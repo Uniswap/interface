@@ -6,7 +6,7 @@ import { Routing, TransactionFailureReason } from 'uniswap/src/data/tradingApi/_
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { DappRequestInfo, EthTransaction } from 'uniswap/src/types/walletConnect'
+import { DappInfo, EthTransaction } from 'uniswap/src/types/walletConnect'
 
 export type ChainIdToTxIdToDetails = Partial<Record<UniverseChainId, { [txId: string]: TransactionDetails }>>
 
@@ -161,7 +161,6 @@ export type TransactionOptions = {
   timeoutTimestampMs?: number
   blockSubmitted?: number
   timeoutLogged?: boolean
-  appBackgroundedWhilePending?: boolean
   submitViaPrivateRpc?: boolean
   privateRpcProvider?: 'flashbots' | 'mevblocker'
 }
@@ -230,7 +229,7 @@ export interface BaseTransactionInfo {
   type: TransactionType
   transactedUSDValue?: number
   isSpam?: boolean
-  externalDappInfo?: DappRequestInfo
+  externalDappInfo?: DappInfo
   gasEstimates?: GasFeeEstimates
 }
 
@@ -397,7 +396,7 @@ export interface NFTApproveTransactionInfo extends BaseTransactionInfo {
 
 export interface WCConfirmInfo extends BaseTransactionInfo {
   type: TransactionType.WCConfirm
-  dappRequestInfo: DappRequestInfo
+  dapp: DappInfo
 }
 
 export interface DappInfoTransactionDetails {

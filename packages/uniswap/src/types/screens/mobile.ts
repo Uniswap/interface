@@ -19,7 +19,6 @@ export enum MobileScreens {
   SettingsLanguage = 'SettingsLanguage',
   SettingsNotifications = 'SettingsNotifications',
   SettingsPrivacy = 'SettingsPrivacy',
-  SettingsSmartWallet = 'SettingsSmartWallet',
   SettingsWallet = 'SettingsWallet',
   SettingsWalletEdit = 'SettingsWalletEdit',
   SettingsWalletManageConnection = 'SettingsWalletManageConnection',
@@ -29,7 +28,6 @@ export enum MobileScreens {
   TokenDetails = 'TokenDetails',
   ExternalProfile = 'ExternalProfile',
   WebView = 'WebView',
-  ViewPrivateKeys = 'ViewPrivateKeys',
 }
 
 export enum OnboardingScreens {
@@ -51,7 +49,6 @@ export enum OnboardingScreens {
   RestoreCloudBackupLoading = 'RestoreCloudBackupLoading',
   RestoreCloudBackup = 'RestoreCloudBackup',
   RestoreCloudBackupPassword = 'RestoreCloudBackupPassword',
-  RestoreMethod = 'RestoreMethod',
   SelectWallet = 'SelectWallet',
   WatchWallet = 'WatchWallet',
 

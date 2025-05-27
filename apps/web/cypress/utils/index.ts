@@ -1,3 +1,4 @@
+import { Currency } from '@uniswap/sdk-core'
 import { HardhatProvider } from 'cypress-hardhat/lib/browser/provider'
 import { Utils } from 'cypress-hardhat/lib/browser/utils'
 
@@ -18,6 +19,14 @@ export const HARDHAT_TIMEOUT = 48_000
 export const getTestSelector = (selectorId: string) => `[data-testid=${selectorId}]`
 
 export const getTestSelectorStartsWith = (selectorId: string) => `[data-testid^=${selectorId}]`
+
+/** Gets the balance of a token as a Chainable. */
+export function getBalance(token: Currency) {
+  return cy
+    .hardhat()
+    .then((hardhat) => hardhat.getBalance(hardhat.wallet, token))
+    .then((balance) => Number(balance.toFixed(1)))
+}
 
 /**
  * Sets up hardhat, and reverts it after tests to ensure isolation.

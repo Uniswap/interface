@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { CloudSlash } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { SmartWalletModal } from 'uniswap/src/features/smartWallet/modals/SmartWalletModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { SmartWalletModal } from 'wallet/src/features/smartWallet/modals/SmartWalletModal'
 
 interface SmartWalletUnavailableModalProps {
   isOpen: boolean

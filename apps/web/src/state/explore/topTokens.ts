@@ -1,6 +1,4 @@
 import { Amount, PriceHistory, TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { SparklineMap } from 'appGraphql/data/types'
-import { PricePoint, TimePeriod, unwrapToken } from 'appGraphql/data/util'
 import {
   TokenSortMethod,
   exploreSearchStringAtom,
@@ -9,6 +7,8 @@ import {
   sortMethodAtom,
 } from 'components/Tokens/state'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { SparklineMap } from 'graphql/data/types'
+import { PricePoint, TimePeriod, unwrapToken } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { useContext, useMemo } from 'react'
 import { ExploreContext, giveExploreStatDefaultValue } from 'state/explore'

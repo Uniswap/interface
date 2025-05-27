@@ -132,7 +132,12 @@ export function IntroCard({
   const GraphicElement = useMemo(() => {
     if (isIcon) {
       return (
-        <Flex p="$spacing2" {...graphic.iconContainerProps}>
+        <Flex
+          backgroundColor={isDarkMode ? '$surface3' : '$surface2'}
+          borderRadius="$roundedFull"
+          p="$spacing8"
+          {...graphic.iconContainerProps}
+        >
           <graphic.Icon color={iconColor} size="$icon.20" {...graphic.iconProps} />
         </Flex>
       )
@@ -143,7 +148,7 @@ export function IntroCard({
         </Flex>
       )
     }
-  }, [graphic, isIcon, iconColor])
+  }, [graphic, isDarkMode, isIcon, iconColor])
 
   const topRightElement = useMemo(() => {
     switch (cardType) {
@@ -206,7 +211,7 @@ export function IntroCard({
         >
           {GraphicElement}
 
-          <Flex fill gap="$spacing4" paddingStart={isIcon ? '$none' : '$spacing12'} py="$spacing2">
+          <Flex fill gap="$spacing4" paddingStart={isIcon ? '$none' : '$spacing12'}>
             <Flex row justifyContent="space-between">
               <Flex fill>
                 <ElementAfterText

@@ -16,6 +16,7 @@ export const CustomButtonText = styled(Text, {
   tag: 'span',
   fontFamily: '$button',
   color: '$color',
+  cursor: 'pointer',
   maxFontSizeMultiplier: 1.2,
   numberOfLines: 1,
   variants: {

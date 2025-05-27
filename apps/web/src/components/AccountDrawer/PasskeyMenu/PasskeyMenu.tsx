@@ -7,18 +7,17 @@ import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { MenuColumn } from 'components/AccountDrawer/shared'
 import { AndroidLogo } from 'components/Icons/AndroidLogo'
 import { AppleLogo } from 'components/Icons/AppleLogo'
-import { useAccount } from 'hooks/useAccount'
 import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
 import { t } from 'i18next'
 import { useCallback, useEffect, useState } from 'react'
 import { LifeBuoy } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Anchor, Button, Flex, Loader, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Anchor, Button, Flex, Image, Loader, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { CHROME_LOGO } from 'ui/src/assets'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Trash } from 'ui/src/components/icons/Trash'
 import { Windows } from 'ui/src/components/icons/Windows'
-import { GoogleChromeLogo } from 'ui/src/components/logos/GoogleChromeLogo'
 import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -50,7 +49,7 @@ type AuthenticatorDisplay = Authenticator & {
 function getProviderIcon(provider: AuthenticatorProvider, colors: UseSporeColorsReturn) {
   switch (provider) {
     case AuthenticatorProvider.Google:
-      return <GoogleChromeLogo size={iconSizes.icon20} />
+      return <Image height={iconSizes.icon20} source={CHROME_LOGO} width={iconSizes.icon20} />
     case AuthenticatorProvider.Apple:
       return <AppleLogo height={iconSizes.icon20} width={iconSizes.icon20} fill={colors.neutral1.val} />
     case AuthenticatorProvider.Android:
@@ -183,7 +182,6 @@ function LoadingPasskeyRow() {
 export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const account = useAccount()
   const [authenticators, setAuthenticators] = useState<AuthenticatorDisplay[]>([])
   const [passkeyMenuModalState, setPasskeyMenuModalState] = useState<PasskeyMenuModalState | undefined>(undefined)
   const [selectedAuthenticator, setSelectedAuthenticator] = useState<AuthenticatorDisplay | undefined>(undefined)
@@ -195,7 +193,7 @@ export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
 
   const { mutate: refreshAuthenticators, isPending: areAuthenticatorsLoading } = usePasskeyAuthWithHelpModal(
     async () => {
-      const authenticators = await listAuthenticators(account.address)
+      const authenticators = await listAuthenticators()
       const authenticatorsDisplay = convertAuthenticatorsToDisplay(authenticators)
       // Sort by creation time, oldest to newest
       authenticatorsDisplay.sort((a, b) => {

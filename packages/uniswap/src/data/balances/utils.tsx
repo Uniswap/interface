@@ -25,7 +25,7 @@ export function useTotalBalancesUsdPerChain(
         (chainAcc, chain) => {
           chainAcc[chain] =
             portfolioBalances.data?.portfolios?.[0]?.tokenBalances?.reduce((balanceAcc, tokenBalance) => {
-              if (tokenBalance?.token?.chain === chain && !tokenBalance.isHidden) {
+              if (tokenBalance?.token?.chain === chain) {
                 return balanceAcc + (tokenBalance.denominatedValue?.value || 0)
               }
               return balanceAcc

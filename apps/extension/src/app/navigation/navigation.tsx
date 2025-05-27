@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { NavigationType, Outlet, ScrollRestoration, useLocation } from 'react-router-dom'
-import { SmartWalletNudgeModals } from 'src/app/components/modals/SmartWalletNudgeModals'
 import { DappRequestQueue } from 'src/app/features/dappRequests/DappRequestQueue'
 import { ForceUpgradeModal } from 'src/app/features/forceUpgrade/ForceUpgradeModal'
 import { HomeScreen } from 'src/app/features/home/HomeScreen'
@@ -220,8 +219,6 @@ function LoggedIn(): JSX.Element {
       {isChromeWindowFocused && <TransactionHistoryUpdater />}
 
       <DappRequestQueue />
-
-      <SmartWalletNudgeModals />
     </>
   )
 }

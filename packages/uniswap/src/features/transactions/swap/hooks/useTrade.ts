@@ -50,7 +50,7 @@ export function useTrade({
   skip,
   selectedProtocols,
   isDebouncing,
-  generatePermitAsTransaction,
+  getGeneratePermitAsTransaction,
   isV4HookPoolsEnabled,
 }: UseTradeArgs): TradeWithStatus {
   const activeAccountAddress = account?.address
@@ -70,6 +70,8 @@ export function useTrade({
   const tokenOutAddress = getTokenAddressForApi(currencyOut)
   const activeGasStrategy = useActiveGasStrategy(tokenInChainId, 'swap')
   const shadowGasStrategies = useShadowGasStrategies(tokenInChainId, 'swap')
+
+  const generatePermitAsTransaction = getGeneratePermitAsTransaction?.(currencyIn?.chainId)
 
   const routingParams = useQuoteRoutingParams({
     selectedProtocols,

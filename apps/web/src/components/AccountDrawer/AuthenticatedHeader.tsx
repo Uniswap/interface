@@ -3,7 +3,6 @@ import { InterfaceElementName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
 import { ActionTile } from 'components/AccountDrawer/ActionTile'
-import { DownloadGraduatedWalletCard } from 'components/AccountDrawer/DownloadGraduatedWalletCard'
 import IconButton, { IconWithConfirmTextButton } from 'components/AccountDrawer/IconButton'
 import { EmptyWallet } from 'components/AccountDrawer/MiniPortfolio/EmptyWallet'
 import { ExtensionDeeplinks } from 'components/AccountDrawer/MiniPortfolio/ExtensionDeeplinks'
@@ -126,7 +125,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const { unitag } = useUnitagByAddress(account)
   const showAddress = ENSName || unitag?.username
 
-  const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' }) ?? '-'
+  const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')
 
   const shouldFadePortfolioDecimals =
     (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) && currencyComponents.symbolAtFront
@@ -229,7 +228,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                       onClick={openReceiveCryptoModal}
                     />
                   </Flex>
-                  <DownloadGraduatedWalletCard />
                   <MiniPortfolio account={account} />
                 </>
               )}

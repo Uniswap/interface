@@ -16,9 +16,9 @@ import { restoreMnemonicCompleteWatcher } from 'src/features/wallet/saga'
 import { walletConnectSaga } from 'src/features/walletConnect/saga'
 import { signWcRequestSaga } from 'src/features/walletConnect/signWcRequestSaga'
 import { call, fork, join, select, spawn, take } from 'typed-redux-saga'
+import { appLanguageWatcherSaga } from 'uniswap/src/features/language/saga'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
-import { deviceLocaleWatcher } from 'wallet/src/features/i18n/deviceLocaleWatcherSaga'
-import { transactionWatcher } from 'wallet/src/features/transactions/watcher/transactionWatcherSaga'
+import { transactionWatcher } from 'wallet/src/features/transactions/transactionWatcherSaga'
 
 // These sagas are not persisted, so we can run them before rehydration
 const nonPersistedSagas = [appStateSaga, splashScreenSaga, biometricsSaga]
@@ -26,6 +26,7 @@ const nonPersistedSagas = [appStateSaga, splashScreenSaga, biometricsSaga]
 // All regular sagas must be included here
 const sagas = [
   lockScreenSaga,
+  appLanguageWatcherSaga,
   appRatingWatcherSaga,
   cloudBackupsManagerSaga,
   deepLinkWatcher,
@@ -36,10 +37,9 @@ const sagas = [
   signWcRequestSaga,
   telemetrySaga,
   walletConnectSaga,
-  deviceLocaleWatcher,
 ]
 
-export function* rootMobileSaga(): SagaIterator {
+export function* rootMobileSaga() {
   // Start non-persisted sagas
   for (const s of nonPersistedSagas) {
     yield* spawn(s)

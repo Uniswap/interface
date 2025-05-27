@@ -69,9 +69,9 @@ export function ConnectedDappsList({ backButton, sessions, selectedAddress }: Co
             pushNotification({
               type: AppNotificationType.WalletConnect,
               address,
-              dappName: session.dappRequestInfo.name,
+              dappName: session.dapp.name,
               event: WalletConnectEvent.Disconnected,
-              imageUrl: session.dappRequestInfo.icon,
+              imageUrl: session.dapp.icon,
               hideDelay: 3 * ONE_SECOND_MS,
             }),
           )

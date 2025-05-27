@@ -1,14 +1,15 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
-import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { SwapBottomCard } from 'components/SwapBottomCard'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { PageWrapper } from 'components/swap/styled'
-import { useDeferredComponent } from 'hooks/useDeferredComponent'
+import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import { useResetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
-import { useWebSwapSettings } from 'pages/Swap/settings/useWebSwapSettings'
+import { BuyForm } from 'pages/Swap/Buy/BuyForm'
+import { LimitFormWrapper } from 'pages/Swap/Limit/LimitForm'
+import { SendForm } from 'pages/Swap/Send/SendForm'
+import { DeadlineOverride } from 'pages/Swap/settings/DeadlineOverride'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -33,10 +34,12 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
-import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow/SwapFlow'
+import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow'
 import { SwapDependenciesContextProvider } from 'uniswap/src/features/transactions/swap/contexts/SwapDependenciesContextProvider'
 import { SwapFormContextProvider, SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/contexts/selectors'
+import { TradeRoutingPreference } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/TradeRoutingPreference'
+import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -213,22 +216,6 @@ function UniversalSwapFlow({
   const swapCallback = useSwapCallback()
   const wrapCallback = useWrapCallback()
 
-  const LimitFormWrapper = useDeferredComponent(() =>
-    import('pages/Swap/Limit/LimitForm').then((module) => ({
-      default: module.LimitFormWrapper,
-    })),
-  )
-  const BuyForm = useDeferredComponent(() =>
-    import('pages/Swap/Buy/BuyForm').then((module) => ({
-      default: module.BuyForm,
-    })),
-  )
-  const SendForm = useDeferredComponent(() =>
-    import('pages/Swap/Send/SendForm').then((module) => ({
-      default: module.SendForm,
-    })),
-  )
-
   useEffect(() => {
     if (pathname === '/send' && isIFramed()) {
       // Redirect to swap if send tab is iFramed (we do not allow the send tab to be iFramed due to clickjacking protections)
@@ -267,9 +254,6 @@ function UniversalSwapFlow({
     }))
   }, [t, currentTab])
 
-  const swapSettings = useWebSwapSettings()
-  const resetDisableOneClickSwap = useResetOverrideOneClickSwapFlag()
-
   return (
     <Flex>
       {!hideHeader && (
@@ -288,7 +272,7 @@ function UniversalSwapFlow({
         <Flex gap="$spacing16">
           <SwapDependenciesContextProvider swapCallback={swapCallback} wrapCallback={wrapCallback}>
             <SwapFlow
-              settings={swapSettings}
+              settings={[Slippage, DeadlineOverride, TradeRoutingPreference]}
               hideHeader={hideHeader}
               hideFooter={hideFooter}
               onClose={noop}
@@ -296,19 +280,16 @@ function UniversalSwapFlow({
               onCurrencyChange={onCurrencyChange}
               prefilledState={prefilledState}
               tokenColor={tokenColor}
-              onSubmitSwap={resetDisableOneClickSwap}
             />
           </SwapDependenciesContextProvider>
           <SwapBottomCard />
         </Flex>
       )}
-      {currentTab === SwapTab.Limit && LimitFormWrapper && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
-      {currentTab === SwapTab.Send && SendForm && (
+      {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
+      {currentTab === SwapTab.Send && (
         <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
       )}
-      {currentTab === SwapTab.Buy && BuyForm && (
-        <BuyForm disabled={disableTokenInputs} initialCurrency={prefilledState?.output} />
-      )}
+      {currentTab === SwapTab.Buy && <BuyForm disabled={disableTokenInputs} initialCurrency={prefilledState?.output} />}
     </Flex>
   )
 }

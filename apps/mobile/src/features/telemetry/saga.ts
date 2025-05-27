@@ -10,7 +10,7 @@ import { ApplicationTransport } from 'utilities/src/telemetry/analytics/Applicat
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
-import { watchTransactionEvents } from 'wallet/src/features/transactions/watcher/transactionFinalizationSaga'
+import { watchTransactionEvents } from 'wallet/src/features/transactions/transactionWatcherSaga'
 
 export function* telemetrySaga() {
   yield* delay(1)

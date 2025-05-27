@@ -73,7 +73,7 @@ export default function WalletModal() {
       )}
       <Flex row justifyContent={isEmbeddedWalletEnabled ? 'center' : 'space-between'} width="100%">
         <Text variant="subheading2">
-          {isEmbeddedWalletEnabled ? t('nav.logInOrConnect.title') : t('common.connectAWallet.button')}
+          {isEmbeddedWalletEnabled ? t('nav.signInOrConnect.title') : t('common.connectAWallet.button')}
         </Text>
       </Flex>
       {isEmbeddedWalletEnabled ? (

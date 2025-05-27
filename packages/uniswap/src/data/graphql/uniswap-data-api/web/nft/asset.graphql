@@ -1,0 +1,82 @@
+query Asset(
+  $address: String!
+  $orderBy: NftAssetSortableField
+  $asc: Boolean
+  $filter: NftAssetsFilterInput
+  $first: Int
+  $after: String
+  $last: Int
+  $before: String
+) {
+  nftAssets(
+    address: $address
+    orderBy: $orderBy
+    asc: $asc
+    filter: $filter
+    first: $first
+    after: $after
+    last: $last
+    before: $before
+  ) {
+    edges {
+      node {
+        id
+        name
+        image {
+          url
+        }
+        smallImage {
+          url
+        }
+        tokenId
+        animationUrl
+        suspiciousFlag
+        collection {
+          name
+          isVerified
+          nftContracts {
+            address
+            standard
+          }
+        }
+        listings(first: 1) {
+          edges {
+            node {
+              address
+              createdAt
+              endAt
+              id
+              maker
+              marketplace
+              marketplaceUrl
+              orderHash
+              price {
+                currency
+                value
+              }
+              quantity
+              startAt
+              status
+              taker
+              tokenId
+              type
+              protocolParameters
+            }
+            cursor
+          }
+        }
+        rarities {
+          rank
+        }
+      }
+      cursor
+    }
+    totalCount
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
+  }
+}

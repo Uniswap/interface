@@ -3,9 +3,9 @@ import { flattenObjectOfObjects, sortKeysRecursively, unnestObject } from 'utili
 
 const DAI = new Token(1, '0x6b175474e89094c44da98b954eedeac495271d0f', 18, 'DAI', 'Dai Stablecoin')
 
-const USDC = new Token(1, '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', 6, 'USDC', 'USD Coin')
+const USDC = new Token(1, '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', 6, 'USDC', 'USD//C')
 
-const USDC_ARBITRUM = new Token(42161, '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', 6, 'USDC', 'USD Coin')
+const USDC_ARBITRUM = new Token(42161, '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', 6, 'USDC', 'USD//C')
 
 describe(flattenObjectOfObjects, () => {
   it('correctly flattens', () => {

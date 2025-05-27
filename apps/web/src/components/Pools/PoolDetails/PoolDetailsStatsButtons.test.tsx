@@ -14,7 +14,6 @@ import { Currency, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
 
@@ -127,15 +126,15 @@ describe('PoolDetailsStatsButton', () => {
 
     expect(asFragment()).toMatchSnapshot()
 
-    expect(screen.getByTestId(TestID.PoolDetailsAddLiquidityButton)).toBeVisible()
-    expect(screen.getByTestId(TestID.PoolDetailsSwapButton)).toBeVisible()
+    expect(screen.getByTestId('pool-details-add-liquidity-button')).toBeVisible()
+    expect(screen.getByTestId('pool-details-swap-button')).toBeVisible()
     jest.useRealTimers()
   })
 
   it('clicking swap reveals swap modal', async () => {
     render(<PoolDetailsStatsButtons {...mockProps} />)
 
-    await userEvent.click(screen.getByTestId(TestID.PoolDetailsSwapButton))
+    await userEvent.click(screen.getByTestId('pool-details-swap-button'))
     expect(screen.getByTestId('pool-details-swap-modal')).toBeVisible()
     expect(screen.getByTestId('pool-details-close-button')).toBeVisible()
   })
@@ -143,7 +142,7 @@ describe('PoolDetailsStatsButton', () => {
   it('clicking add liquidity goes to correct url', async () => {
     render(<PoolDetailsStatsButtons {...mockPropsTokensReversed} />)
 
-    await userEvent.click(screen.getByTestId(TestID.PoolDetailsAddLiquidityButton))
+    await userEvent.click(screen.getByTestId('pool-details-add-liquidity-button'))
     expect(globalThis.window.location.href).toContain(
       '/positions/create/v3?currencyA=0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&currencyB=0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48&chain=ethereum',
     )

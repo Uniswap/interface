@@ -49,9 +49,7 @@ function IncreaseLiquidityModalInner() {
             closeModal={closeModal}
             goBack={step === IncreaseLiquidityStep.Review ? () => setStep(IncreaseLiquidityStep.Input) : undefined}
           />
-          <HeightAnimator animation="fast" useInitialHeight>
-            {modalContent}
-          </HeightAnimator>
+          <HeightAnimator animation="fast">{modalContent}</HeightAnimator>
         </Modal>
       </IncreaseLiquidityTxContextProvider>
     </TransactionSettingsContextProvider>

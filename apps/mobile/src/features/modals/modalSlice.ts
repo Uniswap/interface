@@ -22,6 +22,21 @@ type FiatOnRampAggregatorModalParams = {
   initialState?: FiatOnRampModalState
 }
 
+type LanguageSelectorModalParams = {
+  name: typeof ModalName.LanguageSelector
+  initialState?: undefined
+}
+
+type SettingsAppearanceModalParams = {
+  name: typeof ModalName.SettingsAppearance
+  initialState?: undefined
+}
+
+type PortfolioBalanceModalParams = {
+  name: typeof ModalName.PortfolioBalanceModal
+  initialState?: undefined
+}
+
 type WalletConnectModalParams = {
   name: typeof ModalName.WalletConnectScan
   initialState: ScannerModalState
@@ -36,9 +51,18 @@ type SendModalParams = {
   }
 }
 
+type PermissionsModalParams = {
+  name: typeof ModalName.PermissionsModal
+  initialState?: undefined
+}
+
 export type OpenModalParams =
   | FiatOnRampAggregatorModalParams
+  | PortfolioBalanceModalParams
+  | PermissionsModalParams
+  | LanguageSelectorModalParams
   | SendModalParams
+  | SettingsAppearanceModalParams
   | SwapModalParams
   | WalletConnectModalParams
 

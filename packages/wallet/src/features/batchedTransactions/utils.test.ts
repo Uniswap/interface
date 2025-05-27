@@ -52,6 +52,11 @@ describe(transformCallsToTransactionRequests, () => {
     value: '0x4',
   }
 
+  const invalidCallMissingValue: EthTransaction = {
+    to: '0x mno',
+    data: '0x789',
+  }
+
   it('should transform valid calls correctly', () => {
     const calls = [validCall1, validCall2]
     const expected: TransactionRequest[] = [
@@ -76,7 +81,7 @@ describe(transformCallsToTransactionRequests, () => {
   })
 
   it('should filter out invalid calls', () => {
-    const calls = [validCall1, invalidCallMissingTo, validCall2, invalidCallMissingData]
+    const calls = [validCall1, invalidCallMissingTo, validCall2, invalidCallMissingData, invalidCallMissingValue]
     const expected: TransactionRequest[] = [
       {
         to: validCall1.to!,
@@ -99,7 +104,7 @@ describe(transformCallsToTransactionRequests, () => {
   })
 
   it('should return an empty array if all calls are invalid', () => {
-    const calls = [invalidCallMissingTo, invalidCallMissingData]
+    const calls = [invalidCallMissingTo, invalidCallMissingData, invalidCallMissingValue]
     const result = transformCallsToTransactionRequests(calls, mockChainId, mockAccountAddress)
     expect(result).toEqual([])
   })

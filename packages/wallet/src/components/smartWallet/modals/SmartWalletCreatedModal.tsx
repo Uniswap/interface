@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { Flex, useSporeColors } from 'ui/src'
 import { SmartWallet } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { SmartWalletModal } from 'uniswap/src/features/smartWallet/modals/SmartWalletModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { SmartWalletModal } from 'wallet/src/features/smartWallet/modals/SmartWalletModal'
 
 interface SmartWalletCreatedModalProps {
   isOpen: boolean

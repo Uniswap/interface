@@ -1,4 +1,4 @@
-import { PoolData } from 'appGraphql/data/pools/usePoolData'
+import { PoolData } from 'graphql/data/pools/usePoolData'
 import { TFunction } from 'i18next'
 
 export const getPoolDetailPageTitle = (t: TFunction, poolData?: PoolData) => {

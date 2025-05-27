@@ -3,15 +3,15 @@ import { Flex, UniversalImage } from 'ui/src'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { DappRequestInfo } from 'uniswap/src/types/walletConnect'
+import { DappInfo } from 'uniswap/src/types/walletConnect'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 
 export function DappHeaderIcon({
-  dappRequestInfo,
+  dapp,
   permitCurrencyInfo,
   size = iconSizes.icon40,
 }: {
-  dappRequestInfo: DappRequestInfo
+  dapp: DappInfo
   permitCurrencyInfo?: CurrencyInfo | null
   size?: number
 }): JSX.Element {
@@ -19,11 +19,11 @@ export function DappHeaderIcon({
     return <CurrencyLogo currencyInfo={permitCurrencyInfo} />
   }
 
-  const fallback = <DappIconPlaceholder iconSize={size} name={dappRequestInfo.name} />
+  const fallback = <DappIconPlaceholder iconSize={size} name={dapp.name} />
 
   return (
     <Flex height={size} width={size}>
-      {dappRequestInfo.icon ? (
+      {dapp.icon ? (
         <UniversalImage
           fallback={fallback}
           size={{ height: size, width: size }}
@@ -34,7 +34,7 @@ export function DappHeaderIcon({
               overflow: 'hidden',
             },
           }}
-          uri={dappRequestInfo.icon}
+          uri={dapp.icon}
         />
       ) : (
         fallback

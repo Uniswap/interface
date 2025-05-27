@@ -12,7 +12,6 @@ import {
 } from 'src/features/walletConnect/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
-import { DappRequestType } from 'uniswap/src/types/walletConnect'
 
 const EIP155_MAINNET = 'eip155:1'
 const EIP155_POLYGON = 'eip155:137'
@@ -119,12 +118,11 @@ describe(parseGetCapabilitiesRequest, () => {
       internalId: String(mockInternalId),
       account: TEST_ADDRESS,
       chainIds: undefined,
-      isLinkModeSupported: false,
-      dappRequestInfo: {
+      dapp: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        requestType: DappRequestType.WalletConnectSessionRequest,
+        source: 'walletconnect',
       },
     })
   })
@@ -142,12 +140,11 @@ describe(parseGetCapabilitiesRequest, () => {
       internalId: String(mockInternalId),
       account: TEST_ADDRESS,
       chainIds,
-      isLinkModeSupported: false,
-      dappRequestInfo: {
+      dapp: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        requestType: DappRequestType.WalletConnectSessionRequest,
+        source: 'walletconnect',
       },
     })
   })
@@ -178,12 +175,11 @@ describe(parseSignRequest, () => {
       chainId: mockChainId,
       rawMessage: message,
       message: 'Hello World',
-      isLinkModeSupported: false,
-      dappRequestInfo: {
+      dapp: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        requestType: DappRequestType.WalletConnectSessionRequest,
+        source: 'walletconnect',
       },
     })
   })
@@ -202,12 +198,11 @@ describe(parseSignRequest, () => {
       chainId: mockChainId,
       rawMessage: message,
       message: 'Hello World',
-      isLinkModeSupported: false,
-      dappRequestInfo: {
+      dapp: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        requestType: DappRequestType.WalletConnectSessionRequest,
+        source: 'walletconnect',
       },
     })
   })
@@ -226,12 +221,11 @@ describe(parseSignRequest, () => {
       chainId: mockChainId,
       rawMessage: typedData,
       message: null,
-      isLinkModeSupported: false,
-      dappRequestInfo: {
+      dapp: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        requestType: DappRequestType.WalletConnectSessionRequest,
+        source: 'walletconnect',
       },
     })
   })
@@ -274,7 +268,6 @@ describe(parseTransactionRequest, () => {
       internalId: String(mockInternalId),
       account: TEST_ADDRESS,
       chainId: mockChainId,
-      isLinkModeSupported: false,
       transaction: {
         from: TEST_ADDRESS,
         to: '0x1234567890123456789012345678901234567890',
@@ -283,11 +276,11 @@ describe(parseTransactionRequest, () => {
         value: '0x0',
         // gasPrice and nonce should be omitted
       },
-      dappRequestInfo: {
+      dapp: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        requestType: DappRequestType.WalletConnectSessionRequest,
+        source: 'walletconnect',
       },
     })
   })
@@ -343,12 +336,11 @@ describe(parseSendCallsRequest, () => {
       capabilities: sendCallsParams.capabilities,
       id: sendCallsParams.id,
       version: sendCallsParams.version,
-      isLinkModeSupported: false,
-      dappRequestInfo: {
+      dapp: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        requestType: DappRequestType.WalletConnectSessionRequest,
+        source: 'walletconnect',
       },
     })
   })
@@ -405,12 +397,11 @@ describe(parseGetCallsStatusRequest, () => {
       account,
       chainId: mockChainId,
       id: requestId,
-      isLinkModeSupported: false,
-      dappRequestInfo: {
+      dapp: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        requestType: DappRequestType.WalletConnectSessionRequest,
+        source: 'walletconnect',
       },
     })
   })

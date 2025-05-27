@@ -1,4 +1,4 @@
-import { meldSupportedCurrencyToCurrencyInfo } from 'appGraphql/data/types'
+import { meldSupportedCurrencyToCurrencyInfo } from 'graphql/data/types'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {

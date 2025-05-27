@@ -73,14 +73,12 @@ export function useSwapReviewError(): {
   submissionError: Error | undefined
   setSubmissionError: (error?: Error) => void
   onSwapButtonClick: () => Promise<void>
-  onPressRetry: (() => void) | undefined
 } {
   const { onSwapButtonClick } = useSwapReviewCallbacks()
-  const { submissionError, setSubmissionError, onPressRetry } = useSwapReviewState()
+  const { submissionError, setSubmissionError } = useSwapReviewState()
   return {
     submissionError,
     setSubmissionError,
     onSwapButtonClick,
-    onPressRetry,
   }
 }

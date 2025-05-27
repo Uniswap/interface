@@ -21,11 +21,6 @@ export interface BehaviorHistoryState {
       hasDismissedHomeScreenNudge: boolean
     }
   }
-  /**
-   * Whether the user has copied their private keys via the view private keys screen during
-   * a restoration flow.
-   */
-  hasCopiedPrivateKeys?: boolean
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
@@ -38,7 +33,6 @@ export const initialBehaviorHistoryState: BehaviorHistoryState = {
   hasViewedOffRampTooltip: false,
   hasViewedDappRequestBridgingBanner: {},
   smartWalletNudge: {},
-  hasCopiedPrivateKeys: false,
 }
 
 const slice = createSlice({
@@ -85,9 +79,6 @@ const slice = createSlice({
         ...initialBehaviorHistoryState,
       }
     },
-    setHasCopiedPrivateKeys: (state, action: PayloadAction<boolean>) => {
-      state.hasCopiedPrivateKeys = action.payload
-    },
   },
 })
 
@@ -102,7 +93,6 @@ export const {
   resetWalletBehaviorHistory,
   setHasViewedNotificationsCard,
   setHasDismissedSmartWalletHomeScreenNudge,
-  setHasCopiedPrivateKeys,
 } = slice.actions
 
 export const behaviorHistoryReducer = slice.reducer

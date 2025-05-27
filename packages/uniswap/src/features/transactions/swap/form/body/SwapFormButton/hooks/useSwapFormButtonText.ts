@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
+import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
@@ -23,10 +23,11 @@ export const useSwapFormButtonText = (): string => {
   const isTokenSelectionInvalid = useIsTokenSelectionInvalid()
   const isAmountSelectionInvalid = useIsAmountSelectionInvalid()
 
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
   const { insufficientBalanceWarning, blockingWarning, insufficientGasFundsWarning } = useParsedSwapWarnings()
 
-  const isLogIn = isEmbeddedWalletEnabled
+  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
+  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
 
   const nativeCurrency = NativeCurrency.onChain(chainId)
 
@@ -43,7 +44,7 @@ export const useSwapFormButtonText = (): string => {
   }
 
   if (!activeAccount) {
-    return isLogIn ? t('nav.logIn.button') : t('common.connectWallet.button')
+    return isSignIn ? t('nav.signIn.button') : isLogIn ? t('nav.logIn.button') : t('common.connectWallet.button')
   }
 
   if (blockingWarning?.buttonText) {

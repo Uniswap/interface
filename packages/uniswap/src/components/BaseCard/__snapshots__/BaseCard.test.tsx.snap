@@ -131,36 +131,22 @@ exports[`ErrorState renders without error 1`] = `
 exports[`Header renders without error 1`] = `
 <View
   cancelable={true}
-  collapsable={false}
   disabled={false}
-  focusVisibleStyle={{}}
   focusable={true}
-  forwardedRef={[Function]}
-  jestAnimatedStyle={
-    {
-      "value": {},
-    }
-  }
+  hitSlop={[Function]}
   minPressDuration={0}
   onBlur={[Function]}
   onFocus={[Function]}
-  onLayout={[Function]}
   onMouseEnter={[Function]}
   onMouseLeave={[Function]}
   onPress={[Function]}
   onPressIn={[Function]}
   onPressOut={[Function]}
-  role="button"
   style={
     {
-      "backgroundColor": "transparent",
       "borderBottomColor": "rgba(255,255,255,0.12)",
-      "borderBottomLeftRadius": 12,
-      "borderBottomRightRadius": 12,
       "borderBottomWidth": 0.25,
       "borderStyle": "solid",
-      "borderTopLeftRadius": 12,
-      "borderTopRightRadius": 12,
       "flexDirection": "column",
       "opacity": 1,
       "paddingBottom": 12,
@@ -176,12 +162,9 @@ exports[`Header renders without error 1`] = `
   }
 >
   <View
-    onBlur={[Function]}
-    onFocus={[Function]}
     style={
       {
         "alignItems": "center",
-        "color": "#FFFFFF",
         "flexDirection": "row",
         "gap": 16,
         "justifyContent": "space-between",
@@ -189,8 +172,6 @@ exports[`Header renders without error 1`] = `
     }
   >
     <View
-      onBlur={[Function]}
-      onFocus={[Function]}
       style={
         {
           "flexDirection": "column",
@@ -199,8 +180,6 @@ exports[`Header renders without error 1`] = `
       }
     >
       <View
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "alignItems": "center",
@@ -212,8 +191,6 @@ exports[`Header renders without error 1`] = `
         <Text
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
               "color": "rgba(255, 255, 255, 0.65)",
@@ -247,8 +224,6 @@ exports[`Header renders without error 1`] = `
           },
         }
       }
-      onBlur={[Function]}
-      onFocus={[Function]}
       style={
         {
           "alignItems": "center",

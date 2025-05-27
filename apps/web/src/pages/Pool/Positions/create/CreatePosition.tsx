@@ -319,10 +319,8 @@ export default function CreatePosition() {
   const media = useMedia()
   const { t } = useTranslation()
 
-  // URL format is `/positions/create/:protocolVersion`, with possible searchParams `?currencyA=...&currencyB=...&chain=...&feeTier=...&hook=...`
-  const { protocolVersion } = useParams<{
-    protocolVersion: string
-  }>()
+  // URL format is `/positions/create/:protocolVersion`, with possible searchParams `?currencyA=...&currencyB=...&chain=...`
+  const { protocolVersion } = useParams<{ protocolVersion: string }>()
   const paramsProtocolVersion = parseProtocolVersion(protocolVersion)
 
   const autoSlippageTolerance = useLPSlippageValue(paramsProtocolVersion)
@@ -340,8 +338,6 @@ export default function CreatePosition() {
           <CreatePositionContextProvider
             initialState={{
               currencyInputs: initialInputs,
-              hook: initialInputs.hook,
-              fee: initialInputs.fee,
               protocolVersion: initialProtocolVersion,
             }}
           >

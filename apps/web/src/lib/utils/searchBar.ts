@@ -1,4 +1,4 @@
-import { GqlSearchToken } from 'appGraphql/data/SearchTokens'
+import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'

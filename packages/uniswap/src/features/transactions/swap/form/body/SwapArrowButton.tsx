@@ -1,6 +1,5 @@
 import { FlexProps, TouchableArea, TouchableAreaProps, useIsShortMobileDevice, useSporeColors } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
-import { PRESS_SCALE } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/constants'
 import { iconSizes } from 'ui/src/theme'
 
 type SwapArrowButtonProps = Pick<TouchableAreaProps, 'disabled' | 'testID' | 'onPress' | 'backgroundColor'> & {
@@ -26,7 +25,7 @@ export function SwapArrowButton({
       borderRadius={isShortMobileDevice ? '$rounded12' : '$rounded16'}
       borderWidth={isShortMobileDevice ? '$spacing2' : '$spacing4'}
       p={isShortMobileDevice ? '$spacing6' : '$spacing8'}
-      scaleTo={PRESS_SCALE}
+      scaleTo={0.98}
       hoverStyle={hoverStyle}
       disabled={disabled}
       testID={testID}

@@ -1,7 +1,7 @@
-import { useNftBalance } from 'appGraphql/data/nft/NftBalance'
 import { NFT } from 'components/AccountDrawer/MiniPortfolio/NFTs/NFTItem'
 import { DEFAULT_NFT_QUERY_AMOUNT } from 'components/AccountDrawer/MiniPortfolio/constants'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useState } from 'react'

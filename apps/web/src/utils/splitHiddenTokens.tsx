@@ -1,4 +1,4 @@
-import { PortfolioBalance } from 'appGraphql/data/portfolios'
+import { PortfolioBalance } from 'graphql/data/portfolios'
 import { TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SpamCode } from 'uniswap/src/data/types'
 

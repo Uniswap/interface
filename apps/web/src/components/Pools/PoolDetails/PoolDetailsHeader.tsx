@@ -1,18 +1,20 @@
 import { Percent } from '@uniswap/sdk-core'
-import { getTokenDetailsURL, gqlToCurrency } from 'appGraphql/data/util'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
-import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import { DetailBubble } from 'components/Pools/PoolDetails/shared'
+import { PoolDetailsBadge } from 'components/Pools/PoolTable/PoolTable'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import { ActionButtonStyle } from 'components/Tokens/TokenDetails/shared'
+import { LoadingBubble } from 'components/Tokens/loading'
+import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import styled, { useTheme } from 'lib/styled-components'
 import { ReversedArrowsIcon } from 'nft/components/iconExports'
 import React, { useMemo, useState } from 'react'
@@ -21,8 +23,10 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
-import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
-import { Flex, Shine, Text, TouchableArea, styled as tamaguiStyled, useIsTouchDevice, useMedia } from 'ui/src'
+import { ClickableStyle, ClickableTamaguiStyle, EllipsisStyle } from 'theme/components/styles'
+import { textFadeIn } from 'theme/styles'
+import { Flex, TouchableArea, useIsTouchDevice, useMedia } from 'ui/src'
+import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -32,12 +36,28 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { getChainUrlParam } from 'utils/chainParams'
+import { useFormatter } from 'utils/formatNumbers'
 
 const StyledExternalLink = styled(ExternalLink)`
   &:hover {
     // Override hover behavior from ExternalLink
     opacity: 1;
   }
+`
+
+const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: 'flex-start';
+  width: 100%;
+  ${textFadeIn};
+  animation-duration: ${({ theme }) => theme.transition.duration.medium};
+`
+
+const IconBubble = styled(LoadingBubble)`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
 `
 
 interface PoolDetailsBreadcrumbProps {
@@ -63,15 +83,30 @@ export function PoolDetailsBreadcrumb({ chainId, poolAddress, token0, token1, lo
         <Trans i18nKey="common.pools" /> <ChevronRight size={14} />
       </BreadcrumbNavLink>
       {loading || !poolAddress ? (
-        <Shine>
-          <Flex width={80} height={20} borderRadius={20} backgroundColor="$surface3" />
-        </Shine>
+        <DetailBubble $width={200} />
       ) : (
         <CurrentPageBreadcrumb address={poolAddress} poolName={`${token0?.symbol} / ${token1?.symbol}`} />
       )}
     </BreadcrumbNavContainer>
   )
 }
+
+const StyledPoolDetailsTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  width: max-content;
+  align-items: center;
+`
+
+const PoolName = styled(ThemedText.HeadlineMedium)`
+  font-size: 24px !important;
+
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
+    font-size: 18px !important;
+    line-height: 24px !important;
+  }
+`
 
 const PoolDetailsTitle = ({
   token0,
@@ -91,12 +126,14 @@ const PoolDetailsTitle = ({
   hookAddress?: string
 }) => {
   const theme = useTheme()
+  const { formatPercent } = useFormatter()
   const { defaultChainId } = useEnabledChains()
   const graphQLChain = toGraphQLChain(chainId ?? defaultChainId)
+  const feePercent = feeTier && formatPercent(new Percent(feeTier, BIPS_BASE * 100))
   return (
-    <Flex row gap="$spacing12" alignItems="center" width="max-content">
+    <StyledPoolDetailsTitle>
       <Flex>
-        <Text variant="heading1" fontSize={24} color="neutral1" $md={{ variant: 'subheading1', fontSize: 18 }}>
+        <PoolName>
           <StyledLink
             to={getTokenDetailsURL({
               address: token0?.address,
@@ -114,15 +151,24 @@ const PoolDetailsTitle = ({
           >
             {token1?.symbol}
           </StyledLink>
-        </Text>
+        </PoolName>
       </Flex>
-      <Flex row gap="$spacing2">
-        <LiquidityPositionInfoBadges
-          versionLabel={protocolVersion?.toLowerCase()}
-          v4hook={hookAddress}
-          feeTier={feeTier}
-          size="default"
-        />
+      <Flex row gap="$gap4" alignItems="center">
+        <PoolDetailsBadge variant="body3" $position="left">
+          {protocolVersion?.toLowerCase()}
+        </PoolDetailsBadge>
+        {hookAddress && (
+          <ExternalLink href={getExplorerLink(chainId ?? defaultChainId, hookAddress, ExplorerDataType.ADDRESS)}>
+            <PoolDetailsBadge variant="body3" {...ClickableTamaguiStyle}>
+              {shortenAddress(hookAddress, 0, 4)}
+            </PoolDetailsBadge>
+          </ExternalLink>
+        )}
+        {!!feePercent && (
+          <PoolDetailsBadge variant="body3" $position="right">
+            {feePercent}
+          </PoolDetailsBadge>
+        )}
       </Flex>
       <TouchableArea
         hoverable
@@ -132,26 +178,22 @@ const PoolDetailsTitle = ({
       >
         <ReversedArrowsIcon size="20px" color={theme.neutral2} />
       </TouchableArea>
-    </Flex>
+    </StyledPoolDetailsTitle>
   )
 }
 
-const ContractsDropdownRowContainer = tamaguiStyled(Flex, {
-  row: true,
-  alignItems: 'center',
-  cursor: 'pointer',
-  gap: '$gap12',
-  px: '$padding6',
-  py: '$padding8',
-  borderRadius: '$rounded8',
-  ...EllipsisTamaguiStyle,
-  '$platform-web': {
-    textDecoration: 'none',
-  },
-  hoverStyle: {
-    background: '$surface3',
-  },
-})
+const ContractsDropdownRowContainer = styled(Row)`
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: 8px;
+  ${EllipsisStyle}
+  &:hover {
+    background: ${({ theme }) => theme.surface3};
+  }
+`
 
 const ContractsDropdownRow = ({
   address,
@@ -255,13 +297,11 @@ const PoolDetailsHeaderActions = ({
   )
 }
 
-const StyledLink = tamaguiStyled(Link, {
-  color: '$neutral1',
-  ...ClickableTamaguiStyle,
-  '$platform-web': {
-    textDecoration: 'none',
-  },
-})
+const StyledLink = styled(Link)`
+  color: ${({ theme }) => theme.neutral1};
+  text-decoration: none;
+  ${ClickableStyle}
+`
 
 interface PoolDetailsHeaderProps {
   chainId?: number
@@ -301,30 +341,23 @@ export function PoolDetailsHeader({
 
   if (loading) {
     return (
-      <Flex
-        justifyContent="space-between"
-        alignItems="flex-start"
-        width="100%"
-        data-testid="pdp-header-loading-skeleton"
-      >
-        <Flex
-          gap="$gap12"
-          alignItems={shouldColumnBreak ? 'flex-start' : 'center'}
-          row={!shouldColumnBreak}
-          style={{ width: '100%' }}
-        >
-          <Shine>
-            <Flex width={32} height={32} borderRadius="$roundedFull" backgroundColor="$surface3" />
-          </Shine>
-          <Shine>
-            <Flex width={200} height={32} borderRadius="$rounded8" backgroundColor="$surface3" />
-          </Shine>
-        </Flex>
-      </Flex>
+      <HeaderContainer data-testid="pdp-header-loading-skeleton">
+        {shouldColumnBreak ? (
+          <Column gap="sm" style={{ width: '100%' }}>
+            <IconBubble />
+            <DetailBubble $height={40} $width={137} />
+          </Column>
+        ) : (
+          <Row gap="sm">
+            <IconBubble />
+            <DetailBubble $height={40} $width={137} />
+          </Row>
+        )}
+      </HeaderContainer>
     )
   }
   return (
-    <Flex justifyContent="space-between" alignItems="flex-start" width="100%">
+    <HeaderContainer>
       {shouldColumnBreak ? (
         <Flex gap="$spacing4" width="100%">
           <Flex row gap="$spacing8" justifyContent="space-between">
@@ -375,6 +408,6 @@ export function PoolDetailsHeader({
           </Flex>
         </Flex>
       )}
-    </Flex>
+    </HeaderContainer>
   )
 }

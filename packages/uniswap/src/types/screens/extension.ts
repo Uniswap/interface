@@ -28,6 +28,9 @@ export enum ExtensionOnboardingScreens {
 
   // New Wallet Flow
   ClaimUnitag = 'ClaimUnitag',
+  NameWallet = 'NameWallet',
+  ViewSeedPhrase = 'ViewSeedPhrase',
+  ConfirmSeedPhrase = 'ConfirmSeedPhrase',
 
   // Import Flow
   SelectImportMethod = 'SelectImportMethod',

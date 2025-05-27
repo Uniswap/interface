@@ -2,7 +2,7 @@
 
 exports[`should inject metadata for valid tokens 1`] = `
 "<!DOCTYPE html>
-<html translate="no">
+<html translate="no" style="overflow-x: hidden;">
   <head>
     <meta charset="utf-8" />
 
@@ -131,7 +131,7 @@ exports[`should inject metadata for valid tokens 1`] = `
 
 exports[`should inject metadata for valid tokens 2`] = `
 "<!DOCTYPE html>
-<html translate="no">
+<html translate="no" style="overflow-x: hidden;">
   <head>
     <meta charset="utf-8" />
 
@@ -260,7 +260,7 @@ exports[`should inject metadata for valid tokens 2`] = `
 
 exports[`should inject metadata for valid tokens 3`] = `
 "<!DOCTYPE html>
-<html translate="no">
+<html translate="no" style="overflow-x: hidden;">
   <head>
     <meta charset="utf-8" />
 
@@ -389,7 +389,7 @@ exports[`should inject metadata for valid tokens 3`] = `
 
 exports[`should inject metadata for valid tokens 4`] = `
 "<!DOCTYPE html>
-<html translate="no">
+<html translate="no" style="overflow-x: hidden;">
   <head>
     <meta charset="utf-8" />
 

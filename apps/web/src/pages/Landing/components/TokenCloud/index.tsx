@@ -1,4 +1,4 @@
-import { getTokenDetailsURL } from 'appGraphql/data/util'
+import { getTokenDetailsURL } from 'graphql/data/util'
 import { approvedERC20, approvedERC721, InteractiveToken, TokenStandard } from 'pages/Landing/assets/approvedTokens'
 import { Ticker } from 'pages/Landing/components/TokenCloud/Ticker'
 import { useCallback } from 'react'

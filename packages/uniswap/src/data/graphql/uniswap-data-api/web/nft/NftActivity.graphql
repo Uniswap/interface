@@ -1,0 +1,65 @@
+query NftActivity(
+  $filter: NftActivityFilterInput
+  $after: String
+  $first: Int
+) {
+  nftActivity(filter: $filter, after: $after, first: $first) {
+    edges {
+      node {
+        id
+        address
+        tokenId
+        asset {
+          id
+          metadataUrl
+          image {
+            id
+            url
+          }
+          smallImage {
+            id
+            url
+          }
+          name
+          rarities {
+            id
+            provider
+            rank
+            score
+          }
+          suspiciousFlag
+          nftContract {
+            id
+            standard
+          }
+          collection {
+            id
+            image {
+              id
+              url
+            }
+          }
+        }
+        type
+        marketplace
+        fromAddress
+        toAddress
+        transactionHash
+        price {
+          id
+          value
+        }
+        orderStatus
+        quantity
+        url
+        timestamp
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
+  }
+}

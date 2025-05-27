@@ -14,7 +14,9 @@ export default function RemoveButton({ visible = true, ...rest }: RemoveButtonPr
       disabled={!visible}
       height={imageSizes.image24}
       justifyContent="center"
-      opacity={visible ? 1 : 0}
+      style={{
+        opacity: visible ? 1 : 0,
+      }}
       testID="explore/remove-button"
       width={imageSizes.image24}
       zIndex="$tooltip"

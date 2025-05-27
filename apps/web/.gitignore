@@ -24,7 +24,6 @@
 # builds
 /build
 /dts
-/dist
 
 # misc
 .DS_Store

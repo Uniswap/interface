@@ -4,33 +4,19 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
 [
   <View
     cancelable={true}
-    collapsable={false}
     disabled={false}
-    focusVisibleStyle={{}}
     focusable={true}
-    forwardedRef={[Function]}
-    jestAnimatedStyle={
-      {
-        "value": {},
-      }
-    }
+    hitSlop={[Function]}
     minPressDuration={0}
     onBlur={[Function]}
     onFocus={[Function]}
-    onLayout={[Function]}
     onMouseEnter={[Function]}
     onMouseLeave={[Function]}
     onPress={[Function]}
     onPressIn={[Function]}
     onPressOut={[Function]}
-    role="button"
     style={
       {
-        "backgroundColor": "transparent",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
         "flexDirection": "column",
         "opacity": 1,
         "transform": [
@@ -43,12 +29,9 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
   >
     <View
       collapsable={false}
-      onBlur={[Function]}
-      onFocus={[Function]}
       style={
         {
           "alignItems": "center",
-          "color": "#FFFFFF",
           "flexDirection": "row",
           "gap": 8,
           "justifyContent": "center",
@@ -59,8 +42,6 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
       testID="chain-selector"
     >
       <View
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "borderColor": "#131313",
@@ -105,8 +86,6 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
             },
           }
         }
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "alignItems": "center",

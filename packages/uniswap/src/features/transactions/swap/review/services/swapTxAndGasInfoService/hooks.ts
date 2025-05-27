@@ -6,7 +6,8 @@ import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import {
@@ -56,24 +57,37 @@ function useSwapConfig(): {
   v4SwapEnabled: boolean
   activeGasStrategy: GasStrategy
   shadowGasStrategies: GasStrategy[]
-  getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
-  getSwapDelegationAddress?: (chainId: UniverseChainId | undefined) => string | undefined
+  getCanBatchTransactions?: (chainId?: UniverseChainId) => boolean
 } {
   const { chainId } = useSwapFormContext().derivedSwapInfo
   const activeGasStrategy = useActiveGasStrategy(chainId, 'general')
   const shadowGasStrategies = useShadowGasStrategies(chainId, 'general')
   const v4SwapEnabled = useV4SwapEnabled(chainId)
-  const { getCanBatchTransactions, getSwapDelegationAddress } = useUniswapContext()
+  const { getCanBatchTransactions } = useUniswapContext()
   return useMemo(
     () => ({
       v4SwapEnabled,
       activeGasStrategy,
       shadowGasStrategies,
       getCanBatchTransactions,
-      getSwapDelegationAddress,
     }),
-    [v4SwapEnabled, activeGasStrategy, shadowGasStrategies, getCanBatchTransactions, getSwapDelegationAddress],
+    [v4SwapEnabled, activeGasStrategy, shadowGasStrategies, getCanBatchTransactions],
   )
+}
+
+const MOCK_7702_DATA = { delegatedAddress: '0x227380efd3392EC33cf148Ade5e0a89D33121814', newUpgradeAddress: undefined }
+export function useSwapDelegationAddress(): string | undefined {
+  const smartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWallet)
+  const { delegatedAddress, newUpgradeAddress } = MOCK_7702_DATA // TODO(smart wallet): remove mock, replace with delegation flow hooks
+
+  if (!smartWalletEnabled) {
+    return undefined
+  }
+  return delegatedAddress ?? newUpgradeAddress
+}
+
+export function useIsSmartWalletFlow(): boolean {
+  return !!useSwapDelegationAddress()
 }
 
 export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService<Trade | undefined> {
@@ -81,12 +95,14 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService<Trade | un
   const presignPermit = usePresignPermit()
   const trace = useTrace()
   const transactionSettings = useTransactionSettingsContext()
+  const swapDelegationAddress = useSwapDelegationAddress()
   const instructionService = useMemo(() => {
     return createEVMSwapInstructionsService({
       ...swapConfig,
       presignPermit,
+      swapDelegationAddress,
     })
-  }, [swapConfig, presignPermit])
+  }, [swapConfig, presignPermit, swapDelegationAddress])
 
   const decorateWithEVMLogging = useEvent(createDecorateSwapTxInfoServiceWithEVMLogging({ trace, transactionSettings }))
 

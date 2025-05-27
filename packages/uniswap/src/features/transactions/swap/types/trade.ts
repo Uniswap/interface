@@ -21,6 +21,7 @@ import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transac
 import { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { getSwapFee } from 'uniswap/src/features/transactions/swap/types/getSwapFee'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 type QuoteResponseWithAggregatedOutputs = ClassicQuoteResponse | DutchQuoteResponse | DutchV3QuoteResponse | PriorityQuoteResponse
 
@@ -326,7 +327,7 @@ export interface UseTradeArgs {
   skip?: boolean
   selectedProtocols?: FrontendSupportedProtocol[]
   isDebouncing?: boolean
-  generatePermitAsTransaction?: boolean
+  getGeneratePermitAsTransaction?: (chainId?: UniverseChainId) => boolean
   isV4HookPoolsEnabled?: boolean
 }
 

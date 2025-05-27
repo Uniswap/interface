@@ -3,8 +3,6 @@ import { createColumnHelper } from '@tanstack/react-table'
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { Percent, Token } from '@uniswap/sdk-core'
-import { PoolSortFields, TablePool } from 'appGraphql/data/pools/useTopPools'
-import { OrderDirection, gqlToCurrency, supportedChainIdFromGQLChain, unwrapToken } from 'appGraphql/data/util'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentiveFeeStatTooltip'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -21,6 +19,8 @@ import {
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { PoolSortFields, TablePool } from 'graphql/data/pools/useTopPools'
+import { OrderDirection, gqlToCurrency, supportedChainIdFromGQLChain, unwrapToken } from 'graphql/data/util'
 import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
@@ -50,6 +50,25 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 const TableWrapper = styled(Flex, {
   m: '0 auto',
   maxWidth: MAX_WIDTH_MEDIA_BREAKPOINT,
+})
+
+export const PoolDetailsBadge = styled(Text, {
+  py: 2,
+  px: 6,
+  backgroundColor: '$surface2',
+  color: '$neutral2',
+  variants: {
+    $position: {
+      right: {
+        borderTopRightRadius: 4,
+        borderBottomRightRadius: 4,
+      },
+      left: {
+        borderTopLeftRadius: 4,
+        borderBottomLeftRadius: 4,
+      },
+    },
+  },
 })
 
 interface PoolTableValues {

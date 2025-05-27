@@ -17,7 +17,7 @@ const openLanguageSettings = async (): Promise<void> => {
   }
 }
 
-export function SettingsLanguageModal({ onClose }: Omit<SettingsLanguageModalProps, 'isOpen'>): JSX.Element {
+export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): JSX.Element {
   const { t } = useTranslation()
 
   return (

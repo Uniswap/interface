@@ -1,12 +1,13 @@
-import { Experiments, NativeTokenPercentageBufferProperties } from 'uniswap/src/features/gating/experiments'
-import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
+import { Experiments, NativeTokenPercentageBufferExperimentGroup } from 'uniswap/src/features/gating/experiments'
+import { useExperimentGroupNameWithLoading } from 'uniswap/src/features/gating/hooks'
 
 export function useNativeTokenPercentageBufferExperiment() {
-  const bufferSize = useExperimentValue(
+  const { value: nativeTokenPercentageBuffer } = useExperimentGroupNameWithLoading(
     Experiments.NativeTokenPercentageBuffer,
-    NativeTokenPercentageBufferProperties.BufferSize,
-    1,
   )
+  const controlPercentageBuffer = 0.5
+  const bufferPercentage =
+    nativeTokenPercentageBuffer === NativeTokenPercentageBufferExperimentGroup.Control ? controlPercentageBuffer : 1
 
-  return bufferSize
+  return bufferPercentage
 }

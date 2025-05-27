@@ -164,26 +164,17 @@ exports[`ContextMenu renders without error 1`] = `
           >
             <View
               cancelable={true}
-              collapsable={false}
               disabled={false}
-              focusVisibleStyle={{}}
               focusable={true}
-              forwardedRef={[Function]}
-              jestAnimatedStyle={
-                {
-                  "value": {},
-                }
-              }
+              hitSlop={[Function]}
               minPressDuration={0}
               onBlur={[Function]}
               onFocus={[Function]}
-              onLayout={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               onPress={[Function]}
               onPressIn={[Function]}
               onPressOut={[Function]}
-              role="button"
               selectable={false}
               style={
                 {
@@ -213,12 +204,9 @@ exports[`ContextMenu renders without error 1`] = `
               }
             >
               <View
-                onBlur={[Function]}
-                onFocus={[Function]}
                 style={
                   {
                     "alignItems": "center",
-                    "color": "#FFFFFF",
                     "flexDirection": "row",
                     "flexShrink": 1,
                   }
@@ -229,8 +217,6 @@ exports[`ContextMenu renders without error 1`] = `
                   ellipsizeMode="tail"
                   maxFontSizeMultiplier={1.2}
                   numberOfLines={1}
-                  onBlur={[Function]}
-                  onFocus={[Function]}
                   style={
                     {
                       "color": "#FFFFFF",
@@ -248,19 +234,14 @@ exports[`ContextMenu renders without error 1`] = `
                 </Text>
               </View>
               <View
-                onBlur={[Function]}
-                onFocus={[Function]}
                 style={
                   {
-                    "color": "#FFFFFF",
                     "flexDirection": "column",
                     "flexShrink": 0,
                   }
                 }
               >
                 <View
-                  onBlur={[Function]}
-                  onFocus={[Function]}
                   pointerEvents="none"
                   style={
                     {
@@ -296,26 +277,17 @@ exports[`ContextMenu renders without error 1`] = `
             />
             <View
               cancelable={true}
-              collapsable={false}
               disabled={false}
-              focusVisibleStyle={{}}
               focusable={true}
-              forwardedRef={[Function]}
-              jestAnimatedStyle={
-                {
-                  "value": {},
-                }
-              }
+              hitSlop={[Function]}
               minPressDuration={0}
               onBlur={[Function]}
               onFocus={[Function]}
-              onLayout={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
               onPress={[Function]}
               onPressIn={[Function]}
               onPressOut={[Function]}
-              role="button"
               selectable={false}
               style={
                 {
@@ -345,12 +317,9 @@ exports[`ContextMenu renders without error 1`] = `
               }
             >
               <View
-                onBlur={[Function]}
-                onFocus={[Function]}
                 style={
                   {
                     "alignItems": "center",
-                    "color": "#FFFFFF",
                     "flexDirection": "row",
                     "flexShrink": 1,
                   }
@@ -361,8 +330,6 @@ exports[`ContextMenu renders without error 1`] = `
                   ellipsizeMode="tail"
                   maxFontSizeMultiplier={1.2}
                   numberOfLines={1}
-                  onBlur={[Function]}
-                  onFocus={[Function]}
                   style={
                     {
                       "color": "#FFFFFF",
@@ -380,19 +347,14 @@ exports[`ContextMenu renders without error 1`] = `
                 </Text>
               </View>
               <View
-                onBlur={[Function]}
-                onFocus={[Function]}
                 style={
                   {
-                    "color": "#FFFFFF",
                     "flexDirection": "column",
                     "flexShrink": 0,
                   }
                 }
               >
                 <View
-                  onBlur={[Function]}
-                  onFocus={[Function]}
                   pointerEvents="none"
                   style={
                     {

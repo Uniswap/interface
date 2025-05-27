@@ -1,5 +1,5 @@
-import { GqlSearchToken } from 'appGraphql/data/SearchTokens'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import { GenieCollection } from 'nft/types'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'

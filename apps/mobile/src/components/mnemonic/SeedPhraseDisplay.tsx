@@ -1,9 +1,8 @@
-import { useFocusEffect, useNavigation } from '@react-navigation/core'
 import { addScreenshotListener } from 'expo-screen-capture'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { usePrevious } from 'react-native-wagmi-charts'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { WalletRestoreType } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
@@ -22,27 +21,17 @@ type Props = {
 
 export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }: Props): JSX.Element {
   const { t } = useTranslation()
-  const { walletRestoreType } = useWalletRestore({
-    openModalImmediately: true,
-  })
+  const { isModalOpen: isWalletRestoreModalOpen } = useWalletRestore({ openModalImmediately: true })
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
-  const navigation = useNavigation()
   const [showSeedPhraseViewWarningModal, setShowSeedPhraseViewWarningModal] = useState(!walletNeedsRestore)
 
-  useFocusEffect(
-    useCallback(() => {
-      if (walletRestoreType !== WalletRestoreType.None) {
-        navigation.goBack()
+  const prevIsWalletRestoreModalOpen = usePrevious(isWalletRestoreModalOpen)
 
-        // This is a very unlikely edge case if the user somehow get to this screen on a new device.
-        // In this case, we want to back an additional time to dismiss the NewDevice modal which is
-        // will try to reopen anytime this screen is focused.
-        if (walletRestoreType === WalletRestoreType.NewDevice) {
-          navigation.goBack()
-        }
-      }
-    }, [walletRestoreType, navigation]),
-  )
+  useEffect(() => {
+    if (prevIsWalletRestoreModalOpen && !isWalletRestoreModalOpen) {
+      onDismiss?.()
+    }
+  })
 
   const onShowSeedPhraseConfirmed = (): void => {
     setShowSeedPhrase(true)

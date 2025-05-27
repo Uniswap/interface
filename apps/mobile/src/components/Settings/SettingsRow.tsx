@@ -1,6 +1,7 @@
 import { NavigatorScreenParams, useNavigation } from '@react-navigation/native'
 import { memo, useCallback } from 'react'
 import { ValueOf } from 'react-native-gesture-handler/lib/typescript/typeUtils'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import {
   AppStackNavigationProp,
@@ -11,15 +12,16 @@ import {
 } from 'src/app/navigation/types'
 import { ConnectionsDappsListModalState } from 'src/components/Settings/ConnectionsDappModal/ConnectionsDappsListModalState'
 import { EditWalletSettingsModalState } from 'src/components/Settings/EditWalletModal/EditWalletSettingsModalState'
+import { openModal } from 'src/features/modals/modalSlice'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
 import { Flex, Skeleton, Switch, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { SmartWalletAdvancedSettingsModalState } from 'uniswap/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
-import { SmartWalletAdvancedSettingsModalState } from 'wallet/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 
 export const SETTINGS_ROW_HEIGHT = 60
 
@@ -34,6 +36,12 @@ export interface SettingsSectionItemComponent {
   isHidden?: boolean
 }
 
+type SettingsModal =
+  | typeof ModalName.LanguageSelector
+  | typeof ModalName.SettingsAppearance
+  | typeof ModalName.PortfolioBalanceModal
+  | typeof ModalName.PermissionsModal
+
 type SettingsNavigationModal =
   | typeof ModalName.BiometricsModal
   | typeof ModalName.FiatCurrencySelector
@@ -42,16 +50,11 @@ type SettingsNavigationModal =
   | typeof ModalName.ConnectionsDappListModal
   | typeof ModalName.SmartWalletAdvancedSettingsModal
   | typeof ModalName.PasskeyManagement
-  | typeof ModalName.Experiments
-  | typeof ModalName.SettingsAppearance
-  | typeof ModalName.PermissionsModal
-  | typeof ModalName.PortfolioBalanceModal
-  | typeof ModalName.LanguageSelector
 
 export interface SettingsSectionItem {
   screen?: keyof SettingsStackParamList | typeof MobileScreens.OnboardingStack
+  modal?: SettingsModal
   navigationModal?: SettingsNavigationModal
-  testID?: string
   screenProps?: ValueOf<SettingsStackParamList> | NavigatorScreenParams<OnboardingStackParamList>
   navigationProps?:
     | ConnectionsDappsListModalState
@@ -75,13 +78,13 @@ interface SettingsRowProps {
   page: SettingsSectionItem
   navigation: SettingsStackNavigationProp & OnboardingStackNavigationProp
   checkIfCanProceed?: SettingsSectionItem['checkIfCanProceed']
-  testID?: string
 }
 
 export const SettingsRow = memo(
   ({
     page: {
       screen,
+      modal,
       navigationModal,
       screenProps,
       navigationProps,
@@ -95,12 +98,12 @@ export const SettingsRow = memo(
       onToggle,
       isToggleEnabled,
       count,
-      testID,
     },
     navigation,
     checkIfCanProceed,
   }: SettingsRowProps): JSX.Element => {
     const colors = useSporeColors()
+    const dispatch = useDispatch()
 
     const handleRow = useCallback(async (): Promise<void> => {
       if (checkIfCanProceed && !checkIfCanProceed()) {
@@ -111,15 +114,28 @@ export const SettingsRow = memo(
         return
       } else if (screen) {
         navigation.navigate(screen, screenProps)
+      } else if (modal) {
+        dispatch(openModal({ name: modal }))
       } else if (navigationModal) {
         navigate(navigationModal, navigationProps)
       } else if (externalLink) {
         await openUri(externalLink)
       }
-    }, [checkIfCanProceed, onToggle, screen, navigation, screenProps, navigationProps, navigationModal, externalLink])
+    }, [
+      checkIfCanProceed,
+      onToggle,
+      screen,
+      navigation,
+      screenProps,
+      navigationProps,
+      modal,
+      navigationModal,
+      dispatch,
+      externalLink,
+    ])
 
     return (
-      <TouchableArea disabled={Boolean(action)} testID={testID} onPress={handleRow}>
+      <TouchableArea disabled={Boolean(action)} onPress={handleRow}>
         <Flex grow row alignItems="center" gap="$spacing12" minHeight={40}>
           <Flex grow row alignItems={subText ? 'flex-start' : 'center'} flexBasis={0} gap="$spacing12">
             <Flex centered height={32} width={32}>
@@ -141,6 +157,7 @@ export const SettingsRow = memo(
           )}
           <RowRightContent
             screen={screen}
+            modal={modal}
             navigationModal={navigationModal}
             externalLink={externalLink}
             disabled={disabled}
@@ -176,6 +193,7 @@ const LOADING_DIMENSIONS = {
 const RowRightContent = memo(
   ({
     screen,
+    modal,
     navigationModal,
     externalLink,
     disabled,
@@ -187,6 +205,7 @@ const RowRightContent = memo(
   }: Pick<
     SettingsSectionItem,
     | 'screen'
+    | 'modal'
     | 'navigationModal'
     | 'externalLink'
     | 'disabled'
@@ -217,7 +236,7 @@ const RowRightContent = memo(
       )
     }
 
-    if (screen || navigationModal) {
+    if (screen || modal || navigationModal) {
       return (
         <Flex centered row>
           {currentSetting &&

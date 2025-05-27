@@ -1,37 +1,21 @@
-import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useAccount } from 'hooks/useAccount'
-import ms from 'ms'
+import { useMutation } from '@tanstack/react-query'
 import { useAppDispatch } from 'state/hooks'
 import { handleGetCapabilities } from 'state/walletCapabilities/lib/handleGetCapabilities'
 import { setCapabilitiesByChain, setCapabilitiesNotSupported } from 'state/walletCapabilities/reducer'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { getLogger } from 'utilities/src/logger/logger'
-import { useEvent } from 'utilities/src/react/hooks'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 /**
  * [public] useWalletGetCapabilitiesMutation -- gets the wallet capabilities for the current account
  * @returns a mutation that gets the wallet capabilities for the current account
  */
 export function useWalletGetCapabilitiesMutation() {
-  const queryClient = useQueryClient()
   const dispatch = useAppDispatch()
   const logger = getLogger()
   const isWalletGetCapabilitiesDisabled = useIsWalletGetCapabilitiesDisabled()
-  const account = useAccount()
-
-  // use query cache to dedupe and cache the capabilities for 5 minutes
-  const fetchCapabilities = useEvent(async () =>
-    queryClient.ensureQueryData({
-      ...getCapabilitiesQueryOptions({
-        address: account.address,
-      }),
-      revalidateIfStale: true,
-    }),
-  )
   return useMutation({
-    mutationFn: isWalletGetCapabilitiesDisabled ? () => Promise.resolve(null) : fetchCapabilities,
+    mutationFn: isWalletGetCapabilitiesDisabled ? () => Promise.resolve(null) : handleGetCapabilities,
     onSuccess: (data) => {
       if (data) {
         dispatch(setCapabilitiesByChain(data))
@@ -54,14 +38,4 @@ export function useWalletGetCapabilitiesMutation() {
 
 function useIsWalletGetCapabilitiesDisabled(): boolean {
   return useFeatureFlag(FeatureFlags.ForceDisableWalletGetCapabilities)
-}
-
-const getCapabilitiesQueryOptions = (ctx: { address?: string }) => {
-  return queryOptions({
-    queryKey: [ReactQueryCacheKey.WalletGetCapabilities, ctx.address],
-    queryFn: () => handleGetCapabilities(),
-    staleTime: ms('1m'),
-    gcTime: ms('5m'),
-    enabled: !!ctx.address,
-  })
 }

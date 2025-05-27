@@ -9,8 +9,7 @@ import { useUpdateDelegatedState } from 'uniswap/src/features/smartWallet/delega
 import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
 import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { createHasMismatchUtil } from 'uniswap/src/features/smartWallet/mismatch/mismatch'
-import { useGetCanSignPermits } from 'uniswap/src/features/transactions/hooks/useGetCanSignPermits'
-import { useGetSwapDelegationAddress } from 'uniswap/src/features/transactions/hooks/useGetSwapDelegationAddress'
+import { useGetGeneratePermitAsTransaction } from 'uniswap/src/features/transactions/hooks/useGetGeneratePermitAsTransaction'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { getLogger, logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -90,8 +89,7 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
     }
     return true
   })
-  const getCanSignPermits = useGetCanSignPermits()
-  const getSwapDelegationAddress = useGetSwapDelegationAddress()
+  const getGeneratePermitAsTransaction = useGetGeneratePermitAsTransaction()
 
   return (
     <UniswapProvider
@@ -108,8 +106,7 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
       signer={signer}
       useProviderHook={useWalletProvider}
       getIsUniswapXSupported={getIsUniswapXSupported}
-      getCanSignPermits={getCanSignPermits}
-      getSwapDelegationAddress={getSwapDelegationAddress}
+      getGeneratePermitAsTransaction={getGeneratePermitAsTransaction}
       onSwapChainsChanged={showSwapNetworkNotification}
     >
       {children}

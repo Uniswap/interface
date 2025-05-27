@@ -5,14 +5,13 @@ import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
 import { datadogRum } from '@datadog/browser-rum'
 import { PortalProvider } from '@tamagui/portal'
-import { AssetActivityProvider } from 'appGraphql/data/apollo/AssetActivityProvider'
-import { TokenBalancesProvider } from 'appGraphql/data/apollo/TokenBalancesProvider'
-import { apolloClient } from 'appGraphql/data/apollo/client'
 import { QueryClientPersistProvider } from 'components/PersistQueryClient'
-import Web3Provider from 'components/Web3Provider'
+import Web3Provider, { Web3ProviderUpdater } from 'components/Web3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
+import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
+import { TokenBalancesProvider } from 'graphql/data/apollo/TokenBalancesProvider'
+import { apolloClient } from 'graphql/data/apollo/client'
 import { useAccount } from 'hooks/useAccount'
-import { useDeferredComponent } from 'hooks/useDeferredComponent'
 import { LanguageProvider } from 'i18n/LanguageProvider'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import App from 'pages/App'
@@ -24,7 +23,13 @@ import { configureReanimatedLogger } from 'react-native-reanimated'
 import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
 import store from 'state'
+import { ActivityStateUpdater } from 'state/activity/updater'
+import ApplicationUpdater from 'state/application/updater'
+import FiatOnRampTransactionsUpdater from 'state/fiatOnRampTransactions/updater'
+import ListsUpdater from 'state/lists/updater'
+import LogsUpdater from 'state/logs/updater'
 import { ThemeProvider, ThemedGlobalStyle } from 'theme'
+import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
@@ -49,44 +54,22 @@ if (__DEV__ && !isTestEnv()) {
   })
 }
 
-const loadListsUpdater = () => import('state/lists/updater')
-const loadSystemThemeUpdater = () =>
-  import('theme/components/ThemeToggle').then((m) => ({ default: m.SystemThemeUpdater }))
-const loadThemeColorMetaUpdater = () =>
-  import('theme/components/ThemeToggle').then((m) => ({ default: m.ThemeColorMetaUpdater }))
-const loadApplicationUpdater = () => import('state/application/updater')
-const loadActivityStateUpdater = () =>
-  import('state/activity/updater').then((m) => ({ default: m.ActivityStateUpdater }))
-const loadLogsUpdater = () => import('state/logs/updater')
-const loadFiatOnRampTransactionsUpdater = () => import('state/fiatOnRampTransactions/updater')
-const loadWeb3ProviderUpdater = () =>
-  import('components/Web3Provider').then((m) => ({ default: m.Web3ProviderUpdater }))
-
 function Updaters() {
   const location = useLocation()
-
-  const ListsUpdater = useDeferredComponent(loadListsUpdater)
-  const SystemThemeUpdater = useDeferredComponent(loadSystemThemeUpdater)
-  const ThemeColorMetaUpdater = useDeferredComponent(loadThemeColorMetaUpdater)
-  const ApplicationUpdater = useDeferredComponent(loadApplicationUpdater)
-  const ActivityStateUpdater = useDeferredComponent(loadActivityStateUpdater)
-  const LogsUpdater = useDeferredComponent(loadLogsUpdater)
-  const FiatOnRampTransactionsUpdater = useDeferredComponent(loadFiatOnRampTransactionsUpdater)
-  const Web3ProviderUpdater = useDeferredComponent(loadWeb3ProviderUpdater)
 
   return (
     <>
       <Helmet>
         <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
       </Helmet>
-      {ListsUpdater && <ListsUpdater />}
-      {SystemThemeUpdater && <SystemThemeUpdater />}
-      {ThemeColorMetaUpdater && <ThemeColorMetaUpdater />}
-      {ApplicationUpdater && <ApplicationUpdater />}
-      {ActivityStateUpdater && <ActivityStateUpdater />}
-      {LogsUpdater && <LogsUpdater />}
-      {FiatOnRampTransactionsUpdater && <FiatOnRampTransactionsUpdater />}
-      {Web3ProviderUpdater && <Web3ProviderUpdater />}
+      <ListsUpdater />
+      <SystemThemeUpdater />
+      <ThemeColorMetaUpdater />
+      <ApplicationUpdater />
+      <ActivityStateUpdater />
+      <LogsUpdater />
+      <FiatOnRampTransactionsUpdater />
+      <Web3ProviderUpdater />
     </>
   )
 }

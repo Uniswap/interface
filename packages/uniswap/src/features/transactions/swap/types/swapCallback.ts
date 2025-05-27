@@ -15,7 +15,7 @@ export interface SwapCallbackParams {
   presetPercentage?: PresetPercentage
   preselectAsset?: boolean
   onSuccess: () => void
-  onFailure: (error?: Error, onPressRetry?: () => void) => void
+  onFailure: (error?: Error) => void
   /** Called by async submission code to communicate UI should display a pending state. */
   onPending: () => void
   txId?: string

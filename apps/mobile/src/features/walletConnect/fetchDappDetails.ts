@@ -11,8 +11,8 @@ export function fetchDappDetails(
     if (sessions && sessions[topic]) {
       const wcSession = sessions[topic]
       return {
-        dappIcon: wcSession?.dappRequestInfo?.icon || null,
-        dappName: wcSession?.dappRequestInfo?.name || '',
+        dappIcon: wcSession?.dapp?.icon || null,
+        dappName: wcSession?.dapp?.name || '',
       }
     }
   } catch (error) {

@@ -2,7 +2,7 @@ import { ColorTokens } from 'tamagui'
 import { GeneratedIcon, IconProps } from 'ui/src/components/factories/createIcon'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
-import { TouchableArea } from 'ui/src/components/touchable/TouchableArea/TouchableArea'
+import { TouchableArea } from 'ui/src/components/touchable/TouchableArea'
 
 type InlineCardProps = {
   Icon: GeneratedIcon | ((props: IconProps) => JSX.Element)

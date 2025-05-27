@@ -1,10 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { test as base } from '@playwright/test'
-import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
-import { ZERO_ADDRESS } from 'constants/misc'
 import { anvilClient, setErc20BalanceWithMultipleSlots } from 'playwright/anvil/utils'
 import { DAI, USDT } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Address, erc20Abi, publicActions, walletActions } from 'viem'
 
 class WalletError extends Error {
@@ -13,7 +10,7 @@ class WalletError extends Error {
 
 export const TEST_WALLET_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
 
-const allowedErc20BalanceAddresses = [USDT.address, DAI.address, WETH_ADDRESS(UniverseChainId.Mainnet)]
+const allowedErc20BalanceAddresses = [USDT.address, DAI.address]
 
 const anvil = anvilClient
   .extend(publicActions)
@@ -22,11 +19,11 @@ const anvil = anvilClient
     async getWalletAddress() {
       return TEST_WALLET_ADDRESS
     },
-    async setErc20Balance(address: Address, balance: bigint, walletAddress: Address = TEST_WALLET_ADDRESS) {
+    async setErc20Balance(address: Address, balance: bigint) {
       if (!allowedErc20BalanceAddresses.includes(address)) {
         throw new Error(`Token ${address} is not allowed. Allowed tokens: ${allowedErc20BalanceAddresses.join(', ')}`)
       }
-      await setErc20BalanceWithMultipleSlots(client, address, walletAddress, balance)
+      await setErc20BalanceWithMultipleSlots(client, address, TEST_WALLET_ADDRESS, balance)
     },
     async getErc20Balance(address: Address, owner?: Address) {
       return await client.readContract({
@@ -51,39 +48,10 @@ const anvil = anvilClient
     },
   }))
 
-export const test = base.extend<{ anvil: typeof anvil; delegateToZeroAddress?: typeof anvil }>({
+export const test = base.extend<{ anvil: typeof anvil }>({
   // eslint-disable-next-line no-empty-pattern
   async anvil({}, use) {
     await use(anvil)
-    await anvil.reset().catch(() => {
-      // eslint-disable-next-line no-console
-      console.error('👉 Anvil is not running. Start it by running `yarn web anvil:mainnet`')
-    })
+    await anvil.reset()
   },
-  // Delegate the test wallet to the zero address to avoid any smart wallet conflicts
-  delegateToZeroAddress: [
-    async ({ anvil }, use) => {
-      try {
-        const originalBalance = await anvil.getBalance({ address: TEST_WALLET_ADDRESS })
-        const nonce = await anvil.getTransactionCount({
-          address: TEST_WALLET_ADDRESS,
-        })
-        const auth = await anvil.account.experimental_signAuthorization({
-          contractAddress: ZERO_ADDRESS,
-          chainId: anvil.chain.id,
-          nonce: nonce + 1,
-        })
-        await anvil.sendTransaction({
-          authorizationList: [auth],
-          to: TEST_WALLET_ADDRESS,
-        })
-        // Reset the wallet to the original balance because tests might rely on that
-        await anvil.setBalance({ address: TEST_WALLET_ADDRESS, value: originalBalance })
-        await use(anvil)
-      } catch (e) {
-        await use(undefined)
-      }
-    },
-    { auto: true },
-  ],
 })

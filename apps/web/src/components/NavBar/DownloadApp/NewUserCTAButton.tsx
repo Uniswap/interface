@@ -19,7 +19,7 @@ export function NewUserCTAButton() {
         testID={TestID.NewUserCTAButton}
         fill={false}
         size="small"
-        emphasis={isEmbeddedWalletEnabled ? 'secondary' : 'tertiary'}
+        emphasis={isEmbeddedWalletEnabled ? 'primary' : 'tertiary'}
         variant={isEmbeddedWalletEnabled ? 'branded' : 'default'}
         onPress={openModal}
       >

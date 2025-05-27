@@ -1,3 +1,4 @@
+import { ScrollBarStyles } from 'components/Common/styles'
 import { CurrencyRow } from 'components/SearchModal/CurrencyList'
 import { HeaderContent } from 'pages/Swap/Buy/CountryListModal'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
@@ -5,7 +6,7 @@ import { CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
-import { Flex, ModalCloseIcon, useMedia, useScrollbarStyles } from 'ui/src'
+import { Flex, ModalCloseIcon, useMedia } from 'ui/src'
 import { Text } from 'ui/src/components/text/Text'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
@@ -30,7 +31,6 @@ export function FiatOnRampCurrencyModal({
 }: FiatOnRampCurrencyModalProps) {
   const { t } = useTranslation()
   const media = useMedia()
-  const scrollbarStyles = useScrollbarStyles()
 
   return (
     <Modal
@@ -60,7 +60,7 @@ export function FiatOnRampCurrencyModal({
                   itemCount={currencies.length}
                   itemSize={ROW_ITEM_SIZE}
                   itemKey={(index: number, data: typeof currencies) => data[index]?.meldCurrencyCode ?? index}
-                  style={scrollbarStyles}
+                  {...ScrollBarStyles}
                 >
                   {({ style, data, index }: { data: FiatOnRampCurrency[]; index: number; style: CSSProperties }) => {
                     const currencyInfo = data[index].currencyInfo

@@ -22,6 +22,3 @@ export const selectHasViewedDappRequestBridgingBanner = (state: WalletState, dap
 
 export const selectHasViewedConnectionMigration = (state: WalletState): boolean =>
   state.behaviorHistory.hasViewedConnectionMigration ?? false
-
-export const selectHasCopiedPrivateKeys = (state: WalletState): boolean =>
-  state.behaviorHistory.hasCopiedPrivateKeys ?? false

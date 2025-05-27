@@ -13,20 +13,9 @@ const getIsInvalidSwap = ({ wrapType, trade }: { wrapType: WrapType; trade: Trad
   return !isWrapAction(wrapType) && !trade.trade
 }
 
-const getIsInvalidWrap = ({
-  wrapType,
-  exactAmountToken,
-}: {
-  wrapType: WrapType
-  exactAmountToken: string
-}): boolean => {
-  return isWrapAction(wrapType) && (!exactAmountToken || parseFloat(exactAmountToken) === 0)
-}
-
 const useIsReviewButtonDisabled = (): boolean => {
   const {
-    derivedSwapInfo: { wrapType, trade, exactAmountToken },
-
+    derivedSwapInfo: { wrapType, trade },
     isSubmitting,
   } = useSwapFormContext()
   const activeAccount = useAccountMeta()
@@ -38,11 +27,8 @@ const useIsReviewButtonDisabled = (): boolean => {
 
   const isInvalidSwap = getIsInvalidSwap({ wrapType, trade })
 
-  const isInvalidWrap = getIsInvalidWrap({ wrapType, exactAmountToken })
-
   return (
     isInvalidSwap ||
-    isInvalidWrap ||
     !!blockingWarning ||
     isBlockedAccount ||
     isBlockedAccountLoading ||

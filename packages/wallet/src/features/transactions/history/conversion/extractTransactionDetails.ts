@@ -1,7 +1,7 @@
 import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { SpamCode } from 'uniswap/src/data/types'
-import { DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/chainInfo'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import {
@@ -99,7 +99,7 @@ export default function extractTransactionDetails(
           quantity: transaction.details.networkFee.quantity,
           tokenSymbol: transaction.details.networkFee.tokenSymbol,
           // graphQL returns a null token address for native tokens like ETH
-          tokenAddress: transaction.details.networkFee.tokenAddress ?? DEFAULT_NATIVE_ADDRESS_LEGACY,
+          tokenAddress: transaction.details.networkFee.tokenAddress ?? DEFAULT_NATIVE_ADDRESS,
           chainId,
         }
       : undefined

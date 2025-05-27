@@ -5,14 +5,13 @@ import PlayStoreBadge from 'assets/images/play-store-badge.png'
 import WalletIllustration from 'assets/images/walletIllustration.png'
 import { AndroidLogo } from 'components/Icons/AndroidLogo'
 import { AppleLogo } from 'components/Icons/AppleLogo'
-import { Wiggle } from 'components/animations/Wiggle'
+import { GoogleChromeLogo } from 'components/Icons/GoogleChromeLogo'
 import Column from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
-import deprecatedStyled from 'lib/styled-components'
+import styled from 'lib/styled-components'
+import { Wiggle } from 'pages/Landing/components/animations'
 import { PropsWithChildren, ReactNode, Suspense, lazy, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
-import { updateDownloadGraduatedWalletCardsDismissed } from 'state/application/reducer'
 import { ExternalLink } from 'theme/components/Links'
 import {
   AnimatedPager,
@@ -23,14 +22,14 @@ import {
   ModalCloseIcon,
   Text,
   TouchableArea,
-  styled,
   useSporeColors,
 } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
-import { GoogleChromeLogo } from 'ui/src/components/logos/GoogleChromeLogo'
 import { iconSizes, zIndexes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -40,33 +39,33 @@ const LazyWalletOneLinkQR = lazy(async () => {
   return { default: module.WalletOneLinkQR }
 })
 
-const BadgeLink = deprecatedStyled(ExternalLink)`
+const BadgeLink = styled(ExternalLink)`
   stroke: none;
   :hover {
     opacity: 1;
   }
 `
 
-const WiggleIcon = styled(Wiggle, {
-  flex: 0,
-  height: 'auto',
-  cursor: 'pointer',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-})
-const IllustrationContainer = deprecatedStyled.div`
+const WiggleIcon = styled(Wiggle)`
+  flex: 0;
+  height: auto;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+const IllustrationContainer = styled.div`
   display: flex;
   width: 100%;
   border-radius: 16px;
   border: ${({ theme }) => `1px solid ${theme.neutral3}`};
   overflow: hidden;
 `
-const Illustration = deprecatedStyled.img`
+const Illustration = styled.img`
   width: 100%;
   transition: ${({ theme }) => `transform ${theme.transition.timing.inOut} ${theme.transition.duration.medium}`};
 `
-const Card = deprecatedStyled(Column)`
+const Card = styled(Column)`
   cursor: pointer;
   &:hover {
     ${Illustration} {
@@ -160,13 +159,6 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const account = useAccount()
-  const dispatch = useDispatch()
-
-  const onPressCard = useEvent(() => {
-    if (account?.address) {
-      dispatch(updateDownloadGraduatedWalletCardsDismissed({ walletAddress: account.address }))
-    }
-  })
 
   return (
     <Trace logImpression modal={ModalName.DownloadApp} properties={{ connector_id: account?.connector?.id }}>
@@ -177,13 +169,7 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
         maxWidth="620px"
       >
         <Flex row gap="$spacing12" width="100%" alignItems="flex-start">
-          <Card
-            flex="1 1 auto"
-            onClick={() => {
-              setPage(Page.DownloadMobile)
-              onPressCard?.()
-            }}
-          >
+          <Card flex="1 1 auto" onClick={() => setPage(Page.DownloadMobile)}>
             <IllustrationContainer>
               <Illustration src={WalletIllustration} alt="Wallet example page" />
             </IllustrationContainer>
@@ -193,7 +179,7 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
                 element={InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON}
                 properties={{ connector_id: account?.connector?.id }}
               >
-                <Flex row gap="$spacing8" alignItems="center">
+                <Flex row gap="$spacing8">
                   <WiggleIcon>
                     <AppleLogo fill={colors.neutral1.val} />
                   </WiggleIcon>
@@ -205,19 +191,14 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
             </CardInfo>
           </Card>
           <Trace logPress element={InterfaceElementName.EXTENSION_DOWNLOAD_BUTTON}>
-            <Card
-              onClick={() => {
-                window.open(uniswapUrls.chromeExtension)
-                onPressCard?.()
-              }}
-            >
+            <Card onClick={() => window.open(uniswapUrls.chromeExtension)}>
               <IllustrationContainer>
                 <Illustration src={ExtensionIllustration} alt="Extension example page" />
               </IllustrationContainer>
               <CardInfo title={t('common.chromeExtension')} details="Google Chrome">
                 <Flex row gap="$spacing8">
                   <WiggleIcon>
-                    <GoogleChromeLogo size={iconSizes.icon16} />
+                    <GoogleChromeLogo width="16px" height="16px" />
                   </WiggleIcon>
                 </Flex>
               </CardInfo>
@@ -229,15 +210,17 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
   )
 }
 
-export function DownloadAppsModal({ goBack, onClose }: { goBack?: () => void; onClose: () => void }) {
+export function DownloadAppsModal({ goBack, onClose }: { goBack: () => void; onClose: () => void }) {
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+
   const [page, setPage] = useState<Page>(Page.DownloadApps)
-  const showBackButton = goBack || page !== Page.DownloadApps
+  const showBackButton = isEmbeddedWalletEnabled || page !== Page.DownloadApps
 
   const onPressBack = useEvent(() => {
     if (page === Page.DownloadMobile) {
       setPage(Page.DownloadApps)
     } else {
-      goBack?.()
+      goBack()
     }
   })
 

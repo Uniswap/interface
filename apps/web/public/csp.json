@@ -32,9 +32,6 @@
     "self",
     "*"
   ],
-  "formAction": [
-    "'none'"
-  ],
   "connectSrc": [
     "'self'",
     "blob:",

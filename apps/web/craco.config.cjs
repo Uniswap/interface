@@ -105,9 +105,6 @@ module.exports = {
       }),
     ],
     configure: (webpackConfig) => {
-      // Copy Rive WASM file to public directory
-      import('./scripts/copy-rive-wasm.js').catch(console.error)
-
       webpackConfig.resolve.extensions.unshift('.web.tsx')
       webpackConfig.resolve.extensions.unshift('.web.ts')
       webpackConfig.resolve.extensions.unshift('.web.js')
@@ -178,7 +175,6 @@ module.exports = {
           crypto: require.resolve('expo-crypto'),
           'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
           'react-native$': 'react-native-web',
-          'expo-blur': require.resolve('./.storybook/__mocks__/expo-blur.jsx'),
         },
         plugins: webpackConfig.resolve.plugins,
         // Webpack 5 does not resolve node modules, so we do so for those necessary:

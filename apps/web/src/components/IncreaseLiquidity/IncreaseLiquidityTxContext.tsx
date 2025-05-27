@@ -53,7 +53,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
   const [hasIncreaseErrorResponse, setHasIncreaseErrorResponse] = useState(false)
 
-  const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(positionInfo?.chainId)
+  const generatePermitAsTransaction = useUniswapContext().getGeneratePermitAsTransaction?.(positionInfo?.chainId)
 
   const { currencyAmounts, error } = derivedIncreaseLiquidityInfo
   const { exactField } = increaseLiquidityState
@@ -237,12 +237,9 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       },
     })
 
-    if (increaseCalldataQueryParams) {
-      sendAnalyticsEvent(InterfaceEventNameLocal.IncreaseLiquidityFailed, {
-        message,
-        ...increaseCalldataQueryParams,
-      })
-    }
+    sendAnalyticsEvent(InterfaceEventNameLocal.IncreaseLiquidityFailed, {
+      message,
+    })
   }
 
   const fallbackDependentAmount = useIncreasePositionDependentAmountFallback(

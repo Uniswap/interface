@@ -24,11 +24,7 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import {
-  CreateLPPositionRequest,
-  IncreaseLPPositionRequest,
-  TransactionFailureReason,
-} from 'uniswap/src/data/tradingApi/__generated__'
+import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
@@ -81,7 +77,6 @@ export type GasEstimateAccuracyProperties = {
   name?: string
   out_of_gas: boolean
   timed_out: boolean
-  app_backgrounded_while_pending?: boolean
   display_limit_inflation_factor?: number
 }
 
@@ -545,10 +540,10 @@ export type UniverseEventProperties = {
   [InterfaceEventNameLocal.UniswapXOrderSubmitted]: Record<string, unknown> // TODO specific type
   [InterfaceEventNameLocal.CreatePositionFailed]: {
     message: string
-  } & CreateLPPositionRequest
+  }
   [InterfaceEventNameLocal.IncreaseLiquidityFailed]: {
     message: string
-  } & IncreaseLPPositionRequest
+  }
   [InterfaceEventNameLocal.DecreaseLiquidityFailed]: {
     message: string
   }

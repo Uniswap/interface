@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { getTokenDetailsURL } from 'appGraphql/data/util'
+import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useNavigate } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components/styles'

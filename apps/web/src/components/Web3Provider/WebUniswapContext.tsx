@@ -6,7 +6,6 @@ import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useModalState } from 'hooks/useModalState'
 import { useShowSwapNetworkNotification } from 'hooks/useShowSwapNetworkNotification'
 import { useUpdateAtom } from 'jotai/utils'
-import { useOneClickSwapSetting } from 'pages/Swap/settings/OneClickSwap'
 import React, { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -25,7 +24,7 @@ import { DelegatedState } from 'uniswap/src/features/smartWallet/delegation/type
 import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
 import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useGetCanSignPermits } from 'uniswap/src/features/transactions/hooks/useGetCanSignPermits'
+import { useGetGeneratePermitAsTransaction } from 'uniswap/src/features/transactions/hooks/useGetGeneratePermitAsTransaction'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
@@ -128,7 +127,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
     }
     return true
   })
-  const getCanSignPermits = useGetCanSignPermits()
+  const getGeneratePermitAsTransaction = useGetGeneratePermitAsTransaction()
 
   // no-op until we have an external profile screen on web
   const navigateToExternalProfile = useCallback((_: { address: Address }) => noop(), [])
@@ -149,14 +148,11 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
     openModal()
   })
 
-  const isBatchedSwapsFlagEnabled = useFeatureFlag(FeatureFlags.BatchedSwaps)
+  const isBatchedSwapsEnabled = useFeatureFlag(FeatureFlags.BatchedSwaps)
   const isAtomicBatchingSupportedByChain = useIsAtomicBatchingSupportedByChainIdCallback()
 
-  const { enabled: isOneClickSwapSettingEnabled } = useOneClickSwapSetting()
   const getCanBatchTransactions = useEvent((chainId?: UniverseChainId | undefined) => {
-    return Boolean(
-      isBatchedSwapsFlagEnabled && isOneClickSwapSettingEnabled && chainId && isAtomicBatchingSupportedByChain(chainId),
-    )
+    return Boolean(isBatchedSwapsEnabled && chainId && isAtomicBatchingSupportedByChain(chainId))
   })
 
   const setActiveChainId = useSetActiveChainId()
@@ -186,7 +182,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       navigateToNftCollection={navigateToNftCollection}
       handleShareToken={handleShareToken}
       onConnectWallet={accountDrawer.open}
-      getCanSignPermits={getCanSignPermits}
+      getGeneratePermitAsTransaction={getGeneratePermitAsTransaction}
       getIsUniswapXSupported={getIsUniswapXSupported}
       handleOnPressUniswapXUnsupported={handleOpenUniswapXUnsupportedModal}
       getCanBatchTransactions={getCanBatchTransactions}
