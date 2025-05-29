@@ -56,12 +56,9 @@ export function createCreatePositionAsyncStep(
             },
           })
 
-          if (createPositionRequestArgs) {
-            sendAnalyticsEvent(InterfaceEventNameLocal.CreatePositionFailed, {
-              message,
-              ...createPositionRequestArgs,
-            })
-          }
+          sendAnalyticsEvent(InterfaceEventNameLocal.CreatePositionFailed, {
+            message,
+          })
         }
         throw new Error('create failed to get transaction request', {
           cause: message,
@@ -98,12 +95,9 @@ export function createIncreasePositionAsyncStep(
               function: 'createIncreasePositionAsyncStep',
             },
           })
-          if (increasePositionRequestArgs) {
-            sendAnalyticsEvent(InterfaceEventNameLocal.IncreaseLiquidityFailed, {
-              message,
-              ...increasePositionRequestArgs,
-            })
-          }
+          sendAnalyticsEvent(InterfaceEventNameLocal.IncreaseLiquidityFailed, {
+            message,
+          })
         }
         throw new Error('increase failed to get transaction request', {
           cause: message,

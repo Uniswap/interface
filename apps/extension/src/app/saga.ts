@@ -2,9 +2,9 @@ import { initDappStore } from 'src/app/features/dapp/saga'
 import { dappRequestApprovalWatcher } from 'src/app/features/dappRequests/dappRequestApprovalWatcherSaga'
 import { dappRequestWatcher } from 'src/app/features/dappRequests/saga'
 import { call, spawn } from 'typed-redux-saga'
+import { appLanguageWatcherSaga } from 'uniswap/src/features/language/saga'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { authActions, authReducer, authSaga, authSagaName } from 'wallet/src/features/auth/saga'
-import { deviceLocaleWatcher } from 'wallet/src/features/i18n/deviceLocaleWatcherSaga'
 import { initProviders } from 'wallet/src/features/providers/saga'
 import { swapActions, swapReducer, swapSaga, swapSagaName } from 'wallet/src/features/transactions/swap/swapSaga'
 import {
@@ -13,8 +13,7 @@ import {
   tokenWrapSaga,
   tokenWrapSagaName,
 } from 'wallet/src/features/transactions/swap/wrapSaga'
-import { watchTransactionEvents } from 'wallet/src/features/transactions/watcher/transactionFinalizationSaga'
-import { transactionWatcher } from 'wallet/src/features/transactions/watcher/transactionWatcherSaga'
+import { transactionWatcher, watchTransactionEvents } from 'wallet/src/features/transactions/transactionWatcherSaga'
 import {
   editAccountActions,
   editAccountReducer,
@@ -64,12 +63,12 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
 } as const
 
 const sagasInitializedOnStartup = [
+  appLanguageWatcherSaga,
   initDappStore,
   dappRequestApprovalWatcher,
   dappRequestWatcher,
   initProviders,
   watchTransactionEvents,
-  deviceLocaleWatcher,
 ] as const
 
 export const monitoredSagaReducers = getMonitoredSagaReducers(monitoredSagas)

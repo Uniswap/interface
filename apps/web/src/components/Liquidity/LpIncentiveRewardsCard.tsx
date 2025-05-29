@@ -34,7 +34,6 @@ import { useGetPoolsRewards } from 'uniswap/src/data/rest/getPoolsRewards'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
-import { logger } from 'utilities/src/logger/logger'
 import { isMobileWeb } from 'utilities/src/platform'
 
 interface LpIncentiveRewardsCardProps {
@@ -87,34 +86,19 @@ function LpIncentiveRewardsCard({
     return timeDiff < FIVE_MINUTES_MS && rewardsData.totalUnclaimedAmountUni === lastClaimed.amount
   }, [initialHasCollectedRewards, lastClaimed, rewardsData?.totalUnclaimedAmountUni])
 
-  const { lpIncentiveRewards, userHasRewards, isParseRewardsError } = useMemo(() => {
+  const { lpIncentiveRewards, userHasRewards } = useMemo(() => {
     if (effectivelyClaimed) {
       return {
         lpIncentiveRewards: '0',
         userHasRewards: false,
-        isParseRewardsError: false,
       }
     }
 
-    try {
-      const threshold = BigInt(10) ** BigInt(token.decimals - 3)
-      const rewards = rewardsData?.totalUnclaimedAmountUni ?? '0'
-
-      return {
-        lpIncentiveRewards: formatTokenAmount(rewards, token.decimals),
-        userHasRewards: BigInt(rewards) >= threshold, // Returns true if rewards are at least 0.001 UNI
-        isParseRewardsError: false,
-      }
-    } catch (e) {
-      logger.error(e, {
-        tags: { file: 'LpIncentiveRewardsCard.tsx', function: 'lpIncentiveRewards' },
-      })
-
-      return {
-        lpIncentiveRewards: '-',
-        userHasRewards: false,
-        isParseRewardsError: true,
-      }
+    const threshold = BigInt(10) ** BigInt(token.decimals - 3)
+    const rewards = rewardsData?.totalUnclaimedAmountUni ?? '0'
+    return {
+      lpIncentiveRewards: formatTokenAmount(rewards, token.decimals),
+      userHasRewards: BigInt(rewards) >= threshold, // Returns true if rewards are at least 0.001 UNI
     }
   }, [effectivelyClaimed, rewardsData?.totalUnclaimedAmountUni, token.decimals])
 
@@ -138,10 +122,6 @@ function LpIncentiveRewardsCard({
     }
   }, [lastClaimed, setLastClaimed])
 
-  const rewardsError = useMemo((): boolean => {
-    return !!error || isParseRewardsError
-  }, [error, isParseRewardsError])
-
   const renderRewardsAmount = () => {
     if (isLoading) {
       return (
@@ -157,7 +137,7 @@ function LpIncentiveRewardsCard({
       )
     }
 
-    if (rewardsError) {
+    if (error) {
       return (
         <Text variant={isSmallScreen ? 'subheading1' : 'heading2'} color="$neutral1">
           -
@@ -173,7 +153,7 @@ function LpIncentiveRewardsCard({
   }
 
   return (
-    <Flex group cursor="default">
+    <TouchableArea group cursor="default">
       <Flex
         height={isSmallScreen ? 142 : 192}
         p={isSmallScreen ? '$spacing16' : '$spacing24'}
@@ -205,7 +185,7 @@ function LpIncentiveRewardsCard({
             <Flex row justifyContent="space-between">
               <Flex row gap="$spacing8" alignItems="center">
                 {renderRewardsAmount()}
-                {!rewardsError && (
+                {!error && (
                   <Image
                     src={tokenLogo}
                     width={isSmallScreen ? 24 : 28}
@@ -227,7 +207,7 @@ function LpIncentiveRewardsCard({
             </Flex>
             <Flex row gap="$spacing6">
               <Text variant={isSmallScreen ? 'body4' : 'body3'} color="$neutral2">
-                {rewardsError ? t('pool.incentives.yourRewards.error') : t('pool.incentives.rewardsEarned')}
+                {error ? t('pool.incentives.yourRewards.error') : t('pool.incentives.rewardsEarned')}
               </Text>
               {!isMobileWeb && (
                 <InfoTooltip
@@ -240,11 +220,11 @@ function LpIncentiveRewardsCard({
                   text={
                     <Flex gap="$spacing4">
                       <Text variant="body4" color="$neutral1">
-                        {rewardsError
+                        {error
                           ? t('pool.incentives.yourRewards.error.description')
                           : t('pool.incentives.administeredRewards')}
                       </Text>
-                      {!rewardsError && (
+                      {!error && (
                         <Trace logPress eventOnTrigger={UniswapEventName.LpIncentiveLearnMoreCtaClicked}>
                           <LearnMoreLink textVariant="buttonLabel4" url={uniswapUrls.helpArticleUrls.lpIncentiveInfo} />
                         </Trace>
@@ -258,20 +238,14 @@ function LpIncentiveRewardsCard({
         </Flex>
         <Flex gap="$spacing2">
           <Trace logPress eventOnTrigger={UniswapEventName.LpIncentiveLearnMoreCtaClicked}>
-            <TouchableArea
-              group="item"
-              row
-              gap="$spacing6"
-              alignItems="center"
-              hoverStyle={{ opacity: 0.8 }}
-              onPress={() => navigate('/explore/pools')}
-              alignSelf="flex-start"
-            >
-              <Text variant={isSmallScreen ? 'body4' : 'body3'} color="$neutral1">
-                {t('pool.incentives.uni.findMore')}
-              </Text>
-              <Flex animation="simple" enterStyle={{ x: 0 }} x={0} $group-item-hover={{ x: 4 }}>
-                <ArrowRight color="$neutral1" size={isSmallScreen ? iconSizes.icon12 : iconSizes.icon16} />
+            <TouchableArea onPress={() => navigate('/explore/pools')}>
+              <Flex group="item" row gap="$spacing6" alignItems="center" hoverStyle={{ opacity: 0.8 }}>
+                <Text variant={isSmallScreen ? 'body4' : 'body3'} color="$neutral1">
+                  {t('pool.incentives.uni.findMore')}
+                </Text>
+                <Flex animation="simple" enterStyle={{ x: 0 }} x={0} $group-item-hover={{ x: 4 }}>
+                  <ArrowRight color="$neutral1" size={isSmallScreen ? iconSizes.icon12 : iconSizes.icon16} />
+                </Flex>
               </Flex>
             </TouchableArea>
           </Trace>
@@ -280,7 +254,7 @@ function LpIncentiveRewardsCard({
           </Text>
         </Flex>
       </Flex>
-    </Flex>
+    </TouchableArea>
   )
 }
 

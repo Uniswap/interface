@@ -1,23 +1,10 @@
-IPFS hash of the deployment:
-- CIDv0: `QmZhPHVskUQR1q2jr5D2AyMkfvkoBtbN95Z3ofUcwyH3Lh`
-- CIDv1: `bafybeifiybibt7gtwvbhz4awqe7lzdd5m62cm7mcuriu5eva3zceuov4xy`
+We are back with some new updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Search Improvements: Enjoy an improved search algorithm, with more relevant information. Recent history also now includes wallet search results. 
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Other changes: 
 
-IPFS gateways:
-- https://bafybeifiybibt7gtwvbhz4awqe7lzdd5m62cm7mcuriu5eva3zceuov4xy.ipfs.dweb.link/
-- [ipfs://QmZhPHVskUQR1q2jr5D2AyMkfvkoBtbN95Z3ofUcwyH3Lh/](ipfs://QmZhPHVskUQR1q2jr5D2AyMkfvkoBtbN95Z3ofUcwyH3Lh/)
-
-### 5.86.1 (2025-05-23)
-
-
-### Bug Fixes
-
-* **web:** hotfix prod cb 5792 patch (#20096) 11ba54c
-
-
+- Added haptics when repositioning favorited tokens and wallets
+- Improved token selector behavior, with more relevant network filtering, as well as an improved experience when flipping input and output.
+- Improvements to NFT spam detection
+- Various bug fixes and performance improvements

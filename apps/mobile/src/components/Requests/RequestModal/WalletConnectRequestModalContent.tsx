@@ -82,9 +82,6 @@ export function WalletConnectRequestModalContent({
 
   const hasGasFee = getDoesMethodCostGas(request)
 
-  // If link mode is supported, we can sign messages through universal links on device
-  const suppressOfflineWarning = request.isLinkModeSupported
-
   return (
     <>
       <Flex px="$spacing24">
@@ -121,7 +118,7 @@ export function WalletConnectRequestModalContent({
           </Flex>
         )}
 
-        {!netInfo.isInternetReachable && !suppressOfflineWarning ? (
+        {!netInfo.isInternetReachable ? (
           <BaseCard.InlineErrorState
             backgroundColor="$statusWarning2"
             icon={<AlertTriangleFilled color="$statusWarning" size="$icon.16" />}

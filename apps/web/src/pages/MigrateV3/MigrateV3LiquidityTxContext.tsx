@@ -59,7 +59,7 @@ export function MigrateV3PositionTxContextProvider({
     derivedPriceRangeInfo,
     priceRangeState: { fullRange },
   } = usePriceRangeContext()
-  const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(positionInfo?.chainId)
+  const generatePermitAsTransaction = useUniswapContext().getGeneratePermitAsTransaction?.(positionInfo?.chainId)
 
   const increaseLiquidityApprovalParams: CheckApprovalLPRequest | undefined = useMemo(() => {
     if (!positionInfo || !account.address) {

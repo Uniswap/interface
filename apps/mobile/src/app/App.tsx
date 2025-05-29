@@ -8,7 +8,7 @@ import { default as React, StrictMode, useCallback, useEffect, useLayoutEffect, 
 import { I18nextProvider } from 'react-i18next'
 import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
-import DeviceInfo from 'react-native-device-info'
+import DeviceInfo, { getUniqueIdSync } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MMKV } from 'react-native-mmkv'
 import { OneSignal } from 'react-native-onesignal'
@@ -22,7 +22,7 @@ import { AppModals } from 'src/app/modals/AppModals'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
 import { AppStackNavigator } from 'src/app/navigation/navigation'
-import { store } from 'src/app/store'
+import { persistor, store } from 'src/app/store'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { initAppsFlyer } from 'src/features/analytics/appsflyer'
@@ -66,6 +66,7 @@ import { StatsigUser, Storage, getStatsigClient } from 'uniswap/src/features/gat
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice'
+import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -78,10 +79,8 @@ import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utiliti
 import { DDRumAction, DDRumTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
-import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-import { getReduxPersistor } from 'wallet/src/state/persistor'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
@@ -122,14 +121,9 @@ function App(): JSX.Element | null {
       attachUnhandledRejectionHandler()
       setAttributesToDatadog({ buildNumber: DeviceInfo.getBuildNumber() }).catch(() => undefined)
     }
-  }, [])
 
-  // We want to ensure deviceID is used as the identifier to link with analytics
-  const fetchAndSetDeviceId = useCallback(async (): Promise<string> => {
-    return setDatadogUserWithUniqueId(undefined)
+    setDatadogUserWithUniqueId(undefined)
   }, [])
-
-  const deviceId = useAsyncData(fetchAndSetDeviceId).data
 
   const [datadogSessionSampleRate, setDatadogSessionSampleRate] = React.useState<number | undefined>(undefined)
 
@@ -137,12 +131,12 @@ function App(): JSX.Element | null {
 
   const statsigUser: StatsigUser = useMemo(
     () => ({
-      ...(deviceId ? { userID: deviceId } : {}),
+      userID: getUniqueIdSync(),
       custom: {
         app: StatsigCustomAppValue.Mobile,
       },
     }),
-    [deviceId],
+    [],
   )
 
   const onStatsigInit = (): void => {
@@ -259,7 +253,7 @@ function AppOuter(): JSX.Element | null {
 
   return (
     <ApolloProvider client={client}>
-      <PersistGate loading={null} persistor={getReduxPersistor()}>
+      <PersistGate loading={null} persistor={persistor}>
         <ErrorBoundary>
           <BlankUrlProvider>
             <LocalizationContextProvider>
@@ -315,6 +309,7 @@ function AppInner(): JSX.Element {
 
   useEffect(() => {
     dispatch(clearNotificationQueue()) // clear all in-app toasts on app start
+    dispatch(syncAppWithDeviceLanguage())
   }, [dispatch])
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
-import { PollingInterval } from 'appGraphql/data/util'
+import { PollingInterval } from 'graphql/data/util'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useMemo, useRef } from 'react'
 import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'

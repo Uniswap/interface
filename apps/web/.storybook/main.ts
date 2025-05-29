@@ -76,18 +76,11 @@ const config: StorybookConfig = {
 
     config.resolve ??= {}
 
-    // Add fallback for Node.js 'os' module
-    config.resolve.fallback = {
-      ...(config.resolve.fallback || {}),
-      os: false,
-    }
-
     config.resolve = {
       ...config.resolve,
       alias: {
         ...config?.resolve?.alias,
         'react-native$': 'react-native-web',
-        'expo-blur': require.resolve('./__mocks__/expo-blur.js'),
       },
     }
 

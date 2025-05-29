@@ -231,8 +231,8 @@ function WCConfirmHeaderLogo({ transactionDetails, typeInfo }: SpecificHeaderLog
   return (
     <DappLogoWithWCBadge
       chainId={transactionDetails.chainId}
-      dappImageUrl={typeInfo.dappRequestInfo.icon}
-      dappName={typeInfo.dappRequestInfo.name}
+      dappImageUrl={typeInfo.dapp.icon}
+      dappName={typeInfo.dapp.name}
       size={TXN_DETAILS_ICON_SIZE}
     />
   )

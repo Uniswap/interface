@@ -1,4 +1,4 @@
-import { PricePoint } from 'appGraphql/data/util'
+import { PricePoint } from 'graphql/data/util'
 import { CandlestickData } from 'lightweight-charts'
 
 /**

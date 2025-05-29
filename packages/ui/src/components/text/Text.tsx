@@ -205,6 +205,6 @@ export const Text = TextFrame.styleable<TextProps>(
       )
     }
 
-    return <TextComponent ref={ref} allowFontScaling={enableFontScaling} color="$neutral1" {...rest} />
+    return <TextComponent allowFontScaling={enableFontScaling} color="$neutral1" {...rest} />
   },
 )

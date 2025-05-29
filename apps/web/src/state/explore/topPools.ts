@@ -1,14 +1,14 @@
 import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { exploreSearchStringAtom } from 'components/Tokens/state'
 import {
   PoolSortFields,
   PoolTableSortState,
   V2_BIPS,
   calculate1DVolOverTvl,
   calculateApr,
-} from 'appGraphql/data/pools/useTopPools'
-import { OrderDirection } from 'appGraphql/data/util'
-import { exploreSearchStringAtom } from 'components/Tokens/state'
+} from 'graphql/data/pools/useTopPools'
+import { OrderDirection } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { useContext, useMemo } from 'react'
 import { ExploreContext, giveExploreStatDefaultValue } from 'state/explore'

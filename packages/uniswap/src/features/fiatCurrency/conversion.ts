@@ -8,12 +8,10 @@ import { FiatNumberType } from 'utilities/src/format/types'
 
 type SupportedServerCurrency = Extract<
   Currency,
-  | Currency.Ars
   | Currency.Aud
   | Currency.Brl
   | Currency.Cad
   | Currency.Cny
-  | Currency.Cop
   | Currency.Eur
   | Currency.Gbp
   | Currency.Hkd
@@ -21,7 +19,6 @@ type SupportedServerCurrency = Extract<
   | Currency.Inr
   | Currency.Jpy
   | Currency.Krw
-  | Currency.Mxn
   | Currency.Ngn
   | Currency.Pkr
   | Currency.Rub
@@ -33,12 +30,10 @@ type SupportedServerCurrency = Extract<
   | Currency.Vnd
 >
 const mapServerCurrencyToFiatCurrency: Record<Currency, FiatCurrency | undefined> = {
-  [Currency.Ars]: FiatCurrency.ArgentinePeso,
   [Currency.Aud]: FiatCurrency.AustralianDollar,
   [Currency.Brl]: FiatCurrency.BrazilianReal,
   [Currency.Cad]: FiatCurrency.CanadianDollar,
   [Currency.Cny]: FiatCurrency.ChineseYuan,
-  [Currency.Cop]: FiatCurrency.ColombianPeso,
   [Currency.Eur]: FiatCurrency.Euro,
   [Currency.Gbp]: FiatCurrency.BritishPound,
   [Currency.Hkd]: FiatCurrency.HongKongDollar,
@@ -46,7 +41,6 @@ const mapServerCurrencyToFiatCurrency: Record<Currency, FiatCurrency | undefined
   [Currency.Inr]: FiatCurrency.IndianRupee,
   [Currency.Jpy]: FiatCurrency.JapaneseYen,
   [Currency.Krw]: FiatCurrency.SouthKoreanWon,
-  [Currency.Mxn]: FiatCurrency.MexicanPeso,
   [Currency.Ngn]: FiatCurrency.NigerianNaira,
   [Currency.Pkr]: FiatCurrency.PakistaniRupee,
   [Currency.Rub]: FiatCurrency.RussianRuble,
@@ -60,19 +54,16 @@ const mapServerCurrencyToFiatCurrency: Record<Currency, FiatCurrency | undefined
   [Currency.Matic]: undefined,
 }
 export const mapFiatCurrencyToServerCurrency: Record<FiatCurrency, SupportedServerCurrency> = {
-  [FiatCurrency.ArgentinePeso]: Currency.Ars,
   [FiatCurrency.AustralianDollar]: Currency.Aud,
   [FiatCurrency.BrazilianReal]: Currency.Brl,
   [FiatCurrency.CanadianDollar]: Currency.Cad,
   [FiatCurrency.ChineseYuan]: Currency.Cny,
-  [FiatCurrency.ColombianPeso]: Currency.Cop,
   [FiatCurrency.Euro]: Currency.Eur,
   [FiatCurrency.BritishPound]: Currency.Gbp,
   [FiatCurrency.HongKongDollar]: Currency.Hkd,
   [FiatCurrency.IndonesianRupiah]: Currency.Idr,
   [FiatCurrency.IndianRupee]: Currency.Inr,
   [FiatCurrency.JapaneseYen]: Currency.Jpy,
-  [FiatCurrency.MexicanPeso]: Currency.Mxn,
   [FiatCurrency.SouthKoreanWon]: Currency.Krw,
   [FiatCurrency.NigerianNaira]: Currency.Ngn,
   [FiatCurrency.PakistaniRupee]: Currency.Pkr,

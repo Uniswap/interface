@@ -4,6 +4,9 @@ import { OnboardingScreenProps } from 'src/app/features/onboarding/OnboardingScr
 export enum CreateOnboardingSteps {
   ClaimUnitag = 'claimUnitag',
   Password = 'password',
+  ViewMnemonic = 'mnemonic',
+  TestMnemonic = 'testMnemonic',
+  Naming = 'naming',
   Complete = 'complete',
 }
 

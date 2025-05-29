@@ -3,7 +3,6 @@ declare type AddressTo<T> = Record<Address, T>
 
 declare type Nullable<T> = T | null
 declare type Maybe<T> = Nullable<T> | undefined
-declare type PossiblyUndefined<T> = T | undefined
 
 declare type Primitive = number | string | boolean | bigint | symbol | null | undefined
 
@@ -25,5 +24,5 @@ declare type RequireNonNullable<T, K extends keyof T> = T & { [P in K]-?: NonNul
 declare type NumberRange<
   Start extends number,
   End extends number,
-  Acc extends number[] = [],
+  Acc extends number[] = []
 > = Acc['length'] extends End ? Acc[number] : NumberRange<Start, End, [...Acc, Acc['length'] & number]>

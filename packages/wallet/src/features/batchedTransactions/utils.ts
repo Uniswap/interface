@@ -24,13 +24,13 @@ export function transformCallsToTransactionRequests(
 ): TransactionRequest[] {
   return calls
     .map((call): TransactionRequest | undefined => {
-      if (call.to === undefined || call.data === undefined || !chainId) {
+      if (call.to === undefined || call.data === undefined || call.value === undefined || !chainId) {
         return undefined
       }
       return {
         to: call.to,
         data: call.data,
-        value: call.value ?? '0x0',
+        value: call.value,
         from: accountAddress,
         chainId: chainId.valueOf(),
       }

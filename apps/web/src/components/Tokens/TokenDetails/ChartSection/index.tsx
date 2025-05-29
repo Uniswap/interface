@@ -1,4 +1,3 @@
-import { TimePeriod, toHistoryDuration } from 'appGraphql/data/util'
 import { refitChartContentAtom } from 'components/Charts/ChartModel'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { PriceChart, PriceChartData } from 'components/Charts/PriceChart'
@@ -20,11 +19,11 @@ import {
   TimePeriodDisplay,
   getTimePeriodFromDisplay,
 } from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
+import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { ThemeProvider } from 'theme'
 import { Flex, SegmentedControl, SegmentedControlOption, styled, useMedia } from 'ui/src'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
@@ -110,7 +109,6 @@ export function useCreateTDPChartState(tokenDBAddress: string | undefined, curre
 
 export default function ChartSection() {
   const { activeQuery, timePeriod, priceChartType } = useTDPContext().chartState
-  const { tokenColor } = useTDPContext()
 
   // eslint-disable-next-line consistent-return
   const getSection = () => {
@@ -140,12 +138,10 @@ export default function ChartSection() {
   }
 
   return (
-    <ThemeProvider accent1={tokenColor}>
-      <Flex data-cy={`tdp-${activeQuery.chartType}-chart-container`}>
-        {getSection()}
-        <ChartControls />
-      </Flex>
-    </ThemeProvider>
+    <Flex data-cy={`tdp-${activeQuery.chartType}-chart-container`}>
+      {getSection()}
+      <ChartControls />
+    </Flex>
   )
 }
 

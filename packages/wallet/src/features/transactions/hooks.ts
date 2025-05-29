@@ -283,7 +283,7 @@ export function useMergeLocalAndRemoteTransactions(
 
       // If the tx was done via WC, then add the dapp info from WC to the remote data
       if (localTx.typeInfo.type === TransactionType.WCConfirm) {
-        const externalDappInfo = { ...localTx.typeInfo.dappRequestInfo }
+        const externalDappInfo = { ...localTx.typeInfo.dapp }
         const mergedTx = { ...remoteTx, typeInfo: { ...remoteTx.typeInfo, externalDappInfo } }
         deDupedTxs.push(mergedTx)
         continue

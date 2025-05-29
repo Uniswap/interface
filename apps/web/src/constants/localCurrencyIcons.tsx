@@ -1,3 +1,5 @@
+/* eslint-disable import/no-unused-modules */
+
 import { lazy } from 'react'
 
 export const USD_ICON = lazy(() => import('constants/icons/usdIcon'))
@@ -20,6 +22,3 @@ export const UAH_ICON = lazy(() => import('constants/icons/uahIcon'))
 export const THB_ICON = lazy(() => import('constants/icons/thbIcon'))
 export const CNY_ICON = lazy(() => import('constants/icons/cnyIcon'))
 export const KRW_ICON = lazy(() => import('constants/icons/krwIcon'))
-export const COP_ICON = lazy(() => import('constants/icons/copIcon'))
-export const ARS_ICON = lazy(() => import('constants/icons/arsIcon'))
-export const MXN_ICON = lazy(() => import('constants/icons/mxnIcon'))

@@ -1,7 +1,7 @@
 import { QueryResult } from '@apollo/client'
 import { Currency } from '@uniswap/sdk-core'
-import { PortfolioBalance } from 'appGraphql/data/portfolios'
 import { TDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
+import { PortfolioBalance } from 'graphql/data/portfolios'
 import { PropsWithChildren, createContext, useContext } from 'react'
 import { Chain, Exact, TokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'

@@ -163,18 +163,16 @@ export function GatingOverrides(): JSX.Element {
         </Accordion.Item>
       </Flex>
 
-      <Flex row>
-        <GatingButton mt="$spacing12" onPress={onClearAllGatingOverrides}>
-          Clear all gating overrides
-        </GatingButton>
-      </Flex>
+      <GatingButton mt="$spacing12" onPress={onClearAllGatingOverrides}>
+        Clear all gating overrides
+      </GatingButton>
     </>
   )
 }
 
-export function AccordionHeader({ title, testId }: { title: React.ReactNode; testId?: string }): JSX.Element {
+export function AccordionHeader({ title }: { title: React.ReactNode }): JSX.Element {
   return (
-    <Accordion.Header mt="$spacing12" testID={testId}>
+    <Accordion.Header mt="$spacing12">
       <Accordion.Trigger width="100%">
         {({ open }: { open: boolean }): JSX.Element => (
           <>

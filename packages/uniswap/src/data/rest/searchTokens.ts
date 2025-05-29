@@ -13,6 +13,7 @@ import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
 import { parseProtectionInfo, parseSafetyLevel } from 'uniswap/src/data/rest/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo, getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 /**
@@ -41,8 +42,8 @@ export function searchTokenToCurrencyInfo(token: SearchToken): CurrencyInfo | nu
 
   const currency = buildCurrency({
     chainId,
-    // TODO: backend currently returns 'ETH' for some native tokens, remove this check once BE fixes
-    address: address === 'ETH' ? getNativeAddress(chainId) : address,
+    // TODO: backend currently returns 'ETH'/'BNB'/etc for some native tokens, remove this check once BE fixes
+    address: getValidAddress(address) ?? getNativeAddress(chainId),
     decimals,
     symbol,
     name,

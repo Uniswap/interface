@@ -42,7 +42,6 @@ export function usePerformanceLogger(eventName: string, dependencyList: Dependen
             eventName,
             triggers,
           }
-
           await DdRum.addAction(RumActionType.CUSTOM, DDRumAction.ManualTiming, eventObject)
           isCurrentlyMeasuring.current = false
         })

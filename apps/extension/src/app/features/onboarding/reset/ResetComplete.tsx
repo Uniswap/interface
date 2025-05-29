@@ -1,16 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { useFinishExtensionOnboarding } from 'src/app/features/onboarding/useFinishExtensionOnboarding'
 import { terminateStoreSynchronization } from 'src/store/storeSynchronization'
 import { Flex, Text } from 'ui/src'
 import { Check, GraduationCap } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useFinishOnboarding } from 'wallet/src/features/onboarding/OnboardingContext'
 
 export function ResetComplete(): JSX.Element {
   const { t } = useTranslation()
 
   // Activates onboarding accounts on component mount
-  useFinishExtensionOnboarding({ callback: terminateStoreSynchronization })
+  useFinishOnboarding(terminateStoreSynchronization)
 
   return (
     <>

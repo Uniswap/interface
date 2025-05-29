@@ -328,7 +328,7 @@ describe('hooks', () => {
     })
 
     describe('Connected wallet with balance', () => {
-      jest.mock('appGraphql/data/apollo/TokenBalancesProvider', () => ({
+      jest.mock('graphql/data/apollo/TokenBalancesProvider', () => ({
         useTokenBalancesQuery: () => ({
           data: {
             portfolios: [

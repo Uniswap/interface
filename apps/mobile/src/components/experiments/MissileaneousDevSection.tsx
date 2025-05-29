@@ -3,7 +3,6 @@ import { Alert } from 'react-native'
 import { Accordion, Flex, Text } from 'ui/src'
 import { GatingButton } from 'uniswap/src/components/gating/GatingButton'
 import { AccordionHeader } from 'uniswap/src/components/gating/GatingOverrides'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 export function MissileaneousDevSection(): JSX.Element {
@@ -12,11 +11,11 @@ export function MissileaneousDevSection(): JSX.Element {
       <Text variant="heading3">Misc.</Text>
       <Flex flexDirection="column">
         <Accordion.Item value="other-configs">
-          <AccordionHeader title="🤯 Seed Phrase & Private Keys" testId={TestID.DevSeedPhrasePrivateKeysAccordion} />
-          <Accordion.Content testID={TestID.DevDeleteSeedPhraseButton} gap="$spacing12">
+          <AccordionHeader title="🤯 Seed Phrase & Private Keys" />
+          <Accordion.Content gap="$spacing12">
             <GatingButton onPress={onDeleteSeedPhrase}>Delete Seed Phrase (Irreversible)</GatingButton>
           </Accordion.Content>
-          <Accordion.Content testID={TestID.DevDeletePrivateKeysButton} gap="$spacing12">
+          <Accordion.Content gap="$spacing12">
             <GatingButton onPress={onDeletePrivateKeys}>Delete Private Keys (Irreversible)</GatingButton>
           </Accordion.Content>
         </Accordion.Item>

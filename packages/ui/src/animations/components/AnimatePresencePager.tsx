@@ -100,7 +100,7 @@ export function AnimatedPager({ children, currentIndex }: { currentIndex: number
   const prevIndex = usePrevious(currentIndex)
   const [direction, setDirection] = useState<TransitionDirection>('forward')
   useEffect(() => {
-    if (prevIndex === undefined) {
+    if (!prevIndex) {
       return
     }
     if (currentIndex > prevIndex) {

@@ -27,7 +27,7 @@
     "promise": "8.3.0",
     "react": "18.3.1",
     "react-native": "0.76.9",
-    "react-native-device-info": "10.0.2",
+    "react-native-device-info": "10.11.0",
     "react-test-renderer": "18.3.1",
     "redux": "4.2.1",
     "subscriptions-transport-ws": "0.11.0",

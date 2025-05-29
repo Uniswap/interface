@@ -130,7 +130,7 @@ function RecentlyConnectedModalUI({
         <Flex row alignSelf="stretch" $md={{ ml: 'auto', alignSelf: 'center' }}>
           <Button variant="default" py="$spacing8" emphasis="primary" onPress={onSignIn}>
             <Text variant="buttonLabel3" color="$surface1" lineHeight="20px">
-              {t('nav.logIn.button')}
+              {t('nav.signIn.button')}
             </Text>
           </Button>
         </Flex>

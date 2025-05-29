@@ -14,7 +14,6 @@ import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
-import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
@@ -78,13 +77,7 @@ export function TraceUserProperties(): null {
   // Set user properties for datadog
 
   useEffect(() => {
-    setDatadogUserWithUniqueId(activeAccount?.address).catch(() =>
-      logger.warn(
-        'TraceUserProperties',
-        'TraceUserProperties',
-        'Failed to set datadog current active address attribute',
-      ),
-    )
+    setDatadogUserWithUniqueId(activeAccount?.address)
   }, [activeAccount?.address])
 
   // Set user properties for amplitude

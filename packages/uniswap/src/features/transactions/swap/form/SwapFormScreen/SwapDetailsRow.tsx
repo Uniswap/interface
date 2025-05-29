@@ -163,7 +163,7 @@ const ReceivingAmount = ({
           {(hasFeeOnTransfer || priceDifferenceWarning?.showPriceDifferenceWarning) && (
             <AlertTriangleFilled color={priceDifferenceWarningColor ?? 'neutral2'} size="$icon.16" />
           )}
-          <Text variant="body3" color={priceDifferenceWarningColor ?? userReceivesOutputAmountColor}>
+          <Text variant="subheading2" color={priceDifferenceWarningColor ?? userReceivesOutputAmountColor}>
             {userReceivesOutputAmount}
           </Text>
         </AnimatedFlex>

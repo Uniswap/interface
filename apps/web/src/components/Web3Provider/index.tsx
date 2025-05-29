@@ -50,7 +50,7 @@ export function Web3ProviderUpdater() {
   const currentPage = getCurrentPageFromLocation(pathname)
   const analyticsContext = useTrace()
   const networkProvider = isSupportedChain && account.chainId ? RPC_PROVIDERS[account.chainId] : undefined
-  const { trackConversions } = useConversionTracking(account.address)
+  const { trackConversions } = useConversionTracking()
 
   const updateRecentConnectorId = useUpdateAtom(recentConnectorIdAtom)
   useEffect(() => {
@@ -88,13 +88,13 @@ export function Web3ProviderUpdater() {
       sendAnalyticsEvent(InterfaceEventName.CHAIN_CHANGED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: account.address,
-        wallet_type: walletTypeToAmplitudeWalletType(connector?.type),
+        wallet_type: connector?.name ?? 'Network',
         chain_id: accountWagmiChainId,
         previousConnectedChainId,
         page: currentPage,
       })
     }
-  }, [account.address, accountWagmiChainId, connector?.type, currentPage, previousConnectedChainId])
+  }, [account.address, accountWagmiChainId, connector?.name, currentPage, previousConnectedChainId])
 
   // Send analytics events when the active account changes.
   const previousAccount = usePrevious(account.address)

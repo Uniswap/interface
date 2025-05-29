@@ -71,51 +71,6 @@ describe('processWrapResponse', () => {
   })
 })
 
-describe('processWrapResponse (smart contract unwrap fallback)', () => {
-  it('should fallback to hardcoded gas limit when gas params are missing for a smart contract unwrap', () => {
-    jest.isolateModules(() => {
-      jest.doMock('utilities/src/platform', () => ({
-        __esModule: true,
-        ...jest.requireActual('utilities/src/platform'),
-        isInterface: true,
-      }))
-
-      const {
-        processWrapResponse: mockedProcessWrapResponse,
-      } = require('uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils')
-
-      const {
-        WRAP_FALLBACK_GAS_LIMIT_IN_GWEI,
-      } = require('uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants')
-
-      const gasFeeResult: GasFeeResult = {
-        value: '1000',
-        displayValue: '0.001',
-        isLoading: false,
-        error: null,
-        params: undefined,
-      }
-
-      const wrapTxRequest = {
-        to: '0x123',
-        value: '1000000',
-      } as providers.TransactionRequest
-
-      const expectedGasLimit = WRAP_FALLBACK_GAS_LIMIT_IN_GWEI * 10e9
-
-      const fallbackGasParams = { gasLimit: expectedGasLimit }
-
-      const result = mockedProcessWrapResponse({
-        gasFeeResult,
-        wrapTxRequest,
-        fallbackGasParams,
-      })
-
-      expect(result.txRequests?.[0]).toEqual(expect.objectContaining({ gasLimit: expectedGasLimit }))
-    })
-  })
-})
-
 describe('createPrepareSwapRequestParams', () => {
   it('should prepare swap request params for classic quote', () => {
     // Given

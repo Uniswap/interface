@@ -33,7 +33,7 @@ import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
-import { DappRequestType, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
+import { UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
@@ -89,11 +89,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
   const getHasMismatch = useHasAccountMismatchCallback()
   const hasMismatch = chainId ? getHasMismatch(chainId) : false
-  // When link mode is active we can sign messages through universal links on device
-  const suppressOfflineWarning = request.isLinkModeSupported
 
   const checkConfirmEnabled = (): boolean => {
-    if (!netInfo.isInternetReachable && !suppressOfflineWarning) {
+    if (!netInfo.isInternetReachable) {
       return false
     }
 
@@ -125,7 +123,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const rejectOnCloseRef = useRef(true)
 
   const onReject = async (): Promise<void> => {
-    if (request.dappRequestInfo.requestType === DappRequestType.WalletConnectSessionRequest) {
+    if (request.dapp.source === 'walletconnect') {
       await wcWeb3Wallet.respondSessionRequest({
         topic: request.sessionId,
         response: {
@@ -141,8 +139,8 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
       request_type: isTransactionRequest(request) ? WCEventType.TransactionRequest : WCEventType.SignRequest,
       eth_method: request.type,
-      dapp_url: request.dappRequestInfo.url,
-      dapp_name: request.dappRequestInfo.name,
+      dapp_url: request.dapp.url,
+      dapp_name: request.dapp.name,
       wc_version: '2',
       chain_id: chainId,
       outcome: WCRequestOutcome.Reject,
@@ -180,7 +178,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
           method: request.type === EthMethod.WalletSendCalls ? EthMethod.WalletSendCalls : EthMethod.EthSendTransaction,
           transaction: txnWithFormattedGasEstimates,
           account: signerAccount,
-          dappRequestInfo: request.dappRequestInfo,
+          dapp: request.dapp,
           chainId,
           request,
         }),
@@ -194,7 +192,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
           method: request.type,
           message: request.message || request.rawMessage,
           account: signerAccount,
-          dappRequestInfo: request.dappRequestInfo,
+          dapp: request.dapp,
           chainId,
         }),
       )
@@ -205,8 +203,8 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
       request_type: isTransactionRequest(request) ? WCEventType.TransactionRequest : WCEventType.SignRequest,
       eth_method: request.type,
-      dapp_url: request.dappRequestInfo.url,
-      dapp_name: request.dappRequestInfo.name,
+      dapp_url: request.dapp.url,
+      dapp_name: request.dapp.name,
       wc_version: '2',
       chain_id: chainId,
       outcome: WCRequestOutcome.Confirm,
@@ -261,7 +259,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   }
 
   // KidSuper Uniswap Cafe check-in screen
-  if (request.type === EthMethod.PersonalSign && request.dappRequestInfo.name === 'Uniswap Cafe') {
+  if (request.type === EthMethod.PersonalSign && request.dapp.name === 'Uniswap Cafe') {
     return (
       <KidSuperCheckinModal request={request} onClose={handleClose} onConfirm={onConfirmPress} onReject={onReject} />
     )

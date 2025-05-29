@@ -1038,7 +1038,7 @@ exports[`getLoadingTitle should return correct title 1`] = `
       style="transition: 100ms;"
       target="_blank"
     >
-      USD Coin (USDC)
+      USD//C (USDC)
     </a>
      on Ethereum
     <div

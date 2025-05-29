@@ -39,11 +39,10 @@ export type ApprovalTxInfo = {
 
 function useApprovalWillBeBatchedWithSwap(chainId: UniverseChainId, routing: Routing | undefined): boolean {
   const canBatchTransactions = useUniswapContextSelector((ctx) => ctx.getCanBatchTransactions?.(chainId))
-  const swapDelegationAddress = useUniswapContextSelector((ctx) => ctx.getSwapDelegationAddress?.(chainId))
 
   const isBatchableFlow = Boolean(routing && !isUniswapX({ routing }))
 
-  return Boolean((canBatchTransactions || swapDelegationAddress) && isBatchableFlow)
+  return Boolean(canBatchTransactions) && isBatchableFlow
 }
 
 export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalTxInfo {

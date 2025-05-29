@@ -32,7 +32,7 @@ type TokenBalanceListProps = {
 export const TokenBalanceList = memo(function _TokenBalanceList({ owner }: TokenBalanceListProps): JSX.Element {
   return (
     <Flex grow>
-      <TokenBalanceListContextProvider isExternalProfile={false} owner={owner}>
+      <TokenBalanceListContextProvider isExternalProfile={false} owner={owner} onPressToken={() => {}}>
         <TokenBalanceListInner />
       </TokenBalanceListContextProvider>
     </Flex>
@@ -202,14 +202,14 @@ function TokenContextMenu({
 }: PropsWithChildren<{
   portfolioBalance: PortfolioBalance
 }>): JSX.Element {
-  const { menuActions } = useTokenContextMenu({
+  const contextMenu = useTokenContextMenu({
     currencyId: portfolioBalance.currencyInfo.currencyId,
     isBlocked: portfolioBalance.currencyInfo.safetyInfo?.tokenList === TokenList.Blocked,
     tokenSymbolForNotification: portfolioBalance?.currencyInfo?.currency?.symbol,
     portfolioBalance,
   })
 
-  const menuOptions = menuActions.map((action) => ({
+  const menuOptions = contextMenu.menuActions.map((action) => ({
     label: action.title,
     onPress: action.onPress,
     Icon: action.Icon,

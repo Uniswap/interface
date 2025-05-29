@@ -1,5 +1,4 @@
-import { WalletRestoreType } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
-import { checkWalletNeedsRestore } from 'src/features/wallet/useWalletRestore'
+import { checkWalletNeedsRestore, WalletRestoreType } from 'src/features/wallet/useWalletRestore'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 jest.mock('wallet/src/features/wallet/Keyring/Keyring', () => ({

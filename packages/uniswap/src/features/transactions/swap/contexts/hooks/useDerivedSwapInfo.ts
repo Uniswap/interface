@@ -96,13 +96,7 @@ export function useDerivedSwapInfo({
 
   const sendPortionEnabled = useFeatureFlag(FeatureFlags.PortionFields)
 
-  const generatePermitAsTransaction = useUniswapContextSelector((ctx) => {
-    // If the account cannot sign typedData, permits should be completed as a transaction step,
-    // unless the swap is going through the 7702 smart wallet flow, in which case the
-    // swap_7702 endpoint consumes typedData in the process encoding the swap.
-    return ctx.getCanSignPermits?.(chainId) && !ctx.getSwapDelegationAddress?.(chainId)
-  })
-
+  const getGeneratePermitAsTransaction = useUniswapContextSelector((ctx) => ctx.getGeneratePermitAsTransaction)
   const tradeParams = {
     account,
     amountSpecified: isWrap ? null : amountSpecified,
@@ -113,7 +107,7 @@ export function useDerivedSwapInfo({
     selectedProtocols,
     sendPortionEnabled,
     isDebouncing,
-    generatePermitAsTransaction,
+    getGeneratePermitAsTransaction,
     isV4HookPoolsEnabled,
   }
 

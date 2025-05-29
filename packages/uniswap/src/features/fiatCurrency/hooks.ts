@@ -43,11 +43,9 @@ export function useFiatCurrencyComponents(currency: FiatCurrency): FiatCurrencyC
 export function getFiatCurrencyName(t: AppTFunction, currency: FiatCurrency): { name: string; shortName: string } {
   const currencyToCurrencyName: Record<FiatCurrency, string> = {
     [FiatCurrency.AustralianDollar]: t('currency.aud'),
-    [FiatCurrency.ArgentinePeso]: t('currency.ars'),
     [FiatCurrency.BrazilianReal]: t('currency.brl'),
     [FiatCurrency.CanadianDollar]: t('currency.cad'),
     [FiatCurrency.ChineseYuan]: t('currency.cny'),
-    [FiatCurrency.ColombianPeso]: t('currency.cop'),
     [FiatCurrency.Euro]: t('currency.eur'),
     [FiatCurrency.BritishPound]: t('currency.gbp'),
     [FiatCurrency.HongKongDollar]: t('currency.hkd'),
@@ -55,7 +53,6 @@ export function getFiatCurrencyName(t: AppTFunction, currency: FiatCurrency): { 
     [FiatCurrency.IndianRupee]: t('currency.inr'),
     [FiatCurrency.JapaneseYen]: t('currency.jpy'),
     [FiatCurrency.SouthKoreanWon]: t('currency.krw'),
-    [FiatCurrency.MexicanPeso]: t('currency.mxn'),
     [FiatCurrency.NigerianNaira]: t('currency.ngn'),
     [FiatCurrency.PakistaniRupee]: t('currency.pkr'),
     [FiatCurrency.RussianRuble]: t('currency.rub'),
@@ -68,11 +65,9 @@ export function getFiatCurrencyName(t: AppTFunction, currency: FiatCurrency): { 
   }
   const currencyToGlobalSymbol: Record<FiatCurrency, string> = {
     [FiatCurrency.AustralianDollar]: '$',
-    [FiatCurrency.ArgentinePeso]: '$',
     [FiatCurrency.BrazilianReal]: 'R$',
     [FiatCurrency.CanadianDollar]: '$',
     [FiatCurrency.ChineseYuan]: '¥',
-    [FiatCurrency.ColombianPeso]: '$',
     [FiatCurrency.Euro]: '€',
     [FiatCurrency.BritishPound]: '£',
     [FiatCurrency.HongKongDollar]: '$',
@@ -80,7 +75,6 @@ export function getFiatCurrencyName(t: AppTFunction, currency: FiatCurrency): { 
     [FiatCurrency.IndianRupee]: '₹',
     [FiatCurrency.JapaneseYen]: '¥',
     [FiatCurrency.SouthKoreanWon]: '₩',
-    [FiatCurrency.MexicanPeso]: '$',
     [FiatCurrency.NigerianNaira]: '₦',
     [FiatCurrency.PakistaniRupee]: 'Rs',
     [FiatCurrency.RussianRuble]: '₽',

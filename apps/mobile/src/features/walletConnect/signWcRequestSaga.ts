@@ -1,5 +1,3 @@
-/* eslint-disable complexity */
-import { buildAuthObject, getSdkError } from '@walletconnect/utils'
 import { providers } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
@@ -15,7 +13,7 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { DappRequestInfo, DappRequestType, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { DappInfo, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { addBatchedTransaction } from 'wallet/src/features/batchedTransactions/slice'
@@ -34,7 +32,7 @@ type SignMessageParams = {
   message: string
   account: Account
   method: EthSignMethod
-  dappRequestInfo: DappRequestInfo
+  dapp: DappInfo
   chainId: UniverseChainId
 }
 
@@ -44,7 +42,7 @@ type SignTransactionParams = {
   transaction: providers.TransactionRequest
   account: Account
   method: EthMethod.EthSendTransaction | EthMethod.WalletSendCalls
-  dappRequestInfo: DappRequestInfo
+  dapp: DappInfo
   chainId: UniverseChainId
   request: TransactionRequest | UwuLinkErc20Request | WalletSendCallsEncodedRequest
 }
@@ -59,10 +57,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
       result = yield* call(signMessage, params.message, account, signerManager)
 
       // TODO: add `isCheckIn` type to uwulink request info so that this can be generalized
-      if (
-        params.dappRequestInfo.requestType === DappRequestType.UwULink &&
-        params.dappRequestInfo.name === 'Uniswap Cafe'
-      ) {
+      if (params.dapp.source === 'uwulink' && params.dapp.name === 'Uniswap Cafe') {
         yield* put(
           pushNotification({
             type: AppNotificationType.Success,
@@ -99,7 +94,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         },
         typeInfo: {
           type: TransactionType.WCConfirm,
-          dappRequestInfo: params.dappRequestInfo,
+          dapp: params.dapp,
         },
         transactionOriginType: TransactionOriginType.External,
       }
@@ -122,7 +117,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         },
         typeInfo: {
           type: TransactionType.WCConfirm,
-          dappRequestInfo: params.dappRequestInfo,
+          dapp: params.dapp,
         },
         transactionOriginType: TransactionOriginType.External,
       }
@@ -149,27 +144,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
       )
     }
 
-    if (params.dappRequestInfo.requestType === DappRequestType.WalletConnectAuthenticationRequest) {
-      const iss = `eip155:${chainId}:${account.address}`
-
-      // Check if signature is a string, if not throw an error
-      if (typeof result !== 'string') {
-        throw new Error('Expected signature to be a string in WalletConnectAuthenticationRequest')
-      }
-
-      const auth = buildAuthObject(
-        params.dappRequestInfo.authPayload,
-        {
-          t: 'eip191',
-          s: result,
-        },
-        iss,
-      )
-      yield* call(wcWeb3Wallet.approveSessionAuthenticate, {
-        id: Number(sessionId),
-        auths: [auth],
-      })
-    } else if (params.dappRequestInfo.requestType === DappRequestType.WalletConnectSessionRequest) {
+    if (params.dapp.source === 'walletconnect') {
       yield* call(wcWeb3Wallet.respondSessionRequest, {
         topic: sessionId,
         response: {
@@ -178,8 +153,8 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
           result,
         },
       })
-    } else if (params.dappRequestInfo.requestType === DappRequestType.UwULink && params.dappRequestInfo.webhook) {
-      fetch(params.dappRequestInfo.webhook, {
+    } else if (params.dapp.source === 'uwulink' && params.dapp.webhook) {
+      fetch(params.dapp.webhook, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -194,7 +169,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
       )
     }
   } catch (error) {
-    if (params.dappRequestInfo.requestType === DappRequestType.WalletConnectSessionRequest) {
+    if (params.dapp.source === 'walletconnect') {
       yield* call(wcWeb3Wallet.respondSessionRequest, {
         topic: sessionId,
         response: {
@@ -203,19 +178,14 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
           error: { code: 5000, message: `Signing error: ${error}` },
         },
       })
-    } else if (params.dappRequestInfo.requestType === DappRequestType.WalletConnectAuthenticationRequest) {
-      yield* call(wcWeb3Wallet.rejectSessionAuthenticate, {
-        id: Number(sessionId),
-        reason: getSdkError('USER_REJECTED'),
-      })
     }
 
     yield* put(
       pushNotification({
         type: AppNotificationType.WalletConnect,
         event: WalletConnectEvent.TransactionFailed,
-        dappName: params.dappRequestInfo.name,
-        imageUrl: params.dappRequestInfo.icon ?? null,
+        dappName: params.dapp.name,
+        imageUrl: params.dapp.icon ?? null,
         chainId,
         address: account.address,
       }),

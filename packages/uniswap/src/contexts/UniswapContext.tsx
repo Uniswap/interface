@@ -35,12 +35,11 @@ interface UniswapContextValue {
   // Used for web to open the token selector from a banner not in the swap flow
   isSwapTokenSelectorOpen: boolean
   setIsSwapTokenSelectorOpen: (open: boolean) => void
-  getCanSignPermits?: (chainId: UniverseChainId | undefined) => boolean
+  getGeneratePermitAsTransaction?: (chainId?: UniverseChainId) => boolean
   // some wallets don't support UniswapX, so we need to check if it's supported (mismatch account)
-  getIsUniswapXSupported?: (chainId: UniverseChainId | undefined) => boolean
+  getIsUniswapXSupported?: (chainId?: UniverseChainId) => boolean
   handleOnPressUniswapXUnsupported?: () => void
-  getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
-  getSwapDelegationAddress?: (chainId: UniverseChainId | undefined) => string | undefined
+  getCanBatchTransactions?: (chainId?: UniverseChainId) => boolean
 }
 
 export const UniswapContext = createContext<UniswapContextValue | null>(null)
@@ -62,11 +61,10 @@ export function UniswapProvider({
   signer,
   useProviderHook,
   onConnectWallet,
-  getCanSignPermits,
+  getGeneratePermitAsTransaction,
   getIsUniswapXSupported,
   handleOnPressUniswapXUnsupported,
   getCanBatchTransactions,
-  getSwapDelegationAddress,
 }: PropsWithChildren<
   Omit<UniswapContextValue, 'isSwapTokenSelectorOpen' | 'setIsSwapTokenSelectorOpen' | 'setSwapOutputChainId'>
 >): JSX.Element {
@@ -108,11 +106,10 @@ export function UniswapProvider({
       setSwapOutputChainId,
       isSwapTokenSelectorOpen,
       setIsSwapTokenSelectorOpen: (open: boolean) => setIsSwapTokenSelectorOpen(open),
-      getCanSignPermits,
+      getGeneratePermitAsTransaction,
       getIsUniswapXSupported,
       handleOnPressUniswapXUnsupported,
       getCanBatchTransactions,
-      getSwapDelegationAddress,
     }),
     [
       account,
@@ -133,12 +130,11 @@ export function UniswapProvider({
       swapOutputChainId,
       isSwapTokenSelectorOpen,
       setIsSwapTokenSelectorOpen,
-      getCanSignPermits,
+      getGeneratePermitAsTransaction,
       onSwapChainsChanged,
       getIsUniswapXSupported,
       handleOnPressUniswapXUnsupported,
       getCanBatchTransactions,
-      getSwapDelegationAddress,
     ],
   )
 

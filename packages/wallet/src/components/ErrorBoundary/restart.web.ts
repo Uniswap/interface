@@ -1,1 +1,1 @@
-export const restart = (): void => chrome.runtime.reload()
+export const restartApp = (): void => chrome.runtime.reload()

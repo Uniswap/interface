@@ -1,4 +1,4 @@
-import { CommonActions } from '@react-navigation/core'
+import { StackActions } from '@react-navigation/core'
 import { dispatchNavigationAction } from 'src/app/navigation/rootNavigation'
 import { call, put, takeEvery } from 'typed-redux-saga'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
@@ -21,11 +21,5 @@ function* onRestoreMnemonicComplete() {
       title: i18n.t('notification.restore.success'),
     }),
   )
-  yield* call(
-    dispatchNavigationAction,
-    CommonActions.reset({
-      index: 0,
-      routes: [{ name: MobileScreens.Home }],
-    }),
-  )
+  yield* call(dispatchNavigationAction, StackActions.replace(MobileScreens.Home))
 }

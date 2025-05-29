@@ -120,7 +120,7 @@ function BottomSheetModalContents({
   useModalBackHandler(modalRef, isDismissible && dismissOnBackPress)
 
   useEffect(() => {
-    modalRef.current?.present?.()
+    modalRef.current?.present()
     // Close modal when it is unmounted
     return modalRef.current?.close
   }, [modalRef])
@@ -316,7 +316,7 @@ export function BottomSheetDetachedModal({
   useModalBackHandler(modalRef, isDismissible && dismissOnBackPress)
 
   useEffect(() => {
-    modalRef.current?.present?.()
+    modalRef.current?.present()
     // Close modal when it is unmounted
     return modalRef.current?.close
   }, [modalRef])

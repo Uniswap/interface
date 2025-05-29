@@ -10,7 +10,6 @@ import { isNonJestDev } from 'utilities/src/environment/constants'
 import { createDatadogReduxEnhancer } from 'utilities/src/logger/datadog/Datadog'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
-import { setReduxPersistor } from 'wallet/src/state/persistor'
 
 const storage = new MMKV()
 
@@ -67,6 +66,6 @@ const setupStore = (
     enhancers,
   })
 }
-
 export const store = setupStore()
-setReduxPersistor(persistStore(store))
+
+export const persistor = persistStore(store)

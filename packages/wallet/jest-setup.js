@@ -39,7 +39,4 @@ Object.defineProperty(global, "crypto", {
   },
 });
 
-// Use native locales
-jest.mock('utilities/src/device/locales', () => {
-  return jest.requireActual('utilities/src/device/locales.native.ts')
-})
+

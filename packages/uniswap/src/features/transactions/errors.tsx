@@ -109,7 +109,6 @@ export function getErrorContent(
   error: Error,
 ): {
   title: string
-  buttonText?: string
   message: string
   supportArticleURL?: string
 } {
@@ -129,7 +128,6 @@ function getStepSpecificErrorContent(
   error: TransactionStepFailedError,
 ): {
   title: string
-  buttonText?: string
   message: string
   supportArticleURL?: string
 } {
@@ -145,13 +143,6 @@ function getStepSpecificErrorContent(
       return {
         title: t('common.swap.failed'),
         message: t('swap.fail.message'),
-        supportArticleURL: uniswapUrls.helpArticleUrls.transactionFailure,
-      }
-    case TransactionStepType.SwapTransactionBatched:
-      return {
-        title: t('swap.fail.batched.title'),
-        buttonText: t('swap.fail.batched.retry'),
-        message: t('swap.fail.batched'),
         supportArticleURL: uniswapUrls.helpArticleUrls.transactionFailure,
       }
     case TransactionStepType.UniswapXSignature:

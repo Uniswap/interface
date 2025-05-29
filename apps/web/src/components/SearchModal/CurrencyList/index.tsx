@@ -96,6 +96,13 @@ function TokenTags({ currency }: { currency: Currency }) {
   )
 }
 
+const getDisplayName = (name: string | undefined) => {
+  if (name === 'USD//C') {
+    return 'USD Coin'
+  }
+  return name
+}
+
 const RowWrapper = styled(Flex, {
   row: true,
   height: '$spacing60',
@@ -139,6 +146,7 @@ export function CurrencyRow({
   const balanceUSD = balanceMap[currencyKey(currency)]?.usdValue
 
   const Wrapper = tooltip ? MouseoverTooltip : RowWrapper
+  const currencyName = getDisplayName(currency.name)
 
   // only show add or remove buttons if not on selected list
   return (
@@ -167,7 +175,7 @@ export function CurrencyRow({
           <CurrencyLogo currency={currency} size={36} style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} />
           <Flex style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} gap="$spacing2">
             <Flex row alignItems="center" gap="$spacing4">
-              <CurrencyName variant="body2">{currency.name}</CurrencyName>
+              <CurrencyName variant="body2">{currencyName}</CurrencyName>
               <WarningIcon severity={warningSeverity} size="$icon.16" ml="$spacing4" />
             </Flex>
             <Flex row alignItems="center" gap="$spacing8">

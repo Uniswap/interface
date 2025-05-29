@@ -20,7 +20,7 @@ export function DappConnectionItem({
   handleDisconnect: (session: WalletConnectSession) => Promise<void>
 }): JSX.Element {
   const { t } = useTranslation()
-  const { dappRequestInfo } = session
+  const { dapp } = session
 
   const menuActions = [{ title: t('common.button.disconnect'), systemIcon: 'trash', destructive: true }]
 
@@ -74,12 +74,12 @@ export function DappConnectionItem({
           )}
         </Flex>
         <Flex grow centered gap="$gap8">
-          <DappHeaderIcon size={iconSizes.icon36} dappRequestInfo={dappRequestInfo} />
+          <DappHeaderIcon size={iconSizes.icon36} dapp={dapp} />
           <Text numberOfLines={2} textAlign="center" variant="body3" mt="$spacing4">
-            {dappRequestInfo.name || dappRequestInfo.url}
+            {dapp.name || dapp.url}
           </Text>
           <Text color="$neutral2" numberOfLines={1} textAlign="center" variant="body4">
-            {dappRequestInfo.url}
+            {dapp.url}
           </Text>
         </Flex>
       </Flex>

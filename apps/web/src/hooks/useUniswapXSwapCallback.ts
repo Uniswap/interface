@@ -1,6 +1,6 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import { SwapEventName } from '@uniswap/analytics-events'
+import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { PermitTransferFrom } from '@uniswap/permit2-sdk'
 import { Percent } from '@uniswap/sdk-core'
 import {
@@ -13,7 +13,7 @@ import {
   V2DutchOrderBuilder,
   V3DutchOrderBuilder,
 } from '@uniswap/uniswapx-sdk'
-import { useTotalBalancesUsdForAnalytics } from 'appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
+import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
@@ -42,6 +42,7 @@ import {
 } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
+import { getWalletMeta } from 'utils/walletMeta'
 
 type DutchAuctionOrderError = { errorCode?: number; detail?: string }
 type DutchAuctionOrderSuccess = { hash: string }
@@ -236,6 +237,10 @@ export function useUniswapXSwapCallback({
               portfolioBalanceUsd,
               trace: analyticsContext,
             }),
+            // TODO (WEB-2993): remove these after debugging missing user properties.
+            [CustomUserProperties.WALLET_ADDRESS]: account.address,
+            [CustomUserProperties.WALLET_TYPE]: account.connector.name,
+            [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
           })
 
           const encodedOrder = updatedOrder.serialize()

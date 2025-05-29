@@ -26,8 +26,6 @@ import {
 } from 'uniswap/src/test/fixtures'
 import { renderHook } from 'uniswap/src/test/test-utils'
 
-const TEST_TOKEN_ADDRESS = '0xabcdef0123456789abcdef0123456789abcdef01'
-
 describe(currencyIdToContractInput, () => {
   it('converts currencyId to ContractInput', () => {
     expect(currencyIdToContractInput(SAMPLE_CURRENCY_ID_1)).toEqual({
@@ -95,14 +93,14 @@ describe(buildCurrency, () => {
   it('should return a new Token instance when all parameters are provided', () => {
     const token = buildCurrency({
       chainId: UniverseChainId.Mainnet,
-      address: TEST_TOKEN_ADDRESS,
+      address: '0x0000000000000000000000000000000000000000',
       decimals: 0,
       symbol: 'TEST',
       name: 'Test Token',
     }) as Token
     expect(token).toBeInstanceOf(Token)
     expect(token.chainId).toBe(UniverseChainId.Mainnet)
-    expect(token.address).toBe(TEST_TOKEN_ADDRESS)
+    expect(token.address).toBe('0x0000000000000000000000000000000000000000')
     expect(token.decimals).toBe(0)
     expect(token.symbol).toBe('TEST')
     expect(token.name).toBe('Test Token')
@@ -111,7 +109,7 @@ describe(buildCurrency, () => {
   it('should return the same reference when the same parameters are provided', () => {
     const args = {
       chainId: UniverseChainId.Mainnet,
-      address: TEST_TOKEN_ADDRESS,
+      address: '0x0000000000000000000000000000000000000000',
       decimals: 0,
       symbol: 'TEST',
       name: 'Test Token',

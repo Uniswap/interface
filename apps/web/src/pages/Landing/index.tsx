@@ -36,7 +36,7 @@ export default function Landing() {
 
   const [privacySharingOptOut] = useAtom(privacySharingOptOutAtom)
 
-  const { initConversionTracking } = useConversionTracking(account.address)
+  const { initConversionTracking } = useConversionTracking()
 
   useEffect(() => {
     // Track conversion leads on the landing page only

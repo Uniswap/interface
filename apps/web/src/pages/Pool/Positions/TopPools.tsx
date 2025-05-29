@@ -1,5 +1,5 @@
-import { PoolSortFields } from 'appGraphql/data/pools/useTopPools'
-import { OrderDirection } from 'appGraphql/data/util'
+import { PoolSortFields } from 'graphql/data/pools/useTopPools'
+import { OrderDirection } from 'graphql/data/util'
 import { ExternalArrowLink } from 'pages/Pool/Positions/shared'
 import { TopPoolsSection } from 'pages/Pool/Positions/TopPoolsSection'
 import { useTranslation } from 'react-i18next'

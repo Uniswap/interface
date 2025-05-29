@@ -10,7 +10,6 @@ import {
   selectAccounts,
   selectActiveAccount,
   selectActiveAccountAddress,
-  selectHasSmartWalletConsent,
   selectSignerMnemonicAccountExists,
   selectSignerMnemonicAccounts,
   selectViewOnlyAccounts,
@@ -169,21 +168,4 @@ export function useDisplayName(address: Maybe<string>, options?: DisplayNameOpti
   }
 
   return onchainDisplayName
-}
-
-/**
- * Hook used to get the active account's consent status for smart wallet functionality
- * @returns boolean if a consent status is found for the active account, null otherwise (eg if no account is active)
- */
-export function useHasSmartWalletConsent(): boolean | null {
-  const address = useActiveAccount()?.address
-
-  const hasSmartWalletConsent = useSelector((state: WalletState) => {
-    if (!address || !selectAccounts(state)[address]) {
-      return null
-    }
-    return selectHasSmartWalletConsent(state, address)
-  })
-
-  return hasSmartWalletConsent
 }

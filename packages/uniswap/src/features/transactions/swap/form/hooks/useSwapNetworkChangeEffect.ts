@@ -43,12 +43,10 @@ export function useSwapNetworkChangeEffect({
     },
   )
 
-  const skipInitialCallback = !!inputChainId && !!outputChainId && inputChainId === outputChainId
-
   useChainIdsChangeEffect({
     inputChainId,
     outputChainId,
     onChainIdsChanged,
-    skipInitialCallback,
+    skipInitialCallback: true,
   })
 }

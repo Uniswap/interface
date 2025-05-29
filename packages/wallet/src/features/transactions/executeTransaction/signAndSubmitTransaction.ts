@@ -1,12 +1,7 @@
 import { providers } from 'ethers'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { SignedAuthorization } from 'viem/experimental'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
-
-// TODO: Remove in upstack PR
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-let signedAuthorization: SignedAuthorization | undefined
 
 export async function signAndSubmitTransaction(
   request: providers.TransactionRequest,

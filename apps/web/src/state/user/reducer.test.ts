@@ -4,7 +4,6 @@ import reducer, {
   addSerializedPair,
   initialState,
   updateHideClosedPositions,
-  updateIsEmbeddedWalletBackedUp,
   updateUserDeadline,
   updateUserRouterPreference,
   updateUserSlippageTolerance,
@@ -56,15 +55,6 @@ describe('swap reducer', () => {
     it('updates the userHideClosedPositions', () => {
       store.dispatch(updateHideClosedPositions({ userHideClosedPositions: true }))
       expect(store.getState().userHideClosedPositions).toEqual(true)
-    })
-  })
-
-  describe('updateIsEmbeddedWalletBackedUp', () => {
-    it('updates the isEmbeddedWalletBackedUp', () => {
-      expect(store.getState().isEmbeddedWalletBackedUp).toEqual(false)
-
-      store.dispatch(updateIsEmbeddedWalletBackedUp({ isEmbeddedWalletBackedUp: true }))
-      expect(store.getState().isEmbeddedWalletBackedUp).toEqual(true)
     })
   })
 

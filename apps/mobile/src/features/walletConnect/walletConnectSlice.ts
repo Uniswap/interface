@@ -2,27 +2,20 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ProposalTypes, SessionTypes } from '@walletconnect/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
-import { DappRequestInfo, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
+import { DappInfo, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
 import { Call, Capability } from 'wallet/src/features/dappRequests/types'
-
-export enum WalletConnectVerifyStatus {
-  Verified = 'VERIFIED',
-  Unverified = 'UNVERIFIED',
-  Threat = 'THREAT',
-}
 
 export type WalletConnectPendingSession = {
   id: string
   chains: UniverseChainId[]
-  dappRequestInfo: DappRequestInfo
+  dapp: DappInfo
   proposalNamespaces: ProposalTypes.RequiredNamespaces
-  verifyStatus: WalletConnectVerifyStatus
 }
 
 export type WalletConnectSession = {
   id: string
   chains: UniverseChainId[]
-  dappRequestInfo: DappRequestInfo
+  dapp: DappInfo
   namespaces: SessionTypes.Namespaces
 }
 
@@ -34,9 +27,8 @@ interface BaseRequest {
   sessionId: string
   internalId: string
   account: string
-  dappRequestInfo: DappRequestInfo
+  dapp: DappInfo
   chainId: UniverseChainId
-  isLinkModeSupported?: boolean
 }
 
 export interface SignRequest extends BaseRequest {
