@@ -1,64 +1,56 @@
-# Uniswap Labs: Front End Interfaces
+# Interface
 
-This is the **public** repository for Uniswap Labs’ front-end interfaces, including the Web App, Wallet Mobile App, and Wallet Extension. Uniswap is a protocol for decentralized exchange of Ethereum-based assets.
+🌈 Open source interfaces for the Uniswap protocol
 
-## Interfaces
+## Overview
 
-- Web: [app.uniswap.org](https://app.uniswap.org)
-- Wallet (mobile + extension): [wallet.uniswap.org](https://wallet.uniswap.org)
+This repository contains open-source TypeScript-based interfaces for interacting with the Uniswap protocol. It serves as a foundation for building decentralized applications (dApps) that leverage Uniswap's functionalities.
 
-## Install & Apps
+## Features
 
-```bash
-git clone git@github.com:Uniswap/interface.git
-yarn
-yarn lfg
-yarn web start
-```
+- Built with TypeScript for type safety and developer experience
+- Licensed under the GNU General Public License v2.0
+- Provides a foundation for building on the Uniswap protocol
 
-For instructions per application or package, see the README published for each application:
+## Getting Started
 
-- [Web](apps/web/README.md)
-- [Mobile](apps/mobile/README.md)
-- [Extension](apps/extension/README.md)
+To get started with this project:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/nodoubtz/interface.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd interface
+   ```
+
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+4. Start the development server:
+   ```bash
+   npm start
+   ```
 
 ## Contributing
 
-For instructions on the best way to contribute, please review our [Contributing guide](CONTRIBUTING.md)!
+We welcome contributions to this project. To contribute:
 
-## Socials / Contact
+1. Fork the repository.
+2. Create a new branch for your changes.
+3. Submit a pull request with a detailed description of your changes.
 
-- X (Formerly Twitter): [@Uniswap](https://x.com/Uniswap)
-- Reddit: [/r/Uniswap](https://www.reddit.com/r/Uniswap/)
-- Email: [contact@uniswap.org](mailto:contact@uniswap.org)
-- Discord: [Uniswap](https://discord.com/invite/uniswap)
-- LinkedIn: [Uniswap Labs](https://www.linkedin.com/company/uniswaporg)
+## License
 
-## Uniswap Links
+This project is licensed under the [GNU General Public License v2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 
-- Website: [uniswap.org](https://uniswap.org/)
-- Docs: [uniswap.org/docs/](https://docs.uniswap.org/)
+## Links
 
-## Whitepapers
+- [Uniswap Protocol](https://uniswap.org)
+- [Uniswap App](https://app.uniswap.org)
 
-- [V4](https://uniswap.org/whitepaper-v4.pdf)
-- [V3](https://uniswap.org/whitepaper-v3.pdf)
-- [V2](https://uniswap.org/whitepaper.pdf)
-- [V1](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
-
-## Production & Release Process
-
-Uniswap Labs develops all front-end interfaces in a private repository.
-At the end of each development cycle:
-
-1. We publish the latest production-ready code to this public repository.
-
-2. Releases are automatically tagged — view them in the [Releases tab](https://github.com/Uniswap/interface/releases).
-
-## 🗂 Directory Structure
-
-| Folder      | Contents                                                                       |
-| ----------- | ------------------------------------------------------------------------------ |
-| `apps/`     | The home for each standalone application.                                      |
-| `config/`   | Shared infrastructure packages and configurations.                             |
-| `packages/` | Shared code packages covering UI, shared functionality, and shared utilities.  |
+---
