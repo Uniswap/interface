@@ -317,7 +317,7 @@ export default function TokenWarningModal({
       <AnimateTransition currentIndex={warningIndex} animationType={warningIndex === 0 ? 'forward' : 'backward'}>
         <TokenWarningModalContent
           currencyInfo0={currencyInfo0}
-          currencyInfo1={currencyInfo1}
+          currencyInfo1={combinedPlural ? currencyInfo1 : undefined}
           isInfoOnlyWarning={!hasSecondWarning && isInfoOnlyWarning} // modal should be actionable if it is a 2-token warning (go to next token)
           hasSecondWarning={hasSecondWarning}
           shouldBeCombinedPlural={combinedPlural}
