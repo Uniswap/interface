@@ -4,3 +4,8 @@ export interface DelegatedState {
   // The currently active chain ID
   activeChainId?: number
 }
+
+export interface SwapDelegationInfo {
+  delegationAddress?: Address
+  delegationInclusion: boolean
+}

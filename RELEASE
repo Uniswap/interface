@@ -1,10 +1,80 @@
-We are back with some new updates! Here’s the latest:
+IPFS hash of the deployment:
+- CIDv0: `QmeQNaiwpcq1CouKoDNgFD67b4rcw5YuLs3DSG1t5DLBxr`
+- CIDv1: `bafybeihov4kdcqzqfzh4p4n7o7o7z5p5xs3sdle6gc7zbfymyncoz24ma4`
 
-Search Improvements: Enjoy an improved search algorithm, with more relevant information. Recent history also now includes wallet search results. 
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Other changes: 
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-- Added haptics when repositioning favorited tokens and wallets
-- Improved token selector behavior, with more relevant network filtering, as well as an improved experience when flipping input and output.
-- Improvements to NFT spam detection
-- Various bug fixes and performance improvements
+IPFS gateways:
+- https://bafybeihov4kdcqzqfzh4p4n7o7o7z5p5xs3sdle6gc7zbfymyncoz24ma4.ipfs.dweb.link/
+- [ipfs://QmeQNaiwpcq1CouKoDNgFD67b4rcw5YuLs3DSG1t5DLBxr/](ipfs://QmeQNaiwpcq1CouKoDNgFD67b4rcw5YuLs3DSG1t5DLBxr/)
+
+## 5.87.0 (2025-05-29)
+
+
+### Features
+
+* **web:** change how we navigate to new TDP when tokens change (#20088) 3c515b3
+* **web:** clear text on search select (#19957) 519d18d
+* **web:** fiat offramp (#19241) 1654f80
+* **web:** fix language around swapping with passkey (#19805) cf90f72
+* **web:** react compiler on vite (#19825) fe989f5
+* **web:** remove EW view passphrase (#19640) fdc36d5
+* **web:** remove indicativeQuote endpoint in favor of quote w/ routingPreference.Fastest (#19982) c05ffb7
+* **web:** reworked connected no positions page (#20000) af0bf59
+* **web:** reworked disconnected your positions page (#19999) 3e56bb9
+* **web:** vite CSP injection (#19836) 7e16a6a
+
+
+### Bug Fixes
+
+* **web:** [tdp] sort other chain balances (#20063) d032e9d
+* **web:** add submitting state to send form review modal (#20049) 112c892
+* **web:** bug in send form when sending Celo USDC (#20132) d7e717c
+* **web:** debugging csp error in production (#20058) 083c86c
+* **web:** fallback to currency info on testnet (#20120) 3ec79b7
+* **web:** handle 5792 v1 spec (#20097) 4df918c
+* **web:** handle errors in parseRestPosition function (#20062) 5de5253
+* **web:** make Range Bands indicator line more visible (#19891) 1aa70e1
+* **web:** make web logging synchronous (#20013) aa9d96c
+* **web:** pool index virtualized list dynamic heights (#20010) 70bee14
+* **web:** prevent extreme outliers from breaking Pool price history chart (#19914) 8cc189f
+* **web:** remove nfts from landing page (#20055) 28e7db8
+* **web:** removeFormatNumberOrString from web formatting (#20034) f06fefd
+* **web:** settings tooltips (#20059) 4406198
+* **web:** update max button border (#19981) c769943
+* **web:** update publishignore (#19864) ea21978
+* **web:** update search bar hover behavior (#19994) a7481ad
+* **web:** update unwrap TX on smart wallet accounts (#19954) 06f49bf
+* **web:** use current year for footer copy (#19939) 7c30ca8
+* **web:** vite storybook mock fix (#20012) e15b409
+* **web:** wrapped token issues in pool details page (#20085) b129d2a
+* **web): Revert "feat(web:** defer render of mini portfolio (#19442)" (#19958) 72ef6b8
+
+
+### Continuous Integration
+
+* **web:** update sitemaps a6ea37d
+
+
+### Code Refactoring
+
+* **web:** remove dialog component + content & customize limit error (#19911) 2331e94
+* **web:** rename dialogv2 -> dialog (#19912) 9fd421e
+
+
+### Tests
+
+* **web:** fix Swap → should be able to swap token with FOT warning via TDP (#20024) 8fd03b5
+* **web:** migrate some TDP tests to playwright (#20087) 7e831d1
+* **web:** remove uniswapx cypress files (#19936) f057838
+* **web:** uniswapx test - activity (#19933) fb5a4c2
+* **web:** uniswapx test - cancel (#19929) 3502b54
+* **web:** uniswapx test - expired (#19928) a5cc4c1
+* **web:** uniswapx test (#19886) 32f8775
+
+

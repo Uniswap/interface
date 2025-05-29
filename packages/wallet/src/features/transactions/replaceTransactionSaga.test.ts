@@ -5,8 +5,14 @@ import MockDate from 'mockdate'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
-import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  ClassicTransactionDetails,
+  TransactionOriginType,
+  TransactionStatus,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ethersTransactionRequest, getTxFixtures, transactionDetails } from 'uniswap/src/test/fixtures'
 import * as CreateTransactionId from 'uniswap/src/utils/createTransactionId'
 import { executeTransaction } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
@@ -20,7 +26,7 @@ import { provider, providerManager, signerManager } from 'wallet/src/test/mocks'
 const NEW_UNIQUE_ID = faker.datatype.uuid()
 
 // Structure with valid request address (to avoid address validation within saga)
-const transaction = transactionDetails({
+const transaction: ClassicTransactionDetails = transactionDetails({
   options: {
     request: ethersTransactionRequest({ from: ACCOUNT.address }),
   },
@@ -77,6 +83,15 @@ describe(executeTransaction, () => {
           ),
           { transactionResponse: txResponse, populatedRequest: txRequest },
         ],
+        [
+          call(sendAnalyticsEvent, WalletEventName.CancelSubmitted, {
+            original_transaction_hash: transaction.hash,
+            replacement_transaction_hash: txResponse.hash,
+            chain_id: transaction.chainId,
+            nonce: txResponse.nonce,
+          }),
+          undefined,
+        ],
       ])
       .put(
         addTransaction({
@@ -104,6 +119,105 @@ describe(executeTransaction, () => {
               maxPriorityFeePerGas: undefined,
               maxFeePerGas: undefined,
             },
+            replacedTransactionHash: transaction.hash,
+          },
+        }),
+      )
+      .silentRun()
+  })
+
+  it('Correctly logs CancelSubmitted event and sets status to Cancelling when isCancellation is true', () => {
+    MockDate.set(present.valueOf())
+
+    const transactionToCancel: ClassicTransactionDetails = transactionDetails({
+      hash: faker.datatype.hexadecimal({ length: 64 }),
+      from: ACCOUNT.address,
+      chainId: 1,
+      options: {
+        request: ethersTransactionRequest({
+          from: ACCOUNT.address,
+          nonce: 1,
+          chainId: 1,
+        }),
+      },
+    })
+
+    const mockPopulatedRequest = transactionToCancel.options.request
+
+    const mockTxResponse: providers.TransactionResponse = {
+      hash: faker.datatype.hexadecimal({ length: 64 }),
+      confirmations: 0,
+      from: transactionToCancel.from,
+      nonce: BigNumber.from(mockPopulatedRequest.nonce).toNumber(),
+      gasLimit: BigNumber.from(mockPopulatedRequest.gasLimit || 0),
+      gasPrice: BigNumber.from(mockPopulatedRequest.gasPrice),
+      data: '0x0',
+      value: mockPopulatedRequest.value ? BigNumber.from(mockPopulatedRequest.value) : BigNumber.from(0),
+      chainId: transactionToCancel.chainId,
+      wait: jest.fn().mockResolvedValue({} as providers.TransactionReceipt),
+    }
+
+    // Construct the expected serializable request based on mockPopulatedRequest
+    const expectedSerializableRequest = {
+      chainId: transactionToCancel.chainId,
+      to: mockPopulatedRequest.to,
+      from: mockPopulatedRequest.from,
+      data: mockPopulatedRequest.data,
+      value: mockPopulatedRequest.value,
+      nonce: BigNumber.from(mockPopulatedRequest.nonce).toString(),
+      type: mockPopulatedRequest.type,
+      gasLimit: mockPopulatedRequest.gasLimit,
+      gasPrice: mockPopulatedRequest.gasPrice?.toString(),
+      maxPriorityFeePerGas: mockPopulatedRequest.maxPriorityFeePerGas?.toString(),
+      maxFeePerGas: mockPopulatedRequest.maxFeePerGas?.toString(),
+    }
+
+    return expectSaga(attemptReplaceTransaction, transactionToCancel, transactionToCancel.options.request, true)
+      .withState({
+        transactions: {
+          [ACCOUNT.address]: {
+            [transactionToCancel.chainId]: {
+              [transactionToCancel.id]: transactionToCancel,
+            },
+          },
+        },
+        wallet: {
+          accounts: {
+            [ACCOUNT.address]: ACCOUNT,
+          },
+        },
+      })
+      .provide([
+        [selectAccounts, { [transactionToCancel.from]: ACCOUNT }],
+        [call(getProvider, transactionToCancel.chainId), provider],
+        [call(getProviderManager), providerManager],
+        [call(getSignerManager), signerManager],
+        [
+          call(signAndSubmitTransaction, mockPopulatedRequest, ACCOUNT, provider as providers.Provider, signerManager),
+          { transactionResponse: mockTxResponse, populatedRequest: mockPopulatedRequest },
+        ],
+        [
+          call(sendAnalyticsEvent, WalletEventName.CancelSubmitted, {
+            original_transaction_hash: transactionToCancel.hash,
+            replacement_transaction_hash: mockTxResponse.hash,
+            chain_id: transactionToCancel.chainId,
+            nonce: mockTxResponse.nonce,
+          }),
+          undefined,
+        ],
+      ])
+      .put(
+        addTransaction({
+          ...transactionToCancel,
+          id: NEW_UNIQUE_ID,
+          hash: mockTxResponse.hash,
+          status: TransactionStatus.Cancelling,
+          receipt: undefined,
+          addedTime: present.valueOf(),
+          options: {
+            ...transactionToCancel.options,
+            request: expectedSerializableRequest,
+            replacedTransactionHash: transactionToCancel.hash,
           },
         }),
       )

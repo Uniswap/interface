@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { DialogV2 } from 'components/Dialog/DialogV2'
+import { Dialog } from 'components/Dialog/Dialog'
 import { useFormattedTokenRewards } from 'components/Liquidity/hooks/LpIncentiveClaim/useFormattedTokenRewards'
 import { useLpIncentiveClaimButtonConfig } from 'components/Liquidity/hooks/LpIncentiveClaim/useLpIncentiveClaimButtonConfig'
 import { useLpIncentiveClaimMutation } from 'components/Liquidity/hooks/LpIncentiveClaim/useLpIncentiveClaimMutation'
@@ -82,7 +82,7 @@ export function LpIncentiveClaimModal({
   })
 
   return (
-    <DialogV2
+    <Dialog
       isOpen={isOpen}
       icon={
         iconUrl ? (

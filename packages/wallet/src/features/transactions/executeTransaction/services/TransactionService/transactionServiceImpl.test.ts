@@ -144,6 +144,7 @@ describe('TransactionService', () => {
       mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
         transactionResponse: txResponse,
         populatedRequest: { ...txRequest },
+        timestampBeforeSign: 1234500000,
         timestampBeforeSend: 1234567890,
       })
 
@@ -267,6 +268,7 @@ describe('TransactionService', () => {
         return {
           transactionResponse: txResponse,
           populatedRequest: requestWithNonce,
+          timestampBeforeSign: 1234500000,
           timestampBeforeSend: 1234567890,
         }
       })
@@ -467,6 +469,7 @@ describe('TransactionService', () => {
       mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
         transactionResponse: txResponse,
         populatedRequest: { ...txRequest },
+        timestampBeforeSign: 1234500000,
         timestampBeforeSend: 1234567890,
       })
 
@@ -537,6 +540,7 @@ describe('TransactionService', () => {
       mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
         transactionResponse: txResponse,
         populatedRequest: { ...txRequest },
+        timestampBeforeSign: 1234500000,
         timestampBeforeSend: 1234567890,
       })
 
@@ -617,6 +621,7 @@ describe('TransactionService', () => {
       mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
         transactionResponse: txResponse,
         populatedRequest: { ...txRequest, nonce: 10 },
+        timestampBeforeSign: 1234500000,
         timestampBeforeSend: 1234567890,
       })
 
@@ -698,6 +703,7 @@ describe('TransactionService', () => {
       mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
         transactionResponse: txResponse,
         populatedRequest: { ...txRequest },
+        timestampBeforeSign: 1234500000,
         timestampBeforeSend: 1234567890,
       })
 
@@ -768,6 +774,7 @@ describe('TransactionService', () => {
       mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
         transactionResponse: txResponse,
         populatedRequest: { ...txRequest },
+        timestampBeforeSign: 1234500000,
         timestampBeforeSend: 1234567890,
       })
 
@@ -845,6 +852,7 @@ describe('TransactionService', () => {
       mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
         transactionResponse: txResponse,
         populatedRequest: { ...txRequest },
+        timestampBeforeSign: 1234500000,
         timestampBeforeSend: 1234567890,
       })
 
@@ -936,6 +944,7 @@ describe('TransactionService', () => {
       mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
         transactionResponse: txResponse,
         populatedRequest: { ...txRequest },
+        timestampBeforeSign: 1234500000,
         timestampBeforeSend: 1234567890,
       })
 

@@ -1,4 +1,7 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { PoolData, usePoolData } from 'appGraphql/data/pools/usePoolData'
+import { calculateApr } from 'appGraphql/data/pools/useTopPools'
+import { gqlToCurrency, unwrapToken } from 'appGraphql/data/util'
 import { LpIncentivesPoolDetailsRewardsDistribution } from 'components/LpIncentives/LpIncentivesPoolDetailsRewardsDistribution'
 import ChartSection from 'components/Pools/PoolDetails/ChartSection'
 import { PoolDetailsApr } from 'components/Pools/PoolDetails/PoolDetailsApr'
@@ -9,9 +12,6 @@ import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetail
 import { PoolDetailsTableTab } from 'components/Pools/PoolDetails/PoolDetailsTable'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { PoolData, usePoolData } from 'graphql/data/pools/usePoolData'
-import { calculateApr } from 'graphql/data/pools/useTopPools'
-import { gqlToCurrency, unwrapToken } from 'graphql/data/util'
 import { useColor } from 'hooks/useColor'
 import styled, { useTheme } from 'lib/styled-components'
 import { ExploreTab } from 'pages/Explore/constants'
@@ -231,6 +231,7 @@ export default function PoolDetailsPage() {
                 token0={token0}
                 token1={token1}
                 feeTier={poolData?.feeTier}
+                hookAddress={poolData?.hookAddress}
                 protocolVersion={poolData?.protocolVersion}
                 loading={loading}
               />

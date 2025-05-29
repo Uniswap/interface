@@ -16,10 +16,12 @@ import { Flex, Loader } from 'ui/src'
 import { DownloadAlt, OSDynamicCloudIcon } from 'ui/src/components/icons'
 import { imageSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { config } from 'uniswap/src/config'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
+import { isAndroid } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -27,7 +29,13 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 const MIN_LOADING_UI_MS = ONE_SECOND_MS
 // 10s timeout time for query for backups, since we don't know when the query completes
-const MAX_LOADING_TIMEOUT_MS = ONE_SECOND_MS * 10
+
+const MAX_LOADING_TIMEOUT_MS = config.isE2ETest ? ONE_SECOND_MS : ONE_SECOND_MS * 10
+/**
+ * Workaround for Android GDrive backup. There are many UXs depending on the API and
+ * at the moment we are only e2e testing seed phrase input.
+ */
+const ANDROID_E2E_WORKAROUND = config.isE2ETest && isAndroid
 
 export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
@@ -55,6 +63,10 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
     // delays native oauth consent screen to avoid UI freezes
     setTimeout(async () => {
       try {
+        if (ANDROID_E2E_WORKAROUND) {
+          setIsError(false)
+          return
+        }
         await startFetchingCloudStorageBackups()
       } catch (e) {
         setIsError(true)
@@ -150,6 +162,7 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
   if (isLoading === false && backups.length === 0) {
     if (isRestoringMnemonic) {
       navigation.replace(OnboardingScreens.SeedPhraseInput, {
+        showAsCloudBackupFallback: true,
         importType,
         entryPoint,
       })

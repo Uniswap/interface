@@ -3,19 +3,33 @@
 exports[`SplitLogo inline renders inline button 1`] = `
 <View
   cancelable={true}
+  collapsable={false}
   disabled={false}
+  focusVisibleStyle={{}}
   focusable={true}
-  hitSlop={[Function]}
+  forwardedRef={[Function]}
+  jestAnimatedStyle={
+    {
+      "value": {},
+    }
+  }
   minPressDuration={0}
   onBlur={[Function]}
   onFocus={[Function]}
+  onLayout={[Function]}
   onMouseEnter={[Function]}
   onMouseLeave={[Function]}
   onPress={[Function]}
   onPressIn={[Function]}
   onPressOut={[Function]}
+  role="button"
   style={
     {
+      "backgroundColor": "transparent",
+      "borderBottomLeftRadius": 12,
+      "borderBottomRightRadius": 12,
+      "borderTopLeftRadius": 12,
+      "borderTopRightRadius": 12,
       "flexDirection": "column",
       "opacity": 1,
       "paddingBottom": 8,
@@ -31,9 +45,12 @@ exports[`SplitLogo inline renders inline button 1`] = `
   }
 >
   <View
+    onBlur={[Function]}
+    onFocus={[Function]}
     style={
       {
         "alignItems": "center",
+        "color": "#FFFFFF",
         "flexDirection": "row",
         "gap": 4,
         "justifyContent": "center",
@@ -100,6 +117,8 @@ exports[`SplitLogo inline renders inline button 1`] = `
     <Text
       allowFontScaling={true}
       maxFontSizeMultiplier={1.2}
+      onBlur={[Function]}
+      onFocus={[Function]}
       style={
         {
           "color": "rgba(255, 255, 255, 0.65)",
@@ -120,17 +139,26 @@ exports[`SplitLogo inline renders inline button 1`] = `
 exports[`SplitLogo renders without error 1`] = `
 <View
   cancelable={true}
+  collapsable={false}
   disabled={false}
+  focusVisibleStyle={{}}
   focusable={true}
-  hitSlop={[Function]}
+  forwardedRef={[Function]}
+  jestAnimatedStyle={
+    {
+      "value": {},
+    }
+  }
   minPressDuration={0}
   onBlur={[Function]}
   onFocus={[Function]}
+  onLayout={[Function]}
   onMouseEnter={[Function]}
   onMouseLeave={[Function]}
   onPress={[Function]}
   onPressIn={[Function]}
   onPressOut={[Function]}
+  role="button"
   style={
     {
       "backgroundColor": "rgba(255, 55, 199, 0.08)",
@@ -153,9 +181,12 @@ exports[`SplitLogo renders without error 1`] = `
   }
 >
   <View
+    onBlur={[Function]}
+    onFocus={[Function]}
     style={
       {
         "alignItems": "center",
+        "color": "#FFFFFF",
         "flexDirection": "row",
         "gap": 4,
         "justifyContent": "center",
@@ -165,6 +196,8 @@ exports[`SplitLogo renders without error 1`] = `
     <Text
       allowFontScaling={true}
       maxFontSizeMultiplier={1.2}
+      onBlur={[Function]}
+      onFocus={[Function]}
       style={
         {
           "color": "#FF37C7",

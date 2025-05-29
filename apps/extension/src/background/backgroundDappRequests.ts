@@ -127,6 +127,7 @@ export function initMessageBridge(): void {
         function: message.functionName,
         ...message.tags,
       },
+      extra: message.extra,
     })
   })
 

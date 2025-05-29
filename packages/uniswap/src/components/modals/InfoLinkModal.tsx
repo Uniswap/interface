@@ -5,7 +5,7 @@ import { zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { openURL } from 'uniswap/src/utils/link'
+import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 
 interface InfoModalProps {
@@ -47,7 +47,7 @@ export function InfoLinkModal({
     }
 
     try {
-      await openURL(linkUrl)
+      await openUri(linkUrl)
       onAnalyticsEvent?.()
     } catch (error) {
       logger.error(error, { tags: { file: 'InfoLinkModal.tsx', function: 'openUniswapURL' } })

@@ -22,7 +22,6 @@ import {
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { WETH } from 'uniswap/src/test/fixtures'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import {
@@ -30,7 +29,7 @@ import {
   executeTransaction,
 } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { tryGetNonce } from 'wallet/src/features/transactions/executeTransaction/tryGetNonce'
-import { getShouldWaitBetweenTransactions } from 'wallet/src/features/transactions/swap/delegatedAccountUtils'
+import { getShouldWaitBetweenTransactions } from 'wallet/src/features/transactions/swap/confirmation'
 import { SubmitUniswapXOrderParams, submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
 import {
   SwapParams,
@@ -105,12 +104,6 @@ const mockApproveTxRequest = {
   nonce: 1,
 }
 
-const mockWrapTxRequest = {
-  chainId: 1,
-  to: WETH.address,
-  data: '0x0',
-}
-
 const mockSwapTxRequest = {
   chainId: 1,
   to: universalRouterAddress,
@@ -134,6 +127,7 @@ const classicSwapParams = {
     permit: undefined,
     swapRequestArgs: undefined,
     unsigned: false,
+    includesDelegation: false,
   },
   onSuccess: jest.fn(),
   onPending: jest.fn(),
@@ -148,14 +142,15 @@ const uniswapXSwapParams = {
   } as SwapTradeBaseProperties,
   swapTxContext: {
     routing: Routing.DUTCH_V2,
+
     approveTxRequest: mockApproveTxRequest,
     revocationTxRequest: mockRevocationTxRequest,
     trade: mockUniswapXTrade,
     permit: mockPermit,
-    wrapTxRequest: undefined,
     gasFee: { value: '5', isLoading: false, error: null },
     gasFeeEstimation: {},
-    gasFeeBreakdown: { classicGasUseEstimateUSD: '5', approvalCost: '5', wrapCost: '0' },
+    gasFeeBreakdown: { classicGasUseEstimateUSD: '5', approvalCost: '5' },
+    includesDelegation: false,
   },
   onSuccess: jest.fn(),
   onPending: jest.fn(),
@@ -218,6 +213,7 @@ describe(approveAndSwap, () => {
         ...classicSwapParams.swapTxContext,
         approveTxRequest: undefined,
         revocationTxRequest: undefined,
+        includesDelegation: false,
       },
     } satisfies SwapParams
 
@@ -335,7 +331,6 @@ describe(approveAndSwap, () => {
       typeInfo: mockTransactionTypeInfo,
       analytics: uniswapXSwapParams.analytics,
       approveTxHash: '0xMockApprovalTxHash',
-      wrapTxHash: undefined,
       txId: uniswapXSwapParams.txId,
       permit: mockPermit.typedData,
       routing: uniswapXSwapParams.swapTxContext.trade.quote.routing,
@@ -376,90 +371,6 @@ describe(approveAndSwap, () => {
         onFailure: uniswapXSwapParams.onFailure,
       })
       .next()
-      .call(submitUniswapXOrder, expectedSubmitOrderParams)
-      .next()
-      .isDone()
-  })
-
-  it('sends an ETH-input uniswapx order', async () => {
-    const uniswapXSwapEthInputParams = {
-      ...uniswapXSwapParams,
-      swapTxContext: {
-        ...uniswapXSwapParams.swapTxContext,
-        wrapTxRequest: mockWrapTxRequest,
-        permit: mockPermit,
-        gasFeeEstimation: {},
-      },
-    } satisfies SwapParams
-
-    const expectedSendWrapParams: ExecuteTransactionParams = {
-      chainId: mockWrapTxRequest.chainId,
-      account,
-      options: { request: { ...mockWrapTxRequest, nonce: nonce + 1 } },
-      typeInfo: {
-        type: TransactionType.Wrap,
-        unwrapped: false,
-        currencyAmountRaw: '1000',
-        swapTxId: '1',
-        gasEstimates: undefined,
-      },
-      txId: undefined,
-      transactionOriginType: TransactionOriginType.Internal,
-    }
-
-    const expectedSubmitOrderParams: SubmitUniswapXOrderParams = {
-      chainId: uniswapXSwapParams.swapTxContext.trade.inputAmount.currency.chainId,
-      account: uniswapXSwapParams.account,
-      typeInfo: mockTransactionTypeInfo,
-      analytics: uniswapXSwapParams.analytics,
-      approveTxHash: '0xMockApprovalTxHash',
-      wrapTxHash: '0xMockWrapTxHash',
-      txId: uniswapXSwapParams.txId,
-      permit: mockPermit.typedData,
-      onSuccess: uniswapXSwapParams.onSuccess,
-      onFailure: uniswapXSwapParams.onFailure,
-      routing: uniswapXSwapParams.swapTxContext.trade.quote.routing,
-      quote: uniswapXSwapParams.swapTxContext.trade.quote.quote,
-    }
-
-    await expectSaga(approveAndSwap, uniswapXSwapEthInputParams)
-      .provide([
-        ...sharedProviders,
-        [
-          call(executeTransaction, expectedSendApprovalParams),
-          { transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} },
-        ],
-        [
-          call(executeTransaction, expectedSendWrapParams),
-          { transactionResponse: { hash: '0xMockWrapTxHash' }, populatedRequest: {} },
-        ],
-        [call(submitUniswapXOrder, expectedSubmitOrderParams), undefined],
-      ])
-      .call.fn(submitUniswapXOrder)
-      .silentRun()
-
-    testSaga(approveAndSwap, uniswapXSwapEthInputParams)
-      .next()
-      .call(getShouldWaitBetweenTransactions, {
-        swapper: account.address,
-        chainId: expectedSubmitOrderParams.chainId,
-        privateRpcAvailable: false,
-      })
-      .next(false)
-      .call(uniswapXSwapEthInputParams.onPending)
-      .next()
-      .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
-      .next({ nonce })
-      .call(executeTransaction, expectedSendApprovalParams)
-      .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })
-      .call(handleTransactionSpacing, {
-        shouldWait: false,
-        hash: '0xMockApprovalTxHash',
-        onFailure: uniswapXSwapEthInputParams.onFailure,
-      })
-      .next()
-      .call(executeTransaction, expectedSendWrapParams)
-      .next({ transactionResponse: { hash: '0xMockWrapTxHash' }, populatedRequest: {} })
       .call(submitUniswapXOrder, expectedSubmitOrderParams)
       .next()
       .isDone()

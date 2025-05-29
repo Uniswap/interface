@@ -13,6 +13,7 @@ export const paths = [
   '/explore/pools/:chainName/:poolAddress',
   '/vote/*',
   '/create-proposal',
+  '/sell',
   '/send',
   '/swap',
   '/buy',

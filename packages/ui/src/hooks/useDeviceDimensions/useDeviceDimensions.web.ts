@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useWindowDimensions } from 'react-native'
-import { DeviceDimensions } from 'ui/src/hooks/useDeviceDimensions/useDeviceDimensions'
+import type { DeviceDimensions } from 'ui/src/hooks/useDeviceDimensions/useDeviceDimensions'
 import { breakpoints } from 'ui/src/theme'
 import { isExtension } from 'utilities/src/platform'
 

@@ -1,15 +1,13 @@
 import { expect, test } from 'playwright/fixtures'
 import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
-import uniswapXFeeQuote from 'playwright/fixtures/uniswapXFeeQuote.json'
+import { Mocks } from 'playwright/mocks/mocks'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { assume0xAddress } from 'utils/wagmi'
 
 test.describe('Fees', () => {
-  test('should not display fee on swaps without fees', async ({ page, graphql }) => {
-    await graphql.intercept('SearchTokens', 'search_token_dai.json')
-
+  test('should not display fee on swaps without fees', async ({ page }) => {
     await page.goto(`/swap?inputCurrency=${DAI.address}&outputCurrency=${USDC_MAINNET.address}`)
 
     // Enter amount
@@ -52,13 +50,16 @@ test.describe('Fees', () => {
   test('displays UniswapX fee in UI', async ({ page }) => {
     await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.swap)
 
-    await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
+    await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${DAI.address}`)
 
-    // use playwright to stub the response to https://interface.gateway.uniswap.org/v1/quote
-    await page.route('https://interface.gateway.uniswap.org/v1/quote', async (route) => {
-      await route.fulfill({
-        body: JSON.stringify(uniswapXFeeQuote),
-      })
+    await page.route(`${uniswapUrls.tradingApiUrl}${uniswapUrls.tradingApiPaths.quote}`, async (route, request) => {
+      const postData = await request.postData()
+      const data = JSON.parse(postData ?? '{}')
+      if (data.tokenOut === USDC_MAINNET.address) {
+        await route.continue()
+      } else {
+        await route.fulfill({ path: Mocks.UniswapX.quote })
+      }
     })
 
     // Set up swap
@@ -68,5 +69,6 @@ test.describe('Fees', () => {
     // Verify there is no "fee" text:
     const locator = page.locator('Fee')
     await expect(locator).toHaveCount(0)
+    await expect(page.getByText('No network costs with UniswapX')).toBeVisible()
   })
 })

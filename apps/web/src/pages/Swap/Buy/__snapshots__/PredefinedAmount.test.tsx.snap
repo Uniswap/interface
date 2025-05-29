@@ -1,26 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PredefinedAmount renders correctly with amount= 100 , currentAmount= "1000" , disabled= false 1`] = `
-.c0 {
-  background-color: #FFFFFF;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  cursor: pointer;
-}
-
-.c0:hover {
-  background-color: #FCFCFC;
-  border-color: rgba(19,19,19,0.1);
-}
-
+exports[`PredefinedAmount renders correctly with amount= 100 , disabled= false 1`] = `
 <span
   class=""
   style="display: contents;"
 >
   <div
-    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+    class="_backgroundColor-0hover-surface1Hov3121676 _borderTopColor-0hover-surface3Hov3121676 _borderRightColor-0hover-surface3Hov3121676 _borderBottomColor-0hover-surface3Hov3121676 _borderLeftColor-0hover-surface3Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _backgroundColor-surface1 _userSelect-none _cursor-pointer _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     style="border-color: rgba(34,34,34,0.05);"
   >
     <span
@@ -37,22 +23,14 @@ exports[`PredefinedAmount renders correctly with amount= 100 , currentAmount= "1
 </span>
 `;
 
-exports[`PredefinedAmount renders correctly with amount= 300 , currentAmount= "1000" , disabled= true 1`] = `
-.c0 {
-  background-color: #F9F9F9;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
+exports[`PredefinedAmount renders correctly with amount= 300 , disabled= true 1`] = `
 <span
   class=""
   style="display: contents;"
 >
   <div
     aria-disabled="true"
-    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _backgroundColor-surface2 _userSelect-none _cursor-default _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     style="border-color: rgba(34,34,34,0.05);"
   >
     <span
@@ -69,33 +47,19 @@ exports[`PredefinedAmount renders correctly with amount= 300 , currentAmount= "1
 </span>
 `;
 
-exports[`PredefinedAmount renders correctly with amount= 1000 , currentAmount= "1000" , disabled= false 1`] = `
-.c0 {
-  background-color: rgba(34,34,34,0.05);
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  cursor: pointer;
-}
-
-.c0:hover {
-  background-color: rgba(19,19,19,0.1);
-  border-color: rgba(19,19,19,0.1);
-}
-
+exports[`PredefinedAmount renders correctly with amount= 1000 , disabled= false 1`] = `
 <span
   class=""
   style="display: contents;"
 >
   <div
-    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+    class="_backgroundColor-0hover-surface1Hov3121676 _borderTopColor-0hover-surface3Hov3121676 _borderRightColor-0hover-surface3Hov3121676 _borderBottomColor-0hover-surface3Hov3121676 _borderLeftColor-0hover-surface3Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _backgroundColor-surface1 _userSelect-none _cursor-pointer _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     style="border-color: rgba(34,34,34,0.05);"
   >
     <span
       class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
       data-disable-theme="true"
-      style="color: rgb(19, 19, 19); padding-top: 1px;"
+      style="color: rgba(19, 19, 19, 0.63); padding-top: 1px;"
     >
       $1000
     </span>
@@ -106,22 +70,14 @@ exports[`PredefinedAmount renders correctly with amount= 1000 , currentAmount= "
 </span>
 `;
 
-exports[`PredefinedAmount renders correctly with amount= 1000 , currentAmount= "1000" , disabled= true 1`] = `
-.c0 {
-  background-color: #F9F9F9;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
+exports[`PredefinedAmount renders correctly with amount= 1000 , disabled= true 1`] = `
 <span
   class=""
   style="display: contents;"
 >
   <div
     aria-disabled="true"
-    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _backgroundColor-surface2 _userSelect-none _cursor-default _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     style="border-color: rgba(34,34,34,0.05);"
   >
     <span

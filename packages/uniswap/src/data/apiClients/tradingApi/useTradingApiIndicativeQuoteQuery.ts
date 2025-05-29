@@ -2,33 +2,37 @@ import { QueryClient, QueryKey, UseQueryResult, skipToken, useQuery } from '@tan
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { is404Error } from 'uniswap/src/data/apiClients/FetchError'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
-import { fetchIndicativeQuote } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { fetchQuote } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
-import { IndicativeQuoteRequest, IndicativeQuoteResponse } from 'uniswap/src/data/tradingApi/__generated__'
+import { QuoteRequest, QuoteResponse, RoutingPreference } from 'uniswap/src/data/tradingApi/__generated__'
 import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
-function getTradingApiIndicativeQuoteQueryKey(params: IndicativeQuoteRequest | undefined): QueryKey {
-  return [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.indicativeQuote, params]
+function getTradingApiIndicativeQuoteQueryKey(params: QuoteRequest | undefined): QueryKey {
+  return [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.quote, RoutingPreference.FASTEST, params]
 }
 
+/**
+ * Indicative quote requests are just requests to the normal quote endpoint,
+ * with routingPreference=FASTEST.
+ */
 export function useTradingApiIndicativeQuoteQuery({
   params,
   ...rest
-}: UseQueryApiHelperHookArgs<
-  IndicativeQuoteRequest,
-  IndicativeQuoteResponse
->): UseQueryResult<IndicativeQuoteResponse> {
+}: UseQueryApiHelperHookArgs<QuoteRequest, QuoteResponse>): UseQueryResult<QuoteResponse> {
   const queryKey = getTradingApiIndicativeQuoteQueryKey(params)
 
-  return useQuery<IndicativeQuoteResponse>({
+  return useQuery<QuoteResponse>({
     queryKey,
     queryFn: params
-      ? async (): ReturnType<typeof fetchIndicativeQuote> => {
+      ? async (): ReturnType<typeof fetchQuote> => {
           if (params.tokenInChainId) {
             logSwapQuoteFetch({ chainId: params.tokenInChainId, isQuickRoute: true })
           }
-          return await fetchIndicativeQuote(params)
+          return await fetchQuote({
+            ...params,
+            routingPreference: RoutingPreference.FASTEST,
+          })
         }
       : skipToken,
     ...rest,
@@ -43,12 +47,16 @@ export async function fetchTradingApiIndicativeQuoteIgnoring404({
   params,
 }: {
   queryClient?: QueryClient
-  params: IndicativeQuoteRequest
-}): Promise<IndicativeQuoteResponse | undefined> {
+  params: QuoteRequest
+}): Promise<QuoteResponse | undefined> {
   try {
     return await queryClient.fetchQuery({
       queryKey: getTradingApiIndicativeQuoteQueryKey(params),
-      queryFn: async () => fetchIndicativeQuote(params),
+      queryFn: async () =>
+        fetchQuote({
+          ...params,
+          routingPreference: RoutingPreference.FASTEST,
+        }),
     })
   } catch (error) {
     if (is404Error(error)) {

@@ -1,3 +1,4 @@
+import { getChromeRuntime } from 'utilities/src/chrome/chrome'
 import { TRUSTED_CHROME_EXTENSION_IDS } from 'utilities/src/environment/extensionId'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isInterface } from 'utilities/src/platform'
@@ -19,7 +20,9 @@ export function isDevEnv(): boolean {
   if (isInterface) {
     return process.env.NODE_ENV === 'development'
   } else if (isExtension) {
-    if (!chrome.runtime) {
+    const chromeRuntime = getChromeRuntime()
+
+    if (!chromeRuntime) {
       // eslint-disable-next-line no-console
       console.warn(
         'Avoid using `isDevEnv()` inside the injected script. Use `__DEV__` instead. ' +
@@ -31,8 +34,8 @@ export function isDevEnv(): boolean {
 
     return (
       __DEV__ ||
-      chrome.runtime.id === TRUSTED_CHROME_EXTENSION_IDS.dev ||
-      chrome.runtime.id === TRUSTED_CHROME_EXTENSION_IDS.local
+      chromeRuntime.id === TRUSTED_CHROME_EXTENSION_IDS.dev ||
+      chromeRuntime.id === TRUSTED_CHROME_EXTENSION_IDS.local
     )
   } else if (isTestEnv()) {
     return false
@@ -46,7 +49,8 @@ export function isBetaEnv(): boolean {
     // This is set in vercel builds for all pre-production envs, including `web/staging` and all other branches.
     return Boolean(process.env.REACT_APP_STAGING)
   } else if (isExtension) {
-    if (!chrome.runtime) {
+    const chromeRuntime = getChromeRuntime()
+    if (!chromeRuntime) {
       // eslint-disable-next-line no-console
       console.warn(
         'Avoid using `isBetaEnv()` inside the injected script. ' +
@@ -56,7 +60,7 @@ export function isBetaEnv(): boolean {
       return false
     }
 
-    return chrome.runtime.id === TRUSTED_CHROME_EXTENSION_IDS.beta
+    return chromeRuntime.id === TRUSTED_CHROME_EXTENSION_IDS.beta
   } else if (isTestEnv()) {
     return false
   } else {
@@ -68,7 +72,8 @@ export function isProdEnv(): boolean {
   if (isInterface) {
     return process.env.NODE_ENV === 'production' && !isBetaEnv()
   } else if (isExtension) {
-    if (!chrome.runtime) {
+    const chromeRuntime = getChromeRuntime()
+    if (!chromeRuntime) {
       // eslint-disable-next-line no-console
       console.warn(
         'Avoid using `isProdEnv()` inside the injected script. ' +
@@ -78,7 +83,7 @@ export function isProdEnv(): boolean {
       return true
     }
 
-    return chrome.runtime.id === TRUSTED_CHROME_EXTENSION_IDS.prod
+    return chromeRuntime.id === TRUSTED_CHROME_EXTENSION_IDS.prod
   } else if (isTestEnv()) {
     return false
   } else {

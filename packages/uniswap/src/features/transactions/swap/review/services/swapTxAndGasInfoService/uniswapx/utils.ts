@@ -11,27 +11,15 @@ import {
   UniswapXSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { validatePermit, validateTransactionRequests } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { validatePermit } from 'uniswap/src/features/transactions/swap/utils/trade'
 
-// TODO(WEB-7432): Remove deprecated UniswapX Wrap logic
 export function processUniswapXResponse({
-  wrapTransactionRequestInfo,
   permitData,
-  needsWrap,
 }: {
-  wrapTransactionRequestInfo?: TransactionRequestInfo
   permitData: NullablePermit | undefined
-  needsWrap?: boolean
 }): TransactionRequestInfo {
-  if (needsWrap && wrapTransactionRequestInfo) {
-    return {
-      ...wrapTransactionRequestInfo, // Extend the wrap response if a wrap is needed
-      permitData,
-    }
-  }
-
   return {
-    gasFeeResult: { value: '0', displayValue: '0', error: null, isLoading: false }, // Set a 0 gas fee when no wrap is needed
+    gasFeeResult: { value: '0', displayValue: '0', error: null, isLoading: false }, // There is no gas fee for UniswapX swap
     gasEstimate: {},
     txRequests: undefined,
     swapRequestArgs: undefined,
@@ -68,7 +56,6 @@ export function getUniswapXSwapTxAndGasInfo({
   swapTxInfo: TransactionRequestInfo
   approvalTxInfo: ApprovalTxInfo
 }): UniswapXSwapTxAndGasInfo {
-  const txRequests = validateTransactionRequests(swapTxInfo.txRequests)
   const permit = validatePermit(swapTxInfo.permitData)
 
   return {
@@ -77,7 +64,6 @@ export function getUniswapXSwapTxAndGasInfo({
     ...createGasFields({ swapTxInfo, approvalTxInfo }),
     ...createApprovalFields({ approvalTxInfo }),
     ...createUniswapXGasBreakdown({ trade, approvalTxInfo, swapTxInfo }),
-    wrapTxRequest: txRequests?.[0],
     permit: permit ? { method: PermitMethod.TypedData, typedData: permit } : undefined,
   }
 }

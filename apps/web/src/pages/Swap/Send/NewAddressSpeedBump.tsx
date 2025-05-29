@@ -7,6 +7,7 @@ import { useSendContext } from 'state/send/SendContext'
 import type { RecipientData } from 'state/send/hooks'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const RecipientDisplay = ({
   recipientData,
@@ -50,33 +51,35 @@ export const NewAddressSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendM
 
   return (
     <Dialog
-      isVisible={isOpen}
+      isOpen={isOpen}
+      onClose={onDismiss}
       icon={<UserIcon fill={colors.neutral2.val} width={28} height={28} />}
+      hasIconBackground
       title={t('speedBump.newAddress.warning.title')}
-      description={t('speedBump.newAddress.warning.description')}
-      body={
-        <Flex
-          centered
-          borderWidth="$spacing1"
-          borderColor="$surface3"
-          borderRadius="$rounded20"
-          py="$padding20"
-          width="100%"
-        >
-          <RecipientDisplay recipientData={recipientData} identiconType={identiconType} />
-        </Flex>
-      }
-      onCancel={onDismiss}
-      buttonsConfig={{
-        left: {
-          title: t('common.button.cancel'),
-          onClick: onDismiss,
-        },
-        right: {
-          title: t('common.button.continue'),
-          onClick: onConfirm,
-        },
+      subtext={t('speedBump.newAddress.warning.description')}
+      modalName={ModalName.NewAddressSpeedBump}
+      primaryButtonText={t('common.button.close')}
+      primaryButtonOnClick={onDismiss}
+      primaryButtonVariant="default"
+      primaryButtonEmphasis="secondary"
+      secondaryButtonText={t('common.button.continue')}
+      secondaryButtonOnClick={onConfirm}
+      secondaryButtonVariant="branded"
+      displayHelpCTA
+      buttonContainerProps={{
+        flexDirection: 'row',
       }}
-    />
+    >
+      <Flex
+        centered
+        borderWidth="$spacing1"
+        borderColor="$surface3"
+        borderRadius="$rounded20"
+        py="$padding20"
+        width="100%"
+      >
+        <RecipientDisplay recipientData={recipientData} identiconType={identiconType} />
+      </Flex>
+    </Dialog>
   )
 }

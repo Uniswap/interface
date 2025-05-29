@@ -6,8 +6,8 @@ import {
   UnsupportedEthMethods,
 } from 'src/contentScript/methodHandlers/requestMethods'
 import { PendingResponseInfo } from 'src/contentScript/methodHandlers/types'
+import { logContentScriptError } from 'src/contentScript/utils'
 import { DappResponseType, EthMethod, ExtensionEthMethod } from 'uniswap/src/features/dappRequests/types'
-import { logger } from 'utilities/src/logger/logger'
 
 export function isProviderDirectMethod(method: string): boolean {
   return Object.keys(ProviderDirectMethods).includes(method)
@@ -79,6 +79,16 @@ export function postParsingError(source: MessageEventSource | null, requestId: s
   })
 }
 
+/**
+ * Reject a request with an invalid params error
+ */
+export function rejectSelfCallWithData(requestId: string, source: MessageEventSource | null): void {
+  source?.postMessage({
+    requestId,
+    error: serializeError(providerErrors.unsupportedMethod(`Self-calls with data are not supported`)),
+  })
+}
+
 export function getPendingResponseInfo(
   requestIdToSourceMap: Map<string, PendingResponseInfo>,
   requestId: string,
@@ -89,14 +99,10 @@ export function getPendingResponseInfo(
     requestIdToSourceMap.delete(requestId)
 
     if (type !== DappResponseType.ErrorResponse && type !== pendingResponseInfo.type) {
-      logger.error(
+      logContentScriptError(
         `Response type doesn't match expected type, expected: ${pendingResponseInfo.type}, actual: ${type}`,
-        {
-          tags: {
-            file: 'injected.ts',
-            function: 'validateResponse',
-          },
-        },
+        'methodHandlers/utils.ts',
+        'validateResponse',
       )
     }
     return pendingResponseInfo

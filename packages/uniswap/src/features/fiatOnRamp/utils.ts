@@ -25,7 +25,7 @@ export interface FORApiError {
     statusCode: number
     errorName: string
     message: string
-    context: object | undefined
+    context: object | undefined | string
   }
 }
 
@@ -38,6 +38,34 @@ export interface InvalidRequestAmountTooLow extends FORApiError {
       unit?: 'token' | 'fiat'
     }
   }
+}
+
+export interface BadRequest extends FORApiError {
+  data: FORApiError['data'] & {
+    statusCode: 400
+    errorName: 'BadRequest'
+    context: string
+  }
+}
+
+export function isBadRequestAmountTooLow(error: FORApiError): error is BadRequest {
+  const e = error as BadRequest
+  return (
+    e.data.statusCode === 400 &&
+    e.data.errorName === 'BadRequest' &&
+    typeof e.data.context === 'string' &&
+    e.data.context.includes('Source amount is below the minimum allowed')
+  )
+}
+
+export function isBadRequestAmountTooHigh(error: FORApiError): error is BadRequest {
+  const e = error as BadRequest
+  return (
+    e.data.statusCode === 400 &&
+    e.data.errorName === 'BadRequest' &&
+    typeof e.data.context === 'string' &&
+    e.data.context.includes('Source amount is above the maximum allowed')
+  )
 }
 
 export function isInvalidRequestAmountTooLow(error: FORApiError): error is InvalidRequestAmountTooLow {

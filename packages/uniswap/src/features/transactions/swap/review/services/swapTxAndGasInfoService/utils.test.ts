@@ -19,18 +19,12 @@ import {
   createPrepareSwapRequestParams,
   createProcessSwapResponse,
   getBridgeOrClassicQuoteResponse,
-  getIsWrapApplicable,
   getShouldSkipSwapRequest,
   getSimulationError,
   processWrapResponse,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import {
-  ApprovalAction,
-  TokenApprovalInfo,
-  Trade,
-  TradeWithStatus,
-} from 'uniswap/src/features/transactions/swap/types/trade'
+import { ApprovalAction, TokenApprovalInfo, TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
 import { DEFAULT_PROTOCOL_OPTIONS } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -71,16 +65,59 @@ describe('processWrapResponse', () => {
   })
 })
 
+describe('processWrapResponse (smart contract unwrap fallback)', () => {
+  it('should fallback to hardcoded gas limit when gas params are missing for a smart contract unwrap', () => {
+    jest.isolateModules(() => {
+      jest.doMock('utilities/src/platform', () => ({
+        __esModule: true,
+        ...jest.requireActual('utilities/src/platform'),
+        isInterface: true,
+      }))
+
+      const {
+        processWrapResponse: mockedProcessWrapResponse,
+      } = require('uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils')
+
+      const {
+        WRAP_FALLBACK_GAS_LIMIT_IN_GWEI,
+      } = require('uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants')
+
+      const gasFeeResult: GasFeeResult = {
+        value: '1000',
+        displayValue: '0.001',
+        isLoading: false,
+        error: null,
+        params: undefined,
+      }
+
+      const wrapTxRequest = {
+        to: '0x123',
+        value: '1000000',
+      } as providers.TransactionRequest
+
+      const expectedGasLimit = WRAP_FALLBACK_GAS_LIMIT_IN_GWEI * 10e9
+
+      const fallbackGasParams = { gasLimit: expectedGasLimit }
+
+      const result = mockedProcessWrapResponse({
+        gasFeeResult,
+        wrapTxRequest,
+        fallbackGasParams,
+      })
+
+      expect(result.txRequests?.[0]).toEqual(expect.objectContaining({ gasLimit: expectedGasLimit }))
+    })
+  })
+})
+
 describe('createPrepareSwapRequestParams', () => {
   it('should prepare swap request params for classic quote', () => {
     // Given
     const activeGasStrategy = DEFAULT_GAS_STRATEGY
     const shadowGasStrategies: GasStrategy[] = []
-    const v4SwapEnabled = true
     const prepareParams = createPrepareSwapRequestParams({
       activeGasStrategy,
       shadowGasStrategies,
-      v4SwapEnabled,
     })
 
     const swapQuoteResponse = {
@@ -117,7 +154,6 @@ describe('createPrepareSwapRequestParams', () => {
       refreshGasPrice: true,
       gasStrategies: [DEFAULT_GAS_STRATEGY],
       urgency: undefined,
-      v4Enabled: true,
     })
   })
 })
@@ -177,41 +213,6 @@ describe('getBridgeOrClassicQuoteResponse', () => {
     const result = getBridgeOrClassicQuoteResponse({ quote })
 
     expect(result).toBeUndefined()
-  })
-})
-
-describe('getIsWrapApplicable', () => {
-  it('should return true when wrap type is not NotApplicable', () => {
-    const derivedSwapInfo = {
-      wrapType: WrapType.Wrap,
-      trade: { trade: { routing: Routing.CLASSIC } } as unknown as Trade,
-    } as unknown as DerivedSwapInfo
-
-    const result = getIsWrapApplicable({ derivedSwapInfo })
-
-    expect(result).toBe(true)
-  })
-
-  it('should return true when trade is UniswapX Eth input', () => {
-    const derivedSwapInfo = {
-      wrapType: WrapType.NotApplicable,
-      trade: { trade: { routing: Routing.DUTCH_V2, needsWrap: true } } as unknown as Trade,
-    } as unknown as DerivedSwapInfo
-
-    const result = getIsWrapApplicable({ derivedSwapInfo })
-
-    expect(result).toBe(true)
-  })
-
-  it('should return false when trade is not UniswapX or a wrap', () => {
-    const derivedSwapInfo = {
-      wrapType: WrapType.NotApplicable,
-      trade: { trade: { routing: Routing.CLASSIC } } as unknown as Trade,
-    } as unknown as DerivedSwapInfo
-
-    const result = getIsWrapApplicable({ derivedSwapInfo })
-
-    expect(result).toBe(false)
   })
 })
 
@@ -382,7 +383,7 @@ describe('createProcessSwapResponse', () => {
       swapQuote,
       isSwapLoading: false,
       permitData: { fakePermitField: 'hi' },
-      swapRequestParams: { quote: swapQuote, v4Enabled: false },
+      swapRequestParams: { quote: swapQuote },
       isRevokeNeeded: false,
     })
 
@@ -403,7 +404,7 @@ describe('createProcessSwapResponse', () => {
         },
         wrapEstimates: undefined,
       },
-      swapRequestArgs: { quote: swapQuote, v4Enabled: false },
+      swapRequestArgs: { quote: swapQuote },
     })
   })
 
@@ -422,7 +423,7 @@ describe('createProcessSwapResponse', () => {
       swapQuote,
       isSwapLoading: false,
       permitData: undefined,
-      swapRequestParams: { quote: swapQuote, v4Enabled: false },
+      swapRequestParams: { quote: swapQuote },
       isRevokeNeeded: false,
     })
 

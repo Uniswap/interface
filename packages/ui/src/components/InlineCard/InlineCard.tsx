@@ -1,12 +1,13 @@
 import { ColorTokens } from 'tamagui'
 import { GeneratedIcon, IconProps } from 'ui/src/components/factories/createIcon'
-import { Flex } from 'ui/src/components/layout/Flex'
+import { Flex, FlexProps } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
-import { TouchableArea } from 'ui/src/components/touchable/TouchableArea'
+import { TouchableArea } from 'ui/src/components/touchable/TouchableArea/TouchableArea'
 
 type InlineCardProps = {
   Icon: GeneratedIcon | ((props: IconProps) => JSX.Element)
   iconColor?: ColorTokens
+  iconProps?: FlexProps
   color: ColorTokens
   backgroundColor?: ColorTokens
   description: string | JSX.Element
@@ -20,6 +21,7 @@ type InlineCardProps = {
 export function InlineCard({
   Icon,
   iconColor,
+  iconProps,
   color,
   backgroundColor = '$surface2',
   iconBackgroundColor,
@@ -58,7 +60,7 @@ export function InlineCard({
 
   return (
     <Flex row backgroundColor={backgroundColor} borderRadius="$rounded16" gap="$spacing12" p="$spacing12">
-      <Flex>{iconElement}</Flex>
+      <Flex {...iconProps}>{iconElement}</Flex>
       <Flex fill grow row gap="$spacing4" justifyContent="space-between">
         <Flex fill grow gap="$spacing2">
           {headingElement}

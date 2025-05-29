@@ -1,9 +1,12 @@
+import { Currency } from '@uniswap/sdk-core'
 import { useTheme } from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Flex, ModalCloseIcon, styled, useSporeColors } from 'ui/src'
 import { ReactComponent as ForConnectingBackground } from 'ui/src/assets/backgrounds/for-connecting-v2.svg'
-import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
+import { FiatCurrencyInfo, RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
+import { LocalizedFormatter } from 'uniswap/src/features/language/formatter'
+import { NumberType } from 'utilities/src/format/types'
 
 export const ContentWrapper = styled(Flex, {
   backgroundColor: '$surface1',
@@ -58,4 +61,48 @@ export function ConnectingViewWrapper({ children, closeModal, onBack }: PropsWit
 
 export function formatFiatOnRampFiatAmount(amount: number, fiatCurrencyInfo: FiatCurrencyInfo) {
   return fiatCurrencyInfo.symbolAtFront ? `${fiatCurrencyInfo.symbol}${amount}` : `${amount}${fiatCurrencyInfo.symbol}`
+}
+
+export function parseAndFormatFiatOnRampFiatAmount(amount: string, fiatCurrencyInfo: FiatCurrencyInfo) {
+  const match = /\d+\.\d+/.exec(amount)
+
+  if (match) {
+    return formatFiatOnRampFiatAmount(parseFloat(match[0]), fiatCurrencyInfo)
+  }
+
+  return undefined
+}
+
+export function formatFORErrorAmount(
+  amount: number,
+  isFiat: boolean,
+  fiatCurrencyInfo: FiatCurrencyInfo,
+  quoteCurrency: Currency | undefined,
+  formatNumberOrString: LocalizedFormatter['formatNumberOrString'],
+  getSymbolDisplayText: (symbol: Maybe<string>) => Maybe<string>,
+): string | undefined {
+  if (isFiat) {
+    return formatFiatOnRampFiatAmount(amount, fiatCurrencyInfo)
+  }
+
+  if (quoteCurrency) {
+    return `${formatNumberOrString({
+      value: amount,
+      type: NumberType.TokenNonTx,
+    })} ${getSymbolDisplayText(quoteCurrency.symbol)}`
+  }
+
+  return undefined
+}
+
+export function getOnRampInputAmount(
+  rampDirection: RampDirection,
+  inputAmount: string,
+  amountOut: string,
+  inputInFiat: boolean,
+) {
+  if (rampDirection === RampDirection.ONRAMP) {
+    return inputInFiat ? inputAmount : amountOut
+  }
+  return inputInFiat ? amountOut : inputAmount
 }

@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'uniswap/src/constants/transactions'
 import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import { CancellationGasFeeDetails, useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
-import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -19,14 +19,7 @@ export function useCancellationGasFeeInfo(transaction: TransactionDetails): Canc
     return {
       chainId: transaction.chainId,
       from: transaction.from,
-      to:
-        // Flashbots requires the cancellation transaction to be sent to the same address as the original transaction
-        // https://docs.flashbots.net/flashbots-protect/cancellations
-        isClassic(transaction) &&
-        transaction.options.privateRpcProvider === 'flashbots' &&
-        transaction.options.request.to
-          ? transaction.options.request.to
-          : transaction.from,
+      to: transaction.from,
       value: '0x0',
     }
   }, [transaction])

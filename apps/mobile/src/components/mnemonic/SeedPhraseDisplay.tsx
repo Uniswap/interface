@@ -1,11 +1,12 @@
+import { useFocusEffect, useNavigation } from '@react-navigation/core'
 import { addScreenshotListener } from 'expo-screen-capture'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { usePrevious } from 'react-native-wagmi-charts'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { WalletRestoreType } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
-import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
-import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
+import { useBiometricAppSpeedBump } from 'src/features/biometrics/useBiometricAppSpeedBump'
+import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreenOnBlur'
 import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
 import { Button, Flex } from 'ui/src'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
@@ -21,36 +22,35 @@ type Props = {
 
 export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }: Props): JSX.Element {
   const { t } = useTranslation()
-  const { isModalOpen: isWalletRestoreModalOpen } = useWalletRestore({ openModalImmediately: true })
+  const { walletRestoreType } = useWalletRestore({
+    openModalImmediately: true,
+  })
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
+  const navigation = useNavigation()
   const [showSeedPhraseViewWarningModal, setShowSeedPhraseViewWarningModal] = useState(!walletNeedsRestore)
 
-  const prevIsWalletRestoreModalOpen = usePrevious(isWalletRestoreModalOpen)
+  useFocusEffect(
+    useCallback(() => {
+      if (walletRestoreType !== WalletRestoreType.None) {
+        navigation.goBack()
 
-  useEffect(() => {
-    if (prevIsWalletRestoreModalOpen && !isWalletRestoreModalOpen) {
-      onDismiss?.()
-    }
-  })
+        // This is a very unlikely edge case if the user somehow get to this screen on a new device.
+        // In this case, we want to back an additional time to dismiss the NewDevice modal which is
+        // will try to reopen anytime this screen is focused.
+        if (walletRestoreType === WalletRestoreType.NewDevice) {
+          navigation.goBack()
+        }
+      }
+    }, [walletRestoreType, navigation]),
+  )
+
+  useLockScreenOnBlur()
 
   const onShowSeedPhraseConfirmed = (): void => {
     setShowSeedPhrase(true)
     setShowSeedPhraseViewWarningModal(false)
   }
-
-  const onConfirmWarning = async (): Promise<void> => {
-    if (biometricAuthRequiredForAppAccess || biometricAuthRequiredForTransactions) {
-      await biometricTrigger()
-    } else {
-      onShowSeedPhraseConfirmed()
-    }
-  }
-
-  const {
-    requiredForAppAccess: biometricAuthRequiredForAppAccess,
-    requiredForTransactions: biometricAuthRequiredForTransactions,
-  } = useBiometricAppSettings()
-  const { trigger: biometricTrigger } = useBiometricPrompt(onShowSeedPhraseConfirmed)
+  const { onBiometricContinue } = useBiometricAppSpeedBump(onShowSeedPhraseConfirmed)
 
   useEffect(() => {
     const listener = addScreenshotListener(() =>
@@ -94,7 +94,7 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }:
               onDismiss?.()
             }
           }}
-          onAcknowledge={onConfirmWarning}
+          onAcknowledge={onBiometricContinue}
         />
       )}
     </>

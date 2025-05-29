@@ -121,7 +121,7 @@ function getConnectorText({
   } else if (connectorId === AlternativeOption.OTHER_WALLETS) {
     return t('wallet.other')
   } else if (connectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
-    return t('account.passkey.sign.in.title')
+    return t('account.passkey.log.in.title')
   } else {
     return connector?.name
   }
@@ -157,7 +157,7 @@ function createWalletConnectionHandler({
 }: {
   connection: ReturnType<typeof useConnect>
   setPersistHideMobileAppPromoBanner: (value: boolean) => void
-  signInWithPasskey: UseMutateFunction<string, Error, void, unknown>
+  signInWithPasskey: UseMutateFunction<{ walletAddress: string; exported?: boolean }, Error, void, unknown>
 }) {
   async function connectEmbeddedWallet() {
     await signInWithPasskey()

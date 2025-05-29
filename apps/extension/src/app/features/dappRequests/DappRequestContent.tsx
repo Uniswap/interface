@@ -5,7 +5,11 @@ import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { useIsDappRequestConfirming } from 'src/app/features/dappRequests/hooks'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/shared'
-import { DappRequest, isBatchedSwapRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import {
+  DappRequest,
+  isBatchedSwapRequest,
+  isConnectionRequest,
+} from 'src/app/features/dappRequests/types/DappRequestTypes'
 import {
   Anchor,
   AnimatePresence,
@@ -17,7 +21,9 @@ import {
   UniversalImageResizeMode,
   styled,
 } from 'ui/src'
+import { Verified } from 'ui/src/components/icons'
 import { borderRadii, iconSizes } from 'ui/src/theme'
+import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappRequestType } from 'uniswap/src/features/dappRequests/types'
@@ -129,9 +135,11 @@ export function DappRequestContent({
 }
 
 function DappRequestHeader({ headerIcon, title }: DappRequestHeaderProps): JSX.Element {
-  const { dappIconUrl, dappUrl } = useDappRequestQueueContext()
+  const { dappIconUrl, dappUrl, request } = useDappRequestQueueContext()
   const hostname = extractNameFromUrl(dappUrl).toUpperCase()
   const fallbackIcon = <DappIconPlaceholder iconSize={iconSizes.icon40} name={hostname} />
+  const showVerified =
+    request && isConnectionRequest(request.dappRequest) && formatDappURL(dappUrl) === UNISWAP_WEB_HOSTNAME
 
   return (
     <Flex mb="$spacing4" ml="$spacing8" mt="$spacing8" px="$spacing12">
@@ -157,9 +165,12 @@ function DappRequestHeader({ headerIcon, title }: DappRequestHeaderProps): JSX.E
         {title}
       </Text>
       <Anchor href={dappUrl} rel="noopener noreferrer" target="_blank" textDecorationLine="none">
-        <Text color="$accent1" mt="$spacing4" textAlign="left" variant="body4">
-          {formatDappURL(dappUrl)}
-        </Text>
+        <Flex row alignItems="center" mt="$spacing4" gap="$gap4">
+          <Text color="$accent1" textAlign="left" variant="body4">
+            {formatDappURL(dappUrl)}
+          </Text>
+          {showVerified && <Verified color="$accent1" size="$icon.12" />}
+        </Flex>
       </Anchor>
     </Flex>
   )

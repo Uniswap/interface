@@ -33,7 +33,7 @@ type TokenBalanceListContextState = {
   isWarmLoading: boolean
   rows: Array<TokenBalanceListRow>
   setHiddenTokensExpanded: Dispatch<SetStateAction<boolean>>
-  onPressToken: (currencyId: CurrencyId) => void
+  onPressToken?: (currencyId: CurrencyId) => void
 }
 
 export const TokenBalanceListContext = createContext<TokenBalanceListContextState | undefined>(undefined)
@@ -46,7 +46,7 @@ export function TokenBalanceListContextProvider({
 }: PropsWithChildren<{
   owner: Address
   isExternalProfile: boolean
-  onPressToken: (currencyId: CurrencyId) => void
+  onPressToken?: (currencyId: CurrencyId) => void
 }>): JSX.Element {
   const {
     data: balancesById,

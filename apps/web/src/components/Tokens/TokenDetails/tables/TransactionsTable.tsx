@@ -1,6 +1,8 @@
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { Token } from '@uniswap/sdk-core'
+import { TokenTransactionType, useTokenTransactions } from 'appGraphql/data/useTokenTransactions'
+import { unwrapToken } from 'appGraphql/data/util'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
@@ -15,8 +17,6 @@ import {
   TokenLinkCell,
 } from 'components/Table/styled'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
-import { TokenTransactionType, useTokenTransactions } from 'graphql/data/useTokenTransactions'
-import { unwrapToken } from 'graphql/data/util'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, Text, styled, useMedia } from 'ui/src'

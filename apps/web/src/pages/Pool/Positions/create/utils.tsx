@@ -38,6 +38,7 @@ import { tryParsePrice, tryParseTick } from 'state/mint/v3/utils'
 import { PositionField } from 'types/position'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { ProtocolVersion as GraphQLProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import type {
   CheckApprovalLPRequest,
   CheckApprovalLPResponse,
@@ -163,13 +164,13 @@ export function getCurrencyAddressWithWrap(
 ): string | undefined
 export function getCurrencyAddressWithWrap(
   currency: OptionalCurrency,
-  protocolVersion: ProtocolVersion,
+  protocolVersion: ProtocolVersion | GraphQLProtocolVersion,
 ): string | undefined {
   if (currency?.isToken) {
     return currency.address
   }
 
-  if (protocolVersion === ProtocolVersion.V4) {
+  if (protocolVersion === ProtocolVersion.V4 || protocolVersion === GraphQLProtocolVersion.V4) {
     return ZERO_ADDRESS
   }
 

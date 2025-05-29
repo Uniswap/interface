@@ -1,28 +1,28 @@
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { ComponentProps, useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { SelectWalletsSkeleton } from 'src/app/components/loading/SelectWalletSkeleton'
-import { saveDappConnection } from 'src/app/features/dapp/actions'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { useSubmitOnEnter } from 'src/app/features/onboarding/utils'
-import { Flex, ScrollView, SpinningLoader, Square, Text } from 'ui/src'
+import { Flex, ScrollView, SpinningLoader, Square, Text, Tooltip, TouchableArea } from 'ui/src'
 import { WalletFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
+import { openUri } from 'uniswap/src/utils/linking'
 import { useAsyncData, useEvent } from 'utilities/src/react/hooks'
 import WalletPreviewCard from 'wallet/src/components/WalletPreviewCard/WalletPreviewCard'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useImportableAccounts } from 'wallet/src/features/onboarding/hooks/useImportableAccounts'
 import { useSelectAccounts } from 'wallet/src/features/onboarding/hooks/useSelectAccounts'
+import { useAnyAccountEligibleForDelegation } from 'wallet/src/features/smartWallet/hooks/useAnyAccountEligibleForDelegation'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.Element {
   const { t } = useTranslation()
-  const shouldAutoConnect = useFeatureFlag(FeatureFlags.ExtensionAutoConnect)
   const [buttonClicked, setButtonClicked] = useState(false)
 
   const { goToNextStep, goToPreviousStep } = useOnboardingSteps()
@@ -32,9 +32,15 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
 
   const { importableAccounts, isLoading, showError, refetch } = useImportableAccounts(generatedAddresses)
 
+  const { eligible: isAnyAccountEligibleForDelegation, loading: isDelegationChecksLoading } =
+    useAnyAccountEligibleForDelegation(importableAccounts)
+
   const { selectedAddresses, toggleAddressSelection } = useSelectAccounts(importableAccounts)
 
-  const enableSubmit = showError || (selectedAddresses.length > 0 && !isLoading)
+  const smartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWallet)
+
+  const enableSubmit =
+    (showError || (selectedAddresses.length > 0 && !isLoading)) && !(isDelegationChecksLoading && smartWalletEnabled)
 
   const onSubmit = useEvent(async () => {
     if (!enableSubmit) {
@@ -42,16 +48,10 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
     }
 
     setButtonClicked(true)
-    const importedAccounts = await generateAccountsAndImportAddresses({
+    await generateAccountsAndImportAddresses({
       selectedAddresses,
       backupType: flow === ExtensionOnboardingFlow.Passkey ? BackupType.Passkey : BackupType.Manual,
     })
-
-    // TODO(EXT-1375): figure out how to better auto connect existing wallets that may have connected via WC or some other method.
-    // Once that's solved the feature flag can be turned on/removed.
-    if (shouldAutoConnect && importedAccounts?.[0]) {
-      await saveDappConnection(UNISWAP_WEB_URL, importedAccounts[0])
-    }
 
     goToNextStep()
     setButtonClicked(false)
@@ -61,9 +61,15 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
 
   useSubmitOnEnter(showError ? refetch : onSubmit)
 
+  const belowFrameContent = useMemo(
+    () => (smartWalletEnabled && isAnyAccountEligibleForDelegation ? <SmartWalletTooltip /> : undefined),
+    [smartWalletEnabled, isAnyAccountEligibleForDelegation],
+  )
+
   return (
     <Trace logImpression properties={{ flow }} screen={ExtensionOnboardingScreens.SelectWallet}>
       <OnboardingScreen
+        belowFrameContent={belowFrameContent}
         Icon={
           <Square backgroundColor="$surface2" borderRadius="$rounded12" size={iconSizes.icon48}>
             <WalletFilled color="$neutral1" size="$icon.24" />
@@ -90,7 +96,7 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
               <Text color="$statusCritical" textAlign="center" variant="buttonLabel2">
                 {t('onboarding.selectWallets.error')}
               </Text>
-            ) : !importableAccounts?.length ? (
+            ) : isDelegationChecksLoading ? (
               <Flex>
                 <SelectWalletsSkeleton repeat={3} />
               </Flex>
@@ -112,5 +118,44 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
         </ScrollView>
       </OnboardingScreen>
     </Trace>
+  )
+}
+
+const onPressLearnMore = (url: string): Promise<void> => openUri(url)
+
+function SmartWalletTooltip(): JSX.Element | undefined {
+  const { t } = useTranslation()
+  const triggerComponent = <CustomTrigger />
+  return (
+    <Tooltip allowFlip stayInFrame delay={{ close: 100, open: 0 }} placement="top">
+      <Flex centered row mx="$spacing60" mt="$spacing8">
+        <Text textAlign="center" variant="body4" color="$neutral2">
+          <Trans components={{ highlight: triggerComponent }} i18nKey="account.wallet.select.smartWalletDisclaimer" />
+        </Text>
+      </Flex>
+      <Tooltip.Content animationDirection="top" pointerEvents="auto">
+        <Tooltip.Arrow />
+        <Flex>
+          <Text variant="body4" color="$neutral2">
+            {`${t('smartWallet.modal.description.block1')} ${t('smartWallet.modal.description.block2')}`}
+          </Text>
+          <TouchableArea onPress={() => onPressLearnMore(uniswapUrls.helpArticleUrls.smartWalletDelegation)}>
+            <Text variant="buttonLabel4" color="$neutral1" mt="$spacing4">
+              {t('common.button.learn')}
+            </Text>
+          </TouchableArea>
+        </Flex>
+      </Tooltip.Content>
+    </Tooltip>
+  )
+}
+
+function CustomTrigger(props: ComponentProps<typeof Text>): JSX.Element {
+  return (
+    <Flex display="inline-flex">
+      <Tooltip.Trigger>
+        <Text variant="buttonLabel4" color="$neutral1" {...props} cursor="pointer" />
+      </Tooltip.Trigger>
+    </Flex>
   )
 }

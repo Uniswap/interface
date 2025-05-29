@@ -62,8 +62,16 @@ module.exports = {
     'security/detect-pseudoRandomBytes': 'error',
     'security/detect-new-buffer': 'error',
 
-    // Globals
-    'no-restricted-globals': ['error'].concat(restrictedGlobals),
+    // Globals.
+    // The Extension config overrides this rule, so make sure to verify if we need to
+    // update `apps/extension/.eslintrc.js` if you make any changes here.
+    'no-restricted-globals': ['error'].concat(restrictedGlobals, [
+      {
+        name: 'chrome',
+        message:
+          'Direct `chrome` access is restricted to prevent accidental usage in the wrong context. Use `getChrome()` or `getChromeWithThrow()` instead.',
+      },
+    ]),
 
     // Custom Rules
     'local-rules/no-unwrapped-t': ['error', { blockedElements: ['Flex', 'AnimatedFlex', 'TouchableArea', 'Trace'] }],

@@ -9,6 +9,7 @@ export enum PageType {
   POSITIONS = '/positions',
   SEND = '/send',
   SWAP = '/swap',
+  SELL = '/sell',
 }
 
 // eslint-disable-next-line import/no-unused-modules -- currently used in a test file
@@ -29,6 +30,7 @@ const pageMatchDefaults: Record<PageType, MatchType> = {
   [PageType.POSITIONS]: MatchType.INCLUDES,
   [PageType.SEND]: MatchType.ENDS_WITH,
   [PageType.SWAP]: MatchType.ENDS_WITH,
+  [PageType.SELL]: MatchType.ENDS_WITH,
 }
 
 /**

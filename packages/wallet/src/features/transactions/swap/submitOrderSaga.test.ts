@@ -92,7 +92,7 @@ describe(submitUniswapXOrder, () => {
   it('sends a uniswapx order', async () => {
     const expectedSubmittedOrderDetails = {
       ...baseExpectedInitialOrderDetails,
-      addedTime: 3,
+      addedTime: 2,
       queueStatus: QueuedOrderStatus.Submitted,
     } satisfies UniswapXOrderDetails
 
@@ -136,7 +136,7 @@ describe(submitUniswapXOrder, () => {
   it('updates an order properly if order submission fails', async () => {
     const expectedSubmittedOrderDetails = {
       ...baseExpectedInitialOrderDetails,
-      addedTime: 3,
+      addedTime: 2,
       queueStatus: QueuedOrderStatus.Submitted,
     }
 
@@ -175,12 +175,11 @@ describe(submitUniswapXOrder, () => {
 
   describe('blocking tx edge cases', () => {
     const approveTxHash = '0xMockApprovalTxHash'
-    const wrapTxHash = '0xMockWrapTxHash'
 
     it('waits for approval and then sends a uniswapx order', async () => {
       const expectedSubmittedOrderDetails = {
         ...baseExpectedInitialOrderDetails,
-        addedTime: 5,
+        addedTime: 4,
         queueStatus: QueuedOrderStatus.Submitted,
       } satisfies UniswapXOrderDetails
 
@@ -190,102 +189,6 @@ describe(submitUniswapXOrder, () => {
         .next()
         .take(finalizeTransaction.type)
         .next({ payload: { hash: "different transaction not the one we're waiting for" } })
-        .take(finalizeTransaction.type)
-        .next({ payload: { hash: approveTxHash, status: TransactionStatus.Success } })
-        .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
-        .next()
-        .call(getSignerManager)
-        .next(mockSignerManager)
-        .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
-        .next(mockSigner)
-        .call(
-          signTypedData,
-          mockPermit.typedData.domain,
-          mockPermit.typedData.types,
-          mockPermit.typedData.values,
-          mockSigner,
-        )
-        .next(mockSignature)
-        .call(submitOrder, expectedOrderRequest)
-        .next()
-        .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
-          routing: 'uniswap_x_v2',
-          order_hash: baseExpectedInitialOrderDetails.orderHash,
-          transactionOriginType: TransactionOriginType.Internal,
-          v2Used: false,
-          v3Used: false,
-          v4Used: false,
-          uniswapXUsed: true,
-        })
-        .next()
-        .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
-        .next()
-        .call(baseSubmitOrderParams.onSuccess)
-        .next()
-        .isDone()
-    })
-
-    it('waits for wrap and then sends a uniswapx order', async () => {
-      const expectedSubmittedOrderDetails = {
-        ...baseExpectedInitialOrderDetails,
-        addedTime: 5,
-        queueStatus: QueuedOrderStatus.Submitted,
-      } satisfies UniswapXOrderDetails
-
-      testSaga(submitUniswapXOrder, { ...baseSubmitOrderParams, wrapTxHash })
-        .next()
-        .put({ type: addTransaction.type, payload: baseExpectedInitialOrderDetails })
-        .next()
-        .take(finalizeTransaction.type)
-        .next({ payload: { hash: "different transaction not the one we're waiting for" } })
-        .take(finalizeTransaction.type)
-        .next({ payload: { hash: wrapTxHash, status: TransactionStatus.Success } })
-        .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
-        .next()
-        .call(getSignerManager)
-        .next(mockSignerManager)
-        .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
-        .next(mockSigner)
-        .call(
-          signTypedData,
-          mockPermit.typedData.domain,
-          mockPermit.typedData.types,
-          mockPermit.typedData.values,
-          mockSigner,
-        )
-        .next(mockSignature)
-        .call(submitOrder, expectedOrderRequest)
-        .next()
-        .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
-          routing: 'uniswap_x_v2',
-          order_hash: baseExpectedInitialOrderDetails.orderHash,
-          transactionOriginType: TransactionOriginType.Internal,
-          v2Used: false,
-          v3Used: false,
-          v4Used: false,
-          uniswapXUsed: true,
-        })
-        .next()
-        .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
-        .next()
-        .call(baseSubmitOrderParams.onSuccess)
-        .next()
-        .isDone()
-    })
-
-    it('waits for approval and wrap and sends a uniswapx order', async () => {
-      const expectedSubmittedOrderDetails = {
-        ...baseExpectedInitialOrderDetails,
-        addedTime: 5,
-        queueStatus: QueuedOrderStatus.Submitted,
-      } satisfies UniswapXOrderDetails
-
-      testSaga(submitUniswapXOrder, { ...baseSubmitOrderParams, wrapTxHash, approveTxHash })
-        .next()
-        .put({ type: addTransaction.type, payload: baseExpectedInitialOrderDetails })
-        .next()
-        .take(finalizeTransaction.type)
-        .next({ payload: { hash: wrapTxHash, status: TransactionStatus.Success } })
         .take(finalizeTransaction.type)
         .next({ payload: { hash: approveTxHash, status: TransactionStatus.Success } })
         .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
@@ -341,26 +244,6 @@ describe(submitUniswapXOrder, () => {
         .isDone()
     })
 
-    it('updates state if an wrap fails', async () => {
-      testSaga(submitUniswapXOrder, { ...baseSubmitOrderParams, wrapTxHash })
-        .next()
-        .put({ type: addTransaction.type, payload: baseExpectedInitialOrderDetails })
-        .next()
-        .take(finalizeTransaction.type)
-        .next({ payload: { hash: wrapTxHash, status: TransactionStatus.Failed } })
-        .put({
-          type: updateTransaction.type,
-          payload: {
-            ...baseExpectedInitialOrderDetails,
-            queueStatus: QueuedOrderStatus.WrapFailed,
-          },
-        })
-        .next()
-        .call(baseSubmitOrderParams.onFailure)
-        .next()
-        .isDone()
-    })
-
     it('updates state if order becomes stale after waiting too long', async () => {
       let nextTimestampReturnValue = 1
       // Mock more than ORDER_STALENESS_THRESHOLD seconds passing between saga start & wrap finish
@@ -370,12 +253,12 @@ describe(submitUniswapXOrder, () => {
         return timestamp
       })
 
-      testSaga(submitUniswapXOrder, { ...baseSubmitOrderParams, wrapTxHash })
+      testSaga(submitUniswapXOrder, { ...baseSubmitOrderParams, approveTxHash })
         .next()
         .put({ type: addTransaction.type, payload: baseExpectedInitialOrderDetails })
         .next()
         .take(finalizeTransaction.type)
-        .next({ payload: { hash: wrapTxHash, status: TransactionStatus.Success } })
+        .next({ payload: { hash: approveTxHash, status: TransactionStatus.Success } })
         .put({
           type: updateTransaction.type,
           payload: {

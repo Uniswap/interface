@@ -13,6 +13,7 @@ import {
   usePoolPriceHistoryQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isSameAddress } from 'utilities/src/addresses'
+import { removeOutliers } from 'utils/prices'
 
 export type PDPChartQueryVars = {
   addressOrId: string
@@ -27,19 +28,19 @@ export function usePoolPriceChartData(
   variables: PDPChartQueryVars | undefined,
   currencyA: OptionalCurrency,
   protocolVersion: ProtocolVersion,
-  sortedCurrencyAAddress: string,
+  token0Address: string,
 ): ChartQueryResult<PriceChartData, ChartType.PRICE> {
   const { data, loading } = usePoolPriceHistoryQuery({ variables, skip: !variables?.addressOrId })
   return useMemo(() => {
     const { priceHistory } = data?.v2Pair ?? data?.v3Pool ?? data?.v4Pool ?? {}
 
+    const baseTokenIsToken0 = isSameAddress(token0Address, getCurrencyAddressWithWrap(currencyA, protocolVersion))
+
     const entries =
       priceHistory
         ?.filter((price): price is TimestampedPoolPrice => price !== null)
         .map((price) => {
-          const value = isSameAddress(sortedCurrencyAAddress, getCurrencyAddressWithWrap(currencyA, protocolVersion))
-            ? price?.token0Price
-            : price?.token1Price
+          const value = baseTokenIsToken0 ? price?.token0Price : price?.token1Price
 
           return {
             time: price.timestamp as UTCTimestamp,
@@ -51,10 +52,12 @@ export function usePoolPriceChartData(
           }
         }) ?? []
 
+    const filteredEntries = removeOutliers(entries)
+
     // TODO(WEB-3769): Append current price based on active tick to entries
     /* const dataQuality = checkDataQuality(entries, ChartType.PRICE, variables.duration) */
     const dataQuality = loading || !priceHistory || !priceHistory.length ? DataQuality.INVALID : DataQuality.VALID
 
-    return { chartType: ChartType.PRICE, entries, loading, dataQuality }
-  }, [data?.v2Pair, data?.v3Pool, data?.v4Pool, loading, sortedCurrencyAAddress, currencyA, protocolVersion])
+    return { chartType: ChartType.PRICE, entries: filteredEntries, loading, dataQuality }
+  }, [data?.v2Pair, data?.v3Pool, data?.v4Pool, loading, token0Address, currencyA, protocolVersion])
 }

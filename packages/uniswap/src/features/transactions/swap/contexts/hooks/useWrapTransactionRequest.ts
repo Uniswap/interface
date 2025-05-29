@@ -8,7 +8,6 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
@@ -20,18 +19,17 @@ export function useWrapTransactionRequest(
   derivedSwapInfo: DerivedSwapInfo,
   account?: AccountMeta,
 ): providers.TransactionRequest | undefined {
-  const { wrapType, currencyAmounts, trade } = derivedSwapInfo
-  const isUniswapXWrap = Boolean(trade.trade && isUniswapX(trade.trade) && trade.trade.needsWrap)
+  const { wrapType, currencyAmounts } = derivedSwapInfo
 
   const transactionFetcher = useCallback(() => {
     const currencyAmountIn = currencyAmounts.input
     const from = account?.address
-    if (!currencyAmountIn || (wrapType === WrapType.NotApplicable && !isUniswapXWrap)) {
+    if (!currencyAmountIn || wrapType === WrapType.NotApplicable) {
       return undefined
     }
 
     return getWrapTransactionRequest({ currencyAmountIn, from })
-  }, [account, isUniswapXWrap, wrapType, currencyAmounts.input])
+  }, [account, wrapType, currencyAmounts.input])
 
   return useAsyncData(transactionFetcher).data
 }

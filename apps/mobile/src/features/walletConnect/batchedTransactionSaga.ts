@@ -1,14 +1,25 @@
 import { getInternalError, getSdkError } from '@walletconnect/utils'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import { WalletSendCallsRequest, addRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { call, put } from 'typed-redux-saga'
+import { call, put, select } from 'typed-redux-saga'
 import { UNISWAP_DELEGATION_ADDRESS } from 'uniswap/src/constants/addresses'
-import { fetchWalletEncoding7702 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { checkWalletDelegation, fetchWalletEncoding7702 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { WalletCheckDelegationResponseBody } from 'uniswap/src/data/tradingApi/__generated__'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { getCallsStatusHelper } from 'wallet/src/features/batchedTransactions/eip5792Utils'
-import { transformCallsToTransactionRequests } from 'wallet/src/features/batchedTransactions/utils'
+import {
+  getCapabilitiesForDelegationStatus,
+  transformCallsToTransactionRequests,
+} from 'wallet/src/features/batchedTransactions/utils'
+import { selectHasShownEip5792Nudge } from 'wallet/src/features/behaviorHistory/selectors'
+import { setHasShown5792Nudge } from 'wallet/src/features/behaviorHistory/slice'
+import { selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
 
 /**
  * Checks if EIP-5792 methods are enabled via feature flag
@@ -109,13 +120,29 @@ export function* handleSendCalls(topic: string, requestId: number, request: Wall
  * @param requestId ID of the request
  * @param accountAddress Address of the connected account
  * @param requestedAccount Address of the account capabilities are being requested for
+ * @param chainIdsFromRequest Chain IDs from the request
+ * @param dappName Name of the dapp
+ * @param dappIconUrl Icon URL of the dapp
  */
-export function* handleGetCapabilities(
-  topic: string,
-  requestId: number,
-  accountAddress: string,
-  requestedAccount: string,
-) {
+export function* handleGetCapabilities({
+  topic,
+  requestId,
+  accountAddress,
+  requestedAccount,
+  chainIdsFromRequest,
+  dappUrl,
+  dappName,
+  dappIconUrl,
+}: {
+  topic: string
+  requestId: number
+  accountAddress: string
+  requestedAccount: string
+  chainIdsFromRequest?: UniverseChainId[]
+  dappUrl: string
+  dappName?: string
+  dappIconUrl?: string
+}) {
   const eip5792MethodsEnabled = isEip5792MethodsEnabled()
 
   if (!eip5792MethodsEnabled) {
@@ -128,13 +155,72 @@ export function* handleGetCapabilities(
     return
   }
 
+  const hasSmartWalletConsent = yield* select(selectHasSmartWalletConsent, accountAddress)
+  const hasShownNudge = yield* select(selectHasShownEip5792Nudge, accountAddress, dappUrl)
+
+  const { chains: enabledChains } = yield* call(getEnabledChainIdsSaga)
+
+  const chainIds = (chainIdsFromRequest ?? enabledChains).map((chainId) => chainId.valueOf())
+
+  let delegationStatusResponse: WalletCheckDelegationResponseBody | undefined
+
+  let hasNoExistingDelegations = true
+
+  try {
+    delegationStatusResponse = yield* call(checkWalletDelegation, {
+      walletAddresses: [accountAddress],
+      chainIds: chainIds.map((chain) => chain.valueOf()),
+    })
+
+    const detailsMap = delegationStatusResponse.delegationDetails[accountAddress]
+
+    if (detailsMap) {
+      const hasAtLeastOneDelegation = Object.values(detailsMap).some((details) => !!details.currentDelegationAddress)
+
+      hasNoExistingDelegations = !hasAtLeastOneDelegation
+    }
+  } catch (error) {
+    logger.error(error, {
+      tags: { file: 'dappRequestSaga', function: 'handleGetCapabilities' },
+      extra: { accountAddress },
+    })
+  }
+
+  if (!hasSmartWalletConsent && !hasShownNudge && hasNoExistingDelegations) {
+    const onEnableSmartWallet = () => {
+      navigate(ModalName.SmartWalletEnabledModal, {
+        showReconnectDappPrompt: true,
+      })
+    }
+
+    // Update the state to mark that we've shown the nudge
+    yield* put(
+      setHasShown5792Nudge({
+        walletAddress: accountAddress,
+        dappUrl,
+      }),
+    )
+
+    yield* call(navigate, ModalName.PostSwapSmartWalletNudge, {
+      onEnableSmartWallet,
+      dappInfo: {
+        icon: dappIconUrl,
+        name: dappName,
+      },
+    })
+  }
+
+  const capabilities = getCapabilitiesForDelegationStatus(
+    delegationStatusResponse?.delegationDetails[accountAddress],
+    hasSmartWalletConsent,
+  )
+
   yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
     topic,
     response: {
       id: requestId,
       jsonrpc: '2.0',
-      // TODO: This would be where we add any changes in capabilities object (when decided)
-      result: {},
+      result: capabilities,
     },
   })
 }

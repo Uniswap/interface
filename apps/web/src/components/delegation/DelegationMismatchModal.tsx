@@ -1,6 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { WalletAlertBadge } from 'components/Badge/WalletAlertBadge'
-import { DialogV2 } from 'components/Dialog/DialogV2'
+import { Dialog } from 'components/Dialog/Dialog'
 import { useWalletDisplay } from 'components/Web3Status/RecentlyConnectedModal'
 import { useAccount } from 'hooks/useAccount'
 import { useTheme } from 'lib/styled-components'
@@ -63,7 +63,7 @@ function DelegationMismatchModal({ onClose }: DelegationMismatchModalProps) {
 
   return (
     <Trace logImpression modal={ModalName.DelegationMismatch}>
-      <DialogV2
+      <Dialog
         isOpen
         modalName={ModalName.DelegationMismatch}
         title={t('smartWallets.delegationMismatchModal.title')}
@@ -101,7 +101,7 @@ function DelegationMismatchModal({ onClose }: DelegationMismatchModalProps) {
             </Flex>
           ))}
         </Flex>
-      </DialogV2>
+      </Dialog>
     </Trace>
   )
 }

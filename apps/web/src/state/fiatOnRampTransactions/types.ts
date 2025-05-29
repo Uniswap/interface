@@ -21,5 +21,6 @@ export function backendStatusToFiatOnRampStatus(status: TransactionStatus) {
 
 export enum FiatOnRampTransactionType {
   BUY = 'BUY',
+  SELL = 'SELL',
   TRANSFER = 'TRANSFER',
 }

@@ -8,11 +8,11 @@ import {
 } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxContext } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import { canUnwrapCurrency } from 'pages/Pool/Positions/create/utils'
-import { ClickablePill } from 'pages/Swap/Buy/PredefinedAmount'
+import { PredefinedAmount } from 'pages/Swap/Buy/PredefinedAmount'
 import { NumericalInputMimic, NumericalInputSymbolContainer, NumericalInputWrapper } from 'pages/Swap/common/shared'
 import { useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Button, Flex, Switch, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Switch, Text } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import useResizeObserver from 'use-resize-observer'
 
@@ -24,7 +24,6 @@ const isValidPercentageInput = (value: string): boolean => {
 export function RemoveLiquidityForm() {
   const hiddenObserver = useResizeObserver<HTMLElement>()
   const { t } = useTranslation()
-  const colors = useSporeColors()
 
   const { percent, positionInfo, setPercent, setStep, percentInvalid, unwrapNativeCurrency, setUnwrapNativeCurrency } =
     useRemoveLiquidityModalContext()
@@ -109,25 +108,15 @@ export function RemoveLiquidityForm() {
             </NumericalInputWrapper>
           </Flex>
           <Flex row gap="$gap8" width="100%" justifyContent="center">
-            {[25, 50, 75, 100].map((option) => {
-              const active = percent === option.toString()
-              const disabled = false
-              return (
-                <ClickablePill
-                  key={option}
-                  onPress={() => {
-                    setPercent(option.toString())
-                  }}
-                  $disabled={disabled}
-                  $active={active}
-                  customBorderColor={colors.surface3.val}
-                  foregroundColor={colors[disabled ? 'neutral3' : active ? 'neutral1' : 'neutral2'].val}
-                  label={option < 100 ? option + '%' : t('swap.button.max')}
-                  px="$spacing16"
-                  textVariant="buttonLabel2"
-                />
-              )
-            })}
+            {[25, 50, 75, 100].map((option) => (
+              <PredefinedAmount
+                key={option}
+                onPress={() => {
+                  setPercent(option.toString())
+                }}
+                label={option < 100 ? option + '%' : t('swap.button.max')}
+              />
+            ))}
           </Flex>
         </Flex>
         {unwrapUnderCard}

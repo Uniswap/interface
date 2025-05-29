@@ -18,6 +18,7 @@ export const ErrorLogSchema = MessageSchema.extend({
   fileName: z.string(),
   functionName: z.string(),
   tags: z.record(z.string()).optional(),
+  extra: z.record(z.unknown()).optional(),
 })
 export type ErrorLog = z.infer<typeof ErrorLogSchema>
 

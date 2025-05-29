@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { TransitionPresets, createStackNavigator } from '@react-navigation/stack'
 import React, { useEffect } from 'react'
 import { DevSettings } from 'react-native'
-import { INCLUDE_PROTOTYPE_FEATURES } from 'react-native-dotenv'
+import { INCLUDE_PROTOTYPE_FEATURES, IS_E2E_TEST } from 'react-native-dotenv'
 import { useSelector } from 'react-redux'
 import { AccountSwitcherModal } from 'src/app/modals/AccountSwitcherModal'
 import { BackupReminderModal } from 'src/app/modals/BackupReminderModal'
@@ -12,6 +12,7 @@ import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
 import { ExploreModal } from 'src/app/modals/ExploreModal'
 import { KoreaCexTransferInfoModal } from 'src/app/modals/KoreaCexTransferInfoModal'
 import { NotificationsOSSettingsModal } from 'src/app/modals/NotificationsOSSettingsModal'
+import { SmartWalletInfoModal } from 'src/app/modals/SmartWalletInfoModal'
 import { TokenWarningModalWrapper } from 'src/app/modals/TokenWarningModalWrapper'
 import { ViewOnlyExplainerModal } from 'src/app/modals/ViewOnlyExplainerModal'
 import { renderHeaderBackButton, renderHeaderBackImage } from 'src/app/navigation/components'
@@ -27,19 +28,29 @@ import {
   useAppStackNavigation,
 } from 'src/app/navigation/types'
 import { RemoveWalletModal } from 'src/components/RemoveWallet/RemoveWalletModal'
+import { PrivateKeySpeedBumpModal } from 'src/components/RestoreWalletModal/PrivateKeySpeedBumpModal'
 import { RestoreWalletModal } from 'src/components/RestoreWalletModal/RestoreWalletModal'
 import { ConnectionsDappListModal } from 'src/components/Settings/ConnectionsDappModal/ConnectionsDappListModal'
 import { EditLabelSettingsModal } from 'src/components/Settings/EditWalletModal/EditLabelSettingsModal'
 import { EditProfileSettingsModal } from 'src/components/Settings/EditWalletModal/EditProfileSettingsModal'
 import { ManageWalletsModal } from 'src/components/Settings/ManageWalletsModal'
+import { SettingsAppearanceModal } from 'src/components/Settings/SettingsAppearanceModal'
 import { SettingsBiometricModal } from 'src/components/Settings/SettingsBiometricModal'
 import { BuyNativeTokenModal } from 'src/components/TokenDetails/BuyNativeTokenModal'
 import { FundWalletModal } from 'src/components/home/introCards/FundWalletModal'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { AdvancedSettingsModal } from 'src/components/modals/ReactNavigationModals/AdvancedSettingsModal'
 import { HiddenTokenInfoModalScreen } from 'src/components/modals/ReactNavigationModals/HiddenTokenInfoModalScreen'
+import { LanguageSettingsScreen } from 'src/components/modals/ReactNavigationModals/LanguageSettingsScreen'
 import { PasskeyHelpModalScreen } from 'src/components/modals/ReactNavigationModals/PasskeyHelpModalScreen'
 import { PasskeyManagementModalScreen } from 'src/components/modals/ReactNavigationModals/PasskeyManagementModalScreen'
+import { PermissionsSettingsScreen } from 'src/components/modals/ReactNavigationModals/PermissionsSettingsScreen'
+import { PortfolioBalanceSettingsScreen } from 'src/components/modals/ReactNavigationModals/PortfolioBalanceSettingsScreen'
+import { PostSwapSmartWalletNudgeScreen } from 'src/components/modals/ReactNavigationModals/PostSwapSmartWalletNudgeScreen'
+import { SmartWalletConfirmModalScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletConfirmModalScreen'
+import { SmartWalletCreatedModalScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletCreatedModalScreen'
+import { SmartWalletEnabledModalScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletEnabledModalScreen'
+import { SmartWalletInsufficientFundsOnNetworkScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletInsufficientFundsOnNetworkScreen'
 import { TestnetModeModalScreen } from 'src/components/modals/ReactNavigationModals/TestnetModeModalScreen'
 import { UnitagsIntroModal } from 'src/components/unitags/UnitagsIntroModal'
 import { ExchangeTransferModal } from 'src/features/fiatOnRamp/ExchangeTransferModal'
@@ -66,6 +77,7 @@ import { PasskeyImportScreen } from 'src/screens/Import/PasskeyImportScreen'
 import { RestoreCloudBackupLoadingScreen } from 'src/screens/Import/RestoreCloudBackupLoadingScreen'
 import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreCloudBackupPasswordScreen'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
+import { RestoreMethodScreen } from 'src/screens/Import/RestoreMethodScreen'
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInputScreen'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
 import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
@@ -89,9 +101,11 @@ import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal
 import { SettingsNotificationsScreen } from 'src/screens/SettingsNotificationsScreen'
 import { SettingsPrivacyScreen } from 'src/screens/SettingsPrivacyScreen'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
+import { SettingsSmartWalletScreen } from 'src/screens/SettingsSmartWalletScreen'
 import { SettingsViewSeedPhraseScreen } from 'src/screens/SettingsViewSeedPhraseScreen'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
+import { ViewPrivateKeysScreen } from 'src/screens/ViewPrivateKeys/ViewPrivateKeysScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
 import { useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
@@ -110,6 +124,17 @@ import {
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
+
+/**
+ * Note that we need to explicitly check for the imports from 'react-native-dotenv'
+ * in for the bundler to know to exclude this code from release builds.
+ */
+const enabledInEnvOrDev =
+  INCLUDE_PROTOTYPE_FEATURES === 'true' ||
+  process.env.INCLUDE_PROTOTYPE_FEATURES === 'true' ||
+  IS_E2E_TEST === 'true' ||
+  process.env.IS_E2E_TEST === 'true' ||
+  __DEV__
 
 const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()
@@ -147,12 +172,18 @@ function SettingsStackGroup(): JSX.Element {
         name={MobileScreens.SettingsCloudBackupProcessing}
       />
       <SettingsStack.Screen component={SettingsCloudBackupStatus} name={MobileScreens.SettingsCloudBackupStatus} />
+      <SettingsStack.Screen component={SettingsSmartWalletScreen} name={MobileScreens.SettingsSmartWallet} />
       <SettingsStack.Screen component={SettingsPrivacyScreen} name={MobileScreens.SettingsPrivacy} />
       <SettingsStack.Screen component={SettingsNotificationsScreen} name={MobileScreens.SettingsNotifications} />
+      <SettingsStack.Screen component={ViewPrivateKeysScreen} name={MobileScreens.ViewPrivateKeys} />
       <SettingsStack.Group screenOptions={navNativeStackOptions.presentationBottomSheet}>
         <SettingsStack.Screen component={NotificationsOSSettingsModal} name={ModalName.NotificationsOSSettings} />
         <SettingsStack.Screen component={UnitagsIntroModal} name={ModalName.UnitagsIntro} />
         <SettingsStack.Screen component={RestoreWalletModal} name={ModalName.RestoreWallet} />
+        {enabledInEnvOrDev &&
+          ((): JSX.Element => {
+            return <SettingsStack.Screen component={ExperimentsModal} name={ModalName.Experiments} />
+          })()}
       </SettingsStack.Group>
     </SettingsStack.Navigator>
   )
@@ -247,6 +278,7 @@ function OnboardingStackNavigator(): JSX.Element {
             name={OnboardingScreens.BackupCloudPasswordConfirm}
           />
           <OnboardingStack.Screen component={ImportMethodScreen} name={OnboardingScreens.ImportMethod} />
+          <OnboardingStack.Screen component={RestoreMethodScreen} name={OnboardingScreens.RestoreMethod} />
           <OnboardingStack.Screen
             component={OnDeviceRecoveryScreen}
             name={OnboardingScreens.OnDeviceRecovery}
@@ -269,6 +301,7 @@ function OnboardingStackNavigator(): JSX.Element {
           <OnboardingStack.Screen component={SeedPhraseInputScreen} name={OnboardingScreens.SeedPhraseInput} />
           <OnboardingStack.Screen component={SelectWalletScreen} name={OnboardingScreens.SelectWallet} />
           <OnboardingStack.Screen component={WatchWalletScreen} name={OnboardingScreens.WatchWallet} />
+          <OnboardingStack.Screen component={ViewPrivateKeysScreen} name={MobileScreens.ViewPrivateKeys} />
         </OnboardingStack.Group>
       </OnboardingStack.Navigator>
     </OnboardingContextProvider>
@@ -319,8 +352,6 @@ function UnitagStackNavigator(): JSX.Element {
 export function AppStackNavigator(): JSX.Element {
   const finishedOnboarding = useSelector(selectFinishedOnboarding)
   const navigation = useAppStackNavigation()
-  const enabledInEnvOrDev =
-    INCLUDE_PROTOTYPE_FEATURES === 'true' || process.env.INCLUDE_PROTOTYPE_FEATURES === 'true' || __DEV__
 
   useEffect(() => {
     // Adds a menu item to navigate to Storybook in debug builds
@@ -369,6 +400,7 @@ export function AppStackNavigator(): JSX.Element {
         <AppStack.Screen component={NotificationsOSSettingsModal} name={ModalName.NotificationsOSSettings} />
         <AppStack.Screen component={FundWalletModal} name={ModalName.FundWallet} />
         <AppStack.Screen component={KoreaCexTransferInfoModal} name={ModalName.KoreaCexTransferInfoModal} />
+        <AppStack.Screen component={SmartWalletInfoModal} name={ModalName.SmartWalletInfoModal} />
         <AppStack.Screen component={ExchangeTransferModal} name={ModalName.ExchangeTransferModal} />
         <AppStack.Screen component={TestnetSwitchModal} name={ModalName.TestnetSwitchModal} />
         <AppStack.Screen component={TokenWarningModalWrapper} name={ModalName.TokenWarning} />
@@ -393,8 +425,20 @@ export function AppStackNavigator(): JSX.Element {
         <AppStack.Screen component={EditLabelSettingsModal} name={ModalName.EditLabelSettingsModal} />
         <AppStack.Screen component={EditProfileSettingsModal} name={ModalName.EditProfileSettingsModal} />
         <AppStack.Screen component={ConnectionsDappListModal} name={ModalName.ConnectionsDappListModal} />
+        <AppStack.Screen component={PrivateKeySpeedBumpModal} name={ModalName.PrivateKeySpeedBumpModal} />
         <AppStack.Screen component={AdvancedSettingsModal} name={ModalName.SmartWalletAdvancedSettingsModal} />
-
+        <AppStack.Screen component={SmartWalletConfirmModalScreen} name={ModalName.SmartWalletConfirmModal} />
+        <AppStack.Screen component={SmartWalletCreatedModalScreen} name={ModalName.SmartWalletCreatedModal} />
+        <AppStack.Screen component={SmartWalletEnabledModalScreen} name={ModalName.SmartWalletEnabledModal} />
+        <AppStack.Screen component={SettingsAppearanceModal} name={ModalName.SettingsAppearance} />
+        <AppStack.Screen component={PermissionsSettingsScreen} name={ModalName.PermissionsModal} />
+        <AppStack.Screen component={PortfolioBalanceSettingsScreen} name={ModalName.PortfolioBalanceModal} />
+        <AppStack.Screen component={LanguageSettingsScreen} name={ModalName.LanguageSelector} />
+        <AppStack.Screen
+          component={SmartWalletInsufficientFundsOnNetworkScreen}
+          name={ModalName.SmartWalletInsufficientFundsOnNetworkModal}
+        />
+        <AppStack.Screen component={PostSwapSmartWalletNudgeScreen} name={ModalName.PostSwapSmartWalletNudge} />
         {enabledInEnvOrDev &&
           ((): JSX.Element => {
             return <AppStack.Screen component={ExperimentsModal} name={ModalName.Experiments} />

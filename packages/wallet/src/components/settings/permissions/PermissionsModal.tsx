@@ -8,12 +8,16 @@ import { AnalyticsToggleLineSwitch } from 'wallet/src/components/settings/Analyt
 import { DefaultWalletLineSwitch } from 'wallet/src/components/settings/permissions/DefaultWalletLineSwitch'
 
 type PermissionsModalProps = {
-  onClose: () => void
+  isOpen: boolean
   handleDefaultBrowserToggle?: (isChecked: boolean) => void
   isDefaultBrowserProvider?: boolean
+  onClose: () => void
 }
 
+export type PermissionsModalState = Omit<PermissionsModalProps, 'onClose' | 'isOpen'>
+
 export function PermissionsModal({
+  isOpen,
   onClose,
   handleDefaultBrowserToggle,
   isDefaultBrowserProvider,
@@ -30,7 +34,7 @@ export function PermissionsModal({
   const [isDefaultProvider, setIsDefaultProvider] = useState(isDefaultBrowserProvider || false)
 
   return (
-    <Modal name={ModalName.PermissionsModal} onClose={onClose}>
+    <Modal isModalOpen={isOpen} name={ModalName.PermissionsModal} onClose={onClose}>
       <Flex
         animation="fast"
         gap="$spacing16"

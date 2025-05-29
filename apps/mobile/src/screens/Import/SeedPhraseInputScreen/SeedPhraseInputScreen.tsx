@@ -5,11 +5,16 @@ import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreenOnBlur'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
-
 import { SeedPhraseInput } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/SeedPhraseInput'
+import {
+  NativeSeedPhraseInputProps,
+  NativeSeedPhraseInputRef,
+  StringKey,
+} from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/types'
 import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
+import { useFunctionAfterNavigationTransitionEndWithDelay } from 'src/utils/hooks'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
-import { Button, Flex, Text, TouchableArea, useIsShortMobileDevice } from 'ui/src'
+import { Button, Flex, MobileDeviceHeight, Text, TouchableArea, useIsShortMobileDevice } from 'ui/src'
 import { PapersText, QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -18,19 +23,11 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
-
-import {
-  NativeSeedPhraseInputProps,
-  NativeSeedPhraseInputRef,
-  StringKey,
-} from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/types'
-import { useFunctionAfterNavigationTransitionEndWithDelay } from 'src/utils/hooks'
-import { MobileDeviceHeight } from 'ui/src'
-import { useEvent } from 'utilities/src/react/hooks'
-import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 type SeedPhraseInputScreenProps = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SeedPhraseInput>
 
@@ -69,7 +66,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false)
 
   const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
-
+  const isShowingAsCloudBackupFallback = params.showAsCloudBackupFallback ?? false
   const targetMnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
 
   const handleOnInputValidated: NativeSeedPhraseInputProps['onInputValidated'] = useCallback(
@@ -89,7 +86,13 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
 
       seedPhraseInputRef.current?.blur()
 
-      onRestoreComplete({ isRestoringMnemonic, dispatch, params, navigation })
+      onRestoreComplete({
+        isRestoringMnemonic,
+        dispatch,
+        params,
+        navigation,
+        screen: OnboardingScreens.SeedPhraseInput,
+      })
       setIsSubmitEnabled(true)
     },
     [dispatch, generateImportedAccounts, setIsSubmitEnabled, isRestoringMnemonic, navigation, params],
@@ -100,12 +103,10 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
     [],
   )
 
-  const handleSubmit = useEvent(() =>
-    setIsSubmitEnabled((_prev) => {
-      seedPhraseInputRef.current?.handleSubmit()
-      return false
-    }),
-  )
+  const handleSubmit = useEvent(() => {
+    setIsSubmitEnabled(false)
+    seedPhraseInputRef.current?.handleSubmit()
+  })
 
   const onPressTryAgainButton = useCallback(() => {
     navigation.replace(OnboardingScreens.RestoreCloudBackupLoading, params)
@@ -136,12 +137,14 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
       }
       minHeightWhenKeyboardExpanded={false}
       subtitle={
-        isRestoringMnemonic
+        isShowingAsCloudBackupFallback
           ? t('account.recoveryPhrase.subtitle.restoring')
           : t('account.recoveryPhrase.subtitle.import')
       }
       title={
-        isRestoringMnemonic ? t('account.recoveryPhrase.title.restoring') : t('account.recoveryPhrase.title.import')
+        isShowingAsCloudBackupFallback
+          ? t('account.recoveryPhrase.title.restoring')
+          : t('account.recoveryPhrase.title.import')
       }
       keyboardDismissMode="interactive"
       onHeaderPress={() => {
@@ -171,11 +174,11 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
       />
 
       <Flex row justifyContent="center" pt="$spacing24">
-        <TouchableArea onPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}>
+        <TouchableArea onPress={isShowingAsCloudBackupFallback ? onPressTryAgainButton : onPressRecoveryHelpButton}>
           <Flex row alignItems="center" gap="$spacing4">
             <QuestionInCircleFilled color="$neutral3" size="$icon.20" />
             <Text color="$neutral3" variant="body2">
-              {isRestoringMnemonic
+              {isShowingAsCloudBackupFallback
                 ? t('account.recoveryPhrase.helpText.restoring')
                 : t('account.recoveryPhrase.helpText.import')}
             </Text>

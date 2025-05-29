@@ -1,16 +1,9 @@
 import { providers as ethersProviders } from 'ethers/lib/ethers'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Experiments, PrivateRpcProperties } from 'uniswap/src/features/gating/experiments'
-import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
-import {
-  FLASHBOTS_DEFAULT_REFUND_PERCENT,
-  FlashbotsRpcProvider,
-  SignerInfo,
-} from 'uniswap/src/features/providers/FlashbotsRpcProvider'
+import { SignerInfo } from 'uniswap/src/features/providers/FlashbotsCommon'
+import { FlashbotsRpcProvider } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
+import { selectRpcUrl } from 'uniswap/src/features/providers/rpcUrlSelector'
 import { logger } from 'utilities/src/logger/logger'
-
-export const DEFAULT_FLASHBOTS_ENABLED = true
 
 // Should use ProviderManager for provider access unless being accessed outside of ProviderManagerContext (e.g., Apollo initialization)
 export function createEthersProvider(
@@ -19,45 +12,24 @@ export function createEthersProvider(
   signerInfo?: SignerInfo,
 ): ethersProviders.JsonRpcProvider | null {
   try {
-    if (rpcType === RPCType.Private) {
-      const privateRPCUrl = getChainInfo(chainId).rpcUrls?.[RPCType.Private]?.http[0]
-      if (!privateRPCUrl) {
-        throw new Error(`No private RPC available for chain ${chainId}`)
-      }
-
-      const flashbotsEnabled = getExperimentValue<Experiments.PrivateRpc, PrivateRpcProperties, boolean>(
-        Experiments.PrivateRpc,
-        PrivateRpcProperties.FlashbotsEnabled,
-        DEFAULT_FLASHBOTS_ENABLED,
-      )
-
-      if (chainId === UniverseChainId.Mainnet && flashbotsEnabled) {
-        const flashbotsRefundPercent = getExperimentValue<Experiments.PrivateRpc, PrivateRpcProperties, number>(
-          Experiments.PrivateRpc,
-          PrivateRpcProperties.RefundPercent,
-          FLASHBOTS_DEFAULT_REFUND_PERCENT,
-        )
-
-        return new FlashbotsRpcProvider(signerInfo, flashbotsRefundPercent)
-      }
-
-      return new ethersProviders.JsonRpcProvider(privateRPCUrl)
+    // Use the shared RPC URL selector
+    const rpcConfig = selectRpcUrl(chainId, rpcType)
+    if (!rpcConfig) {
+      return null
     }
 
-    try {
-      const publicRPCUrl = getChainInfo(chainId).rpcUrls?.[RPCType.Public]?.http[0]
-      if (publicRPCUrl) {
-        return new ethersProviders.JsonRpcProvider(publicRPCUrl)
-      }
-      throw new Error(`No public RPC available for chain ${chainId}`)
-    } catch (error) {
-      const altPublicRPCUrl = getChainInfo(chainId).rpcUrls?.[RPCType.PublicAlt]?.http[0]
-      return new ethersProviders.JsonRpcProvider(altPublicRPCUrl)
+    // If we should use Flashbots, create a FlashbotsRpcProvider
+    if (rpcConfig.shouldUseFlashbots && rpcConfig.flashbotsConfig) {
+      const { refundPercent } = rpcConfig.flashbotsConfig
+      return new FlashbotsRpcProvider(signerInfo, refundPercent)
     }
+
+    // Otherwise, create a standard JsonRpcProvider
+    return new ethersProviders.JsonRpcProvider(rpcConfig.rpcUrl)
   } catch (error) {
     logger.error(error, {
       tags: { file: 'createEthersProvider', function: 'createProvider' },
-      extra: { chainId },
+      extra: { chainId, rpcType },
     })
     return null
   }

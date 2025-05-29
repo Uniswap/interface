@@ -42,9 +42,6 @@ const RemoveLiquidityModal = lazy(() =>
 const ClaimFeeModal = lazy(() =>
   import('pages/Pool/Positions/ClaimFeeModal').then((module) => ({ default: module.ClaimFeeModal })),
 )
-const RecoveryPhraseModal = lazy(() =>
-  import('components/RecoveryPhrase/Modal').then((module) => ({ default: module.RecoveryPhraseModal })),
-)
 const PasskeysHelpModal = lazy(() =>
   import('uniswap/src/features/passkey/PasskeysHelpModal').then((module) => ({ default: module.PasskeysHelpModal })),
 )
@@ -122,10 +119,6 @@ export const modalRegistry: ModalRegistry = {
   [ModalName.ClaimFee]: {
     component: ClaimFeeModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.ClaimFee,
-  },
-  [ModalName.RecoveryPhrase]: {
-    component: RecoveryPhraseModal,
-    shouldMount: (state) => state.application.openModal?.name === ModalName.RecoveryPhrase,
   },
   [ModalName.TokenNotFound]: {
     component: TokenNotFoundModal,

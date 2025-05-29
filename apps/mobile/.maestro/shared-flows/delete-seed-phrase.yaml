@@ -1,0 +1,17 @@
+# mutiple flows have the biometrics confirm step, so we abstract it here
+appId: com.uniswap.mobile.dev
+---
+- tapOn:
+    id: 'account-header-settings-icon'
+- waitForAnimationToEnd
+- swipe:
+    direction: 'up'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'app-settings-dev-modal'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'seed-phrase-private-keys-accordion'
+- tapOn:
+    id: 'delete-seed-phrase-button'
+- tapOn: 'Delete'

@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
+import { DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/chainInfo'
 import { type CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -23,7 +23,7 @@ export function useSendSelectCurrencyEvent({
     ({ position, suggestion_count, currencyInfo }: SelectCurrencyEventProperties): void => {
       sendAnalyticsEvent(UniswapEventName.TokenSelected, {
         name: currencyInfo.currency.name,
-        address: currencyInfo.currency.isToken ? currencyInfo.currency.address : DEFAULT_NATIVE_ADDRESS,
+        address: currencyInfo.currency.isToken ? currencyInfo.currency.address : DEFAULT_NATIVE_ADDRESS_LEGACY,
         chain: currencyInfo.currency.chainId,
         page,
         field: currencyField,

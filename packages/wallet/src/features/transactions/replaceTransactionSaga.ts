@@ -2,10 +2,11 @@ import { BigNumber, providers } from 'ethers'
 import { call, put, select } from 'typed-redux-saga'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { addTransaction, deleteTransaction } from 'uniswap/src/features/transactions/slice'
 import {
-  BridgeTransactionDetails,
-  ClassicTransactionDetails,
+  OnChainTransactionDetails,
   TransactionDetails,
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -19,7 +20,7 @@ import { getPrivateProvider, getProvider, getSignerManager } from 'wallet/src/fe
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 
 export function* attemptReplaceTransaction(
-  transaction: ClassicTransactionDetails | BridgeTransactionDetails,
+  transaction: OnChainTransactionDetails,
   newTxRequest: providers.TransactionRequest,
   isCancellation = false,
 ) {
@@ -65,6 +66,15 @@ export function* attemptReplaceTransaction(
     )
     logger.debug('replaceTransaction', '', 'Tx submitted. New hash:', transactionResponse.hash)
 
+    if (isCancellation) {
+      yield* call(sendAnalyticsEvent, WalletEventName.CancelSubmitted, {
+        original_transaction_hash: transaction.hash,
+        replacement_transaction_hash: transactionResponse.hash,
+        chain_id: chainId,
+        nonce: transactionResponse.nonce,
+      })
+    }
+
     const replacementTransaction: TransactionDetails = {
       ...transaction,
       // Ensure we create a new, unique txn to monitor
@@ -76,6 +86,7 @@ export function* attemptReplaceTransaction(
       options: {
         ...options,
         request: getSerializableTransactionRequest(populatedRequest, chainId),
+        replacedTransactionHash: transaction.hash,
       },
     }
 

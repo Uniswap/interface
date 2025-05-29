@@ -69,7 +69,6 @@ export function validateGasFeeResult(gasFee: GasFeeResult): ValidatedGasFeeResul
 
 export type FormattedUniswapXGasFeeInfo = {
   approvalFeeFormatted?: string
-  wrapFeeFormatted?: string
   swapFeeFormatted: string
   preSavingsGasFeeFormatted: string
   inputTokenSymbol?: string

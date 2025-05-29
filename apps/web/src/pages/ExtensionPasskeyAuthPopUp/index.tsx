@@ -18,6 +18,7 @@ import {
 } from 'uniswap/src/extension/messagePassing/types/requests'
 import { authenticatePasskey } from 'uniswap/src/features/passkey/passkey'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { getChromeRuntime, getChromeRuntimeWithThrow } from 'utilities/src/chrome/chrome'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
@@ -45,8 +46,10 @@ export default function ExtensionPasskeyAuthPopUp() {
   const [searchParams] = useSearchParams()
 
   useEffect(() => {
-    if (!chrome?.runtime) {
-      // `chrome.runtime` should exist when the Extension is installed
+    const chromeRuntime = getChromeRuntime()
+
+    if (!chromeRuntime?.sendMessage) {
+      // `chrome.runtime.sendMessage` should exist when the Extension is installed
       // and the URL matches the Extension's `externally_connectable` manifest field.
       logger.debug('ExtensionPasskeyAuthPopUp/index.tsx', 'useEffect', 'No `chrome.runtime` found')
       setSignInAttemptStatus(ReferrerVerification.Denied)
@@ -85,7 +88,7 @@ export default function ExtensionPasskeyAuthPopUp() {
       `Sending PasskeySignInFlowOpened message to extension ID ${extensionId}`,
     )
 
-    chrome.runtime.sendMessage(
+    chromeRuntime.sendMessage(
       extensionId,
       {
         type: InterfaceToExtensionRequestType.PasskeySignInFlowOpened,
@@ -105,6 +108,8 @@ export default function ExtensionPasskeyAuthPopUp() {
       return
     }
 
+    const chromeRuntime = getChromeRuntimeWithThrow()
+
     try {
       const credential = await authenticatePasskey(passkeyRequestData.challengeJson)
 
@@ -115,7 +120,7 @@ export default function ExtensionPasskeyAuthPopUp() {
           `Sending PasskeyCredentialError message to extension ID ${extensionId}`,
         )
 
-        chrome.runtime.sendMessage(extensionId, {
+        chromeRuntime.sendMessage(extensionId, {
           type: InterfaceToExtensionRequestType.PasskeyCredentialError,
           requestId: passkeyRequestData.requestId,
           error: 'No credential returned',
@@ -130,7 +135,7 @@ export default function ExtensionPasskeyAuthPopUp() {
         `Sending PasskeyCredentialRetrieved message to extension ID ${extensionId}`,
       )
 
-      chrome.runtime.sendMessage(extensionId, {
+      chromeRuntime.sendMessage(extensionId, {
         type: InterfaceToExtensionRequestType.PasskeyCredentialRetrieved,
         requestId: passkeyRequestData.requestId,
         credential,

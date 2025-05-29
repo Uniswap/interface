@@ -23,7 +23,7 @@ import { NFTItem } from 'wallet/src/features/nfts/types'
 import { formatNftItems, getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 
 export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]
-export const NUM_FIRST_NFTS = 30
+export const NUM_FIRST_NFTS = 100
 
 const PREFETCH_ITEMS_THRESHOLD = 0.5
 const LOADING_ITEM = 'loading'
@@ -96,7 +96,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
 
     await fetchMore({
       variables: {
-        first: 30,
+        first: NUM_FIRST_NFTS,
         after: data?.nftBalances?.pageInfo?.endCursor,
       },
     })

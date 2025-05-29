@@ -13,16 +13,18 @@ export function createGetUpdatedTransactionDetails(ctx: {
 }): (input: {
   transaction: OnChainTransactionDetails
   hash: string
+  timestampBeforeSign: number
   timestampBeforeSend: number
   populatedRequest: providers.TransactionRequest
 }) => Promise<OnChainTransactionDetails> {
   return async function getUpdatedTransactionDetails(input: {
     transaction: OnChainTransactionDetails
     hash: string
+    timestampBeforeSign: number
     timestampBeforeSend: number
     populatedRequest: providers.TransactionRequest
   }): Promise<OnChainTransactionDetails> {
-    const { transaction, hash, timestampBeforeSend, populatedRequest } = input
+    const { transaction, hash, timestampBeforeSign, timestampBeforeSend, populatedRequest } = input
     const timestampAfterSend = Date.now()
     const blockNumber = await ctx.getBlockNumber()
     const currentBlockFetchDelayMs = Date.now() - timestampAfterSend
@@ -46,6 +48,7 @@ export function createGetUpdatedTransactionDetails(ctx: {
         request,
         rpcSubmissionTimestampMs: timestampAfterSend,
         rpcSubmissionDelayMs: timestampAfterSend - timestampBeforeSend,
+        signTransactionDelayMs: timestampBeforeSend - timestampBeforeSign,
         currentBlockFetchDelayMs,
         timeoutTimestampMs,
         privateRpcProvider,

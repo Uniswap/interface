@@ -3,16 +3,22 @@ import React, { RefObject, forwardRef, useCallback, useEffect, useImperativeHand
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
-import { ColorTokens, Flex, Text, TouchableArea, useIsShortMobileDevice, useSporeColors } from 'ui/src'
-import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
+import {
+  ColorTokens,
+  Flex,
+  Text,
+  TouchableArea,
+  useIsShortMobileDevice,
+  useShakeAnimation,
+  useSporeColors,
+} from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { fonts, spacing } from 'ui/src/theme'
-import { AmountInput } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
+import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useFormatExactCurrencyAmount } from 'uniswap/src/features/fiatOnRamp/hooks'
@@ -131,14 +137,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
       [selectionChange],
     )
 
-    const inputShakeX = useSharedValue(0)
-    const inputAnimatedStyle = useAnimatedStyle(() => ({
-      transform: [{ translateX: inputShakeX.value }],
-    }))
-
-    const triggerShakeAnimation = useCallback(() => {
-      inputShakeX.value = errorShakeAnimation(inputShakeX)
-    }, [inputShakeX])
+    const { shakeStyle: inputAnimatedStyle, triggerShakeAnimation } = useShakeAnimation()
 
     useEffect(() => {
       async function shake(): Promise<void> {
@@ -147,7 +146,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
       if (errorText && prevErrorText !== errorText) {
         shake().catch(() => undefined)
       }
-    }, [errorText, inputShakeX, prevErrorText, triggerShakeAnimation])
+    }, [errorText, prevErrorText, triggerShakeAnimation])
 
     // Design has asked to make it around 100ms and DEFAULT_DELAY is 200ms
     const debouncedErrorText = useDebounce(errorText, DEFAULT_DELAY / 2)

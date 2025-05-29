@@ -15,6 +15,7 @@ import { ListSeparatorToggle } from 'uniswap/src/features/transactions/Transacti
 import { SwapFee } from 'uniswap/src/features/transactions/TransactionDetails/SwapFee'
 import { SwapReviewTokenWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/SwapReviewTokenWarningCard'
 import { TransactionWarning } from 'uniswap/src/features/transactions/TransactionDetails/TransactionWarning'
+import { UserReceiveAmount } from 'uniswap/src/features/transactions/TransactionDetails/UserReceiveAmount'
 import {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,
@@ -23,7 +24,6 @@ import { TransactionSettingsModal } from 'uniswap/src/features/transactions/comp
 import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippageUpdate/SlippageUpdate'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
-import { UserReceiveAmount } from 'uniswap/src/features/transactions/swap/review/UserReceiveAmount'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isInterface } from 'utilities/src/platform'
@@ -56,6 +56,7 @@ interface TransactionDetailsProps {
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
   txSimulationErrors?: TransactionFailureReason[]
   amountUserWillReceive?: CurrencyAmount<Currency>
+  includesDelegation?: boolean
 }
 
 // eslint-disable-next-line complexity
@@ -88,6 +89,7 @@ export function TransactionDetails({
   RoutingInfo,
   RateInfo,
   amountUserWillReceive,
+  includesDelegation,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const { t } = useTranslation()
   const [showChildren, setShowChildren] = useState(showExpandedChildren)
@@ -146,6 +148,7 @@ export function TransactionDetails({
             indicative={indicative}
             transactionUSDValue={transactionUSDValue}
             uniswapXGasBreakdown={uniswapXGasBreakdown}
+            includesDelegation={includesDelegation}
           />
           {isSwap && RoutingInfo}
           {AccountDetails}

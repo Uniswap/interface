@@ -3,4 +3,5 @@ export enum SwapTab {
   Limit = 'limit',
   Send = 'send',
   Buy = 'buy',
+  Sell = 'sell',
 }

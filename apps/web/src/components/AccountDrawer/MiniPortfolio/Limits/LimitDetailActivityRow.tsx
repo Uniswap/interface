@@ -14,7 +14,8 @@ import { Trans } from 'react-i18next'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { Checkbox, Flex, Image, Text, useMedia, useSporeColors } from 'ui/src'
-import { useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 interface LimitDetailActivityRowProps {
   order: Activity
@@ -29,7 +30,7 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
   const inputCurrencyInfo = useCurrencyInfo(currencies?.[0])
   const outputCurrencyInfo = useCurrencyInfo(currencies?.[1])
   const openOffchainActivityModal = useOpenOffchainActivityModal()
-  const { formatReviewSwapCurrencyAmount } = useFormatter()
+  const { formatCurrencyAmount } = useLocalizationContext()
   const [hovered, setHovered] = useState(false)
 
   const amounts = useOrderAmounts(order.offchainOrderDetails)
@@ -84,12 +85,20 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
             <Flex row gap="$gap4" alignItems="center">
               {inputLogo && <Image src={inputLogo} height={16} width={16} borderRadius="$roundedFull" />}
               <Text variant="subheading2" color="neutral1">
-                {formatReviewSwapCurrencyAmount(amounts.inputAmount)} {amounts.inputAmount.currency.symbol}
+                {formatCurrencyAmount({
+                  value: amounts.inputAmount,
+                  type: NumberType.TokenTx,
+                })}{' '}
+                {amounts.inputAmount.currency.symbol}
               </Text>
               <ArrowRight color={colors.neutral1.val} size="12px" />
               {outputLogo && <Image src={outputLogo} height={16} width={16} borderRadius="$roundedFull" />}
               <Text variant="subheading2" color="neutral1">
-                {formatReviewSwapCurrencyAmount(amounts.outputAmount)} {amounts.outputAmount.currency.symbol}
+                {formatCurrencyAmount({
+                  value: amounts.outputAmount,
+                  type: NumberType.TokenTx,
+                })}{' '}
+                {amounts.outputAmount.currency.symbol}
               </Text>
             </Flex>
             {displayPrice && (
@@ -97,7 +106,10 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
                 <Trans
                   i18nKey="common.limits.when"
                   values={{
-                    price: formatReviewSwapCurrencyAmount(displayPrice),
+                    price: formatCurrencyAmount({
+                      value: displayPrice,
+                      type: NumberType.TokenTx,
+                    }),
                     outSymbol: amounts.outputAmount.currency.symbol,
                     inSymbol: amounts.inputAmount.currency.symbol,
                   }}

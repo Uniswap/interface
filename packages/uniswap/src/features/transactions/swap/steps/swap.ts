@@ -30,7 +30,6 @@ export function createSwapTransactionStep(txRequest: ValidatedTransactionRequest
 
 export function createSwapTransactionAsyncStep(
   swapRequestArgs: CreateSwapRequest | undefined,
-  v4Enabled: boolean,
 ): SwapTransactionStepAsync {
   return {
     type: TransactionStepType.SwapTransactionAsync,
@@ -44,7 +43,6 @@ export function createSwapTransactionAsyncStep(
         signature,
         /* simulating transaction provides a more accurate gas limit, and the simulation will succeed because async swap step will only occur after approval has been confirmed. */
         simulateTransaction: true,
-        v4Enabled,
       })
 
       return validateTransactionRequest(swap)

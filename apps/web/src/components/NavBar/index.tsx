@@ -56,6 +56,7 @@ function useShouldHideChainSelector() {
   const isPositionsPage = useIsPage(PageType.POSITIONS)
   const isMigrateV3Page = useIsPage(PageType.MIGRATE_V3)
   const isBuyPage = useIsPage(PageType.BUY)
+  const isSellPage = useIsPage(PageType.SELL)
 
   const multichainHiddenPages =
     isLandingPage ||
@@ -65,7 +66,8 @@ function useShouldHideChainSelector() {
     isExplorePage ||
     isPositionsPage ||
     isMigrateV3Page ||
-    isBuyPage
+    isBuyPage ||
+    isSellPage
 
   return multichainHiddenPages
 }
@@ -101,8 +103,8 @@ export default function Navbar() {
           {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
           {!hideChainSelector && <ChainSelector />}
           {isTestnetModeEnabled && <TestnetModeTooltip />}
-          <Web3Status />
           {isEmbeddedWalletEnabled && !account.address && <NewUserCTAButton />}
+          <Web3Status />
         </Right>
       </UnpositionedFlex>
     </Nav>

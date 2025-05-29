@@ -180,6 +180,47 @@ const PayerIsUserParamSchema = z.object({
   value: z.boolean(),
 })
 
+const SettleParamSchema = z.object({
+  name: z.literal('SETTLE'),
+  value: z.array(
+    z.union([
+      z.object({
+        name: z.literal('currency'),
+        value: z.string(),
+      }),
+      z.object({
+        name: z.literal('amount'),
+        value: BigNumberSchema,
+      }),
+      z.object({
+        name: z.literal('payerIsUser'),
+        value: z.boolean(),
+      }),
+    ]),
+  ),
+})
+type SettleParam = z.infer<typeof SettleParamSchema>
+
+const TakeParamSchema = z.object({
+  name: z.literal('TAKE'),
+  value: z.array(
+    z.union([
+      z.object({
+        name: z.literal('currency'),
+        value: z.string(),
+      }),
+      z.object({
+        name: z.literal('recipient'),
+        value: z.string(),
+      }),
+      z.object({
+        name: z.literal('amount'),
+        value: BigNumberSchema,
+      }),
+    ]),
+  ),
+})
+
 const ParamSchema = z.union([
   AmountInParamSchema,
   AmountInMaxParamSchema,
@@ -188,6 +229,8 @@ const ParamSchema = z.union([
   AmountMinParamSchema,
   V3PathParamSchema,
   PayerIsUserParamSchema,
+  SettleParamSchema,
+  TakeParamSchema,
   FallbackParamSchema,
 ])
 export type Param = z.infer<typeof ParamSchema>
@@ -245,6 +288,8 @@ const V4SwapCommandSchema = z.object({
     V4SwapExactOutParamSchema,
     V4SwapExactInSingleParamSchema,
     V4SwapExactOutSingleParamSchema,
+    SettleParamSchema,
+    TakeParamSchema,
   ])),
 })
 
@@ -307,4 +352,8 @@ export function isAmountOutParam(param: Param): param is AmountOutParam {
 
 export function isAmountMinParam(param: Param): param is AmountMinParam {
   return AmountMinParamSchema.safeParse(param).success
+}
+
+export function isSettleParam(param: Param): param is SettleParam {
+  return SettleParamSchema.safeParse(param).success
 }

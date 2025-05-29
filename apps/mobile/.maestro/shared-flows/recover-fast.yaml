@@ -4,6 +4,10 @@ appId: com.uniswap.mobile.dev
 env:
   E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
 ---
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.ImportAccount}
+    timeout: 30000 # Starting the app during local dev loads the JS bundle which can take much longer than a normal build
 - tapOn:
     id: ${output.testIds.ImportAccount}
 - waitForAnimationToEnd
@@ -32,4 +36,7 @@ env:
     id: ${output.testIds.Skip}
 - waitForAnimationToEnd
 - runFlow: biometrics-confirm.yaml
+- waitForAnimationToEnd
+- tapOn:
+    id: ${output.testIds.SmartWalletUpgradeModalMaybeLater}
 - waitForAnimationToEnd

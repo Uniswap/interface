@@ -6,7 +6,6 @@ export enum TopLevelRoutes {
 }
 
 export enum OnboardingRoutes {
-  Claim = 'claim',
   Create = 'create',
   Import = 'import',
   ImportPasskey = 'import-passkey',
@@ -43,6 +42,7 @@ export enum SettingsRoutes {
   BackupRecoveryPhrase = 'backup-recovery-phrase',
   RemoveRecoveryPhrase = 'remove-recovery-phrase',
   ManageConnections = 'manage-connections',
+  SmartWallet = 'smart-wallet',
 }
 
 export enum RemoveRecoveryPhraseRoutes {

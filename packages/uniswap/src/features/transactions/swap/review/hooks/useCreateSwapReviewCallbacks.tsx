@@ -23,8 +23,9 @@ export function useCreateSwapReviewCallbacks(ctx: {
   resetCurrentStep: () => void
   setScreen: (screen: TransactionScreen) => void
   authTrigger?: AuthTrigger
-  onSubmitSwap?: () => Promise<void>
+  onSubmitSwap?: () => Promise<void> | void
   setSubmissionError: (error?: Error) => void
+  setRetrySwap: (onPressRetry?: () => void) => void
   onClose: () => void
   showWarningModal: boolean
   warningAcknowledged: boolean
@@ -44,6 +45,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
     authTrigger,
     onSubmitSwap,
     setSubmissionError,
+    setRetrySwap,
     onClose,
     showWarningModal,
     warningAcknowledged,
@@ -59,7 +61,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
   } = ctx
 
   const onFailure = useCallback(
-    (error?: Error) => {
+    (error?: Error, onPressRetry?: () => void) => {
       resetCurrentStep()
 
       // Create a new txId for the next transaction, as the existing one may be used in state to track the failed submission.
@@ -67,8 +69,9 @@ export function useCreateSwapReviewCallbacks(ctx: {
       updateSwapForm({ isSubmitting: false, txId: newTxId, showPendingUI: false })
 
       setSubmissionError(error)
+      setRetrySwap(() => onPressRetry)
     },
-    [updateSwapForm, setSubmissionError, resetCurrentStep],
+    [updateSwapForm, setSubmissionError, resetCurrentStep, setRetrySwap],
   )
 
   const onSuccess = useCallback(() => {

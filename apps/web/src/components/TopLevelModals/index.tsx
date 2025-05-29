@@ -60,7 +60,6 @@ export default function TopLevelModals() {
       <ModalRenderer modalName={ModalName.AddLiquidity} />
       <ModalRenderer modalName={ModalName.RemoveLiquidity} />
       <ModalRenderer modalName={ModalName.ClaimFee} />
-      <ModalRenderer modalName={ModalName.RecoveryPhrase} />
       <ModalRenderer modalName={ModalName.PasskeysHelp} componentProps={{ type: passkeysHelpModalType, accountName }} />
       <ModalRenderer modalName={ModalName.DelegationMismatch} />
     </>

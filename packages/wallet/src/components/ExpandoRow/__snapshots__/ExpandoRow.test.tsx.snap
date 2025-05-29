@@ -4,19 +4,33 @@ exports[`ExpandoRow matches snapshot when collapsed 1`] = `
 [
   <View
     cancelable={true}
+    collapsable={false}
     disabled={false}
+    focusVisibleStyle={{}}
     focusable={true}
-    hitSlop={[Function]}
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {},
+      }
+    }
     minPressDuration={0}
     onBlur={[Function]}
     onFocus={[Function]}
+    onLayout={[Function]}
     onMouseEnter={[Function]}
     onMouseLeave={[Function]}
     onPress={[Function]}
     onPressIn={[Function]}
     onPressOut={[Function]}
+    role="button"
     style={
       {
+        "backgroundColor": "transparent",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
         "flexDirection": "column",
         "opacity": 1,
         "transform": [
@@ -29,9 +43,17 @@ exports[`ExpandoRow matches snapshot when collapsed 1`] = `
     testID="expando-row"
   >
     <View
+      onBlur={[Function]}
+      onFocus={[Function]}
       style={
         {
           "alignItems": "center",
+          "color": {
+            "dynamic": {
+              "dark": "#FFFFFF",
+              "light": "#222222",
+            },
+          },
           "flexDirection": "row",
           "justifyContent": "space-between",
           "paddingBottom": 8,
@@ -40,6 +62,8 @@ exports[`ExpandoRow matches snapshot when collapsed 1`] = `
       }
     >
       <View
+        onBlur={[Function]}
+        onFocus={[Function]}
         style={
           {
             "alignItems": "center",
@@ -51,6 +75,8 @@ exports[`ExpandoRow matches snapshot when collapsed 1`] = `
         }
       >
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "borderBottomColor": {
@@ -90,6 +116,8 @@ exports[`ExpandoRow matches snapshot when collapsed 1`] = `
           }
         />
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "alignItems": "center",
@@ -102,6 +130,8 @@ exports[`ExpandoRow matches snapshot when collapsed 1`] = `
           <Text
             allowFontScaling={false}
             maxFontSizeMultiplier={1.4}
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "color": {
@@ -123,6 +153,8 @@ exports[`ExpandoRow matches snapshot when collapsed 1`] = `
             Test Label
           </Text>
           <View
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "alignItems": "center",
@@ -192,6 +224,8 @@ exports[`ExpandoRow matches snapshot when collapsed 1`] = `
           </View>
         </View>
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "borderBottomColor": {
@@ -247,19 +281,33 @@ exports[`ExpandoRow matches snapshot when expanded 1`] = `
 [
   <View
     cancelable={true}
+    collapsable={false}
     disabled={false}
+    focusVisibleStyle={{}}
     focusable={true}
-    hitSlop={[Function]}
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {},
+      }
+    }
     minPressDuration={0}
     onBlur={[Function]}
     onFocus={[Function]}
+    onLayout={[Function]}
     onMouseEnter={[Function]}
     onMouseLeave={[Function]}
     onPress={[Function]}
     onPressIn={[Function]}
     onPressOut={[Function]}
+    role="button"
     style={
       {
+        "backgroundColor": "transparent",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
         "flexDirection": "column",
         "opacity": 1,
         "transform": [
@@ -272,9 +320,17 @@ exports[`ExpandoRow matches snapshot when expanded 1`] = `
     testID="expando-row"
   >
     <View
+      onBlur={[Function]}
+      onFocus={[Function]}
       style={
         {
           "alignItems": "center",
+          "color": {
+            "dynamic": {
+              "dark": "#FFFFFF",
+              "light": "#222222",
+            },
+          },
           "flexDirection": "row",
           "justifyContent": "space-between",
           "paddingBottom": 8,
@@ -283,6 +339,8 @@ exports[`ExpandoRow matches snapshot when expanded 1`] = `
       }
     >
       <View
+        onBlur={[Function]}
+        onFocus={[Function]}
         style={
           {
             "alignItems": "center",
@@ -294,6 +352,8 @@ exports[`ExpandoRow matches snapshot when expanded 1`] = `
         }
       >
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "borderBottomColor": {
@@ -333,6 +393,8 @@ exports[`ExpandoRow matches snapshot when expanded 1`] = `
           }
         />
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "alignItems": "center",
@@ -345,6 +407,8 @@ exports[`ExpandoRow matches snapshot when expanded 1`] = `
           <Text
             allowFontScaling={false}
             maxFontSizeMultiplier={1.4}
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "color": {
@@ -366,6 +430,8 @@ exports[`ExpandoRow matches snapshot when expanded 1`] = `
             Test Label
           </Text>
           <View
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "alignItems": "center",
@@ -443,6 +509,8 @@ exports[`ExpandoRow matches snapshot when expanded 1`] = `
           </View>
         </View>
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "borderBottomColor": {

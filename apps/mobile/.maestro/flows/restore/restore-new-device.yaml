@@ -1,0 +1,45 @@
+appId: com.uniswap.mobile.dev
+---
+- runFlow: ../../shared-flows/start.yaml
+- runFlow: ../../shared-flows/recover-fast.yaml
+- tapOn:
+    id: 'account-header-settings-icon'
+- waitForAnimationToEnd
+- swipe:
+    direction: 'up'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'app-settings-dev-modal'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'seed-phrase-private-keys-accordion'
+- tapOn:
+    id: 'delete-seed-phrase-button'
+- tapOn: 'Delete'
+- tapOn:
+    id: 'delete-private-keys-button'
+- tapOn: 'Delete'
+- killApp
+- launchApp
+- waitForAnimationToEnd
+- assertVisible:
+    text: 'Recover your wallet'
+- assertVisible:
+    id: 'continue'
+- assertNotVisible:
+    id: 'cancel'
+- tapOn:
+    id: 'continue'
+- waitForAnimationToEnd
+- back
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      text: 'No backups found'
+    timeout: 5000 # wait for cloud backup to fail
+- inputText: ${E2E_RECOVERY_PHRASE}
+- tapOn:
+    id: 'continue'
+- waitForAnimationToEnd
+- assertVisible:
+    id: 'account-header-avatar'

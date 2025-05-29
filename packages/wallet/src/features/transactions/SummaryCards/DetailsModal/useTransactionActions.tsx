@@ -130,7 +130,7 @@ export const useTransactionActions = ({
         />
       )}
       {showCancelModal && (
-        <Modal hideHandlebar={false} name={ModalName.TransactionActions} onClose={handleCancelModalClose}>
+        <Modal hideHandlebar={false} name={ModalName.TransactionCancellation} onClose={handleCancelModalClose}>
           {transaction && (
             <CancelConfirmationView
               authTrigger={authTrigger}

@@ -1,6 +1,6 @@
 import { useBottomSheetInternal } from '@gorhom/bottom-sheet'
 import { useTranslation } from 'react-i18next'
-import { Linking, TouchableOpacity } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
 import { ClientDetails } from 'src/components/Requests/RequestModal/ClientDetails'
@@ -10,6 +10,7 @@ import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { openUri } from 'uniswap/src/utils/linking'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 
 export function ActionCannotBeCompletedContent({
@@ -20,7 +21,7 @@ export function ActionCannotBeCompletedContent({
   onReject: () => void
 }): JSX.Element {
   const handleLearnMore = async (): Promise<void> => {
-    await Linking.openURL(uniswapUrls.helpArticleUrls.mismatchedImports)
+    await openUri(uniswapUrls.helpArticleUrls.mismatchedImports)
   }
 
   return (

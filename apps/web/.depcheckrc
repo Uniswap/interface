@@ -1,5 +1,6 @@
 ignores: [
     # Dependencies that depcheck thinks are unused but are actually used
+    'wrangler',
     '@web3-react/eip1193',
     '@web3-react/empty',
     '@swc/core',
@@ -12,6 +13,9 @@ ignores: [
     'process',
     'madge',
     'mini-css-extract-plugin',
+    '@rive-app/canvas',
+    'babel-plugin-react-compiler',
+    'react-compiler-runtime',
     # Dependencies that depcheck thinks are missing but are actually present or never used
     'stories',
     ## package.json scripts
@@ -59,6 +63,7 @@ ignores: [
     ## Top level local file paths
     'abis',
     'analytics',
+    'appGraphql',
     'assets',
     'components',
     'connection',

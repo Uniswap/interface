@@ -162,7 +162,7 @@ function MobileTokenActions({ mobileSheetOpen, toggleMobileSheet, HeaderActions 
   return (
     <Flex>
       <TouchableArea height={32} onPress={() => toggleMobileSheet(true)} {...ActionButtonStyle}>
-        <MoreHorizontal size="$icon.20" color={colors.neutral2.val} />
+        <MoreHorizontal size={20} fill={colors.neutral2.val} />
       </TouchableArea>
       <WebBottomSheet isOpen={mobileSheetOpen} onClose={() => toggleMobileSheet(false)}>
         <Flex gap="$spacing8" mb="$spacing16">

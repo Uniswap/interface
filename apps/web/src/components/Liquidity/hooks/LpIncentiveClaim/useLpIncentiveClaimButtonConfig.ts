@@ -1,4 +1,3 @@
-import { DialogButtonType } from 'components/Dialog/Dialog'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -34,7 +33,6 @@ export function useLpIncentiveClaimButtonConfig({
 
     return {
       title: t('pool.incentives.collect'),
-      type: DialogButtonType.Accent,
       onClick: onClaim,
       isLoading,
     }

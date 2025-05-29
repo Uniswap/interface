@@ -274,7 +274,6 @@ export const WalletGetCapabilitiesRequestSchema = EthereumRequestWithIdSchema.ex
   return {
     requestId,
     method,
-    params,
     address,
     chainIds,
   }

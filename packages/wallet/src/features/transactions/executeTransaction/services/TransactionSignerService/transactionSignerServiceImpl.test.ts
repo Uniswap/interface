@@ -241,6 +241,7 @@ describe('TransactionSignerService', () => {
       expect(result).toEqual({
         transactionResponse: txResponse,
         populatedRequest,
+        timestampBeforeSign: mockTimestamp,
         timestampBeforeSend: mockTimestamp,
       })
     })

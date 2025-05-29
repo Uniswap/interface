@@ -2,6 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import ReactPlayer from 'react-player'
 import { useDispatch, useSelector } from 'react-redux'
 import { ActivityTab } from 'src/app/components/tabs/ActivityTab'
 import { NftsTab } from 'src/app/components/tabs/NftsTab'
@@ -18,6 +19,9 @@ import { useOptimizedSearchParams } from 'src/app/hooks/useOptimizedSearchParams
 import { HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { Flex, Loader, Text, TouchableArea, styled } from 'ui/src'
+import { SMART_WALLET_UPGRADE_VIDEO } from 'ui/src/assets'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -25,13 +29,34 @@ import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { NFTS_TAB_DATA_DEPENDENCIES } from 'wallet/src/components/nfts/NftsList'
+import { SmartWalletEnabledModal } from 'wallet/src/components/smartWallet/modals/SmartWalletEnabledModal'
+import { SmartWalletUpgradeModals } from 'wallet/src/components/smartWallet/modals/SmartWalletUpgradeModal'
 import { PendingNotificationBadge } from 'wallet/src/features/notifications/components/PendingNotificationBadge'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
+
+const MemoizedVideo = memo(() => (
+  <Flex borderRadius="$rounded12" overflow="hidden" height="auto" maxWidth="100%" aspectRatio="16 / 9">
+    <ReactPlayer
+      url={SMART_WALLET_UPGRADE_VIDEO}
+      width="100%"
+      height="100%"
+      playing={true}
+      muted={true}
+      style={{
+        objectFit: 'cover',
+      }}
+      fallback={undefined}
+    />
+  </Flex>
+))
+MemoizedVideo.displayName = 'MemoizedVideo'
 
 export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
   const { t } = useTranslation()
+  const activeAccount = useActiveAccountWithThrow()
   const [showTabs, setShowTabs] = useState(false)
 
   const apolloClient = useApolloClient()
@@ -41,6 +66,8 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
 
   const address = useActiveAccountAddressWithThrow()
   const [selectedTab, setSelectedTab] = useSelectedTabState()
+  const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWallet)
+  const [isSmartWalletEnabledModalOpen, setIsSmartWalletEnabledModalOpen] = useState(false)
   const dispatch = useDispatch()
 
   // Record a heartbeat for anonymous user DAU
@@ -59,6 +86,15 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
   // defaults to true, but store state will persist to future loads once updated
   const { isOpen: isPinRequestOpen } = useSelector(selectAlertsState(AlertName.PinToToolbar))
   const onClosePinRequest = useCallback(() => dispatch(closeAlert(AlertName.PinToToolbar)), [dispatch])
+
+  const handleSmartWalletEnable = useCallback(
+    (onComplete?: () => void): void => {
+      dispatch(setSmartWalletConsent({ address: activeAccount.address, smartWalletConsent: true }))
+      onComplete?.()
+      setIsSmartWalletEnabledModalOpen(true)
+    },
+    [dispatch, activeAccount.address, setIsSmartWalletEnabledModalOpen],
+  )
 
   useEffect(() => {
     let intervalId: number
@@ -198,6 +234,21 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
         </Text>
       )}
       {appRatingModalVisible && <AppRatingModal onClose={onAppRatingModalClose} />}
+      {isSmartWalletEnabled && (
+        <SmartWalletUpgradeModals
+          account={activeAccount}
+          video={<MemoizedVideo />}
+          onEnableSmartWallet={handleSmartWalletEnable}
+        />
+      )}
+
+      {isSmartWalletEnabledModalOpen && isSmartWalletEnabled ? (
+        <SmartWalletEnabledModal
+          isOpen
+          showReconnectDappPrompt={false}
+          onClose={() => setIsSmartWalletEnabledModalOpen(false)}
+        />
+      ) : undefined}
     </Flex>
   )
 })

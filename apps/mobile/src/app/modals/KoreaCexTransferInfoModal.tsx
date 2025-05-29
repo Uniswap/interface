@@ -6,7 +6,7 @@ import { CEX_TRANSFER_MODAL_BG_DARK, CEX_TRANSFER_MODAL_BG_LIGHT } from 'ui/src/
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { openURL } from 'uniswap/src/utils/link'
+import { openUri } from 'uniswap/src/utils/linking'
 
 const BG_IMAGE_MAX_HEIGHT = 80
 
@@ -37,7 +37,7 @@ export function KoreaCexTransferInfoModal(): JSX.Element {
           <Button
             size="large"
             emphasis="secondary"
-            onPress={() => openURL(uniswapUrls.helpArticleUrls.cexTransferKorea)}
+            onPress={() => openUri(uniswapUrls.helpArticleUrls.cexTransferKorea)}
           >
             {t('common.button.learn')}
           </Button>

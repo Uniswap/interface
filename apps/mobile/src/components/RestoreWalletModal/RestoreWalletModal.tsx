@@ -1,15 +1,18 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { AppStackScreenProp } from 'src/app/navigation/types'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { WalletRestoreType } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
 import { closeAllModals } from 'src/features/modals/modalSlice'
 import { Button, Flex, useSporeColors } from 'ui/src'
-import { ArrowDownCircle, WalletFilled } from 'ui/src/components/icons'
-import { spacing } from 'ui/src/theme/spacing'
+import { ArrowDownCircleFilledWithBorder, WalletFilled } from 'ui/src/components/icons'
+import { spacing } from 'ui/src/theme'
 import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
@@ -21,43 +24,72 @@ const SHADOW_OPACITY = 0.3
 const SHADOW_OFFSET = { width: 0, height: 0 } as const
 const ICON_OFFSET = -spacing.spacing8
 
-function BackgroundRing({ size }: { size: number }): JSX.Element {
-  return (
-    <Flex
-      position="absolute"
-      borderRadius="$roundedFull"
-      borderColor="$surface3"
-      borderWidth="$spacing1"
-      height={size}
-      width={size}
-      top="50%"
-      left="50%"
-      transform={[{ translateX: -size / 2 }, { translateY: -size / 2 }]}
-    />
-  )
-}
-
-export function RestoreWalletModal(): JSX.Element | null {
+/**
+ * This modal is used to prompt the user to restore their wallet depending on the type of
+ * restoration needed.
+ */
+export function RestoreWalletModal({ route }: AppStackScreenProp<typeof ModalName.RestoreWallet>): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const dispatch = useDispatch()
-
   const { onClose } = useReactNavigationModal()
+
+  const restoreType = route.params?.restoreType ?? WalletRestoreType.None
+  const { title, description, isDismissible } = useMemo(() => {
+    switch (restoreType) {
+      case WalletRestoreType.SeedPhrase:
+        return {
+          title: t('account.wallet.restore.seed_phrase.title'),
+          description: t('account.wallet.restore.seed_phrase.description'),
+          isDismissible: true,
+        }
+      case WalletRestoreType.NewDevice:
+        return {
+          title: t('account.wallet.restore.new_device.title'),
+          description: t('account.wallet.restore.new_device.description'),
+          isDismissible: false,
+        }
+      default:
+        return {}
+    }
+  }, [restoreType, t])
 
   const onRestore = (): void => {
     onClose()
     dispatch(closeAllModals()) // still need this until all modals are migrated to react-navigation
-    navigate(MobileScreens.OnboardingStack, {
-      screen: OnboardingScreens.RestoreCloudBackupLoading,
-      params: {
-        entryPoint: OnboardingEntryPoint.Sidebar,
-        importType: ImportType.RestoreMnemonic,
-      },
-    })
+
+    switch (restoreType) {
+      case WalletRestoreType.SeedPhrase: {
+        navigate(MobileScreens.OnboardingStack, {
+          screen: OnboardingScreens.RestoreMethod,
+          params: {
+            entryPoint: OnboardingEntryPoint.Sidebar,
+            importType: ImportType.RestoreMnemonic,
+          },
+        })
+        break
+      }
+      case WalletRestoreType.NewDevice: {
+        navigate(MobileScreens.OnboardingStack, {
+          screen: OnboardingScreens.RestoreCloudBackupLoading,
+          params: {
+            entryPoint: OnboardingEntryPoint.Sidebar,
+            importType: ImportType.RestoreMnemonic,
+          },
+        })
+        break
+      }
+    }
   }
 
   return (
-    <Modal hideHandlebar backgroundColor={colors.surface1.val} isDismissible={false} name={ModalName.RestoreWallet}>
+    <Modal
+      hideHandlebar
+      backgroundColor={colors.surface1.val}
+      isDismissible={isDismissible}
+      name={ModalName.RestoreWallet}
+      onClose={onClose}
+    >
       <Flex centered gap="$spacing24" px="$spacing24" py="$spacing12" backgroundColor="$surface1">
         <Flex
           centered
@@ -87,23 +119,43 @@ export function RestoreWalletModal(): JSX.Element | null {
           >
             <WalletFilled color="$neutral1" size="$icon.24" />
             <Flex position="absolute" bottom={ICON_OFFSET} right={ICON_OFFSET}>
-              <ArrowDownCircle color="$accent1" size="$icon.24" />
+              <ArrowDownCircleFilledWithBorder color="$accent1" size="$icon.24" />
             </Flex>
           </Flex>
         </Flex>
 
-        <GenericHeader
-          title={t('account.wallet.button.restore')}
-          titleVariant="subheading1"
-          subtitle={t('account.wallet.restore.description')}
-          subtitleVariant="body3"
-        />
-        <Flex row>
-          <Button variant="branded" emphasis="primary" size="large" onPress={onRestore}>
-            {t('common.button.continue')}
-          </Button>
+        <GenericHeader title={title} titleVariant="subheading1" subtitle={description} subtitleVariant="body3" />
+        <Flex gap="$spacing8" width="100%">
+          <Flex row>
+            <Button testID={TestID.Continue} variant="branded" emphasis="primary" size="medium" onPress={onRestore}>
+              {t('common.button.continue')}
+            </Button>
+          </Flex>
+          {isDismissible && (
+            <Flex row>
+              <Button testID={TestID.Cancel} variant="default" emphasis="secondary" size="medium" onPress={onClose}>
+                {t('common.button.notNow')}
+              </Button>
+            </Flex>
+          )}
         </Flex>
       </Flex>
     </Modal>
+  )
+}
+
+function BackgroundRing({ size }: { size: number }): JSX.Element {
+  return (
+    <Flex
+      position="absolute"
+      borderRadius="$roundedFull"
+      borderColor="$surface3"
+      borderWidth="$spacing1"
+      height={size}
+      width={size}
+      top="50%"
+      left="50%"
+      transform={[{ translateX: -size / 2 }, { translateY: -size / 2 }]}
+    />
   )
 }

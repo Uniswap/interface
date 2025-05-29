@@ -249,9 +249,9 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
     if (params.positionPriceLower !== undefined && params.positionPriceUpper !== undefined) {
       if (!this.bandIndicator) {
         this.bandIndicator = new BandsIndicator({
-          lineColor: opacify(10, params.theme.neutral1),
+          lineColor: opacify(40, params.theme.neutral1),
           fillColor: params.theme.surface3,
-          lineWidth: 1,
+          lineWidth: 1.5,
           upperValue: this.positionRangeMax,
           lowerValue: this.positionRangeMin,
         })

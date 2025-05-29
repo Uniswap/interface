@@ -1,12 +1,12 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
+import { GqlSearchToken } from 'appGraphql/data/SearchTokens'
+import { gqlTokenToCurrencyInfo } from 'appGraphql/data/types'
+import { getTokenDetailsURL } from 'appGraphql/data/util'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { GqlSearchToken } from 'graphql/data/SearchTokens'
-import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
-import { getTokenDetailsURL } from 'graphql/data/util'
 import styled, { css } from 'lib/styled-components'
 import { searchTokenToTokenSearchResult } from 'lib/utils/searchBar'
 import { GenieCollection } from 'nft/types'
@@ -22,12 +22,14 @@ import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import { Token, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { shortenAddress } from 'utilities/src/addresses'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
+import { useFormatter } from 'utils/formatNumbers'
 
 const PriceChangeContainer = styled.div`
   display: flex;
@@ -106,7 +108,8 @@ export function SuggestionRow({
   const isToken = suggestionIsToken(suggestion)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { formatFiatPrice, formatDelta, formatNumberOrString } = useFormatter()
+  const { formatFiatPrice, formatDelta } = useFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
   const [brokenCollectionImage, setBrokenCollectionImage] = useState(false)
 
   const tokenWarningSeverity = isToken
@@ -218,7 +221,7 @@ export function SuggestionRow({
           <PrimaryText width="100%">
             {isToken
               ? formatFiatPrice({ price: suggestion.market?.price?.value })
-              : `${formatNumberOrString({ input: suggestion.stats?.floor_price, type: NumberType.NFTToken })} ETH`}
+              : `${formatNumberOrString({ value: suggestion.stats?.floor_price, type: NumberType.NFTTokenFloorPrice })} ETH`}
           </PrimaryText>
         </Flex>
 

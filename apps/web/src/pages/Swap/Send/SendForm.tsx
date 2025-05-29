@@ -168,9 +168,13 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     [handleModalState],
   )
 
+  const [confirming, setConfirming] = useState(false)
+
   const handleSend = useCallback(() => {
+    setConfirming(true)
     sendCallback()
       .then(() => {
+        setConfirming(false)
         handleModalState(SendFormModalState.None)
         setSendState((prev) => ({
           ...prev,
@@ -181,7 +185,9 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
           inputInFiat: true,
         }))
       })
-      .catch(() => undefined)
+      .catch(() => {
+        setConfirming(false)
+      })
   }, [handleModalState, sendCallback, setSendState])
 
   const buttonDisabled = !!inputError || loadingSmartContractAddress || transfersLoading || sendButtonState.disabled
@@ -222,6 +228,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
       </Column>
       <SendReviewModal
         isOpen={sendFormModalState === SendFormModalState.REVIEW}
+        isConfirming={confirming}
         onConfirm={handleSend}
         onDismiss={() => handleModalState(SendFormModalState.None)}
       />

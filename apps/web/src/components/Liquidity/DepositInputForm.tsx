@@ -5,9 +5,23 @@ import { useTokenBalanceWithBuffer } from 'pages/Pool/Positions/create/hooks'
 import { useNativeTokenPercentageBufferExperiment } from 'pages/Pool/Positions/create/hooks/useNativeTokenPercentageBufferExperiment'
 import { ReactNode, useState } from 'react'
 import { PositionField } from 'types/position'
-import { Flex } from 'ui/src'
+import { Flex, FlexProps } from 'ui/src'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import { CurrencyField } from 'uniswap/src/types/currency'
+
+const INPUT_BORDER_RADIUS = '$rounded20'
+const sharedPanelStyle = {
+  borderTopLeftRadius: INPUT_BORDER_RADIUS,
+  borderTopRightRadius: INPUT_BORDER_RADIUS,
+  backgroundColor: '$surface2',
+}
+
+function borderRadiusStyles(component?: ReactNode): FlexProps {
+  return {
+    borderBottomLeftRadius: component ? '$rounded0' : INPUT_BORDER_RADIUS,
+    borderBottomRightRadius: component ? '$rounded0' : INPUT_BORDER_RADIUS,
+  }
+}
 
 function UnderCardComponent({ children }: { children: ReactNode }) {
   return (
@@ -83,11 +97,10 @@ export function DepositInputForm({
         <Flex gap={2}>
           <CurrencyInputPanel
             focus={focusedInputField === PositionField.TOKEN0}
-            borderTopLeftRadius="$rounded20"
-            borderTopRightRadius="$rounded20"
-            borderBottomLeftRadius={token0UnderCardComponent ? '$rounded0' : '$rounded20'}
-            borderBottomRightRadius={token0UnderCardComponent ? '$rounded0' : '$rounded20'}
-            backgroundColor="$surface2"
+            customPanelStyle={{
+              ...sharedPanelStyle,
+              ...borderRadiusStyles(token0UnderCardComponent),
+            }}
             currencyInfo={token0CurrencyInfo}
             currencyField={CurrencyField.INPUT}
             currencyAmount={currencyAmounts?.[PositionField.TOKEN0]}
@@ -107,12 +120,11 @@ export function DepositInputForm({
         <Flex gap={2}>
           <CurrencyInputPanel
             focus={focusedInputField === PositionField.TOKEN1}
-            py="$spacing16"
-            borderTopLeftRadius="$rounded20"
-            borderTopRightRadius="$rounded20"
-            borderBottomLeftRadius={token1UnderCardComponent ? '$rounded0' : '$rounded20'}
-            borderBottomRightRadius={token1UnderCardComponent ? '$rounded0' : '$rounded20'}
-            backgroundColor="$surface2"
+            customPanelStyle={{
+              ...sharedPanelStyle,
+              py: '$spacing16',
+              ...borderRadiusStyles(token1UnderCardComponent),
+            }}
             currencyInfo={token1CurrencyInfo}
             currencyField={CurrencyField.INPUT}
             currencyAmount={currencyAmounts?.[PositionField.TOKEN1]}

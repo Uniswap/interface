@@ -1,7 +1,8 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Experiments, PrivateRpcProperties } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { DEFAULT_FLASHBOTS_ENABLED } from 'uniswap/src/features/providers/createEthersProvider'
+import { DEFAULT_FLASHBOTS_ENABLED } from 'uniswap/src/features/providers/FlashbotsCommon'
+
 import { logger as loggerUtil } from 'utilities/src/logger/logger'
 import { FeatureFlagService } from 'wallet/src/features/transactions/executeTransaction/services/featureFlagService'
 import type { TransactionConfigService } from 'wallet/src/features/transactions/executeTransaction/services/transactionConfigService'

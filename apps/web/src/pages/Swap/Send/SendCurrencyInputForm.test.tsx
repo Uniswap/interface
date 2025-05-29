@@ -124,7 +124,7 @@ describe('SendCurrencyInputform', () => {
     await waitFor(() => {
       expect(screen.getByDisplayValue('1')).toBeVisible()
     })
-    expect(screen.getByText('$100.00 USD')).toBeVisible()
+    expect(screen.getByText('$100')).toBeVisible()
     expect(screen.getByText('DAI')).toBeVisible()
     expect(container.firstChild).toMatchSnapshot()
   })

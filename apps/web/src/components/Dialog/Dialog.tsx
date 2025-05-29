@@ -1,177 +1,125 @@
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import { ColumnCenter } from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
-import styled, { DefaultTheme } from 'lib/styled-components'
-import { ReactNode } from 'react'
-import { Gap } from 'theme'
-import { ThemedText } from 'theme/components'
-import { Button, ButtonEmphasis, ButtonVariant } from 'ui/src'
+import React from 'react'
+import { Button, ButtonEmphasis, ButtonVariant, Flex, FlexProps, Text, TextProps } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
+import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { isExtension } from 'utilities/src/platform'
 
-export const Container = styled(ColumnCenter)`
-  background-color: ${({ theme }) => theme.surface1};
-  border-radius: 16px;
-  padding: 16px 24px 24px 24px;
-  width: 100%;
-`
-
-const IconContainer = styled.div`
-  display: flex;
-  background-color: ${({ theme }) => theme.surface3};
-  width: 48px;
-  height: 48px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-`
-
-const TitleText = styled(ThemedText.HeadlineMedium)`
-  font-size: 24px;
-  line-height: 32px;
-  text-align: center;
-  font-weight: 500;
-`
-
-const DescriptionText = styled(ThemedText.BodySecondary)`
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  letter-spacing: 0em;
-  text-align: center;
-`
-
-const DialogHeader = styled(GetHelpHeader)`
-  padding: 4px 0px;
-`
-
-export enum DialogButtonType {
-  Primary = 'primary',
-  Error = 'error',
-  Accent = 'accent',
+interface DialogProps {
+  isOpen: boolean
+  onClose: () => void
+  icon: React.ReactNode
+  title: string | React.ReactNode
+  subtext: string | React.ReactNode
+  learnMoreUrl?: string
+  learnMoreTextColor?: string
+  learnMoreTextVariant?: TextProps['variant']
+  modalName: ModalNameType
+  primaryButtonText: string
+  primaryButtonOnClick: () => void
+  primaryButtonVariant?: ButtonVariant
+  primaryButtonEmphasis?: ButtonEmphasis
+  isPrimaryButtonLoading?: boolean
+  secondaryButtonText?: string
+  secondaryButtonOnClick?: () => void
+  secondaryButtonVariant?: ButtonVariant
+  secondaryButtonEmphasis?: ButtonEmphasis
+  buttonContainerProps?: FlexProps
+  children?: React.ReactNode
+  alignment?: 'top' | 'center'
+  displayHelpCTA?: boolean
+  textAlign?: 'center' | 'left'
+  hasIconBackground?: boolean
 }
 
-function getButtonEmphasis(type?: DialogButtonType): ButtonEmphasis {
-  switch (type) {
-    case DialogButtonType.Accent:
-    case DialogButtonType.Error:
-      return 'primary'
-    default:
-      return 'secondary' // default/undefined DialogButtonType should show as Button default variant, secondary emphasis
-  }
-}
-
-function getButtonVariant(type?: DialogButtonType): ButtonVariant {
-  switch (type) {
-    case DialogButtonType.Error:
-      return 'critical'
-    case DialogButtonType.Accent:
-      return 'branded'
-    default:
-      return 'default'
-  }
-}
-type ButtonConfig = {
-  type?: DialogButtonType
-  title: ReactNode
-  onClick: () => void
-  disabled?: boolean
-  textColor?: keyof DefaultTheme
-  isLoading?: boolean
-}
-
-type ButtonsConfig = {
-  left?: ButtonConfig | JSX.Element
-  right?: ButtonConfig | JSX.Element
-  gap?: Gap
-}
-
-export interface DialogProps {
-  isVisible: boolean
-  icon: ReactNode
-  title: ReactNode
-  description: ReactNode
-  body?: ReactNode
-  onCancel: () => void
-  buttonsConfig?: ButtonsConfig
-  removeIconBackground?: boolean
-}
-
-/**
- * All the content of the dialog that doesn't relate to the modal presentation.
- * Use this if you want to use the dialog within a different modal.
- */
-export function DialogContent({ icon, title, description, body, buttonsConfig, removeIconBackground }: DialogProps) {
-  const { left, right, gap } = buttonsConfig ?? {}
+export function Dialog({
+  isOpen,
+  onClose,
+  icon,
+  title,
+  subtext,
+  learnMoreUrl,
+  learnMoreTextColor = '$neutral1',
+  learnMoreTextVariant = 'body3',
+  modalName,
+  primaryButtonText,
+  primaryButtonOnClick,
+  primaryButtonVariant = 'branded',
+  primaryButtonEmphasis,
+  isPrimaryButtonLoading,
+  secondaryButtonText,
+  secondaryButtonOnClick,
+  secondaryButtonVariant = 'default',
+  secondaryButtonEmphasis = 'secondary',
+  buttonContainerProps,
+  alignment = isExtension ? 'top' : undefined,
+  children,
+  displayHelpCTA = false,
+  textAlign = 'center',
+  hasIconBackground = false,
+}: DialogProps): JSX.Element {
   return (
-    <ColumnCenter gap="lg">
-      <ColumnCenter gap="16px">
-        {removeIconBackground ? icon : <IconContainer>{icon}</IconContainer>}
-        <ColumnCenter gap="sm">
-          <TitleText>{title}</TitleText>
-          <DescriptionText>{description}</DescriptionText>
-          {body}
-        </ColumnCenter>
-      </ColumnCenter>
-      <Row align="center" justify="center" gap={gap ?? 'md'}>
-        {left ? (
-          'title' in left ? (
+    <Modal alignment={alignment} isModalOpen={isOpen} name={modalName} onClose={onClose}>
+      {displayHelpCTA && <GetHelpHeader closeModal={onClose} />}
+      <Flex
+        flexDirection="column"
+        alignItems={textAlign === 'center' ? 'center' : 'flex-start'}
+        p="$spacing12"
+        gap="$spacing8"
+      >
+        {hasIconBackground ? (
+          <Flex
+            backgroundColor="$surface3"
+            borderRadius="$rounded12"
+            height="$spacing48"
+            width="$spacing48"
+            alignItems="center"
+            justifyContent="center"
+            mb="$spacing4"
+            data-testid="dialog-icon"
+          >
+            {icon}
+          </Flex>
+        ) : (
+          icon
+        )}
+        <Text variant="subheading1" color="$neutral1" mt="$spacing8">
+          {title}
+        </Text>
+        {typeof subtext === 'string' ? (
+          <Text variant="body3" color="$neutral2" textAlign={textAlign}>
+            {subtext}
+          </Text>
+        ) : (
+          subtext
+        )}
+        {learnMoreUrl && (
+          <LearnMoreLink url={learnMoreUrl} textColor={learnMoreTextColor} textVariant={learnMoreTextVariant} />
+        )}
+        {children}
+        <Flex gap="$spacing8" width="100%" mt="$spacing16" {...buttonContainerProps}>
+          <Button
+            variant={primaryButtonVariant}
+            emphasis={primaryButtonEmphasis}
+            minHeight="$spacing48"
+            onPress={primaryButtonOnClick}
+            loading={isPrimaryButtonLoading}
+          >
+            {primaryButtonText}
+          </Button>
+          {secondaryButtonText && secondaryButtonOnClick && (
             <Button
-              size="small"
-              onPress={left.onClick}
-              isDisabled={left.disabled || left.isLoading}
-              height={40}
-              emphasis={getButtonEmphasis(left.type)}
-              variant={getButtonVariant(left.type)}
-              loading={left.isLoading}
+              variant={secondaryButtonVariant}
+              emphasis={secondaryButtonEmphasis}
+              minHeight="$spacing48"
+              onPress={secondaryButtonOnClick}
             >
-              {left.title}
+              {secondaryButtonText}
             </Button>
-          ) : (
-            left
-          )
-        ) : null}
-        {right ? (
-          'title' in right ? (
-            <Button
-              size="small"
-              onPress={right.onClick}
-              isDisabled={right.disabled}
-              height={40}
-              emphasis={getButtonEmphasis(right.type)}
-              variant={getButtonVariant(right.type)}
-            >
-              {right.title}
-            </Button>
-          ) : (
-            right
-          )
-        ) : null}
-      </Row>
-    </ColumnCenter>
-  )
-}
-
-/**
- * Displays interruptive timely information.
- * Persists until dismissed by user.
- * Appears on top of a scrim.
- *
- * .------------------.
- * |      icon        |
- * |      title       |
- * |    description   |
- * |      body        |
- * |   left | right   |
- *  ------------------
- */
-export function Dialog(props: DialogProps) {
-  return (
-    <Modal name={ModalName.Dialog} isModalOpen={props.isVisible} onClose={props.onCancel} padding={0}>
-      <Container gap="lg">
-        <DialogHeader closeModal={props.onCancel} closeDataTestId="Dialog-closeButton" />
-        <DialogContent {...props} />
-      </Container>
+          )}
+        </Flex>
+      </Flex>
     </Modal>
   )
 }

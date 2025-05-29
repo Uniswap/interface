@@ -302,12 +302,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                           <div
                             class="c10"
                           >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                              style="font-weight: 535;"
-                            >
-                              $0
-                            </div>
+                            $0
                           </div>
                           <s>
                             $7.87
@@ -336,7 +331,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                      aggregates liquidity sources for better prices and gas free swaps. 
                     <a
                       class="c14"
-                      href="https://support.uniswap.org/hc/en-us/articles/17544708791821"
+                      href="https://support.uniswap.org/hc/en-us/articles/17544708791821?product_link=web"
                       rel="noopener noreferrer"
                       target="_blank"
                     >
@@ -373,7 +368,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                  aggregates liquidity sources for better prices and gas free swaps. 
                 <a
                   class="c14"
-                  href="https://support.uniswap.org/hc/en-us/articles/17544708791821"
+                  href="https://support.uniswap.org/hc/en-us/articles/17544708791821?product_link=web"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -648,7 +643,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                  aggregates liquidity sources for better prices and gas free swaps. 
                 <a
                   class="c14"
-                  href="https://support.uniswap.org/hc/en-us/articles/17544708791821"
+                  href="https://support.uniswap.org/hc/en-us/articles/17544708791821?product_link=web"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -973,12 +968,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
                           <div
                             class="c10"
                           >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                              style="font-weight: 535;"
-                            >
-                              $0
-                            </div>
+                            $0
                           </div>
                           <s>
                             $7.87
@@ -1007,7 +997,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
                      aggregates liquidity sources for better prices and gas free swaps. 
                     <a
                       class="c14"
-                      href="https://support.uniswap.org/hc/en-us/articles/17544708791821"
+                      href="https://support.uniswap.org/hc/en-us/articles/17544708791821?product_link=web"
                       rel="noopener noreferrer"
                       target="_blank"
                     >
@@ -1044,7 +1034,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
                  aggregates liquidity sources for better prices and gas free swaps. 
                 <a
                   class="c14"
-                  href="https://support.uniswap.org/hc/en-us/articles/17544708791821"
+                  href="https://support.uniswap.org/hc/en-us/articles/17544708791821?product_link=web"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -1319,7 +1309,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
                  aggregates liquidity sources for better prices and gas free swaps. 
                 <a
                   class="c14"
-                  href="https://support.uniswap.org/hc/en-us/articles/17544708791821"
+                  href="https://support.uniswap.org/hc/en-us/articles/17544708791821?product_link=web"
                   rel="noopener noreferrer"
                   target="_blank"
                 >

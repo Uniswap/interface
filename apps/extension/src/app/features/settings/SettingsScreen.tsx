@@ -48,7 +48,6 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { PasskeyManagementModal } from 'uniswap/src/features/passkey/PasskeyManagementModal'
 import { setCurrentFiatCurrency, setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
-import { SmartWalletAdvancedSettingsModal } from 'uniswap/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -66,6 +65,7 @@ import { authActions } from 'wallet/src/features/auth/saga'
 import { AuthActionType } from 'wallet/src/features/auth/types'
 import { selectHasViewedConnectionMigration } from 'wallet/src/features/behaviorHistory/selectors'
 import { resetWalletBehaviorHistory, setHasViewedConnectionMigration } from 'wallet/src/features/behaviorHistory/slice'
+import { SmartWalletAdvancedSettingsModal } from 'wallet/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -79,7 +79,7 @@ export function SettingsScreen(): JSX.Element {
   const currentLanguageInfo = useCurrentLanguageInfo()
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const hasViewedConnectionMigration = useSelector(selectHasViewedConnectionMigration)
-  const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWallet)
+  const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWalletSettings)
   const signerAccount = useSignerAccounts()[0]
   const hasPasskeyBackup = hasBackup(BackupType.Passkey, signerAccount)
 
@@ -125,6 +125,11 @@ export function SettingsScreen(): JSX.Element {
 
   const handleAdvancedModalClose = useCallback(() => setIsAdvancedModalOpen(false), [])
 
+  const handleSmartWalletPress = useCallback(() => {
+    navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.SmartWallet}`)
+    setIsAdvancedModalOpen(false)
+  }, [navigateTo])
+
   useEffect(() => {
     getIsDefaultProviderFromStorage()
       .then((newIsDefaultProvider) => setIsDefaultProvider(newIsDefaultProvider))
@@ -146,12 +151,18 @@ export function SettingsScreen(): JSX.Element {
 
   return (
     <Trace logImpression screen={ExtensionScreens.Settings}>
-      {isLanguageModalOpen ? <SettingsLanguageModal onClose={() => setIsLanguageModalOpen(false)} /> : undefined}
+      {isLanguageModalOpen ? (
+        <SettingsLanguageModal isOpen={isLanguageModalOpen} onClose={() => setIsLanguageModalOpen(false)} />
+      ) : undefined}
       {isPortfolioBalanceModalOpen ? (
-        <PortfolioBalanceModal onClose={() => setIsPortfolioBalanceModalOpen(false)} />
+        <PortfolioBalanceModal
+          isOpen={isPortfolioBalanceModalOpen}
+          onClose={() => setIsPortfolioBalanceModalOpen(false)}
+        />
       ) : undefined}
       {isPermissionsModalOpen ? (
         <PermissionsModal
+          isOpen={isPermissionsModalOpen}
           handleDefaultBrowserToggle={handleDefaultBrowserToggle}
           isDefaultBrowserProvider={isDefaultProvider}
           onClose={() => setIsPermissionsModalOpen(false)}
@@ -163,6 +174,7 @@ export function SettingsScreen(): JSX.Element {
         onTestnetModeToggled={handleTestnetModeToggle}
         isOpen={isAdvancedModalOpen}
         onClose={handleAdvancedModalClose}
+        onPressSmartWallet={handleSmartWalletPress}
       />
       {hasPasskeyBackup && (
         <PasskeyManagementModal

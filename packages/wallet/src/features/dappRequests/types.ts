@@ -1,10 +1,6 @@
 import { z } from 'zod'
 
-export const CapabilitySchema = z
-  .object({
-    optional: z.boolean().optional(),
-  })
-  .catchall(z.unknown())
+export const CapabilitySchema = z.record(z.string(), z.unknown())
 
 export const CallSchema = z.object({
   to: z.string().optional(),

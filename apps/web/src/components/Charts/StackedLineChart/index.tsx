@@ -1,8 +1,8 @@
+import { getProtocolColor } from 'appGraphql/data/util'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { StackedAreaSeriesOptions } from 'components/Charts/StackedLineChart/stacked-area-series/options'
 import { StackedAreaSeries } from 'components/Charts/StackedLineChart/stacked-area-series/stacked-area-series'
-import { getProtocolColor } from 'graphql/data/util'
 import {
   CustomStyleOptions,
   DeepPartial,
@@ -84,10 +84,13 @@ class TVLChartModel extends ChartModel<StackedLineData> {
       this.fitContent()
     }
 
+    // For single line charts, use theme.accent1 as the color - this will be the token color in TokenDetails
+    const effectiveColors = isSingleLineChart ? [params.theme.accent1] : colors
+
     this.series.applyOptions({
       priceLineVisible: false,
       lastValueVisible: false,
-      colors,
+      colors: effectiveColors,
       gradients,
       lineWidth: 2.5,
     } as DeepPartial<StackedAreaSeriesOptions>)
@@ -103,6 +106,7 @@ interface LineChartProps {
 
 export function LineChart({ height, data, sources, stale }: LineChartProps) {
   const sporeColors = useSporeColors()
+  // Theme handling is now done in the chart model via ThemeProvider
 
   const params = useMemo(() => {
     const colors = sources?.map((source) => getProtocolColor(source)) ?? [sporeColors.accent1.val]

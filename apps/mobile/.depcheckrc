@@ -16,13 +16,15 @@ ignores: [
     'expo-modules-core',
     'madge',
     'postinstall-postinstall',
-    ## React Native Usage
+    ## React Native Usage. These are modules imported by other packages in our repo,
+    ## but must be declared in `apps/mobile/package.json` too for proper RN autolinking.
     '@amplitude/analytics-react-native',
     '@react-native-masked-view/masked-view',
     '@shopify/react-native-skia',
     'react-native-image-colors',
     'react-native-passkey',
     'react-native-restart',
+    'sp-react-native-in-app-updates',
     # Dependencies that depcheck thinks are missing but are actually present or never used
     ## Internal packages / workspaces
     'e2e',

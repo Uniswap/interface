@@ -1,6 +1,7 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
 import { Signer, UnsignedTransaction, providers, utils } from 'ethers'
+import { Bytes } from 'ethers/lib/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { SignsTypedData } from 'uniswap/src/features/transactions/signing'
@@ -30,8 +31,23 @@ export class NativeSigner extends Signer implements SignsTypedData {
     return Promise.resolve(this.address)
   }
 
-  signMessage(message: string): Promise<string> {
+  signMessage(message: string | Bytes): Promise<string> {
+    if (typeof message !== 'string') {
+      throw new Error('Use signHashForAddress instead')
+    }
     return Keyring.signMessageForAddress(this.address, message)
+  }
+
+  signHashForAddress(address: string, hash: string | Bytes, chainId: number): Promise<string> {
+    // Use type narrowing for safety
+    if (typeof hash === 'string') {
+      // Add 0x prefix if needed
+      const prefixedHash = hash.startsWith('0x') ? hash : `0x${hash}`
+      return Keyring.signHashForAddress(address, prefixedHash, chainId)
+    } else {
+      // Convert non-string (Bytes) to hex string
+      return Keyring.signHashForAddress(address, utils.hexlify(hash), chainId)
+    }
   }
 
   // reference: https://github.com/ethers-io/ethers.js/blob/ce8f1e4015c0f27bf178238770b1325136e3351a/packages/wallet/src.ts/index.ts#L135

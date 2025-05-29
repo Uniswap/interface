@@ -14,6 +14,7 @@ import { getProcessedEvent } from 'utilities/src/telemetry/analytics/utils'
 
 const loggers = generateAnalyticsLoggers('telemetry/analytics.native')
 
+let initCalled: boolean = false
 let allowAnalytics: Maybe<boolean>
 let testnetMode: Maybe<boolean>
 let testnetModeConfig: Maybe<TestnetModeConfig>
@@ -31,7 +32,15 @@ export const analytics: Analytics = {
     userIdGetter?: () => Promise<string>,
   ): Promise<void> {
     try {
+      // Ensure events are filtered based on the allowAnalytics setting, but not before init is called
       allowAnalytics = allowed
+      initCalled = true
+
+      // Clear all user properties if analytics are not allowed
+      if (!allowed) {
+        identify(new Identify().clearAll())
+      }
+
       init(
         DUMMY_KEY, // Amplitude custom reverse proxy takes care of API key
         undefined, // User ID should be undefined to let Amplitude default to Device ID
@@ -75,7 +84,7 @@ export const analytics: Analytics = {
     testnetModeConfig = config
   },
   sendEvent(eventName: string, eventProperties?: Record<string, unknown>): void {
-    if (!allowAnalytics && !ANONYMOUS_EVENT_NAMES.includes(eventName)) {
+    if (!allowAnalytics && initCalled && !ANONYMOUS_EVENT_NAMES.includes(eventName)) {
       return
     }
 
@@ -97,7 +106,7 @@ export const analytics: Analytics = {
     flush()
   },
   setUserProperty(property: string, value: UserPropertyValue, insert?: boolean): void {
-    if (!allowAnalytics) {
+    if (!allowAnalytics && initCalled) {
       return
     }
 

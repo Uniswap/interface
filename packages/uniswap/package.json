@@ -92,7 +92,6 @@
     "react-native-localize": "2.2.6",
     "react-native-mmkv": "2.10.1",
     "react-native-reanimated": "3.16.7",
-    "react-native-restart": "0.0.27",
     "react-native-svg": "15.10.1",
     "react-redux": "8.0.5",
     "react-router-dom": "6.10.0",
@@ -105,6 +104,7 @@
     "ui": "workspace:^",
     "utilities": "workspace:^",
     "uuid": "9.0.0",
+    "viem": "2.22.9",
     "wagmi": "2.9.3",
     "zod": "3.22.4"
   },
@@ -131,6 +131,7 @@
     "@types/react-window": "1.8.2",
     "@typescript-eslint/utils": "6.20.0",
     "@uniswap/eslint-config": "workspace:^",
+    "@walletconnect/types": "2.20.0",
     "depcheck": "1.4.7",
     "eslint": "8.44.0",
     "eslint-plugin-rulesdir": "0.2.2",

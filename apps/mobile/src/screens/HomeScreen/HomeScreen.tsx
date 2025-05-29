@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { StyleProp, View, ViewProps, ViewStyle } from 'react-native'
 import Animated, { FadeIn, interpolateColor, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
+import { Video } from 'react-native-video'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { useHomeScreenCustomAndroidBackButton } from 'src/app/navigation/hooks'
@@ -31,6 +32,8 @@ import {
   TabLabelProps,
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
+import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
+import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
 import { useHideSplashScreen } from 'src/features/splashScreen/useHideSplashScreen'
 import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
@@ -41,19 +44,27 @@ import { useHomeScreenTracking } from 'src/screens/HomeScreen/useHomeScreenTrack
 import { useHomeScrollRefs } from 'src/screens/HomeScreen/useHomeScrollRefs'
 import { useOpenBackupReminderModal } from 'src/utils/useOpenBackupReminderModal'
 import { Flex, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
+import { SMART_WALLET_UPGRADE_VIDEO } from 'ui/src/assets'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
 import { ModalName, SectionName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { useEvent } from 'utilities/src/react/hooks'
+import { SmartWalletUpgradeModals } from 'wallet/src/components/smartWallet/modals/SmartWalletUpgradeModal'
+import { selectHasSeenCreatedSmartWalletModal } from 'wallet/src/features/behaviorHistory/selectors'
+import { setHasSeenSmartWalletCreatedWalletModal } from 'wallet/src/features/behaviorHistory/slice'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAccountCountChanged, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
 
 type HomeRoute = {
   key: (typeof SectionName)[keyof typeof SectionName]
@@ -79,6 +90,9 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const isModalOpen = useSelector(selectSomeModalOpen)
   const isHomeScreenBlur = !isFocused || isModalOpen
   const hideSplashScreen = useHideSplashScreen()
+  const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWallet)
+  const SmartWalletDisableVideo = useFeatureFlag(FeatureFlags.SmartWalletDisableVideo)
+  const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
 
   const { showEmptyWalletState, isTabsDataLoaded } = useHomeScreenState()
 
@@ -89,6 +103,8 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   useHeartbeatReporter()
   // Report balances at most every 24 hours, checking every 15 seconds when app is open
   useLastBalancesReporter()
+
+  const { trigger } = useBiometricPrompt()
 
   const [routeTabIndex, setRouteTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
   // Ensures that tabIndex has the proper value between the empty state and non-empty state
@@ -266,6 +282,15 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       </Flex>
     )
   }, [showEmptyWalletState, activeAccount.address, isSignerAccount, onPressViewOnlyLabel, viewOnlyLabel, promoBanner])
+
+  const MemoizedVideo = useMemo(
+    () => (
+      <Flex borderRadius="$rounded16" width="100%" aspectRatio={16 / 9} overflow="hidden">
+        <Video source={SMART_WALLET_UPGRADE_VIDEO} resizeMode="cover" style={{ width: '100%', height: '100%' }} />
+      </Flex>
+    ),
+    [],
+  )
 
   const paddingTop = headerHeight + TAB_BAR_HEIGHT + (showEmptyWalletState ? 0 : TAB_STYLES.tabListInner.paddingTop)
   const paddingBottom = insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom + spacing.spacing12
@@ -472,6 +497,38 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     ],
   )
 
+  const handleSmartWalletEnable = useCallback(
+    async (onComplete?: () => void): Promise<void> => {
+      const successAction = (): void => {
+        dispatch(setSmartWalletConsent({ address: activeAccount.address, smartWalletConsent: true }))
+        onComplete?.()
+        navigate(ModalName.SmartWalletEnabledModal, {
+          showReconnectDappPrompt: false,
+        })
+      }
+
+      if (requiresBiometrics) {
+        await trigger({ successCallback: successAction })
+      } else {
+        successAction()
+      }
+    },
+    [dispatch, activeAccount.address, requiresBiometrics, trigger],
+  )
+
+  const hasSeenCreatedSmartWalletModal = useSelector(selectHasSeenCreatedSmartWalletModal)
+
+  // Setup listener for account creation events to show the SmartWalletCreatedModal
+  useAccountCountChanged(
+    useEvent(() => {
+      if (hasSeenCreatedSmartWalletModal) {
+        return
+      }
+      navigate(ModalName.SmartWalletCreatedModal)
+      dispatch(setHasSeenSmartWalletCreatedWalletModal())
+    }),
+  )
+
   return (
     <Screen edges={['left', 'right']} onLayout={hideSplashScreen}>
       <View style={TAB_STYLES.container}>
@@ -503,6 +560,14 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         width="100%"
         zIndex="$sticky"
       />
+
+      {isSmartWalletEnabled && (
+        <SmartWalletUpgradeModals
+          account={activeAccount}
+          video={!SmartWalletDisableVideo && MemoizedVideo}
+          onEnableSmartWallet={handleSmartWalletEnable}
+        />
+      )}
     </Screen>
   )
 }

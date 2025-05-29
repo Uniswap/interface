@@ -12,7 +12,10 @@ import {
   SAMPLE_SEED_ADDRESS_8,
   SAMPLE_SEED_ADDRESS_9,
 } from 'uniswap/src/test/fixtures'
+import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
 import { WebKeyring } from 'wallet/src/features/wallet/Keyring/Keyring.web'
+
+const chrome = getChromeWithThrow()
 
 type ChromeSessionStore = { [prop: string]: unknown }
 

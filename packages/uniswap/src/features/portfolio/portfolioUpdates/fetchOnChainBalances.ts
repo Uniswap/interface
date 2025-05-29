@@ -7,7 +7,7 @@ import {
   TokenDocument,
   TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { IndicativeQuoteRequest, IndicativeQuoteResponse, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
+import { QuoteRequest, QuoteResponse, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
@@ -92,6 +92,7 @@ export async function fetchOnChainBalances({
 
       const denominatedValue = onchainQuantityCurrencyAmount
         ? await getDenominatedValue({
+            accountAddress,
             onchainQuantityCurrencyAmount,
             token,
             cachedPortfolio,
@@ -121,10 +122,12 @@ export async function fetchOnChainBalances({
 type DenominatedValue = { value: number; currency: string }
 
 async function getDenominatedValue({
+  accountAddress,
   onchainQuantityCurrencyAmount,
   token,
   cachedPortfolio,
 }: {
+  accountAddress: Address
   onchainQuantityCurrencyAmount: CurrencyAmount<NativeCurrency | Token>
   token: NonNullable<TokenQuery['token']>
   cachedPortfolio: NonNullable<PortfolioBalancesQuery['portfolios']>[0]
@@ -190,9 +193,11 @@ async function getDenominatedValue({
     tokenOutChainId: chainId,
     tokenIn: tokenAddress,
     tokenOut: stablecoinCurrency.address,
+    swapper: accountAddress,
   })
 
-  const amountOut = indicativeQuote?.output.amount
+  const amountOut =
+    indicativeQuote && 'output' in indicativeQuote.quote ? indicativeQuote.quote.output?.amount : undefined
 
   if (!amountOut) {
     return undefined
@@ -239,7 +244,7 @@ function getInferredCachedDenominatedValue({
   return undefined
 }
 
-async function fetchIndicativeQuote(params: IndicativeQuoteRequest): Promise<IndicativeQuoteResponse | undefined> {
+async function fetchIndicativeQuote(params: QuoteRequest): Promise<QuoteResponse | undefined> {
   try {
     return await fetchTradingApiIndicativeQuoteIgnoring404({ params })
   } catch (error) {
@@ -247,7 +252,7 @@ async function fetchIndicativeQuote(params: IndicativeQuoteRequest): Promise<Ind
     logger.error(error, {
       tags: {
         file: 'fetchOnChainBalances.ts',
-        function: 'getIndicativeQuote',
+        function: 'fetchIndicativeQuote',
       },
       extra: {
         params,

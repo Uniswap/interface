@@ -74,11 +74,7 @@ test.describe('Swap', () => {
     await page.getByTestId(TestID.Confirm).click()
 
     // See swap review screen & confirm swap
-    await page
-      .locator('div')
-      .filter({ hasText: /^Swap$/ })
-      .first()
-      .click()
+    await page.getByTestId(TestID.Swap).click()
 
     // Confirm price impact warning
     await page.getByTestId(TestID.Confirm).click()

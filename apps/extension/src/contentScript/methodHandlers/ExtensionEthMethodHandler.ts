@@ -37,11 +37,16 @@ import {
 } from 'src/contentScript/WindowEthereumRequestTypes'
 import { BaseMethodHandler } from 'src/contentScript/methodHandlers/BaseMethodHandler'
 import { PendingResponseInfo } from 'src/contentScript/methodHandlers/types'
-import { getPendingResponseInfo, postUnauthorizedError } from 'src/contentScript/methodHandlers/utils'
+import {
+  getPendingResponseInfo,
+  postUnauthorizedError,
+  rejectSelfCallWithData,
+} from 'src/contentScript/methodHandlers/utils'
 import { WindowEthereumRequest } from 'src/contentScript/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType, EthMethod } from 'uniswap/src/features/dappRequests/types'
+import { isSelfCallWithData } from 'uniswap/src/features/dappRequests/utils'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 
@@ -432,6 +437,12 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
   }
 
   async handleEthSendTransaction(request: EthSendTransactionRequest, source: MessageEventSource | null): Promise<void> {
+    // Reject transactions where from === to and data !== undefined (self-calls with data)
+    if (isSelfCallWithData(request.transaction.from, request.transaction.to, request.transaction.data)) {
+      rejectSelfCallWithData(request.requestId, source)
+      return
+    }
+
     this.requestIdToSourceMap.set(request.requestId, {
       type: DappResponseType.SendTransactionResponse,
       source,
@@ -573,6 +584,14 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
    * This method allows dapps to send a batch of calls to the wallet
    */
   async handleWalletSendCalls(request: WalletSendCallsRequest, source: MessageEventSource | null): Promise<void> {
+    // Reject if any calls have from === to and data !== undefined
+    const hasSelfCallWithData = request.calls.some((call) => isSelfCallWithData(request.from, call.to, call.data))
+
+    if (hasSelfCallWithData) {
+      rejectSelfCallWithData(request.requestId, source)
+      return
+    }
+
     this.requestIdToSourceMap.set(request.requestId, {
       type: DappResponseType.SendCallsResponse,
       source,

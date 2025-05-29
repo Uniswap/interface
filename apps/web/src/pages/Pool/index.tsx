@@ -4,35 +4,30 @@ import tokenLogo from 'assets/images/token-logo.png'
 import V4_HOOK from 'assets/images/v4Hooks.png'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { Pool as PoolIcon } from 'components/Icons/Pool'
 import { LiquidityPositionCard, LiquidityPositionCardLoader } from 'components/Liquidity/LiquidityPositionCard'
 import { LpIncentiveClaimModal } from 'components/Liquidity/LpIncentiveClaimModal'
 import LpIncentiveRewardsCard from 'components/Liquidity/LpIncentiveRewardsCard'
 import { PositionInfo } from 'components/Liquidity/types'
 import { getPositionUrl, parseRestPosition } from 'components/Liquidity/utils'
-import { TopPoolTable, sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
-import { OrderDirection } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import { useLpIncentives } from 'hooks/useLpIncentives'
 import { atom, useAtom } from 'jotai'
-import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { PositionsHeader } from 'pages/Pool/Positions/PositionsHeader'
 import { TopPools } from 'pages/Pool/Positions/TopPools'
 import { ExternalArrowLink } from 'pages/Pool/Positions/shared'
-import { useEffect, useMemo, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
-import { useTopPools } from 'state/explore/topPools'
+import { FixedSizeList } from 'react-window'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { useRequestPositionsForSavedPairs } from 'state/user/hooks'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Anchor, Button, Flex, Text, useSporeColors } from 'ui/src'
+import { Anchor, Button, Flex, Text, useMedia } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { iconSizes } from 'ui/src/theme'
+import { Pools } from 'ui/src/components/icons/Pools'
+import { Wallet } from 'ui/src/components/icons/Wallet'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
-import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { useGetPositionsInfiniteQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -45,111 +40,118 @@ import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hook
 
 const PAGE_SIZE = 25
 
-function EmptyPositionsView({ chainId, isConnected }: { chainId?: UniverseChainId | null; isConnected: boolean }) {
-  const colors = useSporeColors()
+function DisconnectedWalletView() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const accountDrawer = useAccountDrawer()
 
-  const sortMethod = useAtomValue(sortMethodAtom)
-  const sortAscending = useAtomValue(sortAscendingAtom)
-
-  const resetSortMethod = useResetAtom(sortMethodAtom)
-  const resetSortAscending = useResetAtom(sortAscendingAtom)
-
-  useEffect(() => {
-    resetSortMethod()
-    resetSortAscending()
-  }, [resetSortAscending, resetSortMethod])
-
-  const {
-    data: exploreStatsData,
-    isLoading: exploreStatsLoading,
-    error: exploreStatsError,
-  } = useExploreStatsQuery({
-    chainId: chainId ? chainId.toString() : ALL_NETWORKS_ARG,
-  })
-
-  const { topPools } = useTopPools(
-    { data: exploreStatsData, isLoading: exploreStatsLoading, isError: !!exploreStatsError },
-    {
-      sortBy: sortMethod,
-      sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc,
-    },
-  )
-
   return (
-    <Flex gap="$spacing32">
+    <Flex gap="$spacing12">
       <Flex
-        row
-        alignItems="center"
-        justifyContent="space-between"
-        borderRadius="$rounded20"
+        padding="$spacing24"
+        centered
+        gap="$gap16"
+        borderRadius="$rounded12"
         borderColor="$surface3"
         borderWidth="$spacing1"
         borderStyle="solid"
-        p="$padding16"
-        overflow="hidden"
-        cursor={isConnected ? 'auto' : 'pointer'}
-        onPress={
-          isConnected
-            ? undefined
-            : () => {
-                accountDrawer.toggle()
-              }
-        }
-        $md={{ row: false, gap: '$gap16', alignItems: 'flex-start' }}
       >
-        <Flex alignItems="center" row gap="$gap8">
-          <Flex p="$padding8" borderRadius="$rounded12" backgroundColor="$accent2">
-            <PoolIcon width={iconSizes.icon24} height={iconSizes.icon24} color={colors.accent1.val} />
-          </Flex>
-          <Flex shrink>
-            <Text variant="subheading2">{isConnected ? t('pool.openPosition') : t('positions.welcome')}</Text>
-            <Text variant="body2" color="$neutral2">
-              {isConnected ? t('pool.openPosition.cta') : t('positions.welcome.connect')}
-            </Text>
-          </Flex>
+        <Flex padding="$padding12" borderRadius="$rounded12" backgroundColor="$surface3">
+          <Wallet size="$icon.24" color="$neutral1" />
         </Flex>
-        {isConnected && (
-          <Flex centered row $md={{ width: '100%' }}>
-            <Button size="small" emphasis="secondary" onPress={() => navigate('/explore/pools')}>
-              {t('pools.explore')}
-            </Button>
-          </Flex>
-        )}
-      </Flex>
-      <Flex gap="$gap24">
-        <Text variant="subheading1">
-          <Trans i18nKey="pool.top.tvl" />
+        <Text variant="subheading1">{t('positions.welcome.connect.wallet')}</Text>
+        <Text variant="body2" color="$neutral2">
+          {t('positions.welcome.connect.description')}
         </Text>
-        <TopPoolTable
-          topPoolData={{ topPools, isLoading: exploreStatsLoading, isError: !!exploreStatsError }}
-          pageSize={10}
-          staticSize
-          forcePinning
-        />
-        <ExternalArrowLink href="/explore/pools" openInNewTab={false}>
-          {t('explore.more.pools')}
-        </ExternalArrowLink>
+        <Flex row gap="$gap8">
+          <Button variant="default" size="small" emphasis="secondary" onPress={() => navigate('/positions/create/v4')}>
+            {t('position.new')}
+          </Button>
+          <Button variant="default" size="small" width={160} onPress={accountDrawer.open}>
+            {t('common.connectWallet.button')}
+          </Button>
+        </Flex>
+      </Flex>
+      <Flex gap="$gap20" mb="$spacing24">
+        <Flex row gap="$gap12">
+          <LearnMoreTile
+            width="100%"
+            img={PROVIDE_LIQUIDITY}
+            text={t('liquidity.provideOnProtocols')}
+            link={uniswapUrls.helpArticleUrls.providingLiquidityInfo}
+          />
+          <LearnMoreTile
+            width="100%"
+            img={V4_HOOK}
+            text={t('liquidity.hooks')}
+            link={uniswapUrls.helpArticleUrls.v4HooksInfo}
+          />
+        </Flex>
       </Flex>
     </Flex>
   )
 }
 
-function LearnMoreTile({ img, text, link }: { img: string; text: string; link?: string }) {
+function EmptyPositionsView() {
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  return (
+    <Flex gap="$spacing12">
+      <Flex
+        padding="$spacing24"
+        centered
+        gap="$gap16"
+        borderRadius="$rounded12"
+        borderColor="$surface3"
+        borderWidth="$spacing1"
+        borderStyle="solid"
+        $platform-web={{
+          textAlign: 'center',
+        }}
+      >
+        <Flex padding="$padding12" borderRadius="$rounded12" backgroundColor="$surface3">
+          <Pools size="$icon.24" color="$neutral1" />
+        </Flex>
+        <Text variant="subheading1">{t('positions.noPositions.title')}</Text>
+        <Text variant="body2" color="$neutral2" maxWidth={420}>
+          {t('positions.noPositions.description')}
+        </Text>
+        <Flex row gap="$gap8">
+          <Button variant="default" size="small" emphasis="secondary" onPress={() => navigate('/explore/pools')}>
+            {t('pools.explore')}
+          </Button>
+          <Button variant="default" size="small" width={160} onPress={() => navigate('/positions/create/v4')}>
+            {t('position.new')}
+          </Button>
+        </Flex>
+      </Flex>
+    </Flex>
+  )
+}
+
+function LearnMoreTile({
+  img,
+  text,
+  link,
+  width = 344,
+}: {
+  img: string
+  text: string
+  link?: string
+  width?: number | string
+}) {
   return (
     <Anchor
       href={link}
       textDecorationLine="none"
       target="_blank"
       rel="noopener noreferrer"
+      width={width}
       {...ClickableTamaguiStyle}
       hoverStyle={{ backgroundColor: '$surface1Hovered', borderColor: '$surface3Hovered' }}
     >
       <Flex
         row
-        width={344}
         borderRadius="$rounded20"
         borderColor="$surface3"
         borderWidth="$spacing1"
@@ -169,18 +171,78 @@ const chainFilterAtom = atom<UniverseChainId | null>(null)
 const versionFilterAtom = atom<ProtocolVersion[]>([ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2])
 const statusFilterAtom = atom<PositionStatus[]>([PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE])
 
+function VirtualizedPositionsList({
+  positions,
+  onLoadMore,
+  hasNextPage,
+  isFetching,
+}: {
+  positions: PositionInfo[]
+  onLoadMore: () => void
+  hasNextPage: boolean
+  isFetching: boolean
+}) {
+  const media = useMedia()
+  const positionItemHeight = useMemo(() => {
+    return media.sm ? 360 : media.md ? 290 : 200 // Approximate height of a position card
+  }, [media])
+
+  const listHeight = useMemo(() => {
+    return positions.length * positionItemHeight
+  }, [positionItemHeight, positions.length])
+
+  const onItemsRendered = useCallback(
+    ({ visibleStopIndex }: { visibleStartIndex: number; visibleStopIndex: number }) => {
+      // Load more if we're near the end
+      if (visibleStopIndex >= positions.length - 5 && hasNextPage && !isFetching) {
+        onLoadMore()
+      }
+    },
+    [positions.length, hasNextPage, isFetching, onLoadMore],
+  )
+
+  return (
+    <Flex grow>
+      <FixedSizeList
+        height={listHeight}
+        width="100%"
+        itemCount={positions.length}
+        itemSize={positionItemHeight}
+        itemData={positions}
+        onItemsRendered={onItemsRendered}
+        itemKey={(index) => `${positions[index].poolId}-${positions[index].tokenId}-${positions[index].chainId}`}
+      >
+        {({ index, style, data }) => {
+          const position = data[index]
+          return (
+            <Flex style={style}>
+              <Link
+                key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
+                style={{ textDecoration: 'none' }}
+                to={getPositionUrl(position)}
+              >
+                <LiquidityPositionCard showVisibilityOption liquidityPosition={position} showMigrateButton />
+              </Link>
+            </Flex>
+          )
+        }}
+      </FixedSizeList>
+    </Flex>
+  )
+}
+
 export default function Pool() {
+  const account = useAccount()
   const { t } = useTranslation()
-  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
+  const { address, isConnected } = account
+
+  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives) && isConnected
 
   const [chainFilter, setChainFilter] = useAtom(chainFilterAtom)
   const { chains: currentModeChains } = useEnabledChains()
   const [versionFilter, setVersionFilter] = useAtom(versionFilterAtom)
   const [statusFilter, setStatusFilter] = useAtom(statusFilterAtom)
   const [closedCTADismissed, setClosedCTADismissed] = useState(false)
-
-  const account = useAccount()
-  const { address, isConnected } = account
 
   const isPositionVisible = usePositionVisibilityCheck()
   const [showHiddenPositions, setShowHiddenPositions] = useState(false)
@@ -285,7 +347,7 @@ export default function Pool() {
         px="$spacing40"
         $lg={{ px: '$spacing20' }}
       >
-        <Flex grow shrink gap="$spacing24" maxWidth={700} $xl={{ maxWidth: '100%' }}>
+        <Flex grow shrink gap="$spacing24" maxWidth={740} $xl={{ maxWidth: '100%' }}>
           {isLPIncentivesEnabled && (
             <LpIncentiveRewardsCard
               walletAddress={account.address}
@@ -329,36 +391,28 @@ export default function Pool() {
           {!isLoadingPositions ? (
             combinedPositions.length > 0 ? (
               <Flex gap="$gap16" mb="$spacing16" opacity={isPlaceholderData ? 0.6 : 1}>
-                {visiblePositions.map((position) => (
-                  <Link
-                    key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
-                    style={{ textDecoration: 'none' }}
-                    to={getPositionUrl(position)}
-                  >
-                    <LiquidityPositionCard showVisibilityOption liquidityPosition={position} showMigrateButton />
-                  </Link>
-                ))}
+                <VirtualizedPositionsList
+                  positions={visiblePositions}
+                  onLoadMore={loadMorePositions}
+                  hasNextPage={hasNextPage}
+                  isFetching={isFetching}
+                />
                 <HiddenPositions
                   showHiddenPositions={showHiddenPositions}
                   setShowHiddenPositions={setShowHiddenPositions}
                   hiddenPositions={hiddenPositions}
                 />
               </Flex>
+            ) : isConnected ? (
+              <EmptyPositionsView />
             ) : (
-              <EmptyPositionsView chainId={chainFilter} isConnected={isConnected} />
+              <DisconnectedWalletView />
             )
           ) : (
             <Flex gap="$gap16">
               {Array.from({ length: 5 }, (_, index) => (
                 <LiquidityPositionCardLoader key={index} />
               ))}
-            </Flex>
-          )}
-          {hasNextPage && (
-            <Flex mx="auto">
-              <Button emphasis="tertiary" size="small" onPress={loadMorePositions} isDisabled={isFetching}>
-                {t('common.loadMore')}
-              </Button>
             </Flex>
           )}
           {!statusFilter.includes(PositionStatus.CLOSED) && !closedCTADismissed && account.address && (
@@ -377,42 +431,50 @@ export default function Pool() {
               </Flex>
               <Flex grow flexBasis={0}>
                 <Text variant="body3" color="$neutral1">
-                  <Trans i18nKey="pool.closedCTA.title" />
+                  {t('pool.closedCTA.title')}
                 </Text>
                 <Text variant="body3" color="$neutral2">
-                  <Trans i18nKey="pool.closedCTA.description" />
+                  {t('pool.closedCTA.description')}
                 </Text>
               </Flex>
               <CloseIconWithHover onClose={() => setClosedCTADismissed(true)} size="$icon.20" />
             </Flex>
           )}
-          <Flex row centered $sm={{ flexDirection: 'column', alignItems: 'flex-start' }} mb="$spacing24" gap="$gap4">
-            <Text variant="body3" color="$neutral2">
-              {t('pool.import.link.description')}
-            </Text>
-            <Anchor href="/pools/v2/find" textDecorationLine="none">
-              <Text variant="body3" color="$neutral1" {...ClickableTamaguiStyle}>
-                {t('pool.import.positions.v2')}
+          {isConnected && (
+            <Flex row centered $sm={{ flexDirection: 'column', alignItems: 'flex-start' }} mb="$spacing24" gap="$gap4">
+              <Text variant="body3" color="$neutral2">
+                {t('pool.import.link.description')}
               </Text>
-            </Anchor>
-          </Flex>
+              <Anchor href="/pools/v2/find" textDecorationLine="none">
+                <Text variant="body3" color="$neutral1" {...ClickableTamaguiStyle}>
+                  {t('pool.import.positions.v2')}
+                </Text>
+              </Anchor>
+            </Flex>
+          )}
         </Flex>
         <Flex gap="$gap32">
           <TopPools chainId={chainFilter} />
-          <Flex gap="$gap20" mb="$spacing24">
-            <Text variant="subheading1">{t('liquidity.learnMoreLabel')}</Text>
-            <Flex gap="$gap12">
-              <LearnMoreTile
-                img={PROVIDE_LIQUIDITY}
-                text={t('liquidity.provideOnProtocols')}
-                link={uniswapUrls.helpArticleUrls.providingLiquidityInfo}
-              />
-              <LearnMoreTile img={V4_HOOK} text={t('liquidity.hooks')} link={uniswapUrls.helpArticleUrls.v4HooksInfo} />
+          {isConnected && (
+            <Flex gap="$gap20" mb="$spacing24">
+              <Text variant="subheading1">{t('liquidity.learnMoreLabel')}</Text>
+              <Flex gap="$gap12">
+                <LearnMoreTile
+                  img={PROVIDE_LIQUIDITY}
+                  text={t('liquidity.provideOnProtocols')}
+                  link={uniswapUrls.helpArticleUrls.providingLiquidityInfo}
+                />
+                <LearnMoreTile
+                  img={V4_HOOK}
+                  text={t('liquidity.hooks')}
+                  link={uniswapUrls.helpArticleUrls.v4HooksInfo}
+                />
+              </Flex>
+              <ExternalArrowLink href={uniswapUrls.helpArticleUrls.positionsLearnMore}>
+                {t('common.button.learn')}
+              </ExternalArrowLink>
             </Flex>
-            <ExternalArrowLink href={uniswapUrls.helpArticleUrls.positionsLearnMore}>
-              {t('common.button.learn')}
-            </ExternalArrowLink>
-          </Flex>
+          )}
         </Flex>
       </Flex>
       {isLPIncentivesEnabled && (
@@ -450,17 +512,19 @@ function HiddenPositions({ showHiddenPositions, setShowHiddenPositions, hiddenPo
       title={t('common.hidden')}
       enableOverflow
     >
-      <Flex gap="$gap16">
-        {hiddenPositions.map((position) => (
-          <Link
-            key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
-            style={{ textDecoration: 'none' }}
-            to={getPositionUrl(position)}
-          >
-            <LiquidityPositionCard showVisibilityOption liquidityPosition={position} isVisible={false} />
-          </Link>
-        ))}
-      </Flex>
+      {showHiddenPositions && (
+        <Flex gap="$gap16">
+          {hiddenPositions.map((position) => (
+            <Link
+              key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
+              style={{ textDecoration: 'none' }}
+              to={getPositionUrl(position)}
+            >
+              <LiquidityPositionCard showVisibilityOption liquidityPosition={position} isVisible={false} />
+            </Link>
+          ))}
+        </Flex>
+      )}
     </ExpandoRow>
   )
 }

@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 import type { TextInputProps } from 'react-native'
-import { CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
+import { CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { usePrefetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
@@ -10,15 +10,15 @@ import {
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { useDecimalPadControlledField } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useDecimalPadControlledField'
-import { useSwapFormHoverStyles } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useSwapFormHoverStyles'
-import { useTemporaryFoTWarning } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useTemporaryFoTWarning'
-import { useUpdateSwapFormOnMountIfExactOutputWillFail } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useUpdateSwapFormOnMountIfExactOutputWillFail'
 import {
   SwapFormScreenContext,
   SwapFormScreenContextState,
 } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContext'
+import { useSwapFormHoverStyles } from 'uniswap/src/features/transactions/swap/form/context/hooks/useSwapFormHoverStyles'
 import { useSwapFormScreenCallbacks } from 'uniswap/src/features/transactions/swap/form/context/hooks/useSwapFormScreenCallbacks'
+import { useTemporaryFoTWarning } from 'uniswap/src/features/transactions/swap/form/context/hooks/useTemporaryFoTWarning'
+import { useUpdateSwapFormOnMountIfExactOutputWillFail } from 'uniswap/src/features/transactions/swap/form/context/hooks/useUpdateSwapFormOnMountIfExactOutputWillFail'
+import { useDecimalPadControlledField } from 'uniswap/src/features/transactions/swap/form/hooks/useDecimalPadControlledField'
 import { useSwapNetworkChangeEffect } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapNetworkChangeEffect'
 import { useSyncFiatAndTokenAmountUpdater } from 'uniswap/src/features/transactions/swap/form/hooks/useSyncFiatAndTokenAmountUpdater'
 import { getExactOutputWillFail } from 'uniswap/src/features/transactions/swap/utils/getExactOutputWillFail'

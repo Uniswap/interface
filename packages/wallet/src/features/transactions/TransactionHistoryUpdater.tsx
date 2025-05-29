@@ -44,11 +44,12 @@ export function TransactionHistoryUpdater(): JSX.Element | null {
 
   // Poll at different intervals to reduce requests made for non active accounts.
 
+  const activeAddresses = activeAccountAddress ?? []
   const { data: activeAccountData } = useTransactionHistoryUpdaterQuery({
-    variables: { addresses: activeAccountAddress ?? [], chains: gqlChains },
+    variables: { addresses: activeAddresses, chains: gqlChains },
     pollInterval: PollingInterval.KindaFast,
     fetchPolicy: 'network-only', // Ensure latest data.
-    skip: !activeAccountAddress,
+    skip: activeAddresses.length === 0,
   })
 
   const { data: nonActiveAccountData } = useTransactionHistoryUpdaterQuery({

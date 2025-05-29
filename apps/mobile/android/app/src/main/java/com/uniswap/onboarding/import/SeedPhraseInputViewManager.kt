@@ -144,9 +144,9 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
     }
   }
 
-  @ReactProp(name = "mnemonicIdForRecovery")
-  fun setMnemonicIdForRecovery(view: View, mnemonicId: String?) {
-    viewModel.mnemonicIdForRecovery = mnemonicId
+  @ReactProp(name = "targetMnemonicId")
+  fun setTargetMnemonicId(view: View, mnemonicId: String?) {
+    viewModel.targetMnemonicId = mnemonicId
   }
 
   @ReactProp(name = "strings")

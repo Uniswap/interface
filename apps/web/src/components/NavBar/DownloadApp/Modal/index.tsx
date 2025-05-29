@@ -6,7 +6,7 @@ import { PasskeyGenerationModal } from 'components/NavBar/DownloadApp/Modal/Pass
 import { useModalState } from 'hooks/useModalState'
 import { atom, useAtom } from 'jotai'
 import { useCallback, useEffect, useState } from 'react'
-import { AnimateTransition, Flex } from 'ui/src'
+import { AnimatedPager, Flex } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -50,7 +50,7 @@ export function GetTheAppModal() {
     >
       <Flex data-testid={TestID.DownloadUniswapModal} position="relative" userSelect="none">
         {/* The Page enum value corresponds to the modal page's index */}
-        <AnimateTransition currentIndex={page} animationType={page === Page.GetStarted ? 'forward' : 'backward'}>
+        <AnimatedPager currentIndex={page}>
           <GetStarted
             onClose={close}
             setPage={setPage}
@@ -59,7 +59,10 @@ export function GetTheAppModal() {
               accountDrawer.open()
             }}
           />
-          <DownloadAppsModal goBack={() => setPage(Page.GetStarted)} onClose={close} />
+          <DownloadAppsModal
+            goBack={isEmbeddedWalletEnabled ? () => setPage(Page.GetStarted) : undefined}
+            onClose={close}
+          />
           <ChooseUnitagModal
             setUnitag={setUnitag}
             goBack={() => setPage(Page.GetStarted)}
@@ -72,7 +75,7 @@ export function GetTheAppModal() {
             onClose={close}
             setPage={setPage}
           />
-        </AnimateTransition>
+        </AnimatedPager>
       </Flex>
     </Modal>
   )

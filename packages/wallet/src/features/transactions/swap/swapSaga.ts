@@ -29,9 +29,8 @@ import {
   getShouldWaitBetweenTransactions,
   getSwapTransactionCount,
   waitForTransactionConfirmation,
-} from 'wallet/src/features/transactions/swap/delegatedAccountUtils'
+} from 'wallet/src/features/transactions/swap/confirmation'
 import { SubmitUniswapXOrderParams, submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
-import { wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
@@ -147,32 +146,15 @@ export function* approveAndSwap(params: SwapParams) {
 
     const typeInfo = tradeToTransactionInfo(swapTxContext.trade, transactedUSDValue, gasFeeEstimation?.swapEstimates)
 
-    // TODO(WEB-7432) - Remove UniswapX wrap logic, as ETH-input UniswapX is a dead flow / disabled by backend.
     // Swap Logic - UniswapX
     if (isUniswapXRouting) {
-      const { trade, wrapTxRequest, permit } = swapTxContext
+      const { trade, permit } = swapTxContext
       const { quote } = trade.quote
-
-      let wrapTxHash: string | undefined
-      // Wrap Logic - UniswapX Eth-input
-      if (wrapTxRequest) {
-        const inputCurrencyAmount = trade.inputAmount
-        const wrapResponse = yield* wrap({
-          txRequest: { ...wrapTxRequest, nonce },
-          account,
-          inputCurrencyAmount,
-          swapTxId: txId,
-          skipPushNotification: true, // wrap is abstracted away in UX; we avoid showing a wrap notification
-          gasEstimates: gasFeeEstimation?.wrapEstimates,
-        })
-        wrapTxHash = wrapResponse?.transactionResponse.hash
-      }
 
       const submitOrderParams: SubmitUniswapXOrderParams = {
         account,
         analytics,
         approveTxHash,
-        wrapTxHash,
         permit: permit.typedData,
         quote,
         routing: swapTxContext.routing,
@@ -259,13 +241,13 @@ export function* handleTransactionSpacing(params: { shouldWait: boolean; hash: s
     return
   }
 
-  const throwOnFailure = () => {
+  const { success } = yield* call(waitForTransactionConfirmation, { hash })
+
+  if (!success) {
     // Call back to UI
     params.onFailure()
 
     // Throw error to prevent saga from continuing
     throw new Error('Wait failed in swapSaga')
   }
-
-  yield* call(waitForTransactionConfirmation, { hash, onFailure: throwOnFailure })
 }

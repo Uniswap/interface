@@ -183,6 +183,11 @@ export const routes: RouteDefinition[] = [
     getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
   }),
   createRouteDefinition({
+    path: '/sell',
+    getElement: () => <Swap />,
+    getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
+  }),
+  createRouteDefinition({
     path: '/send',
     getElement: () => <Swap />,
     getTitle: () => i18n.t('title.sendTokens'),

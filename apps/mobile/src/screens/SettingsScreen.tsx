@@ -2,8 +2,9 @@ import { useNavigation } from '@react-navigation/core'
 import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { OnboardingStackNavigationProp, SettingsStackNavigationProp } from 'src/app/navigation/types'
+import { WalletRestoreType } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
 import { FooterSettings } from 'src/components/Settings/FooterSettings'
 import { OnboardingRow } from 'src/components/Settings/OnboardingRow'
 import { ResetBehaviorHistoryRow } from 'src/components/Settings/ResetBehaviorHistoryRow'
@@ -26,6 +27,7 @@ import {
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
 import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
+import { importFromCloudBackupOption, restoreFromCloudBackupOption } from 'src/screens/Import/constants'
 import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { Flex, IconProps, Text, useSporeColors } from 'ui/src'
 import {
@@ -38,6 +40,7 @@ import {
   Faceid,
   FileListLock,
   Fingerprint,
+  Key,
   Language,
   LikeSquare,
   LineChartDots,
@@ -60,12 +63,14 @@ import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
-import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { isAndroid } from 'utilities/src/platform'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
+import { selectHasCopiedPrivateKeys } from 'wallet/src/features/behaviorHistory/selectors'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -78,6 +83,8 @@ export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
   const dispatch = useDispatch()
   const colors = useSporeColors()
+  const hasCopiedPrivateKeys = useSelector(selectHasCopiedPrivateKeys)
+  const shouldShowPrivateKeys = useFeatureFlag(FeatureFlags.EnableExportPrivateKeys)
   const { deviceSupportsBiometrics } = useBiometricsState()
   const { t } = useTranslation()
   const { onClose } = useReactNavigationModal()
@@ -89,7 +96,7 @@ export function SettingsScreen(): JSX.Element {
   const currentAppearanceSetting = useCurrentAppearanceSetting()
   const currentFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const { originName: currentLanguage } = useCurrentLanguageInfo()
-  const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWallet)
+  const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWalletSettings)
 
   const { hapticsEnabled, setHapticsEnabled } = useHapticFeedback()
 
@@ -134,7 +141,7 @@ export function SettingsScreen(): JSX.Element {
   const hasCloudBackup = hasBackup(BackupType.Cloud, signerAccount)
   const hasPasskeyBackup = hasBackup(BackupType.Passkey, signerAccount)
   const noSignerAccountImported = !signerAccount
-  const { walletNeedsRestore } = useWalletRestore()
+  const { walletNeedsRestore, walletRestoreType } = useWalletRestore()
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<SettingsSectionItem | SettingsSectionItemComponent>): JSX.Element | null => {
@@ -145,7 +152,13 @@ export function SettingsScreen(): JSX.Element {
         return item.component
       }
       return (
-        <SettingsRow key={item.screen} navigation={navigation} page={item} checkIfCanProceed={item.checkIfCanProceed} />
+        <SettingsRow
+          key={item.screen}
+          navigation={navigation}
+          page={item}
+          checkIfCanProceed={item.checkIfCanProceed}
+          testID={item.testID}
+        />
       )
     },
     [navigation],
@@ -172,7 +185,7 @@ export function SettingsScreen(): JSX.Element {
         subTitle: t('settings.section.preferences'),
         data: [
           {
-            modal: ModalName.SettingsAppearance,
+            navigationModal: ModalName.SettingsAppearance,
             text: t('settings.setting.appearance.title'),
             currentSetting:
               currentAppearanceSetting === 'system'
@@ -189,7 +202,7 @@ export function SettingsScreen(): JSX.Element {
             icon: <Coins {...iconProps} />,
           },
           {
-            modal: ModalName.LanguageSelector,
+            navigationModal: ModalName.LanguageSelector,
             text: t('settings.setting.language.title'),
             currentSetting: currentLanguage,
             icon: <Language {...iconProps} />,
@@ -207,7 +220,7 @@ export function SettingsScreen(): JSX.Element {
             },
           },
           {
-            modal: ModalName.PortfolioBalanceModal,
+            navigationModal: ModalName.PortfolioBalanceModal,
             text: t('settings.setting.smallBalances.title'),
             icon: <Chart {...iconProps} />,
           },
@@ -225,7 +238,10 @@ export function SettingsScreen(): JSX.Element {
                   icon: <Sliders {...iconProps} />,
                   navigationProps: {
                     isTestnetEnabled: isTestnetModeEnabled,
-                    onTestnetModeToggled: () => handleTestnetModeToggle(),
+                    onTestnetModeToggled: (): void => handleTestnetModeToggle(),
+                    onPressSmartWallet: (): void => {
+                      navigation.navigate(MobileScreens.SettingsSmartWallet)
+                    },
                   },
                 },
               ]
@@ -265,28 +281,51 @@ export function SettingsScreen(): JSX.Element {
             icon: <FileListLock {...iconProps} />,
             screenProps: { address: signerAccount?.address ?? '', walletNeedsRestore },
             isHidden: noSignerAccountImported,
+            testID: TestID.WalletSettingsRecoveryPhrase,
           },
           {
-            screen: walletNeedsRestore
-              ? MobileScreens.OnboardingStack
-              : hasCloudBackup
-                ? MobileScreens.SettingsCloudBackupStatus
-                : MobileScreens.SettingsCloudBackupPasswordCreate,
-            screenProps: walletNeedsRestore
-              ? {
-                  screen: OnboardingScreens.RestoreCloudBackupLoading,
+            screen: MobileScreens.ViewPrivateKeys,
+            screenProps: {
+              showHeader: true,
+            },
+            text: t('settings.setting.privateKeys.title'),
+            icon: <Key {...iconProps} />,
+            isHidden: !hasCopiedPrivateKeys || !shouldShowPrivateKeys,
+            testID: TestID.WalletSettingsPrivateKeys,
+          },
+          walletNeedsRestore
+            ? {
+                screen: MobileScreens.OnboardingStack,
+                screenProps: {
+                  screen:
+                    walletRestoreType === WalletRestoreType.NewDevice
+                      ? importFromCloudBackupOption.nav
+                      : restoreFromCloudBackupOption.nav,
                   params: {
                     entryPoint: OnboardingEntryPoint.Sidebar,
-                    importType: ImportType.Restore,
+                    importType:
+                      walletRestoreType === WalletRestoreType.NewDevice
+                        ? importFromCloudBackupOption.importType
+                        : restoreFromCloudBackupOption.importType,
                   },
-                }
-              : { address: signerAccount?.address ?? '' },
-            text: t('settings.setting.backup.selected', {
-              cloudProviderName: getCloudProviderName(),
-            }),
-            icon: <Cloud color="$neutral2" size="$icon.24" />,
-            isHidden: noSignerAccountImported,
-          },
+                },
+                text: t('settings.setting.backup.selected', {
+                  cloudProviderName: getCloudProviderName(),
+                }),
+                icon: <Cloud color="$neutral2" size="$icon.24" />,
+                isHidden: noSignerAccountImported,
+              }
+            : {
+                screen: hasCloudBackup
+                  ? MobileScreens.SettingsCloudBackupStatus
+                  : MobileScreens.SettingsCloudBackupPasswordCreate,
+                screenProps: { address: signerAccount?.address ?? '' },
+                text: t('settings.setting.backup.selected', {
+                  cloudProviderName: getCloudProviderName(),
+                }),
+                icon: <Cloud color="$neutral2" size="$icon.24" />,
+                isHidden: noSignerAccountImported,
+              },
           {
             navigationModal: ModalName.PasskeyManagement,
             isHidden: !hasPasskeyBackup,
@@ -295,7 +334,7 @@ export function SettingsScreen(): JSX.Element {
             navigationProps: { address: signerAccount?.address },
           },
           {
-            modal: ModalName.PermissionsModal,
+            navigationModal: ModalName.PermissionsModal,
             text: t('settings.setting.permissions.title'),
             icon: <LineChartDots {...iconProps} />,
           },
@@ -352,6 +391,12 @@ export function SettingsScreen(): JSX.Element {
         isHidden: !isDevEnv(),
         data: [
           {
+            navigationModal: ModalName.Experiments,
+            text: 'Dev Modal',
+            icon: <UniswapLogo {...svgProps} />,
+            testID: TestID.AppSettingsDevModal,
+          },
+          {
             screen: MobileScreens.Dev,
             text: 'Dev options',
             icon: <UniswapLogo {...svgProps} />,
@@ -383,6 +428,9 @@ export function SettingsScreen(): JSX.Element {
     handleTestnetModeToggle,
     notificationOSPermission,
     navigation,
+    hasCopiedPrivateKeys,
+    shouldShowPrivateKeys,
+    walletRestoreType,
   ])
 
   return (

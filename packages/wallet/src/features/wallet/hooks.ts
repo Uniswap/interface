@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { AccountType, DisplayName, DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
@@ -10,6 +10,7 @@ import {
   selectAccounts,
   selectActiveAccount,
   selectActiveAccountAddress,
+  selectHasSmartWalletConsent,
   selectSignerMnemonicAccountExists,
   selectSignerMnemonicAccounts,
   selectViewOnlyAccounts,
@@ -168,4 +169,48 @@ export function useDisplayName(address: Maybe<string>, options?: DisplayNameOpti
   }
 
   return onchainDisplayName
+}
+
+/**
+ * Hook used to get the active account's consent status for smart wallet functionality
+ * @param overrideAddress - optional address to check consent status for
+ * @returns boolean if a consent status is found for the active account, null otherwise (eg if no account is active)
+ */
+export function useHasSmartWalletConsent(overrideAddress?: string): boolean | null {
+  const activeAddress = useActiveAccount()?.address
+
+  const address = overrideAddress || activeAddress
+
+  const hasSmartWalletConsent = useSelector((state: WalletState) => {
+    if (!address || !selectAccounts(state)[address]) {
+      return null
+    }
+    return selectHasSmartWalletConsent(state, address)
+  })
+
+  return hasSmartWalletConsent
+}
+
+/**
+ * Hook to detect when the number of accounts increases (new account added)
+ * @param onAccountAdded Callback function that is called when a new account is added
+ */
+export function useAccountCountChanged(onAccountAdded: () => void): void {
+  // Get accounts from Redux store
+  const accounts = useAccounts()
+
+  // Track previous account count to detect new accounts
+  const prevAccountCountRef = useRef(Object.keys(accounts).length)
+
+  useEffect(() => {
+    const currentAccountCount = Object.keys(accounts).length
+
+    // If account count has increased, call the callback
+    if (currentAccountCount > prevAccountCountRef.current) {
+      onAccountAdded()
+    }
+
+    // Update the reference for next comparison
+    prevAccountCountRef.current = currentAccountCount
+  }, [accounts, onAccountAdded])
 }

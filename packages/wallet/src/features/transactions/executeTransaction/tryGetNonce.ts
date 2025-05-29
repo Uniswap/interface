@@ -6,7 +6,7 @@ import { Experiments, PrivateRpcProperties } from 'uniswap/src/features/gating/e
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
-import { DEFAULT_FLASHBOTS_ENABLED } from 'uniswap/src/features/providers/createEthersProvider'
+import { DEFAULT_FLASHBOTS_ENABLED } from 'uniswap/src/features/providers/FlashbotsCommon'
 import { makeSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'

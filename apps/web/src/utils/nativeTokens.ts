@@ -1,4 +1,4 @@
-import { supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { supportedChainIdFromGQLChain } from 'appGraphql/data/util'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 

@@ -2885,6 +2885,49 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-video (6.13.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.10.14.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - react-native-video/Video (= 6.13.0)
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - react-native-video/Video (6.13.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.10.14.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-webview (13.12.5):
     - DoubleConversion
     - glog
@@ -3485,6 +3528,7 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../../../node_modules/react-native-safe-area-context`)
   - "react-native-skia (from `../../../node_modules/@shopify/react-native-skia`)"
   - "react-native-slider (from `../../../node_modules/@react-native-community/slider`)"
+  - react-native-video (from `../../../node_modules/react-native-video`)
   - react-native-webview (from `../../../node_modules/react-native-webview`)
   - react-native-widgetkit (from `../../../node_modules/react-native-widgetkit`)
   - React-nativeconfig (from `../../../node_modules/react-native/ReactCommon`)
@@ -3722,6 +3766,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/@shopify/react-native-skia"
   react-native-slider:
     :path: "../../../node_modules/@react-native-community/slider"
+  react-native-video:
+    :path: "../../../node_modules/react-native-video"
   react-native-webview:
     :path: "../../../node_modules/react-native-webview"
   react-native-widgetkit:
@@ -3928,6 +3974,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 142fade490cbebbe428640b8cbdb09daf17e8191
   react-native-skia: 8c407cb8134a35d5225e039bbd0f18db56a1091c
   react-native-slider: 8925e9856a27e84c0ce105b1d4f4ada65defec6c
+  react-native-video: 6b3982969370a8ce5dd425348cde2c63ab84bc32
   react-native-webview: 38a1b372b458cdb280f0fc75aa43abb115107585
   react-native-widgetkit: efb6680df237463bbe1be3a4d1a1578a1b0bb08f
   React-nativeconfig: 415626a63057638759bcc75e0a96e2e07771a479

@@ -1,4 +1,4 @@
-import { PoolData } from 'graphql/data/pools/usePoolData'
+import { PoolData } from 'appGraphql/data/pools/usePoolData'
 import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
 import { validPoolDataResponse } from 'test-utils/pools/fixtures'
 import i18n from 'uniswap/src/i18n'

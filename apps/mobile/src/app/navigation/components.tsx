@@ -7,7 +7,9 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
-export const renderHeaderBackButton = (): JSX.Element => <BackButton color="$neutral2" size={iconSizes.icon28} />
+export const renderHeaderBackButton = (): JSX.Element => (
+  <BackButton color="$neutral2" size={iconSizes.icon28} testID={TestID.OnboardingHeaderBack} />
+)
 
 export const renderHeaderBackImage = (): JSX.Element => (
   <RotatableChevron color="$neutral2" height={iconSizes.icon28} width={iconSizes.icon28} />

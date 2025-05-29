@@ -5,6 +5,7 @@ export enum ReactQueryCacheKey {
   LocalActivities = 'localActivities',
   OnchainBalances = 'OnchainBalances',
   OnchainENS = 'OnchainENS',
+  PasskeyAuthStatus = 'PasskeyAuthStatus',
   PositionCurrencyInfo = 'positionCurrencyInfo',
   PositionTokenURI = 'PositionTokenURI',
   SignatureToActivity = 'SignatureToActivity',
@@ -12,6 +13,8 @@ export enum ReactQueryCacheKey {
   TransactionToActivity = 'TransactionToActivity',
   UniswapApi = 'UniswapApi',
   UnitagsApi = 'UnitagsApi',
-  WalletCapabilities = 'WalletCapabilities',
+  WalletGetCapabilities = 'WalletGetCapabilities',
+  MismatchAccount = 'MismatchAccount',
   IsSmartContractAddress = 'IsSmartContractAddress',
+  WalletDelegation = 'WalletDelegation',
 }

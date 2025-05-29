@@ -6,6 +6,7 @@ import {
   TradeType,
   UNI_ADDRESSES,
 } from '@uniswap/sdk-core'
+import { gqlToCurrency, supportedChainIdFromGQLChain } from 'appGraphql/data/util'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -16,7 +17,6 @@ import {
 } from 'components/AccountDrawer/MiniPortfolio/constants'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import { gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { parseRemote as parseRemoteSignature } from 'state/signatures/parseRemote'
@@ -44,10 +44,11 @@ import {
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import i18n from 'uniswap/src/i18n'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
+import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 type TransactionChanges = {
   NftTransfer: NftTransferPartsFragment[]
@@ -57,7 +58,7 @@ type TransactionChanges = {
   NftApproveForAll: NftApproveForAllPartsFragment[]
 }
 
-type FormatNumberOrStringFunctionType = ReturnType<typeof useFormatter>['formatNumberOrString']
+type FormatNumberOrStringFunctionType = ReturnType<typeof useLocalizationContext>['formatNumberOrString']
 
 // TODO: Move common contract metadata to a backend service
 const UNI_IMG =
@@ -294,10 +295,10 @@ export function parseSwapAmounts(
   const inputAmountRaw = adjustedInput.toString()
   const outputAmountRaw = receivedQuantity.toString()
   const inputAmount = formatNumberOrString({
-    input: formatUnits(adjustedInput, sent.asset.decimals),
+    value: formatUnits(adjustedInput, sent.asset.decimals),
     type: NumberType.TokenNonTx,
   })
-  const outputAmount = formatNumberOrString({ input: received.quantity, type: NumberType.TokenNonTx })
+  const outputAmount = formatNumberOrString({ value: received.quantity, type: NumberType.TokenNonTx })
   return {
     sent,
     received,
@@ -469,8 +470,8 @@ function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: For
   const poolTokenA = changes.TokenTransfer[0]
   const poolTokenB = changes.TokenTransfer[1]
 
-  const tokenAQuanitity = formatNumberOrString({ input: poolTokenA.quantity, type: NumberType.TokenNonTx })
-  const tokenBQuantity = formatNumberOrString({ input: poolTokenB.quantity, type: NumberType.TokenNonTx })
+  const tokenAQuanitity = formatNumberOrString({ value: poolTokenA.quantity, type: NumberType.TokenNonTx })
+  const tokenBQuantity = formatNumberOrString({ value: poolTokenB.quantity, type: NumberType.TokenNonTx })
 
   return {
     descriptor: i18n.t('activity.transaction.tokens.descriptor', {
@@ -514,7 +515,7 @@ function parseSendReceive(
   } else if (changes.TokenTransfer.length === 1) {
     transfer = changes.TokenTransfer[0]
     assetName = transfer.asset.symbol
-    amount = formatNumberOrString({ input: transfer.quantity, type: NumberType.TokenNonTx })
+    amount = formatNumberOrString({ value: transfer.quantity, type: NumberType.TokenNonTx })
     currencies = [gqlToCurrency(transfer.asset)]
   }
 
@@ -529,7 +530,7 @@ function parseSendReceive(
             descriptor: i18n.t('activity.transaction.swap.descriptor', {
               amountWithSymbolA: `${amount} ${assetName}`,
               amountWithSymbolB: formatNumberOrString({
-                input: getTransactedValue(transfer.transactedValue),
+                value: getTransactedValue(transfer.transactedValue),
                 type: NumberType.FiatTokenPrice,
               }),
             }),

@@ -121,7 +121,13 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
 
         dispatch(resetPasswordAttempts())
         setIsLoading(false)
-        onRestoreComplete({ isRestoringMnemonic, dispatch, params, navigation })
+        onRestoreComplete({
+          isRestoringMnemonic,
+          dispatch,
+          params,
+          navigation,
+          screen: OnboardingScreens.RestoreCloudBackupPassword,
+        })
       } catch (error) {
         setIsLoading(false)
         dispatch(incrementPasswordAttempts())

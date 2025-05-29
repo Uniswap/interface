@@ -13,13 +13,14 @@ import { Flex, Text, TextStyle, styled } from 'ui/src'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
+import { NumberType } from 'utilities/src/format/types'
 import { currencyKey } from 'utils/currencyKey'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 function currencyListRowKey(data: Currency): string {
   return currencyKey(data)
@@ -53,12 +54,12 @@ const Tag = styled(Text, {
 })
 
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
-  const { formatNumberOrString } = useFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
 
   return (
     <StyledBalanceText>
       {formatNumberOrString({
-        input: balance.toExact(),
+        value: balance.toExact(),
         type: NumberType.TokenNonTx,
       })}
     </StyledBalanceText>
@@ -94,13 +95,6 @@ function TokenTags({ currency }: { currency: Currency }) {
       ) : null}
     </Flex>
   )
-}
-
-const getDisplayName = (name: string | undefined) => {
-  if (name === 'USD//C') {
-    return 'USD Coin'
-  }
-  return name
 }
 
 const RowWrapper = styled(Flex, {
@@ -146,7 +140,6 @@ export function CurrencyRow({
   const balanceUSD = balanceMap[currencyKey(currency)]?.usdValue
 
   const Wrapper = tooltip ? MouseoverTooltip : RowWrapper
-  const currencyName = getDisplayName(currency.name)
 
   // only show add or remove buttons if not on selected list
   return (
@@ -175,7 +168,7 @@ export function CurrencyRow({
           <CurrencyLogo currency={currency} size={36} style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} />
           <Flex style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} gap="$spacing2">
             <Flex row alignItems="center" gap="$spacing4">
-              <CurrencyName variant="body2">{currencyName}</CurrencyName>
+              <CurrencyName variant="body2">{currency.name}</CurrencyName>
               <WarningIcon severity={warningSeverity} size="$icon.16" ml="$spacing4" />
             </Flex>
             <Flex row alignItems="center" gap="$spacing8">

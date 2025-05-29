@@ -1,5 +1,6 @@
 import { flush, getUserId, Identify, identify, init, setDeviceId, track } from '@amplitude/analytics-browser'
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
+import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { Analytics, TestnetModeConfig, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
@@ -24,6 +25,7 @@ async function setAnalyticsAtomDirect(allowed: boolean): Promise<void> {
     window.localStorage.setItem(ALLOW_ANALYTICS_ATOM_KEY, JSON.stringify(allowed))
     document.dispatchEvent(new Event('analyticsToggled'))
   } catch {
+    const chrome = getChromeWithThrow()
     await chrome.storage.local.set({ ALLOW_ANALYTICS_ATOM_KEY: JSON.stringify(allowed) })
   }
 }
@@ -32,6 +34,7 @@ async function getAnalyticsAtomFromStorage(): Promise<boolean> {
   try {
     return window.localStorage.getItem(ALLOW_ANALYTICS_ATOM_KEY) !== 'false'
   } catch {
+    const chrome = getChromeWithThrow()
     const res = await chrome.storage.local.get(ALLOW_ANALYTICS_ATOM_KEY)
     return res[ALLOW_ANALYTICS_ATOM_KEY] !== 'false'
   }
@@ -52,6 +55,7 @@ const updateLocalVar = async (): Promise<void> => {
 try {
   window.document.addEventListener('analyticsToggled', updateLocalVar, false)
 } catch {
+  const chrome = getChromeWithThrow()
   chrome.storage.local.onChanged.addListener(updateLocalVar)
 }
 
@@ -106,8 +110,8 @@ export const analytics: Analytics = {
     testnetMode = enabled
     testnetModeConfig = config
   },
-  async sendEvent(eventName: string, eventProperties?: Record<string, unknown>): Promise<void> {
-    if (!(await getAnalyticsAtomDirect()) && !ANONYMOUS_EVENT_NAMES.includes(eventName)) {
+  sendEvent(eventName: string, eventProperties?: Record<string, unknown>): void {
+    if (!allowAnalytics && !ANONYMOUS_EVENT_NAMES.includes(eventName)) {
       return
     }
     const propertiesWithHash: Record<string, unknown> = {

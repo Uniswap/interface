@@ -98,6 +98,10 @@ const sharedRules = {
       name: 'statsig-react',
       message: 'Import from internal module uniswap/src/features/gating instead',
     },
+    {
+      name: 'wallet/src/components/ErrorBoundary/restart',
+      message: 'Use `wallet/src/components/ErrorBoundary/restartApp` instead.',
+    },
   ],
   patterns: [
     {

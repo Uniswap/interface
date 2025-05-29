@@ -57,6 +57,7 @@ function assignWindowEthereum(provider: unknown): void {
   } catch (error) {
     if (__DEV__) {
       // Only log in dev env for debugging purposes to avoid spamming DD with these errors.
+      // eslint-disable-next-line no-restricted-syntax
       logger.error(error, { tags: { file: 'ethereum.ts', function: 'assignWindowEthereum' } })
     }
   }

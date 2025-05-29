@@ -2,6 +2,7 @@ import { PropsWithChildren } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { GraphqlProvider } from 'src/app/apollo'
 import { TraceUserProperties } from 'src/app/components/Trace/TraceUserProperties'
+import { SmartWalletNudgesProvider } from 'src/app/context/SmartWalletNudgesContext'
 import { ExtensionStatsigProvider } from 'src/app/core/StatsigProvider'
 import { DatadogAppNameTag } from 'src/app/datadog'
 import { getReduxStore } from 'src/store/store'
@@ -24,10 +25,12 @@ export function BaseAppContainer({
             <ErrorBoundary>
               <GraphqlProvider>
                 <BlankUrlProvider>
-                  <LocalizationContextProvider>
-                    <TraceUserProperties />
-                    {children}
-                  </LocalizationContextProvider>
+                  <SmartWalletNudgesProvider>
+                    <LocalizationContextProvider>
+                      <TraceUserProperties />
+                      {children}
+                    </LocalizationContextProvider>
+                  </SmartWalletNudgesProvider>
                 </BlankUrlProvider>
               </GraphqlProvider>
             </ErrorBoundary>

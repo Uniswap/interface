@@ -9,6 +9,7 @@ import com.facebook.react.uimanager.ViewManager
 import com.uniswap.onboarding.backup.MnemonicConfirmationViewManager
 import com.uniswap.onboarding.backup.MnemonicDisplayViewManager
 import com.uniswap.onboarding.import.SeedPhraseInputViewManager
+import com.uniswap.onboarding.privatekeys.PrivateKeyDisplayViewManager
 
 class UniswapPackage : ReactPackage {
   override fun createViewManagers(
@@ -17,6 +18,7 @@ class UniswapPackage : ReactPackage {
     MnemonicConfirmationViewManager(),
     MnemonicDisplayViewManager(),
     SeedPhraseInputViewManager(),
+    PrivateKeyDisplayViewManager()
   )
 
   override fun createNativeModules(

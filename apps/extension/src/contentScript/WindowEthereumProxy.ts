@@ -108,7 +108,7 @@ export class WindowEthereumProxy extends EventEmitter {
         })
         return Promise.resolve()
       } catch (error) {
-        logger.info('WindowEthereumProxy.ts', 'request', 'Invalid request', args)
+        logger.debug('WindowEthereumProxy.ts', 'request', 'Invalid request', args)
 
         // Based on the zod error, we can determine the type of error and reject accordingly
         if (error instanceof ZodError) {

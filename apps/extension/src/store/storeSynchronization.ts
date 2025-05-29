@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { getReduxPersistor, initializeReduxStore } from 'src/store/store'
+import { initializeReduxStore } from 'src/store/store'
 import { logger } from 'utilities/src/logger/logger'
 import { v4 as uuid } from 'uuid'
+import { getReduxPersistor } from 'wallet/src/state/persistor'
 import { PersistedStorage } from 'wallet/src/utils/persistedStorage'
 
 /**
@@ -32,7 +33,7 @@ export enum ExtensionAppLocation {
   Tab = 1,
 }
 
-async function initPrimaryInstanceHandler(appLocation: ExtensionAppLocation): Promise<void> {
+function initPrimaryInstanceHandler(appLocation: ExtensionAppLocation): void {
   if (isInitialized) {
     // This is just to prevent bugs being introduced in the future.
     logger.error(new Error('`initPrimaryInstanceHandler` called when already initialized'), {
@@ -44,7 +45,7 @@ async function initPrimaryInstanceHandler(appLocation: ExtensionAppLocation): Pr
     return
   }
 
-  await initializeReduxStore()
+  initializeReduxStore()
 
   const onStorageChangedListener: Parameters<typeof chrome.storage.onChanged.addListener>[0] = async (
     changes,
@@ -103,7 +104,11 @@ async function initPrimaryInstanceHandler(appLocation: ExtensionAppLocation): Pr
   window.addEventListener('focus', onWindowFocusListener)
 
   // We always set the current app instance as the primary when it first launches.
-  await sessionStorage.setItem(PRIMARY_APP_INSTANCE_ID_KEY, currentAppInstanceId)
+  sessionStorage.setItem(PRIMARY_APP_INSTANCE_ID_KEY, currentAppInstanceId).catch((error) => {
+    logger.error(error, {
+      tags: { file: 'storeSynchronization.ts', function: 'sessionStorage.setItem' },
+    })
+  })
 
   // This will be used in the onboarding flow when the user completes onboarding but the tab remains open.
   // We don't want this tab to become the primary ever again when it's focused.

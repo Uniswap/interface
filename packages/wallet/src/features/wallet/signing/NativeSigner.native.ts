@@ -36,6 +36,12 @@ export class NativeSigner extends Signer {
     return signaturePromise.then((signature) => ensureLeading0x(signature))
   }
 
+  signHashForAddress(address: string, hash: string | Bytes, chainId: number): Promise<string> {
+    return Keyring.signHashForAddress(address, hexlify(hash).slice(2), chainId).then((signature) => {
+      return ensureLeading0x(signature)
+    })
+  }
+
   // reference: https://github.com/ethers-io/ethers.js/blob/ce8f1e4015c0f27bf178238770b1325136e3351a/packages/wallet/src.ts/index.ts#L135
   async _signTypedData(
     domain: TypedDataDomain,

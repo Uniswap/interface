@@ -19,6 +19,7 @@ import viVN from 'uniswap/src/i18n/locales/translations/vi-VN.json'
 import zhCN from 'uniswap/src/i18n/locales/translations/zh-CN.json'
 import zhTW from 'uniswap/src/i18n/locales/translations/zh-TW.json'
 import { MissingI18nInterpolationError } from 'uniswap/src/i18n/shared'
+import { getWalletDeviceLocale } from 'uniswap/src/i18n/utils'
 import { logger } from 'utilities/src/logger/logger'
 
 const resources = {
@@ -70,7 +71,7 @@ i18n
   .use(initReactI18next)
   .init({
     defaultNS,
-    lng: 'en-US',
+    lng: getWalletDeviceLocale(),
     fallbackLng: 'en-US',
     resources,
     interpolation: {

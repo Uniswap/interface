@@ -13,6 +13,7 @@ type WarningInfoProps = {
   tooltipProps: Omit<InfoTooltipProps, 'button' | 'trigger'>
   modalProps: Omit<WarningModalProps, 'onClose' | 'isOpen'>
   infoButton?: ReactNode
+  mobileBanner?: ReactNode
   trigger?: ReactNode
   triggerPlacement?: 'start' | 'end'
   analyticsTitle?: string
@@ -25,6 +26,7 @@ export function WarningInfo({
   tooltipProps,
   modalProps,
   infoButton,
+  mobileBanner,
   children,
   trigger = <InfoCircle color="$neutral3" size="$icon.12" />,
   triggerPlacement = 'end',
@@ -92,6 +94,7 @@ export function WarningInfo({
       </TouchableArea>
       <WarningModal isOpen={showModal} {...modalProps} onClose={(): void => setShowModal(false)}>
         {infoButton}
+        {mobileBanner}
       </WarningModal>
     </>
   )

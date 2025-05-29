@@ -17,7 +17,8 @@ import { tryParsePrice } from 'state/mint/v3/utils'
 import { AnimatePresence, Button, Flex, SegmentedControl, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { fonts, zIndexes } from 'ui/src/theme'
-import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
+import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
+import { numericInputRegex } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
@@ -414,7 +415,7 @@ function RangeInput({
             hoverable
             hoverStyle={{ backgroundColor: '$surface3Hovered' }}
           >
-            <Plus size={16} />
+            <Plus size={16} color={colors.neutral2.val} />
           </TouchableArea>
           <TouchableArea
             testID={`${TestID.RangeInputDecrement}-${input}`}
@@ -427,7 +428,7 @@ function RangeInput({
             hoverable
             hoverStyle={{ backgroundColor: '$surface3Hovered' }}
           >
-            <Minus size={16} />
+            <Minus size={16} color={colors.neutral2.val} />
           </TouchableArea>
         </Flex>
       )}

@@ -103,8 +103,8 @@ export function useTransactionDetailsInfoRows(
         <DappInfoRow
           key="dappInfo"
           label={t('transaction.details.dappName')}
-          iconUrl={typeInfo.dapp.icon}
-          name={typeInfo.dapp.name}
+          iconUrl={typeInfo.dappRequestInfo.icon}
+          name={typeInfo.dappRequestInfo.name}
         />,
       )
       break

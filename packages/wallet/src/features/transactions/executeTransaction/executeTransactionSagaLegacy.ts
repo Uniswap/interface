@@ -23,7 +23,13 @@ import { CalculatedNonce, tryGetNonce } from 'wallet/src/features/transactions/e
 import { createGetUpdatedTransactionDetails } from 'wallet/src/features/transactions/executeTransaction/utils/createGetUpdatedTransactionDetails'
 import { createUnsubmittedTransactionDetails } from 'wallet/src/features/transactions/executeTransaction/utils/createUnsubmittedTransactionDetails'
 import { getRPCErrorCategory } from 'wallet/src/features/transactions/utils'
-import { getPrivateProvider, getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
+import {
+  getPrivateProvider,
+  getPrivateViemClient,
+  getProvider,
+  getSignerManager,
+  getViemClient,
+} from 'wallet/src/features/wallet/context'
 
 export interface ExecuteTransactionParams {
   // internal id used for tracking transactions before they're submitted
@@ -65,18 +71,24 @@ export function* executeTransactionLegacy(params: ExecuteTransactionParams): Sag
         request = { ...request, nonce: calculatedNonce.nonce }
       }
     }
-
     // Sign and send the transaction
     const provider = options.submitViaPrivateRpc
       ? yield* call(getPrivateProvider, chainId, account)
       : yield* call(getProvider, chainId)
+
+    const viemClient = options.submitViaPrivateRpc
+      ? yield* call(getPrivateViemClient, chainId, account)
+      : yield* call(getViemClient, chainId)
+
     const signerManager = yield* call(getSignerManager)
-    const { transactionResponse, populatedRequest, timestampBeforeSend } = yield* call(
+
+    const { transactionResponse, populatedRequest, timestampBeforeSend, timestampBeforeSign } = yield* call(
       signAndSubmitTransaction,
       request,
       account,
       provider,
       signerManager,
+      viemClient,
     )
     logger.debug('executeTransaction', '', 'Tx submitted:', transactionResponse.hash)
 
@@ -85,6 +97,7 @@ export function* executeTransactionLegacy(params: ExecuteTransactionParams): Sag
       updateSubmittedTransaction,
       unsubmittedTransaction,
       transactionResponse.hash,
+      timestampBeforeSign,
       timestampBeforeSend,
       populatedRequest,
       provider,
@@ -149,6 +162,7 @@ function* addUnsubmittedTransaction(
 function* updateSubmittedTransaction(
   transaction: OnChainTransactionDetails,
   hash: string,
+  timestampBeforeSign: number,
   timestampBeforeSend: number,
   populatedRequest: providers.TransactionRequest,
   provider: providers.Provider,
@@ -167,6 +181,7 @@ function* updateSubmittedTransaction(
   const updatedTransaction = yield* call(getUpdatedTransactionDetails, {
     transaction,
     hash,
+    timestampBeforeSign,
     timestampBeforeSend,
     populatedRequest,
   })

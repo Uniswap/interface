@@ -13,6 +13,7 @@ export type TransactionModalProps = PropsWithChildren<{
   renderBiometricsIcon?: TransactionModalContextState['renderBiometricsIcon']
   walletNeedsRestore?: TransactionModalContextState['walletNeedsRestore']
   authTrigger?: TransactionModalContextState['authTrigger']
+  passkeyAuthStatus?: TransactionModalContextState['passkeyAuthStatus']
 }>
 
 export type TransactionModalInnerContainerProps = PropsWithChildren<{

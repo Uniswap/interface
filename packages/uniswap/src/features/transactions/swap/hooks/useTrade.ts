@@ -5,11 +5,8 @@ import { useTradingApiQuoteQuery } from 'uniswap/src/data/apiClients/tradingApi/
 import { TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
 import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 import { useIndicativeTrade } from 'uniswap/src/features/transactions/swap/hooks/useIndicativeTrade'
-import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import { TradeWithStatus, UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   SWAP_GAS_URGENCY_OVERRIDE,
@@ -50,7 +47,7 @@ export function useTrade({
   skip,
   selectedProtocols,
   isDebouncing,
-  getGeneratePermitAsTransaction,
+  generatePermitAsTransaction,
   isV4HookPoolsEnabled,
 }: UseTradeArgs): TradeWithStatus {
   const activeAccountAddress = account?.address
@@ -63,15 +60,12 @@ export function useTrade({
     currencyIn && currencyOut && areCurrencyIdsEqual(currencyId(currencyIn), currencyId(currencyOut))
 
   const tokenInChainId = toTradingApiSupportedChainId(currencyIn?.chainId)
-  const v4SwapEnabled = useV4SwapEnabled(tokenInChainId)
 
   const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
   const tokenInAddress = getTokenAddressForApi(currencyIn)
   const tokenOutAddress = getTokenAddressForApi(currencyOut)
   const activeGasStrategy = useActiveGasStrategy(tokenInChainId, 'swap')
   const shadowGasStrategies = useShadowGasStrategies(tokenInChainId, 'swap')
-
-  const generatePermitAsTransaction = getGeneratePermitAsTransaction?.(currencyIn?.chainId)
 
   const routingParams = useQuoteRoutingParams({
     selectedProtocols,
@@ -118,7 +112,6 @@ export function useTrade({
       tokenOutChainId,
       type: requestTradeType,
       urgency: SWAP_GAS_URGENCY_OVERRIDE,
-      v4Enabled: v4SwapEnabled,
       ...routingParams,
       ...slippageParams,
     }
@@ -137,7 +130,6 @@ export function useTrade({
     tokenInChainId,
     tokenOutAddress,
     tokenOutChainId,
-    v4SwapEnabled,
   ])
 
   /***** Fetch quote from trading API  ******/
@@ -195,13 +187,12 @@ export function useTrade({
   }
 
   const isLoading = (amount && isDebouncing) || queryIsLoading
-  const indicativeQuotesEnabled = useFeatureFlag(FeatureFlags.IndicativeSwapQuotes)
 
   const indicative = useIndicativeTrade({
     quoteRequestArgs,
     currencyIn,
     currencyOut,
-    skip: !indicativeQuotesEnabled || isUSDQuote,
+    skip: isUSDQuote,
   })
 
   /***** Format `trade` type, add errors if needed.  ******/

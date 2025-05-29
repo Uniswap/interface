@@ -1,15 +1,15 @@
+import { SparklineMap } from 'appGraphql/data/types'
+import { PricePoint } from 'appGraphql/data/util'
 import { getPriceBounds } from 'components/Charts/PriceChart/utils'
 import LineChart from 'components/Charts/SparklineChart/LineChart'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { curveCardinal, scaleLinear } from 'd3'
-import { SparklineMap } from 'graphql/data/types'
-import { PricePoint } from 'graphql/data/util'
 import { memo } from 'react'
 import { TokenStat } from 'state/explore/types'
 import { Flex, useSporeColors } from 'ui/src'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 
 interface SparklineChartProps {
@@ -25,7 +25,7 @@ function _SparklineChart({ width, height, tokenData, pricePercentChange, sparkli
   // for sparkline
   const chainId = getChainIdFromChainUrlParam(tokenData?.chain.toLowerCase())
   const chainInfo = chainId && getChainInfo(chainId)
-  const isNative = addressesAreEquivalent(tokenData?.address, chainInfo?.wrappedNativeCurrency.address)
+  const isNative = areAddressesEqual(tokenData?.address, chainInfo?.wrappedNativeCurrency.address)
   const pricePoints = tokenData?.address
     ? sparklineMap[isNative ? NATIVE_CHAIN_ID : tokenData.address.toLowerCase()]
     : null

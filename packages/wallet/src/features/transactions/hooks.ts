@@ -47,7 +47,6 @@ export function usePendingTransactions(
 const ERRORED_QUEUE_STATUSES = [
   QueuedOrderStatus.AppClosed,
   QueuedOrderStatus.ApprovalFailed,
-  QueuedOrderStatus.WrapFailed,
   QueuedOrderStatus.SubmissionFailed,
   QueuedOrderStatus.Stale,
 ] as const
@@ -283,7 +282,7 @@ export function useMergeLocalAndRemoteTransactions(
 
       // If the tx was done via WC, then add the dapp info from WC to the remote data
       if (localTx.typeInfo.type === TransactionType.WCConfirm) {
-        const externalDappInfo = { ...localTx.typeInfo.dapp }
+        const externalDappInfo = { ...localTx.typeInfo.dappRequestInfo }
         const mergedTx = { ...remoteTx, typeInfo: { ...remoteTx.typeInfo, externalDappInfo } }
         deDupedTxs.push(mergedTx)
         continue

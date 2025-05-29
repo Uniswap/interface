@@ -28,8 +28,8 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
-import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
@@ -145,7 +145,7 @@ export function LegacyPositionPage() {
   }
 
   const hasFees = feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || false
-  const isOwner = addressesAreEquivalent(positionInfo.owner, account?.address)
+  const isOwner = areAddressesEqual(positionInfo.owner, account?.address)
 
   const showV4UnsupportedTooltip = isV4UnsupportedChain(positionInfo.chainId)
 

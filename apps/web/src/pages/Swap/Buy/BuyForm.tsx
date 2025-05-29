@@ -5,6 +5,10 @@ import { ChooseProviderModal } from 'pages/Swap/Buy/ChooseProviderModal'
 import { CountryListModal } from 'pages/Swap/Buy/CountryListModal'
 import { FiatOnRampCurrencyModal } from 'pages/Swap/Buy/FiatOnRampCurrencyModal'
 import { PredefinedAmount } from 'pages/Swap/Buy/PredefinedAmount'
+import { fallbackCurrencyInfo } from 'pages/Swap/Buy/hooks'
+import { formatFiatOnRampFiatAmount } from 'pages/Swap/Buy/shared'
+import { AlternateCurrencyDisplay } from 'pages/Swap/common/AlternateCurrencyDisplay'
+import { SelectTokenPanel } from 'pages/Swap/common/SelectTokenPanel'
 import {
   NumericalInputMimic,
   NumericalInputSymbolContainer,
@@ -12,34 +16,43 @@ import {
   StyledNumericalInput,
   useWidthAdjustedDisplayValue,
 } from 'pages/Swap/common/shared'
-import { useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, styled } from 'ui/src'
+import { Flex, Text, styled, useShadowPropsShort } from 'ui/src'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
-import { SelectTokenButton } from 'uniswap/src/features/fiatOnRamp/SelectTokenButton'
 import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/api'
-import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { FiatOnRampCurrency, RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { FiatOnRampEventName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+import {
+  FiatOffRampEventName,
+  FiatOnRampEventName,
+  InterfacePageNameLocal,
+} from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import useResizeObserver from 'use-resize-observer'
 import { useFormatter } from 'utils/formatNumbers'
 
 const InputWrapper = styled(Flex, {
-  backgroundColor: '$surface2',
+  backgroundColor: '$surface1',
   p: '$spacing16',
   pt: '$spacing12',
   pb: 52,
-  height: 342,
+  height: 264,
   alignItems: 'center',
-  borderRadius: '$rounded16',
+  borderRadius: '$rounded20',
   justifyContent: 'space-between',
   overflow: 'hidden',
   gap: '$spacing8',
+  borderWidth: 1,
+  borderColor: '$surface3',
 })
 
 const HeaderRow = styled(Flex, {
@@ -49,7 +62,9 @@ const HeaderRow = styled(Flex, {
   width: '100%',
 })
 
+const DEFAULT_FIAT_DECIMALS = 2
 const PREDEFINED_AMOUNTS = [100, 300, 1000]
+const PREDEFINED_PERCENTAGES = [25, 50, 75, 100]
 
 type BuyFormProps = {
   disabled?: boolean
@@ -64,19 +79,36 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
   const { symbol: fiatSymbol } = useFiatCurrencyComponents(fiatCurrency)
 
   const { buyFormState, setBuyFormState, derivedBuyFormInfo } = useBuyFormContext()
-  const { inputAmount, selectedCountry, quoteCurrency, currencyModalOpen, countryModalOpen, providerModalOpen } =
-    buyFormState
-  const { amountOut, amountOutLoading, supportedTokens, countryOptionsResult, error } = derivedBuyFormInfo
+  const {
+    inputAmount,
+    inputInFiat,
+    selectedCountry,
+    quoteCurrency,
+    currencyModalOpen,
+    countryModalOpen,
+    providerModalOpen,
+    rampDirection,
+  } = buyFormState
+  const { supportedTokens, countryOptionsResult, error, amountOut, meldSupportedFiatCurrency } = derivedBuyFormInfo
 
   const postWidthAdjustedDisplayValue = useWidthAdjustedDisplayValue(inputAmount)
   const hiddenObserver = useResizeObserver<HTMLElement>()
 
-  const handleUserInput = (newValue: string) => {
-    setBuyFormState((state) => ({ ...state, inputAmount: newValue }))
+  useEffect(() => {
+    const fiatValue = inputInFiat ? inputAmount : derivedBuyFormInfo.amountOut
+
+    if (!fiatValue) {
+      return
+    }
+
     sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampAmountEntered, {
-      amountUSD: convertToFiatAmount(Number(newValue)).amount,
+      amountUSD: convertToFiatAmount(Number(fiatValue)).amount,
       source: 'textInput',
     })
+  }, [inputAmount, derivedBuyFormInfo.amountOut, inputInFiat, convertToFiatAmount])
+
+  const handleUserInput = (newValue: string) => {
+    setBuyFormState((state) => ({ ...state, inputAmount: newValue }))
   }
 
   const { data: countryResult } = useFiatOnRampAggregatorGetCountryQuery()
@@ -90,6 +122,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
   const parsedQs = useParsedQueryString()
   useEffect(() => {
     let supportedToken: Maybe<FiatOnRampCurrency>
+    const quoteCurrencyCode = parsedQs.quoteCurrencyCode
 
     if (initialCurrency) {
       const supportedNativeToken = supportedTokens?.find(
@@ -105,12 +138,14 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
             meldToken.currencyInfo?.currency.isToken &&
             meldToken.currencyInfo?.currency.address === initialCurrency.address,
         ) || supportedNativeToken
+    } else if (quoteCurrencyCode) {
+      // Defaults the quote currency to the initial currency (from query params) if supported
+      supportedToken = supportedTokens?.find((meldToken) => meldToken.meldCurrencyCode === quoteCurrencyCode)
     } else {
-      const quoteCurrencyCode = parsedQs.quoteCurrencyCode
-      if (quoteCurrencyCode) {
-        // Defaults the quote currency to the initial currency (from query params) if supported
-        supportedToken = supportedTokens?.find((meldToken) => meldToken.meldCurrencyCode === quoteCurrencyCode)
-      }
+      supportedToken =
+        supportedTokens?.find((meldToken) =>
+          meldToken.currencyInfo?.currency.equals(nativeOnChain(UniverseChainId.Mainnet)),
+        ) ?? supportedTokens?.[0]
     }
 
     if (supportedToken) {
@@ -132,13 +167,33 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
     }
   }, [account.chainId, parsedQs, initialCurrency, setBuyFormState, supportedTokens])
 
+  const { data: balancesById } = usePortfolioBalances({ address: account.address })
+
+  const balance = useMemo(() => {
+    const currentCurrencyId = currencyId(quoteCurrency?.currencyInfo?.currency)
+    return currentCurrencyId ? balancesById?.[currentCurrencyId.toLowerCase()] : undefined
+  }, [balancesById, quoteCurrency?.currencyInfo?.currency])
+
+  const shadowProps = useShadowPropsShort()
+  const [inputHasFocus, setInputHasFocus] = useState(false)
+  const focusProps = useMemo(
+    () => ({
+      backgroundColor: '$surface2',
+      borderColor: 'transparent',
+      ...(inputHasFocus || inputAmount
+        ? { ...shadowProps, backgroundColor: '$surface1', borderColor: '$surface3' }
+        : {}),
+    }),
+    [inputAmount, inputHasFocus, shadowProps],
+  )
+
   return (
     <Trace page={InterfacePageNameLocal.Buy} logImpression>
       <Flex gap="$spacing4">
-        <InputWrapper>
+        <InputWrapper {...focusProps}>
           <HeaderRow>
             <Text variant="body3" userSelect="none" color="$neutral2">
-              {t('common.youreBuying')}
+              {rampDirection === RampDirection.ONRAMP ? t('common.youreBuying') : t('common.youreSelling')}
             </Text>
             <FiatOnRampCountryPicker
               onPress={() => {
@@ -147,56 +202,112 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
               countryCode={selectedCountry?.countryCode}
             />
           </HeaderRow>
-          <Flex alignItems="center" gap="$spacing8">
+          <Flex alignItems="center" gap="$spacing16" maxWidth="100%" overflow="hidden">
             {error && (
               <Text variant="body3" userSelect="none" color="$statusCritical">
                 {error.message}
               </Text>
             )}
             <NumericalInputWrapper>
-              <NumericalInputSymbolContainer showPlaceholder={!inputAmount}>{fiatSymbol}</NumericalInputSymbolContainer>
+              {inputInFiat && (
+                <NumericalInputSymbolContainer showPlaceholder={!inputAmount}>
+                  {fiatSymbol}
+                </NumericalInputSymbolContainer>
+              )}
               <StyledNumericalInput
                 value={postWidthAdjustedDisplayValue}
                 disabled={disabled}
                 onUserInput={handleUserInput}
+                onFocus={() => setInputHasFocus(true)}
+                onBlur={() => setInputHasFocus(false)}
                 placeholder="0"
                 $width={inputAmount && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
-                maxDecimals={6}
+                maxDecimals={
+                  inputInFiat
+                    ? DEFAULT_FIAT_DECIMALS
+                    : quoteCurrency?.currencyInfo?.currency.decimals ?? DEFAULT_FIAT_DECIMALS
+                }
                 testId={TestID.BuyFormAmountInput}
               />
               <NumericalInputMimic ref={hiddenObserver.ref}>{inputAmount}</NumericalInputMimic>
             </NumericalInputWrapper>
-            <SelectTokenButton
-              onPress={() => {
-                setBuyFormState((state) => ({ ...state, currencyModalOpen: true }))
-              }}
-              selectedCurrencyInfo={quoteCurrency?.currencyInfo}
-              formattedAmount={amountOutLoading ? '' : amountOut ?? '-'}
-              disabled={disabled}
-              iconSize={18}
-              chevronDirection="down"
-              loading={amountOutLoading && inputAmount !== ''}
-              testID={TestID.ChooseInputToken}
-            />
-            <Flex row alignItems="center" gap="$spacing8" justifyContent="center" mt="$spacing8">
-              {PREDEFINED_AMOUNTS.map((amount: number) => (
-                <PredefinedAmount
-                  onClick={() => {
-                    setBuyFormState((state) => ({ ...state, inputAmount: amount.toString() }))
-                    sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampAmountEntered, {
-                      amountUSD: convertToFiatAmount(amount).amount,
-                      source: 'chip',
-                    })
+            {quoteCurrency?.currencyInfo?.currency && inputAmount && (
+              <Flex height={36} justifyContent="center">
+                <AlternateCurrencyDisplay
+                  disabled={disabled || !amountOut}
+                  inputCurrency={quoteCurrency.currencyInfo.currency}
+                  inputInFiat={inputInFiat}
+                  exactAmountOut={amountOut}
+                  onToggle={() => {
+                    setBuyFormState((state) => ({
+                      ...state,
+                      inputInFiat: !state.inputInFiat,
+                      inputAmount: amountOut || '',
+                    }))
                   }}
-                  key={amount}
-                  amount={amount}
-                  currentAmount={inputAmount}
-                  disabled={disabled}
                 />
-              ))}
-            </Flex>
+              </Flex>
+            )}
+            {!inputAmount && rampDirection === RampDirection.ONRAMP && (
+              <Flex row alignItems="center" gap="$spacing8" justifyContent="center">
+                {PREDEFINED_AMOUNTS.map((amount: number) => (
+                  <PredefinedAmount
+                    onPress={() => {
+                      setBuyFormState((state) => ({
+                        ...state,
+                        inputInFiat: true,
+                        inputAmount: amount.toString(),
+                      }))
+                      sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampAmountEntered, {
+                        amountUSD: convertToFiatAmount(amount).amount,
+                        source: 'chip',
+                      })
+                    }}
+                    key={amount}
+                    label={formatFiatOnRampFiatAmount(amount, meldSupportedFiatCurrency ?? fallbackCurrencyInfo)}
+                    disabled={disabled}
+                  />
+                ))}
+              </Flex>
+            )}
+            {!inputAmount && rampDirection === RampDirection.OFFRAMP && (
+              <Flex row alignItems="center" gap="$spacing8" justifyContent="center">
+                {PREDEFINED_PERCENTAGES.map((value: number) => (
+                  <PredefinedAmount
+                    key={value}
+                    label={value === 100 ? t('common.max') : `${value}%`}
+                    disabled={disabled || !balance?.balanceUSD}
+                    onPress={() => {
+                      if (!balance) {
+                        return
+                      }
+                      const newInputAmount = (balance.quantity * value) / 100
+                      setBuyFormState((state) => ({
+                        ...state,
+                        inputInFiat: false,
+                        inputAmount: String(newInputAmount),
+                      }))
+                      sendAnalyticsEvent(FiatOffRampEventName.FiatOffRampAmountEntered, {
+                        amountUSD: convertToFiatAmount(newInputAmount).amount,
+                        source: 'chip',
+                      })
+                    }}
+                  />
+                ))}
+              </Flex>
+            )}
           </Flex>
         </InputWrapper>
+        <SelectTokenPanel
+          currency={quoteCurrency?.currencyInfo?.currency}
+          balance={balance}
+          disabled={disabled}
+          testID={TestID.ChooseInputToken}
+          onPress={() => {
+            setBuyFormState((state) => ({ ...state, currencyModalOpen: true }))
+          }}
+          {...focusProps}
+        />
         <Flex row>
           <BuyFormButton />
         </Flex>
@@ -240,9 +351,9 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
   )
 }
 
-export function BuyForm(props: BuyFormProps) {
+export function BuyForm({ rampDirection, ...props }: BuyFormProps & { rampDirection: RampDirection }) {
   return (
-    <BuyFormContextProvider>
+    <BuyFormContextProvider rampDirection={rampDirection}>
       <BuyFormInner {...props} />
     </BuyFormContextProvider>
   )

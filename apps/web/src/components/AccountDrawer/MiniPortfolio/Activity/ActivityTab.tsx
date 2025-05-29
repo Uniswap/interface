@@ -14,6 +14,7 @@ import { useMemo } from 'react'
 import { ThemedText } from 'theme/components'
 import { AnimatePresence, Flex } from 'ui/src'
 import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const ActivityGroupWrapper = styled(Column)`
   margin-top: 16px;
@@ -61,7 +62,7 @@ export function ActivityTab({ account }: { account: string }) {
               <ThemedText.SubHeader color="neutral2" marginLeft="16px">
                 {activityGroup.title}
               </ThemedText.SubHeader>
-              <Flex data-testid="activity-content" width="100%">
+              <Flex data-testid={TestID.ActivityContent} width="100%">
                 {activityGroup.transactions.map(
                   (activity) =>
                     !(hideSpam && activity.isSpam) && <ActivityRow key={activity.hash} activity={activity} />,

@@ -6,7 +6,7 @@ import { Routing, TransactionFailureReason } from 'uniswap/src/data/tradingApi/_
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { DappInfo, EthTransaction } from 'uniswap/src/types/walletConnect'
+import { DappRequestInfo, EthTransaction } from 'uniswap/src/types/walletConnect'
 
 export type ChainIdToTxIdToDetails = Partial<Record<UniverseChainId, { [txId: string]: TransactionDetails }>>
 
@@ -118,7 +118,6 @@ export enum TransactionStatus {
 export enum QueuedOrderStatus {
   Waiting = 'waiting',
   ApprovalFailed = 'approvalFailed',
-  WrapFailed = 'wrapFailed',
   AppClosed = 'appClosed',
   Stale = 'stale',
   SubmissionFailed = 'submissionFailed',
@@ -157,12 +156,15 @@ export type TransactionOptions = {
   userSubmissionTimestampMs?: number
   rpcSubmissionTimestampMs?: number
   rpcSubmissionDelayMs?: number
+  signTransactionDelayMs?: number
   currentBlockFetchDelayMs?: number
   timeoutTimestampMs?: number
   blockSubmitted?: number
   timeoutLogged?: boolean
+  appBackgroundedWhilePending?: boolean
   submitViaPrivateRpc?: boolean
   privateRpcProvider?: 'flashbots' | 'mevblocker'
+  replacedTransactionHash?: string
 }
 
 export interface TransactionReceipt {
@@ -229,7 +231,7 @@ export interface BaseTransactionInfo {
   type: TransactionType
   transactedUSDValue?: number
   isSpam?: boolean
-  externalDappInfo?: DappInfo
+  externalDappInfo?: DappRequestInfo
   gasEstimates?: GasFeeEstimates
 }
 
@@ -396,7 +398,7 @@ export interface NFTApproveTransactionInfo extends BaseTransactionInfo {
 
 export interface WCConfirmInfo extends BaseTransactionInfo {
   type: TransactionType.WCConfirm
-  dapp: DappInfo
+  dappRequestInfo: DappRequestInfo
 }
 
 export interface DappInfoTransactionDetails {

@@ -23,7 +23,6 @@ export type SwapGasFeeEstimation = {
 export type UniswapXGasBreakdown = {
   classicGasUseEstimateUSD?: string
   approvalCost?: string
-  wrapCost?: string
   inputTokenSymbol?: string
 }
 
@@ -34,6 +33,7 @@ export interface BaseSwapTxAndGasInfo {
   revocationTxRequest: ValidatedTransactionRequest | undefined
   gasFee: GasFeeResult
   gasFeeEstimation: SwapGasFeeEstimation
+  includesDelegation?: boolean
 }
 
 export enum PermitMethod {
@@ -63,13 +63,13 @@ export interface ClassicSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   */
   unsigned: boolean
   txRequests: PopulatedTransactionRequestArray | undefined
+  
 }
 
 export interface UniswapXSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY
   trade: UniswapXTrade
   permit: PermitTypedData | undefined
-  wrapTxRequest: ValidatedTransactionRequest | undefined
   gasFeeBreakdown: UniswapXGasBreakdown
 }
 
@@ -114,27 +114,27 @@ function validateSwapTxContext(swapTxContext: SwapTxAndGasInfo | unknown): Valid
 
   if (swapTxContext.trade) {
     if (isClassic(swapTxContext)) {
-      const { trade, unsigned, permit, txRequests } = swapTxContext
+      const { trade, unsigned, permit, txRequests, includesDelegation } = swapTxContext
 
       if (unsigned) {
         // SwapTxContext should only ever be unsigned / still require a signature on interface.
         if (!isInterface || !permit || permit.method !== PermitMethod.TypedData) {
           return undefined
         }
-        return { ...swapTxContext, trade, gasFee, unsigned, txRequests: undefined, permit }
+        return { ...swapTxContext, trade, gasFee, unsigned, txRequests: undefined, permit, includesDelegation: includesDelegation ?? false }
       } else if (txRequests) {
-        return { ...swapTxContext, trade, gasFee, unsigned, txRequests, permit: undefined }
+        return { ...swapTxContext, trade, gasFee, unsigned, txRequests, permit: undefined, includesDelegation: includesDelegation ?? false }
       }
 
     } else if (isBridge(swapTxContext)) {
-      const { trade, txRequests } = swapTxContext
+      const { trade, txRequests, includesDelegation } = swapTxContext
       if (txRequests) {
-        return { ...swapTxContext, trade, gasFee, txRequests }
+        return { ...swapTxContext, trade, gasFee, txRequests, includesDelegation: includesDelegation ?? false }
       }
     } else if (isUniswapX(swapTxContext) && swapTxContext.permit) {
       const { trade, permit } = swapTxContext
-      return { ...swapTxContext, trade, gasFee, permit }
-    }
+      return { ...swapTxContext, trade, gasFee, permit, includesDelegation: false }
+    } 
   }
   return undefined
 }

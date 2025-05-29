@@ -1,0 +1,95 @@
+appId: com.uniswap.mobile.dev
+---
+- runFlow: ../../shared-flows/start.yaml
+- runFlow: ../../shared-flows/recover-fast.yaml
+- runFlow: ../../shared-flows/delete-seed-phrase.yaml
+- killApp
+- launchApp
+- assertVisible:
+    text: 'Restore your wallet'
+- tapOn:
+    id: 'cancel'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'account-header-settings-icon'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'wallet-settings-recovery-phrase'
+- waitForAnimationToEnd
+- assertVisible:
+    text: 'Restore your wallet'
+- tapOn:
+    id: 'continue'
+- assertVisible:
+    text: 'Select how to restore your wallet'
+- assertVisible:
+    id: 'onboarding-import-seed-phrase'
+- assertVisible:
+    id: 'restore-from-cloud'
+- assertVisible:
+    id: 'onboarding-view-private-keys'
+- tapOn:
+    id: 'restore-from-cloud'
+- extendedWaitUntil:
+    visible:
+      text: 'No backups found'
+    timeout: 5000 # wait for cloud back to fail
+- inputText: 'purchase arrest rotate cave alone walk naive claim day tube pact soap' # random incorrect phrase
+- waitForAnimationToEnd: # workaround for a native bug where the validation check has a delay
+    timeout: 1000
+- tapOn:
+    id: 'continue'
+- assertVisible:
+    text: 'Wrong recovery phrase'
+- tapOn:
+    id: 'back'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'onboarding-import-seed-phrase'
+- waitForAnimationToEnd
+- inputText: 'purchase arrest rotate cave alone walk naive claim day tube pact soap' # random incorrect phrase
+- waitForAnimationToEnd: # workaround for a native bug where the validation check has a delay
+    timeout: 1000
+- tapOn:
+    id: 'continue'
+- assertVisible:
+    text: 'Wrong recovery phrase'
+- eraseText: 150
+- inputText: ${E2E_RECOVERY_PHRASE}
+- tapOn:
+    id: 'continue'
+- assertVisible:
+    id: 'account-header-avatar'
+- runFlow: ../../shared-flows/delete-seed-phrase.yaml
+- killApp
+- launchApp
+- waitForAnimationToEnd
+- tapOn:
+    id: 'cancel'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'account-header-settings-icon'
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: 'wallet-settings-private-keys'
+- tapOn:
+    id: 'wallet-settings-recovery-phrase'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'continue'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'onboarding-view-private-keys'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'continue'
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: 'view-native-private-key'
+- tapOn:
+    id: 'continue'
+- waitForAnimationToEnd
+- assertVisible:
+    id: 'view-native-private-key'
+- tapOn:
+    id: 'view-native-private-keys-on-copied'

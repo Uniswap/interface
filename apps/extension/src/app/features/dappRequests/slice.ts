@@ -17,10 +17,12 @@ type WithMetadata<T> = T & {
 }
 export interface DappRequestState {
   requests: Record<RequestId, WithMetadata<DappRequestStoreItem>>
+  mostRecent5792DappUrl: string | null
 }
 
 const initialDappRequestState: DappRequestState = {
   requests: {}, // record of requestId -> request
+  mostRecent5792DappUrl: null,
 }
 
 // Enforces that a request object in state is for an eth send txn request
@@ -80,6 +82,9 @@ const slice = createSlice({
     removeAll: (state) => {
       state.requests = {}
     },
+    setMostRecent5792DappUrl: (state, action: PayloadAction<string | null>) => {
+      state.mostRecent5792DappUrl = action.payload
+    },
   },
   extraReducers: (builder) => {
     // update status of request to confirming
@@ -102,6 +107,9 @@ export const selectAllDappRequests = (state: { dappRequests: DappRequestState })
 
 export const selectIsRequestConfirming = (state: { dappRequests: DappRequestState }, requestId: string): boolean =>
   state.dappRequests.requests[requestId]?.status === DappRequestStatus.Confirming
+
+export const selectMostRecent5792DappUrl = (state: { dappRequests: DappRequestState }): string | null =>
+  state.dappRequests.mostRecent5792DappUrl
 
 export const dappRequestActions = slice.actions
 export const dappRequestReducer = slice.reducer

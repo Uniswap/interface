@@ -61,6 +61,7 @@ describe('Swap', () => {
     trade: mockTrade.trade as ClassicTrade,
     txRequests: [mockTxRequest],
     unsigned: false,
+    includesDelegation: false,
   } as const satisfies SwapTxAndGasInfo
 
   describe(Routing.CLASSIC, () => {
@@ -161,22 +162,15 @@ describe('Swap', () => {
         ...baseSwapTxContext,
         trade: mockUniswapXTrade,
         routing: Routing.DUTCH_V2,
-        wrapTxRequest: mockTxRequest,
         gasFeeBreakdown: {
           approvalCost: '1000000000000000000',
           classicGasUseEstimateUSD: '1000000000000000000',
           inputTokenSymbol: 'USDC',
-          wrapCost: '1000000000000000000',
         },
         permit: mockPermit,
       }
 
       expect(generateSwapTransactionSteps(swapTxContext)).toEqual([
-        {
-          txRequest: swapTxContext.wrapTxRequest,
-          type: TransactionStepType.WrapTransaction,
-          amount: mockUniswapXTrade.inputAmount,
-        },
         {
           ...swapTxContext.permit?.typedData,
           type: TransactionStepType.UniswapXSignature,
@@ -193,22 +187,15 @@ describe('Swap', () => {
         routing: Routing.DUTCH_V2,
         approveTxRequest: mockApproveRequest,
         revocationTxRequest: mockRevokeRequest,
-        wrapTxRequest: mockTxRequest,
         gasFeeBreakdown: {
           approvalCost: '1000000000000000000',
           classicGasUseEstimateUSD: '1000000000000000000',
           inputTokenSymbol: 'USDC',
-          wrapCost: '1000000000000000000',
         },
         permit: mockPermit,
       }
 
       expect(generateSwapTransactionSteps(swapTxContext)).toEqual([
-        {
-          txRequest: swapTxContext.wrapTxRequest,
-          type: TransactionStepType.WrapTransaction,
-          amount: mockUniswapXTrade.inputAmount,
-        },
         {
           amount: '0',
           spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
@@ -238,22 +225,15 @@ describe('Swap', () => {
         trade: mockUniswapXTrade,
         routing: Routing.DUTCH_V2,
         approveTxRequest: mockApproveRequest,
-        wrapTxRequest: mockTxRequest,
         gasFeeBreakdown: {
           approvalCost: '1000000000000000000',
           classicGasUseEstimateUSD: '1000000000000000000',
           inputTokenSymbol: 'USDC',
-          wrapCost: '1000000000000000000',
         },
         permit: mockPermit,
       }
 
       expect(generateSwapTransactionSteps(swapTxContext)).toEqual([
-        {
-          txRequest: swapTxContext.wrapTxRequest,
-          type: TransactionStepType.WrapTransaction,
-          amount: mockUniswapXTrade.inputAmount,
-        },
         {
           amount: mockUniswapXTrade.inputAmount.quotient.toString(),
           spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',

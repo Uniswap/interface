@@ -83,7 +83,7 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
     <TouchableArea
       hoverable
       borderRadius="$roundedFull"
-      p="$spacing8"
+      p="$spacing6"
       onHoverIn={onBegin}
       onHoverOut={onCancel}
       onPress={onPressSettingsLocal}
@@ -152,7 +152,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
 
   return (
     <Flex gap="$spacing8">
-      <Flex row justifyContent="space-between">
+      <Flex row justifyContent="space-between" alignItems="flex-start">
         <TouchableArea pressStyle={{ scale: 0.95 }} onPress={onPressAccount}>
           <Flex group row alignItems="center" gap="$spacing4">
             <Flex $group-hover={{ opacity: 0.6 }}>
@@ -163,7 +163,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
             </Flex>
           </Flex>
         </TouchableArea>
-        <Flex row alignItems="center" gap="$spacing4" justifyContent="space-around">
+        <Flex row alignItems="center" gap="$spacing6" justifyContent="space-around">
           {showConnectionStatus && (
             <Popover
               offset={10}
@@ -177,7 +177,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
               }}
             >
               <Popover.Trigger onPress={toggleConnectPopup}>
-                <TouchableArea hoverable borderRadius="$roundedFull" p="$spacing8">
+                <TouchableArea hoverable borderRadius="$roundedFull" p="$spacing6">
                   <ConnectionStatusIcon
                     dappIconUrl={dappIconUrl}
                     dappUrl={dappUrl}

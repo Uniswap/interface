@@ -8,11 +8,19 @@ export const Mocks = {
     supported_tokens: '../mocks/fiatOnRamp/supported-tokens.json',
     quotes: '../mocks/fiatOnRamp/quotes.json',
   },
+  UniswapX: {
+    quote: path.resolve(__dirname, '../mocks/rest/uniswapX/quote.json'),
+    openOrder: path.resolve(__dirname, '../mocks/rest/uniswapX/open_order.json'),
+    filledOrders: path.resolve(__dirname, '../mocks/rest/uniswapX/filled_orders.json'),
+    expiredOrders: path.resolve(__dirname, '../mocks/rest/uniswapX/expired_orders.json'),
+    activity: path.resolve(__dirname, '../mocks/graphql/UniswapX/uniswapx_activity.json'),
+  },
   PortfolioBalances: {
     test_wallet: path.resolve(__dirname, '../mocks/graphql/PortfolioBalances/test_wallet.json'),
   },
   Token: {
     token_warning: path.resolve(__dirname, '../mocks/graphql/Token/token_warning.json'),
+    search_token_tether: path.resolve(__dirname, '../mocks/graphql/Token/search_token_tether.json'),
   },
   TokenProjects: {
     token_spam: path.resolve(__dirname, '../mocks/graphql/TokenProjects/token_warning.json'),

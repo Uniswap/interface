@@ -1,10 +1,10 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
+import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { isInputGreaterThanDecimals } from 'components/NumericalInput'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { AlternateCurrencyDisplay } from 'pages/Swap/common/AlternateCurrencyDisplay'
 import {
   NumericalInputMimic,
   NumericalInputSymbolContainer,
@@ -20,7 +20,6 @@ import { CurrencyState } from 'state/swap/types'
 import { ThemedText } from 'theme/components'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Button, Flex, Text, styled, type ButtonProps } from 'ui/src'
-import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -84,50 +83,6 @@ const MaxButton = ({ onPress }: { onPress: ButtonProps['onPress'] }) => {
     <Button variant="branded" emphasis="secondary" size="xxsmall" onPress={onPress}>
       <Trans i18nKey="common.max" />
     </Button>
-  )
-}
-
-const AlternateCurrencyDisplay = ({ disabled, onToggle }: { disabled: boolean; onToggle: () => void }) => {
-  const { formatConvertedFiatNumberOrString, formatNumberOrString } = useFormatter()
-  const activeCurrency = useAppFiatCurrency()
-
-  const { sendState, derivedSendInfo } = useSendContext()
-  const { inputCurrency, inputInFiat } = sendState
-  const { exactAmountOut } = derivedSendInfo
-
-  const formattedAmountOut = inputInFiat
-    ? formatNumberOrString({
-        input: exactAmountOut || '0',
-        type: NumberType.TokenNonTx,
-      })
-    : formatConvertedFiatNumberOrString({
-        input: exactAmountOut || '0',
-        type: NumberType.PortfolioBalance,
-      })
-
-  const displayCurrency = inputInFiat ? inputCurrency?.symbol ?? '' : activeCurrency
-  const formattedAlternateCurrency = formattedAmountOut + ' ' + displayCurrency
-
-  if (!inputCurrency) {
-    return null
-  }
-
-  return (
-    <LoadingOpacityContainer $loading={false}>
-      <Flex
-        row
-        alignItems="center"
-        justifyContent="center"
-        gap="$gap4"
-        onPress={disabled ? undefined : onToggle}
-        {...(!disabled ? ClickableTamaguiStyle : {})}
-      >
-        <ThemedText.BodySecondary fontSize="16px" lineHeight="24px" color="neutral3">
-          {formattedAlternateCurrency}
-        </ThemedText.BodySecondary>
-        <ArrowUpDown color="$neutral3" size="$icon.16" />
-      </Flex>
-    </LoadingOpacityContainer>
   )
 }
 
@@ -290,6 +245,9 @@ export default function SendCurrencyInputForm({
         {isTestnetModeEnabled ? null : (
           <Trace logPress element={InterfaceElementName.SEND_FIAT_TOGGLE}>
             <AlternateCurrencyDisplay
+              inputCurrency={inputCurrency}
+              inputInFiat={inputInFiat}
+              exactAmountOut={exactAmountOut}
               disabled={fiatCurrencyEqualsTransferCurrency}
               onToggle={toggleFiatInputAmountEnabled}
             />

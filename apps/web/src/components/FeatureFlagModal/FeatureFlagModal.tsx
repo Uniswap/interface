@@ -175,7 +175,6 @@ export default function FeatureFlagModal() {
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Swap Features">
             <FeatureFlagOption flag={FeatureFlags.BatchedSwaps} label="Enable Batched Swaps" />
-            <FeatureFlagOption flag={FeatureFlags.IndicativeSwapQuotes} label="Enable Quick Routes" />
             <FeatureFlagOption flag={FeatureFlags.UniquoteEnabled} label="Enable Uniquote" />
             <FeatureFlagOption flag={FeatureFlags.ViemProviderEnabled} label="Enable Viem Provider" />
             <FeatureFlagOption flag={FeatureFlags.InstantTokenBalanceUpdate} label="Instant token balance update" />
@@ -206,6 +205,9 @@ export default function FeatureFlagModal() {
           <FeatureFlagGroup name="LP">
             <FeatureFlagOption flag={FeatureFlags.LpIncentives} label="Enable LP Incentives" />
             <FeatureFlagOption flag={FeatureFlags.PositionPageV2} label="Enable Position Page V2" />
+          </FeatureFlagGroup>
+          <FeatureFlagGroup name="FOR">
+            <FeatureFlagOption flag={FeatureFlags.FiatOffRamp} label="Enable Fiat OffRamp" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Embedded Wallet">
             <FeatureFlagOption flag={FeatureFlags.EmbeddedWallet} label="Add internal embedded wallet functionality" />

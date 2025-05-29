@@ -10,13 +10,16 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FormattedUniswapXGasFeeInfo } from 'uniswap/src/features/gas/types'
+import { NetworkCostBanner } from 'uniswap/src/features/smartWallet/banner/NetworkCostBanner'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
   NetworkCostTooltipClassic,
+  NetworkCostTooltipSmartWallet,
   NetworkCostTooltipUniswapX,
-} from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips'
+} from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/SwapFormTooltips'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { isInterface, isMobileApp } from 'utilities/src/platform'
 
@@ -27,12 +30,14 @@ export function NetworkFeeWarning({
   placement = 'top',
   uniswapXGasFeeInfo,
   chainId,
+  includesDelegation,
 }: PropsWithChildren<{
   gasFeeHighRelativeToValue?: boolean
   tooltipTrigger?: InfoTooltipProps['trigger']
   placement?: InfoTooltipProps['placement']
   uniswapXGasFeeInfo?: FormattedUniswapXGasFeeInfo
   chainId: UniverseChainId
+  includesDelegation?: boolean
 }>): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -42,17 +47,27 @@ export function NetworkFeeWarning({
 
   return (
     <WarningInfo
-      infoButton={
-        priceUxEnabled ? null : uniswapXGasFeeInfo ? (
-          <UniswapXFeeContent uniswapXGasFeeInfo={uniswapXGasFeeInfo} />
-        ) : (
-          <LearnMoreLink textVariant={isWeb ? 'body4' : undefined} url={uniswapUrls.helpArticleUrls.networkFeeInfo} />
+      mobileBanner={
+        includesDelegation &&
+        isMobileApp && (
+          <NetworkCostBanner
+            bannerText={t('smartWallet.banner.networkCost', { chainName: getChainInfo(chainId).label })}
+            url={uniswapUrls.helpArticleUrls.smartWalletNetworkCost}
+          />
         )
+      }
+      infoButton={
+        <InfoButton
+          includesDelegation={includesDelegation}
+          priceUxEnabled={priceUxEnabled}
+          uniswapXGasFeeInfo={uniswapXGasFeeInfo}
+        />
       }
       modalProps={{
         backgroundIconColor: showHighGasFeeUI ? colors.statusCritical2.get() : colors.surface2.get(),
         captionComponent: (
           <NetworkFeeText
+            includesDelegation={includesDelegation}
             showHighGasFeeUI={showHighGasFeeUI}
             uniswapXGasFeeInfo={uniswapXGasFeeInfo}
             chainId={chainId}
@@ -73,6 +88,8 @@ export function NetworkFeeWarning({
         text: priceUxEnabled ? (
           uniswapXGasFeeInfo ? (
             <NetworkCostTooltipUniswapX uniswapXGasFeeInfo={uniswapXGasFeeInfo} />
+          ) : includesDelegation ? (
+            <NetworkCostTooltipSmartWallet />
           ) : (
             <NetworkCostTooltipClassic />
           )
@@ -95,11 +112,42 @@ export function NetworkFeeWarning({
   )
 }
 
+function InfoButton({
+  includesDelegation,
+  priceUxEnabled,
+  uniswapXGasFeeInfo,
+}: {
+  includesDelegation?: boolean
+  priceUxEnabled: boolean
+  uniswapXGasFeeInfo?: FormattedUniswapXGasFeeInfo
+}): JSX.Element | null {
+  if (includesDelegation && isMobileApp) {
+    return (
+      <LearnMoreLink
+        textVariant={isWeb ? 'body4' : undefined}
+        url={uniswapUrls.helpArticleUrls.smartWalletNetworkCost}
+      />
+    )
+  }
+
+  if (priceUxEnabled) {
+    return null
+  }
+
+  if (uniswapXGasFeeInfo) {
+    return <UniswapXFeeContent uniswapXGasFeeInfo={uniswapXGasFeeInfo} />
+  }
+
+  return <LearnMoreLink textVariant={isWeb ? 'body4' : undefined} url={uniswapUrls.helpArticleUrls.networkFeeInfo} />
+}
+
 function NetworkFeeText({
+  includesDelegation,
   showHighGasFeeUI,
   uniswapXGasFeeInfo,
   chainId,
 }: {
+  includesDelegation?: boolean
   showHighGasFeeUI?: boolean
   uniswapXGasFeeInfo?: FormattedUniswapXGasFeeInfo
   chainId: UniverseChainId
@@ -126,6 +174,14 @@ function NetworkFeeText({
     )
   }
 
+  if (includesDelegation) {
+    return (
+      <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant="body3">
+        {t('swap.warning.networkFee.message')}
+      </Text>
+    )
+  }
+
   return (
     <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={variant}>
       {showHighGasFeeUI
@@ -140,7 +196,7 @@ function NetworkFeeText({
 }
 
 function UniswapXFeeContent({ uniswapXGasFeeInfo }: { uniswapXGasFeeInfo: FormattedUniswapXGasFeeInfo }): JSX.Element {
-  const { approvalFeeFormatted, wrapFeeFormatted, swapFeeFormatted, inputTokenSymbol } = uniswapXGasFeeInfo
+  const { approvalFeeFormatted, swapFeeFormatted, inputTokenSymbol } = uniswapXGasFeeInfo
   const { t } = useTranslation()
 
   return (
@@ -149,14 +205,6 @@ function UniswapXFeeContent({ uniswapXGasFeeInfo }: { uniswapXGasFeeInfo: Format
         <LearnMoreLink textVariant={isWeb ? 'body4' : undefined} url={uniswapUrls.helpArticleUrls.uniswapXInfo} />
       </Flex>
       <Separator />
-      {wrapFeeFormatted && (
-        <Flex row justifyContent="space-between" width="100%">
-          <Text color="$neutral2" variant="body4">
-            {t('swap.warning.networkFee.wrap')}
-          </Text>
-          <Text variant="body4">{wrapFeeFormatted}</Text>
-        </Flex>
-      )}
       {approvalFeeFormatted && (
         <Flex row justifyContent="space-between" width="100%">
           <Text color="$neutral2" variant="body4">

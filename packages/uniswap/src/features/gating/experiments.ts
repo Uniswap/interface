@@ -4,11 +4,10 @@
  * These must match parameter names on Statsig within an experiment
  */
 export enum Experiments {
-  AccountCTAs = 'signin_login_connect_ctas',
   SwapPresets = 'swap_presets',
-  NativeTokenPercentageBuffer = 'lp_native_eth_buffer',
   PriceUxUpdate = 'price_ux_update',
   PrivateRpc = 'private_rpc',
+  NativeTokenPercentageBuffer = 'lp_native_buffer',
 }
 
 export enum Layers {
@@ -16,12 +15,6 @@ export enum Layers {
 }
 
 // experiment groups
-
-export enum AccountCTAsExperimentGroup {
-  Control = 'Control', // Get the app / Connect
-  SignInSignUp = 'SignIn-SignUp',
-  LogInCreateAccount = 'LogIn-CreateAccount',
-}
 
 export enum NativeTokenPercentageBufferExperimentGroup {
   Control = 'Control',
@@ -48,10 +41,15 @@ export enum PrivateRpcProperties {
   RefundPercent = 'refund_percent',
 }
 
+export enum NativeTokenPercentageBufferProperties {
+  BufferSize = 'bufferSize',
+}
+
 export type ExperimentProperties = {
   [Experiments.SwapPresets]: SwapPresetsProperties
   [Experiments.PriceUxUpdate]: PriceUxUpdateProperties
   [Experiments.PrivateRpc]: PrivateRpcProperties
+  [Experiments.NativeTokenPercentageBuffer]: NativeTokenPercentageBufferProperties
 }
 
 // will be a spread of all experiment properties in that layer

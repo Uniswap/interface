@@ -88,6 +88,7 @@ import {
   v83Schema,
   v84Schema,
   v85Schema,
+  v86Schema,
   v8Schema,
   v9Schema,
 } from 'src/app/schema'
@@ -113,6 +114,7 @@ import { initialTransactionsState } from 'uniswap/src/features/transactions/slic
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
 import { transactionDetails } from 'uniswap/src/test/fixtures'
+import { DappRequestType } from 'uniswap/src/types/walletConnect'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
@@ -1631,5 +1633,75 @@ describe('Redux state migrations', () => {
 
   it('migrates from v85 to v86', () => {
     testAddBatchedTransactions(migrations[86], v85Schema)
+  })
+
+  it('migrates from v86 to v87', () => {
+    /** test migration on uwulink transaction */
+    const stateWithUwulinkTransaction = {
+      transactions: {
+        testAddress: {
+          testChainId: {
+            testTxnId: {
+              typeInfo: {
+                dappRequestInfo: {
+                  name: 'testDapp',
+                },
+                externalDappInfo: {
+                  source: 'uwulink',
+                },
+              },
+            },
+          },
+        },
+      },
+    }
+
+    const v86Stub = { ...v86Schema, ...stateWithUwulinkTransaction }
+    const v87 = migrations[87](v86Stub)
+
+    expect(v87.transactions).toBeDefined()
+    expect(v87.transactions.testAddress.testChainId.testTxnId.typeInfo).toEqual({
+      dappRequestInfo: {
+        name: 'testDapp',
+      },
+      externalDappInfo: {
+        requestType: DappRequestType.UwULink,
+      },
+    })
+
+    /** test migration on walletconnect transaction */
+    const stateWithWalletConnectTransaction = {
+      transactions: {
+        testAddress: {
+          testChainId: {
+            testTxnId: {
+              typeInfo: {
+                type: TransactionType.WCConfirm,
+                dapp: {
+                  name: 'testDapp',
+                },
+                externalDappInfo: {
+                  source: 'walletconnect',
+                },
+              },
+            },
+          },
+        },
+      },
+    }
+
+    const v86StubWalletConnect = { ...v86Schema, ...stateWithWalletConnectTransaction }
+    const v87WalletConnect = migrations[87](v86StubWalletConnect)
+
+    expect(v87WalletConnect.transactions).toBeDefined()
+    expect(v87WalletConnect.transactions.testAddress.testChainId.testTxnId.typeInfo).toEqual({
+      type: TransactionType.WCConfirm,
+      dappRequestInfo: {
+        name: 'testDapp',
+      },
+      externalDappInfo: {
+        requestType: DappRequestType.WalletConnectSessionRequest,
+      },
+    })
   })
 })

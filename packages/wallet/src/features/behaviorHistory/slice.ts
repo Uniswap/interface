@@ -18,9 +18,23 @@ export interface BehaviorHistoryState {
   }
   smartWalletNudge?: {
     [walletAddress: string]: {
-      hasDismissedHomeScreenNudge: boolean
+      hasDismissedHomeScreenNudge?: boolean
+      /**
+       * Should show once per dapp per wallet.
+       *
+       * If not connected when `wallet_getCapabilities` is called, wait for connection then nudge
+       */
+      dappUrlToHasShownNudge?: Record<string, boolean>
+      lastPostSwapNudge?: number
+      numPostSwapNudges?: number
     }
   }
+  hasSeenSmartWalletCreatedWalletModal?: boolean
+  /**
+   * Whether the user has copied their private keys via the view private keys screen during
+   * a restoration flow.
+   */
+  hasCopiedPrivateKeys?: boolean
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
@@ -33,6 +47,7 @@ export const initialBehaviorHistoryState: BehaviorHistoryState = {
   hasViewedOffRampTooltip: false,
   hasViewedDappRequestBridgingBanner: {},
   smartWalletNudge: {},
+  hasCopiedPrivateKeys: false,
 }
 
 const slice = createSlice({
@@ -73,11 +88,48 @@ const slice = createSlice({
         hasDismissedHomeScreenNudge: action.payload.hasDismissed,
       }
     },
+    setHasShown5792Nudge: (
+      state,
+      action: PayloadAction<{
+        walletAddress: string
+        dappUrl: string
+      }>,
+    ) => {
+      state.smartWalletNudge ??= {}
+
+      state.smartWalletNudge[action.payload.walletAddress] = {
+        ...state.smartWalletNudge[action.payload.walletAddress],
+        dappUrlToHasShownNudge: {
+          ...state.smartWalletNudge[action.payload.walletAddress]?.dappUrlToHasShownNudge,
+          [action.payload.dappUrl]: true,
+        },
+      }
+    },
+    setIncrementNumPostSwapNudge: (
+      state,
+      action: PayloadAction<{
+        walletAddress: string
+      }>,
+    ) => {
+      state.smartWalletNudge ??= {}
+      state.smartWalletNudge[action.payload.walletAddress] = {
+        ...state.smartWalletNudge[action.payload.walletAddress],
+        numPostSwapNudges: (state.smartWalletNudge[action.payload.walletAddress]?.numPostSwapNudges ?? 0) + 1,
+        lastPostSwapNudge: Date.now(),
+      }
+    },
+    setHasSeenSmartWalletCreatedWalletModal: (state) => {
+      state.hasSeenSmartWalletCreatedWalletModal = true
+    },
+
     // Should only be used for testing
     resetWalletBehaviorHistory: (_state, _action: PayloadAction) => {
       return {
         ...initialBehaviorHistoryState,
       }
+    },
+    setHasCopiedPrivateKeys: (state, action: PayloadAction<boolean>) => {
+      state.hasCopiedPrivateKeys = action.payload
     },
   },
 })
@@ -93,6 +145,10 @@ export const {
   resetWalletBehaviorHistory,
   setHasViewedNotificationsCard,
   setHasDismissedSmartWalletHomeScreenNudge,
+  setHasCopiedPrivateKeys,
+  setHasShown5792Nudge,
+  setIncrementNumPostSwapNudge,
+  setHasSeenSmartWalletCreatedWalletModal,
 } = slice.actions
 
 export const behaviorHistoryReducer = slice.reducer

@@ -17,6 +17,7 @@ export enum MobileEventName {
   NotificationsToggled = 'Notifications Toggled',
   OnboardingCompleted = 'Onboarding Completed',
   PerformanceReport = 'Performance Report',
+  RestoreSuccess = 'Restore Success',
   ShareLinkOpened = 'Share Link Opened',
   TokenDetailsOtherChainButtonPressed = 'Token Details Other Chain Button Pressed',
   TokenDetailsContextMenuAction = 'Token Details Context Menu Action Selected',

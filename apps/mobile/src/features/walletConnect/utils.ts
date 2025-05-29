@@ -1,10 +1,11 @@
 import { WalletKitTypes } from '@reown/walletkit'
-import { PairingTypes, ProposalTypes, SessionTypes, SignClientTypes } from '@walletconnect/types'
+import { PairingTypes, ProposalTypes, SessionTypes, SignClientTypes, Verify } from '@walletconnect/types'
 import { utils } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
   SignRequest,
   TransactionRequest,
+  WalletConnectVerifyStatus,
   WalletGetCallsStatusRequest,
   WalletGetCapabilitiesRequest,
   WalletSendCallsRequest,
@@ -12,6 +13,8 @@ import {
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { EthMethod, EthSignMethod, WalletConnectEthMethod } from 'uniswap/src/features/dappRequests/types'
+import { DappRequestInfo, DappRequestType } from 'uniswap/src/types/walletConnect'
+import { hexToNumber } from 'uniswap/src/utils/hex'
 import { generateBatchId } from 'wallet/src/features/batchedTransactions/utils'
 import { GetCallsStatusParams, SendCallsParams } from 'wallet/src/features/dappRequests/types'
 /**
@@ -98,23 +101,20 @@ function createBaseRequest<T extends WalletConnectEthMethod>(
   sessionId: string
   internalId: string
   account: Address
-  dapp: {
-    name: string
-    url: string
-    icon: string | null
-    source: 'walletconnect'
-  }
+  isLinkModeSupported: boolean
+  dappRequestInfo: DappRequestInfo
 } {
   return {
     type: method,
     sessionId: topic,
     internalId: String(internalId),
     account,
-    dapp: {
+    isLinkModeSupported: Boolean(dapp.redirect?.linkMode),
+    dappRequestInfo: {
       name: dapp.name,
       url: dapp.url,
       icon: dapp.icons[0] ?? null,
-      source: 'walletconnect',
+      requestType: DappRequestType.WalletConnectSessionRequest,
     },
   }
 }
@@ -203,7 +203,7 @@ export const parseGetCapabilitiesRequest = (
 ): WalletGetCapabilitiesRequest => {
   const [address, chainIds] = requestParams
   const parsedChainIds = chainIds
-    ?.map((chainId) => toSupportedChainId(chainId))
+    ?.map((chainId) => toSupportedChainId(hexToNumber(chainId)))
     .filter((c): c is UniverseChainId => Boolean(c))
 
   return {
@@ -294,4 +294,33 @@ export async function pairWithWalletConnectURI(uri: string): Promise<void | Pair
   } catch (error) {
     return Promise.reject(error instanceof Error ? error.message : '')
   }
+}
+
+/**
+ * Formats safety level based on the verify context from a wallet connect proposal or sesison request.
+ *
+ * See https://docs.reown.com/walletkit/ios/verify
+ */
+export function parseVerifyStatus(verifyContext?: Verify.Context): WalletConnectVerifyStatus {
+  if (!verifyContext) {
+    return WalletConnectVerifyStatus.Unverified
+  }
+
+  const { verified } = verifyContext
+
+  // Must check for isScam first, since valid URLs can still be scams
+  if (verified.validation === 'INVALID' || verified.isScam) {
+    return WalletConnectVerifyStatus.Threat
+  }
+
+  if (verified.validation === 'VALID') {
+    return WalletConnectVerifyStatus.Verified
+  }
+
+  if (verified.validation === 'UNKNOWN') {
+    return WalletConnectVerifyStatus.Unverified
+  }
+
+  // Default to unverified status to enforce stricter warning if verification information is empty
+  return WalletConnectVerifyStatus.Unverified
 }

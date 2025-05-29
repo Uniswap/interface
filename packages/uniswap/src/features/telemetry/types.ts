@@ -21,10 +21,14 @@ import {
 } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
+import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
+import {
+  CreateLPPositionRequest,
+  IncreaseLPPositionRequest,
+  TransactionFailureReason,
+} from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
@@ -49,6 +53,7 @@ import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { WidgetEvent, WidgetType } from 'uniswap/src/types/widgets'
@@ -64,6 +69,7 @@ export type GasEstimateAccuracyProperties = {
   user_experienced_delay_ms?: number
   send_to_confirmation_delay_ms?: number
   rpc_submission_delay_ms?: number
+  sign_transaction_delay_ms?: number
   current_block_fetch_delay_ms?: number
   gas_use_diff?: number
   gas_use_diff_percentage?: number
@@ -77,6 +83,7 @@ export type GasEstimateAccuracyProperties = {
   name?: string
   out_of_gas: boolean
   timed_out: boolean
+  app_backgrounded_while_pending?: boolean
   display_limit_inflation_factor?: number
 }
 
@@ -234,6 +241,15 @@ type FailedClassicSwapResultProperties = Omit<ClassicSwapTransactionResultProper
 
 type FailedBridgeSwapResultProperties = Omit<BridgeSwapTransactionResultProperties, 'hash'> & {
   hash: string | undefined
+}
+
+type CancelledClassicSwapResultProperties = ClassicSwapTransactionResultProperties & {
+  replaced_transaction_hash: string | undefined
+}
+
+type CancelledBridgeSwapResultProperties = Omit<BridgeSwapTransactionResultProperties, 'hash'> & {
+  hash: string | undefined
+  replaced_transaction_hash: string | undefined
 }
 
 type TransferProperties = {
@@ -540,10 +556,10 @@ export type UniverseEventProperties = {
   [InterfaceEventNameLocal.UniswapXOrderSubmitted]: Record<string, unknown> // TODO specific type
   [InterfaceEventNameLocal.CreatePositionFailed]: {
     message: string
-  }
+  } & CreateLPPositionRequest
   [InterfaceEventNameLocal.IncreaseLiquidityFailed]: {
     message: string
-  }
+  } & IncreaseLPPositionRequest
   [InterfaceEventNameLocal.DecreaseLiquidityFailed]: {
     message: string
   }
@@ -673,6 +689,11 @@ export type UniverseEventProperties = {
   }
   [MobileEventName.OnboardingCompleted]: OnboardingCompletedProps & ITraceContext
   [MobileEventName.PerformanceReport]: RenderPassReport
+  [MobileEventName.RestoreSuccess]: {
+    import_type?: string
+    screen: OnboardingScreens
+    is_restoring_mnemonic: boolean
+  }
   [MobileEventName.ShareLinkOpened]: {
     entity: ShareableEntity
     url: string
@@ -806,6 +827,7 @@ export type UniverseEventProperties = {
     | FailedClassicSwapResultProperties
     | FailedUniswapXOrderResultProperties
     | FailedBridgeSwapResultProperties
+  [WalletEventName.SwapTransactionCancelled]: CancelledClassicSwapResultProperties | CancelledBridgeSwapResultProperties
   [SwapEventName.SWAP_DETAILS_EXPANDED]: ITraceContext | undefined
   [SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED]: ITraceContext
   [SwapEventName.SWAP_QUOTE_RECEIVED]: {
@@ -928,6 +950,7 @@ export type UniverseEventProperties = {
     twitter: boolean
   }
   [UnitagEventName.UnitagRemoved]: undefined
+  [WalletEventName.DismissSmartWalletUpgradeModal]: undefined
   [WalletEventName.AppRating]: {
     type: 'store-review' | 'feedback-form' | 'remind' | 'close'
     appRatingPromptedMs?: number
@@ -1003,6 +1026,12 @@ export type UniverseEventProperties = {
       }
   ) &
     SwapTradeBaseProperties
+  [WalletEventName.CancelSubmitted]: {
+    original_transaction_hash: string | undefined
+    replacement_transaction_hash: string
+    chain_id: number
+    nonce: number
+  }
   [WalletEventName.TestnetModeToggled]: {
     enabled: boolean
     location: 'settings' | 'deep_link_modal'

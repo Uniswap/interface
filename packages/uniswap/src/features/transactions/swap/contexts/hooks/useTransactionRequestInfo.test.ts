@@ -2,6 +2,7 @@ import { renderHook } from '@testing-library/react-hooks'
 import { providers } from 'ethers/lib/ethers'
 import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
 import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
+import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
@@ -27,12 +28,14 @@ jest.mock('uniswap/src/features/gating/hooks', () => {
     }),
   }
 })
+jest.mock('uniswap/src/features/address/useIsSmartContractAddress')
 
 const mockUseTradingApiSwapQuery = useTradingApiSwapQuery as jest.Mock
 const mockUsePermit2SignatureWithData = usePermit2SignatureWithData as jest.Mock
 const mockUseWrapTransactionRequest = useWrapTransactionRequest as jest.Mock
 const mockUseTransactionGasFee = useTransactionGasFee as jest.Mock
 const mockUseV4SwapEnabled = useV4SwapEnabled as jest.Mock
+const mockUseIsSmartContractAddress = useIsSmartContractAddress as jest.Mock
 
 describe('useTransactionRequestInfo', () => {
   const mockAccount: AccountMeta = { address: '0x123', type: AccountType.SignerMnemonic }
@@ -68,6 +71,7 @@ describe('useTransactionRequestInfo', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    mockUseIsSmartContractAddress.mockReturnValue({ loading: false, isSmartContractAddress: false })
   })
 
   it('should include gas fee values from wrapGasFee in the returned wrap transactionRequest', () => {

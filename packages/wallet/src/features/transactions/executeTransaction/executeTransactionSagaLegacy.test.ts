@@ -25,9 +25,10 @@ import {
   getProvider,
   getProviderManager,
   getSignerManager,
+  getViemClient,
 } from 'wallet/src/features/wallet/context'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
-import { provider, providerManager, signerManager } from 'wallet/src/test/mocks'
+import { provider, providerManager, signerManager, viemClient } from 'wallet/src/test/mocks'
 
 let mockGates: Record<string, boolean> = {}
 let mockExperiments: Record<string, Record<string, unknown>> = {}
@@ -70,6 +71,11 @@ const mockProvider = {
   getFeeData: jest.fn(),
 } as unknown as providers.Provider
 
+const mockViemClient = {
+  ...viemClient,
+  sendTransaction: jest.fn(),
+}
+
 describe(executeTransactionLegacy, () => {
   let dateNowSpy: jest.SpyInstance
 
@@ -99,11 +105,17 @@ describe(executeTransactionLegacy, () => {
       .withState({ transactions: {}, wallet: {} })
       .provide([
         [call(getProvider, sendParams.chainId), mockProvider],
+        [call(getViemClient, sendParams.chainId), mockViemClient],
         [call(getProviderManager), providerManager],
         [call(getSignerManager), signerManager],
         [
-          call(signAndSubmitTransaction, txRequest, account, mockProvider, signerManager),
-          { transactionResponse: txResponse, populatedRequest: txRequest, timestampBeforeSend: Date.now() },
+          call(signAndSubmitTransaction, txRequest, account, mockProvider, signerManager, mockViemClient),
+          {
+            transactionResponse: txResponse,
+            populatedRequest: txRequest,
+            timestampBeforeSign: Date.now() - 1000,
+            timestampBeforeSend: Date.now() - 500,
+          },
         ],
       ])
       .put(
@@ -147,7 +159,8 @@ describe(executeTransactionLegacy, () => {
               maxFeePerGas: undefined,
             },
             rpcSubmissionTimestampMs: Date.now(),
-            rpcSubmissionDelayMs: 0,
+            rpcSubmissionDelayMs: 500,
+            signTransactionDelayMs: 500,
             currentBlockFetchDelayMs: 0,
             timeoutTimestampMs: undefined,
             privateRpcProvider: undefined,
@@ -177,10 +190,11 @@ describe(executeTransactionLegacy, () => {
       .withState({ transactions: {}, wallet: {} })
       .provide([
         [call(getProvider, sendParams.chainId), provider],
+        [call(getViemClient, sendParams.chainId), viemClient],
         [call(getProviderManager), providerManager],
         [call(getSignerManager), signerManager],
         [
-          call(signAndSubmitTransaction, txRequest, account, provider as providers.Provider, signerManager),
+          call(signAndSubmitTransaction, txRequest, account, provider as providers.Provider, signerManager, viemClient),
           throwError(new Error('Something went wrong with nonce')),
         ],
       ])
@@ -224,9 +238,17 @@ describe(executeTransactionLegacy, () => {
       .provide([
         [call(tryGetNonce, account, sendParams.chainId), { nonce: mockNonce }],
         [call(getProvider, sendParams.chainId), mockProvider],
+        [call(getViemClient, sendParams.chainId), viemClient],
         [call(getSignerManager), signerManager],
         [
-          call(signAndSubmitTransaction, { ...request, nonce: mockNonce }, account, mockProvider, signerManager),
+          call(
+            signAndSubmitTransaction,
+            { ...request, nonce: mockNonce },
+            account,
+            mockProvider,
+            signerManager,
+            viemClient,
+          ),
           { transactionResponse: txResponse, populatedRequest: { ...request, nonce: mockNonce } },
         ],
       ])
@@ -240,6 +262,7 @@ describe(executeTransactionLegacy, () => {
         account,
         mockProvider,
         signerManager,
+        viemClient,
       )
       .silentRun()
   })

@@ -5,14 +5,14 @@ import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
 import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
 import { ProviderOption } from 'pages/Swap/Buy/ProviderOption'
-import { ContentWrapper } from 'pages/Swap/Buy/shared'
+import { ContentWrapper, getOnRampInputAmount } from 'pages/Swap/Buy/shared'
 import { useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, Separator, Text } from 'ui/src'
 import { TimePast } from 'ui/src/components/icons/TimePast'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { FORQuote, FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
+import { FORQuote, FORServiceProvider, RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { useInterval } from 'utilities/src/time/timing'
@@ -24,10 +24,15 @@ interface ChooseProviderModal {
 
 function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
   const { derivedBuyFormInfo, buyFormState } = useBuyFormContext()
-  const { quoteCurrency, selectedCountry, inputAmount } = buyFormState
-  const { quotes, meldSupportedFiatCurrency } = derivedBuyFormInfo
+  const { quoteCurrency, selectedCountry, inputAmount, inputInFiat, rampDirection } = buyFormState
+  const { quotes, meldSupportedFiatCurrency, amountOut } = derivedBuyFormInfo
   const [errorProvider, setErrorProvider] = useState<FORServiceProvider>()
   const [connectedProvider, setConnectedProvider] = useState<FORServiceProvider>()
+
+  const onRampInputAmount = useMemo(
+    () => getOnRampInputAmount(rampDirection, inputAmount, amountOut ?? '0', inputInFiat),
+    [rampDirection, inputAmount, amountOut, inputInFiat],
+  )
 
   const account = useAccount()
 
@@ -83,7 +88,13 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
   return (
     <Flex gap="$spacing24" pb="$spacing8" $sm={{ px: '$spacing8', pb: '$spacing16' }} id="ChooseProviderModal">
       <GetHelpHeader
-        title={<Trans i18nKey="fiatOnRamp.checkoutWith" />}
+        title={
+          rampDirection === RampDirection.ONRAMP ? (
+            <Trans i18nKey="fiatOnRamp.checkout.title" />
+          ) : (
+            <Trans i18nKey="fiatOffRamp.checkout.title" />
+          )
+        }
         link={uniswapUrls.helpArticleUrls.fiatOnRampHelp}
         closeModal={closeModal}
         closeDataTestId="ChooseProviderModal-close"
@@ -102,11 +113,12 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
               quote={mostRecentlyUsedProvider}
               selectedCountry={selectedCountry}
               quoteCurrencyCode={quoteCurrencyCode}
-              inputAmount={inputAmount}
+              inputAmount={onRampInputAmount}
               meldSupportedFiatCurrency={meldSupportedFiatCurrency}
               walletAddress={recipientAddress}
               setConnectedProvider={setConnectedProvider}
               setErrorProvider={setErrorProvider}
+              rampDirection={rampDirection}
             />
             {otherProviders && otherProviders.length > 0 && (
               <Flex centered row gap="$spacing12" mt="$spacing12">
@@ -127,11 +139,12 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
               quote={q}
               selectedCountry={selectedCountry}
               quoteCurrencyCode={quoteCurrencyCode}
-              inputAmount={inputAmount}
+              inputAmount={onRampInputAmount}
               meldSupportedFiatCurrency={meldSupportedFiatCurrency}
               walletAddress={recipientAddress}
               setConnectedProvider={setConnectedProvider}
               setErrorProvider={setErrorProvider}
+              rampDirection={rampDirection}
             />
           )
         })}

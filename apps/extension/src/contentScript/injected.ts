@@ -11,7 +11,6 @@ import { addWindowMessageListener } from 'src/background/messagePassing/messageU
 import {
   AnalyticsLog,
   ContentScriptUtilityMessageType,
-  ErrorLog,
   ExtensionToDappRequestType,
 } from 'src/background/messagePassing/types/requests'
 import { ExtensionEthMethodHandler } from 'src/contentScript/methodHandlers/ExtensionEthMethodHandler'
@@ -43,6 +42,7 @@ import { walletContextValue } from 'wallet/src/features/wallet/context'
 
 import { isArcBrowser } from 'src/app/utils/chrome'
 import { getIsDefaultProviderFromStorage } from 'src/app/utils/provider'
+import { logContentScriptError } from 'src/contentScript/utils'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -129,7 +129,7 @@ addWindowMessageListener<WindowEthereumRequest>(isValidWindowEthereumRequest, as
 
   if (!backgroundStore.state.isOnboarded) {
     rejectRequestNotOnboarded(request, source).catch((error) =>
-      logError(
+      logContentScriptError(
         error?.message ?? 'Error rejecting request when not onboarded',
         'injected.ts',
         'WindowEthereumRequestListener',
@@ -153,7 +153,7 @@ addWindowMessageListener<WindowEthereumRequest>(isValidWindowEthereumRequest, as
         postParsingError(source, request.requestId, request.method)
       }
       const errorMessage = e instanceof Error ? e.message : 'Unknown error'
-      await logError(errorMessage, 'injected.ts', 'WindowEthereumRequest')
+      await logContentScriptError(errorMessage, 'injected.ts', 'WindowEthereumRequest')
     }
     return
   }
@@ -166,7 +166,7 @@ addWindowMessageListener<WindowEthereumRequest>(isValidWindowEthereumRequest, as
         postParsingError(source, request.requestId, request.method)
       }
       const errorMessage = e instanceof Error ? e.message : 'Unknown error'
-      await logError(errorMessage, 'injected.ts', 'WindowEthereumRequest')
+      await logContentScriptError(errorMessage, 'injected.ts', 'WindowEthereumRequest')
     }
     return
   }
@@ -220,7 +220,7 @@ async function init(): Promise<void> {
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    await logError(errorMessage, 'injected.ts', 'init')
+    await logContentScriptError(errorMessage, 'injected.ts', 'init')
   }
 }
 
@@ -242,22 +242,6 @@ async function rejectRequestNotOnboarded(
 }
 
 init().catch(() => {})
-
-async function logError(
-  errorMessage: string,
-  fileName: string,
-  functionName: string,
-  tags?: Record<string, string>,
-): Promise<void> {
-  const message: ErrorLog = {
-    type: ContentScriptUtilityMessageType.ErrorLog,
-    message: errorMessage,
-    fileName,
-    functionName,
-    tags,
-  }
-  await contentScriptUtilityMessageChannel.sendMessage(message)
-}
 
 // These go to Amplitude instead of Datadog since they are informational
 async function passAnalytics(message: string, tags: Record<string, string>): Promise<void> {

@@ -12,13 +12,11 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { updateTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   QueuedOrderStatus,
   TransactionDetails,
   TransactionStatus,
-  TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -57,18 +55,6 @@ export function QueuedOrderModal(): JSX.Element | null {
     }
   }, [transactionState, navigateToSwapFlow, onCancel])
 
-  const localTransactions = useSelectAddressTransactions(account?.address ?? null)
-  // If a wrap tx was involved as part of the order flow, show a message indicating that the user now has WETH,
-  // unless the wrap failed, in which case the user still has ETH and the message should not be shown.
-  const showWrapMessage = useMemo(() => {
-    if (!currentFailedOrder || currentFailedOrder?.queueStatus === QueuedOrderStatus.WrapFailed) {
-      return false
-    }
-    return localTransactions?.some(
-      (tx) => tx.typeInfo.type === TransactionType.Wrap && tx.typeInfo.swapTxId === currentFailedOrder?.id,
-    )
-  }, [localTransactions, currentFailedOrder])
-
   // If there are no failed orders tracked in state, return nothing.
   if (!uniswapXEnabled || !currentFailedOrder || !isSwapTransactionInfo(currentFailedOrder.typeInfo)) {
     return null
@@ -77,7 +63,6 @@ export function QueuedOrderModal(): JSX.Element | null {
   const QUEUE_STATUS_TO_MESSAGE = {
     [QueuedOrderStatus.AppClosed]: t('swap.warning.queuedOrder.appClosed'),
     [QueuedOrderStatus.ApprovalFailed]: t('swap.warning.queuedOrder.approvalFailed'),
-    [QueuedOrderStatus.WrapFailed]: t('swap.warning.queuedOrder.wrapFailed'),
     [QueuedOrderStatus.SubmissionFailed]: t('swap.warning.queuedOrder.submissionFailed'),
     [QueuedOrderStatus.Stale]: t('swap.warning.queuedOrder.stale'),
   } as const satisfies Record<ErroredQueuedOrderStatus, string>
@@ -101,8 +86,6 @@ export function QueuedOrderModal(): JSX.Element | null {
             </Text>
             <Text color="$neutral2" textAlign="center" variant="body3">
               {reason}
-              {showWrapMessage && ' '}
-              {showWrapMessage && t('swap.warning.queuedOrder.wrap.message')}
             </Text>
             <LearnMoreLink
               textColor="$neutral1"

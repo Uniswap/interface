@@ -11,6 +11,11 @@ export enum TransactionScreen {
   Review = 'Review',
 }
 
+export type PasskeyAuthStatus = {
+  isSignedInWithPasskey: boolean
+  isSessionAuthenticated: boolean
+}
+
 export type SwapRedirectFn = ({
   inputCurrency,
   outputCurrency,
@@ -40,6 +45,7 @@ export type TransactionModalContextState = {
   screen: TransactionScreen
   setScreen: (newScreen: TransactionScreen) => void
   swapRedirectCallback?: SwapRedirectFn
+  passkeyAuthStatus?: PasskeyAuthStatus
 }
 
 export const TransactionModalContext = createContext<TransactionModalContextState | undefined>(undefined)
@@ -56,6 +62,7 @@ export function TransactionModalContextProvider({
   screen,
   setScreen,
   swapRedirectCallback,
+  passkeyAuthStatus,
 }: PropsWithChildren<TransactionModalContextState>): JSX.Element {
   const state = useMemo<TransactionModalContextState>(
     (): TransactionModalContextState => ({
@@ -69,6 +76,7 @@ export function TransactionModalContextProvider({
       setScreen,
       swapRedirectCallback,
       walletNeedsRestore,
+      passkeyAuthStatus,
     }),
     [
       renderBiometricsIcon,
@@ -81,6 +89,7 @@ export function TransactionModalContextProvider({
       setScreen,
       swapRedirectCallback,
       walletNeedsRestore,
+      passkeyAuthStatus,
     ],
   )
 

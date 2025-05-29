@@ -1,4 +1,4 @@
-import { PropsWithChildren, useCallback, useState } from 'react'
+import { PropsWithChildren, ReactNode, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -32,27 +32,20 @@ export function TransactionSettingRow({
     }
   }, [Screen, setting, setSelectedSetting])
 
+  const InfoIcon = <InfoCircleFilled color="$neutral3" size="$icon.16" />
+
   const row = (
     <>
       <Flex>
         <Flex centered row columnGap="$spacing16" justifyContent="space-between">
-          <TouchableArea onPress={(): void => setShowInfoModal(true)}>
+          <TouchableAreaWrapper isTouchable={!!InfoModal} onPress={(): void => setShowInfoModal(true)}>
             <Flex gap="$spacing2" justifyContent="center" minHeight={48}>
               <Flex row alignItems="center" gap="$spacing4">
                 <Text color="$neutral1" variant="subheading2">
                   {renderTitle(t)}
                 </Text>
-                {InfoModal && <InfoCircleFilled color="$neutral3" size="$icon.16" />}
-                {!!renderTooltip && (
-                  <InfoTooltip
-                    trigger={
-                      <TouchableArea>
-                        <InfoCircleFilled color="$neutral3" size="$icon.16" />
-                      </TouchableArea>
-                    }
-                    text={renderTooltip(t)}
-                  />
-                )}
+                {InfoModal && InfoIcon}
+                {!!renderTooltip && <InfoTooltip trigger={InfoIcon} text={renderTooltip(t)} />}
               </Flex>
               {Description && (
                 <Text color="$neutral2" variant="body3">
@@ -61,7 +54,7 @@ export function TransactionSettingRow({
               )}
               {warning}
             </Flex>
-          </TouchableArea>
+          </TouchableAreaWrapper>
           <TouchableArea
             group
             flexDirection="row"
@@ -94,4 +87,12 @@ function GateWrapper({ featureFlag, children }: PropsWithChildren<{ featureFlag:
     return null
   }
   return <>{children}</>
+}
+
+function TouchableAreaWrapper({
+  isTouchable,
+  onPress,
+  children,
+}: PropsWithChildren<{ isTouchable: boolean; onPress: () => void }>): ReactNode {
+  return isTouchable ? <TouchableArea onPress={onPress}>{children}</TouchableArea> : children
 }

@@ -12,8 +12,10 @@ import { useForceUpgradeTranslations } from 'uniswap/src/features/forceUpgrade/h
 import { useLocalizedStatsigLanguage } from 'uniswap/src/features/language/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isMobileApp } from 'utilities/src/platform'
+import { isExtension, isIOS, isMobileApp } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 import { EXTENSION_FORCED_UPGRADE_HELP_LINK, MOBILE_APP_STORE_LINK } from 'wallet/src/constants/urls'
+import { startAndroidInAppUpdate } from 'wallet/src/features/forceUpgrade/startAndroidInAppUpdate'
 import { UpgradeStatus } from 'wallet/src/features/forceUpgrade/types'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -27,12 +29,34 @@ interface ForceUpgradeProps {
   SeedPhraseModalContent: React.ComponentType<{ mnemonicId: string; onDismiss: () => void }>
 }
 
-export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX.Element {
+export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX.Element | null {
+  const forceUpgradeStatusString = useForceUpgradeStatus()
+
+  const upgradeStatus = useMemo(() => {
+    if (forceUpgradeStatusString === 'recommended') {
+      return UpgradeStatus.Recommended
+    }
+    if (forceUpgradeStatusString === 'required') {
+      return UpgradeStatus.Required
+    }
+    return UpgradeStatus.NotRequired
+  }, [forceUpgradeStatusString])
+
+  if (upgradeStatus === UpgradeStatus.NotRequired) {
+    return null
+  }
+
+  return <ForceUpgradeModal SeedPhraseModalContent={SeedPhraseModalContent} upgradeStatus={upgradeStatus} />
+}
+
+function ForceUpgradeModal({
+  SeedPhraseModalContent,
+  upgradeStatus,
+}: ForceUpgradeProps & { upgradeStatus: UpgradeStatus }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const statsigLanguage = useLocalizedStatsigLanguage()
 
-  const forceUpgradeStatusString = useForceUpgradeStatus()
   const upgradeTextTranslations = useForceUpgradeTranslations()
 
   const { description: translatedDescription, title: translatedTitle } = useMemo<Translation>(() => {
@@ -45,16 +69,6 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
       ? { description: translation.description, title: translation.title }
       : { description: undefined, title: undefined }
   }, [upgradeTextTranslations, statsigLanguage])
-
-  const upgradeStatus = useMemo(() => {
-    if (forceUpgradeStatusString === 'recommended') {
-      return UpgradeStatus.Recommended
-    }
-    if (forceUpgradeStatusString === 'required') {
-      return UpgradeStatus.Required
-    }
-    return UpgradeStatus.NotRequired
-  }, [forceUpgradeStatusString])
 
   const shouldShow = upgradeStatus !== UpgradeStatus.NotRequired
   const [userDismissed, setUserDismissed] = useState(false)
@@ -73,29 +87,43 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
   const signerAccounts = useSignerAccounts()
   const mnemonicId = signerAccounts.length > 0 ? (signerAccounts?.[0] as SignerMnemonicAccount)?.mnemonicId : undefined
 
-  const onPressConfirm = async (): Promise<void> => {
+  const onClose = useEvent(() => {
+    setUserDismissed(true)
+  })
+
+  const onPressConfirm = useEvent(async (): Promise<void> => {
     if (isRecommended) {
       onClose()
     }
-    if (isMobileApp) {
-      await openUri(MOBILE_APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
-    } else {
+
+    if (isExtension) {
       await openUri(EXTENSION_FORCED_UPGRADE_HELP_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
+      return
     }
-  }
 
-  const onClose = (): void => {
-    setUserDismissed(true)
-  }
+    if (isIOS) {
+      // iOS doesn't support in-app updates, just open the App Store
+      await openUri(MOBILE_APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
+      return
+    }
 
-  const onPressViewRecovery = (): void => {
+    // Try using in-app updates for Android
+    const updateStarted = await startAndroidInAppUpdate({ isRequired: !isRecommended })
+
+    // If in-app update wasn't available or failed, fall back to store link
+    if (!updateStarted) {
+      await openUri(MOBILE_APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
+    }
+  })
+
+  const onPressViewRecovery = useEvent(() => {
     setShowSeedPhrase(true)
-  }
+  })
 
-  const onDismiss = (): void => {
+  const onDismiss = useEvent(() => {
     setUserDismissed(false)
     setShowSeedPhrase(false)
-  }
+  })
 
   // We do not add explicit error boundary here as we can not hide or replace
   // the force upgrade screen on error, hence we fallback to the global error boundary

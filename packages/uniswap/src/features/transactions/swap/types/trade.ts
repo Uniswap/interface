@@ -9,10 +9,12 @@ import { BridgeQuoteResponse, ClassicQuoteResponse, DutchQuoteResponse, DutchV3Q
 import { BigNumber, providers } from 'ethers/lib/ethers'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
+  ClassicInput,
+  ClassicOutput,
   DutchOrderInfoV2,
   DutchOrderInfoV3,
-  IndicativeQuoteResponse,
   PriorityOrderInfo,
+  QuoteResponse,
   Routing,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
@@ -21,7 +23,6 @@ import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transac
 import { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { getSwapFee } from 'uniswap/src/features/transactions/swap/types/getSwapFee'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 type QuoteResponseWithAggregatedOutputs = ClassicQuoteResponse | DutchQuoteResponse | DutchV3QuoteResponse | PriorityQuoteResponse
 
@@ -94,10 +95,6 @@ export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, Trade
     this.swapFee = getSwapFee(quote)
   }
 
-  public get needsWrap(): boolean {
-    return this.inputAmount.currency.isNative
-  }
-
   public get deadline(): number {
     return this.order.info.deadline
   }
@@ -148,10 +145,6 @@ export class UniswapXV3Trade extends V3DutchOrderTrade<Currency, Currency, Trade
     this.swapFee = getSwapFee(quote)
   }
 
-  public get needsWrap(): boolean {
-    return this.inputAmount.currency.isNative
-  }
-
   public get deadline(): number {
     return this.order.info.deadline
   }
@@ -200,10 +193,6 @@ export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, 
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
     this.swapFee = getSwapFee(quote)
-  }
-
-  public get needsWrap(): boolean {
-    return this.inputAmount.currency.isNative
   }
 
   public get deadline(): number {
@@ -327,7 +316,7 @@ export interface UseTradeArgs {
   skip?: boolean
   selectedProtocols?: FrontendSupportedProtocol[]
   isDebouncing?: boolean
-  getGeneratePermitAsTransaction?: (chainId?: UniverseChainId) => boolean
+  generatePermitAsTransaction?: boolean
   isV4HookPoolsEnabled?: boolean
 }
 
@@ -446,17 +435,22 @@ function transformToPriorityOrderInfo(orderInfo: PriorityOrderInfo): UnsignedPri
   }
 }
 
-type ValidatedIndicativeQuoteToken = Required<IndicativeQuoteResponse["input"]>
 
-export type ValidatedIndicativeQuoteResponse = IndicativeQuoteResponse & {
-  input: ValidatedIndicativeQuoteToken
-  output: ValidatedIndicativeQuoteToken
+export type ValidatedIndicativeQuoteResponse = QuoteResponse & {
+  input: Required<ClassicInput>
+  output: Required<ClassicOutput>
 }
 
-export function validateIndicativeQuoteResponse(response: IndicativeQuoteResponse): ValidatedIndicativeQuoteResponse | undefined {
-  const { input, output } = response
-  if (response.input && response.output && response.requestId && response.type && input.amount && input.chainId && input.token && output.amount && output.chainId && output.token) {
-    return { ...response, input:  { amount: input.amount, chainId: input.chainId, token: output.token }, output:  { amount: output.amount, chainId: output.chainId, token: output.token } }
+export function validateIndicativeQuoteResponse(response: QuoteResponse): ValidatedIndicativeQuoteResponse | undefined {
+  if ('input' in response.quote && 'output' in response.quote) {
+    const input = response.quote.input
+    const output = response.quote.output
+    if (!input || !output) {
+      return undefined
+    }
+    if (input.amount  && input.token && output.amount  && output.token && output.recipient)  {
+      return { ...response, input:  { amount: input.amount, token: input.token }, output: { amount: output.amount, token: output.token, recipient: output.recipient }}
+    }
   }
   return undefined
 }

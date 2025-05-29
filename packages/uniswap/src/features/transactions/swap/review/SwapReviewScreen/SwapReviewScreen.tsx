@@ -6,13 +6,13 @@ import { useTransactionModalContext } from 'uniswap/src/features/transactions/co
 import { useSwapDependencies } from 'uniswap/src/features/transactions/swap/contexts/SwapDependenciesContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
-import { SwapErrorScreen } from 'uniswap/src/features/transactions/swap/review/SwapErrorScreen'
+import { SwapErrorScreen } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapErrorScreen'
+import { SwapReviewFooter } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/SwapReviewFooter'
+import { SwapReviewLoadingView } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewLoadingView'
+import { SwapReviewSwapDetails } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewSwapDetails'
+import { SwapReviewWarningModal } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewWarningModal'
+import { SwapReviewWrapTransactionDetails } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewWrapTransactionDetails'
 import { TransactionAmountsReview } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/TransactionAmountsReview'
-import { SwapReviewFooter } from 'uniswap/src/features/transactions/swap/review/components/SwapReviewFooter'
-import { SwapReviewLoadingView } from 'uniswap/src/features/transactions/swap/review/components/SwapReviewLoadingView'
-import { SwapReviewSwapDetails } from 'uniswap/src/features/transactions/swap/review/components/SwapReviewSwapDetails'
-import { SwapReviewWarningModal } from 'uniswap/src/features/transactions/swap/review/components/SwapReviewWarningModal'
-import { SwapReviewWrapTransactionDetails } from 'uniswap/src/features/transactions/swap/review/components/SwapReviewWrapTransactionDetails'
 import { SwapReviewCallbacksContextProvider } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewCallbacksContextProvider'
 import { useSwapReviewState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewStateContext'
 import { SwapReviewStateContextProvider } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewStateContextProvider'
@@ -30,7 +30,7 @@ import { logger } from 'utilities/src/logger/logger'
 
 interface SwapReviewScreenProps {
   hideContent: boolean
-  onSubmitSwap?: () => Promise<void>
+  onSubmitSwap?: () => Promise<void> | void
 }
 
 export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | null {
@@ -110,6 +110,7 @@ function SwapReviewContent(): JSX.Element | null {
         submissionError={error.submissionError}
         setSubmissionError={error.setSubmissionError}
         resubmitSwap={error.onSwapButtonClick}
+        onPressRetry={error.onPressRetry}
         onClose={onPrev}
       />
     )

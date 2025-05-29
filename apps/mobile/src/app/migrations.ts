@@ -17,6 +17,7 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { unchecksumDismissedTokenWarningKeys } from 'uniswap/src/state/uniswapMigrations'
+import { DappRequestType } from 'uniswap/src/types/walletConnect'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -989,6 +990,69 @@ export const migrations = {
       batchedTransactions: {},
     }
   },
+
+  87: function migrateDappRequestInfoTypes(state: any): any {
+    const newState = { ...state }
+
+    if (!newState?.transactions) {
+      return newState
+    }
+
+    const newTransactionState = {} as Record<any, any>
+
+    for (const [address, chainIdToTxIdToDetails] of Object.entries(newState.transactions as Record<any, any>)) {
+      for (const [chainId, txIdToDetails] of Object.entries(chainIdToTxIdToDetails as Record<any, any>)) {
+        for (const [txId, details] of Object.entries(txIdToDetails as Record<any, any>)) {
+          let newDetails = { ...details }
+
+          if (details.typeInfo.externalDappInfo?.source === 'uwulink') {
+            newDetails = {
+              ...details,
+              typeInfo: {
+                ...details.typeInfo,
+                externalDappInfo: {
+                  ...(details.typeInfo.externalDappInfo ?? {}),
+                  requestType: DappRequestType.UwULink,
+                },
+              },
+            }
+          }
+
+          if (details.typeInfo.externalDappInfo?.source === 'walletconnect') {
+            newDetails = {
+              ...details,
+              typeInfo: {
+                ...details.typeInfo,
+                externalDappInfo: {
+                  ...(details.typeInfo.externalDappInfo ?? {}),
+                  requestType: DappRequestType.WalletConnectSessionRequest,
+                },
+              },
+            }
+          }
+
+          // Change the field `dapp` to `dappRequestInfo`
+          if (details.typeInfo.type === TransactionType.WCConfirm && details.typeInfo.dapp) {
+            newDetails.typeInfo.dappRequestInfo = {
+              ...(details.typeInfo.dapp ?? {}),
+            }
+          }
+
+          delete newDetails.typeInfo.dapp
+          delete newDetails.typeInfo.externalDappInfo?.source
+
+          newTransactionState[address] ??= {}
+          newTransactionState[address][chainId] ??= {}
+          newTransactionState[address][chainId][txId] = newDetails
+        }
+      }
+    }
+
+    return {
+      ...newState,
+      transactions: newTransactionState,
+    }
+  },
 }
 
-export const MOBILE_STATE_VERSION = 86
+export const MOBILE_STATE_VERSION = 87

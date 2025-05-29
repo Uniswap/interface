@@ -33,7 +33,10 @@ export function useImportableAccounts(importedAddresses?: Address[]): {
     isLoadingAddresses ? undefined : importedAddresses,
   )
 
-  const accountsWithBalanceOrName = Object.values(addressInfoMap ?? {}).filter(hasBalanceOrName)
+  const accountsWithBalanceOrName = useMemo(
+    () => Object.values(addressInfoMap ?? {}).filter(hasBalanceOrName),
+    [addressInfoMap],
+  )
 
   const importableAccounts: AddressWithBalanceAndName[] | undefined = useMemo(() => {
     if (accountsWithBalanceOrName.length > 0) {

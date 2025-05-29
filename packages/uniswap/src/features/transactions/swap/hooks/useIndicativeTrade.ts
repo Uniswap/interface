@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTradingApiIndicativeQuoteQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery'
-import { IndicativeQuoteRequest, QuoteRequest } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { QuoteRequest } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { IndicativeTrade, validateIndicativeQuoteResponse } from 'uniswap/src/features/transactions/swap/types/trade'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -17,7 +17,7 @@ export function useIndicativeTrade({ quoteRequestArgs, currencyIn, currencyOut, 
   isLoading: boolean
 } {
   // Avoid passing unused fields to Indicative endpoint; IndicativeQuote request uses less fields than Quote request.
-  const params: IndicativeQuoteRequest | undefined = useMemo(() => {
+  const params: QuoteRequest | undefined = useMemo(() => {
     if (!quoteRequestArgs?.type) {
       return undefined
     }
@@ -28,6 +28,7 @@ export function useIndicativeTrade({ quoteRequestArgs, currencyIn, currencyOut, 
       tokenOutChainId: quoteRequestArgs.tokenOutChainId,
       tokenIn: quoteRequestArgs.tokenIn,
       tokenOut: quoteRequestArgs.tokenOut,
+      swapper: quoteRequestArgs.swapper,
     }
   }, [
     quoteRequestArgs?.amount,
@@ -36,6 +37,7 @@ export function useIndicativeTrade({ quoteRequestArgs, currencyIn, currencyOut, 
     quoteRequestArgs?.tokenIn,
     quoteRequestArgs?.tokenOut,
     quoteRequestArgs?.type,
+    quoteRequestArgs?.swapper,
   ])
 
   const { data, isLoading } = useTradingApiIndicativeQuoteQuery({

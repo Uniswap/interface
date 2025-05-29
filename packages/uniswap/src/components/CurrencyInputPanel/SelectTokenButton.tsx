@@ -1,6 +1,7 @@
 import { ComponentProps, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, getContrastPassingTextColor, getHoverCssFilter, isWeb, useIsDarkMode } from 'ui/src'
+import { PRESS_SCALE } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/constants'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes, spacing, validColor } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -63,7 +64,7 @@ export const SelectTokenButton = memo(function _SelectTokenButton({
       shadowColor="$surface3"
       shadowRadius={10}
       shadowOpacity={0.04}
-      scaleTo={0.98}
+      scaleTo={PRESS_SCALE}
       hoverable={!!selectedCurrencyInfo}
       hoverStyle={hoverStyle}
       onPress={onPress}

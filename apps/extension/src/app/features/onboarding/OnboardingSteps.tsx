@@ -81,6 +81,33 @@ export function OnboardingStepsProvider({
     going: 'forward',
   })
 
+  // This is needed to force the onboarding screen to re-render when the belowFrameContent or outsideContent changes
+  useEffect(() => {
+    const handler = (nextStep: Step, next: MaybeOnboardingProps): void => {
+      if (
+        nextStep === step &&
+        (next?.belowFrameContent !== onboardingScreen?.belowFrameContent ||
+          next?.outsideContent !== onboardingScreen?.outsideContent)
+      ) {
+        setState((prev) => {
+          return {
+            ...prev,
+            onboardingScreen: {
+              ...prev.onboardingScreen,
+              belowFrameContent: next?.belowFrameContent,
+              outsideContent: next?.outsideContent,
+            },
+          }
+        })
+      }
+    }
+
+    onboardingScreenListen.add(handler)
+    return () => {
+      onboardingScreenListen.delete(handler)
+    }
+  }, [onboardingScreen?.belowFrameContent, onboardingScreen?.outsideContent, step])
+
   const getCurrentStep = useRef(step)
   getCurrentStep.current = step
 

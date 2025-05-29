@@ -1,13 +1,12 @@
-import { Signer } from 'ethers'
 import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
 
 /** Manages initialized ethers.Signers across the app */
 export class SignerManager {
-  private readonly signers: Record<Address, Signer> = {}
+  private readonly signers: Record<Address, NativeSigner> = {}
 
-  async getSignerForAccount(account: AccountMeta): Promise<Signer> {
+  async getSignerForAccount(account: AccountMeta): Promise<NativeSigner> {
     const signer = this.signers[account.address]
     if (signer) {
       return signer

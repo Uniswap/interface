@@ -1,4 +1,4 @@
-import { DialogV2 } from 'components/Dialog/DialogV2'
+import { Dialog } from 'components/Dialog/Dialog'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
@@ -36,7 +36,7 @@ export const DynamicFeeTierSpeedbump = () => {
   }
 
   return (
-    <DialogV2
+    <Dialog
       icon={
         <Flex
           backgroundColor="$surface3"

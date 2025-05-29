@@ -86,7 +86,7 @@ export const ChooseNftModal = ({
                 {t('unitags.choosePhoto.option.nft')}
               </Text>
             </Flex>
-            <X position="absolute" left={0} size="$icon.24" cursor="pointer" color="$neutral2" onClick={onClose} />
+            <X position="absolute" left={0} size="$icon.24" cursor="pointer" color="$neutral2" onPress={onClose} />
           </Flex>
         ) : undefined}
         <Flex fill {...containerProps}>

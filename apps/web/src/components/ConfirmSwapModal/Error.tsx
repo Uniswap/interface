@@ -1,12 +1,12 @@
 import { TradeSummary } from 'components/ConfirmSwapModal/TradeSummary'
-import { DialogButtonType, DialogContent } from 'components/Dialog/Dialog'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
-import { ColumnCenter } from 'components/deprecated/Column'
 import { SwapResult } from 'hooks/useSwapCallback'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isUniswapXTrade } from 'state/routing/utils'
 import { ExternalLink } from 'theme/components/Links'
+import { Button, Flex, Text } from 'ui/src'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
@@ -81,43 +81,42 @@ function getErrorContent({ errorType, trade }: { errorType: PendingModalError; t
 
 export default function Error({ errorType, trade, showTrade, swapResult, onRetry }: ErrorModalContentProps) {
   const { title, message, supportArticleURL } = getErrorContent({ errorType, trade })
+  const { t } = useTranslation()
 
   return (
-    <DialogContent
-      isVisible={true}
-      icon={<AlertTriangleFilled data-testid="pending-modal-failure-icon" size="24px" />}
-      title={title}
-      description={message}
-      body={
-        <ColumnCenter gap="sm">
-          {showTrade && trade && <TradeSummary trade={trade} />}
-          {supportArticleURL && (
-            <ExternalLink href={supportArticleURL}>
-              <Trans i18nKey="common.button.learn" />
-            </ExternalLink>
-          )}
-          {swapResult && swapResult.type === TradeFillType.Classic && (
-            <ExternalLink
-              href={getExplorerLink(
-                swapResult.response.chainId,
-                swapResult.response.hash,
-                ExplorerDataType.TRANSACTION,
-              )}
-              color="neutral2"
-            >
-              <Trans i18nKey="common.viewOnExplorer" />
-            </ExternalLink>
-          )}
-        </ColumnCenter>
-      }
-      buttonsConfig={{
-        left: {
-          type: DialogButtonType.Primary,
-          title: <Trans i18nKey="common.tryAgain.error" />,
-          onClick: onRetry,
-        },
-      }}
-      onCancel={() => null}
-    />
+    <Flex alignItems="center" p="$spacing8" gap="$spacing8">
+      <Flex
+        backgroundColor="$surface3"
+        borderRadius="$rounded12"
+        height="$spacing48"
+        width="$spacing48"
+        alignItems="center"
+        justifyContent="center"
+        mb="$spacing4"
+      >
+        <AlertTriangleFilled data-testid="pending-modal-failure-icon" size="24px" />
+      </Flex>
+      <Text variant="subheading1" color="$neutral1" mt="$spacing8">
+        {title}
+      </Text>
+      <Text variant="body3" color="$neutral2">
+        {message}
+      </Text>
+      <Flex gap="$gap8" justifyContent="center" alignItems="center">
+        {showTrade && trade && <TradeSummary trade={trade} />}
+        {supportArticleURL && <LearnMoreLink url={supportArticleURL} centered />}
+        {swapResult && swapResult.type === TradeFillType.Classic && (
+          <ExternalLink
+            href={getExplorerLink(swapResult.response.chainId, swapResult.response.hash, ExplorerDataType.TRANSACTION)}
+            color="neutral2"
+          >
+            {t('common.viewOnExplorer')}
+          </ExternalLink>
+        )}
+      </Flex>
+      <Button variant="default" emphasis="secondary" minHeight="$spacing48" mt="$spacing8" onPress={onRetry}>
+        {t('common.tryAgain.error')}
+      </Button>
+    </Flex>
   )
 }

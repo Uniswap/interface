@@ -1,145 +1,104 @@
 import '@testing-library/jest-dom'
-import { Dialog, DialogButtonType } from 'components/Dialog/Dialog'
+import { Dialog } from 'components/Dialog/Dialog'
 import { fireEvent, render, screen } from 'test-utils/render'
-import { Gap } from 'theme'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-const mockIcon = <>Mock Icon</>
-const mockTitle = <>Mock Title</>
-const mockDescription = <>Mock Description</>
-const mockBody = <>Mock Body</>
+const mockOnClose = jest.fn()
+const mockPrimaryClick = jest.fn()
+const mockSecondaryClick = jest.fn()
 
-const mockOnCancel = jest.fn()
-const mockLeftClick = jest.fn()
-const mockRightClick = jest.fn()
+describe('Dialog component', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
 
-const mockButtonsConfig = {
-  left: {
-    title: <>Left Button</>,
-    onClick: mockLeftClick,
-  },
-  right: {
-    title: <>Right Button</>,
-    onClick: mockRightClick,
-  },
-  gap: 'md' as Gap,
-}
-
-describe('<Dialog />', () => {
-  it('renders the Dialog component correctly', () => {
-    render(
+  const renderDialog = (props = {}) => {
+    return render(
       <Dialog
-        isVisible={true}
-        icon={mockIcon}
-        title={mockTitle}
-        description={mockDescription}
-        body={mockBody}
-        onCancel={mockOnCancel}
-        buttonsConfig={mockButtonsConfig}
+        isOpen={true}
+        onClose={mockOnClose}
+        icon={<>Mock Icon</>}
+        title="Mock Title"
+        subtext="Mock Subtext"
+        modalName={ModalName.Dialog}
+        primaryButtonText="Primary Button"
+        primaryButtonOnClick={mockPrimaryClick}
+        secondaryButtonText="Close"
+        secondaryButtonOnClick={mockOnClose}
+        {...props}
       />,
     )
+  }
 
-    expect(document.body).toMatchSnapshot()
+  it('renders with required props', () => {
+    renderDialog()
 
     expect(screen.getByText('Mock Icon')).toBeInTheDocument()
     expect(screen.getByText('Mock Title')).toBeInTheDocument()
-    expect(screen.getByText('Mock Description')).toBeInTheDocument()
-    expect(screen.getByText('Mock Body')).toBeInTheDocument()
-    expect(screen.getByText('Left Button')).toBeInTheDocument()
-    expect(screen.getByText('Right Button')).toBeInTheDocument()
+    expect(screen.getByText('Mock Subtext')).toBeInTheDocument()
+    expect(screen.getByText('Primary Button')).toBeInTheDocument()
   })
 
-  it('handles cancel button click', () => {
-    render(
-      <Dialog
-        isVisible={true}
-        icon={mockIcon}
-        title={mockTitle}
-        description={mockDescription}
-        body={mockBody}
-        onCancel={mockOnCancel}
-        buttonsConfig={mockButtonsConfig}
-      />,
-    )
-
-    fireEvent.click(screen.getByTestId('Dialog-closeButton'))
-    expect(mockOnCancel).toHaveBeenCalled()
+  it('handles close button click', () => {
+    renderDialog()
+    const closeButton = screen.getByRole('button', { name: /close/i })
+    fireEvent.click(closeButton)
+    expect(mockOnClose).toHaveBeenCalled()
   })
 
-  it('handles left button click', () => {
-    render(
-      <Dialog
-        isVisible={true}
-        icon={mockIcon}
-        title={mockTitle}
-        description={mockDescription}
-        body={mockBody}
-        onCancel={mockOnCancel}
-        buttonsConfig={mockButtonsConfig}
-      />,
-    )
-
-    fireEvent.click(screen.getByText('Left Button'))
-    expect(mockLeftClick).toHaveBeenCalled()
+  it('handles primary button click', () => {
+    renderDialog()
+    fireEvent.click(screen.getByRole('button', { name: 'Primary Button' }))
+    expect(mockPrimaryClick).toHaveBeenCalled()
   })
 
-  it('handles right button click', () => {
-    render(
-      <Dialog
-        isVisible={true}
-        icon={mockIcon}
-        title={mockTitle}
-        description={mockDescription}
-        body={mockBody}
-        onCancel={mockOnCancel}
-        buttonsConfig={mockButtonsConfig}
-      />,
-    )
+  it('handles secondary button click when provided', () => {
+    renderDialog({
+      secondaryButtonText: 'Secondary Button',
+      secondaryButtonOnClick: mockSecondaryClick,
+    })
 
-    fireEvent.click(screen.getByText('Right Button'))
-    expect(mockRightClick).toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('button', { name: 'Secondary Button' }))
+    expect(mockSecondaryClick).toHaveBeenCalled()
   })
 
-  it('renders no buttons if not provided', () => {
-    render(
-      <Dialog
-        isVisible={true}
-        buttonsConfig={{}}
-        icon={mockIcon}
-        title={mockTitle}
-        description={mockDescription}
-        body={mockBody}
-        onCancel={mockOnCancel}
-      />,
-    )
-    expect(screen.queryByText('Left Button')).not.toBeInTheDocument()
-    expect(screen.queryByText('Right Button')).not.toBeInTheDocument()
+  it('does not render secondary button when not provided', () => {
+    renderDialog({ secondaryButtonText: undefined })
+    expect(screen.queryByRole('button', { name: 'Close' })).not.toBeInTheDocument()
   })
 
-  it('renders different button types', () => {
-    render(
-      <Dialog
-        isVisible={true}
-        buttonsConfig={{
-          left: {
-            ...mockButtonsConfig.left,
-            disabled: true,
-          },
-          right: {
-            ...mockButtonsConfig.right,
-            type: DialogButtonType.Error,
-          },
-        }}
-        icon={mockIcon}
-        title={mockTitle}
-        description={mockDescription}
-        body={mockBody}
-        onCancel={mockOnCancel}
-      />,
-    )
+  it('renders with left text alignment', () => {
+    renderDialog({ textAlign: 'left' })
+    const subtext = screen.getByText('Mock Subtext')
+    expect(subtext).toHaveClass('_textAlign-left')
+  })
 
-    expect(document.body).toMatchSnapshot()
+  it('renders with icon background', () => {
+    renderDialog({ hasIconBackground: true })
+    expect(screen.getByTestId('dialog-icon')).toBeInTheDocument()
+  })
 
-    expect(screen.queryByText('Left Button')).toBeInTheDocument()
-    expect(screen.queryByText('Right Button')).toBeInTheDocument()
+  it('renders help CTA', () => {
+    renderDialog({ displayHelpCTA: true })
+    expect(screen.getByText('Get help')).toBeInTheDocument()
+  })
+
+  it('renders children content when provided', () => {
+    const childContent = <div data-testid="custom-content">Custom Content</div>
+    renderDialog({ children: childContent })
+    expect(screen.getByTestId('custom-content')).toBeInTheDocument()
+  })
+
+  it('renders ReactNode title and subtext', () => {
+    const customTitle = <span data-testid="custom-title">Custom Title</span>
+    const customSubtext = <span data-testid="custom-subtext">Custom Subtext</span>
+
+    renderDialog({
+      title: customTitle,
+      subtext: customSubtext,
+    })
+
+    expect(screen.getByTestId('custom-title')).toBeInTheDocument()
+    expect(screen.getByTestId('custom-subtext')).toBeInTheDocument()
   })
 })

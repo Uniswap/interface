@@ -16,8 +16,8 @@ import { TransactionDetails, UniswapXOrderDetails } from 'uniswap/src/features/t
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { signAndSubmitTransaction } from 'wallet/src/features/transactions/executeTransaction/signAndSubmitTransaction'
-import { getOrders } from 'wallet/src/features/transactions/orderWatcherSaga'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
+import { getOrders } from 'wallet/src/features/transactions/watcher/orderWatcherSaga'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 // Note, transaction cancellation on Ethereum is inherently flaky

@@ -61,10 +61,10 @@ export function WalletConnectModals(): JSX.Element {
   // When WalletConnectModal is open and a WC QR code is scanned to add a pendingSession,
   // dismiss the scan modal in favor of showing PendingConnectionModal
   useEffect(() => {
-    if (modalState.isOpen && pendingSession) {
+    if (modalState.isOpen && (pendingSession || currRequest)) {
       dispatch(closeModal({ name: ModalName.WalletConnectScan }))
     }
-  }, [modalState.isOpen, pendingSession, dispatch])
+  }, [modalState.isOpen, pendingSession, currRequest, dispatch])
 
   return (
     <>

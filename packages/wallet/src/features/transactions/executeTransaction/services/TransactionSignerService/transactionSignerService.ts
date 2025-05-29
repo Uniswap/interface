@@ -5,12 +5,12 @@ import type { providers } from 'ethers'
 // so we can use viem etc if we want!
 export type TransactionResponse = providers.TransactionResponse
 export type TransactionPopulatedRequest = providers.TransactionRequest
-export type TransactionTimestampBeforeSend = number
 
 export type TransactionSignerOutput = {
   transactionResponse: TransactionResponse
   populatedRequest: TransactionPopulatedRequest
-  timestampBeforeSend: TransactionTimestampBeforeSend
+  timestampBeforeSign: number
+  timestampBeforeSend: number
 }
 
 export type TransactionSignerInput = {

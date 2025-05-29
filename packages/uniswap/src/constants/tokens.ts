@@ -16,7 +16,7 @@ export const USDC_SEPOLIA = new Token(
   '0x1c7d4b196cb0c7b01d743fbc6116a902379c7238',
   6,
   'USDC',
-  'USD//C',
+  'USD Coin',
 )
 
 export const USDC_UNICHAIN = new Token(
@@ -24,7 +24,7 @@ export const USDC_UNICHAIN = new Token(
   '0x078D782b760474a361dDA0AF3839290b0EF57AD6',
   6,
   'USDC',
-  'USD//C',
+  'USD Coin',
 )
 
 export const USDC_UNICHAIN_SEPOLIA = new Token(
@@ -32,7 +32,7 @@ export const USDC_UNICHAIN_SEPOLIA = new Token(
   '0x31d0220469e10c4E71834a79b1f276d740d3768F',
   6,
   'USDC',
-  'USD//C',
+  'USD Coin',
 )
 
 export const USDC_SONEIUM = new Token(
@@ -40,7 +40,7 @@ export const USDC_SONEIUM = new Token(
   '0xbA9986D2381edf1DA03B0B9c1f8b00dc4AacC369',
   6,
   'USDCE',
-  'Soneium Bridged USDC Soneium',
+  'Soneium Bridged USDC',
 )
 
 export const DAI = new Token(
@@ -64,7 +64,7 @@ export const USDC_MAINNET = new Token(
   '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   6,
   'USDC',
-  'USD//C',
+  'USD Coin',
 )
 
 export const USDC = new Token(
@@ -72,7 +72,7 @@ export const USDC = new Token(
   '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   6,
   'USDC',
-  'USD//C',
+  'USD Coin',
 )
 
 export const USDC_OPTIMISM = new Token(
@@ -80,7 +80,7 @@ export const USDC_OPTIMISM = new Token(
   '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85',
   6,
   'USDC',
-  'USD//C',
+  'USD Coin',
 )
 
 export const USDT_OPTIMISM = new Token(
@@ -117,7 +117,13 @@ export const USDC_BASE = new Token(
 
 export const BTC_BSC = new Token(UniverseChainId.Bnb, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'BTCB')
 
-export const USDC_BNB = new Token(UniverseChainId.Bnb, '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', 18, 'USDC', 'USDC')
+export const USDC_BNB = new Token(
+  UniverseChainId.Bnb,
+  '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
+  18,
+  'USDC',
+  'USD Coin',
+)
 
 export const USDT_BNB = new Token(
   UniverseChainId.Bnb,
@@ -127,7 +133,13 @@ export const USDT_BNB = new Token(
   'TetherUSD',
 )
 
-export const USDC_BSC = new Token(UniverseChainId.Bnb, '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', 18, 'USDC', 'USDC')
+export const USDC_BSC = new Token(
+  UniverseChainId.Bnb,
+  '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
+  18,
+  'USDC',
+  'USD Coin',
+)
 
 export const USDT_BSC = new Token(UniverseChainId.Bnb, '0x55d398326f99059fF775485246999027B3197955', 18, 'USDT', 'USDT')
 
@@ -212,7 +224,7 @@ export const USDC_ARBITRUM = new Token(
   '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
   6,
   'USDC',
-  'USD//C',
+  'USD Coin',
 )
 
 export const WBTC_ARBITRUM_ONE = new Token(
@@ -314,7 +326,7 @@ export const USDC_ZKSYNC = new Token(
   '0x1d17CBcF0D6D143135aE902365D2E5e2A16538D4',
   6,
   'USDC',
-  'USDC',
+  'USD Coin',
 )
 
 export const WBTC = new Token(

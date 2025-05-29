@@ -7,6 +7,8 @@ import { fonts } from 'ui/src/theme'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -98,15 +100,26 @@ export function CancelConfirmationView({
         <Button emphasis="secondary" onPress={onBack}>
           {t('common.button.back')}
         </Button>
-        <Button
-          isDisabled={disableConfirmationButton}
-          testID={TestID.Cancel}
-          variant="critical"
-          emphasis="secondary"
-          onPress={onPressCancel}
+        <Trace
+          logPress
+          element={ElementName.Confirm}
+          modal={ModalName.TransactionCancellation}
+          properties={{
+            transaction_hash: transactionDetails.hash,
+            chain_id: transactionDetails.chainId,
+            status: transactionDetails.status,
+          }}
         >
-          {t('common.button.confirm')}
-        </Button>
+          <Button
+            isDisabled={disableConfirmationButton}
+            testID={TestID.Cancel}
+            variant="critical"
+            emphasis="secondary"
+            onPress={onPressCancel}
+          >
+            {t('common.button.confirm')}
+          </Button>
+        </Trace>
       </Flex>
     </Flex>
   )

@@ -3,7 +3,9 @@ import { useSettingsStackNavigation } from 'src/app/navigation/types'
 import { Flex, IconProps, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron, UniswapLogo } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
 import { logger } from 'utilities/src/logger/logger'
+import { resetWalletBehaviorHistory } from 'wallet/src/features/behaviorHistory/slice'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
@@ -20,6 +22,8 @@ export function OnboardingRow({ iconProps }: { iconProps: IconProps }): JSX.Elem
       .then(() => {
         navigation.goBack()
         dispatch(resetWallet())
+        dispatch(resetWalletBehaviorHistory())
+        dispatch(resetUniswapBehaviorHistory())
         dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
       })
       .catch((error) => {

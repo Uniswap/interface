@@ -14,10 +14,13 @@ import { isExtension } from 'utilities/src/platform'
 const AVOID_RENDER_DURING_ANIMATION_MS = 100
 
 type PortfolioBalanceModalProps = {
+  isOpen: boolean
   onClose: () => void
 }
 
-export function PortfolioBalanceModal({ onClose }: PortfolioBalanceModalProps): JSX.Element {
+export type PortfolioBalanceModalState = Omit<PortfolioBalanceModalProps, 'onClose' | 'isOpen'>
+
+export function PortfolioBalanceModal({ isOpen, onClose }: PortfolioBalanceModalProps): JSX.Element {
   const { t } = useTranslation()
   const hideSpamTokens = useHideSpamTokensSetting()
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -38,11 +41,11 @@ export function PortfolioBalanceModal({ onClose }: PortfolioBalanceModalProps): 
   }, [dispatch, hideSpamTokens])
 
   return (
-    <Modal name={ModalName.PortfolioBalanceModal} onClose={onClose}>
+    <Modal isModalOpen={isOpen} name={ModalName.PortfolioBalanceModal} onClose={onClose}>
       <Flex
         animation="fast"
         gap="$spacing16"
-        pb={isExtension ? undefined : '$spacing60'}
+        pb={isExtension ? undefined : '$spacing24'}
         py={isExtension ? '$spacing16' : undefined}
         px="$spacing12"
         width="100%"
@@ -53,7 +56,7 @@ export function PortfolioBalanceModal({ onClose }: PortfolioBalanceModalProps): 
           </Text>
         </Flex>
 
-        <Flex>
+        <Flex pr="$spacing12">
           <PortfolioBalanceOption
             active={hideSmallBalances && !isTestnetModeEnabled}
             subtitle={t('settings.hideSmallBalances.subtitle')}

@@ -6,6 +6,8 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { checkCloudBackupOrShowAlert } from 'src/components/mnemonic/cloudImportUtils'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { WalletRestoreType } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
+import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
@@ -55,6 +57,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const dispatch = useDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
   const isModalOpen = useIsFocused()
+  const { openWalletRestoreModal, walletRestoreType } = useWalletRestore()
 
   const sortedMnemonicAccounts = useSelector(selectSortedSignerMnemonicAccounts)
 
@@ -116,6 +119,12 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     const onPressCreateNewWallet = async (): Promise<void> => {
       setShowAddWalletModal(false)
       onClose()
+
+      if (walletRestoreType === WalletRestoreType.SeedPhrase) {
+        openWalletRestoreModal()
+        return
+      }
+
       if (hasImportedSeedPhrase) {
         await createAdditionalAccount()
       } else {
@@ -216,7 +225,16 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     return options
-  }, [activeAccountAddress, dispatch, hasImportedSeedPhrase, onClose, sortedMnemonicAccounts, t])
+  }, [
+    activeAccountAddress,
+    dispatch,
+    hasImportedSeedPhrase,
+    onClose,
+    sortedMnemonicAccounts,
+    t,
+    openWalletRestoreModal,
+    walletRestoreType,
+  ])
 
   const accountsWithoutActive = accounts.filter((a) => a.address !== activeAccountAddress)
 
@@ -256,7 +274,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           onClose={onClose}
         />
       </Flex>
-      <TouchableArea mt="$spacing16" onPress={onPressAddWallet}>
+      <TouchableArea mt="$spacing16" testID={TestID.AccountSwitcherAddWallet} onPress={onPressAddWallet}>
         <Flex row alignItems="center" gap="$spacing8" ml="$spacing24">
           <PlusCircle />
           <Text color="$neutral1" variant="buttonLabel2">

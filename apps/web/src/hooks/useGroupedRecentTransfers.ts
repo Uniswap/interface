@@ -1,4 +1,4 @@
-import { useRecentTokenTransfers } from 'graphql/data/RecentTokenTransfers'
+import { useRecentTokenTransfers } from 'appGraphql/data/RecentTokenTransfers'
 import { useMemo } from 'react'
 
 export function useGroupedRecentTransfers(account?: string) {

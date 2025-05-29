@@ -271,6 +271,8 @@ export type GetCallsStatusResponse = z.infer<typeof GetCallsStatusResponseSchema
 
 export const GetCapabilitiesRequestSchema = BaseDappRequestSchema.extend({
   type: z.literal(DappRequestType.GetCapabilities),
+  chainIds: z.array(z.string()).optional(),
+  address: z.string(),
 })
 export type GetCapabilitiesRequest = z.infer<typeof GetCapabilitiesRequestSchema>
 

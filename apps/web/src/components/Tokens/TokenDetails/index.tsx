@@ -1,5 +1,6 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
+import { getTokenDetailsURL } from 'appGraphql/data/util'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import { MobileBottomBar, TDPActionTabs } from 'components/NavBar/MobileBottomBar'
 import { ActivitySection } from 'components/Tokens/TokenDetails/ActivitySection'
@@ -11,7 +12,6 @@ import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescriptio
 import { TokenDetailsHeader } from 'components/Tokens/TokenDetails/TokenDetailsHeader'
 import { Hr } from 'components/Tokens/TokenDetails/shared'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
 import deprecatedStyled from 'lib/styled-components'
@@ -31,8 +31,8 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
-import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { getInitialLogoUrl } from 'utils/getInitialLogoURL'
 
 const DividerLine = deprecatedStyled(Hr)`
@@ -73,7 +73,7 @@ function getCurrencyURLAddress(currency?: Currency): string {
 
 // Defaults the input currency to the output currency's native currency or undefined if the output currency is already the chain's native currency
 // Note: Query string input currency takes precedence if it's set
-function useSwapInitialInputCurrency() {
+function useSwapInitialCurrencies() {
   const { currency } = useTDPContext()
   const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
@@ -86,7 +86,25 @@ function useSwapInitialInputCurrency() {
         : getNativeAddress(currency.chainId)
   }, [currency.chainId, currency.isNative, parsedQs.inputCurrency])
 
-  return useCurrency(inputTokenAddress, currency.chainId)
+  const outputTokenAddress = useMemo(() => {
+    return typeof parsedQs.outputCurrency === 'string'
+      ? parsedQs.outputCurrency
+      : currency.isNative
+        ? undefined
+        : getNativeAddress(currency.chainId)
+  }, [currency.chainId, currency.isNative, parsedQs.outputCurrency])
+
+  return {
+    inputCurrency: useCurrency(inputTokenAddress, currency.chainId),
+    outputCurrency: useCurrency(outputTokenAddress, currency.chainId),
+  }
+}
+
+function includesToken(tokens: CurrencyState | undefined, token: Currency | undefined): boolean {
+  if (!tokens || !token) {
+    return false
+  }
+  return areCurrenciesEqual(tokens.inputCurrency, token) || areCurrenciesEqual(tokens.outputCurrency, token)
 }
 
 function TDPSwapComponent() {
@@ -95,21 +113,41 @@ function TDPSwapComponent() {
 
   const currencyInfo = useCurrencyInfo(currencyId(currency))
 
+  const { inputCurrency, outputCurrency } = useSwapInitialCurrencies()
+
+  // Other token to prefill the swap form with
+  const initialInputCurrency = inputCurrency
+  // If the initial input currency is the same as the TDP currency, then we are selling the TDP currency
+  const initialOutputCurrency = areCurrenciesEqual(initialInputCurrency, currency) ? outputCurrency : currency
+
+  const [prevTokens, setPrevTokens] = useState<CurrencyState>({
+    inputCurrency: initialInputCurrency,
+    outputCurrency: initialOutputCurrency,
+  })
+
   const handleCurrencyChange = useCallback(
     (tokens: CurrencyState, isBridgePair?: boolean) => {
       const inputCurrencyURLAddress = getCurrencyURLAddress(tokens.inputCurrency)
       const outputCurrencyURLAddress = getCurrencyURLAddress(tokens.outputCurrency)
 
       const inputEquivalent =
-        addressesAreEquivalent(inputCurrencyURLAddress, address) && tokens.inputCurrency?.chainId === currencyChainId
+        areAddressesEqual(inputCurrencyURLAddress, address) && tokens.inputCurrency?.chainId === currencyChainId
       const outputEquivalent =
-        addressesAreEquivalent(outputCurrencyURLAddress, address) && tokens.outputCurrency?.chainId === currencyChainId
+        areAddressesEqual(outputCurrencyURLAddress, address) && tokens.outputCurrency?.chainId === currencyChainId
 
       if (inputEquivalent || outputEquivalent || isBridgePair) {
+        setPrevTokens(tokens)
         return
       }
 
-      const newDefaultToken = tokens.outputCurrency ?? tokens.inputCurrency
+      // If the user replaced the default token, we will hit this path.
+      // In this case, we want to navigate to the token that replaced it,
+      // which is the token that was not in the previous state.
+      const newDefaultToken = includesToken(prevTokens, tokens.inputCurrency)
+        ? tokens.outputCurrency
+        : tokens.inputCurrency
+
+      setPrevTokens(tokens)
 
       if (!newDefaultToken) {
         return
@@ -120,20 +158,13 @@ function TDPSwapComponent() {
         // The function falls back to "NATIVE" if the address is null
         address: newDefaultToken.isNative ? null : newDefaultToken.address,
         chain: toGraphQLChain(isUniverseChainId(newDefaultToken.chainId) ? newDefaultToken.chainId : currencyChainId),
-        inputAddress:
-          // If only one token was selected before we navigate, then it was the default token and it's being replaced.
-          // On the new page, the *new* default token becomes the output, and we don't have another option to set as the input token.
-          tokens.inputCurrency && tokens.inputCurrency !== newDefaultToken ? inputCurrencyURLAddress : null,
+        inputAddress: inputCurrencyURLAddress,
+        outputAddress: outputCurrencyURLAddress,
       })
       navigate(url, { state: { preloadedLogoSrc } })
     },
-    [address, currencyChainId, navigate],
+    [address, currencyChainId, navigate, prevTokens],
   )
-
-  // Other token to prefill the swap form with
-  const initialInputCurrency = useSwapInitialInputCurrency()
-  // If the initial input currency is the same as the TDP currency, then we are selling the TDP currency
-  const isSell = areCurrenciesEqual(initialInputCurrency, currency)
 
   const [showWarningModal, setShowWarningModal] = useState(false)
   const closeWarningModal = useCallback(() => setShowWarningModal(false), [])
@@ -144,7 +175,7 @@ function TDPSwapComponent() {
         syncTabToUrl={false}
         chainId={currency.chainId}
         initialInputCurrency={initialInputCurrency}
-        initialOutputCurrency={isSell ? undefined : currency}
+        initialOutputCurrency={initialOutputCurrency}
         onCurrencyChange={handleCurrencyChange}
         tokenColor={tokenColor}
       />

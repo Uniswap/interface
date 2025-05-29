@@ -7,8 +7,10 @@ import { Button, Flex, Text } from 'ui/src'
 import { DEAD_LUNI } from 'ui/src/assets'
 import { pushNotification, resetNotifications } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { Trace } from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
-import { restartApp } from 'wallet/src/components/ErrorBoundary/restart'
+import { restartApp } from 'wallet/src/components/ErrorBoundary/restartApp'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
@@ -126,20 +128,22 @@ function ErrorScreen({ error }: { error: Error }): JSX.Element {
   }
 
   return (
-    <Flex centered fill backgroundColor="$surface1" gap="$spacing16" px="$spacing16" py="$spacing48">
-      <Flex centered grow gap="$spacing36">
-        <Image resizeMode="contain" source={DEAD_LUNI} height={LUNI_SIZE} width={LUNI_SIZE} />
-        <Flex centered gap="$spacing8">
-          <Text variant="subheading1">{t('errors.crash.title')}</Text>
-          <Text variant="body2">{t('errors.crash.message')}</Text>
+    <Trace logImpression element={ElementName.AppCrashScreen}>
+      <Flex centered fill backgroundColor="$surface1" gap="$spacing16" px="$spacing16" py="$spacing48">
+        <Flex centered grow gap="$spacing36">
+          <Image resizeMode="contain" source={DEAD_LUNI} height={LUNI_SIZE} width={LUNI_SIZE} />
+          <Flex centered gap="$spacing8">
+            <Text variant="subheading1">{t('errors.crash.title')}</Text>
+            <Text variant="body2">{t('errors.crash.message')}</Text>
+          </Flex>
+          {error.message && __DEV__ && <Text variant="body2">{error.message}</Text>}
         </Flex>
-        {error.message && __DEV__ && <Text variant="body2">{error.message}</Text>}
+        <Flex row alignSelf="stretch">
+          <Button emphasis="primary" variant="branded" onPress={restartApp}>
+            {t('errors.crash.restart')}
+          </Button>
+        </Flex>
       </Flex>
-      <Flex row alignSelf="stretch">
-        <Button emphasis="primary" variant="branded" onPress={restartApp}>
-          {t('errors.crash.restart')}
-        </Button>
-      </Flex>
-    </Flex>
+    </Trace>
   )
 }

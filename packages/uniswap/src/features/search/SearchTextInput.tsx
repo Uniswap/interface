@@ -17,7 +17,7 @@ import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isAndroid, isIOS } from 'utilities/src/platform'
+import { isAndroid } from 'utilities/src/platform'
 
 const DEFAULT_MIN_HEIGHT = 48
 const CANCEL_CHEVRON_X_OFFSET = -6
@@ -187,20 +187,17 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 testID={TestID.ExploreSearchInput}
                 textContentType="none"
                 top={0}
-                // fix horizontal text wobble on iOS
-                {...(isIOS && {
-                  width: '100%',
-                })}
                 // avoid turning into a controlled input if not wanting to
                 {...(typeof value !== 'undefined' && {
                   value,
                 })}
+                // web and iOS need this to avoid platform specific issues
+                width="100%"
                 // fix Android TextInput issue when the width is changed
                 // (the placeholder text was wrapping in 2 lines when the width was changed)
                 {...(isAndroid && {
                   width: value ? undefined : 9999,
                 })}
-                width="100%"
                 onChangeText={onChangeTextInput}
                 onFocus={onTextInputFocus}
                 onSubmitEditing={dismissNativeKeyboard}

@@ -1,8 +1,8 @@
+import { TokenQueryData } from 'appGraphql/data/Token'
 import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable'
 import { UNSUPPORTED_METADATA_CHAINS } from 'components/Tokens/constants'
 import { TokenSortMethod } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { TokenQueryData } from 'graphql/data/Token'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
@@ -54,12 +54,12 @@ export const StatsWrapper = styled.div`
 type NumericStat = number | undefined | null
 
 function Stat({
-  dataCy,
+  testID,
   value,
   title,
   description,
 }: {
-  dataCy: string
+  testID: string
   value: NumericStat
   title: ReactNode
   description?: ReactNode
@@ -67,7 +67,7 @@ function Stat({
   const { formatNumber } = useFormatter()
 
   return (
-    <StatWrapper data-cy={`${dataCy}`}>
+    <StatWrapper data-cy={`${testID}`} data-testid={`${testID}`}>
       <MouseoverTooltip disabled={!description} text={description}>
         {title}
       </MouseoverTooltip>
@@ -110,13 +110,13 @@ export default function StatsSection(props: StatsSectionProps) {
         <TokenStatsSection>
           <StatPair>
             <Stat
-              dataCy="tvl"
+              testID="tvl"
               value={TVL}
               description={<Trans i18nKey="stats.tvl.description" />}
               title={<Trans i18nKey="common.totalValueLocked" />}
             />
             <Stat
-              dataCy="market-cap"
+              testID="market-cap"
               value={marketCap}
               description={<Trans i18nKey="stats.marketCap.description" />}
               title={<Trans i18nKey="stats.marketCap" />}
@@ -124,13 +124,13 @@ export default function StatsSection(props: StatsSectionProps) {
           </StatPair>
           <StatPair>
             <Stat
-              dataCy="fdv"
+              testID="fdv"
               value={FDV}
               description={HEADER_DESCRIPTIONS[TokenSortMethod.FULLY_DILUTED_VALUATION]}
               title={<Trans i18nKey="stats.fdv" />}
             />
             <Stat
-              dataCy="volume-24h"
+              testID="volume-24h"
               value={volume24H}
               description={<Trans i18nKey="stats.volume.1d.description" />}
               title={<Trans i18nKey="stats.volume.1d" />}

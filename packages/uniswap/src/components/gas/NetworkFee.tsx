@@ -23,12 +23,14 @@ export function NetworkFee({
   uniswapXGasBreakdown,
   transactionUSDValue,
   indicative,
+  includesDelegation,
 }: {
   chainId: UniverseChainId
   gasFee: GasFeeResult
   uniswapXGasBreakdown?: UniswapXGasBreakdown
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
   indicative?: boolean
+  includesDelegation?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -36,6 +38,7 @@ export function NetworkFee({
     gasFee,
     chainId,
     placeholder: '-',
+    includesDelegation,
   })
 
   const uniswapXGasFeeInfo = useFormattedUniswapXGasFeeInfo(uniswapXGasBreakdown, chainId)
@@ -44,37 +47,45 @@ export function NetworkFee({
   const showHighGasFeeUI = gasFeeHighRelativeToValue && !isInterface // Avoid high gas UI on interface
 
   return (
-    <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
-      <NetworkFeeWarning
-        gasFeeHighRelativeToValue={gasFeeHighRelativeToValue}
-        uniswapXGasFeeInfo={uniswapXGasFeeInfo}
-        chainId={chainId}
-      >
-        <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body3">
-          {t('transaction.networkCost.label')}
+    <Flex gap="$spacing4">
+      <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
+        <NetworkFeeWarning
+          includesDelegation={includesDelegation}
+          gasFeeHighRelativeToValue={gasFeeHighRelativeToValue}
+          uniswapXGasFeeInfo={uniswapXGasFeeInfo}
+          chainId={chainId}
+        >
+          <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body3">
+            {t('transaction.networkCost.label')}
+          </Text>
+        </NetworkFeeWarning>
+        <IndicativeLoadingWrapper loading={indicative || (!gasFee.value && gasFee.isLoading)}>
+          <Flex row alignItems="center" gap={uniswapXGasBreakdown ? '$spacing4' : '$spacing8'}>
+            {(!uniswapXGasBreakdown || gasFee.error) && (
+              <NetworkLogo chainId={chainId} shape="square" size={iconSizes.icon16} />
+            )}
+            {gasFee.error ? (
+              <Text color="$neutral2" variant="body3">
+                {t('common.text.notAvailable')}
+              </Text>
+            ) : uniswapXGasBreakdown ? (
+              <UniswapXFee gasFee={gasFeeFormatted} preSavingsGasFee={uniswapXGasFeeInfo?.preSavingsGasFeeFormatted} />
+            ) : (
+              <Text
+                color={gasFee.isLoading ? '$neutral3' : showHighGasFeeUI ? '$statusCritical' : '$neutral1'}
+                variant="body3"
+              >
+                {gasFeeFormatted}
+              </Text>
+            )}
+          </Flex>
+        </IndicativeLoadingWrapper>
+      </Flex>
+      {includesDelegation && (
+        <Text color="$neutral3" variant="body4">
+          {t('swap.warning.networkFee.includesDelegation')}
         </Text>
-      </NetworkFeeWarning>
-      <IndicativeLoadingWrapper loading={indicative || (!gasFee.value && gasFee.isLoading)}>
-        <Flex row alignItems="center" gap={uniswapXGasBreakdown ? '$spacing4' : '$spacing8'}>
-          {(!uniswapXGasBreakdown || gasFee.error) && (
-            <NetworkLogo chainId={chainId} shape="square" size={iconSizes.icon16} />
-          )}
-          {gasFee.error ? (
-            <Text color="$neutral2" variant="body3">
-              {t('common.text.notAvailable')}
-            </Text>
-          ) : uniswapXGasBreakdown ? (
-            <UniswapXFee gasFee={gasFeeFormatted} preSavingsGasFee={uniswapXGasFeeInfo?.preSavingsGasFeeFormatted} />
-          ) : (
-            <Text
-              color={gasFee.isLoading ? '$neutral3' : showHighGasFeeUI ? '$statusCritical' : '$neutral1'}
-              variant="body3"
-            >
-              {gasFeeFormatted}
-            </Text>
-          )}
-        </Flex>
-      </IndicativeLoadingWrapper>
+      )}
     </Flex>
   )
 }

@@ -4,7 +4,6 @@ import { TestnetsToggle } from 'components/AccountDrawer/TestnetsToggle'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
-import { useModalState } from 'hooks/useModalState'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
@@ -12,12 +11,9 @@ import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import ThemeToggle from 'theme/components/ThemeToggle'
 import { Flex, Text } from 'ui/src'
-import { LockedDocument } from 'ui/src/components/icons/LockedDocument'
-import { Passkey } from 'ui/src/components/icons/Passkey'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const Container = styled(Column)`
   height: 100%;
@@ -72,7 +68,6 @@ export default function SettingsMenu({
   const activeLanguage = useCurrentLanguage()
   const activeLocalCurrency = useAppFiatCurrency()
   const languageInfo = useLanguageInfo(activeLanguage)
-  const { openModal: openRecoveryPhraseModal } = useModalState(ModalName.RecoveryPhrase)
   const connectedWithEmbeddedWallet =
     useAccount().connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
 
@@ -99,20 +94,7 @@ export default function SettingsMenu({
             onClick={openPortfolioBalanceSettings}
             testId="portfolio-balance-settings-button"
           />
-          {connectedWithEmbeddedWallet && (
-            <SettingsButton
-              title={t('common.passkeys')}
-              currentState={<Passkey color="$neutral1" size="$icon.24" />}
-              onClick={openPasskeySettings}
-            />
-          )}
-          {connectedWithEmbeddedWallet && (
-            <SettingsButton
-              title={t('settings.setting.connectedWithEmbeddedWallet.title')}
-              currentState={<LockedDocument size="$icon.24" />}
-              onClick={openRecoveryPhraseModal}
-            />
-          )}
+          {connectedWithEmbeddedWallet && <SettingsButton title={t('common.passkeys')} onClick={openPasskeySettings} />}
         </Flex>
         <TestnetsToggle />
         <AnalyticsToggle />

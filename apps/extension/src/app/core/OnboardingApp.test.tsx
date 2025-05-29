@@ -5,7 +5,7 @@ import { initializeReduxStore } from 'src/store/store'
 describe('OnboardingApp', () => {
   // eslint-disable-next-line jest/expect-expect
   it('renders without error', async () => {
-    await initializeReduxStore()
+    initializeReduxStore()
     render(<OnboardingApp />)
   })
 })

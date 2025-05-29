@@ -80,7 +80,13 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
       await generateImportedAccounts({ mnemonicId, backupType: BackupType.Manual })
     }
 
-    onRestoreComplete({ isRestoringMnemonic, dispatch, params, navigation })
+    onRestoreComplete({
+      isRestoringMnemonic,
+      dispatch,
+      params,
+      navigation,
+      screen: OnboardingScreens.SeedPhraseInput,
+    })
   }, [value, mnemonicId, isRestoringMnemonic, t, generateImportedAccounts, dispatch, navigation, params])
 
   const onBlur = useCallback(() => {

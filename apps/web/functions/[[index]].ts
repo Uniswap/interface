@@ -19,7 +19,8 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
     title: 'Uniswap Interface',
     image: imageUri,
     url: request.url,
-    description: 'Swap or provide liquidity on the Uniswap Protocol',
+    description:
+      'Swap crypto on Ethereum, Base, Arbitrum, Polygon, Unichain and more. The DeFi platform trusted by millions.',
   }
   const response = next()
   if (doesMatchPath(requestURL.pathname)) {

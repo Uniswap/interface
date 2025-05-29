@@ -25,6 +25,7 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { logger } from 'utilities/src/logger/logger'
 import { getChainUrlParam } from 'utils/chainParams'
 import { formatUnits } from 'viem'
 
@@ -246,123 +247,147 @@ function getPairFromRest({
  * @returns PositionInfo with the available fields parsed.
  */
 export function parseRestPosition(position?: RestPosition): PositionInfo | undefined {
-  if (position?.position.case === 'v2Pair') {
-    const v2PairPosition = position.position.value
-    const token0 = parseRestToken<Token>(v2PairPosition.token0)
-    const token1 = parseRestToken<Token>(v2PairPosition.token1)
-    const liquidityToken = parseRestToken<Token>(v2PairPosition.liquidityToken)
-    if (!token0 || !token1 || !liquidityToken) {
+  try {
+    if (position?.position.case === 'v2Pair') {
+      const v2PairPosition = position.position.value
+      const token0 = parseRestToken<Token>(v2PairPosition.token0)
+      const token1 = parseRestToken<Token>(v2PairPosition.token1)
+      const liquidityToken = parseRestToken<Token>(v2PairPosition.liquidityToken)
+      if (!token0 || !token1 || !liquidityToken) {
+        return undefined
+      }
+
+      const pair = getPairFromRest({ pair: position.position.value, token0, token1 })
+
+      return {
+        status: position.status,
+        version: ProtocolVersion.V2,
+        pair,
+        liquidityToken,
+        chainId: token0.chainId,
+        poolId: liquidityToken.address,
+        currency0Amount: CurrencyAmount.fromRawAmount(token0, v2PairPosition.liquidity0),
+        currency1Amount: CurrencyAmount.fromRawAmount(token1, v2PairPosition.liquidity1),
+        totalSupply: CurrencyAmount.fromRawAmount(liquidityToken, v2PairPosition.totalSupply),
+        liquidityAmount: CurrencyAmount.fromRawAmount(liquidityToken, v2PairPosition.liquidity),
+        apr: v2PairPosition.apr,
+        v4hook: undefined,
+        feeTier: undefined,
+        owner: undefined,
+        isHidden: position.isHidden,
+      }
+    } else if (position?.position.case === 'v3Position') {
+      const v3Position = position.position.value
+
+      const token0 = parseRestToken<Token>(v3Position.token0)
+      const token1 = parseRestToken<Token>(v3Position.token1)
+      if (!token0 || !token1) {
+        return undefined
+      }
+
+      const pool = getPoolFromRest({
+        pool: position.position.value,
+        token0,
+        token1,
+        protocolVersion: ProtocolVersion.V3,
+      })
+      const sdkPosition = pool
+        ? new V3Position({
+            pool,
+            liquidity: v3Position.liquidity,
+            tickLower: Number(v3Position.tickLower),
+            tickUpper: Number(v3Position.tickUpper),
+          })
+        : undefined
+
+      return {
+        status: position.status,
+        feeTier: parseV3FeeTier(v3Position.feeTier),
+        version: ProtocolVersion.V3,
+        chainId: token0.chainId,
+        pool,
+        poolId: position.position.value.poolId,
+        position: sdkPosition,
+        tickLower: v3Position.tickLower,
+        tickUpper: v3Position.tickUpper,
+        tickSpacing: Number(v3Position.tickSpacing),
+        liquidity: v3Position.liquidity,
+        tokenId: v3Position.tokenId,
+        token0UncollectedFees: v3Position.token0UncollectedFees,
+        token1UncollectedFees: v3Position.token1UncollectedFees,
+        currency0Amount: CurrencyAmount.fromRawAmount(token0, v3Position.amount0),
+        currency1Amount: CurrencyAmount.fromRawAmount(token1, v3Position.amount1),
+        apr: v3Position.apr,
+        v4hook: undefined,
+        owner: v3Position.owner,
+        isHidden: position.isHidden,
+      }
+    } else if (position?.position.case === 'v4Position') {
+      const v4Position = position.position.value.poolPosition
+      const token0 = parseRestToken<Currency>(v4Position?.token0)
+      const token1 = parseRestToken<Currency>(v4Position?.token1)
+      if (!v4Position || !token0 || !token1) {
+        return undefined
+      }
+
+      const hook = position.position.value.hooks[0]?.address
+      const pool = getPoolFromRest({
+        pool: v4Position,
+        token0,
+        token1,
+        hooks: hook,
+        protocolVersion: ProtocolVersion.V4,
+      })
+
+      const sdkPosition = pool
+        ? new V4Position({
+            pool,
+            liquidity: v4Position.liquidity,
+            tickLower: Number(v4Position.tickLower),
+            tickUpper: Number(v4Position.tickUpper),
+          })
+        : undefined
+      const poolId = V4Pool.getPoolId(token0, token1, Number(v4Position.feeTier), Number(v4Position.tickSpacing), hook)
+      return {
+        status: position.status,
+        feeTier: v4Position.feeTier,
+        version: ProtocolVersion.V4,
+        position: sdkPosition,
+        chainId: token0.chainId,
+        pool,
+        poolId,
+        v4hook: hook,
+        tokenId: v4Position.tokenId,
+        tickLower: v4Position.tickLower,
+        tickUpper: v4Position.tickUpper,
+        tickSpacing: Number(v4Position.tickSpacing),
+        currency0Amount: CurrencyAmount.fromRawAmount(token0, v4Position.amount0 ?? 0),
+        currency1Amount: CurrencyAmount.fromRawAmount(token1, v4Position.amount1 ?? 0),
+        token0UncollectedFees: v4Position.token0UncollectedFees,
+        token1UncollectedFees: v4Position.token1UncollectedFees,
+        liquidity: v4Position.liquidity,
+        apr: v4Position.apr,
+        owner: v4Position.owner,
+        isHidden: position.isHidden,
+        totalApr: position.position.value.poolPosition?.totalApr,
+        unclaimedRewardsAmountUni: position.position.value.poolPosition?.unclaimedRewardsAmountUni,
+        boostedApr: position.position.value.poolPosition?.boostedApr,
+        token0Address: v4Position?.token0?.address,
+        token1Address: v4Position?.token1?.address,
+      }
+    } else {
       return undefined
     }
-
-    const pair = getPairFromRest({ pair: position.position.value, token0, token1 })
-
-    return {
-      status: position.status,
-      version: ProtocolVersion.V2,
-      pair,
-      liquidityToken,
-      chainId: token0.chainId,
-      poolId: liquidityToken.address,
-      currency0Amount: CurrencyAmount.fromRawAmount(token0, v2PairPosition.liquidity0),
-      currency1Amount: CurrencyAmount.fromRawAmount(token1, v2PairPosition.liquidity1),
-      totalSupply: CurrencyAmount.fromRawAmount(liquidityToken, v2PairPosition.totalSupply),
-      liquidityAmount: CurrencyAmount.fromRawAmount(liquidityToken, v2PairPosition.liquidity),
-      apr: v2PairPosition.apr,
-      v4hook: undefined,
-      feeTier: undefined,
-      owner: undefined,
-      isHidden: position.isHidden,
-    }
-  } else if (position?.position.case === 'v3Position') {
-    const v3Position = position.position.value
-
-    const token0 = parseRestToken<Token>(v3Position.token0)
-    const token1 = parseRestToken<Token>(v3Position.token1)
-    if (!token0 || !token1) {
-      return undefined
-    }
-
-    const pool = getPoolFromRest({ pool: position.position.value, token0, token1, protocolVersion: ProtocolVersion.V3 })
-    const sdkPosition = pool
-      ? new V3Position({
-          pool,
-          liquidity: v3Position.liquidity,
-          tickLower: Number(v3Position.tickLower),
-          tickUpper: Number(v3Position.tickUpper),
-        })
-      : undefined
-
-    return {
-      status: position.status,
-      feeTier: parseV3FeeTier(v3Position.feeTier),
-      version: ProtocolVersion.V3,
-      chainId: token0.chainId,
-      pool,
-      poolId: position.position.value.poolId,
-      position: sdkPosition,
-      tickLower: v3Position.tickLower,
-      tickUpper: v3Position.tickUpper,
-      tickSpacing: Number(v3Position.tickSpacing),
-      liquidity: v3Position.liquidity,
-      tokenId: v3Position.tokenId,
-      token0UncollectedFees: v3Position.token0UncollectedFees,
-      token1UncollectedFees: v3Position.token1UncollectedFees,
-      currency0Amount: CurrencyAmount.fromRawAmount(token0, v3Position.amount0),
-      currency1Amount: CurrencyAmount.fromRawAmount(token1, v3Position.amount1),
-      apr: v3Position.apr,
-      v4hook: undefined,
-      owner: v3Position.owner,
-      isHidden: position.isHidden,
-    }
-  } else if (position?.position.case === 'v4Position') {
-    const v4Position = position.position.value.poolPosition
-    const token0 = parseRestToken<Currency>(v4Position?.token0)
-    const token1 = parseRestToken<Currency>(v4Position?.token1)
-    if (!v4Position || !token0 || !token1) {
-      return undefined
-    }
-
-    const hook = position.position.value.hooks[0]?.address
-    const pool = getPoolFromRest({ pool: v4Position, token0, token1, hooks: hook, protocolVersion: ProtocolVersion.V4 })
-
-    const sdkPosition = pool
-      ? new V4Position({
-          pool,
-          liquidity: v4Position.liquidity,
-          tickLower: Number(v4Position.tickLower),
-          tickUpper: Number(v4Position.tickUpper),
-        })
-      : undefined
-    const poolId = V4Pool.getPoolId(token0, token1, Number(v4Position.feeTier), Number(v4Position.tickSpacing), hook)
-    return {
-      status: position.status,
-      feeTier: v4Position.feeTier,
-      version: ProtocolVersion.V4,
-      position: sdkPosition,
-      chainId: token0.chainId,
-      pool,
-      poolId,
-      v4hook: hook,
-      tokenId: v4Position.tokenId,
-      tickLower: v4Position.tickLower,
-      tickUpper: v4Position.tickUpper,
-      tickSpacing: Number(v4Position.tickSpacing),
-      currency0Amount: CurrencyAmount.fromRawAmount(token0, v4Position.amount0 ?? 0),
-      currency1Amount: CurrencyAmount.fromRawAmount(token1, v4Position.amount1 ?? 0),
-      token0UncollectedFees: v4Position.token0UncollectedFees,
-      token1UncollectedFees: v4Position.token1UncollectedFees,
-      liquidity: v4Position.liquidity,
-      apr: v4Position.apr,
-      owner: v4Position.owner,
-      isHidden: position.isHidden,
-      totalApr: position.position.value.poolPosition?.totalApr,
-      unclaimedRewardsAmountUni: position.position.value.poolPosition?.unclaimedRewardsAmountUni,
-      boostedApr: position.position.value.poolPosition?.boostedApr,
-      token0Address: v4Position?.token0?.address,
-      token1Address: v4Position?.token1?.address,
-    }
-  } else {
+  } catch (e) {
+    logger.error(e, {
+      tags: {
+        file: 'Liquidity/utils.tsx',
+        function: 'parseRestPosition',
+      },
+      extra: {
+        ...position,
+      },
+    })
     return undefined
   }
 }

@@ -3,7 +3,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { BaseMethodHandler } from 'src/contentScript/methodHandlers/BaseMethodHandler'
 import { ProviderDirectMethods } from 'src/contentScript/methodHandlers/requestMethods'
 import { WindowEthereumRequest } from 'src/contentScript/types'
-import { logger } from 'utilities/src/logger/logger'
+import { logContentScriptError } from 'src/contentScript/utils'
 
 /**
  * Handles all provider direct requests
@@ -65,16 +65,16 @@ export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereu
       this.handleResponse(response, source, request.requestId)
     } else {
       // We shouldn't end up here because injected.ts checks that the method is supported before calling this function
-      logger.error(new Error('Unexpected method requested'), {
-        tags: {
-          file: 'ProviderDirectMethodHandler.ts',
-          function: 'handleRequest',
-        },
-        extra: {
+      logContentScriptError(
+        'Unexpected method requested',
+        'ProviderDirectMethodHandler.ts',
+        'handleRequest',
+        undefined,
+        {
           method: request.method,
           dapp: window.origin,
         },
-      })
+      )
     }
   }
 

@@ -4,6 +4,7 @@ import { createContext, PropsWithChildren, useContext, useMemo, useState } from 
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { Connector } from 'wagmi'
 
@@ -35,11 +36,12 @@ interface UniswapContextValue {
   // Used for web to open the token selector from a banner not in the swap flow
   isSwapTokenSelectorOpen: boolean
   setIsSwapTokenSelectorOpen: (open: boolean) => void
-  getGeneratePermitAsTransaction?: (chainId?: UniverseChainId) => boolean
+  getCanSignPermits?: (chainId: UniverseChainId | undefined) => boolean
   // some wallets don't support UniswapX, so we need to check if it's supported (mismatch account)
-  getIsUniswapXSupported?: (chainId?: UniverseChainId) => boolean
+  getIsUniswapXSupported?: (chainId: UniverseChainId | undefined) => boolean
   handleOnPressUniswapXUnsupported?: () => void
-  getCanBatchTransactions?: (chainId?: UniverseChainId) => boolean
+  getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
+  getSwapDelegationInfo?: (chainId: UniverseChainId | undefined) => SwapDelegationInfo
 }
 
 export const UniswapContext = createContext<UniswapContextValue | null>(null)
@@ -61,10 +63,11 @@ export function UniswapProvider({
   signer,
   useProviderHook,
   onConnectWallet,
-  getGeneratePermitAsTransaction,
+  getCanSignPermits,
   getIsUniswapXSupported,
   handleOnPressUniswapXUnsupported,
   getCanBatchTransactions,
+  getSwapDelegationInfo,
 }: PropsWithChildren<
   Omit<UniswapContextValue, 'isSwapTokenSelectorOpen' | 'setIsSwapTokenSelectorOpen' | 'setSwapOutputChainId'>
 >): JSX.Element {
@@ -106,10 +109,11 @@ export function UniswapProvider({
       setSwapOutputChainId,
       isSwapTokenSelectorOpen,
       setIsSwapTokenSelectorOpen: (open: boolean) => setIsSwapTokenSelectorOpen(open),
-      getGeneratePermitAsTransaction,
+      getCanSignPermits,
       getIsUniswapXSupported,
       handleOnPressUniswapXUnsupported,
       getCanBatchTransactions,
+      getSwapDelegationInfo,
     }),
     [
       account,
@@ -130,11 +134,12 @@ export function UniswapProvider({
       swapOutputChainId,
       isSwapTokenSelectorOpen,
       setIsSwapTokenSelectorOpen,
-      getGeneratePermitAsTransaction,
+      getCanSignPermits,
       onSwapChainsChanged,
       getIsUniswapXSupported,
       handleOnPressUniswapXUnsupported,
       getCanBatchTransactions,
+      getSwapDelegationInfo,
     ],
   )
 

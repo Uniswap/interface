@@ -1,5 +1,6 @@
 import { defineConfig, devices } from '@playwright/test'
 import dotenv from 'dotenv'
+import ms from 'ms'
 import path from 'path'
 
 if (process.env.CI !== 'true') {
@@ -13,6 +14,9 @@ export default defineConfig({
   workers: 1,
   fullyParallel: true,
   reporter: process.env.CI && process.env.REPORT_TO_SLACK ? [['blob', 'list']] : 'list',
+  expect: {
+    timeout: ms('10s'),
+  },
   use: {
     screenshot: 'off',
     video: 'retain-on-failure',

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
 import { isExtension } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
@@ -20,6 +21,7 @@ export function useIsChromeWindowFocused(): boolean {
       // We run this on first render to get the initial state.
       await onFocusChangedListener()
 
+      const chrome = getChromeWithThrow()
       chrome.windows.onFocusChanged.addListener(onFocusChangedListener)
 
       return () => {

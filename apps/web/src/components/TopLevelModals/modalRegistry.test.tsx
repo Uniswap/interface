@@ -125,7 +125,6 @@ describe('ModalRegistry', () => {
         ModalName.AddLiquidity,
         ModalName.RemoveLiquidity,
         ModalName.ClaimFee,
-        ModalName.RecoveryPhrase,
         ModalName.DevFlags,
       ] as const
 

@@ -59,7 +59,7 @@ export type {
   Tokens,
   ViewProps,
 } from 'tamagui'
-export { LinearGradient } from 'tamagui/linear-gradient'
+export { LinearGradient, type LinearGradientProps } from 'tamagui/linear-gradient'
 export * from 'ui/src/animations'
 export * from './components/InlineCard/InlineCard'
 export { QRCodeDisplay } from './components/QRCode/QRCodeDisplay'

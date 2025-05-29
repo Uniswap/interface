@@ -1,29 +1,29 @@
 import { SwapEventName } from '@uniswap/analytics-events'
+import { useTotalBalancesUsdForAnalytics } from 'appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { ZERO_PERCENT } from 'constants/misc'
-import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
+import { useSetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleAtomicSendCalls } from 'state/sagas/transactions/5792'
+import { useGetOnPressRetry } from 'state/sagas/transactions/retry'
 import { handleUniswapXSignatureStep } from 'state/sagas/transactions/uniswapx'
 import {
   HandleOnChainStepParams,
-  addTransactionBreadcrumb,
+  getDisplayableError,
   getSwapTransactionInfo,
   handleApprovalTransactionStep,
   handleOnChainStep,
   handlePermitTransactionStep,
   handleSignatureStep,
 } from 'state/sagas/transactions/utils'
-import { handleWrapStep } from 'state/sagas/transactions/wrapSaga'
 import { VitalTxFields } from 'state/transactions/types'
 import invariant from 'tiny-invariant'
 import { call } from 'typed-redux-saga'
-import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -31,12 +31,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
-import {
-  HandledTransactionInterrupt,
-  TransactionError,
-  TransactionStepFailedError,
-  UnexpectedTransactionStateError,
-} from 'uniswap/src/features/transactions/errors'
+import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
@@ -65,7 +60,6 @@ import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/s
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
   step: SwapTransactionStep | SwapTransactionStepAsync
@@ -117,9 +111,10 @@ interface HandleSwapBatchedStepParams extends Omit<HandleOnChainStepParams, 'ste
   step: SwapTransactionStepBatched
   trade: ClassicTrade | BridgeTrade
   analytics: SwapTradeBaseProperties
+  disableOneClickSwap: () => void
 }
 function* handleSwapTransactionBatchedStep(params: HandleSwapBatchedStepParams) {
-  const { trade, step } = params
+  const { trade, step, disableOneClickSwap } = params
 
   const info = getSwapTransactionInfo(trade)
 
@@ -129,6 +124,7 @@ function* handleSwapTransactionBatchedStep(params: HandleSwapBatchedStepParams) 
     step,
     ignoreInterrupt: true, // We avoid interruption during the swap step, since it is too late to give user a new trade once the swap is submitted.
     shouldWaitForConfirmation: false,
+    disableOneClickSwap,
   })
   handleSwapTransactionAnalytics({ ...params, batchId })
 
@@ -188,8 +184,11 @@ type SwapParams = {
   swapTxContext: ValidatedSwapTxContext
   setCurrentStep: SetCurrentStepFn
   setSteps: (steps: TransactionStep[]) => void
+  getOnPressRetry: (error: Error | undefined) => (() => void) | undefined
+  // TODO(WEB-7763): Upgrade jotai to v2 to avoid need for prop drilling `disableOneClickSwap`
+  disableOneClickSwap: () => void
   onSuccess: () => void
-  onFailure: (error?: Error) => void
+  onFailure: (error?: Error, onPressRetry?: () => void) => void
   v4Enabled: boolean
 }
 
@@ -234,6 +233,7 @@ function* classicSwap(
 ) {
   const {
     account,
+    disableOneClickSwap,
     setCurrentStep,
     steps,
     swapTxContext: { trade },
@@ -266,7 +266,14 @@ function* classicSwap(
           break
         }
         case TransactionStepType.SwapTransactionBatched: {
-          yield* call(handleSwapTransactionBatchedStep, { account, step, setCurrentStep, trade, analytics })
+          yield* call(handleSwapTransactionBatchedStep, {
+            account,
+            step,
+            setCurrentStep,
+            trade,
+            analytics,
+            disableOneClickSwap,
+          })
           break
         }
         default: {
@@ -278,7 +285,8 @@ function* classicSwap(
       if (displayableError) {
         logger.error(displayableError, { tags: { file: 'swapSaga', function: 'classicSwap' } })
       }
-      onFailure(displayableError)
+      const onPressRetry = params.getOnPressRetry(displayableError)
+      onFailure(displayableError, onPressRetry)
       return
     }
   }
@@ -306,10 +314,6 @@ function* uniswapXSwap(
   for (const step of steps) {
     try {
       switch (step.type) {
-        case TransactionStepType.WrapTransaction: {
-          yield* call(handleWrapStep, { account, step, setCurrentStep })
-          break
-        }
         case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {
           yield* call(handleApprovalTransactionStep, { account, step, setCurrentStep })
@@ -336,26 +340,6 @@ function* uniswapXSwap(
   yield* call(onSuccess)
 }
 
-function getDisplayableError(error: Error, step: TransactionStep): TransactionError | undefined {
-  const userRejected = didUserReject(error)
-  // If the user rejects a request, or it's a known interruption e.g. trade update, we handle gracefully / do not show error UI
-  if (userRejected || error instanceof HandledTransactionInterrupt) {
-    const loggableMessage = userRejected ? 'user rejected request' : error.message // for user rejections, avoid logging redundant/long message
-    addTransactionBreadcrumb({ step, status: 'interrupted', data: { message: loggableMessage } })
-    return undefined
-  } else if (error instanceof TransactionError) {
-    return error // If the error was already formatted as a TransactionError, we just propagate
-  } else {
-    const isBackendRejection = error instanceof FetchError
-    return new TransactionStepFailedError({
-      message: `${step.type} failed during swap`,
-      step,
-      isBackendRejection,
-      originalError: error,
-    })
-  }
-}
-
 export const swapSaga = createSaga(swap, 'swapSaga')
 
 /** Callback to submit trades and track progress */
@@ -370,6 +354,9 @@ export function useSwapCallback(): SwapCallback {
   const trace = useTrace()
 
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
+
+  const disableOneClickSwap = useSetOverrideOneClickSwapFlag()
+  const getOnPressRetry = useGetOnPressRetry()
 
   return useCallback(
     (args: SwapCallbackParams) => {
@@ -410,6 +397,8 @@ export function useSwapCallback(): SwapCallback {
         swapTxContext,
         account,
         analytics,
+        getOnPressRetry,
+        disableOneClickSwap,
         onSuccess,
         onFailure,
         setCurrentStep,
@@ -436,6 +425,17 @@ export function useSwapCallback(): SwapCallback {
       // Reset swap start timestamp now that the swap has been submitted
       appDispatch(updateSwapStartTimestamp({ timestamp: undefined }))
     },
-    [formatter, portfolioBalanceUsd, trace, selectChain, startChainId, v4SwapEnabled, appDispatch, swapStartTimestamp],
+    [
+      formatter,
+      portfolioBalanceUsd,
+      trace,
+      selectChain,
+      startChainId,
+      v4SwapEnabled,
+      appDispatch,
+      swapStartTimestamp,
+      getOnPressRetry,
+      disableOneClickSwap,
+    ],
   )
 }

@@ -1,6 +1,8 @@
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { InterfaceElementName } from '@uniswap/analytics-events'
+import { SparklineMap } from 'appGraphql/data/types'
+import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'appGraphql/data/util'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { Table } from 'components/Table'
@@ -24,8 +26,6 @@ import {
   useSetSortMethod,
 } from 'components/Tokens/state'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { SparklineMap } from 'graphql/data/types'
-import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtomValue } from 'jotai/utils'
 import { ReactElement, ReactNode, memo, useMemo } from 'react'

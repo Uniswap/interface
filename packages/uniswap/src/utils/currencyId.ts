@@ -1,7 +1,11 @@
 import { Currency } from '@uniswap/sdk-core'
 import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
-import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
+import {
+  DEFAULT_NATIVE_ADDRESS,
+  DEFAULT_NATIVE_ADDRESS_LEGACY,
+  getChainInfo,
+} from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -82,8 +86,19 @@ export const isNativeCurrencyAddress = (chainId: UniverseChainId, address: Maybe
   if (!address) {
     return true
   }
+  const chainInfo = getChainInfo(chainId)
+  // sometimes the native token symbol is returned as the native token address
+  if (address === chainInfo.nativeCurrency.symbol) {
+    return true
+  }
 
-  return areAddressesEqual(address, getNativeAddress(chainId))
+  const nativeAddress = getNativeAddress(chainId)
+  // allow both native address formats until all backend endpoints return the new one
+  if (nativeAddress === DEFAULT_NATIVE_ADDRESS_LEGACY) {
+    return areAddressesEqual(address, nativeAddress) || areAddressesEqual(address, DEFAULT_NATIVE_ADDRESS)
+  }
+
+  return areAddressesEqual(address, nativeAddress)
 }
 
 // Currency ids are formatted as `chainId-tokenaddress`
@@ -129,5 +144,5 @@ export function currencyIdToChain(_currencyId: string): UniverseChainId | null {
 }
 
 export function isDefaultNativeAddress(address: string): boolean {
-  return areAddressesEqual(address, DEFAULT_NATIVE_ADDRESS)
+  return areAddressesEqual(address, DEFAULT_NATIVE_ADDRESS_LEGACY)
 }

@@ -12,14 +12,14 @@ import {
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
-import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/modals/AcrossRoutingInfo'
 import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
-import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/review/MaxSlippageRow/MaxSlippageRow'
 import { AcceptNewQuoteRow } from 'uniswap/src/features/transactions/swap/review/SwapDetails/AcceptNewQuoteRow'
 import { HeightAnimatorWrapper } from 'uniswap/src/features/transactions/swap/review/SwapDetails/HeightAnimatorWrapper'
-import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/review/SwapDetails/PriceImpactRow'
-import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/SwapRateRatio'
-import { RoutingInfo } from 'uniswap/src/features/transactions/swap/review/modals/RoutingInfo'
+import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/shared-components/AcrossRoutingInfo'
+import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/shared-components/MaxSlippageRow/MaxSlippageRow'
+import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/shared-components/PriceImpactRow/PriceImpactRow'
+import { RoutingInfo } from 'uniswap/src/features/transactions/swap/shared-components/RoutingInfo'
+import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/shared-components/SwapRateRatio'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
@@ -43,6 +43,7 @@ interface SwapDetailsProps {
   onShowWarning?: () => void
   setTokenWarningChecked?: (checked: boolean) => void
   txSimulationErrors?: TransactionFailureReason[]
+  includesDelegation?: boolean
 }
 
 export function SwapDetails({
@@ -61,6 +62,7 @@ export function SwapDetails({
   onShowWarning,
   setTokenWarningChecked,
   txSimulationErrors,
+  includesDelegation,
 }: SwapDetailsProps): JSX.Element {
   const v4SwapEnabled = useV4SwapEnabled(derivedSwapInfo.chainId)
   const priceUxEnabled = usePriceUXEnabled()
@@ -123,6 +125,7 @@ export function SwapDetails({
         isBridgeTrade={isBridgeTrade ?? false}
         txSimulationErrors={txSimulationErrors}
         amountUserWillReceive={derivedSwapInfo.outputAmountUserWillReceive ?? undefined}
+        includesDelegation={includesDelegation}
         onShowWarning={onShowWarning}
       >
         <Flex row alignItems="center" justifyContent="space-between">

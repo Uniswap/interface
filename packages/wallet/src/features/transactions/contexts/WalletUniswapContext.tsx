@@ -9,15 +9,20 @@ import { useUpdateDelegatedState } from 'uniswap/src/features/smartWallet/delega
 import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
 import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { createHasMismatchUtil } from 'uniswap/src/features/smartWallet/mismatch/mismatch'
-import { useGetGeneratePermitAsTransaction } from 'uniswap/src/features/transactions/hooks/useGetGeneratePermitAsTransaction'
+import { useGetCanSignPermits } from 'uniswap/src/features/transactions/hooks/useGetCanSignPermits'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { getLogger, logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import {
+  WalletDelegationProvider,
+  useGetSwapDelegationInfoForActiveAccount,
+} from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import { getDelegationService } from 'wallet/src/features/smartWallet/delegation'
 import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/hooks/useShowSwapNetworkNotification'
 import { useProvider, useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useActiveAccount, useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'
+import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
 
 // Adapts useProvider to fit uniswap context requirement of returning undefined instead of null
 function useWalletProvider(chainId: number): ethers.providers.JsonRpcProvider | undefined {
@@ -25,10 +30,10 @@ function useWalletProvider(chainId: number): ethers.providers.JsonRpcProvider | 
 }
 
 // Gets the signer for the active account
-function useWalletSigner(): ethers.Signer | undefined {
+function useWalletSigner(): NativeSigner | undefined {
   const account = useActiveSignerAccount()
   const signerManager = useWalletSigners()
-  const [signer, setSigner] = useState<ethers.Signer | undefined>(undefined)
+  const [signer, setSigner] = useState<NativeSigner | undefined>(undefined)
   useEffect(() => {
     setSigner(undefined) // clear signer if account changes
 
@@ -47,7 +52,9 @@ function useWalletSigner(): ethers.Signer | undefined {
 export function WalletUniswapProvider({ children }: PropsWithChildren): JSX.Element {
   return (
     <MismatchContextWrapper>
-      <WalletUniswapProviderInner>{children}</WalletUniswapProviderInner>
+      <WalletDelegationProvider>
+        <WalletUniswapProviderInner>{children}</WalletUniswapProviderInner>
+      </WalletDelegationProvider>
     </MismatchContextWrapper>
   )
 }
@@ -89,7 +96,9 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
     }
     return true
   })
-  const getGeneratePermitAsTransaction = useGetGeneratePermitAsTransaction()
+
+  const getCanSignPermits = useGetCanSignPermits()
+  const getSwapDelegationInfo = useGetSwapDelegationInfoForActiveAccount()
 
   return (
     <UniswapProvider
@@ -106,7 +115,8 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
       signer={signer}
       useProviderHook={useWalletProvider}
       getIsUniswapXSupported={getIsUniswapXSupported}
-      getGeneratePermitAsTransaction={getGeneratePermitAsTransaction}
+      getCanSignPermits={getCanSignPermits}
+      getSwapDelegationInfo={getSwapDelegationInfo}
       onSwapChainsChanged={showSwapNetworkNotification}
     >
       {children}

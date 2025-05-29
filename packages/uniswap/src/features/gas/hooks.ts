@@ -42,6 +42,8 @@ export const DEFAULT_GAS_STRATEGY: GasStrategy = {
   maxPriorityFeeGwei: 9,
 }
 
+export const SMART_WALLET_DELEGATION_GAS_FEE = 21500
+
 export type CancellationGasFeeDetails = {
   cancelRequest: providers.TransactionRequest
   gasFeeDisplayValue: string
@@ -180,14 +182,13 @@ export function useFormattedUniswapXGasFeeInfo(
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const { value: approvalCostUsd } = useUSDValueOfGasFee(chainId, uniswapXGasBreakdown?.approvalCost)
-  const { value: wrapCostUsd } = useUSDValueOfGasFee(chainId, uniswapXGasBreakdown?.wrapCost)
 
   return useMemo(() => {
     if (!uniswapXGasBreakdown) {
       return undefined
     }
-    const { approvalCost, wrapCost, inputTokenSymbol } = uniswapXGasBreakdown
-    // Without uniswapx, the swap would have costed approval price + classic swap fee. A separate wrap tx would not have occurred.
+    const { approvalCost, inputTokenSymbol } = uniswapXGasBreakdown
+    // If this swap was done via classic routing, the total gas fee would have been approval gas fee + classic swap gas fee.
     const preSavingsGasCostUsd =
       Number(approvalCostUsd ?? 0) + Number(uniswapXGasBreakdown?.classicGasUseEstimateUSD ?? 0)
     const preSavingsGasFeeFormatted = convertFiatAmountFormatted(preSavingsGasCostUsd, NumberType.FiatGasPrice)
@@ -199,12 +200,11 @@ export function useFormattedUniswapXGasFeeInfo(
       approvalFeeFormatted: approvalCost
         ? convertFiatAmountFormatted(approvalCostUsd, NumberType.FiatGasPrice)
         : undefined,
-      wrapFeeFormatted: wrapCost ? convertFiatAmountFormatted(wrapCostUsd, NumberType.FiatGasPrice) : undefined,
       preSavingsGasFeeFormatted,
       swapFeeFormatted,
       inputTokenSymbol,
     }
-  }, [uniswapXGasBreakdown, approvalCostUsd, convertFiatAmountFormatted, wrapCostUsd])
+  }, [uniswapXGasBreakdown, approvalCostUsd, convertFiatAmountFormatted])
 }
 
 export function useGasFeeHighRelativeToValue(
@@ -291,8 +291,10 @@ export function useGasFeeFormattedDisplayAmounts<T extends string | undefined>({
   gasFee: GasFeeResult | undefined
   chainId: UniverseChainId
   placeholder: T
+  includesDelegation?: boolean
 }): GasFeeFormattedAmounts<T> {
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
+
   const { value: gasFeeUSD, isLoading: gasFeeUSDIsLoading } = useUSDValueOfGasFee(chainId, gasFee?.displayValue)
 
   // In testnet mode, use native currency values as USD pricing may be unreliable
@@ -322,7 +324,7 @@ export function useGasFeeFormattedDisplayAmounts<T extends string | undefined>({
 
     // Gas fee available, USD not available - return native currency amount (always do this in testnet mode)
     if (!gasFeeUSD || isTestnetModeEnabled) {
-      return gasFee.isLoading || gasFeeUSDIsLoading ? emptyState : `${nativeAmountFormatted} ${nativeCurrency.symbol}`
+      return gasFee?.isLoading || gasFeeUSDIsLoading ? emptyState : `${nativeAmountFormatted} ${nativeCurrency.symbol}`
     }
 
     // Gas fee and USD both available

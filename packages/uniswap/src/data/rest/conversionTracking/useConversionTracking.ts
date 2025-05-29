@@ -16,7 +16,6 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useAccount } from 'wagmi'
 
 const conversionLeadsAtom = atomWithStorage<ConversionLead[]>(CONVERSION_LEADS_STORAGE_KEY, [])
 
@@ -31,9 +30,8 @@ type UseConversionTracking = {
   initConversionTracking: () => void
 }
 
-export function useConversionTracking(): UseConversionTracking {
+export function useConversionTracking(accountAddress?: `0x${string}`): UseConversionTracking {
   const { search } = useLocation()
-  const account = useAccount()
   const queryParams = useMemo(() => parse(search, { ignoreQueryPrefix: true }), [search])
   const [conversionLeads, setConversionLeads] = useAtom(conversionLeadsAtom) as [
     ConversionLead[],
@@ -57,7 +55,7 @@ export function useConversionTracking(): UseConversionTracking {
       // - Google or Twitter conversion tracking is not enabled
       if (
         !lead ||
-        !account.address ||
+        !accountAddress ||
         lead.executedEvents.includes(eventId) ||
         !isConversionTrackingEnabled ||
         (platformIdType === PlatformIdType.Google && !isGoogleConversionTrackingEnabled) ||
@@ -66,7 +64,7 @@ export function useConversionTracking(): UseConversionTracking {
         return
       }
 
-      const proxyRequest = buildProxyRequest({ lead, address: account.address, eventId, eventName })
+      const proxyRequest = buildProxyRequest({ lead, address: accountAddress, eventId, eventName })
 
       try {
         const response = await conversionProxy.mutateAsync(proxyRequest)
@@ -107,7 +105,7 @@ export function useConversionTracking(): UseConversionTracking {
     // TODO: Investigate why conversionProxy as a dependency causes a rendering loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
-      account.address,
+      accountAddress,
       conversionLeads,
       isConversionTrackingEnabled,
       isGoogleConversionTrackingEnabled,

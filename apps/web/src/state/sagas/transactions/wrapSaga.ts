@@ -19,7 +19,7 @@ import noop from 'utilities/src/react/noop'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 interface HandleWrapStepParams extends Omit<HandleOnChainStepParams<WrapTransactionStep>, 'info'> {}
-export function* handleWrapStep(params: HandleWrapStepParams) {
+function* handleWrapStep(params: HandleWrapStepParams) {
   const info = getWrapTransactionInfo(params.step.amount)
   return yield* call(handleOnChainStep, { ...params, info })
 }

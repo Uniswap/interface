@@ -18,6 +18,7 @@ export function TransactionModal({
   openWalletRestoreModal,
   walletNeedsRestore,
   swapRedirectCallback,
+  passkeyAuthStatus,
   modalName,
 }: TransactionModalProps): JSX.Element {
   const [screen, setScreen] = useState<TransactionScreen>(TransactionScreen.Form)
@@ -29,6 +30,7 @@ export function TransactionModal({
         openWalletRestoreModal={openWalletRestoreModal}
         walletNeedsRestore={walletNeedsRestore}
         screen={screen}
+        passkeyAuthStatus={passkeyAuthStatus}
         setScreen={setScreen}
         swapRedirectCallback={swapRedirectCallback}
         onClose={onClose}

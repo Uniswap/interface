@@ -76,21 +76,22 @@ const SendModalHeader = ({
 type SendModalInnerProps = {
   onConfirm: () => void
   onDismiss: () => void
+  isConfirming?: boolean
 }
 
 export type SendModalProps = SendModalInnerProps & {
   isOpen: boolean
 }
 
-export function SendReviewModal({ isOpen, onConfirm, onDismiss }: SendModalProps) {
+export function SendReviewModal({ isOpen, onConfirm, onDismiss, isConfirming }: SendModalProps) {
   return (
     <Modal name={ModalName.SendReview} isModalOpen={isOpen} onClose={onDismiss} padding={0}>
-      <SendReviewModalInner onConfirm={onConfirm} onDismiss={onDismiss} />
+      <SendReviewModalInner onConfirm={onConfirm} onDismiss={onDismiss} isConfirming={isConfirming} />
     </Modal>
   )
 }
 
-function SendReviewModalInner({ onConfirm, onDismiss }: SendModalInnerProps) {
+function SendReviewModalInner({ onConfirm, onDismiss, isConfirming }: SendModalInnerProps) {
   const { t } = useTranslation()
   const { chainId } = useMultichainContext()
   const {
@@ -185,7 +186,14 @@ function SendReviewModalInner({ onConfirm, onDismiss }: SendModalInnerProps) {
         </ReviewContentContainer>
         <Trace logPress element={InterfaceElementName.SEND_REVIEW_BUTTON}>
           <Flex alignSelf="stretch" row>
-            <Button emphasis="primary" variant="branded" size="large" onPress={handleConfirm}>
+            <Button
+              emphasis="primary"
+              variant="branded"
+              size="large"
+              onPress={handleConfirm}
+              loading={isConfirming}
+              isDisabled={isConfirming}
+            >
               <Trans i18nKey="common.confirmSend.button" />
             </Button>
           </Flex>

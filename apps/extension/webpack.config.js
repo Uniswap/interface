@@ -111,13 +111,14 @@ const {
             }
           : {},
         compress: false,
+        hot: true, // Enable HMR
         static: {
           directory: path.join(__dirname, '../dev'),
         },
         client: {
           // logging: "info",
           progress: true,
-          reconnect: false,
+          reconnect: true,
           overlay: {
             errors: true,
             warnings: false,
@@ -281,6 +282,7 @@ module.exports = (env) => {
         'react-native-vector-icons$': 'react-native-vector-icons/dist',
         src: path.resolve(__dirname, 'src'), // absolute imports in apps/web
         'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
+        'expo-blur': require.resolve('./__mocks__/expo-blur.js'),
       },
       // Add support for web-based extensions so we can share code between mobile/extension
       extensions: [

@@ -72,7 +72,7 @@ export function createTransactionService(ctx: {
         const provider = await ctx.getProvider()
 
         // Sign and send the transaction
-        const { transactionResponse, populatedRequest, timestampBeforeSend } =
+        const { transactionResponse, populatedRequest, timestampBeforeSign, timestampBeforeSend } =
           await transactionSigner.signAndSendTransaction({ request })
 
         logger.debug('TransactionService', 'sendTransaction', 'Tx submitted:', transactionResponse.hash)
@@ -89,6 +89,7 @@ export function createTransactionService(ctx: {
         const updatedTransaction = await getUpdatedTransactionDetails({
           transaction: unsubmittedTransaction,
           hash: transactionResponse.hash,
+          timestampBeforeSign,
           timestampBeforeSend,
           populatedRequest,
         })

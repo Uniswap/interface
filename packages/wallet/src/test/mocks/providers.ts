@@ -7,6 +7,8 @@ import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ethersTransactionReceipt } from 'uniswap/src/test/fixtures'
+import { createPublicClient, http } from 'viem'
+import { eip7702Actions } from 'viem/experimental'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
@@ -16,6 +18,10 @@ export const provider = new providers.JsonRpcProvider()
 export const providerManager = {
   getProvider: (): typeof provider => provider,
 }
+
+export const viemClient = createPublicClient({
+  transport: http('https://rpc.flashbots.net'),
+}).extend(eip7702Actions())
 
 const mockFeeData = {
   maxFeePerPrice: BigNumber.from('1000'),

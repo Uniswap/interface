@@ -120,8 +120,8 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
       pushNotification({
         type: AppNotificationType.WalletConnect,
         event: WalletConnectEvent.TransactionConfirmed,
-        dappName: typeInfo.dapp.name,
-        imageUrl: typeInfo.dapp.icon ?? null,
+        dappName: typeInfo.dappRequestInfo.name,
+        imageUrl: typeInfo.dappRequestInfo.icon ?? null,
         chainId,
       }),
     )

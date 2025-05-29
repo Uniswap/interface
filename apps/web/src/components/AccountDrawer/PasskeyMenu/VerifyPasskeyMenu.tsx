@@ -41,7 +41,7 @@ export function VerifyPasskeyMenu({
         <Flex row alignSelf="stretch">
           <Trace logPress element={ElementName.Confirm}>
             <Button variant="default" size="medium" onPress={onVerify} mt="$spacing8">
-              {t('account.passkey.sign.in.title')}
+              {t('account.passkey.verify.button')}
             </Button>
           </Trace>
         </Flex>

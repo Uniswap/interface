@@ -1,11 +1,11 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import PortfolioDrawer from 'components/AccountDrawer'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import StatusIcon from 'components/Identicon/StatusIcon'
 import { RecentlyConnectedModal } from 'components/Web3Status/RecentlyConnectedModal'
 import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier'
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
 import { useModalState } from 'hooks/useModalState'
 import { atom, useAtom } from 'jotai'
@@ -17,12 +17,12 @@ import { useAppSelector } from 'state/hooks'
 import { Button, ButtonProps, Flex, Popover, Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { breakpoints } from 'ui/src/theme'
-import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useExperimentGroupNameWithLoading, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isIFramed } from 'utils/isIFramed'
 
 const TextStyled = styled.span<{ marginRight?: number }>`
@@ -71,24 +71,21 @@ const ExistingUserCTAButton = forwardRef<HTMLDivElement, { onPress: () => void }
 ) {
   const { t } = useTranslation()
 
-  const { value: accountsCTAExperimentGroup } = useExperimentGroupNameWithLoading(Experiments.AccountCTAs)
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp || isEmbeddedWalletEnabled
-  const isLogIn =
-    accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount && !isEmbeddedWalletEnabled
+  const isLogIn = isEmbeddedWalletEnabled
 
   return (
     <Button
       fill={false}
       size="small"
       variant="branded"
-      emphasis="secondary"
+      emphasis="primary"
       tabIndex={0}
       data-testid="navbar-connect-wallet"
       ref={ref}
       onPress={onPress}
     >
-      {isSignIn ? t('nav.signIn.button') : isLogIn ? t('nav.logIn.button') : t('common.connect.button')}
+      {isLogIn ? t('nav.logIn.button') : t('common.connect.button')}
     </Button>
   )
 })
@@ -115,12 +112,16 @@ function Web3StatusInner() {
   const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
   const { accountIdentifier, hasUnitag, hasRecent } = useAccountIdentifier()
 
-  const { isLoading: isExperimentGroupNameLoading } = useExperimentGroupNameWithLoading(Experiments.AccountCTAs)
-
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
-  if (((account.isConnecting || account.isReconnecting) && hasRecent && !isIFramed()) || isExperimentGroupNameLoading) {
+  if ((account.isConnecting || account.isReconnecting) && hasRecent && !isIFramed()) {
     return (
-      <Web3StatusGeneric loading isDisabled onPress={handleWalletDropdownClick} ref={ref}>
+      <Web3StatusGeneric
+        loading
+        isDisabled
+        onDisabledPress={handleWalletDropdownClick}
+        onPress={handleWalletDropdownClick}
+        ref={ref}
+      >
         <AddressAndChevronContainer $loading={true}>
           <Text variant="body2" marginRight={hasUnitag ? '$spacing8' : undefined}>
             {accountIdentifier}
@@ -136,8 +137,9 @@ function Web3StatusInner() {
       <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'open' }}>
         <Web3StatusGeneric
           isDisabled={Boolean(switchingChain)}
-          data-testid="web3-status-connected"
+          data-testid={TestID.Web3StatusConnected}
           onPress={handleWalletDropdownClick}
+          onDisabledPress={handleWalletDropdownClick}
           loading={hasPendingActivity}
           ref={ref}
           icon={!hasPendingActivity ? <StatusIcon size={24} showMiniIcons={false} /> : undefined}

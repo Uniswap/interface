@@ -42,6 +42,7 @@ export default function SearchBar({ tab }: { tab?: string }) {
 
   const handleClose = () => {
     setIsOpen(false)
+    setLocalFilterString('')
   }
 
   const placeholdersText: Record<string, string> = {
@@ -87,8 +88,9 @@ export default function SearchBar({ tab }: { tab?: string }) {
           borderWidth={1}
           borderColor={isOpen ? '$accent1' : '$surface3'}
           height="100%"
-          width={isOpen ? 230 : 0}
+          width={isOpen ? 200 : 0}
           pl={34}
+          pr={isOpen ? 30 : undefined}
           color="$neutral2"
           textOverflow="ellipsis"
           onFocus={handleFocus}
@@ -102,7 +104,8 @@ export default function SearchBar({ tab }: { tab?: string }) {
             color: '$neutral1',
           }}
           hoverStyle={{
-            backgroundColor: '$surface1',
+            borderColor: '$surface3Hovered',
+            cursor: 'pointer',
           }}
           $md={{
             '$platform-web': {

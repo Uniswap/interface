@@ -48,7 +48,7 @@ class SeedPhraseInputViewModel(
   )
 
   // Sourced externally from RN
-  var mnemonicIdForRecovery by mutableStateOf<String?>(null)
+  var targetMnemonicId by mutableStateOf<String?>(null)
   var rnStrings by mutableStateOf(
     ReactNativeStrings(
       inputPlaceholder = "",
@@ -149,9 +149,9 @@ class SeedPhraseInputViewModel(
   }
 
   private fun submitMnemonic(mnemonic: String) {
-    if (mnemonicIdForRecovery != null) {
+    if (targetMnemonicId != null) {
       val generatedId = ethersRs.generateAddressForMnemonic(mnemonic, derivationIndex = 0)
-      if (generatedId != mnemonicIdForRecovery) {
+      if (generatedId != targetMnemonicId) {
         status = Status.Error(MnemonicError.WrongRecoveryPhrase)
         onSubmitError()
       } else {

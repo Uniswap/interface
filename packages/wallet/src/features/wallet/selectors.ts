@@ -40,6 +40,11 @@ export const selectAllAccountsSorted = createSelector(
   },
 )
 
+export const selectAllSignerMnemonicAccountAddresses = createSelector(
+  selectSortedSignerMnemonicAccounts,
+  (signerMnemonicAccounts) => signerMnemonicAccounts.map((account) => account.address),
+)
+
 export const selectActiveAccountAddress = (state: WalletState): string | null => state.wallet.activeAccountAddress
 export const selectActiveAccount = createSelector(
   selectAccounts,

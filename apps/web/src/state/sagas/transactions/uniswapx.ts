@@ -115,6 +115,7 @@ function getUniswapXSignatureInfo(
     id: step.quote.orderId,
     addedTime: Date.now(),
     chainId,
+    encodedOrder: trade.quote.quote.encodedOrder,
     offerer: trade.quote.quote.orderInfo.swapper,
     orderHash: trade.quote.quote.orderId,
     status: UniswapXOrderStatus.OPEN,

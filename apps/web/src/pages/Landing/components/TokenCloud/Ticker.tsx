@@ -1,45 +1,29 @@
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { InteractiveToken, TokenStandard } from 'pages/Landing/assets/approvedTokens'
+import { InteractiveToken } from 'pages/Landing/assets/approvedTokens'
 import { useMemo } from 'react'
 import { Flex, Text } from 'ui/src'
 import { ItemPoint } from 'uniswap/src/components/IconCloud/IconCloud'
-import {
-  useCollectionPromoQuery,
-  useTokenPromoQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormatter } from 'utils/formatNumbers'
 
 export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }) {
   const { formatDelta } = useFormatter()
 
   const { color, size, floatingElementPosition, itemData } = itemPoint
-  const { address, chain, standard, symbol } = itemData
+  const { address, chain, symbol } = itemData
 
   const tokenPromoQuery = useTokenPromoQuery({
     variables: {
       address: address !== NATIVE_CHAIN_ID ? address : undefined,
       chain,
     },
-    skip: standard !== TokenStandard.ERC20,
   })
-  const collectionPromoQuery = useCollectionPromoQuery({
-    variables: {
-      addresses: [address],
-    },
-    skip: standard !== TokenStandard.ERC721,
-  })
+
   const pricePercentChange = useMemo(() => {
-    const value =
-      standard === TokenStandard.ERC20
-        ? tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
-        : collectionPromoQuery.data?.nftCollections?.edges?.[0].node.markets?.[0].floorPricePercentChange?.value
+    const value = tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
     return value ?? 0
-  }, [
-    collectionPromoQuery.data?.nftCollections?.edges,
-    tokenPromoQuery.data?.token?.market?.pricePercentChange?.value,
-    standard,
-  ])
+  }, [tokenPromoQuery.data?.token?.market?.pricePercentChange?.value])
 
   return (
     <Flex

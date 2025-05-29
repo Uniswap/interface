@@ -10,7 +10,7 @@ export enum BackupType {
   Passkey = 'passkey',
 }
 
-export type AccountCustomizations = {
+type AccountCustomizations = {
   localPfp?: string
 }
 

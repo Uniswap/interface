@@ -9,6 +9,7 @@ import {
   NativeSeedPhraseInputProps,
   NativeSeedPhraseInputRef,
 } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
 
@@ -68,9 +69,10 @@ export const SeedPhraseInput = forwardRef<NativeSeedPhraseInputRef, SeedPhraseIn
 
   return (
     <NativeSeedPhraseInput
-      key={key}
       // @ts-expect-error - TODO: figure out how to properly type the ref of a custom native component
       ref={inputRef}
+      key={key}
+      testID={TestID.NativeSeedPhraseInput}
       style={calculatedStyle}
       onHeightMeasured={handleOnHeightMeasured}
       {...rest}

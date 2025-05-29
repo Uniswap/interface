@@ -1,15 +1,15 @@
+import { useAssetActivity } from 'appGraphql/data/apollo/AssetActivityProvider'
 import { useLocalActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { parseRemoteActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
 import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { useCreateCancelTransactionRequest } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
-import { useAssetActivity } from 'graphql/data/apollo/AssetActivityProvider'
 import { GasFeeResult, GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
 import { useEffect, useMemo } from 'react'
 import { usePendingOrders } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 
 /** Detects transactions from same account with the same nonce and different hash */
 function findCancelTx(localActivity: Activity, remoteMap: ActivityMap, account: string): string | undefined {
@@ -64,7 +64,7 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
 }
 
 export function useAllActivities(account: string) {
-  const { formatNumberOrString } = useFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
   const { activities, loading } = useAssetActivity()
 
   const localMap = useLocalActivities(account)

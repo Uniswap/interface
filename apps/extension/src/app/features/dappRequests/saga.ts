@@ -44,30 +44,33 @@ import { navigate } from 'src/app/navigation/state'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import getCalldataInfoFromTransaction from 'src/background/utils/getCalldataInfoFromTransaction'
 import { call, put, select, take } from 'typed-redux-saga'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { checkWalletDelegation } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { WalletCheckDelegationResponseBody } from 'uniswap/src/data/tradingApi/__generated__'
 import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import {
   TransactionOriginType,
   TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { hexToNumber } from 'uniswap/src/utils/hex'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { getCallsStatusHelper } from 'wallet/src/features/batchedTransactions/eip5792Utils'
 import { addBatchedTransaction } from 'wallet/src/features/batchedTransactions/slice'
-import { generateBatchId } from 'wallet/src/features/batchedTransactions/utils'
+import { generateBatchId, getCapabilitiesForDelegationStatus } from 'wallet/src/features/batchedTransactions/utils'
 import { Call } from 'wallet/src/features/dappRequests/types'
 import {
   ExecuteTransactionParams,
   executeTransaction,
 } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
-import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
+import { selectActiveAccount, selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
 
 export function isDappRequestWithDappInfo(
@@ -79,6 +82,14 @@ export function isDappRequestWithDappInfo(
 export function* dappRequestWatcher() {
   while (true) {
     const { payload, type } = yield* take(addRequest)
+
+    if (payload.dappRequest.type === DappRequestType.GetCapabilities) {
+      const { senderTabInfo } = payload
+      const dappUrl = extractBaseUrl(senderTabInfo.url)
+      if (dappUrl) {
+        yield* put(dappRequestActions.setMostRecent5792DappUrl(dappUrl))
+      }
+    }
 
     if (type === addRequest.type) {
       yield* call(handleRequest, payload)
@@ -493,15 +504,34 @@ export function* handleUniswapOpenSidebarRequest(request: UniswapOpenSidebarRequ
  * This method returns the capabilities supported by the wallet for specific chains
  */
 export function* handleGetCapabilities(request: GetCapabilitiesRequest, senderTabInfo: SenderTabInfo) {
+  const { chains: enabledChains } = yield* call(getEnabledChainIdsSaga)
+
+  const chainIds = request.chainIds?.map(hexToNumber) ?? enabledChains.map((chain) => chain.valueOf())
+
+  let delegationStatusResponse: WalletCheckDelegationResponseBody | undefined
+
+  try {
+    delegationStatusResponse = yield* call(checkWalletDelegation, {
+      walletAddresses: [request.address],
+      chainIds,
+    })
+  } catch (error) {
+    logger.error(error, {
+      tags: { file: 'dappRequestSaga', function: 'handleGetCapabilities' },
+      extra: { request },
+    })
+  }
+
+  const hasSmartWalletConsent = yield* select(selectHasSmartWalletConsent, request.address)
+  const capabilities = getCapabilitiesForDelegationStatus(
+    delegationStatusResponse?.delegationDetails[request.address],
+    hasSmartWalletConsent,
+  )
+
   const response: GetCapabilitiesResponse = {
     type: DappResponseType.GetCapabilitiesResponse,
     requestId: request.requestId,
-    // TODO: Implement this
-    // https://linear.app/uniswap/issue/WALL-6679/implement-getcapabilities-on-extensionwc-instead-of-hardcoded-values
-    response: {
-      [`0x${UniverseChainId.Sepolia.toString(16)}`]: { atomic: { status: 'supported' } },
-      [`0x${UniverseChainId.UnichainSepolia.toString(16)}`]: { atomic: { status: 'supported' } },
-    },
+    response: capabilities,
   }
   yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, response)
 }

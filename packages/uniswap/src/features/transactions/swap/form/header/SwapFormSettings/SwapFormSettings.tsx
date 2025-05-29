@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext } from 'react'
+import { createContext, useContext } from 'react'
 import { ColorTokens, Flex, FlexProps, Popover } from 'ui/src'
 import { IconSizeTokens } from 'ui/src/theme'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
@@ -13,6 +13,7 @@ import { ViewOnlyButton } from 'uniswap/src/features/transactions/swap/form/head
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippage/useSlippageSettings'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isExtension, isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export function SwapFormSettings(props: SwapFormSettingsProps): JSX.Element {
@@ -61,12 +62,7 @@ function SwapFormSettingsInner({
     handleHideSlippageWarningModal,
   } = useSwapFormSettingsContext()
 
-  const onPressSwapSettings = useCallback((): void => {
-    handleShowTransactionSettingsModal()
-    dismissNativeKeyboard()
-  }, [handleShowTransactionSettingsModal])
-
-  const onCloseSettingsModal = useCallback((): void => {
+  const onCloseSettingsModal = useEvent((): void => {
     const shouldShowSlippageWarning =
       !slippageWarningModalSeen && customSlippageTolerance && customSlippageTolerance >= 20
 
@@ -84,13 +80,17 @@ function SwapFormSettingsInner({
     } else {
       handleHideTransactionSettingsModal()
     }
-  }, [
-    slippageWarningModalSeen,
-    customSlippageTolerance,
-    updateTransactionSettings,
-    handleHideTransactionSettingsModal,
-    handleShowSlippageWarningModal,
-  ])
+  })
+
+  const onPressSwapSettings = useEvent((): void => {
+    if (isTransactionSettingsModalVisible) {
+      onCloseSettingsModal()
+    } else {
+      handleShowTransactionSettingsModal()
+    }
+
+    dismissNativeKeyboard()
+  })
 
   const isViewOnlyWallet = account?.type === AccountType.Readonly
 

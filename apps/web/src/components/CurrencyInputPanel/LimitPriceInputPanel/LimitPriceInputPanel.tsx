@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import {
   LimitCustomMarketPriceButton,
   LimitPresetPriceButton,
@@ -12,7 +13,6 @@ import { StyledNumericalInput } from 'components/NumericalInput'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import Row from 'components/deprecated/Row'
 import { parseUnits } from 'ethers/lib/utils'
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import JSBI from 'jsbi'
 import styled from 'lib/styled-components'
 import { ReversedArrowsIcon } from 'nft/components/iconExports'

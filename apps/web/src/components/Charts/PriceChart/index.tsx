@@ -134,6 +134,9 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
       this.fitContent()
     }
 
+    // Use theme.accent1 which will be the token color when inside TokenColorThemeProvider
+    const lineColor = theme.accent1
+
     this.series.applyOptions({
       priceLineVisible: false,
       lastValueVisible: false,
@@ -141,11 +144,11 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
       // Line-specific options:
       lineType: data.length < 20 ? LineType.WithSteps : LineType.Curved, // Stepped line is visually preferred for smaller datasets
       lineWidth: 2,
-      lineColor: theme.accent1,
-      topColor: opacify(12, theme.accent1),
-      bottomColor: opacify(12, theme.accent1),
+      lineColor,
+      topColor: opacify(12, lineColor),
+      bottomColor: opacify(12, lineColor),
       crosshairMarkerRadius: 5,
-      crosshairMarkerBorderColor: opacify(30, theme.accent1),
+      crosshairMarkerBorderColor: opacify(30, lineColor),
       crosshairMarkerBorderWidth: 3,
 
       // Candlestick-specific options:
@@ -251,6 +254,7 @@ function CandlestickTooltip({ data }: { data: PriceChartData }) {
 
 export function PriceChart({ data, height, type, stale }: PriceChartProps) {
   const lastPrice = data[data.length - 1]
+
   return (
     <Chart
       Model={PriceChartModel}

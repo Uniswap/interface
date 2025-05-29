@@ -14,6 +14,7 @@ export function useTokenProjects(currencyIds: CurrencyId[]): GqlResult<CurrencyI
 
   const { data, loading, error, refetch } = useTokenProjectsQuery({
     variables: { contracts },
+    skip: currencyIds.length === 0,
   })
 
   const formattedData = useMemo(() => {

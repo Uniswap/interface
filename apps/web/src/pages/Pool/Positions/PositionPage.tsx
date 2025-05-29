@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 /* eslint-disable-next-line no-restricted-imports */
 import { Position, PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { WrappedLiquidityPositionRangeChart } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { DropdownSelector } from 'components/DropdownSelector'
@@ -9,7 +9,7 @@ import { LiquidityPositionAmountRows } from 'components/Liquidity/LiquidityPosit
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { LiquidityPositionStackedBars } from 'components/Liquidity/LiquidityPositionStackedBars'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
-import { usePositionDerivedInfo } from 'components/Liquidity/hooks'
+import { useGetRangeDisplay, usePositionDerivedInfo } from 'components/Liquidity/hooks'
 import type { PositionInfo } from 'components/Liquidity/types'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
@@ -63,9 +63,9 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { isMobileWeb } from 'utilities/src/platform'
-import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
@@ -143,6 +143,14 @@ function PositionPage() {
   } = usePositionDerivedInfo(positionInfo)
 
   const [priceInverted, setPriceInverted] = useState(false)
+
+  const { maxPrice, minPrice, tokenASymbol, tokenBSymbol, isFullRange } = useGetRangeDisplay({
+    priceOrdering,
+    tickSpacing: positionInfo?.tickSpacing,
+    tickLower: positionInfo?.tickLower,
+    tickUpper: positionInfo?.tickUpper,
+    pricesInverted: priceInverted,
+  })
 
   const [baseCurrency, quoteCurrency] = getInvertedTuple(
     [currency0Amount?.currency, currency1Amount?.currency],
@@ -257,7 +265,7 @@ function PositionPage() {
   }
 
   const hasFees = feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || false
-  const isOwner = addressesAreEquivalent(positionInfo.owner, account?.address)
+  const isOwner = areAddressesEqual(positionInfo.owner, account?.address)
 
   const showV4UnsupportedTooltip = isV4UnsupportedChain(positionInfo.chainId)
 
@@ -578,6 +586,19 @@ function PositionPage() {
                     }}
                   />
                 ))}
+            </Flex>
+            <Flex mt="$spacing24">
+              <PriceRangeSection
+                maxPrice={maxPrice}
+                minPrice={minPrice}
+                tokenASymbol={tokenASymbol}
+                tokenBSymbol={tokenBSymbol}
+                isFullRange={isFullRange}
+                token0CurrentPrice={token0CurrentPrice}
+                token1CurrentPrice={token1CurrentPrice}
+                priceInverted={priceInverted}
+                setPriceInverted={setPriceInverted}
+              />
             </Flex>
           </Flex>
           <Flex gap="$spacing20">
@@ -1006,5 +1027,112 @@ const EarningsSection = ({
         )}
       </Flex>
     </SectionContainer>
+  )
+}
+
+const PriceDisplay = ({
+  labelText,
+  price,
+  tokenASymbol,
+  tokenBSymbol,
+  setPriceInverted,
+}: {
+  labelText: string
+  price: string | React.ReactNode
+  tokenASymbol?: string
+  tokenBSymbol?: string
+  setPriceInverted: (value: React.SetStateAction<boolean>) => void
+}) => {
+  return (
+    <Flex gap="$gap4">
+      <Text variant="subheading2" color="$neutral2">
+        {labelText}
+      </Text>
+      <Text variant="subheading1">{price}</Text>
+      <Flex group row>
+        <Flex row gap="$gap8" alignItems="center">
+          <Text variant="body4" color="$neutral2">
+            {tokenASymbol} = 1 {tokenBSymbol}
+          </Text>
+          <TouchableArea
+            $group-hover={{ opacity: 1 }}
+            opacity={0}
+            onPress={() => {
+              setPriceInverted((prev: boolean) => !prev)
+            }}
+          >
+            <ExchangeHorizontal color="$neutral2" size="$icon.16" />
+          </TouchableArea>
+        </Flex>
+      </Flex>
+    </Flex>
+  )
+}
+
+const PriceRangeSection = ({
+  maxPrice,
+  minPrice,
+  tokenASymbol,
+  tokenBSymbol,
+  token0CurrentPrice,
+  token1CurrentPrice,
+  isFullRange,
+  priceInverted,
+  setPriceInverted,
+}: {
+  maxPrice: string
+  minPrice: string
+  tokenASymbol?: string
+  tokenBSymbol?: string
+  isFullRange?: boolean
+  token0CurrentPrice?: Price<Currency, Currency>
+  token1CurrentPrice?: Price<Currency, Currency>
+  priceInverted?: boolean
+  setPriceInverted: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
+  const { t } = useTranslation()
+  const { formatPrice } = useFormatter()
+  const formattedMarketPrice = useMemo(() => {
+    return formatPrice({
+      price: priceInverted ? token1CurrentPrice : token0CurrentPrice,
+      type: NumberType.TokenTx,
+    })
+  }, [priceInverted, token0CurrentPrice, token1CurrentPrice, formatPrice])
+
+  if (isFullRange) {
+    return null
+  }
+
+  return (
+    <Flex gap="$spacing24">
+      <Text variant="heading3" color="$neutral1">
+        Price Range
+      </Text>
+      <Flex row justifyContent="space-between">
+        <PriceDisplay
+          labelText={t('pool.minPrice')}
+          price={minPrice}
+          tokenASymbol={tokenASymbol}
+          tokenBSymbol={tokenBSymbol}
+          setPriceInverted={setPriceInverted}
+        />
+
+        <PriceDisplay
+          labelText={t('pool.maxPrice')}
+          price={maxPrice}
+          tokenASymbol={tokenASymbol}
+          tokenBSymbol={tokenBSymbol}
+          setPriceInverted={setPriceInverted}
+        />
+
+        <PriceDisplay
+          labelText={t('common.marketPrice')}
+          price={formattedMarketPrice}
+          tokenASymbol={tokenASymbol}
+          tokenBSymbol={tokenBSymbol}
+          setPriceInverted={setPriceInverted}
+        />
+      </Flex>
+    </Flex>
   )
 }

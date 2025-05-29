@@ -1,10 +1,9 @@
 import { MenuItem, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
 import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
 import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
+import { Wiggle } from 'components/animations/Wiggle'
 import { useModalState } from 'hooks/useModalState'
-import deprecatedStyled from 'lib/styled-components'
 import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
-import { Wiggle } from 'pages/Landing/components/animations'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Anchor, Flex, Separator, Text, styled } from 'ui/src'
@@ -13,16 +12,11 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const SOCIAL_ICONS_SIZE = `${iconSizes.icon32}px`
 
-const SocialIcon = deprecatedStyled(Wiggle)`
-  flex: 0;
-  fill: ${(props) => props.theme.neutral1};
-  cursor: pointer;
-  transition: fill;
-  transition-duration: 0.2s;
-  &:hover {
-    fill: ${(props) => props.$hoverColor};
-  }
-`
+const SocialIcon = styled(Wiggle, {
+  cursor: 'pointer',
+  flex: 0,
+})
+
 const PolicyLink = styled(Text, {
   variant: 'body3',
   animation: '100ms',
@@ -34,17 +28,17 @@ const PolicyLink = styled(Text, {
 export function Socials({ iconSize }: { iconSize?: string }) {
   return (
     <Flex row gap="$spacing24" maxHeight={iconSize} alignItems="flex-start">
-      <SocialIcon $hoverColor="#00C32B">
+      <SocialIcon iconColor="#00C32B">
         <Anchor href="https://github.com/Uniswap" target="_blank">
           <Github size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
-      <SocialIcon $hoverColor="#20BAFF">
+      <SocialIcon iconColor="#20BAFF">
         <Anchor href="https://x.com/Uniswap" target="_blank">
           <Twitter size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
-      <SocialIcon $hoverColor="#5F51FF">
+      <SocialIcon iconColor="#5F51FF">
         <Anchor href="https://discord.com/invite/uniswap" target="_blank">
           <Discord size={iconSize} fill="inherit" />
         </Anchor>
@@ -90,6 +84,7 @@ export function Footer() {
     href: 'https://github.com/Uniswap/brand-assets/raw/main/Uniswap%20Brand%20Assets.zip',
     internal: false,
   }
+  const currentYear = new Date().getFullYear()
 
   return (
     <Flex maxWidth="100vw" width="100%" gap="$spacing24" pt="$none" px="$spacing48" pb={40} $lg={{ px: '$spacing40' }}>
@@ -121,7 +116,7 @@ export function Footer() {
         width="100%"
         justifyContent="space-between"
       >
-        <Text variant="body3">© 2024 - Uniswap Labs</Text>
+        <Text variant="body3">© {currentYear} - Uniswap Labs</Text>
         <Flex row alignItems="center" gap="$spacing16">
           <Anchor textDecorationLine="none" href="https://uniswap.org/trademark" target="_blank">
             <PolicyLink>{t('common.trademarkPolicy')}</PolicyLink>

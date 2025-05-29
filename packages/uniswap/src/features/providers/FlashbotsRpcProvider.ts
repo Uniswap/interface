@@ -4,8 +4,12 @@ import { id } from '@ethersproject/hash'
 import { resolveProperties } from '@ethersproject/properties'
 import { BlockTag, JsonRpcProvider } from '@ethersproject/providers'
 import { ConnectionInfo, fetchJson } from '@ethersproject/web'
-import { sleep } from 'utilities/src/time/timing'
-import { z } from 'zod'
+import {
+  FLASHBOTS_RPC_URL,
+  FLASHBOTS_SIGNATURE_HEADER,
+  SignerInfo,
+  getRefundString,
+} from 'uniswap/src/features/providers/FlashbotsCommon'
 
 /**
  * A provider that uses a signer to authenticate requests.
@@ -20,42 +24,10 @@ class AuthenticatedJsonRpcProvider extends JsonRpcProvider {
 }
 
 /**
- * Interface representing the structure of the response from Flashbots API.
- * @see {@link https://protect.flashbots.net/tx/docs}
- */
-const FlashbotsReceiptSchema = z.object({
-  status: z.enum(['UNKNOWN', 'PENDING', 'INCLUDED', 'FAILED', 'CANCELLED']),
-  hash: z.string(),
-  maxBlockNumber: z.number(),
-  transaction: z.object({
-    from: z.string(),
-    to: z.string(),
-    gasLimit: z.string(),
-    maxFeePerGas: z.string(),
-    maxPriorityFeePerGas: z.string(),
-    nonce: z.string(),
-    value: z.string(),
-  }),
-  fastMode: z.boolean(),
-  seenInMempool: z.boolean(),
-  simError: z.string().optional(),
-})
-
-type FlashbotsReceipt = z.infer<typeof FlashbotsReceiptSchema>
-
-export type SignerInfo = {
-  signer: Signer
-  address: Address
-}
-
-export const FLASHBOTS_RPC_URL = 'https://rpc.flashbots.net/fast?originId=uniswapwallet'
-export const FLASHBOTS_DEFAULT_REFUND_PERCENT = 50 // Default for fast mode
-
-/**
  * A provider to Flashbots RPC that uses a signer to authenticate requests.
  */
 export class FlashbotsRpcProvider extends AuthenticatedJsonRpcProvider {
-  private signatureHeaderName = 'X-Flashbots-Signature'
+  private signatureHeaderName = FLASHBOTS_SIGNATURE_HEADER
 
   /**
    * Create a Flashbots RPC provider.
@@ -149,13 +121,6 @@ export class FlashbotsRpcProvider extends AuthenticatedJsonRpcProvider {
   }
 }
 
-function getRefundString(address?: Address, refundPercent?: number): string {
-  if (!address || !refundPercent || refundPercent < 0 || refundPercent > 100) {
-    return ''
-  }
-  return `&refund=${address}:${refundPercent}`
-}
-
 // Copied from JsonRpcProvider.getResult
 function getResult(payload: {
   error?: { code?: number; data?: unknown; message?: string }
@@ -170,48 +135,4 @@ function getResult(payload: {
   }
 
   return payload.result
-}
-
-const POLL_INTERVAL_MS = 4000
-const MAX_ATTEMPTS = (25 * 12000) / POLL_INTERVAL_MS // 25 blocks of 12 seconds, queried every 4 seconds
-
-/**
- * Waits for a Flashbots Protect transaction receipt by polling the Flashbots Protect API until a final status is reached or we reach the max attempts.
- * @param hash - The transaction hash to wait for.
- * @returns A promise that resolves to the final status of the transaction.
- * @throws Will throw an error if the polling exceeds the max attempts or if there is an issue fetching the transaction status.
- */
-export async function waitForFlashbotsProtectReceipt(hash: string): Promise<FlashbotsReceipt> {
-  const url = `https://protect.flashbots.net/tx/${hash}`
-  let attempt = 0
-
-  while (true) {
-    if (attempt >= MAX_ATTEMPTS) {
-      throw new Error(`Polling Flashbots Protect API for transaction ${hash} reached maximum ${MAX_ATTEMPTS} attempts`)
-    }
-
-    const connection: ConnectionInfo = {
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-
-    const data: FlashbotsReceipt = await fetchJson(connection, undefined, (payload) => {
-      // Validate and return the payload as FlashbotsReceipt
-      try {
-        return FlashbotsReceiptSchema.parse(payload)
-      } catch (error) {
-        throw new Error(`Invalid response structure from Flashbots API: ${error}`)
-      }
-    })
-
-    if (data.status !== 'PENDING') {
-      return data
-    }
-
-    // Wait for POLL_INTERVAL_MS milliseconds before the next check
-    await sleep(POLL_INTERVAL_MS)
-    attempt++
-  }
 }

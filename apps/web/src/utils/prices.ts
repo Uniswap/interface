@@ -2,6 +2,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { PriceChartData } from 'components/Charts/PriceChart'
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,
@@ -124,4 +125,31 @@ export function getPriceImpactColor(priceImpact: Percent): keyof DefaultTheme | 
     default:
       return undefined
   }
+}
+
+/**
+ * Removes outliers from price data using the Interquartile Range (IQR) method
+ * @param entries Array of price data points
+ * @returns Filtered array with outliers removed
+ */
+export function removeOutliers(entries: PriceChartData[]): PriceChartData[] {
+  if (entries.length < 4) {
+    return entries
+  }
+
+  const values = entries.map((entry) => entry.value).sort((a, b) => a - b)
+
+  const q1Index = Math.floor(values.length * 0.25)
+  const q3Index = Math.floor(values.length * 0.75)
+  const q1 = values[q1Index]
+  const q3 = values[q3Index]
+
+  const iqr = q3 - q1
+  const lowerBound = q1 - 1.5 * iqr
+  const upperBound = q3 + 1.5 * iqr
+
+  return entries.filter((entry) => {
+    const value = entry.value
+    return value >= lowerBound && value <= upperBound
+  })
 }

@@ -3,7 +3,6 @@ import { createPermit2SignatureStep } from 'uniswap/src/features/transactions/st
 import { createPermit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
 import { createRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
-import { createWrapTransactionStep } from 'uniswap/src/features/transactions/steps/wrap'
 import { orderClassicSwapSteps } from 'uniswap/src/features/transactions/swap/steps/classicSteps'
 import { createSignUniswapXOrderStep } from 'uniswap/src/features/transactions/swap/steps/signOrder'
 import {
@@ -15,7 +14,7 @@ import { orderUniswapXSteps } from 'uniswap/src/features/transactions/swap/steps
 import { SwapTxAndGasInfo, isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 
-export function generateSwapTransactionSteps(txContext: SwapTxAndGasInfo, v4Enabled = false): TransactionStep[] {
+export function generateSwapTransactionSteps(txContext: SwapTxAndGasInfo): TransactionStep[] {
   const isValidSwap = isValidSwapTxContext(txContext)
 
   if (isValidSwap) {
@@ -32,7 +31,7 @@ export function generateSwapTransactionSteps(txContext: SwapTxAndGasInfo, v4Enab
           revocation,
           approval,
           permit: createPermit2SignatureStep(txContext.permit.typedData, trade.inputAmount.currency),
-          swap: createSwapTransactionAsyncStep(swapRequestArgs, v4Enabled),
+          swap: createSwapTransactionAsyncStep(swapRequestArgs),
         })
       }
       if (txContext.txRequests.length > 1) {
@@ -56,7 +55,6 @@ export function generateSwapTransactionSteps(txContext: SwapTxAndGasInfo, v4Enab
       return orderUniswapXSteps({
         revocation,
         approval,
-        wrap: createWrapTransactionStep(txContext.wrapTxRequest, trade.inputAmount),
         signOrder: createSignUniswapXOrderStep(txContext.permit.typedData, txContext.trade.quote.quote),
       })
     } else if (isBridge(txContext)) {

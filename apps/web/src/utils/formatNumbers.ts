@@ -3,7 +3,6 @@ import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
 import { getCurrencySymbolDisplayType } from 'constants/localCurrencies'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useMemo } from 'react'
-import { Bound } from 'state/mint/v3/actions'
 import { DEFAULT_LOCAL_CURRENCY, FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -655,38 +654,6 @@ function formatPrice({
   })
 }
 
-interface FormatTickPriceOptions {
-  price?: Price<Currency, Currency>
-  atLimit: { [bound in Bound]?: boolean | undefined }
-  direction: Bound
-  placeholder?: string
-  numberType?: NumberType
-  locale?: Locale
-  localCurrency?: FiatCurrency
-  conversionRate?: number
-}
-
-function formatTickPrice({
-  price,
-  atLimit,
-  direction,
-  placeholder,
-  numberType,
-  locale,
-  localCurrency,
-  conversionRate,
-}: FormatTickPriceOptions) {
-  if (atLimit[direction]) {
-    return direction === Bound.LOWER ? '0' : '∞'
-  }
-
-  if (!price && placeholder !== undefined) {
-    return placeholder
-  }
-
-  return formatPrice({ price, type: numberType ?? NumberType.TokenNonTx, locale, localCurrency, conversionRate })
-}
-
 interface FormatNumberOrStringOptions {
   input: Maybe<number | string>
   type: FormatterType
@@ -741,16 +708,6 @@ function formatFiatPrice({
   conversionRate,
 }: FormatFiatPriceOptions): string {
   return formatNumberOrString({ input: price, type, locale, localCurrency, conversionRate })
-}
-
-const MAX_AMOUNT_STR_LENGTH = 9
-
-function formatReviewSwapCurrencyAmount(amount: CurrencyAmount<Currency>, locale: Locale = DEFAULT_LOCALE): string {
-  let formattedAmount = formatCurrencyAmount({ amount, type: NumberType.TokenTx, locale })
-  if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
-    formattedAmount = formatCurrencyAmount({ amount, type: NumberType.SwapTradeAmount, locale })
-  }
-  return formattedAmount
 }
 
 function handleFallbackCurrency(
@@ -825,33 +782,6 @@ export function useFormatter() {
     [currencyToFormatWith, activeLocale, localCurrencyConversionRateToFormatWith],
   )
 
-  const formatReviewSwapCurrencyAmountWithLocales = useCallback(
-    (amount: CurrencyAmount<Currency>) => formatReviewSwapCurrencyAmount(amount, activeLocale),
-    [activeLocale],
-  )
-
-  const formatTickPriceWithLocales = useCallback(
-    (options: Omit<FormatTickPriceOptions, LocalesType>) =>
-      formatTickPrice({
-        ...options,
-        locale: activeLocale,
-        localCurrency: currencyToFormatWith,
-        conversionRate: localCurrencyConversionRateToFormatWith,
-      }),
-    [currencyToFormatWith, activeLocale, localCurrencyConversionRateToFormatWith],
-  )
-
-  const formatNumberOrStringWithLocales = useCallback(
-    (options: Omit<FormatNumberOrStringOptions, LocalesType>) =>
-      formatNumberOrString({
-        ...options,
-        locale: activeLocale,
-        localCurrency: currencyToFormatWith,
-        conversionRate: localCurrencyConversionRateToFormatWith,
-      }),
-    [currencyToFormatWith, activeLocale, localCurrencyConversionRateToFormatWith],
-  )
-
   const formatFiatPriceWithLocales = useCallback(
     (options: Omit<FormatFiatPriceOptions, LocalesType>) =>
       formatFiatPrice({
@@ -902,12 +832,9 @@ export function useFormatter() {
       formatEther: formatEtherwithLocales,
       formatFiatPrice: formatFiatPriceWithLocales,
       formatNumber: formatNumberWithLocales,
-      formatNumberOrString: formatNumberOrStringWithLocales,
       formatDelta: formatDeltaWithLocales,
       formatPercent: formatPercentWithLocales,
       formatPrice: formatPriceWithLocales,
-      formatReviewSwapCurrencyAmount: formatReviewSwapCurrencyAmountWithLocales,
-      formatTickPrice: formatTickPriceWithLocales,
     }),
     [
       convertFiatAmount,
@@ -916,12 +843,9 @@ export function useFormatter() {
       formatDeltaWithLocales,
       formatEtherwithLocales,
       formatFiatPriceWithLocales,
-      formatNumberOrStringWithLocales,
       formatNumberWithLocales,
       formatPercentWithLocales,
       formatPriceWithLocales,
-      formatReviewSwapCurrencyAmountWithLocales,
-      formatTickPriceWithLocales,
     ],
   )
 }

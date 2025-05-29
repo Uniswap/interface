@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
 import { Position as V3Position } from '@uniswap/v3-sdk'
 import { Position as V4Position } from '@uniswap/v4-sdk'
 import {
@@ -29,8 +29,10 @@ import { useAppSelector } from 'state/hooks'
 import { Bound } from 'state/mint/v3/actions'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
+import { useFormatter } from 'utils/formatNumbers'
 
 function getPriceOrderingFromPositionForUI(position?: V3Position | V4Position): PriceOrdering {
   if (!position) {
@@ -105,7 +107,9 @@ export function useAllFeeTierPoolData({
               feeAmount: pool.fee,
               tickSpacing: pool.tickSpacing,
             },
-            formattedFee: formatPercent(new Percent(pool.fee, 1000000), MAX_FEE_TIER_DECIMALS),
+            formattedFee: pool.isDynamicFee
+              ? t('fee.dynamic')
+              : formatPercent(new Percent(pool.fee, 1000000), MAX_FEE_TIER_DECIMALS),
             totalLiquidityUsd: totalLiquidityUsdTruncated,
             percentage,
             tvl: pool.totalLiquidityUsd,
@@ -145,8 +149,8 @@ export function usePositionDerivedInfo(positionInfo?: PositionInfo): PositionDer
     tickUpper,
     apr,
   } = positionInfo ?? {}
-  const { price: price0 } = useUSDCPrice(currency0Amount?.currency, PollingInterval.Normal)
-  const { price: price1 } = useUSDCPrice(currency1Amount?.currency, PollingInterval.Normal)
+  const { price: price0 } = useUSDCPrice(positionInfo?.currency0Amount?.currency, PollingInterval.Slow)
+  const { price: price1 } = useUSDCPrice(positionInfo?.currency1Amount?.currency, PollingInterval.Slow)
 
   const { feeValue0, feeValue1 } = useMemo(() => {
     if (!currency0Amount || !currency1Amount) {
@@ -231,6 +235,31 @@ export function usePositionDerivedInfo(positionInfo?: PositionInfo): PositionDer
   }, [fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceOrdering, feeValue0, feeValue1, positionInfo, apr])
 }
 
+function useFormatTickPrice({
+  price,
+  atLimit,
+  direction,
+}: {
+  price?: Price<Currency, Currency>
+  atLimit: { [bound in Bound]?: boolean | undefined }
+  direction: Bound
+}): string {
+  const { formatNumberOrString } = useLocalizationContext()
+
+  if (atLimit[direction]) {
+    return direction === Bound.LOWER ? '0' : '∞'
+  }
+
+  if (!price) {
+    return '-'
+  }
+
+  return formatNumberOrString({
+    value: price.toSignificant(),
+    type: NumberType.TokenTx,
+  })
+}
+
 export function useGetRangeDisplay({
   priceOrdering,
   pricesInverted,
@@ -250,8 +279,6 @@ export function useGetRangeDisplay({
   tokenBSymbol?: string
   isFullRange?: boolean
 } {
-  const { formatTickPrice } = useFormatter()
-
   const { priceLower, priceUpper, base, quote } = calculateInvertedValues({
     ...priceOrdering,
     invert: pricesInverted,
@@ -259,17 +286,15 @@ export function useGetRangeDisplay({
 
   const isTickAtLimit = useIsTickAtLimit(tickSpacing, Number(tickLower), Number(tickUpper))
 
-  const minPrice = formatTickPrice({
+  const minPrice = useFormatTickPrice({
     price: priceLower,
     atLimit: isTickAtLimit,
     direction: Bound.LOWER,
-    numberType: NumberType.TokenTx,
   })
-  const maxPrice = formatTickPrice({
+  const maxPrice = useFormatTickPrice({
     price: priceUpper,
     atLimit: isTickAtLimit,
     direction: Bound.UPPER,
-    numberType: NumberType.TokenTx,
   })
   const tokenASymbol = quote?.symbol
   const tokenBSymbol = base?.symbol

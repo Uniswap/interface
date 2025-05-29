@@ -10,12 +10,15 @@
   "styleSrc": [
     "'self'",
     "'unsafe-inline'",
-    "https://fonts.googleapis.com"
+    "https://fonts.googleapis.com",
+    "https://fonts.gstatic.com",
+    "https://fonts.gstatic.com/s/inter/v18/*"
   ],
   "fontSrc": [
     "'self'",
     "https://fonts.googleapis.com",
-    "https://fonts.gstatic.com"
+    "https://fonts.gstatic.com",
+    "https://fonts.gstatic.com/s/inter/v18/*"
   ],
   "imgSrc": [
     "*",
@@ -31,6 +34,9 @@
   "mediaSrc": [
     "self",
     "*"
+  ],
+  "formAction": [
+    "'none'"
   ],
   "connectSrc": [
     "'self'",

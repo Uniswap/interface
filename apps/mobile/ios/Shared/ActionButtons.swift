@@ -85,6 +85,33 @@ struct CopyButton: View {
   }
 }
 
+// Similar to CopyButton, but without the text and background. It's just an icon.
+struct CopyIconButton: View {
+  private let copyTimeout: TimeInterval = 2.0
+  
+  @State private var isCopied = false
+  @State private var copyTimer: Timer?
+  
+  var textToCopy: String
+
+  var body: some View { 
+    let iconColor = isCopied ? Colors.statusSuccess : Colors.neutral2
+    
+    return Button(action: {
+      UIPasteboard.general.string = textToCopy
+      isCopied = true
+      copyTimer?.invalidate()
+      copyTimer = Timer.scheduledTimer(withTimeInterval: copyTimeout, repeats: false) { _ in
+      isCopied = false
+      }
+    }) {
+      CopyIconOutline()
+        .fill(iconColor)
+        .frame(width: 21, height: 20)
+    }
+  }
+}
+
 struct PasteButton: View {
   var pasteButtonText: String
   var onPaste: (String) -> Void

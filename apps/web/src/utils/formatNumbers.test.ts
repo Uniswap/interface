@@ -1,7 +1,6 @@
 import { renderHook } from '@testing-library/react'
-import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { mocked } from 'test-utils/mocked'
-import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { Currency } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_LOCAL_CURRENCY, FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -369,38 +368,6 @@ describe('formatPercent', () => {
     expect(formatPercent(new Percent(1, 100))).toBe('1%')
     expect(formatPercent(new Percent(1, 10))).toBe('10%')
     expect(formatPercent(new Percent(1, 1))).toBe('100%')
-  })
-})
-
-describe('formatReviewSwapCurrencyAmount', () => {
-  it('should use TokenTx formatting under a default length', () => {
-    const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
-
-    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000') // 2,000 USDC
-    expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2,000')
-  })
-
-  it('should use TokenTx formatting under a default length with french locales', () => {
-    mocked(useCurrentLocale).mockReturnValue(Locale.FrenchFrance)
-    const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
-
-    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000') // 2,000 USDC
-    expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2\u202f000')
-  })
-
-  it('should use SwapTradeAmount formatting over the default length', () => {
-    const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
-
-    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,000,000 USDC
-    expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2000000')
-  })
-
-  it('should use SwapTradeAmount formatting over the default length with french locales', () => {
-    mocked(useCurrentLocale).mockReturnValue(Locale.FrenchFrance)
-    const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
-
-    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,000,000 USDC
-    expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2000000')
   })
 })
 
