@@ -18,4 +18,4 @@ Shared code for wallet functionality and larger UI components.
 
 ## `utilities`
 
-Shared utility functionality used across app applications. Should not import any other packages or applications.
+Shared utility functionality used across applications. Should not import any other packages or applications.
