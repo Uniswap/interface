@@ -706,15 +706,17 @@ export const SBCH = new Token(
   UNIVERSE_CHAIN_INFO[UniverseChainId.SmartBCH].nativeCurrency.name,
 )
 
+export const WBCH = new Token(
+  UniverseChainId.SmartBCH,
+  '0x3743eC0673453E5009310C727Ba4eaF7b3a1cc04',
+  18,
+  'WBCH',
+  'Wrapped BCH',
+)
+
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
   ...(WETH9 as Record<UniverseChainId, Token>),
-  [UniverseChainId.SmartBCH]: new Token(
-    UniverseChainId.SmartBCH,
-    '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-    18,
-    'WBCH',
-    'Wrapped BCH',
-  ),
+  [UniverseChainId.SmartBCH]: WBCH,
 }
 
 export function isCelo(chainId: number): chainId is UniverseChainId.Celo {

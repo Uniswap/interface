@@ -190,9 +190,8 @@ const Toolbar = ({
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { positionState, setPositionState, setStep, reset: resetCreatePositionState } = useCreatePositionContext()
-  const protocolVersion = 3
-  //const { protocolVersion } = positionState
-  console.log('protocolVersion', protocolVersion)
+  const protocolVersion = ProtocolVersion.V3
+
   const { setPriceRangeState } = usePriceRangeContext()
   const [versionDropdownOpen, setVersionDropdownOpen] = useState(false)
 

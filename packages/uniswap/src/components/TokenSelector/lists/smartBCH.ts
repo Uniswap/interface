@@ -86,6 +86,7 @@ import {
   UATX_TOKEN,
   VIEGAGE_TOKEN,
   VOLCANO,
+  WBCH,
   WENLAMBO,
   WOJAK,
   WYVERN_EGG,
@@ -307,6 +308,7 @@ export function toTokenOption(token: Token): TokenOption {
 // List of all Token objects from the previous result
 export const SMARTBCH_TOKENS = [
   SBCH,
+  WBCH,
   TANGO,
   BLOCKNG_PEG_USDT_TOKEN,
   BLOCKNG_PEG_BCH_TOKEN,

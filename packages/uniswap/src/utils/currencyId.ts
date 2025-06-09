@@ -83,7 +83,10 @@ export const isNativeCurrencyAddress = (chainId: UniverseChainId, address: Maybe
     return true
   }
 
-  return areAddressesEqual(address, getNativeAddress(chainId))
+  return (
+    areAddressesEqual(address, getNativeAddress(chainId)) ||
+    areAddressesEqual(address, '0x0000000000000000000000000000000000000000')
+  )
 }
 
 // Currency ids are formatted as `chainId-tokenaddress`

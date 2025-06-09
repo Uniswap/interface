@@ -330,7 +330,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               </Flex>
             ) : (
               <Flex row>
-                <Button size="large" variant="branded" onPress={handleCreate} isDisabled={false}>
+                <Button size="large" variant="branded" onPress={handleCreate} isDisabled={!txInfo?.action}>
                   {t('common.button.create')}
                 </Button>
               </Flex>

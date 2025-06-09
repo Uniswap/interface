@@ -155,16 +155,21 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
   } = params
 
   let signature: string | undefined
-
   try {
-    for (const step of steps) {
+    for (let step of steps) {
+      delete step.txRequest.type
+      delete step.txRequest.account
+      step.txRequest.gasLimit = step.txRequest.gas
+      delete step.txRequest.gas
       switch (step.type) {
         case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {
+          console.log({ account, step, setCurrentStep })
           yield* call(handleApprovalTransactionStep, { account, step, setCurrentStep })
           break
         }
         case TransactionStepType.Permit2Signature: {
+          console.log({ account, step, setCurrentStep })
           signature = yield* call(handleSignatureStep, { account, step, setCurrentStep })
           break
         }
@@ -174,6 +179,7 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
         case TransactionStepType.MigratePositionTransactionStep:
         case TransactionStepType.MigratePositionTransactionStepAsync:
         case TransactionStepType.CollectFeesTransactionStep:
+          console.log({ account, step, setCurrentStep })
           yield* call(handlePositionTransactionStep, { account, step, setCurrentStep, action, signature, analytics })
           break
         default: {

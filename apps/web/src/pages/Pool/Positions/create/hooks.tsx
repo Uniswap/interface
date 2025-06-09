@@ -67,7 +67,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
   const {
     currencyInputs: { TOKEN0: token0Input, TOKEN1: token1Input },
   } = state
-  const protocolVersion = 3
+  const protocolVersion = ProtocolVersion.V3
   const TOKEN0 = token0Input
   const TOKEN1 = token1Input
 
@@ -121,6 +121,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
   const pair = pairsQueryEnabled ? pairResult[1] || undefined : undefined
 
   const v3PoolResult = usePool(sortedTokens?.[0], sortedTokens?.[1], state.fee.feeAmount)
+  console.log('v3PoolResult', v3PoolResult)
   const v3Pool = protocolVersion === ProtocolVersion.V3 ? v3PoolResult[1] ?? undefined : undefined
   const v3Price = v3Pool?.token0Price
 

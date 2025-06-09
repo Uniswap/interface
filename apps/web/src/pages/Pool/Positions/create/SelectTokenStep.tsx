@@ -33,8 +33,8 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { toTokenOption } from 'uniswap/src/components/TokenSelector/lists/smartBCH'
 import {
   BLOCKNG_PEG_BCH_TOKEN,
-  SBCH,
   TANGO,
+  WBCH,
   WRAPPED_NATIVE_CURRENCY,
   nativeOnChain,
 } from 'uniswap/src/constants/tokens'
@@ -544,7 +544,7 @@ export function SelectTokensStep({
           onDismiss={() => setCurrencySearchInputState(undefined)}
           onCurrencySelect={handleCurrencySelect}
           chainIds={supportedChains}
-          tokenIds={[SBCH, TANGO, BLOCKNG_PEG_BCH_TOKEN].map((t) => toTokenOption(t).currencyInfo.currencyId)}
+          tokenIds={[WBCH, TANGO, BLOCKNG_PEG_BCH_TOKEN].map((t) => toTokenOption(t).currencyInfo.currencyId)}
         />
       </PrefetchBalancesWrapper>
     </>

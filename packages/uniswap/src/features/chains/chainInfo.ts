@@ -82,19 +82,19 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     sdkId: 10000 as UniswapSDKChainId,
     rpcUrls: {
       [RPCType.Private]: {
-        http: ['https://smartbch.greyh.at'],
+        http: ['https://smartbch.fountainhead.cash/mainnet', 'https://smartbch.greyh.at'],
       },
       [RPCType.Public]: {
-        http: ['https://smartbch.greyh.at'],
+        http: ['https://smartbch.fountainhead.cash/mainnet', 'https://smartbch.greyh.at'],
       },
       [RPCType.Default]: {
-        http: ['https://smartbch.greyh.at'],
+        http: ['https://smartbch.fountainhead.cash/mainnet', 'https://smartbch.greyh.at'],
       },
       [RPCType.Interface]: {
-        http: ['https://smartbch.greyh.at'],
+        http: ['https://smartbch.fountainhead.cash/mainnet', 'https://smartbch.greyh.at'],
       },
       [RPCType.Fallback]: {
-        http: ['https://smartbch.greyh.at'],
+        http: ['https://smartbch.fountainhead.cash/mainnet', 'https://smartbch.greyh.at'],
       },
     },
     assetRepoNetworkName: 'smartbch',
