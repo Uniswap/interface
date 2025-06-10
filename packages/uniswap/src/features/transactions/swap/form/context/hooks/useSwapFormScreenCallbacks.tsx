@@ -1,6 +1,5 @@
 import { RefObject, type MutableRefObject } from 'react'
 import type { TextInputProps } from 'react-native'
-import { isWeb } from 'ui/src'
 import { PRESET_MAX } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/constants'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
@@ -10,6 +9,7 @@ import { useOnToggleIsFiatMode } from 'uniswap/src/features/transactions/swap/fo
 import { useDecimalPadControlledField } from 'uniswap/src/features/transactions/swap/form/hooks/useDecimalPadControlledField'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { isWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 

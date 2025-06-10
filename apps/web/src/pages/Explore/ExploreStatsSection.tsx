@@ -4,7 +4,8 @@ import { Fragment, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { use24hProtocolVolume, useDailyTVLWithChange } from 'state/explore/protocolStats'
 import { Flex, Popover, Text, isTouchable, useMedia, useShadowPropsMedium } from 'ui/src'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 interface ExploreStatSectionData {
   label: string
@@ -19,7 +20,7 @@ interface ExploreStatSectionData {
 const ExploreStatsSection = () => {
   const media = useMedia()
   const { t } = useTranslation()
-  const { formatFiatPrice } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const {
     protocolVolumes,
@@ -38,7 +39,7 @@ const ExploreStatsSection = () => {
   const isStatDataLoading = isVolumeLoading || isTVLLoading
 
   const exploreStatsSectionData = useMemo(() => {
-    const formatPrice = (price: number) => formatFiatPrice({ price, type: NumberType.ChartFiatValue })
+    const formatPrice = (price: number) => convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)
 
     const stats = [
       {
@@ -60,7 +61,7 @@ const ExploreStatsSection = () => {
     return stats.filter((state): state is Exclude<typeof state, null> => state !== null)
   }, [
     t,
-    formatFiatPrice,
+    convertFiatAmountFormatted,
     totalVolume,
     volume24hChangePercent,
     protocolVolumes.v4,
@@ -109,7 +110,7 @@ interface StatDisplayProps {
 }
 
 const StatDisplay = memo(({ data, isLoading, isHoverable }: StatDisplayProps) => {
-  const { formatDelta } = useFormatter()
+  const { formatPercent } = useLocalizationContext()
 
   return (
     <Flex group gap="$spacing4" animation="simple">
@@ -128,9 +129,9 @@ const StatDisplay = memo(({ data, isLoading, isHoverable }: StatDisplayProps) =>
           <LoadingBubble height="12px" width="30px" />
         ) : (
           <Fragment>
-            <DeltaArrow delta={data.change} formattedDelta={formatDelta(data.change)} size={12} />
+            <DeltaArrow delta={data.change} formattedDelta={formatPercent(Math.abs(data.change))} size={12} />
             <Text variant="body4" color="$neutral1">
-              {formatDelta(data.change)}
+              {formatPercent(Math.abs(data.change))}
             </Text>
           </Fragment>
         )}
@@ -143,7 +144,7 @@ StatDisplay.displayName = 'StatDisplay'
 
 const StatDisplayWithPopover = memo(({ data, isLoading }: StatDisplayProps) => {
   const shadowProps = useShadowPropsMedium()
-  const { formatFiatPrice } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   return (
     <Popover hoverable placement="bottom-start" offset={{ mainAxis: 10 }}>
@@ -166,12 +167,7 @@ const StatDisplayWithPopover = memo(({ data, isLoading }: StatDisplayProps) => {
                 <Text variant="body4" color="neutral2">
                   {item.label}
                 </Text>
-                <Text variant="body4">
-                  {formatFiatPrice({
-                    price: item.value ?? 0,
-                    type: NumberType.ChartFiatValue,
-                  })}
-                </Text>
+                <Text variant="body4">{convertFiatAmountFormatted(item.value ?? 0, NumberType.FiatTokenPrice)}</Text>
               </Flex>
             )
           })}

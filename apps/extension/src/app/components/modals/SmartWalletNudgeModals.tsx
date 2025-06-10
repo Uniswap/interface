@@ -1,10 +1,15 @@
+import { useDispatch } from 'react-redux'
 import { useSmartWalletNudges } from 'src/app/context/SmartWalletNudgesContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { PostSwapSmartWalletNudge } from 'wallet/src/components/smartWallet/modals/PostSwapSmartWalletNudge'
 import { SmartWalletCreatedModal } from 'wallet/src/components/smartWallet/modals/SmartWalletCreatedModal'
 import { SmartWalletEnabledModal } from 'wallet/src/components/smartWallet/modals/SmartWalletEnabledModal'
+import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
 
 export function SmartWalletNudgeModals(): JSX.Element | null {
+  const dispatch = useDispatch()
+  const address = useActiveAccount()?.address
   const { activeModal, closeModal, openModal, dappInfo } = useSmartWalletNudges()
 
   if (!activeModal) {
@@ -20,7 +25,14 @@ export function SmartWalletNudgeModals(): JSX.Element | null {
           isOpen
           onClose={closeModal}
           dappInfo={dappInfo}
-          onEnableSmartWallet={() => openModal(ModalName.SmartWalletEnabledModal)}
+          onEnableSmartWallet={() => {
+            if (!address) {
+              return
+            }
+
+            dispatch(setSmartWalletConsent({ address, smartWalletConsent: true }))
+            openModal(ModalName.SmartWalletEnabledModal)
+          }}
         />
       )
     case ModalName.SmartWalletEnabledModal:

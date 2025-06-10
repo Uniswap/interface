@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { ReactNode, useEffect, useMemo, useRef } from 'react'
-import { Flex, Text, TextProps, isWeb } from 'ui/src'
+import { Flex, Text, TextProps } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -15,6 +15,7 @@ import {
   SwapFeeOnTransferTooltip,
 } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/SwapFormTooltips'
 import { UsePriceDifferenceReturnType } from 'uniswap/src/features/transactions/swap/hooks/usePriceDifference'
+import { isWeb } from 'utilities/src/platform'
 
 const Outer = ({ children }: { children: ReactNode }): JSX.Element => {
   return (

@@ -1,4 +1,4 @@
-import { Flex, Text, TouchableArea, isWeb } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -11,6 +11,7 @@ import {
   SendTokenTransactionInfo,
   TransactionDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isWeb } from 'utilities/src/platform'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 

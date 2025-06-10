@@ -1,6 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea, isWeb } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -11,6 +11,7 @@ import { ApproveTransactionInfo, TransactionDetails } from 'uniswap/src/features
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
+import { isWeb } from 'utilities/src/platform'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 
 const INFINITE_AMOUNT = 'INF'

@@ -165,6 +165,8 @@ export type TransactionOptions = {
   submitViaPrivateRpc?: boolean
   privateRpcProvider?: 'flashbots' | 'mevblocker'
   replacedTransactionHash?: string
+  includesDelegation?: boolean
+  isSmartWalletTransaction?: boolean
 }
 
 export interface TransactionReceipt {
@@ -233,6 +235,8 @@ export interface BaseTransactionInfo {
   isSpam?: boolean
   externalDappInfo?: DappRequestInfo
   gasEstimates?: GasFeeEstimates
+  includesDelegation?: boolean
+  isSmartWalletTransaction?: boolean
 }
 
 export interface ApproveTransactionInfo extends BaseTransactionInfo {

@@ -137,7 +137,7 @@ export function RemoveLiquidityForm() {
           key="LoaderButton-animation-RemoveLiquidity-continue"
           size="large"
         >
-          {t('common.button.remove')}
+          {t('common.button.review')}
         </Button>
       </Flex>
     </Flex>

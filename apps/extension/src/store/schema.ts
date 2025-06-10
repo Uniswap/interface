@@ -254,5 +254,20 @@ export const v22Schema = {
   batchedTransactions: {},
 }
 
-const v23Schema = v22Schema
-export const getSchema = (): typeof v23Schema => v23Schema
+export const v23Schema = v22Schema
+
+const v24SchemaIntermediate = {
+  ...v23Schema,
+  appearanceSettings: {
+    ...v23Schema.appearanceSettings,
+    hapticsEnabled: undefined,
+  },
+  userSettings: {
+    ...v23Schema.userSettings,
+    hapticsEnabled: v23Schema.appearanceSettings.hapticsEnabled,
+  },
+}
+delete v24SchemaIntermediate.appearanceSettings.hapticsEnabled
+const v24Schema = v24SchemaIntermediate
+
+export const getSchema = (): typeof v24Schema => v24Schema

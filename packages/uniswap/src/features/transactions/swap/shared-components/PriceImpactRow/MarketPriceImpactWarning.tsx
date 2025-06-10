@@ -1,7 +1,7 @@
 import { TFunction } from 'i18next'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { isWeb, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ChartBar } from 'ui/src/components/icons/ChartBar'
 import { zIndexes } from 'ui/src/theme'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -11,6 +11,7 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { openUri } from 'uniswap/src/utils/linking'
+import { isWeb } from 'utilities/src/platform'
 
 function getPriceImpactInfo(t: TFunction, routing: Routing, missing: boolean): { caption: string; link: string } {
   if (isUniswapX({ routing })) {

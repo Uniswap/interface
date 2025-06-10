@@ -17,5 +17,6 @@ export function useGetPasskeyAuthStatus(connectionType: string | undefined): Pas
   return {
     isSignedInWithPasskey,
     isSessionAuthenticated,
+    needsPasskeySignin: isSignedInWithPasskey && !isSessionAuthenticated,
   }
 }

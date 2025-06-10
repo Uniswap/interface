@@ -26,16 +26,21 @@ import { GetCallsStatusParams, SendCallsParams } from 'wallet/src/features/dappR
  * @return {SessionTypes.Namespaces} session namespaces specifying which accounts, chains, methods, events to complete the pairing
  */
 export const getSessionNamespaces = (
-  account: Address,
+  accounts: Address[],
   proposalNamespaces: ProposalTypes.RequiredNamespaces,
 ): SessionTypes.Namespaces => {
   // Below inspired from https://github.com/WalletConnect/web-examples/blob/main/wallets/react-wallet-v2/src/views/SessionProposalModal.tsx#L63
   const namespaces: SessionTypes.Namespaces = {}
 
-  Object.entries(proposalNamespaces).forEach(([key, namespace]) => {
+  Object.entries(proposalNamespaces).forEach(([nameSpaceId, namespace]) => {
     const { chains, events, methods } = namespace
-    namespaces[key] = {
-      accounts: chains ? chains.map((chain) => `${chain}:${account}`) : [`${key}:${account}`],
+
+    const formattedAccounts = !chains
+      ? accounts.map((account) => `${nameSpaceId}:${account}`)
+      : accounts.flatMap((account) => chains.map((chain) => `${chain}:${account}`))
+
+    namespaces[nameSpaceId] = {
+      accounts: formattedAccounts,
       events,
       methods,
       chains,

@@ -25,32 +25,25 @@ exports[`SortButton renders without error 1`] = `
     }
   >
     <View
-      collapsable={false}
-      focusVisibleStyle={{}}
-      forwardedRef={[Function]}
-      jestAnimatedStyle={
+      hitSlop={
         {
-          "value": {},
+          "bottom": 5,
+          "left": 5,
+          "right": 5,
+          "top": 5,
         }
       }
       onBlur={[Function]}
       onClick={[Function]}
       onFocus={[Function]}
-      onLayout={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
       onResponderRelease={[Function]}
       onResponderTerminate={[Function]}
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
-      role="button"
       style={
         {
-          "backgroundColor": "transparent",
-          "borderBottomLeftRadius": 12,
-          "borderBottomRightRadius": 12,
-          "borderTopLeftRadius": 12,
-          "borderTopRightRadius": 12,
           "flexDirection": "column",
           "opacity": 1,
           "transform": [
@@ -63,17 +56,9 @@ exports[`SortButton renders without error 1`] = `
     >
       <View
         collapsable={false}
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "alignItems": "center",
-            "color": {
-              "dynamic": {
-                "dark": "#FFFFFF",
-                "light": "#222222",
-              },
-            },
             "flexDirection": "row",
             "gap": 8,
             "justifyContent": "center",
@@ -88,8 +73,6 @@ exports[`SortButton renders without error 1`] = `
           lineBreakMode="clip"
           maxFontSizeMultiplier={1.2}
           numberOfLines={1}
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
               "color": {
@@ -127,8 +110,6 @@ exports[`SortButton renders without error 1`] = `
               },
             }
           }
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
               "alignItems": "center",

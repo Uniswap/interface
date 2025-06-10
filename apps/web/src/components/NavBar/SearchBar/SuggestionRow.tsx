@@ -29,7 +29,6 @@ import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/t
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import { useFormatter } from 'utils/formatNumbers'
 
 const PriceChangeContainer = styled.div`
   display: flex;
@@ -108,8 +107,8 @@ export function SuggestionRow({
   const isToken = suggestionIsToken(suggestion)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { formatFiatPrice, formatDelta } = useFormatter()
-  const { formatNumberOrString } = useLocalizationContext()
+  const { formatPercent } = useLocalizationContext()
+  const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const [brokenCollectionImage, setBrokenCollectionImage] = useState(false)
 
   const tokenWarningSeverity = isToken
@@ -220,7 +219,7 @@ export function SuggestionRow({
         <Flex row gap="$spacing4">
           <PrimaryText width="100%">
             {isToken
-              ? formatFiatPrice({ price: suggestion.market?.price?.value })
+              ? convertFiatAmountFormatted(suggestion.market?.price?.value, NumberType.FiatTokenPrice)
               : `${formatNumberOrString({ value: suggestion.stats?.floor_price, type: NumberType.NFTTokenFloorPrice })} ETH`}
           </PrimaryText>
         </Flex>
@@ -230,11 +229,11 @@ export function SuggestionRow({
             <>
               <DeltaArrow
                 delta={suggestion.market?.pricePercentChange?.value}
-                formattedDelta={formatDelta(suggestion.market?.pricePercentChange?.value)}
+                formattedDelta={formatPercent(Math.abs(suggestion.market?.pricePercentChange?.value ?? 0))}
               />
               <ThemedText.BodySmall>
                 <DeltaText delta={suggestion.market?.pricePercentChange?.value}>
-                  {formatDelta(Math.abs(suggestion.market?.pricePercentChange?.value ?? 0))}
+                  {formatPercent(Math.abs(suggestion.market?.pricePercentChange?.value ?? 0))}
                 </DeltaText>
               </ThemedText.BodySmall>
             </>

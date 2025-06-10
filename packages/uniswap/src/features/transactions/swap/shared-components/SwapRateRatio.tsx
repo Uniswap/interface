@@ -8,7 +8,6 @@ import { useAcceptedTrade } from 'uniswap/src/features/transactions/swap/review/
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/utils/getTradeAmounts'
 import { calculateRateLine, getRateToDisplay } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 
 type SwapRateRatioProps = {
   trade: Trade | IndicativeTrade | undefined | null
@@ -26,14 +25,12 @@ export function SwapRateRatio({
   const formatter = useLocalizationContext()
   const [showInverseRate, setShowInverseRate] = useState(initialInverse)
   const { derivedSwapInfo, isSubmitting } = useSwapFormContext()
-  const { wrapType } = derivedSwapInfo
 
-  const { acceptedDerivedSwapInfo: swapAcceptedDerivedSwapInfo } = useAcceptedTrade({
+  const { acceptedDerivedSwapInfo } = useAcceptedTrade({
     derivedSwapInfo,
     isSubmitting,
   })
 
-  const acceptedDerivedSwapInfo = isWrapAction(wrapType) ? derivedSwapInfo : swapAcceptedDerivedSwapInfo
   const { outputCurrencyAmount } = getTradeAmounts(acceptedDerivedSwapInfo, priceUXEnabled)
   const usdAmountOut = useUSDCValue(outputCurrencyAmount)
 

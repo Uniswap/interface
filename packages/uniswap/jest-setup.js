@@ -19,6 +19,11 @@ jest.mock('uniswap/src/components/modals/Modal', () => {
   return jest.requireActual('uniswap/src/components/modals/Modal.native.tsx')
 })
 
+// Use web TouchableArea
+jest.mock('ui/src/components/touchable/TouchableArea/TouchableArea', () => {
+  return jest.requireActual('ui/src/components/touchable/TouchableArea/TouchableArea.web.tsx')
+})
+
 // Mock the browser's performance API
 global.performance = require('perf_hooks').performance
 

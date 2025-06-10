@@ -14,6 +14,7 @@ export enum TransactionScreen {
 export type PasskeyAuthStatus = {
   isSignedInWithPasskey: boolean
   isSessionAuthenticated: boolean
+  needsPasskeySignin: boolean
 }
 
 export type SwapRedirectFn = ({

@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
-import { MAX_FEE_TIER_DECIMALS, useAllFeeTierPoolData } from 'components/Liquidity/hooks'
-import { calculateTickSpacingFromFeeAmount, isDynamicFeeTier } from 'components/Liquidity/utils'
+import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
+import { MAX_FEE_TIER_DECIMALS, calculateTickSpacingFromFeeAmount, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import { StyledPercentInput } from 'components/PercentInput'
 import { ZERO_ADDRESS } from 'constants/misc'
@@ -413,7 +413,9 @@ export function FeeTierSearchModal() {
                         </Text>
                         <Text variant="body3" color="$neutral2">
                           {pool.created
-                            ? t('fee.tier.percent.select', { percentage: formatPercent(pool.percentage.toFixed()) })
+                            ? t('fee.tier.percent.select', {
+                                percentage: formatPercent(pool.percentage.toSignificant(), 3),
+                              })
                             : t('common.notCreated.label')}
                         </Text>
                       </Flex>

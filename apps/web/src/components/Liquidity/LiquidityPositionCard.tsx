@@ -235,7 +235,7 @@ export function LiquidityPositionCard({
 }) {
   const { value: isOpenContextMenu, setTrue: openContextMenu, setFalse: closeContextMenu } = useBooleanState(false)
 
-  const { formatCurrencyAmount } = useLocalizationContext()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   const isTouchDevice = useIsTouchDevice()
   const [pricesInverted, setPricesInverted] = useState(false)
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
@@ -254,10 +254,7 @@ export function LiquidityPositionCard({
 
   const formattedUsdValue =
     fiatValue0 && fiatValue1
-      ? formatCurrencyAmount({
-          value: fiatValue0.add(fiatValue1),
-          type: NumberType.FiatStandard,
-        })
+      ? convertFiatAmountFormatted(fiatValue0.add(fiatValue1).toExact(), NumberType.FiatStandard)
       : undefined
 
   const { totalFormattedEarnings, hasRewards, formattedFeesValue } = useLpIncentivesFormattedEarnings({

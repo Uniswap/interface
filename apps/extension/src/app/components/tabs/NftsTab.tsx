@@ -7,7 +7,7 @@ import { NftViewWithContextMenu } from 'wallet/src/components/nfts/NftViewWithCo
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
-export const NftsTab = memo(function _NftsTab({ owner }: { owner: Address }): JSX.Element {
+export const NftsTab = memo(function _NftsTab({ owner, skip }: { owner: Address; skip?: boolean }): JSX.Element {
   const renderNFTItem = useCallback(
     (item: NFTItem) => {
       const onPress = (): void => {
@@ -32,6 +32,7 @@ export const NftsTab = memo(function _NftsTab({ owner }: { owner: Address }): JS
       errorStateStyle={defaultEmptyStyle}
       owner={owner}
       renderNFTItem={renderNFTItem}
+      skip={skip}
     />
   )
 })

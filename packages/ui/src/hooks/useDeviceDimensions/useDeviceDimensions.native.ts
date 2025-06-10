@@ -1,5 +1,5 @@
 import { Dimensions } from 'react-native'
-import type { DeviceDimensions } from 'ui/src/hooks/useDeviceDimensions/useDeviceDimensions'
+import { DeviceDimensions } from 'ui/src/hooks/useDeviceDimensions/useDeviceDimensions'
 
 export const useDeviceDimensions = (): DeviceDimensions => {
   // We need to use screen height instead of the window height

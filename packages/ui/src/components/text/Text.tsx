@@ -1,10 +1,11 @@
 import { PropsWithChildren } from 'react'
-import { GetProps, Text as TamaguiText, isWeb, styled } from 'tamagui'
+import { GetProps, Text as TamaguiText, styled } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
 import { HiddenFromScreenReaders } from 'ui/src/components/text/HiddenFromScreenReaders'
 import { useEnableFontScaling } from 'ui/src/components/text/useEnableFontScaling'
 import { Skeleton } from 'ui/src/loading/Skeleton'
 import { fonts } from 'ui/src/theme/fonts'
+import { isWeb } from 'utilities/src/platform'
 
 export const TextFrame = styled(TamaguiText, {
   fontFamily: '$body',

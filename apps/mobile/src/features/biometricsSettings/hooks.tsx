@@ -1,4 +1,5 @@
 import { hasHardwareAsync, isEnrolledAsync } from 'expo-local-authentication'
+import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { triggerAuthentication } from 'src/features/biometrics/biometricsSlice'
 import { isAndroid } from 'utilities/src/platform'
@@ -47,22 +48,25 @@ export function useBiometricPrompt<T = undefined>(
 } {
   const dispatch = useDispatch()
 
-  const trigger = async (args?: TriggerArgs<T>): Promise<void> => {
-    dispatch(
-      triggerAuthentication({
-        onSuccess: (params?: unknown) => {
-          const typedParams = params as T | undefined
-          if (args?.successCallback) {
-            args.successCallback(typedParams)
-          } else if (successCallback) {
-            successCallback(typedParams)
-          }
-        },
-        onFailure: args?.failureCallback ?? failureCallback,
-        params: args?.params,
-      }),
-    )
-  }
+  const trigger = useCallback(
+    async (args?: TriggerArgs<T>): Promise<void> => {
+      dispatch(
+        triggerAuthentication({
+          onSuccess: (params?: unknown) => {
+            const typedParams = params as T | undefined
+            if (args?.successCallback) {
+              args.successCallback(typedParams)
+            } else if (successCallback) {
+              successCallback(typedParams)
+            }
+          },
+          onFailure: args?.failureCallback ?? failureCallback,
+          params: args?.params,
+        }),
+      )
+    },
+    [dispatch, successCallback, failureCallback],
+  )
 
   return { trigger }
 }

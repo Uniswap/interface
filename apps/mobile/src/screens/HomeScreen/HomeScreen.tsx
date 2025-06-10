@@ -44,7 +44,7 @@ import { useHomeScreenTracking } from 'src/screens/HomeScreen/useHomeScreenTrack
 import { useHomeScrollRefs } from 'src/screens/HomeScreen/useHomeScrollRefs'
 import { useOpenBackupReminderModal } from 'src/utils/useOpenBackupReminderModal'
 import { Flex, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
-import { SMART_WALLET_UPGRADE_VIDEO } from 'ui/src/assets'
+import { SMART_WALLET_UPGRADE_FALLBACK, SMART_WALLET_UPGRADE_VIDEO } from 'ui/src/assets'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
@@ -57,10 +57,15 @@ import { ModalName, SectionName, SectionNameType } from 'uniswap/src/features/te
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { SmartWalletUpgradeModals } from 'wallet/src/components/smartWallet/modals/SmartWalletUpgradeModal'
+import { useOpenSmartWalletNudgeOnCompletedSwap } from 'wallet/src/components/smartWallet/smartAccounts/hook'
 import { selectHasSeenCreatedSmartWalletModal } from 'wallet/src/features/behaviorHistory/selectors'
-import { setHasSeenSmartWalletCreatedWalletModal } from 'wallet/src/features/behaviorHistory/slice'
+import {
+  setHasSeenSmartWalletCreatedWalletModal,
+  setIncrementNumPostSwapNudge,
+} from 'wallet/src/features/behaviorHistory/slice'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
 import { useAccountCountChanged, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -283,14 +288,28 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     )
   }, [showEmptyWalletState, activeAccount.address, isSignerAccount, onPressViewOnlyLabel, viewOnlyLabel, promoBanner])
 
-  const MemoizedVideo = useMemo(
-    () => (
+  const [hasVideoError, setVideoHasError] = useState(false)
+
+  const MemoizedVideo = useMemo(() => {
+    if (hasVideoError) {
+      return undefined
+    }
+
+    return (
       <Flex borderRadius="$rounded16" width="100%" aspectRatio={16 / 9} overflow="hidden">
-        <Video source={SMART_WALLET_UPGRADE_VIDEO} resizeMode="cover" style={{ width: '100%', height: '100%' }} />
+        <Video
+          source={SMART_WALLET_UPGRADE_VIDEO}
+          poster={SMART_WALLET_UPGRADE_FALLBACK}
+          resizeMode="cover"
+          style={{ width: '100%', height: '100%' }}
+          onError={(error) => {
+            logger.warn('HomeScreen', 'MemoizedVideo', 'video error', error)
+            setVideoHasError(true)
+          }}
+        />
       </Flex>
-    ),
-    [],
-  )
+    )
+  }, [hasVideoError])
 
   const paddingTop = headerHeight + TAB_BAR_HEIGHT + (showEmptyWalletState ? 0 : TAB_STYLES.tabListInner.paddingTop)
   const paddingBottom = insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom + spacing.spacing12
@@ -526,6 +545,32 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       }
       navigate(ModalName.SmartWalletCreatedModal)
       dispatch(setHasSeenSmartWalletCreatedWalletModal())
+    }),
+  )
+
+  useOpenSmartWalletNudgeOnCompletedSwap(
+    useEvent(() => {
+      if (!activeAccount.address) {
+        return
+      }
+
+      navigate(ModalName.PostSwapSmartWalletNudge, {
+        onEnableSmartWallet: async () => {
+          const successAction = (): void => {
+            dispatch(setSmartWalletConsent({ address: activeAccount.address, smartWalletConsent: true }))
+            navigate(ModalName.SmartWalletEnabledModal, {
+              showReconnectDappPrompt: false,
+            })
+          }
+
+          if (requiresBiometrics) {
+            await trigger({ successCallback: successAction })
+          } else {
+            successAction()
+          }
+        },
+      })
+      dispatch(setIncrementNumPostSwapNudge({ walletAddress: activeAccount.address }))
     }),
   )
 

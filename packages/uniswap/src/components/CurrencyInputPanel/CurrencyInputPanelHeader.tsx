@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { Flex, Text, isWeb } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme/spacing'
 import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
@@ -10,7 +10,7 @@ import { useExperimentValueFromLayer } from 'uniswap/src/features/gating/hooks'
 import { DefaultTokenOptions } from 'uniswap/src/features/transactions/swap/form/body/DefaultTokenOptions/DefaultTokenOptions'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isInterfaceDesktop } from 'utilities/src/platform'
+import { isInterfaceDesktop, isWeb } from 'utilities/src/platform'
 
 interface CurrencyInputPanelHeaderProps {
   headerLabel?: string

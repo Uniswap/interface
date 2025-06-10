@@ -10,10 +10,11 @@ import { useTranslation } from 'react-i18next'
 import { Button, Checkbox, Flex, Text } from 'ui/src'
 import { Trash } from 'ui/src/components/icons/Trash'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Authenticator, deleteAuthenticator, disconnectWallet } from 'uniswap/src/features/passkey/embeddedWallet'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
 
 export function DeletePasskeyMenu({
   show,
@@ -38,7 +39,7 @@ export function DeletePasskeyMenu({
     address: account.address,
   })
   const { balanceUSD } = portfolioTotalValue || {}
-  const { formatFiatPrice } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   const [acknowledged, setAcknowledged] = useState(false)
 
   const { mutate: handleDeleteAuthenticator } = usePasskeyAuthWithHelpModal(
@@ -97,7 +98,7 @@ export function DeletePasskeyMenu({
             <StatusIcon size={24} showMiniIcons={false} />
             <AddressDisplay enableCopyAddress={false} address={account.address} />
             <Text variant="body3" color="$statusCritical" ml="auto" mr="0">
-              {formatFiatPrice({ price: balanceUSD })}
+              {convertFiatAmountFormatted(balanceUSD, NumberType.FiatTokenPrice)}
             </Text>
           </Flex>
         )}

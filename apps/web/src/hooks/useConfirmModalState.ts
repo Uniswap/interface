@@ -15,9 +15,10 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
@@ -48,7 +49,7 @@ export function useConfirmModalState({
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
   const [pendingModalSteps, setPendingModalSteps] = useState<PendingConfirmModalState[]>([])
-  const { formatCurrencyAmount } = useFormatter()
+  const { formatCurrencyAmount } = useLocalizationContext()
 
   const account = useAccount()
   const { chainId } = useMultichainContext()
@@ -86,7 +87,7 @@ export function useConfirmModalState({
     nativeCurrency,
     trade.inputAmount.currency,
     formatCurrencyAmount({
-      amount: trade.inputAmount,
+      value: trade.inputAmount,
       type: NumberType.SwapTradeAmount,
     }),
   )

@@ -107,14 +107,14 @@ export function WarningModalContent({
         <Flex row alignSelf="stretch" gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'}>
           {rejectText && (
             <Trace logPress element={ElementName.BackButton} modal={modalName} properties={analyticsProperties}>
-              <Button emphasis="secondary" onPress={onReject ?? onClose}>
+              <Button size="small" emphasis="secondary" onPress={onReject ?? onClose}>
                 {rejectText}
               </Button>
             </Trace>
           )}
           {acknowledgeText && (
             <Trace logPress element={ElementName.Confirm} modal={modalName} properties={analyticsProperties}>
-              <Button testID={TestID.Confirm} onPress={onAcknowledge}>
+              <Button size="small" testID={TestID.Confirm} onPress={onAcknowledge}>
                 {acknowledgeText}
               </Button>
             </Trace>

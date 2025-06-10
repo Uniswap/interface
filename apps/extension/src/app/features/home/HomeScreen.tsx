@@ -6,6 +6,7 @@ import ReactPlayer from 'react-player'
 import { useDispatch, useSelector } from 'react-redux'
 import { ActivityTab } from 'src/app/components/tabs/ActivityTab'
 import { NftsTab } from 'src/app/components/tabs/NftsTab'
+import { useSmartWalletNudges } from 'src/app/context/SmartWalletNudgesContext'
 import AppRatingModal from 'src/app/features/appRating/AppRatingModal'
 import { useAppRating } from 'src/app/features/appRating/hooks/useAppRating'
 import { PortfolioActionButtons } from 'src/app/features/home/PortfolioActionButtons'
@@ -24,13 +25,17 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { NFTS_TAB_DATA_DEPENDENCIES } from 'wallet/src/components/nfts/NftsList'
 import { SmartWalletEnabledModal } from 'wallet/src/components/smartWallet/modals/SmartWalletEnabledModal'
 import { SmartWalletUpgradeModals } from 'wallet/src/components/smartWallet/modals/SmartWalletUpgradeModal'
+import { useOpenSmartWalletNudgeOnCompletedSwap } from 'wallet/src/components/smartWallet/smartAccounts/hook'
+import { setIncrementNumPostSwapNudge } from 'wallet/src/features/behaviorHistory/slice'
 import { PendingNotificationBadge } from 'wallet/src/features/notifications/components/PendingNotificationBadge'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
@@ -94,6 +99,18 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
       setIsSmartWalletEnabledModalOpen(true)
     },
     [dispatch, activeAccount.address, setIsSmartWalletEnabledModalOpen],
+  )
+
+  // Handle the smart wallet nudge when a swap transaction is completed
+  const { openModal } = useSmartWalletNudges()
+  useOpenSmartWalletNudgeOnCompletedSwap(
+    useEvent(() => {
+      if (!activeAccount.address) {
+        return
+      }
+      dispatch(setIncrementNumPostSwapNudge({ walletAddress: address }))
+      openModal(ModalName.PostSwapSmartWalletNudge)
+    }),
   )
 
   useEffect(() => {
@@ -209,14 +226,14 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
                       hideRight={selectedTab === HomeTabs.Tokens}
                       isActive={selectedTab === HomeTabs.NFTs}
                     >
-                      <NftsTab owner={address} />
+                      <NftsTab owner={address} skip={selectedTab !== HomeTabs.NFTs} />
                     </AnimatedTab>
 
                     <AnimatedTab
                       hideRight={selectedTab !== HomeTabs.Activity}
                       isActive={selectedTab === HomeTabs.Activity}
                     >
-                      <ActivityTab address={address} />
+                      <ActivityTab address={address} skip={selectedTab !== HomeTabs.Activity} />
                     </AnimatedTab>
                   </>
                 ) : (

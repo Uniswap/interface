@@ -35,8 +35,9 @@ function AssetActivityProviderInternal({ children }: PropsWithChildren) {
       chains: gqlChains,
       // Backend will return off-chain activities even if gqlChains are all testnets.
       includeOffChain: !isTestnetModeEnabled,
-      // Include the externalsessionIDs of all fiat on-ramp transactions in the local store,
+      // Include the externalsessionIDs of all FOR transactions in the local store,
       // so that the backend can find the transactions without signature authentication.
+      // Note: No FOR transactions are included in activity without explicity passing IDs from local storage
       onRampTransactionIDs: transactionIds,
     }),
     [account.address, gqlChains, isTestnetModeEnabled, transactionIds],

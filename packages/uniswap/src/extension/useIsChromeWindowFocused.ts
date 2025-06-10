@@ -1,15 +1,17 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
+import { logger } from 'utilities/src/logger/logger'
 import { isExtension } from 'utilities/src/platform'
-import { useAsyncData } from 'utilities/src/react/hooks'
+import { useEvent } from 'utilities/src/react/hooks'
 
 export function useIsChromeWindowFocused(): boolean {
   const [isFocused, setIsFocused] = useState(true)
 
-  useAsyncData(
-    useCallback(async () => {
+  const focusMutation = useMutation({
+    mutationFn: async () => {
       if (!isExtension) {
-        // This hook is ignored and always returns `true` when not in the Extension.
+        // This hook is ignored and always returns the default value of `true` when not in the Extension.
         return undefined
       }
 
@@ -27,8 +29,22 @@ export function useIsChromeWindowFocused(): boolean {
       return () => {
         chrome.windows.onFocusChanged.removeListener(onFocusChangedListener)
       }
-    }, []),
-  )
+    },
+    onError: (error: unknown) => {
+      logger.error(error, {
+        tags: {
+          file: 'useIsChromeWindowFocused',
+          function: 'useIsChromeWindowFocused',
+        },
+      })
+    },
+  })
+
+  const focusEvent = useEvent(focusMutation.mutate)
+
+  useEffect(() => {
+    focusEvent()
+  }, [focusEvent])
 
   return isFocused
 }

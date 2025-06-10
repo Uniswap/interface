@@ -4,7 +4,8 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 import { warningSeverity } from 'utils/prices'
 
 export function FiatValue({
@@ -16,7 +17,7 @@ export function FiatValue({
   priceImpact?: Percent
   testId?: string
 }) {
-  const { formatNumber, formatPercent } = useFormatter()
+  const { formatPercent, convertFiatAmountFormatted } = useLocalizationContext()
 
   const priceImpactColor = useMemo(() => {
     if (!priceImpact) {
@@ -43,10 +44,7 @@ export function FiatValue({
     <Flex row gap="$gap8">
       <Text variant="body3" color="$neutral2" data-testid={testId}>
         {fiatValue.data ? (
-          formatNumber({
-            input: fiatValue.data,
-            type: NumberType.FiatTokenPrice,
-          })
+          convertFiatAmountFormatted(fiatValue.data, NumberType.FiatTokenPrice)
         ) : (
           <MouseoverTooltip text={<Trans i18nKey="liquidity.notEnough.label" />}>-</MouseoverTooltip>
         )}
@@ -54,7 +52,7 @@ export function FiatValue({
       {priceImpact && (
         <Text variant="body3" color={priceImpactColor}>
           <MouseoverTooltip placement="right" text={<Trans i18nKey="swap.estimatedDifference.label" />}>
-            ({formatPercent(priceImpact.multiply(-1))})
+            ({formatPercent(priceImpact.multiply(-1).toSignificant())})
           </MouseoverTooltip>
         </Text>
       )}

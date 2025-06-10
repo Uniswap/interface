@@ -1,5 +1,5 @@
 import { expect, test } from 'playwright/fixtures'
-import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/anvil'
+import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 

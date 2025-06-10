@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Flex, Text, TouchableArea, isWeb } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { useTrendingTokensCurrencyInfos } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensCurrencyInfos'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
@@ -21,9 +21,8 @@ import {
 import { useRecentlySearchedOptions } from 'uniswap/src/features/search/SearchModal/hooks/useRecentlySearchedOptions'
 import { getMockTrendingPoolsSection } from 'uniswap/src/features/search/SearchModal/mocks'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
-
 import { clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
-import { isMobileApp } from 'utilities/src/platform'
+import { isMobileApp, isWeb } from 'utilities/src/platform'
 import noop from 'utilities/src/react/noop'
 
 function ClearButton({ onPress }: { onPress: () => void }): JSX.Element {

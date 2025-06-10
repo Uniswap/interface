@@ -4,7 +4,8 @@ import { PriceOrdering } from 'components/Liquidity/types'
 import { useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, SegmentedControl, SegmentedControlOption, Text, styled } from 'ui/src'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 const InnerTile = styled(Flex, {
   grow: true,
@@ -34,7 +35,7 @@ export function LiquidityPositionPriceRangeTile({
   tickLower,
   tickUpper,
 }: LiquidityPositionPriceRangeTileProps) {
-  const { formatPrice } = useFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
   const [pricesInverted, setPricesInverted] = useState(false)
 
   const currencyASymbol = token0CurrentPrice.baseCurrency.symbol
@@ -136,7 +137,7 @@ export function LiquidityPositionPriceRangeTile({
           <Trans i18nKey="common.marketPrice" />
         </Text>
         <Text variant="heading2" color="$neutral1">
-          {formatPrice({ price: currentPrice, type: NumberType.TokenTx })}
+          {formatNumberOrString({ value: currentPrice?.toSignificant(), type: NumberType.TokenTx })}
         </Text>
         <Text variant="subheading2" color="$neutral2">
           <Trans

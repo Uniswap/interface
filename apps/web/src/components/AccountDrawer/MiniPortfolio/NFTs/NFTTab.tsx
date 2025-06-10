@@ -41,7 +41,7 @@ export default function NFTs({ account }: { account: string }) {
   if (loading && !walletAssets) {
     return (
       <AssetsContainer>
-        <LoadingAssets count={2} />
+        <LoadingAssets count={2} height={150} />
       </AssetsContainer>
     )
   }

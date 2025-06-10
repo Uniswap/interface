@@ -1,8 +1,8 @@
 // until the web app needs all of tamagui, avoid heavy imports there
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { createFont, isAndroid, isWeb } from '@tamagui/core'
+import { createFont, isAndroid } from '@tamagui/core'
 import { needsSmallFont } from 'ui/src/utils/needs-small-font'
-import { isInterface } from 'utilities/src/platform'
+import { isInterface, isWeb } from 'utilities/src/platform'
 
 // TODO(EXT-148): remove this type and use Tamagui's FontTokens
 export type TextVariantTokens = keyof typeof fonts

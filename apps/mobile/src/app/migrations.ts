@@ -34,6 +34,7 @@ import {
   deleteWelcomeWalletCardBehaviorHistory,
   moveCurrencySetting,
   moveDismissedTokenWarnings,
+  moveHapticsToUserSettings,
   moveLanguageSetting,
   moveTokenAndNFTVisibility,
   moveUserSettings,
@@ -1053,6 +1054,8 @@ export const migrations = {
       transactions: newTransactionState,
     }
   },
+
+  88: moveHapticsToUserSettings,
 }
 
-export const MOBILE_STATE_VERSION = 87
+export const MOBILE_STATE_VERSION = 88

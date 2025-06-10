@@ -8,11 +8,12 @@ import {
   TEST_TRADE_EXACT_INPUT,
 } from 'test-utils/constants'
 import { render, renderHook, screen, within } from 'test-utils/render'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 describe('SwapDetails.tsx', () => {
   it('matches base snapshot, test trade exact input', () => {
-    const { formatCurrencyAmount } = renderHook(() => useFormatter()).result.current
+    const { formatCurrencyAmount } = renderHook(() => useLocalizationContext()).result.current
     const { asFragment } = render(
       <SwapDetails
         isLoading={false}
@@ -38,7 +39,7 @@ describe('SwapDetails.tsx', () => {
     expect(asFragment()).toMatchSnapshot()
 
     const tradeMinAmount = TEST_TRADE_EXACT_INPUT.minimumAmountOut(TEST_ALLOWED_SLIPPAGE ?? new Percent(0))
-    const formattedAmount = formatCurrencyAmount({ amount: tradeMinAmount, type: NumberType.SwapDetailsAmount })
+    const formattedAmount = formatCurrencyAmount({ value: tradeMinAmount, type: NumberType.SwapTradeAmount })
 
     expect(
       screen.getByText(

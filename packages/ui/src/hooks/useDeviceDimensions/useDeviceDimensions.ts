@@ -1,9 +1,6 @@
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
-export type DeviceDimensions = {
-  fullHeight: number
-  fullWidth: number
-}
+export type DeviceDimensions = { fullHeight: number; fullWidth: number }
 
 export function useDeviceDimensions(): DeviceDimensions {
   throw new PlatformSplitStubError('useDeviceDimensions')

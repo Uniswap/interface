@@ -5,19 +5,16 @@ import { FeeAmount, Pool as PoolV3, TICK_SPACINGS, TickMath as TickMathV3, tickT
 import { Pool as PoolV4, tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
 import { ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { LiquidityBarSeries } from 'components/Charts/LiquidityChart/liquidity-bar-series'
-import {
-  LiquidityBarData,
-  LiquidityBarProps,
-  LiquidityBarSeriesOptions,
-} from 'components/Charts/LiquidityChart/renderer'
+import { LiquidityBarData, LiquidityBarProps, LiquidityBarSeriesOptions } from 'components/Charts/LiquidityChart/types'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 import { ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useState } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 import { TickProcessed } from 'utils/computeSurroundingTicks'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface LiquidityBarChartModelParams extends ChartModelParams<LiquidityBarData>, LiquidityBarProps {}
 
@@ -300,7 +297,7 @@ export function useLiquidityBarData({
   hooks?: string
   poolId?: string
 }) {
-  const { formatNumber, formatPrice } = useFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
 
   // Determine the correct tokens to use based on the protocol version
   // V3 requires tokens, V4 can handle native or tokens
@@ -370,8 +367,8 @@ export function useLiquidityBarData({
         barData.push({
           tick: t.tick,
           liquidity: parseFloat(t.liquidityActive.toString()),
-          price0: formatPrice({ price: price0, type: NumberType.SwapDetailsAmount }),
-          price1: formatPrice({ price: price1, type: NumberType.SwapDetailsAmount }),
+          price0: formatNumberOrString({ value: price0.toSignificant(), type: NumberType.SwapTradeAmount }),
+          price1: formatNumberOrString({ value: price1.toSignificant(), type: NumberType.SwapTradeAmount }),
           time: fakeTime,
           amount0Locked,
           amount1Locked,
@@ -415,8 +412,7 @@ export function useLiquidityBarData({
     currencyB,
     tokenAWrapped,
     tokenBWrapped,
-    formatNumber,
-    formatPrice,
+    formatNumberOrString,
     isReversed,
     feeTier,
     version,

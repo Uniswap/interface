@@ -11,9 +11,9 @@ import { SubmittableTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { ThemedText } from 'theme/components'
 import { chainSupportsGasEstimates } from 'uniswap/src/features/chains/utils'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
-
+import { NumberType } from 'utilities/src/format/types'
 const StyledGasIcon = styled(Gas)`
   height: 16px;
   width: 16px;
@@ -25,7 +25,7 @@ const StyledGasIcon = styled(Gas)`
 
 export default function GasEstimateTooltip({ trade, loading }: { trade?: SubmittableTrade; loading: boolean }) {
   const { chainId } = useMultichainContext()
-  const { formatNumber } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   if (!trade || !chainId || !chainSupportsGasEstimates(chainId)) {
     return null
@@ -49,28 +49,15 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Submitt
             <Row gap="sm">
               {isUniswapXTrade(trade) ? (
                 <UniswapXGradient>
-                  {formatNumber({
-                    input: trade.totalGasUseEstimateUSD,
-                    type: NumberType.FiatGasPrice,
-                  })}
+                  {convertFiatAmountFormatted(trade.totalGasUseEstimateUSD, NumberType.FiatGasPrice)}
                 </UniswapXGradient>
               ) : (
-                <>
-                  {formatNumber({
-                    input: trade.totalGasUseEstimateUSD,
-                    type: NumberType.FiatGasPrice,
-                  })}
-                </>
+                <>{convertFiatAmountFormatted(trade.totalGasUseEstimateUSD, NumberType.FiatGasPrice)}</>
               )}
 
               {isUniswapXTrade(trade) && (trade.classicGasUseEstimateUSD ?? 0) > 0 && (
                 <>
-                  <s>
-                    {formatNumber({
-                      input: trade.classicGasUseEstimateUSD,
-                      type: NumberType.FiatGasPrice,
-                    })}
-                  </s>
+                  <s>{convertFiatAmountFormatted(trade.classicGasUseEstimateUSD, NumberType.FiatGasPrice)}</s>
                 </>
               )}
             </Row>

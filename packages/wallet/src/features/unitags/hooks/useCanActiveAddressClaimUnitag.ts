@@ -1,6 +1,6 @@
+import { useQuery } from '@tanstack/react-query'
 import { useUnitagsClaimEligibilityQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsClaimEligibilityQuery'
-import { getUniqueId } from 'utilities/src/device/getUniqueId'
-import { useAsyncData } from 'utilities/src/react/hooks'
+import { uniqueIdQuery } from 'utilities/src/device/uniqueIdQuery'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export const useCanActiveAddressClaimUnitag = (
@@ -11,7 +11,7 @@ export const useCanActiveAddressClaimUnitag = (
   const activeAddress = useActiveAccountAddressWithThrow()
   const targetAddress = address ?? activeAddress
 
-  const { data: deviceId } = useAsyncData(getUniqueId)
+  const { data: deviceId } = useQuery(uniqueIdQuery())
   const skip = !deviceId
 
   const { isLoading, data } = useUnitagsClaimEligibilityQuery({

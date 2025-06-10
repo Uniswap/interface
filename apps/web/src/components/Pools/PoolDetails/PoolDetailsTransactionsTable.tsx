@@ -19,10 +19,11 @@ import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
+import { NumberType } from 'utilities/src/format/types'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const StyledExternalLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.neutral2};
@@ -72,7 +73,7 @@ export function PoolDetailsTransactionsTable({
 }) {
   const chainId = useChainIdFromUrlParam() ?? UniverseChainId.Mainnet
   const activeLocalCurrency = useAppFiatCurrency()
-  const { formatNumber, formatFiatPrice } = useFormatter()
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
   const filterAnchorRef = useRef<HTMLDivElement>(null)
   const [filter, setFilters] = useState<PoolTableTransactionType[]>([
@@ -184,7 +185,7 @@ export function PoolDetailsTransactionsTable({
         ),
         cell: (fiat) => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
-            <TableText>{formatFiatPrice({ price: fiat.getValue?.() })}</TableText>
+            <TableText>{convertFiatAmountFormatted(fiat.getValue?.(), NumberType.FiatTokenPrice)}</TableText>
           </Cell>
         ),
       }),
@@ -201,7 +202,10 @@ export function PoolDetailsTransactionsTable({
         cell: (inputTokenAmount) => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
             <TableText>
-              {formatNumber({ input: Math.abs(inputTokenAmount.getValue?.() ?? 0), type: NumberType.TokenTx })}
+              {formatNumberOrString({
+                value: Math.abs(inputTokenAmount.getValue?.() ?? 0),
+                type: NumberType.TokenTx,
+              })}
             </TableText>
           </Cell>
         ),
@@ -219,7 +223,10 @@ export function PoolDetailsTransactionsTable({
         cell: (outputTokenAmount) => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
             <TableText>
-              {formatNumber({ input: Math.abs(outputTokenAmount.getValue?.() ?? 0), type: NumberType.TokenTx })}
+              {formatNumberOrString({
+                value: Math.abs(outputTokenAmount.getValue?.() ?? 0),
+                type: NumberType.TokenTx,
+              })}
             </TableText>
           </Cell>
         ),
@@ -248,8 +255,8 @@ export function PoolDetailsTransactionsTable({
     chainId,
     filter,
     filterModalIsOpen,
-    formatFiatPrice,
-    formatNumber,
+    convertFiatAmountFormatted,
+    formatNumberOrString,
     showLoadingSkeleton,
     token0,
     token1?.symbol,

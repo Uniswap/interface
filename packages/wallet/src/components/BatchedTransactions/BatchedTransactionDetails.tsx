@@ -2,7 +2,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { forwardRef, useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  FlatList,
   LayoutChangeEvent,
   ListRenderItemInfo,
   NativeScrollEvent,
@@ -11,6 +10,7 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'

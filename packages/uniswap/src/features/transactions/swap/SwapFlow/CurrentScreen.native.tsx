@@ -49,7 +49,7 @@ export function CurrentScreen({
 }
 
 // Please verify this on both an Android and iOS physical device before changing these values.
-const SWAP_FORM_SCREEN_TRANSITION_DELAY = 25
+const SWAP_FORM_SCREEN_TRANSITION_DELAY = 75
 const SWAP_REVIEW_SCREEN_TRANSITION_DELAY = 450
 
 // We add a short hardcoded delay to allow the sheet to animate quickly both on first render and when going back from Review -> Form.

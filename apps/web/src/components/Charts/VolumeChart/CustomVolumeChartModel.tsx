@@ -3,7 +3,7 @@ import { CrosshairHighlightPrimitive } from 'components/Charts/VolumeChart/Cross
 import { CustomHistogramSeries } from 'components/Charts/VolumeChart/custom-histogram-series'
 import { CustomHistogramData, CustomHistogramSeriesOptions } from 'components/Charts/VolumeChart/renderer'
 import { BarPrice, DeepPartial, ISeriesApi } from 'lightweight-charts'
-import { NumberType } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
 
 export type CustomVolumeChartModelParams = {
   colors: string[]
@@ -57,8 +57,7 @@ export class CustomVolumeChartModel<TDataType extends CustomHistogramData> exten
     const stackedVolumeChartOptions = {
       localization: {
         locale: params.locale,
-        priceFormatter: (price: BarPrice) =>
-          params.format.formatFiatPrice({ price, type: NumberType.ChartVolumePriceScale }),
+        priceFormatter: (price: BarPrice) => params.format.convertFiatAmountFormatted(price, NumberType.FiatTokenPrice),
       },
       rightPriceScale: {
         visible: false,

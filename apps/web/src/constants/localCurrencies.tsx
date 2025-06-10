@@ -27,23 +27,6 @@ import { ReactNode, Suspense } from 'react'
 import { Loader } from 'ui/src/loading/Loader'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 
-// some currencies need to be forced to use the narrow symbol and others need to be forced to use symbol
-// for example: when CAD is set to narrowSymbol it is displayed as $ which offers no differentiation from USD
-// but when set to symbol it is displayed as CA$ which is correct
-// On the other hand when TBH is set to symbol it is displayed as THB, but when set to narrowSymbol it is ฿ which is correct
-export function getCurrencySymbolDisplayType(currency: FiatCurrency): 'narrowSymbol' | 'symbol' {
-  switch (currency) {
-    case FiatCurrency.SingaporeDollar:
-    case FiatCurrency.BrazilianReal:
-    case FiatCurrency.HongKongDollar:
-    case FiatCurrency.CanadianDollar:
-    case FiatCurrency.AustralianDollar:
-      return 'symbol'
-    default:
-      return 'narrowSymbol'
-  }
-}
-
 export function getLocalCurrencyIcon(localCurrency: FiatCurrency, size = 20): ReactNode {
   switch (localCurrency) {
     case FiatCurrency.UnitedStatesDollar:

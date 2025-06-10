@@ -84,7 +84,8 @@ const slice = createSlice({
       action: PayloadAction<{ walletAddress: string; hasDismissed: boolean }>,
     ) => {
       state.smartWalletNudge ??= {}
-      state.smartWalletNudge[action.payload.walletAddress] ??= {
+      state.smartWalletNudge[action.payload.walletAddress] = {
+        ...state.smartWalletNudge[action.payload.walletAddress],
         hasDismissedHomeScreenNudge: action.payload.hasDismissed,
       }
     },

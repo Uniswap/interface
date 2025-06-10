@@ -1,12 +1,13 @@
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ElementAfterText, Flex, Text, isWeb } from 'ui/src'
+import { ElementAfterText, Flex, Text } from 'ui/src'
 import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isWeb } from 'utilities/src/platform'
 
 const NETWORK_OPTION_ICON_SIZE = iconSizes.icon24
 const OPTION_GAP = isWeb ? '$spacing8' : '$spacing6'

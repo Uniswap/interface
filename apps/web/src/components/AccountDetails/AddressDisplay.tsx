@@ -5,6 +5,7 @@ import { Flex } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 
 const IdentifierText = styled.span`
@@ -21,7 +22,7 @@ export function AddressDisplay({ address, enableCopyAddress }: { address: Addres
   const uniswapUsername = unitag?.username
 
   const AddressDisplay = (
-    <Flex row gap="2px" alignItems="center">
+    <Flex row gap="2px" alignItems="center" data-testid={TestID.AddressDisplay}>
       <IdentifierText>{uniswapUsername ?? ENSName ?? shortenAddress(address)}</IdentifierText>
       {uniswapUsername && <Unitag size={18} />}
     </Flex>

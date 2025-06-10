@@ -22,12 +22,10 @@ export const SelectTokenPanel = ({
     <Flex
       row
       borderRadius="$rounded20"
-      backgroundColor="$surface1"
+      backgroundColor="$surface2"
       p="$spacing16"
       gap="$spacing12"
       alignItems="center"
-      borderWidth={1}
-      borderColor="$surface3"
       {...ClickableTamaguiStyle}
       {...rest}
     >

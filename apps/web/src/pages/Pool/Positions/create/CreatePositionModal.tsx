@@ -29,6 +29,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { Button, Flex, Separator, Text } from 'ui/src'
+import { Passkey } from 'ui/src/components/icons/Passkey'
 import { iconSizes } from 'ui/src/theme'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -38,6 +39,7 @@ import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
@@ -85,6 +87,9 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const startChainId = connectedAccount.chainId
   const navigate = useNavigate()
   const trace = useTrace()
+  const { isSignedInWithPasskey, isSessionAuthenticated, needsPasskeySignin } = useGetPasskeyAuthStatus(
+    connectedAccount.connector?.id,
+  )
 
   const onSuccess = useCallback(() => {
     setSteps([])
@@ -324,11 +329,20 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
             </Flex>
             {currentTransactionStep ? (
               <Button size="large" variant="branded" loading={true} key="create-position-confirm" fill={false}>
-                {t('common.confirmWallet')}
+                {isSignedInWithPasskey ? t('swap.button.submitting.passkey') : t('common.confirmWallet')}
               </Button>
             ) : (
-              <Button size="large" variant="branded" onPress={handleCreate} isDisabled={!txInfo?.action} fill={false}>
-                {t('common.button.create')}
+              <Button
+                size="large"
+                variant="branded"
+                onPress={handleCreate}
+                isDisabled={!txInfo?.action}
+                fill={false}
+                icon={needsPasskeySignin ? <Passkey size="$icon.24" /> : undefined}
+              >
+                {isSignedInWithPasskey && isSessionAuthenticated
+                  ? t('position.create.confirm')
+                  : t('common.button.create')}
               </Button>
             )}
           </>

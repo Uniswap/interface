@@ -2,7 +2,7 @@
 import type { BottomSheetView } from '@gorhom/bottom-sheet'
 import type { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, isWeb } from 'ui/src'
+import { Flex } from 'ui/src'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -26,7 +26,7 @@ import { usePriceDifference } from 'uniswap/src/features/transactions/swap/hooks
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isExtension, isInterface } from 'utilities/src/platform'
+import { isExtension, isInterface, isWeb } from 'utilities/src/platform'
 
 interface SwapFormScreenProps {
   hideContent: boolean
@@ -94,7 +94,6 @@ function SwapFormContent(): JSX.Element {
     exactFieldIsInput,
     exactFieldIsOutput,
     exactOutputDisabled,
-    isSwapDataLoading,
     resetSelection,
     currencyAmountsUSDValue,
     exactValue,
@@ -151,7 +150,7 @@ function SwapFormContent(): JSX.Element {
                 focus={selectingCurrencyField ? undefined : focusOnCurrencyField === CurrencyField.INPUT}
                 isFiatMode={isFiatMode && exactFieldIsInput}
                 isIndicativeLoading={trade.isIndicativeLoading}
-                isLoading={!exactFieldIsInput && isSwapDataLoading}
+                isLoading={!exactFieldIsInput && trade.isFetching}
                 priceDifferencePercentage={priceDifferencePercentage}
                 resetSelection={resetSelection}
                 showSoftInputOnFocus={false}
@@ -190,7 +189,7 @@ function SwapFormContent(): JSX.Element {
                 // We do not want to force-focus the input when the token selector is open.
                 focus={selectingCurrencyField ? undefined : focusOnCurrencyField === CurrencyField.OUTPUT}
                 isFiatMode={isFiatMode && exactFieldIsOutput}
-                isLoading={!exactFieldIsOutput && isSwapDataLoading}
+                isLoading={!exactFieldIsOutput && trade.isFetching}
                 priceDifferencePercentage={priceDifferencePercentage}
                 resetSelection={resetSelection}
                 showSoftInputOnFocus={false}
@@ -216,7 +215,7 @@ function SwapFormContent(): JSX.Element {
             <YouReceiveDetails
               isIndicative={Boolean(trade.indicativeTrade && !trade.trade)}
               isLoadingIndicative={trade.isIndicativeLoading}
-              isLoading={isSwapDataLoading}
+              isLoading={Boolean(trade.isFetching)}
               isBridge={isBridge}
             />
           )}

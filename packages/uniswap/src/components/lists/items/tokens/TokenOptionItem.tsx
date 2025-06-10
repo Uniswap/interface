@@ -11,6 +11,7 @@ import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
+import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -155,6 +156,7 @@ function _LegacyTokenOptionItem(props: LegacyTokenOptionItemProps): JSX.Element 
   }, [setShowWarningModal])
 
   const { value: isContextMenuOpen, setFalse: closeContextMenu, setTrue: openContextMenu } = useBooleanState(false)
+  const { hapticFeedback } = useHapticFeedback()
 
   const onPressTokenOption = useCallback(() => {
     if (showWarnings && shouldShowWarningModalOnPress) {
@@ -191,7 +193,10 @@ function _LegacyTokenOptionItem(props: LegacyTokenOptionItemProps): JSX.Element 
         opacity={(showWarnings && severity === WarningSeverity.Blocked) || isUnsupported ? 0.5 : 1}
         hoverStyle={{ backgroundColor: '$surface1Hovered' }}
         onPress={onPressTokenOption}
-        onLongPress={openContextMenu}
+        onLongPress={async (): Promise<void> => {
+          await hapticFeedback.success()
+          openContextMenu()
+        }}
       >
         {isWeb ? (
           // eslint-disable-next-line react/forbid-elements
@@ -297,6 +302,7 @@ export const TokenOptionItem = memo(function _TokenOptionItem(
   props: TokenOptionItemProps | LegacyTokenOptionItemProps,
 ): JSX.Element {
   const { value: isContextMenuOpen, setFalse: closeContextMenu, setTrue: openContextMenu } = useBooleanState(false)
+  const { hapticFeedback } = useHapticFeedback()
 
   if (!isLegacyTokenOptionItemProps(props)) {
     return (
@@ -312,7 +318,13 @@ export const TokenOptionItem = memo(function _TokenOptionItem(
             <BaseTokenOptionItem {...props} />
           </div>
         ) : (
-          <BaseTokenOptionItem {...props} openContextMenu={openContextMenu} />
+          <BaseTokenOptionItem
+            {...props}
+            openContextMenu={async (): Promise<void> => {
+              await hapticFeedback.success()
+              openContextMenu()
+            }}
+          />
         )}
       </TokenOptionItemContextMenu>
     )

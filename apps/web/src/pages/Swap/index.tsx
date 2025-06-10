@@ -8,6 +8,7 @@ import { PageWrapper } from 'components/swap/styled'
 import { useAccount } from 'hooks/useAccount'
 import { useDeferredComponent } from 'hooks/useDeferredComponent'
 import { PageType, useIsPage } from 'hooks/useIsPage'
+import { useModalState } from 'hooks/useModalState'
 import { useResetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
 import { useWebSwapSettings } from 'pages/Swap/settings/useWebSwapSettings'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -31,7 +32,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   PasskeyAuthStatus,
@@ -178,7 +179,7 @@ export function Swap({
   )
 }
 
-const SWAP_TABS = [SwapTab.Swap, SwapTab.Limit, SwapTab.Send, SwapTab.Buy, SwapTab.Sell]
+const SWAP_TABS = [SwapTab.Swap, SwapTab.Limit, SwapTab.Buy, SwapTab.Sell]
 
 const TAB_TYPE_TO_LABEL = {
   [SwapTab.Swap]: (t: AppTFunction) => t('swap.form.header'),
@@ -232,21 +233,21 @@ function UniversalSwapFlow({
       default: module.BuyForm,
     })),
   )
-  const SendForm = useDeferredComponent(() =>
-    import('pages/Swap/Send/SendForm').then((module) => ({
-      default: module.SendForm,
-    })),
-  )
+
+  const { openModal: openSendFormModal } = useModalState(ModalName.Send)
 
   useEffect(() => {
-    if (pathname === '/send' && isIFramed()) {
-      // Redirect to swap if send tab is iFramed (we do not allow the send tab to be iFramed due to clickjacking protections)
-      // https://www.notion.so/uniswaplabs/What-is-not-allowed-to-be-iFramed-Clickjacking-protections-874f85f066c648afa0eb3480b3f47b5c#d0ebf1846c83475a86342a594f77eae5
+    if (pathname === '/send') {
       setCurrentTab(SwapTab.Swap)
+      // Do not open the send modal if iFramed (we do not allow the send tab to be iFramed due to clickjacking protections)
+      // https://www.notion.so/uniswaplabs/What-is-not-allowed-to-be-iFramed-Clickjacking-protections-874f85f066c648afa0eb3480b3f47b5c#d0ebf1846c83475a86342a594f77eae5
+      if (!isIFramed()) {
+        openSendFormModal()
+      }
     } else {
       setCurrentTab(PATHNAME_TO_TAB[pathname] ?? SwapTab.Swap)
     }
-  }, [pathname, setCurrentTab])
+  }, [pathname, setCurrentTab, openSendFormModal])
 
   const onTabClick = useCallback(
     (tab: SwapTab) => {
@@ -263,11 +264,11 @@ function UniversalSwapFlow({
   const isFiatOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
   const SWAP_TAB_OPTIONS: readonly SegmentedControlOption<SwapTab>[] = useMemo(() => {
     return SWAP_TABS.filter((tab) => {
-      if ((tab === SwapTab.Sell && !isFiatOffRampEnabled) || (tab === SwapTab.Send && isFiatOffRampEnabled)) {
+      if (tab === SwapTab.Sell && !isFiatOffRampEnabled) {
         return false
       }
 
-      return !(isIFramed() && tab === SwapTab.Send)
+      return true
     }).map((tab) => ({
       value: tab,
       display: (
@@ -323,9 +324,6 @@ function UniversalSwapFlow({
         </Flex>
       )}
       {currentTab === SwapTab.Limit && LimitFormWrapper && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
-      {currentTab === SwapTab.Send && SendForm && (
-        <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
-      )}
       {currentTab === SwapTab.Buy && BuyForm && (
         <BuyForm
           rampDirection={RampDirection.ONRAMP}

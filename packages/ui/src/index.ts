@@ -29,7 +29,6 @@ export {
   getToken,
   getTokenValue,
   isTouchable,
-  isWeb,
   styled,
   useComposedRefs,
   useIsTouchDevice,

@@ -20,11 +20,12 @@ import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSortedPortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
+import { NumberType } from 'utilities/src/format/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { getChainUrlParam } from 'utils/chainParams'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export default function Tokens() {
   const accountDrawer = useAccountDrawer()
@@ -68,7 +69,7 @@ export default function Tokens() {
 
 function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
   const { t } = useTranslation()
-  const { formatDelta, formatNumber } = useFormatter()
+  const { formatPercent, formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const { isTestnetModeEnabled } = useEnabledChains()
   const navigate = useNavigate()
   const accountDrawer = useAccountDrawer()
@@ -109,8 +110,8 @@ function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
       }
       descriptor={
         <Text variant="body2" color="$neutral2" {...EllipsisTamaguiStyle}>
-          {formatNumber({
-            input: tokenBalance.quantity,
+          {formatNumberOrString({
+            value: tokenBalance.quantity,
             type: NumberType.TokenNonTx,
           })}{' '}
           {symbol}
@@ -121,14 +122,11 @@ function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
         tokenBalance.balanceUSD && (
           <>
             <ThemedText.SubHeader>
-              {formatNumber({
-                input: tokenBalance.balanceUSD,
-                type: NumberType.PortfolioBalance,
-              })}
+              {convertFiatAmountFormatted(tokenBalance.balanceUSD, NumberType.PortfolioBalance)}
             </ThemedText.SubHeader>
             <Row justify="flex-end">
-              <DeltaArrow delta={percentChange24} formattedDelta={formatDelta(percentChange24)} />
-              <ThemedText.BodySecondary>{formatDelta(percentChange24)}</ThemedText.BodySecondary>
+              <DeltaArrow delta={percentChange24} formattedDelta={formatPercent(Math.abs(percentChange24))} />
+              <ThemedText.BodySecondary>{formatPercent(Math.abs(percentChange24))}</ThemedText.BodySecondary>
             </Row>
           </>
         )

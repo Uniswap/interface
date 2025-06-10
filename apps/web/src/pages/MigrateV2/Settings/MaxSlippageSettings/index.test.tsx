@@ -45,7 +45,7 @@ describe('MaxSlippageSettings', () => {
 
       fireEvent.change(getSlippageInput(), { target: { value: '0.5' } })
 
-      expect(screen.queryAllByText('0.5%').length).toEqual(1)
+      expect(screen.queryAllByText('0.50%').length).toEqual(1)
     })
     it('updates input value on blur with the slippage in store', () => {
       renderSlippageSettings()
@@ -55,7 +55,7 @@ describe('MaxSlippageSettings', () => {
       fireEvent.change(input, { target: { value: '0.5' } })
       fireEvent.blur(input)
 
-      expect(input.value).toBe('0.5')
+      expect(input.value).toBe('0.50')
     })
     it('clears errors on blur and overwrites incorrect value with the latest correct value', () => {
       renderSlippageSettings()

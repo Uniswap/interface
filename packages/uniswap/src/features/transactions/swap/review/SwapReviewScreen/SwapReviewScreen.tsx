@@ -1,5 +1,5 @@
 import { ReactNode, memo } from 'react'
-import { Flex, isWeb } from 'ui/src'
+import { Flex } from 'ui/src'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
@@ -27,6 +27,7 @@ import { SwapReviewWarningStateContextProvider } from 'uniswap/src/features/tran
 import { useAcceptedTrade } from 'uniswap/src/features/transactions/swap/review/hooks/useAcceptedTrade'
 import { useSwapOnPrevious } from 'uniswap/src/features/transactions/swap/review/hooks/useSwapOnPrevious'
 import { logger } from 'utilities/src/logger/logger'
+import { isWeb } from 'utilities/src/platform'
 
 interface SwapReviewScreenProps {
   hideContent: boolean
@@ -46,11 +47,7 @@ export function SwapReviewScreenProviders(
   const { isSubmitting } = useSwapFormContext()
   const { derivedSwapInfo, getExecuteSwapService } = useSwapDependencies()
   const swapTxContext = useSwapTxContext()
-  const {
-    onAcceptTrade,
-    acceptedDerivedSwapInfo: swapAcceptedDerivedSwapInfo,
-    newTradeRequiresAcceptance,
-  } = useAcceptedTrade({
+  const { onAcceptTrade, acceptedDerivedSwapInfo, newTradeRequiresAcceptance } = useAcceptedTrade({
     derivedSwapInfo,
     isSubmitting,
   })
@@ -69,7 +66,7 @@ export function SwapReviewScreenProviders(
           <SwapReviewTransactionContextProvider
             derivedSwapInfo={derivedSwapInfo}
             swapTxContext={swapTxContext}
-            swapAcceptedDerivedSwapInfo={swapAcceptedDerivedSwapInfo}
+            acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
             newTradeRequiresAcceptance={newTradeRequiresAcceptance}
           >
             <SwapReviewContent />

@@ -27,7 +27,7 @@ import {
 } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 
 function mockSwapInfo(
   type: MockTradeType,
@@ -234,7 +234,7 @@ jest.mock('../../../../state/transactions/hooks', () => {
 
 describe('parseLocalActivity', () => {
   it('returns swap activity fields with known tokens, exact input', async () => {
-    const { formatNumber } = renderHook(() => useFormatter()).result.current
+    const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
 
     const details = {
       info: mockSwapInfo(
@@ -248,7 +248,7 @@ describe('parseLocalActivity', () => {
       status: TransactionStatus.Confirmed,
     } as TransactionDetails
     const chainId = UniverseChainId.Mainnet
-    const result = await transactionToActivity(details, chainId, formatNumber)
+    const result = await transactionToActivity(details, chainId, formatNumberOrString)
     expect(result).toEqual({
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
@@ -262,7 +262,7 @@ describe('parseLocalActivity', () => {
   })
 
   it('returns swap activity fields with known tokens, exact output', async () => {
-    const { formatNumber } = renderHook(() => useFormatter()).result.current
+    const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
 
     const details = {
       info: mockSwapInfo(
@@ -276,7 +276,7 @@ describe('parseLocalActivity', () => {
       status: TransactionStatus.Confirmed,
     } as TransactionDetails
     const chainId = UniverseChainId.Mainnet
-    const result = await transactionToActivity(details, chainId, formatNumber)
+    const result = await transactionToActivity(details, chainId, formatNumberOrString)
     expect(result).toMatchObject({
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
@@ -289,7 +289,7 @@ describe('parseLocalActivity', () => {
   it('returns swap activity fields with unknown tokens', async () => {
     mocked(getCurrency).mockImplementation(async () => undefined)
 
-    const { formatNumber } = renderHook(() => useFormatter()).result.current
+    const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
 
     const details = {
       info: mockSwapInfo(
@@ -303,7 +303,7 @@ describe('parseLocalActivity', () => {
       status: TransactionStatus.Confirmed,
     } as TransactionDetails
     const chainId = UniverseChainId.Mainnet
-    const result = await transactionToActivity(details, chainId, formatNumber)
+    const result = await transactionToActivity(details, chainId, formatNumberOrString)
     expect(result).toMatchObject({
       chainId: 1,
       currencies: [undefined, undefined],
@@ -572,7 +572,7 @@ describe('parseLocalActivity', () => {
   })
 
   it('Signature to activity - returns undefined if is filled onchain order', async () => {
-    const { formatNumber } = renderHook(() => useFormatter()).result.current
+    const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
 
     expect(
       await signatureToActivity(
@@ -580,13 +580,13 @@ describe('parseLocalActivity', () => {
           type: SignatureType.SIGN_UNISWAPX_ORDER,
           status: UniswapXOrderStatus.FILLED,
         } as SignatureDetails,
-        formatNumber,
+        formatNumberOrString,
       ),
     ).toBeUndefined()
   })
 
   it('Signature to activity - returns activity if is cancelled onchain order', async () => {
-    const { formatNumber } = renderHook(() => useFormatter()).result.current
+    const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
 
     expect(
       await signatureToActivity(
@@ -602,7 +602,7 @@ describe('parseLocalActivity', () => {
             mockCurrencyAmountRaw,
           ),
         } as SignatureDetails,
-        formatNumber,
+        formatNumberOrString,
       ),
     ).toEqual({
       chainId: 1,

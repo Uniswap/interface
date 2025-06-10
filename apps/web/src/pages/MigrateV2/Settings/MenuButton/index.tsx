@@ -4,12 +4,12 @@ import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import { ThemedText } from 'theme/components'
 import { Flex, TouchableArea } from 'ui/src'
-import { useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import validateUserSlippageTolerance, { SlippageValidationResult } from 'utils/validateUserSlippageTolerance'
 
 const ButtonContent = ({ compact }: { compact: boolean }) => {
   const [userSlippageTolerance] = useUserSlippageTolerance()
-  const { formatPercent } = useFormatter()
+  const { formatPercent } = useLocalizationContext()
 
   if (userSlippageTolerance === SlippageTolerance.Auto) {
     return (
@@ -33,9 +33,9 @@ const ButtonContent = ({ compact }: { compact: boolean }) => {
     >
       <ThemedText.Caption color={isInvalidSlippage ? 'accentWarning' : 'neutral2'}>
         {compact ? (
-          formatPercent(userSlippageTolerance)
+          formatPercent(userSlippageTolerance.toSignificant())
         ) : (
-          <Trans i18nKey="swap.slippage.amt" values={{ amt: formatPercent(userSlippageTolerance) }} />
+          <Trans i18nKey="swap.slippage.amt" values={{ amt: formatPercent(userSlippageTolerance.toSignificant()) }} />
         )}
       </ThemedText.Caption>
       <Settings height="24px" width="24px" fill="neutral2" />

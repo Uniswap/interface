@@ -43,16 +43,12 @@ import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupp
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { Locale } from 'uniswap/src/features/language/constants'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useIsMismatchAccountQuery } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import {
-  NumberType,
-  formatCurrencyAmount as formatCurrencyAmountWithoutUserLocale,
-  useFormatter,
-} from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 const LIMIT_SUPPORTED_CHAINS = [UniverseChainId.Mainnet]
@@ -100,7 +96,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   const theme = useTheme()
   const { onSwitchTokens } = useSwapActionHandlers()
-  const { formatCurrencyAmount } = useFormatter()
+  const { formatCurrencyAmount } = useLocalizationContext()
   const accountDrawer = useAccountDrawer()
   const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
 
@@ -123,8 +119,8 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       return
     }
 
-    const marketPriceString = formatCurrencyAmountWithoutUserLocale({
-      amount: (() => {
+    const marketPriceString = formatCurrencyAmount({
+      value: (() => {
         if (limitState.limitPriceInverted) {
           return marketPrice.invert().quote(CurrencyAmount.fromRawAmount(outputCurrency, 10 ** outputCurrency.decimals))
         } else {
@@ -133,7 +129,6 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       })(),
       type: NumberType.SwapTradeAmount,
       placeholder: '',
-      locale: Locale.EnglishUnitedStates,
     })
 
     setLimitState((prev) => ({
@@ -282,13 +277,13 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
     const formattedInput = limitState.isInputAmountFixed
       ? limitState.inputAmount
       : formatCurrencyAmount({
-          amount: derivedLimitInfo.parsedAmounts[CurrencyField.INPUT],
+          value: derivedLimitInfo.parsedAmounts[CurrencyField.INPUT],
           type: NumberType.SwapTradeAmount,
           placeholder: '',
         })
     const formattedOutput = limitState.isInputAmountFixed
       ? formatCurrencyAmount({
-          amount: derivedLimitInfo.parsedAmounts[CurrencyField.OUTPUT],
+          value: derivedLimitInfo.parsedAmounts[CurrencyField.OUTPUT],
           type: NumberType.SwapTradeAmount,
           placeholder: '',
         })

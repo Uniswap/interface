@@ -1,22 +1,21 @@
 import {
   FLASHBOTS_DEFAULT_REFUND_PERCENT,
-  FLASHBOTS_RPC_URL,
   FLASHBOTS_SIGNATURE_HEADER,
-  getRefundString,
   SignerInfo,
+  buildFlashbotsUrl,
 } from 'uniswap/src/features/providers/FlashbotsCommon'
 import {
   Chain,
   ClientConfig,
-  createPublicClient,
   EIP1193RequestFn,
-  hashMessage,
-  http,
   PublicClient,
   Transport,
   TransportConfig,
+  createPublicClient,
+  hashMessage,
+  http,
+  walletActions,
 } from 'viem'
-import { eip7702Actions } from 'viem/experimental'
 
 /**
  * Creates a Flashbots RPC client using viem
@@ -47,7 +46,7 @@ export function createFlashbotsRpcClient({
   return createPublicClient({
     chain,
     transport,
-  }).extend(eip7702Actions())
+  }).extend(walletActions)
 }
 
 /**
@@ -116,22 +115,6 @@ export function createFlashbotsTransport({
 }
 
 // --- Utility Functions ---
-
-/**
- * Builds a Flashbots URL with the appropriate parameters
- */
-function buildFlashbotsUrl({
-  baseUrl = FLASHBOTS_RPC_URL,
-  address,
-  refundPercent,
-}: {
-  baseUrl?: string
-  address?: `0x${string}` | string | undefined
-  refundPercent?: number
-}): string {
-  const refundParam = getRefundString(address, refundPercent)
-  return `${baseUrl}${refundParam}`
-}
 
 /**
  * Determines if a request should be authenticated with Flashbots headers

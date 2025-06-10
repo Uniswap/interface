@@ -10,7 +10,6 @@ export enum WalletEventName {
   BackupMethodRemoved = 'Backup Method Removed',
   DappRequestCardClosed = 'DappRequestCardClosed',
   DappRequestCardPressed = 'DappRequestCardPressed',
-  DismissSmartWalletUpgradeModal = 'Dismiss Wallet Upgrade Modal',
   ExploreSearchCancel = 'Explore Search Cancel',
   ExternalLinkOpened = 'External Link Opened',
   GasEstimateAccuracy = 'Gas Estimate Accuracy',

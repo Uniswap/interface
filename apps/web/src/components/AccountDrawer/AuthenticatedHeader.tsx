@@ -22,6 +22,7 @@ import { useIsUniExtensionConnected } from 'hooks/useIsUniExtensionConnected'
 import { useModalState } from 'hooks/useModalState'
 import { useSignOutWithPasskey } from 'hooks/useSignOutWithPasskey'
 import { useAtom } from 'jotai'
+import { SendFormModal } from 'pages/Swap/Send/SendFormModal'
 import { useCallback, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -30,7 +31,7 @@ import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/ho
 import { CopyHelper } from 'theme/components/CopyHelper'
 import { Button, Flex, Text } from 'ui/src'
 import { ArrowDownCircleFilled } from 'ui/src/components/icons/ArrowDownCircleFilled'
-import { Bank } from 'ui/src/components/icons/Bank'
+import { SendAction } from 'ui/src/components/icons/SendAction'
 import { Shine } from 'ui/src/loading/Shine'
 import AnimatedNumber, {
   BALANCE_CHANGE_INDICATION_DURATION,
@@ -56,7 +57,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { isPathBlocked } from 'utils/blockedPaths'
 
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
   const { disconnect } = useDisconnect()
@@ -66,7 +66,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
 
   const [modalState, setModalState] = useAtom(miniPortfolioModalStateAtom)
 
-  const shouldShowBuyFiatButton = !isPathBlocked('/buy')
   const isUniExtensionConnected = useIsUniExtensionConnected()
   const { isTestnetModeEnabled } = useEnabledChains()
   const connectedAccount = useAccount()
@@ -99,6 +98,11 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const openAddressQRModal = useEvent(() => setModalState(ModalState.QR_CODE))
   const openCEXTransferModal = useEvent(() => setModalState(ModalState.CEX_TRANSFER))
   const openReceiveCryptoModal = useEvent(() => setModalState(ModalState.DEFAULT))
+  const {
+    isOpen: isSendFormModalOpen,
+    openModal: openSendFormModal,
+    closeModal: closeSendFormModal,
+  } = useModalState(ModalName.Send)
 
   const { data, networkStatus, loading } = usePortfolioTotalValue({
     address: account,
@@ -166,7 +170,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           </Text>
           {showAddress && (
             <CopyHelper iconSize={14} iconPosition="right" toCopy={account}>
-              <Text variant="body3" color="neutral3">
+              <Text variant="body3" color="neutral3" data-testid={TestID.AddressDisplayCopyHelper}>
                 {shortenAddress(account)}
               </Text>
             </CopyHelper>
@@ -214,14 +218,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               ) : (
                 <>
                   <Flex row gap="$gap8">
-                    {shouldShowBuyFiatButton && (
-                      <ActionTile
-                        dataTestId={TestID.WalletBuyCrypto}
-                        Icon={<Bank size={24} color="$accent1" />}
-                        name={t('common.buy.label')}
-                        onClick={handleBuyCryptoClick}
-                      />
-                    )}
+                    <ActionTile
+                      dataTestId={TestID.Send}
+                      Icon={<SendAction size={24} color="$accent1" />}
+                      name={t('common.send.button')}
+                      onClick={openSendFormModal}
+                    />
                     <ActionTile
                       dataTestId={TestID.WalletReceiveCrypto}
                       Icon={<ArrowDownCircleFilled size={24} color="$accent1" />}
@@ -248,6 +250,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         </Flex>
       </Flex>
       {modalState !== undefined && <ReceiveCryptoModal />}
+      {isSendFormModalOpen && <SendFormModal isModalOpen={isSendFormModalOpen} onClose={closeSendFormModal} />}
       {displayDelegationMismatchModal && (
         <DelegationMismatchModal onClose={() => setDisplayDelegationMismatchModal(false)} />
       )}

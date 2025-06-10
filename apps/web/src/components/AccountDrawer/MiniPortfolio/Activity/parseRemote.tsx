@@ -34,6 +34,7 @@ import {
   NftApprovalPartsFragment,
   NftApproveForAllPartsFragment,
   NftTransferPartsFragment,
+  OffRampTransactionDetailsPartsFragment,
   OnRampTransactionDetailsPartsFragment,
   OnRampTransferPartsFragment,
   TokenApprovalPartsFragment,
@@ -485,6 +486,7 @@ function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: For
 
 type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
 type FiatOnRampActivity = AssetActivityPartsFragment & { details: OnRampTransactionDetailsPartsFragment }
+type FiatOffRampActivity = AssetActivityPartsFragment & { details: OffRampTransactionDetailsPartsFragment }
 
 function parseSendReceive(
   changes: TransactionChanges,
@@ -736,6 +738,42 @@ function parseFiatOnRampTransaction(activity: TransactionActivity | FiatOnRampAc
   }
 }
 
+function parseFiatOffRampTransaction(activity: FiatOffRampActivity): Activity {
+  const chainId = supportedChainIdFromGQLChain(activity.chain)
+  if (!chainId) {
+    const error = new Error('Invalid activity from unsupported chain received from GQL')
+    logger.error(error, {
+      tags: {
+        file: 'parseRemote',
+        function: 'parseRemote',
+      },
+      extra: { activity },
+    })
+    throw error
+  }
+
+  const { offRampTransfer } = activity.details
+  return {
+    from: activity.details.senderAddress,
+    hash: activity.id,
+    chainId,
+    timestamp: activity.timestamp,
+    logos: [offRampTransfer.token.project?.logoUrl],
+    currencies: [gqlToCurrency(offRampTransfer.token)],
+    title: i18n.t('transaction.status.sale.successOn', {
+      serviceProvider: offRampTransfer.serviceProvider.name,
+    }),
+    descriptor: i18n.t('fiatOffRamp.exchangeRate', {
+      inputAmount: offRampTransfer.amount,
+      inputSymbol: offRampTransfer.token.symbol,
+      outputAmount: offRampTransfer.destinationAmount,
+      outputSymbol: offRampTransfer.destinationCurrency,
+    }),
+    suffixIconSrc: offRampTransfer.serviceProvider.logoDarkUrl,
+    status: activity.details.status,
+  }
+}
+
 function parseRemoteActivity(
   assetActivity: AssetActivityPartsFragment | undefined,
   account: string,
@@ -746,13 +784,8 @@ function parseRemoteActivity(
       return undefined
     }
 
-    // TODO: skip until offramp transactions are supported
-    if (
-      assetActivity.details.__typename === 'OffRampTransactionDetails' ||
-      (assetActivity.details.__typename === 'TransactionDetails' &&
-        assetActivity.details.type === TransactionType.OffRamp)
-    ) {
-      return undefined
+    if (assetActivity.details.__typename === 'OffRampTransactionDetails') {
+      return parseFiatOffRampTransaction(assetActivity as FiatOffRampActivity)
     }
 
     if (assetActivity.details.__typename === 'SwapOrderDetails') {

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, IconButton, isWeb } from 'ui/src'
+import { Button, Flex, IconButton } from 'ui/src'
 import { HelpCenter } from 'ui/src/components/icons/HelpCenter'
 import { X } from 'ui/src/components/icons/X'
 import { WarningModalContent } from 'uniswap/src/components/modals/WarningModal/WarningModal'
@@ -13,6 +13,7 @@ import { useTransactionSettingsContext } from 'uniswap/src/features/transactions
 import { TransactionStepFailedError, getErrorContent } from 'uniswap/src/features/transactions/errors'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { openUri } from 'uniswap/src/utils/linking'
+import { isWeb } from 'utilities/src/platform'
 
 export function SwapErrorScreen({
   submissionError,

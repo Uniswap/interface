@@ -12,7 +12,8 @@ import { Flex } from 'ui/src'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 interface BalanceProps {
   currency?: Currency
@@ -28,17 +29,17 @@ const Balance = ({
   alignLeft = false,
   onClick,
 }: BalanceProps) => {
-  const { formatNumber } = useFormatter()
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const currencies = useMemo(() => [currency], [currency])
 
-  const formattedGqlBalance = formatNumber({
-    input: gqlBalance?.quantity,
+  const formattedGqlBalance = formatNumberOrString({
+    value: gqlBalance?.quantity,
     type: NumberType.TokenNonTx,
   })
-  const formattedUsdGqlValue = formatNumber({
-    input: gqlBalance?.denominatedValue?.value,
-    type: NumberType.PortfolioBalance,
-  })
+  const formattedUsdGqlValue = convertFiatAmountFormatted(
+    gqlBalance?.denominatedValue?.value,
+    NumberType.PortfolioBalance,
+  )
 
   return (
     <Flex mt="$spacing12" row alignItems="center" onPress={onClick}>

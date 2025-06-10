@@ -273,14 +273,6 @@ export const DAI_AVALANCHE = new Token(
   'Dai.e Token',
 )
 
-export const CELO_CELO = new Token(
-  UniverseChainId.Celo,
-  '0x471EcE3750Da237f93B8E339c536989b8978a438',
-  18,
-  'CELO',
-  'Celo',
-)
-
 export const PORTAL_ETH_CELO = new Token(
   UniverseChainId.Celo,
   '0x66803FB87aBd4aaC3cbB3fAd7C3aa01f6F3FB207',
@@ -438,10 +430,11 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
   ),
   [UniverseChainId.Celo]: new Token(
     UniverseChainId.Celo,
+    // This is the precompile contract address that makes the native asset fully compliant with ERC20.
     '0x471ece3750da237f93b8e339c536989b8978a438',
     18,
     'CELO',
-    'Celo native asset',
+    'Celo',
   ),
   [UniverseChainId.MonadTestnet]: new Token(
     UniverseChainId.MonadTestnet,
@@ -519,14 +512,30 @@ export function isCelo(chainId: number): chainId is UniverseChainId.Celo {
   return chainId === UniverseChainId.Celo
 }
 
-// Celo has a precompile for its native asset that is fully-compliant with ERC20 interface
-// so we can treat it as an ERC20 token. (i.e. $CELO pools are created with its ERC20 precompile)
-function getCeloNativeCurrency(chainId: number): Token {
-  switch (chainId) {
-    case UniverseChainId.Celo:
-      return CELO_CELO
-    default:
+// Celo has a precompile for its native asset that makes the native asset fully compliant with ERC20
+// (i.e. $CELO pools are created with its ERC20 precompile).
+// But we still treat it as a NativeCurrency so that .isNative = true.
+class CeloNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isCelo(this.chainId)) {
       throw new Error('Not celo')
+    }
+    // Return wrapped representation of the native asset, which uses the ERC20 precompile contract address
+    // 0x471ece3750da237f93b8e339c536989b8978a438 as the address.
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    invariant(wrapped instanceof Token)
+    return wrapped
+  }
+
+  public constructor(chainId: number) {
+    if (!isCelo(chainId)) {
+      throw new Error('Not celo')
+    }
+    super(chainId, 18, 'CELO', 'Celo')
   }
 }
 
@@ -670,7 +679,7 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
   if (isPolygon(chainId)) {
     nativeCurrency = new PolygonNativeCurrency(chainId)
   } else if (isCelo(chainId)) {
-    nativeCurrency = getCeloNativeCurrency(chainId)
+    nativeCurrency = new CeloNativeCurrency(chainId)
   } else if (isBsc(chainId)) {
     nativeCurrency = new BscNativeCurrency(chainId)
   } else if (isAvalanche(chainId)) {

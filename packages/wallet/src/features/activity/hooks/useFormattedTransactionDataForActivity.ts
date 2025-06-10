@@ -42,6 +42,7 @@ export function useFormattedTransactionDataForActivity({
   sectionData: Array<TransactionDetails | SectionHeader | LoadingItem> | undefined
   keyExtractor: (item: TransactionDetails | SectionHeader | LoadingItem) => string
   onRetry: () => void
+  skip?: boolean
 } {
   const { t } = useTranslation()
   const { gqlChains } = useEnabledChains()

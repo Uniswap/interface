@@ -166,10 +166,9 @@ const ContractsDropdownRow = ({
   const currency = tokens[0] && gqlToCurrency(tokens[0])
   const isPool = tokens.length === 2
   const currencies = isPool && tokens[1] ? [currency, gqlToCurrency(tokens[1])] : [currency]
-  const isNative = address === NATIVE_CHAIN_ID
+  const isNative = address === NATIVE_CHAIN_ID || !address
   const explorerUrl =
     chainId &&
-    address &&
     getExplorerLink(
       chainId,
       address,

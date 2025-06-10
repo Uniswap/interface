@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
@@ -9,37 +10,34 @@ import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/Wall
 export function useSmartWalletChains(): UniverseChainId[] {
   const { chains: enabledChains } = useEnabledChains()
   const { delegationDataQuery } = useWalletDelegationContext()
-  const validChains: UniverseChainId[] = []
 
-  if (!delegationDataQuery.data) {
-    return []
-  }
+  return useMemo(() => {
+    const validChains: UniverseChainId[] = []
 
-  const address = Object.keys(delegationDataQuery.data)[0]
-  if (!address) {
-    return []
-  }
-  const chainData = delegationDataQuery.data[address]
-  if (!chainData) {
-    return []
-  }
-
-  for (const chainId in chainData) {
-    const chain = toSupportedChainId(chainId)
-    if (!chain) {
-      continue
+    if (!delegationDataQuery.data) {
+      return []
     }
-    const chainResult = chainData[chain]
-    if (enabledChains.includes(chain) && chainResult?.latestDelegationAddress) {
-      validChains.push(chain)
+
+    const address = Object.keys(delegationDataQuery.data)[0]
+    if (!address) {
+      return []
     }
-  }
+    const chainData = delegationDataQuery.data[address]
+    if (!chainData) {
+      return []
+    }
 
-  return validChains
-}
+    for (const chainId in chainData) {
+      const chain = toSupportedChainId(chainId)
+      if (!chain) {
+        continue
+      }
+      const chainResult = chainData[chain]
+      if (enabledChains.includes(chain) && chainResult?.latestDelegationAddress) {
+        validChains.push(chain)
+      }
+    }
 
-export function useIsChainSupportedBySmartWallet(chainId?: UniverseChainId): boolean {
-  const enabledSmartWalletChains = useSmartWalletChains()
-
-  return chainId ? enabledSmartWalletChains.includes(chainId) : false
+    return validChains
+  }, [enabledChains, delegationDataQuery.data])
 }

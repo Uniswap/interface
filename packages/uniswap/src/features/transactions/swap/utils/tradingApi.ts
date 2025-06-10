@@ -41,6 +41,8 @@ import {
   Trade,
   UniswapXV2Trade,
   UniswapXV3Trade,
+  UnwrapTrade,
+  WrapTrade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   DEFAULT_PROTOCOL_OPTIONS,
@@ -109,6 +111,12 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
     }
     case Routing.BRIDGE: {
       return new BridgeTrade({ quote: data, currencyIn, currencyOut, tradeType })
+    }
+    case Routing.WRAP: {
+      return new WrapTrade({ quote: data, currencyIn, currencyOut, tradeType })
+    }
+    case Routing.UNWRAP: {
+      return new UnwrapTrade({ quote: data, currencyIn, currencyOut, tradeType })
     }
     default: {
       return null

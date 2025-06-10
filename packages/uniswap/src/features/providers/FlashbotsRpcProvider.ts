@@ -5,10 +5,9 @@ import { resolveProperties } from '@ethersproject/properties'
 import { BlockTag, JsonRpcProvider } from '@ethersproject/providers'
 import { ConnectionInfo, fetchJson } from '@ethersproject/web'
 import {
-  FLASHBOTS_RPC_URL,
   FLASHBOTS_SIGNATURE_HEADER,
   SignerInfo,
-  getRefundString,
+  buildFlashbotsUrl,
 } from 'uniswap/src/features/providers/FlashbotsCommon'
 
 /**
@@ -37,8 +36,10 @@ export class FlashbotsRpcProvider extends AuthenticatedJsonRpcProvider {
    *    @see {@link https://docs.flashbots.net/flashbots-protect/settings-guide#refunds}
    */
   constructor(signerInfo?: SignerInfo, refundPercent?: number) {
-    const refundString = getRefundString(signerInfo?.address, refundPercent)
-    const url = `${FLASHBOTS_RPC_URL}${refundString}`
+    const url = buildFlashbotsUrl({
+      address: signerInfo?.address,
+      refundPercent,
+    })
     super(url, signerInfo?.signer)
   }
 

@@ -109,7 +109,13 @@ describe(executeTransactionLegacy, () => {
         [call(getProviderManager), providerManager],
         [call(getSignerManager), signerManager],
         [
-          call(signAndSubmitTransaction, txRequest, account, mockProvider, signerManager, mockViemClient),
+          call(signAndSubmitTransaction, {
+            request: txRequest,
+            account,
+            provider: mockProvider,
+            signerManager,
+            viemClient: mockViemClient,
+          }),
           {
             transactionResponse: txResponse,
             populatedRequest: txRequest,
@@ -194,7 +200,13 @@ describe(executeTransactionLegacy, () => {
         [call(getProviderManager), providerManager],
         [call(getSignerManager), signerManager],
         [
-          call(signAndSubmitTransaction, txRequest, account, provider as providers.Provider, signerManager, viemClient),
+          call(signAndSubmitTransaction, {
+            request: txRequest,
+            account,
+            provider: provider as providers.Provider,
+            signerManager,
+            viemClient,
+          }),
           throwError(new Error('Something went wrong with nonce')),
         ],
       ])
@@ -241,29 +253,24 @@ describe(executeTransactionLegacy, () => {
         [call(getViemClient, sendParams.chainId), viemClient],
         [call(getSignerManager), signerManager],
         [
-          call(
-            signAndSubmitTransaction,
-            { ...request, nonce: mockNonce },
+          call(signAndSubmitTransaction, {
+            request: { ...request, nonce: mockNonce },
             account,
-            mockProvider,
+            provider: mockProvider,
             signerManager,
             viemClient,
-          ),
+          }),
           { transactionResponse: txResponse, populatedRequest: { ...request, nonce: mockNonce } },
         ],
       ])
       .call(tryGetNonce, account, sendParams.chainId)
-      .call(
-        signAndSubmitTransaction,
-        {
-          ...request,
-          nonce: mockNonce,
-        },
+      .call(signAndSubmitTransaction, {
+        request: { ...request, nonce: mockNonce },
         account,
-        mockProvider,
+        provider: mockProvider,
         signerManager,
         viemClient,
-      )
+      })
       .silentRun()
   })
 

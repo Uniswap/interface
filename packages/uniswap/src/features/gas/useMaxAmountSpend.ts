@@ -106,41 +106,41 @@ function useGetMinAmount(chainId?: UniverseChainId, txType?: TransactionType): J
 export function useMinEthForGas(txType?: TransactionType): JSBI {
   return useCalculateMinForGas(
     isSend(txType) ? SwapConfigKey.EthSendMinGasAmount : SwapConfigKey.EthSwapMinGasAmount,
-    isSend(txType) ? 150 : 20, // .015 and .002 ETH
+    isSend(txType) ? 20 : 150, // .002 and .015 ETH
   )
 }
 
 export function useMinPolygonForGas(txType?: TransactionType): JSBI {
   return useCalculateMinForGas(
     isSend(txType) ? SwapConfigKey.PolygonSendMinGasAmount : SwapConfigKey.PolygonSwapMinGasAmount,
-    isSend(txType) ? 600 : 75, // .06 and .0075 MATIC
+    isSend(txType) ? 75 : 600, // .0075 and .06 MATIC
   )
 }
 
 export function useMinAvalancheForGas(txType?: TransactionType): JSBI {
   return useCalculateMinForGas(
     isSend(txType) ? SwapConfigKey.AvalancheSendMinGasAmount : SwapConfigKey.AvalancheSwapMinGasAmount,
-    isSend(txType) ? 200 : 25, // .02 and .0025 AVAX
+    isSend(txType) ? 25 : 200, // .0025 and .02 AVAX
   )
 }
 
 export function useMinCeloForGas(txType?: TransactionType): JSBI {
   return useCalculateMinForGas(
     isSend(txType) ? SwapConfigKey.CeloSendMinGasAmount : SwapConfigKey.CeloSwapMinGasAmount,
-    isSend(txType) ? 100 : 13, // .01 and .0013 CELO
+    isSend(txType) ? 13 : 2000, // .0013 and .2 CELO
   )
 }
 
 export function useMinMonForGas(txType?: TransactionType): JSBI {
   return useCalculateMinForGas(
     isSend(txType) ? SwapConfigKey.MonSendMinGasAmount : SwapConfigKey.MonSwapMinGasAmount,
-    isSend(txType) ? 150 : 20,
+    isSend(txType) ? 20 : 150, // .002 and .015 ETH
   )
 }
 export function useMinGenericL2ForGas(txType?: TransactionType): JSBI {
   return useCalculateMinForGas(
     isSend(txType) ? SwapConfigKey.GenericL2SendMinGasAmount : SwapConfigKey.GenericL2SwapMinGasAmount,
-    isSend(txType) ? 8 : 1, // .0008 and .0001 ETH
+    isSend(txType) ? 1 : 8, // .0001 and .0008 ETH
   )
 }
 

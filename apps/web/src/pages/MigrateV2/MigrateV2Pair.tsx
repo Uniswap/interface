@@ -45,17 +45,18 @@ import { iconSizes } from 'ui/src/theme'
 import Badge from 'uniswap/src/components/badge/Badge'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress } from 'utilities/src/addresses'
+import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { currencyId } from 'utils/currencyId'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { assume0xAddress } from 'utils/wagmi'
 import { useReadContract, useReadContracts } from 'wagmi'
@@ -231,6 +232,7 @@ function V2PairMigration({
   const colors = useSporeColors()
   const v2FactoryAddress = account.chainId ? V2_FACTORY_ADDRESSES[account.chainId] : undefined
   const trace = useTrace()
+  const { formatCurrencyAmount } = useLocalizationContext()
 
   const { data: pairFactory } = useReadContract({
     address: assume0xAddress(pairAddress),
@@ -737,12 +739,12 @@ function V2PairMigration({
                     <Trans
                       i18nKey="migrate.refund"
                       values={{
-                        amtA: formatCurrencyAmount(refund0, 4),
+                        amtA: formatCurrencyAmount({ value: refund0, type: NumberType.TokenTx }),
                         symA:
                           account.chainId && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(token0)
                             ? 'ETH'
                             : token0.symbol,
-                        amtB: formatCurrencyAmount(refund1, 4),
+                        amtB: formatCurrencyAmount({ value: refund1, type: NumberType.TokenTx }),
                         symB:
                           account.chainId && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(token1)
                             ? 'ETH'

@@ -10,7 +10,8 @@ import {
   ProtocolVersion,
   useDailyProtocolVolumeQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 const Container = styled(Flex, {
   width: '100%',
@@ -208,7 +209,7 @@ const RightBottom = styled(Flex, {
 
 function Cards({ inView }: { inView: boolean }) {
   const { t } = useTranslation()
-  const { formatNumber } = useFormatter()
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const dailyV2VolumeQuery = useDailyProtocolVolumeQuery({
     variables: {
       version: ProtocolVersion.V2,
@@ -237,7 +238,7 @@ function Cards({ inView }: { inView: boolean }) {
       <LeftTop>
         <StatCard
           title={t('stats.allTimeVolume')}
-          value={formatNumber({ input: 2.9 * 10 ** 12, type: NumberType.FiatTokenStats })}
+          value={convertFiatAmountFormatted(2.9 * 10 ** 12, NumberType.FiatTokenStats)}
           delay={0}
           inView={inView}
         />
@@ -245,7 +246,10 @@ function Cards({ inView }: { inView: boolean }) {
       <RightTop>
         <StatCard
           title={t('stats.allTimeSwappers')}
-          value={formatNumber({ input: 119 * 10 ** 6, type: NumberType.TokenQuantityStats })}
+          value={formatNumberOrString({
+            value: 119 * 10 ** 6,
+            type: NumberType.TokenQuantityStats,
+          })}
           delay={0.2}
           inView={inView}
         />
@@ -253,7 +257,7 @@ function Cards({ inView }: { inView: boolean }) {
       <LeftBottom>
         <StatCard
           title={t('stats.allTimeFees')}
-          value={formatNumber({ input: 4.9 * 10 ** 9, type: NumberType.FiatTokenStats })}
+          value={convertFiatAmountFormatted(4.9 * 10 ** 9, NumberType.FiatTokenStats)}
           delay={0.4}
           inView={inView}
         />
@@ -261,7 +265,7 @@ function Cards({ inView }: { inView: boolean }) {
       <RightBottom>
         <StatCard
           title={t('stats.24volume')}
-          value={formatNumber({ input: totalVolume || 500000000, type: NumberType.FiatTokenStats })}
+          value={convertFiatAmountFormatted(totalVolume || 500000000, NumberType.FiatTokenStats)}
           live
           delay={0.6}
           inView={inView}

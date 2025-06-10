@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Flex, Separator, Text, UniswapXText, isWeb, useSporeColors } from 'ui/src'
+import { Flex, Separator, Text, UniswapXText, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Gas } from 'ui/src/components/icons/Gas'
 import { NATIVE_LINE_HEIGHT_SCALE, fonts, zIndexes } from 'ui/src/theme'
@@ -21,7 +21,7 @@ import {
   NetworkCostTooltipUniswapX,
 } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/SwapFormTooltips'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
-import { isInterface, isMobileApp } from 'utilities/src/platform'
+import { isInterface, isMobileApp, isWeb } from 'utilities/src/platform'
 
 export function NetworkFeeWarning({
   gasFeeHighRelativeToValue,
@@ -91,7 +91,7 @@ export function NetworkFeeWarning({
           ) : includesDelegation ? (
             <NetworkCostTooltipSmartWallet />
           ) : (
-            <NetworkCostTooltipClassic />
+            <NetworkCostTooltipClassic chainId={chainId} />
           )
         ) : (
           <NetworkFeeText

@@ -21,6 +21,7 @@ export const createImportedAccounts = async (
     mnemonicId,
     backups: [backupType],
     pushNotificationsEnabled: true,
+    smartWalletConsent: true,
   }))
   return importedAccounts
 }

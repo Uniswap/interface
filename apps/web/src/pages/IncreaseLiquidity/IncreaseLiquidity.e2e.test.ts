@@ -20,7 +20,7 @@ test('should increase liquidity of a position', async ({ page, anvil }) => {
   await page.getByTestId(TestID.AmountInputIn).nth(1).click()
   await page.getByTestId(TestID.AmountInputIn).nth(1).fill('1')
 
-  await page.getByRole('button', { name: 'Add' }).click()
+  await page.getByRole('button', { name: 'Review' }).click()
   await page.getByRole('button', { name: 'Confirm' }).click()
   await expect(page.getByText('Approved')).toBeVisible()
 })

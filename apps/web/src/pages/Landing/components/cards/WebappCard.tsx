@@ -13,7 +13,8 @@ import { LDO, UNI, USDC_BASE } from 'uniswap/src/constants/tokens'
 import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 const primary = '#2ABDFF'
 
@@ -41,7 +42,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
   const isSmallScreen = media.md
 
   const navigate = useNavigate()
-  const { formatFiatPrice, formatDelta } = useFormatter()
+  const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
   const currency = useCurrency(address, chainId)
   const tokenPromoQuery = useTokenPromoQuery({
     variables: {
@@ -150,10 +151,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
               lineHeight: 20,
             }}
           >
-            {formatFiatPrice({
-              price,
-              type: NumberType.FiatTokenPrice,
-            })}
+            {convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)}
           </Text>
           <Flex
             row
@@ -167,7 +165,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
               display: 'none',
             }}
           >
-            <DeltaArrow delta={pricePercentChange} formattedDelta={formatDelta(pricePercentChange)} />
+            <DeltaArrow delta={pricePercentChange} formattedDelta={formatPercent(Math.abs(pricePercentChange))} />
             <Text
               textAlign="right"
               fontSize={24}
@@ -185,7 +183,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
                 width: 50,
               }}
             >
-              {formatDelta(pricePercentChange)}
+              {formatPercent(Math.abs(pricePercentChange))}
             </Text>
           </Flex>
         </Flex>

@@ -65,6 +65,9 @@ export function createExecuteSwapService(ctx: {
     }
     const { presetPercentage, preselectAsset } = ctx.getPresetInfo()
 
+    const txRequest = isUniswapX(swapTxContext) ? undefined : swapTxContext.txRequests?.[0]
+    const isSmartWalletTransaction = txRequest?.to === account.address
+
     ctx.swapCallback({
       // input
       txId: input.txId,
@@ -77,6 +80,8 @@ export function createExecuteSwapService(ctx: {
       swapTxContext,
       presetPercentage,
       preselectAsset,
+      isSmartWalletTransaction,
+      includesDelegation: swapTxContext.includesDelegation,
       onSuccess: ctx.onSuccess,
       onFailure: ctx.onFailure,
       onPending: ctx.onPending,

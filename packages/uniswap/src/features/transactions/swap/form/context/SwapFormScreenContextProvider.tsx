@@ -22,7 +22,6 @@ import { useDecimalPadControlledField } from 'uniswap/src/features/transactions/
 import { useSwapNetworkChangeEffect } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapNetworkChangeEffect'
 import { useSyncFiatAndTokenAmountUpdater } from 'uniswap/src/features/transactions/swap/form/hooks/useSyncFiatAndTokenAmountUpdater'
 import { getExactOutputWillFail } from 'uniswap/src/features/transactions/swap/utils/getExactOutputWillFail'
-import { isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
@@ -57,7 +56,7 @@ export function SwapFormScreenContextProvider({
     hideFooter,
   } = useSwapFormContext()
 
-  const { currencyAmounts, currencyBalances, currencies, currencyAmountsUSDValue, wrapType, trade } = derivedSwapInfo
+  const { currencyAmounts, currencyBalances, currencies, currencyAmountsUSDValue, trade } = derivedSwapInfo
 
   // When using fiat input mode, this hook updates the token amount based on the latest fiat conversion rate (currently polled every 15s).
   // In the Extension, the `SwapForm` is not unmounted when the user moves to the `SwapReview` screen,
@@ -85,9 +84,6 @@ export function SwapFormScreenContextProvider({
   const derivedCurrencyField = exactFieldIsInput ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
   const decimalPadControlledField = useDecimalPadControlledField()
-
-  // Quote is being fetched for first time or refetching
-  const isSwapDataLoading = Boolean(!isWrapAction(wrapType) && trade.isFetching)
 
   const inputRef = useRef<CurrencyInputPanelRef>(null)
   const outputRef = useRef<CurrencyInputPanelRef>(null)
@@ -180,7 +176,6 @@ export function SwapFormScreenContextProvider({
     exactFieldIsInput,
     exactFieldIsOutput,
     exactOutputDisabled,
-    isSwapDataLoading,
     resetSelection: callbacks.resetSelection,
     currencyAmountsUSDValue,
     exactValue,

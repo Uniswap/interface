@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query'
 import { BigNumber, providers } from 'ethers'
 import { useCallback, useMemo } from 'react'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'uniswap/src/constants/transactions'
@@ -6,9 +7,11 @@ import { CancellationGasFeeDetails, useTransactionGasFee } from 'uniswap/src/fea
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
-import { useAsyncData } from 'utilities/src/react/hooks'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { FeeDetails, getAdjustedGasFeeDetails } from 'wallet/src/features/gas/adjustGasFee'
 import { getCancelOrderTxRequest } from 'wallet/src/features/transactions/cancelTransactionSaga'
+
+export const CANCELLATION_TX_VALUE = '0x0'
 
 /**
  * Construct cancellation transaction with increased gas (based on current network conditions),
@@ -20,23 +23,23 @@ export function useCancellationGasFeeInfo(transaction: TransactionDetails): Canc
       chainId: transaction.chainId,
       from: transaction.from,
       to: transaction.from,
-      value: '0x0',
+      value: CANCELLATION_TX_VALUE,
     }
   }, [transaction])
 
   const isUniswapXTx = isUniswapX(transaction)
 
   const uniswapXCancelRequest = useUniswapXCancelRequest(transaction)
-  const uniswapXGasFee = useTransactionGasFee(uniswapXCancelRequest?.data, !isUniswapXTx)
+  const uniswapXGasFee = useTransactionGasFee(uniswapXCancelRequest, !isUniswapXTx)
 
   const baseTxGasFee = useTransactionGasFee(classicCancelRequest, /* skip = */ isUniswapXTx)
   return useMemo(() => {
     if (isUniswapXTx) {
-      if (!uniswapXCancelRequest.data || !uniswapXGasFee.value || !uniswapXGasFee.displayValue) {
+      if (!uniswapXCancelRequest || !uniswapXGasFee.value || !uniswapXGasFee.displayValue) {
         return undefined
       }
       return {
-        cancelRequest: uniswapXCancelRequest.data,
+        cancelRequest: uniswapXCancelRequest,
         gasFeeDisplayValue: uniswapXGasFee.displayValue,
       }
     }
@@ -84,7 +87,7 @@ export function useCancellationGasFeeInfo(transaction: TransactionDetails): Canc
     baseTxGasFee.displayValue,
     classicCancelRequest,
     transaction,
-    uniswapXCancelRequest.data,
+    uniswapXCancelRequest,
     uniswapXGasFee.value,
     uniswapXGasFee.displayValue,
   ])
@@ -109,17 +112,17 @@ function getCancelationGasFee(adjustedFeeDetails: FeeDetails, gasLimit: string):
   return BigNumber.from(adjustedFeeDetails.params.maxFeePerGas).mul(gasLimit)
 }
 
-function useUniswapXCancelRequest(transaction: TransactionDetails): {
-  isLoading: boolean
-  data: providers.TransactionRequest | undefined
-  error?: Error
-} {
-  const cancelRequestFetcher = useCallback(() => {
+function useUniswapXCancelRequest(transaction: TransactionDetails): providers.TransactionRequest | undefined {
+  const cancelRequestFetcher = useCallback(async (): Promise<providers.TransactionRequest | null> => {
     if (!isUniswapX(transaction)) {
-      return undefined
+      return null
     }
     return getCancelOrderTxRequest(transaction)
   }, [transaction])
 
-  return useAsyncData(cancelRequestFetcher)
+  const { data: cancelRequest } = useQuery({
+    queryKey: [ReactQueryCacheKey.CancelUniswapXTransactionRequest, transaction.id],
+    queryFn: cancelRequestFetcher,
+  })
+  return cancelRequest ?? undefined
 }

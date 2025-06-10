@@ -12,6 +12,11 @@ import {
   OrderTextTable,
   getActivityTitle,
 } from 'components/AccountDrawer/MiniPortfolio/constants'
+import { FiatOnRampTransactionStatus } from 'state/fiatOnRampTransactions/types'
+import {
+  forTransactionStatusToTransactionStatus,
+  statusToTransactionInfoStatus,
+} from 'state/fiatOnRampTransactions/utils'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
@@ -39,13 +44,16 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import i18n from 'uniswap/src/i18n'
 import { isAddress } from 'utilities/src/addresses'
+import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-type FormatNumberFunctionType = ReturnType<typeof useFormatter>['formatNumber']
+type FormatNumberFunctionType = ReturnType<typeof useLocalizationContext>['formatNumberOrString']
+type FormatFiatPriceFunctionType = ReturnType<typeof useLocalizationContext>['convertFiatAmountFormatted']
 
 function buildCurrencyDescriptor(
   currencyA: Currency | undefined,
@@ -57,14 +65,14 @@ function buildCurrencyDescriptor(
 ) {
   const formattedA = currencyA
     ? formatNumber({
-        input: parseFloat(CurrencyAmount.fromRawAmount(currencyA, amtA).toSignificant()),
+        value: parseFloat(CurrencyAmount.fromRawAmount(currencyA, amtA).toSignificant()),
         type: NumberType.TokenNonTx,
       })
     : i18n.t('common.unknown')
   const symbolA = currencyA?.symbol ? ` ${currencyA?.symbol}` : ''
   const formattedB = currencyB
     ? formatNumber({
-        input: parseFloat(CurrencyAmount.fromRawAmount(currencyB, amtB).toSignificant()),
+        value: parseFloat(CurrencyAmount.fromRawAmount(currencyB, amtB).toSignificant()),
         type: NumberType.TokenNonTx,
       })
     : i18n.t('common.unknown')
@@ -117,13 +125,13 @@ async function parseBridge(
   ])
   const inputAmount = tokenIn
     ? formatNumber({
-        input: parseFloat(CurrencyAmount.fromRawAmount(tokenIn, bridge.inputCurrencyAmountRaw).toSignificant()),
+        value: parseFloat(CurrencyAmount.fromRawAmount(tokenIn, bridge.inputCurrencyAmountRaw).toSignificant()),
         type: NumberType.TokenNonTx,
       })
     : i18n.t('common.unknown')
   const outputAmount = tokenOut
     ? formatNumber({
-        input: parseFloat(CurrencyAmount.fromRawAmount(tokenOut, bridge.outputCurrencyAmountRaw).toSignificant()),
+        value: parseFloat(CurrencyAmount.fromRawAmount(tokenOut, bridge.outputCurrencyAmountRaw).toSignificant()),
         type: NumberType.TokenNonTx,
       })
     : i18n.t('common.unknown')
@@ -259,7 +267,7 @@ async function parseSend(
   const currency = await getCurrency(currencyId, chainId)
   const formattedAmount = currency
     ? formatNumber({
-        input: parseFloat(CurrencyAmount.fromRawAmount(currency, amount).toSignificant()),
+        value: parseFloat(CurrencyAmount.fromRawAmount(currency, amount).toSignificant()),
         type: NumberType.TokenNonTx,
       })
     : i18n.t('common.unknown')
@@ -384,6 +392,58 @@ export function getSignatureToActivityQueryOptions(
   })
 }
 
+export function getFORTransactionToActivityQueryOptions(
+  transaction: FORTransaction | undefined,
+  formatNumber: FormatNumberFunctionType,
+  formatFiatPrice: FormatFiatPriceFunctionType,
+) {
+  return queryOptions({
+    queryKey: [ReactQueryCacheKey.TransactionToActivity, transaction],
+    queryFn: async () => forTransactionToActivity(transaction, formatNumber, formatFiatPrice),
+  })
+}
+
+const forTransactionToActivity = async (
+  transaction: FORTransaction | undefined,
+  formatNumber: FormatNumberFunctionType,
+  formatFiatPrice: FormatFiatPriceFunctionType,
+) => {
+  if (!transaction) {
+    return undefined
+  }
+
+  const chainId = Number(transaction.cryptoDetails.chainId) as UniverseChainId
+  const currency = await getCurrency(transaction.sourceCurrencyCode, chainId)
+  const status = statusToTransactionInfoStatus(transaction.status)
+  const serviceProvider = transaction.serviceProviderDetails.name
+  const tokenAmount = formatNumber({ value: transaction.sourceAmount, type: NumberType.TokenNonTx })
+  const fiatAmount = formatFiatPrice(transaction.destinationAmount, NumberType.FiatTokenPrice)
+
+  let title = ''
+  switch (status) {
+    case FiatOnRampTransactionStatus.PENDING:
+      title = i18n.t('transaction.status.sale.pendingOn', { serviceProvider })
+      break
+    case FiatOnRampTransactionStatus.COMPLETE:
+      title = i18n.t('transaction.status.sale.successOn', { serviceProvider })
+      break
+    case FiatOnRampTransactionStatus.FAILED:
+      title = i18n.t('transaction.status.sale.failedOn', { serviceProvider })
+      break
+  }
+
+  return {
+    hash: transaction.externalSessionId,
+    chainId,
+    title,
+    descriptor: `${tokenAmount} ${transaction?.sourceCurrencyCode} ${i18n.t('common.for').toLocaleLowerCase()} ${fiatAmount}`,
+    currencies: [currency],
+    status: forTransactionStatusToTransactionStatus(status),
+    timestamp: convertToSecTimestamp(Number(transaction.createdAt)),
+    from: transaction.cryptoDetails.walletAddress,
+  }
+}
+
 function convertToSecTimestamp(timestamp: number) {
   // UNIX timestamp in ms for Jan 1, 2100
   const threshold: number = 4102444800000
@@ -438,7 +498,7 @@ export async function signatureToActivity(
 export function useLocalActivities(account: string): ActivityMap {
   const allTransactions = useMultichainTransactions()
   const allSignatures = useAllSignatures()
-  const { formatNumber } = useFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
   const { chains } = useEnabledChains()
 
   const { data } = useQuery({
@@ -447,10 +507,10 @@ export function useLocalActivities(account: string): ActivityMap {
       const transactions = Object.values(allTransactions)
         .filter(([transaction]) => transaction.from === account)
         .filter(([, chainId]) => chains.includes(chainId))
-        .map(([transaction, chainId]) => transactionToActivity(transaction, chainId, formatNumber))
+        .map(([transaction, chainId]) => transactionToActivity(transaction, chainId, formatNumberOrString))
       const signatures = Object.values(allSignatures)
         .filter((signature) => signature.offerer === account)
-        .map((signature) => signatureToActivity(signature, formatNumber))
+        .map((signature) => signatureToActivity(signature, formatNumberOrString))
 
       return (await Promise.all([...transactions, ...signatures])).reduce((acc, activity) => {
         if (activity) {

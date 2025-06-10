@@ -2,12 +2,12 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { isWeb } from 'ui/src'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
 import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FormattedUniswapXGasFeeInfo, GasFeeResult } from 'uniswap/src/features/gas/types'
@@ -26,6 +26,7 @@ import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/de
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { isWeb } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 // The default "Urgent" strategy that was previously hardcoded in the gas service
@@ -232,6 +233,7 @@ export function useTransactionGasWarning({
   const { chainId, currencyAmounts, currencyBalances } = derivedInfo
   const { t } = useTranslation()
   const { balance: nativeCurrencyBalance } = useOnChainNativeCurrencyBalance(chainId, account?.address)
+  const { isSmartContractAddress } = useIsSmartContractAddress(account?.address, chainId)
 
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
@@ -249,7 +251,13 @@ export function useTransactionGasWarning({
 
   return useMemo(() => {
     // if balance is already insufficient, dont need to show warning about network fee
-    if (gasFee === undefined || balanceInsufficient || !nativeCurrencyBalance || hasGasFunds) {
+    if (
+      gasFee === undefined ||
+      isSmartContractAddress ||
+      balanceInsufficient ||
+      !nativeCurrencyBalance ||
+      hasGasFunds
+    ) {
       return undefined
     }
     const currencySymbol = nativeCurrencyBalance.currency.symbol ?? ''
@@ -269,7 +277,7 @@ export function useTransactionGasWarning({
       message: undefined,
       currency: nativeCurrencyBalance.currency,
     }
-  }, [gasFee, balanceInsufficient, nativeCurrencyBalance, hasGasFunds, t])
+  }, [gasFee, isSmartContractAddress, balanceInsufficient, nativeCurrencyBalance, hasGasFunds, t])
 }
 
 type GasFeeFormattedAmounts<T extends string | undefined> = T extends string

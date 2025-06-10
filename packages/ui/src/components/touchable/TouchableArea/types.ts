@@ -1,3 +1,4 @@
+import type { GestureResponderEvent } from 'react-native'
 import type { GetProps } from 'tamagui'
 import { TouchableAreaFrame } from 'ui/src/components/touchable/TouchableArea/TouchableAreaFrame'
 
@@ -10,6 +11,7 @@ type TouchableAreaExtraProps = {
   // defaults to undefined for backwards compatibility with previous versions of the TouchableArea component
   shouldConsiderMinimumDimensions?: boolean
   scaleTo?: number
+  ignoreDragEvents?: boolean
   activeOpacity?: number
   /**
    * If true, calls event.stopPropagation() on press events to prevent bubbling to parent touchables.
@@ -33,3 +35,5 @@ type RaisedProps = TouchableAreaExtraProps &
   }
 
 export type TouchableAreaProps = NonRaisedProps | RaisedProps
+
+export type TouchableAreaEvent = GestureResponderEvent

@@ -216,6 +216,11 @@ export function createDelegationQueryOptions(input: {
 const selectDelegationDetailsByAccount = (
   delegationResponse: Awaited<ReturnType<typeof checkWalletDelegation>>,
 ): DelegationDetailsByAccount => {
+  logger.debug(
+    'WalletDelegationProvider',
+    'selectDelegationDetailsByAccount',
+    'selecting delegation details by account',
+  )
   // Transform the API response to our internal structure
   const delegationDetailsByAccount: DelegationDetailsByAccount = {}
   for (const address of Object.keys(delegationResponse.delegationDetails)) {

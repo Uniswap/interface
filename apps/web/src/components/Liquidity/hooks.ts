@@ -13,6 +13,7 @@ import {
   V3OrV4PositionDerivedInfo,
 } from 'components/Liquidity/types'
 import {
+  MAX_FEE_TIER_DECIMALS,
   calculateInvertedValues,
   getDefaultFeeTiersForChainWithDynamicFeeTier,
   mergeFeeTiers,
@@ -27,12 +28,11 @@ import { useTranslation } from 'react-i18next'
 import { LiquidityModalInitialState } from 'state/application/reducer'
 import { useAppSelector } from 'state/hooks'
 import { Bound } from 'state/mint/v3/actions'
-import { PollingInterval } from 'uniswap/src/constants/misc'
+import { BIPS_BASE, PollingInterval } from 'uniswap/src/constants/misc'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
-import { useFormatter } from 'utils/formatNumbers'
 
 function getPriceOrderingFromPositionForUI(position?: V3Position | V4Position): PriceOrdering {
   if (!position) {
@@ -50,7 +50,6 @@ function getPriceOrderingFromPositionForUI(position?: V3Position | V4Position): 
   }
 }
 
-export const MAX_FEE_TIER_DECIMALS = 4
 /**
  * @returns map of fee tier (in hundredths of bips) to more data about the Pool
  *
@@ -69,7 +68,7 @@ export function useAllFeeTierPoolData({
   withDynamicFeeTier?: boolean
 }): { feeTierData: Record<number, FeeTierData>; hasExistingFeeTiers: boolean } {
   const { t } = useTranslation()
-  const { formatPercent } = useFormatter()
+  const { formatPercent } = useLocalizationContext()
   const sortedCurrencies = getSortedCurrenciesTupleWithWrap(currencies[0], currencies[1], protocolVersion)
 
   const { data: poolData } = useGetPoolsByTokens(
@@ -109,7 +108,7 @@ export function useAllFeeTierPoolData({
             },
             formattedFee: pool.isDynamicFee
               ? t('fee.dynamic')
-              : formatPercent(new Percent(pool.fee, 1000000), MAX_FEE_TIER_DECIMALS),
+              : formatPercent(pool.fee / BIPS_BASE, MAX_FEE_TIER_DECIMALS),
             totalLiquidityUsd: totalLiquidityUsdTruncated,
             percentage,
             tvl: pool.totalLiquidityUsd,

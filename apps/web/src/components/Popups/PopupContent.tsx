@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import {
+  getFORTransactionToActivityQueryOptions,
   getSignatureToActivityQueryOptions,
   getTransactionToActivityQueryOptions,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
@@ -14,6 +15,7 @@ import { useTranslation } from 'react-i18next'
 import { useOrder } from 'state/signatures/hooks'
 import { useTransaction } from 'state/transactions/hooks'
 import { isPendingTx } from 'state/transactions/utils'
+import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { BridgeIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
@@ -21,8 +23,11 @@ import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__g
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { useFormatter } from 'utils/formatNumbers'
+import noop from 'utilities/src/react/noop'
 
 export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: UniverseChainId; onClose: () => void }) {
   const isSupportedChain = useIsSupportedChainId(chainId)
@@ -77,7 +82,7 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
         width: '100%',
       }}
     >
-      <TouchableArea onPress={onClick}>
+      <TouchableArea onPress={onClick} flex={1}>
         <Flex row gap="$gap12" height={68} py="$spacing12" px="$spacing16">
           {showPortfolioLogo ? (
             <Flex>
@@ -93,11 +98,11 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
               <AlertTriangleFilled color="$neutral2" size="32px" />
             </Flex>
           )}
-          <Flex justifyContent="center" gap="$gap4">
+          <Flex justifyContent="center" gap="$gap4" fill>
             <Text variant="body2" color="$neutral1">
               {activity.title}
             </Text>
-            <Text variant="body3" color="$neutral2">
+            <Text variant="body3" color="$neutral2" {...EllipsisTamaguiStyle}>
               {activity.descriptor}
             </Text>
           </Flex>
@@ -108,7 +113,7 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
           <LoaderV3 color={colors.accent1.variable} size="20px" />
         </Flex>
       ) : (
-        <Flex position="absolute" right="$spacing16" top="$spacing16">
+        <Flex position="absolute" right="$spacing16" top="$spacing16" data-testid={TestID.ActivityPopupCloseIcon}>
           <TouchableArea onPress={onClose}>
             <X color="$neutral2" size={16} />
           </TouchableArea>
@@ -128,8 +133,8 @@ export function TransactionPopupContent({
   onClose: () => void
 }) {
   const transaction = useTransaction(hash)
-  const { formatNumber } = useFormatter()
-  const { data: activity } = useQuery(getTransactionToActivityQueryOptions(transaction, chainId, formatNumber))
+  const { formatNumberOrString } = useLocalizationContext()
+  const { data: activity } = useQuery(getTransactionToActivityQueryOptions(transaction, chainId, formatNumberOrString))
 
   if (!transaction || !activity) {
     return null
@@ -153,8 +158,8 @@ export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: s
   const order = useOrder(orderHash)
   const openOffchainActivityModal = useOpenOffchainActivityModal()
 
-  const { formatNumber } = useFormatter()
-  const { data: activity } = useQuery(getSignatureToActivityQueryOptions(order, formatNumber))
+  const { formatNumberOrString } = useLocalizationContext()
+  const { data: activity } = useQuery(getSignatureToActivityQueryOptions(order, formatNumberOrString))
 
   if (!activity || !order) {
     return null
@@ -164,4 +169,23 @@ export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: s
     openOffchainActivityModal(order, { inputLogo: activity?.logos?.[0], outputLogo: activity?.logos?.[1] })
 
   return <ActivityPopupContent activity={activity} onClose={onClose} onClick={onClick} />
+}
+
+export function FORTransactionPopupContent({
+  transaction,
+  onClose,
+}: {
+  transaction: FORTransaction
+  onClose: () => void
+}) {
+  const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
+  const { data: activity } = useQuery(
+    getFORTransactionToActivityQueryOptions(transaction, formatNumberOrString, convertFiatAmountFormatted),
+  )
+
+  if (!activity || !transaction) {
+    return null
+  }
+
+  return <ActivityPopupContent activity={activity} onClose={onClose} onClick={noop} />
 }

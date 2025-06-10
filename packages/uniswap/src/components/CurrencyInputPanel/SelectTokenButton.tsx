@@ -1,6 +1,6 @@
 import { ComponentProps, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea, getContrastPassingTextColor, getHoverCssFilter, isWeb, useIsDarkMode } from 'ui/src'
+import { Flex, Text, TouchableArea, getContrastPassingTextColor, getHoverCssFilter, useIsDarkMode } from 'ui/src'
 import { PRESS_SCALE } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/constants'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes, spacing, validColor } from 'ui/src/theme'
@@ -8,7 +8,7 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { isInterface, isMobileWeb } from 'utilities/src/platform'
+import { isInterface, isMobileWeb, isWeb } from 'utilities/src/platform'
 
 interface SelectTokenButtonProps {
   onPress?: () => void

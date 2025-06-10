@@ -37,9 +37,10 @@ import { Flex, Text, View, styled, useMedia } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { NumberType } from 'utilities/src/format/types'
 import { getChainIdFromChainUrlParam } from 'utils/chainParams'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const TableWrapper = styled(Flex, {
   m: '0 auto',
@@ -124,7 +125,7 @@ function TokenTableHeader({
     <Flex width="100%">
       <MouseoverTooltip
         disabled={!HEADER_DESCRIPTIONS[category]}
-        size={TooltipSize.Max}
+        size={TooltipSize.Small}
         text={HEADER_DESCRIPTIONS[category]}
         placement="top"
       >
@@ -154,7 +155,7 @@ function TokenTable({
   error?: ApolloError | boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
 }) {
-  const { formatFiatPrice, formatNumber, formatDelta } = useFormatter()
+  const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
   const { defaultChainId } = useEnabledChains()
   const sortAscending = useAtomValue(sortAscendingAtom)
   const orderDirection = sortAscending ? OrderDirection.Asc : OrderDirection.Desc
@@ -166,7 +167,9 @@ function TokenTable({
     () =>
       tokens?.map((token, i) => {
         const delta1hr = token.pricePercentChange1Hour?.value
+        const delta1hrAbs = delta1hr !== undefined ? Math.abs(delta1hr) : undefined
         const delta1d = token.pricePercentChange1Day?.value
+        const delta1dAbs = delta1d !== undefined ? Math.abs(delta1d) : undefined
         const currCurrencyId = buildCurrencyId(fromGraphQLChain(token.chain) ?? UniverseChainId.Mainnet, token.address)
         const tokenSortIndex = tokenSortRank[currCurrencyId]
         const chainId = getChainIdFromChainUrlParam(token.chain.toLowerCase())
@@ -179,14 +182,14 @@ function TokenTable({
           testId: `token-table-row-${unwrappedToken.address}`,
           percentChange1hr: (
             <Flex row gap="$gap4" alignItems="center">
-              <DeltaArrow delta={delta1hr} formattedDelta={formatDelta(delta1hr)} />
-              <TableText>{formatDelta(delta1hr)}</TableText>
+              <DeltaArrow delta={delta1hr} formattedDelta={formatPercent(delta1hrAbs)} />
+              <TableText>{formatPercent(delta1hrAbs)}</TableText>
             </Flex>
           ),
           percentChange1d: (
             <Flex row gap="$gap4" alignItems="center">
-              <DeltaArrow delta={delta1d} formattedDelta={formatDelta(delta1d)} />
-              <TableText>{formatDelta(delta1d)}</TableText>
+              <DeltaArrow delta={delta1d} formattedDelta={formatPercent(delta1dAbs)} />
+              <TableText>{formatPercent(delta1dAbs)}</TableText>
             </Flex>
           ),
           fdv: giveExploreStatDefaultValue(token.fullyDilutedValuation?.value),
@@ -220,7 +223,7 @@ function TokenTable({
           linkState: { preloadedLogoSrc: token.logo },
         }
       }) ?? [],
-    [defaultChainId, filterString, formatDelta, sparklines, timePeriod, tokenSortRank, tokens],
+    [defaultChainId, filterString, formatPercent, sparklines, timePeriod, tokenSortRank, tokens],
   )
 
   const showLoadingSkeleton = loading || !!error
@@ -281,7 +284,7 @@ function TokenTable({
               {/* A simple 0 price indicates the price is not currently available from the api */}
               {price.getValue?.() === 0
                 ? '-'
-                : formatFiatPrice({ price: price.getValue?.(), type: NumberType.FiatTokenPrice })}
+                : convertFiatAmountFormatted(price.getValue?.(), NumberType.FiatTokenPrice)}
             </TableText>
           </Cell>
         ),
@@ -336,7 +339,7 @@ function TokenTable({
         ),
         cell: (fdv) => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end" testId="fdv-cell">
-            <EllipsisText>{formatNumber({ input: fdv.getValue?.(), type: NumberType.FiatTokenStats })}</EllipsisText>
+            <EllipsisText>{convertFiatAmountFormatted(fdv.getValue?.(), NumberType.FiatTokenStats)}</EllipsisText>
           </Cell>
         ),
       }),
@@ -354,7 +357,7 @@ function TokenTable({
         ),
         cell: (volume) => (
           <Cell loading={showLoadingSkeleton} grow testId="volume-cell">
-            <EllipsisText>{formatNumber({ input: volume.getValue?.(), type: NumberType.FiatTokenStats })}</EllipsisText>
+            <EllipsisText>{convertFiatAmountFormatted(volume.getValue?.(), NumberType.FiatTokenStats)}</EllipsisText>
           </Cell>
         ),
       }),
@@ -373,7 +376,7 @@ function TokenTable({
     ]
 
     return filteredColumns.filter((column): column is NonNullable<(typeof filteredColumns)[number]> => Boolean(column))
-  }, [formatFiatPrice, formatNumber, orderDirection, showLoadingSkeleton, sortMethod, media])
+  }, [convertFiatAmountFormatted, orderDirection, showLoadingSkeleton, sortMethod, media])
 
   return (
     <Table

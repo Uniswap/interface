@@ -99,13 +99,20 @@ export function formatNumberOrString({
   return formatNumber({ input: price, locale, currencyCode, type, placeholder })
 }
 
-export function formatPercent(rawPercentage: Maybe<number | string>, locale: string): string {
+export function formatPercent(rawPercentage: Maybe<number | string>, locale: string, maxDecimals?: 2 | 3 | 4): string {
   if (rawPercentage === null || rawPercentage === undefined) {
     return '-'
   }
+
+  const type =
+    maxDecimals === 3
+      ? NumberType.PercentageThreeDecimals
+      : maxDecimals === 4
+        ? NumberType.PercentageFourDecimals
+        : NumberType.Percentage
   const percentage =
     typeof rawPercentage === 'string' ? parseFloat(rawPercentage) : parseFloat(rawPercentage.toString())
-  return formatNumber({ input: percentage / 100, type: NumberType.Percentage, locale })
+  return formatNumber({ input: percentage / 100, type, locale })
 }
 
 export function addFiatSymbolToNumber({

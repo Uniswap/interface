@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AlertCircleFilled } from 'ui/src/components/icons/AlertCircleFilled'
 import { zIndexes } from 'ui/src/theme'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
@@ -9,6 +9,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { openUri } from 'uniswap/src/utils/linking'
+import { isWeb } from 'utilities/src/platform'
 
 export function SwapFeeWarning({ noFee, children }: PropsWithChildren<{ noFee: boolean }>): JSX.Element {
   const priceUXEnabled = usePriceUXEnabled()

@@ -1,9 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
+import { ReversedArrowsIcon } from 'nft/components/iconExports'
 
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Flex, Text } from 'ui/src'
-import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
-import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { Flex, Text, useSporeColors } from 'ui/src'
+import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -20,18 +20,19 @@ export const AlternateCurrencyDisplay = ({
   disabled?: boolean
   onToggle: () => void
 }) => {
-  const { formatNumberOrString, addFiatSymbolToNumber } = useLocalizationContext()
-  const activeCurrency = useAppFiatCurrencyInfo()
+  const { formatNumberOrString } = useLocalizationContext()
+  const activeCurrency = useAppFiatCurrency()
+  const colors = useSporeColors()
 
   const formattedAlternateCurrency = inputInFiat
     ? `${formatNumberOrString({
         value: exactAmountOut || '0',
         type: NumberType.TokenNonTx,
       })} ${inputCurrency?.symbol}`
-    : addFiatSymbolToNumber({
+    : formatNumberOrString({
         value: exactAmountOut || '0',
-        currencyCode: activeCurrency.code,
-        currencySymbol: activeCurrency.symbol,
+        type: NumberType.PortfolioBalance,
+        currencyCode: activeCurrency,
       })
 
   if (!inputCurrency) {
@@ -47,10 +48,10 @@ export const AlternateCurrencyDisplay = ({
       onPress={disabled ? undefined : onToggle}
       {...(!disabled ? ClickableTamaguiStyle : {})}
     >
-      <Text variant="body2" color="neutral3">
+      <Text variant="body2" color="$neutral2">
         {formattedAlternateCurrency}
       </Text>
-      <ArrowUpDown color="$neutral3" size="$icon.16" />
+      <ReversedArrowsIcon color={colors.neutral2.val} size="16px" />
     </Flex>
   )
 }

@@ -1,7 +1,7 @@
 import { providers } from 'ethers'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, FlexLoader, Separator, Skeleton, Text, isWeb } from 'ui/src'
+import { Button, Flex, FlexLoader, Separator, Skeleton, Text } from 'ui/src'
 import { SlashCircle } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
@@ -13,6 +13,7 @@ import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
+import { isWeb } from 'utilities/src/platform'
 import { useCancellationGasFeeInfo } from 'wallet/src/features/gas/hooks'
 import { useSelectTransaction } from 'wallet/src/features/transactions/hooks'
 

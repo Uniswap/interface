@@ -44,8 +44,8 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { NumberType } from 'utilities/src/format/types'
 import { getChainUrlParam } from 'utils/chainParams'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const TableWrapper = styled(Flex, {
   m: '0 auto',
@@ -146,7 +146,7 @@ function PoolTableHeader({
     <Flex width="100%">
       <MouseoverTooltip
         disabled={!HEADER_DESCRIPTIONS[category]}
-        size={TooltipSize.Max}
+        size={TooltipSize.Small}
         text={HEADER_DESCRIPTIONS[category]}
         placement="top"
       >
@@ -238,7 +238,7 @@ export function PoolsTable({
   hiddenColumns?: PoolSortFields[]
   forcePinning?: boolean
 }) {
-  const { formatNumber, formatPercent } = useFormatter()
+  const { formatPercent, formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const sortAscending = useAtomValue(sortAscendingAtom)
   const orderDirection = sortAscending ? OrderDirection.Asc : OrderDirection.Desc
   const sortMethod = useAtomValue(sortMethodAtom)
@@ -391,7 +391,7 @@ export function PoolsTable({
             ),
             cell: (tvl) => (
               <Cell loading={showLoadingSkeleton}>
-                <TableText>{formatNumber({ input: tvl.getValue?.(), type: NumberType.FiatTokenStats })}</TableText>
+                <TableText>{convertFiatAmountFormatted(tvl.getValue?.(), NumberType.FiatTokenStats)}</TableText>
               </Cell>
             ),
           })
@@ -411,7 +411,7 @@ export function PoolsTable({
             ),
             cell: (oneDayApr) => (
               <Cell loading={showLoadingSkeleton}>
-                <TableText>{formatPercent(oneDayApr.getValue?.())}</TableText>
+                <TableText>{formatPercent(oneDayApr.getValue?.()?.toSignificant())}</TableText>
               </Cell>
             ),
           })
@@ -465,9 +465,7 @@ export function PoolsTable({
             cell: (volume24h) => {
               return (
                 <Cell loading={showLoadingSkeleton}>
-                  <TableText>
-                    {formatNumber({ input: volume24h.getValue?.(), type: NumberType.FiatTokenStats })}
-                  </TableText>
+                  <TableText>{convertFiatAmountFormatted(volume24h.getValue?.(), NumberType.FiatTokenStats)}</TableText>
                 </Cell>
               )
             },
@@ -488,9 +486,7 @@ export function PoolsTable({
             ),
             cell: (volumeWeek) => (
               <Cell loading={showLoadingSkeleton}>
-                <TableText>
-                  {formatNumber({ input: volumeWeek.getValue?.(), type: NumberType.FiatTokenStats })}
-                </TableText>
+                <TableText>{convertFiatAmountFormatted(volumeWeek.getValue?.(), NumberType.FiatTokenStats)}</TableText>
               </Cell>
             ),
           })
@@ -511,8 +507,8 @@ export function PoolsTable({
             cell: (volOverTvl) => (
               <Cell loading={showLoadingSkeleton}>
                 <TableText>
-                  {formatNumber({
-                    input: volOverTvl.getValue?.(),
+                  {formatNumberOrString({
+                    value: volOverTvl.getValue?.(),
                     type: NumberType.TokenQuantityStats,
                     placeholder: '-',
                   })}
@@ -531,8 +527,9 @@ export function PoolsTable({
     t,
     sortMethod,
     orderDirection,
-    formatNumber,
+    formatNumberOrString,
     formatPercent,
+    convertFiatAmountFormatted,
   ])
 
   return (

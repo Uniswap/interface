@@ -4,9 +4,10 @@ import {
   NavigationContainer as NativeNavigationContainer,
   NavigationContainerRefWithCurrent,
 } from '@react-navigation/native'
+import { useMutation } from '@tanstack/react-query'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { FC, PropsWithChildren, useCallback, useState } from 'react'
-import { Linking } from 'react-native'
+import React, { FC, PropsWithChildren, useEffect, useRef, useState } from 'react'
+import { EmitterSubscription, Linking } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { navigationRef } from 'src/app/navigation/navigationRef'
 import { RootParamList } from 'src/app/navigation/types'
@@ -19,7 +20,8 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileNavScreen } from 'uniswap/src/types/screens/mobile'
 import { datadogEnabledBuild } from 'utilities/src/environment/constants'
-import { useAsyncData } from 'utilities/src/react/hooks'
+import { logger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
 import { sleep } from 'utilities/src/time/timing'
 
 interface Props {
@@ -87,20 +89,47 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, on
 
 const useManageDeepLinks = (): void => {
   const dispatch = useDispatch()
-  const manageDeepLinks = useCallback(async () => {
-    const url = await Linking.getInitialURL()
-    if (url) {
-      dispatch(openDeepLink({ url, coldStart: true }))
+  const hasRun = useRef(false)
+  const urlListener = useRef<EmitterSubscription | undefined>()
+
+  const deepLinkMutation = useMutation({
+    mutationFn: async () => {
+      if (hasRun.current) {
+        return
+      }
+
+      const url = await Linking.getInitialURL()
+      if (url) {
+        dispatch(openDeepLink({ url, coldStart: true }))
+      }
+      // we need to set an event listener for deep links, but we don't want to do it immediately on cold start,
+      // as then there is a change we dispatch `openDeepLink` action twice if app was launched by a deep link
+      await sleep(2000) // 2000 was chosen empirically
+      urlListener.current = Linking.addEventListener('url', (event: { url: string }) =>
+        dispatch(openDeepLink({ url: event.url, coldStart: false })),
+      )
+    },
+    onMutate: () => {
+      hasRun.current = true
+    },
+    onError: (error) => {
+      logger.error(error, {
+        tags: {
+          file: 'NavigationContainer',
+          function: 'useManageDeepLinks',
+        },
+      })
+    },
+  })
+
+  const deepLinkEvent = useEvent(deepLinkMutation.mutate)
+
+  useEffect(() => {
+    deepLinkEvent()
+    return () => {
+      if (urlListener.current) {
+        urlListener.current.remove()
+      }
     }
-    // we need to set an event listener for deep links, but we don't want to do it immediately on cold start,
-    // as then there is a change we dispatch `openDeepLink` action twice if app was lauched by a deep link
-    await sleep(2000) // 2000 was chosen imperically
-    const urlListener = Linking.addEventListener('url', (event: { url: string }) =>
-      dispatch(openDeepLink({ url: event.url, coldStart: false })),
-    )
-
-    return urlListener.remove
-  }, [dispatch])
-
-  useAsyncData(manageDeepLinks)
+  }, [deepLinkEvent])
 }

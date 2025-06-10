@@ -22,7 +22,8 @@ import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { Flex } from 'ui/src'
 import { chainSupportsGasEstimates } from 'uniswap/src/features/chains/utils'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 import { getPriceImpactColor } from 'utils/prices'
 
 export enum SwapLineItemType {
@@ -91,8 +92,8 @@ export function SlippageTooltipContent() {
 }
 
 function MinimumOutputTooltipContent({ amount }: { amount: CurrencyAmount<Currency> }) {
-  const { formatCurrencyAmount } = useFormatter()
-  const formattedAmount = formatCurrencyAmount({ amount, type: NumberType.SwapDetailsAmount })
+  const { formatCurrencyAmount } = useLocalizationContext()
+  const formattedAmount = formatCurrencyAmount({ value: amount, type: NumberType.SwapTradeAmount })
 
   return (
     <BaseTooltipContent url="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage">
@@ -106,20 +107,20 @@ function Loading({ width = 50 }: { width?: number }) {
 }
 
 function ColoredPercentRow({ percent }: { percent: Percent }) {
-  const { formatPercent } = useFormatter()
-  const formattedPercent = formatPercent(percent)
+  const { formatPercent } = useLocalizationContext()
+  const formattedPercent = formatPercent(percent.toSignificant())
   const positivePercent = percent.lessThan(0) ? percent.multiply(-1) : percent
   return <ColorWrapper textColor={getPriceImpactColor(positivePercent)}>{formattedPercent}</ColorWrapper>
 }
 
 function CurrencyAmountRow({ amount }: { amount: CurrencyAmount<Currency> }) {
-  const { formatCurrencyAmount } = useFormatter()
-  const formattedAmount = formatCurrencyAmount({ amount, type: NumberType.SwapDetailsAmount })
+  const { formatCurrencyAmount } = useLocalizationContext()
+  const formattedAmount = formatCurrencyAmount({ value: amount, type: NumberType.SwapTradeAmount })
   return <>{`${formattedAmount} ${amount.currency.symbol}`}</>
 }
 
 function FeeRow({ trade: { swapFee, outputAmount } }: { trade: SubmittableTrade }) {
-  const { formatNumber } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const feeCurrencyAmount = CurrencyAmount.fromRawAmount(outputAmount.currency, swapFee?.amount ?? 0)
   const { data: outputFeeFiatValue } = useUSDPrice(feeCurrencyAmount, feeCurrencyAmount?.currency)
@@ -129,14 +130,14 @@ function FeeRow({ trade: { swapFee, outputAmount } }: { trade: SubmittableTrade 
     return <CurrencyAmountRow amount={feeCurrencyAmount} />
   }
 
-  return <>{formatNumber({ input: outputFeeFiatValue, type: NumberType.FiatGasPrice })}</>
+  return <>{convertFiatAmountFormatted(outputFeeFiatValue, NumberType.FiatGasPrice)}</>
 }
 
 // eslint-disable-next-line consistent-return
 function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   const { t } = useTranslation()
   const { trade, syncing, allowedSlippage, type, priceImpact } = props
-  const { formatPercent } = useFormatter()
+  const { formatPercent } = useLocalizationContext()
   const isAutoSlippage = useUserSlippageTolerance()[0] === SlippageTolerance.Auto
 
   const isUniswapX = isUniswapXTrade(trade)
@@ -189,7 +190,8 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         TooltipBody: () => <SlippageTooltipContent />,
         Value: () => (
           <Row gap="8px">
-            {isAutoSlippage && <AutoBadge>{t(`common.automatic`)}</AutoBadge>} {formatPercent(allowedSlippage)}
+            {isAutoSlippage && <AutoBadge>{t(`common.automatic`)}</AutoBadge>}{' '}
+            {formatPercent(allowedSlippage?.toSignificant())}
           </Row>
         ),
       }
@@ -200,7 +202,8 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       return {
         Label: () => (
           <>
-            <Trans i18nKey="common.fee" /> {trade.swapFee && `(${formatPercent(trade.swapFee.percent)})`}
+            <Trans i18nKey="common.fee" />{' '}
+            {trade.swapFee && `(${formatPercent(trade.swapFee.percent.toSignificant())})`}
           </>
         ),
         TooltipBody: () => <SwapFeeTooltipContent hasFee={Boolean(trade.swapFee)} />,

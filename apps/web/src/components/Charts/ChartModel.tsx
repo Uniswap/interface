@@ -20,8 +20,9 @@ import { ReactElement, TouchEvent, useEffect, useMemo, useRef, useState } from '
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { ColorTokens, Flex, TamaguiElement, assertWebElement, styled, useMedia } from 'ui/src'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
 import { v4 as uuidv4 } from 'uuid'
 
 export const refitChartContentAtom = atom<(() => void) | undefined>(undefined)
@@ -32,7 +33,7 @@ export const DEFAULT_BOTTOM_PRICE_SCALE_MARGIN = 0.15
 interface ChartUtilParams<TDataType extends SeriesDataItemType> {
   locale: string
   theme: DefaultTheme
-  format: ReturnType<typeof useFormatter>
+  format: ReturnType<typeof useLocalizationContext>
   isLargeScreen: boolean
   onCrosshairMove?: (data: TDataType | undefined) => void
 }
@@ -42,6 +43,7 @@ interface ChartDataParams<TDataType extends SeriesDataItemType> {
   data: TDataType[]
   /** Repesents whether `data` is stale. If true, stale UI will appear */
   stale?: boolean
+  hideTooltipBorder?: boolean
 }
 
 export type ChartModelParams<TDataType extends SeriesDataItemType> = ChartUtilParams<TDataType> &
@@ -180,7 +182,7 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
     const defaultOptions: DeepPartial<TimeChartOptions> = {
       localization: {
         locale,
-        priceFormatter: (price: BarPrice) => format.formatFiatPrice({ price }),
+        priceFormatter: (price: BarPrice) => format.convertFiatAmountFormatted(price, NumberType.FiatTokenPrice),
       },
       autoSize: true,
       layout: { textColor: theme.neutral2, background: { color: 'transparent' } },
@@ -272,7 +274,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   // It is stored in state to cause a re-render upon div mount, avoiding delay in chart creation
   const [chartDivElement, setChartDivElement] = useState<TamaguiElement | null>(null)
   const [crosshairData, setCrosshairData] = useState<TDataType | undefined>(undefined)
-  const format = useFormatter()
+  const format = useLocalizationContext()
   const theme = useTheme()
   const locale = useCurrentLocale()
   const media = useMedia()
@@ -327,10 +329,11 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
     >
       {children && children(crosshairData)}
       {TooltipBody && crosshairData && (
-        <ChartTooltip id={chartModelRef.current?.tooltipId}>
+        <ChartTooltip id={chartModelRef.current?.tooltipId} includeBorder={!params.hideTooltipBorder}>
           <TooltipBody data={crosshairData} />
         </ChartTooltip>
       )}
+
       {params.stale && <StaleBanner />}
     </Flex>
   )
@@ -342,13 +345,20 @@ const ChartTooltip = styled(Flex, {
   left: 0,
   top: 0,
   zIndex: '$tooltip',
-  backgroundColor: '$surface5',
-  backdropFilter: 'blur(8px)',
-  borderRadius: '$rounded8',
-  borderColor: '$surface3',
+  borderWidth: 0,
   borderStyle: 'solid',
-  borderWidth: 1,
-  p: '$spacing8',
+  variants: {
+    includeBorder: {
+      true: {
+        backgroundColor: '$surface5',
+        backdropFilter: 'blur(8px)',
+        borderRadius: '$rounded8',
+        borderColor: '$surface3',
+        borderWidth: 1,
+        p: '$spacing8',
+      },
+    },
+  },
 })
 
 const StaleBannerWrapper = styled(ChartTooltip, {

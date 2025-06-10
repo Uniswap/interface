@@ -3,6 +3,7 @@ import { ProposalTypes, SessionTypes } from '@walletconnect/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
 import { DappRequestInfo, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
+import { logger } from 'utilities/src/logger/logger'
 import { Call, Capability } from 'wallet/src/features/dappRequests/types'
 
 export enum WalletConnectVerifyStatus {
@@ -24,10 +25,12 @@ export type WalletConnectSession = {
   chains: UniverseChainId[]
   dappRequestInfo: DappRequestInfo
   namespaces: SessionTypes.Namespaces
-}
 
-interface SessionMapping {
-  [sessionId: string]: WalletConnectSession
+  /**
+   * WC session namespaces can contain approvals for multiple accounts. The active account represents the account that the dapp
+   * is tracking as the active account based on session events (approve session, change account, etc).
+   */
+  activeAccount: string
 }
 
 interface BaseRequest {
@@ -104,10 +107,8 @@ export const isBatchedTransactionRequest = (
 ): request is WalletSendCallsEncodedRequest => request.type === EthMethod.WalletSendCalls
 
 export interface WalletConnectState {
-  byAccount: {
-    [accountId: string]: {
-      sessions: SessionMapping
-    }
+  sessions: {
+    [sessionId: string]: WalletConnectSession
   }
   pendingSession: WalletConnectPendingSession | null
   pendingRequests: WalletConnectSigningRequest[]
@@ -116,7 +117,7 @@ export interface WalletConnectState {
 }
 
 export const initialWalletConnectState: Readonly<WalletConnectState> = {
-  byAccount: {},
+  sessions: {},
   pendingSession: null,
   pendingRequests: [],
 }
@@ -125,34 +126,25 @@ const slice = createSlice({
   name: 'walletConnect',
   initialState: initialWalletConnectState,
   reducers: {
-    addSession: (state, action: PayloadAction<{ account: string; wcSession: WalletConnectSession }>) => {
-      const { wcSession, account } = action.payload
-      state.byAccount[account] ??= { sessions: {} }
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      state.byAccount[account]!.sessions[wcSession.id] = wcSession
+    addSession: (state, action: PayloadAction<{ wcSession: WalletConnectSession }>) => {
+      const { wcSession } = action.payload
+      state.sessions[wcSession.id] = wcSession
       state.pendingSession = null
     },
 
-    removeSession: (state, action: PayloadAction<{ sessionId: string; account?: string }>) => {
-      const { sessionId, account } = action.payload
+    replaceSession: (state, action: PayloadAction<{ wcSession: WalletConnectSession }>) => {
+      const { wcSession } = action.payload
+      state.sessions[wcSession.id] = wcSession
+    },
 
-      // If account address is known, delete directly
-      if (account) {
-        const wcAccount = state.byAccount[account]
-        if (wcAccount) {
-          delete wcAccount.sessions[sessionId]
-        }
-        return
+    removeSession: (state, action: PayloadAction<{ sessionId: string }>) => {
+      const { sessionId } = action.payload
+
+      if (!state.sessions[sessionId]) {
+        logger.warn('walletConnect/walletConnectSlice.ts', 'removeSession', `Session ${sessionId} doesnt exist`)
       }
 
-      // If account address is not known (handling `session_delete` events),
-      // iterate over each account and delete the sessionId
-      Object.keys(state.byAccount).forEach((accountAddress) => {
-        const wcAccount = state.byAccount[accountAddress]
-        if (wcAccount && wcAccount.sessions[sessionId]) {
-          delete wcAccount.sessions[sessionId]
-        }
-      })
+      delete state.sessions[sessionId]
     },
 
     addPendingSession: (state, action: PayloadAction<{ wcSession: WalletConnectPendingSession }>) => {
@@ -185,6 +177,7 @@ const slice = createSlice({
 
 export const {
   addSession,
+  replaceSession,
   removeSession,
   addPendingSession,
   removePendingSession,

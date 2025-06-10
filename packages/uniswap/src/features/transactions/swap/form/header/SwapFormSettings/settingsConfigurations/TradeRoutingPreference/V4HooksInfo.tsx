@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, isWeb } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
@@ -7,6 +7,7 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { isWeb } from 'utilities/src/platform'
 
 export function V4HooksInfo(): JSX.Element {
   const { t } = useTranslation()

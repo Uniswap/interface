@@ -4,6 +4,7 @@ import {
   SwapChains,
   useChainIdsChangeEffect,
 } from 'uniswap/src/features/transactions/swap/contexts/hooks/useChainIdsChangeEffect'
+import { isMobileApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function useSwapNetworkChangeEffect({
@@ -43,7 +44,7 @@ export function useSwapNetworkChangeEffect({
     },
   )
 
-  const skipInitialCallback = !!inputChainId && !!outputChainId && inputChainId === outputChainId
+  const skipInitialCallback = (!!inputChainId && !!outputChainId && inputChainId === outputChainId) || isMobileApp
 
   useChainIdsChangeEffect({
     inputChainId,

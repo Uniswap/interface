@@ -6,6 +6,7 @@ import {
   BridgeQuoteResponse,
   ClassicQuoteResponse,
   DiscriminatedQuoteResponse,
+  WrapQuoteResponse,
 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
 import {
@@ -34,15 +35,18 @@ import {
   ClassicSwapTxAndGasInfo,
   PermitMethod,
   SwapGasFeeEstimation,
+  WrapSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import {
   ApprovalAction,
   BridgeTrade,
   ClassicTrade,
   TokenApprovalInfo,
+  UnwrapTrade,
+  WrapTrade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { mergeGasFeeResults } from 'uniswap/src/features/transactions/swap/utils/gas'
-import { isBridge, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isBridge, isClassic, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   ValidatedTransactionRequest,
   validatePermit,
@@ -51,7 +55,6 @@ import {
 } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { SWAP_GAS_URGENCY_OVERRIDE, isClassicQuote } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
@@ -105,7 +108,11 @@ export function createPrepareSwapRequestParams({
     alreadyApproved,
     overrideSimulation,
   }: {
-    swapQuoteResponse: ClassicQuoteResponse | BridgeQuoteResponse
+    swapQuoteResponse:
+      | ClassicQuoteResponse
+      | BridgeQuoteResponse
+      | WrapQuoteResponse<Routing.WRAP>
+      | WrapQuoteResponse<Routing.UNWRAP>
     signature: string | undefined
     transactionSettings: TransactionSettingsContextState
     alreadyApproved: boolean
@@ -162,9 +169,8 @@ export function getShouldSkipSwapRequest({
   const requiresPermit2Sig = !!trade?.quote?.permitData
   const missingSig = requiresPermit2Sig && !signature && !permitsDontNeedSignature
   const approvalInfoMissing = !tokenApprovalInfo?.action || tokenApprovalInfo?.action === ApprovalAction.Unknown
-  const isWrapApplicable = derivedSwapInfo.wrapType !== WrapType.NotApplicable
 
-  return isWrapApplicable || getSwapInputExceedsBalance({ derivedSwapInfo }) || approvalInfoMissing || missingSig
+  return getSwapInputExceedsBalance({ derivedSwapInfo }) || approvalInfoMissing || missingSig
 }
 
 /** Returns an error if simulation fails on backend and we expect the swap transaction to fail */
@@ -255,12 +261,17 @@ export function createProcessSwapResponse({ activeGasStrategy }: { activeGasStra
 }
 
 /** Extracts classic or bridge quote from a quote response */
-export function getBridgeOrClassicQuoteResponse({
+export function getSwapQuoteQuoteResponse({
   quote,
 }: {
   quote: QuoteResponse | undefined
-}): BridgeQuoteResponse | ClassicQuoteResponse | undefined {
-  if (quote && (isClassic(quote) || isBridge(quote))) {
+}):
+  | BridgeQuoteResponse
+  | ClassicQuoteResponse
+  | WrapQuoteResponse<Routing.WRAP>
+  | WrapQuoteResponse<Routing.UNWRAP>
+  | undefined {
+  if (quote && (isClassic(quote) || isBridge(quote) || isWrap(quote))) {
     return quote
   }
   return undefined
@@ -288,7 +299,7 @@ export function createLogSwapRequestErrors({ trace }: { trace: ITraceContext }) 
       return
     }
 
-    const swapQuote = getBridgeOrClassicQuoteResponse({ quote })?.quote
+    const swapQuote = getSwapQuoteQuoteResponse({ quote })?.quote
 
     if (gasFeeResult.error) {
       logger.warn('useTransactionRequestInfo', 'useTransactionRequestInfo', UNKNOWN_SIM_ERROR, {
@@ -296,7 +307,7 @@ export function createLogSwapRequestErrors({ trace }: { trace: ITraceContext }) 
         // we explicitly log it here to show on Datadog dashboard
         chainLabel: getChainLabel(derivedSwapInfo.chainId),
         requestId: quote?.requestId,
-        quoteId: swapQuote?.quoteId,
+        quoteId: swapQuote && 'quoteId' in swapQuote ? swapQuote.quoteId : undefined,
         error: gasFeeResult.error,
         simulationFailureReasons: isClassicQuote(swapQuote) ? swapQuote?.txFailureReasons : undefined,
         txRequest,
@@ -466,15 +477,19 @@ export function getBridgeSwapTxAndGasInfo({
   }
 }
 
-export function getWrapTxAndGasInfo({ swapTxInfo }: { swapTxInfo: TransactionRequestInfo }): ClassicSwapTxAndGasInfo {
+export function getWrapTxAndGasInfo({
+  trade,
+  swapTxInfo,
+}: {
+  trade: WrapTrade | UnwrapTrade
+  swapTxInfo: TransactionRequestInfo
+}): ClassicSwapTxAndGasInfo | WrapSwapTxAndGasInfo {
   const txRequests = validateTransactionRequests(swapTxInfo.txRequests)
 
   return {
-    routing: Routing.CLASSIC,
+    routing: trade.routing,
+    trade,
     txRequests,
-    swapRequestArgs: swapTxInfo.swapRequestArgs,
-    permit: undefined,
-    unsigned: false,
     approveTxRequest: undefined,
     revocationTxRequest: undefined,
     gasFee: swapTxInfo.gasFeeResult,

@@ -194,6 +194,22 @@ export const ShorthandOneDecimalsCurrency: FormatCreator = {
   },
 }
 
+export const OneSigFigCurrency: FormatCreator = {
+  createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
+    return getNumberFormat({
+      name: 'OneSigFigCurrency',
+      locale,
+      props: {
+        notation: 'standard',
+        minimumSignificantDigits: 1,
+        maximumSignificantDigits: 1,
+        currency: currencyCode,
+        style: 'currency',
+      },
+    })
+  },
+}
+
 export const ThreeSigFigsCurrency: FormatCreator = {
   createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
     return getNumberFormat({
@@ -203,6 +219,22 @@ export const ThreeSigFigsCurrency: FormatCreator = {
         notation: 'standard',
         minimumSignificantDigits: 3,
         maximumSignificantDigits: 3,
+        currency: currencyCode,
+        style: 'currency',
+      },
+    })
+  },
+}
+
+const SevenSigFigsSciNotationCurrency: FormatCreator = {
+  createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
+    return getNumberFormat({
+      name: 'SevenSigFigsSciNotationCurrency',
+      locale,
+      props: {
+        notation: 'scientific',
+        minimumSignificantDigits: 7,
+        maximumSignificantDigits: 7,
         currency: currencyCode,
         style: 'currency',
       },
@@ -299,10 +331,10 @@ export const SixSigFigsTwoDecimalsNoCommas: FormatCreator = {
   },
 }
 
-export const NoTrailingDecimalsPercentages: FormatCreator = {
+export const NoTrailingTwoDecimalsPercentages: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
     return getNumberFormat({
-      name: 'NoTrailingDecimalsPercentages',
+      name: 'NoTrailingTwoDecimalsPercentages',
       locale,
       props: {
         notation: 'standard',
@@ -314,7 +346,37 @@ export const NoTrailingDecimalsPercentages: FormatCreator = {
   },
 }
 
-export const TwoDecimalsPercentages: FormatCreator = {
+export const NoTrailingThreeDecimalsPercentages: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return getNumberFormat({
+      name: 'NoTrailingThreeDecimalsPercentages',
+      locale,
+      props: {
+        notation: 'standard',
+        style: 'percent',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 3,
+      },
+    })
+  },
+}
+
+export const NoTrailingFourDecimalsPercentages: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return getNumberFormat({
+      name: 'NoTrailingFourDecimalsPercentages',
+      locale,
+      props: {
+        notation: 'standard',
+        style: 'percent',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 4,
+      },
+    })
+  },
+}
+
+const TwoDecimalsPercentages: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
     return getNumberFormat({
       name: 'TwoDecimalsPercentages',
@@ -463,6 +525,17 @@ export const fiatTokenStatsFormatter: Formatter = {
   defaultFormat: ShorthandOneDecimalsCurrency,
 }
 
+const tokenQuantityStatsFormatter: Formatter = {
+  rules: [
+    // if token stat value is 0, we probably don't have the data for it, so show '-' as a placeholder
+    { exact: 0, formatter: '-' },
+    { upperBound: 0.01, formatter: '<0.01' },
+    { upperBound: 1000, formatter: TwoDecimals },
+    { upperBound: Infinity, formatter: ShorthandOneDecimal },
+  ],
+  defaultFormat: ShorthandOneDecimal,
+}
+
 export const fiatGasPriceFormatter: Formatter = {
   rules: [
     { exact: 0, formatter: NoDecimalsCurrency },
@@ -527,17 +600,44 @@ export const ntfCollectionStatsFormatter: Formatter = {
   defaultFormat: ShorthandOneDecimal,
 }
 
-export const percentagesFormatter: Formatter = {
+const percentagesFormatter: Formatter = {
   rules: [
     { upperBound: 0.01, formatter: TwoDecimalsPercentages },
-    { upperBound: Infinity, formatter: NoTrailingDecimalsPercentages },
+    { upperBound: Infinity, formatter: NoTrailingTwoDecimalsPercentages },
   ],
-  defaultFormat: NoTrailingDecimalsPercentages,
+  defaultFormat: NoTrailingTwoDecimalsPercentages,
+}
+
+const percentagesThreeDecimalsFormatter: Formatter = {
+  rules: [{ upperBound: Infinity, formatter: NoTrailingThreeDecimalsPercentages }],
+  defaultFormat: NoTrailingThreeDecimalsPercentages,
+}
+
+const percentagesFourDecimalsFormatter: Formatter = {
+  rules: [{ upperBound: Infinity, formatter: NoTrailingFourDecimalsPercentages }],
+  defaultFormat: NoTrailingFourDecimalsPercentages,
+}
+
+const fiatRewardsFormatter: Formatter = {
+  rules: [
+    { exact: 0, formatter: NoDecimalsCurrency },
+    { exact: 0.00000001, formatter: '<0.00000001' },
+    {
+      upperBound: 0.00000001,
+      formatter: OneSigFigCurrency,
+    },
+    { upperBound: 1, formatter: ThreeSigFigsCurrency },
+    { upperBound: 1e6, formatter: TwoDecimalsCurrency },
+    { upperBound: 1e16, formatter: ShorthandTwoDecimalsCurrency },
+    { upperBound: Infinity, formatter: SevenSigFigsSciNotationCurrency },
+  ],
+  defaultFormat: SevenSigFigsSciNotationCurrency,
 }
 
 export const TYPE_TO_FORMATTER_RULES = {
   [NumberType.TokenNonTx]: tokenNonTxFormatter,
   [NumberType.TokenTx]: tokenTxFormatter,
+  [NumberType.TokenQuantityStats]: tokenQuantityStatsFormatter,
   [NumberType.SwapPrice]: swapPriceFormatter,
   [NumberType.SwapTradeAmount]: swapTradeAmountFormatter,
   [NumberType.FiatStandard]: fiatStandardFormatter,
@@ -545,9 +645,12 @@ export const TYPE_TO_FORMATTER_RULES = {
   [NumberType.FiatTokenDetails]: fiatTokenDetailsFormatter,
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,
   [NumberType.FiatTokenStats]: fiatTokenStatsFormatter,
+  [NumberType.FiatRewards]: fiatRewardsFormatter,
   [NumberType.FiatGasPrice]: fiatGasPriceFormatter,
   [NumberType.PortfolioBalance]: portfolioBalanceFormatter,
   [NumberType.NFTTokenFloorPrice]: ntfTokenFloorPriceFormatter,
   [NumberType.NFTCollectionStats]: ntfCollectionStatsFormatter,
   [NumberType.Percentage]: percentagesFormatter,
+  [NumberType.PercentageThreeDecimals]: percentagesThreeDecimalsFormatter,
+  [NumberType.PercentageFourDecimals]: percentagesFourDecimalsFormatter, // update to use 4 decimals
 }

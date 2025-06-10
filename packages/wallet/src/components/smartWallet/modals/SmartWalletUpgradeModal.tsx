@@ -1,10 +1,11 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Flex, Image } from 'ui/src'
 import { SMART_WALLET_UPGRADE_FALLBACK } from 'ui/src/assets'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SmartWalletUnavailableModal } from 'wallet/src/components/smartWallet/modals/SmartWalletUnavailableModal'
 import {
@@ -43,7 +44,7 @@ export function SmartWalletUpgradeModals({
     dispatch(setHasDismissedSmartWalletHomeScreenNudge({ walletAddress: account.address, hasDismissed: true }))
     setShowModal(false)
 
-    sendAnalyticsEvent(WalletEventName.DismissSmartWalletUpgradeModal)
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element: ElementName.SmartWalletNotNow })
   }
 
   if (delegationStatus === SmartWalletDelegationAction.None) {
@@ -63,6 +64,7 @@ export function SmartWalletUpgradeModals({
 
   const handleEnableSmartWalletClick = (): void => {
     onEnableSmartWallet(() => setShowModal(false))
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element: ElementName.SmartWalletEnabled })
   }
 
   if (delegationStatus === SmartWalletDelegationAction.PromptUpgrade) {

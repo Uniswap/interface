@@ -1,7 +1,8 @@
-import { AnimatePresence, Flex, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { AnimatePresence, Flex, useIsShortMobileDevice } from 'ui/src'
 import { useSwapFormScreenState } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContext'
 import { FoTWarningRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/FoTWarningRow'
 import { GasAndWarningRows } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/GasAndWarningRows'
+import { isWeb } from 'utilities/src/platform'
 
 /**
  * IMPORTANT: If you modify the footer layout, you must test this on a small device and verify that the `DecimalPad`

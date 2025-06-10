@@ -1,11 +1,12 @@
 import dayjs from 'dayjs'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ColorTokens, Flex, GeneratedIcon, Separator, Text, isWeb } from 'ui/src'
+import { ColorTokens, Flex, GeneratedIcon, Separator, Text } from 'ui/src'
 import { ActionSheetModalContent, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FORMAT_DATE_LONG, useFormattedDate } from 'uniswap/src/features/language/localizedDayjs'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { isWeb } from 'utilities/src/platform'
 
 function renderOptionItem(label: string, textColorOverride?: ColorTokens): () => JSX.Element {
   return function OptionItem(): JSX.Element {

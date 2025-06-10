@@ -1,7 +1,7 @@
 import { WETH9 } from '@uniswap/sdk-core'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { expect, test } from 'playwright/fixtures'
-import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/anvil'
+import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import { Mocks } from 'playwright/mocks/mocks'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'

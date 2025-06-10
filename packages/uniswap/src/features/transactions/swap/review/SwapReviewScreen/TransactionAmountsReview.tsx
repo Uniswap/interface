@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Loader, ModalCloseIcon, Text, isWeb, useMedia, type FlexProps } from 'ui/src'
+import { Flex, Loader, ModalCloseIcon, Text, useMedia, type FlexProps } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { iconSizes, validColor } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -21,6 +21,7 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
+import { isWeb } from 'utilities/src/platform'
 
 const SHORT_GAP: FlexProps['$short'] = { gap: '$spacing8' }
 

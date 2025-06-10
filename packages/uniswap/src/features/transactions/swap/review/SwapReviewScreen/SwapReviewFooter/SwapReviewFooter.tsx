@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react'
-import { Flex, IconButton, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { Flex, IconButton, useIsShortMobileDevice } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { getShouldDisplayTokenWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/utils/getShouldDisplayTokenWarningCard'
@@ -12,6 +12,7 @@ import { useSwapReviewTransactionState } from 'uniswap/src/features/transactions
 import { useSwapWarningState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewWarningStateContext'
 import { useSwapOnPrevious } from 'uniswap/src/features/transactions/swap/review/hooks/useSwapOnPrevious'
 import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { isWeb } from 'utilities/src/platform'
 
 export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | null {
   const { showInterfaceReviewSteps } = useSwapReviewState()

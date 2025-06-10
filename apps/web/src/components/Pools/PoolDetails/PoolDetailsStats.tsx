@@ -23,7 +23,8 @@ import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/t
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 const HeaderText = styled(Text)`
   font-weight: 485;
@@ -131,7 +132,7 @@ type TokenFullData = Token & {
 const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chainId?: UniverseChainId }) => {
   const media = useMedia()
   const isLargeScreen = !media.xl
-  const { formatNumber } = useFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
   const unwrappedToken = chainId ? unwrapToken(chainId, token) : token
   const isNative = unwrappedToken?.address === NATIVE_CHAIN_ID
   const currency = isNative && chainId ? nativeOnChain(chainId) : token.currency
@@ -141,8 +142,8 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
     <PoolBalanceTokenNamesContainer>
       <Flex row alignItems="center" gap="$spacing4">
         {!isLargeScreen && <CurrencyLogo currency={currency} size={20} />}
-        {formatNumber({
-          input: token.tvl,
+        {formatNumberOrString({
+          value: token.tvl,
           type: NumberType.TokenQuantityStats,
         })}
         <StyledLink
@@ -281,22 +282,22 @@ const StatItemText = styled(Text)`
 `
 
 function StatItem({ title, value, delta }: { title: ReactNode; value: number; delta?: number }) {
-  const { formatNumber, formatDelta } = useFormatter()
+  const { formatPercent, formatNumberOrString } = useLocalizationContext()
 
   return (
     <StatItemColumn>
       <ThemedText.BodySecondary>{title}</ThemedText.BodySecondary>
       <StatsTextContainer>
         <StatItemText>
-          {formatNumber({
-            input: value,
+          {formatNumberOrString({
+            value,
             type: NumberType.FiatTokenStats,
           })}
         </StatItemText>
         {!!delta && (
           <Flex row width="max-content" py="$spacing4" $lg={{ py: 0 }}>
-            <DeltaArrow delta={delta} formattedDelta={formatDelta(delta)} />
-            <ThemedText.BodySecondary>{formatDelta(delta)}</ThemedText.BodySecondary>
+            <DeltaArrow delta={delta} formattedDelta={formatPercent(Math.abs(delta))} />
+            <ThemedText.BodySecondary>{formatPercent(Math.abs(delta))}</ThemedText.BodySecondary>
           </Flex>
         )}
       </StatsTextContainer>

@@ -65,9 +65,9 @@ import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetr
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { NumberType } from 'utilities/src/format/types'
 import { isMobileWeb } from 'utilities/src/platform'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
 import { useAccount } from 'wagmi'
 
@@ -667,7 +667,7 @@ const PositionSection = ({
   fiatValue0?: CurrencyAmount<Currency>
   fiatValue1?: CurrencyAmount<Currency>
 }) => {
-  const { formatCurrencyAmount } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   const { t } = useTranslation()
   const colors = useSporeColors()
   const currencyInfo0 = useCurrencyInfo(currency0Amount.currency)
@@ -731,19 +731,13 @@ const PositionSection = ({
         </Text>
         {position.status === PositionStatus.CLOSED ? (
           <Text variant="heading2" $lg={{ variant: 'heading3' }}>
-            {formatCurrencyAmount({
-              amount: CurrencyAmount.fromRawAmount(currency0Amount.currency, 0),
-              type: NumberType.FiatTokenPrice,
-            })}
+            {convertFiatAmountFormatted(0, NumberType.FiatTokenPrice)}
           </Text>
         ) : (
           <>
             <Text variant="heading2" mb="$spacing12">
               {fiatValue0 && fiatValue1 ? (
-                formatCurrencyAmount({
-                  amount: fiatValue0.add(fiatValue1),
-                  type: NumberType.FiatTokenPrice,
-                })
+                convertFiatAmountFormatted(fiatValue0.add(fiatValue1).toExact(), NumberType.FiatTokenPrice)
               ) : (
                 <MouseoverTooltip text={t('pool.positions.usdValueUnavailable.tooltip')} placement="right">
                   <Flex alignItems="center" row gap="$gap8">
@@ -839,7 +833,7 @@ const EarningsSection = ({
   feeValue0?: CurrencyAmount<Currency>
   feeValue1?: CurrencyAmount<Currency>
 }) => {
-  const { formatCurrencyAmount } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   const { t } = useTranslation()
   const colors = useSporeColors()
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
@@ -964,20 +958,12 @@ const EarningsSection = ({
           {isLpIncentivesEnabled && hasRewards ? t('pool.earnings') : t('common.feesEarned')}
         </Text>
         {positionInfo.status === PositionStatus.CLOSED ? (
-          <Text variant="heading2">
-            {formatCurrencyAmount({
-              amount: CurrencyAmount.fromRawAmount(currency0Amount.currency, 0),
-              type: NumberType.FiatRewards,
-            })}
-          </Text>
+          <Text variant="heading2">{convertFiatAmountFormatted(0, NumberType.FiatRewards)}</Text>
         ) : (
           <>
             <Text variant="heading2" mb="$spacing12">
               {totalEarningsFiatValue ? (
-                formatCurrencyAmount({
-                  amount: totalEarningsFiatValue,
-                  type: NumberType.FiatRewards,
-                })
+                convertFiatAmountFormatted(totalEarningsFiatValue.toExact(), NumberType.FiatRewards)
               ) : (
                 <MouseoverTooltip text={t('pool.positions.usdValueUnavailable.tooltip')} placement="right">
                   <Flex alignItems="center" row gap="$gap8">
@@ -1091,13 +1077,13 @@ const PriceRangeSection = ({
   setPriceInverted: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
   const { t } = useTranslation()
-  const { formatPrice } = useFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
   const formattedMarketPrice = useMemo(() => {
-    return formatPrice({
-      price: priceInverted ? token1CurrentPrice : token0CurrentPrice,
+    return formatNumberOrString({
+      value: (priceInverted ? token1CurrentPrice : token0CurrentPrice)?.toSignificant(),
       type: NumberType.TokenTx,
     })
-  }, [priceInverted, token0CurrentPrice, token1CurrentPrice, formatPrice])
+  }, [priceInverted, token0CurrentPrice, token1CurrentPrice, formatNumberOrString])
 
   if (isFullRange) {
     return null

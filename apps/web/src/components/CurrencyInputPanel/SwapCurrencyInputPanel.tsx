@@ -25,9 +25,10 @@ import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { AnimatePresence, Button, Flex, Text } from 'ui/src'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
 
 export const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${flexColumnNoWrap};
@@ -252,7 +253,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     const chainAllowed = useIsSupportedChainId(chainId)
     const selectedCurrencyBalance = useCurrencyBalance(account.address, currency ?? undefined)
     const theme = useTheme()
-    const { formatCurrencyAmount } = useFormatter()
+    const { formatCurrencyAmount } = useLocalizationContext()
     const { t } = useTranslation()
 
     const handleDismissSearch = useCallback(() => {
@@ -403,7 +404,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                             i18nKey="swap.balance.amount"
                             values={{
                               amount: formatCurrencyAmount({
-                                amount: selectedCurrencyBalance,
+                                value: selectedCurrencyBalance,
                                 type: NumberType.TokenNonTx,
                               }),
                             }}

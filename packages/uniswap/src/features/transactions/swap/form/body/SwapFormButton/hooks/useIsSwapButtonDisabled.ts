@@ -5,28 +5,9 @@ import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/conte
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 
-import type { TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
-import type { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-
-const getIsInvalidSwap = ({ wrapType, trade }: { wrapType: WrapType; trade: TradeWithStatus }): boolean => {
-  return !isWrapAction(wrapType) && !trade.trade
-}
-
-const getIsInvalidWrap = ({
-  wrapType,
-  exactAmountToken,
-}: {
-  wrapType: WrapType
-  exactAmountToken: string
-}): boolean => {
-  return isWrapAction(wrapType) && (!exactAmountToken || parseFloat(exactAmountToken) === 0)
-}
-
 const useIsReviewButtonDisabled = (): boolean => {
   const {
-    derivedSwapInfo: { wrapType, trade, exactAmountToken },
-
+    derivedSwapInfo: { trade },
     isSubmitting,
   } = useSwapFormContext()
   const activeAccount = useAccountMeta()
@@ -36,13 +17,10 @@ const useIsReviewButtonDisabled = (): boolean => {
   )
   const { walletNeedsRestore } = useTransactionModalContext()
 
-  const isInvalidSwap = getIsInvalidSwap({ wrapType, trade })
-
-  const isInvalidWrap = getIsInvalidWrap({ wrapType, exactAmountToken })
+  const tradeMissing = !trade
 
   return (
-    isInvalidSwap ||
-    isInvalidWrap ||
+    tradeMissing ||
     !!blockingWarning ||
     isBlockedAccount ||
     isBlockedAccountLoading ||

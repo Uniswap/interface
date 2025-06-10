@@ -23,9 +23,10 @@ import { Flex, Text, styled, useMedia } from 'ui/src'
 import { Token as GQLToken } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
 
 const TableWrapper = styled(Flex, {
   position: 'relative',
@@ -50,7 +51,7 @@ interface SwapLeg {
 
 export function TransactionsTable({ chainId, referenceToken }: { chainId: UniverseChainId; referenceToken: Token }) {
   const activeLocalCurrency = useAppFiatCurrency()
-  const { formatNumber, formatFiatPrice } = useFormatter()
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
   const filterAnchorRef = useRef<HTMLDivElement>(null)
   const [filter, setFilters] = useState<TokenTransactionType[]>([TokenTransactionType.BUY, TokenTransactionType.SELL])
@@ -179,8 +180,9 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
           cell: (inputTokenAmount) => (
             <Cell loading={showLoadingSkeleton} justifyContent="flex-end">
               <TableText>
-                {formatNumber({
-                  input: Math.abs(inputTokenAmount.getValue?.()) || 0,
+                {formatNumberOrString({
+                  value: Math.abs(inputTokenAmount.getValue?.()) || 0,
+                  type: NumberType.TokenNonTx,
                 })}
               </TableText>
             </Cell>
@@ -194,8 +196,8 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
           return (
             <Flex row gap="$gap8" justifyContent="flex-end" alignItems="center">
               <EllipsisText maxWidth={75}>
-                {formatNumber({
-                  input: Math.abs(nonReferenceSwapLeg.amount) || 0,
+                {formatNumberOrString({
+                  value: Math.abs(nonReferenceSwapLeg.amount) || 0,
                   type: NumberType.TokenQuantityStats,
                 })}
               </EllipsisText>
@@ -232,7 +234,7 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
         ),
         cell: (fiat) => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end">
-            <TableText>{formatFiatPrice({ price: fiat.getValue?.() })}</TableText>
+            <TableText>{convertFiatAmountFormatted(fiat.getValue?.(), NumberType.FiatTokenPrice)}</TableText>
           </Cell>
         ),
       }),
@@ -262,9 +264,9 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
     filter,
     referenceToken.address,
     unwrappedReferenceToken.symbol,
-    formatNumber,
+    formatNumberOrString,
     activeLocalCurrency,
-    formatFiatPrice,
+    convertFiatAmountFormatted,
   ])
 
   return (

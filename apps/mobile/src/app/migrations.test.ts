@@ -89,6 +89,7 @@ import {
   v84Schema,
   v85Schema,
   v86Schema,
+  v87Schema,
   v8Schema,
   v9Schema,
 } from 'src/app/schema'
@@ -135,6 +136,7 @@ import {
   testMovedLanguageSetting,
   testMovedTokenWarnings,
   testMovedUserSettings,
+  testMoveHapticsToUserSettings,
   testMoveTokenAndNFTVisibility,
   testRemoveCreatedOnboardingRedesignAccount,
   testRemoveHoldToSwap,
@@ -1703,5 +1705,9 @@ describe('Redux state migrations', () => {
         requestType: DappRequestType.WalletConnectSessionRequest,
       },
     })
+  })
+
+  it('migrates from v87 to v88', () => {
+    testMoveHapticsToUserSettings(migrations[88], v87Schema)
   })
 })

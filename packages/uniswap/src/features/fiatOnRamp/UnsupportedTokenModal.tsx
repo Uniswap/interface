@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, isWeb, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { isWeb } from 'utilities/src/platform'
 
 interface Props {
   isVisible: boolean

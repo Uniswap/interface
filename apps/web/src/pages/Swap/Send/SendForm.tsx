@@ -1,25 +1,31 @@
+import { useMutation } from '@tanstack/react-query'
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Column from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
+import { useModalState } from 'hooks/useModalState'
 import { useSendCallback } from 'hooks/useSendCallback'
 import { NewAddressSpeedBumpModal } from 'pages/Swap/Send/NewAddressSpeedBump'
 import SendCurrencyInputForm from 'pages/Swap/Send/SendCurrencyInputForm'
 import { SendRecipientForm } from 'pages/Swap/Send/SendRecipientForm'
-import { SendReviewModal } from 'pages/Swap/Send/SendReviewModal'
+import { SendReviewModalInner } from 'pages/Swap/Send/SendReviewModal'
 import { SmartContractSpeedBumpModal } from 'pages/Swap/Send/SmartContractSpeedBump'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SendContextProvider, useSendContext } from 'state/send/SendContext'
+import { useSendContext } from 'state/send/SendContext'
 import { CurrencyState } from 'state/swap/types'
 import { Button, Flex } from 'ui/src'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import {
+  TransactionScreen,
+  useTransactionModalContext,
+} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 
-type SendFormProps = {
+export type SendFormProps = {
   onCurrencyChange?: (selected: CurrencyState) => void
   disableTokenInputs?: boolean
 }
@@ -63,7 +69,6 @@ enum SendFormModalState {
   None = 'None',
   SMART_CONTRACT_SPEED_BUMP = 'SMART_CONTRACT_SPEED_BUMP',
   NEW_ADDRESS_SPEED_BUMP = 'NEW_ADDRESS_SPEED_BUMP',
-  REVIEW = 'REVIEW',
 }
 
 enum SendSpeedBump {
@@ -75,6 +80,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
   const account = useAccount()
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
+  const { setScreen } = useTransactionModalContext()
 
   const accountDrawer = useAccountDrawer()
 
@@ -83,8 +89,8 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     [SendSpeedBump.NEW_ADDRESS_SPEED_BUMP]: false,
     [SendSpeedBump.SMART_CONTRACT_SPEED_BUMP]: false,
   })
-  const { sendState, setSendState, derivedSendInfo } = useSendContext()
-  const { inputError, parsedTokenAmount, recipientData, transaction, gasFee } = derivedSendInfo
+  const { sendState, derivedSendInfo } = useSendContext()
+  const { inputError, recipientData } = derivedSendInfo
 
   const { isSmartContractAddress, loading: loadingSmartContractAddress } = useIsSmartContractAddress(
     recipientData?.address,
@@ -101,12 +107,6 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
   }, [recentTransfers, recipientData?.address])
 
   const sendButtonState = useSendButtonState()
-  const sendCallback = useSendCallback({
-    currencyAmount: parsedTokenAmount,
-    recipient: recipientData?.address,
-    transactionRequest: transaction,
-    gasFee,
-  })
 
   const handleModalState = useCallback((newState?: SendFormModalState) => {
     setSendFormModalState(newState ?? SendFormModalState.None)
@@ -137,9 +137,9 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
         return
       }
 
-      handleModalState(SendFormModalState.REVIEW)
+      setScreen(TransactionScreen.Review)
     },
-    [handleModalState, sendFormSpeedBumpState],
+    [handleModalState, sendFormSpeedBumpState, setScreen],
   )
 
   const handleConfirmSmartContractSpeedBump = useCallback(() => {
@@ -167,28 +167,6 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     () => handleModalState(SendFormModalState.None),
     [handleModalState],
   )
-
-  const [confirming, setConfirming] = useState(false)
-
-  const handleSend = useCallback(() => {
-    setConfirming(true)
-    sendCallback()
-      .then(() => {
-        setConfirming(false)
-        handleModalState(SendFormModalState.None)
-        setSendState((prev) => ({
-          ...prev,
-          exactAmountToken: undefined,
-          exactAmountFiat: '',
-          recipient: '',
-          validatedRecipient: undefined,
-          inputInFiat: true,
-        }))
-      })
-      .catch(() => {
-        setConfirming(false)
-      })
-  }, [handleModalState, sendCallback, setSendState])
 
   const buttonDisabled = !!inputError || loadingSmartContractAddress || transfersLoading || sendButtonState.disabled
 
@@ -226,12 +204,6 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
           </Trace>
         )}
       </Column>
-      <SendReviewModal
-        isOpen={sendFormModalState === SendFormModalState.REVIEW}
-        isConfirming={confirming}
-        onConfirm={handleSend}
-        onDismiss={() => handleModalState(SendFormModalState.None)}
-      />
       <SmartContractSpeedBumpModal
         isOpen={sendFormModalState === SendFormModalState.SMART_CONTRACT_SPEED_BUMP}
         onConfirm={handleConfirmSmartContractSpeedBump}
@@ -247,11 +219,45 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
 }
 
 export function SendForm(props: SendFormProps) {
-  return (
-    <Trace page={InterfacePageNameLocal.Send}>
-      <SendContextProvider>
-        <SendFormInner {...props} />
-      </SendContextProvider>
-    </Trace>
-  )
+  const { setSendState, derivedSendInfo } = useSendContext()
+  const { parsedTokenAmount, recipientData, transaction, gasFee } = derivedSendInfo
+  const { closeModal } = useModalState(ModalName.Send)
+
+  const sendCallback = useSendCallback({
+    currencyAmount: parsedTokenAmount,
+    recipient: recipientData?.address,
+    transactionRequest: transaction,
+    gasFee,
+  })
+
+  const { mutate: handleSend, isPending: isConfirming } = useMutation({
+    mutationFn: sendCallback,
+    onSuccess: () => {
+      closeModal()
+      setSendState((prev) => ({
+        ...prev,
+        exactAmountToken: undefined,
+        exactAmountFiat: '',
+        recipient: '',
+        validatedRecipient: undefined,
+        inputInFiat: true,
+      }))
+    },
+  })
+
+  const { screen, setScreen } = useTransactionModalContext()
+  switch (screen) {
+    case TransactionScreen.Form:
+      return <SendFormInner {...props} />
+    case TransactionScreen.Review:
+      return (
+        <SendReviewModalInner
+          onConfirm={handleSend}
+          onDismiss={() => setScreen(TransactionScreen.Form)}
+          isConfirming={isConfirming}
+        />
+      )
+    default:
+      return null
+  }
 }

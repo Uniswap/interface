@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
-import { Flex, HeightAnimator, Separator, Text, TouchableArea, UniswapXText, isWeb } from 'ui/src'
+import { Flex, HeightAnimator, Separator, Text, TouchableArea, UniswapXText } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { AnglesDownUp } from 'ui/src/components/icons/AnglesDownUp'
 import { SortVertical } from 'ui/src/components/icons/SortVertical'
@@ -39,7 +39,7 @@ import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
-import { isInterfaceDesktop } from 'utilities/src/platform'
+import { isInterfaceDesktop, isWeb } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 const ZERO_PERCENT = new Percent(0, 100)

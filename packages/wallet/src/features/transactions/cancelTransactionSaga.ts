@@ -57,16 +57,14 @@ function getPermit2NonceForOrder({
   return ROUTING_TO_ORDER_CLASS[routing].parse(encodedOrder, chainId).info.nonce
 }
 
-export async function getCancelOrderTxRequest(
-  tx: UniswapXOrderDetails,
-): Promise<providers.TransactionRequest | undefined> {
+export async function getCancelOrderTxRequest(tx: UniswapXOrderDetails): Promise<providers.TransactionRequest | null> {
   const { orderHash, chainId, from, routing } = tx
   if (!orderHash) {
-    return undefined
+    return null
   } else {
     const { encodedOrder } = (await getOrders([orderHash])).orders[0] ?? {}
     if (!encodedOrder) {
-      return undefined
+      return null
     }
 
     const nonce = getPermit2NonceForOrder({ encodedOrder, chainId, routing })
@@ -100,7 +98,13 @@ function* cancelOrder(order: UniswapXOrderDetails, cancelRequest: providers.Tran
     // UniswapX Orders are cancelled via submitting a transaction to invalidate the nonce of the permit2 signature used to fill the order.
     // If the permit2 tx is mined before a filler attempts to fill the order, the order is prevented; the cancellation is successful.
     // If the permit2 tx is mined after a filler successfully fills the order, the tx will succeed but have no effect; the cancellation is unsuccessful.
-    yield* call(signAndSubmitTransaction, cancelRequest, account, provider, signerManager)
+    yield* call(signAndSubmitTransaction, {
+      request: cancelRequest,
+      account,
+      provider,
+      signerManager,
+      isCancellation: true,
+    })
 
     // At this point, there is no need to track the above transaction in state, as it will be mined regardless of whether the order is filled or not.
     // Instead, the transactionWatcherSaga will either receive 'cancelled' or 'success' from the backend, updating the original tx's UI accordingly.

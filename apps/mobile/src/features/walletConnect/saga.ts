@@ -12,6 +12,7 @@ import {
   handleSendCalls,
 } from 'src/features/walletConnect/batchedTransactionSaga'
 import { fetchDappDetails } from 'src/features/walletConnect/fetchDappDetails'
+import { selectAllSessions } from 'src/features/walletConnect/selectors'
 import {
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
@@ -30,6 +31,7 @@ import {
   addRequest,
   addSession,
   removeSession,
+  replaceSession,
   setHasPendingSessionError,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, fork, put, select, take } from 'typed-redux-saga'
@@ -43,9 +45,15 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import i18n from 'uniswap/src/i18n'
 import { DappRequestType, EthEvent, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { selectAccounts, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
+import {
+  selectAccounts,
+  selectActiveAccountAddress,
+  selectSignerMnemonicAccounts,
+} from 'wallet/src/features/wallet/selectors'
+import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 
 const WC_SUPPORTED_METHODS = [
   EthMethod.EthSign,
@@ -154,8 +162,6 @@ function* cancelErrorSession(dappName: string, chainLabels: string, proposalId: 
 }
 
 export function* handleSessionProposal(proposal: ProposalTypes.Struct & { verifyContext?: Verify.Context }) {
-  const activeAccountAddress = yield* select(selectActiveAccountAddress)
-
   const {
     id,
     proposer: { metadata: dapp },
@@ -170,9 +176,15 @@ export function* handleSessionProposal(proposal: ProposalTypes.Struct & { verify
     return
   }
 
+  const activeSignerAccounts = yield* select(selectSignerMnemonicAccounts)
+  const activeSignerAccountAddresses = activeSignerAccounts.map((account) => account.address)
+
   try {
     const supportedEip155Chains = ALL_CHAIN_IDS.map((chainId) => `eip155:${chainId}`)
-    const accounts = supportedEip155Chains.map((chain) => `${chain}:${activeAccountAddress}`)
+
+    const accounts = supportedEip155Chains.flatMap((chain) =>
+      activeSignerAccountAddresses.map((account) => `${chain}:${account}`),
+    )
 
     const namespaces = buildApprovedNamespaces({
       proposal,
@@ -481,8 +493,8 @@ function* populateActiveSessions() {
           },
           chains,
           namespaces: session.namespaces,
+          activeAccount: accountAddress,
         },
-        account: accountAddress,
       }),
     )
   }
@@ -504,10 +516,59 @@ function* fetchPendingSessionRequests() {
   }
 }
 
+/**
+ * Monitor wallet account changes and update WC sessions accordingly for sessions that are approved with multiple accounts.
+ *
+ * This allows connected Dapps to stay in sync with the currently active wallet account across all supported chains.
+ *
+ * Account approvals are per chain, and included as part of the wc session namespaces.
+ */
+function* monitorAccountChanges() {
+  while (true) {
+    const action = yield* take(setAccountAsActive)
+    const newActiveAccountAddress = action.payload
+
+    const allSessions = yield* select(selectAllSessions)
+
+    for (const session of Object.values(allSessions)) {
+      const accounts = session.namespaces.eip155?.accounts
+
+      // Update all sessions if new active account is included in the session namespacess
+      const isNewAccountApprovedInNamespace = accounts?.some((eip155String) => {
+        const parsedAddress = getAccountAddressFromEIP155String(eip155String)
+        return areAddressesEqual(parsedAddress, newActiveAccountAddress)
+      })
+
+      if (!isNewAccountApprovedInNamespace) {
+        continue
+      }
+
+      // Update WC sessions across all supported chains with the new active account
+      const chains = session.namespaces.eip155?.chains ?? []
+      yield* call(function* () {
+        for (const chainId of chains) {
+          yield* call([wcWeb3Wallet, wcWeb3Wallet.emitSessionEvent], {
+            topic: session.id,
+            chainId,
+            event: {
+              name: EthEvent.AccountsChanged,
+              data: [newActiveAccountAddress],
+            },
+          })
+        }
+      })
+
+      // Update the active account in store
+      yield* put(replaceSession({ wcSession: { ...session, activeAccount: newActiveAccountAddress } }))
+    }
+  }
+}
+
 export function* walletConnectSaga() {
   yield* call(initializeWeb3Wallet)
   yield* call(populateActiveSessions)
   yield* fork(fetchPendingSessionProposals)
   yield* fork(fetchPendingSessionRequests)
   yield* fork(watchWalletConnectEvents)
+  yield* fork(monitorAccountChanges)
 }

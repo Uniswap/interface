@@ -11,7 +11,7 @@ import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { ZERO_ADDRESS } from 'constants/misc'
+import { BIPS_BASE, ZERO_ADDRESS } from 'constants/misc'
 import { SUPPORTED_V2POOL_CHAIN_IDS } from 'hooks/useNetworkSupportsV2'
 import { AddHook } from 'pages/Pool/Positions/create/AddHook'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
@@ -42,7 +42,6 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { useFormatter } from 'utils/formatNumbers'
 import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
 
 interface WrappedNativeWarning {
@@ -115,8 +114,7 @@ const FeeTier = ({
   isLpIncentivesEnabled?: boolean
 }) => {
   const { t } = useTranslation()
-  const { formatPercent } = useFormatter()
-  const { formatNumberOrString } = useLocalizationContext()
+  const { formatNumberOrString, formatPercent } = useLocalizationContext()
 
   return (
     <FeeTierContainer
@@ -126,7 +124,7 @@ const FeeTier = ({
     >
       <Flex gap="$spacing8">
         <Flex row gap={10} justifyContent="space-between">
-          <Text variant="buttonLabel3">{formatPercent(new Percent(feeTier.value.feeAmount, 1000000))}</Text>
+          <Text variant="buttonLabel3">{formatPercent(feeTier.value.feeAmount / BIPS_BASE, 4)}</Text>
           {selected && <CheckCircleFilled size="$icon.16" />}
         </Flex>
         <Text variant="body4">{feeTier.title}</Text>
@@ -142,7 +140,9 @@ const FeeTier = ({
             </Text>
             {feeTier.selectionPercent && feeTier.selectionPercent.greaterThan(0) && (
               <Text variant="body4" color="$neutral2">
-                {formatPercent(feeTier.selectionPercent)} select
+                {t('fee.tier.percent.select', {
+                  percentage: formatPercent(feeTier.selectionPercent.toSignificant(), 3),
+                })}
               </Text>
             )}
           </Flex>
@@ -160,7 +160,7 @@ export function SelectTokensStep({
   tokensLocked,
   ...rest
 }: { tokensLocked?: boolean; onContinue: () => void } & FlexProps) {
-  const { formatPercent } = useFormatter()
+  const { formatPercent } = useLocalizationContext()
   const { t } = useTranslation()
   const { setSelectedChainId } = useMultichainContext()
   const trace = useTrace()
@@ -447,7 +447,7 @@ export function SelectTokensStep({
                           ) : (
                             <Trans
                               i18nKey="fee.tierExact"
-                              values={{ fee: formatPercent(new Percent(fee.feeAmount, 1000000), 4) }}
+                              values={{ fee: formatPercent(fee.feeAmount / BIPS_BASE, 4) }}
                             />
                           )}
                         </Text>

@@ -1,8 +1,9 @@
 import { Currency, Price } from '@uniswap/sdk-core'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Text, TextProps } from 'ui/src'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
 
 export function BaseQuoteFiatAmount({
   price,
@@ -15,7 +16,7 @@ export function BaseQuoteFiatAmount({
   quote?: Currency
   variant?: TextProps['variant']
 }) {
-  const { formatCurrencyAmount, formatPrice } = useFormatter()
+  const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const quoteCurrencyAmount = tryParseCurrencyAmount(price?.toFixed(), price?.quoteCurrency)
   const usdPrice = useUSDCValue(quoteCurrencyAmount)
 
@@ -26,15 +27,11 @@ export function BaseQuoteFiatAmount({
   return (
     <>
       <Text variant={variant ?? 'body3'} color="$neutral1">
-        {formatPrice({ price, type: NumberType.TokenTx })} {quote?.symbol} = 1 {base?.symbol}
+        {formatNumberOrString({ value: price.toSignificant(), type: NumberType.TokenTx })} {quote?.symbol} = 1{' '}
+        {base?.symbol}
       </Text>{' '}
       <Text variant={variant ?? 'body3'} color="$neutral2">
-        (
-        {formatCurrencyAmount({
-          amount: usdPrice,
-          type: NumberType.FiatTokenPrice,
-        })}
-        )
+        ({convertFiatAmountFormatted(usdPrice?.toExact(), NumberType.FiatTokenPrice)})
       </Text>
     </>
   )

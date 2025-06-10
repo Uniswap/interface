@@ -1,11 +1,10 @@
-import { Percent } from '@uniswap/sdk-core'
 import Row from 'components/deprecated/Row'
 import styled, { css } from 'lib/styled-components'
 import { X } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { ClickableStyle } from 'theme/components/styles'
-import { useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 
 interface LimitPriceButtonProps {
   priceAdjustmentPercentage: number
@@ -75,7 +74,7 @@ export function LimitPresetPriceButton({
   disabled,
   onSelect,
 }: LimitPriceButtonProps) {
-  const { formatPercent } = useFormatter()
+  const { formatPercent } = useLocalizationContext()
   const sign = priceAdjustmentPercentage > 0 ? '+' : '-'
   return (
     <Container
@@ -91,7 +90,7 @@ export function LimitPresetPriceButton({
       ) : (
         <ThemedText.BodySecondary fontWeight={535} color="inherit">
           {sign}
-          {formatPercent(new Percent(Math.abs(priceAdjustmentPercentage), 100))}
+          {formatPercent(Math.abs(priceAdjustmentPercentage))}
         </ThemedText.BodySecondary>
       )}
     </Container>
@@ -111,7 +110,7 @@ export function LimitCustomMarketPriceButton({
   customAdjustmentPercentage?: number
 }) {
   const onSetAdjustmentPercentage = () => !disabled && onSelect(0)
-  const { formatPercent } = useFormatter()
+  const { formatPercent } = useLocalizationContext()
   return (
     <Row width="unset" gap="1px">
       <Container
@@ -127,7 +126,7 @@ export function LimitCustomMarketPriceButton({
         ) : (
           <ThemedText.BodySecondary color="inherit" fontWeight={535}>
             {customAdjustmentPercentage > 0 ? '+' : ''}
-            {formatPercent(new Percent(customAdjustmentPercentage, 100))}
+            {formatPercent(customAdjustmentPercentage)}
           </ThemedText.BodySecondary>
         )}
       </Container>

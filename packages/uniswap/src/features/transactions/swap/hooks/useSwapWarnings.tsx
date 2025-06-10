@@ -5,7 +5,6 @@ import isEqual from 'lodash/isEqual'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
-import { isWeb } from 'ui/src'
 import {
   ParsedWarnings,
   Warning,
@@ -40,7 +39,7 @@ import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
-import { isInterface } from 'utilities/src/platform'
+import { isInterface, isWeb } from 'utilities/src/platform'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%

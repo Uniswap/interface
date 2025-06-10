@@ -5,10 +5,10 @@ import { useMemo } from 'react'
 import { Flex, Text } from 'ui/src'
 import { ItemPoint } from 'uniswap/src/components/IconCloud/IconCloud'
 import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 
 export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }) {
-  const { formatDelta } = useFormatter()
+  const { formatPercent } = useLocalizationContext()
 
   const { color, size, floatingElementPosition, itemData } = itemPoint
   const { address, chain, symbol } = itemData
@@ -50,8 +50,8 @@ export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }
           {symbol}
         </Text>
         <Flex row alignItems="center">
-          <DeltaArrow delta={pricePercentChange} formattedDelta={formatDelta(pricePercentChange)} />
-          <Text variant="body2">{formatDelta(pricePercentChange)}</Text>
+          <DeltaArrow delta={pricePercentChange} formattedDelta={formatPercent(Math.abs(pricePercentChange))} />
+          <Text variant="body2">{formatPercent(Math.abs(pricePercentChange))}</Text>
         </Flex>
       </Flex>
     </Flex>

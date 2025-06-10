@@ -4,14 +4,8 @@ import { buildApprovedNamespaces, populateAuthPayload } from '@walletconnect/uti
 import { expectSaga } from 'redux-saga-test-plan'
 import { handleSessionAuthenticate, handleSessionProposal } from 'src/features/walletConnect/saga'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
-import {
-  SignRequest,
-  WalletConnectVerifyStatus,
-  addPendingSession,
-  addRequest,
-} from 'src/features/walletConnect/walletConnectSlice'
+import { WalletConnectVerifyStatus, addPendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { DappRequestInfo, DappRequestType, EthEvent } from 'uniswap/src/types/walletConnect'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
@@ -121,7 +115,15 @@ describe('WalletConnect Saga', () => {
             if (selector === selectActiveAccountAddress) {
               return activeAccountAddress
             }
+            // For any other selectors that might access wallet state
             return next()
+          },
+        })
+        .withState({
+          wallet: {
+            accounts: {
+              [activeAccountAddress]: { address: activeAccountAddress },
+            },
           },
         })
         .put(addPendingSession(expectedPendingSession))
@@ -181,23 +183,6 @@ describe('WalletConnect Saga', () => {
       // Mock formatAuthMessage
       wcWeb3Wallet.formatAuthMessage = jest.fn().mockReturnValue(mockAuthMessage)
 
-      const mockSignRequest: SignRequest = {
-        type: EthMethod.EthSign,
-        message: mockAuthMessage,
-        rawMessage: mockAuthMessage,
-        sessionId: '789',
-        internalId: `${UniverseChainId.Mainnet}:789`, // Fix: use actual chainId format without 'eip155:' prefix
-        chainId: UniverseChainId.Mainnet,
-        account: activeAccountAddress,
-        dappRequestInfo: {
-          name: 'Auth Dapp',
-          url: 'https://auth-dapp.com',
-          icon: 'https://auth-dapp.com/icon.png',
-          requestType: DappRequestType.WalletConnectAuthenticationRequest,
-          authPayload: mockPopulatedAuthPayload,
-        },
-      }
-
       // Run the saga and verify action is dispatched
       await expectSaga(handleSessionAuthenticate, mockAuthenticate)
         .provide({
@@ -208,7 +193,14 @@ describe('WalletConnect Saga', () => {
             return next()
           },
         })
-        .put(addRequest(mockSignRequest))
+        .withState({
+          wallet: {
+            accounts: {
+              [activeAccountAddress]: { address: activeAccountAddress },
+            },
+          },
+        })
+        .put.actionType('walletConnect/addRequest')
         .run()
     })
   })

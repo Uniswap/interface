@@ -190,6 +190,8 @@ export function getBaseTradeAnalyticsProperties({
   trace,
   isBatched,
   includedPermitTransactionStep,
+  includesDelegation,
+  isSmartWalletTransaction,
 }: {
   formatter: LocalizationContextState
   trade: Trade<Currency, Currency, TradeType>
@@ -201,6 +203,8 @@ export function getBaseTradeAnalyticsProperties({
   trace: ITraceContext
   isBatched?: boolean
   includedPermitTransactionStep?: boolean
+  includesDelegation?: boolean
+  isSmartWalletTransaction?: boolean
 }): SwapTradeBaseProperties {
   const portionAmount = getClassicQuoteFromResponse(trade?.quote)?.portionAmount
 
@@ -268,6 +272,8 @@ export function getBaseTradeAnalyticsProperties({
     ...getRouteAnalyticsData(trade),
     is_batch: isBatched,
     included_permit_transaction_step: includedPermitTransactionStep,
+    includes_delegation: includesDelegation,
+    is_smart_wallet_transaction: isSmartWalletTransaction,
   }
 }
 

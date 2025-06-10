@@ -1,11 +1,15 @@
 import { Currency } from '@uniswap/sdk-core'
 import { BigNumberish } from 'ethers'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { makeSelectTransaction, useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
+import {
+  makeSelectTransaction,
+  selectTransactions,
+  useSelectAddressTransactions,
+} from 'uniswap/src/features/transactions/selectors'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -19,11 +23,13 @@ import {
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { ensureLeading0x } from 'uniswap/src/utils/addresses'
 import { areCurrencyIdsEqual, buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import {
   createSwapFormFromTxDetails,
   createWrapFormFromTxDetails,
 } from 'wallet/src/features/transactions/swap/createSwapFormFromTxDetails'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccount, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { WalletState } from 'wallet/src/state/walletReducer'
 
 type HashToTxMap = Map<string, TransactionDetails>
@@ -345,4 +351,51 @@ export function useIsQueuedTransaction(tx: TransactionDetails): boolean {
 
   const nonce = tx?.options?.request?.nonce
   return nonce && lowestPendingNonce ? nonce > lowestPendingNonce : false
+}
+
+const ACCEPTABLE_TIME_DIFF = 5 * ONE_SECOND_MS
+
+export function useSuccessfulSwapCompleted(onSwapCompleted: (transaction: TransactionDetails) => void): void {
+  const activeAccount = useActiveAccount()
+  const transactions = useSelector(selectTransactions)
+
+  const successfulSwapTransactions = useMemo((): TransactionDetails[] => {
+    if (!activeAccount?.address || !transactions) {
+      return []
+    }
+
+    const swapTransactions: TransactionDetails[] = []
+
+    flattenObjectOfObjects(transactions).forEach((tx) =>
+      Object.values(tx).forEach((txNested) => {
+        if (
+          txNested.typeInfo.type === TransactionType.Swap &&
+          txNested.status === TransactionStatus.Success &&
+          txNested.from === activeAccount.address
+        ) {
+          swapTransactions.push(txNested)
+        }
+      }),
+    )
+    return swapTransactions
+  }, [activeAccount?.address, transactions])
+
+  const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState<number>(0)
+
+  useEffect(() => {
+    const lastCompletedSwap = successfulSwapTransactions.sort((a, b) => (b.addedTime || 0) - (a.addedTime || 0))[0]
+
+    // if a completed swap and it was added in the last ACCEPTABLE_TIME_DIFF seconds, trigger the callback
+    if (
+      lastCompletedSwap &&
+      lastCompletedSwap.receipt?.confirmedTime &&
+      lastCompletedSwap.receipt.confirmedTime > lastProcessedTimestamp
+    ) {
+      const timeSinceAdded = Date.now() - (lastCompletedSwap.receipt?.confirmedTime || 0)
+      if (timeSinceAdded < ACCEPTABLE_TIME_DIFF) {
+        onSwapCompleted(lastCompletedSwap)
+        setLastProcessedTimestamp(lastCompletedSwap.receipt.confirmedTime)
+      }
+    }
+  }, [successfulSwapTransactions, lastProcessedTimestamp, onSwapCompleted])
 }

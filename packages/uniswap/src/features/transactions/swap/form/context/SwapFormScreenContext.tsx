@@ -28,7 +28,6 @@ export interface SwapFormScreenContextState {
   exactFieldIsInput: boolean
   exactFieldIsOutput: boolean
   exactOutputDisabled: boolean
-  isSwapDataLoading: boolean
   resetSelection: (params: { start: number; end?: number; currencyField?: CurrencyField }) => void
   currencyAmountsUSDValue: { [field in CurrencyField]: Maybe<CurrencyAmount<Currency>> }
   exactValue: string | undefined

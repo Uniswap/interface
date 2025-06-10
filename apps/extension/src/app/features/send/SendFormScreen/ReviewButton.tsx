@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, isWeb } from 'ui/src'
+import { Button, Flex } from 'ui/src'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { isWeb } from 'utilities/src/platform'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 
 type ReviewButtonProps = {

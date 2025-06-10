@@ -25,10 +25,11 @@ import {
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
+import { NumberType } from 'utilities/src/format/types'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const TableRow = styled(Flex, {
   row: true,
@@ -38,7 +39,7 @@ const TableRow = styled(Flex, {
 
 const RecentTransactions = memo(function RecentTransactions() {
   const activeLocalCurrency = useAppFiatCurrency()
-  const { formatNumber, formatFiatPrice } = useFormatter()
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
   const filterAnchorRef = useRef<HTMLDivElement>(null)
   const [filter, setFilters] = useState<TransactionType[]>([
@@ -146,7 +147,7 @@ const RecentTransactions = memo(function RecentTransactions() {
         ),
         cell: (fiat) => (
           <Cell loading={showLoadingSkeleton}>
-            <TableText>{formatFiatPrice({ price: fiat.getValue?.() })}</TableText>
+            <TableText>{convertFiatAmountFormatted(fiat.getValue?.(), NumberType.FiatTokenPrice)}</TableText>
           </Cell>
         ),
       }),
@@ -164,8 +165,8 @@ const RecentTransactions = memo(function RecentTransactions() {
           <Cell loading={showLoadingSkeleton}>
             <TableRow justifyContent="flex-end">
               <TableText variant="body2" color="$neutral1">
-                {formatNumber({
-                  input: Math.abs(parseFloat(transaction.getValue?.().token0Quantity)) || 0,
+                {formatNumberOrString({
+                  value: Math.abs(parseFloat(transaction.getValue?.().token0Quantity)) || 0,
                   type: NumberType.TokenQuantityStats,
                 })}
               </TableText>
@@ -188,8 +189,8 @@ const RecentTransactions = memo(function RecentTransactions() {
           <Cell loading={showLoadingSkeleton}>
             <TableRow justifyContent="flex-end">
               <TableText variant="body2" color="$neutral1">
-                {formatNumber({
-                  input: Math.abs(parseFloat(transaction.getValue?.().token1Quantity)) || 0,
+                {formatNumberOrString({
+                  value: Math.abs(parseFloat(transaction.getValue?.().token1Quantity)) || 0,
                   type: NumberType.TokenQuantityStats,
                 })}
               </TableText>
@@ -226,8 +227,8 @@ const RecentTransactions = memo(function RecentTransactions() {
     media.lg,
     filter,
     filterModalIsOpen,
-    formatFiatPrice,
-    formatNumber,
+    convertFiatAmountFormatted,
+    formatNumberOrString,
     showLoadingSkeleton,
     t,
   ])

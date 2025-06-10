@@ -1,43 +1,14 @@
+import { LiquidityBarData, LiquidityBarProps, LiquidityBarSeriesOptions } from 'components/Charts/LiquidityChart/types'
 import { ColumnPosition, calculateColumnPositionsInPlace, positionsBox } from 'components/Charts/VolumeChart/utils'
 import { roundRect } from 'components/Charts/utils'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
-import {
-  CustomData,
-  CustomSeriesOptions,
-  ICustomSeriesPaneRenderer,
-  PaneRendererCustomData,
-  PriceToCoordinateConverter,
-  Time,
-  UTCTimestamp,
-} from 'lightweight-charts'
-
-export interface LiquidityBarData extends CustomData {
-  time: UTCTimestamp
-  tick: number
-  price0: string
-  price1: string
-  liquidity: number
-  amount0Locked: number
-  amount1Locked: number
-}
+import { ICustomSeriesPaneRenderer, PaneRendererCustomData, PriceToCoordinateConverter, Time } from 'lightweight-charts'
 
 interface LiquidityBarItem {
   x: number
   y: number
   column?: ColumnPosition
   tick: number
-}
-
-export interface LiquidityBarProps {
-  tokenAColor: string
-  tokenBColor: string
-  highlightColor: string
-  activeTick?: number
-  activeTickProgress?: number
-}
-
-export interface LiquidityBarSeriesOptions extends CustomSeriesOptions, LiquidityBarProps {
-  hoveredTick?: number
 }
 
 export class LiquidityBarSeriesRenderer<TData extends LiquidityBarData> implements ICustomSeriesPaneRenderer {

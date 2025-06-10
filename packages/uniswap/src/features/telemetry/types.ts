@@ -195,6 +195,8 @@ export type SwapTradeBaseProperties = {
   is_batch?: boolean
   batch_id?: string
   included_permit_transaction_step?: boolean
+  includes_delegation?: boolean
+  is_smart_wallet_transaction?: boolean
 } & ITraceContext
 
 type BaseSwapTransactionResultProperties = {
@@ -223,6 +225,8 @@ type BaseSwapTransactionResultProperties = {
   protocol?: Protocol
   transactedUSDValue?: number
   simulation_failure_reasons?: TransactionFailureReason[]
+  includes_delegation?: SwapTradeBaseProperties['includes_delegation']
+  is_smart_wallet_transaction?: SwapTradeBaseProperties['is_smart_wallet_transaction']
 }
 
 type ClassicSwapTransactionResultProperties = BaseSwapTransactionResultProperties
@@ -242,6 +246,8 @@ type FailedClassicSwapResultProperties = Omit<ClassicSwapTransactionResultProper
 type FailedBridgeSwapResultProperties = Omit<BridgeSwapTransactionResultProperties, 'hash'> & {
   hash: string | undefined
 }
+
+type CancelledUniswapXOrderResultProperties = Omit<UniswapXTransactionResultProperties, 'hash'>
 
 type CancelledClassicSwapResultProperties = ClassicSwapTransactionResultProperties & {
   replaced_transaction_hash: string | undefined
@@ -827,7 +833,10 @@ export type UniverseEventProperties = {
     | FailedClassicSwapResultProperties
     | FailedUniswapXOrderResultProperties
     | FailedBridgeSwapResultProperties
-  [WalletEventName.SwapTransactionCancelled]: CancelledClassicSwapResultProperties | CancelledBridgeSwapResultProperties
+  [WalletEventName.SwapTransactionCancelled]:
+    | CancelledClassicSwapResultProperties
+    | CancelledUniswapXOrderResultProperties
+    | CancelledBridgeSwapResultProperties
   [SwapEventName.SWAP_DETAILS_EXPANDED]: ITraceContext | undefined
   [SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED]: ITraceContext
   [SwapEventName.SWAP_QUOTE_RECEIVED]: {
@@ -950,7 +959,6 @@ export type UniverseEventProperties = {
     twitter: boolean
   }
   [UnitagEventName.UnitagRemoved]: undefined
-  [WalletEventName.DismissSmartWalletUpgradeModal]: undefined
   [WalletEventName.AppRating]: {
     type: 'store-review' | 'feedback-form' | 'remind' | 'close'
     appRatingPromptedMs?: number

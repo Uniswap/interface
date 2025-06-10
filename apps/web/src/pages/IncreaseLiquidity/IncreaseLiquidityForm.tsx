@@ -182,7 +182,7 @@ export function IncreaseLiquidityForm() {
           key="LoaderButton-animation-IncreaseLiquidity-continue"
           size="large"
         >
-          {error || t('common.add.label')}
+          {error || t('swap.button.review')}
         </Button>
       </Flex>
     </Flex>

@@ -6,19 +6,21 @@ import { useCallback, useEffect } from 'react'
 import { Directions, FlingGestureHandler, FlingGestureHandlerGestureEvent, State } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
-import { ElementAfterText, Flex, Text, TouchableArea, isWeb, styled, useShadowPropsShort } from 'ui/src'
+import { ElementAfterText, Flex, Text, TouchableArea, styled, useShadowPropsShort } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, spacing } from 'ui/src/theme'
 import { useSelectAddressNotifications } from 'uniswap/src/features/notifications/hooks'
 import { popNotification, setNotificationViewed } from 'uniswap/src/features/notifications/slice'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { isWeb } from 'utilities/src/platform'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 const NOTIFICATION_HEIGHT = 64
 
-const DEFAULT_HIDE_DELAY = 5000 // 5 seconds
+export const DEFAULT_HIDE_DELAY = 5 * ONE_SECOND_MS // 5 seconds
 const HIDE_OFFSET_Y = -150
 const SPRING_ANIMATION = { damping: 30, stiffness: 150 }
 

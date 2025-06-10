@@ -84,11 +84,13 @@ export function* executeTransactionLegacy(params: ExecuteTransactionParams): Sag
 
     const { transactionResponse, populatedRequest, timestampBeforeSend, timestampBeforeSign } = yield* call(
       signAndSubmitTransaction,
-      request,
-      account,
-      provider,
-      signerManager,
-      viemClient,
+      {
+        request,
+        account,
+        provider,
+        signerManager,
+        viemClient,
+      },
     )
     logger.debug('executeTransaction', '', 'Tx submitted:', transactionResponse.hash)
 
@@ -106,7 +108,7 @@ export function* executeTransactionLegacy(params: ExecuteTransactionParams): Sag
 
     // Log metric for successfully submitted transactions to datadog for alerting %
     logger.info('sendTransactionSaga', 'sendTransaction', 'Transaction successfully submitted', {
-      chainId,
+      chainLabel: getChainLabel(chainId),
       transactionType: typeInfo.type,
       hash: transactionResponse.hash,
     })

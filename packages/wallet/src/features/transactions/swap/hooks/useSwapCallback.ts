@@ -45,6 +45,8 @@ export function useSwapCallback(): SwapCallback {
         preselectAsset,
         isAutoSlippage,
         isFiatInputMode,
+        isSmartWalletTransaction,
+        includesDelegation,
       } = args
       const { trade, gasFee } = swapTxContext
 
@@ -62,6 +64,8 @@ export function useSwapCallback(): SwapCallback {
         preselectAsset,
         portfolioBalanceUsd: portfolioData?.balanceUSD,
         trace,
+        includesDelegation,
+        isSmartWalletTransaction,
       })
       appDispatch(swapActions.trigger({ swapTxContext, txId, account, analytics, onSuccess, onFailure, onPending }))
 

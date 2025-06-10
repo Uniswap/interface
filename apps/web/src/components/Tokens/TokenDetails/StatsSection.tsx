@@ -12,7 +12,8 @@ import { textFadeIn } from 'theme/styles'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 export const StatWrapper = styled.div`
   color: ${({ theme }) => theme.neutral2};
@@ -64,19 +65,14 @@ function Stat({
   title: ReactNode
   description?: ReactNode
 }) {
-  const { formatNumber } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   return (
     <StatWrapper data-cy={`${testID}`} data-testid={`${testID}`}>
       <MouseoverTooltip disabled={!description} text={description}>
         {title}
       </MouseoverTooltip>
-      <StatPrice>
-        {formatNumber({
-          input: value,
-          type: NumberType.FiatTokenStats,
-        })}
-      </StatPrice>
+      <StatPrice>{convertFiatAmountFormatted(value, NumberType.FiatTokenStats)}</StatPrice>
     </StatWrapper>
   )
 }

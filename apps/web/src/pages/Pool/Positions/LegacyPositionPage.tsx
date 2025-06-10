@@ -26,12 +26,13 @@ import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { NumberType } from 'utilities/src/format/types'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
 import { useAccount } from 'wagmi'
 
@@ -91,7 +92,7 @@ export function LegacyPositionPage() {
 
   const dispatch = useAppDispatch()
 
-  const { formatCurrencyAmount } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   const navigate = useNavigate()
   const { t } = useTranslation()
 
@@ -267,10 +268,7 @@ export function LegacyPositionPage() {
                 </Text>
                 <Text variant="heading2">
                   {fiatValue0 && fiatValue1 ? (
-                    formatCurrencyAmount({
-                      amount: fiatValue0.add(fiatValue1),
-                      type: NumberType.FiatTokenPrice,
-                    })
+                    convertFiatAmountFormatted(fiatValue0.add(fiatValue1).toExact(), NumberType.FiatTokenPrice)
                   ) : (
                     <MouseoverTooltip text={t('pool.positions.usdValueUnavailable.tooltip')} placement="right">
                       <Flex alignItems="center" row gap="$gap8">
@@ -318,10 +316,7 @@ export function LegacyPositionPage() {
               </Flex>
               <Text variant="heading2" mt="$spacing8" mb="$spacing16">
                 {fiatFeeValue0 && fiatFeeValue1 ? (
-                  formatCurrencyAmount({
-                    amount: fiatFeeValue0.add(fiatFeeValue1),
-                    type: NumberType.FiatTokenPrice,
-                  })
+                  convertFiatAmountFormatted(fiatFeeValue0.add(fiatFeeValue1).toExact(), NumberType.FiatTokenPrice)
                 ) : (
                   <MouseoverTooltip text={t('pool.positions.usdValueUnavailable.tooltip')} placement="right">
                     <Flex alignItems="center" row gap="$gap8">

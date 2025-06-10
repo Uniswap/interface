@@ -15,9 +15,9 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isSubmittableTrade } from 'state/routing/utils'
 import { ThemedText } from 'theme/components'
 import { HeightAnimator } from 'ui/src'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { useFormatter } from 'utils/formatNumbers'
 
 const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean }>`
   padding: 0;
@@ -97,7 +97,7 @@ export default function SwapDetailsDropdown(props: SwapDetailsProps) {
 
 function AdvancedSwapDetails(props: SwapDetailsProps & { open: boolean }) {
   const { open, trade, allowedSlippage, syncing = false, priceImpact } = props
-  const format = useFormatter()
+  const format = useLocalizationContext()
 
   if (!trade) {
     return null

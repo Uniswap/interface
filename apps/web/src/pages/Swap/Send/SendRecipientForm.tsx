@@ -1,5 +1,4 @@
 import Identicon from 'components/Identicon'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import Column, { AutoColumn } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
@@ -16,7 +15,7 @@ import { ThemedText } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
 import { ClickableStyle } from 'theme/components/styles'
 import { capitalize } from 'tsafe'
-import { Text } from 'ui/src'
+import { Flex, Popover, Text, Tooltip } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
@@ -36,7 +35,7 @@ const StyledCloseIcon = styled(X)`
   ${ClickableStyle}
 `
 
-const RecipientWrapper = styled(Column)<{ $disabled?: boolean }>`
+const RecipientWrapper = styled(Column)<{ $disabled?: boolean; $isFocused?: boolean }>`
   position: relative;
   background-color: ${({ theme }) => theme.surface2};
   border-radius: 16px;
@@ -44,10 +43,13 @@ const RecipientWrapper = styled(Column)<{ $disabled?: boolean }>`
   gap: 4px;
   opacity: ${({ $disabled }) => (!$disabled ? 1 : 0.4)};
   pointer-events: ${({ $disabled }) => (!$disabled ? 'initial' : 'none')};
-`
-
-const StyledRecipientInputRow = styled(Row)`
-  color: ${({ theme }) => theme.neutral2};
+  border: 1px solid transparent;
+  ${({ $isFocused }) =>
+    $isFocused &&
+    css`
+      border: 1px solid ${({ theme }) => theme.surface3};
+      background-color: ${({ theme }) => theme.surface1};
+    `}
 `
 
 const StyledRecipientInput = styled.input`
@@ -82,8 +84,8 @@ const slideOutAnimation = css`
 `
 
 const MenuFlyout = styled(AutoColumn)`
-  width: calc(100% - 8px);
-  background-color: ${({ theme }) => theme.surface2};
+  width: 100%;
+  background-color: ${({ theme }) => theme.surface1};
   border: 1px solid ${({ theme }) => theme.surface3};
   box-shadow:
     0px 0px 1px rgba(0, 0, 0, 0.01),
@@ -92,8 +94,6 @@ const MenuFlyout = styled(AutoColumn)`
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
   position: absolute;
-  top: 76px;
-  left: 4px;
   z-index: 100;
   padding: 16px;
   transition: display ${({ theme }) => `${theme.transition.duration.fast} ${theme.transition.timing.inOut}`};
@@ -147,20 +147,30 @@ const AutocompleteRow = ({
         <Column>
           <Row gap="xs">
             {shouldShowAddress ? (
-              <MouseoverTooltip text={address} placement="top-start" size={TooltipSize.Max}>
-                <ThemedText.BodyPrimary lineHeight="24px">{formattedAddress}</ThemedText.BodyPrimary>
-              </MouseoverTooltip>
+              <Tooltip placement="top-start">
+                <Tooltip.Trigger>
+                  <Text variant="subheading2">{formattedAddress}</Text>
+                </Tooltip.Trigger>
+                <Tooltip.Content maxWidth="fit-content">
+                  <Text variant="body4">{address}</Text>
+                </Tooltip.Content>
+              </Tooltip>
             ) : (
               <ThemedText.BodyPrimary lineHeight="24px">{unitag?.username ?? cachedEnsName}</ThemedText.BodyPrimary>
             )}
             {unitag?.username && <Unitag size={18} />}
           </Row>
           {!shouldShowAddress && (
-            <ThemedText.LabelSmall lineHeight="20px">
-              <MouseoverTooltip text={address} placement="top-start" size={TooltipSize.Max}>
-                {formattedAddress}
-              </MouseoverTooltip>
-            </ThemedText.LabelSmall>
+            <Tooltip placement="top-start">
+              <Tooltip.Trigger>
+                <Text variant="body3" color="$neutral2">
+                  {formattedAddress}
+                </Text>
+              </Tooltip.Trigger>
+              <Tooltip.Content maxWidth="fit-content">
+                <Text variant="body4">{address}</Text>
+              </Tooltip.Content>
+            </Tooltip>
           )}
         </Column>
       </Row>
@@ -234,7 +244,8 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
 
   const inputNode = useRef<HTMLInputElement | null>(null)
   const inputWrapperNode = useRef<HTMLDivElement | null>(null)
-  useOnClickOutside(inputWrapperNode, isFocusing ? () => handleFocus(false) : undefined)
+  const popoverContentRef = useRef<HTMLDivElement | null>(null)
+  useOnClickOutside(inputWrapperNode, isFocusing ? () => handleFocus(false) : undefined, [popoverContentRef])
 
   const showFlyout = isFocusing && (!!recipientData || !recipient)
   const flyoutRef = useRef<HTMLDivElement>(null)
@@ -303,15 +314,16 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
   )
 
   const showInputField = !recipientData || isFocusing || isForcingFocus
+
   return (
-    <RecipientWrapper $disabled={disabled}>
-      {showInputField ? (
-        <>
-          <Text variant="body3" userSelect="none" color="$neutral2">
-            {capitalize(t('common.to'))}
-          </Text>
-          <StyledRecipientInputRow justify="space-between">
-            <Row ref={inputWrapperNode}>
+    <RecipientWrapper $disabled={disabled} $isFocused={isFocusing}>
+      <Popover open={isFocusing} placement="bottom-start" offset={{ crossAxis: -16 }}>
+        <Popover.Trigger>
+          {showInputField ? (
+            <Flex ref={inputWrapperNode}>
+              <Text variant="body3" userSelect="none" color="$neutral2">
+                {capitalize(t('common.to'))}
+              </Text>
               <StyledRecipientInput
                 ref={inputNode}
                 type="text"
@@ -327,36 +339,44 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
                 onKeyDown={handleEnter}
                 autoFocus={isForcingFocus}
               />
-              {showFlyout && (
-                <AutocompleteFlyout
-                  ref={flyoutRef}
-                  transfers={recentTransfers}
-                  validatedRecipientData={recipientData}
-                  selectRecipient={selectValidatedRecipient}
-                />
-              )}
-            </Row>
-          </StyledRecipientInputRow>
-        </>
-      ) : (
-        <StyledConfirmedRecipientRow>
-          <StyledConfirmedRecipientDisplayRow gap="md" onClick={editValidatedRecipient}>
-            <Identicon account={recipientData.address} size={36} />
-            <Column>
-              <Row gap="xs">
-                <ThemedText.BodyPrimary lineHeight="24px">
-                  {recipientData.unitag ?? recipientData.ensName ?? shortenAddress(recipientData.address)}
-                </ThemedText.BodyPrimary>
-                {recipientData.unitag && <Unitag size={18} />}
-              </Row>
-              {Boolean(recipientData.ensName) && (
-                <ThemedText.LabelMicro lineHeight="16px">{shortenAddress(recipientData.address)}</ThemedText.LabelMicro>
-              )}
-            </Column>
-          </StyledConfirmedRecipientDisplayRow>
-          <StyledCloseIcon size={20} onClick={clearValidatedRecipient} />
-        </StyledConfirmedRecipientRow>
-      )}
+            </Flex>
+          ) : (
+            <StyledConfirmedRecipientRow>
+              <StyledConfirmedRecipientDisplayRow gap="md" onClick={editValidatedRecipient}>
+                <Identicon account={recipientData.address} size={36} />
+                <Column>
+                  <Row gap="xs">
+                    <ThemedText.BodyPrimary lineHeight="24px">
+                      {recipientData.unitag ?? recipientData.ensName ?? shortenAddress(recipientData.address)}
+                    </ThemedText.BodyPrimary>
+                    {recipientData.unitag && <Unitag size={18} />}
+                  </Row>
+                  {Boolean(recipientData.ensName) && (
+                    <ThemedText.LabelMicro lineHeight="16px">
+                      {shortenAddress(recipientData.address)}
+                    </ThemedText.LabelMicro>
+                  )}
+                </Column>
+              </StyledConfirmedRecipientDisplayRow>
+              <StyledCloseIcon size={20} onClick={clearValidatedRecipient} />
+            </StyledConfirmedRecipientRow>
+          )}
+        </Popover.Trigger>
+        <Popover.Content
+          background="transparent"
+          width={(inputNode.current?.clientWidth ?? 0) + 32}
+          ref={popoverContentRef}
+        >
+          {showFlyout && (
+            <AutocompleteFlyout
+              ref={flyoutRef}
+              transfers={recentTransfers}
+              validatedRecipientData={recipientData}
+              selectRecipient={selectValidatedRecipient}
+            />
+          )}
+        </Popover.Content>
+      </Popover>
     </RecipientWrapper>
   )
 }

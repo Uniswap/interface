@@ -1,10 +1,10 @@
 import { memo, useCallback } from 'react'
-import { Flex, FlexProps, Text, TextProps, TouchableArea, isWeb } from 'ui/src'
+import { Flex, FlexProps, Text, TextProps, TouchableArea } from 'ui/src'
 import useIsKeyboardOpen from 'uniswap/src/hooks/useIsKeyboardOpen'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
 import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
-import { isInterface } from 'utilities/src/platform'
+import { isInterface, isWeb } from 'utilities/src/platform'
 import noop from 'utilities/src/react/noop'
 
 // Props for manually managing the focused row index of a list

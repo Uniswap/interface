@@ -74,13 +74,13 @@ describe(executeTransaction, () => {
         [call(getProviderManager), providerManager],
         [call(getSignerManager), signerManager],
         [
-          call(
-            signAndSubmitTransaction,
-            transaction.options.request,
-            ACCOUNT,
-            provider as providers.Provider,
+          call(signAndSubmitTransaction, {
+            request: transaction.options.request,
+            account: ACCOUNT,
+            provider: provider as providers.Provider,
             signerManager,
-          ),
+            isCancellation: false,
+          }),
           { transactionResponse: txResponse, populatedRequest: txRequest },
         ],
         [
@@ -193,7 +193,13 @@ describe(executeTransaction, () => {
         [call(getProviderManager), providerManager],
         [call(getSignerManager), signerManager],
         [
-          call(signAndSubmitTransaction, mockPopulatedRequest, ACCOUNT, provider as providers.Provider, signerManager),
+          call(signAndSubmitTransaction, {
+            request: mockPopulatedRequest,
+            account: ACCOUNT,
+            provider: provider as providers.Provider,
+            signerManager,
+            isCancellation: true,
+          }),
           { transactionResponse: mockTxResponse, populatedRequest: mockPopulatedRequest },
         ],
         [

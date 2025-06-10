@@ -1,18 +1,17 @@
 import { Web3Provider as EthersWeb3Provider, ExternalProvider } from '@ethersproject/providers'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { UNISWAP_EXTENSION_CONNECTOR_NAME, recentConnectorIdAtom } from 'components/Web3Provider/constants'
+import { createWeb3Provider } from 'components/Web3Provider/createWeb3Provider'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { useAccount } from 'hooks/useAccount'
-import { ConnectionProvider } from 'hooks/useConnect'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import usePrevious from 'hooks/usePrevious'
 import { useUpdateAtom } from 'jotai/utils'
-import { ReactNode, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
-import { useWalletCapabilitiesStateEffect } from 'state/walletCapabilities/hooks/useWalletCapabilitiesStateEffect'
 import { useConnectedWallets } from 'state/wallets/hooks'
 import { CONVERSION_EVENTS } from 'uniswap/src/data/rest/conversionTracking/constants'
 import { useConversionTracking } from 'uniswap/src/data/rest/conversionTracking/useConversionTracking'
@@ -21,23 +20,16 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setUserProperty } from 'uniswap/src/features/telemetry/user'
-import { isTestEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { WalletType, getWalletMeta } from 'utils/walletMeta'
-import { WagmiProvider, useAccount as useAccountWagmi } from 'wagmi'
+import { useAccount as useAccountWagmi } from 'wagmi'
 
-export default function Web3Provider({ children }: { children: ReactNode }) {
-  return (
-    <WagmiProvider config={wagmiConfig}>
-      <ConnectionProvider>
-        <WalletCapabilitiesEffects />
-        {children}
-      </ConnectionProvider>
-    </WagmiProvider>
-  )
-}
+// Production Web3Provider – always reconnects on mount and runs capability effects.
+const Web3Provider = createWeb3Provider({ wagmiConfig })
+
+export default Web3Provider
 
 /** A component to run hooks under the Web3ReactProvider context. */
 export function Web3ProviderUpdater() {
@@ -197,17 +189,3 @@ function trace(event: any) {
   const { method, id, params } = event.request
   logger.debug('Web3Provider', 'provider', 'trace', { method, id, params })
 }
-
-/**
- * WalletCapabilitiesEffectsInner -- handles the effects related to wallet capabilities
- * @returns null
- */
-const WalletCapabilitiesEffectsInner: React.FC = () => {
-  // get the wallet capabilities for the current account on connect (and reset on disconnect)
-  useWalletCapabilitiesStateEffect()
-
-  return null
-}
-
-// we don't want to run the smart account wallet effects in tests
-const WalletCapabilitiesEffects: React.FC = isTestEnv() ? () => null : WalletCapabilitiesEffectsInner

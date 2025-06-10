@@ -3,6 +3,7 @@ import { SignatureType } from 'state/signatures/types'
 import { ConfirmedTransactionDetails, TransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapRouting } from 'uniswap/src/features/telemetry/types'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
@@ -54,7 +55,7 @@ export function logSwapFinalized(
   if (status === TransactionStatus.Failed && type === TransactionType.SWAP) {
     logger.warn('swapFlowLoggers', 'logSwapFinalized', 'Onchain Swap Failure', {
       hash,
-      chainId: chainInId,
+      chainLabel: getChainLabel(chainInId),
     })
   }
 }

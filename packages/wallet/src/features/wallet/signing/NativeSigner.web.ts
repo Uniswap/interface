@@ -31,10 +31,8 @@ export class NativeSigner extends Signer implements SignsTypedData {
     return Promise.resolve(this.address)
   }
 
-  signMessage(message: string | Bytes): Promise<string> {
-    if (typeof message !== 'string') {
-      throw new Error('Use signHashForAddress instead')
-    }
+  // TODO(WALL-6927): Fix typing for signMessage here for web
+  signMessage(message: string): Promise<string> {
     return Keyring.signMessageForAddress(this.address, message)
   }
 

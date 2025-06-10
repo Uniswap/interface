@@ -1,6 +1,5 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { isWeb } from 'ui/src'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
@@ -17,6 +16,7 @@ import { useWalletSearchResults } from 'uniswap/src/features/search/SearchModal/
 import { MOCK_POOL_OPTION_ITEM } from 'uniswap/src/features/search/SearchModal/mocks'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { isWeb } from 'utilities/src/platform'
 import noop from 'utilities/src/react/noop'
 
 export function useSectionsForSearchResults(

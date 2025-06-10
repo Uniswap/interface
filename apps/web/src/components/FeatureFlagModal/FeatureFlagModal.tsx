@@ -229,9 +229,7 @@ export default function FeatureFlagModal() {
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="New Chains">
-            <FeatureFlagOption flag={FeatureFlags.MonadTestnet} label="Enable Monad Testnet" />
             <FeatureFlagOption flag={FeatureFlags.Soneium} label="Enable Soneium" />
-            <FeatureFlagOption flag={FeatureFlags.MonadTestnetDown} label="Enable Monad Testnet Down Banner" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Network Requests">
             <DynamicConfigDropdown

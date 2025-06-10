@@ -14,7 +14,7 @@ import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-s
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
 import { defaultFeeTiers } from 'components/Liquidity/constants'
 import { FeeTierData, PositionInfo } from 'components/Liquidity/types'
-import { ZERO_ADDRESS } from 'constants/misc'
+import { BIPS_BASE, ZERO_ADDRESS } from 'constants/misc'
 import { DYNAMIC_FEE_DATA, DynamicFeeData, FeeData } from 'pages/Pool/Positions/create/types'
 import { GeneratedIcon } from 'ui/src'
 import { Flag } from 'ui/src/components/icons/Flag'
@@ -28,6 +28,8 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { logger } from 'utilities/src/logger/logger'
 import { getChainUrlParam } from 'utils/chainParams'
 import { formatUnits } from 'viem'
+
+export const MAX_FEE_TIER_DECIMALS = 4
 
 export function hasLPFoTTransferError(
   currencyInfo: Maybe<CurrencyInfo>,
@@ -521,7 +523,7 @@ export function getFlagWarning(flag: HookFlag, t: AppTFunction): FlagWarning | u
 export function mergeFeeTiers(
   feeTiers: Record<number, FeeTierData>,
   feeData: FeeData[],
-  formatPercent: (percent: Percent | undefined) => string,
+  formatPercent: (percent: string | number | undefined, maxDecimals?: 2 | 3 | 4) => string,
   formattedDynamicFeeTier: string,
 ): Record<number, FeeTierData> {
   const result: Record<number, FeeTierData> = {}
@@ -530,7 +532,7 @@ export function mergeFeeTiers(
       fee: feeTier,
       formattedFee: isDynamicFeeTier(feeTier)
         ? formattedDynamicFeeTier
-        : formatPercent(new Percent(feeTier.feeAmount, 1000000)),
+        : formatPercent(feeTier.feeAmount / BIPS_BASE, MAX_FEE_TIER_DECIMALS),
       totalLiquidityUsd: 0,
       percentage: new Percent(0, 100),
       created: false,

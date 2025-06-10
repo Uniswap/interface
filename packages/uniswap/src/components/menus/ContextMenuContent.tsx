@@ -1,6 +1,7 @@
 import { Fragment } from 'react'
-import { DropdownMenuSheetItem, DropdownMenuSheetItemProps, Flex, Separator, isWeb } from 'ui/src'
+import { DropdownMenuSheetItem, DropdownMenuSheetItemProps, Flex, Separator } from 'ui/src'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
+import { isWeb } from 'utilities/src/platform'
 
 type MenuContentProps = {
   items: MenuOptionItem[]

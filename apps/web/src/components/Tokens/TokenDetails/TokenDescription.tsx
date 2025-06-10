@@ -16,9 +16,9 @@ import { ExternalLink } from 'theme/components/Links'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Paragraph, Text, styled } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
-import { useFormatter } from 'utils/formatNumbers'
 
 const TokenInfoSection = styled(Flex, {
   gap: '$gap16',
@@ -101,10 +101,10 @@ export function TokenDescription() {
   const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
   const showTruncatedDescription = shouldTruncate && isDescriptionTruncated
   const { inputTax: sellFee, outputTax: buyFee } = useSwapTaxes(address, address, currency.chainId)
-  const { formatPercent } = useFormatter()
+  const { formatPercent } = useLocalizationContext()
   const { sellFeeString, buyFeeString } = {
-    sellFeeString: formatPercent(sellFee),
-    buyFeeString: formatPercent(buyFee),
+    sellFeeString: formatPercent(sellFee.toSignificant()),
+    buyFeeString: formatPercent(buyFee.toSignificant()),
   }
   const hasFee = Boolean(parseFloat(sellFeeString)) || Boolean(parseFloat(buyFee.toFixed(2)))
   const sameFee = sellFeeString === buyFeeString

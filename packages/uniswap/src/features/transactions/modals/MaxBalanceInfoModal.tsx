@@ -1,10 +1,11 @@
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Text, isWeb } from 'ui/src'
+import { Text } from 'ui/src'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { isWeb } from 'utilities/src/platform'
 
 interface MaxBalanceInfoModalProps {
   isMax: boolean

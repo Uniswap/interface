@@ -6,7 +6,8 @@ import { ReactElement, ReactNode } from 'react'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, styled } from 'ui/src'
 import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 
 type ChartHeaderProtocolInfo = { protocol: PriceSource; value?: number }
 
@@ -35,13 +36,13 @@ const ProtocolLegendWrapper = styled(Flex, {
 })
 
 function ProtocolLegend({ protocolData }: { protocolData?: ChartHeaderProtocolInfo[] }) {
-  const { formatFiatPrice } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   return (
     <ProtocolLegendWrapper id={PROTOCOL_LEGEND_ELEMENT_ID} hover={true}>
       {protocolData
         ?.map(({ value, protocol }) => {
-          const display = value ? formatFiatPrice({ price: value, type: NumberType.ChartFiatValue }) : null
+          const display = value ? convertFiatAmountFormatted(value, NumberType.FiatTokenStats) : null
           return (
             !!display && (
               <Flex row gap={8} justifyContent="flex-end" key={protocol + '_blip'} width="max-content">
@@ -65,12 +66,12 @@ function ProtocolLegend({ protocolData }: { protocolData?: ChartHeaderProtocolIn
 interface HeaderValueDisplayProps {
   /** The number to be formatted and displayed, or the ReactElement to be displayed */
   value?: number | ReactElement
-  /** Used to override default format NumberType (ChartFiatValue) */
-  valueFormatterType?: NumberType
+  /** Used to override default format NumberType (FiatTokenStats) */
+  valueFormatterType?: FiatNumberType
 }
 
-function HeaderValueDisplay({ value, valueFormatterType = NumberType.ChartFiatValue }: HeaderValueDisplayProps) {
-  const { formatFiatPrice } = useFormatter()
+function HeaderValueDisplay({ value, valueFormatterType = NumberType.FiatTokenStats }: HeaderValueDisplayProps) {
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   if (typeof value !== 'number' && typeof value !== 'undefined') {
     return <>{value}</>
@@ -78,7 +79,7 @@ function HeaderValueDisplay({ value, valueFormatterType = NumberType.ChartFiatVa
 
   return (
     <Text variant="heading2" {...EllipsisTamaguiStyle}>
-      {formatFiatPrice({ price: value, type: valueFormatterType })}
+      {convertFiatAmountFormatted(value, valueFormatterType)}
     </Text>
   )
 }

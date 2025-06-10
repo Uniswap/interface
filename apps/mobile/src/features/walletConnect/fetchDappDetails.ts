@@ -6,7 +6,7 @@ export function fetchDappDetails(
   currentState: Readonly<WalletConnectState>,
 ): { dappIcon: string | null; dappName: string } {
   try {
-    const sessions = Object.values(currentState.byAccount).find((account) => account?.sessions?.[topic])?.sessions
+    const sessions = currentState.sessions
 
     if (sessions && sessions[topic]) {
       const wcSession = sessions[topic]

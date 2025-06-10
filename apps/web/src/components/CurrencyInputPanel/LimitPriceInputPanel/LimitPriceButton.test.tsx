@@ -41,7 +41,7 @@ describe('LimitCustomMarketPriceButton', () => {
   it('renders the custom amount correctly, negative change', async () => {
     const onSelect = jest.fn()
     const { container } = render(<LimitCustomMarketPriceButton customAdjustmentPercentage={-10} onSelect={onSelect} />)
-    await userEvent.click(screen.getByText('-10%'))
+    await userEvent.click(screen.getByText('-10.00%'))
     expect(container.firstChild).toMatchSnapshot()
     expect(onSelect).toHaveBeenCalledWith(0)
   })

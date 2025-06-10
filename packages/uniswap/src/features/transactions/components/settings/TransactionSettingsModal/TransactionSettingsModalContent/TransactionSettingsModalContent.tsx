@@ -1,7 +1,7 @@
 import type { TFunction } from 'i18next'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, TouchableArea, isWeb, useMedia } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useMedia } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
 import { WarningMessage } from 'uniswap/src/components/WarningMessage/WarningMessage'
@@ -14,7 +14,7 @@ import {
   type TransactionSettingConfig,
 } from 'uniswap/src/features/transactions/components/settings/types'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippage/useSlippageSettings'
-import { isExtension, isInterfaceDesktop, isMobileApp, isMobileWeb } from 'utilities/src/platform'
+import { isExtension, isInterfaceDesktop, isMobileApp, isMobileWeb, isWeb } from 'utilities/src/platform'
 
 function createRowWarningContent({
   t,

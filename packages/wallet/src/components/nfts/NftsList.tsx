@@ -43,6 +43,7 @@ type NftsListProps = Omit<
       loadingStateStyle?: StyleProp<ViewStyle | CSSProperties | (ViewStyle & CSSProperties)>
       errorStateStyle?: StyleProp<ViewStyle | CSSProperties | (ViewStyle & CSSProperties)>
       emptyStateStyle?: StyleProp<ViewStyle | CSSProperties | (ViewStyle & CSSProperties)>
+      skip?: boolean
     },
     'renderItem'
   >,
@@ -66,6 +67,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     onScroll,
     refreshing,
     onRefresh,
+    skip,
     ...rest
   },
   ref,
@@ -85,6 +87,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     },
     notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
     errorPolicy: 'all', // Suppress non-null image.url fields from backend
+    skip,
   })
 
   const nftDataItems = formatNftItems(data)

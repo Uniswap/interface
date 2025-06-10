@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { UniswapXText, isWeb } from 'ui/src'
+import { UniswapXText } from 'ui/src'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { colors, opacify, zIndexes } from 'ui/src/theme'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
@@ -9,6 +9,7 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { isWeb } from 'utilities/src/platform'
 
 export function UniswapXInfo({
   children,

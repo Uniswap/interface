@@ -7,6 +7,7 @@ export const FLASHBOTS_RPC_URL = 'https://rpc.flashbots.net/fast?originId=uniswa
 export const FLASHBOTS_DEFAULT_REFUND_PERCENT = 50 // Default for fast mode
 export const FLASHBOTS_SIGNATURE_HEADER = 'X-Flashbots-Signature'
 export const DEFAULT_FLASHBOTS_ENABLED = true
+export const DEFAULT_FLASHBOTS_BLOCK_RANGE = 10
 
 // Polling constants
 export const POLL_INTERVAL_MS = 4000
@@ -41,11 +42,27 @@ export type SignerInfo = {
   signer: Signer
   address: string
 }
+/**
+ * Builds a Flashbots URL with the appropriate parameters
+ */
+export function buildFlashbotsUrl({
+  baseUrl = FLASHBOTS_RPC_URL,
+  address,
+  refundPercent,
+}: {
+  baseUrl?: string
+  address?: `0x${string}` | string | undefined
+  refundPercent?: number
+}): string {
+  const refundParam = getRefundString(address, refundPercent)
+  const blockRangeParam = `&blockRange=${DEFAULT_FLASHBOTS_BLOCK_RANGE}`
+  return `${baseUrl}${refundParam}${blockRangeParam}`
+}
 
 /**
  * Helper function to create the refund string for Flashbots URL
  */
-export function getRefundString(address?: string, refundPercent?: number): string {
+function getRefundString(address?: string, refundPercent?: number): string {
   if (!address || !refundPercent || refundPercent < 0 || refundPercent > 100) {
     return ''
   }

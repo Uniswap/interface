@@ -2,35 +2,20 @@
 
 exports[`BackButton renders without error 1`] = `
 <View
-  collapsable={false}
   dd-action-name="back"
-  focusVisibleStyle={{}}
-  forwardedRef={[Function]}
   hitSlop={24}
-  jestAnimatedStyle={
-    {
-      "value": {},
-    }
-  }
   onBlur={[Function]}
   onClick={[Function]}
   onFocus={[Function]}
-  onLayout={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
   onResponderTerminate={[Function]}
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
-  role="button"
   style={
     {
       "alignItems": "center",
-      "backgroundColor": "transparent",
-      "borderBottomLeftRadius": 12,
-      "borderBottomRightRadius": 12,
-      "borderTopLeftRadius": 12,
-      "borderTopRightRadius": 12,
       "flexDirection": "column",
       "opacity": 1,
       "transform": [
@@ -43,8 +28,6 @@ exports[`BackButton renders without error 1`] = `
   testID="back"
 >
   <View
-    onBlur={[Function]}
-    onFocus={[Function]}
     style={
       {
         "alignItems": "center",
@@ -71,8 +54,6 @@ exports[`BackButton renders without error 1`] = `
           },
         }
       }
-      onBlur={[Function]}
-      onFocus={[Function]}
       style={
         {
           "alignItems": "center",
@@ -107,7 +88,7 @@ exports[`BackButton renders without error 1`] = `
               "borderWidth": 0,
             },
             {
-              "color": "#222222",
+              "color": "rgba(19, 19, 19, 0.63)",
               "height": 24,
               "width": 24,
             },
@@ -122,7 +103,7 @@ exports[`BackButton renders without error 1`] = `
         vbWidth={24}
       >
         <RNSVGGroup
-          color="#222222"
+          color="rgba(19, 19, 19, 0.63)"
           fill={null}
           propList={
             [
@@ -154,8 +135,6 @@ exports[`BackButton renders without error 1`] = `
     <Text
       allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
-      onBlur={[Function]}
-      onFocus={[Function]}
       style={
         {
           "color": {

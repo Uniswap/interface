@@ -13,13 +13,21 @@ import {
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 
-export async function signAndSubmitTransaction(
-  request: providers.TransactionRequest,
-  account: AccountMeta,
-  provider: providers.Provider,
-  signerManager: SignerManager,
-  viemClient?: PublicClient,
-): Promise<{
+export async function signAndSubmitTransaction({
+  request,
+  account,
+  provider,
+  signerManager,
+  viemClient,
+  isCancellation,
+}: {
+  request: providers.TransactionRequest
+  account: AccountMeta
+  provider: providers.Provider
+  signerManager: SignerManager
+  viemClient?: PublicClient
+  isCancellation?: boolean
+}): Promise<{
   transactionResponse: providers.TransactionResponse
   populatedRequest: providers.TransactionRequest
   timestampBeforeSign: number
@@ -31,20 +39,18 @@ export async function signAndSubmitTransaction(
   const populatedRequest = await connectedSigner.populateTransaction(hexRequest)
   const chainId = populatedRequest.chainId ?? UniverseChainId.Mainnet
 
-  // For smart wallet transactions, check if the transaction needs delegation
-  if (populatedRequest.to === populatedRequest.from) {
+  // For smart wallet transactions, check if the transaction needs delegation.
+  // Cancellations should be excluded
+  if (populatedRequest.to === populatedRequest.from && !isCancellation) {
     logger.debug('signAndSubmitTransaction', 'signAndSubmitTransaction', 'smart wallet transaction', populatedRequest)
     const delegationInfo = await getAccountDelegationDetails(account.address, chainId)
-    if (delegationInfo.needsDelegation) {
+    if (delegationInfo.needsDelegation && viemClient) {
       logger.debug(
         'signAndSubmitTransaction',
         'signAndSubmitTransaction',
         'needs delegation to contract:',
         delegationInfo.contractAddress,
       )
-      if (!viemClient) {
-        throw new Error('viemClient is required for smart contract accounts')
-      }
 
       if (!delegationInfo.contractAddress) {
         throw new Error('Delegation contract address not found')

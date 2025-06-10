@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Text, TextProps, TouchableArea, TouchableAreaProps, isWeb } from 'ui/src'
+import { Button, Text, TextProps, TouchableArea, TouchableAreaProps } from 'ui/src'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isMobileApp } from 'utilities/src/platform'
+import { isMobileApp, isWeb } from 'utilities/src/platform'
 
 const onPressLearnMore = (url: string): Promise<void> => openUri(url)
 

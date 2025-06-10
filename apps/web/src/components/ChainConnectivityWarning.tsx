@@ -15,8 +15,6 @@ import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { DEFAULT_MS_BEFORE_WARNING, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 
 const BodyRow = styled.div`
@@ -61,7 +59,6 @@ const CloseButton = tamaguiStyled(X, {
 export function ChainConnectivityWarning() {
   const { defaultChainId } = useEnabledChains()
   const [hide, setHide] = useState(false)
-  const isMonadDownFlag = useFeatureFlag(FeatureFlags.MonadTestnetDown)
   const { swapInputChainId: chainId } = useUniswapContext()
   const info = getChainInfo(chainId ?? defaultChainId)
   const label = info.label
@@ -76,9 +73,8 @@ export function ChainConnectivityWarning() {
   const blockTime = useCurrentBlockTimestamp({ refetchInterval: ms('5min') })
 
   const warning = Boolean(!!blockTime && machineTime - Number(blockTime) * 1000 > waitMsBeforeWarning)
-  const isMonadDown = chainId === UniverseChainId.MonadTestnet && isMonadDownFlag
 
-  if (hide || (!isMonadDown && (!warning || isLandingPage))) {
+  if (hide || !warning || isLandingPage) {
     return null
   }
 

@@ -26,10 +26,11 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import useResizeObserver from 'use-resize-observer'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 const Wrapper = styled(Flex, {
@@ -119,7 +120,7 @@ export default function SendCurrencyInputForm({
   const { defaultChainId } = useEnabledChains()
   const supportedChainId = useSupportedChainId(chainId)
   const { isTestnetModeEnabled } = useEnabledChains()
-  const { formatCurrencyAmount } = useFormatter()
+  const { formatCurrencyAmount, convertFiatAmountFormatted } = useLocalizationContext()
   const appFiatCurrency = useAppFiatCurrency()
   const { symbol: fiatSymbol } = useFiatCurrencyComponents(appFiatCurrency)
 
@@ -137,7 +138,7 @@ export default function SendCurrencyInputForm({
   const fiatCurrencyEqualsTransferCurrency = !!inputCurrency && fiatCurrency.equals(inputCurrency)
 
   const formattedBalance = formatCurrencyAmount({
-    amount: currencyBalance,
+    value: currencyBalance,
     type: NumberType.TokenNonTx,
   })
 
@@ -222,11 +223,6 @@ export default function SendCurrencyInputForm({
   return (
     <Wrapper disabled={disabled}>
       <InputWrapper>
-        <Flex position="absolute" top="16px" left="16px">
-          <Text variant="body3" userSelect="none" color="$neutral2">
-            <Trans i18nKey="common.youreSending" />
-          </Text>
-        </Flex>
         <NumericalInputWrapper>
           {inputInFiat && (
             <NumericalInputSymbolContainer showPlaceholder={!displayValue}>{fiatSymbol}</NumericalInputSymbolContainer>
@@ -278,10 +274,9 @@ export default function SendCurrencyInputForm({
                         <ThemedText.LabelMicro lineHeight="16px">{`Balance: ${formattedBalance}`}</ThemedText.LabelMicro>
                       )}
                       {Boolean(fiatBalanceValue) && (
-                        <ThemedText.LabelMicro lineHeight="16px" color="neutral3">{`(${formatCurrencyAmount({
-                          amount: fiatBalanceValue,
-                          type: NumberType.FiatTokenPrice,
-                        })})`}</ThemedText.LabelMicro>
+                        <ThemedText.LabelMicro lineHeight="16px" color="neutral3">
+                          {`(${convertFiatAmountFormatted(fiatBalanceValue?.toExact(), NumberType.FiatTokenPrice)})`}
+                        </ThemedText.LabelMicro>
                       )}
                     </Flex>
                   </Flex>

@@ -1,20 +1,20 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { Flex, UniversalImage } from 'ui/src'
 import { SmartWallet } from 'ui/src/components/icons'
 import { borderRadii } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { useCloseIfConsented } from 'wallet/src/components/smartWallet/modals/hooks/useCloseIfConsented'
 import { SmartWalletModal } from 'wallet/src/features/smartWallet/modals/SmartWalletModal'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
-import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
 
 const IMAGE_SIZE: number = 48
 
-interface PostSwapSmartWalletNudgeProps {
+export interface PostSwapSmartWalletNudgeProps {
   isOpen: boolean
   onClose: () => void
   onEnableSmartWallet?: () => void
@@ -32,7 +32,6 @@ export function PostSwapSmartWalletNudge({
   onEnableSmartWallet,
   dappInfo,
 }: PostSwapSmartWalletNudgeProps): JSX.Element {
-  const appDispatch = useDispatch()
   const { t } = useTranslation()
 
   const address = useActiveAccount()?.address
@@ -43,8 +42,13 @@ export function PostSwapSmartWalletNudge({
     }
 
     onEnableSmartWallet?.()
-    appDispatch(setSmartWalletConsent({ address, smartWalletConsent: true }))
-  }, [appDispatch, onEnableSmartWallet, address])
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element: ElementName.SmartWalletEnabled })
+  }, [onEnableSmartWallet, address])
+
+  const handleSecondaryButtonOnClick = useCallback(() => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element: ElementName.SmartWalletNotNow })
+    onClose()
+  }, [onClose])
 
   useCloseIfConsented({
     onClose,
@@ -104,7 +108,7 @@ export function PostSwapSmartWalletNudge({
       title={dappInfo ? t('smartWallets.postSwapNudge.title.dapp') : t('smartWallets.postSwapNudge.title')}
       subtext={t('smartWallets.educationalModal.description')}
       secondaryButtonText={t('common.button.notNow')}
-      secondaryButtonOnClick={onClose}
+      secondaryButtonOnClick={handleSecondaryButtonOnClick}
       learnMoreUrl={uniswapUrls.helpArticleUrls.smartWalletDelegation}
       modalName={ModalName.PostSwapSmartWalletNudge}
       primaryButtonText={t('smartWallets.postSwapNudge.enable')}

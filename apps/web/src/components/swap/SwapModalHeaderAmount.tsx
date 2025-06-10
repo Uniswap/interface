@@ -12,7 +12,6 @@ import { breakpoints } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { NumberType as NumberTypeDeprecated, useFormatter } from 'utils/formatNumbers'
 
 const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
   cursor: ${({ cursor }) => cursor};
@@ -54,8 +53,7 @@ export function SwapModalHeaderAmount({
   isLoading,
   headerTextProps,
 }: AmountProps) {
-  const { formatNumber } = useFormatter()
-  const { formatCurrencyAmount } = useLocalizationContext()
+  const { formatCurrencyAmount, convertFiatAmountFormatted } = useLocalizationContext()
 
   return (
     <Row align="center" justify="space-between" gap="md">
@@ -80,10 +78,7 @@ export function SwapModalHeaderAmount({
             {currency?.symbol}
           </ResponsiveHeadline>
           <ThemedText.BodySmall color="neutral2">
-            {formatNumber({
-              input: usdAmount,
-              type: NumberTypeDeprecated.FiatTokenQuantity,
-            })}
+            {convertFiatAmountFormatted(usdAmount, NumberType.FiatTokenQuantity)}
           </ThemedText.BodySmall>
         </Column>
       </Column>

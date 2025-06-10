@@ -17,6 +17,7 @@ export const Mocks = {
   },
   PortfolioBalances: {
     test_wallet: path.resolve(__dirname, '../mocks/graphql/PortfolioBalances/test_wallet.json'),
+    hayden: path.resolve(__dirname, '../mocks/graphql/PortfolioBalances/hayden.json'),
   },
   Token: {
     token_warning: path.resolve(__dirname, '../mocks/graphql/Token/token_warning.json'),
@@ -30,5 +31,11 @@ export const Mocks = {
   },
   Positions: {
     get_position: path.resolve(__dirname, '../mocks/rest/positions/get_position.json'),
+  },
+  Account: {
+    tokens: path.resolve(__dirname, '../mocks/graphql/Account/tokens.json'),
+    nfts: path.resolve(__dirname, '../mocks/graphql/Account/nfts.json'),
+    full_activity_history: path.resolve(__dirname, '../mocks/graphql/Account/full_activity.json'),
+    activity_history: path.resolve(__dirname, '../mocks/graphql/Account/activity_history.json'),
   },
 }

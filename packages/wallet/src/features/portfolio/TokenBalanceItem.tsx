@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Shine, Text, TouchableArea, isWeb, useIsDarkMode } from 'ui/src'
+import { Flex, Shine, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -9,6 +9,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { isWeb } from 'utilities/src/platform'
 import {
   useTokenBalanceMainPartsFragment,
   useTokenBalanceQuantityPartsFragment,

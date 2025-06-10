@@ -12,6 +12,7 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import RoutingDiagram from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FormattedUniswapXGasFeeInfo } from 'uniswap/src/features/gas/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
@@ -300,15 +301,14 @@ export function BestRouteUniswapXTooltip(): JSX.Element {
   )
 }
 
-export function NetworkCostTooltipClassic(): JSX.Element {
+export function NetworkCostTooltipClassic({ chainId }: { chainId: UniverseChainId }): JSX.Element {
   const { t } = useTranslation()
-  const { derivedSwapInfo } = useSwapFormContext()
 
   return (
     <SwapDetailsTooltip.Outer>
       <SwapDetailsTooltip.Header
-        title={{ title: t('common.chain.networkCost', { chain: getChainInfo(derivedSwapInfo.chainId).name }) }}
-        logo={<NetworkLogo chainId={derivedSwapInfo.chainId} size={16} />}
+        title={{ title: t('common.chain.networkCost', { chain: getChainInfo(chainId).name }) }}
+        logo={<NetworkLogo chainId={chainId} size={16} />}
       />
       <SwapDetailsTooltip.Description
         learnMoreUrl={uniswapUrls.helpArticleUrls.smartWalletNetworkCost}

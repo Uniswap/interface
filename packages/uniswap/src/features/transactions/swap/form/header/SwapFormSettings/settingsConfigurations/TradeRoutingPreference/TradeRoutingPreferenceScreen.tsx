@@ -1,7 +1,7 @@
 import { TFunction } from 'i18next'
 import { ReactNode, useCallback, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Flex, Switch, Text, TouchableArea, UniswapXText, isWeb, useSporeColors, type FlexProps } from 'ui/src'
+import { Flex, Switch, Text, TouchableArea, UniswapXText, useSporeColors, type FlexProps } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { Lightning } from 'ui/src/components/icons/Lightning'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
@@ -33,7 +33,7 @@ import {
   FrontendSupportedProtocol,
 } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isExtension, isInterface } from 'utilities/src/platform'
+import { isExtension, isInterface, isWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function TradeRoutingPreferenceScreen(): JSX.Element {

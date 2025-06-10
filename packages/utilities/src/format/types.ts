@@ -5,6 +5,9 @@ export enum NumberType {
   // used for token quantities in transaction contexts (e.g. swap, send)
   TokenTx = 'token-tx',
 
+  // used for token quantities in chart contexts (e.g. pool stats)
+  TokenQuantityStats = 'token-quantity-stats',
+
   // this formatter is used for displaying swap price conversions
   // below the input/output amounts
   SwapPrice = 'swap-price',
@@ -31,6 +34,9 @@ export enum NumberType {
   // fiat gas prices
   FiatGasPrice = 'fiat-gas-price',
 
+  // fiat rewards
+  FiatRewards = 'fiat-rewards',
+
   // portfolio balance
   PortfolioBalance = 'portfolio-balance',
 
@@ -41,6 +47,8 @@ export enum NumberType {
   NFTCollectionStats = 'nft-collection-stats',
 
   Percentage = 'percentage',
+  PercentageThreeDecimals = 'percentage-three-decimals',
+  PercentageFourDecimals = 'percentage-four-decimals',
 }
 export type FiatNumberType = Extract<
   NumberType,
@@ -49,6 +57,7 @@ export type FiatNumberType = Extract<
   | NumberType.FiatTokenStats
   | NumberType.FiatTokenQuantity
   | NumberType.FiatGasPrice
+  | NumberType.FiatRewards
   | NumberType.PortfolioBalance
   | NumberType.FiatStandard
 >

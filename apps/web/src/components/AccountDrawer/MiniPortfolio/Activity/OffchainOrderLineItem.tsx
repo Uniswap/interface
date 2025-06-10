@@ -5,8 +5,9 @@ import TradePrice from 'components/swap/TradePrice'
 import { Trans } from 'react-i18next'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 import { ExternalLink } from 'theme/components/Links'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ellipseMiddle } from 'utilities/src/addresses'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
 
 export enum OffchainOrderLineItemType {
   EXCHANGE_RATE = 'EXCHANGE_RATE',
@@ -37,7 +38,7 @@ export type OffchainOrderLineItemProps =
     }
 
 function useLineItem(details: OffchainOrderLineItemProps): LineItemData | undefined {
-  const { formatNumber } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   switch (details.type) {
     case OffchainOrderLineItemType.EXCHANGE_RATE:
       return {
@@ -63,7 +64,7 @@ function useLineItem(details: OffchainOrderLineItemProps): LineItemData | undefi
     case OffchainOrderLineItemType.NETWORK_COST:
       return {
         Label: () => <Trans i18nKey="common.networkCost" />,
-        Value: () => <span>{formatNumber({ input: 0, type: NumberType.FiatGasPrice })}</span>,
+        Value: () => <span>{convertFiatAmountFormatted(0, NumberType.FiatGasPrice)}</span>,
       }
     case OffchainOrderLineItemType.TRANSACTION_ID:
       return {

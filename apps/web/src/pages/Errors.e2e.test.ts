@@ -1,6 +1,6 @@
 import { expect, test } from 'playwright/fixtures'
-import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/anvil'
 import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
+import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'

@@ -1,10 +1,11 @@
 import type { IconProps as TamaguiIconProps } from '@tamagui/helpers-icon'
 import { createElement, forwardRef, useState } from 'react'
 import { Svg, SvgProps } from 'react-native-svg'
-import { ColorTokens, SpecificTokens, Stack, ThemeKeys, View, isWeb, styled, usePropsAndStyle } from 'tamagui'
+import { ColorTokens, SpecificTokens, Stack, ThemeKeys, View, styled, usePropsAndStyle } from 'tamagui'
 import { withAnimated } from 'ui/src/components/factories/animated'
 import { DynamicColor } from 'ui/src/hooks/useSporeColors'
 import { IconSizeTokens } from 'ui/src/theme'
+import { isWeb } from 'utilities/src/platform'
 
 type SvgPropsWithRef = SvgProps & { ref: React.ForwardedRef<Svg>; style?: { color?: string } }
 

@@ -1,6 +1,7 @@
 import { NumberValue, ScaleLinear, axisRight, Axis as d3Axis, select } from 'd3'
 import { useMemo } from 'react'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 const TEXT_Y_OFFSET = 5
 
@@ -51,7 +52,7 @@ export const AxisRight = ({
   current?: number
   max?: number
 }) => {
-  const { formatNumber } = useFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
   const tickValues = useMemo(() => {
     const minCoordinate = min ? yScale(min) : undefined
     const maxCoordinate = max ? yScale(max) : undefined
@@ -71,8 +72,8 @@ export const AxisRight = ({
         axisGenerator={axisRight(yScale)
           .tickValues(tickValues)
           .tickFormat((d) =>
-            formatNumber({
-              input: d as number,
+            formatNumberOrString({
+              value: d as number,
               type: NumberType.TokenQuantityStats,
             }),
           )}

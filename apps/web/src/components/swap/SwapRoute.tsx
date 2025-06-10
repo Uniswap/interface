@@ -9,16 +9,17 @@ import { ThemedText } from 'theme/components'
 import { Flex, Separator } from 'ui/src'
 import RoutingDiagram from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
 import { chainSupportsGasEstimates } from 'uniswap/src/features/chains/utils'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 
 function useGasPrice({ gasUseEstimateUSD, inputAmount }: ClassicTrade) {
-  const { formatNumber } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   if (!gasUseEstimateUSD || !chainSupportsGasEstimates(inputAmount.currency.chainId)) {
     return undefined
   }
 
-  return gasUseEstimateUSD === 0 ? '<$0.01' : formatNumber({ input: gasUseEstimateUSD, type: NumberType.FiatGasPrice })
+  return gasUseEstimateUSD === 0 ? '<$0.01' : convertFiatAmountFormatted(gasUseEstimateUSD, NumberType.FiatGasPrice)
 }
 
 function RouteLabel({ trade }: { trade: SubmittableTrade }) {
@@ -33,12 +34,12 @@ function RouteLabel({ trade }: { trade: SubmittableTrade }) {
 }
 
 function PriceImpactRow({ trade }: { trade: ClassicTrade }) {
-  const { formatPercent } = useFormatter()
+  const { formatPercent } = useLocalizationContext()
   return (
     <ThemedText.BodySmall color="neutral2">
       <RowBetween>
         <Trans i18nKey="swap.priceImpact" />
-        <Flex>{formatPercent(trade.priceImpact)}</Flex>
+        <Flex>{formatPercent(trade.priceImpact.toSignificant())}</Flex>
       </RowBetween>
     </ThemedText.BodySmall>
   )

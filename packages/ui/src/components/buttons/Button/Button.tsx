@@ -33,7 +33,7 @@ const ButtonComponent = forwardRef<TamaguiElement, ButtonProps>(function Button(
   // This is responsible for the disabled UI state of the button
   // If `onDisabledPress` is provided, though, the button will be interactive even when disabled
   const isDisabled = getIsButtonDisabled({ isDisabled: propDisabled, loading })
-  const handleOnPress = isDisabled && props.onDisabledPress ? props.onDisabledPress : onPress
+  const handleOnPress = isDisabled ? (props.onDisabledPress ? props.onDisabledPress : undefined) : onPress
   const iconPosition = getIconPosition(propIconPosition)
 
   // We need to check if the children is a string, a Trans tag, or a custom component that likely renders a Trans tag, in which case we will pass it as a child to the `CustomButtonText` component

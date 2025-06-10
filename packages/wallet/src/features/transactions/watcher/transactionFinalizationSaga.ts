@@ -5,6 +5,7 @@ import { BigNumber } from 'ethers'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { getGasPrice } from 'uniswap/src/features/gas/types'
 import { findLocalGasStrategy } from 'uniswap/src/features/gas/utils'
 import { Experiments, PrivateRpcProperties } from 'uniswap/src/features/gating/experiments'
@@ -25,6 +26,7 @@ import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactio
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   FinalizedTransactionDetails,
+  SendTokenTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
@@ -83,7 +85,7 @@ export function* finalizeTransaction({
   }
 }
 
-async function invalidateAndRefetchWalletDelegationQueries(input: {
+export async function invalidateAndRefetchWalletDelegationQueries(input: {
   accountAddresses: Address[]
   chainIds: UniverseChainId[]
 }): Promise<void> {
@@ -95,14 +97,19 @@ async function invalidateAndRefetchWalletDelegationQueries(input: {
 /**
  * Send analytics events for finalized transactions
  */
+// eslint-disable-next-line complexity
 export function logTransactionEvent(actionData: ReturnType<typeof transactionActions.finalizeTransaction>): void {
   const { payload } = actionData
   const { hash, chainId, addedTime, from, typeInfo, receipt, status, transactionOriginType } = payload
-  const { gasUsed, effectiveGasPrice, confirmedTime } = receipt ?? {}
   const { type } = typeInfo
 
   // Send analytics event for swap success and failure
   if (type === TransactionType.Swap || type === TransactionType.Bridge) {
+    const { gasUsed, effectiveGasPrice, confirmedTime } = receipt ?? {}
+    const isOnChainTransaction = 'options' in payload
+    const includesDelegation = isOnChainTransaction ? payload.options?.includesDelegation : undefined
+    const isSmartWalletTransaction = isOnChainTransaction ? payload.options?.isSmartWalletTransaction : undefined
+
     const { quoteId, gasUseEstimate, inputCurrencyId, outputCurrencyId, transactedUSDValue } = typeInfo
 
     const swapProperties =
@@ -113,6 +120,8 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
             route: typeInfo.routeString,
             protocol: typeInfo.protocol,
             simulation_failure_reasons: typeInfo.simulationFailureReasons,
+            includes_delegation: includesDelegation,
+            is_smart_wallet_transaction: isSmartWalletTransaction,
           }
         : undefined
 
@@ -155,12 +164,19 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
         })
         return
       }
-      if (status === TransactionStatus.Success) {
-        const properties = { ...baseProperties, order_hash: orderHash, hash }
-        logSwapSuccess(properties)
-      } else {
-        const properties = { ...baseProperties, order_hash: orderHash }
-        sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, properties)
+
+      switch (status) {
+        case TransactionStatus.Success:
+          logSwapSuccess({ ...baseProperties, order_hash: orderHash, hash })
+          break
+        case TransactionStatus.Canceled:
+          sendAnalyticsEvent(WalletEventName.SwapTransactionCancelled, {
+            ...baseProperties,
+            order_hash: orderHash,
+          })
+          break
+        default:
+          sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, { ...baseProperties, order_hash: orderHash })
       }
     } else {
       // All successful classic swaps should be tracked in redux with a tx hash.
@@ -192,8 +208,9 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
           // Log to datadog
           if (type === TransactionType.Swap && status === TransactionStatus.Failed) {
             logger.warn('swapFlowLoggers', 'logSwapFinalized', 'Onchain Swap Failure', {
+              ...baseProperties,
               hash,
-              chainId,
+              chainLabel: getChainLabel(chainId),
               quoteId,
               inputCurrencyId,
               outputCurrencyId,
@@ -207,19 +224,23 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
 
   // Log metrics for confirmed transfers
   if (type === TransactionType.Send) {
-    const { tokenAddress, recipient: toAddress, currencyAmountUSD } = typeInfo
-
-    const amountUSD = currencyAmountUSD ? parseFloat(currencyAmountUSD?.toFixed(2)) : undefined
-
-    sendAnalyticsEvent(WalletEventName.TransferCompleted, {
-      chainId,
-      tokenAddress,
-      toAddress,
-      amountUSD,
-    })
+    logSend(typeInfo, chainId)
   }
 
   maybeLogGasEstimateAccuracy(payload)
+}
+
+function logSend(typeInfo: SendTokenTransactionInfo, chainId: UniverseChainId): void {
+  const { tokenAddress, recipient: toAddress, currencyAmountUSD } = typeInfo
+
+  const amountUSD = currencyAmountUSD ? parseFloat(currencyAmountUSD?.toFixed(2)) : undefined
+
+  sendAnalyticsEvent(WalletEventName.TransferCompleted, {
+    chainId,
+    tokenAddress,
+    toAddress,
+    amountUSD,
+  })
 }
 
 export function logTransactionTimeout(transaction: TransactionDetails): void {

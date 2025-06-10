@@ -48,7 +48,7 @@ export function ConnectedDappsList({ backButton, sessions, selectedAddress }: Co
   const disconnectSession = useCallback(
     async (session: WalletConnectSession, isNotification = true) => {
       try {
-        dispatch(removeSession({ account: address, sessionId: session.id }))
+        dispatch(removeSession({ sessionId: session.id }))
         try {
           await wcWeb3Wallet.disconnectSession({
             topic: session.id,

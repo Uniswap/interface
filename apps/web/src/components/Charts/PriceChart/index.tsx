@@ -23,7 +23,8 @@ import { useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, Text, styled } from 'ui/src'
 import { opacify } from 'ui/src/theme'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 export type PriceChartData = CandlestickData<UTCTimestamp> & AreaData<UTCTimestamp>
 
@@ -97,11 +98,11 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
       localization: {
         locale,
         priceFormatter: (price: BarPrice) => {
-          return format.formatFiatPrice({
+          return format.convertFiatAmountFormatted(
             // Transform price back to original value if it was scaled
-            price: Number(price) / this.lowPriceRangeScaleFactor,
-            type: NumberType.ChartFiatValue,
-          })
+            Number(price) / this.lowPriceRangeScaleFactor,
+            NumberType.FiatTokenPrice,
+          )
         },
       },
       grid: {
@@ -203,12 +204,12 @@ interface PriceChartDeltaProps {
 
 export function PriceChartDelta({ startingPrice, endingPrice, noColor }: PriceChartDeltaProps) {
   const delta = calculateDelta(startingPrice.close ?? startingPrice.value, endingPrice.close ?? endingPrice.value)
-  const { formatDelta } = useFormatter()
+  const { formatPercent } = useLocalizationContext()
 
   return (
     <Text variant="body2" display="flex" alignItems="center" gap="$gap4">
-      <DeltaArrow delta={delta} formattedDelta={formatDelta(delta)} noColor={noColor} />
-      <DeltaText delta={delta}>{formatDelta(delta)}</DeltaText>
+      <DeltaArrow delta={delta} formattedDelta={formatPercent(Math.abs(delta))} noColor={noColor} />
+      <DeltaText delta={delta}>{formatPercent(Math.abs(delta))}</DeltaText>
     </Text>
   )
 }
@@ -227,25 +228,25 @@ const CandlestickTooltipRow = styled(Flex, {
 })
 
 function CandlestickTooltip({ data }: { data: PriceChartData }) {
-  const { formatFiatPrice } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   return (
     <>
       <Text variant="body3" color="$neutral1">
         <CandlestickTooltipRow>
           <Trans i18nKey="chart.price.label.open" />
-          <Flex>{formatFiatPrice({ price: data.open })}</Flex>
+          <Flex>{convertFiatAmountFormatted(data.open, NumberType.FiatTokenPrice)}</Flex>
         </CandlestickTooltipRow>
         <CandlestickTooltipRow>
           <Trans i18nKey="chart.price.label.high" />
-          <Flex>{formatFiatPrice({ price: data.high })}</Flex>
+          <Flex>{convertFiatAmountFormatted(data.high, NumberType.FiatTokenPrice)}</Flex>
         </CandlestickTooltipRow>
         <CandlestickTooltipRow>
           <Trans i18nKey="chart.price.label.low" />
-          <Flex>{formatFiatPrice({ price: data.low })}</Flex>
+          <Flex>{convertFiatAmountFormatted(data.low, NumberType.FiatTokenPrice)}</Flex>
         </CandlestickTooltipRow>
         <CandlestickTooltipRow>
           <Trans i18nKey="chart.price.label.close" />
-          <Flex>{formatFiatPrice({ price: data.close })}</Flex>
+          <Flex>{convertFiatAmountFormatted(data.close, NumberType.FiatTokenPrice)}</Flex>
         </CandlestickTooltipRow>
       </Text>
     </>

@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactNode, useCallback, useRef, useState } from 'react'
-import { Flex, TouchableArea, isWeb } from 'ui/src'
+import { Flex, TouchableArea } from 'ui/src'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { WarningModal, WarningModalProps } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
@@ -7,6 +7,7 @@ import { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProp
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
+import { isWeb } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 type WarningInfoProps = {

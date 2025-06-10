@@ -29,7 +29,7 @@ type AddFiatSymbolToNumberInput = {
 export interface LocalizedFormatter {
   formatNumberOrString: (input: FormatNumberOrStringInput) => string
   formatCurrencyAmount: (input: FormatCurrencyAmountInput) => string
-  formatPercent: (value: Maybe<number | string>) => string
+  formatPercent: (value: Maybe<number | string>, maxDecimals?: 2 | 3 | 4) => string
   addFiatSymbolToNumber: (input: AddFiatSymbolToNumberInput) => string
 }
 
@@ -53,7 +53,7 @@ export function useLocalizedFormatter(): LocalizedFormatter {
     [locale],
   )
   const formatPercentInner = useCallback(
-    (value: Maybe<number | string>): string => formatPercent(value, locale),
+    (value: Maybe<number | string>, maxDecimals?: 2 | 3 | 4): string => formatPercent(value, locale, maxDecimals),
     [locale],
   )
 

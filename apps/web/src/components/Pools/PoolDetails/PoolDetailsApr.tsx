@@ -3,14 +3,16 @@ import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprD
 import { calculateTotalApr } from 'components/LpIncentives/utils'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 
 export const PoolDetailsApr = ({ poolApr, rewardsApr }: { poolApr: Percent; rewardsApr?: number }) => {
   const { t } = useTranslation()
-  const { formatPercent } = useFormatter()
+  const { formatPercent } = useLocalizationContext()
 
   const showAprBreakdown = rewardsApr !== undefined && rewardsApr > 0
-  const totalApr = rewardsApr ? formatPercent(calculateTotalApr(poolApr, rewardsApr), 2) : `${poolApr.toFixed(2)}%`
+  const totalApr = rewardsApr
+    ? formatPercent(calculateTotalApr(poolApr, rewardsApr).toSignificant(), 2)
+    : `${poolApr.toFixed(2)}%`
 
   return (
     <Flex
@@ -39,7 +41,7 @@ export const PoolDetailsApr = ({ poolApr, rewardsApr }: { poolApr: Percent; rewa
               {t('pool.apr.base')}
             </Text>
             <Text variant="body3" color="$neutral1">
-              {formatPercent(poolApr, 2)}
+              {formatPercent(poolApr.toSignificant())}
             </Text>
           </Flex>
           <Flex row justifyContent="space-between" alignItems="center" gap="$gap8">

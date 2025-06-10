@@ -57,13 +57,13 @@ export function* attemptReplaceTransaction(
         : yield* call(getProvider, chainId)
     const signerManager = yield* call(getSignerManager)
 
-    const { transactionResponse, populatedRequest } = yield* call(
-      signAndSubmitTransaction,
+    const { transactionResponse, populatedRequest } = yield* call(signAndSubmitTransaction, {
       request,
       account,
       provider,
       signerManager,
-    )
+      isCancellation,
+    })
     logger.debug('replaceTransaction', '', 'Tx submitted. New hash:', transactionResponse.hash)
 
     if (isCancellation) {

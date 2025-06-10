@@ -3,7 +3,7 @@ import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef }
 import { useTranslation } from 'react-i18next'
 import type { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { Flex, Text, TouchableArea, isWeb, useIsShortMobileDevice, useShakeAnimation, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useIsShortMobileDevice, useShakeAnimation, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, spacing } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
@@ -36,7 +36,7 @@ import { DefaultTokenOptions } from 'uniswap/src/features/transactions/swap/form
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isExtension, isInterfaceDesktop, isMobileWeb } from 'utilities/src/platform'
+import { isExtension, isInterfaceDesktop, isMobileWeb, isWeb } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export const CurrencyInputPanel = memo(

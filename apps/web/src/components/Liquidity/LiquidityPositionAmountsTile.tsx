@@ -25,7 +25,7 @@ export function LiquidityPositionAmountsTile({
   // TODO(WEB-4920): skip GraphQL call once backend provides image URLs
   const currencyInfo0 = useCurrencyInfo(currency0Amount.currency)
   const currencyInfo1 = useCurrencyInfo(currency1Amount.currency)
-  const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
+  const { formatCurrencyAmount, formatPercent, convertFiatAmountFormatted } = useLocalizationContext()
   const totalFiatValue = fiatValue0?.add(fiatValue1 ?? CurrencyAmount.fromRawAmount(fiatValue0.currency, 0))
 
   const chainUrlParam = getChainInfo(currencyInfo0?.currency.chainId || UniverseChainId.Mainnet).urlParam
@@ -55,7 +55,7 @@ export function LiquidityPositionAmountsTile({
           </Text>
           {fiatValue0?.greaterThan(0) && (
             <Text variant="body2" color="$neutral2">
-              ({formatCurrencyAmount({ value: fiatValue0, type: NumberType.FiatTokenPrice })})
+              ({convertFiatAmountFormatted(fiatValue0.toExact(), NumberType.FiatTokenPrice)})
             </Text>
           )}
           {totalFiatValue && totalFiatValue?.toExact() !== '0' && fiatValue0 && (
@@ -80,7 +80,7 @@ export function LiquidityPositionAmountsTile({
           </Text>
           {fiatValue1?.greaterThan(0) && (
             <Text variant="body2" color="$neutral2">
-              ({formatCurrencyAmount({ value: fiatValue1, type: NumberType.FiatTokenPrice })})
+              ({convertFiatAmountFormatted(fiatValue1.toExact(), NumberType.FiatTokenPrice)})
             </Text>
           )}
           {totalFiatValue && totalFiatValue?.toExact() !== '0' && fiatValue1 && (

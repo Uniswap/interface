@@ -7,9 +7,10 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { RewardsCampaign } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
 
 const formatDateRange = (
   startTimestamp: number | undefined,
@@ -69,7 +70,7 @@ export const LpIncentivesPoolDetailsRewardsDistribution = ({
 }: {
   rewardsCampaign?: RewardsCampaign
 }) => {
-  const { formatCurrencyAmount } = useFormatter()
+  const { formatCurrencyAmount, convertFiatAmountFormatted } = useLocalizationContext()
   const { price: uniPrice } = useUSDCPrice(LP_INCENTIVES_REWARD_TOKEN)
   const { t } = useTranslation()
   const currentLanguage = useCurrentLanguage()
@@ -135,25 +136,20 @@ export const LpIncentivesPoolDetailsRewardsDistribution = ({
   const totalRewardAllocationFiat = uniPrice?.quote(totalRewardAllocationAmount)
 
   const formattedDistributedToken = formatCurrencyAmount({
-    amount: distributedRewardsAmount,
+    value: distributedRewardsAmount,
     type: NumberType.TokenQuantityStats,
   })
   const formattedTotalToken = formatCurrencyAmount({
-    amount: totalRewardAllocationAmount,
+    value: totalRewardAllocationAmount,
     type: NumberType.TokenQuantityStats,
   })
 
-  const formattedDistributedFiat = formatCurrencyAmount({
-    amount: distributedRewardsFiat,
-    type: NumberType.FiatTokenStats,
-    placeholder: '--',
-  })
+  const formattedDistributedFiat = convertFiatAmountFormatted(
+    distributedRewardsFiat?.toExact(),
+    NumberType.FiatTokenStats,
+  )
 
-  const formattedTotalFiat = formatCurrencyAmount({
-    amount: totalRewardAllocationFiat,
-    type: NumberType.FiatTokenStats,
-    placeholder: '--',
-  })
+  const formattedTotalFiat = convertFiatAmountFormatted(totalRewardAllocationFiat?.toExact(), NumberType.FiatTokenStats)
 
   const daysRemaining = getDaysRemaining(rewardsCampaign.endTimestamp, t)
   const dateRange = formatDateRange(rewardsCampaign.startTimestamp, rewardsCampaign.endTimestamp, currentLanguage)

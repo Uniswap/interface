@@ -14,9 +14,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { Button, Flex, RadioButtonGroup, Text } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { useFormatter } from 'utils/formatNumbers'
 
 const Select = styled.div`
   align-items: flex-start;
@@ -46,7 +46,7 @@ export default function FeeSelector({
 }) {
   const { chainId } = useAccount()
   const trace = useTrace()
-  const { formatDelta } = useFormatter()
+  const { formatPercent } = useLocalizationContext()
 
   const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(currencyA, currencyB)
 
@@ -154,7 +154,7 @@ export default function FeeSelector({
                   <Text className="selected-fee-label">
                     <Trans
                       i18nKey="fee.tierExact"
-                      values={{ fee: formatDelta(parseFloat(FEE_AMOUNT_DETAIL[feeAmount].label)) }}
+                      values={{ fee: formatPercent(parseFloat(FEE_AMOUNT_DETAIL[feeAmount].label)) }}
                     />
                   </Text>
                   {distributions && (

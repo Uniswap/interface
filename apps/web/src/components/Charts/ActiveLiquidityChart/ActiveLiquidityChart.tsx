@@ -9,7 +9,7 @@ import { max as getMax, scaleLinear } from 'd3'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
-import { useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 
 const xAccessor = (d: ChartEntry) => d.activeLiquidity
 const yAccessor = (d: ChartEntry) => d.price0
@@ -101,7 +101,7 @@ export function ActiveLiquidityChart({
   isMobile?: boolean
   barColor?: string
 }) {
-  const { formatPercent } = useFormatter()
+  const { formatPercent } = useLocalizationContext()
   const colors = useSporeColors()
   const svgRef = useRef<SVGSVGElement | null>(null)
   const [hoverY, setHoverY] = useState<number>()
@@ -174,7 +174,9 @@ export function ActiveLiquidityChart({
               top={yScale(brushDomain[0]) - 16}
             >
               <Text variant="body4">
-                {formatPercent(new Percent(scaleToInteger(brushDomain[0] - current), scaleToInteger(current)))}
+                {formatPercent(
+                  new Percent(scaleToInteger(brushDomain[0] - current), scaleToInteger(current)).toSignificant(),
+                )}
               </Text>
             </Flex>
           )}
@@ -190,7 +192,9 @@ export function ActiveLiquidityChart({
               top={yScale(brushDomain[1]) - 16}
             >
               <Text variant="body4">
-                {formatPercent(new Percent(scaleToInteger(brushDomain[1] - current), scaleToInteger(current)))}
+                {formatPercent(
+                  new Percent(scaleToInteger(brushDomain[1] - current), scaleToInteger(current)).toSignificant(),
+                )}
               </Text>
             </Flex>
           )}

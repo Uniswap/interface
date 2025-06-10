@@ -3,6 +3,7 @@ import { test as base } from '@playwright/test'
 import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { anvilClient, setErc20BalanceWithMultipleSlots } from 'playwright/anvil/utils'
+import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import { DAI, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Address, erc20Abi, publicActions, walletActions } from 'viem'
@@ -10,8 +11,6 @@ import { Address, erc20Abi, publicActions, walletActions } from 'viem'
 class WalletError extends Error {
   code?: number
 }
-
-export const TEST_WALLET_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
 
 const allowedErc20BalanceAddresses = [USDT.address, DAI.address, WETH_ADDRESS(UniverseChainId.Mainnet)]
 
@@ -68,7 +67,7 @@ export const test = base.extend<{ anvil: typeof anvil; delegateToZeroAddress?: t
         const nonce = await anvil.getTransactionCount({
           address: TEST_WALLET_ADDRESS,
         })
-        const auth = await anvil.account.experimental_signAuthorization({
+        const auth = await anvil.account.signAuthorization({
           contractAddress: ZERO_ADDRESS,
           chainId: anvil.chain.id,
           nonce: nonce + 1,

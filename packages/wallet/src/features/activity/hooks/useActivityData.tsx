@@ -1,13 +1,14 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
-import { Flex, Loader, Text, isWeb } from 'ui/src'
+import { Flex, Loader, Text } from 'ui/src'
 import { NoTransactions } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import { isWeb } from 'utilities/src/platform'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks/useFormattedTransactionDataForActivity'
 import { LoadingItem, SectionHeader } from 'wallet/src/features/activity/utils'
@@ -30,6 +31,7 @@ type ActivityDataProps = {
   isExternalProfile?: boolean
   emptyComponentStyle?: StyleProp<ViewStyle>
   onPressEmptyState?: () => void
+  skip?: boolean
 }
 
 type ActivityData = {
@@ -44,6 +46,7 @@ export function useActivityData({
   authTrigger,
   isExternalProfile,
   onPressEmptyState,
+  skip,
 }: ActivityDataProps): ActivityData {
   const { t } = useTranslation()
   const { navigateToSwapFlow } = useWalletNavigation()
@@ -78,6 +81,7 @@ export function useActivityData({
   const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity({
     address: owner,
     hideSpamTokens,
+    skip,
   })
 
   const errorCard = useMemo(

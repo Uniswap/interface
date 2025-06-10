@@ -14,6 +14,8 @@ export interface SwapCallbackParams {
   isAutoSlippage: boolean
   presetPercentage?: PresetPercentage
   preselectAsset?: boolean
+  isSmartWalletTransaction?: boolean
+  includesDelegation?: boolean
   onSuccess: () => void
   onFailure: (error?: Error, onPressRetry?: () => void) => void
   /** Called by async submission code to communicate UI should display a pending state. */

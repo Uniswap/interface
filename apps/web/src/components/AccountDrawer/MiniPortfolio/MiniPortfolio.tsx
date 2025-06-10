@@ -155,7 +155,12 @@ export default function MiniPortfolio({ account }: { account: string }) {
             }
             return (
               <Trace logPress eventOnTrigger={SharedEventName.NAVBAR_CLICKED} element={loggingElementName} key={index}>
-                <NavItem onClick={handleNavItemClick} active={currentPage === index} key={key}>
+                <NavItem
+                  onClick={handleNavItemClick}
+                  active={currentPage === index}
+                  key={key}
+                  data-testid={loggingElementName}
+                >
                   <span>{title}</span>
                   {showActivityIndicator && (
                     <>

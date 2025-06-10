@@ -15,7 +15,8 @@ import { useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 interface VolumeChartModelParams extends ChartModelParams<SingleHistogramData>, CustomVolumeChartModelParams {
   TooltipBody?: React.FunctionComponent<{ data: SingleHistogramData }>
@@ -78,7 +79,7 @@ function VolumeChartHeader({
   timePeriod: TimePeriod
 }) {
   const { t } = useTranslation()
-  const { formatFiatPrice } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   const headerDateFormatter = useHeaderDateFormatter()
 
   const display = useMemo(() => {
@@ -86,11 +87,7 @@ function VolumeChartHeader({
       volume: '-',
       time: '-',
     }
-    const priceFormatter = (price?: number) =>
-      formatFiatPrice({
-        price,
-        type: NumberType.ChartFiatValue,
-      })
+    const priceFormatter = (price?: number) => convertFiatAmountFormatted(price, NumberType.FiatTokenStats)
     if (crosshairData === undefined) {
       const cumulativeVolume = getCumulativeVolume(volumes)
       displayValues.volume = priceFormatter(cumulativeVolume)
@@ -100,7 +97,7 @@ function VolumeChartHeader({
       displayValues.time = headerDateFormatter(crosshairData.time)
     }
     return displayValues
-  }, [crosshairData, formatFiatPrice, headerDateFormatter, t, timePeriod, volumes])
+  }, [crosshairData, convertFiatAmountFormatted, headerDateFormatter, t, timePeriod, volumes])
 
   return (
     <ChartHeader
@@ -113,17 +110,14 @@ function VolumeChartHeader({
 
 function FeesTooltipDisplay({ data, feeTier }: { data: SingleHistogramData; feeTier?: number }) {
   const { t } = useTranslation()
-  const { formatFiatPrice } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   const fees = data.value * ((feeTier ?? 0) / BIPS_BASE / 100)
 
   return (
     <>
       <ThemedText.BodySmall>
         {t(`token.chart.tooltip`, {
-          amount: formatFiatPrice({
-            price: fees,
-            type: NumberType.ChartFiatValue,
-          }),
+          amount: convertFiatAmountFormatted(fees, NumberType.FiatTokenStats),
         })}
       </ThemedText.BodySmall>
     </>

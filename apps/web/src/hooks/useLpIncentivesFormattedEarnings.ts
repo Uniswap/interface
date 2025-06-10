@@ -33,16 +33,13 @@ export function useLpIncentivesFormattedEarnings({
   fiatFeeValue0,
   fiatFeeValue1,
 }: UseLpIncentivesFormattedEarningsProps): LpIncentivesEarningsResult {
-  const { formatCurrencyAmount } = useLocalizationContext()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
   const { price: uniPrice } = useUSDCPrice(LP_INCENTIVES_REWARD_TOKEN)
 
   return useMemo(() => {
     const formatCurrency = (value: CurrencyAmount<Currency>) => {
-      return formatCurrencyAmount({
-        value,
-        type: NumberType.FiatStandard,
-      })
+      return convertFiatAmountFormatted(value.toExact(), NumberType.FiatStandard)
     }
 
     const result: LpIncentivesEarningsResult = {
@@ -111,5 +108,5 @@ export function useLpIncentivesFormattedEarnings({
     }
 
     return result
-  }, [fiatFeeValue0, fiatFeeValue1, liquidityPosition, isLPIncentivesEnabled, uniPrice, formatCurrencyAmount])
+  }, [fiatFeeValue0, fiatFeeValue1, liquidityPosition, isLPIncentivesEnabled, uniPrice, convertFiatAmountFormatted])
 }

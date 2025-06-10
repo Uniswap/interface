@@ -15,6 +15,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'state/hooks'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { Button, Flex, Switch, Text } from 'ui/src'
+import { Passkey } from 'ui/src/components/icons/Passkey'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -26,6 +27,7 @@ import { ClaimLPFeesRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { InterfaceEventNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -117,6 +119,9 @@ export function ClaimFeeModal() {
   const selectChain = useSelectChain()
   const connectedAccount = useAccount()
   const startChainId = connectedAccount.chainId
+  const { isSignedInWithPasskey, isSessionAuthenticated, needsPasskeySignin } = useGetPasskeyAuthStatus(
+    connectedAccount.connector?.id,
+  )
 
   const claimLpFeesParams = useMemo(() => {
     if (!positionInfo || !currency0 || !currency1) {
@@ -313,8 +318,15 @@ export function ClaimFeeModal() {
             size="large"
             variant="branded"
             onPress={onPressConfirm}
+            icon={needsPasskeySignin ? <Passkey size="$icon.24" /> : undefined}
           >
-            {currentTransactionStep ? t('common.confirmWallet') : t('common.collect.button')}
+            {currentTransactionStep
+              ? isSignedInWithPasskey
+                ? t('swap.button.submitting.passkey')
+                : t('common.confirmWallet')
+              : isSessionAuthenticated
+                ? t('common.confirm')
+                : t('common.collect.button')}
           </Button>
         </Flex>
       </Flex>

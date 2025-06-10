@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ColorTokens, Flex, isWeb, Popover, Text, Tooltip, TouchableArea } from 'ui/src'
+import { ColorTokens, Flex, Popover, Text, Tooltip, TouchableArea } from 'ui/src'
 import { Settings } from 'ui/src/components/icons/Settings'
 import { SettingsWarning } from 'ui/src/components/icons/SettingsWarning'
 import { IconSizeTokens } from 'ui/src/theme'
@@ -9,7 +9,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippage/useSlippageSettings'
 import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isInterface } from 'utilities/src/platform'
+import { isInterface, isWeb } from 'utilities/src/platform'
 
 type SwapFormSettingsButtonProps = {
   shouldShowCustomSlippage: boolean

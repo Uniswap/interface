@@ -283,7 +283,7 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly, negat
       <div
         class="c3 css-1guhfcl"
       >
-        -10%
+        -10.00%
       </div>
     </button>
     <button

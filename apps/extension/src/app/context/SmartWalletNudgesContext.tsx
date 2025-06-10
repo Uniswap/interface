@@ -3,8 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useGet5792DappInfo } from 'src/app/hooks/useGet5792DappInfo'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
-import { selectHasSeenCreatedSmartWalletModal } from 'wallet/src/features/behaviorHistory/selectors'
-import { setHasSeenSmartWalletCreatedWalletModal } from 'wallet/src/features/behaviorHistory/slice'
+import {
+  selectHasSeenCreatedSmartWalletModal,
+  selectHasShownEip5792Nudge,
+} from 'wallet/src/features/behaviorHistory/selectors'
+import {
+  setHasSeenSmartWalletCreatedWalletModal,
+  setHasShown5792Nudge,
+} from 'wallet/src/features/behaviorHistory/slice'
 import { useAccountCountChanged } from 'wallet/src/features/wallet/hooks'
 
 import { extractUrlHost } from 'utilities/src/format/urls'
@@ -12,8 +18,6 @@ import {
   SmartWalletDelegationAction,
   useSmartWalletDelegationStatus,
 } from 'wallet/src/components/smartWallet/smartAccounts/hook'
-import { selectHasShownEip5792Nudge } from 'wallet/src/features/behaviorHistory/selectors'
-import { setHasShown5792Nudge } from 'wallet/src/features/behaviorHistory/slice'
 import { WalletState } from 'wallet/src/state/walletReducer'
 
 type DappInfo = {

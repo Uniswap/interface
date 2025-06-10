@@ -1,6 +1,6 @@
 import { PropsWithChildren, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea, UniswapXText, isWeb } from 'ui/src'
+import { Flex, Text, TouchableArea, UniswapXText } from 'ui/src'
 import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
 import { zIndexes } from 'ui/src/theme'
 import { RouterLabel } from 'uniswap/src/components/RouterLabel/RouterLabel'
@@ -24,6 +24,7 @@ import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/ut
 import getRoutingDiagramEntries from 'uniswap/src/utils/getRoutingDiagramEntries'
 import { openUri } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
+import { isWeb } from 'utilities/src/platform'
 
 export function RoutingInfo({
   chainId,

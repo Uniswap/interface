@@ -175,7 +175,9 @@ export function* handleGetCapabilities({
     const detailsMap = delegationStatusResponse.delegationDetails[accountAddress]
 
     if (detailsMap) {
-      const hasAtLeastOneDelegation = Object.values(detailsMap).some((details) => !!details.currentDelegationAddress)
+      const hasAtLeastOneDelegation = Object.values(detailsMap).some(
+        (details) => !!details.currentDelegationAddress && !details.isWalletDelegatedToUniswap,
+      )
 
       hasNoExistingDelegations = !hasAtLeastOneDelegation
     }
@@ -187,12 +189,6 @@ export function* handleGetCapabilities({
   }
 
   if (!hasSmartWalletConsent && !hasShownNudge && hasNoExistingDelegations) {
-    const onEnableSmartWallet = () => {
-      navigate(ModalName.SmartWalletEnabledModal, {
-        showReconnectDappPrompt: true,
-      })
-    }
-
     // Update the state to mark that we've shown the nudge
     yield* put(
       setHasShown5792Nudge({
@@ -202,7 +198,6 @@ export function* handleGetCapabilities({
     )
 
     yield* call(navigate, ModalName.PostSwapSmartWalletNudge, {
-      onEnableSmartWallet,
       dappInfo: {
         icon: dappIconUrl,
         name: dappName,
@@ -210,7 +205,8 @@ export function* handleGetCapabilities({
     })
   }
 
-  const capabilities = getCapabilitiesForDelegationStatus(
+  const capabilities = yield* call(
+    getCapabilitiesForDelegationStatus,
     delegationStatusResponse?.delegationDetails[accountAddress],
     hasSmartWalletConsent,
   )

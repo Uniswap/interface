@@ -334,19 +334,27 @@ export function ClaimUnitagContent({
                   onSubmitEditing={onPressContinue}
                   onLayout={getInitialUnitagNameInputWidth}
                 />
-                <Text
-                  key={UNITAG_SUFFIX}
+                <Flex
                   animation="lazy"
-                  color="$neutral1"
                   enterStyle={{ opacity: 0, x: SLIDE_IN_AMOUNT }}
                   exitStyle={{ opacity: 0, x: SLIDE_IN_AMOUNT }}
-                  fontFamily="$heading"
-                  fontSize={isWeb ? fonts.subheading1.fontSize : fontSize}
-                  fontWeight="$book"
-                  lineHeight={fonts.heading2.lineHeight}
                 >
-                  {UNITAG_SUFFIX}
-                </Text>
+                  {/* This is a workaround for aligning a unitag suffix with a unitag name.*/}
+                  {/* Some devices render text inside text input and text component vertically shifted.*/}
+                  <TextInput
+                    editable={false}
+                    borderWidth="$none"
+                    borderRadius={isWeb ? 0 : undefined}
+                    fontFamily="$heading"
+                    fontSize={isWeb ? fonts.subheading1.fontSize : fontSize}
+                    fontWeight="$book"
+                    numberOfLines={1}
+                    p="$none"
+                    placeholderTextColor="$neutral3"
+                    textAlign="left"
+                    value={UNITAG_SUFFIX}
+                  />
+                </Flex>
               </Flex>
             )}
           </AnimatePresence>

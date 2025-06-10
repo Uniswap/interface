@@ -8,21 +8,21 @@ import {
 
 export const makeSelectSessions = (): Selector<MobileState, WalletConnectSession[] | undefined, [Maybe<Address>]> =>
   createSelector(
-    (state: MobileState) => state.walletConnect.byAccount,
+    (state: MobileState) => state.walletConnect.sessions,
     (_: MobileState, address: Maybe<Address>) => address,
-    (sessionsByAccount, address) => {
+    (sessions, address) => {
       if (!address) {
         return undefined
       }
 
-      const wcAccount = sessionsByAccount[address]
-      if (!wcAccount) {
-        return undefined
-      }
-
-      return Object.values(wcAccount.sessions)
+      // Filter sessions by active account address
+      return Object.values(sessions).filter((session) => session.activeAccount === address)
     },
   )
+
+export const selectAllSessions = (state: MobileState): Record<string, WalletConnectSession> => {
+  return state.walletConnect.sessions
+}
 
 export const selectPendingRequests = (state: MobileState): WalletConnectSigningRequest[] => {
   return state.walletConnect.pendingRequests

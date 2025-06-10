@@ -13,7 +13,6 @@ import {
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export function useSwapTxAndGasInfo({
@@ -42,7 +41,6 @@ export function useSwapTxAndGasInfo({
 
   // TODO(MOB-3425) decouple wrap tx from swap tx to simplify UniswapX code
   const swapTxInfo = useTransactionRequestInfo({
-    account,
     derivedSwapInfo,
     tokenApprovalInfo,
   })
@@ -59,11 +57,11 @@ export function useSwapTxAndGasInfo({
         return getBridgeSwapTxAndGasInfo({ trade, swapTxInfo, approvalTxInfo })
       case Routing.CLASSIC:
         return getClassicSwapTxAndGasInfo({ trade, swapTxInfo, approvalTxInfo, permitTxInfo })
+      case Routing.WRAP:
+      case Routing.UNWRAP:
+        return getWrapTxAndGasInfo({ trade, swapTxInfo })
       default:
-        if (isWrapAction(wrapType)) {
-          return getWrapTxAndGasInfo({ swapTxInfo })
-        }
         return getFallbackSwapTxAndGasInfo({ swapTxInfo, approvalTxInfo })
     }
-  }, [approvalTxInfo, permitTxInfo, swapTxInfo, trade, wrapType])
+  }, [approvalTxInfo, permitTxInfo, swapTxInfo, trade])
 }

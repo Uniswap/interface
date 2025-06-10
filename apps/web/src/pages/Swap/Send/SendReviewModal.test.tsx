@@ -1,7 +1,7 @@
 import 'test-utils/tokens/mocks'
 
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { SendReviewModal } from 'pages/Swap/Send/SendReviewModal'
+import { SendReviewModalInner } from 'pages/Swap/Send/SendReviewModal'
 import { MultichainContext } from 'state/multichain/types'
 import { SendContext, SendContextType } from 'state/send/SendContext'
 import { SwapAndLimitContext } from 'state/swap/types'
@@ -67,13 +67,13 @@ const mockedSendContextTokenInput: SendContextType = {
   setSendState: jest.fn(),
 }
 
-describe('SendCurrencyInputform', () => {
+describe('SendReviewModal', () => {
   it('should render input in fiat correctly', () => {
     render(
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <SendContext.Provider value={mockedSendContextFiatInput}>
-            <SendReviewModal isOpen onDismiss={jest.fn()} onConfirm={jest.fn()} />
+            <SendReviewModalInner onDismiss={jest.fn()} onConfirm={jest.fn()} />
           </SendContext.Provider>
         </SwapAndLimitContext.Provider>
       </MultichainContext.Provider>,
@@ -91,7 +91,7 @@ describe('SendCurrencyInputform', () => {
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <SendContext.Provider value={mockedSendContextTokenInput}>
-            <SendReviewModal isOpen onDismiss={jest.fn()} onConfirm={jest.fn()} />
+            <SendReviewModalInner onDismiss={jest.fn()} onConfirm={jest.fn()} />
           </SendContext.Provider>
         </SwapAndLimitContext.Provider>
       </MultichainContext.Provider>,

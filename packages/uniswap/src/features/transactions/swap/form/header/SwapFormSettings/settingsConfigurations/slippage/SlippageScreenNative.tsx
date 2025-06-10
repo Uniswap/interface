@@ -1,16 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  ColorTokens,
-  Flex,
-  PlusMinusButton,
-  PlusMinusButtonType,
-  Text,
-  TouchableArea,
-  isWeb,
-  useSporeColors,
-} from 'ui/src'
+import { ColorTokens, Flex, PlusMinusButton, PlusMinusButtonType, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
@@ -26,6 +17,7 @@ import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/sw
 import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { isWeb } from 'utilities/src/platform'
 
 function SlippageMessage({
   inputWarning,

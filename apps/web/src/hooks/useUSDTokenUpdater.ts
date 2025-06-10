@@ -3,8 +3,9 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
 
 const NUM_DECIMALS_USD = 2
 const NUM_DECIMALS_DISPLAY = 2
@@ -18,8 +19,8 @@ export function useUSDTokenUpdater(
   loading: boolean
 } {
   const { price, isLoading } = useUSDCPrice(exactCurrency)
-  const { convertToFiatAmount, formatCurrencyAmount } = useFormatter()
-  const conversionRate = convertToFiatAmount(1).amount
+  const { convertFiatAmount, formatCurrencyAmount } = useLocalizationContext()
+  const conversionRate = convertFiatAmount(1).amount
   const supportedChainId = useSupportedChainId(exactCurrency?.chainId)
 
   return useMemo(() => {
@@ -35,7 +36,7 @@ export function useUSDTokenUpdater(
 
       const currencyAmount = stablecoinAmount ? price?.invert().quote(stablecoinAmount) : undefined
       const formattedCurrencyAmount = formatCurrencyAmount({
-        amount: currencyAmount,
+        value: currencyAmount,
         type: NumberType.SwapTradeAmount,
         placeholder: '',
       })
@@ -46,13 +47,13 @@ export function useUSDTokenUpdater(
     const exactCurrencyAmount = tryParseCurrencyAmount(exactAmount || '0', exactCurrency)
 
     const usdPrice = exactCurrencyAmount ? price?.quote(exactCurrencyAmount) : undefined
-    const fiatPrice = convertToFiatAmount(parseFloat(usdPrice?.toExact() ?? '0')).amount
+    const fiatPrice = convertFiatAmount(parseFloat(usdPrice?.toExact() ?? '0')).amount
     const formattedFiatPrice = fiatPrice ? fiatPrice.toFixed(NUM_DECIMALS_DISPLAY) : '0'
 
     return { formattedAmount: formattedFiatPrice, loading: isLoading }
   }, [
     conversionRate,
-    convertToFiatAmount,
+    convertFiatAmount,
     exactAmount,
     exactCurrency,
     formatCurrencyAmount,

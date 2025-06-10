@@ -17,10 +17,11 @@ import { Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
 
 const ModalHeader = styled(GetHelpHeader)`
   padding: 4px 0px;
@@ -169,11 +170,8 @@ export function CancelOrdersDialog(props: CancelOrdersDialogProps) {
 function GasEstimateDisplay({ gasEstimateValue, chainId }: { gasEstimateValue?: string; chainId: UniverseChainId }) {
   const gasFeeCurrencyAmount = CurrencyAmount.fromRawAmount(nativeOnChain(chainId), gasEstimateValue ?? '0')
   const gasFeeUSD = useUSDCValue(gasFeeCurrencyAmount)
-  const { formatCurrencyAmount } = useFormatter()
-  const gasFeeFormatted = formatCurrencyAmount({
-    amount: gasFeeUSD,
-    type: NumberType.PortfolioBalance,
-  })
+  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD?.toExact(), NumberType.PortfolioBalance)
 
   return (
     <Flex

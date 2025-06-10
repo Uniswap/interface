@@ -1,4 +1,5 @@
-import { isWeb, Stack, styled } from 'tamagui'
+import { Stack, styled } from 'tamagui'
+import { isWeb } from 'utilities/src/platform'
 
 export const Separator = styled(Stack, {
   name: 'Separator',

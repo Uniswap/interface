@@ -11,7 +11,7 @@ import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult } from 'hooks/useSwapCallback'
 import styled from 'lib/styled-components'
 import ms from 'ms'
-import { ReactNode, useMemo, useState } from 'react'
+import { PropsWithChildren, ReactNode, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { InterfaceTrade, LimitOrderTrade, RouterPreference } from 'state/routing/types'
 import { isClassicTrade, isLimitTrade } from 'state/routing/utils'
@@ -69,13 +69,24 @@ interface HelpLink {
   url: string
 }
 
-function DropdownController({ open, onClick }: { open: boolean; onClick: () => void }) {
+// TODO: Extract to Spore ExpandoRow component (WEB-7906)
+export function DropdownController({
+  open,
+  onClick,
+  children,
+}: PropsWithChildren & { open: boolean; onClick: () => void }) {
   return (
     <DropdownButton onClick={onClick}>
       <Separator />
       <DropdownControllerWrapper>
         <ThemedText.BodySmall color="neutral2">
-          {open ? <Trans i18nKey="common.showLess.button" /> : <Trans i18nKey="common.showMore.button" />}
+          {children ? (
+            children
+          ) : open ? (
+            <Trans i18nKey="common.showLess.button" />
+          ) : (
+            <Trans i18nKey="common.showMore.button" />
+          )}
         </ThemedText.BodySmall>
         {open ? <ExpandoIconOpened /> : <ExpandoIconClosed />}
       </DropdownControllerWrapper>

@@ -15,7 +15,8 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 const Container = styled(AutoColumn)`
   padding: 4px;
@@ -24,13 +25,13 @@ const Container = styled(AutoColumn)`
 type GasCostItemProps = { title: ReactNode; itemValue?: React.ReactNode; amount?: number }
 
 const GasCostItem = ({ title, amount, itemValue }: GasCostItemProps) => {
-  const { formatNumber } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   if (!amount && !itemValue) {
     return null
   }
 
-  const value = itemValue ?? formatNumber({ input: amount, type: NumberType.FiatGasPrice })
+  const value = itemValue ?? convertFiatAmountFormatted(amount, NumberType.FiatGasPrice)
   return (
     <Row justify="space-between">
       <ThemedText.SubHeaderSmall>{title}</ThemedText.SubHeaderSmall>
@@ -40,8 +41,8 @@ const GasCostItem = ({ title, amount, itemValue }: GasCostItemProps) => {
 }
 
 const GaslessSwapLabel = () => {
-  const { formatNumber } = useFormatter()
-  return <UniswapXRouterLabel>{formatNumber({ input: 0, type: NumberType.FiatGasPrice })}</UniswapXRouterLabel>
+  const { convertFiatAmountFormatted } = useLocalizationContext()
+  return <UniswapXRouterLabel>{convertFiatAmountFormatted(0, NumberType.FiatGasPrice)}</UniswapXRouterLabel>
 }
 
 type GasBreakdownTooltipProps = { trade: InterfaceTrade }

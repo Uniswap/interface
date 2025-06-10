@@ -1,8 +1,8 @@
-import { isWeb } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text'
 import { Skeleton } from 'ui/src/loading/Skeleton'
 import { iconSizes } from 'ui/src/theme'
+import { isWeb } from 'utilities/src/platform'
 
 interface TokenLoaderProps {
   opacity: number

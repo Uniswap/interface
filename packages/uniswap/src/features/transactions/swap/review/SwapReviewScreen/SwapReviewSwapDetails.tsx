@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { SwapDetails } from 'uniswap/src/features/transactions/swap/review/SwapDetails/SwapDetails'
 import { useSwapReviewCallbacks } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewCallbacksContext'
@@ -22,6 +22,16 @@ export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.
   const { onAcceptTrade, onShowWarning } = useSwapReviewCallbacks()
   const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
 
+  const [stableIncludesDelegation, setStableIncludesDelegation] = useState<boolean | undefined>(
+    swapTxContext?.includesDelegation,
+  )
+
+  useEffect(() => {
+    if (swapTxContext?.includesDelegation !== undefined) {
+      setStableIncludesDelegation(swapTxContext.includesDelegation)
+    }
+  }, [swapTxContext?.includesDelegation])
+
   if (!derivedSwapInfo || !acceptedDerivedSwapInfo) {
     return null
   }
@@ -41,7 +51,7 @@ export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.
       uniswapXGasBreakdown={uniswapXGasBreakdown}
       warning={reviewScreenWarning?.warning}
       txSimulationErrors={txSimulationErrors}
-      includesDelegation={swapTxContext?.includesDelegation}
+      includesDelegation={stableIncludesDelegation}
       onAcceptTrade={onAcceptTrade}
       onShowWarning={onShowWarning}
     />
