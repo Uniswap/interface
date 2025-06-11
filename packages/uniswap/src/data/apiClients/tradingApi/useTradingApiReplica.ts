@@ -49,6 +49,7 @@ export enum TradingApiReplicaRequests {
 enum ActionType {
   RESULT,
   ERROR,
+  INIT,
 }
 
 export interface ListPositionsResponse {
@@ -56,6 +57,10 @@ export interface ListPositionsResponse {
 }
 
 type Response = CreateLPPositionResponse | CheckApprovalLPResponse | ListPositionsResponse
+
+interface InitAction {
+  type: ActionType.INIT
+}
 
 interface ResponseAction {
   type: ActionType.RESULT
@@ -67,7 +72,7 @@ interface ErrorAction {
   value: UseQueryResult['error']
 }
 
-type Action = ResponseAction | ErrorAction
+type Action = ResponseAction | ErrorAction | InitAction
 
 type State<T = Response> = Pick<UseQueryResult<T>, 'data' | 'error' | 'isLoading'>
 
@@ -1865,7 +1870,6 @@ const listPositions = async (params: PartialMessage<ListPositionsRequest>): Prom
     })
     tokenIds.push(tokenId)
   }
-  console.log('tokenIds', tokenIds)
   const positions: PositionReplica[] = []
   for (const tokenId of tokenIds) {
     const position = (await client.readContract({
@@ -1889,7 +1893,6 @@ const listPositions = async (params: PartialMessage<ListPositionsRequest>): Prom
       tokensOwed1: position[11],
     })
   }
-  console.log('positions', positions)
   return {
     positions,
   }
@@ -1964,8 +1967,6 @@ const createLpPosition = async (params: CreateLPPositionRequest): Promise<Create
     slot0[1],
   )
 
-  console.log({ configuredPool })
-
   let position: SDKPosition | null = null
 
   if (params.position == null) {
@@ -2034,6 +2035,7 @@ const createLpPosition = async (params: CreateLPPositionRequest): Promise<Create
       to: CHAIN_TO_ADDRESSES_MAP[10000].nonfungiblePositionManagerAddress,
       value: value,
       from: params.walletAddress,
+      gas: 1000000,
     }),
   }
 }
@@ -2053,8 +2055,6 @@ const checkLpApproval = async (params: CheckApprovalLPRequest): Promise<CheckApp
     gasFeeToken0Cancel: '0',
     gasFeeToken1Cancel: '0',
   }
-  console.log('approvalParams', params)
-  // Check approval status for token0
   if (params.token0) {
     if (isNativeCurrencyAddress(UniverseChainId.SmartBCH, params.token0)) {
       response.token0Approval = undefined
@@ -2130,6 +2130,12 @@ const reducer = (state: State, action: Action): State => {
         isLoading: false,
         error: action.value,
       }
+    case ActionType.INIT:
+      return {
+        data: undefined,
+        isLoading: true,
+        error: null,
+      }
     default:
       return state
   }
@@ -2140,6 +2146,9 @@ const useTradingApiReplica = (params: Params) => {
   useEffect(() => {
     ;(async () => {
       if (params.params == null || params.skip === true) return
+      dispatch({
+        type: ActionType.INIT,
+      })
       switch (params.request) {
         case TradingApiReplicaRequests.LIST_POSITIONS:
           try {
