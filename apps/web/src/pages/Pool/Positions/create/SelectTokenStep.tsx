@@ -30,14 +30,8 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Search } from 'ui/src/components/icons/Search'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { toTokenOption } from 'uniswap/src/components/TokenSelector/lists/smartBCH'
-import {
-  BLOCKNG_PEG_BCH_TOKEN,
-  TANGO,
-  WBCH,
-  WRAPPED_NATIVE_CURRENCY,
-  nativeOnChain,
-} from 'uniswap/src/constants/tokens'
+import { smartBCHTokenOptions } from 'uniswap/src/components/TokenSelector/lists/smartBCH'
+import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -544,7 +538,7 @@ export function SelectTokensStep({
           onDismiss={() => setCurrencySearchInputState(undefined)}
           onCurrencySelect={handleCurrencySelect}
           chainIds={supportedChains}
-          tokenIds={[WBCH, TANGO, BLOCKNG_PEG_BCH_TOKEN].map((t) => toTokenOption(t).currencyInfo.currencyId)}
+          tokenIds={smartBCHTokenOptions.slice(1).map((t) => t.currencyInfo.currencyId)}
         />
       </PrefetchBalancesWrapper>
     </>
