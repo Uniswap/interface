@@ -47,7 +47,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { parseCurrencyFromURLParameter } from 'state/swap/hooks'
 import { PositionField } from 'types/position'
-import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { WBCH, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -539,7 +539,7 @@ export function useInitialPoolInputs() {
 
   return useMemo(() => {
     return {
-      [PositionField.TOKEN0]: currencyA ?? currencyB ?? defaultInitialToken,
+      [PositionField.TOKEN0]: currencyA ?? currencyB ?? WBCH,
       [PositionField.TOKEN1]: currencyA && currencyB ? currencyB : undefined,
       hook: hookAddress,
     }
