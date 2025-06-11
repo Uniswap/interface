@@ -16,5 +16,6 @@ export function useCheckLpApprovalQuery({
   return useTradingApiReplica({
     params,
     request: TradingApiReplicaRequests.CHECK_LP_APPROVAL,
+    skip: !rest.enabled,
   })
 }

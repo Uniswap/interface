@@ -19,5 +19,6 @@ export function useCreateLpPositionCalldataQuery({
   return useTradingApiReplica({
     params: paramsWithDeadline,
     request: TradingApiReplicaRequests.CREATE_LP_POSITION,
+    skip: !rest.enabled,
   })
 }
