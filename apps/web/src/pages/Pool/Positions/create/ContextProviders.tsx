@@ -35,7 +35,7 @@ import { PositionField } from 'types/position'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
-import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
+import { useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
@@ -265,24 +265,24 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     approvalCalldata?.token0Cancel ||
     approvalCalldata?.token1Cancel
   )
-  const { value: calculatedGasFee } = useTransactionGasFee(
-    createCalldata?.create,
-    !!actualGasFee || needsApprovals /* skip */,
-  )
-  const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
-    createCalldata?.create?.chainId,
-    actualGasFee || calculatedGasFee,
-  )
+  // const { value: calculatedGasFee } = useTransactionGasFee(
+  //   createCalldata?.create,
+  //   !!actualGasFee || needsApprovals /* skip */,
+  // )
+  // const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
+  //   createCalldata?.create?.chainId,
+  //   actualGasFee || calculatedGasFee,
+  // )
 
-  const totalGasFee = useMemo(() => {
-    const fees = [gasFeeToken0USD, gasFeeToken1USD, increaseGasFeeUsd]
-    return fees.reduce((total, fee) => {
-      if (fee && total) {
-        return total.add(fee)
-      }
-      return total || fee
-    })
-  }, [gasFeeToken0USD, gasFeeToken1USD, increaseGasFeeUsd])
+  // const totalGasFee = useMemo(() => {
+  //   const fees = [gasFeeToken0USD, gasFeeToken1USD, increaseGasFeeUsd]
+  //   return fees.reduce((total, fee) => {
+  //     if (fee && total) {
+  //       return total.add(fee)
+  //     }
+  //     return total || fee
+  //   })
+  // }, [gasFeeToken0USD, gasFeeToken1USD, increaseGasFeeUsd])
 
   const validatedValue = useMemo(() => {
     const txInfo = generateCreatePositionTxRequest({
@@ -295,7 +295,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
 
     return {
       txInfo,
-      gasFeeEstimateUSD: totalGasFee,
+      gasFeeEstimateUSD: undefined,
       error: getErrorMessageToDisplay({ approvalError, calldataError: createError }),
       refetch: approvalError ? approvalRefetch : createError ? createRefetch : undefined,
       // in some cases there is an error with create but createCalldata still has a cached value
@@ -312,7 +312,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     createError,
     approvalRefetch,
     createRefetch,
-    totalGasFee,
+    //totalGasFee,
     dependentAmountFallback,
   ])
 
