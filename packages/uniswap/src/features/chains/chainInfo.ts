@@ -142,7 +142,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     wrappedNativeCurrency: {
       name: 'Bitcoin Cash',
       symbol: 'WBCH',
-      decimals: 8,
+      decimals: 18,
       address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
     },
   },
