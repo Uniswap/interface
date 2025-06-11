@@ -5,7 +5,7 @@ import { ListPositionsRequest } from '@uniswap/client-pools/dist/pools/v1/api_pb
 import { CHAIN_TO_ADDRESSES_MAP, Percent, Token } from '@uniswap/sdk-core'
 import IUniswapV3FactoryABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Factory.sol/IUniswapV3Factory.json'
 import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json'
-import { MintOptions, NonfungiblePositionManager, Pool, Position as SDKPosition } from '@uniswap/v3-sdk'
+import { FeeAmount, MintOptions, NonfungiblePositionManager, Pool, Position as SDKPosition } from '@uniswap/v3-sdk'
 import { useEffect, useReducer } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -94,7 +94,9 @@ interface ListPositionsParams {
   params?: PartialMessage<ListPositionsRequest>
 }
 
-type Params = CreateLpPositionParams | CheckApprovalLPParams | ListPositionsParams
+type Params = (CreateLpPositionParams | CheckApprovalLPParams | ListPositionsParams) & {
+  skip?: boolean
+}
 
 type PositionContractResponse = [
   BigInt,
@@ -1894,11 +1896,27 @@ const listPositions = async (params: PartialMessage<ListPositionsRequest>): Prom
 }
 
 const createLpPosition = async (params: CreateLPPositionRequest): Promise<CreateLPPositionResponse> => {
-  const token0 = new Token(UniverseChainId.SmartBCH, params.position?.pool.token0, 18)
+  const [token0Decimals, token1Decimals] = await Promise.all([
+    client.readContract({
+      address: params.position?.pool.token0 as `0x${string}`,
+      abi: [{ name: 'decimals', type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint8' }] }],
+      functionName: 'decimals',
+    }),
+    client.readContract({
+      address: params.position?.pool.token1 as `0x${string}`,
+      abi: [{ name: 'decimals', type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint8' }] }],
+      functionName: 'decimals',
+    }),
+  ])
 
-  const token1 = new Token(UniverseChainId.SmartBCH, params.position?.pool.token1, 18)
+  if (params.position == null) {
+    throw new Error('Position must be defined')
+  }
 
-  console.log(CHAIN_TO_ADDRESSES_MAP[10000])
+  const token0 = new Token(UniverseChainId.SmartBCH, params.position.pool.token0, token0Decimals)
+
+  const token1 = new Token(UniverseChainId.SmartBCH, params.position.pool.token1, token1Decimals)
+
   let poolAddress = await client.readContract({
     address: CHAIN_TO_ADDRESSES_MAP[10000].v3CoreFactoryAddress as `0x${string}`,
     abi: IUniswapV3FactoryABI.abi,
@@ -1940,7 +1958,7 @@ const createLpPosition = async (params: CreateLPPositionRequest): Promise<Create
   const configuredPool = new Pool(
     token0,
     token1,
-    params.position?.pool.fee,
+    params.position.pool.fee as FeeAmount,
     slot0[0].toString(),
     liquidity.toString(),
     slot0[1],
@@ -1948,7 +1966,7 @@ const createLpPosition = async (params: CreateLPPositionRequest): Promise<Create
 
   console.log({ configuredPool })
 
-  let position: SDKPosition
+  let position: SDKPosition | null = null
 
   if (params.position == null) {
     throw new Error('Position must be defined')
@@ -1993,6 +2011,14 @@ const createLpPosition = async (params: CreateLPPositionRequest): Promise<Create
     })
   }
 
+  if (params.walletAddress == null) {
+    throw new Error('Wallet address must be defined')
+  }
+
+  if (position == null) {
+    throw new Error('Position must be defined')
+  }
+
   const mintOptions: MintOptions = {
     recipient: params.walletAddress,
     deadline: params.deadline ?? Math.floor(Date.now() / 1000) + 60 * 20,
@@ -2002,18 +2028,12 @@ const createLpPosition = async (params: CreateLPPositionRequest): Promise<Create
   // get calldata for minting a position
   const { calldata, value } = NonfungiblePositionManager.addCallParameters(position, mintOptions)
 
-  console.log({ calldata, value })
-
   return {
     create: await client.prepareTransactionRequest({
       data: calldata,
       to: CHAIN_TO_ADDRESSES_MAP[10000].nonfungiblePositionManagerAddress,
       value: value,
       from: params.walletAddress,
-      gas: 100000000,
-      // un-hardcode this so it is estimated
-      // however it errors because estimation is in BigInt... so fix that later
-      gasPrice: 120000000,
     }),
   }
 }
@@ -2119,7 +2139,7 @@ const useTradingApiReplica = (params: Params) => {
   const [state, dispatch] = useReducer(reducer, initialState)
   useEffect(() => {
     ;(async () => {
-      if (params.params == null) return
+      if (params.params == null || params.skip === true) return
       switch (params.request) {
         case TradingApiReplicaRequests.LIST_POSITIONS:
           try {
@@ -2165,8 +2185,7 @@ const useTradingApiReplica = (params: Params) => {
           break
       }
     })()
-  }, [params.request, JSON.stringify(params.params)])
-  console.log('tradingApiReplica', { params, state })
+  }, [params.request, params.skip, JSON.stringify(params.params)])
   return state
 }
 
