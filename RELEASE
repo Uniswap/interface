@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmUKsfqcn6zpJmfBtZD3AV1o9rTrkaJHwNiJnrWZL5j7K8`
-- CIDv1: `bafybeicy6mzbrmf3vzpmgzv7xu3fjweebcnnchtzlu4jeir6qyizmfceem`
+- CIDv0: `QmdVVhTjJqcLTWyz6A2DAUNM84F6gESEzYGShEWMb7Giid`
+- CIDv1: `bafybeihbenlz6ecs7jlsn6yhsykx6wounpbqw7l42nuwu7e6zd7hzfbqvi`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,9 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeicy6mzbrmf3vzpmgzv7xu3fjweebcnnchtzlu4jeir6qyizmfceem.ipfs.dweb.link/
-- [ipfs://QmUKsfqcn6zpJmfBtZD3AV1o9rTrkaJHwNiJnrWZL5j7K8/](ipfs://QmUKsfqcn6zpJmfBtZD3AV1o9rTrkaJHwNiJnrWZL5j7K8/)
+- https://bafybeihbenlz6ecs7jlsn6yhsykx6wounpbqw7l42nuwu7e6zd7hzfbqvi.ipfs.dweb.link/
+- [ipfs://QmdVVhTjJqcLTWyz6A2DAUNM84F6gESEzYGShEWMb7Giid/](ipfs://QmdVVhTjJqcLTWyz6A2DAUNM84F6gESEzYGShEWMb7Giid/)
 
-### 5.88.6 (2025-06-10)
+### 5.88.7 (2025-06-13)
+
+
+### Bug Fixes
+
+* **web:** fix delta formatting error (#20860) 0b9ac1f
 
 
