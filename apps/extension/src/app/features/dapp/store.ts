@@ -152,7 +152,7 @@ function updateDappIconUrl(dappUrl: string, newIconUrl?: string): void {
   updateDappProperty(dappUrl, 'iconUrl', newIconUrl)
 }
 
-// TODO(WALL-4643): if we migrate to immer, let's avoid iterating over the the object here
+// TODO(WALL-4643): if we migrate to immer, let's avoid iterating over the object here
 function updateDappLatestChainId(dappUrl: string, chainId: UniverseChainId): void {
   // Never directly mutate state, as some of its fields could have `writable: false`
   state = Object.fromEntries(
