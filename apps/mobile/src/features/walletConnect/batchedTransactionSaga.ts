@@ -175,7 +175,9 @@ export function* handleGetCapabilities({
     const detailsMap = delegationStatusResponse.delegationDetails[accountAddress]
 
     if (detailsMap) {
-      const hasAtLeastOneDelegation = Object.values(detailsMap).some((details) => !!details.currentDelegationAddress)
+      const hasAtLeastOneDelegation = Object.values(detailsMap).some(
+        (details) => !!details.currentDelegationAddress && !details.isWalletDelegatedToUniswap,
+      )
 
       hasNoExistingDelegations = !hasAtLeastOneDelegation
     }

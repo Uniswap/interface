@@ -52,7 +52,7 @@ export function NetworkFeeWarning({
         isMobileApp && (
           <NetworkCostBanner
             bannerText={t('smartWallet.banner.networkCost', { chainName: getChainInfo(chainId).label })}
-            url={uniswapUrls.helpArticleUrls.smartWalletNetworkCost}
+            url={uniswapUrls.helpArticleUrls.smartWalletDelegation}
           />
         )
       }
@@ -123,10 +123,12 @@ function InfoButton({
 }): JSX.Element | null {
   if (includesDelegation && isMobileApp) {
     return (
-      <LearnMoreLink
-        textVariant={isWeb ? 'body4' : undefined}
-        url={uniswapUrls.helpArticleUrls.smartWalletNetworkCost}
-      />
+      <Flex mb="$spacing8">
+        <LearnMoreLink
+          textVariant={isWeb ? 'body4' : 'buttonLabel3'}
+          url={uniswapUrls.helpArticleUrls.networkFeeInfo}
+        />
+      </Flex>
     )
   }
 

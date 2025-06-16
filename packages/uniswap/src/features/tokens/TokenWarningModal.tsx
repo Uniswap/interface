@@ -30,6 +30,7 @@ import {
 } from 'uniswap/src/features/tokens/safetyUtils'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { isMobileApp } from 'utilities/src/platform'
 
 export interface FoTPercent {
   buyFeePercent?: number
@@ -199,7 +200,18 @@ function TokenWarningModalContent({
               <Text variant="body3" color="$neutral3">
                 <Trans
                   i18nKey="common.poweredBy"
-                  components={{ name: <BlockaidLogo minHeight={10} minWidth={50} color="$neutral3" /> }}
+                  components={{
+                    name: (
+                      <BlockaidLogo
+                        minHeight={10}
+                        minWidth={50}
+                        // Using the "size" prop does not work as expected for non-square icon like this one
+                        // Found that only specifying width fixes all alignment and size issues on mobile
+                        size={isMobileApp ? ({ width: 50 } as { width: number; height: number }) : undefined}
+                        color="$neutral3"
+                      />
+                    ),
+                  }}
                 />
               </Text>
             </Flex>

@@ -55,6 +55,7 @@ export function SmartWalletModal({
 }: SmartWalletModalProps): JSX.Element {
   return (
     <Modal
+      renderBehindTopInset
       alignment={alignment}
       isModalOpen={isOpen}
       name={modalName}
@@ -69,10 +70,10 @@ export function SmartWalletModal({
         px={isExtension ? null : '$spacing24'}
         mb={isExtension ? null : '$spacing48'}
         gap="$spacing16"
+        pt={isExtension ? null : video ? '$spacing24' : '$spacing12'}
       >
         {video ? video : icon}
-
-        <Flex flexDirection="column" alignItems="center" gap="$spacing8">
+        <Flex flexDirection="column" alignItems="center" gap="$gap8">
           <Text variant="subheading2" color="$neutral1">
             {title}
           </Text>

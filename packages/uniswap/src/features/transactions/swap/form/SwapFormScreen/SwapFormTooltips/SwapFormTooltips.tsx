@@ -311,7 +311,7 @@ export function NetworkCostTooltipClassic({ chainId }: { chainId: UniverseChainI
         logo={<NetworkLogo chainId={chainId} size={16} />}
       />
       <SwapDetailsTooltip.Description
-        learnMoreUrl={uniswapUrls.helpArticleUrls.smartWalletNetworkCost}
+        learnMoreUrl={uniswapUrls.helpArticleUrls.networkFeeInfo}
         text={t('transaction.networkCost.description')}
       />
     </SwapDetailsTooltip.Outer>

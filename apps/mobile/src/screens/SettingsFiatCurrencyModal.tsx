@@ -1,9 +1,9 @@
-import { FlashList } from '@shopify/flash-list'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { Flex, Text, TouchableArea } from 'ui/src'
+import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { Check } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
@@ -29,7 +29,11 @@ export function SettingsFiatCurrencyModal(): JSX.Element {
       <Text pb="$spacing12" textAlign="center" variant="subheading1">
         {t('settings.setting.currency.title')}
       </Text>
-      <FlashList data={ORDERED_CURRENCIES} keyExtractor={(item: FiatCurrency) => item} renderItem={renderItem} />
+      <AnimatedBottomSheetFlashList
+        data={ORDERED_CURRENCIES}
+        keyExtractor={(item: FiatCurrency) => item}
+        renderItem={renderItem}
+      />
     </Modal>
   )
 }

@@ -79,7 +79,6 @@ export const uniswapUrls = {
     swapFeeInfo: createHelpArticleUrl('20131678274957'),
     passkeysInfo: createHelpArticleUrl('35522111260173'),
     smartWalletDelegation: createHelpArticleUrl('36391987158797'),
-    smartWalletNetworkCost: createHelpArticleUrl('8370337377805'),
     swapProtection: createHelpArticleUrl('18814993155853'),
     swapSlippage: createHelpArticleUrl('8643879653261-What-is-Price-Slippage-'),
     tokenWarning: createHelpArticleUrl('8723118437133-What-are-token-warnings-'),

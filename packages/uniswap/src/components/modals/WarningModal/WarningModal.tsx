@@ -10,7 +10,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { SwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isWeb } from 'utilities/src/platform'
+import { isMobileApp, isWeb } from 'utilities/src/platform'
 
 type WarningModalContentProps = {
   onClose?: () => void
@@ -49,7 +49,7 @@ export function WarningModalContent({
   titleComponent,
   caption,
   captionComponent,
-  rejectText: rejectText,
+  rejectText,
   acknowledgeText,
   severity = WarningSeverity.Medium,
   children,
@@ -62,6 +62,8 @@ export function WarningModalContent({
 }: PropsWithChildren<WarningModalContentProps>): JSX.Element {
   const colors = useSporeColors()
   const { headerText: alertHeaderTextColor } = getAlertColor(severity)
+
+  const buttonSize = isMobileApp ? 'medium' : 'small'
 
   return (
     <Flex
@@ -107,14 +109,14 @@ export function WarningModalContent({
         <Flex row alignSelf="stretch" gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'}>
           {rejectText && (
             <Trace logPress element={ElementName.BackButton} modal={modalName} properties={analyticsProperties}>
-              <Button emphasis="secondary" onPress={onReject ?? onClose}>
+              <Button size={buttonSize} emphasis="secondary" onPress={onReject ?? onClose}>
                 {rejectText}
               </Button>
             </Trace>
           )}
           {acknowledgeText && (
             <Trace logPress element={ElementName.Confirm} modal={modalName} properties={analyticsProperties}>
-              <Button testID={TestID.Confirm} onPress={onAcknowledge}>
+              <Button size={buttonSize} testID={TestID.Confirm} onPress={onAcknowledge}>
                 {acknowledgeText}
               </Button>
             </Trace>

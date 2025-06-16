@@ -17,13 +17,11 @@ export function NetworkCostBanner({ bannerText, url }: NetworkCostBannerProps): 
 
   return (
     <TouchableArea
-      row
-      centered
       borderWidth="$spacing1"
       borderColor="$surface3"
       borderRadius="$rounded12"
       p="$padding16"
-      gap="$gap12"
+      alignSelf="stretch"
       onPress={handleOnPress}
     >
       <Flex row alignItems="center" justifyContent="space-between" gap="$spacing12">

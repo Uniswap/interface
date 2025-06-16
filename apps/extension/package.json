@@ -35,6 +35,7 @@
     "react-native-reanimated": "3.16.7",
     "react-native-svg": "15.10.1",
     "react-native-web": "0.19.13",
+    "react-player": "2.16.0",
     "react-qr-code": "2.0.12",
     "react-redux": "8.0.5",
     "react-router-dom": "6.10.0",

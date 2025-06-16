@@ -296,7 +296,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     }
 
     return (
-      <Flex borderRadius="$rounded16" width="100%" aspectRatio={16 / 9} overflow="hidden">
+      <Flex borderRadius="$rounded16" width="100%" aspectRatio={16 / 9} overflow="hidden" mb="$spacing8">
         <Video
           source={SMART_WALLET_UPGRADE_VIDEO}
           poster={SMART_WALLET_UPGRADE_FALLBACK}

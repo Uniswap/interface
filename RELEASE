@@ -2,5 +2,6 @@ We are back with a large update: Smart wallets are here! Enable smart wallets fr
 
 Other changes:
 
-- When connected to Uniswap Web, you’ll see a new verification check mark so that you know you’re on the right website.
+- Users can now enjoy multi-account signing, as well as 1 click Auth support, when connecting to external dapps via WalletConnect
+- When connecting to external dapps, users can benefit from better malicious dapp detection.
 - Various bug fixes and performance improvements
