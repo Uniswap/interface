@@ -24,7 +24,6 @@ import {
   v20Schema,
   v21Schema,
   v22Schema,
-  v23Schema,
   v2Schema,
   v3Schema,
   v4Schema,
@@ -58,7 +57,6 @@ import {
   testAddCreatedOnboardingRedesignAccount,
   testAddedHapticSetting,
   testDeleteWelcomeWalletCard,
-  testMoveHapticsToUserSettings,
   testMoveTokenAndNFTVisibility,
   testMovedCurrencySetting,
   testMovedLanguageSetting,
@@ -321,9 +319,5 @@ describe('Redux state migrations', () => {
 
   it('migrates from v22 to v23', () => {
     testMigrateUnknownBackupAccountsToMaybeManualBackup(migrations[23], v22Schema)
-  })
-
-  it('migrates from v23 to v24', () => {
-    testMoveHapticsToUserSettings(migrations[24], v23Schema)
   })
 })

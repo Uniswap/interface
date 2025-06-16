@@ -47,7 +47,11 @@ export function SwapReviewScreenProviders(
   const { isSubmitting } = useSwapFormContext()
   const { derivedSwapInfo, getExecuteSwapService } = useSwapDependencies()
   const swapTxContext = useSwapTxContext()
-  const { onAcceptTrade, acceptedDerivedSwapInfo, newTradeRequiresAcceptance } = useAcceptedTrade({
+  const {
+    onAcceptTrade,
+    acceptedDerivedSwapInfo: swapAcceptedDerivedSwapInfo,
+    newTradeRequiresAcceptance,
+  } = useAcceptedTrade({
     derivedSwapInfo,
     isSubmitting,
   })
@@ -66,7 +70,7 @@ export function SwapReviewScreenProviders(
           <SwapReviewTransactionContextProvider
             derivedSwapInfo={derivedSwapInfo}
             swapTxContext={swapTxContext}
-            acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+            swapAcceptedDerivedSwapInfo={swapAcceptedDerivedSwapInfo}
             newTradeRequiresAcceptance={newTradeRequiresAcceptance}
           >
             <SwapReviewContent />

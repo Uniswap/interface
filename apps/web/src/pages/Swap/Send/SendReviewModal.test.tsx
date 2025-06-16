@@ -1,7 +1,7 @@
 import 'test-utils/tokens/mocks'
 
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { SendReviewModalInner } from 'pages/Swap/Send/SendReviewModal'
+import { SendReviewModal } from 'pages/Swap/Send/SendReviewModal'
 import { MultichainContext } from 'state/multichain/types'
 import { SendContext, SendContextType } from 'state/send/SendContext'
 import { SwapAndLimitContext } from 'state/swap/types'
@@ -73,7 +73,7 @@ describe('SendReviewModal', () => {
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <SendContext.Provider value={mockedSendContextFiatInput}>
-            <SendReviewModalInner onDismiss={jest.fn()} onConfirm={jest.fn()} />
+            <SendReviewModal isOpen onDismiss={jest.fn()} onConfirm={jest.fn()} />
           </SendContext.Provider>
         </SwapAndLimitContext.Provider>
       </MultichainContext.Provider>,
@@ -91,7 +91,7 @@ describe('SendReviewModal', () => {
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <SendContext.Provider value={mockedSendContextTokenInput}>
-            <SendReviewModalInner onDismiss={jest.fn()} onConfirm={jest.fn()} />
+            <SendReviewModal isOpen onDismiss={jest.fn()} onConfirm={jest.fn()} />
           </SendContext.Provider>
         </SwapAndLimitContext.Provider>
       </MultichainContext.Provider>,

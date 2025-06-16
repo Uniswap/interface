@@ -123,11 +123,7 @@ export const routes: RouteDefinition[] = [
     path: '/explore/tokens/:chainName/:tokenAddress',
     getTitle: () => i18n.t('common.buyAndSell'),
     getDescription: () => StaticTitlesAndDescriptions.TDPDescription,
-    getElement: () => (
-      <Suspense fallback={null}>
-        <TokenDetails />
-      </Suspense>
-    ),
+    getElement: () => <TokenDetails />,
   }),
   createRouteDefinition({
     path: '/tokens',

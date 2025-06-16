@@ -140,7 +140,7 @@ export function useCancelOrdersGasEstimate(orders?: UniswapXOrderDetails[]): Gas
         : undefined,
     [orders],
   )
-  const cancelTransaction = useCreateCancelTransactionRequest(cancelTransactionParams) ?? undefined
+  const cancelTransaction = useCreateCancelTransactionRequest(cancelTransactionParams)
   const gasEstimate = useTransactionGasFee(cancelTransaction, GasSpeed.Fast)
   return gasEstimate
 }

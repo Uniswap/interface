@@ -1,5 +1,6 @@
 import { CreditCardIcon } from 'components/Icons/CreditCard'
 import { Limit } from 'components/Icons/Limit'
+import { Send } from 'components/Icons/Send'
 import { SwapV2 } from 'components/Icons/SwapV2'
 import { MenuItem } from 'components/NavBar/CompanyMenu/Content'
 import { useTheme } from 'lib/styled-components'
@@ -45,6 +46,16 @@ export const useTabsContent = (): TabsSection[] => {
           href: '/limit',
           internal: true,
         },
+        ...(isFiatOffRampEnabled
+          ? []
+          : [
+              {
+                label: t('common.send.button'),
+                icon: <Send fill={theme.neutral2} />,
+                href: '/send',
+                internal: true,
+              },
+            ]),
         {
           label: t('common.buy.label'),
           icon: <CreditCardIcon fill={theme.neutral2} />,

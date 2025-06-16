@@ -1,9 +1,5 @@
-import {
-  BridgeQuoteResponse,
-  ClassicQuoteResponse,
-  WrapQuoteResponse,
-} from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { CreateSwapRequest, Permit, Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { BridgeQuoteResponse, ClassicQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { CreateSwapRequest, Permit } from 'uniswap/src/data/tradingApi/__generated__'
 import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
@@ -27,11 +23,7 @@ type SwapInstructions =
 /** A service utility capable of fetching swap instructions or returning unsigned permit data when instructions cannot yet be fetched. */
 export interface EVMSwapInstructionsService {
   getSwapInstructions: (params: {
-    swapQuoteResponse:
-      | ClassicQuoteResponse
-      | BridgeQuoteResponse
-      | WrapQuoteResponse<Routing.WRAP>
-      | WrapQuoteResponse<Routing.UNWRAP>
+    swapQuoteResponse: ClassicQuoteResponse | BridgeQuoteResponse
     transactionSettings: TransactionSettingsContextState
     approvalAction: ApprovalAction
   }) => Promise<SwapInstructions>

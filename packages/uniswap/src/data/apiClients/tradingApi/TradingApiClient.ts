@@ -45,7 +45,6 @@ import {
   WalletCheckDelegationRequestBody,
   WalletCheckDelegationResponseBody,
   WalletEncode7702RequestBody,
-  WrapUnwrapQuote,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -59,8 +58,6 @@ export type DiscriminatedQuoteResponse =
   | DutchV3QuoteResponse
   | PriorityQuoteResponse
   | BridgeQuoteResponse
-  | WrapQuoteResponse<Routing.WRAP>
-  | WrapQuoteResponse<Routing.UNWRAP>
 
 export type DutchV3QuoteResponse = QuoteResponse & {
   quote: DutchQuoteV3
@@ -85,11 +82,6 @@ export type ClassicQuoteResponse = QuoteResponse & {
 export type BridgeQuoteResponse = QuoteResponse & {
   quote: BridgeQuote
   routing: Routing.BRIDGE
-}
-
-export type WrapQuoteResponse<T extends Routing.WRAP | Routing.UNWRAP> = QuoteResponse & {
-  quote: WrapUnwrapQuote
-  routing: T
 }
 
 const TradingApiClient = createApiClient({

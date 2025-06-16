@@ -16,9 +16,7 @@ export const NumericalInputWrapper = styled(Row)`
   width: max-content;
 `
 
-export const StyledNumericalInput = styled(Input)<
-  { $width?: number; $hasPrefix?: boolean; $fontSize?: number } & InputProps
->`
+export const StyledNumericalInput = styled(Input)<{ $width?: number; $hasPrefix?: boolean } & InputProps>`
   max-height: 84px;
   max-width: ${({ $hasPrefix }) => ($hasPrefix ? 'calc(100% - 43px)' : '100%')};
   width: ${({ $width }) => `${$width ?? 43}px`}; // this value is from the size of a 0 which is the default value

@@ -17,7 +17,10 @@ import {
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import { createBridgeSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/bridge/bridgeSwapTxAndGasInfoService'
 import { createClassicSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/classic/classicSwapTxAndGasInfoService'
-import { FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
+import {
+  FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS,
+  WRAP_FALLBACK_GAS_LIMIT_IN_GWEI,
+} from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import { createEVMSwapInstructionsService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapInstructionsService'
 import { usePresignPermit } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/hooks'
 import { createDecorateSwapTxInfoServiceWithEVMLogging } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/logging'
@@ -35,9 +38,6 @@ import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { WithOptional } from 'utilities/src/typescript/withOptional'
-
-type SwapQueryParams = WithOptional<SwapTxAndGasInfoParameters, 'trade'>
 
 const EMPTY_SWAP_TX_AND_GAS_INFO: SwapTxAndGasInfo = {
   routing: Routing.CLASSIC,
@@ -78,7 +78,7 @@ function useSwapConfig(): {
   )
 }
 
-export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
+export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService<Trade | undefined> {
   const swapConfig = useSwapConfig()
   const presignPermit = usePresignPermit()
   const trace = useTrace()
@@ -115,9 +115,8 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
   }, [])
 
   const wrapTxInfoService = useMemo(() => {
-    const wrapService = createWrapTxAndGasInfoService({ ...swapConfig, transactionSettings, instructionService })
-    return decorateWithEVMLogging(wrapService)
-  }, [swapConfig, transactionSettings, instructionService, decorateWithEVMLogging])
+    return createWrapTxAndGasInfoService({ ...swapConfig, fallbackGasLimit: WRAP_FALLBACK_GAS_LIMIT_IN_GWEI * 10e9 })
+  }, [swapConfig])
 
   const services = useMemo(() => {
     return {
@@ -126,16 +125,17 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
       [Routing.PRIORITY]: uniswapXSwapTxInfoService,
       [Routing.DUTCH_V2]: uniswapXSwapTxInfoService,
       [Routing.DUTCH_V3]: uniswapXSwapTxInfoService,
-      [Routing.WRAP]: wrapTxInfoService,
-      [Routing.UNWRAP]: wrapTxInfoService,
+      // TODO(WEB-7243): remove noops after we implement trade variant for wraps
+      [Routing.WRAP]: createNoopService(),
+      [Routing.UNWRAP]: createNoopService(),
       [Routing.LIMIT_ORDER]: createNoopService(),
       [Routing.DUTCH_LIMIT]: createNoopService(),
     } satisfies RoutingServicesMap
-  }, [classicSwapTxInfoService, bridgeSwapTxInfoService, uniswapXSwapTxInfoService, wrapTxInfoService])
+  }, [classicSwapTxInfoService, bridgeSwapTxInfoService, uniswapXSwapTxInfoService])
 
   return useMemo(() => {
-    return createSwapTxAndGasInfoService({ services })
-  }, [services])
+    return createSwapTxAndGasInfoService({ services, tradelessWrapService: wrapTxInfoService })
+  }, [services, wrapTxInfoService])
 }
 
 function createNoopService<T extends Trade>(): SwapTxAndGasInfoService<T> {
@@ -159,7 +159,7 @@ type SwapQueryKeyParams =
     }
 
 // TODO(WEB-7243): Simplify query key logic once all routing types have a corresponding trade this query can be decoupled from derivedSwapInfo
-function parseQueryKeyParams(params: SwapQueryParams): SwapQueryKeyParams {
+function parseQueryKeyParams(params: SwapTxAndGasInfoParameters<Trade | undefined>): SwapQueryKeyParams {
   const { trade, derivedSwapInfo } = params
   // If a trade is not defined, supply information about the currencies and amounts to use as a placeholder key params
   if (!trade) {
@@ -186,7 +186,10 @@ function parseQueryKeyParams(params: SwapQueryParams): SwapQueryKeyParams {
  * Returns true if the params have updated in such a way that the previous query result should be used as placeholder data while fetching the new result,
  * rather than showing a brief loading state in the UX.
  */
-function getCanUsePlaceholderData(params: SwapQueryParams, prevParams?: SwapQueryParams): boolean {
+function getCanUsePlaceholderData(
+  params: SwapTxAndGasInfoParameters<Trade | undefined>,
+  prevParams?: SwapTxAndGasInfoParameters<Trade | undefined>,
+): boolean {
   if (prevParams?.trade && params.trade) {
     const approvalUnchanged =
       prevParams.approvalTxInfo.tokenApprovalInfo.action === params.approvalTxInfo.tokenApprovalInfo.action
@@ -202,20 +205,17 @@ function getCanUsePlaceholderData(params: SwapQueryParams, prevParams?: SwapQuer
 }
 
 function createGetQueryOptions(ctx: {
-  swapTxAndGasInfoService: SwapTxAndGasInfoService<Trade>
+  swapTxAndGasInfoService: SwapTxAndGasInfoService<Trade | undefined>
   refetchInterval: number
 }) {
   return function getQueryOptions(
-    params: SwapQueryParams,
+    params: SwapTxAndGasInfoParameters<Trade | undefined>,
   ): UseQueryOptions<SwapTxAndGasInfo, Error, SwapTxAndGasInfo, (string | SwapQueryKeyParams)[]> {
-    const { trade } = params
-    const queryFn = trade
-      ? (): Promise<SwapTxAndGasInfo> => ctx.swapTxAndGasInfoService.getSwapTxAndGasInfo({ ...params, trade })
-      : undefined
-
     return queryOptions({
       queryKey: ['swapTxAndGasInfo', parseQueryKeyParams(params)],
-      queryFn,
+      queryFn: () => {
+        return ctx.swapTxAndGasInfoService.getSwapTxAndGasInfo(params)
+      },
       refetchInterval: ctx.refetchInterval,
     })
   }

@@ -1,9 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { View } from 'react-native'
 import { parse, SvgXml } from 'react-native-svg'
 import { logger } from 'utilities/src/logger/logger'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { useAsyncData } from 'utilities/src/react/hooks'
 
 type Props = {
   backgroundColor?: string
@@ -43,10 +42,7 @@ export const RemoteSvg = ({
     }
   }, [imageHttpUrl])
 
-  const { data: svg } = useQuery({
-    queryKey: [ReactQueryCacheKey.RemoteSvg, imageHttpUrl],
-    queryFn: fetchSvg,
-  })
+  const { data: svg } = useAsyncData(fetchSvg)
 
   if (!svg) {
     return <View />

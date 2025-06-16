@@ -3,11 +3,10 @@ import { Currency, CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-co
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { PoolData } from 'appGraphql/data/pools/usePoolData'
 import { TimePeriod, gqlToCurrency, toHistoryDuration } from 'appGraphql/data/util'
-import { TickTooltipContent } from 'components/Charts/ActiveLiquidityChart/TickTooltip'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, refitChartContentAtom } from 'components/Charts/ChartModel'
 import { LiquidityBarChartModel, useLiquidityBarData } from 'components/Charts/LiquidityChart'
-import { LiquidityBarData } from 'components/Charts/LiquidityChart/types'
+import { LiquidityBarData } from 'components/Charts/LiquidityChart/renderer'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { PriceChartData, PriceChartDelta, PriceChartModel } from 'components/Charts/PriceChart'
 import { VolumeChart } from 'components/Charts/VolumeChart'
@@ -339,6 +338,50 @@ const FadeInSubheader = styled(ThemedText.SubHeader)`
   ${textFadeIn}
 `
 
+function LiquidityTooltipDisplay({
+  data,
+  tokenADescriptor,
+  tokenBDescriptor,
+  currentTick,
+}: {
+  data: LiquidityBarData
+  tokenADescriptor: string
+  tokenBDescriptor: string
+  currentTick?: number
+}) {
+  const { t } = useTranslation()
+  const { formatNumberOrString } = useLocalizationContext()
+  if (!currentTick) {
+    return null
+  }
+
+  const displayValue0 =
+    data.tick >= currentTick
+      ? formatNumberOrString({
+          value: data.amount0Locked,
+          type: NumberType.TokenQuantityStats,
+        })
+      : 0
+  const displayValue1 =
+    data.tick <= currentTick
+      ? formatNumberOrString({
+          value: data.amount1Locked,
+          type: NumberType.TokenQuantityStats,
+        })
+      : 0
+
+  return (
+    <>
+      <ThemedText.BodySmall>
+        {t('liquidityPool.chart.tooltip.amount', { token: tokenADescriptor, amount: displayValue0 })}
+      </ThemedText.BodySmall>
+      <ThemedText.BodySmall>
+        {t('liquidityPool.chart.tooltip.amount', { token: tokenBDescriptor, amount: displayValue1 })}
+      </ThemedText.BodySmall>
+    </>
+  )
+}
+
 function LiquidityChart({
   currencyA,
   currencyB,
@@ -385,7 +428,6 @@ function LiquidityChart({
       highlightColor: theme.surface3,
       activeTick,
       activeTickProgress: tickData?.activeRangePercentage,
-      hideTooltipBorder: true,
     }
   }, [activeTick, isReversed, theme, tickData])
 
@@ -398,20 +440,16 @@ function LiquidityChart({
       height={PDP_CHART_HEIGHT_PX}
       Model={LiquidityBarChartModel}
       params={params}
-      TooltipBody={({ data: crosshairData }: { data: LiquidityBarData }) => (
+      TooltipBody={({ data }: { data: LiquidityBarData }) => (
         // TODO(WEB-3628): investigate potential off-by-one or subgraph issues causing calculated TVL issues on 1 bip pools
         // Also remove Error Boundary when its determined its not needed
         <ErrorBoundary fallback={() => null}>
-          {tickData?.activeRangeData && (
-            <TickTooltipContent
-              baseCurrency={currencyB}
-              quoteCurrency={currencyA}
-              hoveredTick={crosshairData}
-              currentTick={tickData?.activeRangeData?.tick}
-              currentPrice={parseFloat(tickData?.activeRangeData?.price0)}
-              showQuoteCurrencyFirst={false}
-            />
-          )}
+          <LiquidityTooltipDisplay
+            data={data}
+            tokenADescriptor={tokenADescriptor}
+            tokenBDescriptor={tokenBDescriptor}
+            currentTick={tickData?.activeRangeData?.tick}
+          />
         </ErrorBoundary>
       )}
     >

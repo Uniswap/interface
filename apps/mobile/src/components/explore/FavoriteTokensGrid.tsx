@@ -7,11 +7,11 @@ import Sortable from 'react-native-sortables'
 import { useDispatch, useSelector } from 'react-redux'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteTokenCard from 'src/components/explore/FavoriteTokenCard'
+import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { getTokenValue } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { setFavoriteTokens } from 'uniswap/src/features/favorites/slice'
-import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 
 const NUM_COLUMNS = 2
 

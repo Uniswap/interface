@@ -14,8 +14,8 @@ import {
   createPublicClient,
   hashMessage,
   http,
-  walletActions,
 } from 'viem'
+import { eip7702Actions } from 'viem/experimental'
 
 /**
  * Creates a Flashbots RPC client using viem
@@ -46,7 +46,7 @@ export function createFlashbotsRpcClient({
   return createPublicClient({
     chain,
     transport,
-  }).extend(walletActions)
+  }).extend(eip7702Actions())
 }
 
 /**

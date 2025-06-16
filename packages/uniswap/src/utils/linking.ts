@@ -99,13 +99,9 @@ export enum ExplorerDataType {
  * @param data the data to return a link for
  * @param type the type of the data
  */
-export function getExplorerLink(chainId: UniverseChainId, data: string | undefined, type: ExplorerDataType): string {
+export function getExplorerLink(chainId: UniverseChainId, data: string, type: ExplorerDataType): string {
   const { explorer, nativeCurrency } = getChainInfo(chainId)
   const prefix = explorer.url
-
-  if (!data) {
-    return prefix
-  }
 
   switch (type) {
     case ExplorerDataType.TRANSACTION:
@@ -138,7 +134,7 @@ export function getExplorerLink(chainId: UniverseChainId, data: string | undefin
       return `${prefix}nft/${data}`
 
     default:
-      return prefix
+      return `${prefix}`
   }
 }
 

@@ -12,9 +12,8 @@ const StyledDownArrow = styled(ArrowChangeDown)<{ $noColor?: boolean }>`
     $noColor ? theme.neutral2 : theme.darkMode ? colorsDark.statusCritical : colorsLight.statusCritical};
 `
 
-export function calculateDelta(start: number, current: number): number | undefined {
-  const delta = (current / start - 1) * 100
-  return isValidDelta(delta) ? delta : undefined
+export function calculateDelta(start: number, current: number) {
+  return (current / start - 1) * 100
 }
 
 function isValidDelta(delta: number | null | undefined): delta is number {

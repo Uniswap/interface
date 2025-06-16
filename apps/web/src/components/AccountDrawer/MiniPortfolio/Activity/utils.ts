@@ -1,6 +1,5 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Web3Provider } from '@ethersproject/providers'
-import { useQuery } from '@tanstack/react-query'
 import { permit2Address } from '@uniswap/permit2-sdk'
 import {
   CosignedPriorityOrder,
@@ -30,8 +29,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { queryWithoutCache } from 'utilities/src/reactQuery/queryOptions'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import { WrongChainError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
@@ -230,7 +228,7 @@ export function useCreateCancelTransactionRequest(
         chainId: UniverseChainId
       }
     | undefined,
-): Maybe<TransactionRequest> {
+): TransactionRequest | undefined {
   const permit2 = useContract<Permit2>(permit2Address(params?.chainId), PERMIT2_ABI, true)
   const transactionFetcher = useCallback(() => {
     if (
@@ -239,17 +237,12 @@ export function useCreateCancelTransactionRequest(
       params.orders.filter(({ encodedOrder }) => Boolean(encodedOrder)).length === 0 ||
       !permit2
     ) {
-      return null
+      return undefined
     }
     return getCancelMultipleUniswapXOrdersTransaction(params.orders, params.chainId, permit2)
   }, [params, permit2])
 
-  return useQuery(
-    queryWithoutCache({
-      queryKey: [ReactQueryCacheKey.CancelTransactionRequest, params],
-      queryFn: transactionFetcher,
-    }),
-  ).data
+  return useAsyncData(transactionFetcher).data
 }
 
 export function isLimitCancellable(order: UniswapXOrderDetails) {

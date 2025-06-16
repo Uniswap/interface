@@ -1,6 +1,5 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import type { Web3Provider } from '@ethersproject/providers'
-import { useQuery } from '@tanstack/react-query'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
@@ -8,7 +7,7 @@ import { Erc20 } from 'uniswap/src/abis/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { useAsyncData } from 'utilities/src/react/hooks'
 
 interface TransferInfo {
   provider?: Web3Provider
@@ -27,33 +26,19 @@ interface TransferCurrencyParams {
   amountInWei: string
 }
 
-export function useCreateTransferTransaction(transferInfo: TransferInfo | undefined): Maybe<TransactionRequest> {
+export function useCreateTransferTransaction(transferInfo: TransferInfo) {
   const transactionFetcher = useCallback(() => {
     return getTransferTransaction(transferInfo)
   }, [transferInfo])
 
-  return useQuery({
-    queryFn: transactionFetcher,
-    queryKey: [
-      ReactQueryCacheKey.CreateTransferTransaction,
-      transferInfo?.account,
-      transferInfo?.chainId,
-      transferInfo?.currencyAmount?.toExact(),
-      transferInfo?.currencyAmount?.currency,
-      transferInfo?.toAddress,
-    ],
-  }).data
+  return useAsyncData(transactionFetcher).data
 }
 
-async function getTransferTransaction(transferInfo: TransferInfo | undefined): Promise<TransactionRequest | null> {
-  if (!transferInfo) {
-    return null
-  }
-
+async function getTransferTransaction(transferInfo: TransferInfo): Promise<TransactionRequest | undefined> {
   const { provider, account, chainId, currencyAmount, toAddress } = transferInfo
 
   if (!provider || !account || !chainId || !currencyAmount || !toAddress) {
-    return null
+    return undefined
   }
 
   const currency = currencyAmount.currency
@@ -80,7 +65,9 @@ function getNativeTransferRequest(params: TransferCurrencyParams): TransactionRe
   }
 }
 
-async function getTokenTransferRequest(transferParams: TransferCurrencyParams): Promise<TransactionRequest | null> {
+async function getTokenTransferRequest(
+  transferParams: TransferCurrencyParams,
+): Promise<TransactionRequest | undefined> {
   const { provider, account, chainId, toAddress, tokenAddress, amountInWei } = transferParams
   const tokenContract = getContract(tokenAddress, ERC20_ABI, provider, account) as Erc20
 
@@ -100,5 +87,5 @@ async function getTokenTransferRequest(transferParams: TransferCurrencyParams): 
     })
   }
 
-  return null
+  return undefined
 }

@@ -1,13 +1,13 @@
-import { useQuery } from '@tanstack/react-query'
 import { useUnitagsClaimEligibilityQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsClaimEligibilityQuery'
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
-import { uniqueIdQuery } from 'utilities/src/device/uniqueIdQuery'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
+import { useAsyncData } from 'utilities/src/react/hooks'
 
 export const useCanAddressClaimUnitag = (
   address?: Address,
   isUsernameChange?: boolean,
 ): { canClaimUnitag: boolean; errorCode?: UnitagErrorCodes } => {
-  const { data: deviceId } = useQuery(uniqueIdQuery())
+  const { data: deviceId } = useAsyncData(getUniqueId)
   const skip = !deviceId
 
   const { isLoading, data } = useUnitagsClaimEligibilityQuery({

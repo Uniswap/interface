@@ -130,7 +130,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
     }
   }, [account.address, chainId, parsedTokenAmount, provider, recipientData?.address])
   const transferTransaction = useCreateTransferTransaction(transferInfo)
-  const gasFee = useTransactionGasFee(transferTransaction ?? undefined, GasSpeed.Normal)
+  const gasFee = useTransactionGasFee(transferTransaction, GasSpeed.Normal, !transferTransaction)
   const gasFeeCurrencyAmount = useMemo(() => {
     if (!chainId || !gasFee?.value) {
       return undefined
@@ -167,7 +167,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
       exactAmountOut,
       parsedTokenAmount,
       recipientData,
-      transaction: transferTransaction ?? undefined,
+      transaction: transferTransaction,
       gasFeeCurrencyAmount,
       gasFee,
       inputError,

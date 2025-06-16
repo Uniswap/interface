@@ -3,13 +3,17 @@ import { ensure0xHex } from 'uniswap/src/utils/hex'
 import { logger } from 'utilities/src/logger/logger'
 import {
   Address,
-  SignedAuthorization,
   TransactionSerializable,
   TransactionSerializableEIP7702,
   parseSignature,
   serializeTransaction,
 } from 'viem'
-import { hashAuthorization, recoverAuthorizationAddress, verifyAuthorization } from 'viem/utils'
+import {
+  SignedAuthorization,
+  hashAuthorization,
+  recoverAuthorizationAddress,
+  verifyAuthorization,
+} from 'viem/experimental'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
 
 /**
@@ -50,7 +54,6 @@ export function convertToEIP7702(
 
 /**
  * Signs and serializes an EIP-7702 transaction
- * @param signer
  * @param tx - The viem transaction to sign and serialize
  * @param address - The address to sign with
  * @param chainId - The chain ID for the transaction
@@ -63,7 +66,7 @@ export async function signAndSerializeEIP7702Transaction(
   chainId: number,
 ): Promise<`0x${string}`> {
   // Serialize the transaction using viem
-  const serializedTx = serializeTransaction(tx)
+  const serializedTx = await serializeTransaction(tx)
 
   // Hash the transaction
   const hashedTx = utils.keccak256(serializedTx)
@@ -198,7 +201,7 @@ export function reconstructAuthorization(
 
     const parsedSignature = parseSignature(signature as `0x${string}`)
     const signedAuthorization: SignedAuthorization = {
-      address: contractAddress,
+      contractAddress,
       chainId,
       nonce,
       ...parsedSignature,

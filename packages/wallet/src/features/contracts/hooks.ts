@@ -1,10 +1,9 @@
 import { Contract } from '@ethersproject/contracts'
-import { useQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import { useProvider } from 'wallet/src/features/wallet/context'
 
 export function useIsErc20Contract(
@@ -30,9 +29,6 @@ export function useIsErc20Contract(
     }
   }, [address, isSmartContractAddress, provider])
 
-  const { data, isLoading } = useQuery({
-    queryKey: [ReactQueryCacheKey.IsErc20ContractAddress, address, chainId],
-    queryFn: fetchIsErc20,
-  })
+  const { data, isLoading } = useAsyncData(fetchIsErc20)
   return { isERC20ContractAddress: !!data, loading: isLoading }
 }

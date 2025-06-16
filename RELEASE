@@ -1,23 +1,6 @@
-IPFS hash of the deployment:
-- CIDv0: `QmdVVhTjJqcLTWyz6A2DAUNM84F6gESEzYGShEWMb7Giid`
-- CIDv1: `bafybeihbenlz6ecs7jlsn6yhsykx6wounpbqw7l42nuwu7e6zd7hzfbqvi`
+We are back with a large update: Smart wallets are here! Enable smart wallets from your home screen to benefit from faster, lower-cost transactions, enabled via an EIP 7702 smart contract.
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Other changes:
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
-
-IPFS gateways:
-- https://bafybeihbenlz6ecs7jlsn6yhsykx6wounpbqw7l42nuwu7e6zd7hzfbqvi.ipfs.dweb.link/
-- [ipfs://QmdVVhTjJqcLTWyz6A2DAUNM84F6gESEzYGShEWMb7Giid/](ipfs://QmdVVhTjJqcLTWyz6A2DAUNM84F6gESEzYGShEWMb7Giid/)
-
-### 5.88.7 (2025-06-13)
-
-
-### Bug Fixes
-
-* **web:** fix delta formatting error (#20860) 0b9ac1f
-
-
+- When connected to Uniswap Web, you’ll see a new verification check mark so that you know you’re on the right website.
+- Various bug fixes and performance improvements

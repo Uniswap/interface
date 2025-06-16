@@ -25,18 +25,4 @@ describe(getExplorerLink, () => {
       'https://optimistic.etherscan.io/tx/hash',
     )
   })
-
-  it('handles native currency', () => {
-    expect(getExplorerLink(UniverseChainId.Base, undefined, ExplorerDataType.NATIVE)).toEqual('https://basescan.org/')
-  })
-
-  it('returns prefix if no data', () => {
-    expect(getExplorerLink(UniverseChainId.Base, undefined, ExplorerDataType.ADDRESS)).toEqual('https://basescan.org/')
-    expect(getExplorerLink(UniverseChainId.Base, undefined, ExplorerDataType.TOKEN)).toEqual('https://basescan.org/')
-    expect(getExplorerLink(UniverseChainId.Base, undefined, ExplorerDataType.BLOCK)).toEqual('https://basescan.org/')
-    expect(getExplorerLink(UniverseChainId.Base, undefined, ExplorerDataType.TRANSACTION)).toEqual(
-      'https://basescan.org/',
-    )
-    expect(getExplorerLink(UniverseChainId.Base, undefined, ExplorerDataType.NFT)).toEqual('https://basescan.org/')
-  })
 })

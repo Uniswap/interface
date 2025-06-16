@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { I18nManager, ScrollView } from 'react-native'
-import { getUniqueIdSync } from 'react-native-device-info'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
@@ -14,7 +13,9 @@ import { resetDismissedWarnings } from 'uniswap/src/features/tokens/slice/slice'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import { UniconSampleSheet } from 'wallet/src/components/DevelopmentOnly/UniconSampleSheet'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
@@ -33,7 +34,7 @@ export function DevScreen(): JSX.Element {
   const activeAccount = useActiveAccount()
   const [rtlEnabled, setRTLEnabled] = useState(I18nManager.isRTL)
   const sortedMnemonicAccounts = useSelector(selectSortedSignerMnemonicAccounts)
-  const deviceId = getUniqueIdSync()
+  const { data: deviceId } = useAsyncData(getUniqueId)
 
   const onPressResetTokenWarnings = (): void => {
     dispatch(resetDismissedWarnings())

@@ -24,8 +24,6 @@ export function Modal({
   gap,
   paddingX,
   paddingY,
-  pt,
-  pb,
   analyticsProperties,
   skipLogImpression,
   position,
@@ -86,8 +84,6 @@ export function Modal({
           p={padding ?? '$spacing24'}
           px={paddingX}
           py={paddingY}
-          pt={pt}
-          pb={pb}
           flex={flex}
           onClose={isDismissible ? onClose : undefined}
         >

@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from 'state/fiatOnRampTransactions/types'
-import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
 
 export type FiatOnRampTransactionDetails = {
   account: string
@@ -11,7 +10,6 @@ export type FiatOnRampTransactionDetails = {
   type: FiatOnRampTransactionType
   syncedWithBackend: boolean
   provider: string
-  original?: FORTransaction
 }
 
 export interface FiatOnRampTransactionsState {

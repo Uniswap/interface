@@ -6,7 +6,6 @@ import { DropdownMenuSheetItem } from 'ui/src/components/dropdownMenuSheet/Dropd
 import { zIndexes } from 'ui/src/theme'
 import { ContextMenuProps } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
-import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { logger } from 'utilities/src/logger/logger'
 
 // used for positioning
@@ -47,8 +46,6 @@ export function ContextMenu({
 
   const isLongPress = triggerMode === ContextMenuTriggerMode.Secondary
   const triggerRef = useRef<View>(null)
-
-  const { hapticFeedback } = useHapticFeedback()
 
   // used to control the visibility of the menu to allow for position calculations to complete before rendering
   const [isMenuVisible, setIsMenuVisible] = useState(false)
@@ -238,14 +235,7 @@ export function ContextMenu({
           <TouchableArea
             disabled={disabled}
             onPress={isLongPress ? undefined : openMenu}
-            onLongPress={
-              isLongPress
-                ? async (): Promise<void> => {
-                    await hapticFeedback.success()
-                    openMenu()
-                  }
-                : undefined
-            }
+            onLongPress={isLongPress ? openMenu : undefined}
           >
             <Flex ref={triggerRef} onLayout={recalculateMenuPosition}>
               {children}

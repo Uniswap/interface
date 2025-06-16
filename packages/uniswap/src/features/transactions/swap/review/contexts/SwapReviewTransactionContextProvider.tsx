@@ -16,7 +16,7 @@ export interface SwapReviewContextProviderProps {
   children: ReactNode
   derivedSwapInfo: DerivedSwapInfo
   swapTxContext: SwapTxAndGasInfo
-  acceptedDerivedSwapInfo?: DerivedSwapInfo
+  swapAcceptedDerivedSwapInfo?: DerivedSwapInfo
   newTradeRequiresAcceptance: boolean
 }
 
@@ -24,7 +24,7 @@ export function SwapReviewTransactionContextProvider({
   children,
   derivedSwapInfo,
   swapTxContext,
-  acceptedDerivedSwapInfo,
+  swapAcceptedDerivedSwapInfo,
   newTradeRequiresAcceptance,
 }: SwapReviewContextProviderProps): JSX.Element {
   const uniswapXGasBreakdown = isUniswapX(swapTxContext) ? swapTxContext.gasFeeBreakdown : undefined
@@ -38,6 +38,7 @@ export function SwapReviewTransactionContextProvider({
 
   const { blockingWarning, reviewScreenWarning } = useParsedSwapWarnings()
   const isWrap = isWrapAction(wrapType)
+  const acceptedDerivedSwapInfo = isWrap ? derivedSwapInfo : swapAcceptedDerivedSwapInfo
   const acceptedTrade = acceptedDerivedSwapInfo?.trade.trade
   const feeOnTransferProps = useFeeOnTransferAmounts(acceptedDerivedSwapInfo)
   const tokenWarningProps = getRelevantTokenWarningSeverity(acceptedDerivedSwapInfo)

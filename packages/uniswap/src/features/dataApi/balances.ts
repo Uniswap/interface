@@ -365,7 +365,7 @@ export function useTokenBalancesGroupedByVisibility({
       (acc, balance) => {
         const isTokenHidden = isTestnetModeEnabled
           ? (balance.currencyInfo.spamCode || SpamCode.LOW) >= SpamCode.HIGH
-          : !balance.currencyInfo.currency.isNative && balance.isHidden
+          : balance.isHidden
 
         if (isTokenHidden) {
           acc.hidden.push(balance)

@@ -8,17 +8,11 @@ import {
   getSwapInputExceedsBalance,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import {
-  ApprovalAction,
-  BridgeTrade,
-  ClassicTrade,
-  UnwrapTrade,
-  WrapTrade,
-} from 'uniswap/src/features/transactions/swap/types/trade'
+import { ApprovalAction, BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { tryCatch } from 'utilities/src/errors'
 
 type GetEVMSwapTransactionRequestInfoFn = (params: {
-  trade: ClassicTrade | BridgeTrade | WrapTrade | UnwrapTrade
+  trade: ClassicTrade | BridgeTrade
   approvalTxInfo: ApprovalTxInfo
   derivedSwapInfo: DerivedSwapInfo
 }) => Promise<TransactionRequestInfo>

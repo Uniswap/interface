@@ -1,19 +1,17 @@
-import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { config } from 'uniswap/src/config'
-import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import { StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { StatsigClient, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import { statsigBaseConfig } from 'uniswap/src/features/gating/statsigBaseConfig'
 import { initializeDatadog } from 'uniswap/src/utils/datadog'
-import { getUniqueId } from 'utilities/src/device/uniqueId'
-import { uniqueIdQuery } from 'utilities/src/device/uniqueIdQuery'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
+import { useAsyncData } from 'utilities/src/react/hooks'
 
-function makeStatsigUser(userID: string): StatsigUser {
+async function getStatsigUser(): Promise<StatsigUser> {
   return {
-    userID,
+    userID: await getUniqueId(),
     appVersion: process.env.VERSION,
     custom: {
       app: StatsigCustomAppValue.Extension,
@@ -28,7 +26,7 @@ export function ExtensionStatsigProvider({
   children: React.ReactNode
   appName: string
 }): JSX.Element {
-  const { data: uniqueId } = useQuery(uniqueIdQuery(), SharedQueryClient)
+  const { data: storedUser } = useAsyncData(getStatsigUser)
   const [initFinished, setInitFinished] = useState(false)
   const [user, setUser] = useState<StatsigUser>({
     userID: undefined,
@@ -39,10 +37,10 @@ export function ExtensionStatsigProvider({
   })
 
   useEffect(() => {
-    if (uniqueId && initFinished) {
-      setUser(makeStatsigUser(uniqueId))
+    if (storedUser && initFinished) {
+      setUser(storedUser)
     }
-  }, [uniqueId, initFinished])
+  }, [storedUser, initFinished])
 
   const onStatsigInit = (): void => {
     setInitFinished(true)
@@ -57,8 +55,7 @@ export function ExtensionStatsigProvider({
 }
 
 export async function initStatSigForBrowserScripts(): Promise<void> {
-  const uniqueId = await getUniqueId()
-  const statsigClient = new StatsigClient(config.statsigApiKey, makeStatsigUser(uniqueId), statsigBaseConfig)
+  const statsigClient = new StatsigClient(config.statsigApiKey, await getStatsigUser(), statsigBaseConfig)
   await statsigClient.initializeAsync().catch((error) => {
     logger.error(error, {
       tags: { file: 'StatsigProvider.tsx', function: 'initStatSigForBrowserScripts' },

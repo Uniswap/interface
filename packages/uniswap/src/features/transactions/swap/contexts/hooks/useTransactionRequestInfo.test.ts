@@ -1,12 +1,14 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { providers } from 'ethers/lib/ethers'
 import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
+import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { usePermit2SignatureWithData } from 'uniswap/src/features/transactions/swap/contexts/hooks/usePermit2Signature'
 import { useTransactionRequestInfo } from 'uniswap/src/features/transactions/swap/contexts/hooks/useTransactionRequestInfo'
+import { useWrapTransactionRequest } from 'uniswap/src/features/transactions/swap/contexts/hooks/useWrapTransactionRequest'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
@@ -15,6 +17,7 @@ import { createMockDerivedSwapInfo, createMockTokenApprovalInfo } from 'uniswap/
 
 jest.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery')
 jest.mock('uniswap/src/features/transactions/swap/contexts/hooks/usePermit2Signature')
+jest.mock('uniswap/src/features/transactions/swap/contexts/hooks/useWrapTransactionRequest')
 jest.mock('uniswap/src/features/gas/hooks')
 jest.mock('uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled')
 jest.mock('uniswap/src/features/gating/hooks', () => {
@@ -29,11 +32,13 @@ jest.mock('uniswap/src/features/address/useIsSmartContractAddress')
 
 const mockUseTradingApiSwapQuery = useTradingApiSwapQuery as jest.Mock
 const mockUsePermit2SignatureWithData = usePermit2SignatureWithData as jest.Mock
+const mockUseWrapTransactionRequest = useWrapTransactionRequest as jest.Mock
 const mockUseTransactionGasFee = useTransactionGasFee as jest.Mock
 const mockUseV4SwapEnabled = useV4SwapEnabled as jest.Mock
 const mockUseIsSmartContractAddress = useIsSmartContractAddress as jest.Mock
 
 describe('useTransactionRequestInfo', () => {
+  const mockAccount: AccountMeta = { address: '0x123', type: AccountType.SignerMnemonic }
   const mockWrapGasFee: GasFeeResult = {
     value: '250000',
     params: {
@@ -64,26 +69,6 @@ describe('useTransactionRequestInfo', () => {
     isLoading: false,
   }
 
-  const wrapQueryResult = {
-    data: {
-      requestId: '123',
-      transactions: [
-        {
-          from: '0x123',
-          data: '0x',
-          value: '0',
-          to: '0xWrap',
-          chainId: UniverseChainId.Mainnet,
-          gasLimit: '250000',
-          maxFeePerGas: '300000',
-          maxPriorityFeePerGas: '350000',
-        },
-      ],
-    } satisfies SwapData,
-    error: null,
-    isLoading: false,
-  }
-
   beforeEach(() => {
     jest.clearAllMocks()
     mockUseIsSmartContractAddress.mockReturnValue({ loading: false, isSmartContractAddress: false })
@@ -94,8 +79,12 @@ describe('useTransactionRequestInfo', () => {
     const mockDerivedSwapInfo = createMockDerivedSwapInfo(ETH, WETH, '1000000000000000000', '1000000000', {
       wrapType: WrapType.Wrap,
     })
+    mockUseWrapTransactionRequest.mockReturnValue({
+      to: '0xWrap',
+      chainId: UniverseChainId.Mainnet,
+    })
     mockUsePermit2SignatureWithData.mockReturnValue({ signature: undefined, isLoading: false })
-    mockUseTradingApiSwapQuery.mockReturnValue(wrapQueryResult)
+    mockUseTradingApiSwapQuery.mockReturnValue(swapQueryResult)
     mockUseTransactionGasFee.mockReturnValue(mockWrapGasFee)
     mockUseV4SwapEnabled.mockReturnValue(true)
 
@@ -103,6 +92,7 @@ describe('useTransactionRequestInfo', () => {
       useTransactionRequestInfo({
         derivedSwapInfo: mockDerivedSwapInfo,
         tokenApprovalInfo: createMockTokenApprovalInfo(),
+        account: mockAccount,
       }),
     )
 
@@ -119,6 +109,7 @@ describe('useTransactionRequestInfo', () => {
     // Swap does not need wrapping
     const mockDerivedSwapInfo = createMockDerivedSwapInfo(ETH, WETH, '1000000000000000000', '1000000000')
 
+    mockUseWrapTransactionRequest.mockReturnValue(null)
     mockUsePermit2SignatureWithData.mockReturnValue({ signature: undefined, isLoading: false })
     mockUseTradingApiSwapQuery.mockReturnValue(swapQueryResult)
     mockUseTransactionGasFee.mockReturnValue({ error: null, isLoading: false })
@@ -128,6 +119,7 @@ describe('useTransactionRequestInfo', () => {
       useTransactionRequestInfo({
         derivedSwapInfo: mockDerivedSwapInfo,
         tokenApprovalInfo: createMockTokenApprovalInfo(),
+        account: mockAccount,
       }),
     )
 

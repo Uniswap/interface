@@ -92,7 +92,7 @@ test.describe('Mini Portfolio account drawer', () => {
 
     // Verify wallet state
     await expect(page.getByTestId(TestID.MiniPortfolioNavbar)).toContainText('Tokens')
-    await expect(page.getByTestId(TestID.MiniPortfolioPage)).toContainText('Hidden (4)')
+    await expect(page.getByTestId(TestID.MiniPortfolioPage)).toContainText('Hidden (5)')
 
     // Check NFTs section
     await page.getByTestId(TestID.MiniPortfolioNavbar).getByText('NFTs').click()

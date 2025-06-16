@@ -1,5 +1,9 @@
-import { LiquidityBarSeriesRenderer } from 'components/Charts/LiquidityChart/renderer'
-import { LiquidityBarData, LiquidityBarProps, LiquidityBarSeriesOptions } from 'components/Charts/LiquidityChart/types'
+import {
+  LiquidityBarData,
+  LiquidityBarProps,
+  LiquidityBarSeriesOptions,
+  LiquidityBarSeriesRenderer,
+} from 'components/Charts/LiquidityChart/renderer'
 import {
   CustomSeriesPricePlotValues,
   ICustomSeriesPaneView,

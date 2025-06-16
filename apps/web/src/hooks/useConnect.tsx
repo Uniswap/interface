@@ -57,7 +57,7 @@ export function ConnectionProvider({ children }: PropsWithChildren) {
  * Wraps wagmi.useConnect in a singleton provider to provide the same connect state to all callers.
  * @see {@link https://wagmi.sh/react/api/hooks/useConnect}
  */
-export function useConnect(): UseConnectReturnType<ResolvedRegister['config']> {
+export function useConnect() {
   const value = useContext(ConnectionContext)
   if (!value) {
     throw new Error('useConnect must be used within a ConnectionProvider')

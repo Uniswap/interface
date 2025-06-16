@@ -21,7 +21,6 @@ import {
   deleteWelcomeWalletCardBehaviorHistory,
   moveCurrencySetting,
   moveDismissedTokenWarnings,
-  moveHapticsToUserSettings,
   moveLanguageSetting,
   moveTokenAndNFTVisibility,
   moveUserSettings,
@@ -56,7 +55,6 @@ export const migrations = {
   21: migratePendingDappRequestsToRecord,
   22: addBatchedTransactions,
   23: migrateUnknownBackupAccountsToMaybeManualBackup,
-  24: moveHapticsToUserSettings,
 }
 
-export const EXTENSION_STATE_VERSION = 24
+export const EXTENSION_STATE_VERSION = 23

@@ -9,7 +9,6 @@ import 'polyfills'
 // prettier-ignore
 import 'tracing'
 
-import { setupWagmiAutoConnect } from 'components/Web3Provider/wagmiAutoConnect'
 // We intentionally import this to ensure that the WalletConnect provider is bundled as an entrypoint chunk,
 // because it will always be requested anyway and we don't want to have a waterfall request pattern.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-imports
@@ -19,6 +18,5 @@ if (WalletConnect) {
   console.debug('WalletConnect is defined')
 }
 
-// adding these so webpack won't tree shake this away, sideEffects was giving trouble
+// adding this so webpack won't tree shake this away, sideEffects was giving trouble
 setupi18n()
-setupWagmiAutoConnect()

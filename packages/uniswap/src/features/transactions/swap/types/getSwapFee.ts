@@ -1,15 +1,14 @@
 import { Percent } from '@uniswap/sdk-core'
 import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { SwapFee } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { logger } from 'utilities/src/logger/logger'
 
 export function getSwapFee(quoteResponse?: DiscriminatedQuoteResponse): SwapFee | undefined {
-  if (!quoteResponse || isWrap(quoteResponse)) {
+  const quote = quoteResponse?.quote
+
+  if (!quote) {
     return undefined
   }
-
-  const { quote } = quoteResponse
 
   const aggregatedOutputs = 'aggregatedOutputs' in quote ? quote.aggregatedOutputs : undefined
   const swapper = 'swapper' in quote ? quote.swapper : undefined

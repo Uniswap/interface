@@ -18,7 +18,7 @@ export function getOutageBannerSessionStorageKey(chainId: UniverseChainId) {
 }
 
 // TODO replace with IconButton when it's available from buttons migration
-const OutageCloseButton = tamaguiStyled(X, {
+export const OutageCloseButton = tamaguiStyled(X, {
   ...ClickableTamaguiStyle,
   size: iconSizes.icon24,
   p: '$spacing4',

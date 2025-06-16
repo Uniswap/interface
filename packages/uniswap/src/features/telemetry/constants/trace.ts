@@ -66,8 +66,6 @@ export const ModalName = {
   FeeClaim: 'fee-claim-modal',
   FeeTierSearch: 'fee-tier-search-modal',
   FiatCurrencySelector: 'fiat-currency-selector',
-  FiatOffRampConfirmTransfer: 'fiat-off-ramp-confirm-transfer',
-  FiatOffRampConfirmTransferError: 'fiat-off-ramp-confirm-transfer-error',
   FiatOffRampUnsupportedTokenModal: 'fiat-off-ramp-unsupported-token-modal',
   FiatOnramp: 'fiat-onramp-modal',
   FiatOnRampAggregator: 'fiat-on-ramp-aggregator',

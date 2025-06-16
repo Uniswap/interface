@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { SEND_CONTENT_RENDER_DELAY_MS } from 'src/features/send/constants'
+import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { Flex } from 'ui/src/components/layout/Flex'
-import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { SendReviewDetails } from 'wallet/src/features/transactions/send/SendReviewDetails'

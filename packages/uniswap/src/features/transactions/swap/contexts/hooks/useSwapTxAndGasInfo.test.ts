@@ -144,7 +144,7 @@ describe('useSwapTxAndGasInfo', () => {
       permit: undefined,
       swapRequestArgs: undefined,
       unsigned: false,
-      includesDelegation: false,
+      includesDelegation: undefined,
     })
   })
 })

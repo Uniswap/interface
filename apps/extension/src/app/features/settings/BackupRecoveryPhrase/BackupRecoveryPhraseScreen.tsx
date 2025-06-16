@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query/build/modern/useQuery'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -13,9 +12,9 @@ import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { Checkbox, Flex, SpinningLoader, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled, FileListCheck, FileListLock } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { useEvent } from 'utilities/src/react/hooks'
+import { useAsyncData, useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import { mnemonicUnlockedQuery } from 'wallet/src/features/wallet/Keyring/queries'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
@@ -154,7 +153,9 @@ function RecoveryPhraseVerificationStep({
   const [hasError, setHasError] = useState(false)
   const [numberOfWordsVerified, setNumberOfWordsVerified] = useState(0)
 
-  const { data: mnemonic, error } = useQuery(mnemonicUnlockedQuery(mnemonicId))
+  const { data: mnemonic, error } = useAsyncData(
+    useCallback(async () => Keyring.retrieveMnemonicUnlocked(mnemonicId), [mnemonicId]),
+  )
 
   if (error) {
     // This should never happen. We can't recover from a missing mnemonic.

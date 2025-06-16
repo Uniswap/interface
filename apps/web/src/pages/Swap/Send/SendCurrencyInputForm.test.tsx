@@ -7,7 +7,7 @@ import { SendContext, SendContextType } from 'state/send/SendContext'
 import { SwapAndLimitContext } from 'state/swap/types'
 import { DAI_INFO } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
-import { act, render, screen } from 'test-utils/render'
+import { render, screen, waitFor } from 'test-utils/render'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
@@ -78,57 +78,52 @@ describe('SendCurrencyInputform', () => {
   })
 
   it('should render placeholder values', async () => {
-    const { container } = await act(() =>
-      render(
-        <MultichainContext.Provider value={mockMultichainContextValue}>
-          <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
-            <SendContext.Provider value={mockedSendContextDefault}>
-              <SendCurrencyInputForm />
-            </SendContext.Provider>
-          </SwapAndLimitContext.Provider>
-        </MultichainContext.Provider>,
-      ),
+    const { container } = render(
+      <MultichainContext.Provider value={mockMultichainContextValue}>
+        <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
+          <SendContext.Provider value={mockedSendContextDefault}>
+            <SendCurrencyInputForm />
+          </SendContext.Provider>
+        </SwapAndLimitContext.Provider>
+      </MultichainContext.Provider>,
     )
-
-    expect(screen.getByPlaceholderText('0')).toBeVisible()
+    expect(await screen.getByPlaceholderText('0')).toBeVisible()
     expect(screen.getByText('0 DAI')).toBeVisible()
     expect(screen.getByText('DAI')).toBeVisible()
     expect(container.firstChild).toMatchSnapshot()
   })
 
   it('renders input in fiat correctly', async () => {
-    const { container } = await act(() =>
-      render(
-        <MultichainContext.Provider value={mockMultichainContextValue}>
-          <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
-            <SendContext.Provider value={mockedSendContextFiatInput}>
-              <SendCurrencyInputForm />
-            </SendContext.Provider>
-          </SwapAndLimitContext.Provider>
-        </MultichainContext.Provider>,
-      ),
+    const { container } = render(
+      <MultichainContext.Provider value={mockMultichainContextValue}>
+        <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
+          <SendContext.Provider value={mockedSendContextFiatInput}>
+            <SendCurrencyInputForm />
+          </SendContext.Provider>
+        </SwapAndLimitContext.Provider>
+      </MultichainContext.Provider>,
     )
-
-    expect(screen.getByDisplayValue('1000')).toBeVisible()
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('1000')).toBeVisible()
+    })
     expect(screen.getByText('100.00 DAI')).toBeVisible()
     expect(screen.getByText('DAI')).toBeVisible()
     expect(container.firstChild).toMatchSnapshot()
   })
 
   it('renders input in token amount correctly', async () => {
-    const { container } = await act(() =>
-      render(
-        <MultichainContext.Provider value={mockMultichainContextValue}>
-          <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
-            <SendContext.Provider value={mockedSendContextTokenInput}>
-              <SendCurrencyInputForm />
-            </SendContext.Provider>
-          </SwapAndLimitContext.Provider>
-        </MultichainContext.Provider>,
-      ),
+    const { container } = render(
+      <MultichainContext.Provider value={mockMultichainContextValue}>
+        <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
+          <SendContext.Provider value={mockedSendContextTokenInput}>
+            <SendCurrencyInputForm />
+          </SendContext.Provider>
+        </SwapAndLimitContext.Provider>
+      </MultichainContext.Provider>,
     )
-
-    expect(screen.getByDisplayValue('1')).toBeVisible()
+    await waitFor(() => {
+      expect(screen.getByDisplayValue('1')).toBeVisible()
+    })
     expect(screen.getByText('$100.00')).toBeVisible()
     expect(screen.getByText('DAI')).toBeVisible()
     expect(container.firstChild).toMatchSnapshot()

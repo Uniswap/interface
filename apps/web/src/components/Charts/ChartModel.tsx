@@ -43,7 +43,6 @@ interface ChartDataParams<TDataType extends SeriesDataItemType> {
   data: TDataType[]
   /** Repesents whether `data` is stale. If true, stale UI will appear */
   stale?: boolean
-  hideTooltipBorder?: boolean
 }
 
 export type ChartModelParams<TDataType extends SeriesDataItemType> = ChartUtilParams<TDataType> &
@@ -329,11 +328,10 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
     >
       {children && children(crosshairData)}
       {TooltipBody && crosshairData && (
-        <ChartTooltip id={chartModelRef.current?.tooltipId} includeBorder={!params.hideTooltipBorder}>
+        <ChartTooltip id={chartModelRef.current?.tooltipId}>
           <TooltipBody data={crosshairData} />
         </ChartTooltip>
       )}
-
       {params.stale && <StaleBanner />}
     </Flex>
   )
@@ -345,20 +343,13 @@ const ChartTooltip = styled(Flex, {
   left: 0,
   top: 0,
   zIndex: '$tooltip',
-  borderWidth: 0,
+  backgroundColor: '$surface5',
+  backdropFilter: 'blur(8px)',
+  borderRadius: '$rounded8',
+  borderColor: '$surface3',
   borderStyle: 'solid',
-  variants: {
-    includeBorder: {
-      true: {
-        backgroundColor: '$surface5',
-        backdropFilter: 'blur(8px)',
-        borderRadius: '$rounded8',
-        borderColor: '$surface3',
-        borderWidth: 1,
-        p: '$spacing8',
-      },
-    },
-  },
+  borderWidth: 1,
+  p: '$spacing8',
 })
 
 const StaleBannerWrapper = styled(ChartTooltip, {

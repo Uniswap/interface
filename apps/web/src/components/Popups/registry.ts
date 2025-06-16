@@ -22,8 +22,8 @@ class PopupRegistry {
   }
 
   removePopup(key: string): void {
-    toast.dismiss(this.popupKeyToId.get(key))
     this.popupKeyToId.delete(key)
+    toast.dismiss(this.popupKeyToId.get(key))
   }
 }
 

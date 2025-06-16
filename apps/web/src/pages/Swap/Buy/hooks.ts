@@ -1,7 +1,6 @@
 import { meldSupportedCurrencyToCurrencyInfo } from 'appGraphql/data/types'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
 import {
   getFiatCurrencyName,
   useAppFiatCurrency,
@@ -11,12 +10,7 @@ import {
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
   useFiatOnRampAggregatorSupportedTokensQuery,
 } from 'uniswap/src/features/fiatOnRamp/api'
-import {
-  FORCountry,
-  FiatCurrencyInfo,
-  FiatOnRampCurrency,
-  OffRampTransferDetailsRequest,
-} from 'uniswap/src/features/fiatOnRamp/types'
+import { FORCountry, FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 
@@ -86,31 +80,4 @@ export function useFiatOnRampSupportedTokens(
       }) ?? []
     )
   }, [quoteCurrencyOptions?.supportedTokens])
-}
-
-export function useOffRampTransferDetailsRequest(): Maybe<OffRampTransferDetailsRequest> {
-  const [searchParams] = useSearchParams()
-
-  const externalTransactionId = searchParams.get('externalTransactionId')
-  const baseCurrencyCode = searchParams.get('baseCurrencyCode')
-  const baseCurrencyAmount = searchParams.get('baseCurrencyAmount')
-  const depositWalletAddress = searchParams.get('depositWalletAddress')
-
-  return useMemo(() => {
-    if (baseCurrencyCode && baseCurrencyAmount && depositWalletAddress) {
-      return {
-        moonpayDetails: {
-          baseCurrencyCode,
-          baseCurrencyAmount: Number(baseCurrencyAmount),
-          depositWalletAddress,
-        },
-      }
-    } else if (externalTransactionId) {
-      return {
-        meldDetails: { sessionId: externalTransactionId },
-      }
-    }
-
-    return null
-  }, [baseCurrencyCode, baseCurrencyAmount, depositWalletAddress, externalTransactionId])
 }

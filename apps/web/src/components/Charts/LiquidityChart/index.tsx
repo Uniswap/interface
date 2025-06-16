@@ -5,7 +5,11 @@ import { FeeAmount, Pool as PoolV3, TICK_SPACINGS, TickMath as TickMathV3, tickT
 import { Pool as PoolV4, tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
 import { ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { LiquidityBarSeries } from 'components/Charts/LiquidityChart/liquidity-bar-series'
-import { LiquidityBarData, LiquidityBarProps, LiquidityBarSeriesOptions } from 'components/Charts/LiquidityChart/types'
+import {
+  LiquidityBarData,
+  LiquidityBarProps,
+  LiquidityBarSeriesOptions,
+} from 'components/Charts/LiquidityChart/renderer'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'

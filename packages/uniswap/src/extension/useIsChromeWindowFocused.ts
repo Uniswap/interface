@@ -1,50 +1,40 @@
-import { useMutation } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension } from 'utilities/src/platform'
-import { useEvent } from 'utilities/src/react/hooks'
 
 export function useIsChromeWindowFocused(): boolean {
   const [isFocused, setIsFocused] = useState(true)
 
-  const focusMutation = useMutation({
-    mutationFn: async () => {
-      if (!isExtension) {
-        // This hook is ignored and always returns the default value of `true` when not in the Extension.
-        return undefined
-      }
+  useEffect(() => {
+    if (!isExtension) {
+      return undefined
+    }
 
-      const onFocusChangedListener = async (): Promise<void> => {
-        const { focused } = await chrome.windows.getCurrent()
-        setIsFocused(focused)
-      }
+    const chrome = getChromeWithThrow()
 
-      // We run this on first render to get the initial state.
-      await onFocusChangedListener()
+    const onFocusChangedListener = async (): Promise<void> => {
+      const { focused } = await chrome.windows.getCurrent()
+      setIsFocused(focused)
+    }
 
-      const chrome = getChromeWithThrow()
-      chrome.windows.onFocusChanged.addListener(onFocusChangedListener)
-
-      return () => {
-        chrome.windows.onFocusChanged.removeListener(onFocusChangedListener)
-      }
-    },
-    onError: (error: unknown) => {
+    // Get initial state
+    onFocusChangedListener().catch((error) => {
       logger.error(error, {
         tags: {
-          file: 'useIsChromeWindowFocused',
+          file: 'useIsChromeWindowFocused.ts',
           function: 'useIsChromeWindowFocused',
         },
       })
-    },
-  })
+    })
 
-  const focusEvent = useEvent(focusMutation.mutate)
+    chrome.windows.onFocusChanged.addListener(onFocusChangedListener)
 
-  useEffect(() => {
-    focusEvent()
-  }, [focusEvent])
+    // Remove listener when component unmounts
+    return () => {
+      chrome.windows.onFocusChanged.removeListener(onFocusChangedListener)
+    }
+  }, [])
 
   return isFocused
 }

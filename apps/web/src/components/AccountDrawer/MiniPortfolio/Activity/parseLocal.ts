@@ -12,11 +12,6 @@ import {
   OrderTextTable,
   getActivityTitle,
 } from 'components/AccountDrawer/MiniPortfolio/constants'
-import { FiatOnRampTransactionStatus } from 'state/fiatOnRampTransactions/types'
-import {
-  forTransactionStatusToTransactionStatus,
-  statusToTransactionInfoStatus,
-} from 'state/fiatOnRampTransactions/utils'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
@@ -44,7 +39,6 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import i18n from 'uniswap/src/i18n'
 import { isAddress } from 'utilities/src/addresses'
@@ -53,7 +47,6 @@ import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 type FormatNumberFunctionType = ReturnType<typeof useLocalizationContext>['formatNumberOrString']
-type FormatFiatPriceFunctionType = ReturnType<typeof useLocalizationContext>['convertFiatAmountFormatted']
 
 function buildCurrencyDescriptor(
   currencyA: Currency | undefined,
@@ -390,58 +383,6 @@ export function getSignatureToActivityQueryOptions(
     queryKey: [ReactQueryCacheKey.SignatureToActivity, signature],
     queryFn: async () => signatureToActivity(signature, formatNumber),
   })
-}
-
-export function getFORTransactionToActivityQueryOptions(
-  transaction: FORTransaction | undefined,
-  formatNumber: FormatNumberFunctionType,
-  formatFiatPrice: FormatFiatPriceFunctionType,
-) {
-  return queryOptions({
-    queryKey: [ReactQueryCacheKey.TransactionToActivity, transaction],
-    queryFn: async () => forTransactionToActivity(transaction, formatNumber, formatFiatPrice),
-  })
-}
-
-const forTransactionToActivity = async (
-  transaction: FORTransaction | undefined,
-  formatNumber: FormatNumberFunctionType,
-  formatFiatPrice: FormatFiatPriceFunctionType,
-) => {
-  if (!transaction) {
-    return undefined
-  }
-
-  const chainId = Number(transaction.cryptoDetails.chainId) as UniverseChainId
-  const currency = await getCurrency(transaction.sourceCurrencyCode, chainId)
-  const status = statusToTransactionInfoStatus(transaction.status)
-  const serviceProvider = transaction.serviceProviderDetails.name
-  const tokenAmount = formatNumber({ value: transaction.sourceAmount, type: NumberType.TokenNonTx })
-  const fiatAmount = formatFiatPrice(transaction.destinationAmount, NumberType.FiatTokenPrice)
-
-  let title = ''
-  switch (status) {
-    case FiatOnRampTransactionStatus.PENDING:
-      title = i18n.t('transaction.status.sale.pendingOn', { serviceProvider })
-      break
-    case FiatOnRampTransactionStatus.COMPLETE:
-      title = i18n.t('transaction.status.sale.successOn', { serviceProvider })
-      break
-    case FiatOnRampTransactionStatus.FAILED:
-      title = i18n.t('transaction.status.sale.failedOn', { serviceProvider })
-      break
-  }
-
-  return {
-    hash: transaction.externalSessionId,
-    chainId,
-    title,
-    descriptor: `${tokenAmount} ${transaction?.sourceCurrencyCode} ${i18n.t('common.for').toLocaleLowerCase()} ${fiatAmount}`,
-    currencies: [currency],
-    status: forTransactionStatusToTransactionStatus(status),
-    timestamp: convertToSecTimestamp(Number(transaction.createdAt)),
-    from: transaction.cryptoDetails.walletAddress,
-  }
 }
 
 function convertToSecTimestamp(timestamp: number) {

@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query'
 import { ComponentProps, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { SelectWalletsSkeleton } from 'src/app/components/loading/SelectWalletSkeleton'
@@ -14,9 +13,7 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { openUri } from 'uniswap/src/utils/linking'
-import { useEvent } from 'utilities/src/react/hooks'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { queryWithoutCache } from 'utilities/src/reactQuery/queryOptions'
+import { useAsyncData, useEvent } from 'utilities/src/react/hooks'
 import WalletPreviewCard from 'wallet/src/components/WalletPreviewCard/WalletPreviewCard'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useImportableAccounts } from 'wallet/src/features/onboarding/hooks/useImportableAccounts'
@@ -31,9 +28,7 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
   const { goToNextStep, goToPreviousStep } = useOnboardingSteps()
   const { generateAccountsAndImportAddresses, getGeneratedAddresses } = useOnboardingContext()
 
-  const { data: generatedAddresses } = useQuery(
-    queryWithoutCache({ queryFn: getGeneratedAddresses, queryKey: [ReactQueryCacheKey.GeneratedAddresses] }),
-  )
+  const { data: generatedAddresses } = useAsyncData(getGeneratedAddresses)
 
   const { importableAccounts, isLoading, showError, refetch } = useImportableAccounts(generatedAddresses)
 

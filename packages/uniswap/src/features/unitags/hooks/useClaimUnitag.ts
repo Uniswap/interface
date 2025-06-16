@@ -10,7 +10,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isLocalFileUri, uploadAndUpdateAvatarAfterClaim } from 'uniswap/src/features/unitags/avatars.native'
 import { UnitagClaim, UnitagClaimContext } from 'uniswap/src/features/unitags/types'
 import { parseUnitagErrorCode } from 'uniswap/src/features/unitags/utils'
-import { getUniqueId } from 'utilities/src/device/uniqueId'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
 
 /**

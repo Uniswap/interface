@@ -94,6 +94,7 @@ function SwapFormContent(): JSX.Element {
     exactFieldIsInput,
     exactFieldIsOutput,
     exactOutputDisabled,
+    isSwapDataLoading,
     resetSelection,
     currencyAmountsUSDValue,
     exactValue,
@@ -150,7 +151,7 @@ function SwapFormContent(): JSX.Element {
                 focus={selectingCurrencyField ? undefined : focusOnCurrencyField === CurrencyField.INPUT}
                 isFiatMode={isFiatMode && exactFieldIsInput}
                 isIndicativeLoading={trade.isIndicativeLoading}
-                isLoading={!exactFieldIsInput && trade.isFetching}
+                isLoading={!exactFieldIsInput && isSwapDataLoading}
                 priceDifferencePercentage={priceDifferencePercentage}
                 resetSelection={resetSelection}
                 showSoftInputOnFocus={false}
@@ -189,7 +190,7 @@ function SwapFormContent(): JSX.Element {
                 // We do not want to force-focus the input when the token selector is open.
                 focus={selectingCurrencyField ? undefined : focusOnCurrencyField === CurrencyField.OUTPUT}
                 isFiatMode={isFiatMode && exactFieldIsOutput}
-                isLoading={!exactFieldIsOutput && trade.isFetching}
+                isLoading={!exactFieldIsOutput && isSwapDataLoading}
                 priceDifferencePercentage={priceDifferencePercentage}
                 resetSelection={resetSelection}
                 showSoftInputOnFocus={false}
@@ -215,7 +216,7 @@ function SwapFormContent(): JSX.Element {
             <YouReceiveDetails
               isIndicative={Boolean(trade.indicativeTrade && !trade.trade)}
               isLoadingIndicative={trade.isIndicativeLoading}
-              isLoading={Boolean(trade.isFetching)}
+              isLoading={isSwapDataLoading}
               isBridge={isBridge}
             />
           )}

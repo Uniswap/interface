@@ -12,7 +12,7 @@ import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPri
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { getWrapType } from 'uniswap/src/features/transactions/swap/utils/wrap'
+import { getWrapType, isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -69,6 +69,7 @@ export function useDerivedSwapInfo({
 
   const otherCurrency = isExactIn ? currencyOut : currencyIn
   const exactCurrency = isExactIn ? currencyIn : currencyOut
+  const isWrap = isWrapAction(wrapType)
 
   // amountSpecified, otherCurrency, tradeType fully defines a trade
   const amountSpecified = useMemo(() => {
@@ -78,6 +79,20 @@ export function useDerivedSwapInfo({
       currency: exactCurrency,
     })
   }, [exactAmountToken, exactCurrency])
+
+  const otherAmountForWrap = useMemo(() => {
+    //  we only use otherAmountForWrap when it's a wrap action,
+    //  otherwise parsing exactAmountToken using otherCurrency can lead to errors,
+    //  e.g. otherCurrency.decimals !== exactCurrency.decimals
+    if (isWrap) {
+      return getCurrencyAmount({
+        value: exactAmountToken,
+        valueType: ValueType.Exact,
+        currency: otherCurrency,
+      })
+    }
+    return undefined
+  }, [exactAmountToken, isWrap, otherCurrency])
 
   const sendPortionEnabled = useFeatureFlag(FeatureFlags.PortionFields)
 
@@ -90,7 +105,7 @@ export function useDerivedSwapInfo({
 
   const tradeParams = {
     account,
-    amountSpecified,
+    amountSpecified: isWrap ? null : amountSpecified,
     otherCurrency,
     tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     customSlippageTolerance,
@@ -111,15 +126,15 @@ export function useDerivedSwapInfo({
     ? displayableTrade?.quoteOutputAmount
     : displayableTrade?.outputAmount
 
-  const currencyAmounts = useMemo(
-    () => ({
-      [CurrencyField.INPUT]:
-        exactCurrencyField === CurrencyField.INPUT ? amountSpecified : displayableTrade?.inputAmount,
-      [CurrencyField.OUTPUT]:
-        exactCurrencyField === CurrencyField.OUTPUT ? amountSpecified : displayableTradeOutputAmount,
-    }),
-    [exactCurrencyField, amountSpecified, displayableTrade?.inputAmount, displayableTradeOutputAmount],
-  )
+  const otherAmountInput = isWrap ? otherAmountForWrap : displayableTrade?.inputAmount
+  const otherAmountOutput = isWrap ? otherAmountForWrap : displayableTradeOutputAmount
+
+  const currencyAmounts = useMemo(() => {
+    return {
+      [CurrencyField.INPUT]: exactCurrencyField === CurrencyField.INPUT ? amountSpecified : otherAmountInput,
+      [CurrencyField.OUTPUT]: exactCurrencyField === CurrencyField.OUTPUT ? amountSpecified : otherAmountOutput,
+    }
+  }, [exactCurrencyField, amountSpecified, otherAmountInput, otherAmountOutput])
 
   const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
   const outputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.OUTPUT])

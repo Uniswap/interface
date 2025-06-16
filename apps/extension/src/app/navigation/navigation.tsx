@@ -1,5 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
-import { useEffect, useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { NavigationType, Outlet, ScrollRestoration, useLocation } from 'react-router-dom'
 import { SmartWalletNudgeModals } from 'src/app/components/modals/SmartWalletNudgeModals'
@@ -19,7 +18,7 @@ import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
 import { AnimatePresence, Flex, SpinningLoader, styled } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { useIsChromeWindowFocusedWithTimeout } from 'uniswap/src/extension/useIsChromeWindowFocused'
-import { useEvent, usePrevious } from 'utilities/src/react/hooks'
+import { useAsyncData, usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
@@ -231,27 +230,17 @@ function LoggedOut(): JSX.Element {
   const isOnboarded = useSelector(isOnboardedSelector)
   const didOpenOnboarding = useRef(false)
 
-  const focusOrCreateOnboardingTabMutation = useMutation({
-    onMutate: () => {
+  const handleOnboarding = useCallback(async () => {
+    if (!isOnboarded && !didOpenOnboarding.current) {
       // We keep track of this to avoid opening the onboarding page multiple times if this component remounts.
       didOpenOnboarding.current = true
-    },
-    mutationFn: () => {
-      return focusOrCreateOnboardingTab()
-    },
-    onSuccess: () => {
+      await focusOrCreateOnboardingTab()
       // Automatically close the pop up after focusing on the onboarding tab.
       window.close()
-    },
-  })
-
-  const focusOrCreateOnboardingTabEvent = useEvent(focusOrCreateOnboardingTabMutation.mutate)
-
-  useEffect(() => {
-    if (!focusOrCreateOnboardingTabMutation.isPending && !isOnboarded && !didOpenOnboarding.current) {
-      focusOrCreateOnboardingTabEvent()
     }
-  }, [focusOrCreateOnboardingTabEvent, isOnboarded, focusOrCreateOnboardingTabMutation.isPending])
+  }, [isOnboarded])
+
+  useAsyncData(handleOnboarding)
 
   // If the user has not onboarded, we render nothing and let the `useEffect` above automatically close the popup.
   // We could consider showing a loading spinner while the popup is being closed.

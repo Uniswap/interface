@@ -9,13 +9,15 @@ export function useFeatureFlaggedChainIds(): UniverseChainId[] {
   // You can use the useFeatureFlag hook here to enable/disable chains based on feature flags.
   // Example: [ChainId.BLAST]: useFeatureFlag(FeatureFlags.BLAST)
   // IMPORTANT: Don't forget to also update getEnabledChainIdsSaga
+  const monadTestnetEnabled = useFeatureFlag(FeatureFlags.MonadTestnet)
   const soneiumEnabled = useFeatureFlag(FeatureFlags.Soneium)
 
   return useMemo(
     () =>
       filterChainIdsByFeatureFlag({
+        [UniverseChainId.MonadTestnet]: monadTestnetEnabled,
         [UniverseChainId.Soneium]: soneiumEnabled,
       }),
-    [soneiumEnabled],
+    [monadTestnetEnabled, soneiumEnabled],
   )
 }

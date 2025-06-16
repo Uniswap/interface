@@ -1,8 +1,10 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { MenuItem } from 'components/SearchModal/styled'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { useAccount } from 'hooks/useAccount'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { CSSProperties } from 'react'
 import { TokenFromList } from 'state/lists/tokenFromList'
@@ -33,7 +35,6 @@ const TextOverflowStyle = {
 const StyledBalanceText = styled(Text, {
   ...TextOverflowStyle,
   maxWidth: '80px',
-  textAlign: 'right',
 })
 
 const CurrencyName = styled(Text, TextOverflowStyle)
@@ -51,6 +52,19 @@ const Tag = styled(Text, {
   alignSelf: 'flex-end',
   mr: '$spacing4',
 })
+
+function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
+  const { formatNumberOrString } = useLocalizationContext()
+
+  return (
+    <StyledBalanceText>
+      {formatNumberOrString({
+        value: balance.toExact(),
+        type: NumberType.TokenNonTx,
+      })}
+    </StyledBalanceText>
+  )
+}
 
 function TokenTags({ currency }: { currency: Currency }) {
   if (!(currency instanceof TokenFromList)) {
@@ -95,7 +109,6 @@ export function CurrencyRow({
   otherSelected,
   style,
   showCurrencyAmount,
-  showUsdValue,
   eventProperties,
   balance,
   disabled,
@@ -108,15 +121,14 @@ export function CurrencyRow({
   otherSelected: boolean
   style?: CSSProperties
   showCurrencyAmount?: boolean
-  showUsdValue?: boolean
   eventProperties: Record<string, unknown>
   balance?: CurrencyAmount<Currency>
   disabled?: boolean
   tooltip?: string
   showAddress?: boolean
 }) {
+  const account = useAccount()
   const { currency } = currencyInfo
-  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const key = currencyListRowKey(currency)
 
   const { tokenWarningDismissed: customAdded } = useDismissedTokenWarnings(currency)
@@ -125,8 +137,7 @@ export function CurrencyRow({
   const blockedTokenOpacity = '0.6'
 
   const { balanceMap } = useTokenBalances({ cacheOnly: true })
-  const { usdValue, balance: cachedBalance } = balanceMap[currencyKey(currency)] ?? {}
-  const tokenBalance = balance ? balance.toExact() : cachedBalance
+  const balanceUSD = balanceMap[currencyKey(currency)]?.usdValue
 
   const Wrapper = tooltip ? MouseoverTooltip : RowWrapper
 
@@ -136,7 +147,7 @@ export function CurrencyRow({
       logPress
       logKeyPress
       eventOnTrigger={UniswapEventName.TokenSelected}
-      properties={{ is_imported_by_user: customAdded, ...eventProperties, token_balance_usd: usdValue }}
+      properties={{ is_imported_by_user: customAdded, ...eventProperties, token_balance_usd: balanceUSD }}
       element={InterfaceElementName.TOKEN_SELECTOR_ROW}
     >
       <Wrapper
@@ -176,21 +187,11 @@ export function CurrencyRow({
               <TokenTags currency={currency} />
             </Flex>
           </Flex>
-          <Flex alignSelf="center" justifyContent="flex-end">
-            {showUsdValue && usdValue ? (
-              <StyledBalanceText variant="body4" color="$neutral1">
-                {convertFiatAmountFormatted(usdValue, NumberType.FiatStandard)}
-              </StyledBalanceText>
-            ) : null}
-            {showCurrencyAmount && tokenBalance ? (
-              <StyledBalanceText variant="body4" color="$neutral2">
-                {formatNumberOrString({
-                  value: tokenBalance,
-                  type: NumberType.TokenNonTx,
-                })}
-              </StyledBalanceText>
-            ) : null}
-          </Flex>
+          {showCurrencyAmount && (
+            <Flex row alignSelf="center" justifyContent="flex-end">
+              {account.isConnected ? balance ? <Balance balance={balance} /> : <Loader /> : null}
+            </Flex>
+          )}
         </MenuItem>
       </Wrapper>
     </Trace>

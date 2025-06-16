@@ -223,6 +223,11 @@ export default function SendCurrencyInputForm({
   return (
     <Wrapper disabled={disabled}>
       <InputWrapper>
+        <Flex position="absolute" top="16px" left="16px">
+          <Text variant="body3" userSelect="none" color="$neutral2">
+            <Trans i18nKey="common.youreSending" />
+          </Text>
+        </Flex>
         <NumericalInputWrapper>
           {inputInFiat && (
             <NumericalInputSymbolContainer showPlaceholder={!displayValue}>{fiatSymbol}</NumericalInputSymbolContainer>

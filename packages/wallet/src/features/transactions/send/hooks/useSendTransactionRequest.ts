@@ -1,4 +1,3 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query'
 import { providers } from 'ethers'
 import { useCallback } from 'react'
 import ERC1155_ABI from 'uniswap/src/abis/erc1155.json'
@@ -12,37 +11,29 @@ import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { queryWithoutCache } from 'utilities/src/reactQuery/queryOptions'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { SendCurrencyParams, SendNFTParams, SendTokenParams } from 'wallet/src/features/transactions/send/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
-export function useSendTransactionRequest(
-  derivedSendInfo: DerivedSendInfo,
-): UseQueryResult<providers.TransactionRequest | null> {
+export function useSendTransactionRequest(derivedSendInfo: DerivedSendInfo): providers.TransactionRequest | undefined {
   const { defaultChainId } = useEnabledChains()
   const account = useActiveAccountWithThrow()
   const chainId = toSupportedChainId(derivedSendInfo.chainId)
   const provider = useProvider(chainId ?? defaultChainId)
   const contractManager = useContractManager()
 
-  const transactionFetcher = useCallback(async (): Promise<providers.TransactionRequest | null> => {
+  const transactionFetcher = useCallback(() => {
     if (!provider) {
-      return null
+      return undefined
     }
 
-    return (await getSendTransaction(provider, contractManager, account, derivedSendInfo)) ?? null
+    return getSendTransaction(provider, contractManager, account, derivedSendInfo)
   }, [account, contractManager, derivedSendInfo, provider])
 
-  return useQuery(
-    queryWithoutCache({
-      queryKey: [ReactQueryCacheKey.CreateTransferTransaction, derivedSendInfo, account],
-      queryFn: transactionFetcher,
-    }),
-  )
+  return useAsyncData(transactionFetcher).data
 }
 
 // eslint-disable-next-line consistent-return

@@ -32,6 +32,7 @@ const tabs = [
     dropdown: [
       { label: 'Swap', path: '/swap' },
       { label: 'Limit', path: '/limit' },
+      { label: 'Send', path: '/send' },
       { label: 'Buy', path: '/buy' },
     ],
   },

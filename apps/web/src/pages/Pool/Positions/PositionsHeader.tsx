@@ -128,8 +128,8 @@ export function PositionsHeader({
       <Text variant="heading3">{t('pool.positions.title')}</Text>
       <Flex gap="$gap8" row $sm={{ flexDirection: 'column' }}>
         {showFilters && (
-          <>
-            <Flex gap="$spacing1" row $sm={{ width: '100%' }}>
+          <Flex row alignItems="center" shrink height="100%" gap="$gap4">
+            <Flex gap="$spacing1" row>
               <Flex
                 row
                 gap="$gap8"
@@ -181,49 +181,47 @@ export function PositionsHeader({
                 {createOptions}
               </DropdownSelector>
             </Flex>
-            <Flex row alignItems="center" shrink height="100%" gap="$gap4">
-              <DropdownSelector
-                isOpen={protocolDropdownOpen}
-                toggleOpen={() => {
-                  setProtocolDropdownOpen((prev) => !prev)
+            <DropdownSelector
+              isOpen={protocolDropdownOpen}
+              toggleOpen={() => {
+                setProtocolDropdownOpen((prev) => !prev)
+              }}
+              menuLabel={<Text variant="buttonLabel3">{t('common.status')}</Text>}
+              dropdownStyle={{ width: 240 }}
+              buttonStyle={StyledDropdownButton}
+              alignRight={false}
+            >
+              {statusFilterOptions}
+            </DropdownSelector>
+            <DropdownSelector
+              isOpen={statusDropdownOpen}
+              toggleOpen={() => setStatusDropdownOpen((prev) => !prev)}
+              menuLabel={<Text variant="buttonLabel3">{t('common.protocol')}</Text>}
+              dropdownStyle={{ width: 160 }}
+              buttonStyle={StyledDropdownButton}
+            >
+              {versionFilterOptions}
+            </DropdownSelector>
+            <Flex
+              alignItems="center"
+              justifyContent="center"
+              backgroundColor="$surface3"
+              borderRadius="$rounded16"
+              px="$padding12"
+              height="100%"
+              {...ClickableTamaguiStyle}
+            >
+              <NetworkFilter
+                includeAllNetworks
+                selectedChain={selectedChain}
+                onPressChain={onChainChange}
+                chainIds={chains}
+                styles={{
+                  buttonPaddingY: '$spacing8',
                 }}
-                menuLabel={<Text variant="buttonLabel3">{t('common.status')}</Text>}
-                dropdownStyle={{ width: 240 }}
-                buttonStyle={StyledDropdownButton}
-                alignRight={false}
-              >
-                {statusFilterOptions}
-              </DropdownSelector>
-              <DropdownSelector
-                isOpen={statusDropdownOpen}
-                toggleOpen={() => setStatusDropdownOpen((prev) => !prev)}
-                menuLabel={<Text variant="buttonLabel3">{t('common.protocol')}</Text>}
-                dropdownStyle={{ width: 160 }}
-                buttonStyle={StyledDropdownButton}
-              >
-                {versionFilterOptions}
-              </DropdownSelector>
-              <Flex
-                alignItems="center"
-                justifyContent="center"
-                backgroundColor="$surface3"
-                borderRadius="$rounded16"
-                px="$padding12"
-                height="100%"
-                {...ClickableTamaguiStyle}
-              >
-                <NetworkFilter
-                  includeAllNetworks
-                  selectedChain={selectedChain}
-                  onPressChain={onChainChange}
-                  chainIds={chains}
-                  styles={{
-                    buttonPaddingY: '$spacing8',
-                  }}
-                />
-              </Flex>
+              />
             </Flex>
-          </>
+          </Flex>
         )}
       </Flex>
     </Flex>

@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
@@ -6,7 +5,7 @@ import { ThemeKeys, type ColorTokens } from 'ui/src/index'
 import { colorsLight } from 'ui/src/theme'
 import { ColorStrategy, ExtractedColors, getExtractedColors } from 'ui/src/utils/colors/getExtractedColors'
 import { isSVGUri } from 'utilities/src/format/urls'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import { hex } from 'wcag-contrast'
 
 /** The contrast threshold for token colors is currently lower than the WCAG AA standard of 3.0 because a slightly lower threshold leads to better results right now due to imitations of the color extraction library. */
@@ -115,11 +114,7 @@ export function useExtractedColors(
     [imageUrl, options.fallback, options.cache, sporeColors, options.colorStrategy],
   )
 
-  const { data: colors, isLoading: colorsLoading } = useQuery({
-    queryKey: [ReactQueryCacheKey.ExtractedColors, imageUrl],
-    queryFn: getImageColors,
-    enabled: !!imageUrl,
-  })
+  const { data: colors, isLoading: colorsLoading } = useAsyncData(getImageColors)
 
   return { colors, colorsLoading }
 }

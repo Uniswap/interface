@@ -13,7 +13,6 @@ export interface UserSettingsState {
   hideSmallBalances: boolean
   hideSpamTokens: boolean
   isTestnetModeEnabled?: boolean
-  hapticsEnabled: boolean
 }
 
 export const initialUserSettingsState: UserSettingsState = {
@@ -22,7 +21,6 @@ export const initialUserSettingsState: UserSettingsState = {
   hideSmallBalances: true,
   hideSpamTokens: true,
   isTestnetModeEnabled: false,
-  hapticsEnabled: true,
 }
 
 const slice = createSlice({
@@ -48,9 +46,6 @@ const slice = createSlice({
       state.isTestnetModeEnabled = payload
       analytics.setTestnetMode(payload, WALLET_TESTNET_CONFIG)
     },
-    setHapticsEnabled: (state, { payload }: PayloadAction<boolean>) => {
-      state.hapticsEnabled = payload
-    },
     resetSettings: () => initialUserSettingsState,
   },
 })
@@ -61,7 +56,6 @@ export const {
   setCurrentLanguage,
   setCurrentFiatCurrency,
   setIsTestnetModeEnabled,
-  setHapticsEnabled,
 } = slice.actions
 
 export const userSettingsReducer = slice.reducer

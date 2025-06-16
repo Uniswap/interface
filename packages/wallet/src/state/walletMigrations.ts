@@ -64,10 +64,10 @@ export function addRoutingFieldToTransactions(state: any): any {
 // Mobile: 66
 // Extension: 3
 // Activates redux pending accounts as a result of migration to OnbardingContext.tsx. Migration rulses:
-// 1. if there's a view only pending account, always activate it
-// 2. if there's a signer pending account and it
+// 1. if there’s a view only pending account, always activate it
+// 2. if there’s a signer pending account and it
 //     a. has the same mnemonic id as the active account, always activate it unless:
-//         1. if there's more than 6, only activate the oldest/newest 3. delete the rest
+//         1. if there’s more than 6, only activate the oldest/newest 3. delete the rest
 //     b. has a different mnemonic id as the active account, always delete it
 export function activatePendingAccounts(state: any): any {
   if (!state.wallet) {
@@ -378,23 +378,5 @@ export function addBatchedTransactions(state: any): any {
     ...state,
     batchedTransactions: {},
   }
-  return newState
-}
-
-// Mobile: 88
-// Extension: 24
-export function moveHapticsToUserSettings(state: any): any {
-  const newState = {
-    ...state,
-    appearanceSettings: {
-      ...state.appearanceSettings,
-      hapticsEnabled: undefined,
-    },
-    userSettings: {
-      ...state.userSettings,
-      hapticsEnabled: state.appearanceSettings.hapticsEnabled,
-    },
-  }
-  delete newState.appearanceSettings.hapticsEnabled
   return newState
 }

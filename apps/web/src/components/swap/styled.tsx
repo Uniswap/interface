@@ -2,14 +2,12 @@ import { ReactNode } from 'react'
 import { Flex, styled as TamaguiStyled, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 
-export const PAGE_WRAPPER_MAX_WIDTH = 480
-
 export const PageWrapper = TamaguiStyled(Flex, {
   pt: '$spacing60',
   px: '$spacing8',
   pb: '$spacing40',
   width: '100%',
-  maxWidth: PAGE_WRAPPER_MAX_WIDTH,
+  maxWidth: 480,
   $lg: {
     pt: '$spacing48',
   },

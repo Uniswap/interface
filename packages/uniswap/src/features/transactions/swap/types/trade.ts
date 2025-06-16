@@ -5,7 +5,7 @@ import { UnsignedV2DutchOrderInfo, V2DutchOrderTrade, PriorityOrderTrade as IPri
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { Route as V4RouteSDK } from '@uniswap/v4-sdk'
-import { BridgeQuoteResponse, ClassicQuoteResponse, DutchQuoteResponse, DutchV3QuoteResponse, PriorityQuoteResponse, WrapQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { BridgeQuoteResponse, ClassicQuoteResponse, DutchQuoteResponse, DutchV3QuoteResponse, PriorityQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { BigNumber, providers } from 'ethers/lib/ethers'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
@@ -289,7 +289,7 @@ export type Trade<
   TInput extends Currency = Currency,
   TOutput extends Currency = Currency,
   TTradeType extends TradeType = TradeType,
-> = ClassicTrade<TInput, TOutput, TTradeType> | UniswapXTrade | BridgeTrade | WrapTrade | UnwrapTrade
+> = ClassicTrade<TInput, TOutput, TTradeType> | UniswapXTrade | BridgeTrade
 
 export type TradeWithSlippage = Exclude<Trade, BridgeTrade>
 
@@ -557,61 +557,3 @@ export class BridgeTrade {
     return this.outputAmount
   }
 }
-
-abstract class BaseWrapTrade<TWrapType extends Routing.WRAP | Routing.UNWRAP> {
-  inputAmount: CurrencyAmount<Currency>
-  outputAmount: CurrencyAmount<Currency>
-  executionPrice: Price<Currency, Currency>
-  quote: WrapQuoteResponse<TWrapType>
-  tradeType: TradeType
-  abstract routing: TWrapType
-  readonly indicative = false
-  readonly swapFee?: SwapFee
-  readonly inputTax: Percent = ZERO_PERCENT
-  readonly outputTax: Percent = ZERO_PERCENT
-  readonly slippageTolerance = 0
-  readonly priceImpact: undefined
-  readonly deadline: undefined
-  constructor({ quote, currencyIn, currencyOut, tradeType }: { quote: WrapQuoteResponse<TWrapType>, currencyIn: Currency, currencyOut: Currency, tradeType: TradeType}) {
-    this.quote = quote
-    const quoteInputAmount = quote.quote.input?.amount
-    const quoteOutputAmount = quote.quote.output?.amount
-    if (!quoteInputAmount || !quoteOutputAmount) {
-      throw new Error('Error parsing wrap/unwrap quote currency amounts')
-    }
-    const inputAmount = getCurrencyAmount({ value: quoteInputAmount, valueType: ValueType.Raw, currency: currencyIn })
-    const outputAmount = getCurrencyAmount({ value: quoteOutputAmount, valueType: ValueType.Raw, currency: currencyOut })
-    if (!inputAmount || !outputAmount) {
-      throw new Error('Error parsing wrap/unwrap quote currency amounts')
-    }
-    this.inputAmount = inputAmount
-    this.outputAmount = outputAmount
-    this.executionPrice = new Price(currencyIn, currencyOut, 1, 1)
-    this.tradeType = tradeType
-  }
-  /* Wrap trades have no slippage or fees hence a static execution price. */
-  worstExecutionPrice(_threshold: Percent): Price<Currency, Currency> {
-    return this.executionPrice
-  }
-  maximumAmountIn(_slippageTolerance: Percent, _amountIn?: CurrencyAmount<Currency>): CurrencyAmount<Currency> {
-    return this.inputAmount
-  }
-  minimumAmountOut(_slippageTolerance: Percent, _amountOut?: CurrencyAmount<Currency>): CurrencyAmount<Currency> {
-    return this.outputAmount
-  }
-  public get quoteOutputAmount(): CurrencyAmount<Currency> {
-    return this.outputAmount
-  }
-  public get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
-    return this.outputAmount
-  }
-}
-
-export class WrapTrade extends BaseWrapTrade<Routing.WRAP> {
-  readonly routing = Routing.WRAP
-}
-
-export class UnwrapTrade extends BaseWrapTrade<Routing.UNWRAP> {
-  readonly routing = Routing.UNWRAP
-}
-

@@ -146,7 +146,7 @@ function PoolTableHeader({
     <Flex width="100%">
       <MouseoverTooltip
         disabled={!HEADER_DESCRIPTIONS[category]}
-        size={TooltipSize.Small}
+        size={TooltipSize.Max}
         text={HEADER_DESCRIPTIONS[category]}
         placement="top"
       >

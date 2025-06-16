@@ -184,33 +184,6 @@ fragment OnRampTransactionDetailsParts on OnRampTransactionDetails {
   }
 }
 
-fragment OffRampTransactionDetailsParts on OffRampTransactionDetails {
-  id
-  status
-  senderAddress
-  offRampTransfer {
-    id
-    token {
-      ...SimpleTokenDetails
-    }
-    amount
-    destinationCurrency
-    destinationAmount
-    serviceProvider {
-      serviceProvider
-      name
-      url
-      logoLightUrl
-      logoDarkUrl
-    }
-    transactionReferenceId
-    externalSessionId
-    networkFee
-    transactionFee
-    totalFee
-  }
-}
-
 fragment SwapOrderDetailsParts on SwapOrderDetails {
   id
   offerer
@@ -243,9 +216,6 @@ fragment AssetActivityParts on AssetActivity {
     }
     ... on OnRampTransactionDetails {
       ...OnRampTransactionDetailsParts
-    }
-    ... on OffRampTransactionDetails {
-      ...OffRampTransactionDetailsParts
     }
   }
 }

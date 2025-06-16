@@ -13,7 +13,6 @@
     "@tamagui/react-native-media-driver": "1.125.17",
     "@tamagui/remove-scroll": "1.125.17",
     "@tamagui/theme-base": "1.125.17",
-    "@tanstack/react-query": "5.77.2",
     "@testing-library/react-hooks": "8.0.1",
     "ethers": "5.7.2",
     "expo-blur": "14.0.3",

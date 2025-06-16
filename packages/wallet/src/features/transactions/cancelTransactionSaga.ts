@@ -57,14 +57,16 @@ function getPermit2NonceForOrder({
   return ROUTING_TO_ORDER_CLASS[routing].parse(encodedOrder, chainId).info.nonce
 }
 
-export async function getCancelOrderTxRequest(tx: UniswapXOrderDetails): Promise<providers.TransactionRequest | null> {
+export async function getCancelOrderTxRequest(
+  tx: UniswapXOrderDetails,
+): Promise<providers.TransactionRequest | undefined> {
   const { orderHash, chainId, from, routing } = tx
   if (!orderHash) {
-    return null
+    return undefined
   } else {
     const { encodedOrder } = (await getOrders([orderHash])).orders[0] ?? {}
     if (!encodedOrder) {
-      return null
+      return undefined
     }
 
     const nonce = getPermit2NonceForOrder({ encodedOrder, chainId, routing })

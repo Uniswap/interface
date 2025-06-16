@@ -208,8 +208,8 @@ export function PriceChartDelta({ startingPrice, endingPrice, noColor }: PriceCh
 
   return (
     <Text variant="body2" display="flex" alignItems="center" gap="$gap4">
-      {delta && <DeltaArrow delta={delta} formattedDelta={formatPercent(Math.abs(delta))} noColor={noColor} />}
-      <DeltaText delta={delta}>{delta ? formatPercent(Math.abs(delta)) : '-'}</DeltaText>
+      <DeltaArrow delta={delta} formattedDelta={formatPercent(Math.abs(delta))} noColor={noColor} />
+      <DeltaText delta={delta}>{formatPercent(Math.abs(delta))}</DeltaText>
     </Text>
   )
 }

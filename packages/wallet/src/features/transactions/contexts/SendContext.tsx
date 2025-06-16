@@ -96,9 +96,9 @@ export function SendContextProvider({
   )
 
   const warnings = useSendWarnings(t, derivedSendInfo)
-  const { data: txRequest } = useSendTransactionRequest(derivedSendInfo)
+  const txRequest = useSendTransactionRequest(derivedSendInfo)
   const gasFee = useTransactionGasFee(
-    txRequest ?? undefined,
+    txRequest,
     warnings.some((warning) => warning.action === WarningAction.DisableReview),
   )
   const txRequestWithGasSettings = useMemo(

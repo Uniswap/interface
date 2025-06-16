@@ -16,7 +16,6 @@ import {
   useModalSubtitleText,
   useTokenWarningCardText,
 } from 'uniswap/src/features/tokens/safetyUtils'
-import { logger } from 'utilities/src/logger/logger'
 
 jest.mock('react-i18next', () => ({
   useTranslation: (): { t: (str: string) => string } => {
@@ -435,20 +434,15 @@ describe('useModalHeaderText', () => {
     expect(useModalHeaderText({ tokenProtectionWarning: undefined })).toBeNull()
   })
 
-  it('logs error when tokenSymbol1 provided without plural treatment', () => {
-    const mockLogger = jest.spyOn(logger, 'error')
-    useModalHeaderText({
-      tokenProtectionWarning: TokenProtectionWarning.FotLow,
-      tokenSymbol0: 'ABC',
-      tokenSymbol1: 'XYZ',
-      shouldHavePluralTreatment: false,
-    })
-    expect(mockLogger).toHaveBeenCalledWith(
-      'Should only combine into one plural-languaged modal if BOTH are low or BOTH are blocked',
-      {
-        tags: { file: 'safetyUtils.ts', function: 'useModalHeaderText' },
-      },
-    )
+  it('throws error when tokenSymbol1 provided without plural treatment', () => {
+    expect(() =>
+      useModalHeaderText({
+        tokenProtectionWarning: TokenProtectionWarning.FotLow,
+        tokenSymbol0: 'ABC',
+        tokenSymbol1: 'XYZ',
+        shouldHavePluralTreatment: false,
+      }),
+    ).toThrow('Should only combine into one plural-languaged modal if BOTH are low or BOTH are blocked')
   })
 
   it('returns correct text for blocked tokens with plural treatment', () => {

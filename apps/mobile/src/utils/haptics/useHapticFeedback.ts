@@ -1,15 +1,21 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { ImpactFeedbackStyle, NotificationFeedbackType, impactAsync, notificationAsync } from 'expo-haptics'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setHapticsEnabled } from 'uniswap/src/features/settings/slice'
-import {
-  HapticFeedback,
-  HapticFeedbackControl,
-  HapticFeedbackStyle,
-  NO_HAPTIC_FEEDBACK,
-} from 'uniswap/src/features/settings/useHapticFeedback/types'
-import { UniswapState } from 'uniswap/src/state/uniswapReducer'
+import { selectHapticsEnabled, setHapticsUserSettingEnabled } from 'wallet/src/features/appearance/slice'
+
+type HapticFeedbackStyle = ImpactFeedbackStyle | NotificationFeedbackType
+
+type HapticFeedback = {
+  impact: (style?: HapticFeedbackStyle) => Promise<void>
+  light: () => Promise<void>
+  success: () => Promise<void>
+}
+
+const NO_HAPTIC_FEEDBACK: HapticFeedback = {
+  impact: async () => Promise.resolve(),
+  light: async () => Promise.resolve(),
+  success: async () => Promise.resolve(),
+}
 
 const ENABLED_HAPTIC_FEEDBACK: HapticFeedback = {
   impact: (style?: HapticFeedbackStyle) => {
@@ -24,13 +30,19 @@ function isImpactFeedbackStyle(style: HapticFeedbackStyle): style is ImpactFeedb
   return Object.values(ImpactFeedbackStyle).includes(style as ImpactFeedbackStyle)
 }
 
+interface HapticFeedbackControl {
+  hapticFeedback: HapticFeedback
+  hapticsEnabled: boolean
+  setHapticsEnabled: (willBeEnabled: boolean) => void
+}
+
 export function useHapticFeedback(): HapticFeedbackControl {
-  const hapticsEnabled = useSelector((state: UniswapState) => state.userSettings.hapticsEnabled)
+  const hapticsEnabled = useSelector(selectHapticsEnabled)
   const dispatch = useDispatch()
 
   const handleSetEnabled = useCallback(
     (enabled: boolean): void => {
-      dispatch(setHapticsEnabled(enabled))
+      dispatch(setHapticsUserSettingEnabled(enabled))
     },
     [dispatch],
   )

@@ -67,7 +67,7 @@ export const test = base.extend<{ anvil: typeof anvil; delegateToZeroAddress?: t
         const nonce = await anvil.getTransactionCount({
           address: TEST_WALLET_ADDRESS,
         })
-        const auth = await anvil.account.signAuthorization({
+        const auth = await anvil.account.experimental_signAuthorization({
           contractAddress: ZERO_ADDRESS,
           chainId: anvil.chain.id,
           nonce: nonce + 1,

@@ -2,6 +2,7 @@ import { InterfaceElementName } from '@uniswap/analytics-events'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
+import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useAccount } from 'hooks/useAccount'
 import { ReactNode } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -13,13 +14,14 @@ import { capitalize } from 'tsafe'
 import { Button, Flex, Separator, styled } from 'ui/src'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Unitag } from 'ui/src/components/icons/Unitag'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
@@ -28,8 +30,24 @@ import { NumberType } from 'utilities/src/format/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
+const ModalWrapper = styled(Flex, {
+  backgroundColor: '$surface1',
+  borderRadius: '$rounded16',
+  width: '100%',
+  p: '$spacing8',
+  gap: '$gap12',
+})
+
+const ModalHeader = styled(Flex, {
+  px: '$spacing12',
+  pt: '$spacing8',
+  pb: '$spacing4',
+})
+
 const ReviewContentContainer = styled(Flex, {
   width: '100%',
+  py: '$spacing12',
+  px: '$spacing16',
   gap: '$gap16',
 })
 
@@ -39,7 +57,7 @@ const SendModalHeader = ({
   subheader,
   image,
 }: {
-  label?: ReactNode
+  label: ReactNode
   header: ReactNode
   subheader: ReactNode
   image: ReactNode
@@ -47,11 +65,9 @@ const SendModalHeader = ({
   return (
     <Flex row justifyContent="space-between" alignItems="center">
       <Flex gap="$gap4">
-        {label && (
-          <ThemedText.BodySmall color="neutral2" lineHeight="20px">
-            {label}
-          </ThemedText.BodySmall>
-        )}
+        <ThemedText.BodySmall color="neutral2" lineHeight="20px">
+          {label}
+        </ThemedText.BodySmall>
         <ThemedText.HeadlineLarge lineHeight="44px">{header}</ThemedText.HeadlineLarge>
         <ThemedText.BodySmall lineHeight="20px" color="neutral2">
           {subheader}
@@ -72,11 +88,18 @@ export type SendModalProps = SendModalInnerProps & {
   isOpen: boolean
 }
 
-export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInnerProps) {
+export function SendReviewModal({ isOpen, onConfirm, onDismiss, isConfirming }: SendModalProps) {
+  return (
+    <Modal name={ModalName.SendReview} isModalOpen={isOpen} onClose={onDismiss} padding={0}>
+      <SendReviewModalInner onConfirm={onConfirm} onDismiss={onDismiss} isConfirming={isConfirming} />
+    </Modal>
+  )
+}
+
+function SendReviewModalInner({ onConfirm, onDismiss, isConfirming }: SendModalInnerProps) {
   const { t } = useTranslation()
   const { chainId } = useMultichainContext()
   const account = useAccount()
-
   const {
     value: showMaxTransferModal,
     setTrue: handleShowMaxTransferModal,
@@ -128,41 +151,47 @@ export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInner
 
   return (
     <>
-      <ReviewContentContainer data-testid="send-review-modal">
-        <Flex gap="$gap24" px="$spacing12">
-          <SendModalHeader
-            header={primaryInputView}
-            subheader={secondaryInputView}
-            image={
-              <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? UniverseChainId.Mainnet} />
-            }
-          />
-          <SendModalHeader
-            label={capitalize(t('common.to'))}
-            header={
-              recipientData?.unitag || recipientData?.ensName ? (
-                <Flex row gap="$gap4" alignItems="center">
-                  <ThemedText.HeadlineLarge>{recipientData.unitag ?? recipientData.ensName}</ThemedText.HeadlineLarge>
-                  {recipientData?.unitag && <Unitag size={18} />}
-                </Flex>
-              ) : (
-                shortenAddress(recipientData?.address)
-              )
-            }
-            subheader={(recipientData?.unitag || recipientData?.ensName) && shortenAddress(recipientData.address)}
-            image={<Identicon account={recipientData?.address} size={36} />}
-          />
-        </Flex>
-        <Separator />
-        <Flex row alignItems="center" width="100%" justifyContent="space-between" px="$spacing12">
-          <ThemedText.BodySmall color="neutral2" lineHeight="20px">
-            <Trans i18nKey="common.networkCost" />
-          </ThemedText.BodySmall>
-          <Flex row width="min-content" gap="$gap4" alignItems="center">
-            <ChainLogo chainId={chainId ?? UniverseChainId.Mainnet} size={16} />
-            <ThemedText.BodySmall>{gasFeeFormatted}</ThemedText.BodySmall>
+      <ModalWrapper data-testid="send-review-modal">
+        <ModalHeader>
+          <GetHelpHeader title={<Trans i18nKey="sendReviewModal.title" />} closeModal={onDismiss} />
+        </ModalHeader>
+        <ReviewContentContainer>
+          <Flex gap="$gap24">
+            <SendModalHeader
+              label={<Trans i18nKey="common.youreSending" />}
+              header={primaryInputView}
+              subheader={secondaryInputView}
+              image={
+                <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? UniverseChainId.Mainnet} />
+              }
+            />
+            <SendModalHeader
+              label={capitalize(t('common.to'))}
+              header={
+                recipientData?.unitag || recipientData?.ensName ? (
+                  <Flex row gap="$gap4" alignItems="center">
+                    <ThemedText.HeadlineLarge>{recipientData.unitag ?? recipientData.ensName}</ThemedText.HeadlineLarge>
+                    {recipientData?.unitag && <Unitag size={18} />}
+                  </Flex>
+                ) : (
+                  shortenAddress(recipientData?.address)
+                )
+              }
+              subheader={(recipientData?.unitag || recipientData?.ensName) && shortenAddress(recipientData.address)}
+              image={<Identicon account={recipientData?.address} size={36} />}
+            />
           </Flex>
-        </Flex>
+          <Separator />
+          <Flex row alignItems="center" width="100%" justifyContent="space-between">
+            <ThemedText.BodySmall color="neutral2" lineHeight="20px">
+              <Trans i18nKey="common.networkCost" />
+            </ThemedText.BodySmall>
+            <Flex row width="min-content" gap="$gap4" alignItems="center">
+              <ChainLogo chainId={chainId ?? UniverseChainId.Mainnet} size={16} />
+              <ThemedText.BodySmall>{gasFeeFormatted}</ThemedText.BodySmall>
+            </Flex>
+          </Flex>
+        </ReviewContentContainer>
         <Trace logPress element={InterfaceElementName.SEND_REVIEW_BUTTON}>
           <Flex alignSelf="stretch" row>
             <Button
@@ -178,7 +207,7 @@ export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInner
             </Button>
           </Flex>
         </Trace>
-      </ReviewContentContainer>
+      </ModalWrapper>
       <LowNativeBalanceModal
         isOpen={showMaxTransferModal}
         onClose={handleHideMaxTransferModal}

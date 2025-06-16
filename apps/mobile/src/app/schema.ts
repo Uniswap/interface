@@ -679,22 +679,8 @@ export const v86Schema = {
   batchedTransactions: {},
 }
 
-export const v87Schema = v86Schema
-
-const v88SchemaIntermediate = {
-  ...v87Schema,
-  appearanceSettings: {
-    ...v87Schema.appearanceSettings,
-    hapticsEnabled: undefined,
-  },
-  userSettings: {
-    ...v87Schema.userSettings,
-    hapticsEnabled: v87Schema.appearanceSettings.hapticsEnabled,
-  },
-}
-delete v88SchemaIntermediate.appearanceSettings.hapticsEnabled
-const v88Schema = v88SchemaIntermediate
+const v87Schema = v86Schema
 
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v88Schema => v88Schema
+export const getSchema = (): typeof v87Schema => v87Schema

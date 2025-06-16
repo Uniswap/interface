@@ -129,5 +129,4 @@ export const {
   useFiatOnRampAggregatorWidgetQuery,
   useFiatOnRampAggregatorTransferWidgetQuery,
   useFiatOnRampAggregatorOffRampWidgetQuery,
-  useFiatOnRampAggregatorOffRampTransferDetailsQuery,
 } = fiatOnRampAggregatorApi

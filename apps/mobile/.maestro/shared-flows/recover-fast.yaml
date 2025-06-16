@@ -37,3 +37,6 @@ env:
 - waitForAnimationToEnd
 - runFlow: biometrics-confirm.yaml
 - waitForAnimationToEnd
+- tapOn:
+    id: ${output.testIds.SmartWalletUpgradeModalMaybeLater}
+- waitForAnimationToEnd

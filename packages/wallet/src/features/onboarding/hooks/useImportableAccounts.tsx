@@ -1,5 +1,4 @@
 import { useApolloClient } from '@apollo/client'
-import { useQuery } from '@tanstack/react-query'
 import { useCallback, useMemo, useState } from 'react'
 import { fetchUnitagsByAddresses } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import {
@@ -8,8 +7,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useENSName } from 'uniswap/src/features/ens/api'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { queryWithoutCache } from 'utilities/src/reactQuery/queryOptions'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'
 
 export interface AddressWithBalanceAndName {
@@ -137,12 +135,7 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
     data: balanceAndUnitags,
     isLoading: balanceAndUnitagsLoading,
     error: fetchingError,
-  } = useQuery(
-    queryWithoutCache({
-      queryKey: [ReactQueryCacheKey.BalanceAndUnitags, addressesArray],
-      queryFn: fetchBalanceAndUnitags,
-    }),
-  )
+  } = useAsyncData(fetchBalanceAndUnitags)
 
   const addressInfoMap = useMemo(() => {
     if (balanceAndUnitags === undefined) {

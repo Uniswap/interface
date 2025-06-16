@@ -1,6 +1,5 @@
 import { MismatchToastItem } from 'components/Popups/MismatchToastItem'
 import {
-  FORTransactionPopupContent,
   FailedNetworkSwitchPopup,
   TransactionPopupContent,
   UniswapXOrderPopupContent,
@@ -55,9 +54,6 @@ export function PopupItem({ content, onClose }: { content: PopupContent; popKey:
     }
     case PopupType.Mismatch: {
       return <MismatchToastItem onDismiss={onClose} />
-    }
-    case PopupType.FORTransaction: {
-      return <FORTransactionPopupContent transaction={content.transaction} onClose={onClose} />
     }
   }
 }

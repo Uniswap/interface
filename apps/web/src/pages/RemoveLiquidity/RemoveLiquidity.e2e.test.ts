@@ -18,7 +18,7 @@ test('should decrease liquidity of a position', async ({ page, anvil }) => {
   await page.getByRole('button', { name: 'Remove liquidity' }).dblclick()
   await page.locator('div').filter({ hasText: /^50%$/ }).click()
 
-  await page.getByRole('button', { name: 'Review' }).click()
+  await page.getByRole('button', { name: 'Remove' }).click()
   await page.getByRole('button', { name: 'Confirm' }).click()
   await expect(page.getByText('1.000 USDT').first()).toBeVisible()
 })
