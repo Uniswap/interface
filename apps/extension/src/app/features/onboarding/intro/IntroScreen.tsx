@@ -10,8 +10,8 @@ import { navigate } from 'src/app/navigation/state'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
 import { Button, Flex, Text } from 'ui/src'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
+import Trace from 'nextrade/src/features/telemetry/Trace'
+import { ExtensionOnboardingScreens } from 'nextrade/src/types/screens/extension'
 import { useTimeout } from 'utilities/src/time/timing'
 
 export function IntroScreen(): JSX.Element {

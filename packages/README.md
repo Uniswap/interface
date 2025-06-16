@@ -4,7 +4,7 @@ Packages in this folder are shared packages that can be used across applications
 
 Shared code packages covering UI, shared functionality, and shared utilities. For non-product specific code, split into separate yet widely scoped packages rather than small packages.
 
-## `uniswap`
+## `nexttrade`
 
 Shared code across all of our apps. Where any cross functional features should be built by default.
 

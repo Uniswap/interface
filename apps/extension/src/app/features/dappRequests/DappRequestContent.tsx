@@ -23,14 +23,14 @@ import {
 } from 'ui/src'
 import { Verified } from 'ui/src/components/icons'
 import { borderRadii, iconSizes } from 'ui/src/theme'
-import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { DappRequestType } from 'uniswap/src/features/dappRequests/types'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
-import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
-import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { NEXTTRADE_WEB_HOSTNAME } from 'nexttrade/src/constants/urls'
+import { useEnabledChains } from 'nexttrade/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'nexttrade/src/features/chains/types'
+import { DappRequestType } from 'nexttrade/src/features/dappRequests/types'
+import { GasFeeResult } from 'nexttrade/src/features/gas/types'
+import { hasSufficientFundsIncludingGas } from 'nexttrade/src/features/gas/utils'
+import { useOnChainNativeCurrencyBalance } from 'nexttrade/src/features/portfolio/api'
+import { TransactionTypeInfo } from 'nexttrade/src/features/transactions/types/transactionDetails'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { formatDappURL } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
@@ -58,7 +58,7 @@ interface DappRequestFooterProps {
   showAllNetworks?: boolean
   showNetworkCost?: boolean
   transactionGasFeeResult?: GasFeeResult
-  isUniswapX?: boolean
+  isNextTradeX?: boolean
   disableConfirm?: boolean
   contentHorizontalPadding?: number | Animated.AnimatedNode | GetThemeValueForKey<'paddingHorizontal'> | null
 }
@@ -103,7 +103,7 @@ export function DappRequestContent({
   showNetworkCost,
   transactionGasFeeResult,
   children,
-  isUniswapX,
+  isNextTradeX,
   disableConfirm,
   contentHorizontalPadding = '$spacing12',
 }: PropsWithChildren<DappRequestContentProps>): JSX.Element {
@@ -121,7 +121,7 @@ export function DappRequestContent({
         chainId={chainId}
         confirmText={confirmText}
         connectedAccountAddress={connectedAccountAddress}
-        isUniswapX={isUniswapX}
+        isNextTradeX={isNextTradeX}
         maybeCloseOnConfirm={maybeCloseOnConfirm}
         showAllNetworks={showAllNetworks}
         showNetworkCost={showNetworkCost}
@@ -139,7 +139,7 @@ function DappRequestHeader({ headerIcon, title }: DappRequestHeaderProps): JSX.E
   const hostname = extractNameFromUrl(dappUrl).toUpperCase()
   const fallbackIcon = <DappIconPlaceholder iconSize={iconSizes.icon40} name={hostname} />
   const showVerified =
-    request && isConnectionRequest(request.dappRequest) && formatDappURL(dappUrl) === UNISWAP_WEB_HOSTNAME
+    request && isConnectionRequest(request.dappRequest) && formatDappURL(dappUrl) === NEXTTRADE_WEB_HOSTNAME
 
   return (
     <Flex mb="$spacing4" ml="$spacing8" mt="$spacing8" px="$spacing12">
@@ -187,7 +187,7 @@ function DappRequestFooter({
   onConfirm,
   showNetworkCost,
   transactionGasFeeResult,
-  isUniswapX,
+  isNextTradeX,
   disableConfirm,
 }: DappRequestFooterProps): JSX.Element {
   const { t } = useTranslation()
@@ -279,7 +279,7 @@ function DappRequestFooter({
           <NetworkFeeFooter
             chainId={currentChainId}
             gasFee={transactionGasFeeResult}
-            isUniswapX={isUniswapX}
+            isNextTradeX={isNextTradeX}
             showNetworkLogo={!!transactionGasFeeResult}
             requestMethod={request.dappRequest.type}
           />

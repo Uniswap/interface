@@ -337,29 +337,61 @@ export const MATIC_MAINNET = new Token(
   'Polygon Matic',
 )
 
-export const UNI = {
+export const ZTC = { // Renamed from NXT to ZTC
   [UniverseChainId.Mainnet]: new Token(
     UniverseChainId.Mainnet,
-    UNI_ADDRESSES[UniverseChainId.Mainnet] as string,
+    UNI_ADDRESSES[UniverseChainId.Mainnet] as string, // UNI_ADDRESSES is from @uniswap/sdk-core, leave as is
     18,
-    'UNI',
-    'Uniswap',
+    'ZTC', // Symbol corrected
+    'ZenChain Token', // Name corrected
   ),
   [UniverseChainId.Optimism]: new Token(
     UniverseChainId.Optimism,
     UNI_ADDRESSES[UniverseChainId.Optimism] as string,
     18,
-    'UNI',
-    'Uniswap',
+    'ZTC',
+    'ZenChain Token',
   ),
   [UniverseChainId.Sepolia]: new Token(
     UniverseChainId.Sepolia,
     UNI_ADDRESSES[UniverseChainId.Sepolia] as string,
     18,
-    'UNI',
-    'Uniswap',
+    'ZTC',
+    'ZenChain Token',
   ),
 }
+
+export const USDT_ZENCHAIN_TESTNET = new Token(
+  UniverseChainId.ZenChainTestnet,
+  '0xf8e81D47203A594245E36C48e151709F0C19fBe8',
+  6,
+  'USDT',
+  'Tether USD on ZenChain Testnet',
+)
+
+export const USDC_ZENCHAIN_TESTNET = new Token(
+  UniverseChainId.ZenChainTestnet,
+  '0xCC19142fb9264538EB21cf0Aa0961A25701d55EB', // Address corrected
+  6,
+  'USDC',
+  'USD Coin on ZenChain Testnet',
+)
+
+export const DAI_ZENCHAIN_TESTNET = new Token(
+  UniverseChainId.ZenChainTestnet,
+  '0xD7ACd2a9FD159E69Bb102A1ca21C9a3e3A5F771B',
+  18,
+  'DAI',
+  'Dai Stablecoin on ZenChain Testnet',
+)
+
+export const WZTC_ZENCHAIN_TESTNET = new Token(
+  UniverseChainId.ZenChainTestnet,
+  '0x5e173AED1Bf7ef850366d762f934Ef79Fd34EEfA',
+  18,
+  'WZTC',
+  'Wrapped ZenChain Token',
+)
 
 export const OP = new Token(
   UniverseChainId.Optimism,

@@ -1,4 +1,4 @@
-# Uniswap Extension
+# NextTrade Extension
 
 ## Developer Quickstart
 

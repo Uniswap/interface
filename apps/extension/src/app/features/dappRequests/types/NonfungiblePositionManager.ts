@@ -24,5 +24,5 @@ export function parseCalldata(calldata: string): NonfungiblePositionManagerCall 
     return NonfungiblePositionManagerCallSchema.parse({ commands: data.map(parseMulticallCommand) })
   }
 
-  throw new Error('All NFPM calls from the Uniswap Labs interface are multicalls.')
+  throw new Error('All NFPM calls from the NexTrade Labs interface are multicalls.')
 }

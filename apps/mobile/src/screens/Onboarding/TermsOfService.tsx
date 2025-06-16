@@ -1,7 +1,7 @@
 import { Trans } from 'react-i18next'
 import { Text } from 'ui/src'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { openUri } from 'uniswap/src/utils/linking'
+import { nextradeUrls } from 'nextrade/src/constants/urls'
+import { openUri } from 'nextrade/src/utils/linking'
 
 export function TermsOfService(): JSX.Element {
   return (
@@ -12,14 +12,14 @@ export function TermsOfService(): JSX.Element {
             <Text
               color="$accent1"
               variant="body4"
-              onPress={(): Promise<void> => openUri(uniswapUrls.termsOfServiceUrl)}
+              onPress={(): Promise<void> => openUri(nextradeUrls.termsOfServiceUrl)}
             />
           ),
           highlightPrivacy: (
             <Text
               color="$accent1"
               variant="body4"
-              onPress={(): Promise<void> => openUri(uniswapUrls.privacyPolicyUrl)}
+              onPress={(): Promise<void> => openUri(nextradeUrls.privacyPolicyUrl)}
             />
           ),
         }}

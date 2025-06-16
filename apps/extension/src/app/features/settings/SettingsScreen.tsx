@@ -27,22 +27,22 @@ import {
   Sliders,
   Wrench,
 } from 'ui/src/components/icons'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
-import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { PasskeyManagementModal } from 'uniswap/src/features/passkey/PasskeyManagementModal'
-import { setCurrentFiatCurrency, setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ConnectionCardLoggingName } from 'uniswap/src/features/telemetry/types'
-import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
-import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
+import { nextradeUrls } from 'nextrade/src/constants/urls'
+import { resetNexTradeBehaviorHistory } from 'nextrade/src/features/behaviorHistory/slice'
+import { useEnabledChains } from 'nextrade/src/features/chains/hooks/useEnabledChains'
+import { FiatCurrency, ORDERED_CURRENCIES } from 'nextrade/src/features/fiatCurrency/constants'
+import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'nextrade/src/features/fiatCurrency/hooks'
+import { FeatureFlags } from 'nextrade/src/features/gating/flags'
+import { useFeatureFlag } from 'nextrade/src/features/gating/hooks'
+import { useCurrentLanguageInfo } from 'nextrade/src/features/language/hooks'
+import { PasskeyManagementModal } from 'nextrade/src/features/passkey/PasskeyManagementModal'
+import { setCurrentFiatCurrency, setIsTestnetModeEnabled } from 'nextrade/src/features/settings/slice'
+import Trace from 'nextrade/src/features/telemetry/Trace'
+import { WalletEventName } from 'nextrade/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'nextrade/src/features/telemetry/send'
+import { ConnectionCardLoggingName } from 'nextrade/src/features/telemetry/types'
+import { TestnetModeModal } from 'nextrade/src/features/testnets/TestnetModeModal'
+import { ExtensionScreens } from 'nextrade/src/types/screens/extension'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import noop from 'utilities/src/react/noop'
@@ -193,7 +193,7 @@ export function SettingsScreen(): JSX.Element {
                   title="Clear behavior history"
                   onPress={() => {
                     dispatch(resetWalletBehaviorHistory())
-                    dispatch(resetUniswapBehaviorHistory())
+                    dispatch(resetNexTradeBehaviorHistory())
                   }}
                 />
               )}
@@ -301,7 +301,7 @@ export function SettingsScreen(): JSX.Element {
               <SettingsItem
                 Icon={HelpCenter}
                 title={t('settings.setting.helpCenter.title')}
-                url={uniswapUrls.helpArticleUrls.extensionHelp}
+                url={nextradeUrls.helpArticleUrls.extensionHelp}
                 RightIcon={ArrowUpRight}
               />
               <Text

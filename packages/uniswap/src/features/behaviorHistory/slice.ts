@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
  * Used to store persisted info about a users interactions with UI.
  * We use this to show conditional UI, usually only for the first time a user views a new feature.
  */
-export interface UniswapBehaviorHistoryState {
+export interface NexTradeBehaviorHistoryState {
   hasViewedBridgingBanner?: boolean
   hasDismissedBridgingWarning?: boolean
   hasDismissedLowNetworkTokenWarning?: boolean
@@ -27,7 +27,7 @@ export interface UniswapBehaviorHistoryState {
   hasShownSmartWalletNudge?: boolean
 }
 
-export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
+export const initialNexTradeBehaviorHistoryState: NexTradeBehaviorHistoryState = {
   hasViewedBridgingBanner: false,
   hasDismissedBridgingWarning: false,
   hasDismissedLowNetworkTokenWarning: false,
@@ -46,8 +46,8 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
 }
 
 const slice = createSlice({
-  name: 'uniswapBehaviorHistory',
-  initialState: initialUniswapBehaviorHistoryState,
+  name: 'nextradeBehaviorHistory',
+  initialState: initialNexTradeBehaviorHistoryState,
   reducers: {
     setHasViewedBridgingBanner: (state, action: PayloadAction<boolean>) => {
       state.hasViewedBridgingBanner = action.payload
@@ -90,8 +90,8 @@ const slice = createSlice({
       state.unichainPromotion.bridgingAnimationSeen = action.payload
     },
     // Should only be used for testing
-    resetUniswapBehaviorHistory: (_state, _action: PayloadAction) => {
-      return initialUniswapBehaviorHistoryState
+    resetNexTradeBehaviorHistory: (_state, _action: PayloadAction) => {
+      return initialNexTradeBehaviorHistoryState
     },
     setHasShownMismatchToast: (state, action: PayloadAction<boolean>) => {
       state.hasShownMismatchToast = action.payload
@@ -117,11 +117,11 @@ export const {
   setHasSeenBridgingTooltip,
   setIsFirstUnichainBridgeSelection,
   setHasSeenBridgingAnimation,
-  resetUniswapBehaviorHistory,
+  resetNexTradeBehaviorHistory,
   setHasViewedContractAddressExplainer,
   setHasShownMismatchToast,
   setEmbeddedWalletGraduateCardDismissed,
   setHasShownSmartWalletNudge,
 } = slice.actions
 
-export const uniswapBehaviorHistoryReducer = slice.reducer
+export const nextradeBehaviorHistoryReducer = slice.reducer

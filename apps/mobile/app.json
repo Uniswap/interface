@@ -1,8 +1,8 @@
 {
-  "name": "Uniswap",
-  "displayName": "Uniswap",
+  "name": "NexTrade",
+  "displayName": "NexTrade",
   "appStoreUrl": "https://apps.apple.com/app/apple-store/id6443944476",
-  "playStoreUrl": "https://play.google.com/store/apps/details?id=com.uniswap.mobile",
+  "playStoreUrl": "https://play.google.com/store/apps/details?id=com.zentrade.mobile",
   "expo": {
     "ios": {
       "infoPlist": {

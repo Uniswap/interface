@@ -22,7 +22,7 @@ import {
   handleSendTransaction,
   handleSignMessage,
   handleSignTypedData,
-  handleUniswapOpenSidebarRequest,
+  handleNextTradeOpenSidebarRequest,
 } from 'src/app/features/dappRequests/saga'
 import type {
   DappRequestNoDappInfo,
@@ -58,13 +58,13 @@ import {
   SignMessageRequestSchema,
   SignTypedDataRequest,
   SignTypedDataRequestSchema,
-  UniswapOpenSidebarRequest,
-  UniswapOpenSidebarRequestSchema,
+  NextTradeOpenSidebarRequest,
+  NextTradeOpenSidebarRequestSchema,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
-import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
-import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
+import { DappRequestType, DappResponseType } from 'nexttrade/src/features/dappRequests/types'
+import { getEnabledChainIdsSaga } from 'nexttrade/src/features/settings/saga'
 import { logger } from 'utilities/src/logger/logger'
 
 function* dappRequestApproval({
@@ -247,11 +247,11 @@ function* dappRequestApproval({
           yield* call(getChainIdNoDappInfo, validatedRequest, confirmedRequest.senderTabInfo, defaultChainId)
           break
         }
-        case DappRequestType.UniswapOpenSidebar: {
-          const validatedRequest: UniswapOpenSidebarRequest = UniswapOpenSidebarRequestSchema.parse(
+        case DappRequestType.NextTradeOpenSidebar: {
+          const validatedRequest: NextTradeOpenSidebarRequest = NextTradeOpenSidebarRequestSchema.parse(
             confirmedRequest.dappRequest,
           )
-          yield* call(handleUniswapOpenSidebarRequest, validatedRequest, confirmedRequest.senderTabInfo)
+          yield* call(handleNextTradeOpenSidebarRequest, validatedRequest, confirmedRequest.senderTabInfo)
           break
         }
       }

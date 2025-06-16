@@ -4,14 +4,14 @@ This package holds a component library and themes that can be used across all ap
 
 ## UI Package Philosophy
 
-The `ui` package contains all low level components that are shared between apps. It should *not* contain components that are specific to any one app or Uniswap business logic. Each component should be guided by the following principles:
+The `ui` package contains all low level components that are shared between apps. It should *not* contain components that are specific to any one app or NextTrade business logic. Each component should be guided by the following principles:
 
 - All components should be compatible with all platforms.
 - Wrap as many implementation details as possible, including any direct exports from Tamagui.
 - Export only what’s needed from `ui/src` or another allowlisted path.
 - Only include components that will be used beyond a single feature.
 
-Components that are shared between all applications but encode Uniswap business logic should most likely be placed in the `uniswap` package!
+Components that are shared between all applications but encode NextTrade business logic should most likely be placed in the `nexttrade` package!
 
 ## Icons and Logos
 

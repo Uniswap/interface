@@ -9,7 +9,7 @@ const { none: lightTransparent, ...tamaguiColorsLight } = colorsLight
 // TODO can convert tokens to createTokens() and then use them here
 // Tamagui will automatically convert them though, so it just saves a small amount of performance
 const light = {
-  // Uniswap Design System
+  // NexTrade Design System
   ...tamaguiColorsLight,
   transparent: lightTransparent,
 

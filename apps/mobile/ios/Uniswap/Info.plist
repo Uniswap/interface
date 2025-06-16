@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Uniswap</string>
+	<string>NextTrade</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIconName</key>
@@ -63,17 +63,17 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>uniswap</string>
+			<string>nexttrade</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>uniswap</string>
+				<string>nexttrade</string>
 			</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>CFBundleURLName</key>
-			<string>org.uniswap.wc</string>
+			<string>org.nexttrade.wc</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>wc</string>
@@ -122,12 +122,12 @@
 	<string>$(PRODUCT_NAME) Wallet needs access to your Camera Roll to choose an avatar for your username</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
-		<key>iCloud.Uniswap</key>
+		<key>iCloud.NextTrade</key>
 		<dict>
 			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
 			<false/>
 			<key>NSUbiquitousContainerName</key>
-			<string>Uniswap</string>
+			<string>NextTrade</string>
 			<key>NSUbiquitousContainerSupportedFolderLevels</key>
 			<string>Any</string>
 		</dict>
@@ -137,7 +137,7 @@
 		<string>TokenPriceConfigurationIntent</string>
 	</array>
 	<key>OneSignal_app_groups_key</key>
-	<string>group.com.uniswap.mobile.onesignal</string>
+	<string>group.com.nexttrade.mobile.onesignal</string>
 	<key>OneSignal_suppress_launch_urls</key>
 	<true/>
 	<key>UIAppFonts</key>

@@ -3,16 +3,16 @@ import { useSelector } from 'react-redux'
 import {
   makeSelectAddressNotifications,
   makeSelectHasNotifications,
-} from 'uniswap/src/features/notifications/selectors'
-import { AppNotification } from 'uniswap/src/features/notifications/types'
-import { UniswapState } from 'uniswap/src/state/uniswapReducer'
+} from 'nexttrade/src/features/notifications/selectors'
+import { AppNotification } from 'nexttrade/src/features/notifications/types'
+import { NextTradeState } from 'nexttrade/src/state/uniswapReducer'
 
 export function useSelectAddressHasNotifications(address: Address | null): boolean | undefined {
   const selectHasNotifications = useMemo(makeSelectHasNotifications, [])
-  return useSelector((state: UniswapState) => selectHasNotifications(state, address))
+  return useSelector((state: NextTradeState) => selectHasNotifications(state, address))
 }
 
 export function useSelectAddressNotifications(address: Address | null): AppNotification[] | undefined {
   const selectAddressNotifications = useMemo(makeSelectAddressNotifications, [])
-  return useSelector((state: UniswapState) => selectAddressNotifications(state, address))
+  return useSelector((state: NextTradeState) => selectAddressNotifications(state, address))
 }

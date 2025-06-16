@@ -15,13 +15,13 @@ import {
 } from 'src/background/messagePassing/types/requests'
 import { ExtensionEthMethodHandler } from 'src/contentScript/methodHandlers/ExtensionEthMethodHandler'
 import { ProviderDirectMethodHandler } from 'src/contentScript/methodHandlers/ProviderDirectMethodHandler'
-import { UniswapMethodHandler } from 'src/contentScript/methodHandlers/UniswapMethodHandler'
+import { NexTradeMethodHandler } from 'src/contentScript/methodHandlers/UniswapMethodHandler'
 import { emitAccountsChanged, emitChainChanged } from 'src/contentScript/methodHandlers/emitUtils'
 import {
   isDeprecatedMethod,
   isExtensionEthMethod,
   isProviderDirectMethod,
-  isUniswapMethod,
+  isNexTradeMethod,
   isUnsupportedMethod,
   postDeprecatedMethodError,
   postParsingError,
@@ -34,8 +34,8 @@ import {
   isValidWindowEthereumConfigRequest,
   isValidWindowEthereumRequest,
 } from 'src/contentScript/types'
-import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
-import { EthMethod } from 'uniswap/src/features/dappRequests/types'
+import { chainIdToHexadecimalString } from 'nextrade/src/features/chains/utils'
+import { EthMethod } from 'nextrade/src/features/dappRequests/types'
 import { logger } from 'utilities/src/logger/logger'
 import { arraysAreEqual } from 'utilities/src/primitives/array'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
@@ -43,8 +43,8 @@ import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { isArcBrowser } from 'src/app/utils/chrome'
 import { getIsDefaultProviderFromStorage } from 'src/app/utils/provider'
 import { logContentScriptError } from 'src/contentScript/utils'
-import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { ExtensionEventName } from 'nextrade/src/features/telemetry/constants'
+import { getValidAddress } from 'nextrade/src/utils/addresses'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { ZodError } from 'zod'
 
@@ -115,7 +115,7 @@ const providerDirectMethodHandler = new ProviderDirectMethodHandler(
   setConnectedAddressesAndMaybeEmit,
 )
 
-const uniswapMethodHandler = new UniswapMethodHandler(
+const uniswapMethodHandler = new NexTradeMethodHandler(
   getChainId,
   getProvider,
   getConnectedAddresses,
@@ -145,7 +145,7 @@ addWindowMessageListener<WindowEthereumRequest>(isValidWindowEthereumRequest, as
     return
   }
 
-  if (isUniswapMethod(request.method)) {
+  if (isNexTradeMethod(request.method)) {
     try {
       await uniswapMethodHandler.handleRequest(request, source)
     } catch (e) {

@@ -5,19 +5,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getCountry } from 'react-native-localize'
 import { useDispatch } from 'react-redux'
-import { useCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useCurrencies'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
-import { useAppFiatCurrencyInfo, useFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useCurrencies } from 'nexttrade/src/components/TokenSelector/hooks/useCurrencies'
+import { useAccountMeta } from 'nexttrade/src/contexts/UniswapContext'
+import { Routing } from 'nexttrade/src/data/tradingApi/__generated__/index'
+import { UniverseChainId } from 'nexttrade/src/features/chains/types'
+import { toSupportedChainId } from 'nexttrade/src/features/chains/utils'
+import { FiatCurrency } from 'nexttrade/src/features/fiatCurrency/constants'
+import { useAppFiatCurrencyInfo, useFiatCurrencyInfo } from 'nexttrade/src/features/fiatCurrency/hooks'
 import {
   useFiatOnRampAggregatorCryptoQuoteQuery,
   useFiatOnRampAggregatorGetCountryQuery,
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
   useFiatOnRampAggregatorSupportedTokensQuery,
-} from 'uniswap/src/features/fiatOnRamp/api'
+} from 'nexttrade/src/features/fiatOnRamp/api'
 import {
   FORQuote,
   FORSupportedFiatCurrency,
@@ -25,24 +25,24 @@ import {
   FiatCurrencyInfo,
   FiatOnRampCurrency,
   RampDirection,
-} from 'uniswap/src/features/fiatOnRamp/types'
+} from 'nexttrade/src/features/fiatOnRamp/types'
 import {
   createOnRampTransactionId,
   isFiatOnRampApiError,
   isInvalidRequestAmountTooHigh,
   isInvalidRequestAmountTooLow,
-} from 'uniswap/src/features/fiatOnRamp/utils'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { addTransaction } from 'uniswap/src/features/transactions/slice'
+} from 'nexttrade/src/features/fiatOnRamp/utils'
+import { useLocalizationContext } from 'nexttrade/src/features/language/LocalizationContext'
+import { ValueType } from 'nexttrade/src/features/tokens/getCurrencyAmount'
+import { addTransaction } from 'nexttrade/src/features/transactions/slice'
 import {
   TransactionDetails,
   TransactionOriginType,
   TransactionStatus,
   TransactionType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
-import { getFormattedCurrencyAmount } from 'uniswap/src/utils/currency'
-import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+} from 'nexttrade/src/features/transactions/types/transactionDetails'
+import { getFormattedCurrencyAmount } from 'nexttrade/src/utils/currency'
+import { buildCurrencyId, buildNativeCurrencyId } from 'nexttrade/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useDebounce } from 'utilities/src/time/timing'
 

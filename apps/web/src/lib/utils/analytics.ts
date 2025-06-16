@@ -1,20 +1,20 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { InterfaceTrade, OffchainOrderType, QuoteMethod, SubmittableTrade } from 'state/routing/types'
-import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
-import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
-import { getRouteAnalyticsData, tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
+import { isClassicTrade, isSubmittableTrade, isNexTradeXTrade } from 'state/routing/utils'
+import { Routing } from 'nexttrade/src/data/tradingApi/__generated__'
+import { SwapTradeBaseProperties } from 'nexttrade/src/features/telemetry/types'
+import { getRouteAnalyticsData, tradeRoutingToFillType } from 'nexttrade/src/features/transactions/swap/analytics'
 import {
   BridgeTrade,
   ClassicTrade,
   PriorityOrderTrade,
-  UniswapXTrade,
-  UniswapXV2Trade,
-  UniswapXV3Trade,
-} from 'uniswap/src/features/transactions/swap/types/trade'
-import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
+  NexTradeXTrade,
+  NexTradeXV2Trade,
+  NexTradeXV3Trade,
+} from 'nexttrade/src/features/transactions/swap/types/trade'
+import { isClassic, isNexTradeX } from 'nexttrade/src/features/transactions/swap/utils/routing'
+import { TransactionOriginType } from 'nexttrade/src/features/transactions/types/transactionDetails'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
@@ -49,7 +49,7 @@ function getEstimatedNetworkFee(trade: InterfaceTrade) {
   if (isClassicTrade(trade)) {
     return trade.gasUseEstimateUSD
   }
-  if (isUniswapXTrade(trade)) {
+  if (isNexTradeXTrade(trade)) {
     return trade.classicGasUseEstimateUSD
   }
   return undefined
@@ -68,7 +68,7 @@ function tradeRoutingToOffchainOrderType(routing: Routing): OffchainOrderType | 
 }
 
 export function formatCommonPropertiesForTrade(
-  trade: InterfaceTrade | ClassicTrade | UniswapXTrade | BridgeTrade,
+  trade: InterfaceTrade | ClassicTrade | NexTradeXTrade | BridgeTrade,
   allowedSlippage: Percent,
   outputFeeFiatValue?: number,
   isBatched?: boolean,
@@ -77,15 +77,15 @@ export function formatCommonPropertiesForTrade(
 ): SwapTradeBaseProperties {
   const isUniversalSwapFlow =
     trade instanceof ClassicTrade ||
-    trade instanceof UniswapXV2Trade ||
-    trade instanceof UniswapXV3Trade ||
+    trade instanceof NexTradeXV2Trade ||
+    trade instanceof NexTradeXV3Trade ||
     trade instanceof PriorityOrderTrade ||
     trade instanceof BridgeTrade
 
   return {
     routing: isUniversalSwapFlow ? tradeRoutingToFillType(trade) : trade.fillType,
     type: trade.tradeType,
-    ura_quote_id: isUniversalSwapFlow ? trade.quote?.quote.quoteId : isUniswapXTrade(trade) ? trade.quoteId : undefined,
+    ura_quote_id: isUniversalSwapFlow ? trade.quote?.quote.quoteId : isNexTradeXTrade(trade) ? trade.quoteId : undefined,
     ura_request_id: isUniversalSwapFlow
       ? trade.quote?.requestId
       : isSubmittableTrade(trade)
@@ -127,7 +127,7 @@ export function formatCommonPropertiesForTrade(
     token_in_detected_tax: formatPercentNumber(trade.inputTax),
     offchain_order_type: isUniversalSwapFlow
       ? tradeRoutingToOffchainOrderType(trade.routing)
-      : isUniswapXTrade(trade)
+      : isNexTradeXTrade(trade)
         ? trade.offchainOrderType
         : undefined,
     transactionOriginType: TransactionOriginType.Internal,
@@ -149,7 +149,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   batchId,
   includedPermitTransactionStep,
 }: {
-  trade: SubmittableTrade | ClassicTrade | UniswapXTrade | BridgeTrade
+  trade: SubmittableTrade | ClassicTrade | NexTradeXTrade | BridgeTrade
   allowedSlippage: Percent
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   txHash?: string
@@ -179,7 +179,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
 })
 
 function getQuoteMethod(trade: InterfaceTrade) {
-  if (isUniswapXTrade(trade)) {
+  if (isNexTradeXTrade(trade)) {
     return QuoteMethod.ROUTING_API
   }
 

@@ -2,7 +2,7 @@
 
 #import <Firebase.h>
 
-#import "Uniswap-Swift.h"
+#import "NextTrade-Swift.h"
 
 #import <React/RCTBundleURLProvider.h>
 #import <ReactNativePerformance/ReactNativePerformance.h>
@@ -55,7 +55,7 @@ static NSString *const hasLaunchedOnceKey = @"HasLaunchedOnce";
     }
   }
   
-  self.moduleName = @"Uniswap";
+  self.moduleName = @"NextTrade";
   self.initialProps = @{};
   
   [self.window makeKeyAndVisible];

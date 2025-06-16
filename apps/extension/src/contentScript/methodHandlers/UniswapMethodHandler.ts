@@ -4,22 +4,22 @@ import {
   dappResponseMessageChannel,
 } from 'src/background/messagePassing/messageChannels'
 import {
-  UniswapOpenSidebarRequest,
-  UniswapOpenSidebarRequestSchema,
+  NexTradeOpenSidebarRequest,
+  NexTradeOpenSidebarRequestSchema,
 } from 'src/contentScript/WindowEthereumRequestTypes'
 import { BaseMethodHandler } from 'src/contentScript/methodHandlers/BaseMethodHandler'
-import { UniswapMethods } from 'src/contentScript/methodHandlers/requestMethods'
+import { NexTradeMethods } from 'src/contentScript/methodHandlers/requestMethods'
 import { PendingResponseInfo } from 'src/contentScript/methodHandlers/types'
 import { getPendingResponseInfo } from 'src/contentScript/methodHandlers/utils'
 import { WindowEthereumRequest } from 'src/contentScript/types'
-import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
+import { DappRequestType, DappResponseType } from 'nextrade/src/features/dappRequests/types'
 import { logger } from 'utilities/src/logger/logger'
 
 /**
- * Handles all uniswap-specific requests
+ * Handles all nextrade-specific requests
  */
 
-export class UniswapMethodHandler extends BaseMethodHandler<WindowEthereumRequest> {
+export class NexTradeMethodHandler extends BaseMethodHandler<WindowEthereumRequest> {
   private readonly requestIdToSourceMap: Map<string, PendingResponseInfo> = new Map()
 
   constructor(
@@ -39,11 +39,11 @@ export class UniswapMethodHandler extends BaseMethodHandler<WindowEthereumReques
       setConnectedAddressesAndMaybeEmit,
     )
 
-    dappResponseMessageChannel.addMessageListener(DappResponseType.UniswapOpenSidebarResponse, (message) => {
+    dappResponseMessageChannel.addMessageListener(DappResponseType.NextTradeOpenSidebarResponse, (message) => {
       const source = getPendingResponseInfo(
         this.requestIdToSourceMap,
         message.requestId,
-        DappResponseType.UniswapOpenSidebarResponse,
+        DappResponseType.NextTradeOpenSidebarResponse,
       )?.source
 
       source?.postMessage({
@@ -54,26 +54,26 @@ export class UniswapMethodHandler extends BaseMethodHandler<WindowEthereumReques
 
   async handleRequest(request: WindowEthereumRequest, source: MessageEventSource | null): Promise<void> {
     switch (request.method) {
-      case UniswapMethods.uniswap_openSidebar: {
-        logger.debug("Handling 'uniswap_openSidebar' request", request.method, request.toString())
-        const uniswapOpenTokensRequest = UniswapOpenSidebarRequestSchema.parse(request)
-        await this.handleUniswapOpenSidebarRequest(uniswapOpenTokensRequest, source)
+      case NexTradeMethods.nextrade_openSidebar: {
+        logger.debug("Handling 'nextrade_openSidebar' request", request.method, request.toString())
+        const nexTradeOpenTokensRequest = NexTradeOpenSidebarRequestSchema.parse(request)
+        await this.handleNexTradeOpenSidebarRequest(nexTradeOpenTokensRequest, source)
         break
       }
     }
   }
 
-  private async handleUniswapOpenSidebarRequest(
-    request: UniswapOpenSidebarRequest,
+  private async handleNexTradeOpenSidebarRequest(
+    request: NexTradeOpenSidebarRequest,
     source: MessageEventSource | null,
   ): Promise<void> {
     this.requestIdToSourceMap.set(request.requestId, {
       source,
-      type: DappResponseType.UniswapOpenSidebarResponse,
+      type: DappResponseType.NextTradeOpenSidebarResponse,
     })
 
     await contentScriptToBackgroundMessageChannel.sendMessage({
-      type: DappRequestType.UniswapOpenSidebar,
+      type: DappRequestType.NextTradeOpenSidebar,
       requestId: request.requestId,
       tab: request.tab,
     })

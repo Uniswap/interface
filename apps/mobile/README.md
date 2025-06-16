@@ -1,8 +1,8 @@
-# Uniswap Wallet
+# NextTrade Wallet
 
-[Uniswap Wallet](https://wallet.uniswap.org/) is the simplest, safest, and most powerful self-custodial crypto wallet. It is developed by the Uniswap Labs team, inventors of the Uniswap Protocol.
+[NextTrade Wallet](https://wallet.nexttrade.com/) is the simplest, safest, and most powerful self-custodial crypto wallet. It is developed by the NextTrade Labs team, inventors of the NextTrade Protocol.
 
-If you have suggestions on how we can improve the app, or would like to report a bug or a problem, check out the [Uniswap Help Center](https://support.uniswap.org/).
+If you have suggestions on how we can improve the app, or would like to report a bug or a problem, check out the [NextTrade Help Center](https://support.nexttrade.com/).
 
 ## Table of contents
 
@@ -150,7 +150,7 @@ Note: If you are indeed using an Apple Silicon Mac, we recommend setting up your
 
 You should start with downloading Xcode if you don't already have it installed, since the file is so large. You can find it here: [developer.apple.com/xcode](https://developer.apple.com/xcode/)
 
-You must use the [Required Xcode Version](https://github.com/Uniswap/universe/blob/main/apps/mobile/scripts/podinstall.sh#L5) to compile the app. [Older versions of xCode can be found here](https://developer.apple.com/download/all/?q=xcode).
+You must use the [Required Xcode Version](https://github.com/NextTrade/universe/blob/main/apps/mobile/scripts/podinstall.sh#L5) to compile the app. [Older versions of xCode can be found here](https://developer.apple.com/download/all/?q=xcode).
 
 #### Add Xcode Command Line Tools
 
@@ -242,7 +242,7 @@ Or you can use one command to run them all one after the other: `yarn && yarn po
 
 You can also run the app from Xcode, which is necessary for any Swift related changes. Xcode will automatically start the metro bundler.
 
-Hopefully you now (after a few minutes) see the Uniswap Wallet running in the iOS Simulator!
+Hopefully you now (after a few minutes) see the NextTrade Wallet running in the iOS Simulator!
 
 ### Using Radon IDE (VSCode/Cursor Extension)
 
@@ -261,10 +261,10 @@ In `.vscode/launch.json`, you will see configurations for each platform. This is
 #### Running on a Physical iOS Device
 
 1. Follow all steps listed above.
-2. Sign into your `@uniswap.org` Apple ID (`Cmd + ,` -> Accounts tab) + download provisioning profiles
+2. Sign into your `@nexttrade.org` Apple ID (`Cmd + ,` -> Accounts tab) + download provisioning profiles
 3. Connect your iOS device + follow the on-screen prompts to trust your computer
-4. Select the Uniswap target + your connect device, then `Cmd + R` or use the ▶️ button the start the build
-5. You may get an error about your device not yet being added to the Uniswap Apple Developer account; if so, click `Register` and restart the build
+4. Select the NextTrade target + your connect device, then `Cmd + R` or use the ▶️ button the start the build
+5. You may get an error about your device not yet being added to the NextTrade Apple Developer account; if so, click `Register` and restart the build
 
 ## Important Libraries and Tools
 
@@ -302,7 +302,7 @@ We use `redux-persist` to persist the Redux state between user sessions. Most of
 `sudo xcode-select --switch /Applications/Xcode.app`
 `pod install`
 
-- `unable to open file (in target "OneSignalNotificationServiceExtension" in project "Uniswap")`.
+- `unable to open file (in target "OneSignalNotificationServiceExtension" in project "NextTrade")`.
   Resolve this issue by navigating to the `ios/` directory and running `pod update`.
 
 - `Build target hermes-engine: Command PhaseScriptExecution failed with a nonzero exit code`
@@ -315,7 +315,7 @@ We use `redux-persist` to persist the Redux state between user sessions. Most of
 `cd ios && pod repo update`
 `cd ios && pod update hermes-engine --no-repo-update`
 
-Context: <https://uniswapteam.slack.com/archives/C02GYG8TU12/p1692640189802989?thread_ts=1692635970.952869&cid=C02GYG8TU12>
+Context: <https://nexttradeteam.slack.com/archives/C02GYG8TU12/p1692640189802989?thread_ts=1692635970.952869&cid=C02GYG8TU12>
 
 ### Common fixes
 

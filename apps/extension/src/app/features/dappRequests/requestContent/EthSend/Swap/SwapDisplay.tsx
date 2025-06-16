@@ -3,14 +3,14 @@ import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestCon
 import { Flex, Separator, Text } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { CurrencyLogo } from 'nexttrade/src/components/CurrencyLogo/CurrencyLogo'
+import { SplitLogo } from 'nexttrade/src/components/CurrencyLogo/SplitLogo'
+import { UniverseChainId } from 'nexttrade/src/features/chains/types'
+import { CurrencyInfo } from 'nexttrade/src/features/dataApi/types'
+import { GasFeeResult } from 'nexttrade/src/features/gas/types'
+import { useLocalizationContext } from 'nexttrade/src/features/language/LocalizationContext'
+import { ValueType, getCurrencyAmount } from 'nexttrade/src/features/tokens/getCurrencyAmount'
+import { useUSDCValue } from 'nexttrade/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
 
 export function SwapDisplay({
@@ -22,7 +22,7 @@ export function SwapDisplay({
   transactionGasFeeResult,
   onCancel,
   onConfirm,
-  isUniswapX,
+  isNextTradeX,
   isWrap,
   isUnwrap,
 }: {
@@ -34,7 +34,7 @@ export function SwapDisplay({
   transactionGasFeeResult?: GasFeeResult
   onCancel?: () => Promise<void>
   onConfirm?: () => Promise<void>
-  isUniswapX?: boolean
+  isNextTradeX?: boolean
   isWrap?: boolean
   isUnwrap?: boolean
 }): JSX.Element {
@@ -89,7 +89,7 @@ export function SwapDisplay({
           />
         ) : undefined
       }
-      isUniswapX={isUniswapX}
+      isNextTradeX={isNextTradeX}
       title={title}
       transactionGasFeeResult={transactionGasFeeResult}
       onCancel={onCancel}

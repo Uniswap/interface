@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AppNotification } from 'uniswap/src/features/notifications/types'
+import { AppNotification } from 'nexttrade/src/features/notifications/types'
 
 export interface NotificationState {
   notificationQueue: AppNotification[]

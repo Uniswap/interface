@@ -1,13 +1,13 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
-import { PollingInterval } from 'uniswap/src/constants/misc'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { PollingInterval } from 'nexttrade/src/constants/misc'
+import { Chain } from 'nexttrade/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   GQL_MAINNET_CHAINS,
   GQL_TESTNET_CHAINS,
   // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   UNIVERSE_CHAIN_INFO,
   getChainInfo,
-} from 'uniswap/src/features/chains/chainInfo'
+} from 'nexttrade/src/features/chains/chainInfo'
 import {
   ALL_CHAIN_IDS,
   EnabledChainsInfo,
@@ -16,7 +16,7 @@ import {
   SUPPORTED_CHAIN_IDS,
   SUPPORTED_TESTNET_CHAIN_IDS,
   UniverseChainId,
-} from 'uniswap/src/features/chains/types'
+} from 'nexttrade/src/features/chains/types'
 
 // Some code from the web app uses chainId types as numbers
 // This validates them as coerces into SupportedChainId
@@ -122,7 +122,7 @@ export function getPollingIntervalByBlocktime(chainId?: UniverseChainId): Pollin
   return isMainnetChainId(chainId) ? PollingInterval.Fast : PollingInterval.LightningMcQueen
 }
 
-export function fromUniswapWebAppLink(network: string | null): UniverseChainId | null {
+export function fromNextTradeWebAppLink(network: string | null): UniverseChainId | null {
   switch (network) {
     case Chain.Ethereum.toLowerCase():
       return UniverseChainId.Mainnet
@@ -163,7 +163,7 @@ export function fromUniswapWebAppLink(network: string | null): UniverseChainId |
   }
 }
 
-export function toUniswapWebAppLink(chainId: UniverseChainId): string | null {
+export function toNextTradeWebAppLink(chainId: UniverseChainId): string | null {
   switch (chainId) {
     case UniverseChainId.Mainnet:
       return Chain.Ethereum.toLowerCase()

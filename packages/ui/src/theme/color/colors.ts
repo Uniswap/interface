@@ -75,8 +75,8 @@ export const colors = {
 
   ...accentColors,
 
-  uniswapXViolet: '#4673FA',
-  uniswapXPurple: '#7D55FB',
+  nextradeXViolet: '#4673FA',
+  nextradeXPurple: '#7D55FB',
 
   fiatOnRampBanner: '#FB36D0',
 }

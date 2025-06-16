@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { FOR_API_HEADERS } from 'uniswap/src/features/fiatOnRamp/constants'
+import { nexttradeUrls } from 'nexttrade/src/constants/urls'
+import { FOR_API_HEADERS } from 'nexttrade/src/features/fiatOnRamp/constants'
 import {
   FORGetCountryResponse,
   FORQuoteRequest,
@@ -20,13 +20,13 @@ import {
   OffRampTransferDetailsRequest,
   OffRampTransferDetailsResponse,
   OffRampWidgetUrlRequest,
-} from 'uniswap/src/features/fiatOnRamp/types'
-import { transformPaymentMethods } from 'uniswap/src/features/fiatOnRamp/utils'
+} from 'nexttrade/src/features/fiatOnRamp/types'
+import { transformPaymentMethods } from 'nexttrade/src/features/fiatOnRamp/utils'
 
 export const fiatOnRampAggregatorApi = createApi({
-  reducerPath: 'fiatOnRampAggregatorApi-uniswap',
+  reducerPath: 'fiatOnRampAggregatorApi-nexttrade',
   baseQuery: fetchBaseQuery({
-    baseUrl: uniswapUrls.forApiUrl,
+    baseUrl: nexttradeUrls.forApiUrl,
     headers: FOR_API_HEADERS,
   }),
   endpoints: (builder) => ({

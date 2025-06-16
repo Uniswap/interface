@@ -10,11 +10,11 @@ import { OnboardingMessageType } from 'src/background/messagePassing/types/Exten
 import { openSidePanel } from 'src/background/utils/chromeSidePanelUtils'
 import { terminateStoreSynchronization } from 'src/store/storeSynchronization'
 import { Button, Flex, Image, Text } from 'ui/src'
-import { UNISWAP_LOGO } from 'ui/src/assets'
+import { NEXTRADE_LOGO } from 'ui/src/assets'
 import { RightArrow } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
+import { nextradeUrls } from 'nextrade/src/constants/urls'
+import { ExtensionOnboardingFlow } from 'nextrade/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 
@@ -63,7 +63,7 @@ export function Complete({
   }, [])
 
   const handleOpenWebApp = async (): Promise<void> => {
-    window.location.href = uniswapUrls.webInterfaceSwapUrl
+    window.location.href = nextradeUrls.webInterfaceSwapUrl
   }
 
   const handleOpenSidebar = async (): Promise<void> => {
@@ -84,7 +84,7 @@ export function Complete({
       <Flex alignItems="center">
         <Flex alignItems="center" gap="$spacing24" justifyContent="center">
           <Flex alignItems="center" gap="$spacing12" justifyContent="center">
-            <Image height={iconSizes.icon64} source={UNISWAP_LOGO} width={iconSizes.icon64} />
+            <Image height={iconSizes.icon64} source={NEXTRADE_LOGO} width={iconSizes.icon64} />
             <Text color="$neutral1" variant="heading3">
               {t('onboarding.complete.title')}
             </Text>
@@ -106,7 +106,7 @@ export function Complete({
               emphasis={openedSideBar ? 'primary' : 'secondary'}
               onPress={openedSideBar ? handleOpenWebApp : handleOpenSidebar}
             >
-              {openedSideBar ? t('onboarding.complete.go_to_uniswap') : t('onboarding.complete.button')}
+              {openedSideBar ? t('onboarding.complete.go_to_nextrade') : t('onboarding.complete.button')}
             </Button>
           </Flex>
         </Flex>

@@ -9,5 +9,8 @@ export const SUPPORTED_V2POOL_CHAIN_IDS = Object.keys(V2_ROUTER_ADDRESSES).map((
 export function useNetworkSupportsV2() {
   const { chainId } = useAccount()
 
+  if (chainId === 8408) { // UniverseChainId.ZenchainTestnet
+    return true
+  }
   return chainId && SUPPORTED_V2POOL_CHAIN_IDS.includes(chainId)
 }

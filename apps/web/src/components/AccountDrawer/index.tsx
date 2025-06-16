@@ -4,7 +4,7 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Web3StatusRef } from 'components/Web3Status'
 import { useAccount } from 'hooks/useAccount'
 import useDisableScrolling from 'hooks/useDisableScrolling'
-import { useIsUniExtensionConnected } from 'hooks/useIsUniExtensionConnected'
+import { useIsNexTradeExtensionConnected } from 'hooks/useIsNexTradeExtensionConnected'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
 import { useAtom } from 'jotai'
@@ -24,7 +24,7 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
-import Trace from 'uniswap/src/features/telemetry/Trace'
+import Trace from 'nexttrade/src/features/telemetry/Trace'
 
 const DRAWER_SPECS = {
   WIDTH_XL: '390px',
@@ -61,7 +61,7 @@ const Container = styled(Flex, {
     open: {
       true: { right: DRAWER_SPECS.MARGIN },
     },
-    isUniExtensionConnected: {
+      isNexTradeExtensionConnected: {
       true: ExtensionContainerStyles,
       false: {
         width: DRAWER_SPECS.WIDTH_XL,
@@ -206,7 +206,7 @@ function AccountSideDrawer({ isOpen, onClose, children }: AccountDrawerProps) {
 
 function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
   const accountDrawer = useAccountDrawer()
-  const isUniExtensionConnected = useIsUniExtensionConnected()
+  const isNexTradeExtensionConnected = useIsNexTradeExtensionConnected()
   const media = useMedia()
   const isAccountConnected = useAccount().isConnected
 
@@ -216,7 +216,7 @@ function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
         {children}
       </WebBottomSheet>
     )
-  } else if (!isUniExtensionConnected && isAccountConnected) {
+  } else if (!isNexTradeExtensionConnected && isAccountConnected) {
     return (
       <Container data-testid="account-drawer">
         <AccountSideDrawer isOpen={accountDrawer.isOpen} onClose={accountDrawer.close}>
@@ -226,7 +226,7 @@ function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
     )
   } else {
     return (
-      <Container data-testid="account-drawer" isUniExtensionConnected>
+      <Container data-testid="account-drawer" isNexTradeExtensionConnected>
         <AccountDropdown isOpen={accountDrawer.isOpen} onClose={accountDrawer.close}>
           {children}
         </AccountDropdown>

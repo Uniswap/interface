@@ -1,4 +1,4 @@
-import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionDetails } from 'nexttrade/src/features/transactions/types/transactionDetails'
 
 export type LoadingItem = {
   itemType: 'LOADING'

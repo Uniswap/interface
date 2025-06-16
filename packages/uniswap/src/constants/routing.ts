@@ -13,7 +13,7 @@ import {
   ETH_BSC,
   OP,
   PORTAL_ETH_CELO,
-  UNI,
+  NXT,
   USDC_ARBITRUM,
   USDC_AVALANCHE,
   USDC_BASE,
@@ -44,12 +44,12 @@ import {
   WRAPPED_NATIVE_CURRENCY,
   isCelo,
   nativeOnChain,
-} from 'uniswap/src/constants/tokens'
-import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
-import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
+} from 'nexttrade/src/constants/tokens'
+import { ProtectionResult } from 'nexttrade/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getChainInfo } from 'nexttrade/src/features/chains/chainInfo'
+import { UniverseChainId } from 'nexttrade/src/features/chains/types'
+import { CurrencyInfo, TokenList } from 'nexttrade/src/features/dataApi/types'
+import { buildCurrencyInfo } from 'nexttrade/src/features/dataApi/utils'
 import { isSameAddress } from 'utilities/src/addresses'
 
 type ChainCurrencyList = {
@@ -135,7 +135,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     nativeOnChain(UniverseChainId.Sepolia),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Sepolia] as Token,
     USDC_SEPOLIA,
-    UNI[UniverseChainId.Sepolia],
+    NXT[UniverseChainId.Sepolia],
   ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Soneium]: [
@@ -206,7 +206,7 @@ function getTokenLogoURI(chainId: UniverseChainId, address: string): ImageSource
   }
 
   return networkName
-    ? `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
+    ? `https://raw.githubusercontent.com/NextTrade/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
     : undefined
 }
 

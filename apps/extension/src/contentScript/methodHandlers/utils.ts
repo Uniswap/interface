@@ -2,19 +2,19 @@ import { providerErrors, serializeError } from '@metamask/rpc-errors'
 import {
   DeprecatedEthMethods,
   ProviderDirectMethods,
-  UniswapMethods,
+  NexTradeMethods,
   UnsupportedEthMethods,
 } from 'src/contentScript/methodHandlers/requestMethods'
 import { PendingResponseInfo } from 'src/contentScript/methodHandlers/types'
 import { logContentScriptError } from 'src/contentScript/utils'
-import { DappResponseType, EthMethod, ExtensionEthMethod } from 'uniswap/src/features/dappRequests/types'
+import { DappResponseType, EthMethod, ExtensionEthMethod } from 'nextrade/src/features/dappRequests/types'
 
 export function isProviderDirectMethod(method: string): boolean {
   return Object.keys(ProviderDirectMethods).includes(method)
 }
 
-export function isUniswapMethod(method: string): boolean {
-  return Object.keys(UniswapMethods).includes(method)
+export function isNexTradeMethod(method: string): boolean {
+  return Object.keys(NexTradeMethods).includes(method)
 }
 
 // Since ExtensionEthMethod is a TypeScript type that doesn't exist at runtime,
@@ -51,7 +51,7 @@ export function postDeprecatedMethodError(source: MessageEventSource | null, req
   source?.postMessage({
     requestId,
     error: serializeError(
-      providerErrors.unsupportedMethod(`Uniswap Wallet does not support ${method} as it is deprecated`),
+      providerErrors.unsupportedMethod(`NexTrade Wallet does not support ${method} as it is deprecated`),
     ),
   })
 }
@@ -59,7 +59,7 @@ export function postDeprecatedMethodError(source: MessageEventSource | null, req
 export function postUnknownMethodError(source: MessageEventSource | null, requestId: string, method: string): void {
   source?.postMessage({
     requestId,
-    error: serializeError(providerErrors.unsupportedMethod(`Uniswap Wallet does not support ${method}`)),
+    error: serializeError(providerErrors.unsupportedMethod(`NexTrade Wallet does not support ${method}`)),
   })
 }
 
@@ -74,7 +74,7 @@ export function postParsingError(source: MessageEventSource | null, requestId: s
   source?.postMessage({
     requestId,
     error: serializeError(
-      providerErrors.unsupportedMethod(`Uniswap Wallet could not parse the ${method} request properly`),
+      providerErrors.unsupportedMethod(`NexTrade Wallet could not parse the ${method} request properly`),
     ),
   })
 }

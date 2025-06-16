@@ -5,8 +5,8 @@ import { expectSaga } from 'redux-saga-test-plan'
 import { handleSessionAuthenticate, handleSessionProposal } from 'src/features/walletConnect/saga'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import { WalletConnectVerifyStatus, addPendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { DappRequestInfo, DappRequestType, EthEvent } from 'uniswap/src/types/walletConnect'
+import { UniverseChainId } from 'nextrade/src/features/chains/types'
+import { DappRequestInfo, DappRequestType, EthEvent } from 'nextrade/src/types/walletConnect'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 // Mock for WalletConnect utils
@@ -33,7 +33,7 @@ jest.mock('react-native', () => ({
 }))
 
 // Mock i18n
-jest.mock('uniswap/src/i18n', () => ({
+jest.mock('nextrade/src/i18n', () => ({
   t: jest.fn((key) => key),
 }))
 

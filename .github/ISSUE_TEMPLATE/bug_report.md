@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug or unexpected behavior in the Uniswap interfaces.
+about: Report a bug or unexpected behavior in the NextTrade interfaces.
 title: "[Bug] "
 labels: bug
 ---
@@ -9,8 +9,8 @@ labels: bug
 
 Which application are you experiencing issues with?
 
-- [ ] Web ([app.uniswap.org](https://app.uniswap.org))
-- [ ] Wallet Extension ([wallet.uniswap.org](https://wallet.uniswap.org))
+- [ ] Web ([app.nexttrade.com](https://app.nexttrade.com))
+- [ ] Wallet Extension ([wallet.nexttrade.com](https://wallet.nexttrade.com))
 - [ ] Wallet Mobile App
   - [ ] iOS
   - [ ] Android
@@ -33,7 +33,7 @@ Please provide details about your environment:
 - Browser (name + version):
 - OS / Platform (e.g. iOS 17, Windows 11, Android 14):
 - Device (e.g. iPhone 14 Pro, Pixel 7, MacBook Pro 2023):
-- Wallet used (e.g. Uniswap Wallet, MetaMask, Rainbow):
+- Wallet used (e.g. NextTrade Wallet, MetaMask, Rainbow):
 - Network (e.g. Ethereum Mainnet, Arbitrum, Base, etc.):
 
 ---

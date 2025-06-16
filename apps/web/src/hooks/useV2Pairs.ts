@@ -21,13 +21,24 @@ export function useV2Pairs(currencies: [Currency | undefined, Currency | undefin
   const pairAddresses = useMemo(
     () =>
       tokens.map(([tokenA, tokenB]) => {
-        return tokenA &&
+        if (
+          tokenA &&
           tokenB &&
           tokenA.chainId === tokenB.chainId &&
-          !tokenA.equals(tokenB) &&
-          V2_FACTORY_ADDRESSES[tokenA.chainId]
-          ? computePairAddress({ factoryAddress: V2_FACTORY_ADDRESSES[tokenA.chainId], tokenA, tokenB })
-          : undefined
+          !tokenA.equals(tokenB)
+        ) {
+          let factoryAddress: string | undefined;
+          if (tokenA.chainId === 8408) { // UniverseChainId.ZenchainTestnet
+            factoryAddress = '0x7d8a94f44eF64d4Fe1d8FD847B1908B7aFdA998C';
+          } else {
+            factoryAddress = V2_FACTORY_ADDRESSES[tokenA.chainId];
+          }
+
+          if (factoryAddress) {
+            return computePairAddress({ factoryAddress, tokenA, tokenB });
+          }
+        }
+        return undefined;
       }),
     [tokens],
   )

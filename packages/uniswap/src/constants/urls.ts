@@ -1,4 +1,4 @@
-import { config } from 'uniswap/src/config'
+import { config } from 'nexttrade/src/config'
 import { isBetaEnv, isDevEnv, isPlaywrightEnv, isTestEnv } from 'utilities/src/environment/env'
 import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 
@@ -16,14 +16,14 @@ const FLOWS_USING_BETA = [TrafficFlows.FOR]
 
 const isDevOrBeta = isPlaywrightEnv() ? false : isDevEnv() || isBetaEnv()
 
-export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
-const EMBEDDED_WALLET_HOSTNAME = isPlaywrightEnv() || isDevEnv() ? 'staging.ew.unihq.org' : UNISWAP_WEB_HOSTNAME
+export const NEXTTRADE_WEB_HOSTNAME = 'app.nexttrade.com'
+const EMBEDDED_WALLET_HOSTNAME = isPlaywrightEnv() || isDevEnv() ? 'staging.ew.unihq.org' : NEXTTRADE_WEB_HOSTNAME
 
-export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
-export const UNISWAP_APP_URL = 'https://uniswap.org/app'
-export const UNISWAP_MOBILE_REDIRECT_URL = 'https://uniswap.org/mobile-redirect'
+export const NEXTTRADE_WEB_URL = `https://${NEXTTRADE_WEB_HOSTNAME}`
+export const NEXTTRADE_APP_URL = 'https://nexttrade.com/app'
+export const NEXTTRADE_MOBILE_REDIRECT_URL = 'https://nexttrade.com/mobile-redirect'
 
-const helpUrl = 'https://support.uniswap.org/hc/en-us'
+const helpUrl = 'https://support.nexttrade.com/hc/en-us'
 
 // The trading api uses custom builds for testing which may not use the v1 prefix
 const tradingApiVersionPrefix = config.tradingApiWebTestEnv === 'true' ? '' : '/v1'
@@ -38,11 +38,11 @@ export const uniswapUrls = {
     batchedSwaps: createHelpArticleUrl('36393697148045'),
     batchedSwapsFailure: `${createHelpArticleUrl('36393697148045')}#error-messages-and-troubleshooting`,
     batchedSwapsReview: createHelpArticleUrl('36394497329933'),
-    cexTransferKorea: createHelpArticleUrl('29425131525901-How-to-transfer-crypto-to-a-Uniswap-Wallet-in-Korea'),
+    cexTransferKorea: createHelpArticleUrl('29425131525901-How-to-transfer-crypto-to-a-NextTrade-Wallet-in-Korea'),
     contractAddressExplainer: createHelpArticleUrl('26757826138637-What-is-a-token-contract-address'),
     extensionHelp: createHelpArticleUrl('24458735271181'),
     extensionDappTroubleshooting: createHelpArticleUrl(
-      '25811698471565-Connecting-Uniswap-Extension-Beta-to-other-dapps',
+      '25811698471565-Connecting-NextTrade-Extension-Beta-to-other-dapps',
     ),
     feeOnTransferHelp: createHelpArticleUrl('18673568523789-What-is-a-token-fee-'),
     howToSwapTokens: createHelpArticleUrl('8370549680909-How-to-swap-tokens-'),
@@ -56,7 +56,7 @@ export const uniswapUrls = {
     fiatOnRampHelp: createHelpArticleUrl('11306574799117'),
     fiatOffRampHelp: createHelpArticleUrl('34006552258957'),
     transferCryptoHelp: createHelpArticleUrl(
-      '27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-Uniswap-Wallet',
+      '27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-NextTrade-Wallet',
     ),
     mismatchedImports: createHelpArticleUrl('36393527081997'),
     mobileWalletHelp: createHelpArticleUrl('20317941356429'),
@@ -68,10 +68,10 @@ export const uniswapUrls = {
     priceImpact: createHelpArticleUrl('8671539602317-What-is-Price-Impact'),
     providingLiquidityInfo: createHelpArticleUrl('20982919867021', 'sections'),
     recoveryPhraseHowToImport: createHelpArticleUrl(
-      '11380692567949-How-to-import-a-recovery-phrase-into-the-Uniswap-Wallet',
+      '11380692567949-How-to-import-a-recovery-phrase-into-the-NextTrade-Wallet',
     ),
     recoveryPhraseHowToFind: createHelpArticleUrl(
-      '11306360177677-How-to-find-my-recovery-phrase-in-the-Uniswap-Wallet',
+      '11306360177677-How-to-find-my-recovery-phrase-in-the-NextTrade-Wallet',
     ),
     recoveryPhraseForgotten: createHelpArticleUrl('11306367118349'),
     revokeExplainer: createHelpArticleUrl('15724901841037-How-to-revoke-a-token-approval'),
@@ -84,26 +84,26 @@ export const uniswapUrls = {
     swapSlippage: createHelpArticleUrl('8643879653261-What-is-Price-Slippage-'),
     tokenWarning: createHelpArticleUrl('8723118437133-What-are-token-warnings-'),
     transactionFailure: createHelpArticleUrl('8643975058829-Why-did-my-transaction-fail-'),
-    uniswapXInfo: createHelpArticleUrl('17544708791821'),
-    uniswapXFailure: createHelpArticleUrl('17515489874189-Why-can-my-swap-not-be-filled-'),
+    uniswapXInfo: createHelpArticleUrl('17544708791821'), // TODO: Review if UniswapX should be NextTradeX in help URLs
+    uniswapXFailure: createHelpArticleUrl('17515489874189-Why-can-my-swap-not-be-filled-'), // TODO: Review if UniswapX should be NextTradeX in help URLs
     unsupportedTokenPolicy: createHelpArticleUrl('18783694078989-Unsupported-Token-Policy'),
     addingV4Hooks: createHelpArticleUrl('32402040565133'),
     routingSettings: createHelpArticleUrl('27362707722637'),
     v4HooksInfo: createHelpArticleUrl('30998263256717'),
-    walletSecurityMeasures: createHelpArticleUrl('28278904584077-Uniswap-Wallet-Security-Measures'),
+    walletSecurityMeasures: createHelpArticleUrl('28278904584077-NextTrade-Wallet-Security-Measures'),
     whatIsPrivateKey: createHelpArticleUrl('11306371824653-What-is-a-private-key'),
     wethExplainer: createHelpArticleUrl('16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH'),
   },
-  termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
-  privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
-  chromeExtension: 'http://uniswap.org/ext',
+  termsOfServiceUrl: 'https://nexttrade.com/terms-of-service',
+  privacyPolicyUrl: 'https://nexttrade.com/privacy-policy',
+  chromeExtension: 'http://nexttrade.com/ext',
 
   // Download links
-  appStoreDownloadUrl: 'https://apps.apple.com/us/app/uniswap-crypto-nft-wallet/id6443944476',
-  playStoreDownloadUrl: 'https://play.google.com/store/apps/details?id=com.uniswap.mobile&pcampaignid=web_share',
+  appStoreDownloadUrl: 'https://apps.apple.com/us/app/uniswap-crypto-nft-wallet/id6443944476', // App store display name might change later
+  playStoreDownloadUrl: 'https://play.google.com/store/apps/details?id=com.nexttrade.mobile&pcampaignid=web_share',
 
   // Core API Urls
-  apiOrigin: 'https://api.uniswap.org',
+  apiOrigin: 'https://api.nexttrade.com',
   apiBaseUrl: config.apiBaseUrlOverride || getCloudflareApiBaseUrl(),
   apiBaseUrlV2: config.apiBaseUrlV2Override || `${getCloudflareApiBaseUrl()}/v2`,
   graphQLUrl: config.graphqlUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
@@ -158,17 +158,17 @@ export const uniswapUrls = {
   },
 
   // App and Redirect URL's
-  appBaseUrl: UNISWAP_APP_URL,
-  redirectUrlBase: UNISWAP_MOBILE_REDIRECT_URL,
-  requestOriginUrl: UNISWAP_WEB_URL,
+  appBaseUrl: NEXTTRADE_APP_URL,
+  redirectUrlBase: NEXTTRADE_MOBILE_REDIRECT_URL,
+  requestOriginUrl: NEXTTRADE_WEB_URL,
 
   // Web Interface Urls
-  webInterfaceSwapUrl: `${UNISWAP_WEB_URL}/#/swap`,
-  webInterfaceTokensUrl: `${UNISWAP_WEB_URL}/explore/tokens`,
-  webInterfaceAddressUrl: `${UNISWAP_WEB_URL}/address`,
-  webInterfaceNftItemUrl: `${UNISWAP_WEB_URL}/nfts/asset`,
-  webInterfaceNftCollectionUrl: `${UNISWAP_WEB_URL}/nfts/collection`,
-  webInterfaceBuyUrl: `${UNISWAP_WEB_URL}/buy`,
+  webInterfaceSwapUrl: `${NEXTTRADE_WEB_URL}/#/swap`,
+  webInterfaceTokensUrl: `${NEXTTRADE_WEB_URL}/explore/tokens`,
+  webInterfaceAddressUrl: `${NEXTTRADE_WEB_URL}/address`,
+  webInterfaceNftItemUrl: `${NEXTTRADE_WEB_URL}/nfts/asset`,
+  webInterfaceNftCollectionUrl: `${NEXTTRADE_WEB_URL}/nfts/collection`,
+  webInterfaceBuyUrl: `${NEXTTRADE_WEB_URL}/buy`,
 
   // Feedback Links
   walletFeedbackForm:
@@ -213,7 +213,7 @@ function getServicePrefix(flow?: TrafficFlows): string {
 }
 
 function getCloudflareApiBaseUrl(flow?: TrafficFlows): string {
-  return `https://${getServicePrefix(flow)}${getCloudflarePrefix(flow)}.gateway.uniswap.org`
+  return `https://${getServicePrefix(flow)}${getCloudflarePrefix(flow)}.gateway.nexttrade.com`
 }
 
 function createHelpArticleUrl(resourceId: string, path: string = 'articles'): string {

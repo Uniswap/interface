@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { Button, Flex, Image, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { CEX_TRANSFER_MODAL_BG_DARK, CEX_TRANSFER_MODAL_BG_LIGHT } from 'ui/src/assets'
-import { Modal } from 'uniswap/src/components/modals/Modal'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { openUri } from 'uniswap/src/utils/linking'
+import { Modal } from 'nextrade/src/components/modals/Modal'
+import { nextradeUrls } from 'nextrade/src/constants/urls'
+import { ModalName } from 'nextrade/src/features/telemetry/constants'
+import { openUri } from 'nextrade/src/utils/linking'
 
 const BG_IMAGE_MAX_HEIGHT = 80
 
@@ -37,7 +37,7 @@ export function KoreaCexTransferInfoModal(): JSX.Element {
           <Button
             size="large"
             emphasis="secondary"
-            onPress={() => openUri(uniswapUrls.helpArticleUrls.cexTransferKorea)}
+            onPress={() => openUri(nextradeUrls.helpArticleUrls.cexTransferKorea)}
           >
             {t('common.button.learn')}
           </Button>

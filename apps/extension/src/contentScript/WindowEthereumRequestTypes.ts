@@ -281,8 +281,8 @@ export const WalletGetCapabilitiesRequestSchema = EthereumRequestWithIdSchema.ex
 
 export type WalletGetCapabilitiesRequest = z.infer<typeof WalletGetCapabilitiesRequestSchema>
 
-export const UniswapOpenSidebarRequestSchema = EthereumRequestWithIdSchema.extend({
-  method: z.literal('uniswap_openSidebar'),
+export const NexTradeOpenSidebarRequestSchema = EthereumRequestWithIdSchema.extend({
+  method: z.literal('nextrade_openSidebar'),
   params: z.array(z.unknown()),
 }).transform((data) => {
   const tab = z.nativeEnum(HomeTabs).optional().parse(data.params[0])
@@ -292,7 +292,7 @@ export const UniswapOpenSidebarRequestSchema = EthereumRequestWithIdSchema.exten
   }
 })
 
-export type UniswapOpenSidebarRequest = z.infer<typeof UniswapOpenSidebarRequestSchema>
+export type NexTradeOpenSidebarRequest = z.infer<typeof NexTradeOpenSidebarRequestSchema>
 
 export const WalletSendCallsRequestSchema = EthereumRequestWithIdSchema.extend({
   method: z.literal('wallet_sendCalls'),

@@ -1,7 +1,7 @@
-// Custom Uniswap methods that the extension will handle
+// Custom NexTrade methods that the extension will handle
 /* eslint-disable @typescript-eslint/naming-convention */
-export enum UniswapMethods {
-  uniswap_openSidebar = 'uniswap_openSidebar',
+export enum NexTradeMethods {
+  nextrade_openSidebar = 'nextrade_openSidebar',
 }
 
 // Methods that are not supported by the extension because they are deprecated

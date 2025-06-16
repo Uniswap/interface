@@ -1,18 +1,18 @@
 import 'utilities/jest-package-mocks'
-import 'uniswap/jest-package-mocks'
+import 'nexttrade/jest-package-mocks'
 import 'wallet/jest-package-mocks'
 import 'ui/jest-package-mocks'
 
 import { chrome } from 'jest-chrome'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
-import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'
+import { mockSharedPersistQueryClientProvider } from 'nexttrade/src/test/mocks/mockSharedPersistQueryClientProvider'
 
-process.env.IS_UNISWAP_EXTENSION = true
+process.env.IS_NEXTTRADE_EXTENSION = true
 
 const ignoreLogs = {
   error: [
     // We need to use _persist property to ensure that the state is properly
-    // rehydrated (https://github.com/Uniswap/universe/pull/7502/files#r1566259088)
+    // rehydrated (https://github.com/NextTrade/universe/pull/7502/files#r1566259088)
     'Unexpected key "_persist" found in previous state received by the reducer.'
   ]
 }

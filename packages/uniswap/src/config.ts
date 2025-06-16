@@ -26,6 +26,7 @@ import {
   WALLETCONNECT_PROJECT_ID,
   WALLETCONNECT_PROJECT_ID_BETA,
   WALLETCONNECT_PROJECT_ID_DEV,
+  ZENCHAIN_TESTNET_RPC_URL,
 } from 'react-native-dotenv'
 import { isNonJestDev } from 'utilities/src/environment/constants'
 
@@ -67,6 +68,7 @@ export interface Config {
   walletConnectProjectId: string
   walletConnectProjectIdBeta: string
   walletConnectProjectIdDev: string
+  zenchainTestnetRpcUrl?: string;
 }
 
 /**
@@ -112,6 +114,7 @@ const _config: Config = {
     process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID || process.env.WALLETCONNECT_PROJECT_ID || WALLETCONNECT_PROJECT_ID,
   walletConnectProjectIdBeta: process.env.WALLETCONNECT_PROJECT_ID_BETA || WALLETCONNECT_PROJECT_ID_BETA,
   walletConnectProjectIdDev: process.env.WALLETCONNECT_PROJECT_ID_DEV || WALLETCONNECT_PROJECT_ID_DEV,
+  zenchainTestnetRpcUrl: process.env.REACT_APP_ZENCHAIN_TESTNET_RPC_URL || process.env.ZENCHAIN_TESTNET_RPC_URL || ZENCHAIN_TESTNET_RPC_URL,
 }
 
 export const config = Object.freeze(_config)

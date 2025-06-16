@@ -3,8 +3,8 @@ import { MainIntroWrapper } from 'src/app/features/onboarding/intro/MainIntroWra
 import { isAndroid } from 'src/app/utils/chrome'
 import { Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
+import Trace from 'nextrade/src/features/telemetry/Trace'
+import { ExtensionScreens } from 'nextrade/src/types/screens/extension'
 
 export function UnsupportedBrowserScreen(): JSX.Element {
   const { t } = useTranslation()

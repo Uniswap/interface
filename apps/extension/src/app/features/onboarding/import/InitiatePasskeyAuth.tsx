@@ -13,19 +13,19 @@ import { navigate } from 'src/app/navigation/state'
 import { bringWindowToFront, closeWindow, openPopupWindow } from 'src/app/navigation/utils'
 import { Button, Flex, IconButton, SpinningLoader, Text } from 'ui/src'
 import { X } from 'ui/src/components/icons'
-import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
-import { fetchChallengeRequest } from 'uniswap/src/data/rest/embeddedWallet/requests'
-import { parseMessage } from 'uniswap/src/extension/messagePassing/platform'
+import { NexTradeLogo } from 'ui/src/components/icons/NexTradeLogo' // Updated import
+import { fetchChallengeRequest } from 'nextrade/src/data/rest/embeddedWallet/requests'
+import { parseMessage } from 'nextrade/src/extension/messagePassing/platform'
 import {
   ExtensionToInterfaceRequestType,
   PasskeyCredentialRetrievedSchema,
   PasskeyRequest,
   PasskeySignInFlowOpenedSchema,
-} from 'uniswap/src/extension/messagePassing/types/requests'
-import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
-import { useEmbeddedWalletBaseUrl } from 'uniswap/src/features/passkey/hooks/useEmbeddedWalletBaseUrl'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
+} from 'nextrade/src/extension/messagePassing/types/requests'
+import { EXTENSION_PASSKEY_AUTH_PATH } from 'nextrade/src/features/passkey/constants'
+import { useEmbeddedWalletBaseUrl } from 'nextrade/src/features/passkey/hooks/useEmbeddedWalletBaseUrl'
+import Trace from 'nextrade/src/features/telemetry/Trace'
+import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'nextrade/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useInterval } from 'utilities/src/time/timing'
@@ -277,7 +277,7 @@ function InitiatePasskeyAuthContent(): JSX.Element {
       </Flex>
 
       <Flex gap="$spacing32" centered>
-        <UniswapLogo size={80} />
+        <NexTradeLogo size={80} />
 
         <Text>{t('onboarding.importPasskey.continueInSecureWindow')}</Text>
 

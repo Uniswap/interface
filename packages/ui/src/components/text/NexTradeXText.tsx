@@ -2,7 +2,7 @@ import { GetProps } from 'tamagui'
 import { Text } from 'ui/src/components/text'
 
 const gradientStyle = `
-  .uniswapx-gradient {
+  .nextradex-gradient {
     color: #4673fa;
 
     @supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
@@ -14,12 +14,12 @@ const gradientStyle = `
 `
 
 // TODO(WEB-4313): Wrap GradientText once it works for web.
-export function UniswapXText({ children, ...props }: GetProps<typeof Text>): JSX.Element {
+export function NexTradeXText({ children, ...props }: GetProps<typeof Text>): JSX.Element {
   return (
     <>
       <style>{gradientStyle}</style>
       {/* Do not use gradient color if a color prop override is defined */}
-      <Text {...props} className={!props.color ? 'uniswapx-gradient' : ''}>
+      <Text {...props} className={!props.color ? 'nextradex-gradient' : ''}>
         {children}
       </Text>
     </>

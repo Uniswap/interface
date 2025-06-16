@@ -19,8 +19,9 @@ import {
   WORLD_CHAIN_LOGO,
   ZKSYNC_LOGO,
   ZORA_LOGO,
+  NEXTRADE_LOGO, // Assuming this will be the new logo asset
 } from 'ui/src/assets'
-import { config } from 'uniswap/src/config'
+import { config } from 'nextrade/src/config'
 import {
   DAI,
   DAI_ARBITRUM_ONE,
@@ -44,8 +45,12 @@ import {
   USDC_ZORA,
   USDT,
   USDT_MONAD_TESTNET,
-} from 'uniswap/src/constants/tokens'
-import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+  USDT_ZENCHAIN_TESTNET,
+  USDC_ZENCHAIN_TESTNET,
+  DAI_ZENCHAIN_TESTNET,
+  WZTC_ZENCHAIN_TESTNET,
+} from 'nextrade/src/constants/tokens'
+import { Chain as BackendChainId } from 'nextrade/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   GqlChainId,
   NetworkLayer,
@@ -53,8 +58,8 @@ import {
   RetryOptions,
   UniverseChainId,
   UniverseChainInfo,
-} from 'uniswap/src/features/chains/types'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+} from 'nextrade/src/features/chains/types'
+import { ElementName } from 'nextrade/src/features/telemetry/constants'
 import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { isInterface } from 'utilities/src/platform'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
@@ -73,6 +78,7 @@ import {
   unichainSepolia,
   zkSync,
   zora,
+  // zenchainTestnet will require a similar import if it's added to wagmi/chains
 } from 'wagmi/chains'
 
 const LOCAL_MAINNET_PLAYWRIGHT_RPC_URL = 'http://127.0.0.1:8545'
@@ -171,7 +177,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     blockPerMainnetEpochForChainId: 1,
     blockWaitMsBeforeWarning: isInterface ? DEFAULT_MS_BEFORE_WARNING : ONE_MINUTE_MS,
     bridge: undefined,
-    docs: 'https://docs.uniswap.org/',
+    docs: 'https://docs.zentrade.io/',
     elementName: ElementName.ChainEthereum,
     explorer: {
       name: 'Etherscan',
@@ -179,7 +185,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       apiURL: 'https://api.etherscan.io',
     },
     helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore',
+    infoLink: 'https://app.zentrade.io/explore',
     infuraPrefix: 'mainnet',
     interfaceName: 'mainnet',
     label: 'Ethereum',
@@ -198,7 +204,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       ? getPlaywrightRpcUrls(LOCAL_MAINNET_PLAYWRIGHT_RPC_URL)
       : {
           [RPCType.Private]: {
-            http: ['https://rpc.mevblocker.io/?referrer=uniswapwallet'],
+            http: ['https://rpc.mevblocker.io/?referrer=nextradewallet'],
           },
           [RPCType.Public]: {
             http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
@@ -251,8 +257,8 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       url: 'https://arbiscan.io/',
       apiURL: 'https://api.arbiscan.io',
     },
-    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
-    infoLink: 'https://app.uniswap.org/explore/tokens/arbitrum',
+    helpCenterUrl: 'https://help.zentrade.io/en/collections/3137787-uniswap-on-arbitrum',
+    infoLink: 'https://app.zentrade.io/explore/tokens/arbitrum',
     infuraPrefix: 'arbitrum-mainnet',
     interfaceName: 'arbitrum',
     label: 'Arbitrum',
@@ -315,7 +321,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       apiURL: 'https://api.snowscan.xyz',
     },
     helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore/tokens/avalanche',
+    infoLink: 'https://app.zentrade.io/explore/tokens/avalanche',
     infuraPrefix: 'avalanche-mainnet',
     interfaceName: 'avalanche',
     label: 'Avalanche',
@@ -370,7 +376,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       apiURL: 'https://api.basescan.org',
     },
     helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore/tokens/base',
+    infoLink: 'https://app.zentrade.io/explore/tokens/base',
     interfaceName: 'base',
     label: 'Base',
     logo: BASE_LOGO,
@@ -430,7 +436,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       apiURL: 'https://api.blastscan.io',
     },
     helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore/tokens/blast',
+    infoLink: 'https://app.zentrade.io/explore/tokens/blast',
     infuraPrefix: 'blast-mainnet',
     interfaceName: 'blast',
     label: 'Blast',
@@ -485,7 +491,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     },
     helpCenterUrl: undefined,
     id: UniverseChainId.Bnb,
-    infoLink: 'https://app.uniswap.org/explore/tokens/bnb',
+    infoLink: 'https://app.zentrade.io/explore/tokens/bnb',
     infuraPrefix: undefined,
     interfaceName: 'bnb',
     label: 'BNB Chain',
@@ -541,7 +547,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       apiURL: 'https://api.celoscan.io',
     },
     helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore/tokens/celo',
+    infoLink: 'https://app.zentrade.io/explore/tokens/celo',
     infuraPrefix: 'celo-mainnet',
     interfaceName: 'celo',
     label: 'Celo',
@@ -630,7 +636,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       name: 'Monad Explorer',
       url: 'https://testnet.monadexplorer.com/',
     },
-    infoLink: 'https://app.uniswap.org/explore',
+    infoLink: 'https://app.zentrade.io/explore',
     infuraPrefix: undefined,
     interfaceName: 'monad',
     spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDT_MONAD_TESTNET, 10_000e6),
@@ -657,8 +663,8 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       url: 'https://optimistic.etherscan.io/',
       apiURL: 'https://api-optimistic.etherscan.io',
     },
-    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
-    infoLink: 'https://app.uniswap.org/explore/tokens/optimism',
+    helpCenterUrl: 'https://help.zentrade.io/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
+    infoLink: 'https://app.zentrade.io/explore/tokens/optimism',
     infuraPrefix: 'optimism-mainnet',
     interfaceName: 'optimism',
     label: 'OP Mainnet',
@@ -716,7 +722,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       apiURL: 'https://api.polygonscan.com',
     },
     helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore/tokens/polygon',
+    infoLink: 'https://app.zentrade.io/explore/tokens/polygon',
     infuraPrefix: 'polygon-mainnet',
     interfaceName: 'polygon',
     label: 'Polygon',
@@ -773,7 +779,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       apiURL: 'https://api-sepolia.etherscan.io',
     },
     helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore',
+    infoLink: 'https://app.zentrade.io/explore',
     infuraPrefix: 'sepolia',
     interfaceName: 'sepolia',
     label: 'Sepolia',
@@ -843,7 +849,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       apiURL: 'https://soneium.blockscout.com/api',
     },
     helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore/tokens/soneium',
+    infoLink: 'https://app.zentrade.io/explore/tokens/soneium',
     infuraPrefix: undefined,
     interfaceName: 'soneium',
     label: 'Soneium',
@@ -896,10 +902,10 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     elementName: ElementName.ChainUnichain,
     explorer: {
       name: 'Unichain Explorer',
-      url: 'https://uniscan.xyz/',
+      url: 'https://uniscan.xyz/', // TODO: This probably needs to be zentrade specific if it's not a generic explorer
     },
     helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore/tokens/unichain',
+    infoLink: 'https://app.zentrade.io/explore/tokens/unichain',
     infuraPrefix: 'unichain',
     interfaceName: 'unichain',
     label: 'Unichain',
@@ -952,10 +958,10 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     elementName: ElementName.ChainUnichainSepolia,
     explorer: {
       name: 'Unichain Sepolia Explorer',
-      url: 'https://unichain-sepolia.blockscout.com/',
+      url: 'https://unichain-sepolia.blockscout.com/', // TODO: This probably needs to be zentrade specific
     },
     helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore', // need
+    infoLink: 'https://app.zentrade.io/explore', // need
     infuraPrefix: 'astrochain-sepolia',
     interfaceName: 'astrochain',
     label: 'Unichain Sepolia',
@@ -1016,7 +1022,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       url: 'https://worldchain-mainnet.explorer.alchemy.com/',
     },
     helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore/tokens/ethereum/0x163f8c2467924be0ae7b5347228cabf260318753',
+    infoLink: 'https://app.zentrade.io/explore/tokens/ethereum/0x163f8c2467924be0ae7b5347228cabf260318753',
     infuraPrefix: undefined,
     interfaceName: 'worldchain',
     label: 'World Chain',
@@ -1075,7 +1081,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       apiURL: 'https://block-explorer-api.mainnet.zksync.io',
     },
     helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore/tokens/zksync',
+    infoLink: 'https://app.zentrade.io/explore/tokens/zksync',
     infuraPrefix: undefined,
     interfaceName: 'zksync',
     label: 'ZKsync',
@@ -1129,7 +1135,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       url: 'https://explorer.zora.energy/',
     },
     helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore/tokens/zora',
+    infoLink: 'https://app.zentrade.io/explore/tokens/zora',
     infuraPrefix: undefined,
     interfaceName: 'zora',
     label: 'Zora Network',
@@ -1160,6 +1166,70 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'WETH',
       decimals: 18,
       address: '0x4200000000000000000000000000000000000006',
+    },
+  } as const satisfies UniverseChainInfo,
+  [UniverseChainId.ZenChainTestnet]: {
+    // Ensure zenchainTestnet is imported from wagmi/chains or defined similarly if not present
+    // For now, we'll construct it manually based on common testnet properties
+    id: UniverseChainId.ZenChainTestnet,
+    sdkId: 8408 as UniswapSDKChainId, // Placeholder, might need adjustment
+    name: 'ZenChain Testnet',
+    nativeCurrency: {
+      name: 'ZenChain Token',
+      symbol: 'ZTC',
+      decimals: 18,
+      address: DEFAULT_NATIVE_ADDRESS_LEGACY, // Using legacy placeholder for native
+      logo: NEXTRADE_LOGO, // Placeholder for missing logo
+    },
+    rpcUrls: {
+      [RPCType.Default]: { http: ['https://zenchain-testnet.api.onfinality.io/public'] },
+      [RPCType.Public]: { http: ['https://zenchain-testnet.api.onfinality.io/public'] },
+      [RPCType.Interface]: { http: ['https://zenchain-testnet.api.onfinality.io/public'] },
+    },
+    blockExplorers: {
+      default: { name: 'ZenTrace', url: 'https://zentrace.io/' },
+    },
+    contracts: {
+      // multicall3 might be different or not available
+    },
+    testnet: true,
+    assetRepoNetworkName: undefined, // Or a relevant name if assets are hosted
+    backendChain: {
+      chain: BackendChainId.EthereumSepolia as GqlChainId, // Placeholder GQL mapping
+      backendSupported: true,
+      isSecondaryChain: true, // Mark as secondary to avoid issues
+      nativeTokenBackendAddress: undefined,
+    },
+    blockPerMainnetEpochForChainId: 1, // Placeholder, adjust if known
+    blockWaitMsBeforeWarning: DEFAULT_MS_BEFORE_WARNING,
+    bridge: undefined, // Add bridge URL if available
+    docs: 'https://docs.zentrade.io/', // Placeholder
+    elementName: 'ChainZenChainTestnet' as ElementNameType, // Casting as ElementNameType
+    explorer: {
+      name: 'ZenTrace',
+      url: 'https://zentrace.io/',
+      apiURL: 'https://zentrace.io/api', // Assumed API URL
+    },
+    helpCenterUrl: undefined,
+    infoLink: `https://app.zentrade.io/explore/tokens/zenchain_testnet`, // Adjusted info link
+    infuraPrefix: undefined,
+    interfaceName: 'zenchain',
+    label: 'ZenChain Testnet',
+    logo: NEXTRADE_LOGO, // Placeholder for missing logo
+    networkLayer: NetworkLayer.L2, // Assuming L2, adjust if L1 or other
+    pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
+    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ZENCHAIN_TESTNET, 10_000e6), // Updated placeholder
+    stablecoins: [USDT_ZENCHAIN_TESTNET, USDC_ZENCHAIN_TESTNET, DAI_ZENCHAIN_TESTNET], // Updated
+    statusPage: undefined,
+    supportsInterfaceClientSideRouting: true, // Assumption
+    supportsGasEstimates: true, // Assumption
+    supportsV4: false, // Safer assumption
+    urlParam: 'zenchain_testnet',
+    wrappedNativeCurrency: {
+      name: WZTC_ZENCHAIN_TESTNET.name ?? 'Wrapped ZenChain Token',
+      symbol: WZTC_ZENCHAIN_TESTNET.symbol ?? 'WZTC',
+      decimals: WZTC_ZENCHAIN_TESTNET.decimals,
+      address: WZTC_ZENCHAIN_TESTNET.address,
     },
   } as const satisfies UniverseChainInfo,
 }

@@ -2,12 +2,12 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { useCurrencyInfo as useUniswapCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { getChainInfo } from 'nexttrade/src/features/chains/chainInfo'
+import { useSupportedChainId } from 'nexttrade/src/features/chains/hooks/useSupportedChainId'
+import { UniverseChainId } from 'nexttrade/src/features/chains/types'
+import { CurrencyInfo } from 'nexttrade/src/features/dataApi/types'
+import { useCurrencyInfo as useNexTradeCurrencyInfo } from 'nexttrade/src/features/tokens/useCurrencyInfo'
+import { buildCurrencyId } from 'nexttrade/src/utils/currencyId'
 import { isAddress } from 'utilities/src/addresses'
 
 type Maybe<T> = T | undefined
@@ -43,7 +43,7 @@ export function useCurrencyInfo(
   const addressWithFallback = isNative || !address ? nativeAddressWithFallback : address
 
   const currencyId = buildCurrencyId(supportedChainId ?? UniverseChainId.Mainnet, addressWithFallback)
-  const currencyInfo = useUniswapCurrencyInfo(currencyId, { skip })
+  const currencyInfo = useNexTradeCurrencyInfo(currencyId, { skip })
 
   return useMemo(() => {
     if (!currencyInfo || !addressOrCurrency || skip) {

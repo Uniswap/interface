@@ -2,12 +2,12 @@ IPFS hash of the deployment:
 - CIDv0: `QmUKsfqcn6zpJmfBtZD3AV1o9rTrkaJHwNiJnrWZL5j7K8`
 - CIDv1: `bafybeicy6mzbrmf3vzpmgzv7xu3fjweebcnnchtzlu4jeir6qyizmfceem`
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+The latest release is always mirrored at [app.nexttrade.com](https://app.nexttrade.com).
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+You can also access the NextTrade Interface from an IPFS gateway.
+**BEWARE**: The NextTrade interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.nexttrade.com](https://app.nexttrade.com).
+Your NextTrade settings are never remembered across different URLs.
 
 IPFS gateways:
 - https://bafybeicy6mzbrmf3vzpmgzv7xu3fjweebcnnchtzlu4jeir6qyizmfceem.ipfs.dweb.link/
