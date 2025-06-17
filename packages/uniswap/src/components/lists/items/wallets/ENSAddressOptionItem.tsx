@@ -24,7 +24,7 @@ export function ENSAddressOptionItem({ ensAddressOption, onPress }: ENSAddressOp
   const formattedAddress = sanitizeAddressText(shortenAddress(address))
 
   // Get the completed name if it's not a raw name
-  const completedENSName = isRawName ? ensName : getCompletedENSName(ensName ?? null)
+  const completedENSName = isRawName ? ensName : getCompletedENSName(ensName)
 
   /*
    * Fetch primary ENS associated with `address` since it may resolve to an

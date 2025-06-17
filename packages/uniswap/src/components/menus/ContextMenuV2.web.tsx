@@ -25,8 +25,9 @@ export function ContextMenu({
 
   const isLeftClick = triggerMode === ContextMenuTriggerMode.Primary
 
-  useOnClickOutside(containerRef, () => {
-    closeMenu()
+  useOnClickOutside({
+    node: containerRef,
+    handler: closeMenu,
   })
 
   const onContextMenu = (e: React.MouseEvent<HTMLDivElement>): void => {

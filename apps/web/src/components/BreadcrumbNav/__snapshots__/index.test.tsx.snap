@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`BreadcrumbNav does not display address hover for native tokens 1`] = `
+exports[`BreadcrumbNav > does not display address hover for native tokens 1`] = `
 <DocumentFragment>
   <span
     class=""
@@ -26,7 +26,7 @@ exports[`BreadcrumbNav does not display address hover for native tokens 1`] = `
 </DocumentFragment>
 `;
 
-exports[`BreadcrumbNav renders hover components correctly 1`] = `
+exports[`BreadcrumbNav > renders hover components correctly 1`] = `
 <DocumentFragment>
   <span
     class=""

@@ -45,7 +45,7 @@ export function createGetRoutingAPIArguments(ctx: RoutingAPIContext) {
     const sendPortionEnabled = routerPreference !== INTERNAL_ROUTER_PREFERENCE_PRICE
 
     const isPriorityOrder = routerPreference === RouterPreference.X && isPriorityOrdersEnabled
-    const isArbitrum = tokenIn?.chainId === UniverseChainId.ArbitrumOne
+    const isArbitrum = tokenIn.chainId === UniverseChainId.ArbitrumOne
 
     const routingType = getRoutingType({
       canUseUniswapX,

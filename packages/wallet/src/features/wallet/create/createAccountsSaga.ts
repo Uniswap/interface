@@ -29,4 +29,7 @@ export const {
   wrappedSaga: createAccountsSaga,
   reducer: createAccountsReducer,
   actions: createAccountsActions,
-} = createMonitoredSaga(createAccounts, 'createAccounts')
+} = createMonitoredSaga({
+  saga: createAccounts,
+  name: 'createAccounts',
+})

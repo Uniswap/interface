@@ -24,6 +24,7 @@ export const SwapReviewWarningStateContext = createContext<SwapWarningState>({
 
 export const useSwapWarningState = (): SwapWarningState => {
   const context = useContext(SwapReviewWarningStateContext)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!context) {
     throw new Error('useSwapWarningState must be used within a SwapReviewWarningStateContext')
   }

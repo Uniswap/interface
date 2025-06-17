@@ -1,25 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
-import { SCREEN_ITEM_HORIZONTAL_PAD } from 'src/app/constants'
 import { SettingsItemWithDropdown } from 'src/app/features/settings/SettingsItemWithDropdown'
 import ThemeToggle from 'src/app/features/settings/ThemeToggle'
+import { SettingsItem } from 'src/app/features/settings/components/SettingsItem'
+import { SettingsSection } from 'src/app/features/settings/components/SettingsSection'
+import { SettingsToggleRow } from 'src/app/features/settings/components/SettingsToggleRow'
 import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { getIsDefaultProviderFromStorage, setIsDefaultProviderToStorage } from 'src/app/utils/provider'
-import {
-  Button,
-  ColorTokens,
-  Flex,
-  GeneratedIcon,
-  ScrollView,
-  Switch,
-  Text,
-  TouchableArea,
-  useSporeColors,
-} from 'ui/src'
+import { Button, Flex, ScrollView, Text } from 'ui/src'
 import {
   ArrowUpRight,
   Chart,
@@ -32,12 +23,10 @@ import {
   LineChartDots,
   Lock,
   Passkey,
-  RotatableChevron,
   Settings,
   Sliders,
   Wrench,
 } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -79,7 +68,10 @@ export function SettingsScreen(): JSX.Element {
   const currentLanguageInfo = useCurrentLanguageInfo()
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const hasViewedConnectionMigration = useSelector(selectHasViewedConnectionMigration)
+
+  const isBiometricUnlockEnabled = useFeatureFlag(FeatureFlags.ExtensionBiometricUnlock)
   const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWalletSettings)
+
   const signerAccount = useSignerAccounts()[0]
   const hasPasskeyBackup = hasBackup(BackupType.Passkey, signerAccount)
 
@@ -281,11 +273,19 @@ export function SettingsScreen(): JSX.Element {
           )}
           <Flex pt="$padding16">
             <SettingsSection title={t('settings.section.privacyAndSecurity')}>
-              <SettingsItem
-                Icon={Key}
-                title={t('settings.setting.password.title')}
-                onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ChangePassword}`)}
-              />
+              {isBiometricUnlockEnabled ? (
+                <SettingsItem
+                  Icon={Lock}
+                  title={t('settings.setting.deviceAccess.title')}
+                  onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.DeviceAccess}`)}
+                />
+              ) : (
+                <SettingsItem
+                  Icon={Key}
+                  title={t('settings.setting.password.title')}
+                  onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ChangePassword}`)}
+                />
+              )}
               <SettingsItem
                 Icon={FileListLock}
                 title={t('settings.setting.recoveryPhrase.title')}
@@ -331,126 +331,5 @@ export function SettingsScreen(): JSX.Element {
         </Flex>
       </Flex>
     </Trace>
-  )
-}
-
-function SettingsItem({
-  Icon,
-  title,
-  onPress,
-  iconProps,
-  themeProps,
-  url,
-  count,
-  hideChevron = false,
-  RightIcon,
-}: {
-  Icon: GeneratedIcon
-  title: string
-  hideChevron?: boolean
-  RightIcon?: GeneratedIcon
-  onPress?: () => void
-  iconProps?: { strokeWidth?: number }
-  // TODO: do this with a wrapping Theme, "detrimental" wasn't working
-  themeProps?: { color?: string; hoverColor?: string }
-  url?: string
-  count?: number
-}): JSX.Element {
-  const colors = useSporeColors()
-  const hoverColor = themeProps?.hoverColor ?? colors.surface2.val
-
-  const content = (
-    <TouchableArea
-      alignItems="center"
-      borderRadius="$rounded12"
-      flexDirection="row"
-      flexGrow={1}
-      gap="$spacing12"
-      hoverStyle={{
-        backgroundColor: hoverColor as ColorTokens,
-      }}
-      justifyContent="space-between"
-      px="$spacing12"
-      py="$spacing8"
-      onPress={onPress}
-    >
-      <Flex row justifyContent="space-between" flexGrow={1}>
-        <Flex row gap="$spacing12">
-          <Icon
-            color={themeProps?.color ?? '$neutral2'}
-            size="$icon.24"
-            strokeWidth={iconProps?.strokeWidth ?? undefined}
-          />
-          <Text style={{ color: themeProps?.color ?? colors.neutral1.val }} variant="subheading2">
-            {title}
-          </Text>
-        </Flex>
-        {count !== undefined && (
-          <Text alignSelf="center" color="$neutral2" variant="subheading2">
-            {count}
-          </Text>
-        )}
-      </Flex>
-
-      {RightIcon ? (
-        <RightIcon color="$neutral3" size="$icon.24" strokeWidth={iconProps?.strokeWidth ?? undefined} />
-      ) : (
-        !hideChevron && (
-          <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon20} width={iconSizes.icon20} />
-        )
-      )}
-    </TouchableArea>
-  )
-
-  if (url) {
-    return (
-      <Link style={{ textDecoration: 'none' }} target="_blank" to={url}>
-        {content}
-      </Link>
-    )
-  }
-
-  return content
-}
-
-function SettingsToggleRow({
-  Icon,
-  title,
-  checked,
-  disabled,
-  onCheckedChange,
-}: {
-  title: string
-  Icon: GeneratedIcon
-  checked: boolean
-  disabled?: boolean
-  onCheckedChange: (checked: boolean) => void
-}): JSX.Element {
-  return (
-    <Flex
-      alignItems="center"
-      flexDirection="row"
-      gap="$spacing16"
-      justifyContent="space-between"
-      px={SCREEN_ITEM_HORIZONTAL_PAD}
-      py="$spacing4"
-    >
-      <Flex row gap="$spacing12">
-        <Icon color="$neutral2" size="$icon.24" />
-        <Text>{title}</Text>
-      </Flex>
-      <Switch checked={checked} variant="branded" disabled={disabled} onCheckedChange={onCheckedChange} />
-    </Flex>
-  )
-}
-
-function SettingsSection({ title, children }: { title: string; children: JSX.Element | JSX.Element[] }): JSX.Element {
-  return (
-    <Flex gap="$spacing4">
-      <Text color="$neutral2" px={SCREEN_ITEM_HORIZONTAL_PAD} variant="subheading2">
-        {title}
-      </Text>
-      {children}
-    </Flex>
   )
 }

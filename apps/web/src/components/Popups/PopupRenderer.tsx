@@ -7,6 +7,7 @@ import { Toaster, toast } from 'sonner'
 
 export function PopupRenderer() {
   useEffect(() => {
+    // eslint-disable-next-line max-params
     const unsubscribe = popupRegistry.addListener((content: PopupContent, key: string, removeAfterMs?: number) => {
       const toastId = toast(
         <PopupItem key={key} content={content} onClose={() => popupRegistry.removePopup(key)} popKey={key} />,

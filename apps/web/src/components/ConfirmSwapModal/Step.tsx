@@ -131,7 +131,7 @@ export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; step
   // (2) Step has an estimated amount of time in which it should be completed. Timer starts running when step is in progress.
   const [secondsRemaining, setSecondsRemaining] = useState<number | null>(null)
   useEffect(() => {
-    if (stepStatus === StepStatus.Active && stepDetails?.timeToStart) {
+    if (stepStatus === StepStatus.Active && stepDetails.timeToStart) {
       setSecondsRemaining(stepDetails.timeToStart)
     } else {
       setSecondsRemaining(null)

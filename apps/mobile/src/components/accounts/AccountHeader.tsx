@@ -123,7 +123,7 @@ export function AccountHeader(): JSX.Element {
     dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr }))
   }, [dispatch])
 
-  const walletHasName = displayName && displayName?.type !== DisplayNameType.Address
+  const walletHasName = displayName && displayName.type !== DisplayNameType.Address
   const iconSize = 52
 
   return (

@@ -1,4 +1,3 @@
-import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { OutlineCard } from 'components/Card/cards'
@@ -15,7 +14,9 @@ import { Trans } from 'react-i18next'
 import { Button, Flex, RadioButtonGroup, Text } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { FeePoolSelectAction } from 'uniswap/src/features/telemetry/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const Select = styled.div`
@@ -94,8 +95,8 @@ export default function FeeSelector({
 
   const handleFeePoolSelectWithEvent = useCallback(
     (fee: FeeAmount) => {
-      sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
-        action: FeePoolSelectAction.MANUAL,
+      sendAnalyticsEvent(LiquidityEventName.SelectLiquidityPoolFeeTier, {
+        action: FeePoolSelectAction.Manual,
         fee_tier: fee,
         ...trace,
       })
@@ -116,8 +117,8 @@ export default function FeeSelector({
       setShowOptions(false)
 
       recommended.current = true
-      sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
-        action: FeePoolSelectAction.RECOMMENDED,
+      sendAnalyticsEvent(LiquidityEventName.SelectLiquidityPoolFeeTier, {
+        action: FeePoolSelectAction.Recommended,
         fee_tier: largestUsageFeeTier,
         ...trace,
       })

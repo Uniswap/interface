@@ -1,3 +1,4 @@
+/* eslint-disable max-params */
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { Bytes, Signer, providers } from 'ethers'
 import { SignsTypedData } from 'uniswap/src/features/transactions/signing'

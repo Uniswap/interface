@@ -82,7 +82,7 @@ export function AccountCardItem({
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const { defaultChainId } = useEnabledChains()
-  const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId })?.name
+  const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId }).name
   const { unitag } = useUnitagByAddress(address)
 
   const addressToAccount = useAccounts()

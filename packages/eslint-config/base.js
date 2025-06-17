@@ -42,6 +42,7 @@ module.exports = {
     'consistent-return': ['error', { treatUndefinedAsUnspecified: false }],
     // Disallow unnecessary curly braces in JSX props and children
     'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'never' }],
+    'max-params': ['error', { max: 2 }],
 
     // Rules within the standard React plugin
     'react/no-danger': 'error',
@@ -108,6 +109,12 @@ module.exports = {
       },
       rules: {
         'local-rules/prevent-this-method-destructure': 'error',
+        'local-rules/enforce-query-options-result': [
+          'error',
+          {
+            importPath: 'utilities/src/reactQuery/queryOptions',
+          },
+        ],
         curly: 'error',
         '@typescript-eslint/prefer-enum-initializers': 'error',
         '@typescript-eslint/no-explicit-any': 'off',
@@ -115,6 +122,12 @@ module.exports = {
         '@typescript-eslint/ban-ts-ignore': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
+        '@typescript-eslint/no-unnecessary-condition': [
+          'error',
+          {
+            allowConstantLoopConditions: true,
+          },
+        ],
       },
     },
     // Non-Test Typescript Files

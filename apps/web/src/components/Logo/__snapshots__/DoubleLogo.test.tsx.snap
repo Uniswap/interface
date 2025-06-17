@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`DoubleLogo renders with custom icon 1`] = `
+exports[`DoubleLogo > renders with custom icon 1`] = `
 <DocumentFragment>
   <span
     class=""
@@ -75,7 +75,7 @@ exports[`DoubleLogo renders with custom icon 1`] = `
 </DocumentFragment>
 `;
 
-exports[`DoubleLogo renders with custom size 1`] = `
+exports[`DoubleLogo > renders with custom size 1`] = `
 <DocumentFragment>
   <span
     class=""
@@ -140,7 +140,7 @@ exports[`DoubleLogo renders with custom size 1`] = `
 </DocumentFragment>
 `;
 
-exports[`DoubleLogo renders with one valid and one undefined currency 1`] = `
+exports[`DoubleLogo > renders with one valid and one undefined currency 1`] = `
 <DocumentFragment>
   <span
     class=""
@@ -172,7 +172,7 @@ exports[`DoubleLogo renders with one valid and one undefined currency 1`] = `
 </DocumentFragment>
 `;
 
-exports[`DoubleLogo renders with two undefined currencies 1`] = `
+exports[`DoubleLogo > renders with two undefined currencies 1`] = `
 <DocumentFragment>
   .c0 {
   --size: 32px;
@@ -214,7 +214,7 @@ exports[`DoubleLogo renders with two undefined currencies 1`] = `
 </DocumentFragment>
 `;
 
-exports[`DoubleLogo renders with two valid currencies 1`] = `
+exports[`DoubleLogo > renders with two valid currencies 1`] = `
 <DocumentFragment>
   <span
     class=""

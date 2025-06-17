@@ -161,7 +161,7 @@ function InputStack({ onChangeText, total, value, current, prefixText }: InputSt
   useEffect(() => {
     // Wait until the next tick to focus the input, otherwise the state update interferes with the focus event.
     setTimeout(() => {
-      refs.current?.[current]?.focus()
+      refs.current[current]?.focus()
     }, 1)
   }, [current])
 

@@ -125,16 +125,16 @@ const FALLBACK_APP_LOADING_TIMEOUT_MS = 15000
 export function AppLoadingScreen({ navigation }: Props): JSX.Element | null {
   const dispatch = useDispatch()
 
-  const appLoadingTimeoutMs = useDynamicConfigValue(
-    DynamicConfigs.OnDeviceRecovery,
-    OnDeviceRecoveryConfigKey.AppLoadingTimeoutMs,
-    FALLBACK_APP_LOADING_TIMEOUT_MS,
-  )
-  const maxMnemonicsToLoad = useDynamicConfigValue(
-    DynamicConfigs.OnDeviceRecovery,
-    OnDeviceRecoveryConfigKey.MaxMnemonicsToLoad,
-    20,
-  )
+  const appLoadingTimeoutMs = useDynamicConfigValue({
+    config: DynamicConfigs.OnDeviceRecovery,
+    key: OnDeviceRecoveryConfigKey.AppLoadingTimeoutMs,
+    defaultValue: FALLBACK_APP_LOADING_TIMEOUT_MS,
+  })
+  const maxMnemonicsToLoad = useDynamicConfigValue({
+    config: DynamicConfigs.OnDeviceRecovery,
+    key: OnDeviceRecoveryConfigKey.MaxMnemonicsToLoad,
+    defaultValue: 20,
+  })
 
   // Used to stop this running multiple times during navigation
   const [finished, setFinished] = useState(false)

@@ -36,7 +36,7 @@ export function useFinishExtensionOnboarding({
 
       const account = getOnboardingOrImportedAccount()
       if (account) {
-        await saveDappConnection(UNISWAP_WEB_URL, account)
+        await saveDappConnection({ dappUrl: UNISWAP_WEB_URL, account })
       }
 
       callback?.()

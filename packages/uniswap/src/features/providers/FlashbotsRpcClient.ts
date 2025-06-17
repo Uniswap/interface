@@ -14,8 +14,8 @@ import {
   createPublicClient,
   hashMessage,
   http,
+  walletActions,
 } from 'viem'
-import { eip7702Actions } from 'viem/experimental'
 
 /**
  * Creates a Flashbots RPC client using viem
@@ -46,7 +46,7 @@ export function createFlashbotsRpcClient({
   return createPublicClient({
     chain,
     transport,
-  }).extend(eip7702Actions())
+  }).extend(walletActions)
 }
 
 /**
@@ -86,12 +86,12 @@ export function createFlashbotsTransport({
     // Request handler with conditional authentication
     const request: EIP1193RequestFn = async ({ method, params }) => {
       // Normal request path - most requests go here
-      if (!signerInfo || !shouldAuthenticateRequest(method, params, signerInfo.address)) {
+      if (!signerInfo || !shouldAuthenticateRequest({ method, params, signerAddress: signerInfo.address })) {
         return baseTransport.request({ method, params })
       }
 
       // Authentication needed - special handling path
-      const requestBody = formatJsonRpcRequest(method, params, getNextId)
+      const requestBody = formatJsonRpcRequest({ method, params, getId: getNextId })
       const headers = await createAuthHeaders(requestBody, signerInfo)
 
       // Create a one-time authenticated transport
@@ -119,7 +119,15 @@ export function createFlashbotsTransport({
 /**
  * Determines if a request should be authenticated with Flashbots headers
  */
-function shouldAuthenticateRequest(method: string, params: unknown, signerAddress?: string): boolean {
+function shouldAuthenticateRequest({
+  method,
+  params,
+  signerAddress,
+}: {
+  method: string
+  params: unknown
+  signerAddress?: string
+}): boolean {
   return (
     method === 'eth_getTransactionCount' &&
     Array.isArray(params) &&
@@ -142,7 +150,15 @@ async function createAuthHeaders(requestBody: string, signerInfo: SignerInfo): P
 /**
  * Formats a JSON-RPC request with the next request ID
  */
-function formatJsonRpcRequest(method: string, params: unknown, getId: () => number): string {
+function formatJsonRpcRequest({
+  method,
+  params,
+  getId,
+}: {
+  method: string
+  params: unknown
+  getId: () => number
+}): string {
   return JSON.stringify({
     jsonrpc: '2.0',
     method,

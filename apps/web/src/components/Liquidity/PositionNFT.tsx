@@ -3,7 +3,15 @@ import { useRef, useState } from 'react'
 import styled from 'styled-components'
 
 // snapshots a src img into a canvas
-function getSnapshot(src: HTMLImageElement, canvas: HTMLCanvasElement, targetHeight: number) {
+function getSnapshot({
+  src,
+  canvas,
+  targetHeight,
+}: {
+  src: HTMLImageElement
+  canvas: HTMLCanvasElement
+  targetHeight: number
+}) {
   const context = canvas.getContext('2d')
 
   if (context) {
@@ -57,7 +65,7 @@ export function PositionNFT({ image, height: targetHeight }: { image: string; he
       onMouseLeave={() => {
         // snapshot the current frame so the transition to the canvas is smooth
         if (imageRef.current && canvasRef.current) {
-          getSnapshot(imageRef.current, canvasRef.current, targetHeight)
+          getSnapshot({ src: imageRef.current, canvas: canvasRef.current, targetHeight })
         }
         setAnimate(false)
       }}
@@ -70,7 +78,7 @@ export function PositionNFT({ image, height: targetHeight }: { image: string; he
         onLoad={() => {
           // snapshot for the canvas
           if (imageRef.current && canvasRef.current) {
-            getSnapshot(imageRef.current, canvasRef.current, targetHeight)
+            getSnapshot({ src: imageRef.current, canvas: canvasRef.current, targetHeight })
           }
         }}
       />

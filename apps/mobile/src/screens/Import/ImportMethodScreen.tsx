@@ -34,7 +34,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function ImportMethodScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
-  const entryPoint = params?.entryPoint
+  const entryPoint = params.entryPoint
   const [isLoadingPasskey, setIsLoadingPasskey] = useState(false)
 
   useNavigationHeader(navigation)

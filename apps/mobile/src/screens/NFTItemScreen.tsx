@@ -104,7 +104,7 @@ function NFTItemScreenContents({
   const contractAddress = address || asset?.nftContract?.address || fallbackData?.contractAddress
 
   const lastSaleData = data?.nftActivity?.edges[0]?.node
-  const listingPrice = asset?.listings?.edges?.[0]?.node?.price
+  const listingPrice = asset?.listings?.edges[0]?.node.price
 
   const name = useMemo(() => asset?.name ?? fallbackData?.name, [asset?.name, fallbackData?.name])
   const description = useMemo(
@@ -151,7 +151,7 @@ function NFTItemScreenContents({
     if (asset?.collection?.name) {
       return {
         ...baseProps,
-        collectionName: asset?.collection?.name,
+        collectionName: asset.collection.name,
         isMissingData: false,
       }
     }
@@ -174,7 +174,14 @@ function NFTItemScreenContents({
   const { colorLight, colorDark } = useNearestThemeColorFromImageUri(imageUrl)
   // check if colorLight passes contrast against card bg color, if not use fallback
   const accentTextColor = useMemo(() => {
-    if (colorLight && passesContrast(colorLight, colors.surface1.val, MIN_COLOR_CONTRAST_THRESHOLD)) {
+    if (
+      colorLight &&
+      passesContrast({
+        color: colorLight,
+        backgroundColor: colors.surface1.val,
+        contrastThreshold: MIN_COLOR_CONTRAST_THRESHOLD,
+      })
+    ) {
       return colorLight
     }
     return colors.neutral2.val
@@ -292,7 +299,7 @@ function NFTItemScreenContents({
                           <BaseCard.ErrorState
                             retryButtonLabel={t('common.button.retry')}
                             title={t('tokens.nfts.details.error.load.title')}
-                            onRetry={(): Promise<ApolloQueryResult<NftItemScreenQuery>> => refetch?.()}
+                            onRetry={(): Promise<ApolloQueryResult<NftItemScreenQuery>> => refetch()}
                           />
                         )}
                       </Flex>
@@ -417,7 +424,7 @@ function NFTItemScreenContents({
                 </Flex>
 
                 {/* Traits */}
-                {asset?.traits && asset?.traits?.length > 0 ? (
+                {asset?.traits && asset.traits.length > 0 ? (
                   <Flex gap="$spacing12">
                     <Text color={colors.neutral1.val} ml="$spacing24" variant="body2">
                       {t('tokens.nfts.details.traits')}
@@ -443,11 +450,10 @@ function AssetMetadata({
   valueComponent: JSX.Element
   color: string
 }): JSX.Element {
-  const colors = useSporeColors()
   return (
     <Flex row alignItems="center" justifyContent="space-between" pl="$spacing2">
       <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" maxWidth="40%">
-        <Text style={{ color: color ?? colors.neutral2.get() }} variant="body2">
+        <Text style={{ color }} variant="body2">
           {title}
         </Text>
       </Flex>

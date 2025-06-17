@@ -30,6 +30,7 @@ export const selectHasCopiedPrivateKeys = (state: WalletState): boolean =>
 export const selectHasDismissedSmartWalletHomeScreenNudge = (state: WalletState, walletAddress: string): boolean =>
   state.behaviorHistory.smartWalletNudge?.[walletAddress]?.hasDismissedHomeScreenNudge ?? false
 
+// eslint-disable-next-line max-params
 export const selectHasShownEip5792Nudge = (state: WalletState, walletAddress: string, dappUrl: string): boolean => {
   return state.behaviorHistory.smartWalletNudge?.[walletAddress]?.dappUrlToHasShownNudge?.[dappUrl] ?? false
 }

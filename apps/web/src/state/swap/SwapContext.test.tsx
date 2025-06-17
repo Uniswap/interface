@@ -5,10 +5,13 @@ import { render } from 'test-utils/render'
 import { Flex } from 'ui/src'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
-jest.mock('hooks/useContract', () => ({
-  ...jest.requireActual('hooks/useContract'),
-  useContract: jest.fn(),
-}))
+vi.mock('hooks/useContract', async () => {
+  const actual = await vi.importActual('hooks/useContract')
+  return {
+    ...actual,
+    useContract: vi.fn(),
+  }
+})
 
 describe('SwapAndLimitContext', () => {
   test('should use context', () => {

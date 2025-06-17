@@ -68,8 +68,16 @@ const KeyValueRow = ({ objKey, children }: KeyValueRowProps): JSX.Element => {
 }
 
 // recursively parses typed data objects and adds margin to left
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Element => {
+const getParsedObjectDisplay = ({
+  chainId,
+  obj,
+  depth = 0,
+}: {
+  chainId: number
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obj: any
+  depth?: number
+}): JSX.Element => {
   if (depth === MAX_TYPED_DATA_PARSE_DEPTH + 1) {
     return <Text variant="body3">...</Text>
   }
@@ -84,7 +92,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
         const childValue = obj[objKey]
 
         // Special case for address strings
-        if (typeof childValue === 'string' && getValidAddress(childValue, true)) {
+        if (typeof childValue === 'string' && getValidAddress({ address: childValue, withChecksum: true })) {
           return (
             <KeyValueRow key={objKey} objKey={objKey}>
               <Flex>
@@ -96,7 +104,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
 
         return (
           <KeyValueRow key={objKey} objKey={objKey}>
-            {getParsedObjectDisplay(chainId, childValue, depth + 1)}
+            {getParsedObjectDisplay({ chainId, obj: childValue, depth: depth + 1 })}
           </KeyValueRow>
         )
       })}
@@ -120,7 +128,7 @@ function TransactionDetails({
   return (
     <Flex gap="$spacing12">
       {value && !BigNumber.from(value).eq(0) ? <SpendingEthDetails chainId={chainId} value={value} /> : null}
-      {transactionCurrencies?.map((currencyInfo, i) => (
+      {transactionCurrencies.map((currencyInfo, i) => (
         <SpendingDetails
           key={currencyInfo.currencyId}
           currencyInfo={currencyInfo}
@@ -165,7 +173,7 @@ export function RequestDetailsContent({ request }: RequestDetailsProps): JSX.Ele
   if (isSignTypedDataRequest(request)) {
     try {
       const data = JSON.parse(request.rawMessage)
-      return getParsedObjectDisplay(request.chainId, data.message, 0)
+      return getParsedObjectDisplay({ chainId: request.chainId, obj: data.message })
     } catch (error) {
       logger.error(error, { tags: { file: 'RequestDetails', function: 'RequestDetailsContent' } })
       return <Text />

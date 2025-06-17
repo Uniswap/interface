@@ -28,23 +28,23 @@ export function selectRpcUrl(chainId: UniverseChainId, rpcType: RPCType = RPCTyp
   try {
     // Handle private RPC providers
     if (rpcType === RPCType.Private) {
-      const privateRPCUrl = getChainInfo(chainId).rpcUrls?.[RPCType.Private]?.http[0]
+      const privateRPCUrl = getChainInfo(chainId).rpcUrls[RPCType.Private]?.http[0]
       if (!privateRPCUrl) {
         throw new Error(`No private RPC available for chain ${chainId}`)
       }
 
-      const flashbotsEnabled = getExperimentValue<Experiments.PrivateRpc, PrivateRpcProperties, boolean>(
-        Experiments.PrivateRpc,
-        PrivateRpcProperties.FlashbotsEnabled,
-        DEFAULT_FLASHBOTS_ENABLED,
-      )
+      const flashbotsEnabled = getExperimentValue({
+        experiment: Experiments.PrivateRpc,
+        param: PrivateRpcProperties.FlashbotsEnabled,
+        defaultValue: DEFAULT_FLASHBOTS_ENABLED,
+      })
 
       if (chainId === UniverseChainId.Mainnet && flashbotsEnabled) {
-        const flashbotsRefundPercent = getExperimentValue<Experiments.PrivateRpc, PrivateRpcProperties, number>(
-          Experiments.PrivateRpc,
-          PrivateRpcProperties.RefundPercent,
-          FLASHBOTS_DEFAULT_REFUND_PERCENT,
-        )
+        const flashbotsRefundPercent = getExperimentValue({
+          experiment: Experiments.PrivateRpc,
+          param: PrivateRpcProperties.RefundPercent,
+          defaultValue: FLASHBOTS_DEFAULT_REFUND_PERCENT,
+        })
         return {
           rpcUrl: FLASHBOTS_RPC_URL,
           shouldUseFlashbots: true,
@@ -59,14 +59,14 @@ export function selectRpcUrl(chainId: UniverseChainId, rpcType: RPCType = RPCTyp
 
     // Handle public RPC providers
     try {
-      const publicRPCUrl = getChainInfo(chainId).rpcUrls?.[RPCType.Public]?.http[0]
+      const publicRPCUrl = getChainInfo(chainId).rpcUrls[RPCType.Public]?.http[0]
       if (publicRPCUrl) {
         return { rpcUrl: publicRPCUrl }
       }
       throw new Error(`No public RPC available for chain ${chainId}`)
     } catch (error) {
       // Fall back to alternative public RPC URL if available
-      const altPublicRPCUrl = getChainInfo(chainId).rpcUrls?.[RPCType.PublicAlt]?.http[0]
+      const altPublicRPCUrl = getChainInfo(chainId).rpcUrls[RPCType.PublicAlt]?.http[0]
       if (altPublicRPCUrl) {
         return { rpcUrl: altPublicRPCUrl }
       }

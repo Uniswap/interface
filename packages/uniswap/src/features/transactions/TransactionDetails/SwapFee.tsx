@@ -31,7 +31,8 @@ export function SwapFee({
         noFeeCharged: swapFee.percent.equalTo(0),
         formattedPercent: formatPercent(swapFee.percent.toFixed()),
         formattedAmount:
-          getFormattedCurrencyAmount(currency, swapFee.amount, formatter) + getSymbolDisplayText(currency.symbol),
+          getFormattedCurrencyAmount({ currency, amount: swapFee.amount, formatter }) +
+          getSymbolDisplayText(currency.symbol),
         formattedAmountFiat,
       }
     : undefined

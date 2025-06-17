@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`PoolDetailsHeader renders link for pool address 1`] = `
+exports[`PoolDetailsHeader > renders link for pool address 1`] = `
 <DocumentFragment>
   .c0 {
   box-sizing: border-box;
@@ -318,7 +318,7 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
 </DocumentFragment>
 `;
 
-exports[`PoolDetailsHeader renders link for token address 1`] = `
+exports[`PoolDetailsHeader > renders link for token address 1`] = `
 <DocumentFragment>
   .c0 {
   box-sizing: border-box;

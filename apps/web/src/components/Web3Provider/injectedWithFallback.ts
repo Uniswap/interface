@@ -16,10 +16,10 @@ export function injectedWithFallback() {
         return injectedConnector.connect(...params)
       },
       get icon() {
-        return !window.ethereum || window.ethereum?.isMetaMask ? METAMASK_ICON : INJECTED_LIGHT_ICON
+        return !window.ethereum || window.ethereum.isMetaMask ? METAMASK_ICON : INJECTED_LIGHT_ICON
       },
       get name() {
-        return !window.ethereum ? 'Install MetaMask' : window.ethereum?.isMetaMask ? 'MetaMask' : 'Browser Wallet'
+        return !window.ethereum ? 'Install MetaMask' : window.ethereum.isMetaMask ? 'MetaMask' : 'Browser Wallet'
       },
     }
   })

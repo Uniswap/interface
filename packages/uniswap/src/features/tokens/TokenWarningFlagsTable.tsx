@@ -26,10 +26,10 @@ function getWarningFlags({
   if (isToken) {
     // If Blockaid marks the token as having high fees, but we don't have data on token fees, show Blockaid's fees data
     const buyFeePercent = currencyInfo.currency.buyFeeBps
-      ? currencyInfo.currency.buyFeeBps?.toNumber() / 100
+      ? currencyInfo.currency.buyFeeBps.toNumber() / 100
       : currencyInfo.safetyInfo?.blockaidFees?.buyFeePercent
     const sellFeePercent = currencyInfo.currency.sellFeeBps
-      ? currencyInfo.currency.sellFeeBps?.toNumber() / 100
+      ? currencyInfo.currency.sellFeeBps.toNumber() / 100
       : currencyInfo.safetyInfo?.blockaidFees?.sellFeePercent
 
     if (buyFeePercent) {

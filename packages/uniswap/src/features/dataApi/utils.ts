@@ -1,9 +1,17 @@
-import { ApolloError } from '@apollo/client'
+import { ApolloError, NetworkStatus } from '@apollo/client'
 import { BigNumber } from '@ethersproject/bignumber'
-import { Token } from '@uniswap/sdk-core'
+import {
+  ProtectionInfo,
+  AttackType as RestAttackType,
+  ProtectionResult as RestProtectionResult,
+  SafetyLevel as RestSafetyLevel,
+  SpamCode as RestSpamCode,
+  Token as RestToken,
+  TokenMetadata,
+} from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { useRef } from 'react'
 import {
-  Chain,
   ContractInput,
   ProtectionAttackType,
   ProtectionResult,
@@ -11,8 +19,11 @@ import {
   TokenProjectsQuery,
   TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { SpamCode } from 'uniswap/src/data/types'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { RestContract } from 'uniswap/src/features/dataApi/balancesRest'
 import { AttackType, CurrencyInfo, PortfolioBalance, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -38,9 +49,16 @@ type BuildCurrencyParams = {
 // Converts CurrencyId to ContractInput format for GQL token queries
 export function currencyIdToContractInput(id: CurrencyId): ContractInput {
   return {
-    // TODO: WALL-4919: Remove hardcoded Mainnet
-    chain: toGraphQLChain(currencyIdToChain(id) ?? UniverseChainId.Mainnet) ?? Chain.Ethereum,
+    chain: toGraphQLChain(currencyIdToChain(id) ?? UniverseChainId.Mainnet),
     address: currencyIdToGraphQLAddress(id) ?? undefined,
+  }
+}
+
+// Converts CurrencyId to ContractInput format for Rest token queries
+export function currencyIdToRestContractInput(id: CurrencyId): RestContract {
+  return {
+    chainId: currencyIdToChain(id) ?? UniverseChainId.Mainnet,
+    address: currencyIdToGraphQLAddress(id) ?? DEFAULT_NATIVE_ADDRESS,
   }
 }
 
@@ -51,8 +69,8 @@ export function tokenProjectToCurrencyInfos(
   return tokenProjects
     ?.flatMap((project) =>
       project?.tokens.map((token) => {
-        const { logoUrl, safetyLevel } = project ?? {}
-        const { name, chain, address, decimals, symbol, feeData, protectionInfo } = token ?? {}
+        const { logoUrl, safetyLevel } = project
+        const { name, chain, address, decimals, symbol, feeData, protectionInfo } = token
         const chainId = fromGraphQLChain(chain)
 
         if (chainFilter && chainFilter !== chainId) {
@@ -178,6 +196,24 @@ function getHighestPriorityAttackType(attackTypes?: (ProtectionAttackType | unde
   }
 }
 
+// Priority based on Token Protection PRD spec for REST API
+function getHighestPriorityRestAttackType(attackTypes?: RestAttackType[]): AttackType | undefined {
+  if (!attackTypes || attackTypes.length === 0) {
+    return undefined
+  }
+  if (attackTypes.includes(RestAttackType.HONEYPOT)) {
+    return AttackType.Honeypot
+  } else if (attackTypes.includes(RestAttackType.IMPERSONATOR)) {
+    return AttackType.Impersonator
+  } else if (attackTypes.includes(RestAttackType.AIRDROP_PATTERN)) {
+    return AttackType.Airdrop
+  } else if (attackTypes.includes(RestAttackType.HIGH_FEES)) {
+    return AttackType.HighFees
+  } else {
+    return AttackType.Other
+  }
+}
+
 export function getCurrencySafetyInfo(
   safetyLevel?: SafetyLevel,
   protectionInfo?: NonNullable<TokenQuery['token']>['protectionInfo'],
@@ -258,6 +294,94 @@ export function sortByName(unsortedBalances?: PortfolioBalance[]): PortfolioBala
     if (!b.currencyInfo.currency.name) {
       return -1
     }
-    return a.currencyInfo.currency.name?.localeCompare(b.currencyInfo.currency.name)
+    return a.currencyInfo.currency.name.localeCompare(b.currencyInfo.currency.name)
   })
+}
+
+export function mapRestProtectionResultToProtectionResult(result?: RestProtectionResult): ProtectionResult {
+  switch (result) {
+    case RestProtectionResult.MALICIOUS:
+      return ProtectionResult.Malicious
+    case RestProtectionResult.SPAM:
+      return ProtectionResult.Spam
+    case RestProtectionResult.BENIGN:
+      return ProtectionResult.Benign
+    default:
+      return ProtectionResult.Unknown
+  }
+}
+
+export function getRestCurrencySafetyInfo(safetyLevel?: SafetyLevel, protectionInfo?: ProtectionInfo): SafetyInfo {
+  return {
+    tokenList: getTokenListFromSafetyLevel(safetyLevel),
+    attackType: getHighestPriorityRestAttackType(protectionInfo?.attackTypes),
+    protectionResult: mapRestProtectionResultToProtectionResult(protectionInfo?.result),
+    blockaidFees: undefined,
+  }
+}
+
+export function getRestTokenSafetyInfo(metadata?: TokenMetadata): {
+  isSpam: boolean
+  spamCodeValue: SpamCode
+  mappedSafetyLevel: SafetyLevel | undefined
+} {
+  let isSpam = false
+  let spamCodeValue = SpamCode.LOW
+  let mappedSafetyLevel: SafetyLevel | undefined
+
+  switch (metadata?.spamCode) {
+    case RestSpamCode.SPAM:
+    case RestSpamCode.SPAM_URL:
+      isSpam = true
+      spamCodeValue = SpamCode.HIGH
+      break
+    case RestSpamCode.NOT_SPAM:
+      isSpam = false
+      spamCodeValue = SpamCode.LOW
+      break
+    default:
+      break
+  }
+
+  switch (metadata?.safetyLevel) {
+    case RestSafetyLevel.VERIFIED:
+      mappedSafetyLevel = SafetyLevel.Verified
+      break
+    case RestSafetyLevel.MEDIUM_WARNING:
+      mappedSafetyLevel = SafetyLevel.MediumWarning
+      break
+    case RestSafetyLevel.STRONG_WARNING:
+      mappedSafetyLevel = SafetyLevel.StrongWarning
+      break
+    case RestSafetyLevel.BLOCKED:
+      mappedSafetyLevel = SafetyLevel.Blocked
+      break
+    default:
+      break
+  }
+
+  return { isSpam, spamCodeValue, mappedSafetyLevel }
+}
+
+// maps REST status to gql NetworkStatus to preserve compatibility while we support both endpoints
+export function mapRestStatusToNetworkStatus(status: 'success' | 'error' | 'pending'): NetworkStatus {
+  switch (status) {
+    case 'success':
+      return NetworkStatus.ready
+    case 'error':
+      return NetworkStatus.error
+    case 'pending':
+      return NetworkStatus.loading
+    default:
+      return NetworkStatus.ready
+  }
+}
+
+export function matchesCurrency(token: RestToken, currency: Currency): boolean {
+  const chainIdsMatch = token.chainId === currency.chainId
+  const addressesMatch =
+    (currency.isNative && isNativeCurrencyAddress(token.chainId, token.address)) ||
+    (currency.isToken && token.address === currency.address)
+
+  return chainIdsMatch && addressesMatch
 }

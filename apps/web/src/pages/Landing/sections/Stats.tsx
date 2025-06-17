@@ -224,14 +224,14 @@ function Cards({ inView }: { inView: boolean }) {
   const totalVolume = useMemo(() => {
     // Second to last data point is most recent 24H period
     // Last data point is today's volume, which is still accumulating
-    const v2DataPoints = dailyV2VolumeQuery?.data?.historicalProtocolVolume
+    const v2DataPoints = dailyV2VolumeQuery.data?.historicalProtocolVolume
     const v2Volume = v2DataPoints && v2DataPoints.length >= 2 ? v2DataPoints[v2DataPoints.length - 2].value : 0
 
-    const v3DataPoints = dailyV3VolumeQuery?.data?.historicalProtocolVolume
+    const v3DataPoints = dailyV3VolumeQuery.data?.historicalProtocolVolume
     const v3Volume = v3DataPoints && v3DataPoints.length >= 2 ? v3DataPoints[v3DataPoints.length - 2].value : 0
 
     return v2Volume + v3Volume
-  }, [dailyV2VolumeQuery?.data?.historicalProtocolVolume, dailyV3VolumeQuery?.data?.historicalProtocolVolume])
+  }, [dailyV2VolumeQuery.data?.historicalProtocolVolume, dailyV3VolumeQuery.data?.historicalProtocolVolume])
 
   return (
     <GridArea>

@@ -92,6 +92,7 @@ i18n
   })
   .catch(() => undefined)
 
+// eslint-disable-next-line max-params
 i18n.on('missingKey', (_lngs, _ns, key, _res) => {
   logger.error(new Error(`Missing i18n string key ${key} for language ${i18n.language}`), {
     tags: {

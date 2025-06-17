@@ -1,6 +1,7 @@
 import { UNI_ADDRESSES } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { parse } from 'qs'
+import { ReactNode } from 'react'
 import {
   queryParametersToCurrencyState,
   serializeSwapAddressesToURLParameters,
@@ -18,23 +19,29 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-jest.mock('uniswap/src/features/gating/hooks', () => {
+vi.mock('uniswap/src/features/gating/hooks', () => {
   return {
-    useFeatureFlag: jest.fn(),
+    useFeatureFlag: vi.fn(),
   }
 })
 
-jest.mock('uniswap/src/contexts/UniswapContext')
+vi.mock('uniswap/src/contexts/UniswapContext')
 
-jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
-  ...jest.requireActual('uniswap/src/features/chains/hooks/useEnabledChains'),
-  useEnabledChains: jest.fn(),
-}))
+vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', async () => {
+  const actual = await vi.importActual('uniswap/src/features/chains/hooks/useEnabledChains')
+  return {
+    ...actual,
+    useEnabledChains: vi.fn(),
+  }
+})
 
-jest.mock('uniswap/src/contexts/UrlContext', () => ({
-  ...jest.requireActual('uniswap/src/contexts/UrlContext'),
-  useUrlContext: jest.fn(),
-}))
+vi.mock('uniswap/src/contexts/UrlContext', async () => {
+  const actual = await vi.importActual('uniswap/src/contexts/UrlContext')
+  return {
+    ...actual,
+    useUrlContext: vi.fn(),
+  }
+})
 
 describe('hooks', () => {
   beforeEach(() => {
@@ -46,8 +53,8 @@ describe('hooks', () => {
     })
 
     mocked(useUrlContext).mockReturnValue({
-      useParsedQueryString: jest.fn(),
-      usePathname: jest.fn(),
+      useParsedQueryString: vi.fn(),
+      usePathname: vi.fn(),
     })
   })
 
@@ -222,6 +229,7 @@ describe('hooks', () => {
         navigateToFiatOnRamp: () => {},
         navigateToTokenDetails: () => {},
         navigateToExternalProfile: () => {},
+        navigateToPoolDetails: () => {},
         navigateToNftCollection: () => {},
         navigateToSendFlow: () => {},
         navigateToReceive: () => {},
@@ -242,7 +250,7 @@ describe('hooks', () => {
             outputCurrency: USDC_OPTIMISM.address,
             chain: 'optimism',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         const {
@@ -264,7 +272,7 @@ describe('hooks', () => {
             outputCurrency: USDC_OPTIMISM.address,
             chain: 'optimism',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         const {
@@ -289,7 +297,7 @@ describe('hooks', () => {
             value: '200',
             field: 'OUTPUT',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         const {
@@ -310,7 +318,7 @@ describe('hooks', () => {
           useParsedQueryString: () => ({
             chain: 'mainnet',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         const {
@@ -328,7 +336,8 @@ describe('hooks', () => {
     })
 
     describe('Connected wallet with balance', () => {
-      jest.mock('appGraphql/data/apollo/TokenBalancesProvider', () => ({
+      vi.mock('appGraphql/data/apollo/TokenBalancesProvider', () => ({
+        TokenBalancesProvider: ({ children }: { children: ReactNode }) => children,
         useTokenBalancesQuery: () => ({
           data: {
             portfolios: [
@@ -365,7 +374,7 @@ describe('hooks', () => {
             inputCurrency: 'ETH',
             chain: 'mainnet',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         mocked(useEnabledChains).mockReturnValue({
@@ -391,7 +400,7 @@ describe('hooks', () => {
             inputCurrency: 'ETH',
             chain: 'sepolia',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         mocked(useEnabledChains).mockReturnValue({
@@ -418,7 +427,7 @@ describe('hooks', () => {
             inputCurrency: 'ETH',
             chain: 'sepolia',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         mocked(useEnabledChains).mockReturnValue({
@@ -444,7 +453,7 @@ describe('hooks', () => {
             outputCurrency: USDC_OPTIMISM.address,
             chain: 'optimism',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         const {
@@ -463,7 +472,7 @@ describe('hooks', () => {
           useParsedQueryString: () => ({
             chain: 'mainnet',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         const {
@@ -485,7 +494,7 @@ describe('hooks', () => {
             outputCurrency: USDC_OPTIMISM.address,
             chain: 'optimism',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         const {

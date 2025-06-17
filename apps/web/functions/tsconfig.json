@@ -9,7 +9,7 @@
       "shared-cloud/*": ["../src/shared-cloud/*"]
     },
     "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/functions", // avoid clobbering the build tsbuildinfo
-    "types": ["jest", "node", "@cloudflare/workers-types"],
+    "types": ["node", "@cloudflare/workers-types", "vitest/globals"],
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "references": [

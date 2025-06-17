@@ -52,7 +52,7 @@ export function getInstantTokenBalanceUpdateApolloLink({ reduxStore }: { reduxSt
           tokenBalanceOverrides,
         )
 
-        if (!response?.data?.portfolios) {
+        if (!response.data?.portfolios) {
           logger.warn(
             'getInstantTokenBalanceUpdateApolloLink.ts',
             'getInstantTokenBalanceUpdateApolloLink',
@@ -63,7 +63,7 @@ export function getInstantTokenBalanceUpdateApolloLink({ reduxStore }: { reduxSt
         }
 
         const data = response.data as Maybe<{ portfolios: Array<Portfolio> }>
-        const tokenBalances = data?.portfolios?.[0]?.tokenBalances
+        const tokenBalances = data?.portfolios[0]?.tokenBalances
 
         if (!tokenBalances) {
           logger.warn(

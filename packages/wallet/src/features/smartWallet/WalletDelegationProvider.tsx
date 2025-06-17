@@ -91,10 +91,6 @@ export function useGetSwapDelegationAddressForActiveAccount(): (chainId?: Univer
       return undefined
     }
 
-    if (!chainId) {
-      return undefined
-    }
-
     if (!activeAccount.smartWalletConsent) {
       return undefined
     }
@@ -138,7 +134,7 @@ export function WalletDelegationProvider({
   const getDelegationDetails = useEvent(
     (address: Address, chainId: UniverseChainId): DelegationCheckResult | undefined => {
       // Get from cache first
-      const cachedDelegationDetails = delegationQuery?.data?.[address]?.[chainId]
+      const cachedDelegationDetails = delegationQuery.data?.[address]?.[chainId]
       if (cachedDelegationDetails) {
         return cachedDelegationDetails
       }

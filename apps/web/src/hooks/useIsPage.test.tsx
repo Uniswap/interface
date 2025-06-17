@@ -22,6 +22,7 @@ describe('useIsPage', () => {
     [PageType.SWAP, '/swap/details', MatchType.STARTS_WITH],
     [PageType.POSITIONS, '/view/positions', MatchType.INCLUDES],
     [PageType.SEND, '/send', MatchType.EXACT],
+    // eslint-disable-next-line max-params
   ])('overrides default MatchType for %s when custom MatchType %s is provided', (pageType, path, matchType) => {
     window.history.pushState({}, '', path)
     const { result } = renderHook(() => useIsPage(pageType, matchType), {

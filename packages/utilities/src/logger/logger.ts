@@ -1,3 +1,4 @@
+/* eslint-disable max-params */
 import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/datadog/Datadog'
@@ -83,10 +84,10 @@ function logMessage(
       // Alternatively, we could improve this in the future by removing the Reactotron log plugin and instead
       // manually call `Reactotron.display(...)` here with some custom formatting.
       // eslint-disable-next-line no-console
-      console.log(...formatMessage(level, fileName, functionName, message), ...args)
+      console.log(...formatMessage({ level, fileName, functionName, message }), ...args)
     } else {
       // eslint-disable-next-line no-console
-      console[level](...formatMessage(level, fileName, functionName, message), ...args)
+      console[level](...formatMessage({ level, fileName, functionName, message }), ...args)
     }
   }
 
@@ -170,12 +171,17 @@ function pad(n: number, amount: number = 2): string {
   return n.toString().padStart(amount, '0')
 }
 
-function formatMessage(
-  level: LogLevel,
-  fileName: string,
-  functionName: string,
-  message: string,
-): (string | Record<string, unknown>)[] {
+function formatMessage({
+  level,
+  fileName,
+  functionName,
+  message,
+}: {
+  level: LogLevel
+  fileName: string
+  functionName: string
+  message: string
+}): (string | Record<string, unknown>)[] {
   const t = new Date()
   const timeString = `${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}.${pad(t.getMilliseconds(), 3)}`
   if (isWeb) {

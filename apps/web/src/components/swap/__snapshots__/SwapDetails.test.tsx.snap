@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
+exports[`SwapDetails.tsx > matches base snapshot, test trade exact input 1`] = `
 <DocumentFragment>
   .c0 {
   display: -webkit-box;
@@ -256,16 +256,16 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
           >
             Show more
           </div>
-          <svg>
-            expando-icon-closed.svg
-          </svg>
+          <svg
+            data-testid="mocked-svg"
+          />
         </div>
         <div
           class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
         />
       </button>
       <div
-        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
       >
         <div
           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -302,8 +302,8 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
         </div>
       </div>
       <div
+        class="_opacity-0enter-0 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _opacity-1 _height-0px _overflowX-hidden _overflowY-hidden _width-10037 _mt--8px"
         data-disable-theme="true"
-        style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; margin-top: -8px;"
       >
         <div
           class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
@@ -312,7 +312,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
           >
             <div
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0"
             >
               <div
                 class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -343,7 +343,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
               </div>
             </div>
             <div
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0"
             >
               <div
                 class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -379,7 +379,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
               </div>
             </div>
             <div
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0"
             >
               <div
                 class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -409,7 +409,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
         </div>
       </div>
       <div
-        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
       >
         <div
           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -436,7 +436,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
         </div>
       </div>
       <div
-        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
       >
         <div
           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -506,11 +506,10 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
       class="c11 c18 c19"
     >
       <button
-        class=" is_Button  t_group_item"
+        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-accent1Hove112785 _backgroundColor-0focus-visible-accent1Hove112785 _outlineColor-0focus-visible-accent1Hove112785 _transform-0active-scale0--981281 _backgroundColor-0active-accent1Hove112785 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-accent1 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
         data-testid="confirm-swap-button"
         dd-action-name="Confirm swap"
         id="confirm-swap-or-send"
-        style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(255, 55, 199); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
       >
         <span
           class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
@@ -526,7 +525,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 </DocumentFragment>
 `;
 
-exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] = `
+exports[`SwapDetails.tsx > renders a preview trade while disabling submission 1`] = `
 <DocumentFragment>
   .c0 {
   display: -webkit-box;
@@ -753,16 +752,16 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
           >
             Show more
           </div>
-          <svg>
-            expando-icon-closed.svg
-          </svg>
+          <svg
+            data-testid="mocked-svg"
+          />
         </div>
         <div
           class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
         />
       </button>
       <div
-        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
       >
         <div
           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -791,8 +790,8 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
         </div>
       </div>
       <div
+        class="_opacity-0enter-0 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _opacity-1 _height-0px _overflowX-hidden _overflowY-hidden _width-10037 _mt--8px"
         data-disable-theme="true"
-        style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; margin-top: -8px;"
       >
         <div
           class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
@@ -801,7 +800,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
           >
             <div
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0"
             >
               <div
                 class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -837,7 +836,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
               </div>
             </div>
             <div
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0"
             >
               <div
                 class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -867,7 +866,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
         </div>
       </div>
       <div
-        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
       >
         <div
           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -891,7 +890,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
         </div>
       </div>
       <div
-        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
       >
         <div
           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -928,11 +927,10 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
     >
       <button
         aria-disabled="true"
-        class=" is_Button  t_group_item"
+        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _pointerEvents-_platformweb_none _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-surface2 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-default _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _pointerEvents-box-none _userSelect-none _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
         data-testid="confirm-swap-button"
         dd-action-name="Finalizing quote..."
         id="confirm-swap-or-send"
-        style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(249, 249, 249); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: default; height: auto; align-self: stretch; flex-grow: 1; padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; pointer-events: none; user-select: none; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid;"
         tabindex="-1"
       >
         <style>
@@ -990,7 +988,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
 </DocumentFragment>
 `;
 
-exports[`SwapDetails.tsx renders slippage tooltip 1`] = `
+exports[`SwapDetails.tsx > renders slippage tooltip 1`] = `
 <DocumentFragment>
   .c0 {
   -webkit-text-decoration: none;

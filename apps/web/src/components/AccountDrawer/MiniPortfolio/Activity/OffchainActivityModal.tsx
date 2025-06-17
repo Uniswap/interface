@@ -35,8 +35,7 @@ import { UniswapXOrderStatus } from 'types/uniswapx'
 import { Button, Flex, TouchableArea } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { InterfaceEventNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
@@ -60,7 +59,7 @@ export function useOpenOffchainActivityModal() {
 
   return useCallback(
     (order: UniswapXOrderDetails, logos?: Logos) => {
-      sendAnalyticsEvent(InterfaceEventNameLocal.UniswapXOrderDetailsSheetOpened, {
+      sendAnalyticsEvent(InterfaceEventName.UniswapXOrderDetailsSheetOpened, {
         order: order.orderHash,
       })
       setSelectedOrder({ order, logos, modalOpen: true })
@@ -106,10 +105,16 @@ export function useOrderAmounts(order?: UniswapXOrderDetails):
       outputAmount: CurrencyAmount<Currency>
     }
   | undefined {
-  const inputCurrency = useCurrency(order?.swapInfo?.inputCurrencyId || 'ETH', order?.chainId)
-  const outputCurrency = useCurrency(order?.swapInfo?.outputCurrencyId || 'ETH', order?.chainId)
+  const inputCurrency = useCurrency({
+    address: order?.swapInfo.inputCurrencyId || 'ETH',
+    chainId: order?.chainId,
+  })
+  const outputCurrency = useCurrency({
+    address: order?.swapInfo.outputCurrencyId || 'ETH',
+    chainId: order?.chainId,
+  })
 
-  if (!order || !order?.swapInfo) {
+  if (!order) {
     return undefined
   }
 
@@ -167,16 +172,16 @@ export function OrderContent({
   onCancel?: () => void
 }) {
   const amounts = useOrderAmounts(order)
-  const amountsDefined = !!amounts?.inputAmount?.currency && !!amounts?.outputAmount?.currency
+  const amountsDefined = !!amounts?.inputAmount.currency && !!amounts.outputAmount.currency
   const fiatValueInput = useUSDPrice(amounts?.inputAmount)
   const fiatValueOutput = useUSDPrice(amounts?.outputAmount)
   const theme = useTheme()
 
-  const explorerLink = order?.txHash
-    ? getExplorerLink(order.chainId, order.txHash, ExplorerDataType.TRANSACTION)
+  const explorerLink = order.txHash
+    ? getExplorerLink({ chainId: order.chainId, data: order.txHash, type: ExplorerDataType.TRANSACTION })
     : undefined
 
-  const createdAt = formatTimestamp(order.addedTime)
+  const createdAt = formatTimestamp({ timestamp: order.addedTime })
 
   const details: Array<OffchainOrderLineItemProps> = useMemo(() => {
     const details = []
@@ -207,17 +212,14 @@ export function OrderContent({
     [amounts?.inputAmount.currency, amounts?.outputAmount.currency],
   )
 
-  if (!amounts?.inputAmount || !amounts?.outputAmount) {
+  if (!amounts?.inputAmount) {
     return null
   }
 
   return (
     <Column>
       <Row gap="md">
-        <PortfolioLogo
-          chainId={amounts?.inputAmount.currency.chainId ?? UniverseChainId.Mainnet}
-          currencies={currencies}
-        />
+        <PortfolioLogo chainId={amounts.inputAmount.currency.chainId} currencies={currencies} />
         <Column>
           <ThemedText.SubHeader fontWeight={500}>{getOrderTitle(order)}</ThemedText.SubHeader>
           <ThemedText.BodySmall color="neutral2" fontWeight={500}>

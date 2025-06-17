@@ -6,7 +6,7 @@ import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 import noop from 'utilities/src/react/noop'
 
-jest.mock('state/user/hooks')
+vi.mock('state/user/hooks')
 
 const renderButton = (compact = false) => {
   render(<MenuButton compact={compact} disabled={false} onClick={noop} isActive={false} />)

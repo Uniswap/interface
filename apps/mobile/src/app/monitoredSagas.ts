@@ -1,3 +1,9 @@
+import {
+  removeDelegationActions,
+  removeDelegationReducer,
+  removeDelegationSaga,
+  removeDelegationSagaName,
+} from 'wallet/src/features/smartWallet/sagas/removeDelegationSaga'
 import { swapActions, swapReducer, swapSaga, swapSagaName } from 'wallet/src/features/transactions/swap/swapSaga'
 import {
   tokenWrapActions,
@@ -44,6 +50,12 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     wrappedSaga: tokenWrapSaga,
     reducer: tokenWrapReducer,
     actions: tokenWrapActions,
+  },
+  [removeDelegationSagaName]: {
+    name: removeDelegationSagaName,
+    wrappedSaga: removeDelegationSaga,
+    reducer: removeDelegationReducer,
+    actions: removeDelegationActions,
   },
 }
 

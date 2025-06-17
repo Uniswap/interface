@@ -9,8 +9,8 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { useCurrencyInfo as useUniswapCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 
-jest.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
-  useCurrencyInfo: jest.fn(),
+vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
+  useCurrencyInfo: vi.fn(),
 }))
 
 describe('useCurrencyInfo', () => {

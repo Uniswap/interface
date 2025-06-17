@@ -22,7 +22,15 @@ const convertTokenAddress = (networkName: string, tokenAddress: string) => {
   return tokenAddress
 }
 
-export default async function getToken(networkName: string, tokenAddress: string, url: string) {
+export default async function getToken({
+  networkName,
+  tokenAddress,
+  url,
+}: {
+  networkName: string
+  tokenAddress: string
+  url: string
+}) {
   const origin = new URL(url).origin
   const image = origin + '/api/image/tokens/' + networkName + '/' + tokenAddress
   const uppercaseNetworkName = networkName.toUpperCase()
@@ -34,7 +42,7 @@ export default async function getToken(networkName: string, tokenAddress: string
       address: convertedTokenAddress,
     },
   })
-  const asset = data?.token
+  const asset = data.token
   if (!asset) {
     return undefined
   }

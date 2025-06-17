@@ -7,13 +7,11 @@ import { iconSizes } from 'ui/src/theme'
 import { WarningMessage } from 'uniswap/src/components/WarningMessage/WarningMessage'
 import { SLIPPAGE_CRITICAL_TOLERANCE, WARNING_DEADLINE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { TransactionSettingRow } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModalContent/TransactionSettingsRow'
-import { TransactionSettingsModalProps } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/types'
+import type { TransactionSettingsModalProps } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/types'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
-import {
-  TransactionSettingId,
-  type TransactionSettingConfig,
-} from 'uniswap/src/features/transactions/components/settings/types'
-import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippage/useSlippageSettings'
+import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
+import { TransactionSettingId } from 'uniswap/src/features/transactions/components/settings/types'
+import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/useSlippageSettings'
 import { isExtension, isInterfaceDesktop, isMobileApp, isMobileWeb, isWeb } from 'utilities/src/platform'
 
 function createRowWarningContent({
@@ -71,6 +69,7 @@ const TopLevelSettings = ({
 
   const getSettingsRowWarning = (settingId: TransactionSettingId): JSX.Element | undefined => {
     const warning = rowWarningContent[settingId]
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return warning?.condition ? warning.render() : undefined
   }
 

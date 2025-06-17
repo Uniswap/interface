@@ -20,11 +20,15 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 
-export function tradeToTransactionInfo(
-  trade: Trade,
-  transactedUSDValue?: number,
-  gasEstimates?: GasFeeEstimates,
-): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo | BridgeTransactionInfo {
+export function tradeToTransactionInfo({
+  trade,
+  transactedUSDValue,
+  gasEstimates,
+}: {
+  trade: Trade
+  transactedUSDValue?: number
+  gasEstimates?: GasFeeEstimates
+}): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo | BridgeTransactionInfo {
   const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance ?? 0)
   const { quote, slippageTolerance } = trade
   const { quoteId, gasUseEstimate, routeString } = getClassicQuoteFromResponse(quote) ?? {}
@@ -57,7 +61,7 @@ export function tradeToTransactionInfo(
     gasUseEstimate,
     routeString,
     protocol: getProtocolVersionFromTrade(trade),
-    simulationFailureReasons: isClassic(trade) ? trade.quote?.quote.txFailureReasons : undefined,
+    simulationFailureReasons: isClassic(trade) ? trade.quote.quote.txFailureReasons : undefined,
     transactedUSDValue,
     gasEstimates,
   }
@@ -116,13 +120,19 @@ export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Tr
  * 1 UNI USD Rate = 4,755.47 / 367.351 = 12.94 USD
  * 1 ETH USD Rate = (4,755.47 / 367.351) * 244.9 = 3,170 USD
  */
-export const calculateRateLine = (
-  usdAmountOut: CurrencyAmount<Currency> | null,
-  outputCurrencyAmount: Maybe<CurrencyAmount<Currency>>,
-  trade: Trade | IndicativeTrade | undefined | null,
-  showInverseRate: boolean,
-  formatter: LocalizationContextState,
-): string => {
+export function calculateRateLine({
+  usdAmountOut,
+  outputCurrencyAmount,
+  trade,
+  showInverseRate,
+  formatter,
+}: {
+  usdAmountOut: CurrencyAmount<Currency> | null
+  outputCurrencyAmount: Maybe<CurrencyAmount<Currency>>
+  trade: Trade | IndicativeTrade | undefined | null
+  showInverseRate: boolean
+  formatter: LocalizationContextState
+}): string {
   const isValidAmounts = usdAmountOut && outputCurrencyAmount
 
   const outputRateAmount = isValidAmounts
@@ -139,11 +149,15 @@ export const calculateRateLine = (
   return latestFiatPriceFormatted
 }
 
-export const getRateToDisplay = (
-  formatter: LocalizationContextState,
-  trade: Trade | IndicativeTrade,
-  showInverseRate: boolean,
-): string => {
+export function getRateToDisplay({
+  formatter,
+  trade,
+  showInverseRate,
+}: {
+  formatter: LocalizationContextState
+  trade: Trade | IndicativeTrade
+  showInverseRate: boolean
+}): string {
   const price = showInverseRate ? trade.executionPrice.invert() : trade.executionPrice
 
   let formattedPrice: string

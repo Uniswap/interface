@@ -102,11 +102,11 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const poolAddress = String(index[1])
 
     const cacheUrl = origin + '/pools/' + networkName + '/' + poolAddress
-    const data = await getRequest(
-      cacheUrl,
-      () => getPool(networkName, poolAddress, cacheUrl),
-      (data): data is NonNullable<Awaited<ReturnType<typeof getPool>>> => Boolean(data.title),
-    )
+    const data = await getRequest({
+      url: cacheUrl,
+      getData: () => getPool({ networkName, poolAddress, url: cacheUrl }),
+      validateData: (data): data is NonNullable<Awaited<ReturnType<typeof getPool>>> => Boolean(data.title),
+    })
 
     if (!data) {
       return new Response('Pool not found.', { status: 404 })

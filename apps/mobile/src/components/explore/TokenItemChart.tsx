@@ -27,13 +27,13 @@ export function TokenItemChart({
   const currencyId = tokenItemData.address
     ? buildCurrencyId(tokenItemData.chainId, tokenItemData.address)
     : buildNativeCurrencyId(tokenItemData.chainId)
-  const { data } = useTokenPriceHistory(currencyId)
-  const { tokenColor } = useExtractedTokenColor(
-    tokenItemData.logoUrl,
-    tokenItemData.symbol,
-    /*background=*/ colors.surface1.val,
-    /*default=*/ colors.neutral3.val,
-  )
+  const { data } = useTokenPriceHistory({ currencyId })
+  const { tokenColor } = useExtractedTokenColor({
+    imageUrl: tokenItemData.logoUrl,
+    tokenName: tokenItemData.symbol,
+    backgroundColor: colors.surface1.val,
+    defaultColor: colors.neutral3.val,
+  })
 
   const convertedPriceHistory = useMemo(
     () =>

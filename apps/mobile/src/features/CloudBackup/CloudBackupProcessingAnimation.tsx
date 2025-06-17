@@ -9,7 +9,6 @@ import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudSt
 import { Flex, Text } from 'ui/src'
 import { CheckmarkCircle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
@@ -51,10 +50,7 @@ export function CloudBackupProcessingAnimation({
     throw Error('No account available for backup')
   }
 
-  if (account.type !== AccountType.SignerMnemonic) {
-    throw new Error(`Backed up account with address: ${account.address} is not a mnemonic account`)
-  }
-  const mnemonicId = account?.mnemonicId
+  const mnemonicId = account.mnemonicId
 
   const [processing, doneProcessing] = useReducer(() => false, true)
 

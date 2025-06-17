@@ -5,16 +5,13 @@ import { FeeAmount, Pool as PoolV3, TICK_SPACINGS, TickMath as TickMathV3, tickT
 import { Pool as PoolV4, tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
 import { ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { LiquidityBarSeries } from 'components/Charts/LiquidityChart/liquidity-bar-series'
-import {
-  LiquidityBarData,
-  LiquidityBarProps,
-  LiquidityBarSeriesOptions,
-} from 'components/Charts/LiquidityChart/renderer'
+import { LiquidityBarData, LiquidityBarProps, LiquidityBarSeriesOptions } from 'components/Charts/LiquidityChart/types'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 import { ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useState } from 'react'
+import { PositionField } from 'types/position'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
@@ -125,17 +122,23 @@ function maxAmount(token: Token) {
 
 /** Calculates tokens locked in the active tick range based on the current tick */
 // TODO(WEB-7564): determine how to support v4
-async function calculateActiveRangeTokensLocked(
-  token0: Token,
-  token1: Token,
-  feeTier: FeeAmount,
-  tick: TickProcessed,
+async function calculateActiveRangeTokensLocked({
+  token0,
+  token1,
+  feeTier,
+  tick,
+  poolData,
+}: {
+  token0: Token
+  token1: Token
+  feeTier: FeeAmount
+  tick: TickProcessed
   poolData: {
     sqrtPriceX96?: JSBI
     currentTick?: number
     liquidity?: JSBI
-  },
-): Promise<{ amount0Locked: number; amount1Locked: number } | undefined> {
+  }
+}): Promise<{ amount0Locked: number; amount1Locked: number } | undefined> {
   if (!poolData.currentTick || !poolData.sqrtPriceX96 || !poolData.liquidity) {
     return undefined
   }
@@ -184,12 +187,17 @@ async function calculateActiveRangeTokensLocked(
 }
 
 /** Returns amounts of tokens locked in the given tick. Reference: https://docs.uniswap.org/sdk/v3/guides/advanced/active-liquidity */
-export async function calculateTokensLockedV3(
-  token0: Token,
-  token1: Token,
-  feeTier: FeeAmount,
-  tick: TickProcessed,
-): Promise<{ amount0Locked: number; amount1Locked: number }> {
+export async function calculateTokensLockedV3({
+  token0,
+  token1,
+  feeTier,
+  tick,
+}: {
+  token0: Token
+  token1: Token
+  feeTier: FeeAmount
+  tick: TickProcessed
+}): Promise<{ amount0Locked: number; amount1Locked: number }> {
   try {
     const tickSpacing = TICK_SPACINGS[feeTier]
     const liqGross = JSBI.greaterThan(tick.liquidityNet, JSBI.BigInt(0))
@@ -227,14 +235,21 @@ export async function calculateTokensLockedV3(
 }
 
 // TODO(WEB-7564): determine if tick math needs to be converted to support v4
-export async function calculateTokensLockedV4(
-  token0: Currency,
-  token1: Currency,
-  feeTier: FeeAmount,
-  tickSpacing: number,
-  hooks: string,
-  tick: TickProcessed,
-): Promise<{ amount0Locked: number; amount1Locked: number }> {
+export async function calculateTokensLockedV4({
+  token0,
+  token1,
+  feeTier,
+  tickSpacing,
+  hooks,
+  tick,
+}: {
+  token0: Currency
+  token1: Currency
+  feeTier: FeeAmount
+  tickSpacing: number
+  hooks: string
+  tick: TickProcessed
+}): Promise<{ amount0Locked: number; amount1Locked: number }> {
   try {
     const liqGross = JSBI.greaterThan(tick.liquidityNet, JSBI.BigInt(0))
       ? tick.liquidityNet
@@ -281,8 +296,7 @@ export async function calculateTokensLockedV4(
 }
 
 export function useLiquidityBarData({
-  currencyA,
-  currencyB,
+  sdkCurrencies,
   feeTier,
   isReversed,
   chainId,
@@ -291,8 +305,7 @@ export function useLiquidityBarData({
   hooks,
   poolId,
 }: {
-  currencyA: Currency
-  currencyB: Currency
+  sdkCurrencies: { [field in PositionField]: Currency }
   feeTier: FeeAmount
   isReversed: boolean
   chainId: UniverseChainId
@@ -303,14 +316,8 @@ export function useLiquidityBarData({
 }) {
   const { formatNumberOrString } = useLocalizationContext()
 
-  // Determine the correct tokens to use based on the protocol version
-  // V3 requires tokens, V4 can handle native or tokens
-  const tokenAWrapped = currencyA.wrapped
-  const tokenBWrapped = currencyB.wrapped
-
   const activePoolData = usePoolActiveLiquidity({
-    currencyA,
-    currencyB,
+    sdkCurrencies,
     feeAmount: feeTier,
     version,
     poolId,
@@ -352,21 +359,26 @@ export function useLiquidityBarData({
 
           price0 =
             version === ProtocolVersion.V3
-              ? tickToPrice(tokenAWrapped, tokenBWrapped, t.tick)
-              : tickToPriceV4(currencyA, currencyB, t.tick)
+              ? tickToPrice(sdkCurrencies.TOKEN0.wrapped, sdkCurrencies.TOKEN1.wrapped, t.tick)
+              : tickToPriceV4(sdkCurrencies.TOKEN0, sdkCurrencies.TOKEN1, t.tick)
           price1 = price0.invert()
         }
 
         const { amount0Locked, amount1Locked } = await (version === ProtocolVersion.V3
-          ? calculateTokensLockedV3(tokenAWrapped, tokenBWrapped, feeTier, t)
-          : calculateTokensLockedV4(
-              currencyA,
-              currencyB,
+          ? calculateTokensLockedV3({
+              token0: sdkCurrencies.TOKEN0.wrapped,
+              token1: sdkCurrencies.TOKEN1.wrapped,
               feeTier,
-              tickSpacing ?? TICK_SPACINGS[feeTier],
-              hooks ?? ZERO_ADDRESS,
-              t,
-            ))
+              tick: t,
+            })
+          : calculateTokensLockedV4({
+              token0: sdkCurrencies.TOKEN0,
+              token1: sdkCurrencies.TOKEN1,
+              feeTier,
+              tickSpacing: tickSpacing ?? TICK_SPACINGS[feeTier],
+              hooks: hooks ?? ZERO_ADDRESS,
+              tick: t,
+            }))
 
         barData.push({
           tick: t.tick,
@@ -380,7 +392,7 @@ export function useLiquidityBarData({
       }
 
       // offset the values to line off bars with TVL used to swap across bar
-      barData?.map((entry, i) => {
+      barData.map((entry, i) => {
         if (i > 0) {
           barData[i - 1].amount0Locked = entry.amount0Locked
           barData[i - 1].amount1Locked = entry.amount1Locked
@@ -390,13 +402,13 @@ export function useLiquidityBarData({
       const activeRangeData = activeRangeIndex !== undefined ? barData[activeRangeIndex] : undefined
       // For active range, adjust amounts locked to adjust for where current tick/price is within the range
       if (activeRangeIndex !== undefined && activeRangeData) {
-        const activeTickTvl = await calculateActiveRangeTokensLocked(
-          tokenAWrapped,
-          tokenBWrapped,
+        const activeTickTvl = await calculateActiveRangeTokensLocked({
+          token0: sdkCurrencies.TOKEN0.wrapped,
+          token1: sdkCurrencies.TOKEN1.wrapped,
           feeTier,
-          ticksProcessed[activeRangeIndex],
-          activePoolData,
-        )
+          tick: ticksProcessed[activeRangeIndex],
+          poolData: activePoolData,
+        })
         barData[activeRangeIndex] = { ...activeRangeData, ...activeTickTvl }
       }
 
@@ -410,19 +422,7 @@ export function useLiquidityBarData({
     }
 
     formatData()
-  }, [
-    activePoolData,
-    currencyA,
-    currencyB,
-    tokenAWrapped,
-    tokenBWrapped,
-    formatNumberOrString,
-    isReversed,
-    feeTier,
-    version,
-    tickSpacing,
-    hooks,
-  ])
+  }, [activePoolData, sdkCurrencies, formatNumberOrString, isReversed, feeTier, version, tickSpacing, hooks])
 
   return { tickData, activeTick: activePoolData.activeTick, loading: activePoolData.isLoading || !tickData }
 }

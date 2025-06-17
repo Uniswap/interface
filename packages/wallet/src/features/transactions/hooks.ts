@@ -98,21 +98,29 @@ export function useSortedPendingTransactions(address: Address | null): Transacti
   }, [transactions])
 }
 
-export function useSelectTransaction(
-  address: Address | undefined,
-  chainId: UniverseChainId | undefined,
-  txId: string | undefined,
-): TransactionDetails | undefined {
+export function useSelectTransaction({
+  address,
+  chainId,
+  txId,
+}: {
+  address?: Address
+  chainId?: UniverseChainId
+  txId?: string
+}): TransactionDetails | undefined {
   const selectTransaction = useMemo(makeSelectTransaction, [])
   return useSelector((state: WalletState) => selectTransaction(state, { address, chainId, txId }))
 }
 
-export function useCreateSwapFormState(
-  address: Address | undefined,
-  chainId: UniverseChainId | undefined,
-  txId: string | undefined,
-): TransactionState | undefined {
-  const transaction = useSelectTransaction(address, chainId, txId)
+export function useCreateSwapFormState({
+  address,
+  chainId,
+  txId,
+}: {
+  address?: Address
+  chainId?: UniverseChainId
+  txId?: string
+}): TransactionState | undefined {
+  const transaction = useSelectTransaction({ address, chainId, txId })
 
   const inputCurrencyId =
     transaction?.typeInfo.type === TransactionType.Swap || transaction?.typeInfo.type === TransactionType.Bridge
@@ -140,14 +148,20 @@ export function useCreateSwapFormState(
   }, [chainId, inputCurrencyInfo, outputCurrencyInfo, transaction, txId])
 }
 
-export function useCreateWrapFormState(
-  address: Address | undefined,
-  chainId: UniverseChainId | undefined,
-  txId: string | undefined,
-  inputCurrency: Maybe<Currency>,
-  outputCurrency: Maybe<Currency>,
-): TransactionState | undefined {
-  const transaction = useSelectTransaction(address, chainId, txId)
+export function useCreateWrapFormState({
+  address,
+  chainId,
+  txId,
+  inputCurrency,
+  outputCurrency,
+}: {
+  address?: Address
+  chainId?: UniverseChainId
+  txId?: string
+  inputCurrency: Maybe<Currency>
+  outputCurrency: Maybe<Currency>
+}): TransactionState | undefined {
+  const transaction = useSelectTransaction({ address, chainId, txId })
 
   return useMemo(() => {
     if (!chainId || !txId || !transaction) {
@@ -334,7 +348,7 @@ function useLowestPendingNonce(): BigNumberish | undefined {
     }
     pending.map((txn: TransactionDetails) => {
       if (isClassic(txn)) {
-        const currentNonce = txn.options?.request?.nonce
+        const currentNonce = txn.options.request.nonce
         min = min ? (currentNonce ? (min < currentNonce ? min : currentNonce) : min) : currentNonce
       }
     })
@@ -349,7 +363,7 @@ export function useIsQueuedTransaction(tx: TransactionDetails): boolean {
     return false
   }
 
-  const nonce = tx?.options?.request?.nonce
+  const nonce = tx.options.request.nonce
   return nonce && lowestPendingNonce ? nonce > lowestPendingNonce : false
 }
 
@@ -360,7 +374,7 @@ export function useSuccessfulSwapCompleted(onSwapCompleted: (transaction: Transa
   const transactions = useSelector(selectTransactions)
 
   const successfulSwapTransactions = useMemo((): TransactionDetails[] => {
-    if (!activeAccount?.address || !transactions) {
+    if (!activeAccount?.address) {
       return []
     }
 
@@ -391,7 +405,7 @@ export function useSuccessfulSwapCompleted(onSwapCompleted: (transaction: Transa
       lastCompletedSwap.receipt?.confirmedTime &&
       lastCompletedSwap.receipt.confirmedTime > lastProcessedTimestamp
     ) {
-      const timeSinceAdded = Date.now() - (lastCompletedSwap.receipt?.confirmedTime || 0)
+      const timeSinceAdded = Date.now() - (lastCompletedSwap.receipt.confirmedTime || 0)
       if (timeSinceAdded < ACCEPTABLE_TIME_DIFF) {
         onSwapCompleted(lastCompletedSwap)
         setLastProcessedTimestamp(lastCompletedSwap.receipt.confirmedTime)

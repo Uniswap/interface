@@ -81,6 +81,7 @@ export const appRatingStateSelector: Selector<
     appRatingFeedbackProvidedMsSelector,
     hasConsecutiveRecentSwapsSelector,
   ],
+  // eslint-disable-next-line max-params
   (appRatingProvidedMs, appRatingPromptedMs, appRatingFeedbackProvidedMs, consecutiveSwapsCondition) => {
     const hasPrompted = appRatingPromptedMs !== undefined
     const hasProvidedFeedback = appRatingFeedbackProvidedMs !== undefined

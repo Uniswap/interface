@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { createColumnHelper } from '@tanstack/react-table'
 import {
   PoolTableTransaction,
@@ -83,13 +84,13 @@ export function PoolDetailsTransactionsTable({
     PoolTableTransactionType.ADD,
   ])
 
-  const { transactions, loading, loadMore, error } = usePoolTransactions(
-    poolAddress,
+  const { transactions, loading, loadMore, error } = usePoolTransactions({
+    address: poolAddress,
     chainId,
     filter,
     token0,
     protocolVersion,
-  )
+  })
 
   const showLoadingSkeleton = loading || !!error
   const columns = useMemo(() => {
@@ -111,7 +112,11 @@ export function PoolDetailsTransactionsTable({
           <Cell loading={showLoadingSkeleton} justifyContent="flex-start">
             <TimestampCell
               timestamp={Number(row.getValue?.().timestamp)}
-              link={getExplorerLink(chainId, row.getValue?.().transaction, ExplorerDataType.TRANSACTION)}
+              link={getExplorerLink({
+                chainId,
+                data: row.getValue?.().transaction,
+                type: ExplorerDataType.TRANSACTION,
+              })}
             />
           </Cell>
         ),
@@ -243,7 +248,13 @@ export function PoolDetailsTransactionsTable({
         ),
         cell: (makerAddress) => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
-            <StyledExternalLink href={getExplorerLink(chainId, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}>
+            <StyledExternalLink
+              href={getExplorerLink({
+                chainId,
+                data: makerAddress.getValue?.(),
+                type: ExplorerDataType.ADDRESS,
+              })}
+            >
               <TableText>{shortenAddress(makerAddress.getValue?.(), 0)}</TableText>
             </StyledExternalLink>
           </Cell>

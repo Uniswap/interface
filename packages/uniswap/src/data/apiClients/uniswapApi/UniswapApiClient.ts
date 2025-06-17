@@ -35,18 +35,23 @@ export type GasFeeResultWithoutState = Omit<GasFeeResult, 'isLoading' | 'error'>
 export function createFetchGasFee({
   activeGasStrategy,
   shadowGasStrategies,
+  smartContractDelegationAddress,
 }: {
   activeGasStrategy: GasStrategy
   shadowGasStrategies: GasStrategy[]
+  smartContractDelegationAddress?: Address
 }): FetchGasFn {
   const injectGasStrategies = (tx: TransactionRequest): TransactionRequest & { gasStrategies: GasStrategy[] } => {
     return { ...tx, gasStrategies: [activeGasStrategy, ...shadowGasStrategies] }
   }
 
+  const injectSmartContractDelegationAddress = (tx: TransactionRequest): TransactionRequest => ({
+    ...tx,
+    ...(smartContractDelegationAddress ? { smartContractDelegationAddress } : {}),
+  })
+
   const processGasFeeResponse = (gasFeeResponse: GasFeeResponse): GasFeeResultWithoutState => {
-    const activeEstimate = gasFeeResponse.gasEstimates?.find((e) =>
-      areEqualGasStrategies(e.strategy, activeGasStrategy),
-    )
+    const activeEstimate = gasFeeResponse.gasEstimates.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))
 
     if (!activeEstimate) {
       throw new Error('Could not get gas estimate')
@@ -58,7 +63,7 @@ export function createFetchGasFee({
       params: extractGasFeeParams(activeEstimate),
       gasEstimates: {
         activeEstimate,
-        shadowEstimates: gasFeeResponse.gasEstimates?.filter((e) => e !== activeEstimate),
+        shadowEstimates: gasFeeResponse.gasEstimates.filter((e) => e !== activeEstimate),
       },
     }
   }
@@ -68,7 +73,7 @@ export function createFetchGasFee({
       if (!tx.chainId) {
         throw new Error('No chainId for clientside gas estimation')
       }
-      const provider = createEthersProvider(tx.chainId)
+      const provider = createEthersProvider({ chainId: tx.chainId })
       if (!provider) {
         throw new Error('No provider for clientside gas estimation')
       }
@@ -89,10 +94,17 @@ export function createFetchGasFee({
   }
 
   const fetchGasFee: FetchGasFn = async ({ tx, fallbackGasLimit }) => {
-    const body = JSON.stringify(injectGasStrategies(tx))
+    const body = JSON.stringify(injectGasStrategies(injectSmartContractDelegationAddress(tx)))
 
     try {
-      const gasFeeResponse = await UniswapApiClient.post<GasFeeResponse>(uniswapUrls.gasServicePath, { body })
+      const gasFeeResponse = await UniswapApiClient.post<GasFeeResponse>(uniswapUrls.gasServicePath, {
+        body,
+        headers: smartContractDelegationAddress
+          ? {
+              'x-viem-provider-enabled': 'true',
+            }
+          : {},
+      })
       return processGasFeeResponse(gasFeeResponse)
     } catch (error) {
       if (isInterface) {

@@ -2,9 +2,9 @@ import { DynamicConfigs, ForceUpgradeConfigKey, ForceUpgradeStatus } from 'unisw
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 
 export function useForceUpgradeStatus(): ForceUpgradeStatus {
-  return useDynamicConfigValue<DynamicConfigs.ForceUpgrade, ForceUpgradeConfigKey, ForceUpgradeStatus>(
-    DynamicConfigs.ForceUpgrade,
-    ForceUpgradeConfigKey.Status,
-    'not-required',
-  )
+  return useDynamicConfigValue({
+    config: DynamicConfigs.ForceUpgrade,
+    key: ForceUpgradeConfigKey.Status,
+    defaultValue: 'not-required',
+  })
 }

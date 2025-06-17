@@ -1,4 +1,5 @@
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { Flex, HeightAnimator, Separator, Text, TouchableArea, UniswapXText } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
@@ -6,32 +7,33 @@ import { AnglesDownUp } from 'ui/src/components/icons/AnglesDownUp'
 import { SortVertical } from 'ui/src/components/icons/SortVertical'
 import { AnimatedUniswapX } from 'ui/src/components/icons/UniswapX'
 import { AcrossLogo } from 'ui/src/components/logos/AcrossLogo'
-import { WarningLabel, WarningWithStyle } from 'uniswap/src/components/modals/WarningModal/types'
+import type { WarningWithStyle } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
+import type { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/useSlippageSettings'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
+import { AcrossRoutingInfoTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/AcrossRoutingTooltip'
 import {
-  AcrossRoutingInfoTooltip,
-  AutoSlippageBadge,
   BestRouteTooltip,
   BestRouteUniswapXTooltip,
-  LargePriceDifferenceTooltip,
-  MaxSlippageTooltip,
-  SwapFeeOnTransferTooltip,
-  YouReceiveDetailsTooltip,
-} from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/SwapFormTooltips'
-import { SwapDetailsRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/YouReceiveDetails/SwapDetailsRow'
-import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippage/useSlippageSettings'
-import { useFeeOnTransferAmounts } from 'uniswap/src/features/transactions/swap/hooks/useFeeOnTransferAmount'
+} from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/BestRouteTooltip'
+import { SwapFeeOnTransferTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/FeeDetailsTooltip'
+import { LargePriceDifferenceTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/LargePriceDifferenceTooltip'
 import {
-  UsePriceDifferenceReturnType,
-  usePriceDifference,
-} from 'uniswap/src/features/transactions/swap/hooks/usePriceDifference'
-import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
+  AutoSlippageBadge,
+  MaxSlippageTooltip,
+} from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/MaxSlippageTooltip'
+import { YouReceiveDetailsTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/YouReceiveDetailsTooltip'
+import { SwapDetailsRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/YouReceiveDetails/SwapDetailsRow'
+import { useFeeOnTransferAmounts } from 'uniswap/src/features/transactions/swap/hooks/useFeeOnTransferAmount'
+import type { UsePriceDifferenceReturnType } from 'uniswap/src/features/transactions/swap/hooks/usePriceDifference'
+import { usePriceDifference } from 'uniswap/src/features/transactions/swap/hooks/usePriceDifference'
+import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
@@ -345,7 +347,6 @@ export function YouReceiveDetails({
     derivedSwapInfo.wrapType === WrapType.NotApplicable &&
     !!derivedSwapInfo.currencies.output &&
     !!derivedSwapInfo.currencies.input &&
-    derivedSwapInfo.exactCurrencyField &&
     derivedSwapInfo.currencyAmounts[derivedSwapInfo.exactCurrencyField]
 
   return (

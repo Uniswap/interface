@@ -8,7 +8,7 @@ import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/Contex
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ElementNameType, MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
@@ -24,7 +24,7 @@ function CTAButton({
   icon: Icon,
 }: {
   title: string
-  element: ElementNameType
+  element: ElementName
   onPress: () => void
   onPressDisabled?: () => void
   testID?: TestIDType

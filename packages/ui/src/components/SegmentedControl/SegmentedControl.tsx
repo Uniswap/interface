@@ -266,7 +266,11 @@ export function SegmentedControl<T extends string = string>({
             >
               {display ?? (
                 <Text
-                  color={getOptionTextColor(selectedOption === value, hoveredIndex === index, disabled)}
+                  color={getOptionTextColor({
+                    active: selectedOption === value,
+                    hovered: hoveredIndex === index,
+                    disabled,
+                  })}
                   userSelect="none"
                   variant={size === 'large' ? 'buttonLabel3' : 'buttonLabel4'}
                 >
@@ -301,7 +305,15 @@ export function SegmentedControl<T extends string = string>({
   )
 }
 
-function getOptionTextColor(active: boolean, hovered: boolean, disabled = false): ColorTokens {
+function getOptionTextColor({
+  active,
+  hovered,
+  disabled = false,
+}: {
+  active: boolean
+  hovered: boolean
+  disabled?: boolean
+}): ColorTokens {
   if (disabled) {
     return active ? '$neutral2' : '$neutral3'
   }

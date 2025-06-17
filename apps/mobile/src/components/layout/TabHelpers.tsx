@@ -138,11 +138,15 @@ export const TabLabel = ({
 /**
  * Keeps tab content in sync, by scrolling content in case collapsing header height has changed between tabs
  */
-export const useScrollSync = (
-  currentTabIndex: SharedValue<number>,
-  scrollPairs: ScrollPair[],
-  headerConfig: HeaderConfig,
-): { sync: (event: NativeSyntheticEvent<NativeScrollEvent>) => void } => {
+export const useScrollSync = ({
+  currentTabIndex,
+  scrollPairs,
+  headerConfig,
+}: {
+  currentTabIndex: SharedValue<number>
+  scrollPairs: ScrollPair[]
+  headerConfig: HeaderConfig
+}): { sync: (event: NativeSyntheticEvent<NativeScrollEvent>) => void } => {
   const sync: FlatListProps<unknown>['onMomentumScrollEnd'] | FlashListProps<unknown>['onMomentumScrollEnd'] =
     useCallback(
       (event: { nativeEvent: NativeScrollEvent }) => {

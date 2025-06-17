@@ -3,13 +3,13 @@ import { Button, Flex, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { ExcludedNetworkBanner } from 'uniswap/src/components/banners/ExcludedNetworkBanner'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isMobileApp } from 'utilities/src/platform'
+import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { NetworkInfo } from 'wallet/src/features/smartWallet/InsufficientFundsNetworkRow'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { NetworkFeeFooter } from 'wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter'
 
 /**
  * Props for the SmartWalletConfirmModal component.
@@ -25,8 +25,9 @@ type SmartWalletConfirmModalProps = {
   onCancel?: () => void
   onConfirm?: () => void
   onClose: () => void
-  networkFeeFooter?: React.ReactNode
-  networkInfo?: NetworkInfo[]
+  networkBalances: NetworkInfo[]
+  inProgress?: boolean
+  walletAddress: string
 }
 
 export type SmartWalletConfirmModalState = Omit<SmartWalletConfirmModalProps, 'onClose' | 'isOpen'>
@@ -40,20 +41,26 @@ export function SmartWalletConfirmModal({
   onCancel,
   onConfirm,
   onClose,
-  networkFeeFooter,
-  networkInfo,
+  networkBalances,
+  inProgress,
+  walletAddress,
 }: SmartWalletConfirmModalProps): JSX.Element {
   const { t } = useTranslation()
-  const insets = useAppInsets()
-  const activeAccount = useActiveAccountWithThrow()
-  const chainIds = networkInfo?.map((network) => network.chainId) || []
+  const chainIds = networkBalances.filter((network) => !network.hasSufficientFunds).map((network) => network.chainId)
+
+  const totalGasFee = networkBalances
+    .reduce((acc, network) => acc + BigInt(network.gasFee.displayValue ?? '0'), BigInt(0))
+    .toString()
+
+  const multipleNetworks = networkBalances.length > 1
+  const logoOverrideChainId = !multipleNetworks ? networkBalances[0]?.chainId : undefined
 
   return (
     <Modal name={ModalName.SmartWalletConfirmModal} isModalOpen={isOpen} onClose={onClose}>
-      <Flex p="$spacing12" gap="$spacing8">
+      <Flex px={isExtension ? '$none' : '$spacing12'} pt="$spacing12" gap="$spacing8">
         <Flex alignItems="center" pb="$gap24">
           <Flex
-            backgroundColor="$accent2"
+            backgroundColor="$surface3"
             borderRadius="$rounded12"
             height="$spacing48"
             width="$spacing48"
@@ -71,32 +78,45 @@ export function SmartWalletConfirmModal({
           </Text>
         </Flex>
 
-        {networkInfo && (
+        {chainIds.length > 0 && (
           <Flex px="$spacing24" pb="$spacing16">
             <ExcludedNetworkBanner chainIds={chainIds} />
           </Flex>
         )}
 
         <Flex gap="$spacing12" pb="$spacing16" px={isMobileApp ? '$spacing24' : undefined}>
-          {networkFeeFooter}
-          <AddressFooter activeAccountAddress={activeAccount.address} px="$spacing8" />
+          <NetworkFeeFooter
+            showNetworkLogo
+            chainId={UniverseChainId.Mainnet}
+            gasFee={{ displayValue: totalGasFee, isLoading: false, error: null }}
+            showAllNetworks={multipleNetworks}
+            logoOverrideChainId={logoOverrideChainId}
+          />
+          <AddressFooter activeAccountAddress={walletAddress} px="$spacing8" />
         </Flex>
         <Flex
           row
           backgroundColor="$surface1"
           gap={isMobileApp ? '$spacing8' : '$spacing12'}
-          pb={insets.bottom + spacing.spacing12}
-          px={isMobileApp ? '$spacing24' : undefined}
+          pb={isMobileApp ? spacing.spacing12 : undefined}
+          px={isMobileApp ? '$spacing12' : undefined}
         >
-          <Button size="large" testID={TestID.Cancel} emphasis="tertiary" onPress={onCancel}>
-            {t('common.button.cancel')}
-          </Button>
-
+          {!inProgress && (
+            <Button
+              size={isMobileApp ? 'medium' : 'small'}
+              testID={TestID.Cancel}
+              emphasis="secondary"
+              onPress={onCancel}
+            >
+              {t('common.button.cancel')}
+            </Button>
+          )}
           <Button
             variant="default"
             isDisabled={!confirmationEnabled}
-            size="large"
+            size={isMobileApp ? 'medium' : 'small'}
             testID={TestID.Confirm}
+            loading={inProgress}
             onPress={onConfirm}
           >
             {t('common.button.confirm')}

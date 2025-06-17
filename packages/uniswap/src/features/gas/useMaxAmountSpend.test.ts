@@ -11,9 +11,11 @@ import { ARBITRUM_CURRENCY, MAINNET_CURRENCY, OPTIMISM_CURRENCY, POLYGON_CURRENC
 
 jest.mock('uniswap/src/features/gating/hooks', () => {
   return {
-    useDynamicConfigValue: jest.fn().mockImplementation((config: unknown, key: unknown, defaultVal: unknown) => {
-      return defaultVal
-    }),
+    useDynamicConfigValue: jest
+      .fn()
+      .mockImplementation(({ defaultValue }: { config: unknown; key: unknown; defaultValue: unknown }) => {
+        return defaultValue
+      }),
   }
 })
 

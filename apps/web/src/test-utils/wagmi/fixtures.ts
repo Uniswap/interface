@@ -35,7 +35,7 @@ export const WALLET_CONNECT_CONNECTOR = {
   name: 'WalletConnect',
   type: 'walletConnect',
   getProvider: () => {
-    return Promise.resolve({ modal: { setTheme: jest.fn() } })
+    return Promise.resolve({ modal: { setTheme: vi.fn() } })
   },
 } as unknown as Connector
 export const EMBEDDED_WALLET_CONNECTOR = {

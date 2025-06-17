@@ -30,19 +30,32 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 // otherwise, show entire price in neutral1
 const DEEMPHASIZED_DECIMALS_THRESHOLD = 3
 
-const getEmphasizedNumberColor = (
-  index: number,
-  commaIndex: number,
-  emphasizedColor: string,
-  deemphasizedColor: string,
-): string => {
+function getEmphasizedNumberColor({
+  index,
+  commaIndex,
+  emphasizedColor,
+  deemphasizedColor,
+}: {
+  index: number
+  commaIndex: number
+  emphasizedColor: string
+  deemphasizedColor: string
+}): string {
   if (index >= commaIndex && commaIndex > DEEMPHASIZED_DECIMALS_THRESHOLD) {
     return deemphasizedColor
   }
   return emphasizedColor
 }
 
-const shouldUseSeparator = (index: number, commaIndex: number, decimalPlaceIndex: number): boolean => {
+const shouldUseSeparator = ({
+  index,
+  commaIndex,
+  decimalPlaceIndex,
+}: {
+  index: number
+  commaIndex: number
+  decimalPlaceIndex: number
+}): boolean => {
   'worklet'
   return (index - commaIndex) % 4 === 0 && index - commaIndex < 0 && index > commaIndex - decimalPlaceIndex
 }
@@ -119,7 +132,12 @@ const RollNumber = ({
   currency: FiatCurrencyInfo
 }): JSX.Element => {
   const colors = useSporeColors()
-  const numberColor = getEmphasizedNumberColor(index, commaIndex, colors.neutral1.val, colors.neutral3.val)
+  const numberColor = getEmphasizedNumberColor({
+    index,
+    commaIndex,
+    emphasizedColor: colors.neutral1.val,
+    deemphasizedColor: colors.neutral3.val,
+  })
 
   const animatedDigit = useDerivedValue(() => {
     const char = chars.value[index - (commaIndex - decimalPlace.value)]
@@ -165,7 +183,7 @@ const RollNumber = ({
   // need it in case the current value is eg $999.00 but maximum value in chart is more than $1,000.00
   // so it can hide the comma to avoid something like $,999.00
   const animatedWrapperSeparatorStyle = useAnimatedStyle(() => {
-    if (!shouldUseSeparator(index, commaIndex, decimalPlace.value)) {
+    if (!shouldUseSeparator({ index, commaIndex, decimalPlaceIndex: decimalPlace.value })) {
       return {
         width: withTiming(0),
       }

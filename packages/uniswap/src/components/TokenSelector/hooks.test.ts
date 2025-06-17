@@ -478,9 +478,12 @@ describe(usePortfolioTokenOptions, () => {
       const { resolvers } = queryResolvers({
         portfolios: queryResolver(input),
       })
-      const { result } = renderHook(() => usePortfolioTokenOptions(SAMPLE_SEED_ADDRESS_1, null), {
-        resolvers,
-      })
+      const { result } = renderHook(
+        () => usePortfolioTokenOptions({ address: SAMPLE_SEED_ADDRESS_1, chainFilter: null }),
+        {
+          resolvers,
+        },
+      )
 
       expect(result.current.loading).toEqual(true)
 
@@ -519,12 +522,12 @@ describe(usePortfolioTokenOptions, () => {
 
     const cases: {
       test: string
-      input: Parameters<typeof usePortfolioTokenOptions>
+      input: Parameters<typeof usePortfolioTokenOptions>[0]
       output: ReturnType<typeof usePortfolioTokenOptions>
     }[] = [
       {
         test: 'returns only shown tokens after data is fetched',
-        input: [SAMPLE_SEED_ADDRESS_1, null],
+        input: { address: SAMPLE_SEED_ADDRESS_1, chainFilter: null },
         output: {
           data: shownPortfolioBalanceTokenOptions,
           loading: false,
@@ -534,7 +537,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns shown tokens filtered by chain',
-        input: [SAMPLE_SEED_ADDRESS_1, fromGraphQLChain(usdcTokenBalance.token.chain)],
+        input: { address: SAMPLE_SEED_ADDRESS_1, chainFilter: fromGraphQLChain(usdcTokenBalance.token.chain) },
         output: {
           data: [usdcPortfolioBalanceTokenOption],
           loading: false,
@@ -544,7 +547,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns shown tokens starting with "et" (ETH) filtered by search filter',
-        input: [SAMPLE_SEED_ADDRESS_1, null, 'et'],
+        input: { address: SAMPLE_SEED_ADDRESS_1, chainFilter: null, searchFilter: 'et' },
         output: {
           data: [ethPortfolioBalanceTokenOption],
           loading: false,
@@ -554,7 +557,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns shown tokens starting with "us" (USDC) filtered by search filter',
-        input: [SAMPLE_SEED_ADDRESS_1, null, 'us'],
+        input: { address: SAMPLE_SEED_ADDRESS_1, chainFilter: null, searchFilter: 'us' },
         output: {
           data: [usdcPortfolioBalanceTokenOption],
           loading: false,
@@ -564,7 +567,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns no data when there is no token that matches both chain and search filter',
-        input: [SAMPLE_SEED_ADDRESS_1, UniverseChainId.Base, 'et'],
+        input: { address: SAMPLE_SEED_ADDRESS_1, chainFilter: UniverseChainId.Base, searchFilter: 'et' },
         output: {
           data: [],
           loading: false,
@@ -575,10 +578,7 @@ describe(usePortfolioTokenOptions, () => {
     ]
 
     it.each(cases)('$test', async ({ input, output }) => {
-      const { result } = renderHook(
-        () => usePortfolioTokenOptions(...(input as Parameters<typeof usePortfolioTokenOptions>)),
-        { resolvers },
-      )
+      const { result } = renderHook(() => usePortfolioTokenOptions(input), { resolvers })
 
       await waitFor(() => {
         expect(result.current).toEqual(output)

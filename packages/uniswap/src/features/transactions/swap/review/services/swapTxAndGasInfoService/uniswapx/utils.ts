@@ -39,7 +39,7 @@ function createUniswapXGasBreakdown({
   const { approvalGasFeeResult } = approvalTxInfo
   const gasFeeBreakdown = {
     classicGasUseEstimateUSD: trade.quote.quote.classicGasUseEstimateUSD,
-    approvalCost: approvalGasFeeResult?.displayValue,
+    approvalCost: approvalGasFeeResult.displayValue,
     wrapCost: swapTxInfo.gasFeeResult.displayValue,
     inputTokenSymbol: trade.inputAmount.currency.wrapped.symbol,
   }

@@ -8,14 +8,14 @@ import { analytics, getAnalyticsAtomDirect } from 'utilities/src/telemetry/analy
 
 export function setupAmplitude() {
   getAnalyticsAtomDirect(true).then((allowAnalytics) => {
-    analytics.init(
-      new ApplicationTransport({
+    analytics.init({
+      transportProvider: new ApplicationTransport({
         serverUrl: uniswapUrls.amplitudeProxyUrl,
         appOrigin: OriginApplication.INTERFACE,
         reportOriginCountry: (country: string) => store.dispatch(setOriginCountry(country)),
       }),
-      allowAnalytics,
-      process.env.REACT_APP_GIT_COMMIT_HASH,
-    )
+      allowed: allowAnalytics,
+      initHash: process.env.REACT_APP_GIT_COMMIT_HASH,
+    })
   })
 }

@@ -13,4 +13,5 @@ export enum UniswapEventName {
   SmartWalletMismatchDetected = 'Smart Wallet Mismatch Detected',
   TooltipOpened = 'Tooltip Opened',
   DelegationDetected = 'Delegation Detected',
+  // alphabetize additional values.
 }

@@ -27,7 +27,7 @@ export function TokenDetailsLinks(): JSX.Element {
 
   const { homepageUrl, twitterName } = useTokenProjectUrlsPartsFragment({ currencyId }).data.project ?? {}
 
-  const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
+  const explorerLink = getExplorerLink({ chainId, data: address, type: ExplorerDataType.TOKEN })
   const explorerName = getChainInfo(chainId).explorer.name
 
   const isNativeCurrency = isNativeCurrencyAddress(chainId, address)

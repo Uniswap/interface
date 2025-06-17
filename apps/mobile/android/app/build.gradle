@@ -21,7 +21,7 @@ react {
     root = file("$rnRoot/")
     reactNativeDir = file("$nodeModulesPath/react-native")
     codegenDir = file("$nodeModulesPath/react-native-codegen")
-    cliFile = file("$nodeModulesPath/react-native/cli.js")
+    cliFile = file("$nodeModulesPath/@rnef/cli/dist/src/bin.js")
     debuggableVariants = ["devDebug", "betaDebug", "prodDebug"]
     hermesCommand = "../../node_modules/react-native/sdks/hermesc/%OS-BIN%/hermesc" // This is relative to the project root.
     /* Autolinking */
@@ -71,9 +71,9 @@ if (isCI && datadogPropertiesAvailable) {
   apply from: "../../../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
 }
 
-def devVersionName = "1.52.2"
-def betaVersionName = "1.52.2"
-def prodVersionName = "1.52.2"
+def devVersionName = "1.53"
+def betaVersionName = "1.53"
+def prodVersionName = "1.53"
 
 android {
     ndkVersion rootProject.ext.ndkVersion

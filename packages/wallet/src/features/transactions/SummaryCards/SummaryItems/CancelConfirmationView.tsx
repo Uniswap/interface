@@ -56,8 +56,11 @@ export function CancelConfirmationView({
 
   // We don't currently support cancelling orders made from another device.
   const isRemoteOrder =
-    useSelectTransaction(transactionDetails.from, transactionDetails.chainId, transactionDetails.id) === undefined &&
-    isUniswapX(transactionDetails)
+    useSelectTransaction({
+      address: transactionDetails.from,
+      chainId: transactionDetails.chainId,
+      txId: transactionDetails.id,
+    }) === undefined && isUniswapX(transactionDetails)
 
   const disableConfirmationButton =
     !cancellationGasFeeInfo?.cancelRequest || transactionDetails.status !== TransactionStatus.Pending || isRemoteOrder

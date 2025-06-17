@@ -68,9 +68,12 @@ const oldProvider = window.ethereum
 const uniswapProvider = new WindowEthereumProxy()
 assignWindowEthereum(uniswapProvider)
 
-addWindowMessageListener(isValidContentScriptToProxyEmission, (message) => {
-  logger.debug('ethereum.ts', `Emitting ${message.emitKey} via WindowEthereumProxy`, message.emitValue)
-  uniswapProvider.emit(message.emitKey, message.emitValue)
+addWindowMessageListener({
+  validator: isValidContentScriptToProxyEmission,
+  handler: (message) => {
+    logger.debug('ethereum.ts', `Emitting ${message.emitKey} via WindowEthereumProxy`, message.emitValue)
+    uniswapProvider.emit(message.emitKey, message.emitValue)
+  },
 })
 
 const providerUuid = uuid()
@@ -113,9 +116,9 @@ create6963Listener()
 
 // override logic impl details in src/app/utils/provider.ts
 // get config from sister content script
-addWindowMessageListener<WindowEthereumConfigResponse>(
-  isValidWindowEthereumConfigResponse,
-  async (request) => {
+addWindowMessageListener<WindowEthereumConfigResponse>({
+  validator: isValidWindowEthereumConfigResponse,
+  handler: async (request) => {
     const isDefaultProvider = request.config.isDefaultProvider
 
     // if default provider is false, restore old provider for 1193 and unspoof 6963 provider
@@ -127,9 +130,8 @@ addWindowMessageListener<WindowEthereumConfigResponse>(
       }
     }
   },
-  undefined,
-  { removeAfterHandled: true },
-)
+  options: { removeAfterHandled: true },
+})
 
 window.postMessage({ type: ETH_PROVIDER_CONFIG.REQUEST })
 

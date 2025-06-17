@@ -1,10 +1,5 @@
 import { PropsWithChildren, memo } from 'react'
-import {
-  ElementNameType,
-  InterfacePageNameType,
-  ModalNameType,
-  SectionNameType,
-} from 'uniswap/src/features/telemetry/constants'
+import { ElementName, InterfacePageName, ModalNameType, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { ExtensionScreen } from 'uniswap/src/types/screens/extension'
 import { MobileAppScreen } from 'uniswap/src/types/screens/mobile'
@@ -13,11 +8,11 @@ import { TraceProps, Trace as UntypedTrace } from 'utilities/src/telemetry/trace
 
 // Universe typed version of ITraceContext
 interface UniverseTraceContext {
-  page?: InterfacePageNameType
+  page?: InterfacePageName
   screen?: MobileAppScreen | ExtensionScreen
-  section?: SectionNameType
+  section?: SectionName
   modal?: ModalNameType
-  element?: ElementNameType
+  element?: ElementName
 }
 
 type BaseTraceProps = UniverseTraceContext & Omit<TraceProps, 'eventOnTrigger' | 'properties'>

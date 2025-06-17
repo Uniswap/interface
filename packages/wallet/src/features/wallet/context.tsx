@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Signer } from 'ethers'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react'

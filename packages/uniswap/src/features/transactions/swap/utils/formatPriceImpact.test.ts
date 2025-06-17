@@ -20,18 +20,6 @@ describe('formatPriceImpact', () => {
     jest.clearAllMocks()
   })
 
-  it('should return undefined if priceImpact is undefined', () => {
-    // Arrange
-    const priceImpact = undefined as unknown as Percent
-
-    // Act
-    const result = formatPriceImpact(priceImpact, mockFormatPercent)
-
-    // Assert
-    expect(result).toBeUndefined()
-    expect(mockFormatPercent).not.toHaveBeenCalled()
-  })
-
   it('should format a positive price impact (negative effect for user)', () => {
     // Arrange: 5% price impact
     const priceImpact = createPercent(5, 100)

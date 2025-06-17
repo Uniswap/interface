@@ -28,7 +28,7 @@ export function* attemptCancelTransaction(
   cancelRequest: providers.TransactionRequest,
 ) {
   if (isClassic(transaction) || isBridge(transaction)) {
-    yield* call(attemptReplaceTransaction, transaction, cancelRequest, true)
+    yield* call(attemptReplaceTransaction, { transaction, newTxRequest: cancelRequest, isCancellation: true })
   } else if (isUniswapX(transaction)) {
     yield* call(cancelOrder, transaction, cancelRequest)
   }
@@ -57,16 +57,14 @@ function getPermit2NonceForOrder({
   return ROUTING_TO_ORDER_CLASS[routing].parse(encodedOrder, chainId).info.nonce
 }
 
-export async function getCancelOrderTxRequest(
-  tx: UniswapXOrderDetails,
-): Promise<providers.TransactionRequest | undefined> {
+export async function getCancelOrderTxRequest(tx: UniswapXOrderDetails): Promise<providers.TransactionRequest | null> {
   const { orderHash, chainId, from, routing } = tx
   if (!orderHash) {
-    return undefined
+    return null
   } else {
     const { encodedOrder } = (await getOrders([orderHash])).orders[0] ?? {}
     if (!encodedOrder) {
-      return undefined
+      return null
     }
 
     const nonce = getPermit2NonceForOrder({ encodedOrder, chainId, routing })
@@ -86,7 +84,7 @@ function* cancelOrder(order: UniswapXOrderDetails, cancelRequest: providers.Tran
 
   try {
     const accounts = yield* select(selectAccounts)
-    const checksummedAddress = getValidAddress(order.from, true, false)
+    const checksummedAddress = getValidAddress({ address: order.from, withChecksum: true, log: false })
     if (!checksummedAddress) {
       throw new Error(`Cannot cancel order, address is invalid: ${checksummedAddress}`)
     }

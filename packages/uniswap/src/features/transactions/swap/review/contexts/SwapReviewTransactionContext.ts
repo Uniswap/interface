@@ -43,6 +43,7 @@ export const SwapReviewTransactionContext = createContext<SwapReviewTransactionC
 
 export const useSwapReviewTransactionState = (): SwapReviewTransactionContextState => {
   const context = useContext(SwapReviewTransactionContext)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!context) {
     throw new Error('useSwapReview must be used within a SwapReviewContextProvider')
   }
@@ -63,9 +64,9 @@ export function useIsSwapMissingParams(): boolean {
     !currencyInInfo ||
     !currencyOutInfo ||
     !derivedSwapInfo?.currencyAmounts[CurrencyField.INPUT] ||
-    !derivedSwapInfo?.currencyAmounts[CurrencyField.OUTPUT] ||
+    !derivedSwapInfo.currencyAmounts[CurrencyField.OUTPUT] ||
     !acceptedDerivedSwapInfo?.currencyAmounts[CurrencyField.INPUT] ||
-    !acceptedDerivedSwapInfo?.currencyAmounts[CurrencyField.OUTPUT]
+    !acceptedDerivedSwapInfo.currencyAmounts[CurrencyField.OUTPUT]
   )
 }
 

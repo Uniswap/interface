@@ -6,17 +6,24 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 
 // Mock the useAppDispatch hook
-const dispatchMock = jest.fn()
-jest.mock('state/hooks', () => ({
-  ...jest.requireActual('state/hooks'),
-  useAppDispatch: () => dispatchMock,
-}))
+const dispatchMock = vi.fn()
+vi.mock('state/hooks', async () => {
+  const actual = await vi.importActual('state/hooks')
+  return {
+    ...actual,
+    useAppDispatch: () => dispatchMock,
+  }
+})
 
-jest.mock('uniswap/src/features/trm/hooks', () => ({
-  useIsBlocked: jest.fn(),
+vi.mock('uniswap/src/features/trm/hooks', () => ({
+  useIsBlocked: vi.fn(),
 }))
 
 describe('useAccountRiskCheck', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
   it('should handle blocked account', async () => {
     const account = 'blocked-account'
     mocked(useIsBlocked).mockReturnValue({ isBlocked: true, isBlockedLoading: false })

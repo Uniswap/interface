@@ -184,7 +184,9 @@ export function serializeSwapAddressesToURLParameters({
 export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCurrencyState {
   const chainId = getParsedChainId(parsedQs)
   const outputChainId = getParsedChainId(parsedQs, CurrencyField.OUTPUT)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const inputCurrencyId = parseCurrencyFromURLParameter(parsedQs.inputCurrency ?? parsedQs.inputcurrency)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const parsedOutputCurrencyId = parseCurrencyFromURLParameter(parsedQs.outputCurrency ?? parsedQs.outputcurrency)
   const outputCurrencyId =
     parsedOutputCurrencyId === inputCurrencyId && outputChainId === chainId ? undefined : parsedOutputCurrencyId
@@ -282,11 +284,11 @@ export function useInitialCurrencyState(): {
     [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyId, outputChainIsSupported],
   )
 
-  const initialInputCurrency = useCurrency(initialInputCurrencyAddress, initialChainId)
-  const initialOutputCurrency = useCurrency(
-    initialOutputCurrencyAddress,
-    parsedCurrencyState.outputChainId ?? initialChainId,
-  )
+  const initialInputCurrency = useCurrency({ address: initialInputCurrencyAddress, chainId: initialChainId })
+  const initialOutputCurrency = useCurrency({
+    address: initialOutputCurrencyAddress,
+    chainId: parsedCurrencyState.outputChainId ?? initialChainId,
+  })
   const initialTypedValue = initialInputCurrency || initialOutputCurrency ? parsedCurrencyState.value : undefined
   const initialFieldUpper =
     parsedCurrencyState.field && typeof parsedCurrencyState.field === 'string'

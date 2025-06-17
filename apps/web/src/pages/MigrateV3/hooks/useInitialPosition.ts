@@ -8,6 +8,7 @@ export default function useInitialPosition(positionInfo?: PositionInfo) {
     if (!positionInfo) {
       return undefined
     }
+
     if (positionInfo.status !== PositionStatus.OUT_OF_RANGE) {
       return undefined
     }
@@ -28,7 +29,7 @@ export default function useInitialPosition(positionInfo?: PositionInfo) {
     return {
       tickLower: shouldFlip ? -tickUpper : tickLower,
       tickUpper: shouldFlip ? -tickLower : tickUpper,
-      isOutOfRange: positionInfo.status === PositionStatus.OUT_OF_RANGE,
+      isOutOfRange: true,
     }
   }, [positionInfo])
 }

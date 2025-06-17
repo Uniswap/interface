@@ -8,11 +8,15 @@ import { assume0xAddress } from 'utils/wagmi'
 import { erc20Abi } from 'viem'
 import { useReadContract } from 'wagmi'
 
-export function usePositionOwnerV2(
-  account: Address | undefined,
-  address: string | undefined,
-  chainId?: UniverseChainId,
-): boolean {
+export function usePositionOwnerV2({
+  account,
+  address,
+  chainId,
+}: {
+  account?: Address
+  address?: string
+  chainId?: UniverseChainId
+}): boolean {
   const resultBalance = useReadContract({
     address: assume0xAddress(address),
     chainId,

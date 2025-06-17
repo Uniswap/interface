@@ -59,7 +59,7 @@ export function useBridgingTokenWithHighestBalance({
 
   const { data: bridgingTokens, isLoading: bridgingTokensLoading } = useTradingApiSwappableTokensQuery({
     params:
-      otherChainBalances && otherChainBalances?.length > 0 && tokenIn && tokenInChainId
+      otherChainBalances && otherChainBalances.length > 0 && tokenIn && tokenInChainId
         ? {
             tokenIn,
             tokenInChainId,
@@ -158,7 +158,7 @@ export function useBridgingTokensOptions({
   const isSameChain = oppositeSelectedToken?.chainId === chainFilter
   const shouldFilterByChain = chainFilter !== null && !isSameChain
   const filteredTokenOptions = useMemo(
-    () => filter(tokenOptions ?? null, shouldFilterByChain ? chainFilter : null),
+    () => filter({ tokenOptions: tokenOptions ?? null, chainFilter: shouldFilterByChain ? chainFilter : null }),
     [tokenOptions, shouldFilterByChain, chainFilter],
   )
 
@@ -166,7 +166,7 @@ export function useBridgingTokensOptions({
 
   const refetch = useCallback(async () => {
     portfolioBalancesByIdRefetch?.()
-    await refetchBridgingTokens?.()
+    await refetchBridgingTokens()
   }, [portfolioBalancesByIdRefetch, refetchBridgingTokens])
 
   return {
@@ -190,9 +190,6 @@ function useBridgingTokensToTokenOptions(
     // We sort the tokens by chain in the same order chains in the network selector
     const chainOrder = ALL_CHAIN_IDS
     const sortedBridgingTokens = [...bridgingTokens].sort((a, b) => {
-      if (!a || !b) {
-        return 0
-      }
       const chainIdA = toSupportedChainId(a.chainId)
       const chainIdB = toSupportedChainId(b.chainId)
       if (!chainIdA || !chainIdB) {

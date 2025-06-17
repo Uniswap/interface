@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { createSlice } from '@reduxjs/toolkit'
 import {
   PendingTransactionDetails,

@@ -1,10 +1,11 @@
+import { tamaguiPlugin } from '@tamagui/vite-plugin'
 import react from '@vitejs/plugin-react'
 import { execSync } from 'child_process'
 import path from 'path'
 import process from 'process'
 import { fileURLToPath } from 'url'
 import { defineConfig, loadEnv } from 'vite'
-import { analyzer } from 'vite-bundle-analyzer'
+import bundlesize from 'vite-plugin-bundlesize'
 import commonjs from 'vite-plugin-commonjs'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgr from 'vite-plugin-svgr'
@@ -56,6 +57,8 @@ export default defineConfig(({ mode }) => {
       'process.env.NODE_ENV': JSON.stringify(mode),
       'process.env.EXPO_OS': JSON.stringify('web'),
       'process.env.GIT_COMMIT_HASH': JSON.stringify(commitHash),
+      'process.env.REACT_APP_STAGING': JSON.stringify(mode === 'staging'),
+      'process.env.REACT_APP_WEB_BUILD_TYPE': JSON.stringify('vite'),
       ...envDefines,
     },
 
@@ -90,8 +93,16 @@ export default defineConfig(({ mode }) => {
             }
           : undefined,
       ),
+      isProduction
+        ? tamaguiPlugin({
+            config: '../../packages/ui/src/tamagui.config.ts',
+            components: ['ui', 'uniswap', 'utilities'],
+            optimize: true,
+            importsWhitelist: ['constants.js'],
+          })
+        : undefined,
       tsconfigPaths(),
-      cspMetaTagPlugin(),
+      env.REACT_APP_SKIP_CSP ? undefined : cspMetaTagPlugin(),
       svgr({
         svgrOptions: {
           icon: false,
@@ -124,6 +135,7 @@ export default defineConfig(({ mode }) => {
         transform(code: string) {
           const regex = /import\s+([a-zA-Z0-9_$]+)\s+from\s+['"]([^'"]+\.svg)['"]/g
 
+          // eslint-disable-next-line max-params
           const transformed = code.replace(regex, (match, varName, path) => {
             // Don't touch named imports like { ReactComponent }
             if (match.includes('{')) return match
@@ -147,7 +159,14 @@ export default defineConfig(({ mode }) => {
           loose: false,
         },
       }),
-      process.env.ANALYZE ? analyzer() : null,
+      isProduction
+        ? undefined
+        : bundlesize({
+            limits: [
+              { name: 'assets/index-*.js', limit: '800 kB', mode: 'uncompressed' },
+              { name: '**/*', limit: Infinity, mode: 'uncompressed' },
+            ],
+          }),
     ].filter(Boolean as unknown as <T>(x: T) => x is NonNullable<T>),
 
     optimizeDeps: {
@@ -184,7 +203,8 @@ export default defineConfig(({ mode }) => {
     },
 
     build: {
-      sourcemap: !isProduction,
+      outDir: 'build',
+      sourcemap: isProduction ? false : 'hidden',
       minify: isProduction ? 'esbuild' : undefined,
       rollupOptions: {
         external: [/\.stories\.[tj]sx?$/, /\.mdx$/, /expo-clipboard\/build\/ClipboardPasteButton\.js/],
@@ -204,5 +224,9 @@ export default defineConfig(({ mode }) => {
 
     // Support all prefixes (including no prefix)
     envPrefix: [],
+
+    preview: {
+      port: 3000,
+    },
   }
 })

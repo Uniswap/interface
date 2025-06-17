@@ -17,7 +17,6 @@ import {
   PKR_ICON,
   RUB_ICON,
   SGD_ICON,
-  THB_ICON,
   TRY_ICON,
   UAH_ICON,
   USD_ICON,
@@ -135,12 +134,6 @@ export function getLocalCurrencyIcon(localCurrency: FiatCurrency, size = 20): Re
       return (
         <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
           <UAH_ICON width={size} height={size} />
-        </Suspense>
-      )
-    case FiatCurrency.ThaiBaht:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <THB_ICON width={size} height={size} />
         </Suspense>
       )
     case FiatCurrency.ChineseYuan:

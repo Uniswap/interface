@@ -38,11 +38,11 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
     [dappRequest.transaction, chainId],
   )
 
-  const transactionGasFeeResult = useTransactionGasFee(
-    formattedTxnForGasQuery,
-    /*skip=*/ !formattedTxnForGasQuery,
-    /*pollingInterval=*/ PollingInterval.LightningMcQueen,
-  )
+  const transactionGasFeeResult = useTransactionGasFee({
+    tx: formattedTxnForGasQuery,
+    skip: !formattedTxnForGasQuery,
+    refetchInterval: PollingInterval.LightningMcQueen,
+  })
 
   const isInvalidGasFeeResult = isInvalidGasFeeResultForEthSend(transactionGasFeeResult)
 

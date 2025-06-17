@@ -1737,6 +1737,8 @@
 			buildConfigurationList = 072E23A42A44D5BD006AD6C9 /* Build configuration list for PBXNativeTarget "WidgetsCore" */;
 			buildPhases = (
 				420594480338AF2E35636F6B /* [CP] Check Pods Manifest.lock */,
+				204FD9232D84400E00736C13 /* [GraphQL] Apollo Generate Swift */,
+				204FD9222D843CEE00736C13 /* Copy Env Vars to Swift */,
 				072E23812A44D5BC006AD6C9 /* Headers */,
 				072E23822A44D5BC006AD6C9 /* Sources */,
 				072E23832A44D5BC006AD6C9 /* Frameworks */,
@@ -1846,6 +1848,7 @@
 			buildConfigurationList = F35AFD4327EE49990011A725 /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
 			buildPhases = (
 				49ACF6EF62101F01F694FBF6 /* [CP] Check Pods Manifest.lock */,
+				204FD9212D843C9500736C13 /* Copy Env Vars to Swift */,
 				F35AFD3727EE49990011A725 /* Sources */,
 				F35AFD3827EE49990011A725 /* Frameworks */,
 				F35AFD3927EE49990011A725 /* Resources */,
@@ -1994,7 +1997,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PROJECT_ROOT=$PWD/..\nexport EXTRA_PACKAGER_ARGS=\"--sourcemap-output $PROJECT_ROOT/main.jsbundle.map\"\n\nset -e\n\nWITH_ENVIRONMENT=\"../../../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../../../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+			shellScript = "export PROJECT_ROOT=$PWD/..\nexport EXTRA_PACKAGER_ARGS=\"--sourcemap-output $PROJECT_ROOT/main.jsbundle.map\"\n\nset -e\nif [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\nsource \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\nsource \"$PODS_ROOT/../.xcode.env.local\"\nfi\nexport CONFIG_CMD=\"dummy-workaround-value\"\nexport CLI_PATH=\"$(\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('@rnef/cli/package.json')) + '/dist/src/bin.js'\")\"\n\nWITH_ENVIRONMENT=\"../../../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../../../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
 		0487071ABBC71F28EF79F4AA /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2051,6 +2054,181 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Uniswap/Pods-Uniswap-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		204FD9212D843C9500736C13 /* Copy Env Vars to Swift */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Env Vars to Swift";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/OneSignalNotificationServiceExtension/Env.swift",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd ..\npython3 scripts/copy_env_vars_to_swift.py\necho \"OneSignalNotificationServiceExtension envs\"\nls -al ios/OneSignalNotificationServiceExtension\necho \"WidgetsCore envs\"\nls -al ios/WidgetsCore\n";
+		};
+		204FD9222D843CEE00736C13 /* Copy Env Vars to Swift */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Env Vars to Swift";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/WidgetsCore/Env.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/HomeScreenTokenParts.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/TokenBalanceMainParts.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/TokenBalanceParts.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/TokenBalanceQuantityParts.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/TokenBasicInfoParts.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/TokenBasicProjectParts.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/TokenFeeDataParts.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/TokenMarketParts.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/TokenParts.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/TokenProjectMarketsParts.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/TokenProjectUrlsParts.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/TokenProtectionInfoParts.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Fragments/TopTokenParts.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/MobileSchema.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/ConvertQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/ExploreSearchQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/FavoriteTokenCardQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/FeedTransactionListQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/HomeScreenTokensQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/MultiplePortfolioBalancesQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/NFTItemScreenQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/NftCollectionScreenQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/NftsQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/NftsTabQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/PortfolioBalancesQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/SearchTokensQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/SelectWalletScreenQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TokenDetailsScreenQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TokenPriceHistoryQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TokenProjectDescriptionQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TokenProjectsQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TokenQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TokensQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TopTokensQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TransactionHistoryUpdaterQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TransactionListQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/WidgetTokensQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/Chain.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/Currency.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/HistoryDuration.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/NftActivityType.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/NftMarketplace.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/NftStandard.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/ProtectionAttackType.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/ProtectionResult.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/SafetyLevel.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/SwapOrderStatus.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/SwapOrderType.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/TokenSortableField.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/TokenStandard.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/TransactionDirection.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/TransactionStatus.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Enums/TransactionType.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/ContractInput.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/NftActivityFilterInput.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/NftAssetTraitInput.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/NftAssetsFilterInput.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/NftBalanceAssetInput.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/NftBalancesFilterInput.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/NftCollectionsFilterInput.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/OnRampTransactionsAuth.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/PortfolioValueModifier.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Interfaces/IAmount.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Interfaces/IContract.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/Amount.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/AmountChange.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/ApplicationContract.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/AssetActivity.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/BlockaidFees.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/DescriptionTranslations.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/Dimensions.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/FeeData.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/Image.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NetworkFee.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftActivity.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftActivityConnection.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftActivityEdge.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftApproval.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftApproveForAll.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftAsset.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftAssetConnection.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftAssetEdge.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftAssetTrait.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftBalance.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftBalanceConnection.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftBalanceEdge.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftCollection.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftCollectionConnection.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftCollectionEdge.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftCollectionMarket.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftContract.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftOrder.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftOrderConnection.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftOrderEdge.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftProfile.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/NftTransfer.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/OnRampServiceProvider.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/OnRampTransactionDetails.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/OnRampTransfer.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/OffRampTransactionDetails.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/OffRampTransfer.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/PageInfo.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/Portfolio.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/ProtectionInfo.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/Query.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/SwapOrderDetails.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/TimestampedAmount.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/Token.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/TokenApproval.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/TokenBalance.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/TokenMarket.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/TokenProject.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/TokenProjectMarket.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/TokenTransfer.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Objects/TransactionDetails.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/SchemaConfiguration.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/SchemaMetadata.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Unions/ActivityDetails.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Unions/AssetChange.graphql.swift",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd ..\npython3 scripts/copy_env_vars_to_swift.py\n";
+		};
+		204FD9232D84400E00736C13 /* [GraphQL] Apollo Generate Swift */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[GraphQL] Apollo Generate Swift";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Remove all files inside MobileSchema except for README.md\nfind ./WidgetsCore/MobileSchema -mindepth 1 -maxdepth 1 ! -name 'README.md' -exec rm -rf {} +\n\"${PODS_ROOT}/Apollo/apollo-ios-cli\" generate\n";
 		};
 		24AD8CEA045C82D94D2A96F3 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2246,7 +2424,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\nexport SOURCEMAP_FILE=$DERIVED_FILE_DIR/main.jsbundle.map\n\nWITH_ENVIRONMENT=\"../../../node_modules/react-native/scripts/xcode/with-environment.sh\"\nDATADOG_XCODE=\"./sourcemaps-datadog.sh\"\n\nif [[ -n \"$DATADOG_API_KEY\" ]]; then\n  # JS source maps\n  /bin/sh -c \"$WITH_ENVIRONMENT $DATADOG_XCODE\"\n  # iOS dSYM\n  ../../../node_modules/.bin/datadog-ci dsyms upload $DWARF_DSYM_FOLDER_PATH\nelse\n  echo \"Ignoring upload step for local, API key is missing.\"\nfi\n";
+			shellScript = "set -e\nexport SOURCEMAP_FILE=$DERIVED_FILE_DIR/main.jsbundle.map\n\nset -e\nif [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\nsource \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\nsource \"$PODS_ROOT/../.xcode.env.local\"\nfi\nexport CONFIG_CMD=\"dummy-workaround-value\"\nexport CLI_PATH=\"$(\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('@rnef/cli/package.json')) + '/dist/src/bin.js'\")\"\n\nWITH_ENVIRONMENT=\"../../../node_modules/react-native/scripts/xcode/with-environment.sh\"\nDATADOG_XCODE=\"./sourcemaps-datadog.sh\"\n\nif [[ -n \"$DATADOG_API_KEY\" ]]; then\n  # JS source maps\n  /bin/sh -c \"$WITH_ENVIRONMENT $DATADOG_XCODE\"\n  # iOS dSYM\n  ../../../node_modules/.bin/datadog-ci dsyms upload $DWARF_DSYM_FOLDER_PATH\nelse\n  echo \"Ignoring upload step for local, API key is missing.\"\nfi\n";
 		};
 		F5C7F44CBF58F052A43EB4AA /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2821,7 +2999,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2874,7 +3052,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -2927,7 +3105,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -2980,7 +3158,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -3018,7 +3196,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3054,7 +3232,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -3089,7 +3267,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -3124,7 +3302,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -3171,7 +3349,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3217,7 +3395,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.widgets;
@@ -3263,7 +3441,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.widgets;
@@ -3309,7 +3487,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.widgets;
@@ -3351,7 +3529,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3394,7 +3572,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.WidgetIntentExtension;
@@ -3437,7 +3615,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.WidgetIntentExtension;
@@ -3480,7 +3658,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.WidgetIntentExtension;
@@ -3516,7 +3694,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3554,7 +3732,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3756,7 +3934,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3801,7 +3979,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.OneSignalNotificationServiceExtension;
@@ -3912,7 +4090,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3984,7 +4162,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.OneSignalNotificationServiceExtension;
@@ -4095,7 +4273,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -4167,7 +4345,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.52.2;
+				MARKETING_VERSION = 1.53;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.OneSignalNotificationServiceExtension;

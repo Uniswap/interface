@@ -1,6 +1,5 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
-import { SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import {
   FlatFeeOptions,
@@ -21,7 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
 import { useUserSlippageTolerance } from 'state/user/hooks'
-import { trace } from 'tracing/trace'
+import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
@@ -55,11 +54,15 @@ interface SwapOptions {
   flatFeeOptions?: FlatFeeOptions
 }
 
-export function useUniversalRouterSwapCallback(
-  trade: ClassicTrade | undefined,
-  fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number },
-  options: SwapOptions,
-) {
+export function useUniversalRouterSwapCallback({
+  trade,
+  fiatValues,
+  options,
+}: {
+  trade?: ClassicTrade
+  fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
+  options: SwapOptions
+}) {
   const { t } = useTranslation()
   const account = useAccount()
   const accountRef = useRef(account)
@@ -76,124 +79,123 @@ export function useUniversalRouterSwapCallback(
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
-  return useCallback(
-    (): Promise<{ type: TradeFillType.Classic; response: TransactionResponse; deadline?: BigNumber }> =>
-      trace({ name: 'Swap (Classic)', op: 'swap.classic' }, async (trace) => {
+  return useCallback(async (): Promise<{
+    type: TradeFillType.Classic
+    response: TransactionResponse
+    deadline?: BigNumber
+  }> => {
+    try {
+      const account = accountRef.current
+      const provider = providerRef.current
+      if (account.status !== 'connected') {
+        throw new Error('wallet not connected')
+      }
+      if (!provider) {
+        throw new Error('missing provider')
+      }
+      if (!trade) {
+        throw new Error('missing trade')
+      }
+      const connectedChainId = await provider.getSigner().getChainId()
+      if (account.chainId !== connectedChainId || account.chainId !== chainId) {
+        throw new WrongChainError()
+      }
+
+      const deadline = await getDeadline()
+
+      const { calldata: data, value } = SwapRouter.swapCallParameters(trade, {
+        slippageTolerance: options.slippageTolerance,
+        deadlineOrPreviousBlockhash: deadline?.toString(),
+        inputTokenPermit: options.permit,
+        fee: options.feeOptions,
+        flatFee: options.flatFeeOptions,
+      })
+      const tx = {
+        from: account.address,
+        to: UNIVERSAL_ROUTER_ADDRESS(UniversalRouterVersion.V1_2, chainId),
+        data,
+        // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
+        ...(value && !isZero(value) ? { value: toHex(value) } : {}),
+      }
+
+      let gasLimit: BigNumber
+      try {
+        const gasEstimate = await provider.estimateGas(tx)
+        gasLimit = calculateGasMargin(gasEstimate)
+      } catch (gasError) {
+        sendAnalyticsEvent(SwapEventName.SwapEstimateGasCallFailed, {
+          ...formatCommonPropertiesForTrade({ trade, allowedSlippage: options.slippageTolerance }),
+          ...analyticsContext,
+          client_block_number: blockNumber,
+          txRequest: tx,
+          isAutoSlippage,
+        })
+        const wrappedError = new Error('gas error', { cause: gasError })
+        logger.warn('useUniversalRouter', 'useUniversalRouterSwapCallback', 'Failed to estimate gas', wrappedError)
+        throw new GasEstimationError()
+      }
+
+      const response = await (async () => {
         try {
-          const account = accountRef.current
           const provider = providerRef.current
-          if (account.status !== 'connected') {
-            throw new Error('wallet not connected')
-          }
           if (!provider) {
             throw new Error('missing provider')
           }
-          if (!trade) {
-            throw new Error('missing trade')
-          }
-          const connectedChainId = await provider.getSigner().getChainId()
-          if (account.chainId !== connectedChainId || account.chainId !== chainId) {
-            throw new WrongChainError()
-          }
-
-          const deadline = await getDeadline()
-
-          const { calldata: data, value } = SwapRouter.swapCallParameters(trade, {
-            slippageTolerance: options.slippageTolerance,
-            deadlineOrPreviousBlockhash: deadline?.toString(),
-            inputTokenPermit: options.permit,
-            fee: options.feeOptions,
-            flatFee: options.flatFeeOptions,
-          })
-          const tx = {
-            from: account.address,
-            to: UNIVERSAL_ROUTER_ADDRESS(UniversalRouterVersion.V1_2, chainId),
-            data,
-            // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
-            ...(value && !isZero(value) ? { value: toHex(value) } : {}),
-          }
-
-          let gasLimit: BigNumber
-          try {
-            const gasEstimate = await provider.estimateGas(tx)
-            gasLimit = calculateGasMargin(gasEstimate)
-          } catch (gasError) {
-            sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
-              ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
-              ...analyticsContext,
-              client_block_number: blockNumber,
-              txRequest: tx,
-              isAutoSlippage,
-            })
-            const wrappedError = new Error('gas error', { cause: gasError })
-            logger.warn('useUniversalRouter', 'useUniversalRouterSwapCallback', 'Failed to estimate gas', wrappedError)
-            throw new GasEstimationError()
-          }
-
-          const response = await trace.child({ name: 'Send transaction', op: 'wallet.send_transaction' }, async () => {
-            try {
-              const provider = providerRef.current
-              if (!provider) {
-                throw new Error('missing provider')
-              }
-              return await provider.getSigner().sendTransaction({ ...tx, gasLimit })
-            } catch (error) {
-              if (didUserReject(error)) {
-                throw new UserRejectedRequestError(swapErrorToUserReadableMessage(t, error))
-              } else {
-                throw error
-              }
-            }
-          })
-          sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
-            ...formatSwapSignedAnalyticsEventProperties({
-              trade,
-              timeToSignSinceRequestMs: trace.now(),
-              allowedSlippage: options.slippageTolerance,
-              fiatValues,
-              txHash: response.hash,
-              portfolioBalanceUsd,
-              trace: analyticsContext,
-            }),
-          })
-          if (tx.data !== response.data) {
-            sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
-              txHash: response.hash,
-              expected: tx.data,
-              actual: response.data,
-              ...analyticsContext,
-            })
-            if (!response.data || response.data.length === 0 || response.data === '0x') {
-              throw new ModifiedSwapError()
-            }
-          }
-          return { type: TradeFillType.Classic as const, response, deadline }
-        } catch (error: unknown) {
-          if (error instanceof GasEstimationError) {
-            throw error
-          } else if (error instanceof UserRejectedRequestError) {
-            throw error
-          } else if (error instanceof ModifiedSwapError) {
-            throw error
+          return await provider.getSigner().sendTransaction({ ...tx, gasLimit })
+        } catch (error) {
+          if (didUserReject(error)) {
+            throw new UserRejectedRequestError(swapErrorToUserReadableMessage(t, error))
           } else {
-            throw Error(swapErrorToUserReadableMessage(t, error))
+            throw error
           }
         }
-      }),
-    [
-      trade,
-      t,
-      chainId,
-      getDeadline,
-      options.slippageTolerance,
-      options.permit,
-      options.feeOptions,
-      options.flatFeeOptions,
-      fiatValues,
-      portfolioBalanceUsd,
-      analyticsContext,
-      blockNumber,
-      isAutoSlippage,
-    ],
-  )
+      })()
+      sendAnalyticsEvent(SwapEventName.SwapSigned, {
+        ...formatSwapSignedAnalyticsEventProperties({
+          trade,
+          allowedSlippage: options.slippageTolerance,
+          fiatValues,
+          txHash: response.hash,
+          portfolioBalanceUsd,
+          trace: analyticsContext,
+        }),
+      })
+      if (tx.data !== response.data) {
+        sendAnalyticsEvent(SwapEventName.SwapModifiedInWallet, {
+          txHash: response.hash,
+          expected: tx.data,
+          actual: response.data,
+          ...analyticsContext,
+        })
+        if (!response.data || response.data.length === 0 || response.data === '0x') {
+          throw new ModifiedSwapError()
+        }
+      }
+      return { type: TradeFillType.Classic as const, response, deadline }
+    } catch (error: unknown) {
+      if (error instanceof GasEstimationError) {
+        throw error
+      } else if (error instanceof UserRejectedRequestError) {
+        throw error
+      } else if (error instanceof ModifiedSwapError) {
+        throw error
+      } else {
+        throw Error(swapErrorToUserReadableMessage(t, error))
+      }
+    }
+  }, [
+    trade,
+    t,
+    chainId,
+    getDeadline,
+    options.slippageTolerance,
+    options.permit,
+    options.feeOptions,
+    options.flatFeeOptions,
+    fiatValues,
+    portfolioBalanceUsd,
+    analyticsContext,
+    blockNumber,
+    isAutoSlippage,
+  ])
 }

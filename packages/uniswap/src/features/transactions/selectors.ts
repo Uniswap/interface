@@ -50,6 +50,7 @@ export const makeSelectAddressTransactions = (): AddressTransactionsSelector =>
         return undefined
       }
 
+      // eslint-disable-next-line max-params
       return unique(flattenObjectOfObjects(addressTransactions), (tx, _, self) => {
         // Remove dummy local FOR transactions from TransactionList, notification badge, etc.
         // this is what prevents the local transactions from actually appearing in the activity tab.
@@ -193,7 +194,7 @@ export const selectRecipientsByRecency = (state: UniswapState): SearchableRecipi
     .sort((a, b) => (a.addedTime < b.addedTime ? 1 : -1))
     .map((transaction) => {
       return {
-        address: (transaction.typeInfo as SendTokenTransactionInfo)?.recipient,
+        address: (transaction.typeInfo as SendTokenTransactionInfo).recipient,
         name: '',
       } as SearchableRecipient
     })

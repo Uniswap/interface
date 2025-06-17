@@ -28,6 +28,7 @@ function webResultToUniswapResult(webItem: TokenSearchResultWeb): SearchResult |
       logoUrl: webItem.logoUrl,
       safetyInfo: webItem.safetyInfo,
     }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   } else if (webItem.type === SearchResultType.NFTCollection) {
     return {
       type: SearchResultType.NFTCollection,

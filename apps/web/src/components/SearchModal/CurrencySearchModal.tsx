@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { SwitchNetworkAction } from 'components/Popups/types'
 import { CurrencySearch } from 'components/SearchModal/CurrencySearch'
 import { memo } from 'react'
 import { TOKEN_SELECTOR_WEB_MAX_WIDTH } from 'uniswap/src/components/TokenSelector/TokenSelector'
@@ -12,6 +13,7 @@ interface CurrencySearchModalProps {
   onDismiss: () => void
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
+  switchNetworkAction: SwitchNetworkAction
   otherSelectedCurrency?: Currency | null
   showCurrencyAmount?: boolean
   currencyField?: CurrencyField
@@ -23,6 +25,7 @@ export default memo(function CurrencySearchModal({
   onDismiss,
   onCurrencySelect,
   currencyField = CurrencyField.INPUT,
+  switchNetworkAction,
   chainIds,
 }: CurrencySearchModalProps) {
   return (
@@ -39,6 +42,7 @@ export default memo(function CurrencySearchModal({
       <CurrencySearch
         currencyField={currencyField}
         onCurrencySelect={onCurrencySelect}
+        switchNetworkAction={switchNetworkAction}
         onDismiss={onDismiss}
         chainIds={chainIds}
       />

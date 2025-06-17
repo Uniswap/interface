@@ -76,10 +76,6 @@ export function useAllTransactions(
           cursor: dataV4?.v4Transactions?.[dataV4.v4Transactions.length - 1]?.timestamp,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) {
-            loadingMoreV4.current = false
-            return prev
-          }
           if (!loadingMoreV3.current && !loadingMoreV2.current) {
             onComplete?.()
           }
@@ -96,10 +92,6 @@ export function useAllTransactions(
           cursor: dataV3?.v3Transactions?.[dataV3.v3Transactions.length - 1]?.timestamp,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) {
-            loadingMoreV3.current = false
-            return prev
-          }
           if (!loadingMoreV2.current && !loadingMoreV4.current) {
             onComplete?.()
           }
@@ -116,10 +108,6 @@ export function useAllTransactions(
           cursor: dataV2?.v2Transactions?.[dataV2.v2Transactions.length - 1]?.timestamp,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) {
-            loadingMoreV2.current = false
-            return prev
-          }
           if (!loadingMoreV3.current && !loadingMoreV4.current) {
             onComplete?.()
           }
@@ -144,7 +132,7 @@ export function useAllTransactions(
   const transactions: PoolTxFragment[] = useMemo(() => {
     return [...(dataV4?.v4Transactions ?? []), ...(dataV3?.v3Transactions ?? []), ...(dataV2?.v2Transactions ?? [])]
       .filter(filterTransaction)
-      .sort((a, b) => (b?.timestamp || 0) - (a?.timestamp || 0))
+      .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
       .slice(0, querySizeRef.current)
   }, [dataV2?.v2Transactions, dataV3?.v3Transactions, dataV4?.v4Transactions, filterTransaction])
 

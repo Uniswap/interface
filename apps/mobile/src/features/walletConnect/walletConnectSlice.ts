@@ -16,7 +16,7 @@ export type WalletConnectPendingSession = {
   id: string
   chains: UniverseChainId[]
   dappRequestInfo: DappRequestInfo
-  proposalNamespaces: ProposalTypes.RequiredNamespaces
+  proposalNamespaces: ProposalTypes.OptionalNamespaces
   verifyStatus: WalletConnectVerifyStatus
 }
 

@@ -98,8 +98,8 @@ export const tokenMarket = createFixture<TokenMarket, TokenMarketOptions>(() => 
   token: ethToken(),
   priceSource: randomEnumValue(PriceSource),
   priceHistory: history,
-  price: history ? getLatestPrice(history) : undefined,
-  pricePercentChange: history ? get24hPriceChange(history) : undefined,
+  price: getLatestPrice(history),
+  pricePercentChange: get24hPriceChange(history),
 }))
 
 type TokenProjectMarketOptions = {

@@ -1,4 +1,5 @@
 import { useApolloClient } from '@apollo/client'
+import { useQuery } from '@tanstack/react-query'
 import { useCallback, useMemo, useState } from 'react'
 import { fetchUnitagsByAddresses } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import {
@@ -7,7 +8,8 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useENSName } from 'uniswap/src/features/ens/api'
-import { useAsyncData } from 'utilities/src/react/hooks'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { queryWithoutCache } from 'utilities/src/reactQuery/queryOptions'
 import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'
 
 export interface AddressWithBalanceAndName {
@@ -103,9 +105,9 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
 
     const [balancesResponse, unitagsResponse] = await Promise.all([fetchBalances, fetchUnitags])
 
-    const unitagsByAddress = unitagsResponse.usernames ?? {}
+    const unitagsByAddress = unitagsResponse.usernames
 
-    const balancesByAddress = (balancesResponse?.data?.portfolios ?? []).reduce(
+    const balancesByAddress = (balancesResponse.data.portfolios ?? []).reduce(
       (balances: AddressTo<number | undefined>, portfolios): AddressTo<number | undefined> => {
         if (portfolios?.ownerAddress) {
           balances[portfolios.ownerAddress] = portfolios.tokensTotalDenominatedValue?.value
@@ -135,7 +137,12 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
     data: balanceAndUnitags,
     isLoading: balanceAndUnitagsLoading,
     error: fetchingError,
-  } = useAsyncData(fetchBalanceAndUnitags)
+  } = useQuery(
+    queryWithoutCache({
+      queryKey: [ReactQueryCacheKey.BalanceAndUnitags, addressesArray],
+      queryFn: fetchBalanceAndUnitags,
+    }),
+  )
 
   const addressInfoMap = useMemo(() => {
     if (balanceAndUnitags === undefined) {
@@ -203,6 +210,7 @@ export function useAddressesEnsNames(addresses: Address[]): {
       return {}
     }
 
+    // eslint-disable-next-line max-params
     return addresses.reduce((map: AddressTo<string>, address: string, index: number) => {
       const nameData = ensNameStates[index]?.data
       if (nameData) {

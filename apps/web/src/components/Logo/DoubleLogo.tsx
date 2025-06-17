@@ -67,13 +67,13 @@ export const DoubleCurrencyLogo = memo(function DoubleCurrencyLogo({
   customIcon?: React.ReactNode
   includeNetwork?: boolean
 }) {
-  const currencyInfos = [useCurrencyInfo(currencies?.[0]), useCurrencyInfo(currencies?.[1])]
+  const currencyInfos = [useCurrencyInfo(currencies[0]), useCurrencyInfo(currencies[1])]
   const invalidCurrencyLogo0 = !currencyInfos[0]?.logoUrl
   const invalidCurrencyLogo1 = !currencyInfos[1]?.logoUrl
   const chainId = includeNetwork ? currencyInfos[0]?.currency.chainId ?? null : null
 
   if (invalidCurrencyLogo0 && invalidCurrencyLogo1) {
-    return <LogolessPlaceholder currency={currencies?.[0]} size={size} includeNetwork={Boolean(chainId)} />
+    return <LogolessPlaceholder currency={currencies[0]} size={size} includeNetwork={Boolean(chainId)} />
   }
   if (invalidCurrencyLogo0 && currencyInfos[1]?.logoUrl) {
     return <TokenLogo url={currencyInfos[1].logoUrl} size={size} chainId={chainId} />

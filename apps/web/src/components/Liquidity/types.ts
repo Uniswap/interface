@@ -33,7 +33,7 @@ export interface DepositInfo {
   formattedAmounts?: { [field in PositionField]?: string }
   currencyBalances?: { [field in PositionField]?: CurrencyAmount<Currency> }
   currencyAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
-  currencyAmountsUSDValue?: { [field in PositionField]?: CurrencyAmount<Currency> }
+  currencyAmountsUSDValue?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   error?: ReactNode
 }
 
@@ -54,6 +54,8 @@ interface BasePositionInfo {
   liquidityAmount?: CurrencyAmount<Currency>
   token0UncollectedFees?: string
   token1UncollectedFees?: string
+  fee0Amount?: CurrencyAmount<Currency>
+  fee1Amount?: CurrencyAmount<Currency>
   apr?: number
   isHidden?: boolean
 }
@@ -93,33 +95,6 @@ type V4PositionInfo = BasePositionInfo & {
 }
 
 export type PositionInfo = V2PairInfo | V3PositionInfo | V4PositionInfo
-
-export type BasePositionDerivedInfo = {
-  fiatFeeValue0?: CurrencyAmount<Currency>
-  fiatFeeValue1?: CurrencyAmount<Currency>
-  fiatValue0?: CurrencyAmount<Currency>
-  fiatValue1?: CurrencyAmount<Currency>
-  priceOrdering: PriceOrdering
-  feeValue0?: CurrencyAmount<Currency>
-  feeValue1?: CurrencyAmount<Currency>
-  apr?: number
-  token0CurrentPrice?: Price<Currency, Currency>
-  token1CurrentPrice?: Price<Currency, Currency>
-}
-
-export type V2PositionDerivedInfo = BasePositionDerivedInfo & {
-  version: ProtocolVersion.V2
-  token0CurrentPrice?: undefined
-  token1CurrentPrice?: undefined
-}
-
-export type V3OrV4PositionDerivedInfo = BasePositionDerivedInfo & {
-  version: ProtocolVersion.V3 | ProtocolVersion.V4
-  token0CurrentPrice?: Price<Currency, Currency>
-  token1CurrentPrice?: Price<Currency, Currency>
-}
-
-export type PositionDerivedInfo = BasePositionDerivedInfo | V2PositionDerivedInfo | V3OrV4PositionDerivedInfo
 
 export type FeeTierData = {
   id?: string

@@ -5,7 +5,8 @@ import { RenderOptions, render } from '@testing-library/react'
 import { RenderHookOptions, WrapperComponent, renderHook } from '@testing-library/react-hooks'
 import { AssetActivityProvider } from 'appGraphql/data/apollo/AssetActivityProvider'
 import { TokenBalancesProvider } from 'appGraphql/data/apollo/TokenBalancesProvider'
-import Web3Provider, { Web3ProviderUpdater } from 'components/Web3Provider'
+import { Web3ProviderUpdater } from 'components/Web3Provider'
+import TestWeb3Provider from 'components/Web3Provider/TestWeb3Provider'
 import { BlockNumberContext } from 'lib/hooks/useBlockNumber'
 import { PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { HelmetProvider } from 'react-helmet-async/lib/index'
@@ -30,7 +31,7 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-            <Web3Provider>
+            <TestWeb3Provider>
               <MockedProvider showWarnings={false}>
                 <AssetActivityProvider>
                   <TokenBalancesProvider>
@@ -47,7 +48,7 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
                   </TokenBalancesProvider>
                 </AssetActivityProvider>
               </MockedProvider>
-            </Web3Provider>
+            </TestWeb3Provider>
           </BrowserRouter>
         </QueryClientProvider>
       </Provider>

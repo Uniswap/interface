@@ -6,7 +6,9 @@ import { SUPPORTED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chain
 function getAppProvider(chainId: UniverseChainId) {
   const info = getChainInfo(chainId)
   return new AppJsonRpcProvider(
-    info.rpcUrls.interface.http.map((url) => new ConfiguredJsonRpcProvider(url, { chainId, name: info.interfaceName })),
+    info.rpcUrls.interface.http.map(
+      (url) => new ConfiguredJsonRpcProvider({ url, networkish: { chainId, name: info.interfaceName } }),
+    ),
   )
 }
 

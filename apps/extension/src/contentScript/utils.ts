@@ -2,13 +2,19 @@ import { contentScriptUtilityMessageChannel } from 'src/background/messagePassin
 import { ContentScriptUtilityMessageType, ErrorLog } from 'src/background/messagePassing/types/requests'
 import { logger } from 'utilities/src/logger/logger'
 
-export async function logContentScriptError(
-  errorMessage: string,
-  fileName: string,
-  functionName: string,
-  tags?: Record<string, string>,
-  extra?: Record<string, unknown>,
-): Promise<void> {
+export async function logContentScriptError({
+  errorMessage,
+  fileName,
+  functionName,
+  tags,
+  extra,
+}: {
+  errorMessage: string
+  fileName: string
+  functionName: string
+  tags?: Record<string, string>
+  extra?: Record<string, unknown>
+}): Promise<void> {
   const message: ErrorLog = {
     type: ContentScriptUtilityMessageType.ErrorLog,
     message: errorMessage,

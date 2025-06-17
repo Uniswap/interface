@@ -9,19 +9,25 @@ import {
   useQuickTokenBalancesWebQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-jest.mock('@web3-react/core', () => ({
-  useWeb3React: jest.fn(() => ({ account: '0x123', chainId: 1 })),
+vi.mock('@web3-react/core', () => ({
+  useWeb3React: vi.fn(() => ({ account: '0x123', chainId: 1 })),
 }))
 
-jest.mock('appGraphql/data/apollo/AdaptiveTokenBalancesProvider', () => ({
-  ...jest.requireActual('appGraphql/data/apollo/AdaptiveTokenBalancesProvider'),
-  useTokenBalancesQuery: jest.fn(() => ({ data: {}, loading: false })),
-}))
+vi.mock('appGraphql/data/apollo/AdaptiveTokenBalancesProvider', async () => {
+  const actual = await vi.importActual('appGraphql/data/apollo/AdaptiveTokenBalancesProvider')
+  return {
+    ...actual,
+    useTokenBalancesQuery: vi.fn(() => ({ data: {}, loading: false })),
+  }
+})
 
-jest.mock('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks', () => ({
-  ...jest.requireActual('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'),
-  useQuickTokenBalancesWebQuery: jest.fn(() => ({ data: {}, loading: false })),
-}))
+vi.mock('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks', async () => {
+  const actual = await vi.importActual('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks')
+  return {
+    ...actual,
+    useQuickTokenBalancesWebQuery: vi.fn(() => ({ data: {}, loading: false })),
+  }
+})
 
 describe('useTokenBalances', () => {
   it('should return empty balances when loading', () => {

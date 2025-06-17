@@ -72,7 +72,7 @@ export function RecipientPanel({ chainId }: RecipientPanelProps): JSX.Element {
               placeholder={t('send.search.placeholder')}
               px="$none"
               py="$none"
-              value={pattern ?? ''}
+              value={pattern}
               onChangeText={setPattern}
               onFocus={() => onSetShowRecipientSelector(true)}
             />

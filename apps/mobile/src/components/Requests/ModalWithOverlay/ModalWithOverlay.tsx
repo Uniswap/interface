@@ -81,6 +81,7 @@ export function ModalWithOverlay({
   }, [])
 
   const measureContent = useCallback((parentHeight: number) => {
+    // eslint-disable-next-line max-params
     const onSuccess: MeasureLayoutOnSuccessCallback = (x, y, w, h) => {
       if (h > parentHeight) {
         setShowOverlay(!startedScrollingRef.current)
@@ -115,7 +116,7 @@ export function ModalWithOverlay({
     [measureContent],
   )
 
-  const eip5792MethodsEnabled = useFeatureFlag(FeatureFlags.Eip5792Methods) ?? false
+  const eip5792MethodsEnabled = useFeatureFlag(FeatureFlags.Eip5792Methods)
 
   return (
     <Modal overrideInnerContainer {...bottomSheetModalProps}>

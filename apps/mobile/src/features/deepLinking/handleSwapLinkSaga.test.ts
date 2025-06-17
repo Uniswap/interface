@@ -9,15 +9,22 @@ import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const account = signerMnemonicAccount()
 
-const formSwapUrl = (
-  userAddress?: Address,
-  chain?: UniverseChainId | number,
-  inputAddress?: string,
-  outputAddress?: string,
-  currencyField?: string,
-  amount?: string,
-): URL =>
-  new URL(
+function formSwapUrl({
+  userAddress,
+  chain,
+  inputAddress,
+  outputAddress,
+  currencyField,
+  amount,
+}: {
+  userAddress?: Address
+  chain?: UniverseChainId | number
+  inputAddress?: string
+  outputAddress?: string
+  currencyField?: string
+  amount?: string
+}): URL {
+  return new URL(
     `https://uniswap.org/app?screen=swap
 &userAddress=${userAddress}
 &inputCurrencyId=${chain}-${inputAddress}
@@ -25,69 +32,70 @@ const formSwapUrl = (
 &currencyField=${currencyField}
 &amount=${amount}`.trim(),
   )
+}
 
-const swapUrl = formSwapUrl(
-  account.address,
-  UniverseChainId.Mainnet,
-  DAI.address,
-  UNI[UniverseChainId.Mainnet].address,
-  'input',
-  '100',
-)
+const swapUrl = formSwapUrl({
+  userAddress: account.address,
+  chain: UniverseChainId.Mainnet,
+  inputAddress: DAI.address,
+  outputAddress: UNI[UniverseChainId.Mainnet].address,
+  currencyField: 'input',
+  amount: '100',
+})
 
-const testnetSwapUrl = formSwapUrl(
-  account.address,
-  UniverseChainId.Sepolia,
-  USDC_UNICHAIN_SEPOLIA.address,
-  UNI[UniverseChainId.Sepolia].address,
-  'input',
-  '100',
-)
+const testnetSwapUrl = formSwapUrl({
+  userAddress: account.address,
+  chain: UniverseChainId.Sepolia,
+  inputAddress: USDC_UNICHAIN_SEPOLIA.address,
+  outputAddress: UNI[UniverseChainId.Sepolia].address,
+  currencyField: 'input',
+  amount: '100',
+})
 
-const invalidOutputCurrencySwapUrl = formSwapUrl(
-  account.address,
-  UniverseChainId.Mainnet,
-  DAI.address,
-  undefined,
-  'input',
-  '100',
-)
+const invalidOutputCurrencySwapUrl = formSwapUrl({
+  userAddress: account.address,
+  chain: UniverseChainId.Mainnet,
+  inputAddress: DAI.address,
+  outputAddress: undefined,
+  currencyField: 'input',
+  amount: '100',
+})
 
-const invalidInputTokenSwapURl = formSwapUrl(
-  account.address,
-  UniverseChainId.Mainnet,
-  '0x00',
-  UNI[UniverseChainId.Mainnet].address,
-  'input',
-  '100',
-)
+const invalidInputTokenSwapURl = formSwapUrl({
+  userAddress: account.address,
+  chain: UniverseChainId.Mainnet,
+  inputAddress: '0x00',
+  outputAddress: UNI[UniverseChainId.Mainnet].address,
+  currencyField: 'input',
+  amount: '100',
+})
 
-const invalidChainSwapUrl = formSwapUrl(
-  account.address,
-  23,
-  DAI.address,
-  UNI[UniverseChainId.Mainnet].address,
-  'input',
-  '100',
-)
+const invalidChainSwapUrl = formSwapUrl({
+  userAddress: account.address,
+  chain: 23,
+  inputAddress: DAI.address,
+  outputAddress: UNI[UniverseChainId.Mainnet].address,
+  currencyField: 'input',
+  amount: '100',
+})
 
-const invalidAmountSwapUrl = formSwapUrl(
-  account.address,
-  UniverseChainId.Mainnet,
-  DAI.address,
-  UNI[UniverseChainId.Mainnet].address,
-  'input',
-  'not a number',
-)
+const invalidAmountSwapUrl = formSwapUrl({
+  userAddress: account.address,
+  chain: UniverseChainId.Mainnet,
+  inputAddress: DAI.address,
+  outputAddress: UNI[UniverseChainId.Mainnet].address,
+  currencyField: 'input',
+  amount: 'not a number',
+})
 
-const invalidCurrencyFieldSwapUrl = formSwapUrl(
-  account.address,
-  UniverseChainId.Mainnet,
-  DAI.address,
-  UNI[UniverseChainId.Mainnet].address,
-  'token1',
-  '100',
-)
+const invalidCurrencyFieldSwapUrl = formSwapUrl({
+  userAddress: account.address,
+  chain: UniverseChainId.Mainnet,
+  inputAddress: DAI.address,
+  outputAddress: UNI[UniverseChainId.Mainnet].address,
+  currencyField: 'token1',
+  amount: '100',
+})
 
 describe(handleSwapLink, () => {
   describe('valid inputs', () => {

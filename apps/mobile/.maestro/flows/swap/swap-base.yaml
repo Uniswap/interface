@@ -1,4 +1,6 @@
 appId: com.uniswap.mobile.dev
+tags:
+  - language-agnostic
 env:
   E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
 ---
@@ -11,7 +13,7 @@ env:
     id: ${output.testIds.ChooseOutputToken}
 - tapOn:
     id: ${output.testIds.ExploreSearchInput}
-- inputText: btc
+- inputText: cbbtc
 - tapOn:
     id: 'token-option-8453-cbBTC' # TODO: Replace with id for token
 - tapOn:
@@ -34,7 +36,8 @@ env:
     id: ${output.testIds.DecimalPadNumber1}
 - tapOn:
     id: ${output.testIds.ReviewSwap}
-- tapOn: Show more
+- tapOn:
+    id: ${output.testIds.ListSeparatorToggle}
 - tapOn:
     id: ${output.testIds.Swap}
 # - extendedWaitUntil:

@@ -24,6 +24,8 @@ import {
   v20Schema,
   v21Schema,
   v22Schema,
+  v23Schema,
+  v24Schema,
   v2Schema,
   v3Schema,
   v4Schema,
@@ -44,6 +46,7 @@ import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
+import { testRemoveTHBFromCurrency } from 'uniswap/src/state/uniswapMigrationTests'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBatchedTransactionsState } from 'wallet/src/features/batchedTransactions/slice'
@@ -57,6 +60,7 @@ import {
   testAddCreatedOnboardingRedesignAccount,
   testAddedHapticSetting,
   testDeleteWelcomeWalletCard,
+  testMoveHapticsToUserSettings,
   testMoveTokenAndNFTVisibility,
   testMovedCurrencySetting,
   testMovedLanguageSetting,
@@ -319,5 +323,17 @@ describe('Redux state migrations', () => {
 
   it('migrates from v22 to v23', () => {
     testMigrateUnknownBackupAccountsToMaybeManualBackup(migrations[23], v22Schema)
+  })
+
+  it('migrates from v23 to v24', () => {
+    testMoveHapticsToUserSettings(migrations[24], v23Schema)
+  })
+
+  it('migrates from v24 to v25', () => {
+    const v24Stub = { ...v24Schema, userSettings: { ...v24Schema.userSettings, currentCurrency: 'THB' } }
+    testRemoveTHBFromCurrency(migrations[25], v24Stub)
+
+    const v24Stub2 = { ...v24Schema, userSettings: { ...v24Schema.userSettings, currentCurrency: 'JPY' } }
+    testRemoveTHBFromCurrency(migrations[25], v24Stub2)
   })
 })

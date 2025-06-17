@@ -11,7 +11,6 @@ import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
 import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { Loader } from 'src/components/loading/loaders'
-import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
 import { Flex, SegmentedControl, Text } from 'ui/src'
 import GraphCurve from 'ui/src/assets/backgrounds/graph-curve.svg'
@@ -20,8 +19,9 @@ import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__gen
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
@@ -68,7 +68,7 @@ const PriceTextSection = memo(function PriceTextSection({
 function TimeRangeTraceWrapper({
   children,
   elementName,
-}: PropsWithChildren<{ elementName: ElementNameType }>): ReactElement {
+}: PropsWithChildren<{ elementName: ElementName }>): ReactElement {
   return (
     <Trace logPress element={elementName}>
       {children}
@@ -91,11 +91,11 @@ const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
   const { currencyId, tokenColor, navigation } = useTokenDetailsContext()
   const isScreenNavigationReady = useIsScreenNavigationReady({ navigation })
 
-  const { data, loading, error, refetch, setDuration, selectedDuration, numberOfDigits } = useTokenPriceHistory(
+  const { data, loading, error, refetch, setDuration, selectedDuration, numberOfDigits } = useTokenPriceHistory({
     currencyId,
-    HistoryDuration.Day,
-    !isScreenNavigationReady,
-  )
+    initialDuration: HistoryDuration.Day,
+    skip: !isScreenNavigationReady,
+  })
 
   // Log the number of points in the data
   useEffect(() => {
@@ -104,13 +104,13 @@ const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
         logger.warn('PriceExplorer.tsx', 'PriceExplorerInner', 'Missing token details data points', {
           currencyId,
           duration: selectedDuration,
-          dataLength: data?.priceHistory?.length,
+          dataLength: data.priceHistory.length,
         })
       }
       logger.info('PriceExplorer.tsx', 'PriceExplorerInner', 'Token details data length', {
         currencyId,
         duration: selectedDuration,
-        dataLength: data?.priceHistory?.length,
+        dataLength: data.priceHistory.length,
       })
     }
   }, [data?.priceHistory, selectedDuration, currencyId])
@@ -128,16 +128,14 @@ const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
         return { ...point, value: point.value * conversionRate }
       }) ?? []
 
-    const lastPoint = priceHistory ? priceHistory.length - 1 : 0
-
-    return { lastPricePoint: lastPoint, convertedPriceHistory: priceHistory }
+    return { lastPricePoint: priceHistory.length - 1, convertedPriceHistory: priceHistory }
   }, [data, conversionRate])
 
-  const convertedSpotValue = useDerivedValue(() => conversionRate * (data?.spot?.value?.value ?? 0))
+  const convertedSpotValue = useDerivedValue(() => conversionRate * (data?.spot?.value.value ?? 0))
   const convertedSpot = useMemo((): TokenSpotData | undefined => {
     return (
       data?.spot && {
-        ...data?.spot,
+        ...data.spot,
         value: convertedSpotValue,
       }
     )
@@ -155,12 +153,12 @@ const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
     }))
   }, [])
 
-  if (!loading && (!convertedPriceHistory || (!convertedSpot && selectedDuration === HistoryDuration.Day))) {
-    return <PriceExplorerError showRetry={error !== undefined} onRetry={refetch} />
+  if (!loading && !convertedSpot && selectedDuration === HistoryDuration.Day) {
+    return <PriceExplorerError showRetry={error} onRetry={refetch} />
   }
 
   return (
-    <LineChartProvider data={convertedPriceHistory ?? []} onCurrentIndexChange={hapticFeedback.light}>
+    <LineChartProvider data={convertedPriceHistory} onCurrentIndexChange={hapticFeedback.light}>
       <Flex gap="$spacing8" overflow="hidden">
         <PriceTextSection
           loading={loading}
@@ -170,7 +168,7 @@ const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
         />
 
         <Flex animation="quick" enterStyle={{ opacity: isAndroid ? 0 : 1 }}>
-          {convertedPriceHistory?.length ? (
+          {convertedPriceHistory.length ? (
             <PriceExplorerChart
               additionalPadding={additionalPadding}
               lastPricePoint={lastPricePoint}

@@ -10,7 +10,7 @@ export const useColorsFromTokenColor = (
 
     return {
       validTokenColor: tokenColor ? validatedColor : undefined,
-      lightTokenColor: tokenColor ? opacify(12, validatedColor) : undefined,
+      lightTokenColor: tokenColor && validatedColor ? opacify(12, validatedColor) : undefined,
     }
   }, [tokenColor])
 

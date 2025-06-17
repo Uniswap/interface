@@ -1,7 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { CardNoise } from 'components/earn/styled'
-import { Dots } from 'components/swap/styled'
 import { useColor } from 'hooks/useColor'
 import { transparentize } from 'polished'
 import { Trans } from 'react-i18next'
@@ -38,13 +37,7 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken }: Po
           <Flex row gap="8px" alignItems="center">
             <DoubleCurrencyLogo currencies={[currency0, currency1]} size={20} />
             <Text fontWeight={535} fontSize={20}>
-              {!currency0 || !currency1 ? (
-                <Dots>
-                  <Trans i18nKey="common.loading" />
-                </Dots>
-              ) : (
-                `${currency0.symbol}/${currency1.symbol}`
-              )}
+              {`${currency0.symbol}/${currency1.symbol}`}
             </Text>
             <Badge badgeVariant={BadgeVariant.WARNING}>Sushi</Badge>
           </Flex>

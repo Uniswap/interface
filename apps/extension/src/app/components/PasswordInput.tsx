@@ -1,9 +1,11 @@
+import { useQuery } from '@tanstack/react-query'
 import { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput } from 'react-native'
 import { Input, InputProps } from 'src/app/components/Input'
+import { biometricUnlockCredentialQuery } from 'src/app/features/biometricUnlock/biometricUnlockCredentialQuery'
 import { Flex, FlexProps, IconProps, Text, TouchableArea } from 'ui/src'
-import { Eye, EyeOff } from 'ui/src/components/icons'
+import { Eye, EyeOff, Fingerprint } from 'ui/src/components/icons'
 import { PasswordStrength, getPasswordStrengthTextAndColor } from 'wallet/src/utils/password'
 
 export const PADDING_STRENGTH_INDICATOR = 76
@@ -46,6 +48,49 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(function 
             {hideInput ? <Eye {...iconProps} /> : <EyeOff {...iconProps} />}
           </TouchableArea>
         )
+      )}
+    </Flex>
+  )
+})
+
+export const PasswordInputWithBiometrics = forwardRef<
+  TextInput,
+  PasswordInputProps & { onPressBiometricUnlock: () => void }
+>(function PasswordInputWithBiometrics({ onPressBiometricUnlock, ...passwordInputProps }, ref): JSX.Element {
+  const { data: biometricUnlockCredential } = useQuery(biometricUnlockCredentialQuery())
+  const hasBiometricUnlockCredential = !!biometricUnlockCredential
+
+  return (
+    <Flex row alignItems="center">
+      <Flex grow>
+        <PasswordInput
+          ref={ref}
+          {...passwordInputProps}
+          {...(hasBiometricUnlockCredential && {
+            borderTopRightRadius: 0,
+            borderBottomRightRadius: 0,
+          })}
+        />
+      </Flex>
+
+      {hasBiometricUnlockCredential && (
+        <TouchableArea
+          height="100%"
+          justifyContent="center"
+          px="$spacing12"
+          borderWidth="$spacing1"
+          borderLeftWidth={0}
+          borderTopLeftRadius={0}
+          borderBottomLeftRadius={0}
+          borderColor="$surface3"
+          backgroundColor="$surface1"
+          hoverStyle={{
+            backgroundColor: '$accent2',
+          }}
+          onPress={onPressBiometricUnlock}
+        >
+          <Fingerprint color="$accent1" size="$icon.28" />
+        </TouchableArea>
       )}
     </Flex>
   )

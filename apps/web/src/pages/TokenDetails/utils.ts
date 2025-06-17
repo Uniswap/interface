@@ -3,7 +3,15 @@ import { TFunction } from 'i18next'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 
-export function getTokenPageTitle(t: TFunction, currency?: Currency, chainId?: UniverseChainId) {
+export function getTokenPageTitle({
+  t,
+  currency,
+  chainId,
+}: {
+  t: TFunction
+  currency?: Currency
+  chainId?: UniverseChainId
+}) {
   const tokenName = currency?.name
   const tokenSymbol = currency?.symbol
   const baseTitle = t('common.buyAndSell')
@@ -23,8 +31,8 @@ export function getTokenPageTitle(t: TFunction, currency?: Currency, chainId?: U
 
 export const getTokenPageDescription = (currency?: Currency, chainId?: UniverseChainId) => {
   const tokenPageName =
-    currency?.name && currency?.symbol
-      ? `${currency?.name} (${currency?.symbol})`
+    currency?.name && currency.symbol
+      ? `${currency.name} (${currency.symbol})`
       : currency?.name ?? currency?.symbol ?? 'tokens'
   const chainSuffix = chainId && chainId !== UniverseChainId.Mainnet ? ` on ${getChainLabel(chainId)}` : ''
 

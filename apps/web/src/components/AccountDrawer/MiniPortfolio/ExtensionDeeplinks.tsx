@@ -93,7 +93,7 @@ export function ExtensionDeeplinks({ account }: { account: string }) {
           setActivityUnread(false)
         }}
       />
-      {data && data?.positions.length > 0 && (
+      {data && data.positions.length > 0 && (
         <DeepLinkButton
           Icon={<Pool width="20px" height="20px" fill={theme.neutral1} />}
           Label={t('common.pools')}

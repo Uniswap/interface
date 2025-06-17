@@ -165,7 +165,7 @@ async function openFeedbackRequestAlert() {
       {
         text: i18n.t('appRating.feedback.button.send'),
         onPress: () => {
-          openUri(uniswapUrls.walletFeedbackForm).catch((e) =>
+          openUri({ uri: uniswapUrls.walletFeedbackForm }).catch((e) =>
             logger.error(e, { tags: { file: 'appRating/saga', function: 'openFeedbackAlert' } }),
           )
           resolve(true)

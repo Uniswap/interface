@@ -8,11 +8,11 @@ import { getProviderManager, getViemClientManager } from 'wallet/src/features/wa
 // Initialize Ethers providers for the chains the wallet interacts with
 export function* initProviders() {
   logger.debug('providerSaga', 'initProviders', 'Initializing providers')
-  const manager = yield* call(getProviderManager)
+  const providerManager = yield* call(getProviderManager)
   const viemClientManager = yield* call(getViemClientManager)
   const initTasks = []
   for (const chainId of ALL_CHAIN_IDS) {
-    const task = yield* fork(initProvider, chainId, manager, viemClientManager)
+    const task = yield* fork(initProvider, { chainId, providerManager, viemClientManager })
     initTasks.push(task)
   }
   logger.debug('providerSaga', 'initProviders', 'Waiting for provider')
@@ -20,11 +20,15 @@ export function* initProviders() {
   logger.debug('providerSaga', 'initProviders', 'Providers ready')
 }
 
-function* initProvider(
-  chainId: UniverseChainId,
-  providerManager: ProviderManager,
-  viemClientManager: ViemClientManager,
-) {
+function* initProvider({
+  chainId,
+  providerManager,
+  viemClientManager,
+}: {
+  chainId: UniverseChainId
+  providerManager: ProviderManager
+  viemClientManager: ViemClientManager
+}) {
   try {
     logger.debug('providerSaga', 'initProvider', 'Creating a provider for:', chainId)
     yield* call([providerManager, providerManager.createProvider], chainId)

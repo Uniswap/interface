@@ -1,3 +1,5 @@
+import { NativeModules } from 'react-native'
+
 interface RNCloudStorageBackupsManager {
   isCloudStorageAvailable: () => Promise<boolean>
   deleteCloudStorageMnemonicBackup: (mnemonicId: string) => Promise<boolean>
@@ -12,7 +14,6 @@ declare module 'react-native' {
     RNCloudStorageBackupsManager: RNCloudStorageBackupsManager
   }
 }
-import { NativeModules } from 'react-native'
 
 const { RNCloudStorageBackupsManager } = NativeModules
 

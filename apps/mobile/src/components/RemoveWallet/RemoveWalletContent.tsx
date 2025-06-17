@@ -137,11 +137,15 @@ export const RemoveWalletContent = ({
     if (inProgress) {
       return
     }
-    if (currentStep === RemoveWalletStep.Warning) {
-      setCurrentStep(RemoveWalletStep.Final)
-    } else if (currentStep === RemoveWalletStep.Final) {
-      setInProgress(true)
-      await onRemoveWalletPress()
+
+    switch (currentStep) {
+      case RemoveWalletStep.Warning:
+        setCurrentStep(RemoveWalletStep.Final)
+        break
+      case RemoveWalletStep.Final:
+        setInProgress(true)
+        await onRemoveWalletPress()
+        break
     }
   }
 

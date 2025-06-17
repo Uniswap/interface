@@ -163,7 +163,9 @@ export function useNFTContextMenu({
     if (!chainId || !contractAddress) {
       return
     }
-    await openUri(getExplorerLink(chainId, contractAddress, ExplorerDataType.ADDRESS))
+    await openUri({
+      uri: getExplorerLink({ chainId, data: contractAddress, type: ExplorerDataType.ADDRESS }),
+    })
   }, [chainId, contractAddress])
 
   const ExplorerLogo = useBlockExplorerLogo(chainId)

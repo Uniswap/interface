@@ -1,6 +1,5 @@
-import { SharedEventName, SwapEventName } from '@uniswap/analytics-events'
-import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants/extension'
-import { UniswapEventName } from 'uniswap/src/features/telemetry/constants/uniswap'
+import { SharedEventName } from '@uniswap/analytics-events'
+import { ExtensionEventName, SwapEventName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { TestnetModeConfig } from 'utilities/src/telemetry/analytics/analytics'
 
@@ -38,6 +37,7 @@ export enum WalletEventName {
   ViewRecoveryPhrase = 'View Recovery Phrase',
   WalletAdded = 'Wallet Added',
   WalletRemoved = 'Wallet Removed',
+  // alphabetize additional values.
 }
 
 export const WALLET_TESTNET_CONFIG: TestnetModeConfig = {
@@ -51,10 +51,10 @@ export const WALLET_TESTNET_CONFIG: TestnetModeConfig = {
     WalletEventName.SwapSubmitted,
     WalletEventName.TransferCompleted,
     WalletEventName.TransferSubmitted,
-    SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED,
-    SwapEventName.SWAP_TRANSACTION_COMPLETED,
-    SwapEventName.SWAP_TRANSACTION_FAILED,
-    SwapEventName.SWAP_QUOTE_RECEIVED,
+    SwapEventName.SwapSubmittedButtonClicked,
+    SwapEventName.SwapTransactionCompleted,
+    SwapEventName.SwapTransactionFailed,
+    SwapEventName.SwapQuoteReceived,
     ExtensionEventName.DappChangeChain,
     ExtensionEventName.DappRequest,
   ],

@@ -35,11 +35,15 @@ export function getQuickPollingInterval(orderStartTime: number) {
   return QUICK_POLL_MAX_INTERVAL
 }
 
-async function fetchStatuses(
-  endpoint: 'limit-orders' | 'orders',
-  orders: UniswapXOrderDetails[],
-  swapper: string,
-): Promise<UniswapXBackendOrder[]> {
+async function fetchStatuses({
+  endpoint,
+  orders,
+  swapper,
+}: {
+  endpoint: 'limit-orders' | 'orders'
+  orders: UniswapXOrderDetails[]
+  swapper: string
+}): Promise<UniswapXBackendOrder[]> {
   const hashes = orders.map((order) => order.orderHash)
   if (hashes.length === 0) {
     return []
@@ -52,19 +56,23 @@ async function fetchStatuses(
 
 async function fetchLimitStatuses(account: string, orders: UniswapXOrderDetails[]): Promise<UniswapXBackendOrder[]> {
   const limitOrders = orders.filter((order) => order.type === SignatureType.SIGN_LIMIT)
-  return fetchStatuses('limit-orders', limitOrders, account)
+  return fetchStatuses({ endpoint: 'limit-orders', orders: limitOrders, swapper: account })
 }
 
 async function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[]): Promise<UniswapXBackendOrder[]> {
   const uniswapXOrders = orders.filter((order) => order.type !== SignatureType.SIGN_LIMIT)
-  return fetchStatuses('orders', uniswapXOrders, account)
+  return fetchStatuses({ endpoint: 'orders', orders: uniswapXOrders, swapper: account })
 }
 
-function updateOrders(
-  pendingOrders: UniswapXOrderDetails[],
-  statuses: UniswapXBackendOrder[],
-  onActivityUpdate: OnActivityUpdate,
-) {
+function updateOrders({
+  pendingOrders,
+  statuses,
+  onActivityUpdate,
+}: {
+  pendingOrders: UniswapXOrderDetails[]
+  statuses: UniswapXBackendOrder[]
+  onActivityUpdate: OnActivityUpdate
+}) {
   pendingOrders.forEach((pendingOrder) => {
     const updatedOrder = statuses.find((order) => order.orderHash === pendingOrder.orderHash)
     if (!updatedOrder) {
@@ -87,6 +95,7 @@ function updateOrders(
       if (pendingOrder.swapInfo.tradeType === TradeType.EXACT_INPUT) {
         const exactInputSwapInfo = update.swapInfo as ExactInputSwapTransactionInfo
         exactInputSwapInfo.settledOutputCurrencyAmountRaw = updatedOrder.settledAmounts?.[0]?.amountOut
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       } else if (pendingOrder.swapInfo.tradeType === TradeType.EXACT_OUTPUT) {
         // TODO(WEB-3962): Handle settled EXACT_OUTPUT amounts
       }
@@ -137,7 +146,7 @@ function useQuickPolling({
 
       try {
         const statuses = await fetchOrderStatuses(account.address, l2Orders)
-        updateOrders(pendingOrders, statuses, onActivityUpdate)
+        updateOrders({ pendingOrders, statuses, onActivityUpdate })
 
         const earliestOrder = l2Orders.find((order) => !isFinalizedOrder(order))
         if (earliestOrder) {
@@ -195,7 +204,7 @@ function useStandardPolling({
           fetchLimitStatuses(account.address, mainnetOrders),
         ]).then((results) => results.flat())
 
-        updateOrders(pendingOrders, statuses, onActivityUpdate)
+        updateOrders({ pendingOrders, statuses, onActivityUpdate })
         const newDelay = Math.min(delay * 1.5, STANDARD_POLLING_MAX_INTERVAL)
         setDelay(newDelay)
         timeout = setTimeout(poll, newDelay)

@@ -48,7 +48,7 @@ function useValidatedSearchedAddress(
     autocompleteDomain: false,
   })
 
-  const { loading: unitagLoading, unitag } = useUnitagByName(searchTerm ?? undefined)
+  const { loading: unitagLoading, unitag } = useUnitagByName(searchTerm)
 
   const getRecipients = useCallback((): SearchableRecipient[] => {
     if (!searchTerm) {
@@ -56,10 +56,14 @@ function useValidatedSearchedAddress(
     }
 
     // Check for a valid unitag, ENS address, or literal address
-    const unitagValidatedAddress = getValidAddress(unitag?.address?.address, true, false)
-    const dotEthValidatedAddress = getValidAddress(dotEthAddress, true, false)
-    const ensValidatedAddress = getValidAddress(ensAddress, true, false)
-    const literalValidatedAddress = getValidAddress(searchTerm, true, false)
+    const unitagValidatedAddress = getValidAddress({
+      address: unitag?.address?.address,
+      withChecksum: true,
+      log: false,
+    })
+    const dotEthValidatedAddress = getValidAddress({ address: dotEthAddress, withChecksum: true, log: false })
+    const ensValidatedAddress = getValidAddress({ address: ensAddress, withChecksum: true, log: false })
+    const literalValidatedAddress = getValidAddress({ address: searchTerm, withChecksum: true, log: false })
 
     const recipients = []
 
@@ -250,7 +254,7 @@ export function useFilteredRecipientSections(
     const filteredAddresses = filterRecipientByNameAndAddress(debouncedPattern, searchableRecipientOptions).map(
       (item) => item.data.address,
     )
-    return filterSections(sections, filteredAddresses)
+    return filterSections({ sections, filteredAddresses })
   }, [debouncedPattern, searchableRecipientOptions, sections])
 
   const getFilteredRecipientList = useCallback(

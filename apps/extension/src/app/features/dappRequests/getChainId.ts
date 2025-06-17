@@ -8,7 +8,15 @@ import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function* getChainId(request: GetChainIdRequest, { id }: SenderTabInfo, dappInfo: DappInfo) {
+export function* getChainId({
+  request,
+  senderTabInfo: { id },
+  dappInfo,
+}: {
+  request: GetChainIdRequest
+  senderTabInfo: SenderTabInfo
+  dappInfo: DappInfo
+}) {
   const response: ChainIdResponse = {
     type: DappResponseType.ChainIdResponse,
     requestId: request.requestId,
@@ -19,11 +27,15 @@ export function* getChainId(request: GetChainIdRequest, { id }: SenderTabInfo, d
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function* getChainIdNoDappInfo(
-  request: GetChainIdRequest,
-  { id }: SenderTabInfo,
-  defaultChainId: UniverseChainId,
-) {
+export function* getChainIdNoDappInfo({
+  request,
+  senderTabInfo: { id },
+  defaultChainId,
+}: {
+  request: GetChainIdRequest
+  senderTabInfo: SenderTabInfo
+  defaultChainId: UniverseChainId
+}) {
   // Sending default chain for unconnected dapps
   const response: ChainIdResponse = {
     type: DappResponseType.ChainIdResponse,

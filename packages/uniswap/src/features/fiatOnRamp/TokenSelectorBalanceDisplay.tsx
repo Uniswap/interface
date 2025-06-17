@@ -28,7 +28,7 @@ export function TokenSelectorBalanceDisplay({
   portfolioBalance,
 }: TokenSelectorBalanceDisplayProps): JSX.Element {
   const balanceQuantity = portfolioBalance?.quantity.toString() || '0'
-  const formattedAmount = useFormatExactCurrencyAmount(balanceQuantity, selectedCurrencyInfo?.currency) || '-'
+  const formattedAmount = useFormatExactCurrencyAmount(balanceQuantity, selectedCurrencyInfo.currency) || '-'
   const isDarkMode = useIsDarkMode()
 
   return (

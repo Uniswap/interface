@@ -43,5 +43,5 @@ export const mockBuyFormContext = {
     notAvailableInThisRegion: false,
     fetchingQuotes: false,
   },
-  setBuyFormState: jest.fn(),
+  setBuyFormState: vi.fn(),
 }

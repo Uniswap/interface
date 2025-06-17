@@ -1,5 +1,4 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
@@ -17,7 +16,7 @@ import {
   FLASHBOTS_DEFAULT_REFUND_PERCENT,
 } from 'uniswap/src/features/providers/FlashbotsCommon'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
-import { MobileAppsFlyerEvents, WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { MobileAppsFlyerEvents, SwapEventName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapTransactionsCount } from 'uniswap/src/features/transactions/selectors'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
@@ -107,8 +106,8 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
   if (type === TransactionType.Swap || type === TransactionType.Bridge) {
     const { gasUsed, effectiveGasPrice, confirmedTime } = receipt ?? {}
     const isOnChainTransaction = 'options' in payload
-    const includesDelegation = isOnChainTransaction ? payload.options?.includesDelegation : undefined
-    const isSmartWalletTransaction = isOnChainTransaction ? payload.options?.isSmartWalletTransaction : undefined
+    const includesDelegation = isOnChainTransaction ? payload.options.includesDelegation : undefined
+    const isSmartWalletTransaction = isOnChainTransaction ? payload.options.isSmartWalletTransaction : undefined
 
     const { quoteId, gasUseEstimate, inputCurrencyId, outputCurrencyId, transactedUSDValue } = typeInfo
 
@@ -176,7 +175,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
           })
           break
         default:
-          sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, { ...baseProperties, order_hash: orderHash })
+          sendAnalyticsEvent(SwapEventName.SwapTransactionFailed, { ...baseProperties, order_hash: orderHash })
       }
     } else {
       // All successful classic swaps should be tracked in redux with a tx hash.
@@ -204,7 +203,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
           break
         default:
           // Log to amplitude
-          sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, { ...baseProperties, hash })
+          sendAnalyticsEvent(SwapEventName.SwapTransactionFailed, { ...baseProperties, hash })
           // Log to datadog
           if (type === TransactionType.Swap && status === TransactionStatus.Failed) {
             logger.warn('swapFlowLoggers', 'logSwapFinalized', 'Onchain Swap Failure', {
@@ -233,7 +232,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
 function logSend(typeInfo: SendTokenTransactionInfo, chainId: UniverseChainId): void {
   const { tokenAddress, recipient: toAddress, currencyAmountUSD } = typeInfo
 
-  const amountUSD = currencyAmountUSD ? parseFloat(currencyAmountUSD?.toFixed(2)) : undefined
+  const amountUSD = currencyAmountUSD ? parseFloat(currencyAmountUSD.toFixed(2)) : undefined
 
   sendAnalyticsEvent(WalletEventName.TransferCompleted, {
     chainId,
@@ -244,17 +243,17 @@ function logSend(typeInfo: SendTokenTransactionInfo, chainId: UniverseChainId): 
 }
 
 export function logTransactionTimeout(transaction: TransactionDetails): void {
-  const flashbotsEnabled = getExperimentValue<Experiments.PrivateRpc, PrivateRpcProperties, boolean>(
-    Experiments.PrivateRpc,
-    PrivateRpcProperties.FlashbotsEnabled,
-    DEFAULT_FLASHBOTS_ENABLED,
-  )
+  const flashbotsEnabled = getExperimentValue({
+    experiment: Experiments.PrivateRpc,
+    param: PrivateRpcProperties.FlashbotsEnabled,
+    defaultValue: DEFAULT_FLASHBOTS_ENABLED,
+  })
 
-  const flashbotsRefundPercent = getExperimentValue<Experiments.PrivateRpc, PrivateRpcProperties, number>(
-    Experiments.PrivateRpc,
-    PrivateRpcProperties.RefundPercent,
-    FLASHBOTS_DEFAULT_REFUND_PERCENT,
-  )
+  const flashbotsRefundPercent = getExperimentValue({
+    experiment: Experiments.PrivateRpc,
+    param: PrivateRpcProperties.RefundPercent,
+    defaultValue: FLASHBOTS_DEFAULT_REFUND_PERCENT,
+  })
 
   sendAnalyticsEvent(WalletEventName.PendingTransactionTimeout, {
     use_flashbots: flashbotsEnabled,
@@ -305,7 +304,7 @@ function maybeLogGasEstimateAccuracy(transaction: TransactionDetails): void {
     !!transaction.receipt &&
     !!transactionGasLimit &&
     transaction.status === TransactionStatus.Failed &&
-    BigNumber.from(transactionGasLimit).toString() === transaction.receipt?.gasUsed.toString()
+    BigNumber.from(transactionGasLimit).toString() === transaction.receipt.gasUsed.toString()
   const timed_out =
     !transaction.receipt &&
     'options' in transaction &&
@@ -351,12 +350,12 @@ function maybeLogGasEstimateAccuracy(transaction: TransactionDetails): void {
 }
 
 function logSwapSuccess(
-  analyticsProps: Parameters<typeof sendAnalyticsEvent<SwapEventName.SWAP_TRANSACTION_COMPLETED>>[1],
+  analyticsProps: Parameters<typeof sendAnalyticsEvent<SwapEventName.SwapTransactionCompleted>>[1],
 ): void {
   const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FirstSwapSuccess)
   const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstSwapSuccess)
 
-  sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
+  sendAnalyticsEvent(SwapEventName.SwapTransactionCompleted, {
     ...analyticsProps,
     // We only log the time-to-swap metric for the first swap of a session,
     // so if it was previously set we log undefined here.

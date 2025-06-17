@@ -26,7 +26,7 @@ import { selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selector
  * @returns Boolean indicating if EIP-5792 methods are enabled
  */
 function isEip5792MethodsEnabled(): boolean {
-  return getFeatureFlag(FeatureFlags.Eip5792Methods) ?? false
+  return getFeatureFlag(FeatureFlags.Eip5792Methods)
 }
 
 /**
@@ -35,7 +35,15 @@ function isEip5792MethodsEnabled(): boolean {
  * @param requestId ID of the request to respond to
  * @param error Error object containing message and code
  */
-function* respondWithError(topic: string, requestId: number, error: { message: string; code: number }) {
+function* respondWithError({
+  topic,
+  requestId,
+  error,
+}: {
+  topic: string
+  requestId: number
+  error: { message: string; code: number }
+}) {
   yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
     topic,
     response: {
@@ -53,18 +61,28 @@ function* respondWithError(topic: string, requestId: number, error: { message: s
  * @param batchId ID of the batch to check status for
  * @param accountAddress Address of the account making the request
  */
-export function* handleGetCallsStatus(topic: string, requestId: number, batchId: string, accountAddress: string) {
+export function* handleGetCallsStatus({
+  topic,
+  requestId,
+  batchId,
+  accountAddress,
+}: {
+  topic: string
+  requestId: number
+  batchId: string
+  accountAddress: string
+}) {
   const eip5792MethodsEnabled = isEip5792MethodsEnabled()
 
   if (!eip5792MethodsEnabled) {
-    yield* respondWithError(topic, requestId, getSdkError('WC_METHOD_UNSUPPORTED'))
+    yield* respondWithError({ topic, requestId, error: getSdkError('WC_METHOD_UNSUPPORTED') })
     return
   }
 
   const { data, error } = yield* call(getCallsStatusHelper, batchId, accountAddress)
 
   if (error || !data) {
-    yield* respondWithError(topic, requestId, getInternalError('MISSING_OR_INVALID', error))
+    yield* respondWithError({ topic, requestId, error: getInternalError('MISSING_OR_INVALID', error) })
     return
   }
 
@@ -84,17 +102,29 @@ export function* handleGetCallsStatus(topic: string, requestId: number, batchId:
  * @param requestId ID of the request
  * @param request The WalletSendCallsRequest object containing call data
  */
-export function* handleSendCalls(topic: string, requestId: number, request: WalletSendCallsRequest) {
+export function* handleSendCalls({
+  topic,
+  requestId,
+  request,
+}: {
+  topic: string
+  requestId: number
+  request: WalletSendCallsRequest
+}) {
   const eip5792MethodsEnabled = isEip5792MethodsEnabled()
 
   if (!eip5792MethodsEnabled) {
-    yield* respondWithError(topic, requestId, getSdkError('WC_METHOD_UNSUPPORTED'))
+    yield* respondWithError({ topic, requestId, error: getSdkError('WC_METHOD_UNSUPPORTED') })
     return
   }
 
   try {
     const { requestId: encodedRequestId, encoded: encodedTransaction } = yield* call(fetchWalletEncoding7702, {
-      calls: transformCallsToTransactionRequests(request.calls, request.chainId, request.account),
+      calls: transformCallsToTransactionRequests({
+        calls: request.calls,
+        chainId: request.chainId,
+        accountAddress: request.account,
+      }),
       smartContractDelegationAddress: UNISWAP_DELEGATION_ADDRESS,
       walletAddress: request.account,
     })
@@ -110,7 +140,7 @@ export function* handleSendCalls(topic: string, requestId: number, request: Wall
     logger.error(error, {
       tags: { file: 'batchTransactionSaga', function: 'handleSendCalls' },
     })
-    yield* respondWithError(topic, requestId, getSdkError('USER_REJECTED'))
+    yield* respondWithError({ topic, requestId, error: getSdkError('USER_REJECTED') })
   }
 }
 
@@ -146,12 +176,12 @@ export function* handleGetCapabilities({
   const eip5792MethodsEnabled = isEip5792MethodsEnabled()
 
   if (!eip5792MethodsEnabled) {
-    yield* respondWithError(topic, requestId, getSdkError('WC_METHOD_UNSUPPORTED'))
+    yield* respondWithError({ topic, requestId, error: getSdkError('WC_METHOD_UNSUPPORTED') })
     return
   }
 
   if (requestedAccount.toLowerCase() !== accountAddress.toLowerCase()) {
-    yield* respondWithError(topic, requestId, getSdkError('UNAUTHORIZED_METHOD'))
+    yield* respondWithError({ topic, requestId, error: getSdkError('UNAUTHORIZED_METHOD') })
     return
   }
 
@@ -197,7 +227,7 @@ export function* handleGetCapabilities({
       }),
     )
 
-    yield* call(navigate, ModalName.PostSwapSmartWalletNudge, {
+    yield* call(navigate, ModalName.SmartWalletNudge, {
       dappInfo: {
         icon: dappIconUrl,
         name: dappName,

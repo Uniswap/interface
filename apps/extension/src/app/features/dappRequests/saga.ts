@@ -113,7 +113,7 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
     requestParams.dappRequest.type === DappRequestType.GetCallsStatus ||
     requestParams.dappRequest.type === DappRequestType.GetCapabilities
   ) {
-    const eip5792MethodsEnabled = getFeatureFlag(FeatureFlags.Eip5792Methods) ?? false
+    const eip5792MethodsEnabled = getFeatureFlag(FeatureFlags.Eip5792Methods)
     if (!eip5792MethodsEnabled) {
       const response: DappRequestRejectParams = {
         errorResponse: {
@@ -151,7 +151,7 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
   const dappUrl = extractBaseUrl(requestParams.senderTabInfo.url)
   const dappInfo = yield* call(dappStore.getDappInfo, dappUrl)
 
-  const isConnectedToDapp = dappInfo && dappInfo.connectedAccounts?.length > 0
+  const isConnectedToDapp = dappInfo && dappInfo.connectedAccounts.length > 0
 
   if (!isConnectedToDapp) {
     if (requestParams.dappRequest.type === DappRequestType.GetChainId) {
@@ -260,7 +260,7 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
 
       const parsedCalls = requestParams.dappRequest.calls.map((call): Call | ParsedCall => ({
         ...call,
-        ...(call.data ? getCalldataInfoFromTransaction(call.data, call.to, chainId) : {}),
+        ...(call.data ? getCalldataInfoFromTransaction({ data: call.data, to: call.to, chainId }) : {}),
       }))
 
       const parsedRequestParams = {
@@ -318,12 +318,17 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
   }
 }
 
-export function* handleSendTransaction(
-  request: BaseSendTransactionRequest,
-  { id }: SenderTabInfo,
-  dappInfo: DappInfo,
-  transactionTypeInfo?: TransactionTypeInfo,
-) {
+export function* handleSendTransaction({
+  request,
+  senderTabInfo: { id },
+  dappInfo,
+  transactionTypeInfo,
+}: {
+  request: BaseSendTransactionRequest
+  senderTabInfo: SenderTabInfo
+  dappInfo: DappInfo
+  transactionTypeInfo?: TransactionTypeInfo
+}) {
   const transactionRequest = request.transaction
   const { lastChainId, activeConnectedAddress, connectedAccounts } = dappInfo
   const account = getActiveConnectedAccount(connectedAccounts, activeConnectedAddress)
@@ -404,7 +409,15 @@ export function* changeChainSaga(request: ChangeChainRequest, { id, url }: Sende
   yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
 }
 
-export function* handleSignMessage(request: SignMessageRequest, { id }: SenderTabInfo, dappInfo: DappInfo) {
+export function* handleSignMessage({
+  request,
+  senderTabInfo: { id },
+  dappInfo,
+}: {
+  request: SignMessageRequest
+  senderTabInfo: SenderTabInfo
+  dappInfo: DappInfo
+}) {
   const { requestId, messageHex } = request
   const { connectedAccounts, activeConnectedAddress } = dappInfo
   const currentAccount = getActiveConnectedAccount(connectedAccounts, activeConnectedAddress)
@@ -412,7 +425,7 @@ export function* handleSignMessage(request: SignMessageRequest, { id }: SenderTa
   const signerManager = yield* call(getSignerManager)
   const provider = yield* call(getProvider, dappInfo.lastChainId)
 
-  const signature = yield* call(signMessage, messageHex, currentAccount, signerManager, provider)
+  const signature = yield* call(signMessage, { message: messageHex, account: currentAccount, signerManager, provider })
 
   const response: SignMessageResponse = {
     type: DappResponseType.SignMessageResponse,
@@ -423,11 +436,15 @@ export function* handleSignMessage(request: SignMessageRequest, { id }: SenderTa
   yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
 }
 
-export function* handleSignTypedData(
-  dappRequest: SignTypedDataRequest,
-  senderTabInfo: SenderTabInfo,
-  dappInfo: DappInfo,
-) {
+export function* handleSignTypedData({
+  dappRequest,
+  senderTabInfo,
+  dappInfo,
+}: {
+  dappRequest: SignTypedDataRequest
+  senderTabInfo: SenderTabInfo
+  dappInfo: DappInfo
+}) {
   try {
     const requestId = dappRequest.requestId
     const typedData = dappRequest.typedData
@@ -450,7 +467,12 @@ export function* handleSignTypedData(
     const signerManager = yield* call(getSignerManager)
     const provider = yield* call(getProvider, lastChainId)
 
-    const signature = yield* call(signTypedDataMessage, typedData, currentAccount, signerManager, provider)
+    const signature = yield* call(signTypedDataMessage, {
+      message: typedData,
+      account: currentAccount,
+      signerManager,
+      provider,
+    })
 
     const response: SignTypedDataResponse = {
       type: DappResponseType.SignTypedDataResponse,
@@ -540,14 +562,19 @@ export function* handleGetCapabilities(request: GetCapabilitiesRequest, senderTa
  * Handle wallet_sendCalls request
  * This method allows dapps to send a batch of calls to the wallet
  */
-export function* handleSendCalls(
-  request: SendCallsRequest,
-  { id }: SenderTabInfo,
-  dappInfo: DappInfo,
-  transactionTypeInfo?: TransactionTypeInfo,
-) {
+export function* handleSendCalls({
+  request,
+  senderTabInfo: { id },
+  dappInfo,
+  transactionTypeInfo,
+}: {
+  request: SendCallsRequest
+  senderTabInfo: SenderTabInfo
+  dappInfo: DappInfo
+  transactionTypeInfo?: TransactionTypeInfo
+}) {
   const isSendCallTransaction = transactionTypeInfo?.type === TransactionType.SendCalls
-  if (!isSendCallTransaction || !transactionTypeInfo?.encodedTransaction || !transactionTypeInfo?.encodedRequestId) {
+  if (!isSendCallTransaction || !transactionTypeInfo.encodedTransaction || !transactionTypeInfo.encodedRequestId) {
     const errorResponse: ErrorResponse = {
       type: DappResponseType.ErrorResponse,
       error: serializeError(rpcErrors.invalidInput()),
@@ -643,7 +670,14 @@ export function* handleSendCalls(
  * Handle wallet_getCallsStatus request
  * This method returns the status of a call batch that was sent via wallet_sendCalls
  */
-export function* handleGetCallsStatus(request: GetCallsStatusRequest, { id }: SenderTabInfo, _dappInfo: DappInfo) {
+export function* handleGetCallsStatus({
+  request,
+  senderTabInfo: { id },
+}: {
+  request: GetCallsStatusRequest
+  senderTabInfo: SenderTabInfo
+  dappInfo: DappInfo
+}) {
   const activeAccount = yield* select(selectActiveAccount)
   if (!activeAccount) {
     const errorResponse: ErrorResponse = {

@@ -43,8 +43,12 @@ export function WalletConnectModals(): JSX.Element {
    * opens Uniswap app via Spotlight search – we don't want `returnToPreviousApp` to return
    * to Spotlight search.
    * */
-  useAppStateTrigger('active', 'inactive', () => {
-    dispatch(setDidOpenFromDeepLink(undefined))
+  useAppStateTrigger({
+    from: 'active',
+    to: 'inactive',
+    callback: () => {
+      dispatch(setDidOpenFromDeepLink(undefined))
+    },
   })
 
   const currRequest = pendingRequests[0] ?? null

@@ -7,7 +7,7 @@ import { RefObject, useEffect } from 'react'
  * @returns - true if the node is animating; false otherwise.
  */
 function isAnimating(node?: Animatable | Document): boolean {
-  return (node?.getAnimations?.().length ?? 0) > 0
+  return (node?.getAnimations().length ?? 0) > 0
 }
 
 /**
@@ -24,12 +24,17 @@ function isAnimating(node?: Animatable | Document): boolean {
  * @param animatedElements - Additional elements to animate.
  * @param skip - Whether to skip the animation and remove the node immediately.
  */
-export function useUnmountingAnimation(
-  node: RefObject<HTMLElement>,
-  getAnimatingClass: () => string,
-  animatedElements?: RefObject<HTMLElement>[],
+export function useUnmountingAnimation({
+  node,
+  getAnimatingClass,
+  animatedElements,
   skip = false,
-) {
+}: {
+  node: RefObject<HTMLElement>
+  getAnimatingClass: () => string
+  animatedElements?: RefObject<HTMLElement>[]
+  skip?: boolean
+}) {
   useEffect(() => {
     const current = node.current
 
@@ -46,7 +51,7 @@ export function useUnmountingAnimation(
     // Override the parent's removeChild function to add our animation logic
     parent.removeChild = function <T extends Node>(child: T) {
       // If the current child is the one being removed and it's supposed to animate
-      if ((child as Node) === current && animated) {
+      if ((child as Node) === current) {
         // Add animation class to all elements
         animated.forEach((element) => element?.classList.add(getAnimatingClass()))
 
@@ -54,7 +59,7 @@ export function useUnmountingAnimation(
         const animating = animated.find((element) => isAnimating(element ?? undefined))
         if (animating) {
           // If an element is animating, we wait for the animation to end before removing the child
-          animating?.addEventListener('animationend', (x) => {
+          animating.addEventListener('animationend', (x) => {
             // This check is needed because the animationend event will fire for all animations on the
             // element or its children.
             if (x.target === animating) {

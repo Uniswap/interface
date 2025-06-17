@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'appGraphql/data/useAllTransactions'
@@ -68,7 +69,7 @@ const RecentTransactions = memo(function RecentTransactions() {
       !media.lg
         ? columnHelper.accessor((transaction) => transaction, {
             id: 'timestamp',
-            size: media.lg ? 60 : 80,
+            size: 80,
             header: () => (
               <HeaderCell justifyContent="flex-start">
                 <TableRow>
@@ -82,7 +83,11 @@ const RecentTransactions = memo(function RecentTransactions() {
               <Cell loading={showLoadingSkeleton} justifyContent="flex-start">
                 <TimestampCell
                   timestamp={Number(transaction.getValue?.().timestamp)}
-                  link={getExplorerLink(chainInfo.id, transaction.getValue?.().hash, ExplorerDataType.TRANSACTION)}
+                  link={getExplorerLink({
+                    chainId: chainInfo.id,
+                    data: transaction.getValue?.().hash,
+                    type: ExplorerDataType.TRANSACTION,
+                  })}
                 />
               </Cell>
             ),
@@ -212,7 +217,11 @@ const RecentTransactions = memo(function RecentTransactions() {
         cell: (makerAddress) => (
           <Cell loading={showLoadingSkeleton}>
             <StyledExternalLink
-              href={getExplorerLink(chainInfo.id, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}
+              href={getExplorerLink({
+                chainId: chainInfo.id,
+                data: makerAddress.getValue?.(),
+                type: ExplorerDataType.ADDRESS,
+              })}
             >
               <TableText>{shortenAddress(makerAddress.getValue?.())}</TableText>
             </StyledExternalLink>

@@ -1,5 +1,4 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { usePositionDerivedInfo } from 'components/Liquidity/hooks'
 import { getProtocolItems } from 'components/Liquidity/utils'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { RemoveLiquidityTxInfo } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
@@ -16,7 +15,7 @@ import {
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
@@ -86,7 +85,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
 
   const approvalsNeeded = Boolean(v2LpTokenApproval)
 
-  const { feeValue0, feeValue1 } = usePositionDerivedInfo(positionInfo)
+  const { token0UncollectedFees, token1UncollectedFees } = positionInfo ?? {}
 
   const decreaseCalldataQueryParams = useMemo((): DecreaseLPPositionRequest | undefined => {
     const apiProtocolItems = getProtocolItems(positionInfo?.version)
@@ -109,10 +108,8 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
         positionInfo.version === ProtocolVersion.V2
           ? positionInfo.liquidityAmount?.quotient.toString()
           : positionInfo.liquidity,
-      expectedTokenOwed0RawAmount:
-        positionInfo.version !== ProtocolVersion.V4 ? feeValue0?.quotient.toString() : undefined,
-      expectedTokenOwed1RawAmount:
-        positionInfo.version !== ProtocolVersion.V4 ? feeValue1?.quotient.toString() : undefined,
+      expectedTokenOwed0RawAmount: positionInfo.version !== ProtocolVersion.V4 ? token0UncollectedFees : undefined,
+      expectedTokenOwed1RawAmount: positionInfo.version !== ProtocolVersion.V4 ? token1UncollectedFees : undefined,
       position: {
         tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,
         tickUpper: positionInfo.tickUpper ? Number(positionInfo.tickUpper) : undefined,
@@ -120,7 +117,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
           token0: currency0.isNative ? ZERO_ADDRESS : currency0.address,
           token1: currency1.isNative ? ZERO_ADDRESS : currency1.address,
           fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
-          tickSpacing: positionInfo?.tickSpacing ? Number(positionInfo?.tickSpacing) : undefined,
+          tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
           hooks: positionInfo.v4hook,
         },
       },
@@ -134,8 +131,8 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     currency1,
     approvalsNeeded,
     percent,
-    feeValue0?.quotient,
-    feeValue1?.quotient,
+    token0UncollectedFees,
+    token1UncollectedFees,
     customSlippageTolerance,
   ])
 
@@ -171,12 +168,15 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
         function: 'useEffect',
       },
     })
-    sendAnalyticsEvent(InterfaceEventNameLocal.DecreaseLiquidityFailed, {
+    sendAnalyticsEvent(InterfaceEventName.DecreaseLiquidityFailed, {
       message,
     })
   }
 
-  const { value: estimatedGasFee } = useTransactionGasFee(decreaseCalldata?.decrease, !!decreaseCalldata?.gasFee)
+  const { value: estimatedGasFee } = useTransactionGasFee({
+    tx: decreaseCalldata?.decrease,
+    skip: !!decreaseCalldata?.gasFee,
+  })
   const decreaseGasFeeUsd =
     useUSDCurrencyAmountOfGasFee(
       toSupportedChainId(decreaseCalldata?.decrease?.chainId) ?? undefined,

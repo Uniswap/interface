@@ -54,11 +54,11 @@ export function StatsigProviderWrapper({
         },
       })
     }
-    client?.on('error', errorHandler)
-    client?.on('initialization_failure', errorHandler)
+    client.on('error', errorHandler)
+    client.on('initialization_failure', errorHandler)
     return () => {
-      client?.off('error', errorHandler)
-      client?.off('initialization_failure', errorHandler)
+      client.off('error', errorHandler)
+      client.off('initialization_failure', errorHandler)
     }
   }, [client])
 

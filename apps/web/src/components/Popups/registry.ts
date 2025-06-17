@@ -6,6 +6,7 @@ class PopupRegistry {
   private listener: PopupListener | undefined
   private popupKeyToId = new Map<string, string | number>()
 
+  // eslint-disable-next-line max-params
   addPopup(content: PopupContent, key: string, removeAfterMs?: number): void {
     if (this.popupKeyToId.has(key)) {
       return
@@ -22,8 +23,8 @@ class PopupRegistry {
   }
 
   removePopup(key: string): void {
-    this.popupKeyToId.delete(key)
     toast.dismiss(this.popupKeyToId.get(key))
+    this.popupKeyToId.delete(key)
   }
 }
 

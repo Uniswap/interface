@@ -1,20 +1,57 @@
-// Top level cache keys for react-query queries to ensure unique keys across the universe
+/**
+ * Top level cache keys for react-query queries to ensure unique keys across the universe.
+ * Please order alphabetically to reduce merge conflicts.
+ */
 export enum ReactQueryCacheKey {
+  BalanceAndUnitags = 'BalanceAndUnitags',
   CameraPermission = 'CameraPermission',
+  CancelTransactionRequest = 'CancelTransactionRequest',
+  CancelUniswapXTransactionRequest = 'CancelUniswapXTransactionRequest',
+  CreateTransferTransaction = 'CreateTransferTransaction',
   DensityChartData = 'DensityChartData',
+  ExtensionBiometricUnlockCredential = 'ExtensionBiometricUnlockCredential',
+  ExtensionBuiltInBiometricCapabilities = 'ExtensionBuiltInBiometricCapabilities',
+  ExtractedColors = 'ExtractedColors',
+  GeneratedAddresses = 'GeneratedAddresses',
+  GetPortfolio = 'GetPortfolio',
+  IsErc20ContractAddress = 'IsErc20ContractAddress',
+  IsSmartContractAddress = 'IsSmartContractAddress',
+  ListTransactions = 'ListTransactions',
   LocalActivities = 'localActivities',
+  MismatchAccount = 'MismatchAccount',
+  MnemonicUnlocked = 'MnemonicUnlocked',
+  OnboardingRedirect = 'OnboardingRedirect',
   OnchainBalances = 'OnchainBalances',
   OnchainENS = 'OnchainENS',
+  OnRampAuth = 'OnRampAuth',
   PasskeyAuthStatus = 'PasskeyAuthStatus',
+  Permit2SignatureWithData = 'Permit2SignatureWithData',
   PositionCurrencyInfo = 'positionCurrencyInfo',
   PositionTokenURI = 'PositionTokenURI',
+  RemoteSvg = 'RemoteSvg',
   SignatureToActivity = 'SignatureToActivity',
+  StatsigUser = 'StatsigUser',
   TradingApi = 'TradingApi',
   TransactionToActivity = 'TransactionToActivity',
+  UniqueId = 'UniqueId',
   UniswapApi = 'UniswapApi',
   UnitagsApi = 'UnitagsApi',
-  WalletGetCapabilities = 'WalletGetCapabilities',
-  MismatchAccount = 'MismatchAccount',
-  IsSmartContractAddress = 'IsSmartContractAddress',
   WalletDelegation = 'WalletDelegation',
+  WalletGetCapabilities = 'WalletGetCapabilities',
+  WebTransactionGasFee = 'WebTransactionGasFee',
+  WrapTransactionRequest = 'WrapTransactionRequest',
 }
+
+/**
+ * These queries will not be persisted to disk.
+ *
+ * Some reasons to not persist a query:
+ * - The query response includes a non-serializable object.
+ * - The query data includes sensitive information.
+ *
+ * Note that any query with `gcTime: 0` will not be persisted to disk even if it's not in this list.
+ */
+export const DISABLE_CACHE_PERSISTENCE_TO_DISK: ReactQueryCacheKey[] = [
+  // This query returns a non-serializable react component (the biometric icon).
+  ReactQueryCacheKey.ExtensionBuiltInBiometricCapabilities,
+] as const

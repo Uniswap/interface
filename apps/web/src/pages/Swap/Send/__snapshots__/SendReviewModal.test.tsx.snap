@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SendReviewModal should render input in fiat correctly 1`] = `
+exports[`SendReviewModal > should render input in fiat correctly 1`] = `
 .c2 {
   height: 36px;
   width: 36px;
@@ -18,14 +18,6 @@ exports[`SendReviewModal should render input in fiat correctly 1`] = `
 }
 
 .c0 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c1 {
   color: #131313;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -33,224 +25,150 @@ exports[`SendReviewModal should render input in fiat correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
+.c1 {
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 <div
-  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _width-10037 _pt-t-space-spa94665593 _pr-t-space-spa94665593 _pb-t-space-spa94665593 _pl-t-space-spa94665593 _gap-t-space-gap1569"
+  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _gap-t-space-gap1573"
   data-testid="send-review-modal"
 >
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa94665593 _pb-t-space-spa94665589"
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1602 _pr-t-space-spa1360334080 _pl-t-space-spa1360334080"
   >
     <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap52"
       >
-        <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
-          data-disable-theme="true"
+        <div
+          class="c0 css-15popx1"
         >
-          Review send
-        </span>
+          $1,000.00
+        </div>
+        <div
+          class="c1 css-1a4qi6e"
+        >
+          100.00 DAI
+        </div>
       </div>
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
       >
-        <a
-          href="https://support.uniswap.org/hc/en-us"
-          style="text-decoration: none;"
-          target="_blank"
-        >
-          <div
-            class="_backgroundColor-0hover-surface2Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-fit-content _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665589 _pb-t-space-spa94665589 _backgroundColor-surface2 _gap-4px _alignItems-center"
-          >
-            <svg
-              fill="rgba(19, 19, 19, 0.63)"
-              height="16"
-              stroke="none"
-              viewBox="0 0 16 16"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
-                fill="rgba(19, 19, 19, 0.63)"
-              />
-            </svg>
-            <span
-              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
-              data-disable-theme="true"
-            >
-              Get help
-            </span>
-          </div>
-        </a>
         <div
-          class=" is_TouchableArea  t_group_true"
-          role="button"
-          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1);"
-          tabindex="0"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
           >
-            <svg
-              fill="none"
-              stroke-width="8"
-              style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
-              viewBox="0 0 16 16"
+            <div
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+              data-testid="token-logo"
             >
-              <path
-                d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
-                fill="currentColor"
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
               />
-            </svg>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                data-testid="img-token-image"
+              >
+                <img
+                  height="36"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                  style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                  width="36"
+                />
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center"
+    >
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap52"
+      >
+        <div
+          class="c1 css-1a4qi6e"
+        >
+          To
+        </div>
+        <div
+          class="c0 css-15popx1"
+        >
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center"
+          >
+            <div
+              class="c0 css-15popx1"
+            >
+              hayden.eth
+            </div>
+          </div>
+        </div>
+        <div
+          class="c1 css-1a4qi6e"
+        >
+          0x9984...9103
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
+      >
+        <svg
+          class="c2 c3"
+          data-testid="IdenticonLoader"
+          fill="rgba(19, 19, 19, 0.35)"
+          stroke="rgba(19, 19, 19, 0.35)"
+          viewBox="0 0 54 54"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M53.6666 26.9999C53.6666 41.7275 41.7276 53.6666 27 53.6666C12.2724 53.6666 0.333313 41.7275 0.333313 26.9999C0.333313 12.2723 12.2724 0.333252 27 0.333252C41.7276 0.333252 53.6666 12.2723 53.6666 26.9999ZM8.33331 26.9999C8.33331 37.3092 16.6907 45.6666 27 45.6666C37.3093 45.6666 45.6666 37.3092 45.6666 26.9999C45.6666 16.6906 37.3093 8.33325 27 8.33325C16.6907 8.33325 8.33331 16.6906 8.33331 26.9999Z"
+            fill="rgba(19, 19, 19, 0.35)"
+            opacity="0.1"
+          />
+          <path
+            d="M49.6666 26.9999C51.8758 26.9999 53.6973 25.1992 53.3672 23.0149C53.0452 20.884 52.4652 18.7951 51.6368 16.795C50.2966 13.5597 48.3324 10.62 45.8562 8.14374C43.3799 5.66751 40.4402 3.70326 37.2049 2.36313C35.2048 1.53466 33.1159 0.954747 30.985 0.632693C28.8007 0.30256 27 2.12411 27 4.33325C27 6.54239 28.8108 8.29042 30.9695 8.76019C32.0523 8.99585 33.1146 9.32804 34.1434 9.75417C36.4081 10.6923 38.4659 12.0672 40.1993 13.8006C41.9327 15.534 43.3076 17.5918 44.2457 19.8565C44.6719 20.8853 45.004 21.9476 45.2397 23.0304C45.7095 25.1891 47.4575 26.9999 49.6666 26.9999Z"
+            fill="rgba(19, 19, 19, 0.35)"
+          />
+        </svg>
       </div>
     </div>
   </div>
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1573"
+    class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+  />
+  <div
+    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _justifyContent-space-betwe3241 _pr-t-space-spa1360334080 _pl-t-space-spa1360334080"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1602"
+      class="c1 css-1a4qi6e"
     >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center"
-      >
-        <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap52"
-        >
-          <div
-            class="c0 css-1a4qi6e"
-          >
-            You’re sending
-          </div>
-          <div
-            class="c1 css-15popx1"
-          >
-            $1,000.00
-          </div>
-          <div
-            class="c0 css-1a4qi6e"
-          >
-            100.00 DAI
-          </div>
-        </div>
-        <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
-        >
-          <div
-            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
-          >
-            <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
-            >
-              <div
-                class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
-                data-testid="token-logo"
-              >
-                <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
-                />
-                <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                  data-testid="img-token-image"
-                >
-                  <img
-                    height="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                    style="object-fit: contain; border-radius: 18px; z-index: 1;"
-                    width="36"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center"
-      >
-        <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap52"
-        >
-          <div
-            class="c0 css-1a4qi6e"
-          >
-            To
-          </div>
-          <div
-            class="c1 css-15popx1"
-          >
-            <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center"
-            >
-              <div
-                class="c1 css-15popx1"
-              >
-                hayden.eth
-              </div>
-            </div>
-          </div>
-          <div
-            class="c0 css-1a4qi6e"
-          >
-            0x9984...9103
-          </div>
-        </div>
-        <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
-        >
-          <svg
-            class="c2 c3"
-            data-testid="IdenticonLoader"
-            fill="rgba(19, 19, 19, 0.35)"
-            stroke="rgba(19, 19, 19, 0.35)"
-            viewBox="0 0 54 54"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M53.6666 26.9999C53.6666 41.7275 41.7276 53.6666 27 53.6666C12.2724 53.6666 0.333313 41.7275 0.333313 26.9999C0.333313 12.2723 12.2724 0.333252 27 0.333252C41.7276 0.333252 53.6666 12.2723 53.6666 26.9999ZM8.33331 26.9999C8.33331 37.3092 16.6907 45.6666 27 45.6666C37.3093 45.6666 45.6666 37.3092 45.6666 26.9999C45.6666 16.6906 37.3093 8.33325 27 8.33325C16.6907 8.33325 8.33331 16.6906 8.33331 26.9999Z"
-              fill="rgba(19, 19, 19, 0.35)"
-              opacity="0.1"
-            />
-            <path
-              d="M49.6666 26.9999C51.8758 26.9999 53.6973 25.1992 53.3672 23.0149C53.0452 20.884 52.4652 18.7951 51.6368 16.795C50.2966 13.5597 48.3324 10.62 45.8562 8.14374C43.3799 5.66751 40.4402 3.70326 37.2049 2.36313C35.2048 1.53466 33.1159 0.954747 30.985 0.632693C28.8007 0.30256 27 2.12411 27 4.33325C27 6.54239 28.8108 8.29042 30.9695 8.76019C32.0523 8.99585 33.1146 9.32804 34.1434 9.75417C36.4081 10.6923 38.4659 12.0672 40.1993 13.8006C41.9327 15.534 43.3076 17.5918 44.2457 19.8565C44.6719 20.8853 45.004 21.9476 45.2397 23.0304C45.7095 25.1891 47.4575 26.9999 49.6666 26.9999Z"
-              fill="rgba(19, 19, 19, 0.35)"
-            />
-          </svg>
-        </div>
-      </div>
+      Network cost
     </div>
     <div
-      class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
-    />
-    <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _justifyContent-space-betwe3241"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-min-content _gap-t-space-gap52 _alignItems-center"
     >
+      <img
+        alt="Ethereum logo"
+        aria-labelledby="titleID"
+        height="16px"
+        src="ethereum-logo.png"
+        style="border-radius: 4px;"
+        width="16px"
+      />
       <div
-        class="c0 css-1a4qi6e"
+        class="c0 css-142zc9n"
       >
-        Network cost
-      </div>
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-min-content _gap-t-space-gap52 _alignItems-center"
-      >
-        <img
-          alt="Ethereum logo"
-          aria-labelledby="titleID"
-          height="16px"
-          src="ethereum-logo.png"
-          style="border-radius: 4px;"
-          width="16px"
-        />
-        <div
-          class="c1 css-142zc9n"
-        >
-          -
-        </div>
+        -
       </div>
     </div>
   </div>
@@ -258,8 +176,7 @@ exports[`SendReviewModal should render input in fiat correctly 1`] = `
     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch"
   >
     <button
-      class=" is_Button  t_group_item"
-      style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(255, 55, 199); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 16px 20px 16px 20px; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; gap: 12px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+      class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-accent1Hove112785 _backgroundColor-0focus-visible-accent1Hove112785 _outlineColor-0focus-visible-accent1Hove112785 _transform-0active-scale0--981281 _backgroundColor-0active-accent1Hove112785 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-accent1 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334051 _pl-t-space-spa1360334051 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _gap-t-space-spa1360334080 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
     >
       <span
         class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-larg101 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
@@ -271,7 +188,7 @@ exports[`SendReviewModal should render input in fiat correctly 1`] = `
 </div>
 `;
 
-exports[`SendReviewModal should render input in token amount correctly 1`] = `
+exports[`SendReviewModal > should render input in token amount correctly 1`] = `
 .c2 {
   height: 36px;
   width: 36px;
@@ -289,14 +206,6 @@ exports[`SendReviewModal should render input in token amount correctly 1`] = `
 }
 
 .c0 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c1 {
   color: #131313;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -304,224 +213,150 @@ exports[`SendReviewModal should render input in token amount correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
+.c1 {
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 <div
-  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _width-10037 _pt-t-space-spa94665593 _pr-t-space-spa94665593 _pb-t-space-spa94665593 _pl-t-space-spa94665593 _gap-t-space-gap1569"
+  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _gap-t-space-gap1573"
   data-testid="send-review-modal"
 >
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa94665593 _pb-t-space-spa94665589"
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1602 _pr-t-space-spa1360334080 _pl-t-space-spa1360334080"
   >
     <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap52"
       >
-        <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
-          data-disable-theme="true"
+        <div
+          class="c0 css-15popx1"
         >
-          Review send
-        </span>
+          1.00 DAI
+        </div>
+        <div
+          class="c1 css-1a4qi6e"
+        >
+          $100.00
+        </div>
       </div>
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
       >
-        <a
-          href="https://support.uniswap.org/hc/en-us"
-          style="text-decoration: none;"
-          target="_blank"
-        >
-          <div
-            class="_backgroundColor-0hover-surface2Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-fit-content _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665589 _pb-t-space-spa94665589 _backgroundColor-surface2 _gap-4px _alignItems-center"
-          >
-            <svg
-              fill="rgba(19, 19, 19, 0.63)"
-              height="16"
-              stroke="none"
-              viewBox="0 0 16 16"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
-                fill="rgba(19, 19, 19, 0.63)"
-              />
-            </svg>
-            <span
-              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
-              data-disable-theme="true"
-            >
-              Get help
-            </span>
-          </div>
-        </a>
         <div
-          class=" is_TouchableArea  t_group_true"
-          role="button"
-          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1);"
-          tabindex="0"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
           >
-            <svg
-              fill="none"
-              stroke-width="8"
-              style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
-              viewBox="0 0 16 16"
+            <div
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+              data-testid="token-logo"
             >
-              <path
-                d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
-                fill="currentColor"
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
               />
-            </svg>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                data-testid="img-token-image"
+              >
+                <img
+                  height="36"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                  style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                  width="36"
+                />
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center"
+    >
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap52"
+      >
+        <div
+          class="c1 css-1a4qi6e"
+        >
+          To
+        </div>
+        <div
+          class="c0 css-15popx1"
+        >
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center"
+          >
+            <div
+              class="c0 css-15popx1"
+            >
+              hayden.eth
+            </div>
+          </div>
+        </div>
+        <div
+          class="c1 css-1a4qi6e"
+        >
+          0x9984...9103
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
+      >
+        <svg
+          class="c2 c3"
+          data-testid="IdenticonLoader"
+          fill="rgba(19, 19, 19, 0.35)"
+          stroke="rgba(19, 19, 19, 0.35)"
+          viewBox="0 0 54 54"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M53.6666 26.9999C53.6666 41.7275 41.7276 53.6666 27 53.6666C12.2724 53.6666 0.333313 41.7275 0.333313 26.9999C0.333313 12.2723 12.2724 0.333252 27 0.333252C41.7276 0.333252 53.6666 12.2723 53.6666 26.9999ZM8.33331 26.9999C8.33331 37.3092 16.6907 45.6666 27 45.6666C37.3093 45.6666 45.6666 37.3092 45.6666 26.9999C45.6666 16.6906 37.3093 8.33325 27 8.33325C16.6907 8.33325 8.33331 16.6906 8.33331 26.9999Z"
+            fill="rgba(19, 19, 19, 0.35)"
+            opacity="0.1"
+          />
+          <path
+            d="M49.6666 26.9999C51.8758 26.9999 53.6973 25.1992 53.3672 23.0149C53.0452 20.884 52.4652 18.7951 51.6368 16.795C50.2966 13.5597 48.3324 10.62 45.8562 8.14374C43.3799 5.66751 40.4402 3.70326 37.2049 2.36313C35.2048 1.53466 33.1159 0.954747 30.985 0.632693C28.8007 0.30256 27 2.12411 27 4.33325C27 6.54239 28.8108 8.29042 30.9695 8.76019C32.0523 8.99585 33.1146 9.32804 34.1434 9.75417C36.4081 10.6923 38.4659 12.0672 40.1993 13.8006C41.9327 15.534 43.3076 17.5918 44.2457 19.8565C44.6719 20.8853 45.004 21.9476 45.2397 23.0304C45.7095 25.1891 47.4575 26.9999 49.6666 26.9999Z"
+            fill="rgba(19, 19, 19, 0.35)"
+          />
+        </svg>
       </div>
     </div>
   </div>
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1573"
+    class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+  />
+  <div
+    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _justifyContent-space-betwe3241 _pr-t-space-spa1360334080 _pl-t-space-spa1360334080"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1602"
+      class="c1 css-1a4qi6e"
     >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center"
-      >
-        <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap52"
-        >
-          <div
-            class="c0 css-1a4qi6e"
-          >
-            You’re sending
-          </div>
-          <div
-            class="c1 css-15popx1"
-          >
-            1.00 DAI
-          </div>
-          <div
-            class="c0 css-1a4qi6e"
-          >
-            $100.00
-          </div>
-        </div>
-        <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
-        >
-          <div
-            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
-          >
-            <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
-            >
-              <div
-                class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
-                data-testid="token-logo"
-              >
-                <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
-                />
-                <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                  data-testid="img-token-image"
-                >
-                  <img
-                    height="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                    style="object-fit: contain; border-radius: 18px; z-index: 1;"
-                    width="36"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center"
-      >
-        <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap52"
-        >
-          <div
-            class="c0 css-1a4qi6e"
-          >
-            To
-          </div>
-          <div
-            class="c1 css-15popx1"
-          >
-            <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center"
-            >
-              <div
-                class="c1 css-15popx1"
-              >
-                hayden.eth
-              </div>
-            </div>
-          </div>
-          <div
-            class="c0 css-1a4qi6e"
-          >
-            0x9984...9103
-          </div>
-        </div>
-        <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
-        >
-          <svg
-            class="c2 c3"
-            data-testid="IdenticonLoader"
-            fill="rgba(19, 19, 19, 0.35)"
-            stroke="rgba(19, 19, 19, 0.35)"
-            viewBox="0 0 54 54"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M53.6666 26.9999C53.6666 41.7275 41.7276 53.6666 27 53.6666C12.2724 53.6666 0.333313 41.7275 0.333313 26.9999C0.333313 12.2723 12.2724 0.333252 27 0.333252C41.7276 0.333252 53.6666 12.2723 53.6666 26.9999ZM8.33331 26.9999C8.33331 37.3092 16.6907 45.6666 27 45.6666C37.3093 45.6666 45.6666 37.3092 45.6666 26.9999C45.6666 16.6906 37.3093 8.33325 27 8.33325C16.6907 8.33325 8.33331 16.6906 8.33331 26.9999Z"
-              fill="rgba(19, 19, 19, 0.35)"
-              opacity="0.1"
-            />
-            <path
-              d="M49.6666 26.9999C51.8758 26.9999 53.6973 25.1992 53.3672 23.0149C53.0452 20.884 52.4652 18.7951 51.6368 16.795C50.2966 13.5597 48.3324 10.62 45.8562 8.14374C43.3799 5.66751 40.4402 3.70326 37.2049 2.36313C35.2048 1.53466 33.1159 0.954747 30.985 0.632693C28.8007 0.30256 27 2.12411 27 4.33325C27 6.54239 28.8108 8.29042 30.9695 8.76019C32.0523 8.99585 33.1146 9.32804 34.1434 9.75417C36.4081 10.6923 38.4659 12.0672 40.1993 13.8006C41.9327 15.534 43.3076 17.5918 44.2457 19.8565C44.6719 20.8853 45.004 21.9476 45.2397 23.0304C45.7095 25.1891 47.4575 26.9999 49.6666 26.9999Z"
-              fill="rgba(19, 19, 19, 0.35)"
-            />
-          </svg>
-        </div>
-      </div>
+      Network cost
     </div>
     <div
-      class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
-    />
-    <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _justifyContent-space-betwe3241"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-min-content _gap-t-space-gap52 _alignItems-center"
     >
+      <img
+        alt="Ethereum logo"
+        aria-labelledby="titleID"
+        height="16px"
+        src="ethereum-logo.png"
+        style="border-radius: 4px;"
+        width="16px"
+      />
       <div
-        class="c0 css-1a4qi6e"
+        class="c0 css-142zc9n"
       >
-        Network cost
-      </div>
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-min-content _gap-t-space-gap52 _alignItems-center"
-      >
-        <img
-          alt="Ethereum logo"
-          aria-labelledby="titleID"
-          height="16px"
-          src="ethereum-logo.png"
-          style="border-radius: 4px;"
-          width="16px"
-        />
-        <div
-          class="c1 css-142zc9n"
-        >
-          -
-        </div>
+        -
       </div>
     </div>
   </div>
@@ -529,8 +364,7 @@ exports[`SendReviewModal should render input in token amount correctly 1`] = `
     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch"
   >
     <button
-      class=" is_Button  t_group_item"
-      style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(255, 55, 199); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 16px 20px 16px 20px; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; gap: 12px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+      class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-accent1Hove112785 _backgroundColor-0focus-visible-accent1Hove112785 _outlineColor-0focus-visible-accent1Hove112785 _transform-0active-scale0--981281 _backgroundColor-0active-accent1Hove112785 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-accent1 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334051 _pl-t-space-spa1360334051 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _gap-t-space-spa1360334080 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
     >
       <span
         class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-larg101 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"

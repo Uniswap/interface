@@ -38,7 +38,7 @@ export default function TradePrice({ price }: TradePriceProps) {
   const formattedPrice = useMemo(() => {
     try {
       return formatNumberOrString({
-        value: (showInverted ? price : price.invert())?.toSignificant(),
+        value: (showInverted ? price : price.invert()).toSignificant(),
         type: NumberType.TokenTx,
       })
     } catch {
@@ -46,11 +46,11 @@ export default function TradePrice({ price }: TradePriceProps) {
     }
   }, [formatNumberOrString, price, showInverted])
 
-  const label = showInverted ? `${price.quoteCurrency?.symbol}` : `${price.baseCurrency?.symbol} `
-  const labelInverted = showInverted ? `${price.baseCurrency?.symbol} ` : `${price.quoteCurrency?.symbol}`
+  const label = showInverted ? `${price.quoteCurrency.symbol}` : `${price.baseCurrency.symbol} `
+  const labelInverted = showInverted ? `${price.baseCurrency.symbol} ` : `${price.quoteCurrency.symbol}`
   const flipPrice = useCallback(() => setShowInverted(!showInverted), [setShowInverted, showInverted])
 
-  const text = `${'1 ' + labelInverted + ' = ' + (formattedPrice ?? '-')} ${label}`
+  const text = `${'1 ' + labelInverted + ' = ' + formattedPrice} ${label}`
 
   return (
     <StyledPriceContainer

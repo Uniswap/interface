@@ -48,11 +48,11 @@ export function OnDeviceRecoveryScreen({
 }: Props): JSX.Element {
   const { t } = useTranslation()
   const { setRecoveredImportedAccounts } = useOnboardingContext()
-  const recoveryLoadingTimeoutMs = useDynamicConfigValue(
-    DynamicConfigs.OnDeviceRecovery,
-    OnDeviceRecoveryConfigKey.AppLoadingTimeoutMs,
-    FALLBACK_RECOVERY_LOADING_TIMEOUT_MS,
-  )
+  const recoveryLoadingTimeoutMs = useDynamicConfigValue({
+    config: DynamicConfigs.OnDeviceRecovery,
+    key: OnDeviceRecoveryConfigKey.AppLoadingTimeoutMs,
+    defaultValue: FALLBACK_RECOVERY_LOADING_TIMEOUT_MS,
+  })
   const hideSplashScreen = useHideSplashScreen()
 
   const [selectedMnemonicId, setSelectedMnemonicId] = useState<string>()

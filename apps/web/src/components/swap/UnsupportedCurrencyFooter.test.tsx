@@ -5,7 +5,7 @@ import { Token } from '@uniswap/sdk-core'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { mocked } from 'test-utils/mocked'
-import { render, screen, waitForElementToBeRemoved, within } from 'test-utils/render'
+import { render, screen, within } from 'test-utils/render'
 import { ProtectionResult, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
@@ -18,8 +18,8 @@ const unsupportedTokenSymbol = 'ALTDOM-MAR2021'
 const unsupportedToken = new Token(1, unsupportedTokenAddress, 18, 'ALTDOM-MAR2021')
 const unsupportedTokenExplorerLink = 'www.blahblah.com'
 
-jest.mock('uniswap/src/utils/linking')
-jest.setTimeout(15_000)
+vi.mock('uniswap/src/utils/linking')
+setTimeout(() => {}, 15_000)
 
 describe('UnsupportedCurrencyFooter.tsx with unsupported tokens', () => {
   beforeEach(() => {
@@ -52,7 +52,7 @@ describe('UnsupportedCurrencyFooter.tsx with unsupported tokens', () => {
       unsupportedTokenExplorerLink,
     )
     await userEvent.click(screen.getByTestId('close-icon'))
-    await waitForElementToBeRemoved(rendered.queryByTestId('unsupported-token-card'))
+    expect(rendered.queryByTestId('unsupported-token-card')).not.toBeInTheDocument()
     expect(rendered.queryByText('Unsupported Assets')).toBeNull()
     expect(rendered.queryByTestId('unsupported-token-card')).toBeNull()
     expect(
@@ -62,6 +62,10 @@ describe('UnsupportedCurrencyFooter.tsx with unsupported tokens', () => {
 })
 
 describe('UnsupportedCurrencyFooter.tsx with no unsupported tokens', () => {
+  beforeEach(() => {
+    mocked(getExplorerLink).mockReturnValue(unsupportedTokenExplorerLink)
+  })
+
   it('works as expected when no unsupported tokens exist', async () => {
     mocked(useCurrencyInfo).mockReturnValue({
       currencyId: unsupportedTokenAddress,
@@ -73,14 +77,21 @@ describe('UnsupportedCurrencyFooter.tsx with no unsupported tokens', () => {
       },
     })
     const rendered = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
+
     await userEvent.click(screen.getByTestId(TestID.ReadMoreButton))
+
+    // Wait for the modal to open and content to appear
+    await screen.findByText('Unsupported assets')
     expect(screen.getByText('Unsupported assets')).toBeInTheDocument()
     expect(
       screen.getByText((content) => content.startsWith('Some assets are not available through this interface')),
     ).toBeInTheDocument()
     expect(rendered.queryByTestId('unsupported-token-card')).toBeNull()
     await userEvent.click(screen.getByTestId('close-icon'))
-    await waitForElementToBeRemoved(screen.getByText('Unsupported assets'))
+
+    // Wait for the modal to close by checking that the elements are no longer present
+    await new Promise((resolve) => setTimeout(resolve, 100))
+
     expect(rendered.queryByText('Unsupported assets')).toBeNull()
     expect(
       rendered.queryByText((content) => content.startsWith('Some assets are not available through this interface')),

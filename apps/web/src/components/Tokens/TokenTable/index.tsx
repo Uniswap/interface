@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { SparklineMap } from 'appGraphql/data/types'
 import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'appGraphql/data/util'
 import SparklineChart from 'components/Charts/SparklineChart'
@@ -38,6 +38,8 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { getChainIdFromChainUrlParam } from 'utils/chainParams'
@@ -67,7 +69,7 @@ function TokenDescription({ token }: { token: TokenStat }) {
       <View pr="$spacing4">
         <QueryTokenLogo token={token} size={24} />
       </View>
-      <EllipsisText data-testid="token-name">{token.name ?? token.project?.name}</EllipsisText>
+      <EllipsisText data-testid={TestID.TokenName}>{token.name ?? token.project?.name}</EllipsisText>
       <TableText $platform-web={{ minWidth: 'fit-content' }} $lg={{ display: 'none' }} color="$neutral2">
         {token.symbol}
       </TableText>
@@ -125,7 +127,7 @@ function TokenTableHeader({
     <Flex width="100%">
       <MouseoverTooltip
         disabled={!HEADER_DESCRIPTIONS[category]}
-        size={TooltipSize.Max}
+        size={TooltipSize.Small}
         text={HEADER_DESCRIPTIONS[category]}
         placement="top"
       >
@@ -179,7 +181,7 @@ function TokenTable({
           index: tokenSortIndex,
           tokenDescription: <TokenDescription token={unwrappedToken} />,
           price: giveExploreStatDefaultValue(token.price?.value),
-          testId: `token-table-row-${unwrappedToken.address}`,
+          testId: `${TestID.TokenTableRowPrefix}${unwrappedToken.address}`,
           percentChange1hr: (
             <Flex row gap="$gap4" alignItems="center">
               <DeltaArrow delta={delta1hr} formattedDelta={formatPercent(delta1hrAbs)} />
@@ -208,7 +210,7 @@ function TokenTable({
             chain: toGraphQLChain(chainId ?? defaultChainId),
           }),
           analytics: {
-            elementName: InterfaceElementName.TOKENS_TABLE_ROW,
+            elementName: ElementName.TokensTableRow,
             properties: {
               chain_id: chainId,
               token_address: token.address,
@@ -261,7 +263,7 @@ function TokenTable({
           </HeaderCell>
         ),
         cell: (tokenDescription) => (
-          <Cell justifyContent="flex-start" loading={showLoadingSkeleton} testId="name-cell">
+          <Cell justifyContent="flex-start" loading={showLoadingSkeleton} testId={TestID.NameCell}>
             <TableText>{tokenDescription.getValue?.()}</TableText>
           </Cell>
         ),
@@ -279,7 +281,7 @@ function TokenTable({
           </HeaderCell>
         ),
         cell: (price) => (
-          <Cell loading={showLoadingSkeleton} testId="price-cell" justifyContent="flex-end">
+          <Cell loading={showLoadingSkeleton} testId={TestID.PriceCell} justifyContent="flex-end">
             <TableText>
               {/* A simple 0 price indicates the price is not currently available from the api */}
               {price.getValue?.() === 0
@@ -338,7 +340,7 @@ function TokenTable({
           </HeaderCell>
         ),
         cell: (fdv) => (
-          <Cell loading={showLoadingSkeleton} justifyContent="flex-end" testId="fdv-cell">
+          <Cell loading={showLoadingSkeleton} justifyContent="flex-end" testId={TestID.FdvCell}>
             <EllipsisText>{convertFiatAmountFormatted(fdv.getValue?.(), NumberType.FiatTokenStats)}</EllipsisText>
           </Cell>
         ),
@@ -356,7 +358,7 @@ function TokenTable({
           </HeaderCell>
         ),
         cell: (volume) => (
-          <Cell loading={showLoadingSkeleton} grow testId="volume-cell">
+          <Cell loading={showLoadingSkeleton} grow testId={TestID.VolumeCell}>
             <EllipsisText>{convertFiatAmountFormatted(volume.getValue?.(), NumberType.FiatTokenStats)}</EllipsisText>
           </Cell>
         ),

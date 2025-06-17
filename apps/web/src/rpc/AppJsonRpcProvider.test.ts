@@ -1,26 +1,27 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import * as matchers from 'jest-extended'
 import AppJsonRpcProvider from 'rpc/AppJsonRpcProvider'
+import type { Mocked } from 'vitest'
 
 expect.extend(matchers)
 
-jest.mock('@ethersproject/providers')
+vi.mock('@ethersproject/providers')
 
 describe('AppJsonRpcProvider', () => {
   let mockProviders: JsonRpcProvider[]
-  let mockProvider1: jest.Mocked<JsonRpcProvider>
-  let mockProvider2: jest.Mocked<JsonRpcProvider>
+  let mockProvider1: Mocked<JsonRpcProvider>
+  let mockProvider2: Mocked<JsonRpcProvider>
 
   beforeEach(() => {
-    mockProvider1 = jest.mocked(new JsonRpcProvider())
-    mockProvider2 = jest.mocked(new JsonRpcProvider())
+    mockProvider1 = vi.mocked(new JsonRpcProvider())
+    mockProvider2 = vi.mocked(new JsonRpcProvider())
     mockProviders = [mockProvider1, mockProvider2]
     mockProviders.forEach((mockProvider) => {
       // Mocked modules are referentially equal, so we disambiguate the methods under test.
-      mockProvider.perform = jest.fn()
+      mockProvider.perform = vi.fn()
     })
 
-    jest.spyOn(console, 'warn').mockImplementation()
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
   })
 
   it('constructor initializes with valid providers', () => {
@@ -42,7 +43,7 @@ describe('AppJsonRpcProvider', () => {
     const provider = new AppJsonRpcProvider(mockProviders)
     mockProvider1.perform.mockRejectedValue(new Error('Failed'))
     await provider.perform('call', { transaction: {} })
-    expect(mockProvider2.perform).toHaveBeenCalledAfter(mockProvider1.perform)
+    expect(mockProvider2.perform).toHaveBeenCalledAfter(mockProvider1.perform as any)
   })
 
   it('should resume trying all providers in order after all have failed', async () => {
@@ -51,9 +52,9 @@ describe('AppJsonRpcProvider', () => {
     mockProvider2.perform.mockRejectedValueOnce(new Error('Failed'))
     await expect(provider.perform('call', { transaction: {} })).toReject()
 
-    mockProviders.forEach((mockProvider) => jest.mocked(mockProvider.perform).mockClear())
+    mockProviders.forEach((mockProvider) => vi.mocked(mockProvider.perform).mockClear())
     await provider.perform('call', { transaction: {} })
-    expect(mockProvider2.perform).toHaveBeenCalledAfter(mockProvider1.perform)
+    expect(mockProvider2.perform).toHaveBeenCalledAfter(mockProvider1.perform as any)
   })
 
   it('should try the second provider first if the first provider has recently failed', async () => {
@@ -61,36 +62,36 @@ describe('AppJsonRpcProvider', () => {
     mockProvider1.perform.mockRejectedValue(new Error('Failed'))
     await provider.perform('call', { transaction: {} })
 
-    mockProviders.forEach((mockProvider) => jest.mocked(mockProvider.perform).mockClear())
+    mockProviders.forEach((mockProvider) => vi.mocked(mockProvider.perform).mockClear())
     await provider.perform('call', { transaction: {} })
     expect(mockProvider1.perform).not.toHaveBeenCalled()
     expect(mockProvider2.perform).toHaveBeenCalled()
   })
 
   describe('exponential backoff', () => {
-    beforeAll(() => jest.useFakeTimers())
-    afterAll(() => jest.useRealTimers())
+    beforeAll(() => vi.useFakeTimers())
+    afterAll(() => vi.useRealTimers())
 
     it('should retry the first provider after exponential backoff', async () => {
       const provider = new AppJsonRpcProvider(mockProviders, { minimumBackoffTime: 1 })
       mockProvider1.perform.mockRejectedValue(new Error('Failed'))
       await provider.perform('call', { transaction: {} })
-      expect(mockProvider2.perform).toHaveBeenCalledAfter(mockProvider1.perform)
+      expect(mockProvider2.perform).toHaveBeenCalledAfter(mockProvider1.perform as any)
 
       for (let backoffTime = 1; backoffTime < 10; backoffTime *= 2) {
         for (let i = 0; i < backoffTime; i++) {
           // Ensure that mockProvider1 remains disabled for all of backoffTime.
-          mockProviders.forEach((mockProvider) => jest.mocked(mockProvider.perform).mockClear())
+          mockProviders.forEach((mockProvider) => vi.mocked(mockProvider.perform).mockClear())
           await provider.perform('call', { transaction: {} })
           expect(mockProvider1.perform).not.toHaveBeenCalled()
           expect(mockProvider2.perform).toHaveBeenCalled()
-          jest.advanceTimersByTime(1)
+          vi.advanceTimersByTime(1)
         }
 
         // Ensure that after backoffTime, mockProvider1 is no longer disabled.
-        mockProviders.forEach((mockProvider) => jest.mocked(mockProvider.perform).mockClear())
+        mockProviders.forEach((mockProvider) => vi.mocked(mockProvider.perform).mockClear())
         await provider.perform('call', { transaction: {} })
-        expect(mockProvider2.perform).toHaveBeenCalledAfter(mockProvider1.perform)
+        expect(mockProvider2.perform).toHaveBeenCalledAfter(mockProvider1.perform as any)
       }
     })
   })

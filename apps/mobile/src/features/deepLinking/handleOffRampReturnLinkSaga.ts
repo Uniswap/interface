@@ -39,13 +39,12 @@ function* _handleOffRampReturnLink(url: URL) {
   let offRampTransferDetails: OffRampTransferDetailsResponse | undefined
 
   try {
-    offRampTransferDetails = yield* call(
-      fetchOffRampTransferDetails,
-      externalTransactionId,
-      currencyCode,
-      Number(currencyAmount),
-      walletAddress,
-    )
+    offRampTransferDetails = yield* call(fetchOffRampTransferDetails, {
+      sessionId: externalTransactionId,
+      baseCurrencyCode: currencyCode,
+      baseCurrencyAmount: Number(currencyAmount),
+      depositWalletAddress: walletAddress,
+    })
   } catch (error) {
     logger.error(error, {
       tags: { file: 'handleOffRampReturnLinkSaga', function: 'handleOffRampReturnLink' },
@@ -55,7 +54,6 @@ function* _handleOffRampReturnLink(url: URL) {
   }
 
   if (
-    !offRampTransferDetails ||
     !offRampTransferDetails.tokenAddress ||
     !offRampTransferDetails.baseCurrencyCode ||
     !offRampTransferDetails.depositWalletAddress ||

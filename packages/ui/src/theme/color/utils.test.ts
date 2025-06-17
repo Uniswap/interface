@@ -39,7 +39,7 @@ describe(opacifyRaw, () => {
     ${110.99}    | ${'#aaaaaa'}                  | ${'Error: provided opacity 110.99 should be between 0 and 100'}
     ${-10}       | ${'#123456'}                  | ${'Error: provided opacity -10 should be between 0 and 100'}
     ${-10.11}    | ${'#123456'}                  | ${'Error: provided opacity -10.11 should be between 0 and 100'}
-    ${undefined} | ${'123456'}                   | ${'Error: provided opacity undefined should be between 0 and 100'}
+    ${undefined} | ${'123456'}                   | ${'Error: provided color 123456 is neither a hex nor an rgb color'}
     ${50}        | ${undefined}                  | ${"TypeError: Cannot read properties of undefined (reading 'startsWith')"}
     ${50}        | ${'123456'}                   | ${'Error: provided color 123456 is neither a hex nor an rgb color'}
     ${50}        | ${'#12'}                      | ${'Error: provided color #12 was not in hexadecimal format (e.g. #000000)'}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
@@ -80,11 +81,13 @@ export default createReducer(initialState, (builder) =>
       }
     })
     .addCase(addList, (state, { payload: url }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!state.byUrl[url]) {
         state.byUrl[url] = NEW_LIST_STATE
       }
     })
     .addCase(removeList, (state, { payload: url }) => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (state.byUrl[url]) {
         delete state.byUrl[url]
       }
@@ -103,7 +106,7 @@ export default createReducer(initialState, (builder) =>
       // state loaded from localStorage, but new lists have never been initialized
       if (!state.lastInitializedDefaultListOfLists) {
         state.byUrl = initialState.byUrl
-      } else if (state.lastInitializedDefaultListOfLists) {
+      } else {
         const lastInitializedSet = state.lastInitializedDefaultListOfLists.reduce<Set<string>>(
           (s, l) => s.add(l),
           new Set(),

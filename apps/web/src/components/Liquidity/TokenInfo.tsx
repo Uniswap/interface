@@ -13,8 +13,8 @@ export function TokenInfo({
   currencyUSDAmount,
   isMigrating = false,
 }: {
-  currencyAmount?: CurrencyAmount<Currency>
-  currencyUSDAmount?: CurrencyAmount<Currency>
+  currencyAmount: Maybe<CurrencyAmount<Currency>>
+  currencyUSDAmount: Maybe<CurrencyAmount<Currency>>
   isMigrating?: boolean
 }) {
   const { formatCurrencyAmount } = useLocalizationContext()

@@ -1,34 +1,40 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
+import { logger } from 'utilities/src/logger/logger'
 import { isExtension } from 'utilities/src/platform'
-import { useAsyncData } from 'utilities/src/react/hooks'
 
 export function useIsChromeWindowFocused(): boolean {
   const [isFocused, setIsFocused] = useState(true)
 
-  useAsyncData(
-    useCallback(async () => {
-      if (!isExtension) {
-        // This hook is ignored and always returns `true` when not in the Extension.
-        return undefined
-      }
+  useEffect(() => {
+    if (!isExtension) {
+      return undefined
+    }
 
-      const onFocusChangedListener = async (): Promise<void> => {
-        const { focused } = await chrome.windows.getCurrent()
-        setIsFocused(focused)
-      }
+    const chrome = getChromeWithThrow()
 
-      // We run this on first render to get the initial state.
-      await onFocusChangedListener()
+    const onFocusChangedListener = async (): Promise<void> => {
+      const { focused } = await chrome.windows.getCurrent()
+      setIsFocused(focused)
+    }
 
-      const chrome = getChromeWithThrow()
-      chrome.windows.onFocusChanged.addListener(onFocusChangedListener)
+    // Get initial state
+    onFocusChangedListener().catch((error) => {
+      logger.error(error, {
+        tags: {
+          file: 'useIsChromeWindowFocused.ts',
+          function: 'useIsChromeWindowFocused',
+        },
+      })
+    })
 
-      return () => {
-        chrome.windows.onFocusChanged.removeListener(onFocusChangedListener)
-      }
-    }, []),
-  )
+    chrome.windows.onFocusChanged.addListener(onFocusChangedListener)
+
+    // Remove listener when component unmounts
+    return () => {
+      chrome.windows.onFocusChanged.removeListener(onFocusChangedListener)
+    }
+  }, [])
 
   return isFocused
 }

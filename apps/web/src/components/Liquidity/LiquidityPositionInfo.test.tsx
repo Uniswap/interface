@@ -4,7 +4,7 @@ import { PositionInfo } from 'components/Liquidity/types'
 import { TEST_TOKEN_1, TEST_TOKEN_2, toCurrencyAmount } from 'test-utils/constants'
 import { render } from 'test-utils/render'
 
-jest.mock('components/Liquidity/utils')
+vi.mock('components/Liquidity/utils')
 
 describe('LiquidityPositionInfo', () => {
   it('should render in range', () => {

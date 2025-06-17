@@ -73,7 +73,7 @@ export function UniversalImage({
   // Show a loader while the URI is populating or size is calculating when there's no fallback
   if (!uri || (!sizeKnown && !errored)) {
     if (style?.loadingContainer) {
-      return <Flex style={style?.loadingContainer}>{LOADING_FALLBACK}</Flex>
+      return <Flex style={style.loadingContainer}>{LOADING_FALLBACK}</Flex>
     }
     return LOADING_FALLBACK
   }

@@ -22,7 +22,7 @@ export function UnknownSummaryItem({
       return transaction.typeInfo.dappInfo.name
     }
 
-    if (transaction.typeInfo.tokenAddress && getValidAddress(transaction.typeInfo.tokenAddress)) {
+    if (transaction.typeInfo.tokenAddress && getValidAddress({ address: transaction.typeInfo.tokenAddress })) {
       return shortenAddress(transaction.typeInfo.tokenAddress)
     }
 

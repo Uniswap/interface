@@ -39,7 +39,7 @@ export function useAdaptiveFooter(contentContainerStyle?: StyleProp<ViewStyle>):
       // footerHeight = maxContentHeight - <real content height> - TAB_BAR_HEIGHT - paddingBottom
       //              = maxContentHeight - (contentHeight - paddingTop - paddingBottom - footerHeight) - TAB_BAR_HEIGHT - paddingBottom
       //              = maxContentHeight + paddingTop + footerHeight - (contentHeight + TAB_BAR_HEIGHT)
-      const paddingTopProp = (contentContainerStyle as ViewStyle)?.paddingTop
+      const paddingTopProp = (contentContainerStyle as ViewStyle).paddingTop
       const paddingTop = typeof paddingTopProp === 'number' ? paddingTopProp : 0
       const calculatedFooterHeight =
         maxContentHeight + paddingTop + footerHeight.value - (contentHeight + TAB_BAR_HEIGHT)

@@ -35,13 +35,19 @@ function getBalanceSlotKey(user: Address, mappingSlot: number): `0x${string}` {
  * @param newBalance Desired balance in wei (BigInt)
  * @param mappingSlot The storage slot number where `_balances` mapping is located.
  */
-async function setErc20BalanceViaStorage(
-  client: typeof anvilClient,
-  erc20Address: Address,
-  user: Address,
-  newBalance: bigint,
-  mappingSlot: number = 0,
-) {
+async function setErc20BalanceViaStorage({
+  client,
+  erc20Address,
+  user,
+  newBalance,
+  mappingSlot = 0,
+}: {
+  client: typeof anvilClient
+  erc20Address: Address
+  user: Address
+  newBalance: bigint
+  mappingSlot: number
+}) {
   // 1. Compute the correct storage key for user's balance
   const balanceSlotKey = getBalanceSlotKey(user, mappingSlot)
 
@@ -64,17 +70,22 @@ async function setErc20BalanceViaStorage(
 /**
  * Try setting the ERC20 balance using multiple common storage slots
  */
-export async function setErc20BalanceWithMultipleSlots(
-  client: typeof anvilClient,
-  erc20Address: Address,
-  user: Address,
-  newBalance: bigint,
-) {
+export async function setErc20BalanceWithMultipleSlots({
+  client,
+  erc20Address,
+  user,
+  newBalance,
+}: {
+  client: typeof anvilClient
+  erc20Address: Address
+  user: Address
+  newBalance: bigint
+}) {
   // Try common slots used by different ERC20 implementations
   const commonSlots = [0, 1, 2, 3, 9]
 
   for (const slot of commonSlots) {
-    await setErc20BalanceViaStorage(client, erc20Address, user, newBalance, slot)
+    await setErc20BalanceViaStorage({ client, erc20Address, user, newBalance, mappingSlot: slot })
 
     // You could add a verification step here to check if it worked
     // For example, call the balanceOf function and see if it returns the expected value

@@ -1,10 +1,7 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { MenuItem } from 'components/SearchModal/styled'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { useAccount } from 'hooks/useAccount'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { CSSProperties } from 'react'
 import { TokenFromList } from 'state/lists/tokenFromList'
@@ -15,7 +12,7 @@ import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -35,6 +32,7 @@ const TextOverflowStyle = {
 const StyledBalanceText = styled(Text, {
   ...TextOverflowStyle,
   maxWidth: '80px',
+  textAlign: 'right',
 })
 
 const CurrencyName = styled(Text, TextOverflowStyle)
@@ -53,26 +51,13 @@ const Tag = styled(Text, {
   mr: '$spacing4',
 })
 
-function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
-  const { formatNumberOrString } = useLocalizationContext()
-
-  return (
-    <StyledBalanceText>
-      {formatNumberOrString({
-        value: balance.toExact(),
-        type: NumberType.TokenNonTx,
-      })}
-    </StyledBalanceText>
-  )
-}
-
 function TokenTags({ currency }: { currency: Currency }) {
   if (!(currency instanceof TokenFromList)) {
     return null
   }
 
   const tags = currency.tags
-  if (!tags || tags.length === 0) {
+  if (tags.length === 0) {
     return <span />
   }
 
@@ -109,6 +94,7 @@ export function CurrencyRow({
   otherSelected,
   style,
   showCurrencyAmount,
+  showUsdValue,
   eventProperties,
   balance,
   disabled,
@@ -121,14 +107,15 @@ export function CurrencyRow({
   otherSelected: boolean
   style?: CSSProperties
   showCurrencyAmount?: boolean
+  showUsdValue?: boolean
   eventProperties: Record<string, unknown>
   balance?: CurrencyAmount<Currency>
   disabled?: boolean
   tooltip?: string
   showAddress?: boolean
 }) {
-  const account = useAccount()
   const { currency } = currencyInfo
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const key = currencyListRowKey(currency)
 
   const { tokenWarningDismissed: customAdded } = useDismissedTokenWarnings(currency)
@@ -137,7 +124,9 @@ export function CurrencyRow({
   const blockedTokenOpacity = '0.6'
 
   const { balanceMap } = useTokenBalances({ cacheOnly: true })
-  const balanceUSD = balanceMap[currencyKey(currency)]?.usdValue
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const { usdValue, balance: cachedBalance } = balanceMap[currencyKey(currency)] ?? {}
+  const tokenBalance = balance ? balance.toExact() : cachedBalance
 
   const Wrapper = tooltip ? MouseoverTooltip : RowWrapper
 
@@ -147,8 +136,8 @@ export function CurrencyRow({
       logPress
       logKeyPress
       eventOnTrigger={UniswapEventName.TokenSelected}
-      properties={{ is_imported_by_user: customAdded, ...eventProperties, token_balance_usd: balanceUSD }}
-      element={InterfaceElementName.TOKEN_SELECTOR_ROW}
+      properties={{ is_imported_by_user: customAdded, ...eventProperties, token_balance_usd: usdValue }}
+      element={ElementName.TokenSelectorRow}
     >
       <Wrapper
         style={style}
@@ -187,11 +176,21 @@ export function CurrencyRow({
               <TokenTags currency={currency} />
             </Flex>
           </Flex>
-          {showCurrencyAmount && (
-            <Flex row alignSelf="center" justifyContent="flex-end">
-              {account.isConnected ? balance ? <Balance balance={balance} /> : <Loader /> : null}
-            </Flex>
-          )}
+          <Flex alignSelf="center" justifyContent="flex-end">
+            {showUsdValue && usdValue ? (
+              <StyledBalanceText variant="body4" color="$neutral1">
+                {convertFiatAmountFormatted(usdValue, NumberType.FiatStandard)}
+              </StyledBalanceText>
+            ) : null}
+            {showCurrencyAmount && tokenBalance ? (
+              <StyledBalanceText variant="body4" color="$neutral2">
+                {formatNumberOrString({
+                  value: tokenBalance,
+                  type: NumberType.TokenNonTx,
+                })}
+              </StyledBalanceText>
+            ) : null}
+          </Flex>
         </MenuItem>
       </Wrapper>
     </Trace>

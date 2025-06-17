@@ -93,23 +93,23 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
   const nftDataItems = formatNftItems(data)
 
   const onListEndReached = useCallback(async () => {
-    if (!data?.nftBalances?.pageInfo?.hasNextPage) {
+    if (!data?.nftBalances?.pageInfo.hasNextPage) {
       return
     }
 
     await fetchMore({
       variables: {
         first: NUM_FIRST_NFTS,
-        after: data?.nftBalances?.pageInfo?.endCursor,
+        after: data.nftBalances.pageInfo.endCursor,
       },
     })
-  }, [data?.nftBalances?.pageInfo?.endCursor, data?.nftBalances?.pageInfo?.hasNextPage, fetchMore])
+  }, [data?.nftBalances?.pageInfo.endCursor, data?.nftBalances?.pageInfo.hasNextPage, fetchMore])
 
-  const { nfts, numHidden, numShown } = useGroupNftsByVisibility(
+  const { nfts, numHidden, numShown } = useGroupNftsByVisibility({
     nftDataItems,
-    hiddenNftsExpanded,
-    !data?.nftBalances?.pageInfo?.hasNextPage,
-  )
+    showHidden: hiddenNftsExpanded,
+    allPagesFetched: !data?.nftBalances?.pageInfo.hasNextPage,
+  })
 
   const shouldAddInLoadingItem = networkStatus === NetworkStatus.fetchMore && numShown % 2 === 1
 

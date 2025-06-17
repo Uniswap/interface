@@ -58,7 +58,11 @@ export default function MigrateV2SettingsTab({
   const isOpenMobile = isOpen && isMobile
   const isOpenDesktop = isOpen && !isMobile
 
-  useOnClickOutside(menuNode, isOpenDesktop ? closeMenu : undefined, [toggleButtonNode])
+  useOnClickOutside({
+    node: menuNode,
+    handler: isOpenDesktop ? closeMenu : undefined,
+    ignoredNodes: [toggleButtonNode],
+  })
   useDisableScrolling(isOpen)
 
   const isChainSupported = useIsSupportedChainId(chainId)

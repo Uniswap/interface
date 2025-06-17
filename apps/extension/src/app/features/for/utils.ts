@@ -5,12 +5,12 @@ import { focusOrCreateUniswapInterfaceTab } from 'src/app/navigation/utils'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
 
-export function useInterfaceBuyNavigator(element?: ElementNameType): () => void {
+export function useInterfaceBuyNavigator(element?: ElementName): () => void {
   const { dappUrl } = useDappContext()
   const dappChain = useDappLastChainId(dappUrl)
 

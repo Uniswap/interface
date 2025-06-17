@@ -236,7 +236,6 @@ enum Currency {
   PKR
   RUB
   SGD
-  THB
   TRY
   UAH
   USD

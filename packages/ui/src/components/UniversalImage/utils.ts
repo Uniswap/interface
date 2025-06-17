@@ -1,6 +1,7 @@
-import { useCallback, useRef } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useCallback } from 'react'
 import { logger } from 'utilities/src/logger/logger'
-import { useAsyncData } from 'utilities/src/react/hooks'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 const VIEWBOX_REGEX = /viewBox=["']\d+ \d+ (\d+) (\d+)["']/
 const FALLBACK_ASPECT_RATIO = 1
@@ -11,7 +12,15 @@ export type SvgData = {
   aspectRatio: number
 }
 
-export async function fetchSVG(uri: string, autoplay: boolean, signal?: AbortSignal): Promise<SvgData> {
+export async function fetchSVG({
+  uri,
+  autoplay,
+  signal,
+}: {
+  uri: string
+  autoplay: boolean
+  signal?: AbortSignal
+}): Promise<SvgData> {
   const res = await fetch(uri, { signal })
   const text = await res.text()
 
@@ -44,20 +53,22 @@ function freezeSvgAnimations(svg: string): string {
 }
 
 export function useSvgData(uri: string, autoplay = false): SvgData | undefined {
-  const controllerRef = useRef(new AbortController())
+  const fetchSvgData = useCallback(
+    async (signal?: AbortSignal): Promise<SvgData | undefined> => {
+      try {
+        return await fetchSVG({ uri, autoplay, signal })
+      } catch (error) {
+        logger.error(error, { tags: { file: 'WebSvgUri', function: 'fetchSvg' }, extra: { uri } })
+        return undefined
+      }
+    },
+    [autoplay, uri],
+  )
 
-  const fetchSvgData = useCallback(async (): Promise<SvgData | undefined> => {
-    try {
-      return await fetchSVG(uri, autoplay, controllerRef.current.signal)
-    } catch (error) {
-      logger.error(error, { tags: { file: 'WebSvgUri', function: 'fetchSvg' }, extra: { uri } })
-      return undefined
-    }
-  }, [autoplay, uri])
+  const { data } = useQuery({
+    queryKey: [ReactQueryCacheKey.RemoteSvg, uri],
+    queryFn: ({ signal }) => fetchSvgData(signal),
+  })
 
-  return useAsyncData(fetchSvgData, () => {
-    controllerRef.current.abort()
-    // Create a new AbortController for the next request
-    controllerRef.current = new AbortController()
-  }).data
+  return data
 }

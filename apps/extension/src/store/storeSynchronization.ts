@@ -17,7 +17,6 @@ import { PersistedStorage } from 'wallet/src/utils/persistedStorage'
 
 const PRIMARY_APP_INSTANCE_ID_KEY = 'primaryAppInstanceId'
 
-const isInitialized = false
 let isPrimaryAppInstance = false
 const terminate: (() => Promise<void>) | null = null
 
@@ -34,17 +33,6 @@ export enum ExtensionAppLocation {
 }
 
 function initPrimaryInstanceHandler(appLocation: ExtensionAppLocation): void {
-  if (isInitialized) {
-    // This is just to prevent bugs being introduced in the future.
-    logger.error(new Error('`initPrimaryInstanceHandler` called when already initialized'), {
-      tags: {
-        file: 'storeSynchronization.ts',
-        function: 'initPrimaryInstanceHandler',
-      },
-    })
-    return
-  }
-
   initializeReduxStore()
 
   const onStorageChangedListener: Parameters<typeof chrome.storage.onChanged.addListener>[0] = async (

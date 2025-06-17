@@ -7,11 +7,15 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sortPortfolioBalances, useTokenBalancesGroupedByVisibility } from 'uniswap/src/features/dataApi/balances'
 
-export function usePortfolioTokenOptions(
-  address: Address | undefined,
-  chainFilter: UniverseChainId | null,
-  searchFilter?: string,
-): GqlResult<TokenOption[] | undefined> {
+export function usePortfolioTokenOptions({
+  address,
+  chainFilter,
+  searchFilter,
+}: {
+  address: Address | undefined
+  chainFilter: UniverseChainId | null
+  searchFilter?: string
+}): GqlResult<TokenOption[] | undefined> {
   const { data: portfolioBalancesById, error, refetch, loading } = usePortfolioBalancesForAddressById(address)
   const { isTestnetModeEnabled } = useEnabledChains()
 
@@ -31,7 +35,7 @@ export function usePortfolioTokenOptions(
   )
 
   const filteredPortfolioBalances = useMemo(
-    () => portfolioBalances && filter(portfolioBalances, chainFilter, searchFilter),
+    () => portfolioBalances && filter({ tokenOptions: portfolioBalances, chainFilter, searchFilter }),
     [chainFilter, portfolioBalances, searchFilter],
   )
 

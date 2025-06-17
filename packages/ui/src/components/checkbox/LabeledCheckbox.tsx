@@ -1,10 +1,12 @@
-import { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native'
+import { useMemo } from 'react'
+import { StyleProp, ViewStyle } from 'react-native'
 import { ColorTokens, SpaceTokens } from 'tamagui'
 import { Checkbox, CheckboxSizeTokens } from 'ui/src/components/checkbox/Checkbox'
 import { Flex, FlexProps } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text'
 import { TouchableArea } from 'ui/src/components/touchable'
 import { SporeComponentVariant } from 'ui/src/components/types'
+import { useEvent } from 'utilities/src/react/hooks'
 
 export type LabeledCheckboxProps = {
   size?: CheckboxSizeTokens
@@ -34,32 +36,32 @@ export function LabeledCheckbox({
   containerStyle,
   onCheckPressed,
 }: LabeledCheckboxProps): JSX.Element {
-  const onPress = (e: GestureResponderEvent): void => {
-    // Prevent event from bubbling up to parent
-    e.preventDefault()
-    e.stopPropagation()
+  const onPress = useEvent((): void => {
     onCheckPressed?.(checked)
-  }
+  })
 
-  const textElement =
-    typeof text === 'string' ? (
-      <Text $short={{ variant: 'buttonLabel4' }} variant="subheading2">
-        {text}
-      </Text>
-    ) : (
-      text
-    )
+  const textElement = useMemo(
+    () =>
+      typeof text === 'string' ? (
+        <Text $short={{ variant: 'buttonLabel4' }} variant="subheading2">
+          {text}
+        </Text>
+      ) : (
+        text
+      ),
+    [text],
+  )
 
   return (
     <TouchableArea hoverable={!!hoverStyle} hoverStyle={hoverStyle} style={containerStyle} onPress={onPress}>
       <Flex row alignItems="center" gap={gap} px={px} py={py}>
-        {checkboxPosition === 'start' && <Checkbox checked={checked} size={size} variant={variant} onPress={onPress} />}
+        {checkboxPosition === 'start' && <Checkbox checked={checked} size={size} variant={variant} />}
         {text && (
           <Flex grow shrink>
             {textElement}
           </Flex>
         )}
-        {checkboxPosition === 'end' && <Checkbox checked={checked} size={size} variant={variant} onPress={onPress} />}
+        {checkboxPosition === 'end' && <Checkbox checked={checked} size={size} variant={variant} />}
       </Flex>
     </TouchableArea>
   )

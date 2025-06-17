@@ -16,7 +16,7 @@ export function ImageUri({
   imageDimensions,
   ...rest
 }: ImageUriProps): JSX.Element | null {
-  const inputImageAspectRatio = imageDimensions ? imageDimensions?.width / imageDimensions?.height : 1
+  const inputImageAspectRatio = imageDimensions ? imageDimensions.width / imageDimensions.height : 1
   const [isError, setIsError] = useState(false)
 
   const isLoaded = useSharedValue(false)

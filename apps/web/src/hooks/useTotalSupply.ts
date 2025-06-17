@@ -12,7 +12,7 @@ export function useTotalSupply(token?: Currency): CurrencyAmount<Token> | undefi
   const { data } = useReadContract({ address, chainId: token?.chainId, abi: erc20Abi, functionName: 'totalSupply' })
 
   return useMemo(
-    () => (token?.isToken && data ? CurrencyAmount.fromRawAmount(token, data?.toString()) : undefined),
+    () => (token?.isToken && data ? CurrencyAmount.fromRawAmount(token, data.toString()) : undefined),
     [token, data],
   )
 }

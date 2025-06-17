@@ -22,7 +22,15 @@ export enum AddressStringFormat {
  * @param log If logging is enabled in case of errors
  * @returns The normalized address or false if the address is invalid
  */
-export function getValidAddress(address: Maybe<string>, withChecksum = false, log = true): Nullable<string> {
+export function getValidAddress({
+  address,
+  withChecksum = false,
+  log = true,
+}: {
+  address: Maybe<string>
+  withChecksum?: boolean
+  log?: boolean
+}): Nullable<string> {
   try {
     if (!address) {
       return null
@@ -41,8 +49,8 @@ export function getValidAddress(address: Maybe<string>, withChecksum = false, lo
 
     return normalizeAddress(addressWith0x, AddressStringFormat.Lowercase)
   } catch (error) {
-    if (log) {
-      logger.warn('utils/addresses', 'getValidAddress', (error as Error)?.message, {
+    if (log && error !== undefined) {
+      logger.warn('utils/addresses', 'getValidAddress', (error as Error).message, {
         data: address,
         stacktrace: new Error().stack,
       })
@@ -86,8 +94,8 @@ export function sanitizeAddressText(address?: string): Maybe<string> {
 }
 
 export function areAddressesEqual(a1: Maybe<Address>, a2: Maybe<Address>): boolean {
-  const validA1 = getValidAddress(a1)
-  const validA2 = getValidAddress(a2)
+  const validA1 = getValidAddress({ address: a1 })
+  const validA2 = getValidAddress({ address: a2 })
   return validA1 !== null && validA2 !== null && validA1 === validA2
 }
 

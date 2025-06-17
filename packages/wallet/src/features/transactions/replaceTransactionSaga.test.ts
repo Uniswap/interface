@@ -53,7 +53,11 @@ describe(executeTransaction, () => {
   it('Replaces valid transaction successfully', () => {
     MockDate.set(present.valueOf())
 
-    return expectSaga(attemptReplaceTransaction, transaction, transaction.options.request, false)
+    return expectSaga(attemptReplaceTransaction, {
+      transaction,
+      newTxRequest: transaction.options.request,
+      isCancellation: false,
+    })
       .withState({
         transactions: {
           [ACCOUNT.address]: {
@@ -172,7 +176,11 @@ describe(executeTransaction, () => {
       maxFeePerGas: mockPopulatedRequest.maxFeePerGas?.toString(),
     }
 
-    return expectSaga(attemptReplaceTransaction, transactionToCancel, transactionToCancel.options.request, true)
+    return expectSaga(attemptReplaceTransaction, {
+      transaction: transactionToCancel,
+      newTxRequest: transactionToCancel.options.request,
+      isCancellation: true,
+    })
       .withState({
         transactions: {
           [ACCOUNT.address]: {

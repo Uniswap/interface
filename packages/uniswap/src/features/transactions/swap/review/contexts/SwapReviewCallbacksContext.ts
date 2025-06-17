@@ -13,6 +13,7 @@ export const SwapReviewCallbacksContext = createContext<SwapReviewCallbacks>(nul
 
 export const useSwapReviewCallbacks = (): SwapReviewCallbacks => {
   const context = useContext(SwapReviewCallbacksContext)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!context) {
     throw new Error('useSwapReviewCallbacks must be used within a SwapReviewCallbacksContext')
   }

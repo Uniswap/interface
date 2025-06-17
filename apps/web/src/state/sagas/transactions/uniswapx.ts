@@ -1,4 +1,3 @@
-import { SwapEventName } from '@uniswap/analytics-events'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
@@ -15,7 +14,7 @@ import { UniswapXOrderStatus } from 'types/uniswapx'
 import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/errors'
@@ -32,7 +31,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   const { quote, routing } = trade.quote
   const orderHash = quote.orderId
   const chainId = trade.inputAmount.currency.chainId
-  const signatureDetails = getUniswapXSignatureInfo(step, trade, chainId, routing)
+  const signatureDetails = getUniswapXSignatureInfo({ step, trade, chainId, routing })
 
   const analyticsParams: Parameters<typeof formatSwapSignedAnalyticsEventProperties>[0] = {
     trade,
@@ -47,7 +46,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   }
 
   sendAnalyticsEvent(
-    InterfaceEventNameLocal.UniswapXSignatureRequested,
+    InterfaceEventName.UniswapXSignatureRequested,
     formatSwapSignedAnalyticsEventProperties(analyticsParams),
   )
 
@@ -59,7 +58,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
 
   addTransactionBreadcrumb({ step, data: { routing, ...signatureDetails.swapInfo }, status: 'in progress' })
   sendAnalyticsEvent(
-    SwapEventName.SWAP_SIGNED,
+    SwapEventName.SwapSigned,
     formatSwapSignedAnalyticsEventProperties({
       trade,
       allowedSlippage: slippageToleranceToPercent(trade.slippageTolerance),
@@ -76,7 +75,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   try {
     yield* call(submitOrder, { signature, quote, routing })
   } catch (error) {
-    sendAnalyticsEvent(InterfaceEventNameLocal.UniswapXOrderPostError, {
+    sendAnalyticsEvent(InterfaceEventName.UniswapXOrderPostError, {
       ...formatSwapSignedAnalyticsEventProperties(analyticsParams),
       detail: error.message,
     })
@@ -84,7 +83,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   }
 
   sendAnalyticsEvent(
-    InterfaceEventNameLocal.UniswapXOrderSubmitted,
+    InterfaceEventName.UniswapXOrderSubmitted,
     formatSwapSignedAnalyticsEventProperties(analyticsParams),
   )
 
@@ -102,12 +101,17 @@ const ROUTING_TO_SIGNATURE_TYPE_MAP: {
   // [Routing.LIMIT_ORDER]: SignatureType.SIGN_LIMIT,
 }
 
-function getUniswapXSignatureInfo(
-  step: UniswapXSignatureStep,
-  trade: UniswapXTrade,
-  chainId: UniverseChainId,
-  routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY,
-): UnfilledUniswapXOrderDetails {
+function getUniswapXSignatureInfo({
+  step,
+  trade,
+  chainId,
+  routing,
+}: {
+  step: UniswapXSignatureStep
+  trade: UniswapXTrade
+  chainId: UniverseChainId
+  routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY
+}): UnfilledUniswapXOrderDetails {
   const swapInfo = getSwapTransactionInfo(trade)
 
   return {

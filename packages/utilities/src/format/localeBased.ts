@@ -99,7 +99,15 @@ export function formatNumberOrString({
   return formatNumber({ input: price, locale, currencyCode, type, placeholder })
 }
 
-export function formatPercent(rawPercentage: Maybe<number | string>, locale: string, maxDecimals?: 2 | 3 | 4): string {
+export function formatPercent({
+  rawPercentage,
+  locale,
+  maxDecimals = 2,
+}: {
+  rawPercentage: Maybe<number | string>
+  locale: string
+  maxDecimals?: 2 | 3 | 4
+}): string {
   if (rawPercentage === null || rawPercentage === undefined) {
     return '-'
   }

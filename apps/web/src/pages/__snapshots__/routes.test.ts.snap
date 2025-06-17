@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Routes router definition should match snapshot 1`] = `
+exports[`Routes > router definition should match snapshot 1`] = `
 [
   {
     "enabled": [Function],
@@ -311,6 +311,14 @@ exports[`Routes router definition should match snapshot 1`] = `
     "getTitle": [Function],
     "nestedPaths": [],
     "path": "/manage/passkey/:walletAddress",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [],
+    "path": "/extension/uninstall",
   },
   {
     "enabled": [Function],

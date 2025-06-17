@@ -82,17 +82,26 @@ export function createBundledDelegationTransactionSignerService(ctx: {
 
     // Authorization nonce needs to be +1 of the nonce of the transaction
     const authorizationNonce = Number(input.nonce) + 1
-    const signedAuthorization = await createSignedAuthorization(
+    const signedAuthorization = await createSignedAuthorization({
       signer,
-      account.address as `0x${string}`,
+      walletAddress: account.address as `0x${string}`,
       chainId,
-      delegationInfo.contractAddress,
-      authorizationNonce,
-    )
+      contractAddress: delegationInfo.contractAddress,
+      nonce: authorizationNonce,
+    })
 
     // Convert to EIP-7702 transaction format
-    const viemTxRequest = convertToEIP7702(input, account.address as `0x${string}`, signedAuthorization)
-    const signedTx = await signAndSerializeEIP7702Transaction(signer, viemTxRequest, account.address, chainId)
+    const viemTxRequest = convertToEIP7702({
+      ethersTx: input,
+      walletAddress: account.address as `0x${string}`,
+      signedAuthorization,
+    })
+    const signedTx = await signAndSerializeEIP7702Transaction({
+      signer,
+      tx: viemTxRequest,
+      address: account.address,
+      chainId,
+    })
 
     return signedTx
   }

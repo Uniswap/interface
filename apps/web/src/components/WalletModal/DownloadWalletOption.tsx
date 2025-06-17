@@ -1,4 +1,3 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { OptionContainer } from 'components/WalletModal/UniswapWalletOptions'
@@ -9,7 +8,7 @@ import { Flex, Image, Text } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 
 interface BackgroundImageProps {
@@ -52,7 +51,7 @@ export const DownloadWalletOption = () => {
   })
 
   return (
-    <Trace logPress element={InterfaceElementName.EXTENSION_DOWNLOAD_CONNECTOR}>
+    <Trace logPress element={ElementName.ExtensionDownloadConnector}>
       {/* The white background is needed so that when hovered the background image always becomes lighter even when the app is in dark mode */}
       <Flex
         maxHeight={72}

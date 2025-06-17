@@ -45,20 +45,27 @@ export interface PoolTableTransaction {
 
 const PoolTransactionDefaultQuerySize = 25
 
-export function usePoolTransactions(
-  address: string,
-  chainId?: UniverseChainId,
-  // sortState: PoolTxTableSortState, TODO(WEB-3706): Implement sorting when BE supports
-  filter: PoolTableTransactionType[] = [
+export function usePoolTransactions({
+  address,
+  chainId,
+  filter = [
     PoolTableTransactionType.BUY,
     PoolTableTransactionType.SELL,
     PoolTableTransactionType.REMOVE,
     PoolTableTransactionType.ADD,
   ],
-  token0?: Token,
-  protocolVersion: ProtocolVersion = ProtocolVersion.V3,
+  token0,
+  protocolVersion = ProtocolVersion.V3,
   first = PoolTransactionDefaultQuerySize,
-) {
+}: {
+  address: string
+  chainId?: UniverseChainId
+  // sortState: PoolTxTableSortState, TODO(WEB-3706): Implement sorting when BE supports
+  filter?: PoolTableTransactionType[]
+  token0?: Token
+  protocolVersion?: ProtocolVersion
+  first?: number
+}) {
   const { defaultChainId } = useEnabledChains()
   const variables = { first, chain: toGraphQLChain(chainId ?? defaultChainId) }
   const {
@@ -161,7 +168,7 @@ export function usePoolTransactions(
 
   const filteredTransactions = useMemo(() => {
     return (transactions ?? [])
-      ?.map((tx) => {
+      .map((tx) => {
         if (!tx) {
           return undefined
         }
@@ -170,7 +177,7 @@ export function usePoolTransactions(
           token0?.address === NATIVE_CHAIN_ID
             ? WRAPPED_NATIVE_CURRENCY[chainId ?? UniverseChainId.Mainnet]?.address
             : token0?.address
-        const isSell = tokenIn?.address?.toLowerCase() === token0Address?.toLowerCase()
+        const isSell = tokenIn.address?.toLowerCase() === token0Address?.toLowerCase()
         const type =
           tx.type === PoolTransactionType.Swap
             ? isSell

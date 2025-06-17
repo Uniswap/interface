@@ -1,5 +1,6 @@
 import { providers } from 'ethers'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -20,6 +21,7 @@ export async function signAndSubmitTransaction({
   signerManager,
   viemClient,
   isCancellation,
+  isRemoveDelegation,
 }: {
   request: providers.TransactionRequest
   account: AccountMeta
@@ -27,6 +29,7 @@ export async function signAndSubmitTransaction({
   signerManager: SignerManager
   viemClient?: PublicClient
   isCancellation?: boolean
+  isRemoveDelegation?: boolean
 }): Promise<{
   transactionResponse: providers.TransactionResponse
   populatedRequest: providers.TransactionRequest
@@ -42,40 +45,59 @@ export async function signAndSubmitTransaction({
   // For smart wallet transactions, check if the transaction needs delegation.
   // Cancellations should be excluded
   if (populatedRequest.to === populatedRequest.from && !isCancellation) {
-    logger.debug('signAndSubmitTransaction', 'signAndSubmitTransaction', 'smart wallet transaction', populatedRequest)
     const delegationInfo = await getAccountDelegationDetails(account.address, chainId)
-    if (delegationInfo.needsDelegation && viemClient) {
-      logger.debug(
-        'signAndSubmitTransaction',
-        'signAndSubmitTransaction',
-        'needs delegation to contract:',
-        delegationInfo.contractAddress,
-      )
+    logger.debug(
+      'signAndSubmitTransaction',
+      'signAndSubmitTransaction',
+      'needs delegation to contract:',
+      delegationInfo.contractAddress,
+    )
+    if (!delegationInfo.contractAddress) {
+      throw new Error('Delegation contract address not found')
+    }
 
-      if (!delegationInfo.contractAddress) {
-        throw new Error('Delegation contract address not found')
+    let newDelegationContractAddress: Address | undefined
+    if (isRemoveDelegation) {
+      newDelegationContractAddress = DEFAULT_NATIVE_ADDRESS
+      logger.debug('signAndSubmitTransaction', 'signAndSubmitTransaction', 'Remove delegation request')
+    } else {
+      // new delegation or contract address update
+      if (delegationInfo.needsDelegation) {
+        newDelegationContractAddress = delegationInfo.contractAddress
+        logger.debug(
+          'signAndSubmitTransaction',
+          'signAndSubmitTransaction',
+          'New delegation contract address:',
+          newDelegationContractAddress,
+        )
       }
+    }
 
+    if (newDelegationContractAddress && viemClient) {
       const timestampBeforeSign = Date.now()
 
       // Authorization nonce needs to be +1 of the nonce of the transaction
       const authorizationNonce = Number(populatedRequest.nonce) + 1
-      const signedAuthorization = await createSignedAuthorization(
-        connectedSigner,
-        account.address as `0x${string}`,
+      const signedAuthorization = await createSignedAuthorization({
+        signer: connectedSigner,
+        walletAddress: account.address as `0x${string}`,
         chainId,
-        delegationInfo.contractAddress,
-        authorizationNonce,
-      )
+        contractAddress: newDelegationContractAddress,
+        nonce: authorizationNonce,
+      })
 
       // Convert to EIP-7702 transaction format
-      const viemTxRequest = convertToEIP7702(populatedRequest, account.address as `0x${string}`, signedAuthorization)
-      const serializedTxWithSignature = await signAndSerializeEIP7702Transaction(
-        connectedSigner,
-        viemTxRequest,
-        account.address,
+      const viemTxRequest = convertToEIP7702({
+        ethersTx: populatedRequest,
+        walletAddress: account.address as `0x${string}`,
+        signedAuthorization,
+      })
+      const serializedTxWithSignature = await signAndSerializeEIP7702Transaction({
+        signer: connectedSigner,
+        tx: viemTxRequest,
+        address: account.address,
         chainId,
-      )
+      })
       logger.debug(
         'signAndSubmitTransaction',
         'signAndSubmitTransaction',

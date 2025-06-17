@@ -10,24 +10,26 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isLocalFileUri, uploadAndUpdateAvatarAfterClaim } from 'uniswap/src/features/unitags/avatars.native'
 import { UnitagClaim, UnitagClaimContext } from 'uniswap/src/features/unitags/types'
 import { parseUnitagErrorCode } from 'uniswap/src/features/unitags/utils'
-import { getUniqueId } from 'utilities/src/device/getUniqueId'
+import { getUniqueId } from 'utilities/src/device/uniqueId'
 import { logger } from 'utilities/src/logger/logger'
+
+type ClaimUnitagInput = {
+  claim: UnitagClaim
+  context: UnitagClaimContext
+  address?: string
+  signMessage?: SignMessageFunc
+}
 
 /**
  * A custom async hook that handles the process of claiming a Unitag
  * Hook must be used inside the OnboardingContext
  */
-export const useClaimUnitag = (): ((
-  claim: UnitagClaim,
-  context: UnitagClaimContext,
-  address?: string,
-  signMessage?: SignMessageFunc,
-) => Promise<{ claimError?: string }>) => {
+export const useClaimUnitag = (): ((input: ClaimUnitagInput) => Promise<{ claimError?: string }>) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const resetUnitagsQueries = useResetUnitagsQueries()
 
-  return async (claim: UnitagClaim, context: UnitagClaimContext, address?: string, signMessage?: SignMessageFunc) => {
+  return async ({ claim, context, address, signMessage }: ClaimUnitagInput) => {
     const deviceId = await getUniqueId()
 
     if (!claim.address || !deviceId || !signMessage || !address) {
@@ -48,7 +50,7 @@ export const useClaimUnitag = (): ((
       })
 
       if (claimResponse.errorCode) {
-        return { claimError: parseUnitagErrorCode(t, claim.username, claimResponse.errorCode) }
+        return { claimError: parseUnitagErrorCode(t, claimResponse.errorCode) }
       }
 
       resetUnitagsQueries()

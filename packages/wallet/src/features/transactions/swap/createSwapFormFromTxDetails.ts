@@ -26,12 +26,6 @@ export function createSwapFormFromTxDetails({
   inputCurrency,
   outputCurrency,
 }: Props): TransactionState | undefined {
-  const chainId = transactionDetails?.chainId
-
-  if (!chainId) {
-    return undefined
-  }
-
   try {
     const { typeInfo } = transactionDetails
     const isBridging = isBridgeTypeInfo(typeInfo)
@@ -49,7 +43,7 @@ export function createSwapFormFromTxDetails({
 
     const inputAsset: CurrencyAsset = {
       address: inputAddress,
-      chainId,
+      chainId: transactionDetails.chainId,
       type: AssetType.Currency,
     }
 
@@ -98,10 +92,10 @@ export function createWrapFormFromTxDetails({
   inputCurrency,
   outputCurrency,
 }: Props): TransactionState | undefined {
-  const txHash = transactionDetails?.hash
-  const chainId = transactionDetails?.chainId
+  const txHash = transactionDetails.hash
+  const chainId = transactionDetails.chainId
 
-  if (!chainId || !txHash || !inputCurrency || !outputCurrency) {
+  if (!txHash || !inputCurrency || !outputCurrency) {
     return undefined
   }
 

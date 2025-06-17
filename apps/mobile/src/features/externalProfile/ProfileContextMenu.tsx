@@ -49,7 +49,9 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   }, [address, dispatch])
 
   const openExplorerLink = useCallback(async () => {
-    await openUri(getExplorerLink(defaultChainId, address, ExplorerDataType.ADDRESS))
+    await openUri({
+      uri: getExplorerLink({ chainId: defaultChainId, data: address, type: ExplorerDataType.ADDRESS }),
+    })
   }, [address, defaultChainId])
 
   const onReportProfile = useCallback(async () => {
@@ -57,7 +59,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
     params.append('tf_11041337007757', address) // Wallet Address
     params.append('tf_7005922218125', 'report_unitag') // Report Type Dropdown
     const prefilledRequestUrl = uniswapUrls.helpRequestUrl + '?' + params.toString()
-    openUri(prefilledRequestUrl).catch((e) =>
+    openUri({ uri: prefilledRequestUrl }).catch((e) =>
       logger.error(e, { tags: { file: 'ProfileContextMenu', function: 'reportProfileLink' } }),
     )
   }, [address])

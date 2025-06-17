@@ -81,6 +81,7 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
     this._options = options
   }
 
+  // eslint-disable-next-line max-params
   _drawImpl(
     renderingScope: BitmapCoordinatesRenderingScope,
     priceToCoordinate: PriceToCoordinateConverter,
@@ -105,13 +106,13 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
         ys: cumulativePrice.map((value) => priceToCoordinate(value) ?? 0),
       }
     })
-    calculateColumnPositionsInPlace(
-      bars,
-      this._data.barSpacing,
-      renderingScope.horizontalPixelRatio,
-      this._data.visibleRange.from,
-      this._data.visibleRange.to,
-    )
+    calculateColumnPositionsInPlace({
+      items: bars,
+      barSpacingMedia: this._data.barSpacing,
+      horizontalPixelRatio: renderingScope.horizontalPixelRatio,
+      startIndex: this._data.visibleRange.from,
+      endIndex: this._data.visibleRange.to,
+    })
     const zeroY = priceToCoordinate(0) ?? 0
     for (let i = this._data.visibleRange.from; i < this._data.visibleRange.to; i++) {
       const stack = bars[i]
@@ -129,13 +130,23 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
       const margin = width * 0.075
 
       // Modification: draw rounded rect corresponding to total volume
-      const totalBox = positionsBox(zeroY, stack.ys[stack.ys.length - 1], renderingScope.verticalPixelRatio)
+      const totalBox = positionsBox({
+        position1Media: zeroY,
+        position2Media: stack.ys[stack.ys.length - 1],
+        pixelRatio: renderingScope.verticalPixelRatio,
+      })
 
       if (this._background) {
         ctx.fillStyle = this._background
       }
 
-      roundRect(ctx, column.left + margin, totalBox.position, width - margin, totalBox.length, 4)
+      roundRect({
+        ctx,
+        x: column.left + margin,
+        y: totalBox.position,
+        w: width - margin,
+        h: totalBox.length,
+      })
 
       // Modification: draw the stack's boxes atop the total volume bar, resulting in the top and bottom boxes being rounded
       ctx.globalCompositeOperation = 'source-atop'
@@ -149,7 +160,11 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
         }
 
         const color = this._colors[this._colors.length - 1 - index] // color v2, then v3
-        const stackBoxPositions = positionsBox(previousY, y, renderingScope.verticalPixelRatio)
+        const stackBoxPositions = positionsBox({
+          position1Media: previousY,
+          position2Media: y,
+          pixelRatio: renderingScope.verticalPixelRatio,
+        })
         ctx.fillStyle = color
         ctx.globalAlpha = isStackedHistogram && !isHovered ? 0.24 : 1
         ctx.fillRect(column.left + margin, stackBoxPositions.position, width - margin, stackBoxPositions.length)

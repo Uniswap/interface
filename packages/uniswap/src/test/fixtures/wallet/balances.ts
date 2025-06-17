@@ -74,14 +74,14 @@ export const portfolioBalances = createFixture<PortfolioBalance[], PortfolioBala
   portfolio: portfolio(),
 }))(
   ({ portfolio: { tokenBalances } }) =>
-    (tokenBalances
+    tokenBalances
       ?.map((balance) => {
-        if (balance?.quantity && balance?.token) {
+        if (balance?.quantity && balance.token) {
           return portfolioBalance({
             fromBalance: balance as RequireNonNullable<TokenBalance, 'quantity' | 'token'>,
           })
         }
         return undefined
       })
-      .filter(Boolean) as PortfolioBalance[]) ?? [],
+      .filter(Boolean) as PortfolioBalance[],
 )

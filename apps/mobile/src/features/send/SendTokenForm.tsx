@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { Flex, Text, TouchableArea } from 'ui/src'
@@ -24,7 +24,7 @@ import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transaction
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
-import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/form/body/SwapArrowButton'
+import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/components/SwapArrowButton'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -145,7 +145,7 @@ export function SendTokenForm(): JSX.Element {
 
       if (inputFieldRef) {
         setTimeout(() => {
-          inputFieldRef?.current?.setNativeProps?.({ selection: { start, end } })
+          inputFieldRef.current?.setNativeProps({ selection: { start, end } })
         }, 0)
       }
     },
@@ -227,17 +227,6 @@ export function SendTokenForm(): JSX.Element {
     },
     [isFiatInput, maxDecimals, updateSendForm],
   )
-
-  const [stableWarnings, setStableWarnings] = useState(warnings.warnings)
-  const [stableGasFee, setStableGasFee] = useState(gasFee)
-
-  // Prevent modal from immediately closing by stabilizing this data
-  useEffect(() => {
-    if (warnings.warnings.length > 0 || (gasFee && gasFee.displayValue)) {
-      setStableWarnings(warnings.warnings)
-      setStableGasFee(gasFee)
-    }
-  }, [warnings.warnings, gasFee])
 
   return (
     <>
@@ -333,8 +322,8 @@ export function SendTokenForm(): JSX.Element {
               ) : null}
             </Flex>
             <Flex py="$spacing12">
-              {gasFee && !transferWarning && currencyIn?.chainId && !isBlocked && (
-                <GasFeeRow chainId={currencyIn?.chainId} gasFee={gasFee} />
+              {!transferWarning && currencyIn?.chainId && !isBlocked && (
+                <GasFeeRow chainId={currencyIn.chainId} gasFee={gasFee} />
               )}
             </Flex>
             {transferWarning && !isBlocked && !isInsufficientGasFundsWarning ? (
@@ -358,7 +347,7 @@ export function SendTokenForm(): JSX.Element {
                 </Flex>
               </TouchableArea>
             ) : null}
-            <InsufficientNativeTokenWarning flow="send" gasFee={stableGasFee} warnings={stableWarnings} />
+            <InsufficientNativeTokenWarning flow="send" gasFee={gasFee} warnings={warnings.warnings} />
           </Flex>
         </Flex>
 

@@ -16,6 +16,7 @@ export const SwapDependenciesContext = createContext<SwapDependenciesContextStat
 
 export const useSwapDependencies = (): SwapDependenciesContextState => {
   const context = useContext(SwapDependenciesContext)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!context) {
     throw new Error('useSwapDependencies must be used within a SwapDependenciesContext')
   }

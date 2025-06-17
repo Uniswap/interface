@@ -112,7 +112,7 @@ function InsufficientNativeTokenWarningContent({
           title={
             shouldShowNetworkName
               ? t('transaction.warning.insufficientGas.modal.title.withNetwork', {
-                  tokenSymbol: nativeCurrency.symbol ?? '',
+                  tokenSymbol: nativeCurrency.symbol,
                   networkName,
                 })
               : t('transaction.warning.insufficientGas.modal.title.withoutNetwork', {

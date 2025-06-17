@@ -10,11 +10,15 @@ import { NumberType } from 'utilities/src/format/types'
 const NUM_DECIMALS_USD = 2
 const NUM_DECIMALS_DISPLAY = 2
 
-export function useUSDTokenUpdater(
-  isFiatInput: boolean,
-  exactAmount: string,
-  exactCurrency?: Currency,
-): {
+export function useUSDTokenUpdater({
+  isFiatInput,
+  exactAmount,
+  exactCurrency,
+}: {
+  isFiatInput: boolean
+  exactAmount?: string
+  exactCurrency?: Currency
+}): {
   formattedAmount?: string
   loading: boolean
 } {
@@ -34,7 +38,7 @@ export function useUSDTokenUpdater(
         ? tryParseCurrencyAmount(exactAmountUSD, getChainInfo(supportedChainId).spotPriceStablecoinAmount.currency)
         : undefined
 
-      const currencyAmount = stablecoinAmount ? price?.invert().quote(stablecoinAmount) : undefined
+      const currencyAmount = stablecoinAmount ? price.invert().quote(stablecoinAmount) : undefined
       const formattedCurrencyAmount = formatCurrencyAmount({
         value: currencyAmount,
         type: NumberType.SwapTradeAmount,
@@ -46,7 +50,7 @@ export function useUSDTokenUpdater(
 
     const exactCurrencyAmount = tryParseCurrencyAmount(exactAmount || '0', exactCurrency)
 
-    const usdPrice = exactCurrencyAmount ? price?.quote(exactCurrencyAmount) : undefined
+    const usdPrice = exactCurrencyAmount ? price.quote(exactCurrencyAmount) : undefined
     const fiatPrice = convertFiatAmount(parseFloat(usdPrice?.toExact() ?? '0')).amount
     const formattedFiatPrice = fiatPrice ? fiatPrice.toFixed(NUM_DECIMALS_DISPLAY) : '0'
 

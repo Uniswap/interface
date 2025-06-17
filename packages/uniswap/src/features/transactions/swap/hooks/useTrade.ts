@@ -103,7 +103,7 @@ export function useTrade({
     return {
       amount: amount.quotient.toString(),
       generatePermitAsTransaction,
-      gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
+      gasStrategies: [activeGasStrategy, ...shadowGasStrategies],
       isUSDQuote,
       swapper: activeAccountAddress ?? UNCONNECTED_ADDRESS,
       tokenIn: tokenInAddress,
@@ -204,6 +204,7 @@ export function useTrade({
       logger.error(error, { tags: { file: 'useTrade', function: 'quote' }, extra: { ...quoteRequestArgs } })
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (data && !data.quote) {
       logger.error(new Error('Unexpected empty Trading API response'), {
         tags: { file: 'useTrade', function: 'quote' },

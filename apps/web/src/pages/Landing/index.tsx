@@ -1,4 +1,3 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { PRIVACY_SHARING_OPT_OUT_STORAGE_KEY } from 'components/PrivacyChoices/constants'
@@ -13,6 +12,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import { useConversionTracking } from 'uniswap/src/data/rest/conversionTracking/useConversionTracking'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 
 const privacySharingOptOutAtom = atomWithStorage<boolean>(PRIVACY_SHARING_OPT_OUT_STORAGE_KEY, false)
 
@@ -20,8 +20,8 @@ export default function Landing() {
   const account = useAccount()
   const { connector } = useWeb3React()
   const disconnect = useCallback(() => {
-    connector?.deactivate?.()
-    connector?.resetState()
+    connector.deactivate?.()
+    connector.resetState()
   }, [connector])
 
   const [transition, setTransition] = useState(false)
@@ -71,7 +71,7 @@ export default function Landing() {
   }, [account.address, prevAccount, accountDrawer, navigate, queryParams.intro, connector, disconnect])
 
   return (
-    <Trace logImpression page={InterfacePageName.LANDING_PAGE}>
+    <Trace logImpression page={InterfacePageName.LandingPage}>
       <LandingV2 transition={transition} />
     </Trace>
   )

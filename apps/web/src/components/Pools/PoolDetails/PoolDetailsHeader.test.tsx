@@ -9,7 +9,7 @@ import { usdcWethPoolAddress, validBEPoolToken0, validBEPoolToken1 } from 'test-
 import { render, screen } from 'test-utils/render'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 
-jest.mock('nft/components/iconExports', () => ({
+vi.mock('nft/components/iconExports', () => ({
   ReversedArrowsIcon: () => <div data-testid="reversed-arrows-icon" />,
 }))
 
@@ -52,11 +52,11 @@ describe('PoolDetailsHeader', () => {
     token0: validBEPoolToken0,
     token1: validBEPoolToken1,
     chartType: ChartType.PRICE as PoolsDetailsChartType,
-    onChartTypeChange: jest.fn(),
+    onChartTypeChange: vi.fn(),
     priceChartType: PriceChartType.LINE,
-    onPriceChartTypeChange: jest.fn(),
+    onPriceChartTypeChange: vi.fn(),
     feeTier: 500,
-    toggleReversed: jest.fn(),
+    toggleReversed: vi.fn(),
   }
 
   it('loading skeleton is shown', () => {

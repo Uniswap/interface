@@ -4,32 +4,37 @@ import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSele
 import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useNftSearchResultsToNftCollectionOptions } from 'uniswap/src/components/lists/items/nfts/useNftSearchResultsToNftCollectionOptions'
+import { usePoolSearchResultsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolSearchResultsToPoolOptions'
 import { OnchainItemListOptionType, SearchModalOption, WalletOption } from 'uniswap/src/components/lists/items/types'
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { useCollectionSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useSearchTokensRest } from 'uniswap/src/features/dataApi/searchTokensRest'
+import { useSearchPools } from 'uniswap/src/features/dataApi/searchPools'
+import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import { NUMBER_OF_RESULTS_SHORT } from 'uniswap/src/features/search/SearchModal/constants'
 import { useWalletSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useWalletSearchResults'
-import { MOCK_POOL_OPTION_ITEM } from 'uniswap/src/features/search/SearchModal/mocks'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
 import { isWeb } from 'utilities/src/platform'
 import noop from 'utilities/src/react/noop'
 
-export function useSectionsForSearchResults(
-  chainFilter: UniverseChainId | null,
-  searchFilter: string | null,
-  activeTab: SearchTab,
-): GqlResult<OnchainItemSection<SearchModalOption>[]> {
+function useSectionsForSearchResults({
+  chainFilter,
+  searchFilter,
+  activeTab,
+}: {
+  chainFilter: UniverseChainId | null
+  searchFilter: string | null
+  activeTab: SearchTab
+}): GqlResult<OnchainItemSection<SearchModalOption>[]> {
   const {
     data: searchResultCurrencies,
     error: searchTokensError,
     refetch: refetchSearchTokens,
     loading: searchTokensLoading,
-  } = useSearchTokensRest({
+  } = useSearchTokens({
     searchQuery: searchFilter,
     chainFilter,
     skip: !searchFilter || (activeTab !== SearchTab.Tokens && activeTab !== SearchTab.All),
@@ -41,9 +46,21 @@ export function useSectionsForSearchResults(
     options: tokenSearchResults,
   })
 
+  const skipPoolSearchQuery = !isWeb || !searchFilter || (activeTab !== SearchTab.Pools && activeTab !== SearchTab.All)
+  const {
+    data: searchResultPools,
+    error: searchPoolsError,
+    refetch: refetchSearchPools,
+    loading: searchPoolsLoading,
+  } = useSearchPools({
+    searchQuery: searchFilter,
+    chainFilter,
+    skip: skipPoolSearchQuery,
+  })
+  const poolSearchOptions = usePoolSearchResultsToPoolOptions(searchResultPools ?? [])
   const poolSearchResultsSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.Pools,
-    options: Array(isWeb ? 4 : 0).fill(MOCK_POOL_OPTION_ITEM),
+    options: poolSearchOptions,
   })
 
   const skipWalletSearchQuery = isWeb || (activeTab !== SearchTab.Wallets && activeTab !== SearchTab.All)
@@ -86,8 +103,9 @@ export function useSectionsForSearchResults(
 
   const refetchAll = useCallback(async () => {
     refetchSearchTokens?.()
-    await refetchSearchNftResults?.()
-  }, [refetchSearchNftResults, refetchSearchTokens])
+    refetchSearchPools?.()
+    await refetchSearchNftResults()
+  }, [refetchSearchNftResults, refetchSearchPools, refetchSearchTokens])
 
   // eslint-disable-next-line complexity
   return useMemo((): GqlResult<OnchainItemSection<SearchModalOption>[]> => {
@@ -119,9 +137,9 @@ export function useSectionsForSearchResults(
       case SearchTab.Pools:
         return {
           data: poolSearchResultsSection ?? [],
-          loading: false,
-          error: undefined,
-          refetch: noop,
+          loading: searchPoolsLoading || (poolSearchOptions.length === 0 && searchResultPools?.length !== 0),
+          error: (!poolSearchResultsSection && searchPoolsError) || undefined,
+          refetch: refetchSearchPools,
         }
       case SearchTab.Wallets:
         return {
@@ -141,12 +159,17 @@ export function useSectionsForSearchResults(
   }, [
     activeTab,
     nftCollectionSearchResultsSection,
+    poolSearchOptions.length,
     poolSearchResultsSection,
     refetchAll,
     refetchSearchNftResults,
+    refetchSearchPools,
     refetchSearchTokens,
     searchNftResultsError,
     searchNftResultsLoading,
+    searchPoolsError,
+    searchPoolsLoading,
+    searchResultPools?.length,
     searchTokensError,
     searchTokensLoading,
     tokenSearchResults,
@@ -180,7 +203,11 @@ function _SearchModalResultsList({
     loading,
     error,
     refetch,
-  } = useSectionsForSearchResults(chainFilter, debouncedParsedSearchFilter ?? debouncedSearchFilter, activeTab)
+  } = useSectionsForSearchResults({
+    chainFilter,
+    searchFilter: debouncedParsedSearchFilter ?? debouncedSearchFilter,
+    activeTab,
+  })
 
   const userIsTyping = Boolean(searchFilter && debouncedSearchFilter !== searchFilter)
 

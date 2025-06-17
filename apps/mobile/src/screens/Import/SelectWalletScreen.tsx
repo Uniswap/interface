@@ -60,7 +60,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
 
     navigation.navigate({
       name:
-        params?.importType === ImportType.Restore || params?.importType === ImportType.Passkey
+        params.importType === ImportType.Restore || params.importType === ImportType.Passkey
           ? OnboardingScreens.Notifications
           : OnboardingScreens.Backup,
       params,

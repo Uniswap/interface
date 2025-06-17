@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Percent, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { Pair, computePairAddress } from '@uniswap/v2-sdk'
 import { gqlToCurrency } from 'appGraphql/data/util'

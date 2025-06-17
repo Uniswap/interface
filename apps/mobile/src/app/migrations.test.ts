@@ -89,6 +89,8 @@ import {
   v84Schema,
   v85Schema,
   v86Schema,
+  v87Schema,
+  v88Schema,
   v8Schema,
   v9Schema,
 } from 'src/app/schema'
@@ -113,6 +115,7 @@ import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
+import { testRemoveTHBFromCurrency } from 'uniswap/src/state/uniswapMigrationTests'
 import { transactionDetails } from 'uniswap/src/test/fixtures'
 import { DappRequestType } from 'uniswap/src/types/walletConnect'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
@@ -135,6 +138,7 @@ import {
   testMovedLanguageSetting,
   testMovedTokenWarnings,
   testMovedUserSettings,
+  testMoveHapticsToUserSettings,
   testMoveTokenAndNFTVisibility,
   testRemoveCreatedOnboardingRedesignAccount,
   testRemoveHoldToSwap,
@@ -649,6 +653,7 @@ describe('Redux state migrations', () => {
 
     const v15 = migrations[15](v14Stub)
     const accounts = Object.values(v15.wallet.accounts)
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     expect((accounts[0] as Account)?.type).toEqual(AccountType.SignerMnemonic)
   })
 
@@ -1703,5 +1708,17 @@ describe('Redux state migrations', () => {
         requestType: DappRequestType.WalletConnectSessionRequest,
       },
     })
+  })
+
+  it('migrates from v87 to v88', () => {
+    testMoveHapticsToUserSettings(migrations[88], v87Schema)
+  })
+
+  it('migrates from v88 to v89', () => {
+    const v88Stub = { ...v88Schema, userSettings: { ...v88Schema.userSettings, currentCurrency: 'THB' } }
+    testRemoveTHBFromCurrency(migrations[89], v88Stub)
+
+    const v88Stub2 = { ...v88Schema, userSettings: { ...v88Schema.userSettings, currentCurrency: 'JPY' } }
+    testRemoveTHBFromCurrency(migrations[89], v88Stub2)
   })
 })

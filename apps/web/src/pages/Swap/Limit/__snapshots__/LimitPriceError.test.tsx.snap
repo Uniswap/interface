@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`LimitPriceError renders the limit price error correctly when there is a calculation error 1`] = `
+exports[`LimitPriceError > renders the limit price error correctly when there is a calculation error 1`] = `
 .c5 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -166,7 +166,7 @@ exports[`LimitPriceError renders the limit price error correctly when there is a
 </span>
 `;
 
-exports[`LimitPriceError renders the limit price error correctly, inverted false change -10 1`] = `
+exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p false -10 1`] = `
 .c5 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -332,7 +332,7 @@ exports[`LimitPriceError renders the limit price error correctly, inverted false
 </span>
 `;
 
-exports[`LimitPriceError renders the limit price error correctly, inverted false change 10 1`] = `
+exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p false 10 1`] = `
 .c5 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -498,7 +498,7 @@ exports[`LimitPriceError renders the limit price error correctly, inverted false
 </span>
 `;
 
-exports[`LimitPriceError renders the limit price error correctly, inverted true change -10 1`] = `
+exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p true -10 1`] = `
 .c5 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -664,7 +664,7 @@ exports[`LimitPriceError renders the limit price error correctly, inverted true 
 </span>
 `;
 
-exports[`LimitPriceError renders the limit price error correctly, inverted true change 10 1`] = `
+exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p true 10 1`] = `
 .c5 {
   display: -webkit-box;
   display: -webkit-flex;

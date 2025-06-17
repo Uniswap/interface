@@ -1,3 +1,4 @@
+import { Direction, OnChainTransaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import {
   TokenStandard,
   TokenTransfer,
@@ -24,7 +25,7 @@ type AssetChanges = NonNullable<
 export default function parseBridgingTransaction(
   transaction: NonNullable<TransactionListQueryResponse>,
 ): BridgeTransactionInfo | undefined {
-  if (transaction.details && transaction.details.__typename !== TransactionDetailsType.Transaction) {
+  if (transaction.details.__typename !== TransactionDetailsType.Transaction) {
     return undefined
   }
 
@@ -56,21 +57,21 @@ export default function parseBridgingTransaction(
     return undefined
   }
 
-  const outCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
-    outTokenTransfer.tokenStandard,
-    outTokenTransfer.asset.chain,
-    outTokenTransfer.asset.address,
-    outTokenTransfer.asset.decimals,
-    outTokenTransfer.quantity,
-  )
+  const outCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse({
+    tokenStandard: outTokenTransfer.tokenStandard,
+    chain: outTokenTransfer.asset.chain,
+    address: outTokenTransfer.asset.address,
+    decimals: outTokenTransfer.asset.decimals,
+    quantity: outTokenTransfer.quantity,
+  })
 
-  const inCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
-    inTokenTransfer.tokenStandard,
-    inTokenTransfer.asset.chain,
-    inTokenTransfer.asset.address,
-    inTokenTransfer.asset.decimals,
-    inTokenTransfer.quantity,
-  )
+  const inCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse({
+    tokenStandard: inTokenTransfer.tokenStandard,
+    chain: inTokenTransfer.asset.chain,
+    address: inTokenTransfer.asset.address,
+    decimals: inTokenTransfer.asset.decimals,
+    quantity: inTokenTransfer.quantity,
+  })
 
   return {
     type: TransactionType.Bridge,
@@ -87,4 +88,27 @@ function findTokenTransfer(assetChanges: AssetChanges, direction: TransactionDir
     (t): t is Extract<TokenTransfer, { __typename: 'TokenTransfer' }> =>
       t?.__typename === 'TokenTransfer' && t.direction === direction,
   )
+}
+
+/**
+ * Parse a bridge transaction from the REST API
+ */
+export function parseRestBridgeTransaction(transaction: OnChainTransaction): BridgeTransactionInfo | undefined {
+  const { transfers } = transaction
+  const outTokenTransfer = transfers.find((t) => t.direction === Direction.SEND)
+  const inTokenTransfer = transfers.find((t) => t.direction === Direction.RECEIVE)
+  const outTokenAsset = outTokenTransfer?.asset.value
+  const inTokenAsset = inTokenTransfer?.asset.value
+  if (!outTokenAsset || !inTokenAsset) {
+    return undefined
+  }
+  return {
+    type: TransactionType.Bridge,
+    inputCurrencyId: buildCurrencyId(outTokenAsset.chainId, outTokenAsset.address),
+    outputCurrencyId: buildCurrencyId(inTokenAsset.chainId, inTokenAsset.address),
+    inputCurrencyAmountRaw: outTokenTransfer.amount?.raw ?? '',
+    outputCurrencyAmountRaw: inTokenTransfer.amount?.raw ?? '',
+    transactedUSDValue: undefined,
+    routingDappInfo: ACROSS_DAPP_INFO,
+  }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable max-params */
 import { BigNumber } from '@ethersproject/bignumber'
 import {
   CHAIN_TO_ADDRESSES_MAP,
@@ -34,6 +35,7 @@ import {
   NftApprovalPartsFragment,
   NftApproveForAllPartsFragment,
   NftTransferPartsFragment,
+  OffRampTransactionDetailsPartsFragment,
   OnRampTransactionDetailsPartsFragment,
   OnRampTransferPartsFragment,
   TokenApprovalPartsFragment,
@@ -144,7 +146,7 @@ function getCollectionCounts(nftTransfers: NftTransferPartsFragment[]): { [key: 
     (acc, NFTChange) => {
       const key = NFTChange.asset.collection?.name ?? NFTChange.asset.name
       if (key) {
-        acc[key] = (acc?.[key] ?? 0) + 1
+        acc[key] = (acc[key] ?? 0) + 1
       }
       return acc
     },
@@ -251,7 +253,7 @@ function getTransactedValue(transactedValue: TokenTransferPartsFragment['transac
   if (!transactedValue) {
     return undefined
   }
-  const price = transactedValue?.currency === GQLCurrency.Usd ? transactedValue.value ?? undefined : undefined
+  const price = transactedValue.currency === GQLCurrency.Usd ? transactedValue.value : undefined
   return price
 }
 
@@ -418,7 +420,7 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
   formatNumberOrString: FormatNumberOrStringFunctionType,
 ): UniswapXOrderDetails | undefined {
   const chainId = supportedChainIdFromGQLChain(activity.chain)
-  if (!activity || !activity.details || !chainId) {
+  if (!chainId) {
     return undefined
   }
   if (changes.TokenTransfer.length < 2) {
@@ -485,6 +487,7 @@ function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: For
 
 type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
 type FiatOnRampActivity = AssetActivityPartsFragment & { details: OnRampTransactionDetailsPartsFragment }
+type FiatOffRampActivity = AssetActivityPartsFragment & { details: OffRampTransactionDetailsPartsFragment }
 
 function parseSendReceive(
   changes: TransactionChanges,
@@ -635,10 +638,13 @@ function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
   }
 
   const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity } = activity.details
-  const { title, status } =
+  const orderTextTableEntry =
     signature.type === SignatureType.SIGN_LIMIT
       ? LimitOrderTextTable[signature.status]
       : OrderTextTable[signature.status]
+
+  const title = orderTextTableEntry.getTitle()
+
   return {
     hash: signature.orderHash,
     chainId: signature.chainId,
@@ -655,7 +661,7 @@ function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
     from: signature.offerer,
     prefixIconSrc: UniswapXBolt,
     title,
-    status,
+    status: orderTextTableEntry.status,
   }
 }
 
@@ -672,67 +678,108 @@ function parseFiatOnRampTransaction(activity: TransactionActivity | FiatOnRampAc
     })
     throw error
   }
-  if (activity.details.__typename === 'OnRampTransactionDetails') {
-    const onRampTransfer = activity.details.onRampTransfer
-    return {
-      from: activity.details.receiverAddress,
-      hash: activity.id,
-      chainId,
-      timestamp: activity.timestamp,
-      logos: [onRampTransfer.token.project?.logoUrl],
-      currencies: [gqlToCurrency(onRampTransfer.token)],
-      title: i18n.t('fiatOnRamp.purchasedOn', {
-        serviceProvider: onRampTransfer.serviceProvider.name,
-      }),
-      descriptor: i18n.t('fiatOnRamp.exchangeRate', {
-        outputAmount: onRampTransfer.amount,
-        outputSymbol: onRampTransfer.token.symbol,
-        inputAmount: onRampTransfer.sourceAmount,
-        inputSymbol: onRampTransfer.sourceCurrency,
-      }),
-      suffixIconSrc: onRampTransfer.serviceProvider.logoDarkUrl,
-      status: activity.details.status,
+
+  switch (activity.details.__typename) {
+    case 'OnRampTransactionDetails': {
+      const onRampTransfer = activity.details.onRampTransfer
+      return {
+        from: activity.details.receiverAddress,
+        hash: activity.id,
+        chainId,
+        timestamp: activity.timestamp,
+        logos: [onRampTransfer.token.project?.logoUrl],
+        currencies: [gqlToCurrency(onRampTransfer.token)],
+        title: i18n.t('fiatOnRamp.purchasedOn', {
+          serviceProvider: onRampTransfer.serviceProvider.name,
+        }),
+        descriptor: i18n.t('fiatOnRamp.exchangeRate', {
+          outputAmount: onRampTransfer.amount,
+          outputSymbol: onRampTransfer.token.symbol,
+          inputAmount: onRampTransfer.sourceAmount,
+          inputSymbol: onRampTransfer.sourceCurrency,
+        }),
+        suffixIconSrc: onRampTransfer.serviceProvider.logoDarkUrl,
+        status: activity.details.status,
+      }
     }
-  } else if (activity.details.__typename === 'TransactionDetails') {
-    const assetChange = activity.details.assetChanges[0]
-    if (assetChange?.__typename !== 'OnRampTransfer') {
-      logger.error('Unexpected asset change type, expected OnRampTransfer', {
+    case 'TransactionDetails': {
+      const assetChange = activity.details.assetChanges[0]
+      if (assetChange?.__typename !== 'OnRampTransfer') {
+        logger.error('Unexpected asset change type, expected OnRampTransfer', {
+          tags: {
+            file: 'parseRemote',
+            function: 'parseRemote',
+          },
+        })
+      }
+      const onRampTransfer = assetChange as OnRampTransferPartsFragment
+      return {
+        from: activity.details.from,
+        hash: activity.details.hash,
+        chainId,
+        timestamp: activity.timestamp,
+        logos: [onRampTransfer.token.project?.logoUrl],
+        currencies: [gqlToCurrency(onRampTransfer.token)],
+        title: i18n.t('fiatOnRamp.purchasedOn', {
+          serviceProvider: onRampTransfer.serviceProvider.name,
+        }),
+        descriptor: i18n.t('fiatOnRamp.exchangeRate', {
+          outputAmount: onRampTransfer.amount,
+          outputSymbol: onRampTransfer.token.symbol,
+          inputAmount: onRampTransfer.sourceAmount,
+          inputSymbol: onRampTransfer.sourceCurrency,
+        }),
+        suffixIconSrc: onRampTransfer.serviceProvider.logoDarkUrl,
+        status: activity.details.status,
+      }
+    }
+    default: {
+      const error = new Error('Invalid Fiat On Ramp activity type received from GQL')
+      logger.error(error, {
         tags: {
           file: 'parseRemote',
-          function: 'parseRemote',
+          function: 'parseFiatOnRampTransaction',
         },
+        extra: { activity },
       })
+      throw error
     }
-    const onRampTransfer = assetChange as OnRampTransferPartsFragment
-    return {
-      from: activity.details.from,
-      hash: activity.details.hash,
-      chainId,
-      timestamp: activity.timestamp,
-      logos: [onRampTransfer.token.project?.logoUrl],
-      currencies: [gqlToCurrency(onRampTransfer.token)],
-      title: i18n.t('fiatOnRamp.purchasedOn', {
-        serviceProvider: onRampTransfer.serviceProvider.name,
-      }),
-      descriptor: i18n.t('fiatOnRamp.exchangeRate', {
-        outputAmount: onRampTransfer.amount,
-        outputSymbol: onRampTransfer.token.symbol,
-        inputAmount: onRampTransfer.sourceAmount,
-        inputSymbol: onRampTransfer.sourceCurrency,
-      }),
-      suffixIconSrc: onRampTransfer.serviceProvider.logoDarkUrl,
-      status: activity.details.status,
-    }
-  } else {
-    const error = new Error('Invalid Fiat On Ramp activity type received from GQL')
+  }
+}
+
+function parseFiatOffRampTransaction(activity: FiatOffRampActivity): Activity {
+  const chainId = supportedChainIdFromGQLChain(activity.chain)
+  if (!chainId) {
+    const error = new Error('Invalid activity from unsupported chain received from GQL')
     logger.error(error, {
       tags: {
         file: 'parseRemote',
-        function: 'parseFiatOnRampTransaction',
+        function: 'parseRemote',
       },
       extra: { activity },
     })
     throw error
+  }
+
+  const { offRampTransfer } = activity.details
+  return {
+    from: activity.details.senderAddress,
+    hash: activity.id,
+    chainId,
+    timestamp: activity.timestamp,
+    logos: [offRampTransfer.token.project?.logoUrl],
+    currencies: [gqlToCurrency(offRampTransfer.token)],
+    title: i18n.t('transaction.status.sale.successOn', {
+      serviceProvider: offRampTransfer.serviceProvider.name,
+    }),
+    descriptor: i18n.t('fiatOffRamp.exchangeRate', {
+      inputAmount: offRampTransfer.amount,
+      inputSymbol: offRampTransfer.token.symbol,
+      outputAmount: offRampTransfer.destinationAmount,
+      outputSymbol: offRampTransfer.destinationCurrency,
+    }),
+    suffixIconSrc: offRampTransfer.serviceProvider.logoDarkUrl,
+    status: activity.details.status,
   }
 }
 
@@ -746,13 +793,8 @@ function parseRemoteActivity(
       return undefined
     }
 
-    // TODO: skip until offramp transactions are supported
-    if (
-      assetActivity.details.__typename === 'OffRampTransactionDetails' ||
-      (assetActivity.details.__typename === 'TransactionDetails' &&
-        assetActivity.details.type === TransactionType.OffRamp)
-    ) {
-      return undefined
+    if (assetActivity.details.__typename === 'OffRampTransactionDetails') {
+      return parseFiatOffRampTransaction(assetActivity as FiatOffRampActivity)
     }
 
     if (assetActivity.details.__typename === 'SwapOrderDetails') {
@@ -762,6 +804,7 @@ function parseRemoteActivity(
 
     if (
       assetActivity.details.__typename === 'OnRampTransactionDetails' ||
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       (assetActivity.details.__typename === 'TransactionDetails' &&
         assetActivity.details.type === TransactionType.OnRamp)
     ) {
@@ -883,7 +926,7 @@ export function useTimeSince(timestamp: number) {
         }
       }, ms(`1s`))
 
-    let timeout = refreshTime()
+    let timeout: NodeJS.Timeout | undefined = refreshTime()
 
     return () => {
       timeout && clearTimeout(timeout)

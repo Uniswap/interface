@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
-import { ColorTokens, Switch as TamaguiSwitch } from 'tamagui'
+import type { ColorTokens } from 'tamagui'
+import { Switch as TamaguiSwitch } from 'tamagui'
 import { Check } from 'ui/src/components/icons'
-import { Flex, FlexProps } from 'ui/src/components/layout'
+import type { FlexProps } from 'ui/src/components/layout'
+import { Flex } from 'ui/src/components/layout'
 import { SWITCH_THUMB_HEIGHT, SWITCH_TRACK_HEIGHT, SWITCH_TRACK_WIDTH } from 'ui/src/components/switch/shared'
-import { SwitchProps } from 'ui/src/components/switch/types'
+import type { SwitchProps } from 'ui/src/components/switch/types'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 
 const animationProp = {
@@ -58,11 +60,13 @@ export function Switch({
 
   const thumbBackgroundColor = ((): ColorTokens => {
     if (isDisabledStyling) {
-      if (isBranded) {
-        return checked ? '$neutral2' : '$neutral3'
-      }
-      return checked ? '$neutral2' : '$neutral3'
+      return '$neutral3'
     }
+
+    if (checked) {
+      return isBranded ? '$white' : '$surface1'
+    }
+
     return '$white'
   })()
 
@@ -73,7 +77,6 @@ export function Switch({
     return isBranded ? colors.accent1.val : colors.neutral1.val
   })()
 
-  // Switch is a bit performance sensitive on native, memo to help here
   const frameActiveStyle = {
     x: checked ? -2 : 0,
   }

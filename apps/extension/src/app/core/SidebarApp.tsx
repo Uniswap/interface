@@ -16,6 +16,7 @@ import { ReceiveScreen } from 'src/app/features/receive/ReceiveScreen'
 import { SendFlow } from 'src/app/features/send/SendFlow'
 import { BackupRecoveryPhraseScreen } from 'src/app/features/settings/BackupRecoveryPhrase/BackupRecoveryPhraseScreen'
 import { DevMenuScreen } from 'src/app/features/settings/DevMenuScreen'
+import { DeviceAccessScreen } from 'src/app/features/settings/DeviceAccessScreen'
 import { SettingsManageConnectionsScreen } from 'src/app/features/settings/SettingsManageConnectionsScreen/SettingsManageConnectionsScreen'
 import { RemoveRecoveryPhraseVerify } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseVerify'
 import { RemoveRecoveryPhraseWallets } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseWallets'
@@ -72,6 +73,10 @@ const router = createHashRouter([
           {
             path: SettingsRoutes.ChangePassword,
             element: <SettingsChangePasswordScreen />,
+          },
+          {
+            path: SettingsRoutes.DeviceAccess,
+            element: <DeviceAccessScreen />,
           },
           isDevEnv()
             ? {

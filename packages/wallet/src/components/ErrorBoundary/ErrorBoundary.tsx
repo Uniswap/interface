@@ -64,7 +64,7 @@ class InternalErrorBoundary extends React.Component<
 
     this.props.onError?.(error)
 
-    const isNotificationError = !!errorBoundaryError.stack?.includes?.(NOTIFICATION_ROUTER_COMPONENT_NAME)
+    const isNotificationError = !!errorBoundaryError.stack?.includes(NOTIFICATION_ROUTER_COMPONENT_NAME)
     if (isNotificationError) {
       this.props.dispatch(resetNotifications())
     }
@@ -102,6 +102,7 @@ export function ErrorBoundary({
   // We want to temporary disable non global error boundaries until https://linear.app/uniswap/issue/WALL-4461 is done
   const disableLocalErrorBoundaries = true
   // we do not pass `name` to global error boundary
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (disableLocalErrorBoundaries && props.name) {
     return <>{props.children}</>
   }

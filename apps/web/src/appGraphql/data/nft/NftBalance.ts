@@ -54,62 +54,62 @@ export function useNftBalance({
   })
   const hideSpam = useHideSpamTokensSetting()
 
-  const hasNext = data?.nftBalances?.pageInfo?.hasNextPage
+  const hasNext = data?.nftBalances?.pageInfo.hasNextPage
   const loadMore = useCallback(
     () =>
       fetchMore({
         variables: {
-          after: data?.nftBalances?.pageInfo?.endCursor,
+          after: data?.nftBalances?.pageInfo.endCursor,
         },
       }),
-    [data?.nftBalances?.pageInfo?.endCursor, fetchMore],
+    [data?.nftBalances?.pageInfo.endCursor, fetchMore],
   )
 
   // If hideSpam is true, filter out spam NFTs
   const filteredQueryAssets = hideSpam
-    ? data?.nftBalances?.edges?.filter((queryAsset) => !(queryAsset?.node.ownedAsset as NonNullable<NftAsset>).isSpam)
+    ? data?.nftBalances?.edges.filter((queryAsset) => !(queryAsset.node.ownedAsset as NonNullable<NftAsset>).isSpam)
     : data?.nftBalances?.edges
 
   const walletAssets: WalletAsset[] | undefined = filteredQueryAssets?.map((queryAsset) => {
-    const asset = queryAsset?.node.ownedAsset as NonNullable<NftAsset>
-    const ethPrice = parseEther(wrapScientificNotation(asset?.listings?.edges[0]?.node.price.value ?? 0)).toString()
+    const asset = queryAsset.node.ownedAsset as NonNullable<NftAsset>
+    const ethPrice = parseEther(wrapScientificNotation(asset.listings?.edges[0]?.node.price.value ?? 0)).toString()
     return {
-      id: asset?.id,
-      imageUrl: asset?.image?.url,
-      smallImageUrl: asset?.smallImage?.url,
-      notForSale: asset?.listings?.edges?.length === 0,
-      animationUrl: asset?.animationUrl,
-      susFlag: asset?.suspiciousFlag,
+      id: asset.id,
+      imageUrl: asset.image?.url,
+      smallImageUrl: asset.smallImage?.url,
+      notForSale: asset.listings?.edges.length === 0,
+      animationUrl: asset.animationUrl,
+      susFlag: asset.suspiciousFlag,
       priceInfo: {
         ETHPrice: ethPrice,
         baseAsset: 'ETH',
         baseDecimals: '18',
         basePrice: ethPrice,
       },
-      name: asset?.name,
-      tokenId: asset?.tokenId,
+      name: asset.name,
+      tokenId: asset.tokenId,
       asset_contract: {
-        address: asset?.collection?.nftContracts?.[0]?.address,
-        tokenType: asset?.collection?.nftContracts?.[0]?.standard,
-        name: asset?.collection?.name,
-        description: asset?.description,
-        image_url: asset?.collection?.image?.url,
-        payout_address: queryAsset?.node?.listingFees?.[0]?.payoutAddress,
+        address: asset.collection?.nftContracts?.[0]?.address,
+        tokenType: asset.collection?.nftContracts?.[0]?.standard,
+        name: asset.collection?.name,
+        description: asset.description,
+        image_url: asset.collection?.image?.url,
+        payout_address: queryAsset.node.listingFees?.[0]?.payoutAddress,
       },
       collection: {
         name: asset.collection?.name,
         isVerified: asset.collection?.isVerified,
         imageUrl: asset.collection?.image?.url,
-        twitterUrl: asset.collection?.twitterName ? `@${asset.collection?.twitterName}` : undefined,
+        twitterUrl: asset.collection?.twitterName ? `@${asset.collection.twitterName}` : undefined,
       } as GenieCollection,
-      collectionIsVerified: asset?.collection?.isVerified,
+      collectionIsVerified: asset.collection?.isVerified,
       lastPrice: queryAsset.node.lastPrice?.value,
-      floorPrice: asset?.collection?.markets?.[0]?.floorPrice?.value,
-      basisPoints: queryAsset?.node?.listingFees?.[0]?.basisPoints ?? 0 / BIPS_BASE,
-      listing_date: asset?.listings?.edges?.[0]?.node?.createdAt?.toString(),
-      date_acquired: queryAsset.node.lastPrice?.timestamp?.toString(),
-      sellOrders: asset?.listings?.edges.map((edge: any) => edge.node),
-      floor_sell_order_price: asset?.listings?.edges?.[0]?.node?.price?.value,
+      floorPrice: asset.collection?.markets?.[0]?.floorPrice?.value,
+      basisPoints: queryAsset.node.listingFees?.[0]?.basisPoints ?? 0 / BIPS_BASE,
+      listing_date: asset.listings?.edges[0]?.node.createdAt.toString(),
+      date_acquired: queryAsset.node.lastPrice?.timestamp.toString(),
+      sellOrders: asset.listings?.edges.map((edge: any) => edge.node),
+      floor_sell_order_price: asset.listings?.edges[0]?.node.price.value,
       chain: asset.chain,
     }
   })

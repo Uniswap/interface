@@ -270,7 +270,7 @@ function DappRequestFooter({
           <Flex pb="$spacing8">
             <Text color="$statusWarning" variant="body3">
               {t('swap.warning.insufficientGas.title', {
-                currencySymbol: nativeBalance?.currency?.symbol ?? '',
+                currencySymbol: nativeBalance?.currency.symbol ?? '',
               })}
             </Text>
           </Flex>

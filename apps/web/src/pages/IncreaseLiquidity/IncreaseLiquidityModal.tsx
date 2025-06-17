@@ -21,11 +21,11 @@ function IncreaseLiquidityModalInner() {
 
   const { step, setStep, increaseLiquidityState } = useIncreaseLiquidityContext()
   const { closeModal } = useModalState(ModalName.AddLiquidity)
-  const autoSlippageTolerance = useLPSlippageValue(
-    increaseLiquidityState.position?.version,
-    increaseLiquidityState.position?.currency0Amount.currency,
-    increaseLiquidityState.position?.currency1Amount.currency,
-  )
+  const autoSlippageTolerance = useLPSlippageValue({
+    version: increaseLiquidityState.position?.version,
+    currencyA: increaseLiquidityState.position?.currency0Amount.currency,
+    currencyB: increaseLiquidityState.position?.currency1Amount.currency,
+  })
 
   let modalContent
   switch (step) {

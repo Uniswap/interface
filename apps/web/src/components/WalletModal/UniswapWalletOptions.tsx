@@ -1,4 +1,3 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import { DownloadWalletOption } from 'components/WalletModal/DownloadWalletOption'
 import { DetectedBadge } from 'components/WalletModal/shared'
@@ -16,6 +15,7 @@ import { PhoneDownload } from 'ui/src/components/icons/PhoneDownload'
 import { ScanQr } from 'ui/src/components/icons/ScanQr'
 import { iconSizes } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { isMobileWeb, isWebIOS } from 'utilities/src/platform'
 import { openDownloadApp } from 'utils/openDownloadApp'
 
@@ -115,7 +115,7 @@ export function UniswapWalletOptions() {
           <OptionContainer
             onPress={() => {
               setPersistHideMobileAppPromoBanner(true)
-              openDownloadApp({ element: InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON })
+              openDownloadApp({ element: ElementName.UniswapWalletModalDownloadButton })
             }}
           >
             <PhoneDownload size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} />

@@ -1,19 +1,19 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
-import { UniverseChainInfo } from 'uniswap/src/features/chains/types'
-import type { Client, Transport } from 'viem'
+import type { Chain, Client, Transport } from 'viem'
 import { useClient, useConnectorClient } from 'wagmi'
 
 const providers = new WeakMap<Client, Web3Provider>()
 
-export function clientToProvider(client?: Client<Transport, UniverseChainInfo>, chainId?: number) {
+export function clientToProvider(client?: Client<Transport, Chain>, chainId?: number) {
   if (!client) {
     return undefined
   }
   const { chain, transport } = client
 
-  const ensAddress = chain?.contracts?.ensRegistry?.address
+  const ensAddress = chain.contracts?.ensRegistry?.address
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const network = chain
     ? {
         chainId: chain.id,
@@ -27,7 +27,7 @@ export function clientToProvider(client?: Client<Transport, UniverseChainInfo>, 
     return undefined
   }
 
-  if (providers?.has(client)) {
+  if (providers.has(client)) {
     return providers.get(client)
   } else {
     const provider = new Web3Provider(transport, network)

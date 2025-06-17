@@ -174,7 +174,7 @@ const useAllAcountChainMismatchMutation = (ctx: {
         ctx.onHasAnyMismatch()
         for (const result of data) {
           if (result.hasMismatch) {
-            logger?.info(
+            logger.info(
               'useMismatchAccount.ts',
               'useAllAcountChainMismatchMutation',
               `mismatch found on chain ${result.chainId}`,

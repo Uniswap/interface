@@ -10,7 +10,7 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSelectHasTokenFavorited } from 'uniswap/src/features/favorites/useSelectHasTokenFavorited'
 import { useToggleFavoriteCallback } from 'uniswap/src/features/favorites/useToggleFavoriteCallback'
-import { ElementName, ModalName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
@@ -21,7 +21,7 @@ import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext
 interface TokenMenuParams {
   currencyId: CurrencyId
   chainId: UniverseChainId
-  analyticsSection: SectionNameType
+  analyticsSection: SectionName
   // token, which are in favorite section would have it defined
   onEditFavorites?: () => void
 }

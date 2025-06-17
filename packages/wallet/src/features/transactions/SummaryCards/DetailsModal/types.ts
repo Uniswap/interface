@@ -1,14 +1,20 @@
 import {
   BridgeTransactionInfo,
+  ClaimTransactionInfo,
   ConfirmedSwapTransactionInfo,
+  CreatePairTransactionInfo,
+  CreatePoolTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  LiquidityDecreaseTransactionInfo,
+  LiquidityIncreaseTransactionInfo,
   LocalOffRampTransactionInfo,
   LocalOnRampTransactionInfo,
   OffRampSaleInfo,
   OnRampPurchaseInfo,
   OnRampTransferInfo,
   Permit2ApproveTransactionInfo,
+  RemoveDelegationTransactionInfo,
   SendCallsTransactionInfo,
   UnknownTransactionInfo,
   WrapTransactionInfo,
@@ -99,10 +105,40 @@ export function isSendCallsTransactionInfo(typeInfo: TransactionTypeInfo): typeI
   return typeInfo.type === TransactionType.SendCalls
 }
 
+export function isLiquidityIncreaseTransactionInfo(
+  typeInfo: TransactionTypeInfo,
+): typeInfo is LiquidityIncreaseTransactionInfo {
+  return typeInfo.type === TransactionType.LiquidityIncrease
+}
+
+export function isLiquidityDecreaseTransactionInfo(
+  typeInfo: TransactionTypeInfo,
+): typeInfo is LiquidityDecreaseTransactionInfo {
+  return typeInfo.type === TransactionType.LiquidityDecrease
+}
+
+export function isClaimTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is ClaimTransactionInfo {
+  return typeInfo.type === TransactionType.Claim
+}
+
+export function isCreatePairTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is CreatePairTransactionInfo {
+  return typeInfo.type === TransactionType.CreatePair
+}
+
+export function isCreatePoolTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is CreatePoolTransactionInfo {
+  return typeInfo.type === TransactionType.CreatePool
+}
+
 export function isPermit2ApproveTransactionInfo(
   typeInfo: TransactionTypeInfo,
 ): typeInfo is Permit2ApproveTransactionInfo {
   return typeInfo.type === TransactionType.Permit2Approve
+}
+
+export function isRemoveDelegationTransactionInfo(
+  typeInfo: TransactionTypeInfo,
+): typeInfo is RemoveDelegationTransactionInfo {
+  return typeInfo.type === TransactionType.RemoveDelegation
 }
 
 export type TransactionParticipantRowProps = {

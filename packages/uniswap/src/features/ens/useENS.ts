@@ -22,7 +22,7 @@ export function useENS({ nameOrAddress, autocompleteDomain = false }: UseENSPara
   name: string | null
 } {
   const debouncedNameOrAddress = useDebounce(nameOrAddress) ?? null
-  const validAddress = getValidAddress(debouncedNameOrAddress, false, false)
+  const validAddress = getValidAddress({ address: debouncedNameOrAddress, withChecksum: false, log: false })
   const maybeName = validAddress ? null : debouncedNameOrAddress // if it's a valid address then it's not a name
 
   const { data: name, isLoading: nameFetching } = useENSName(validAddress ?? undefined)

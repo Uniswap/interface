@@ -74,7 +74,12 @@ function* validateSend(sendTokenParams: SendTokenParams) {
 
   switch (type) {
     case AssetType.ERC1155: {
-      const erc1155Contract = contractManager.getOrCreateContract<Erc1155>(chainId, tokenAddress, provider, ERC1155_ABI)
+      const erc1155Contract = contractManager.getOrCreateContract<Erc1155>({
+        chainId,
+        address: tokenAddress,
+        provider,
+        ABI: ERC1155_ABI,
+      })
 
       const balance = yield* call(erc1155Contract.balanceOf, account.address, sendTokenParams.tokenId)
 
@@ -82,7 +87,12 @@ function* validateSend(sendTokenParams: SendTokenParams) {
       return
     }
     case AssetType.ERC721: {
-      const erc721Contract = contractManager.getOrCreateContract<Erc721>(chainId, tokenAddress, provider, ERC721_ABI)
+      const erc721Contract = contractManager.getOrCreateContract<Erc721>({
+        chainId,
+        address: tokenAddress,
+        provider,
+        ABI: ERC721_ABI,
+      })
       const balance = yield* call(erc721Contract.balanceOf, account.address)
       validateSendAmount('1', balance)
       return
@@ -94,7 +104,12 @@ function* validateSend(sendTokenParams: SendTokenParams) {
         return
       }
 
-      const tokenContract = contractManager.getOrCreateContract<Erc20>(chainId, tokenAddress, provider, ERC20_ABI)
+      const tokenContract = contractManager.getOrCreateContract<Erc20>({
+        chainId,
+        address: tokenAddress,
+        provider,
+        ABI: ERC20_ABI,
+      })
       const currentBalance = yield* call(tokenContract.balanceOf, account.address)
       validateSendAmount(sendTokenParams.amountInWei, currentBalance)
     }
@@ -114,6 +129,7 @@ function getSendTypeInfo(params: SendTokenParams): SendTokenTransactionInfo {
 
   if (assetType === AssetType.ERC721 || assetType === AssetType.ERC1155) {
     typeInfo.tokenId = params.tokenId
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   } else if (assetType === AssetType.Currency) {
     typeInfo.currencyAmountRaw = params.amountInWei
   }
@@ -126,4 +142,7 @@ export const {
   wrappedSaga: sendTokenSaga,
   reducer: sendTokenReducer,
   actions: sendTokenActions,
-} = createMonitoredSaga(sendToken, 'sendToken')
+} = createMonitoredSaga({
+  saga: sendToken,
+  name: 'sendToken',
+})

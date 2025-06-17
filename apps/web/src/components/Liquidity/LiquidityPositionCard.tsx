@@ -12,13 +12,13 @@ import {
   MinMaxRange,
 } from 'components/Liquidity/LiquidityPositionFeeStats'
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/Liquidity/LiquidityPositionInfo'
-import { useGetRangeDisplay, usePositionDerivedInfo } from 'components/Liquidity/hooks'
+import { useGetRangeDisplay } from 'components/Liquidity/hooks'
 import { PositionInfo, PriceOrdering } from 'components/Liquidity/types'
 import { MouseoverTooltip } from 'components/Tooltip'
 import useHoverProps from 'hooks/useHoverProps'
 import { useLpIncentivesFormattedEarnings } from 'hooks/useLpIncentivesFormattedEarnings'
 import { useSwitchChain } from 'hooks/useSwitchChain'
-import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
+import { getBaseAndQuoteCurrencies } from 'pages/Pool/Positions/create/utils'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -39,12 +39,14 @@ import { zIndexes } from 'ui/src/theme/zIndexes'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { togglePositionVisibility } from 'uniswap/src/features/visibility/slice'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
@@ -81,11 +83,15 @@ export function LiquidityPositionCardLoader() {
   )
 }
 
-function useDropdownOptions(
-  liquidityPosition: PositionInfo,
-  showVisibilityOption?: boolean,
-  isVisible?: boolean,
-): MenuOptionItem[] {
+function useDropdownOptions({
+  liquidityPosition,
+  showVisibilityOption,
+  isVisible,
+}: {
+  liquidityPosition: PositionInfo
+  showVisibilityOption?: boolean
+  isVisible?: boolean
+}): MenuOptionItem[] {
   const { t } = useTranslation()
   const isOpenLiquidityPosition = liquidityPosition.status !== PositionStatus.CLOSED
 
@@ -151,7 +157,7 @@ function useDropdownOptions(
               if (chainInfo.id !== account.chainId) {
                 await switchChain(chainInfo.id)
               }
-              navigate(`/migrate/v2/${liquidityPosition.liquidityToken?.address ?? ''}`)
+              navigate(`/migrate/v2/${liquidityPosition.liquidityToken.address}`)
             },
             label: t('pool.migrateLiquidity'),
             Icon: RightArrow,
@@ -237,19 +243,41 @@ export function LiquidityPositionCard({
 
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const isTouchDevice = useIsTouchDevice()
-  const [pricesInverted, setPricesInverted] = useState(false)
+  const [priceInverted, setPriceInverted] = useState(false)
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
   const [hover, hoverProps] = useHoverProps()
   const media = useMedia()
   const isSmallScreen = media.sm
 
-  const { fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceOrdering, apr } =
-    usePositionDerivedInfo(liquidityPosition)
+  const { fee0Amount, fee1Amount } = liquidityPosition
+  const fiatFeeValue0 = useUSDCValue(fee0Amount, PollingInterval.Slow)
+  const fiatFeeValue1 = useUSDCValue(fee1Amount, PollingInterval.Slow)
+  const fiatValue0 = useUSDCValue(liquidityPosition.currency0Amount, PollingInterval.Slow)
+  const fiatValue1 = useUSDCValue(liquidityPosition.currency1Amount, PollingInterval.Slow)
+  const priceOrdering = useMemo(() => {
+    if (liquidityPosition.version === ProtocolVersion.V2 || !liquidityPosition.position) {
+      return {}
+    }
 
-  const [baseCurrency, quoteCurrency] = getInvertedTuple(
-    [liquidityPosition.currency0Amount.currency, liquidityPosition.currency1Amount.currency],
-    pricesInverted,
+    const position = liquidityPosition.position
+    const token0 = position.amount0.currency
+    const token1 = position.amount1.currency
+
+    return {
+      priceLower: position.token0PriceLower,
+      priceUpper: position.token0PriceUpper,
+      quote: token1,
+      base: token0,
+    }
+  }, [liquidityPosition])
+
+  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(
+    {
+      TOKEN0: liquidityPosition.currency0Amount.currency,
+      TOKEN1: liquidityPosition.currency1Amount.currency,
+    },
+    priceInverted,
   )
 
   const formattedUsdValue =
@@ -264,22 +292,26 @@ export function LiquidityPositionCard({
   })
 
   const currency0Id =
-    liquidityPosition?.version === ProtocolVersion.V4
+    liquidityPosition.version === ProtocolVersion.V4
       ? buildCurrencyId(liquidityPosition.chainId, currencyAddress(liquidityPosition.currency0Amount.currency))
       : undefined
   const currency1Id =
-    liquidityPosition?.version === ProtocolVersion.V4
+    liquidityPosition.version === ProtocolVersion.V4
       ? buildCurrencyId(liquidityPosition.chainId, currencyAddress(liquidityPosition.currency1Amount.currency))
       : undefined
 
   const currency0Info = useCurrencyInfo(currency0Id)
   const currency1Info = useCurrencyInfo(currency1Id)
 
-  const dropdownOptions = useDropdownOptions(liquidityPosition, showVisibilityOption, isVisible)
+  const dropdownOptions = useDropdownOptions({
+    liquidityPosition,
+    showVisibilityOption,
+    isVisible,
+  })
 
   const priceOrderingForChart = useMemo(() => {
     if (
-      (liquidityPosition?.version !== ProtocolVersion.V3 && liquidityPosition?.version !== ProtocolVersion.V4) ||
+      (liquidityPosition.version !== ProtocolVersion.V3 && liquidityPosition.version !== ProtocolVersion.V4) ||
       !liquidityPosition.position ||
       !liquidityPosition.liquidity ||
       !liquidityPosition.tickLower ||
@@ -289,14 +321,14 @@ export function LiquidityPositionCard({
     }
     return {
       base: baseCurrency,
-      priceLower: pricesInverted
+      priceLower: priceInverted
         ? liquidityPosition.position.token0PriceUpper.invert()
         : liquidityPosition.position.token0PriceLower,
-      priceUpper: pricesInverted
+      priceUpper: priceInverted
         ? liquidityPosition.position.token0PriceLower.invert()
         : liquidityPosition.position.token0PriceUpper,
     }
-  }, [liquidityPosition, baseCurrency, pricesInverted])
+  }, [liquidityPosition, baseCurrency, priceInverted])
 
   return (
     <ContextMenu
@@ -351,6 +383,11 @@ export function LiquidityPositionCard({
               chainId={liquidityPosition.chainId}
               quoteCurrency={quoteCurrency}
               baseCurrency={baseCurrency}
+              sdkCurrencies={{
+                TOKEN0: liquidityPosition.currency0Amount.currency,
+                TOKEN1: liquidityPosition.currency1Amount.currency,
+              }}
+              priceInverted={priceInverted}
               positionStatus={liquidityPosition.status}
               poolAddressOrId={liquidityPosition.poolId}
               priceOrdering={priceOrderingForChart}
@@ -361,8 +398,8 @@ export function LiquidityPositionCard({
                 tickLower={liquidityPosition.tickLower}
                 tickUpper={liquidityPosition.tickUpper}
                 tickSpacing={liquidityPosition.tickSpacing}
-                pricesInverted={pricesInverted}
-                setPricesInverted={setPricesInverted}
+                pricesInverted={priceInverted}
+                setPricesInverted={setPriceInverted}
               />
             </Flex>
           </Flex>
@@ -378,10 +415,10 @@ export function LiquidityPositionCard({
             version={liquidityPosition.version}
             currency0Info={currency0Info}
             currency1Info={currency1Info}
-            apr={apr}
+            apr={liquidityPosition.apr}
             cardHovered={hover && !disabled}
-            pricesInverted={pricesInverted}
-            setPricesInverted={setPricesInverted}
+            pricesInverted={priceInverted}
+            setPricesInverted={setPriceInverted}
             lpIncentiveRewardApr={
               isLPIncentivesEnabled && liquidityPosition.version === ProtocolVersion.V4
                 ? liquidityPosition.boostedApr

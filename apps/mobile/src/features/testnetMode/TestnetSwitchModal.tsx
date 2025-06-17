@@ -16,7 +16,7 @@ export function TestnetSwitchModal({ route }: AppStackScreenProp<typeof ModalNam
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
-  const switchToMode = route.params.initialState?.switchToMode
+  const switchToMode = route.params.initialState.switchToMode
 
   const onToggleTestnetMode = (): void => {
     onClose()

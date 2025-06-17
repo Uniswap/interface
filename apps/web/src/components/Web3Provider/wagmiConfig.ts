@@ -1,27 +1,22 @@
+import { PLAYWRIGHT_CONNECT_ADDRESS } from 'components/Web3Provider/constants'
 import { injectedWithFallback } from 'components/Web3Provider/injectedWithFallback'
 import { WC_PARAMS } from 'components/Web3Provider/walletConnect'
 import { embeddedWallet } from 'connection/EmbeddedWalletConnector'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UNIVERSE_CHAINS_SORTED, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
-import { isPlaywrightEnv } from 'utilities/src/environment/env'
+import { isPlaywrightEnv, isTestEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
-import { Chain, createClient, isAddress } from 'viem'
-import { createConfig, fallback, http } from 'wagmi'
-import { connect } from 'wagmi/actions'
-import { coinbaseWallet, injected, mock, safe, walletConnect } from 'wagmi/connectors'
-
-declare module 'wagmi' {
-  interface Register {
-    config: typeof wagmiConfig
-  }
-}
+import { Chain, createClient } from 'viem'
+import { Config, createConfig, fallback, http } from 'wagmi'
+import { coinbaseWallet, mock, safe, walletConnect } from 'wagmi/connectors'
 
 export const orderedTransportUrls = (chain: ReturnType<typeof getChainInfo>): string[] => {
   const orderedRpcUrls = [
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     ...(chain.rpcUrls.interface?.http ?? []),
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     ...(chain.rpcUrls.default?.http ?? []),
     ...(chain.rpcUrls.public?.http ?? []),
     ...(chain.rpcUrls.fallback?.http ?? []),
@@ -30,50 +25,69 @@ export const orderedTransportUrls = (chain: ReturnType<typeof getChainInfo>): st
   return Array.from(new Set(orderedRpcUrls.filter(Boolean)))
 }
 
-const baseConnectors = [
-  injectedWithFallback(),
-  walletConnect(WC_PARAMS),
-  embeddedWallet(),
-  coinbaseWallet({
-    appName: 'Uniswap',
-    // CB SDK doesn't pass the parent origin context to their passkey site
-    // Flagged to CB team and can remove UNISWAP_WEB_URL once fixed
-    appLogoUrl: `${UNISWAP_WEB_URL}${UNISWAP_LOGO}`,
-    reloadOnDisconnect: false,
-    enableMobileWalletLink: true,
-  }),
-  safe(),
-]
+function createWagmiConnectors(params: {
+  /** If `true`, appends the wagmi `mock` connector. Used in Playwright. */
+  includeMockConnector: boolean
+}): any[] {
+  const { includeMockConnector } = params
 
-// Only add mock connector in Playwright environment
-const connectors = isPlaywrightEnv()
-  ? [
-      ...baseConnectors,
-      mock({
-        features: {},
-        accounts: ['0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'],
-      }),
-    ]
-  : baseConnectors
+  const baseConnectors = [
+    injectedWithFallback(),
+    // There are no unit tests that expect WalletConnect to be included here,
+    // so we can disable it to reduce log noise.
+    ...(isTestEnv() && !isPlaywrightEnv() ? [] : [walletConnect(WC_PARAMS)]),
+    embeddedWallet(),
+    coinbaseWallet({
+      appName: 'Uniswap',
+      // CB SDK doesn't pass the parent origin context to their passkey site
+      // Flagged to CB team and can remove UNISWAP_WEB_URL once fixed
+      appLogoUrl: `${UNISWAP_WEB_URL}${UNISWAP_LOGO}`,
+      reloadOnDisconnect: false,
+    }),
+    safe(),
+  ]
 
-export const wagmiConfig = createConfig({
-  chains: [getChainInfo(UniverseChainId.Mainnet), ...ALL_CHAIN_IDS.map(getChainInfo)],
-  connectors,
-  client({ chain }) {
-    return createClient({
-      chain,
-      batch: { multicall: true },
-      pollingInterval: 12_000,
-      transport: fallback(
-        orderedTransportUrls(chain).map((url) =>
-          http(url, { onFetchResponse: (response) => onFetchResponse(response, chain, url) }),
+  return includeMockConnector
+    ? [
+        ...baseConnectors,
+        mock({
+          features: {},
+          accounts: [PLAYWRIGHT_CONNECT_ADDRESS],
+        }),
+      ]
+    : baseConnectors
+}
+
+const CHAINS = [UNIVERSE_CHAINS_SORTED[0], ...UNIVERSE_CHAINS_SORTED] as const
+
+function createWagmiConfig(params: {
+  /** The connector list to use. */
+  connectors: any[]
+  /** Optional custom `onFetchResponse` handler – defaults to `defaultOnFetchResponse`. */
+  onFetchResponse?: (response: Response, chain: Chain, url: string) => void
+}): Config<typeof CHAINS> {
+  const { connectors, onFetchResponse = defaultOnFetchResponse } = params
+
+  return createConfig({
+    chains: CHAINS,
+    connectors,
+    client({ chain }) {
+      return createClient({
+        chain,
+        batch: { multicall: true },
+        pollingInterval: 12_000,
+        transport: fallback(
+          orderedTransportUrls(chain).map((url) =>
+            http(url, { onFetchResponse: (response) => onFetchResponse(response, chain, url) }),
+          ),
         ),
-      ),
-    })
-  },
-})
+      })
+    },
+  })
+}
 
-const onFetchResponse = (response: Response, chain: Chain, url: string) => {
+// eslint-disable-next-line max-params
+const defaultOnFetchResponse = (response: Response, chain: Chain, url: string) => {
   if (response.status !== 200) {
     const message = `RPC provider returned non-200 status: ${response.status}`
 
@@ -101,29 +115,15 @@ const onFetchResponse = (response: Response, chain: Chain, url: string) => {
   }
 }
 
-// Automatically connect if running in Cypress environment
-if ((window as any).Cypress?.eagerlyConnect) {
-  connect(wagmiConfig, { connector: injected() })
-}
+const defaultConnectors = createWagmiConnectors({
+  includeMockConnector: isPlaywrightEnv(),
+})
 
-const isEagerlyConnect = !window.location.search.includes('eagerlyConnect=false')
-const eagerlyConnectAddress = window.location.search.includes('eagerlyConnectAddress=')
-  ? window.location.search.split('eagerlyConnectAddress=')[1]
-  : undefined
+export const wagmiConfig = createWagmiConfig({ connectors: defaultConnectors })
 
-// Automatically connect if running in Playwright environment
-if (isPlaywrightEnv() && isEagerlyConnect) {
-  // setTimeout is needed to avoid disconnection
-  setTimeout(() => {
-    connect(wagmiConfig, {
-      connector: mock({
-        features: {},
-        accounts: [
-          eagerlyConnectAddress && isAddress(eagerlyConnectAddress)
-            ? eagerlyConnectAddress
-            : '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-        ],
-      }),
-    })
-  }, 1)
+declare module 'wagmi' {
+  interface Register {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+    config: typeof wagmiConfig
+  }
 }

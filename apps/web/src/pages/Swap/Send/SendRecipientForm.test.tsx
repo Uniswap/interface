@@ -8,9 +8,9 @@ import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { shortenAddress } from 'utilities/src/addresses'
 
 const mockMultichainContextValue = {
-  reset: jest.fn(),
-  setSelectedChainId: jest.fn(),
-  setIsUserSelectedToken: jest.fn(),
+  reset: vi.fn(),
+  setSelectedChainId: vi.fn(),
+  setIsUserSelectedToken: vi.fn(),
   isSwapAndLimitContext: true,
   isUserSelectedToken: false,
   isMultichainContext: true,
@@ -21,9 +21,9 @@ const mockSwapAndLimitContextValue = {
     inputCurrency: DAI,
     outputCurrency: undefined,
   },
-  setCurrencyState: jest.fn(),
+  setCurrencyState: vi.fn(),
   currentTab: SwapTab.Limit,
-  setCurrentTab: jest.fn(),
+  setCurrentTab: vi.fn(),
 }
 
 const mockedSendContextDefault: SendContextType = {
@@ -35,7 +35,7 @@ const mockedSendContextDefault: SendContextType = {
     inputInFiat: true,
   },
   derivedSendInfo: {},
-  setSendState: jest.fn(),
+  setSendState: vi.fn(),
 }
 
 const mockedSendContextRecipientInput: SendContextType = {
@@ -47,7 +47,7 @@ const mockedSendContextRecipientInput: SendContextType = {
     inputInFiat: true,
   },
   derivedSendInfo: {},
-  setSendState: jest.fn(),
+  setSendState: vi.fn(),
 }
 
 const mockedSendContextWithVerifiedRecipientInput: SendContextType = {
@@ -68,7 +68,7 @@ const mockedSendContextWithVerifiedRecipientInput: SendContextType = {
       ensName: 'hayden.eth',
     },
   },
-  setSendState: jest.fn(),
+  setSendState: vi.fn(),
 }
 
 const mockedSendContextWithUnitag: SendContextType = {
@@ -90,7 +90,7 @@ const mockedSendContextWithUnitag: SendContextType = {
       unitag: 'hayden',
     },
   },
-  setSendState: jest.fn(),
+  setSendState: vi.fn(),
 }
 
 describe('SendCurrencyInputform', () => {

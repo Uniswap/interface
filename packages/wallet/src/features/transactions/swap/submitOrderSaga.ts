@@ -94,7 +94,12 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
     const signerManager = yield* call(getSignerManager)
     const signer = yield* call([signerManager, 'getSignerForAccount'], account)
 
-    const signature = yield* call(signTypedData, permit.domain, permit.types, permit.values, signer)
+    const signature = yield* call(signTypedData, {
+      domain: permit.domain,
+      types: permit.types,
+      value: permit.values,
+      signer,
+    })
 
     yield* call(submitOrder, { signature, quote, routing })
   } catch {

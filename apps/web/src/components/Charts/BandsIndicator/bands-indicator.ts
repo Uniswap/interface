@@ -41,8 +41,8 @@ class BandsIndicatorPaneRenderer implements ISeriesPrimitivePaneRenderer {
       region.moveTo(points[0]?.x, points[0]?.upper)
       lines.moveTo(points[0]?.x, points[0]?.upper)
       for (const point of points) {
-        region.lineTo(point?.x, point.upper)
-        lines.lineTo(point?.x, point.upper)
+        region.lineTo(point.x, point.upper)
+        lines.lineTo(point.x, point.upper)
       }
       const end = points.length - 1
       region.lineTo(points[end]?.x, points[end]?.lower)

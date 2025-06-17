@@ -16,7 +16,11 @@ export function getOnRampAuthLink(accounts: Record<string, Account>, signerManag
     }
 
     try {
-      const onRampAuth = await createOnRampTransactionsAuth(ON_RAMP_AUTH_MAX_LIMIT, account, signerManager)
+      const onRampAuth = await createOnRampTransactionsAuth({
+        limit: ON_RAMP_AUTH_MAX_LIMIT,
+        account,
+        signerManager,
+      })
 
       return {
         ...prevContext,

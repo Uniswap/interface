@@ -19,6 +19,7 @@ export const SwapFormWarningStateContext = createContext<SwapFormWarningState>(n
 
 export const useSwapFormWarningState = (): SwapFormWarningState => {
   const swapFormWarningState = useContext(SwapFormWarningStateContext)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!swapFormWarningState) {
     throw new Error('useSwapFormWarningState must be used within a SwapFormWarningStateProvider')
   }

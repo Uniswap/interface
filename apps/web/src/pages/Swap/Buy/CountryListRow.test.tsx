@@ -2,9 +2,13 @@ import { CountryListRow } from 'pages/Swap/Buy/CountryListRow'
 import { US } from 'test-utils/constants'
 import { act, render, screen } from 'test-utils/render'
 
+vi.mock('nft/components/iconExports', () => ({
+  ApprovedCheckmarkIcon: () => <div data-testid="approved-checkmark-icon" />,
+}))
+
 describe('CountryListRow', () => {
   it('should render', () => {
-    const clickHandler = jest.fn()
+    const clickHandler = vi.fn()
     const { container } = render(
       <CountryListRow country={US} selectedCountry={undefined} onClick={clickHandler} style={{}} />,
     )
@@ -15,7 +19,7 @@ describe('CountryListRow', () => {
   })
 
   it('should render selected country', async () => {
-    const clickHandler = jest.fn()
+    const clickHandler = vi.fn()
     const result = await act(async () => {
       return render(<CountryListRow country={US} selectedCountry={US} onClick={clickHandler} style={{}} />)
     })

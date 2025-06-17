@@ -1,5 +1,4 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
 import { MAX_FEE_TIER_DECIMALS, calculateTickSpacingFromFeeAmount, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
@@ -26,8 +25,9 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { LiquidityEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { FeePoolSelectAction } from 'uniswap/src/features/telemetry/types'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
 import { isMobileWeb } from 'utilities/src/platform'
@@ -76,7 +76,7 @@ export function FeeTierSearchModal() {
   const { feeTierData, hasExistingFeeTiers } = useAllFeeTierPoolData({
     chainId,
     protocolVersion,
-    currencies: derivedPositionInfo.currencies,
+    sdkCurrencies: derivedPositionInfo.currencies.sdk,
     withDynamicFeeTier,
     hook: hook ?? ZERO_ADDRESS,
   })
@@ -143,7 +143,11 @@ export function FeeTierSearchModal() {
 
   const feeHundredthsOfBips = Math.round(parseFloat(createFeeValue) * 10000)
 
-  const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_FONT_SIZE, MIN_FONT_SIZE)
+  const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing({
+    maxCharWidthAtMaxFontSize: MAX_CHAR_PIXEL_WIDTH,
+    maxFontSize: MAX_FONT_SIZE,
+    minFontSize: MIN_FONT_SIZE,
+  })
   useEffect(() => {
     if (createFeeValue) {
       onSetFontSize(createFeeValue)
@@ -290,8 +294,8 @@ export function FeeTierSearchModal() {
                       tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips),
                     },
                   }))
-                  sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
-                    action: FeePoolSelectAction.SEARCH,
+                  sendAnalyticsEvent(LiquidityEventName.SelectLiquidityPoolFeeTier, {
+                    action: FeePoolSelectAction.Search,
                     fee_tier: feeHundredthsOfBips,
                     is_new_fee_tier: Boolean(feeTierData[feeHundredthsOfBips]),
                     ...trace,
@@ -299,6 +303,7 @@ export function FeeTierSearchModal() {
                   onClose()
                 }}
               >
+                {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
                 {feeTierData[feeHundredthsOfBips] ? t('fee.tier.select.existing.button') : t('fee.tier.create.button')}
               </Button>
             </Flex>

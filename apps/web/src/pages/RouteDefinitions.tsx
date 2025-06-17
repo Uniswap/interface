@@ -7,6 +7,7 @@ import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from 'pages/Landing'
 import Swap from 'pages/Swap'
+import { CHROME_EXTENSION_UNINSTALL_URL_PATH } from 'uniswap/src/constants/urls'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import i18n from 'uniswap/src/i18n'
@@ -38,6 +39,7 @@ const PoolDetails = lazy(() => import('pages/PoolDetails'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 const ExtensionPasskeyAuthPopUp = lazy(() => import('pages/ExtensionPasskeyAuthPopUp'))
 const PasskeyManagement = lazy(() => import('pages/PasskeyManagement'))
+const ExtensionUninstall = lazy(() => import('pages/ExtensionUninstall/ExtensionUninstall'))
 
 interface RouterConfig {
   browserRouterEnabled?: boolean
@@ -123,7 +125,11 @@ export const routes: RouteDefinition[] = [
     path: '/explore/tokens/:chainName/:tokenAddress',
     getTitle: () => i18n.t('common.buyAndSell'),
     getDescription: () => StaticTitlesAndDescriptions.TDPDescription,
-    getElement: () => <TokenDetails />,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <TokenDetails />
+      </Suspense>
+    ),
   }),
   createRouteDefinition({
     path: '/tokens',
@@ -346,6 +352,12 @@ export const routes: RouteDefinition[] = [
     getElement: () => <PasskeyManagement />,
     getTitle: () => StaticTitlesAndDescriptions.PasskeyManagementTitle,
     enabled: (args) => args.isEmbeddedWalletEnabled ?? false,
+  }),
+  // Uniswap Extension Uninstall Page
+  createRouteDefinition({
+    path: CHROME_EXTENSION_UNINSTALL_URL_PATH,
+    getElement: () => <ExtensionUninstall />,
+    getTitle: () => i18n.t('title.extension.uninstall'),
   }),
   createRouteDefinition({ path: '*', getElement: () => <Navigate to="/not-found" replace /> }),
   createRouteDefinition({ path: '/not-found', getElement: () => <NotFound /> }),

@@ -1,9 +1,9 @@
-import { SwapEventName } from '@uniswap/analytics-events'
 import { SignatureType } from 'state/signatures/types'
 import { ConfirmedTransactionDetails, TransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapRouting } from 'uniswap/src/features/telemetry/types'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
@@ -17,22 +17,30 @@ const TRANSACTION_TYPE_TO_SWAP_ROUTING: Record<OnChainSwapTransactionType, SwapR
   [TransactionType.BRIDGE]: 'bridge',
 }
 
-export function logSwapFinalized(
-  hash: string,
-  batchId: string | undefined,
-  chainInId: number,
-  chainOutId: number,
-  analyticsContext: ITraceContext,
-  status: ConfirmedTransactionDetails['status'],
-  type: OnChainSwapTransactionType,
-) {
+export function logSwapFinalized({
+  hash,
+  batchId,
+  chainInId,
+  chainOutId,
+  analyticsContext,
+  status,
+  type,
+}: {
+  hash: string
+  batchId?: string
+  chainInId: number
+  chainOutId: number
+  analyticsContext: ITraceContext
+  status: ConfirmedTransactionDetails['status']
+  type: OnChainSwapTransactionType
+}) {
   const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FirstSwapSuccess)
   const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstSwapSuccess)
 
   const event =
     status === TransactionStatus.Confirmed
-      ? SwapEventName.SWAP_TRANSACTION_COMPLETED
-      : SwapEventName.SWAP_TRANSACTION_FAILED
+      ? SwapEventName.SwapTransactionCompleted
+      : SwapEventName.SwapTransactionFailed
 
   sendAnalyticsEvent(event, {
     routing: TRANSACTION_TYPE_TO_SWAP_ROUTING[type],
@@ -68,21 +76,26 @@ const SIGNATURE_TYPE_TO_SWAP_ROUTING: Record<SignatureType, SwapRouting> = {
   [SignatureType.SIGN_UNISWAPX_ORDER]: 'uniswap_x',
 }
 
-export function logUniswapXSwapFinalized(
-  hash: string | undefined,
-  orderHash: string,
-  chainId: number,
-  analyticsContext: ITraceContext,
-  signatureType: SignatureType,
-  status: UniswapXOrderStatus.FILLED | UniswapXOrderStatus.CANCELLED | UniswapXOrderStatus.EXPIRED,
-) {
+export function logUniswapXSwapFinalized({
+  hash,
+  orderHash,
+  chainId,
+  analyticsContext,
+  signatureType,
+  status,
+}: {
+  hash?: string
+  orderHash: string
+  chainId: number
+  analyticsContext: ITraceContext
+  signatureType: SignatureType
+  status: UniswapXOrderStatus.FILLED | UniswapXOrderStatus.CANCELLED | UniswapXOrderStatus.EXPIRED
+}) {
   const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FirstSwapSuccess)
   const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstSwapSuccess)
 
   const event =
-    status === UniswapXOrderStatus.FILLED
-      ? SwapEventName.SWAP_TRANSACTION_COMPLETED
-      : SwapEventName.SWAP_TRANSACTION_FAILED
+    status === UniswapXOrderStatus.FILLED ? SwapEventName.SwapTransactionCompleted : SwapEventName.SwapTransactionFailed
 
   sendAnalyticsEvent(event, {
     routing: SIGNATURE_TYPE_TO_SWAP_ROUTING[signatureType],

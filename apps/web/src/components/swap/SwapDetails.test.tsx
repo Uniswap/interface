@@ -20,7 +20,7 @@ describe('SwapDetails.tsx', () => {
         trade={TEST_TRADE_EXACT_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
-        onConfirm={jest.fn()}
+        onConfirm={vi.fn()}
         swapErrorMessage={undefined}
         disabledConfirm={false}
         priceImpact={new Percent(5, 100)}
@@ -33,12 +33,12 @@ describe('SwapDetails.tsx', () => {
           isLoading: false,
         }}
         showAcceptChanges={false}
-        onAcceptChanges={jest.fn()}
+        onAcceptChanges={vi.fn()}
       />,
     )
     expect(asFragment()).toMatchSnapshot()
 
-    const tradeMinAmount = TEST_TRADE_EXACT_INPUT.minimumAmountOut(TEST_ALLOWED_SLIPPAGE ?? new Percent(0))
+    const tradeMinAmount = TEST_TRADE_EXACT_INPUT.minimumAmountOut(TEST_ALLOWED_SLIPPAGE)
     const formattedAmount = formatCurrencyAmount({ value: tradeMinAmount, type: NumberType.SwapTradeAmount })
 
     expect(
@@ -51,14 +51,14 @@ describe('SwapDetails.tsx', () => {
   })
 
   it('shows accept changes section when available', () => {
-    const mockAcceptChanges = jest.fn()
+    const mockAcceptChanges = vi.fn()
     render(
       <SwapDetails
         isLoading={false}
         trade={TEST_TRADE_EXACT_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
-        onConfirm={jest.fn()}
+        onConfirm={vi.fn()}
         swapErrorMessage={undefined}
         disabledConfirm={false}
         fiatValueInput={{
@@ -86,7 +86,7 @@ describe('SwapDetails.tsx', () => {
         trade={PREVIEW_EXACT_IN_TRADE}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
-        onConfirm={jest.fn()}
+        onConfirm={vi.fn()}
         swapErrorMessage={undefined}
         disabledConfirm
         fiatValueInput={{
@@ -98,7 +98,7 @@ describe('SwapDetails.tsx', () => {
           isLoading: false,
         }}
         showAcceptChanges={false}
-        onAcceptChanges={jest.fn()}
+        onAcceptChanges={vi.fn()}
       />,
     )
     expect(asFragment()).toMatchSnapshot()
@@ -112,7 +112,7 @@ describe('SwapDetails.tsx', () => {
         trade={LIMIT_ORDER_TRADE}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
-        onConfirm={jest.fn()}
+        onConfirm={vi.fn()}
         swapErrorMessage={undefined}
         disabledConfirm={false}
         fiatValueInput={{
@@ -124,7 +124,7 @@ describe('SwapDetails.tsx', () => {
           isLoading: false,
         }}
         showAcceptChanges={false}
-        onAcceptChanges={jest.fn()}
+        onAcceptChanges={vi.fn()}
       />,
     )
     expect(screen.getByText('Limit price')).toBeInTheDocument()

@@ -15,5 +15,5 @@ export function generateSignerFunc(
   if (!account || !signerManager) {
     return undefined
   }
-  return (message: string): Promise<string> => signMessage(message, account, signerManager)
+  return (message: string): Promise<string> => signMessage({ message, account, signerManager })
 }

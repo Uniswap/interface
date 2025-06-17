@@ -30,7 +30,7 @@ export class EmbeddedWalletProvider {
   listeners: Map<string, Set<Listener>>
   chainId: UniverseChainId
   publicClient?: ReturnType<typeof createPublicClient>
-  static _instance: EmbeddedWalletProvider
+  static _instance: EmbeddedWalletProvider | undefined
 
   private constructor() {
     this.listeners = new Map()
@@ -54,8 +54,8 @@ export class EmbeddedWalletProvider {
       this.publicClient = createPublicClient({
         chain: chainInfo,
         transport: fallback([
-          http(rpcUrls.public?.http?.[0]), // generally quicknode
-          http(rpcUrls.default.http?.[0]), // options here and below are usually public endpoints
+          http(rpcUrls.public?.http[0]), // generally quicknode
+          http(rpcUrls.default.http[0]), // options here and below are usually public endpoints
           ...fallbackTransports,
         ]),
       })
@@ -236,16 +236,16 @@ export class EmbeddedWalletProvider {
       }
       const publicClient = this.getPublicClient(this.chainId)
       const [currentGasData, nonce] = await Promise.all([
-        publicClient?.estimateFeesPerGas({ chain: getChainInfo(this.chainId) }),
-        publicClient?.getTransactionCount({ address: account.address }),
+        publicClient.estimateFeesPerGas({ chain: getChainInfo(this.chainId) }),
+        publicClient.getTransactionCount({ address: account.address }),
       ])
       const tx = {
         ...transactions[0],
         gas: (BigInt(Number(transactions[0].gas ?? 0)) * BigInt(12)) / BigInt(10), // add 20% buffer, TODO[EW]: play around with this
         value: BigInt(transactions[0].value ?? 0),
         chainId: this.chainId,
-        maxFeePerGas: BigInt(transactions[0].maxFeePerGas ?? currentGasData?.maxFeePerGas),
-        maxPriorityFeePerGas: BigInt(transactions[0].maxPriorityFeePerGas ?? currentGasData?.maxPriorityFeePerGas),
+        maxFeePerGas: BigInt(transactions[0].maxFeePerGas ?? currentGasData.maxFeePerGas),
+        maxPriorityFeePerGas: BigInt(transactions[0].maxPriorityFeePerGas ?? currentGasData.maxPriorityFeePerGas),
         nonce: transactions[0].nonce ?? nonce,
       }
       const signedTx = await account.signTransaction(tx)
@@ -270,7 +270,7 @@ export class EmbeddedWalletProvider {
     const client = this.getPublicClient(this.chainId)
 
     const data = await client.getBytecode({
-      address: args?.params?.[0],
+      address: args.params?.[0],
     })
     return data
   }

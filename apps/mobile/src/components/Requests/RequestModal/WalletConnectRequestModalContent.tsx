@@ -69,7 +69,7 @@ export function WalletConnectRequestModalContent({
 }: WalletConnectRequestModalContentProps): JSX.Element {
   const chainId = request.chainId
   const permitInfo = getPermitInfo(request)
-  const nativeCurrency = chainId && NativeCurrency.onChain(chainId)
+  const nativeCurrency = NativeCurrency.onChain(chainId)
 
   const { t } = useTranslation()
   const { animatedFooterHeight } = useBottomSheetInternal()
@@ -115,7 +115,7 @@ export function WalletConnectRequestModalContent({
           <Flex p="$spacing16">
             <Text color="$statusWarning" variant="body2">
               {t('walletConnect.request.error.insufficientFunds', {
-                currencySymbol: nativeCurrency?.symbol,
+                currencySymbol: nativeCurrency.symbol,
               })}
             </Text>
           </Flex>

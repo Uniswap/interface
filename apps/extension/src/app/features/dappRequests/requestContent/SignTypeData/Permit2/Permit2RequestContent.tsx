@@ -25,8 +25,8 @@ export function Permit2RequestContent({ dappRequest }: Permit2RequestProps): JSX
   const [open, setOpen] = useState(false)
   const toggleOpen = (): void => setOpen(!open)
 
-  const spenderLink = chainId ? getExplorerLink(chainId, spender, ExplorerDataType.ADDRESS) : undefined
-  const tokenLink = chainId ? getExplorerLink(chainId, address, ExplorerDataType.TOKEN) : undefined
+  const spenderLink = chainId ? getExplorerLink({ chainId, data: spender, type: ExplorerDataType.ADDRESS }) : undefined
+  const tokenLink = chainId ? getExplorerLink({ chainId, data: address, type: ExplorerDataType.TOKEN }) : undefined
 
   return (
     <DappRequestContent showNetworkCost confirmText={t('common.button.sign')} title={t('dapp.request.permit2.header')}>

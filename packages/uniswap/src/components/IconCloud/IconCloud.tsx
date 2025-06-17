@@ -78,8 +78,8 @@ export function IconCloud<T extends ItemData>({
       .map((p) => {
         return {
           ...p,
-          y: (p?.y ?? 0) - 0.5 * (p?.size ?? 0),
-          x: (p?.x ?? 0) - 0.5 * (p?.size ?? 0),
+          y: p.y - 0.5 * p.size,
+          x: p.x - 0.5 * p.size,
         }
       })
 

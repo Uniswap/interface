@@ -64,7 +64,15 @@ export function* deepLinkWatcher() {
   yield* takeLatest(openDeepLink.type, handleDeepLink)
 }
 
-export function* handleUniswapAppDeepLink(path: string, url: string, linkSource: LinkSource) {
+export function* handleUniswapAppDeepLink({
+  path,
+  url,
+  linkSource,
+}: {
+  path: string
+  url: string
+  linkSource: LinkSource
+}) {
   // Navigate to the home page to ensure that a page isn't already open as a screen,
   // which causes the bottom sheet to break
   navigate(MobileScreens.Home)
@@ -144,7 +152,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
       return
     }
 
-    const isInternal = Boolean(accounts?.[accountAddress])
+    const isInternal = Boolean(accounts[accountAddress])
     if (isInternal) {
       yield* put(setAccountAsActive(accountAddress))
     } else {
@@ -168,7 +176,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
     const activeAccount = yield* select(selectActiveAccount)
     if (!activeAccount) {
       if (deepLinkAction.action === DeepLinkAction.UniswapWebLink) {
-        yield* call(openUri, deepLinkAction.data.url.toString(), true)
+        yield* call(openUri, { uri: deepLinkAction.data.url.toString(), openExternalBrowser: true })
         yield* _sendAnalyticsEvent(deepLinkAction, coldStart)
       }
       // If there is no active account, we don't want to handle the deep link
@@ -177,12 +185,11 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
 
     switch (deepLinkAction.action) {
       case DeepLinkAction.UniswapWebLink: {
-        yield* call(
-          handleUniswapAppDeepLink,
-          deepLinkAction.data.urlPath,
-          deepLinkAction.data.url.href,
-          LinkSource.Share,
-        )
+        yield* call(handleUniswapAppDeepLink, {
+          path: deepLinkAction.data.urlPath,
+          url: deepLinkAction.data.url.href,
+          linkSource: LinkSource.Share,
+        })
         break
       }
       case DeepLinkAction.WalletConnectAsParam:
@@ -191,12 +198,11 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
         break
       }
       case DeepLinkAction.UniswapWidget: {
-        yield* call(
-          handleUniswapAppDeepLink,
-          deepLinkAction.data.url.hash,
-          deepLinkAction.data.url.toString(),
-          LinkSource.Widget,
-        )
+        yield* call(handleUniswapAppDeepLink, {
+          path: deepLinkAction.data.url.hash,
+          url: deepLinkAction.data.url.toString(),
+          linkSource: LinkSource.Widget,
+        })
         break
       }
       case DeepLinkAction.Scantastic: {
@@ -275,9 +281,9 @@ function* _sendAnalyticsEvent(deepLinkAction: DeepLinkActionResult, coldStart: b
   yield* call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
     action: deepLinkAction.action,
     url: deepLinkAction.data.url.toString(),
-    screen: deepLinkAction.data.screen ?? 'other',
+    screen: deepLinkAction.data.screen,
     is_cold_start: coldStart,
-    source: deepLinkAction.data.source ?? 'unknown',
+    source: deepLinkAction.data.source,
   })
 }
 
@@ -372,15 +378,15 @@ function* handleUwuLinkDeepLink(uri: string): Generator {
     const uwulinkData = parseUwuLinkDataFromDeeplink(decodedUri)
     const parsedUwulinkRequest: UwULinkRequest = JSON.parse(uwulinkData)
 
-    const uwuLinkAllowList = getDynamicConfigValue(
-      DynamicConfigs.UwuLink,
-      UwuLinkConfigKey.Allowlist,
-      {
+    const uwuLinkAllowList = getDynamicConfigValue({
+      config: DynamicConfigs.UwuLink,
+      key: UwuLinkConfigKey.Allowlist,
+      defaultValue: {
         contracts: [],
         tokenRecipients: [],
       },
-      isUwULinkAllowlistType,
-    )
+      customTypeGuard: isUwULinkAllowlistType,
+    })
 
     const isAllowed = isAllowedUwuLinkRequest(parsedUwulinkRequest, uwuLinkAllowList)
 

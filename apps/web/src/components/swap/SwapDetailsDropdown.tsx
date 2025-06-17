@@ -1,4 +1,3 @@
-import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Column from 'components/deprecated/Column'
@@ -17,6 +16,7 @@ import { ThemedText } from 'theme/components'
 import { HeightAnimator } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean }>`
@@ -58,10 +58,10 @@ export default function SwapDetailsDropdown(props: SwapDetailsProps) {
       <Trace
         logPress
         logImpression={!showDetails}
-        eventOnTrigger={SwapEventName.SWAP_DETAILS_EXPANDED}
-        element={InterfaceElementName.SWAP_DETAILS_DROPDOWN}
+        eventOnTrigger={SwapEventName.SwapDetailsExpanded}
+        element={ElementName.SwapDetailsDropdown}
         properties={{
-          ...(trade ? formatCommonPropertiesForTrade(trade, allowedSlippage) : {}),
+          ...(trade ? formatCommonPropertiesForTrade({ trade, allowedSlippage }) : {}),
           ...trace,
         }}
       >

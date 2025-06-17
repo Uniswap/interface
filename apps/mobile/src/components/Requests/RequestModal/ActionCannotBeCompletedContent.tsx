@@ -21,7 +21,7 @@ export function ActionCannotBeCompletedContent({
   onReject: () => void
 }): JSX.Element {
   const handleLearnMore = async (): Promise<void> => {
-    await openUri(uniswapUrls.helpArticleUrls.mismatchedImports)
+    await openUri({ uri: uniswapUrls.helpArticleUrls.mismatchedImports })
   }
 
   return (

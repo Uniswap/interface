@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, NativeCurrency } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
+import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import {
   DynamicConfigs,
@@ -10,6 +10,20 @@ import {
 } from 'uniswap/src/features/gating/configs'
 import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+
+// The default "Urgent" strategy that was previously hardcoded in the gas service
+export const DEFAULT_GAS_STRATEGY: GasStrategy = {
+  limitInflationFactor: 1.15,
+  displayLimitInflationFactor: 1,
+  priceInflationFactor: 1.5,
+  percentileThresholdFor1559Fee: 75,
+  thresholdToInflateLastBlockBaseFee: 0,
+  baseFeeMultiplier: 1.05,
+  baseFeeHistoryWindow: 100,
+  minPriorityFeeRatioOfBaseFee: undefined,
+  minPriorityFeeGwei: 2,
+  maxPriorityFeeGwei: 9,
+}
 
 export function applyNativeTokenPercentageBuffer(
   currencyAmount: Maybe<CurrencyAmount<Currency>>,
@@ -42,11 +56,15 @@ export function applyNativeTokenPercentageBuffer(
   })
 }
 
-function getNativeCurrencyTotalSpend(
-  value?: CurrencyAmount<NativeCurrency>,
-  gasFee?: string,
-  nativeCurrency?: NativeCurrency,
-): Maybe<CurrencyAmount<NativeCurrency>> {
+function getNativeCurrencyTotalSpend({
+  value,
+  gasFee,
+  nativeCurrency,
+}: {
+  value?: CurrencyAmount<NativeCurrency>
+  gasFee?: string
+  nativeCurrency?: NativeCurrency
+}): Maybe<CurrencyAmount<NativeCurrency>> {
   if (!gasFee || !nativeCurrency) {
     return value
   }
@@ -66,7 +84,11 @@ export function hasSufficientFundsIncludingGas(params: {
   nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
 }): boolean {
   const { transactionAmount, gasFee, nativeCurrencyBalance } = params
-  const totalSpend = getNativeCurrencyTotalSpend(transactionAmount, gasFee, nativeCurrencyBalance?.currency)
+  const totalSpend = getNativeCurrencyTotalSpend({
+    value: transactionAmount,
+    gasFee,
+    nativeCurrency: nativeCurrencyBalance?.currency,
+  })
   return !totalSpend || !nativeCurrencyBalance?.lessThan(totalSpend)
 }
 
@@ -79,4 +101,54 @@ export function findLocalGasStrategy(
   return gasStrategies.strategies.find(
     (s) => s.conditions.types === type && areEqualGasStrategies(s.strategy, gasEstimate.strategy),
   )
+}
+
+// Helper function to check if the config value is a valid GasStrategies object
+function isValidGasStrategies(value: unknown): value is GasStrategies {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'strategies' in value &&
+    Array.isArray((value as GasStrategies).strategies)
+  )
+}
+
+export function getActiveGasStrategy({
+  chainId,
+  type,
+  isStatsigReady,
+}: {
+  chainId: number | undefined
+  type: GasStrategyType
+  isStatsigReady: boolean
+}): GasStrategy {
+  if (!isStatsigReady) {
+    return DEFAULT_GAS_STRATEGY
+  }
+  const config = getStatsigClient().getDynamicConfig(DynamicConfigs.GasStrategies)
+  const gasStrategies = isValidGasStrategies(config.value) ? config.value : undefined
+  const activeStrategy = gasStrategies?.strategies.find(
+    (s) => s.conditions.chainId === chainId && s.conditions.types === type && s.conditions.isActive,
+  )
+  return activeStrategy ? activeStrategy.strategy : DEFAULT_GAS_STRATEGY
+}
+
+export function getShadowGasStrategies({
+  chainId,
+  type,
+  isStatsigReady,
+}: {
+  chainId: number | undefined
+  type: GasStrategyType
+  isStatsigReady: boolean
+}): GasStrategy[] {
+  if (!isStatsigReady) {
+    return []
+  }
+  const config = getStatsigClient().getDynamicConfig('GasStrategies')
+  const gasStrategies = isValidGasStrategies(config.value) ? config.value : undefined
+  const shadowStrategies = gasStrategies?.strategies
+    .filter((s) => s.conditions.chainId === chainId && s.conditions.types === type && !s.conditions.isActive)
+    .map((s) => s.strategy)
+  return shadowStrategies ?? []
 }

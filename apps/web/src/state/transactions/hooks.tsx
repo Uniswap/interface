@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
@@ -25,6 +26,7 @@ export function useTransactionAdder(): (
   const dispatch = useAppDispatch()
 
   return useCallback(
+    // eslint-disable-next-line max-params
     (response: TransactionResponse, info: TransactionInfo, deadline?: number) => {
       if (account.status !== 'connected' || !account.chainId) {
         return
@@ -61,6 +63,7 @@ export function useTransactionCanceller() {
   const dispatch = useAppDispatch()
 
   return useCallback(
+    // eslint-disable-next-line max-params
     (hash: string, chainId: number, cancelHash: string) => {
       dispatch(cancelTransaction({ hash, chainId, cancelHash }))
     },

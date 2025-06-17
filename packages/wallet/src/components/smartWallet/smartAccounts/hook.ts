@@ -67,7 +67,7 @@ export function useSmartWalletDelegationStatus({
     for (const chain of enabledChains) {
       const result = getDelegationDetails(activeAccount.address, chain)
 
-      if (result?.currentDelegationAddress && result?.isWalletDelegatedToUniswap) {
+      if (result?.currentDelegationAddress && result.isWalletDelegatedToUniswap) {
         isDelegatedOnlyToUniswapSmartContract = true
       } else if (result?.currentDelegationAddress && !result.isWalletDelegatedToUniswap) {
         setStatus(SmartWalletDelegationAction.ShowConflict)

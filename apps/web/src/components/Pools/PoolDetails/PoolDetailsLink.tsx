@@ -103,11 +103,11 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
   const currencies = isPool && tokens[1] ? [currency, gqlToCurrency(tokens[1])] : [currency]
   const explorerUrl =
     chainId &&
-    getExplorerLink(
+    getExplorerLink({
       chainId,
-      address ?? '',
-      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN,
-    )
+      data: address ?? '',
+      type: isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN,
+    })
 
   const navigate = useNavigate()
   const { defaultChainId } = useEnabledChains()
@@ -120,7 +120,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
 
   const [truncateAddress, setTruncateAddress] = useState<false | 'start' | 'both'>(false)
   const onTextRender = useCallback(
-    (textRef: HTMLElement) => {
+    (textRef: HTMLElement | undefined) => {
       if (textRef) {
         const hasOverflow = textRef.clientWidth < textRef.scrollWidth
         if (hasOverflow) {

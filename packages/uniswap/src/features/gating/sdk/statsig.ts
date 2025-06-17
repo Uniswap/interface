@@ -29,7 +29,7 @@ if (!statsigApiKey) {
   throw new Error('STATSIG_API_KEY is not set')
 }
 
-let localOverrideAdapter: LocalOverrideAdapterWrapper
+let localOverrideAdapter: LocalOverrideAdapterWrapper | undefined
 
 export const getOverrideAdapter = (): LocalOverrideAdapterWrapper => {
   if (!localOverrideAdapter) {

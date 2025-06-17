@@ -258,7 +258,7 @@ async function updateFirebaseMetadata(address: Address, metadata: AccountMetadat
   try {
     const firebaseApp = firebase.app()
     const pushId = await getOneSignalUserIdOrError()
-    const metadataRef = getFirestoreMetadataRef(firebaseApp, address, pushId)
+    const metadataRef = getFirestoreMetadataRef({ firebaseApp, address, pushId })
 
     // Firestore does not support updating properties with an `undefined` value so must strip them out
     const metadataWithDefinedPropsOnly = getKeys(metadata).reduce((obj: Record<string, unknown>, prop) => {
@@ -278,6 +278,6 @@ async function updateFirebaseMetadata(address: Address, metadata: AccountMetadat
 async function deleteFirebaseMetadata(address: Address): Promise<void> {
   const firebaseApp = firebase.app()
   const pushId = await getOneSignalUserIdOrError()
-  const metadataRef = getFirestoreMetadataRef(firebaseApp, address, pushId)
+  const metadataRef = getFirestoreMetadataRef({ firebaseApp, address, pushId })
   await metadataRef.delete()
 }

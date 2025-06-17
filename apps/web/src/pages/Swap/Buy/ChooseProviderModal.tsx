@@ -30,7 +30,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
   const [connectedProvider, setConnectedProvider] = useState<FORServiceProvider>()
 
   const onRampInputAmount = useMemo(
-    () => getOnRampInputAmount(rampDirection, inputAmount, amountOut ?? '0', inputInFiat),
+    () => getOnRampInputAmount({ rampDirection, inputAmount, amountOut: amountOut ?? '0', inputInFiat }),
     [rampDirection, inputAmount, amountOut, inputInFiat],
   )
 
@@ -120,7 +120,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
               setErrorProvider={setErrorProvider}
               rampDirection={rampDirection}
             />
-            {otherProviders && otherProviders.length > 0 && (
+            {otherProviders.length > 0 && (
               <Flex centered row gap="$spacing12" mt="$spacing12">
                 <Separator />
                 <Text color="$neutral3" variant="body3">
@@ -132,7 +132,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
           </Flex>
         )}
 
-        {otherProviders?.map((q: FORQuote) => {
+        {otherProviders.map((q: FORQuote) => {
           return (
             <ProviderOption
               key={q.serviceProviderDetails.serviceProvider}

@@ -10,9 +10,10 @@ import { DAI } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-jest.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => {
+vi.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', async () => {
+  const actual = await vi.importActual('components/AccountDrawer/MiniPortfolio/formatTimestamp')
   return {
-    ...jest.requireActual('components/AccountDrawer/MiniPortfolio/formatTimestamp'),
+    ...actual,
     formatTimestamp: () => 'Expires January 1, 1970 at 12:00 AM',
   }
 })
@@ -52,29 +53,12 @@ const mockOrder: Activity = {
 }
 
 describe('LimitDetailActivityRow', () => {
-  it('should not render with invalid details', () => {
+  it('should not render with no offchain order details', () => {
     const { container } = render(
       <LimitDetailActivityRow
         order={{ ...mockOrder, offchainOrderDetails: undefined }}
-        onToggleSelect={jest.fn()}
+        onToggleSelect={vi.fn()}
         selected={false}
-      />,
-    )
-    expect(container.firstChild?.firstChild?.firstChild).toBeNull()
-  })
-
-  it('should not render with invalid amounts', () => {
-    const { container } = render(
-      <LimitDetailActivityRow
-        onToggleSelect={jest.fn()}
-        selected={false}
-        order={{
-          ...mockOrder,
-          offchainOrderDetails: {
-            ...mockOrderDetails,
-            swapInfo: undefined as any,
-          },
-        }}
       />,
     )
     expect(container.firstChild?.firstChild?.firstChild).toBeNull()
@@ -83,11 +67,9 @@ describe('LimitDetailActivityRow', () => {
   it('should render with valid details', () => {
     // Addresses a console.error -- `Warning: React does not recognize the `scaleIcon` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `scaleicon` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
     // This is from tamagui's Checkbox component`
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    const { container } = render(
-      <LimitDetailActivityRow onToggleSelect={jest.fn()} selected={false} order={mockOrder} />,
-    )
+    const { container } = render(<LimitDetailActivityRow onToggleSelect={vi.fn()} selected={false} order={mockOrder} />)
     expect(container.firstChild).toMatchSnapshot()
     expect(screen.getByText('when 0.00042 WETH/DAI')).toBeInTheDocument()
   })

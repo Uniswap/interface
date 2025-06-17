@@ -25,7 +25,11 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
   const response = next()
   if (doesMatchPath(requestURL.pathname)) {
     try {
-      return transformResponse(request, await response, data)
+      return transformResponse({
+        request,
+        response: await response,
+        data,
+      })
     } catch (e) {
       return response
     }

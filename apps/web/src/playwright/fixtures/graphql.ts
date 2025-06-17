@@ -32,6 +32,7 @@ export const test = base.extend<GraphqlFixture>({
   async graphql({ page }, use) {
     interceptConfigs.clear()
 
+    // eslint-disable-next-line max-params
     const intercept = async (operationName: string, mockPath: string, variables?: Record<string, unknown>) => {
       interceptConfigs.set(operationName, { mockPath, variables })
     }
@@ -42,7 +43,7 @@ export const test = base.extend<GraphqlFixture>({
           return false
         }
 
-        const postDataBuffer = response.request().postDataBuffer?.()
+        const postDataBuffer = response.request().postDataBuffer()
         if (!postDataBuffer) {
           return false
         }

@@ -27,7 +27,7 @@ export function useNotificationOSPermissionsEnabled(): {
     checkNotificationPermissions().catch(() => undefined)
   })
 
-  useAppStateTrigger('background', 'active', checkNotificationPermissions)
+  useAppStateTrigger({ from: 'background', to: 'active', callback: checkNotificationPermissions })
 
   return { notificationPermissionsEnabled, checkNotificationPermissions }
 }

@@ -12,7 +12,7 @@
 function replaceSeparators(sNum: string, separators: { decimal: string; thousands: string }): string {
   'worklet'
   const sNumParts = sNum.split('.')
-  if (separators && separators.thousands && sNumParts[0]) {
+  if (separators.thousands && sNumParts[0]) {
     // every three digits, replace it with the digits + the thousands separator
     // $1 indicates that the matched substring is to be replaced by the first captured group
     sNumParts[0] = sNumParts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + separators.thousands)
@@ -417,14 +417,19 @@ function convertSmallSciNotationToDecimal(value: number): string {
   return '0.'.concat('0'.repeat(Number(exponent) - 1).concat(decimal))
 }
 
-export function numberToLocaleStringWorklet(
-  value: number,
-  locale: Language = 'en-US',
-  options: OptionsType = {},
-  symbol?: string,
-): string {
+export function numberToLocaleStringWorklet({
+  value,
+  locale = 'en-US',
+  options = {},
+  symbol,
+}: {
+  value: number
+  locale?: Language
+  options?: OptionsType
+  symbol?: string
+}): string {
   'worklet'
-  if (locale && locale.length < 2) {
+  if (locale.length < 2) {
     throw new RangeError('Invalid language tag: ' + locale)
   }
 
@@ -447,7 +452,7 @@ export function numberToLocaleStringWorklet(
 
   sNum = (<(key: string, options?: OptionsType) => string>mapMatch(transformForLocale, locale))(sNum, options)
 
-  if (options && options.currency && options.style === 'currency') {
+  if (options.currency && options.style === 'currency') {
     const format = currencyFormats[<string>mapMatch(currencyFormatMap, locale)]
     const targetSymbol = symbol ?? currencySymbols[options.currency.toLowerCase()]
     if (format) {

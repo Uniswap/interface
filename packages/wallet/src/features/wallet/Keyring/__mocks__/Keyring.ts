@@ -1,3 +1,4 @@
+/* eslint-disable max-params */
 import { faker } from '@faker-js/faker'
 import { providers, utils, Wallet } from 'ethers'
 import { IKeyring } from 'wallet/src/features/wallet/Keyring/Keyring'

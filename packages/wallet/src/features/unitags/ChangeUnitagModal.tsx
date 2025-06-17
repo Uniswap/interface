@@ -1,4 +1,5 @@
 /* eslint-disable complexity */
+import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -19,11 +20,10 @@ import { useCanClaimUnitagName } from 'uniswap/src/features/unitags/hooks/useCan
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
 import { parseUnitagErrorCode } from 'uniswap/src/features/unitags/utils'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
+import { uniqueIdQuery } from 'utilities/src/device/uniqueIdQuery'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isMobileApp } from 'utilities/src/platform'
-import { useAsyncData } from 'utilities/src/react/hooks'
 import { ModalBackButton } from 'wallet/src/components/modals/ModalBackButton'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanAddressClaimUnitag'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
@@ -45,7 +45,7 @@ export function ChangeUnitagModal({
 }): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const { data: deviceId } = useAsyncData(getUniqueId)
+  const { data: deviceId } = useQuery(uniqueIdQuery())
   const account = useAccount(address)
   const signerManager = useWalletSigners()
 
@@ -120,7 +120,7 @@ export function ChangeUnitagModal({
         dispatch(
           pushNotification({
             type: AppNotificationType.Error,
-            errorMessage: parseUnitagErrorCode(t, unitagToCheck, changeResponse.errorCode),
+            errorMessage: parseUnitagErrorCode(t, changeResponse.errorCode),
           }),
         )
         return

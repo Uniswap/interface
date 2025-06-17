@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Pending - classic trade titles renders classic trade correctly, with approvalPending= false , revocationPending= false, wrapTxHash= undefined 1`] = `
+exports[`Pending - classic trade titles > renders classic trade correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p false false undefined 1`] = `
 <DocumentFragment>
   .c4 {
   -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
@@ -317,7 +317,7 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
 </DocumentFragment>
 `;
 
-exports[`Pending - classic trade titles renders classic trade correctly, with approvalPending= false , revocationPending= false, wrapTxHash= undefined 2`] = `
+exports[`Pending - classic trade titles > renders classic trade correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p false false undefined 2`] = `
 <DocumentFragment>
   .c4 {
   -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
@@ -633,7 +633,7 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
 </DocumentFragment>
 `;
 
-exports[`Pending - classic trade titles renders classic trade correctly, with approvalPending= false , revocationPending= false, wrapTxHash= undefined 3`] = `
+exports[`Pending - classic trade titles > renders classic trade correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p false false undefined 3`] = `
 <DocumentFragment>
   .c5 {
   height: 16px;
@@ -946,7 +946,7 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
 </DocumentFragment>
 `;
 
-exports[`Pending - uniswapX trade titles renders limit order correctly, with approvalPending= false , revocationPending= false, wrapTxHash= undefined 1`] = `
+exports[`Pending - uniswapX trade titles > renders limit order correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p false false undefined 1`] = `
 <DocumentFragment>
   .c4 {
   -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
@@ -1240,7 +1240,7 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
 </DocumentFragment>
 `;
 
-exports[`Pending - uniswapX trade titles renders limit order correctly, with approvalPending= false , revocationPending= false, wrapTxHash= undefined 2`] = `
+exports[`Pending - uniswapX trade titles > renders limit order correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p false false undefined 2`] = `
 <DocumentFragment>
   .c4 {
   -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
@@ -1594,7 +1594,7 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
 </DocumentFragment>
 `;
 
-exports[`Pending - uniswapX trade titles renders limit order correctly, with approvalPending= false , revocationPending= false, wrapTxHash= undefined 3`] = `
+exports[`Pending - uniswapX trade titles > renders limit order correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p false false undefined 3`] = `
 <DocumentFragment>
   .c5 {
   height: 16px;

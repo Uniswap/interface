@@ -1,4 +1,3 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
 import { PoolData, usePoolData } from 'appGraphql/data/pools/usePoolData'
 import { calculateApr } from 'appGraphql/data/pools/useTopPools'
 import { gqlToCurrency, unwrapToken } from 'appGraphql/data/util'
@@ -25,12 +24,12 @@ import { Text } from 'rebass'
 import { ThemeProvider } from 'theme'
 import { Flex } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
-import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants/trace'
+import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 const PageWrapper = styled(Row)`
@@ -94,9 +93,9 @@ const LinksContainer = styled(Column)`
   width: 100%;
 `
 
-function getUnwrappedPoolToken(poolData?: PoolData, chainId?: number) {
-  return poolData?.token0 && poolData?.token1 && chainId
-    ? [unwrapToken(chainId, poolData?.token0), unwrapToken(chainId, poolData?.token1)]
+function getUnwrappedPoolToken(poolData?: PoolData, chainId?: number): [Token | undefined, Token | undefined] {
+  return poolData && chainId
+    ? [unwrapToken(chainId, poolData.token0), unwrapToken(chainId, poolData.token1)]
     : [undefined, undefined]
 }
 
@@ -108,11 +107,16 @@ export default function PoolDetailsPage() {
   const { data: poolData, loading } = usePoolData(poolAddress?.toLowerCase() ?? '', chainInfo?.id)
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const unwrappedTokens = getUnwrappedPoolToken(poolData, chainInfo?.id)
-  const [token0, token1] = isReversed ? [unwrappedTokens?.[1], unwrappedTokens?.[0]] : unwrappedTokens
+  const [token0, token1] = isReversed ? [unwrappedTokens[1], unwrappedTokens[0]] : unwrappedTokens
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
   const poolApr = useMemo(
-    () => calculateApr(poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier),
+    () =>
+      calculateApr({
+        volume24h: poolData?.volumeUSD24H,
+        tvl: poolData?.tvlUSD,
+        feeTier: poolData?.feeTier,
+      }),
     [poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier],
   )
   const navigate = useNavigate()
@@ -172,10 +176,10 @@ export default function PoolDetailsPage() {
       </Helmet>
       <Trace
         logImpression={!loading}
-        page={InterfacePageName.POOL_DETAILS_PAGE}
+        page={InterfacePageName.PoolDetailsPage}
         properties={{
           poolAddress,
-          chainId: chainInfo?.id,
+          chainId: chainInfo.id,
           feeTier: poolData?.feeTier,
           token0Address: poolData?.token0.address,
           token1Address: poolData?.token1.address,
@@ -190,14 +194,14 @@ export default function PoolDetailsPage() {
             <Column gap="20px">
               <Column>
                 <PoolDetailsBreadcrumb
-                  chainId={chainInfo?.id}
+                  chainId={chainInfo.id}
                   poolAddress={poolAddress}
                   token0={token0}
                   token1={token1}
                   loading={loading}
                 />
                 <PoolDetailsHeader
-                  chainId={chainInfo?.id}
+                  chainId={chainInfo.id}
                   poolAddress={poolAddress}
                   token0={token0}
                   token1={token1}
@@ -213,7 +217,7 @@ export default function PoolDetailsPage() {
                 poolData={poolData}
                 loading={loading}
                 isReversed={isReversed}
-                chain={chainInfo?.backendChain.chain}
+                chain={chainInfo.backendChain.chain}
               />
             </Column>
             <HR />
@@ -227,7 +231,7 @@ export default function PoolDetailsPage() {
           <Flex gap="$spacing24" width={360} $xl={{ width: '100%', mt: 44, minWidth: 'unset' }}>
             <Flex $xl={{ marginTop: -24 }}>
               <PoolDetailsStatsButtons
-                chainId={chainInfo?.id}
+                chainId={chainInfo.id}
                 token0={token0}
                 token1={token1}
                 feeTier={poolData?.feeTier}
@@ -239,13 +243,13 @@ export default function PoolDetailsPage() {
             {poolData && (
               <PoolDetailsApr
                 poolApr={poolApr}
-                rewardsApr={isLPIncentivesEnabled ? poolData?.rewardsCampaign?.boostedApr : undefined}
+                rewardsApr={isLPIncentivesEnabled ? poolData.rewardsCampaign?.boostedApr : undefined}
               />
             )}
             {showRewardsDistribution && (
               <LpIncentivesPoolDetailsRewardsDistribution rewardsCampaign={poolData?.rewardsCampaign} />
             )}
-            <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainInfo?.id} loading={loading} />
+            <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainInfo.id} loading={loading} />
             <TokenDetailsWrapper>
               <TokenDetailsHeader>
                 <Trans i18nKey="common.links" />
@@ -254,23 +258,13 @@ export default function PoolDetailsPage() {
                 {poolData?.protocolVersion !== ProtocolVersion.V4 && (
                   <PoolDetailsLink
                     address={poolAddress}
-                    chainId={chainInfo?.id}
+                    chainId={chainInfo.id}
                     tokens={[token0, token1]}
                     loading={loading}
                   />
                 )}
-                <PoolDetailsLink
-                  address={token0?.address}
-                  chainId={chainInfo?.id}
-                  tokens={[token0]}
-                  loading={loading}
-                />
-                <PoolDetailsLink
-                  address={token1?.address}
-                  chainId={chainInfo?.id}
-                  tokens={[token1]}
-                  loading={loading}
-                />
+                <PoolDetailsLink address={token0?.address} chainId={chainInfo.id} tokens={[token0]} loading={loading} />
+                <PoolDetailsLink address={token1?.address} chainId={chainInfo.id} tokens={[token1]} loading={loading} />
               </LinksContainer>
             </TokenDetailsWrapper>
           </Flex>

@@ -1,6 +1,8 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
+import { UseQueryResult, useQuery } from '@tanstack/react-query'
 import { useCallback, useMemo } from 'react'
-import { useAsyncData } from 'utilities/src/react/hooks'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { queryWithoutCache } from 'utilities/src/reactQuery/queryOptions'
 
 enum FeeType {
   Legacy = 'legacy',
@@ -67,13 +69,8 @@ export enum GasSpeed {
   Urgent = 'urgent',
 }
 
-export function useTransactionGasFee(
-  tx?: TransactionRequest,
-  speed: GasSpeed = GasSpeed.Urgent,
-  skip: boolean = !tx,
-): GasFeeResult {
-  const gasFeeFetcher = useGasFeeQuery(tx, skip)
-  const { data, isLoading } = useAsyncData(gasFeeFetcher)
+export function useTransactionGasFee(tx?: TransactionRequest, speed: GasSpeed = GasSpeed.Urgent): GasFeeResult {
+  const { data, isLoading } = useGasFeeQuery(tx)
 
   return useMemo(() => {
     if (!data) {
@@ -105,12 +102,10 @@ const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_BASE_API_URL
 const isErrorResponse = (res: Response, gasFee: GasFeeResponse): gasFee is GasFeeResponseError =>
   res.status < 200 || res.status > 202
 
-function useGasFeeQuery(tx?: TransactionRequest, skip: boolean = !tx) {
-  const gasFeeFetcher = useCallback(async () => {
-    if (skip) {
-      return undefined
-    }
+function useGasFeeQuery(tx?: TransactionRequest): UseQueryResult<GasFeeResponseEip1559 | GasFeeResponseLegacy | null> {
+  const skip = !tx
 
+  const gasFeeFetcher = useCallback(async () => {
     const res = await fetch(`${UNISWAP_API_URL}/v1/gas-fee`, {
       method: 'POST',
       body: JSON.stringify(tx),
@@ -119,11 +114,17 @@ function useGasFeeQuery(tx?: TransactionRequest, skip: boolean = !tx) {
     const body = (await res.json()) as GasFeeResponse
 
     if (isErrorResponse(res, body)) {
-      return undefined
+      return null
     }
 
     return body
-  }, [skip, tx])
+  }, [tx])
 
-  return gasFeeFetcher
+  return useQuery(
+    queryWithoutCache({
+      queryKey: [ReactQueryCacheKey.WebTransactionGasFee, tx],
+      queryFn: gasFeeFetcher,
+      enabled: !skip,
+    }),
+  )
 }

@@ -3,7 +3,7 @@ import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 import { v4 as uuid } from 'uuid'
 
-jest.mock('uuid')
+vi.mock('uuid')
 
 describe('UniswapXRouterLabel', () => {
   it('matches snapshot', () => {

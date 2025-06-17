@@ -147,13 +147,17 @@ export const validateColorValue = (value: ColorValue): { isValid: boolean; error
   }
 }
 
-export const validColor = (value: ColorValue): ColorTokens => {
+export const validColor = (value: ColorValue): ColorTokens | undefined => {
   if (process.env.NODE_ENV !== 'production') {
     const { isValid, error } = validateColorValue(value)
 
     if (!isValid) {
       throw error
     }
+  }
+
+  if (!value) {
+    return undefined
   }
 
   return value as ColorTokens

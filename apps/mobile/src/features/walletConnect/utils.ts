@@ -22,13 +22,13 @@ import { GetCallsStatusParams, SendCallsParams } from 'wallet/src/features/dappR
  * Assumes each namespace has been validated and is supported by the app with `validateProposalNamespaces()`.
  *
  * @param {Address} account address of account to complete WalletConnect pairing request
- * @param {ProposalTypes.RequiredNamespaces} proposalNamespaces validated proposal namespaces that specify all supported chains, methods, events for the session
+ * @param {ProposalTypes.OptionalNamespaces} proposalNamespaces validated proposal namespaces that specify all supported chains, methods, events for the session
  * @return {SessionTypes.Namespaces} session namespaces specifying which accounts, chains, methods, events to complete the pairing
  */
-export const getSessionNamespaces = (
+export function getSessionNamespaces(
   accounts: Address[],
-  proposalNamespaces: ProposalTypes.RequiredNamespaces,
-): SessionTypes.Namespaces => {
+  proposalNamespaces: ProposalTypes.OptionalNamespaces,
+): SessionTypes.Namespaces {
   // Below inspired from https://github.com/WalletConnect/web-examples/blob/main/wallets/react-wallet-v2/src/views/SessionProposalModal.tsx#L63
   const namespaces: SessionTypes.Namespaces = {}
 
@@ -95,13 +95,19 @@ export const getAccountAddressFromEIP155String = (account: string): Address | nu
  * @param dapp Dapp metadata
  * @returns Base request object with common properties
  */
-function createBaseRequest<T extends WalletConnectEthMethod>(
-  method: T,
-  topic: string,
-  internalId: number,
-  account: Address,
-  dapp: SignClientTypes.Metadata,
-): {
+function createBaseRequest<T extends WalletConnectEthMethod>({
+  method,
+  topic,
+  internalId,
+  account,
+  dapp,
+}: {
+  method: T
+  topic: string
+  internalId: number
+  account: Address
+  dapp: SignClientTypes.Metadata
+}): {
   type: T
   sessionId: string
   internalId: string
@@ -135,17 +141,24 @@ function createBaseRequest<T extends WalletConnectEthMethod>(
  * @param {WalletKitTypes.SessionRequest['params']['request']['params']} requestParams parameters of the request
  * @returns {{Address, SignRequest}} address of the account receiving the request and formatted SignRequest object
  */
-export const parseSignRequest = (
-  method: EthSignMethod,
-  topic: string,
-  internalId: number,
-  chainId: UniverseChainId,
-  dapp: SignClientTypes.Metadata,
-  requestParams: WalletKitTypes.SessionRequest['params']['request']['params'],
-): SignRequest => {
+export function parseSignRequest({
+  method,
+  topic,
+  internalId,
+  chainId,
+  dapp,
+  requestParams,
+}: {
+  method: EthSignMethod
+  topic: string
+  internalId: number
+  chainId: UniverseChainId
+  dapp: SignClientTypes.Metadata
+  requestParams: WalletKitTypes.SessionRequest['params']['request']['params']
+}): SignRequest {
   const { address, rawMessage, message } = getAddressAndMessageToSign(method, requestParams)
   return {
-    ...createBaseRequest(method, topic, internalId, address, dapp),
+    ...createBaseRequest({ method, topic, internalId, account: address, dapp }),
     chainId,
     rawMessage,
     message,
@@ -165,19 +178,26 @@ export const parseSignRequest = (
  * @param {WalletKitTypes.SessionRequest['params']['request']['params']} requestParams parameters of the request
  * @returns {{Address, TransactionRequest}} address of the account receiving the request and formatted TransactionRequest object
  */
-export const parseTransactionRequest = (
-  method: EthMethod.EthSendTransaction,
-  topic: string,
-  internalId: number,
-  chainId: UniverseChainId,
-  dapp: SignClientTypes.Metadata,
-  requestParams: WalletKitTypes.SessionRequest['params']['request']['params'],
-): TransactionRequest => {
+export function parseTransactionRequest({
+  method,
+  topic,
+  internalId,
+  chainId,
+  dapp,
+  requestParams,
+}: {
+  method: EthMethod.EthSendTransaction
+  topic: string
+  internalId: number
+  chainId: UniverseChainId
+  dapp: SignClientTypes.Metadata
+  requestParams: WalletKitTypes.SessionRequest['params']['request']['params']
+}): TransactionRequest {
   // Omit gasPrice and nonce in tx sent from dapp since it is calculated later
   const { from, to, data, gasLimit, value } = requestParams[0]
 
   return {
-    ...createBaseRequest(method, topic, internalId, from, dapp),
+    ...createBaseRequest({ method, topic, internalId, account: from, dapp }),
     chainId,
     transaction: {
       to,
@@ -199,37 +219,56 @@ export const parseTransactionRequest = (
  * @param {[string, string[]?]} requestParams parameters of the request [Wallet Address, [Chain IDs]?]
  * @returns {WalletGetCapabilitiesRequest} formatted request object
  */
-export const parseGetCapabilitiesRequest = (
-  method: EthMethod.WalletGetCapabilities,
-  topic: string,
-  internalId: number,
-  dapp: SignClientTypes.Metadata,
-  requestParams: [string, string[]?],
-): WalletGetCapabilitiesRequest => {
+export const parseGetCapabilitiesRequest = ({
+  method,
+  topic,
+  internalId,
+  dapp,
+  requestParams,
+}: {
+  method: EthMethod.WalletGetCapabilities
+  topic: string
+  internalId: number
+  dapp: SignClientTypes.Metadata
+  requestParams: [string, string[]?]
+}): WalletGetCapabilitiesRequest => {
   const [address, chainIds] = requestParams
   const parsedChainIds = chainIds
     ?.map((chainId) => toSupportedChainId(hexToNumber(chainId)))
     .filter((c): c is UniverseChainId => Boolean(c))
 
   return {
-    ...createBaseRequest(method, topic, internalId, address, dapp), // 0 as chainId since it's not specific to a chain
+    ...createBaseRequest({ method, topic, internalId, account: address, dapp }), // 0 as chainId since it's not specific to a chain
     chainIds: parsedChainIds,
     account: address,
   }
 }
 
-export const parseSendCallsRequest = (
-  topic: string,
-  internalId: number,
-  chainId: number,
-  dapp: SignClientTypes.Metadata,
-  requestParams: [SendCallsParams],
-  account: Address,
-): WalletSendCallsRequest => {
+export function parseSendCallsRequest({
+  topic,
+  internalId,
+  chainId,
+  dapp,
+  requestParams,
+  account,
+}: {
+  topic: string
+  internalId: number
+  chainId: number
+  dapp: SignClientTypes.Metadata
+  requestParams: [SendCallsParams]
+  account: Address
+}): WalletSendCallsRequest {
   const sendCallsParam = requestParams[0]
   const requestId = sendCallsParam.id || generateBatchId()
   return {
-    ...createBaseRequest(EthMethod.WalletSendCalls, topic, internalId, sendCallsParam.from ?? account, dapp),
+    ...createBaseRequest({
+      method: EthMethod.WalletSendCalls,
+      topic,
+      internalId,
+      account: sendCallsParam.from ?? account,
+      dapp,
+    }),
     chainId,
     calls: sendCallsParam.calls,
     capabilities: sendCallsParam.capabilities || {},
@@ -239,17 +278,24 @@ export const parseSendCallsRequest = (
   }
 }
 
-export const parseGetCallsStatusRequest = (
-  topic: string,
-  internalId: number,
-  chainId: number,
-  dapp: SignClientTypes.Metadata,
-  requestParams: [GetCallsStatusParams],
-  account: Address,
-): WalletGetCallsStatusRequest => {
+export function parseGetCallsStatusRequest({
+  topic,
+  internalId,
+  chainId,
+  dapp,
+  requestParams,
+  account,
+}: {
+  topic: string
+  internalId: number
+  chainId: number
+  dapp: SignClientTypes.Metadata
+  requestParams: [GetCallsStatusParams]
+  account: Address
+}): WalletGetCallsStatusRequest {
   const requestId = requestParams[0]
   return {
-    ...createBaseRequest(EthMethod.WalletGetCallsStatus, topic, internalId, account, dapp),
+    ...createBaseRequest({ method: EthMethod.WalletGetCallsStatus, topic, internalId, account, dapp }),
     chainId,
     id: requestId,
   }
@@ -259,7 +305,7 @@ export function decodeMessage(value: string): string {
   try {
     if (utils.isHexString(value)) {
       const decoded = utils.toUtf8String(value)
-      if (decoded?.trim()) {
+      if (decoded.trim()) {
         return decoded
       }
     }
@@ -322,10 +368,7 @@ export function parseVerifyStatus(verifyContext?: Verify.Context): WalletConnect
     return WalletConnectVerifyStatus.Verified
   }
 
-  if (verified.validation === 'UNKNOWN') {
-    return WalletConnectVerifyStatus.Unverified
-  }
-
   // Default to unverified status to enforce stricter warning if verification information is empty
+  // Also covers 'UNKNOWN' case
   return WalletConnectVerifyStatus.Unverified
 }

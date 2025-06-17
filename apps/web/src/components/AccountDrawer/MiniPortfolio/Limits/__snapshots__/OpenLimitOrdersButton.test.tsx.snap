@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`OpenLimitOrdersButton should render if there are open limit orders 1`] = `
+exports[`OpenLimitOrdersButton > should render if there are open limit orders 1`] = `
 .c4 {
   display: -webkit-box;
   display: -webkit-flex;

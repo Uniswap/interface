@@ -26,15 +26,15 @@ export function TransferCurrencyNotification({
   // Transfer canceled title doesn't end with the display name
   const showUnicon = txStatus !== TransactionStatus.Canceled && displayNameType === DisplayNameType.Unitag
 
-  const title = formTransferCurrencyNotificationTitle(
+  const title = formTransferCurrencyNotificationTitle({
     formatter,
     txType,
     txStatus,
-    currencyInfo?.currency,
+    currency: currencyInfo?.currency,
     tokenAddress,
     currencyAmountRaw,
-    displayNameType !== DisplayNameType.Address && displayName ? displayName : senderOrRecipient,
-  )
+    senderOrRecipient: displayNameType !== DisplayNameType.Address && displayName ? displayName : senderOrRecipient,
+  })
 
   const { navigateToAccountActivityList } = useWalletNavigation()
 

@@ -26,7 +26,11 @@ describe('MaxSlippageSettings', () => {
     })
     it('is not expanded by default', () => {
       renderSlippageSettings()
-      expect(getSlippageInput()).not.toBeVisible()
+
+      // Input should exist in DOM but be collapsed via HeightAnimator
+      const slippageInput = getSlippageInput()
+      expect(slippageInput).toBeInTheDocument()
+      expect(slippageInput.parentElement?.offsetHeight).toBe(0)
     })
     it('is expanded by default when custom slippage is set', () => {
       store.dispatch(updateUserSlippageTolerance({ userSlippageTolerance: 10 }))

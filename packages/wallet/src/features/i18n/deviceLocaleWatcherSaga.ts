@@ -40,7 +40,7 @@ function* syncAppWithDeviceLanguage(): Generator {
     yield* put(setCurrentLanguage(deviceLanguage))
   }
 
-  if (isMobileApp && currentAppLanguage && currentAppLanguage !== deviceLanguage) {
+  if (isMobileApp && currentAppLanguage !== deviceLanguage) {
     // We force a restart of the mobile app when the language changes
     logger.info(
       'syncAppWithDeviceLanguage.ts',

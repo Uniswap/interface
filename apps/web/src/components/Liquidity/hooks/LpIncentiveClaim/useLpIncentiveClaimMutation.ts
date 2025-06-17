@@ -33,7 +33,7 @@ export function useLpIncentiveClaimMutation({ token, onSuccess, onClose, onError
       })
       if (error) {
         sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsErrorThrown, {
-          error: error.message ?? 'Lp Incentive claim rewards error',
+          error: error.message,
         })
         throw error
       }

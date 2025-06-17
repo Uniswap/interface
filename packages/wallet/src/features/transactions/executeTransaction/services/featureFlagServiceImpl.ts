@@ -8,12 +8,20 @@ export const createFeatureFlagService = (): FeatureFlagService => {
     isFeatureEnabled: (flagName: FeatureFlags): boolean => {
       return getFeatureFlag(flagName)
     },
-    getExperimentValue: <E extends keyof ExperimentProperties, P extends ExperimentProperties[E], T>(
-      experiment: E,
-      property: P,
-      defaultValue: T,
-    ): T => {
-      return getExperimentValue(experiment, property, defaultValue)
+    getExperimentValue: <E extends keyof ExperimentProperties, P extends ExperimentProperties[E], T>({
+      experiment,
+      property,
+      defaultValue,
+    }: {
+      experiment: E
+      property: P
+      defaultValue: T
+    }): T => {
+      return getExperimentValue({
+        experiment,
+        param: property,
+        defaultValue,
+      })
     },
   }
 }

@@ -49,15 +49,15 @@ export function parseUwuLinkDataFromDeeplink(uri: string): string {
 // Gets the UWULink contract allow list from statsig dynamic config.
 // We can safely cast as long as the statsig config format matches our `UwuLinkAllowlist` type.
 export function useUwuLinkContractAllowlist(): UwULinkAllowlist {
-  return useDynamicConfigValue(
-    DynamicConfigs.UwuLink,
-    UwuLinkConfigKey.Allowlist,
-    {
+  return useDynamicConfigValue({
+    config: DynamicConfigs.UwuLink,
+    key: UwuLinkConfigKey.Allowlist,
+    defaultValue: {
       contracts: [],
       tokenRecipients: [],
     },
-    isUwULinkAllowlistType,
-  )
+    customTypeGuard: isUwULinkAllowlistType,
+  })
 }
 
 function findAllowedTokenRecipientForUwuLink(
@@ -131,7 +131,7 @@ export async function getFormattedUwuLinkTxnRequest({
   } = {
     sessionId: UWULINK_PREFIX, // session/internalId is WalletConnect specific, but not needed here
     internalId: UWULINK_PREFIX,
-    account: activeAccount?.address,
+    account: activeAccount.address,
     dappRequestInfo: {
       name: '',
       url: '',
@@ -156,7 +156,12 @@ export async function getFormattedUwuLinkTxnRequest({
       },
     }
   } else if (request.method === UwULinkMethod.Erc20Send) {
-    const preparedTransaction = await toTokenTransferRequest(request, activeAccount, providerManager, contractManager)
+    const preparedTransaction = await toTokenTransferRequest({
+      request,
+      account: activeAccount,
+      providerManager,
+      contractManager,
+    })
     const tokenRecipient = findAllowedTokenRecipientForUwuLink(request, allowList)
     return {
       account: activeAccount.address,
@@ -192,12 +197,17 @@ export async function getFormattedUwuLinkTxnRequest({
   }
 }
 
-async function toTokenTransferRequest(
-  request: UwULinkErc20SendRequest,
-  account: Account,
-  providerManager: ProviderManager,
-  contractManager: ContractManager,
-): Promise<EthTransaction> {
+async function toTokenTransferRequest({
+  request,
+  account,
+  providerManager,
+  contractManager,
+}: {
+  request: UwULinkErc20SendRequest
+  account: Account
+  providerManager: ProviderManager
+  contractManager: ContractManager
+}): Promise<EthTransaction> {
   const provider = providerManager.getProvider(request.chainId)
   const params: SendCurrencyParams = {
     type: AssetType.Currency,
@@ -207,6 +217,6 @@ async function toTokenTransferRequest(
     tokenAddress: request.tokenAddress,
     amountInWei: request.amount.toString(),
   }
-  const transaction = await getTokenSendRequest(params, provider, contractManager)
+  const transaction = await getTokenSendRequest({ params, provider, contractManager })
   return transaction as EthTransaction
 }

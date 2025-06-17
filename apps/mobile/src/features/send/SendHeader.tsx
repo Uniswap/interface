@@ -14,7 +14,7 @@ export function SendHeader({ flowName, setShowViewOnlyModal }: HeaderContentProp
   const account = useActiveAccountWithThrow()
   const { t } = useTranslation()
 
-  const isViewOnlyWallet = account?.type === AccountType.Readonly
+  const isViewOnlyWallet = account.type === AccountType.Readonly
 
   return (
     <Flex

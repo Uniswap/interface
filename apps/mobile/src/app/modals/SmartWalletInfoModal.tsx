@@ -8,7 +8,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
 
-const onPressLearnMore = (url: string): Promise<void> => openUri(url)
+const onPressLearnMore = (url: string): Promise<void> => openUri({ uri: url })
 
 export function SmartWalletInfoModal(): JSX.Element {
   const color = useSporeColors()

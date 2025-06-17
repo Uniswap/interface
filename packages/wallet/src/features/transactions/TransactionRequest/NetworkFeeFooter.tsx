@@ -16,6 +16,8 @@ interface NetworkFeeFooterProps {
   gasFee: GasFeeResult | undefined
   isUniswapX?: boolean
   requestMethod?: string
+  logoOverrideChainId?: UniverseChainId
+  showAllNetworks?: boolean
 }
 
 // Since EthSignMethod is a TypeScript type that doesn't exist at runtime,
@@ -40,6 +42,8 @@ export function NetworkFeeFooter({
   gasFee,
   isUniswapX,
   requestMethod,
+  logoOverrideChainId,
+  showAllNetworks,
 }: NetworkFeeFooterProps): JSX.Element | null {
   const { t } = useTranslation()
   const variant = isMobileApp ? 'body3' : 'body4'
@@ -58,7 +62,15 @@ export function NetworkFeeFooter({
     <Flex px="$spacing8">
       <ContentRow label={t('transaction.networkCost.label')} variant={variant}>
         <Flex centered row gap="$spacing4">
-          {showNetworkLogo && <NetworkLogo chainId={chainId} size={iconSizes.icon16} />}
+          {showNetworkLogo &&
+            (showAllNetworks ? (
+              <NetworkLogo chainId={null} size={iconSizes.icon16} />
+            ) : logoOverrideChainId ? (
+              <NetworkLogo chainId={logoOverrideChainId} size={iconSizes.icon16} />
+            ) : (
+              <NetworkLogo chainId={chainId} size={iconSizes.icon16} />
+            ))}
+
           {isUniswapX ? (
             <UniswapXFee gasFee={gasFeeFormatted} />
           ) : (

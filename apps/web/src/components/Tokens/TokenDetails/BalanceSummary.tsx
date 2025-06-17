@@ -141,7 +141,7 @@ export default function BalanceSummary() {
   const pageChainBalance = multiChainMap[currencyChain]?.balance
   const otherChainBalances: PortfolioBalance[] = []
   for (const [key, value] of Object.entries(multiChainMap)) {
-    if (key !== currencyChain && value?.balance !== undefined) {
+    if (key !== currencyChain && value.balance !== undefined) {
       otherChainBalances.push(value.balance)
     }
   }

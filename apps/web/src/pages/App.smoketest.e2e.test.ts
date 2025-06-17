@@ -6,7 +6,11 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 // this file will block merging PRs if it fails
 // More comprehensive tests should be located in web/src/pages/**.e2e.test.ts
 
-test.describe('App', () => {
+// Retries are enabled for these tests since statsig can be flaky, potentially due to rate limiting.
+
+test.describe('App smoketest', () => {
+  test.describe.configure({ retries: 3 })
+
   test('should load swap page', async ({ page }) => {
     await page.goto('/swap')
     await expect(page.getByTestId(TestID.ChooseInputToken)).toBeVisible()

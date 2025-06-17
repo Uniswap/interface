@@ -91,19 +91,20 @@ export function useUSDCPrice(
       return { price: new Price(stablecoin, stablecoin, '1', '1'), isLoading: false }
     }
 
-    if (!trade || !isClassic(trade) || !trade.routes?.[0] || !quoteAmount || !currency) {
+    if (!trade || !isClassic(trade) || !trade.routes[0] || !currency) {
       return { price: undefined, isLoading }
     }
 
     const { numerator, denominator } = trade.routes[0].midPrice
     return { price: new Price(currency, stablecoin, denominator, numerator), isLoading }
-  }, [currency, stablecoin, currencyIsStablecoin, quoteAmount, trade, isLoading])
+  }, [currency, stablecoin, currencyIsStablecoin, trade, isLoading])
 }
 
 export function useUSDCValue(
   currencyAmount: CurrencyAmount<Currency> | undefined | null,
+  pollInterval: PollingInterval = PollingInterval.Fast,
 ): CurrencyAmount<Currency> | null {
-  const { price } = useUSDCPrice(currencyAmount?.currency)
+  const { price } = useUSDCPrice(currencyAmount?.currency, pollInterval)
 
   return useMemo(() => {
     if (!price || !currencyAmount) {

@@ -18,13 +18,19 @@ export class PoolCache {
   private static pools: Pool[] = []
   private static addresses: { key: string; address: string }[] = []
 
-  static getPoolAddress(
-    factoryAddress: string,
-    tokenA: Token,
-    tokenB: Token,
-    fee: FeeAmount,
-    chainId: UniverseChainId,
-  ): string {
+  static getPoolAddress({
+    factoryAddress,
+    tokenA,
+    tokenB,
+    fee,
+    chainId,
+  }: {
+    factoryAddress: string
+    tokenA: Token
+    tokenB: Token
+    fee: FeeAmount
+    chainId: UniverseChainId
+  }): string {
     if (this.addresses.length > this.MAX_ENTRIES) {
       this.addresses = this.addresses.slice(0, this.MAX_ENTRIES / 2)
     }
@@ -51,14 +57,21 @@ export class PoolCache {
     return address.address
   }
 
-  static getPool(
-    tokenA: Token,
-    tokenB: Token,
-    fee: FeeAmount,
-    sqrtPriceX96: BigintIsh,
-    liquidity: BigintIsh,
-    tick: number,
-  ): Pool {
+  static getPool({
+    tokenA,
+    tokenB,
+    fee,
+    sqrtPriceX96,
+    liquidity,
+    tick,
+  }: {
+    tokenA: Token
+    tokenB: Token
+    fee: FeeAmount
+    sqrtPriceX96: BigintIsh
+    liquidity: BigintIsh
+    tick: number
+  }): Pool {
     if (this.pools.length > this.MAX_ENTRIES) {
       this.pools = this.pools.slice(0, this.MAX_ENTRIES / 2)
     }
@@ -90,7 +103,7 @@ export enum PoolState {
 }
 
 export function usePools(
-  poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][],
+  poolKeys: [Maybe<Currency>, Maybe<Currency>, FeeAmount | undefined][],
   chainId: UniverseChainId | undefined,
 ): [PoolState, Pool | null][] {
   const poolTokens: ([Token, Token, FeeAmount] | undefined)[] = useMemo(() => {
@@ -118,7 +131,17 @@ export function usePools(
       return Array(poolTokens.length).fill(undefined)
     }
 
-    return poolTokens.map((value) => value && PoolCache.getPoolAddress(v3CoreFactoryAddress, ...value, chainId))
+    return poolTokens.map(
+      (value) =>
+        value &&
+        PoolCache.getPoolAddress({
+          factoryAddress: v3CoreFactoryAddress,
+          tokenA: value[0],
+          tokenB: value[1],
+          fee: value[2],
+          chainId,
+        }),
+    )
   }, [chainId, poolTokens])
 
   const { data: slot0s, isLoading: slot0sLoading } = useReadContracts({
@@ -207,43 +230,53 @@ export function usePools(
     }, [poolAddresses, chainId]),
   })
 
-  return useComputePoolState(poolKeys, slot0s, slot0sLoading, liquidities, liquiditiesLoading, poolTokens)
+  return useComputePoolState({
+    poolKeys,
+    slot0s,
+    slot0sLoading,
+    liquidities,
+    liquiditiesLoading,
+    poolTokens,
+  })
 }
 
-export function useComputePoolState(
-  poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][],
-  slot0s:
-    | (
-        | {
-            error: Error
-            result?: undefined
-            status: 'failure'
-          }
-        | {
-            error?: undefined
-            result: readonly [bigint, number, number, number, number, number, boolean]
-            status: 'success'
-          }
-      )[]
-    | undefined,
-  slot0sLoading: boolean,
-  liquidities:
-    | (
-        | {
-            error: Error
-            result?: undefined
-            status: 'failure'
-          }
-        | {
-            error?: undefined
-            result: bigint
-            status: 'success'
-          }
-      )[]
-    | undefined,
-  liquiditiesLoading: boolean,
-  poolTokens: ([Token, Token, FeeAmount] | undefined)[],
-): [PoolState, Pool | null][] {
+export function useComputePoolState({
+  poolKeys,
+  slot0s,
+  slot0sLoading,
+  liquidities,
+  liquiditiesLoading,
+  poolTokens,
+}: {
+  poolKeys: [Maybe<Currency>, Maybe<Currency>, FeeAmount | undefined][]
+  slot0s?: (
+    | {
+        error: Error
+        result?: undefined
+        status: 'failure'
+      }
+    | {
+        error?: undefined
+        result: readonly [bigint, number, number, number, number, number, boolean]
+        status: 'success'
+      }
+  )[]
+  slot0sLoading: boolean
+  liquidities?: (
+    | {
+        error: Error
+        result?: undefined
+        status: 'failure'
+      }
+    | {
+        error?: undefined
+        result: bigint
+        status: 'success'
+      }
+  )[]
+  liquiditiesLoading: boolean
+  poolTokens: ([Token, Token, FeeAmount] | undefined)[]
+}): [PoolState, Pool | null][] {
   return useMemo(() => {
     return poolKeys.map((_key, index) => {
       if (slot0sLoading || liquiditiesLoading) {
@@ -273,7 +306,14 @@ export function useComputePoolState(
       }
 
       try {
-        const pool = PoolCache.getPool(token0, token1, fee, sqrtPriceX96.toString(), liquidity.result.toString(), tick)
+        const pool = PoolCache.getPool({
+          tokenA: token0,
+          tokenB: token1,
+          fee,
+          sqrtPriceX96: sqrtPriceX96.toString(),
+          liquidity: liquidity.result.toString(),
+          tick,
+        })
         return [PoolState.EXISTS, pool]
       } catch (error) {
         logger.error(error, {
@@ -294,12 +334,16 @@ export function useComputePoolState(
   }, [poolKeys, slot0sLoading, liquiditiesLoading, poolTokens, slot0s, liquidities])
 }
 
-export function usePool(
-  currencyA: Currency | undefined,
-  currencyB: Currency | undefined,
-  feeAmount: FeeAmount | undefined,
-): [PoolState, Pool | null] {
-  const poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][] = useMemo(
+export function usePool({
+  currencyA,
+  currencyB,
+  feeAmount,
+}: {
+  currencyA?: Maybe<Currency>
+  currencyB?: Maybe<Currency>
+  feeAmount?: FeeAmount
+}): [PoolState, Pool | null] {
+  const poolKeys: [Maybe<Currency>, Maybe<Currency>, FeeAmount | undefined][] = useMemo(
     () => [[currencyA, currencyB, feeAmount]],
     [currencyA, currencyB, feeAmount],
   )

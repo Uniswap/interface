@@ -9,7 +9,15 @@ import { EMPTY_NFT_ITEM, HIDDEN_NFTS_ROW } from 'wallet/src/features/nfts/consta
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getIsNftHidden } from 'wallet/src/features/nfts/utils'
 
-export function useNFT(owner: Address = '', address?: Address, tokenId?: string): GqlResult<GQLNftAsset> {
+export function useNFT({
+  owner = '',
+  address,
+  tokenId,
+}: {
+  owner?: Address
+  address?: Address
+  tokenId?: string
+}): GqlResult<GQLNftAsset> {
   // TODO: [MOB-227] do a direct cache lookup in Apollo using id instead of re-querying
   const { data, loading, refetch } = useNftsQuery({
     variables: { ownerAddress: owner },
@@ -29,11 +37,15 @@ export function useNFT(owner: Address = '', address?: Address, tokenId?: string)
 }
 
 // Apply to NFTs fetched from API hidden filter, which is stored in Redux
-export function useGroupNftsByVisibility(
-  nftDataItems: Array<NFTItem> | undefined,
-  showHidden: boolean,
-  allPagesFetched: boolean,
-): {
+export function useGroupNftsByVisibility({
+  nftDataItems,
+  showHidden,
+  allPagesFetched,
+}: {
+  nftDataItems: Array<NFTItem> | undefined
+  showHidden: boolean
+  allPagesFetched: boolean
+}): {
   nfts: Array<NFTItem | string>
   numHidden: number
   numShown: number
@@ -63,14 +75,14 @@ export function useGroupNftsByVisibility(
     return {
       nfts: [
         ...shown,
-        ...((hidden.length &&
-          allPagesFetched && [
-            // to fill the gap for odd number of shown elements in 2 columns layout
-            ...(shown.length % 2 ? [EMPTY_NFT_ITEM] : []),
-            HIDDEN_NFTS_ROW,
-          ]) ||
-          []),
-        ...((showHidden && allPagesFetched && hidden) || []),
+        ...(hidden.length && allPagesFetched
+          ? [
+              // to fill the gap for odd number of shown elements in 2 columns layout
+              ...(shown.length % 2 ? [EMPTY_NFT_ITEM] : []),
+              HIDDEN_NFTS_ROW,
+            ]
+          : []),
+        ...(showHidden && allPagesFetched ? hidden : []),
       ],
       numHidden: hidden.length,
       numShown: shown.length,

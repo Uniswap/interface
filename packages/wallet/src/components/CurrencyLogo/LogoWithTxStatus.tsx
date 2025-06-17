@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import React, { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import type { IconProps } from 'ui/src'
@@ -62,7 +61,6 @@ export type LogoWithTxStatusProps = (CurrencyStatusProps | NFTStatusProps) & {
 
 function getLogo(props: LogoWithTxStatusProps): JSX.Element {
   const { assetType, size } = props
-
   return assetType === AssetType.Currency ? (
     <CurrencyLogo hideNetworkLogo currencyInfo={props.currencyInfo} size={size} />
   ) : (
@@ -127,10 +125,6 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
     }
     if (Icon) {
       icon = <Icon color={color.val} fill={fill.val} size={statusSize} testID="status-icon" />
-      // If logo is missing, we render the icon instead
-      if (!logo) {
-        icon = <Icon color={color.val} fill={fill.val} size={size} testID="status-icon" />
-      }
     }
   }
 
@@ -142,8 +136,8 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
 
   return (
     <Flex centered height={size} width={size}>
-      {logo ?? icon}
-      {logo && icon && (
+      {logo}
+      {icon && (
         <Flex bottom={-4} position="absolute" right={-4} zIndex={zIndexes.mask}>
           {icon}
         </Flex>

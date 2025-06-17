@@ -237,7 +237,11 @@ describe(handleDeepLink, () => {
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
-      .call(handleUniswapAppDeepLink, `#/${path}`, hashedUrl, LinkSource.Share)
+      .call(handleUniswapAppDeepLink, {
+        path: `#/${path}`,
+        url: hashedUrl,
+        linkSource: LinkSource.Share,
+      })
       .call(navigate, MobileScreens.NFTItem, expectedModalState)
       .returns(undefined)
       .silentRun()
@@ -250,7 +254,11 @@ describe(handleDeepLink, () => {
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
-      .call(handleUniswapAppDeepLink, path, pathUrl, LinkSource.Share)
+      .call(handleUniswapAppDeepLink, {
+        path,
+        url: pathUrl,
+        linkSource: LinkSource.Share,
+      })
       .call(navigate, MobileScreens.NFTItem, expectedModalState)
       .returns(undefined)
       .silentRun()
@@ -272,7 +280,11 @@ describe(handleDeepLink, () => {
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
-      .call(handleUniswapAppDeepLink, `#/${path}`, hashedUrl, LinkSource.Share)
+      .call(handleUniswapAppDeepLink, {
+        path: `#/${path}`,
+        url: hashedUrl,
+        linkSource: LinkSource.Share,
+      })
       .call(navigate, MobileScreens.NFTCollection, expectedModalState)
       .returns(undefined)
       .silentRun()
@@ -285,7 +297,11 @@ describe(handleDeepLink, () => {
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
-      .call(handleUniswapAppDeepLink, path, pathUrl, LinkSource.Share)
+      .call(handleUniswapAppDeepLink, {
+        path,
+        url: pathUrl,
+        linkSource: LinkSource.Share,
+      })
       .call(navigate, MobileScreens.NFTCollection, expectedModalState)
       .returns(undefined)
       .silentRun()
@@ -307,7 +323,11 @@ describe(handleDeepLink, () => {
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
-      .call(handleUniswapAppDeepLink, `#/${path}`, hashedUrl, LinkSource.Share)
+      .call(handleUniswapAppDeepLink, {
+        path: `#/${path}`,
+        url: hashedUrl,
+        linkSource: LinkSource.Share,
+      })
       .call(navigate, MobileScreens.TokenDetails, expectedModalState)
       .returns(undefined)
       .silentRun()
@@ -320,7 +340,11 @@ describe(handleDeepLink, () => {
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
-      .call(handleUniswapAppDeepLink, path, pathUrl, LinkSource.Share)
+      .call(handleUniswapAppDeepLink, {
+        path,
+        url: pathUrl,
+        linkSource: LinkSource.Share,
+      })
       .call(navigate, MobileScreens.TokenDetails, expectedModalState)
       .returns(undefined)
       .silentRun()
@@ -337,7 +361,11 @@ describe(handleDeepLink, () => {
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
-      .call(handleUniswapAppDeepLink, hash, url, LinkSource.Share)
+      .call(handleUniswapAppDeepLink, {
+        path: hash,
+        url,
+        linkSource: LinkSource.Share,
+      })
       .returns(undefined)
       .silentRun()
   })
@@ -361,7 +389,11 @@ describe(handleDeepLink, () => {
           activeAccountAddress: account.address,
         },
       })
-      .call(handleUniswapAppDeepLink, hash, url, LinkSource.Share)
+      .call(handleUniswapAppDeepLink, {
+        path: hash,
+        url,
+        linkSource: LinkSource.Share,
+      })
       .put(setAccountAsActive(SAMPLE_SEED_ADDRESS_2))
       .returns(undefined)
       .silentRun()
@@ -383,7 +415,11 @@ describe(handleDeepLink, () => {
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
-      .call(handleUniswapAppDeepLink, `#/${path}`, hashedUrl, LinkSource.Share)
+      .call(handleUniswapAppDeepLink, {
+        path: `#/${path}`,
+        url: hashedUrl,
+        linkSource: LinkSource.Share,
+      })
       .call(navigate, MobileScreens.ExternalProfile, expectedModalState)
       .returns(undefined)
       .silentRun()
@@ -396,7 +432,11 @@ describe(handleDeepLink, () => {
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
-      .call(handleUniswapAppDeepLink, path, pathUrl, LinkSource.Share)
+      .call(handleUniswapAppDeepLink, {
+        path,
+        url: pathUrl,
+        linkSource: LinkSource.Share,
+      })
       .call(navigate, MobileScreens.ExternalProfile, expectedModalState)
       .returns(undefined)
       .silentRun()

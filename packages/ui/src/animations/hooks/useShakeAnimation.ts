@@ -1,11 +1,14 @@
-import { useCallback } from 'react'
+import { useMemo } from 'react'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
+import { useEvent } from 'utilities/src/react/hooks'
 
-export const useShakeAnimation = (): {
+export interface ShakeAnimation {
   shakeStyle: ReturnType<typeof useAnimatedStyle>
   triggerShakeAnimation: () => void
-} => {
+}
+
+export const useShakeAnimation = (): ShakeAnimation => {
   const shakeValue = useSharedValue(0)
   const shakeStyle = useAnimatedStyle(
     () => ({
@@ -14,12 +17,15 @@ export const useShakeAnimation = (): {
     [shakeValue.value],
   )
 
-  const triggerShakeAnimation = useCallback(() => {
+  const triggerShakeAnimation = useEvent(() => {
     shakeValue.value = errorShakeAnimation(shakeValue)
-  }, [shakeValue])
+  })
 
-  return {
-    shakeStyle,
-    triggerShakeAnimation,
-  }
+  return useMemo(
+    () => ({
+      shakeStyle,
+      triggerShakeAnimation,
+    }),
+    [shakeStyle, triggerShakeAnimation],
+  )
 }

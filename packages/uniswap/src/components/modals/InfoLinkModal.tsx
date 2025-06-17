@@ -48,7 +48,7 @@ export function InfoLinkModal({
     }
 
     try {
-      await openUri(linkUrl)
+      await openUri({ uri: linkUrl })
       onAnalyticsEvent?.()
     } catch (error) {
       logger.error(error, { tags: { file: 'InfoLinkModal.tsx', function: 'openUniswapURL' } })

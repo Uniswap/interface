@@ -7,7 +7,7 @@ import { Flex, GeneratedIcon, IconProps, Text, TouchableArea } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons'
 import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -22,7 +22,7 @@ export type LinkButtonProps = {
   buttonType: LinkButtonType
   label: string
   Icon?: React.FC<SvgProps & { size?: IconProps['size'] }> | GeneratedIcon
-  element: ElementNameType
+  element: ElementName
   openExternalBrowser?: boolean
   isSafeUri?: boolean
   value: string
@@ -44,10 +44,10 @@ export function LinkButton({
 
   const copyValue = async (): Promise<void> => {
     if (!hasViewedContractAddressExplainer) {
-      openContractAddressExplainerModal?.()
+      openContractAddressExplainerModal()
       return
     }
-    await copyAddressToClipboard?.(value)
+    await copyAddressToClipboard(value)
 
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       element: ElementName.CopyAddress,
@@ -57,7 +57,7 @@ export function LinkButton({
 
   const onPress = async (): Promise<void> => {
     if (buttonType === LinkButtonType.Link) {
-      await openUri(value, openExternalBrowser, isSafeUri)
+      await openUri({ uri: value, openExternalBrowser, isSafeUri })
     } else {
       await copyValue()
     }

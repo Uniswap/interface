@@ -1,11 +1,12 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, Price } from '@uniswap/sdk-core'
+import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { Dispatch, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 export type FeeData = {
   feeAmount: number
@@ -31,7 +32,6 @@ export enum PositionFlowStep {
 
 export interface PositionState {
   protocolVersion: ProtocolVersion
-  currencyInputs: { [field in PositionField]?: Currency }
   fee: FeeData
   hook?: string
   userApprovedHook?: string // address of approved hook. If different from `hook`, user needs to reapprove the new hook
@@ -46,17 +46,15 @@ export interface PositionState {
 export const DEFAULT_FEE_DATA = { feeAmount: FeeAmount.MEDIUM, tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM] }
 
 export const DEFAULT_POSITION_STATE: PositionState = {
-  currencyInputs: {},
   fee: DEFAULT_FEE_DATA,
   hook: undefined,
   userApprovedHook: undefined,
   protocolVersion: ProtocolVersion.V4,
 }
 
-export type OptionalCurrency = Currency | undefined
 type BaseCreatePositionInfo = {
   protocolVersion: ProtocolVersion
-  currencies: [OptionalCurrency, OptionalCurrency]
+  chainId?: UniverseChainId
   creatingPoolOrPair?: boolean
   poolId?: string
   poolOrPairLoading?: boolean
@@ -69,17 +67,32 @@ type BaseCreatePositionInfo = {
 
 export type CreateV4PositionInfo = BaseCreatePositionInfo & {
   protocolVersion: ProtocolVersion.V4
+  currencies: {
+    // sorted and both of these are equal for v4
+    display: { [key in PositionField]: Maybe<Currency> }
+    sdk: { [key in PositionField]: Maybe<Currency> }
+  }
   pool?: V4Pool
   boostedApr?: number
 }
 
 export type CreateV3PositionInfo = BaseCreatePositionInfo & {
   protocolVersion: ProtocolVersion.V3
+  currencies: {
+    // sorted
+    display: { [key in PositionField]: Maybe<Currency> }
+    sdk: { [key in PositionField]: Maybe<Token> } // wrapped
+  }
   pool?: V3Pool
 }
 
 export type CreateV2PositionInfo = BaseCreatePositionInfo & {
   protocolVersion: ProtocolVersion.V2
+  currencies: {
+    // sorted
+    display: { [key in PositionField]: Maybe<Currency> }
+    sdk: { [key in PositionField]: Maybe<Token> } // wrapped
+  }
   pair?: Pair
 }
 
@@ -91,6 +104,7 @@ export interface DynamicFeeTierSpeedbumpData {
 }
 
 export type CreatePositionContextType = {
+  areTokensUnchanged: boolean
   reset: () => void
   step: PositionFlowStep
   setStep: Dispatch<SetStateAction<PositionFlowStep>>
@@ -127,22 +141,18 @@ type BasePriceRangeInfo = {
   deposit1Disabled: boolean
   price?: Price<Currency, Currency>
   priceDifference?: PriceDifference
-  invertPrice: boolean
 }
 
-export type OptionalCurrencyPrice = Price<Currency, Currency> | undefined
-export type OptionalNumber = number | undefined
 type BasePoolPriceRangeInfo = {
-  ticks: [OptionalNumber, OptionalNumber]
+  ticks: [Maybe<number>, Maybe<number>]
   ticksAtLimit: [boolean, boolean]
-  tickSpaceLimits: [OptionalNumber, OptionalNumber]
-  isSorted: boolean
+  tickSpaceLimits: [Maybe<number>, Maybe<number>]
   invalidPrice: boolean
   invalidRange: boolean
   outOfRange: boolean
-  prices: [OptionalCurrencyPrice, OptionalCurrencyPrice]
-  pricesAtLimit: [OptionalCurrencyPrice, OptionalCurrencyPrice]
-  pricesAtTicks: [OptionalCurrencyPrice, OptionalCurrencyPrice]
+  prices: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>]
+  pricesAtLimit: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>]
+  pricesAtTicks: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>]
 }
 
 export type V4PriceRangeInfo = BasePriceRangeInfo &

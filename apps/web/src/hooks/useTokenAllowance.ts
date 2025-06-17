@@ -1,11 +1,10 @@
 import { ContractTransaction } from '@ethersproject/contracts'
-import { InterfaceEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { useTokenContract } from 'hooks/useContract'
 import { useTriggerOnTransactionType } from 'hooks/useTriggerOnTransactionType'
 import { useCallback, useMemo, useRef } from 'react'
 import { ApproveTransactionInfo, TransactionType } from 'state/transactions/types'
-import { trace } from 'tracing/trace'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { UserRejectedRequestError } from 'utils/errors'
@@ -16,11 +15,7 @@ import { useReadContract } from 'wagmi'
 
 const MAX_ALLOWANCE = MaxUint256.toString()
 
-export function useTokenAllowance(
-  token?: Token,
-  owner?: string,
-  spender?: string,
-): {
+export function useTokenAllowance({ token, owner, spender }: { token?: Token; owner?: string; spender?: string }): {
   tokenAllowance?: CurrencyAmount<Token>
   isSyncing: boolean
 } {
@@ -55,68 +50,68 @@ export function useUpdateTokenAllowance(
 ): () => Promise<{ response: ContractTransaction; info: ApproveTransactionInfo }> {
   const analyticsTrace = useTrace()
 
-  const contract = useTokenContract(amount?.currency.address, true, amount?.currency.chainId)
+  const contract = useTokenContract({
+    tokenAddress: amount?.currency.address,
+    withSignerIfPossible: true,
+    chainId: amount?.currency.chainId,
+  })
   const contractRef = useRef(contract)
   contractRef.current = contract
 
-  return useCallback(
-    () =>
-      trace({ name: 'Allowance', op: 'permit.allowance' }, async (trace) => {
+  return useCallback(async () => {
+    try {
+      const contract = contractRef.current
+      if (!amount) {
+        throw new Error('missing amount')
+      }
+      if (!contract) {
+        throw new Error('missing contract')
+      }
+      if (!spender) {
+        throw new Error('missing spender')
+      }
+
+      const allowance = amount.equalTo(0) ? '0' : MAX_ALLOWANCE
+      const response = await (async () => {
+        const contract = contractRef.current
         try {
-          const contract = contractRef.current
-          if (!amount) {
-            throw new Error('missing amount')
-          }
           if (!contract) {
             throw new Error('missing contract')
           }
-          if (!spender) {
-            throw new Error('missing spender')
-          }
-
-          const allowance = amount.equalTo(0) ? '0' : MAX_ALLOWANCE
-          const response = await trace.child({ name: 'Approve', op: 'wallet.approve' }, async () => {
-            const contract = contractRef.current
-            try {
-              if (!contract) {
-                throw new Error('missing contract')
-              }
-              return await contract.approve(spender, allowance)
-            } catch (error) {
-              if (didUserReject(error)) {
-                const symbol = amount?.currency.symbol ?? 'Token'
-                throw new UserRejectedRequestError(`${symbol} token allowance failed: User rejected`)
-              } else {
-                throw error
-              }
-            }
-          })
-          sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
-            chain_id: amount.currency.chainId,
-            token_symbol: amount.currency.symbol,
-            token_address: amount.currency.address,
-            ...analyticsTrace,
-          })
-          return {
-            response,
-            info: {
-              type: TransactionType.APPROVAL,
-              tokenAddress: contract.address,
-              spender,
-              amount: allowance,
-            },
-          }
-        } catch (error: unknown) {
-          if (error instanceof UserRejectedRequestError) {
-            throw error
+          return await contract.approve(spender, allowance)
+        } catch (error) {
+          if (didUserReject(error)) {
+            const symbol = amount.currency.symbol ?? 'Token'
+            throw new UserRejectedRequestError(`${symbol} token allowance failed: User rejected`)
           } else {
-            const symbol = amount?.currency.symbol ?? 'Token'
-            throw new Error(`${symbol} token allowance failed: ${error instanceof Error ? error.message : error}`)
+            throw error
           }
         }
-      }),
-    [amount, spender, analyticsTrace],
-  )
+      })()
+      sendAnalyticsEvent(InterfaceEventName.ApproveTokenTxnSubmitted, {
+        chain_id: amount.currency.chainId,
+        token_symbol: amount.currency.symbol,
+        token_address: amount.currency.address,
+        ...analyticsTrace,
+      })
+      return {
+        response,
+        info: {
+          type: TransactionType.APPROVAL,
+          tokenAddress: contract.address,
+          spender,
+          amount: allowance,
+        },
+      }
+    } catch (error: unknown) {
+      if (error instanceof UserRejectedRequestError) {
+        throw error
+      } else {
+        const symbol = amount?.currency.symbol ?? 'Token'
+        throw new Error(`${symbol} token allowance failed: ${error instanceof Error ? error.message : error}`)
+      }
+    }
+  }, [amount, spender, analyticsTrace])
 }
 
 export function useRevokeTokenAllowance(

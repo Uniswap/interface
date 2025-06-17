@@ -54,7 +54,7 @@ export function SwapErrorScreen({
   }
 
   const onPressGetHelp = async (): Promise<void> => {
-    await openUri(supportArticleURL ?? uniswapUrls.helpUrl)
+    await openUri({ uri: supportArticleURL ?? uniswapUrls.helpUrl })
   }
 
   return (

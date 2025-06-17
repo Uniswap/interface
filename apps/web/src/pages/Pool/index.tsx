@@ -34,7 +34,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { InterfacePageNameLocal, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { InterfacePageName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 
@@ -282,16 +282,15 @@ export default function Pool() {
   const combinedPositions = useMemo(() => {
     return [
       ...loadedPositions,
-      ...(savedPositions
+      ...savedPositions
         .filter((position) => {
           const matchesChain = !chainFilter || position.data?.position?.chainId === chainFilter
-          const matchesStatus =
-            position.data?.position?.status && statusFilter.includes(position.data?.position?.status)
+          const matchesStatus = position.data?.position?.status && statusFilter.includes(position.data.position.status)
           const matchesVersion =
-            position.data?.position?.protocolVersion && versionFilter.includes(position.data?.position?.protocolVersion)
+            position.data?.position?.protocolVersion && versionFilter.includes(position.data.position.protocolVersion)
           return matchesChain && matchesStatus && matchesVersion
         })
-        .map((p) => p.data?.position) ?? []),
+        .map((p) => p.data?.position),
     ]
       .map(parseRestPosition)
       .filter((position): position is PositionInfo => !!position)
@@ -336,7 +335,7 @@ export default function Pool() {
   }
 
   return (
-    <Trace logImpression page={InterfacePageNameLocal.Positions}>
+    <Trace logImpression page={InterfacePageName.Positions}>
       <Flex
         row
         justifyContent="space-between"
@@ -379,7 +378,7 @@ export default function Pool() {
               }}
               onStatusChange={(toggledStatus) => {
                 setStatusFilter((prevStatusFilter) => {
-                  if (prevStatusFilter?.includes(toggledStatus)) {
+                  if (prevStatusFilter.includes(toggledStatus)) {
                     return prevStatusFilter.filter((s) => s !== toggledStatus)
                   } else {
                     return [...prevStatusFilter, toggledStatus]

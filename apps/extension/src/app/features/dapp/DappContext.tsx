@@ -33,10 +33,10 @@ export function DappContextProvider({ children }: { children: ReactNode }): JSX.
 
   useEffect(() => {
     const updateDappInfo = async (): Promise<void> => {
-      const [tab] = (await chrome.tabs.query({ active: true, currentWindow: true })) || []
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
 
       if (tab) {
-        const newDappUrl = extractBaseUrl(tab?.url)
+        const newDappUrl = extractBaseUrl(tab.url)
         setDappUrl(newDappUrl || '')
         setDappIconUrl(tab.favIconUrl)
 

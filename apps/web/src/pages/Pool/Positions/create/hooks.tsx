@@ -22,20 +22,19 @@ import {
   CreateV4PositionInfo,
   DEFAULT_FEE_DATA,
   FeeData,
-  OptionalCurrency,
   PositionState,
   PriceRangeInfo,
   PriceRangeState,
 } from 'pages/Pool/Positions/create/types'
 import {
-  getCurrencyAddressWithWrap,
   getCurrencyWithWrap,
   getDependentAmountFromV2Pair,
   getDependentAmountFromV3Position,
   getDependentAmountFromV4Position,
   getPairFromPositionStateAndRangeState,
   getPoolFromPositionStateAndRangeState,
-  getSortedCurrenciesTuple,
+  getSortedCurrenciesForProtocol,
+  getTokenOrZeroAddress,
   getV2PriceRangeInfo,
   getV3PriceRangeInfo,
   getV4PriceRangeInfo,
@@ -66,24 +65,20 @@ import { getParsedChainId } from 'utils/chainParams'
  * @param state user-defined state for a position being created or migrated
  * @returns derived position information such as existing Pools
  */
-export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo {
+export function useDerivedPositionInfo(
+  currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> },
+  state: PositionState,
+): CreatePositionInfo {
   const { chainId } = useMultichainContext()
-  const {
-    currencyInputs: { TOKEN0: token0Input, TOKEN1: token1Input },
-    protocolVersion,
-  } = state
+  const { protocolVersion } = state
+  const { tokenA, tokenB } = currencyInputs
 
-  const TOKEN0 = token0Input
-  const TOKEN1 = token1Input
-
-  const sortedCurrencies = getSortedCurrenciesTuple(TOKEN0, TOKEN1)
+  const sortedCurrencies = getSortedCurrenciesForProtocol({ a: tokenA, b: tokenB, protocolVersion })
   const validCurrencyInput = validateCurrencyInput(sortedCurrencies)
-  const sortedTokens = getSortedCurrenciesTuple(
-    getCurrencyWithWrap(sortedCurrencies[0], protocolVersion),
-    getCurrencyWithWrap(sortedCurrencies[1], protocolVersion),
-  )
 
   const poolsQueryEnabled = poolEnabledProtocolVersion(protocolVersion) && validCurrencyInput
+  const token0 = getCurrencyWithWrap(sortedCurrencies.TOKEN0, protocolVersion)
+  const token1 = getCurrencyWithWrap(sortedCurrencies.TOKEN1, protocolVersion)
   const {
     data: poolData,
     isLoading: poolIsLoading,
@@ -93,8 +88,8 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       fee: state.fee.feeAmount,
       chainId,
       protocolVersions: [protocolVersion],
-      token0: getCurrencyAddressWithWrap(sortedCurrencies?.[0], protocolVersion),
-      token1: getCurrencyAddressWithWrap(sortedCurrencies?.[1], protocolVersion),
+      token0: getTokenOrZeroAddress(token0),
+      token1: getTokenOrZeroAddress(token1),
       hooks: state.hook?.toLowerCase() ?? ZERO_ADDRESS, // BE does not accept checksummed addresses
     },
     poolsQueryEnabled,
@@ -102,30 +97,17 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
 
   const pool = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined
 
-  const { pairsQueryEnabled } = useMemo(() => {
-    if (!pairEnabledProtocolVersion(protocolVersion)) {
-      return {
-        pairsQueryEnabled: false,
-      } as const
-    }
-
-    if (!validateCurrencyInput(sortedTokens)) {
-      return {
-        pairsQueryEnabled: false,
-      } as const
-    }
-
-    return {
-      pairsQueryEnabled: true,
-    } as const
-  }, [protocolVersion, sortedTokens])
-
-  const pairResult = useV2Pair(sortedTokens?.[0], sortedTokens?.[1])
+  const pairResult = useV2Pair(sortedCurrencies.TOKEN0?.wrapped, sortedCurrencies.TOKEN1?.wrapped)
   const pairIsLoading = pairResult[0] === PairState.LOADING
 
-  const pair = pairsQueryEnabled ? pairResult[1] || undefined : undefined
+  const pair =
+    validCurrencyInput && pairEnabledProtocolVersion(protocolVersion) ? pairResult[1] || undefined : undefined
 
-  const v3PoolResult = usePool(sortedTokens?.[0], sortedTokens?.[1], state.fee.feeAmount)
+  const v3PoolResult = usePool({
+    currencyA: sortedCurrencies.TOKEN0?.wrapped,
+    currencyB: sortedCurrencies.TOKEN1?.wrapped,
+    feeAmount: state.fee.feeAmount,
+  })
   const v3Pool = protocolVersion === ProtocolVersion.V3 ? v3PoolResult[1] ?? undefined : undefined
   const v3Price = v3Pool?.token0Price
 
@@ -134,8 +116,8 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       protocolVersion === ProtocolVersion.V4
         ? getPoolFromRest({
             pool,
-            token0: sortedCurrencies?.[0],
-            token1: sortedCurrencies?.[1],
+            token0: sortedCurrencies.TOKEN0,
+            token1: sortedCurrencies.TOKEN1,
             protocolVersion,
             hooks: pool?.hooks?.address || '',
           })
@@ -163,17 +145,22 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
   }, [protocolVersion, poolData?.pools, pairResult, v3PoolResult])
 
   const { price: defaultInitialPrice, isLoading: isDefaultInitialPriceLoading } = useDefaultInitialPrice({
-    currencies: state.currencyInputs,
+    currencies: {
+      [PositionField.TOKEN0]: sortedCurrencies.TOKEN0,
+      [PositionField.TOKEN1]: sortedCurrencies.TOKEN1,
+    },
     // V2 create flow doesn't show the liquidity range chart so we always want
     // to get the default initial price for DisplayCurrentPrice in deposit step
     skip: !creatingPoolOrPair && pool?.protocolVersion === ProtocolVersion.V2,
   })
 
   return useMemo(() => {
-    const currencies: [OptionalCurrency, OptionalCurrency] = [TOKEN0, TOKEN1]
     if (protocolVersion === ProtocolVersion.UNSPECIFIED) {
       return {
-        currencies,
+        currencies: {
+          display: sortedCurrencies,
+          sdk: sortedCurrencies,
+        },
         protocolVersion: ProtocolVersion.V4,
         isPoolOutOfSync: false,
         defaultInitialPrice,
@@ -184,7 +171,14 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
 
     if (protocolVersion === ProtocolVersion.V2) {
       return {
-        currencies,
+        currencies: {
+          display: sortedCurrencies,
+          sdk: {
+            [PositionField.TOKEN0]: sortedCurrencies.TOKEN0?.wrapped,
+            [PositionField.TOKEN1]: sortedCurrencies.TOKEN1?.wrapped,
+          },
+        },
+        chainId: sortedCurrencies.TOKEN0?.chainId,
         protocolVersion,
         pair,
         creatingPoolOrPair,
@@ -198,7 +192,14 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
 
     if (protocolVersion === ProtocolVersion.V3) {
       return {
-        currencies,
+        currencies: {
+          display: sortedCurrencies,
+          sdk: {
+            [PositionField.TOKEN0]: sortedCurrencies.TOKEN0?.wrapped,
+            [PositionField.TOKEN1]: sortedCurrencies.TOKEN1?.wrapped,
+          },
+        },
+        chainId: sortedCurrencies.TOKEN0?.chainId,
         protocolVersion,
         pool: v3Pool,
         creatingPoolOrPair,
@@ -212,7 +213,11 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     }
 
     return {
-      currencies,
+      currencies: {
+        display: sortedCurrencies,
+        sdk: sortedCurrencies,
+      },
+      chainId: sortedCurrencies.TOKEN0?.chainId,
       protocolVersion, // V4
       pool: v4Pool,
       creatingPoolOrPair,
@@ -225,8 +230,6 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       refetchPoolData,
     } satisfies CreateV4PositionInfo
   }, [
-    TOKEN0,
-    TOKEN1,
     protocolVersion,
     v4Pool,
     creatingPoolOrPair,
@@ -240,6 +243,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     v3Pool,
     refetchPoolData,
     pool?.boostedApr,
+    sortedCurrencies,
   ])
 }
 
@@ -247,25 +251,37 @@ export function useDerivedPriceRangeInfo(state: PriceRangeState): PriceRangeInfo
   const { positionState, derivedPositionInfo } = useCreatePositionContext()
 
   const priceRangeInfo = useMemo(() => {
-    if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
-      return getV2PriceRangeInfo({ state, derivedPositionInfo })
-    }
-
-    if (derivedPositionInfo.protocolVersion === ProtocolVersion.V3) {
-      return getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })
-    }
-
-    return getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })
+    return getPriceRangeInfo({ derivedPositionInfo, state, positionState })
   }, [derivedPositionInfo, state, positionState])
 
   return priceRangeInfo
 }
 
+export function getPriceRangeInfo({
+  derivedPositionInfo,
+  state,
+  positionState,
+}: {
+  derivedPositionInfo: CreatePositionInfo
+  state: PriceRangeState
+  positionState: PositionState
+}): PriceRangeInfo {
+  if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
+    return getV2PriceRangeInfo({ state, derivedPositionInfo })
+  }
+
+  if (derivedPositionInfo.protocolVersion === ProtocolVersion.V3) {
+    return getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })
+  }
+
+  return getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })
+}
+
 export type UseDepositInfoProps = {
   protocolVersion: ProtocolVersion
   address?: string
-  token0?: Currency
-  token1?: Currency
+  token0?: Maybe<Currency>
+  token1?: Maybe<Currency>
   exactField: PositionField
   exactAmounts: {
     [field in PositionField]?: string
@@ -299,60 +315,75 @@ export function useDerivedDepositInfo(state: DepositState): DepositInfo {
   const account = useAccount()
   const { derivedPositionInfo } = useCreatePositionContext()
   const { derivedPriceRangeInfo } = usePriceRangeContext()
+
+  const depositInfoProps = useMemo(() => {
+    return getDepositInfoProps({ address: account.address, derivedPositionInfo, state, derivedPriceRangeInfo })
+  }, [account.address, derivedPositionInfo, state, derivedPriceRangeInfo])
+
+  return useDepositInfo(depositInfoProps)
+}
+
+export function getDepositInfoProps({
+  address,
+  derivedPositionInfo,
+  derivedPriceRangeInfo,
+  state,
+}: {
+  address?: string
+  derivedPositionInfo: CreatePositionInfo
+  derivedPriceRangeInfo: PriceRangeInfo
+  state: DepositState
+}): UseDepositInfoProps {
   const { exactAmounts, exactField } = state
   const { protocolVersion } = derivedPriceRangeInfo
 
-  const depositInfoProps: UseDepositInfoProps = useMemo(() => {
-    if (protocolVersion === ProtocolVersion.V2) {
-      return {
-        protocolVersion,
-        pair: getPairFromPositionStateAndRangeState({ derivedPositionInfo, derivedPriceRangeInfo }),
-        address: account.address,
-        token0: derivedPositionInfo.currencies[0],
-        token1: derivedPositionInfo.currencies[1],
-        exactField,
-        exactAmounts,
-      } satisfies UseDepositInfoProps
-    }
+  if (protocolVersion === ProtocolVersion.V2) {
+    return {
+      protocolVersion,
+      pair: getPairFromPositionStateAndRangeState({ derivedPositionInfo, derivedPriceRangeInfo }),
+      address,
+      token0: derivedPositionInfo.currencies.display.TOKEN0,
+      token1: derivedPositionInfo.currencies.display.TOKEN1,
+      exactField,
+      exactAmounts,
+    } satisfies UseDepositInfoProps
+  }
 
-    const tickLower = derivedPriceRangeInfo.ticks?.[0]
-    const tickUpper = derivedPriceRangeInfo.ticks?.[1]
-    const { invalidRange, outOfRange, deposit0Disabled, deposit1Disabled } = derivedPriceRangeInfo
+  const tickLower = derivedPriceRangeInfo.ticks[0]
+  const tickUpper = derivedPriceRangeInfo.ticks[1]
+  const { invalidRange, outOfRange, deposit0Disabled, deposit1Disabled } = derivedPriceRangeInfo
 
-    if (protocolVersion === ProtocolVersion.V3) {
-      return {
-        protocolVersion,
-        pool: getPoolFromPositionStateAndRangeState({ derivedPositionInfo, derivedPriceRangeInfo }),
-        address: account.address,
-        tickLower,
-        tickUpper,
-        token0: derivedPositionInfo.currencies[0],
-        token1: derivedPositionInfo.currencies[1],
-        exactField,
-        exactAmounts,
-        skipDependentAmount: outOfRange || invalidRange,
-        deposit0Disabled,
-        deposit1Disabled,
-      } satisfies UseDepositInfoProps
-    }
-
+  if (protocolVersion === ProtocolVersion.V3) {
     return {
       protocolVersion,
       pool: getPoolFromPositionStateAndRangeState({ derivedPositionInfo, derivedPriceRangeInfo }),
-      address: account.address,
-      tickLower,
-      tickUpper,
-      token0: derivedPositionInfo.currencies[0],
-      token1: derivedPositionInfo.currencies[1],
+      address,
+      tickLower: tickLower ?? undefined,
+      tickUpper: tickUpper ?? undefined,
+      token0: derivedPositionInfo.currencies.display.TOKEN0,
+      token1: derivedPositionInfo.currencies.display.TOKEN1,
       exactField,
       exactAmounts,
       skipDependentAmount: outOfRange || invalidRange,
       deposit0Disabled,
       deposit1Disabled,
     } satisfies UseDepositInfoProps
-  }, [account.address, derivedPositionInfo, derivedPriceRangeInfo, exactAmounts, exactField, protocolVersion])
+  }
 
-  return useDepositInfo(depositInfoProps)
+  return {
+    protocolVersion,
+    pool: getPoolFromPositionStateAndRangeState({ derivedPositionInfo, derivedPriceRangeInfo }),
+    address,
+    tickLower: tickLower ?? undefined,
+    tickUpper: tickUpper ?? undefined,
+    token0: derivedPositionInfo.currencies.display.TOKEN0,
+    token1: derivedPositionInfo.currencies.display.TOKEN1,
+    exactField,
+    exactAmounts,
+    skipDependentAmount: outOfRange || invalidRange,
+    deposit0Disabled,
+    deposit1Disabled,
+  } satisfies UseDepositInfoProps
 }
 
 export function useTokenBalanceWithBuffer(currencyBalance: Maybe<CurrencyAmount<Currency>>, bufferPercentage: number) {
@@ -386,7 +417,7 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
     dependentToken,
   )
 
-  const dependentAmount: CurrencyAmount<Currency> | undefined = useMemo(() => {
+  const dependentAmount: CurrencyAmount<Currency> | undefined | null = useMemo(() => {
     const shouldSkip = state.skipDependentAmount || protocolVersion === ProtocolVersion.UNSPECIFIED
     if (shouldSkip) {
       return dependentToken && CurrencyAmount.fromRawAmount(dependentToken, 0)
@@ -426,12 +457,12 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
     return dependentToken && CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
   }, [state, protocolVersion, independentAmount, otherAmount, dependentToken, exactField, token0, token1])
 
-  const independentTokenUSDValue = useUSDCValue(independentAmount) || undefined
-  const dependentTokenUSDValue = useUSDCValue(dependentAmount) || undefined
+  const independentTokenUSDValue = useUSDCValue(independentAmount)
+  const dependentTokenUSDValue = useUSDCValue(dependentAmount)
 
   const dependentField = exactField === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0
 
-  const parsedAmounts: { [field in PositionField]: CurrencyAmount<Currency> | undefined } = useMemo(() => {
+  const parsedAmounts: { [field in PositionField]: CurrencyAmount<Currency> | undefined | null } = useMemo(() => {
     return {
       [PositionField.TOKEN0]: exactField === PositionField.TOKEN0 ? independentAmount : dependentAmount,
       [PositionField.TOKEN1]: exactField === PositionField.TOKEN0 ? dependentAmount : independentAmount,
@@ -515,16 +546,16 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
 }
 
 function getParsedHookAddrParam(params: ParsedQs): string | undefined {
-  const hookAddr = params?.hook
+  const hookAddr = params.hook
   if (!hookAddr || typeof hookAddr !== 'string') {
     return undefined
   }
-  const validAddress = getValidAddress(hookAddr)
+  const validAddress = getValidAddress({ address: hookAddr })
   return validAddress || undefined
 }
 
 function getParsedFeeTierParam(params: ParsedQs): FeeData | undefined {
-  const feeTier = params?.feeTier
+  const feeTier = params.feeTier
   if (!feeTier || typeof feeTier !== 'string') {
     return DEFAULT_FEE_DATA
   }
@@ -553,14 +584,18 @@ export function useInitialPoolInputs() {
   const supportedChainId = useSupportedChainId(parsedChainId) ?? defaultChainId
   const fee = getParsedFeeTierParam(parsedQs)
   const { currencyAddressA, currencyAddressB } = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const currencyAddressA = parseCurrencyFromURLParameter(parsedQs.currencyA ?? parsedQs.currencya)
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const parsedCurrencyAddressB = parseCurrencyFromURLParameter(parsedQs.currencyB ?? parsedQs.currencyb)
     const currencyAddressB = parsedCurrencyAddressB === currencyAddressA ? undefined : parsedCurrencyAddressB
 
     // prevent weth + eth
     const isETHOrWETHA =
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       checkIsNative(currencyAddressA) || currencyAddressA === WRAPPED_NATIVE_CURRENCY[supportedChainId]?.address
     const isETHOrWETHB =
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       checkIsNative(currencyAddressB) || currencyAddressB === WRAPPED_NATIVE_CURRENCY[supportedChainId]?.address
 
     return {
@@ -569,13 +604,13 @@ export function useInitialPoolInputs() {
     }
   }, [parsedQs.currencyA, parsedQs.currencyB, parsedQs.currencya, parsedQs.currencyb, supportedChainId])
 
-  const currencyA = useCurrency(currencyAddressA, supportedChainId)
-  const currencyB = useCurrency(currencyAddressB, supportedChainId)
+  const currencyA = useCurrency({ address: currencyAddressA, chainId: supportedChainId })
+  const currencyB = useCurrency({ address: currencyAddressB, chainId: supportedChainId })
 
   return useMemo(() => {
     return {
-      [PositionField.TOKEN0]: currencyA ?? currencyB ?? defaultInitialToken,
-      [PositionField.TOKEN1]: currencyA && currencyB ? currencyB : undefined,
+      tokenA: currencyA ?? currencyB ?? defaultInitialToken,
+      tokenB: currencyA && currencyB ? currencyB : undefined,
       fee,
       hook,
     }

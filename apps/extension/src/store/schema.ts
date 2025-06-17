@@ -254,5 +254,24 @@ export const v22Schema = {
   batchedTransactions: {},
 }
 
-const v23Schema = v22Schema
-export const getSchema = (): typeof v23Schema => v23Schema
+export const v23Schema = v22Schema
+
+const v24SchemaIntermediate = {
+  ...v23Schema,
+  appearanceSettings: {
+    ...v23Schema.appearanceSettings,
+    hapticsEnabled: undefined,
+  },
+  userSettings: {
+    ...v23Schema.userSettings,
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    hapticsEnabled: v23Schema.appearanceSettings.hapticsEnabled ?? false,
+  },
+}
+delete v24SchemaIntermediate.appearanceSettings.hapticsEnabled
+
+export const v24Schema = v24SchemaIntermediate
+
+const v25Schema = { ...v24Schema }
+
+export const getSchema = (): typeof v25Schema => v25Schema

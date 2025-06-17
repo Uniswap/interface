@@ -10,6 +10,7 @@ describe('useIsDappRequestConfirming', () => {
     ['returns false when request is not confirming', MOCK_ID, DappRequestStatus.Pending, false],
     ['returns true when request is confirming', MOCK_ID, DappRequestStatus.Confirming, true],
     ['returns false when request does not exist', 'non-existent-id', DappRequestStatus.Confirming, false],
+    // eslint-disable-next-line max-params
   ])('%s', async (_, requestId, status, expected) => {
     const preloadedState = {
       dappRequests: {

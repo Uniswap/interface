@@ -71,7 +71,11 @@ describe(transformCallsToTransactionRequests, () => {
       },
     ]
 
-    const result = transformCallsToTransactionRequests(calls, mockChainId, mockAccountAddress)
+    const result = transformCallsToTransactionRequests({
+      calls,
+      chainId: mockChainId,
+      accountAddress: mockAccountAddress,
+    })
     expect(result).toEqual(expected)
   })
 
@@ -94,19 +98,31 @@ describe(transformCallsToTransactionRequests, () => {
       },
     ]
 
-    const result = transformCallsToTransactionRequests(calls, mockChainId, mockAccountAddress)
+    const result = transformCallsToTransactionRequests({
+      calls,
+      chainId: mockChainId,
+      accountAddress: mockAccountAddress,
+    })
     expect(result).toEqual(expected)
   })
 
   it('should return an empty array if all calls are invalid', () => {
     const calls = [invalidCallMissingTo, invalidCallMissingData]
-    const result = transformCallsToTransactionRequests(calls, mockChainId, mockAccountAddress)
+    const result = transformCallsToTransactionRequests({
+      calls,
+      chainId: mockChainId,
+      accountAddress: mockAccountAddress,
+    })
     expect(result).toEqual([])
   })
 
   it('should return an empty array if input calls array is empty', () => {
     const calls: EthTransaction[] = []
-    const result = transformCallsToTransactionRequests(calls, mockChainId, mockAccountAddress)
+    const result = transformCallsToTransactionRequests({
+      calls,
+      chainId: mockChainId,
+      accountAddress: mockAccountAddress,
+    })
     expect(result).toEqual([])
   })
 })

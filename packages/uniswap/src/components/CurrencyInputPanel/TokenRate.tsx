@@ -46,7 +46,7 @@ export function TokenRate({ initialInverse = false }: { initialInverse?: boolean
         numberOfLines={1}
         variant="body3"
       >
-        {getRateToDisplay(formatter, trade, showInverseRate)}
+        {getRateToDisplay({ formatter, trade, showInverseRate })}
       </Text>
     </TouchableArea>
   )

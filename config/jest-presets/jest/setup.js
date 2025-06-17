@@ -140,7 +140,7 @@ jest.mock('uniswap/src/features/gating/hooks', () => {
   const real = jest.requireActual('uniswap/src/features/gating/hooks')
   return {
     ...real,
-    useDynamicConfigValue: (_config, _key, defaultValue, _customTypeGuard) => defaultValue,
+    useDynamicConfigValue: (args) => args.defaultValue,
   }
 })
 

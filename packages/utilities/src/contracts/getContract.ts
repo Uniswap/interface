@@ -4,12 +4,17 @@ import { Contract, ContractInterface } from '@ethersproject/contracts'
 import { JsonRpcProvider, Provider } from '@ethersproject/providers'
 import { isAddress } from 'utilities/src/addresses'
 
-export function getContract(
-  address: string,
-  ABI: ContractInterface,
-  provider: JsonRpcProvider,
-  account?: string,
-): Contract {
+export function getContract({
+  address,
+  ABI,
+  provider,
+  account,
+}: {
+  address: string
+  ABI: ContractInterface
+  provider: JsonRpcProvider
+  account?: string
+}): Contract {
   if (!isAddress(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }

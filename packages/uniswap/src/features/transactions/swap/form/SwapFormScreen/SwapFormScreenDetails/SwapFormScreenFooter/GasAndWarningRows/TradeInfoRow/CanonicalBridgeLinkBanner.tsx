@@ -13,10 +13,10 @@ export function CanonicalBridgeLinkBanner({ chainId }: { chainId: UniverseChainI
 
   const networkLabel = getChainLabel(chainId)
   const networkColor = validColor(foreground)
-  const canonicalBridgeUrl = getCanonicalBridgingDappUrls([chainId])?.[0]
+  const canonicalBridgeUrl = getCanonicalBridgingDappUrls([chainId])[0]
 
   return (
-    <TouchableArea onPress={() => canonicalBridgeUrl && openUri(canonicalBridgeUrl)}>
+    <TouchableArea onPress={() => canonicalBridgeUrl && openUri({ uri: canonicalBridgeUrl })}>
       <Flex row gap="$spacing8" alignItems="center">
         <NetworkLogo chainId={chainId} size={iconSizes.icon20} />
         <Text color={networkColor} variant="buttonLabel3">

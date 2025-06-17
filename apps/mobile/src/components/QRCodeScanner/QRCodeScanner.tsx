@@ -69,7 +69,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       if (shouldFreezeCamera) {
         return
       }
-      const data = result?.data
+      const data = result.data
       onScanCode(data)
       setIsReadingImageFile(false)
     },

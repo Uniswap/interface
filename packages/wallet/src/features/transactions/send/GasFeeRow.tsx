@@ -4,10 +4,10 @@ import { Flex, SpinningLoader, Text } from 'ui/src'
 import { Gas } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
+import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useGasFeeFormattedDisplayAmounts } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { NetworkFeeWarning } from 'uniswap/src/features/transactions/modals/NetworkFeeWarning'
 import { isWeb } from 'utilities/src/platform'
 
 type GasFeeRowProps = {

@@ -21,7 +21,7 @@ function _TokenCard({
   const { currency, logoUrl } = token.currencyInfo
 
   const onPress = (): void => {
-    onSelectCurrency?.(token.currencyInfo, section, index)
+    onSelectCurrency(token.currencyInfo, section, index)
   }
 
   const tokenLabel = getSymbolDisplayText(currency.symbol)

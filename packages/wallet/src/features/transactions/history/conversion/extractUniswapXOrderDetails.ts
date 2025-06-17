@@ -66,7 +66,7 @@ function remoteOrderStatusToLocalTxStatus(orderStatus: SwapOrderStatus): Transac
 export default function parseUniswapXOrderTransaction(
   transaction: NonNullable<TransactionListQueryResponse>,
 ): ConfirmedSwapTransactionInfo | null {
-  if (transaction?.details?.__typename !== TransactionDetailsType.UniswapXOrder) {
+  if (transaction.details.__typename !== TransactionDetailsType.UniswapXOrder) {
     return null
   }
 
@@ -83,21 +83,21 @@ export default function parseUniswapXOrderTransaction(
     ? buildCurrencyId(chainId, transaction.details.outputToken.address)
     : null
 
-  const inputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
-    TokenStandard.Erc20,
-    transaction.chain,
-    transaction.details.inputToken.address,
-    transaction.details.inputToken.decimals,
-    transaction.details.inputTokenQuantity,
-  )
+  const inputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse({
+    tokenStandard: TokenStandard.Erc20,
+    chain: transaction.chain,
+    address: transaction.details.inputToken.address,
+    decimals: transaction.details.inputToken.decimals,
+    quantity: transaction.details.inputTokenQuantity,
+  })
 
-  const outputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
-    TokenStandard.Erc20,
-    transaction.chain,
-    transaction.details.outputToken.address,
-    transaction.details.outputToken.decimals,
-    transaction.details.outputTokenQuantity,
-  )
+  const outputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse({
+    tokenStandard: TokenStandard.Erc20,
+    chain: transaction.chain,
+    address: transaction.details.outputToken.address,
+    decimals: transaction.details.outputToken.decimals,
+    quantity: transaction.details.outputTokenQuantity,
+  })
 
   if (!inputCurrencyId || !outputCurrencyId) {
     return null

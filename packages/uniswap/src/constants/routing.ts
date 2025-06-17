@@ -50,6 +50,7 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
+import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { isSameAddress } from 'utilities/src/addresses'
 
 type ChainCurrencyList = {
@@ -176,10 +177,12 @@ export const COMMON_BASES: ChainCurrencyList = {
   ].map(buildPartialCurrencyInfo),
 }
 
-export function getCommonBase(chainId?: number, isNative?: boolean, address?: string): CurrencyInfo | undefined {
+export function getCommonBase(chainId?: number, address?: string): CurrencyInfo | undefined {
   if (!address || !chainId) {
     return undefined
   }
+
+  const isNative = isNativeCurrencyAddress(chainId, address)
   return COMMON_BASES[chainId]?.find(
     (base) =>
       (base.currency.isNative && isNative) || (base.currency.isToken && isSameAddress(base.currency.address, address)),
@@ -191,12 +194,12 @@ function getNativeLogoURI(chainId: UniverseChainId = UniverseChainId.Mainnet): I
     return ETH_LOGO as ImageSourcePropType
   }
 
-  return getChainInfo(chainId).nativeCurrency.logo ?? (ETH_LOGO as ImageSourcePropType)
+  return getChainInfo(chainId).nativeCurrency.logo
 }
 
 function getTokenLogoURI(chainId: UniverseChainId, address: string): ImageSourcePropType | string | undefined {
   const chainInfo = getChainInfo(chainId)
-  const networkName = chainInfo?.assetRepoNetworkName
+  const networkName = chainInfo.assetRepoNetworkName
 
   if (isCelo(chainId) && isSameAddress(address, nativeOnChain(chainId).wrapped.address)) {
     return CELO_LOGO as ImageSourcePropType

@@ -11,10 +11,13 @@ import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSma
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FormattedUniswapXGasFeeInfo, GasFeeResult } from 'uniswap/src/features/gas/types'
-import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
-import { DynamicConfigs, GasStrategies, GasStrategyType } from 'uniswap/src/features/gating/configs'
+import {
+  getActiveGasStrategy,
+  getShadowGasStrategies,
+  hasSufficientFundsIncludingGas,
+} from 'uniswap/src/features/gas/utils'
+import { GasStrategyType } from 'uniswap/src/features/gating/configs'
 import { useStatsigClientStatus } from 'uniswap/src/features/gating/hooks'
-import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
@@ -29,20 +32,6 @@ import { NumberType } from 'utilities/src/format/types'
 import { isWeb } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
-// The default "Urgent" strategy that was previously hardcoded in the gas service
-export const DEFAULT_GAS_STRATEGY: GasStrategy = {
-  limitInflationFactor: 1.15,
-  displayLimitInflationFactor: 1,
-  priceInflationFactor: 1.5,
-  percentileThresholdFor1559Fee: 75,
-  thresholdToInflateLastBlockBaseFee: 0,
-  baseFeeMultiplier: 1.05,
-  baseFeeHistoryWindow: 100,
-  minPriorityFeeRatioOfBaseFee: undefined,
-  minPriorityFeeGwei: 2,
-  maxPriorityFeeGwei: 9,
-}
-
 export const SMART_WALLET_DELEGATION_GAS_FEE = 21500
 
 export type CancellationGasFeeDetails = {
@@ -50,50 +39,16 @@ export type CancellationGasFeeDetails = {
   gasFeeDisplayValue: string
 }
 
-// Helper function to check if the config value is a valid GasStrategies object
-function isValidGasStrategies(value: unknown): value is GasStrategies {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'strategies' in value &&
-    Array.isArray((value as GasStrategies).strategies)
-  )
-}
-
 // Hook to use active GasStrategy for a specific chain.
 export function useActiveGasStrategy(chainId: number | undefined, type: GasStrategyType): GasStrategy {
   const { isStatsigReady } = useStatsigClientStatus()
-
-  return useMemo(() => {
-    if (!isStatsigReady) {
-      return DEFAULT_GAS_STRATEGY
-    }
-
-    const config = getStatsigClient().getDynamicConfig(DynamicConfigs.GasStrategies)
-    const gasStrategies = isValidGasStrategies(config.value) ? config.value : undefined
-    const activeStrategy = gasStrategies?.strategies.find(
-      (s) => s.conditions.chainId === chainId && s.conditions.types === type && s.conditions.isActive,
-    )
-    return activeStrategy ? activeStrategy.strategy : DEFAULT_GAS_STRATEGY
-  }, [isStatsigReady, chainId, type])
+  return useMemo(() => getActiveGasStrategy({ chainId, type, isStatsigReady }), [isStatsigReady, chainId, type])
 }
 
 // Hook to use shadow GasStrategies for a specific chain.
 export function useShadowGasStrategies(chainId: number | undefined, type: GasStrategyType): GasStrategy[] {
   const { isStatsigReady } = useStatsigClientStatus()
-
-  return useMemo(() => {
-    if (!isStatsigReady) {
-      return []
-    }
-
-    const config = getStatsigClient().getDynamicConfig(DynamicConfigs.GasStrategies)
-    const gasStrategies = isValidGasStrategies(config.value) ? config.value : undefined
-    const shadowStrategies = gasStrategies?.strategies
-      .filter((s) => s.conditions.chainId === chainId && s.conditions.types === type && !s.conditions.isActive)
-      .map((s) => s.strategy)
-    return shadowStrategies ?? []
-  }, [chainId, isStatsigReady, type])
+  return useMemo(() => getShadowGasStrategies({ chainId, type, isStatsigReady }), [isStatsigReady, chainId, type])
 }
 
 /**
@@ -130,12 +85,20 @@ export function convertGasFeeToDisplayValue(
     .toString()
 }
 
-export function useTransactionGasFee(
-  tx: providers.TransactionRequest | undefined,
-  skip?: boolean,
-  refetchInterval?: PollingInterval,
-  fallbackGasLimit?: number,
-): GasFeeResult {
+export function useTransactionGasFee({
+  tx,
+  skip,
+  refetchInterval,
+  fallbackGasLimit,
+  // Warning: only use when it's Ok to return old data even when params change.
+  shouldUsePreviousValueDuringLoading,
+}: {
+  tx: providers.TransactionRequest | undefined
+  skip?: boolean
+  refetchInterval?: PollingInterval
+  fallbackGasLimit?: number
+  shouldUsePreviousValueDuringLoading?: boolean
+}): GasFeeResult {
   const pollingIntervalForChain = usePollingIntervalByChain(tx?.chainId)
 
   const { data, error, isLoading } = useGasFeeQuery({
@@ -143,6 +106,7 @@ export function useTransactionGasFee(
     refetchInterval,
     staleTime: pollingIntervalForChain,
     immediateGcTime: pollingIntervalForChain + 15 * ONE_SECOND_MS,
+    shouldUsePreviousValueDuringLoading,
   })
 
   // TODO(WALL-6421): Remove spread once GasFeeResult shape is decoupled from state fields
@@ -191,7 +155,7 @@ export function useFormattedUniswapXGasFeeInfo(
     const { approvalCost, inputTokenSymbol } = uniswapXGasBreakdown
     // If this swap was done via classic routing, the total gas fee would have been approval gas fee + classic swap gas fee.
     const preSavingsGasCostUsd =
-      Number(approvalCostUsd ?? 0) + Number(uniswapXGasBreakdown?.classicGasUseEstimateUSD ?? 0)
+      Number(approvalCostUsd ?? 0) + Number(uniswapXGasBreakdown.classicGasUseEstimateUSD ?? 0)
     const preSavingsGasFeeFormatted = convertFiatAmountFormatted(preSavingsGasCostUsd, NumberType.FiatGasPrice)
 
     // Swap submission will always cost 0, since it's not an on-chain tx.
@@ -332,7 +296,7 @@ export function useGasFeeFormattedDisplayAmounts<T extends string | undefined>({
 
     // Gas fee available, USD not available - return native currency amount (always do this in testnet mode)
     if (!gasFeeUSD || isTestnetModeEnabled) {
-      return gasFee?.isLoading || gasFeeUSDIsLoading ? emptyState : `${nativeAmountFormatted} ${nativeCurrency.symbol}`
+      return gasFee.isLoading || gasFeeUSDIsLoading ? emptyState : `${nativeAmountFormatted} ${nativeCurrency.symbol}`
     }
 
     // Gas fee and USD both available

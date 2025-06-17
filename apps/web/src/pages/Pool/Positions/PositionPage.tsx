@@ -9,7 +9,7 @@ import { LiquidityPositionAmountRows } from 'components/Liquidity/LiquidityPosit
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { LiquidityPositionStackedBars } from 'components/Liquidity/LiquidityPositionStackedBars'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
-import { useGetRangeDisplay, usePositionDerivedInfo } from 'components/Liquidity/hooks'
+import { useGetRangeDisplay } from 'components/Liquidity/hooks'
 import type { PositionInfo } from 'components/Liquidity/types'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
@@ -21,9 +21,8 @@ import { useSrcColor } from 'hooks/useColor'
 import { useLpIncentivesFormattedEarnings } from 'hooks/useLpIncentivesFormattedEarnings'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import NotFound from 'pages/NotFound'
-import { LegacyPositionPage } from 'pages/Pool/Positions/LegacyPositionPage'
 import { BaseQuoteFiatAmount } from 'pages/Pool/Positions/create/BaseQuoteFiatAmount'
-import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
+import { getBaseAndQuoteCurrencies } from 'pages/Pool/Positions/create/utils'
 import { BodyWrapper, LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -51,6 +50,7 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { breakpoints } from 'ui/src/theme/breakpoints'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -61,8 +61,9 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -85,11 +86,9 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
 export default function PositionPageWrapper() {
   const chainId = useChainIdFromUrlParam()
 
-  const isNewPositionPageEnabled = useFeatureFlag(FeatureFlags.PositionPageV2)
-
   return (
     <MultichainContextProvider initialChainId={chainId}>
-      {isNewPositionPageEnabled ? <PositionPage /> : <LegacyPositionPage />}
+      <PositionPage />
     </MultichainContextProvider>
   )
 }
@@ -107,7 +106,7 @@ function PositionPage() {
     isLoading: positionLoading,
     refetch,
   } = useGetPositionQuery({
-    owner: account?.address ?? ZERO_ADDRESS,
+    owner: account.address ?? ZERO_ADDRESS,
     protocolVersion: pathname.includes('v3')
       ? ProtocolVersion.V3
       : pathname.includes('v4')
@@ -118,7 +117,7 @@ function PositionPage() {
   })
   const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
-  const metadata = usePositionTokenURI(tokenId, chainInfo?.id, positionInfo?.version)
+  const metadata = usePositionTokenURI({ tokenId, chainId: chainInfo?.id, version: positionInfo?.version })
   usePendingLPTransactionsChangeListener(refetch)
 
   const dispatch = useAppDispatch()
@@ -129,18 +128,27 @@ function PositionPage() {
   const { t } = useTranslation()
   const media = useMedia()
 
-  const { currency0Amount, currency1Amount, status } = positionInfo ?? {}
-  const {
-    feeValue0,
-    feeValue1,
-    fiatFeeValue0,
-    fiatFeeValue1,
-    token0CurrentPrice,
-    token1CurrentPrice,
-    fiatValue0,
-    fiatValue1,
-    priceOrdering,
-  } = usePositionDerivedInfo(positionInfo)
+  const { currency0Amount, currency1Amount, status, fee0Amount, fee1Amount } = positionInfo ?? {}
+  const fiatFeeValue0 = useUSDCValue(fee0Amount, PollingInterval.Slow)
+  const fiatFeeValue1 = useUSDCValue(fee1Amount, PollingInterval.Slow)
+  const fiatValue0 = useUSDCValue(currency0Amount, PollingInterval.Slow)
+  const fiatValue1 = useUSDCValue(currency1Amount, PollingInterval.Slow)
+  const priceOrdering = useMemo(() => {
+    if (positionInfo?.version === ProtocolVersion.V2 || !positionInfo?.position) {
+      return {}
+    }
+
+    const position = positionInfo.position
+    const token0 = position.amount0.currency
+    const token1 = position.amount1.currency
+
+    return {
+      priceLower: position.token0PriceLower,
+      priceUpper: position.token0PriceUpper,
+      quote: token1,
+      base: token0,
+    }
+  }, [positionInfo])
 
   const [priceInverted, setPriceInverted] = useState(false)
 
@@ -152,8 +160,8 @@ function PositionPage() {
     pricesInverted: priceInverted,
   })
 
-  const [baseCurrency, quoteCurrency] = getInvertedTuple(
-    [currency0Amount?.currency, currency1Amount?.currency],
+  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(
+    { TOKEN0: currency0Amount?.currency, TOKEN1: currency1Amount?.currency },
     priceInverted,
   )
 
@@ -264,15 +272,19 @@ function PositionPage() {
     )
   }
 
-  const hasFees = feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || false
-  const isOwner = areAddressesEqual(positionInfo.owner, account?.address)
+  const hasFees = fee0Amount?.greaterThan(0) || fee1Amount?.greaterThan(0)
+
+  const token0Price = positionInfo.version !== ProtocolVersion.V2 ? positionInfo.pool?.token0Price : undefined
+  const token1Price = positionInfo.version !== ProtocolVersion.V2 ? positionInfo.pool?.token1Price : undefined
+
+  const isOwner = areAddressesEqual(positionInfo.owner, account.address)
 
   const showV4UnsupportedTooltip = isV4UnsupportedChain(positionInfo.chainId)
 
   return (
     <Trace
       logImpression
-      page={InterfacePageNameLocal.PositionDetails}
+      page={InterfacePageName.PositionDetails}
       properties={{
         pool_address: positionInfo.poolId,
         label: [currency0Amount.currency.symbol, currency1Amount.currency.symbol].join('/'),
@@ -369,20 +381,18 @@ function PositionPage() {
                     {t('pool.removeLiquidity')}
                   </Button>
                 )}
-                {hasFees && isOwner && (
+                {hasFees && (
                   <Button
                     size="small"
                     maxWidth="fit-content"
                     fill={false}
                     onPress={() => {
-                      if (hasFees) {
-                        dispatch(
-                          setOpenModal({
-                            name: ModalName.ClaimFee,
-                            initialState: positionInfo,
-                          }),
-                        )
-                      }
+                      dispatch(
+                        setOpenModal({
+                          name: ModalName.ClaimFee,
+                          initialState: positionInfo,
+                        }),
+                      )
                     }}
                   >
                     {t('pool.collectFees')}
@@ -396,7 +406,7 @@ function PositionPage() {
           <Flex gap="$gap12" width={chartWidth}>
             <Flex row gap="$gap8" alignItems="center">
               <BaseQuoteFiatAmount
-                price={priceInverted ? token1CurrentPrice : token0CurrentPrice}
+                price={priceInverted ? token1Price : token0Price}
                 base={priceInverted ? currency1Amount.currency : currency0Amount.currency}
                 quote={priceInverted ? currency0Amount.currency : currency1Amount.currency}
                 variant="heading3"
@@ -423,6 +433,8 @@ function PositionPage() {
                   version={positionInfo.version}
                   quoteCurrency={quoteCurrency}
                   baseCurrency={baseCurrency}
+                  sdkCurrencies={{ TOKEN0: currency0Amount.currency, TOKEN1: currency1Amount.currency }}
+                  priceInverted={priceInverted}
                   poolAddressOrId={positionInfo.poolId}
                   chainId={positionInfo.chainId}
                   tickSpacing={positionInfo.tickSpacing}
@@ -594,8 +606,8 @@ function PositionPage() {
                 tokenASymbol={tokenASymbol}
                 tokenBSymbol={tokenBSymbol}
                 isFullRange={isFullRange}
-                token0CurrentPrice={token0CurrentPrice}
-                token1CurrentPrice={token1CurrentPrice}
+                token0CurrentPrice={token0Price}
+                token1CurrentPrice={token1Price}
                 priceInverted={priceInverted}
                 setPriceInverted={setPriceInverted}
               />
@@ -617,11 +629,11 @@ function PositionPage() {
               fiatValue1={fiatValue1}
               fiatFeeValue0={fiatFeeValue0}
               fiatFeeValue1={fiatFeeValue1}
-              feeValue0={feeValue0}
-              feeValue1={feeValue1}
+              fee0Amount={fee0Amount}
+              fee1Amount={fee1Amount}
             />
             {isLpIncentivesEnabled &&
-              positionInfo?.version === ProtocolVersion.V4 &&
+              positionInfo.version === ProtocolVersion.V4 &&
               Boolean(positionInfo.boostedApr) && (
                 <APRSection
                   poolApr={positionInfo.apr}
@@ -664,24 +676,24 @@ const PositionSection = ({
   position: Position
   currency0Amount: CurrencyAmount<Currency>
   currency1Amount: CurrencyAmount<Currency>
-  fiatValue0?: CurrencyAmount<Currency>
-  fiatValue1?: CurrencyAmount<Currency>
+  fiatValue0: Maybe<CurrencyAmount<Currency>>
+  fiatValue1: Maybe<CurrencyAmount<Currency>>
 }) => {
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const { t } = useTranslation()
   const colors = useSporeColors()
   const currencyInfo0 = useCurrencyInfo(currency0Amount.currency)
   const currencyInfo1 = useCurrencyInfo(currency1Amount.currency)
-  const token0Color = useSrcColor(
-    currencyInfo0?.logoUrl ?? undefined,
-    currencyInfo0?.currency.name,
-    colors.surface2.val,
-  ).tokenColor
-  const token1Color = useSrcColor(
-    currencyInfo1?.logoUrl ?? undefined,
-    currencyInfo1?.currency.name,
-    colors.surface2.val,
-  ).tokenColor
+  const token0Color = useSrcColor({
+    src: currencyInfo0?.logoUrl ?? undefined,
+    currencyName: currencyInfo0?.currency.name,
+    backgroundColor: colors.surface2.val,
+  }).tokenColor
+  const token1Color = useSrcColor({
+    src: currencyInfo1?.logoUrl ?? undefined,
+    currencyName: currencyInfo1?.currency.name,
+    backgroundColor: colors.surface2.val,
+  }).tokenColor
   const totalFiatValue = fiatValue0?.add(fiatValue1 ?? CurrencyAmount.fromRawAmount(fiatValue0.currency, 0))
   const bars = useMemo(() => {
     const percent0 =
@@ -820,18 +832,18 @@ const EarningsSection = ({
   currency1Amount,
   fiatFeeValue0,
   fiatFeeValue1,
-  feeValue0,
-  feeValue1,
+  fee0Amount,
+  fee1Amount,
 }: {
   positionInfo: PositionInfo
   currency0Amount: CurrencyAmount<Currency>
   currency1Amount: CurrencyAmount<Currency>
-  fiatValue0?: CurrencyAmount<Currency>
-  fiatValue1?: CurrencyAmount<Currency>
-  fiatFeeValue0?: CurrencyAmount<Currency>
-  fiatFeeValue1?: CurrencyAmount<Currency>
-  feeValue0?: CurrencyAmount<Currency>
-  feeValue1?: CurrencyAmount<Currency>
+  fiatValue0: Maybe<CurrencyAmount<Currency>>
+  fiatValue1: Maybe<CurrencyAmount<Currency>>
+  fiatFeeValue0: Maybe<CurrencyAmount<Currency>>
+  fiatFeeValue1: Maybe<CurrencyAmount<Currency>>
+  fee0Amount?: CurrencyAmount<Currency>
+  fee1Amount?: CurrencyAmount<Currency>
 }) => {
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const { t } = useTranslation()
@@ -852,21 +864,21 @@ const EarningsSection = ({
     buildCurrencyId(UniverseChainId.Mainnet, LP_INCENTIVES_REWARD_TOKEN.address),
   ])
 
-  const token0Color = useSrcColor(
-    currencyInfo0?.logoUrl ?? undefined,
-    currencyInfo0?.currency.name,
-    colors.surface2.val,
-  ).tokenColor
-  const token1Color = useSrcColor(
-    currencyInfo1?.logoUrl ?? undefined,
-    currencyInfo1?.currency.name,
-    colors.surface2.val,
-  ).tokenColor
-  const rewardTokenColor = useSrcColor(
-    rewardCurrencyInfo?.logoUrl ?? undefined,
-    rewardCurrencyInfo?.currency.name,
-    colors.surface2.val,
-  ).tokenColor
+  const token0Color = useSrcColor({
+    src: currencyInfo0?.logoUrl ?? undefined,
+    currencyName: currencyInfo0?.currency.name,
+    backgroundColor: colors.surface2.val,
+  }).tokenColor
+  const token1Color = useSrcColor({
+    src: currencyInfo1?.logoUrl ?? undefined,
+    currencyName: currencyInfo1?.currency.name,
+    backgroundColor: colors.surface2.val,
+  }).tokenColor
+  const rewardTokenColor = useSrcColor({
+    src: rewardCurrencyInfo?.logoUrl ?? undefined,
+    currencyName: rewardCurrencyInfo?.currency.name,
+    backgroundColor: colors.surface2.val,
+  }).tokenColor
 
   const bars = useMemo(() => {
     const percent0 =
@@ -919,23 +931,23 @@ const EarningsSection = ({
   ])
 
   const feeRows = useMemo(() => {
-    if (!currencyInfo0 || !currencyInfo1 || !feeValue0 || !feeValue1) {
+    if (!currencyInfo0 || !currencyInfo1 || !fee0Amount || !fee1Amount) {
       return []
     }
 
     return [
       {
         currencyInfo: currencyInfo0,
-        currencyAmount: feeValue0,
+        currencyAmount: fee0Amount,
         fiatValue: fiatFeeValue0,
       },
       {
         currencyInfo: currencyInfo1,
-        currencyAmount: feeValue1,
+        currencyAmount: fee1Amount,
         fiatValue: fiatFeeValue1,
       },
     ]
-  }, [currencyInfo0, currencyInfo1, feeValue0, feeValue1, fiatFeeValue0, fiatFeeValue1])
+  }, [currencyInfo0, currencyInfo1, fee0Amount, fee1Amount, fiatFeeValue0, fiatFeeValue1])
 
   const rewardRows = useMemo(() => {
     if (!isLpIncentivesEnabled || !rewardCurrencyInfo || !hasRewards) {

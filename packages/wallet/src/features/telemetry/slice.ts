@@ -69,13 +69,19 @@ export const slice = createSlice({
   },
 })
 
-export function shouldReportBalances(
-  lastBalancesReport: number | undefined,
-  lastBalancesReportValue: number | undefined,
-  signerAccountAddresses: string[],
-  signerAccountValues: number[],
-  signerAccountsTotalBalance: number,
-): boolean {
+export function shouldReportBalances({
+  lastBalancesReport,
+  lastBalancesReportValue,
+  signerAccountAddresses,
+  signerAccountValues,
+  signerAccountsTotalBalance,
+}: {
+  lastBalancesReport?: number
+  lastBalancesReportValue?: number
+  signerAccountAddresses: string[]
+  signerAccountValues: number[]
+  signerAccountsTotalBalance: number
+}): boolean {
   const didWalletGetFunded = signerAccountsTotalBalance > 0 && lastBalancesReportValue === 0
   const balanceReportDue = (lastBalancesReport ?? 0) + balanceReportFrequency < Date.now()
   const validAccountInfo = signerAccountAddresses.length === signerAccountValues.length

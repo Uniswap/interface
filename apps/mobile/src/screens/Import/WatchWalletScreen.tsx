@@ -35,36 +35,36 @@ const validateForm = ({
   validAddress,
   name,
   walletExists,
-  loading,
+  isLoading,
   isSmartContractAddress,
   isValidSmartContract,
 }: {
   validAddress: string | null
   name: string | null
   walletExists: boolean
-  loading: boolean
+  isLoading: boolean
   isSmartContractAddress: boolean
   isValidSmartContract: boolean
 }): boolean => {
-  return (!!validAddress || !!name) && !walletExists && !loading && (!isSmartContractAddress || isValidSmartContract)
+  return (!!validAddress || !!name) && !walletExists && !isLoading && (!isSmartContractAddress || isValidSmartContract)
 }
 
 const getErrorText = ({
   walletExists,
   isSmartContractAddress,
-  loading,
+  isLoading,
   t,
 }: {
   walletExists: boolean
   isSmartContractAddress: boolean
-  loading: boolean
+  isLoading: boolean
   t: TFunction
 }): string | undefined => {
   if (walletExists) {
     return t('account.wallet.watch.error.alreadyImported')
   } else if (isSmartContractAddress) {
     return t('account.wallet.watch.error.smartContract')
-  } else if (!loading) {
+  } else if (!isLoading) {
     return t('account.wallet.watch.error.notFound')
   }
   return undefined
@@ -90,8 +90,8 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     nameOrAddress: normalizedValue,
     autocompleteDomain: !hasSuffixIncluded,
   })
-  const validAddress = getValidAddress(normalizedValue, true, false)
-  const { isSmartContractAddress, loading } = useIsSmartContractAddress(
+  const validAddress = getValidAddress({ address: normalizedValue, withChecksum: true, log: false })
+  const { isSmartContractAddress, loading: isLoading } = useIsSmartContractAddress(
     (validAddress || resolvedAddress) ?? undefined,
     defaultChainId,
   )
@@ -115,12 +115,12 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     validAddress,
     name,
     walletExists,
-    loading,
+    isLoading,
     isSmartContractAddress,
     isValidSmartContract,
   })
 
-  const errorText = !isValid ? getErrorText({ walletExists, isSmartContractAddress, loading, t }) : undefined
+  const errorText = !isValid ? getErrorText({ walletExists, isSmartContractAddress, isLoading, t }) : undefined
 
   const onSubmit = useCallback(async () => {
     if (isValid && value) {

@@ -1,13 +1,9 @@
 /* eslint-env node */
 require('@uniswap/eslint-config/load')
 
-const rulesDirPlugin = require('eslint-plugin-rulesdir')
-rulesDirPlugin.RULES_DIR = 'eslint_rules'
-
 module.exports = {
   root: true,
   extends: ['@uniswap/eslint-config/interface', 'plugin:storybook/recommended'],
-  plugins: ['rulesdir'],
   parserOptions: {
     project: 'tsconfig.eslint.json',
     tsconfigRootDir: __dirname,
@@ -71,7 +67,6 @@ module.exports = {
       files: ['**/*'],
       rules: {
         'multiline-comment-style': ['error', 'separate-lines'],
-        'rulesdir/no-undefined-or': 'error',
       },
     },
     {

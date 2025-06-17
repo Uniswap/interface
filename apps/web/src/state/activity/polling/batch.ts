@@ -95,13 +95,13 @@ export function usePollPendingBatchTransactions(onActivityUpdate: OnActivityUpda
         const result = await getCallsStatus({ provider, batchId: transaction.batchInfo.batchId })
 
         // TODO(WEB-7872) If Coinbase smart wallet returns a string status, handle via fallback helper.
-        if (typeof result?.status === 'string') {
+        if (typeof result.status === 'string') {
           handleFallbackParsingForCoinbase({ result, transaction, onActivityUpdate })
           continue
         }
 
-        const receipt = result?.receipts?.[0]
-        if (result?.status === 200) {
+        const receipt = result.receipts?.[0]
+        if (result.status === 200) {
           if (!receipt) {
             throw new Error(
               `${transaction.batchInfo.connectorId ?? 'wallet'} breaks eip5972 spec, returning a 200 status with no receipt`,
@@ -113,7 +113,7 @@ export function usePollPendingBatchTransactions(onActivityUpdate: OnActivityUpda
           const updatedStatus = receipt.status === '0x1' ? TransactionStatus.Confirmed : TransactionStatus.Failed
           finalizeBatch({ transaction, onActivityUpdate, hash, status: updatedStatus })
         }
-        if (result?.status >= 400) {
+        if (result.status >= 400) {
           if (receipt) {
             const hash = receipt.transactionHash
             finalizeBatch({ transaction, onActivityUpdate, hash, status: TransactionStatus.Failed })
@@ -124,6 +124,7 @@ export function usePollPendingBatchTransactions(onActivityUpdate: OnActivityUpda
           )
         }
       } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         FAILURE_COUNT_MAP[transaction.batchInfo.batchId] = (FAILURE_COUNT_MAP[transaction.batchInfo.batchId] ?? 0) + 1
         if (FAILURE_COUNT_MAP[transaction.batchInfo.batchId] >= FAILURE_COUNT_THRESHOLD) {
           const connectorId = transaction.batchInfo.connectorId

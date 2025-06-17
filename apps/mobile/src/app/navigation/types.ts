@@ -30,9 +30,10 @@ import {
   SharedUnitagScreenParams,
   UnitagStackParamList,
 } from 'uniswap/src/types/screens/mobile'
-import { PostSwapSmartWalletNudgeState } from 'wallet/src/components/smartWallet/modals/PostSwapSmartWalletNudge'
 import { SmartWalletEnabledModalState } from 'wallet/src/components/smartWallet/modals/SmartWalletEnabledModal'
+import { SmartWalletNudgeState } from 'wallet/src/components/smartWallet/modals/SmartWalletNudge'
 import { NFTItem } from 'wallet/src/features/nfts/types'
+import { SmartWalletActionRequiredModalState } from 'wallet/src/features/smartWallet/modals/SmartWalletActionRequiredModal'
 import { SmartWalletAdvancedSettingsModalState } from 'wallet/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { SmartWalletConfirmModalState } from 'wallet/src/features/smartWallet/modals/SmartWalletConfirmModal'
 import { SmartWalletInsufficientFundsOnNetworkModalState } from 'wallet/src/features/smartWallet/modals/SmartWalletInsufficientFundsOnNetworkModal'
@@ -200,14 +201,16 @@ export type AppStackParamList = {
   [ModalName.SmartWalletAdvancedSettingsModal]: SmartWalletAdvancedSettingsModalState
   [ModalName.PrivateKeySpeedBumpModal]: undefined
   [ModalName.SmartWalletConfirmModal]: SmartWalletConfirmModalState
+  [ModalName.SmartWalletActionRequiredModal]: SmartWalletActionRequiredModalState
   [ModalName.SmartWalletInsufficientFundsOnNetworkModal]: SmartWalletInsufficientFundsOnNetworkModalState
-  [ModalName.PostSwapSmartWalletNudge]: PostSwapSmartWalletNudgeState
+  [ModalName.SmartWalletNudge]: SmartWalletNudgeState
   [ModalName.SettingsAppearance]: undefined
   [ModalName.PermissionsModal]: undefined
   [ModalName.PortfolioBalanceModal]: undefined
   [ModalName.LanguageSelector]: undefined
   [ModalName.SmartWalletInfoModal]: undefined
   [ModalName.SmartWalletCreatedModal]: undefined
+  [ModalName.ConfirmDisableSmartWalletScreen]: undefined
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>

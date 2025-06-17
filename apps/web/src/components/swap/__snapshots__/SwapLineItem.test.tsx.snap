@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SwapLineItem.tsx dutch order eth input 1`] = `
+exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
 <DocumentFragment>
   .c4 {
   -webkit-filter: none;
@@ -30,92 +30,9 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c11 {
-  z-index: 1070;
-  pointer-events: none;
-  visibility: hidden;
-  opacity: 0;
-  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
-  transition: visibility 150ms linear, opacity 150ms linear;
-  color: rgba(19,19,19,0.63);
-}
-
 .c2 {
   display: inline-block;
   height: inherit;
-}
-
-.c15 {
-  width: 8px;
-  height: 8px;
-  z-index: 9998;
-}
-
-.c15::before {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  box-sizing: border-box;
-  z-index: 9998;
-  content: '';
-  border: 1px solid rgba(34,34,34,0.05);
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  background: #FFFFFF;
-}
-
-.c15.arrow-top {
-  bottom: -4px;
-}
-
-.c15.arrow-top::before {
-  border-top: none;
-  border-left: none;
-}
-
-.c15.arrow-bottom {
-  top: -4px;
-}
-
-.c15.arrow-bottom::before {
-  border-bottom: none;
-  border-right: none;
-}
-
-.c15.arrow-left {
-  right: -4px;
-}
-
-.c15.arrow-left::before {
-  border-bottom: none;
-  border-left: none;
-}
-
-.c15.arrow-right {
-  left: -4px;
-}
-
-.c15.arrow-right::before {
-  border-right: none;
-  border-top: none;
-}
-
-.c12 {
-  max-width: 256px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 12px;
-  pointer-events: auto;
-  color: #131313;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
 }
 
 .c5 {
@@ -178,30 +95,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   overflow-wrap: break-word;
 }
 
-.c14 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c14:hover {
-  opacity: 0.6;
-}
-
-.c14:active {
-  opacity: 0.4;
-}
-
-.c13 {
-  display: inline;
-}
-
-.c16 {
+.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -230,7 +124,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
     style="display: contents;"
   >
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -313,79 +207,13 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                   </div>
                 </div>
               </div>
-              <div
-                class="c11"
-                style="position: fixed; left: 0px; top: 0px;"
-              >
-                <div
-                  class="c12"
-                >
-                  <div
-                    class="c8 css-obwv3p"
-                  >
-                    <div
-                      class="c10 c13"
-                    >
-                      UniswapX
-                    </div>
-                     aggregates liquidity sources for better prices and gas free swaps. 
-                    <a
-                      class="c14"
-                      href="https://support.uniswap.org/hc/en-us/articles/17544708791821?product_link=web"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
-                <div
-                  class="c15 arrow-"
-                  style="position: absolute;"
-                />
-              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c8 css-obwv3p"
-            >
-              <div
-                class="c8 css-obwv3p"
-              >
-                <div
-                  class="c10 c13"
-                >
-                  UniswapX
-                </div>
-                 aggregates liquidity sources for better prices and gas free swaps. 
-                <a
-                  class="c14"
-                  href="https://support.uniswap.org/hc/en-us/articles/17544708791821?product_link=web"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Learn more
-                </a>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c15 arrow-"
-            style="position: absolute;"
-          />
         </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -409,7 +237,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                 class="c5 c9"
               >
                 <div
-                  class="c8 c16 css-1lgneq0"
+                  class="c8 c11 css-1lgneq0"
                 >
                   Auto
                 </div>
@@ -418,37 +246,10 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c8 css-obwv3p"
-            >
-              The maximum price movement before your transaction will revert.
-              <br />
-              <a
-                class="c14"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c15 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -472,37 +273,10 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c8 css-obwv3p"
-            >
-              Fees are applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap.
-              <br />
-              <a
-                class="c14"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c15 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -526,37 +300,10 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c8 css-obwv3p"
-            >
-              If the price moves so that you will receive less than 0.0000000000000009 DEF, your transaction will revert.
-              <br />
-              <a
-                class="c14"
-                href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c15 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -622,41 +369,6 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c8 css-obwv3p"
-            >
-              <div
-                class="c8 css-obwv3p"
-              >
-                <div
-                  class="c10 c13"
-                >
-                  UniswapX
-                </div>
-                 aggregates liquidity sources for better prices and gas free swaps. 
-                <a
-                  class="c14"
-                  href="https://support.uniswap.org/hc/en-us/articles/17544708791821?product_link=web"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Learn more
-                </a>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c15 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
@@ -666,7 +378,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
 </DocumentFragment>
 `;
 
-exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
+exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
 <DocumentFragment>
   .c4 {
   -webkit-filter: none;
@@ -696,92 +408,9 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c11 {
-  z-index: 1070;
-  pointer-events: none;
-  visibility: hidden;
-  opacity: 0;
-  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
-  transition: visibility 150ms linear, opacity 150ms linear;
-  color: rgba(19,19,19,0.63);
-}
-
 .c2 {
   display: inline-block;
   height: inherit;
-}
-
-.c15 {
-  width: 8px;
-  height: 8px;
-  z-index: 9998;
-}
-
-.c15::before {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  box-sizing: border-box;
-  z-index: 9998;
-  content: '';
-  border: 1px solid rgba(34,34,34,0.05);
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  background: #FFFFFF;
-}
-
-.c15.arrow-top {
-  bottom: -4px;
-}
-
-.c15.arrow-top::before {
-  border-top: none;
-  border-left: none;
-}
-
-.c15.arrow-bottom {
-  top: -4px;
-}
-
-.c15.arrow-bottom::before {
-  border-bottom: none;
-  border-right: none;
-}
-
-.c15.arrow-left {
-  right: -4px;
-}
-
-.c15.arrow-left::before {
-  border-bottom: none;
-  border-left: none;
-}
-
-.c15.arrow-right {
-  left: -4px;
-}
-
-.c15.arrow-right::before {
-  border-right: none;
-  border-top: none;
-}
-
-.c12 {
-  max-width: 256px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 12px;
-  pointer-events: auto;
-  color: #131313;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
 }
 
 .c5 {
@@ -844,30 +473,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
   overflow-wrap: break-word;
 }
 
-.c14 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c14:hover {
-  opacity: 0.6;
-}
-
-.c14:active {
-  opacity: 0.4;
-}
-
-.c13 {
-  display: inline;
-}
-
-.c16 {
+.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -896,7 +502,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
     style="display: contents;"
   >
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -979,79 +585,13 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
                   </div>
                 </div>
               </div>
-              <div
-                class="c11"
-                style="position: fixed; left: 0px; top: 0px;"
-              >
-                <div
-                  class="c12"
-                >
-                  <div
-                    class="c8 css-obwv3p"
-                  >
-                    <div
-                      class="c10 c13"
-                    >
-                      UniswapX
-                    </div>
-                     aggregates liquidity sources for better prices and gas free swaps. 
-                    <a
-                      class="c14"
-                      href="https://support.uniswap.org/hc/en-us/articles/17544708791821?product_link=web"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
-                <div
-                  class="c15 arrow-"
-                  style="position: absolute;"
-                />
-              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c8 css-obwv3p"
-            >
-              <div
-                class="c8 css-obwv3p"
-              >
-                <div
-                  class="c10 c13"
-                >
-                  UniswapX
-                </div>
-                 aggregates liquidity sources for better prices and gas free swaps. 
-                <a
-                  class="c14"
-                  href="https://support.uniswap.org/hc/en-us/articles/17544708791821?product_link=web"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Learn more
-                </a>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c15 arrow-"
-            style="position: absolute;"
-          />
         </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1075,7 +615,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
                 class="c5 c9"
               >
                 <div
-                  class="c8 c16 css-1lgneq0"
+                  class="c8 c11 css-1lgneq0"
                 >
                   Auto
                 </div>
@@ -1084,37 +624,10 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c8 css-obwv3p"
-            >
-              The maximum price movement before your transaction will revert.
-              <br />
-              <a
-                class="c14"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c15 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1138,37 +651,10 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c8 css-obwv3p"
-            >
-              Fees are applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap.
-              <br />
-              <a
-                class="c14"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c15 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1192,37 +678,10 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c8 css-obwv3p"
-            >
-              If the price moves so that you will receive less than 0.0000000000000009 DEF, your transaction will revert.
-              <br />
-              <a
-                class="c14"
-                href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c15 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1288,41 +747,6 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c8 css-obwv3p"
-            >
-              <div
-                class="c8 css-obwv3p"
-              >
-                <div
-                  class="c10 c13"
-                >
-                  UniswapX
-                </div>
-                 aggregates liquidity sources for better prices and gas free swaps. 
-                <a
-                  class="c14"
-                  href="https://support.uniswap.org/hc/en-us/articles/17544708791821?product_link=web"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Learn more
-                </a>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c15 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
@@ -1332,7 +756,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
 </DocumentFragment>
 `;
 
-exports[`SwapLineItem.tsx exact input 1`] = `
+exports[`SwapLineItem.tsx > exact input 1`] = `
 <DocumentFragment>
   .c4 {
   -webkit-filter: none;
@@ -1358,116 +782,16 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c16 {
+.c12 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
-.c11 {
-  z-index: 1070;
-  pointer-events: none;
-  visibility: hidden;
-  opacity: 0;
-  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
-  transition: visibility 150ms linear, opacity 150ms linear;
-  color: rgba(19,19,19,0.63);
-}
-
 .c2 {
   display: inline-block;
   height: inherit;
-}
-
-.c14 {
-  width: 8px;
-  height: 8px;
-  z-index: 9998;
-}
-
-.c14::before {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  box-sizing: border-box;
-  z-index: 9998;
-  content: '';
-  border: 1px solid rgba(34,34,34,0.05);
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  background: #FFFFFF;
-}
-
-.c14.arrow-top {
-  bottom: -4px;
-}
-
-.c14.arrow-top::before {
-  border-top: none;
-  border-left: none;
-}
-
-.c14.arrow-bottom {
-  top: -4px;
-}
-
-.c14.arrow-bottom::before {
-  border-bottom: none;
-  border-right: none;
-}
-
-.c14.arrow-left {
-  right: -4px;
-}
-
-.c14.arrow-left::before {
-  border-bottom: none;
-  border-left: none;
-}
-
-.c14.arrow-right {
-  left: -4px;
-}
-
-.c14.arrow-right::before {
-  border-right: none;
-  border-top: none;
-}
-
-.c12 {
-  max-width: 256px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 12px;
-  pointer-events: auto;
-  color: #131313;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
-}
-
-.c17 {
-  max-width: 400px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 16px 20px;
-  pointer-events: auto;
-  color: #131313;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
 }
 
 .c5 {
@@ -1528,40 +852,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
 .c3 {
   text-align: right;
   overflow-wrap: break-word;
-}
-
-.c18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c13 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c13:hover {
-  opacity: 0.6;
-}
-
-.c13:active {
-  opacity: 0.4;
 }
 
 .c8 {
@@ -1573,7 +863,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   fill: rgba(19,19,19,0.35);
 }
 
-.c15 {
+.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1594,7 +884,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
     style="display: contents;"
   >
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1654,69 +944,13 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                   </div>
                 </div>
               </div>
-              <div
-                class="c11"
-                style="position: fixed; left: 0px; top: 0px;"
-              >
-                <div
-                  class="c12"
-                >
-                  <div
-                    class="c9 css-1m65e73"
-                  >
-                    Network cost is paid in ETH on the Ethereum network in order to transact. 
-                    <a
-                      class="c13"
-                      href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
-                <div
-                  class="c14 arrow-"
-                  style="position: absolute;"
-                />
-              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              <div
-                class="c9 css-1m65e73"
-              >
-                Network cost is paid in ETH on the Ethereum network in order to transact. 
-                <a
-                  class="c13"
-                  href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Learn more
-                </a>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
         </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1740,7 +974,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                 class="c5 c10"
               >
                 <div
-                  class="c9 c15 css-1lgneq0"
+                  class="c9 c11 css-1lgneq0"
                 >
                   Auto
                 </div>
@@ -1749,37 +983,10 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              The maximum price movement before your transaction will revert.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1803,37 +1010,10 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              Fees are applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1857,37 +1037,10 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will revert.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1908,125 +1061,13 @@ exports[`SwapLineItem.tsx exact input 1`] = `
               class="c0 c3 css-142zc9n"
             >
               <div
-                class="c16 css-142zc9n"
+                class="c12 css-142zc9n"
               >
                 Uniswap Client
               </div>
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c17"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                >
-                  <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
-                  >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _justifyContent-space-evenl121 _flexGrow-1 _position-relative _width-auto _pt-t-space-spa94665589 _pb-t-space-spa94665589"
-                    >
-                      <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _height-10037 _left-0px _top-0px _zIndex-1 _opacity-0--5"
-                      >
-                        <svg
-                          stroke-width="8"
-                          style="width: 8px; height: 8px; min-width: 100%; min-height: 35px; color: currentColor;"
-                          viewBox="850 0 300 200"
-                          width="100%"
-                        >
-                          <line
-                            stroke="currentColor"
-                            stroke-dasharray="1, 45"
-                            stroke-linecap="round"
-                            stroke-width="20"
-                            x1="0"
-                            x2="3000"
-                            y1="100"
-                            y2="100"
-                          />
-                        </svg>
-                      </div>
-                      <div
-                        class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
-                      >
-                        <span
-                          class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                          data-disable-theme="true"
-                        >
-                          V3
-                        </span>
-                        <span
-                          class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                          data-disable-theme="true"
-                          style="min-width: auto;"
-                        >
-                          100%
-                        </span>
-                      </div>
-                      <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa94665589 _width-auto _zIndex-2 _flexGrow-1 _justifyContent-space-evenl121 _alignItems-center"
-                      >
-                        <div
-                          aria-expanded="false"
-                          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-                          data-state="closed"
-                        >
-                          <div
-                            class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _ml-2px"
-                            >
-                              <div
-                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
-                              >
-                                <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-9px"
-                                  data-testid="input-currency-logo-container"
-                                />
-                                <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
-                                  data-testid="output-currency-logo-container"
-                                />
-                              </div>
-                            </div>
-                            <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                              data-disable-theme="true"
-                            >
-                              1%
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c9 css-obwv3p"
-                >
-                  Most efficient route is estimated to cost ~$1.00 in network costs.  This route considers split routes, multiple hops, and network costs of each step.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
@@ -2036,7 +1077,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
 </DocumentFragment>
 `;
 
-exports[`SwapLineItem.tsx exact input api 1`] = `
+exports[`SwapLineItem.tsx > exact input api 1`] = `
 <DocumentFragment>
   .c4 {
   -webkit-filter: none;
@@ -2062,116 +1103,16 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c16 {
+.c12 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
-.c11 {
-  z-index: 1070;
-  pointer-events: none;
-  visibility: hidden;
-  opacity: 0;
-  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
-  transition: visibility 150ms linear, opacity 150ms linear;
-  color: rgba(19,19,19,0.63);
-}
-
 .c2 {
   display: inline-block;
   height: inherit;
-}
-
-.c14 {
-  width: 8px;
-  height: 8px;
-  z-index: 9998;
-}
-
-.c14::before {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  box-sizing: border-box;
-  z-index: 9998;
-  content: '';
-  border: 1px solid rgba(34,34,34,0.05);
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  background: #FFFFFF;
-}
-
-.c14.arrow-top {
-  bottom: -4px;
-}
-
-.c14.arrow-top::before {
-  border-top: none;
-  border-left: none;
-}
-
-.c14.arrow-bottom {
-  top: -4px;
-}
-
-.c14.arrow-bottom::before {
-  border-bottom: none;
-  border-right: none;
-}
-
-.c14.arrow-left {
-  right: -4px;
-}
-
-.c14.arrow-left::before {
-  border-bottom: none;
-  border-left: none;
-}
-
-.c14.arrow-right {
-  left: -4px;
-}
-
-.c14.arrow-right::before {
-  border-right: none;
-  border-top: none;
-}
-
-.c12 {
-  max-width: 256px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 12px;
-  pointer-events: auto;
-  color: #131313;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
-}
-
-.c17 {
-  max-width: 400px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 16px 20px;
-  pointer-events: auto;
-  color: #131313;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
 }
 
 .c5 {
@@ -2234,40 +1175,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   overflow-wrap: break-word;
 }
 
-.c18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c13 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c13:hover {
-  opacity: 0.6;
-}
-
-.c13:active {
-  opacity: 0.4;
-}
-
 .c8 {
   height: 16px;
   width: 16px;
@@ -2277,7 +1184,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   fill: rgba(19,19,19,0.35);
 }
 
-.c15 {
+.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2298,7 +1205,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
     style="display: contents;"
   >
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -2358,69 +1265,13 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                   </div>
                 </div>
               </div>
-              <div
-                class="c11"
-                style="position: fixed; left: 0px; top: 0px;"
-              >
-                <div
-                  class="c12"
-                >
-                  <div
-                    class="c9 css-1m65e73"
-                  >
-                    Network cost is paid in ETH on the Ethereum network in order to transact. 
-                    <a
-                      class="c13"
-                      href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
-                <div
-                  class="c14 arrow-"
-                  style="position: absolute;"
-                />
-              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              <div
-                class="c9 css-1m65e73"
-              >
-                Network cost is paid in ETH on the Ethereum network in order to transact. 
-                <a
-                  class="c13"
-                  href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Learn more
-                </a>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
         </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -2444,7 +1295,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                 class="c5 c10"
               >
                 <div
-                  class="c9 c15 css-1lgneq0"
+                  class="c9 c11 css-1lgneq0"
                 >
                   Auto
                 </div>
@@ -2453,37 +1304,10 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              The maximum price movement before your transaction will revert.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -2507,37 +1331,10 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              Fees are applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -2561,37 +1358,10 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will revert.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -2612,124 +1382,12 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
               class="c0 c3 css-142zc9n"
             >
               <div
-                class="c16 css-142zc9n"
+                class="c12 css-142zc9n"
               >
                 Uniswap API
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c17"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                >
-                  <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
-                  >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _justifyContent-space-evenl121 _flexGrow-1 _position-relative _width-auto _pt-t-space-spa94665589 _pb-t-space-spa94665589"
-                    >
-                      <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _height-10037 _left-0px _top-0px _zIndex-1 _opacity-0--5"
-                      >
-                        <svg
-                          stroke-width="8"
-                          style="width: 8px; height: 8px; min-width: 100%; min-height: 35px; color: currentColor;"
-                          viewBox="850 0 300 200"
-                          width="100%"
-                        >
-                          <line
-                            stroke="currentColor"
-                            stroke-dasharray="1, 45"
-                            stroke-linecap="round"
-                            stroke-width="20"
-                            x1="0"
-                            x2="3000"
-                            y1="100"
-                            y2="100"
-                          />
-                        </svg>
-                      </div>
-                      <div
-                        class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
-                      >
-                        <span
-                          class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                          data-disable-theme="true"
-                        >
-                          V3
-                        </span>
-                        <span
-                          class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                          data-disable-theme="true"
-                          style="min-width: auto;"
-                        >
-                          100%
-                        </span>
-                      </div>
-                      <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa94665589 _width-auto _zIndex-2 _flexGrow-1 _justifyContent-space-evenl121 _alignItems-center"
-                      >
-                        <div
-                          aria-expanded="false"
-                          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-                          data-state="closed"
-                        >
-                          <div
-                            class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _ml-2px"
-                            >
-                              <div
-                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
-                              >
-                                <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-9px"
-                                  data-testid="input-currency-logo-container"
-                                />
-                                <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
-                                  data-testid="output-currency-logo-container"
-                                />
-                              </div>
-                            </div>
-                            <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                              data-disable-theme="true"
-                            >
-                              1%
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c9 css-obwv3p"
-                >
-                  Most efficient route is estimated to cost ~$1.00 in network costs.  This route considers split routes, multiple hops, and network costs of each step.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
         </div>
       </div>
     </div>
@@ -2740,7 +1398,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
 </DocumentFragment>
 `;
 
-exports[`SwapLineItem.tsx exact output 1`] = `
+exports[`SwapLineItem.tsx > exact output 1`] = `
 <DocumentFragment>
   .c4 {
   -webkit-filter: none;
@@ -2766,116 +1424,16 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c16 {
+.c12 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
-.c11 {
-  z-index: 1070;
-  pointer-events: none;
-  visibility: hidden;
-  opacity: 0;
-  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
-  transition: visibility 150ms linear, opacity 150ms linear;
-  color: rgba(19,19,19,0.63);
-}
-
 .c2 {
   display: inline-block;
   height: inherit;
-}
-
-.c14 {
-  width: 8px;
-  height: 8px;
-  z-index: 9998;
-}
-
-.c14::before {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  box-sizing: border-box;
-  z-index: 9998;
-  content: '';
-  border: 1px solid rgba(34,34,34,0.05);
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  background: #FFFFFF;
-}
-
-.c14.arrow-top {
-  bottom: -4px;
-}
-
-.c14.arrow-top::before {
-  border-top: none;
-  border-left: none;
-}
-
-.c14.arrow-bottom {
-  top: -4px;
-}
-
-.c14.arrow-bottom::before {
-  border-bottom: none;
-  border-right: none;
-}
-
-.c14.arrow-left {
-  right: -4px;
-}
-
-.c14.arrow-left::before {
-  border-bottom: none;
-  border-left: none;
-}
-
-.c14.arrow-right {
-  left: -4px;
-}
-
-.c14.arrow-right::before {
-  border-right: none;
-  border-top: none;
-}
-
-.c12 {
-  max-width: 256px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 12px;
-  pointer-events: auto;
-  color: #131313;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
-}
-
-.c17 {
-  max-width: 400px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 16px 20px;
-  pointer-events: auto;
-  color: #131313;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
 }
 
 .c5 {
@@ -2938,40 +1496,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   overflow-wrap: break-word;
 }
 
-.c18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c13 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c13:hover {
-  opacity: 0.6;
-}
-
-.c13:active {
-  opacity: 0.4;
-}
-
 .c8 {
   height: 16px;
   width: 16px;
@@ -2981,7 +1505,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   fill: rgba(19,19,19,0.35);
 }
 
-.c15 {
+.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -3002,7 +1526,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
     style="display: contents;"
   >
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -3062,69 +1586,13 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                   </div>
                 </div>
               </div>
-              <div
-                class="c11"
-                style="position: fixed; left: 0px; top: 0px;"
-              >
-                <div
-                  class="c12"
-                >
-                  <div
-                    class="c9 css-1m65e73"
-                  >
-                    Network cost is paid in ETH on the Ethereum network in order to transact. 
-                    <a
-                      class="c13"
-                      href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
-                <div
-                  class="c14 arrow-"
-                  style="position: absolute;"
-                />
-              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              <div
-                class="c9 css-1m65e73"
-              >
-                Network cost is paid in ETH on the Ethereum network in order to transact. 
-                <a
-                  class="c13"
-                  href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Learn more
-                </a>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
         </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -3148,7 +1616,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                 class="c5 c10"
               >
                 <div
-                  class="c9 c15 css-1lgneq0"
+                  class="c9 c11 css-1lgneq0"
                 >
                   Auto
                 </div>
@@ -3157,37 +1625,10 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              The maximum price movement before your transaction will revert.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -3211,37 +1652,10 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              Fees are applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -3265,28 +1679,10 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              The maximum amount you are guaranteed to spend. If the price slips any further, your transaction will revert.
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -3310,37 +1706,10 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              If the price moves so that you will receive less than 0.000000000000001 GHI, your transaction will revert.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -3361,124 +1730,12 @@ exports[`SwapLineItem.tsx exact output 1`] = `
               class="c0 c3 css-142zc9n"
             >
               <div
-                class="c16 css-142zc9n"
+                class="c12 css-142zc9n"
               >
                 Uniswap Client
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c17"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                >
-                  <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
-                  >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _justifyContent-space-evenl121 _flexGrow-1 _position-relative _width-auto _pt-t-space-spa94665589 _pb-t-space-spa94665589"
-                    >
-                      <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _height-10037 _left-0px _top-0px _zIndex-1 _opacity-0--5"
-                      >
-                        <svg
-                          stroke-width="8"
-                          style="width: 8px; height: 8px; min-width: 100%; min-height: 35px; color: currentColor;"
-                          viewBox="850 0 300 200"
-                          width="100%"
-                        >
-                          <line
-                            stroke="currentColor"
-                            stroke-dasharray="1, 45"
-                            stroke-linecap="round"
-                            stroke-width="20"
-                            x1="0"
-                            x2="3000"
-                            y1="100"
-                            y2="100"
-                          />
-                        </svg>
-                      </div>
-                      <div
-                        class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
-                      >
-                        <span
-                          class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                          data-disable-theme="true"
-                        >
-                          V3
-                        </span>
-                        <span
-                          class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                          data-disable-theme="true"
-                          style="min-width: auto;"
-                        >
-                          100%
-                        </span>
-                      </div>
-                      <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa94665589 _width-auto _zIndex-2 _flexGrow-1 _justifyContent-space-evenl121 _alignItems-center"
-                      >
-                        <div
-                          aria-expanded="false"
-                          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-                          data-state="closed"
-                        >
-                          <div
-                            class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _ml-2px"
-                            >
-                              <div
-                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
-                              >
-                                <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-9px"
-                                  data-testid="input-currency-logo-container"
-                                />
-                                <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
-                                  data-testid="output-currency-logo-container"
-                                />
-                              </div>
-                            </div>
-                            <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                              data-disable-theme="true"
-                            >
-                              0.3%
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c9 css-obwv3p"
-                >
-                  This route considers split routes, multiple hops, and network costs of each step.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
         </div>
       </div>
     </div>
@@ -3489,7 +1746,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
 </DocumentFragment>
 `;
 
-exports[`SwapLineItem.tsx fee on buy 1`] = `
+exports[`SwapLineItem.tsx > fee on buy 1`] = `
 <DocumentFragment>
   .c4 {
   -webkit-filter: none;
@@ -3515,116 +1772,16 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c16 {
+.c12 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
-.c11 {
-  z-index: 1070;
-  pointer-events: none;
-  visibility: hidden;
-  opacity: 0;
-  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
-  transition: visibility 150ms linear, opacity 150ms linear;
-  color: rgba(19,19,19,0.63);
-}
-
 .c2 {
   display: inline-block;
   height: inherit;
-}
-
-.c14 {
-  width: 8px;
-  height: 8px;
-  z-index: 9998;
-}
-
-.c14::before {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  box-sizing: border-box;
-  z-index: 9998;
-  content: '';
-  border: 1px solid rgba(34,34,34,0.05);
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  background: #FFFFFF;
-}
-
-.c14.arrow-top {
-  bottom: -4px;
-}
-
-.c14.arrow-top::before {
-  border-top: none;
-  border-left: none;
-}
-
-.c14.arrow-bottom {
-  top: -4px;
-}
-
-.c14.arrow-bottom::before {
-  border-bottom: none;
-  border-right: none;
-}
-
-.c14.arrow-left {
-  right: -4px;
-}
-
-.c14.arrow-left::before {
-  border-bottom: none;
-  border-left: none;
-}
-
-.c14.arrow-right {
-  left: -4px;
-}
-
-.c14.arrow-right::before {
-  border-right: none;
-  border-top: none;
-}
-
-.c12 {
-  max-width: 256px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 12px;
-  pointer-events: auto;
-  color: #131313;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
-}
-
-.c17 {
-  max-width: 400px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 16px 20px;
-  pointer-events: auto;
-  color: #131313;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
 }
 
 .c5 {
@@ -3687,40 +1844,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   overflow-wrap: break-word;
 }
 
-.c18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c13 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c13:hover {
-  opacity: 0.6;
-}
-
-.c13:active {
-  opacity: 0.4;
-}
-
 .c8 {
   height: 16px;
   width: 16px;
@@ -3730,7 +1853,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   fill: rgba(19,19,19,0.35);
 }
 
-.c15 {
+.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -3751,7 +1874,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
     style="display: contents;"
   >
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -3811,69 +1934,13 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                   </div>
                 </div>
               </div>
-              <div
-                class="c11"
-                style="position: fixed; left: 0px; top: 0px;"
-              >
-                <div
-                  class="c12"
-                >
-                  <div
-                    class="c9 css-1m65e73"
-                  >
-                    Network cost is paid in ETH on the Ethereum network in order to transact. 
-                    <a
-                      class="c13"
-                      href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
-                <div
-                  class="c14 arrow-"
-                  style="position: absolute;"
-                />
-              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              <div
-                class="c9 css-1m65e73"
-              >
-                Network cost is paid in ETH on the Ethereum network in order to transact. 
-                <a
-                  class="c13"
-                  href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Learn more
-                </a>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
         </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -3901,37 +1968,10 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -3955,7 +1995,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                 class="c5 c10"
               >
                 <div
-                  class="c9 c15 css-1lgneq0"
+                  class="c9 c11 css-1lgneq0"
                 >
                   Auto
                 </div>
@@ -3964,37 +2004,10 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              The maximum price movement before your transaction will revert.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -4018,37 +2031,10 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              Fees are applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -4072,37 +2058,10 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will revert.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -4123,124 +2082,12 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
               class="c0 c3 css-142zc9n"
             >
               <div
-                class="c16 css-142zc9n"
+                class="c12 css-142zc9n"
               >
                 Uniswap API
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c17"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                >
-                  <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
-                  >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _justifyContent-space-evenl121 _flexGrow-1 _position-relative _width-auto _pt-t-space-spa94665589 _pb-t-space-spa94665589"
-                    >
-                      <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _height-10037 _left-0px _top-0px _zIndex-1 _opacity-0--5"
-                      >
-                        <svg
-                          stroke-width="8"
-                          style="width: 8px; height: 8px; min-width: 100%; min-height: 35px; color: currentColor;"
-                          viewBox="850 0 300 200"
-                          width="100%"
-                        >
-                          <line
-                            stroke="currentColor"
-                            stroke-dasharray="1, 45"
-                            stroke-linecap="round"
-                            stroke-width="20"
-                            x1="0"
-                            x2="3000"
-                            y1="100"
-                            y2="100"
-                          />
-                        </svg>
-                      </div>
-                      <div
-                        class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
-                      >
-                        <span
-                          class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                          data-disable-theme="true"
-                        >
-                          V3
-                        </span>
-                        <span
-                          class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                          data-disable-theme="true"
-                          style="min-width: auto;"
-                        >
-                          100%
-                        </span>
-                      </div>
-                      <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa94665589 _width-auto _zIndex-2 _flexGrow-1 _justifyContent-space-evenl121 _alignItems-center"
-                      >
-                        <div
-                          aria-expanded="false"
-                          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-                          data-state="closed"
-                        >
-                          <div
-                            class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _ml-2px"
-                            >
-                              <div
-                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
-                              >
-                                <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-9px"
-                                  data-testid="input-currency-logo-container"
-                                />
-                                <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
-                                  data-testid="output-currency-logo-container"
-                                />
-                              </div>
-                            </div>
-                            <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                              data-disable-theme="true"
-                            >
-                              1%
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c9 css-obwv3p"
-                >
-                  Most efficient route is estimated to cost ~$1.00 in network costs.  This route considers split routes, multiple hops, and network costs of each step.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
         </div>
       </div>
     </div>
@@ -4251,7 +2098,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
 </DocumentFragment>
 `;
 
-exports[`SwapLineItem.tsx fee on sell 1`] = `
+exports[`SwapLineItem.tsx > fee on sell 1`] = `
 <DocumentFragment>
   .c4 {
   -webkit-filter: none;
@@ -4277,116 +2124,16 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c16 {
+.c12 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
-.c11 {
-  z-index: 1070;
-  pointer-events: none;
-  visibility: hidden;
-  opacity: 0;
-  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
-  transition: visibility 150ms linear, opacity 150ms linear;
-  color: rgba(19,19,19,0.63);
-}
-
 .c2 {
   display: inline-block;
   height: inherit;
-}
-
-.c14 {
-  width: 8px;
-  height: 8px;
-  z-index: 9998;
-}
-
-.c14::before {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  box-sizing: border-box;
-  z-index: 9998;
-  content: '';
-  border: 1px solid rgba(34,34,34,0.05);
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  background: #FFFFFF;
-}
-
-.c14.arrow-top {
-  bottom: -4px;
-}
-
-.c14.arrow-top::before {
-  border-top: none;
-  border-left: none;
-}
-
-.c14.arrow-bottom {
-  top: -4px;
-}
-
-.c14.arrow-bottom::before {
-  border-bottom: none;
-  border-right: none;
-}
-
-.c14.arrow-left {
-  right: -4px;
-}
-
-.c14.arrow-left::before {
-  border-bottom: none;
-  border-left: none;
-}
-
-.c14.arrow-right {
-  left: -4px;
-}
-
-.c14.arrow-right::before {
-  border-right: none;
-  border-top: none;
-}
-
-.c12 {
-  max-width: 256px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 12px;
-  pointer-events: auto;
-  color: #131313;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
-}
-
-.c17 {
-  max-width: 400px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 16px 20px;
-  pointer-events: auto;
-  color: #131313;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
 }
 
 .c5 {
@@ -4449,40 +2196,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   overflow-wrap: break-word;
 }
 
-.c18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c13 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c13:hover {
-  opacity: 0.6;
-}
-
-.c13:active {
-  opacity: 0.4;
-}
-
 .c8 {
   height: 16px;
   width: 16px;
@@ -4492,7 +2205,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   fill: rgba(19,19,19,0.35);
 }
 
-.c15 {
+.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4513,7 +2226,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
     style="display: contents;"
   >
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -4573,69 +2286,13 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                   </div>
                 </div>
               </div>
-              <div
-                class="c11"
-                style="position: fixed; left: 0px; top: 0px;"
-              >
-                <div
-                  class="c12"
-                >
-                  <div
-                    class="c9 css-1m65e73"
-                  >
-                    Network cost is paid in ETH on the Ethereum network in order to transact. 
-                    <a
-                      class="c13"
-                      href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
-                <div
-                  class="c14 arrow-"
-                  style="position: absolute;"
-                />
-              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              <div
-                class="c9 css-1m65e73"
-              >
-                Network cost is paid in ETH on the Ethereum network in order to transact. 
-                <a
-                  class="c13"
-                  href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Learn more
-                </a>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
         </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -4663,37 +2320,10 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -4717,7 +2347,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                 class="c5 c10"
               >
                 <div
-                  class="c9 c15 css-1lgneq0"
+                  class="c9 c11 css-1lgneq0"
                 >
                   Auto
                 </div>
@@ -4726,37 +2356,10 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              The maximum price movement before your transaction will revert.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -4780,37 +2383,10 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              Fees are applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -4834,37 +2410,10 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c12"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will revert.
-              <br />
-              <a
-                class="c13"
-                href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -4885,124 +2434,12 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
               class="c0 c3 css-142zc9n"
             >
               <div
-                class="c16 css-142zc9n"
+                class="c12 css-142zc9n"
               >
                 Uniswap API
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c11"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c17"
-          >
-            <div
-              class="c9 css-obwv3p"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                >
-                  <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
-                  >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _justifyContent-space-evenl121 _flexGrow-1 _position-relative _width-auto _pt-t-space-spa94665589 _pb-t-space-spa94665589"
-                    >
-                      <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _height-10037 _left-0px _top-0px _zIndex-1 _opacity-0--5"
-                      >
-                        <svg
-                          stroke-width="8"
-                          style="width: 8px; height: 8px; min-width: 100%; min-height: 35px; color: currentColor;"
-                          viewBox="850 0 300 200"
-                          width="100%"
-                        >
-                          <line
-                            stroke="currentColor"
-                            stroke-dasharray="1, 45"
-                            stroke-linecap="round"
-                            stroke-width="20"
-                            x1="0"
-                            x2="3000"
-                            y1="100"
-                            y2="100"
-                          />
-                        </svg>
-                      </div>
-                      <div
-                        class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
-                      >
-                        <span
-                          class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                          data-disable-theme="true"
-                        >
-                          V3
-                        </span>
-                        <span
-                          class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                          data-disable-theme="true"
-                          style="min-width: auto;"
-                        >
-                          100%
-                        </span>
-                      </div>
-                      <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa94665589 _width-auto _zIndex-2 _flexGrow-1 _justifyContent-space-evenl121 _alignItems-center"
-                      >
-                        <div
-                          aria-expanded="false"
-                          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-                          data-state="closed"
-                        >
-                          <div
-                            class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _ml-2px"
-                            >
-                              <div
-                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
-                              >
-                                <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-9px"
-                                  data-testid="input-currency-logo-container"
-                                />
-                                <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
-                                  data-testid="output-currency-logo-container"
-                                />
-                              </div>
-                            </div>
-                            <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                              data-disable-theme="true"
-                            >
-                              1%
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c9 css-obwv3p"
-                >
-                  Most efficient route is estimated to cost ~$1.00 in network costs.  This route considers split routes, multiple hops, and network costs of each step.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c14 arrow-"
-            style="position: absolute;"
-          />
         </div>
       </div>
     </div>
@@ -5013,7 +2450,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
 </DocumentFragment>
 `;
 
-exports[`SwapLineItem.tsx preview exact in 1`] = `
+exports[`SwapLineItem.tsx > preview exact in 1`] = `
 <DocumentFragment>
   .c4 {
   -webkit-animation: fAQEyV 1.5s infinite;
@@ -5044,101 +2481,18 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c5 {
-  z-index: 1070;
-  pointer-events: none;
-  visibility: hidden;
-  opacity: 0;
-  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
-  transition: visibility 150ms linear, opacity 150ms linear;
-  color: rgba(19,19,19,0.63);
-}
-
 .c2 {
   display: inline-block;
   height: inherit;
 }
 
-.c9 {
-  width: 8px;
-  height: 8px;
-  z-index: 9998;
-}
-
-.c9::before {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  box-sizing: border-box;
-  z-index: 9998;
-  content: '';
-  border: 1px solid rgba(34,34,34,0.05);
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  background: #FFFFFF;
-}
-
-.c9.arrow-top {
-  bottom: -4px;
-}
-
-.c9.arrow-top::before {
-  border-top: none;
-  border-left: none;
-}
-
-.c9.arrow-bottom {
-  top: -4px;
-}
-
-.c9.arrow-bottom::before {
-  border-bottom: none;
-  border-right: none;
-}
-
-.c9.arrow-left {
-  right: -4px;
-}
-
-.c9.arrow-left::before {
-  border-bottom: none;
-  border-left: none;
-}
-
-.c9.arrow-right {
-  left: -4px;
-}
-
-.c9.arrow-right::before {
-  border-right: none;
-  border-top: none;
-}
-
-.c6 {
-  max-width: 256px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 12px;
-  pointer-events: auto;
-  color: #131313;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
-}
-
-.c10 {
+.c5 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c11 {
+.c6 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -5161,7 +2515,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   color: rgba(19,19,19,0.63);
 }
 
-.c13 {
+.c9 {
   cursor: auto;
   color: rgba(19,19,19,0.63);
 }
@@ -5172,25 +2526,6 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
 }
 
 .c8 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c8:hover {
-  opacity: 0.6;
-}
-
-.c8:active {
-  opacity: 0.4;
-}
-
-.c12 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -5211,7 +2546,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
     style="display: contents;"
   >
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -5240,40 +2575,10 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c5"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c6"
-          >
-            <div
-              class="c7 css-obwv3p"
-            >
-              <div
-                class="c7 css-1m65e73"
-              >
-                Network cost is paid in ETH on the Ethereum network in order to transact. 
-                <a
-                  class="c8"
-                  href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Learn more
-                </a>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c9 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -5294,10 +2599,10 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
               class="c0 c3 css-142zc9n"
             >
               <div
-                class="c10 c11"
+                class="c5 c6"
               >
                 <div
-                  class="c7 c12 css-1lgneq0"
+                  class="c7 c8 css-1lgneq0"
                 >
                   Auto
                 </div>
@@ -5306,43 +2611,16 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c5"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c6"
-          >
-            <div
-              class="c7 css-obwv3p"
-            >
-              The maximum price movement before your transaction will revert.
-              <br />
-              <a
-                class="c8"
-                href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c9 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
       >
         <div
-          class="c0 c13 css-142zc9n"
+          class="c0 c9 css-142zc9n"
           data-testid="swap-li-label"
         >
           Fee
@@ -5360,7 +2638,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -5384,43 +2662,16 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="c5"
-          style="position: fixed; left: 0px; top: 0px;"
-        >
-          <div
-            class="c6"
-          >
-            <div
-              class="c7 css-obwv3p"
-            >
-              If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will revert.
-              <br />
-              <a
-                class="c8"
-                href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
-          <div
-            class="c9 arrow-"
-            style="position: absolute;"
-          />
-        </div>
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
       >
         <div
-          class="c0 c13 css-142zc9n"
+          class="c0 c9 css-142zc9n"
           data-testid="swap-li-label"
         >
           Order routing
@@ -5444,7 +2695,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
 </DocumentFragment>
 `;
 
-exports[`SwapLineItem.tsx syncing 1`] = `
+exports[`SwapLineItem.tsx > syncing 1`] = `
 <DocumentFragment>
   .c2 {
   -webkit-animation: fAQEyV 1.5s infinite;
@@ -5495,7 +2746,7 @@ exports[`SwapLineItem.tsx syncing 1`] = `
     style="display: contents;"
   >
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -5515,7 +2766,7 @@ exports[`SwapLineItem.tsx syncing 1`] = `
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -5535,7 +2786,7 @@ exports[`SwapLineItem.tsx syncing 1`] = `
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -5555,7 +2806,7 @@ exports[`SwapLineItem.tsx syncing 1`] = `
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -5575,7 +2826,7 @@ exports[`SwapLineItem.tsx syncing 1`] = `
       </div>
     </div>
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"

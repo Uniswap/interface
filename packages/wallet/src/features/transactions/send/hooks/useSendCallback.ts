@@ -10,75 +10,100 @@ import { SendTokenParams } from 'wallet/src/features/transactions/send/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 /** Helper send callback for ERC20s */
-export function useSendERC20Callback(
-  txId?: string,
-  chainId?: UniverseChainId,
-  toAddress?: Address,
-  tokenAddress?: Address,
-  amountInWei?: string,
-  transferTxWithGasSettings?: providers.TransactionRequest,
-  onSubmit?: () => void,
-  currencyAmountUSD?: Maybe<CurrencyAmount<Currency>>, // for analytics
-  gasEstimates?: GasFeeEstimates,
-): (() => void) | null {
+export function useSendERC20Callback({
+  txId,
+  chainId,
+  toAddress,
+  tokenAddress,
+  amountInWei,
+  transferTxWithGasSettings,
+  onSubmit,
+  currencyAmountUSD,
+  gasEstimates,
+}: {
+  txId?: string
+  chainId?: UniverseChainId
+  toAddress?: Address
+  tokenAddress?: Address
+  amountInWei?: string
+  transferTxWithGasSettings?: providers.TransactionRequest
+  onSubmit?: () => void
+  currencyAmountUSD?: Maybe<CurrencyAmount<Currency>> // for analytics
+  gasEstimates?: GasFeeEstimates
+}): (() => void) | null {
   const account = useActiveAccount()
 
-  return useSendCallback(
-    chainId && toAddress && tokenAddress && amountInWei && account
-      ? {
-          account,
-          chainId,
-          toAddress,
-          tokenAddress,
-          amountInWei,
-          type: AssetType.Currency,
-          txId,
-          currencyAmountUSD,
-          gasEstimates,
-        }
-      : undefined,
-    transferTxWithGasSettings,
+  return useSendCallback({
+    sendTokenParams:
+      chainId && toAddress && tokenAddress && amountInWei && account
+        ? {
+            account,
+            chainId,
+            toAddress,
+            tokenAddress,
+            amountInWei,
+            type: AssetType.Currency,
+            txId,
+            currencyAmountUSD,
+            gasEstimates,
+          }
+        : undefined,
+    txRequest: transferTxWithGasSettings,
     onSubmit,
-  )
+  })
 }
 
 /** Helper send callback for NFTs */
-export function useSendNFTCallback(
-  txId?: string,
-  chainId?: UniverseChainId,
-  toAddress?: Address,
-  tokenAddress?: Address,
-  tokenId?: string,
-  txRequest?: providers.TransactionRequest,
-  onSubmit?: () => void,
-  gasEstimates?: GasFeeEstimates,
-): (() => void) | null {
+export function useSendNFTCallback({
+  txId,
+  chainId,
+  toAddress,
+  tokenAddress,
+  tokenId,
+  txRequest,
+  onSubmit,
+  gasEstimates,
+}: {
+  txId?: string
+  chainId?: UniverseChainId
+  toAddress?: Address
+  tokenAddress?: Address
+  tokenId?: string
+  txRequest?: providers.TransactionRequest
+  onSubmit?: () => void
+  gasEstimates?: GasFeeEstimates
+}): (() => void) | null {
   const account = useActiveAccount()
 
-  return useSendCallback(
-    account && chainId && toAddress && tokenAddress && tokenId
-      ? {
-          account,
-          chainId,
-          toAddress,
-          tokenAddress,
-          tokenId,
-          type: AssetType.ERC721,
-          txId,
-          gasEstimates,
-        }
-      : undefined,
+  return useSendCallback({
+    sendTokenParams:
+      account && chainId && toAddress && tokenAddress && tokenId
+        ? {
+            account,
+            chainId,
+            toAddress,
+            tokenAddress,
+            tokenId,
+            type: AssetType.ERC721,
+            txId,
+            gasEstimates,
+          }
+        : undefined,
     txRequest,
     onSubmit,
-  )
+  })
 }
 
 /** General purpose send callback for ERC20s, NFTs, etc. */
-function useSendCallback(
-  sendTokenParams?: SendTokenParams,
-  txRequest?: providers.TransactionRequest,
-  onSubmit?: () => void,
-): null | (() => void) {
+function useSendCallback({
+  sendTokenParams,
+  txRequest,
+  onSubmit,
+}: {
+  sendTokenParams?: SendTokenParams
+  txRequest?: providers.TransactionRequest
+  onSubmit?: () => void
+}): null | (() => void) {
   const dispatch = useDispatch()
 
   return useMemo(() => {

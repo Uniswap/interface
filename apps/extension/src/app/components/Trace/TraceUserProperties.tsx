@@ -1,6 +1,7 @@
 import { datadogRum } from '@datadog/browser-rum'
 import { useEffect } from 'react'
 import { useColorScheme } from 'react-native'
+import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
@@ -9,7 +10,12 @@ import { ExtensionUserPropertyName, setUserProperty } from 'uniswap/src/features
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useGatingUserPropertyUsernames } from 'wallet/src/features/gating/userPropertyHooks'
-import { useActiveAccount, useSignerAccounts, useViewOnlyAccounts } from 'wallet/src/features/wallet/hooks'
+import {
+  useActiveAccount,
+  useDisplayName,
+  useSignerAccounts,
+  useViewOnlyAccounts,
+} from 'wallet/src/features/wallet/hooks'
 
 /** Component that tracks UserProperties during the lifetime of the app */
 export function TraceUserProperties(): null {
@@ -22,6 +28,7 @@ export function TraceUserProperties(): null {
   const currentLanguage = useCurrentLanguage()
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const { isTestnetModeEnabled } = useEnabledChains()
+  const displayName = useDisplayName(activeAccount?.address)
 
   useGatingUserPropertyUsernames()
 
@@ -80,6 +87,20 @@ export function TraceUserProperties(): null {
   useEffect(() => {
     setUserProperty(ExtensionUserPropertyName.TestnetModeEnabled, isTestnetModeEnabled)
   }, [isTestnetModeEnabled])
+
+  // Log ENS and Unitag ownership for user usage stats
+  useEffect(() => {
+    switch (displayName?.type) {
+      case DisplayNameType.ENS:
+        setUserProperty(ExtensionUserPropertyName.HasLoadedENS, true)
+        return
+      case DisplayNameType.Unitag:
+        setUserProperty(ExtensionUserPropertyName.HasLoadedUnitag, true)
+        return
+      default:
+        return
+    }
+  }, [displayName?.type])
 
   return null
 }

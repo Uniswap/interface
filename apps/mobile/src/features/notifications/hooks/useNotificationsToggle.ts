@@ -170,6 +170,7 @@ function useBaseNotificationToggle({
       // After this point, we're guaranteed to have requested OS permissions
       // If we just obtained permissions, we want to enable notifications
       // Otherwise, we're toggling the current redux state
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       const shouldEnable = isOsEnabled ? !isAppPermissionEnabled : true
       return shouldEnable
     },

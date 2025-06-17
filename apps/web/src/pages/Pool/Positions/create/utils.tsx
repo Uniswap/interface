@@ -23,9 +23,6 @@ import {
   CreateV3PositionInfo,
   CreateV4PositionInfo,
   FeeData,
-  OptionalCurrency,
-  OptionalCurrencyPrice,
-  OptionalNumber,
   PositionState,
   PriceDifference,
   PriceRangeInfo,
@@ -38,7 +35,6 @@ import { tryParsePrice, tryParseTick } from 'state/mint/v3/utils'
 import { PositionField } from 'types/position'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
-import { ProtocolVersion as GraphQLProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import type {
   CheckApprovalLPRequest,
   CheckApprovalLPResponse,
@@ -53,41 +49,47 @@ import { validatePermit, validateTransactionRequest } from 'uniswap/src/features
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 import { getTickToPrice, getV4TickToPrice } from 'utils/getTickToPrice'
 
-type OptionalToken = Token | undefined
-export function getSortedCurrenciesTuple(a: Token, b: Token): [Token, Token]
-export function getSortedCurrenciesTuple(a: OptionalToken, b: OptionalToken): [OptionalToken, OptionalToken]
-export function getSortedCurrenciesTuple(a: OptionalCurrency, b: OptionalCurrency): [OptionalCurrency, OptionalCurrency]
-export function getSortedCurrenciesTuple(
-  a: OptionalCurrency,
-  b: OptionalCurrency,
-): [OptionalCurrency, OptionalCurrency] {
-  if (a?.isNative || !b) {
-    return [a, b]
+function getSortedCurrencies(a: Maybe<Currency>, b: Maybe<Currency>): { [field in PositionField]: Maybe<Currency> } {
+  if (!a || !b) {
+    return { TOKEN0: a, TOKEN1: b }
   }
 
-  if (b?.isNative || !a) {
-    return [b, a]
+  if (a.isNative) {
+    return { TOKEN0: a, TOKEN1: b }
   }
 
-  return a.sortsBefore(b) ? [a, b] : [b, a]
+  if (b.isNative) {
+    return { TOKEN0: b, TOKEN1: a }
+  }
+
+  return a.sortsBefore(b) ? { TOKEN0: a, TOKEN1: b } : { TOKEN0: b, TOKEN1: a }
 }
 
-export function getSortedCurrenciesTupleWithWrap(
-  a: Currency,
-  b: Currency,
-  protocolVersion: ProtocolVersion,
-): [Currency, Currency]
-export function getSortedCurrenciesTupleWithWrap(
-  a: OptionalCurrency,
-  b: OptionalCurrency,
-  protocolVersion: ProtocolVersion,
-): [OptionalCurrency, OptionalCurrency]
-export function getSortedCurrenciesTupleWithWrap(
-  a: OptionalCurrency,
-  b: OptionalCurrency,
-  protocolVersion: ProtocolVersion,
-): [OptionalCurrency, OptionalCurrency] {
-  return getSortedCurrenciesTuple(getCurrencyWithWrap(a, protocolVersion), getCurrencyWithWrap(b, protocolVersion))
+export function getSortedCurrenciesForProtocol({
+  a,
+  b,
+  protocolVersion,
+}: {
+  a: Maybe<Currency>
+  b: Maybe<Currency>
+  protocolVersion: ProtocolVersion
+}): { [field in PositionField]: Maybe<Currency> } {
+  if (!a || !b) {
+    return { TOKEN0: a, TOKEN1: b }
+  }
+
+  if (protocolVersion === ProtocolVersion.V4) {
+    return getSortedCurrencies(a, b)
+  }
+
+  const wrappedA = getCurrencyWithWrap(a, protocolVersion)
+  const wrappedB = getCurrencyWithWrap(b, protocolVersion)
+  const sorted = getSortedCurrencies(wrappedA, wrappedB)
+
+  const currency0 = !sorted.TOKEN0 || wrappedA?.equals(sorted.TOKEN0) ? a : b
+  const currency1 = !sorted.TOKEN1 || wrappedB?.equals(sorted.TOKEN1) ? b : a
+
+  return { TOKEN0: currency0, TOKEN1: currency1 }
 }
 
 export function getCurrencyForProtocol(
@@ -95,24 +97,21 @@ export function getCurrencyForProtocol(
   protocolVersion: ProtocolVersion.V2 | ProtocolVersion.V3,
 ): Token
 export function getCurrencyForProtocol(
-  currency: OptionalCurrency,
+  currency: Maybe<Currency>,
   protocolVersion: ProtocolVersion.V2 | ProtocolVersion.V3,
 ): Token | undefined
 export function getCurrencyForProtocol(currency: Currency, protocolVersion: ProtocolVersion.V4): Currency
+export function getCurrencyForProtocol(currency: Maybe<Currency>, protocolVersion: ProtocolVersion.V4): Maybe<Currency>
 export function getCurrencyForProtocol(
-  currency: OptionalCurrency,
-  protocolVersion: ProtocolVersion.V4,
-): OptionalCurrency
-export function getCurrencyForProtocol(
-  currency: OptionalCurrency,
+  currency: Maybe<Currency>,
   protocolVersion: ProtocolVersion.UNSPECIFIED | ProtocolVersion.V2 | ProtocolVersion.V3 | ProtocolVersion.V4,
-): OptionalCurrency
+): Maybe<Currency>
 /**
  * Gets the currency or token that each protocol expects. For v2 + v3 if the native currency is passed then we return the wrapped version.
  * For v4 is a wrapped native token is passed then we return the native currency.
  */
 export function getCurrencyForProtocol(
-  currency: OptionalCurrency,
+  currency: Maybe<Currency>,
   protocolVersion: ProtocolVersion,
 ): Currency | Token | undefined {
   if (!currency) {
@@ -137,19 +136,19 @@ export function getCurrencyForProtocol(
 
 export function getCurrencyWithWrap(currency: Currency, protocolVersion: ProtocolVersion.V2 | ProtocolVersion.V3): Token
 export function getCurrencyWithWrap(
-  currency: OptionalCurrency,
+  currency: Maybe<Currency>,
   protocolVersion: ProtocolVersion.V2 | ProtocolVersion.V3,
 ): Token | undefined
 export function getCurrencyWithWrap(currency: Currency, protocolVersion: ProtocolVersion.V4): Currency
-export function getCurrencyWithWrap(currency: OptionalCurrency, protocolVersion: ProtocolVersion.V4): OptionalCurrency
+export function getCurrencyWithWrap(currency: Maybe<Currency>, protocolVersion: ProtocolVersion.V4): Maybe<Currency>
 export function getCurrencyWithWrap(
-  currency: OptionalCurrency,
+  currency: Maybe<Currency>,
   protocolVersion: ProtocolVersion.UNSPECIFIED | ProtocolVersion.V2 | ProtocolVersion.V3 | ProtocolVersion.V4,
-): OptionalCurrency
+): Maybe<Currency>
 export function getCurrencyWithWrap(
-  currency: OptionalCurrency,
+  currency: Maybe<Currency>,
   protocolVersion: ProtocolVersion,
-): Currency | Token | undefined {
+): Maybe<Currency> | Token {
   if (protocolVersion === ProtocolVersion.V4 || currency?.isToken) {
     return currency
   }
@@ -157,30 +156,14 @@ export function getCurrencyWithWrap(
   return currency?.wrapped
 }
 
-export function getCurrencyAddressWithWrap(currency: Currency, protocolVersion: ProtocolVersion): string
-export function getCurrencyAddressWithWrap(
-  currency: OptionalCurrency,
-  protocolVersion: ProtocolVersion,
-): string | undefined
-export function getCurrencyAddressWithWrap(
-  currency: OptionalCurrency,
-  protocolVersion: ProtocolVersion | GraphQLProtocolVersion,
-): string | undefined {
-  if (currency?.isToken) {
-    return currency.address
+export function getTokenOrZeroAddress(currency: Currency): string
+export function getTokenOrZeroAddress(currency: Maybe<Currency>): string | undefined
+export function getTokenOrZeroAddress(currency: Maybe<Currency>): string | undefined {
+  if (!currency) {
+    return undefined
   }
 
-  if (protocolVersion === ProtocolVersion.V4 || protocolVersion === GraphQLProtocolVersion.V4) {
-    return ZERO_ADDRESS
-  }
-
-  return currency?.wrapped.address
-}
-
-export function getCurrencyAddressForTradingApi(currency: Currency): string
-export function getCurrencyAddressForTradingApi(currency: OptionalCurrency): string
-export function getCurrencyAddressForTradingApi(currency: OptionalCurrency): string {
-  return currency?.isToken ? currency.address : ZERO_ADDRESS
+  return currency.isToken ? currency.address : ZERO_ADDRESS
 }
 
 export function poolEnabledProtocolVersion(
@@ -193,14 +176,9 @@ export function pairEnabledProtocolVersion(protocolVersion: ProtocolVersion): pr
   return protocolVersion === ProtocolVersion.V2
 }
 
-export function validateCurrencyInput(currencies: [OptionalToken, OptionalToken]): currencies is [Token, Token]
-export function validateCurrencyInput(
-  currencies: [OptionalCurrency, OptionalCurrency],
-): currencies is [Currency, Currency]
-export function validateCurrencyInput(
-  currencies: [OptionalCurrency, OptionalCurrency],
-): currencies is [Currency, Currency] {
-  return !!currencies[0] && !!currencies[1]
+// update to validate sort order
+export function validateCurrencyInput(currencies: { [field in PositionField]: Maybe<Currency> }): boolean {
+  return !!currencies.TOKEN0 && !!currencies.TOKEN1
 }
 
 export function getPairFromPositionStateAndRangeState({
@@ -278,8 +256,13 @@ export function getPoolFromPositionStateAndRangeState({
   return undefined
 }
 
-export function getInvertedTuple<T extends OptionalCurrency>(tuple: [T, T], inverted: boolean): [T, T] {
-  return inverted ? [tuple[1], tuple[0]] : tuple
+export function getBaseAndQuoteCurrencies<T extends Maybe<Currency>>(
+  sortedCurrencies: { [field in PositionField]: T },
+  inverted: boolean,
+): { baseCurrency: T; quoteCurrency: T } {
+  return inverted
+    ? { baseCurrency: sortedCurrencies.TOKEN1, quoteCurrency: sortedCurrencies.TOKEN0 }
+    : { baseCurrency: sortedCurrencies.TOKEN0, quoteCurrency: sortedCurrencies.TOKEN1 }
 }
 
 function getPrices<T extends Currency>({
@@ -287,14 +270,16 @@ function getPrices<T extends Currency>({
   quoteCurrency,
   pricesAtLimit,
   pricesAtTicks,
+  priceInverted,
   state,
 }: {
-  baseCurrency?: T
-  quoteCurrency?: T
-  pricesAtLimit: (Price<T, T> | undefined)[]
-  pricesAtTicks: (Price<T, T> | undefined)[]
+  baseCurrency: Maybe<T>
+  quoteCurrency: Maybe<T>
+  pricesAtLimit: Maybe<Price<T, T>>[]
+  pricesAtTicks: Maybe<Price<T, T>>[]
+  priceInverted: boolean
   state: PriceRangeState
-}): [OptionalCurrencyPrice, OptionalCurrencyPrice] {
+}): [Maybe<Price<T, T>>, Maybe<Price<T, T>>] {
   if (!baseCurrency || !quoteCurrency) {
     return [undefined, undefined]
   }
@@ -302,37 +287,57 @@ function getPrices<T extends Currency>({
   const lowerPrice = state.fullRange ? pricesAtLimit[0] : pricesAtTicks[0]
   const upperPrice = state.fullRange ? pricesAtLimit[1] : pricesAtTicks[1]
 
-  return [lowerPrice, upperPrice]
+  return priceInverted ? [upperPrice?.invert(), lowerPrice?.invert()] : [lowerPrice, upperPrice]
+}
+
+function getTicksAtLimit({
+  lowerTick,
+  upperTick,
+  tickSpaceLimits,
+  priceInverted,
+  fullRange,
+}: {
+  lowerTick?: Maybe<number>
+  upperTick?: Maybe<number>
+  tickSpaceLimits: [Maybe<number>, Maybe<number>]
+  priceInverted: boolean
+  fullRange: boolean
+}): [boolean, boolean] {
+  if (fullRange) {
+    return [true, true]
+  }
+
+  return priceInverted
+    ? [upperTick === tickSpaceLimits[1], lowerTick === tickSpaceLimits[0]]
+    : [lowerTick === tickSpaceLimits[0], upperTick === tickSpaceLimits[1]]
 }
 
 /**
  * Pools and Pairs in all protocol versions require that [currency0, currency1] be sorted.
- * So, if the user-provided initial price is inverted w.r.t. the sorted order, we need to invert it again here.
+ * * So, if the user-provided initial price is inverted w.r.t. the sorted order, we need to invert it again here.
  */
 function getInitialPrice({
-  baseCurrency,
+  priceInverted,
   sortedCurrencies,
   initialPrice,
 }: {
-  baseCurrency: OptionalCurrency
-  sortedCurrencies: [OptionalCurrency, OptionalCurrency]
+  priceInverted: boolean
+  sortedCurrencies: { [field in PositionField]: Maybe<Currency> }
   initialPrice: string
 }) {
-  const [currency0, currency1] = sortedCurrencies
-  const invertPrice = Boolean(baseCurrency && currency0 && !baseCurrency.equals(currency0))
+  const { TOKEN0: currency0, TOKEN1: currency1 } = sortedCurrencies
 
-  const parsedQuoteAmount = tryParseCurrencyAmount(initialPrice, invertPrice ? currency0 : currency1)
+  const parsedQuoteAmount = tryParseCurrencyAmount(initialPrice, priceInverted ? currency0 : currency1)
   if (!parsedQuoteAmount) {
     return undefined
   }
 
-  const baseAmount = tryParseCurrencyAmount('1', invertPrice ? currency1 : currency0)
-  const price =
-    baseAmount && parsedQuoteAmount
-      ? new Price(baseAmount.currency, parsedQuoteAmount.currency, baseAmount.quotient, parsedQuoteAmount.quotient)
-      : undefined
+  const baseAmount = tryParseCurrencyAmount('1', priceInverted ? currency1 : currency0)
+  const price = baseAmount
+    ? new Price(baseAmount.currency, parsedQuoteAmount.currency, baseAmount.quotient, parsedQuoteAmount.quotient)
+    : undefined
 
-  return invertPrice ? price?.invert() : price
+  return priceInverted ? price?.invert() : price
 }
 
 function getPrice(
@@ -340,20 +345,23 @@ function getPrice(
     | {
         type: ProtocolVersion.V4
         pool?: V4Pool
-        currency0?: Currency
+        currency0?: Maybe<Currency>
+        priceInverted: boolean
       }
     | {
         type: ProtocolVersion.V3
         pool?: V3Pool
-        currency0?: Token
+        currency0?: Maybe<Token>
+        priceInverted: boolean
       },
 ) {
-  const { type, pool, currency0 } = opts
+  const { type, pool, currency0, priceInverted } = opts
   if (!pool || !currency0) {
     return undefined
   }
 
-  return type === ProtocolVersion.V4 ? pool.priceOf(currency0) : pool.priceOf(currency0)
+  const price = type === ProtocolVersion.V4 ? pool.priceOf(currency0) : pool.priceOf(currency0)
+  return priceInverted ? price.invert() : price
 }
 
 function isInvalidPrice(price?: Price<Currency, Currency>) {
@@ -375,13 +383,13 @@ function createMockV3Pool({
   price,
   invalidPrice,
 }: {
-  baseToken?: Token
-  quoteToken?: Token
+  baseToken?: Maybe<Token>
+  quoteToken?: Maybe<Token>
   fee: FeeAmount
   price?: Price<Currency, Currency>
   invalidPrice?: boolean
 }) {
-  if (!baseToken || !quoteToken || !fee || !price || invalidPrice) {
+  if (!baseToken || !quoteToken || !price || invalidPrice) {
     return undefined
   }
 
@@ -392,10 +400,7 @@ function createMockV3Pool({
     price.numerator,
   )
 
-  const invertedPrice = wrappedPrice.baseCurrency.sortsBefore(wrappedPrice.quoteCurrency)
-    ? wrappedPrice
-    : wrappedPrice.invert()
-  const currentTick = priceToClosestV3Tick(invertedPrice)
+  const currentTick = priceToClosestV3Tick(wrappedPrice)
   const currentSqrt = TickMath.getSqrtRatioAtTick(currentTick)
 
   const pool = new V3Pool(baseToken, quoteToken, fee, currentSqrt, JSBI.BigInt(0), currentTick, [])
@@ -410,8 +415,8 @@ function createMockV4Pool({
   price,
   invalidPrice,
 }: {
-  baseToken?: Currency
-  quoteToken?: Currency
+  baseToken: Maybe<Currency>
+  quoteToken: Maybe<Currency>
   fee: FeeData
   hook?: string
   price?: Price<Currency, Currency>
@@ -460,9 +465,9 @@ export function getDependentAmountFromV2Pair({
   otherAmount?: CurrencyAmount<Currency>
   pair?: Pair
   exactField: PositionField
-  token0?: Currency
-  token1?: Currency
-  dependentToken?: Currency
+  token0: Maybe<Currency>
+  token1: Maybe<Currency>
+  dependentToken: Maybe<Currency>
 }): CurrencyAmount<Currency> | undefined {
   const [token0Wrapped, token1Wrapped] = [token0?.wrapped, token1?.wrapped]
   if (!token0Wrapped || !token1Wrapped || !independentAmount || !pair) {
@@ -476,7 +481,7 @@ export function getDependentAmountFromV2Pair({
         : pair.priceOf(token1Wrapped).quote(independentAmount.wrapped)
 
     return dependentToken
-      ? dependentToken?.isNative
+      ? dependentToken.isNative
         ? CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
         : dependentTokenAmount
       : undefined
@@ -557,14 +562,10 @@ export function getV2PriceRangeInfo({
   state: PriceRangeState
   derivedPositionInfo: CreateV2PositionInfo
 }): V2PriceRangeInfo {
-  const { currencies } = derivedPositionInfo
-  const [baseCurrency] = getInvertedTuple(currencies, state.priceInverted)
+  const {
+    currencies: { sdk: sdkCurrencies },
+  } = derivedPositionInfo
 
-  const baseToken = getCurrencyWithWrap(baseCurrency, ProtocolVersion.V2)
-  const sortedTokens = getSortedCurrenciesTuple(
-    getCurrencyWithWrap(currencies[0], ProtocolVersion.V2),
-    getCurrencyWithWrap(currencies[1], ProtocolVersion.V2),
-  )
   const priceDifference = getPriceDifference({
     initialPrice: state.initialPrice,
     defaultInitialPrice: derivedPositionInfo.defaultInitialPrice,
@@ -572,12 +573,10 @@ export function getV2PriceRangeInfo({
   })
 
   const price = getInitialPrice({
-    baseCurrency: baseToken,
-    sortedCurrencies: sortedTokens,
+    priceInverted: state.priceInverted,
+    sortedCurrencies: sdkCurrencies,
     initialPrice: state.initialPrice,
   })
-
-  const invertPrice = Boolean(baseToken && sortedTokens[0] && !baseToken.equals(sortedTokens[0]))
 
   return {
     protocolVersion: ProtocolVersion.V2,
@@ -585,7 +584,6 @@ export function getV2PriceRangeInfo({
     mockPair: createMockPair(price),
     deposit0Disabled: false,
     deposit1Disabled: false,
-    invertPrice,
     priceDifference,
   } satisfies V2PriceRangeInfo
 }
@@ -600,19 +598,13 @@ export function getV3PriceRangeInfo({
   derivedPositionInfo: CreateV3PositionInfo
 }): V3PriceRangeInfo {
   const { fee } = positionState
-  const { protocolVersion, currencies } = derivedPositionInfo
+  const {
+    protocolVersion,
+    currencies: { sdk: sdkCurrencies },
+  } = derivedPositionInfo
   const pool = derivedPositionInfo.pool
 
-  const tokenA = getCurrencyWithWrap(currencies[0], protocolVersion)
-  const tokenB = getCurrencyWithWrap(currencies[1], protocolVersion)
-  const sortedTokens = getSortedCurrenciesTuple(tokenA, tokenB)
-  const [sortedToken0, sortedToken1] = sortedTokens
-
-  const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, state.priceInverted)
-  const [baseToken, quoteToken] = [
-    getCurrencyWithWrap(baseCurrency, protocolVersion),
-    getCurrencyWithWrap(quoteCurrency, protocolVersion),
-  ]
+  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(sdkCurrencies, state.priceInverted)
 
   const priceDifference = getPriceDifference({
     initialPrice: state.initialPrice,
@@ -620,26 +612,24 @@ export function getV3PriceRangeInfo({
     priceInverted: state.priceInverted,
   })
 
-  const initialPriceTokens = getInvertedTuple(
-    [getCurrencyWithWrap(currencies[0], protocolVersion), getCurrencyWithWrap(currencies[1], protocolVersion)],
-    state.priceInverted,
-  )
-
   const price = derivedPositionInfo.creatingPoolOrPair
     ? getInitialPrice({
-        baseCurrency: initialPriceTokens[0],
-        sortedCurrencies: sortedTokens,
+        priceInverted: state.priceInverted,
+        sortedCurrencies: sdkCurrencies,
         initialPrice: state.initialPrice,
       })
     : getPrice({
         type: ProtocolVersion.V3,
         pool,
-        currency0: sortedToken0,
+        currency0: sdkCurrencies.TOKEN0,
+        priceInverted: state.priceInverted,
       })
+
   const invalidPrice = isInvalidPrice(price)
+
   const mockPool = createMockV3Pool({
-    baseToken,
-    quoteToken,
+    baseToken: baseCurrency,
+    quoteToken: quoteCurrency,
     fee: fee.feeAmount,
     price,
     invalidPrice,
@@ -651,47 +641,85 @@ export function getV3PriceRangeInfo({
     nearestUsableTick(TickMath.MAX_TICK, fee.tickSpacing),
   ]
 
-  const invertPrice = Boolean(baseToken && sortedToken0 && !baseToken.equals(sortedToken0))
-  const [baseRangeInput, quoteRangeInput] = invertPrice
+  const [baseRangeInput, quoteRangeInput] = state.priceInverted
     ? [state.maxPrice, state.minPrice]
     : [state.minPrice, state.maxPrice]
 
   const lowerTick =
     baseRangeInput === ''
       ? tickSpaceLimits[0]
-      : invertPrice
-        ? tryParseTick(sortedToken1, sortedToken0, fee.feeAmount, state.maxPrice)
-        : tryParseTick(sortedToken0, sortedToken1, fee.feeAmount, state.minPrice)
+      : state.priceInverted
+        ? tryParseTick({
+            baseToken: sdkCurrencies.TOKEN1,
+            quoteToken: sdkCurrencies.TOKEN0,
+            feeAmount: fee.feeAmount,
+            value: state.maxPrice,
+          })
+        : tryParseTick({
+            baseToken: sdkCurrencies.TOKEN0,
+            quoteToken: sdkCurrencies.TOKEN1,
+            feeAmount: fee.feeAmount,
+            value: state.minPrice,
+          })
   const upperTick =
     quoteRangeInput === ''
       ? tickSpaceLimits[1]
-      : invertPrice
-        ? tryParseTick(sortedToken1, sortedToken0, fee.feeAmount, state.minPrice)
-        : tryParseTick(sortedToken0, sortedToken1, fee.feeAmount, state.maxPrice)
-
-  const ticks: [OptionalNumber, OptionalNumber] = [lowerTick, upperTick]
+      : state.priceInverted
+        ? tryParseTick({
+            baseToken: sdkCurrencies.TOKEN1,
+            quoteToken: sdkCurrencies.TOKEN0,
+            feeAmount: fee.feeAmount,
+            value: state.minPrice,
+          })
+        : tryParseTick({
+            baseToken: sdkCurrencies.TOKEN0,
+            quoteToken: sdkCurrencies.TOKEN1,
+            feeAmount: fee.feeAmount,
+            value: state.maxPrice,
+          })
+  const ticks: [Maybe<number>, Maybe<number>] = [lowerTick, upperTick]
   const invalidRange = Boolean(lowerTick !== undefined && upperTick !== undefined && lowerTick >= upperTick)
 
-  const ticksAtLimit: [boolean, boolean] = state.fullRange
-    ? [true, true]
-    : [lowerTick === tickSpaceLimits[0], upperTick === tickSpaceLimits[1]]
+  const ticksAtLimit: [boolean, boolean] = getTicksAtLimit({
+    lowerTick,
+    upperTick,
+    tickSpaceLimits,
+    fullRange: state.fullRange,
+    priceInverted: state.priceInverted,
+  })
 
-  const pricesAtLimit: [OptionalCurrencyPrice, OptionalCurrencyPrice] = [
-    getTickToPrice(sortedToken0, sortedToken1, tickSpaceLimits[0]),
-    getTickToPrice(sortedToken0, sortedToken1, tickSpaceLimits[1]),
+  const pricesAtLimit: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>] = [
+    getTickToPrice({
+      baseToken: sdkCurrencies.TOKEN0,
+      quoteToken: sdkCurrencies.TOKEN1,
+      tick: tickSpaceLimits[0],
+    }),
+    getTickToPrice({
+      baseToken: sdkCurrencies.TOKEN0,
+      quoteToken: sdkCurrencies.TOKEN1,
+      tick: tickSpaceLimits[1],
+    }),
   ]
 
-  const pricesAtTicks: [OptionalCurrencyPrice, OptionalCurrencyPrice] = [
-    getTickToPrice(sortedToken0, sortedToken1, ticks[0]),
-    getTickToPrice(sortedToken0, sortedToken1, ticks[1]),
+  const pricesAtTicks: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>] = [
+    getTickToPrice({
+      baseToken: sdkCurrencies.TOKEN0,
+      quoteToken: sdkCurrencies.TOKEN1,
+      tick: ticks[0],
+    }),
+    getTickToPrice({
+      baseToken: sdkCurrencies.TOKEN0,
+      quoteToken: sdkCurrencies.TOKEN1,
+      tick: ticks[1],
+    }),
   ]
 
-  const isSorted = areCurrenciesEqual(baseToken, sortedToken0)
   const prices = getPrices({
-    baseCurrency: baseToken,
-    quoteCurrency: quoteToken,
+    baseCurrency,
+    quoteCurrency,
     pricesAtLimit,
     pricesAtTicks,
+    priceInverted: state.priceInverted,
     state,
   })
 
@@ -707,52 +735,41 @@ export function getV3PriceRangeInfo({
     lowerTick !== undefined && poolForPosition && poolForPosition.tickCurrent <= lowerTick,
   )
 
-  const depositADisabled =
-    invalidRange ||
-    Boolean(
-      (deposit0Disabled && poolForPosition && tokenA && poolForPosition.token0.equals(tokenA)) ||
-        (deposit1Disabled && poolForPosition && tokenA && poolForPosition.token1.equals(tokenA)),
-    )
-
-  const depositBDisabled =
-    invalidRange ||
-    Boolean(
-      (deposit0Disabled && poolForPosition && tokenB && poolForPosition.token0.equals(tokenB)) ||
-        (deposit1Disabled && poolForPosition && tokenB && poolForPosition.token1.equals(tokenB)),
-    )
-
   return {
     protocolVersion,
     ticks,
     ticksAtLimit,
-    isSorted,
     price,
     prices,
     pricesAtTicks,
     pricesAtLimit,
     priceDifference,
     tickSpaceLimits,
-    invertPrice,
     invalidPrice,
     invalidRange,
     outOfRange,
-    deposit0Disabled: depositADisabled,
-    deposit1Disabled: depositBDisabled,
+    deposit0Disabled,
+    deposit1Disabled,
     mockPool,
   } satisfies V3PriceRangeInfo
 }
 
-function tryParseV4Tick(
-  baseToken?: Currency,
-  quoteToken?: Currency,
-  value?: string,
-  tickSpacing?: number,
-): number | undefined {
+function tryParseV4Tick({
+  baseToken,
+  quoteToken,
+  value,
+  tickSpacing,
+}: {
+  baseToken?: Maybe<Currency>
+  quoteToken?: Maybe<Currency>
+  value?: string
+  tickSpacing?: number
+}): number | undefined {
   if (!baseToken || !quoteToken || !value || !tickSpacing) {
     return undefined
   }
 
-  const price = tryParsePrice(baseToken, quoteToken, value)
+  const price = tryParsePrice({ baseToken, quoteToken, value })
 
   if (!price) {
     return undefined
@@ -785,12 +802,13 @@ export function getV4PriceRangeInfo({
   derivedPositionInfo: CreateV4PositionInfo
 }): V4PriceRangeInfo {
   const { fee, hook, initialPosition } = positionState
-  const { protocolVersion, currencies, pool } = derivedPositionInfo
+  const {
+    protocolVersion,
+    currencies: { sdk: sortedCurrencies },
+    pool,
+  } = derivedPositionInfo
 
-  const sortedCurrencies = getSortedCurrenciesTuple(currencies[0], currencies[1])
-  const [sortedCurrency0, sortedCurrency1] = sortedCurrencies
-  const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, state.priceInverted)
-  const [initialPriceBaseCurrency] = getInvertedTuple(currencies, state.priceInverted)
+  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(sortedCurrencies, state.priceInverted)
 
   const priceDifference = getPriceDifference({
     initialPrice: state.initialPrice,
@@ -800,15 +818,17 @@ export function getV4PriceRangeInfo({
 
   const price = derivedPositionInfo.creatingPoolOrPair
     ? getInitialPrice({
-        baseCurrency: initialPriceBaseCurrency,
+        priceInverted: state.priceInverted,
         sortedCurrencies,
         initialPrice: state.initialPrice,
       })
     : getPrice({
         type: ProtocolVersion.V4,
         pool,
-        currency0: sortedCurrency0,
+        currency0: sortedCurrencies.TOKEN0,
+        priceInverted: state.priceInverted,
       })
+
   const invalidPrice = isInvalidPrice(price)
   const mockPool = createMockV4Pool({
     baseToken: baseCurrency,
@@ -820,53 +840,99 @@ export function getV4PriceRangeInfo({
   })
 
   const poolForPosition = pool ?? mockPool
-  const tickSpaceLimits: [OptionalNumber, OptionalNumber] =
-    initialPosition?.tickLower && initialPosition?.tickUpper
+  const tickSpaceLimits: [Maybe<number>, Maybe<number>] =
+    initialPosition?.tickLower && initialPosition.tickUpper
       ? [initialPosition.tickLower, initialPosition.tickUpper]
       : [
           poolForPosition ? nearestUsableTick(TickMath.MIN_TICK, poolForPosition.tickSpacing) : undefined,
           poolForPosition ? nearestUsableTick(TickMath.MAX_TICK, poolForPosition.tickSpacing) : undefined,
         ]
 
-  const invertPrice = Boolean(baseCurrency && sortedCurrency0 && !baseCurrency.equals(sortedCurrency0))
-  const [baseRangeInput, quoteRangeInput] = invertPrice
+  const [baseRangeInput, quoteRangeInput] = state.priceInverted
     ? [state.maxPrice, state.minPrice]
     : [state.minPrice, state.maxPrice]
+
   const lowerTick =
     baseRangeInput === '' || initialPosition?.isOutOfRange
       ? tickSpaceLimits[0]
-      : invertPrice
-        ? tryParseV4Tick(sortedCurrency1, sortedCurrency0, state.maxPrice, poolForPosition?.tickSpacing)
-        : tryParseV4Tick(sortedCurrency0, sortedCurrency1, state.minPrice, poolForPosition?.tickSpacing)
+      : state.priceInverted
+        ? tryParseV4Tick({
+            baseToken: sortedCurrencies.TOKEN1,
+            quoteToken: sortedCurrencies.TOKEN0,
+            value: state.maxPrice,
+            tickSpacing: poolForPosition?.tickSpacing,
+          })
+        : tryParseV4Tick({
+            baseToken: sortedCurrencies.TOKEN0,
+            quoteToken: sortedCurrencies.TOKEN1,
+            value: state.minPrice,
+            tickSpacing: poolForPosition?.tickSpacing,
+          })
   const upperTick =
     quoteRangeInput === '' || initialPosition?.isOutOfRange
       ? tickSpaceLimits[1]
-      : invertPrice
-        ? tryParseV4Tick(sortedCurrency1, sortedCurrency0, state.minPrice, poolForPosition?.tickSpacing)
-        : tryParseV4Tick(sortedCurrency0, sortedCurrency1, state.maxPrice, poolForPosition?.tickSpacing)
-  const ticks: [OptionalNumber, OptionalNumber] = [lowerTick, upperTick]
-  const invalidRange = Boolean(lowerTick !== undefined && upperTick !== undefined && lowerTick >= upperTick)
+      : state.priceInverted
+        ? tryParseV4Tick({
+            baseToken: sortedCurrencies.TOKEN1,
+            quoteToken: sortedCurrencies.TOKEN0,
+            value: state.minPrice,
+            tickSpacing: poolForPosition?.tickSpacing,
+          })
+        : tryParseV4Tick({
+            baseToken: sortedCurrencies.TOKEN0,
+            quoteToken: sortedCurrencies.TOKEN1,
+            value: state.maxPrice,
+            tickSpacing: poolForPosition?.tickSpacing,
+          })
+  const ticks: [Maybe<number>, Maybe<number>] = [lowerTick, upperTick]
+  const invalidRange = Boolean(
+    lowerTick !== undefined &&
+      upperTick !== undefined &&
+      typeof lowerTick === 'number' &&
+      typeof upperTick === 'number' &&
+      lowerTick >= upperTick,
+  )
 
-  const ticksAtLimit: [boolean, boolean] = state.fullRange
-    ? [true, true]
-    : [lowerTick === tickSpaceLimits[0], upperTick === tickSpaceLimits[1]]
+  const ticksAtLimit: [boolean, boolean] = getTicksAtLimit({
+    lowerTick,
+    upperTick,
+    tickSpaceLimits,
+    fullRange: state.fullRange,
+    priceInverted: state.priceInverted,
+  })
 
-  const pricesAtLimit: [OptionalCurrencyPrice, OptionalCurrencyPrice] = [
-    getV4TickToPrice(sortedCurrency0, sortedCurrency1, tickSpaceLimits[0]),
-    getV4TickToPrice(sortedCurrency0, sortedCurrency1, tickSpaceLimits[1]),
+  const pricesAtLimit: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>] = [
+    getV4TickToPrice({
+      baseCurrency: sortedCurrencies.TOKEN0,
+      quoteCurrency: sortedCurrencies.TOKEN1,
+      tick: tickSpaceLimits[0],
+    }),
+    getV4TickToPrice({
+      baseCurrency: sortedCurrencies.TOKEN0,
+      quoteCurrency: sortedCurrencies.TOKEN1,
+      tick: tickSpaceLimits[1],
+    }),
   ]
 
-  const pricesAtTicks: [OptionalCurrencyPrice, OptionalCurrencyPrice] = [
-    getV4TickToPrice(sortedCurrency0, sortedCurrency1, ticks[0]),
-    getV4TickToPrice(sortedCurrency0, sortedCurrency1, ticks[1]),
+  const pricesAtTicks: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>] = [
+    getV4TickToPrice({
+      baseCurrency: sortedCurrencies.TOKEN0,
+      quoteCurrency: sortedCurrencies.TOKEN1,
+      tick: ticks[0],
+    }),
+    getV4TickToPrice({
+      baseCurrency: sortedCurrencies.TOKEN0,
+      quoteCurrency: sortedCurrencies.TOKEN1,
+      tick: ticks[1],
+    }),
   ]
 
-  const isSorted = areCurrenciesEqual(baseCurrency, sortedCurrency0)
-  const prices: [OptionalCurrencyPrice, OptionalCurrencyPrice] = getPrices({
+  const prices: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>] = getPrices({
     baseCurrency,
     quoteCurrency,
     pricesAtLimit,
     pricesAtTicks,
+    priceInverted: state.priceInverted,
     state,
   })
 
@@ -876,42 +942,27 @@ export function getV4PriceRangeInfo({
 
   // This is in terms of the sorted tokens
   const deposit0Disabled = Boolean(
-    upperTick !== undefined && poolForPosition && poolForPosition.tickCurrent >= upperTick,
+    upperTick !== undefined && poolForPosition && poolForPosition.tickCurrent >= (upperTick ?? 0),
   )
   const deposit1Disabled = Boolean(
-    lowerTick !== undefined && poolForPosition && poolForPosition.tickCurrent <= lowerTick,
+    lowerTick !== undefined && poolForPosition && poolForPosition.tickCurrent <= (lowerTick ?? 0),
   )
-
-  const depositADisabled =
-    invalidRange ||
-    Boolean(
-      (deposit0Disabled && poolForPosition && currencies[0] && poolForPosition.token0.equals(currencies[0])) ||
-        (deposit1Disabled && poolForPosition && currencies[0] && poolForPosition.token1.equals(currencies[0])),
-    )
-  const depositBDisabled =
-    invalidRange ||
-    Boolean(
-      (deposit0Disabled && poolForPosition && currencies[1] && poolForPosition.token0.equals(currencies[1])) ||
-        (deposit1Disabled && poolForPosition && currencies[1] && poolForPosition.token1.equals(currencies[1])),
-    )
 
   return {
     protocolVersion,
     ticks,
     ticksAtLimit,
-    isSorted,
     price,
     prices,
     pricesAtTicks,
     pricesAtLimit,
     priceDifference,
     tickSpaceLimits,
-    invertPrice,
     invalidPrice,
     invalidRange,
     outOfRange,
-    deposit0Disabled: depositADisabled,
-    deposit1Disabled: depositBDisabled,
+    deposit0Disabled,
+    deposit1Disabled,
     mockPool,
   } satisfies V4PriceRangeInfo
 }
@@ -930,14 +981,14 @@ export function generateAddLiquidityApprovalParams({
   generatePermitAsTransaction?: boolean
 }): CheckApprovalLPRequest | undefined {
   const apiProtocolItems = getProtocolItems(positionState.protocolVersion)
-  const currencies = derivedPositionInfo.currencies
+  const currencies = derivedPositionInfo.currencies.display
   const { currencyAmounts } = derivedDepositInfo
 
   if (
     !account?.address ||
     !apiProtocolItems ||
     !currencyAmounts?.TOKEN0 ||
-    !currencyAmounts?.TOKEN1 ||
+    !currencyAmounts.TOKEN1 ||
     !validateCurrencyInput(currencies)
   ) {
     return undefined
@@ -948,57 +999,13 @@ export function generateAddLiquidityApprovalParams({
     walletAddress: account.address,
     chainId: currencyAmounts.TOKEN0.currency.chainId,
     protocol: apiProtocolItems,
-    token0: getCurrencyAddressForTradingApi(currencies[0]),
-    token1: getCurrencyAddressForTradingApi(currencies[1]),
-    amount0: currencyAmounts?.TOKEN0?.quotient.toString(),
-    amount1: currencyAmounts?.TOKEN1?.quotient.toString(),
+    token0: getTokenOrZeroAddress(currencies.TOKEN0),
+    token1: getTokenOrZeroAddress(currencies.TOKEN1),
+    amount0: currencyAmounts.TOKEN0.quotient.toString(),
+    amount1: currencyAmounts.TOKEN1.quotient.toString(),
     generatePermitAsTransaction:
       positionState.protocolVersion === ProtocolVersion.V4 ? generatePermitAsTransaction : undefined,
   } satisfies CheckApprovalLPRequest
-}
-
-// Returns the sorted token that is independent.
-// For example if the top box on the deposit form corresponds to token0 (lower token sorted by address)
-// and the user types into that form then the independent token is token0.
-// Or if the top box corresponds to token1 (higher token sorted by address)
-// and the user types into that box then the independent token is token1
-// Also returns the index of token0 and token1 in relation to the unsortedCurrencies
-function getIndependentToken({
-  unsortedCurrencies,
-  sortedToken0,
-  sortedToken1,
-  independentField,
-  protocolVersion,
-}: {
-  unsortedCurrencies: [Currency, Currency]
-  sortedToken0: Currency
-  sortedToken1: Currency
-  independentField: PositionField
-  protocolVersion: ProtocolVersion
-}): {
-  independentToken: IndependentToken.TOKEN_0 | IndependentToken.TOKEN_1
-  token0Index: PositionField
-  token1Index: PositionField
-} {
-  const tokenA = getCurrencyWithWrap(unsortedCurrencies[0], protocolVersion)
-  const tokenB = getCurrencyWithWrap(unsortedCurrencies[1], protocolVersion)
-  const token0Index = tokenA && sortedToken0.equals(tokenA) ? PositionField.TOKEN0 : PositionField.TOKEN1
-  const token1Index = tokenB && sortedToken1.equals(tokenB) ? PositionField.TOKEN1 : PositionField.TOKEN0
-
-  const independentToken =
-    independentField === PositionField.TOKEN0
-      ? token0Index === PositionField.TOKEN0
-        ? IndependentToken.TOKEN_0
-        : IndependentToken.TOKEN_1
-      : token1Index === PositionField.TOKEN1
-        ? IndependentToken.TOKEN_1
-        : IndependentToken.TOKEN_0
-
-  return {
-    independentToken,
-    token0Index,
-    token1Index,
-  }
 }
 
 export function generateCreateCalldataQueryParams({
@@ -1023,15 +1030,15 @@ export function generateCreateCalldataQueryParams({
   slippageTolerance?: number
 }): CreateLPPositionRequest | undefined {
   const apiProtocolItems = getProtocolItems(positionState.protocolVersion)
-  const currencies = derivedPositionInfo.currencies
+  const sortedCurrencies = derivedPositionInfo.currencies.display
   const { currencyAmounts } = derivedDepositInfo
 
   if (
     !account?.address ||
     !apiProtocolItems ||
     !currencyAmounts?.TOKEN0 ||
-    !currencyAmounts?.TOKEN1 ||
-    !validateCurrencyInput(currencies)
+    !currencyAmounts.TOKEN1 ||
+    !validateCurrencyInput(sortedCurrencies)
   ) {
     return undefined
   }
@@ -1052,22 +1059,12 @@ export function generateCreateCalldataQueryParams({
 
     const pair = derivedPositionInfo.pair ?? derivedPriceRangeInfo.mockPair
 
-    if (!pair) {
+    if (!pair || !sortedCurrencies.TOKEN0 || !sortedCurrencies.TOKEN1) {
       return undefined
     }
 
-    // token0 and token1 from the sdk are automatically sorted and we need to ensure the values we send
-    // to the trading API are also sorted
-    const sortedToken0 = pair.token0
-    const sortedToken1 = pair.token1
-
-    const { independentToken, token0Index, token1Index } = getIndependentToken({
-      unsortedCurrencies: currencies,
-      sortedToken0,
-      sortedToken1,
-      independentField,
-      protocolVersion: derivedPositionInfo.protocolVersion,
-    })
+    const independentToken =
+      independentField === PositionField.TOKEN0 ? IndependentToken.TOKEN_0 : IndependentToken.TOKEN_1
     const dependentField = independentField === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0
     const independentAmount = currencyAmounts[independentField]
     const dependentAmount = currencyAmounts[dependentField]
@@ -1090,8 +1087,8 @@ export function generateCreateCalldataQueryParams({
       slippageTolerance,
       position: {
         pool: {
-          token0: getCurrencyAddressForTradingApi(currencyAmounts[token0Index]?.currency),
-          token1: getCurrencyAddressForTradingApi(currencyAmounts[token1Index]?.currency),
+          token0: getTokenOrZeroAddress(sortedCurrencies.TOKEN0),
+          token1: getTokenOrZeroAddress(sortedCurrencies.TOKEN1),
         },
       },
     } satisfies CreateLPPositionRequest
@@ -1102,16 +1099,16 @@ export function generateCreateCalldataQueryParams({
   }
 
   const pool = derivedPositionInfo.pool ?? derivedPriceRangeInfo.mockPool
-  if (!pool) {
+  if (!pool || !sortedCurrencies.TOKEN0 || !sortedCurrencies.TOKEN1) {
     return undefined
   }
 
   const tickLower = priceRangeState.fullRange
     ? derivedPriceRangeInfo.tickSpaceLimits[0]
-    : derivedPriceRangeInfo.ticks?.[0]
+    : derivedPriceRangeInfo.ticks[0]
   const tickUpper = priceRangeState.fullRange
     ? derivedPriceRangeInfo.tickSpaceLimits[1]
-    : derivedPriceRangeInfo.ticks?.[1]
+    : derivedPriceRangeInfo.ticks[1]
 
   if (tickLower === undefined || tickUpper === undefined) {
     return undefined
@@ -1121,18 +1118,8 @@ export function generateCreateCalldataQueryParams({
   const initialPrice = creatingPool ? pool.sqrtRatioX96.toString() : undefined
   const tickSpacing = pool.tickSpacing
 
-  // token0 and token1 from the sdk are automatically sorted and we need to ensure the values we send
-  // to the trading API are also sorted
-  const sortedToken0 = pool.token0
-  const sortedToken1 = pool.token1
-
-  const { independentToken, token0Index, token1Index } = getIndependentToken({
-    sortedToken0,
-    sortedToken1,
-    unsortedCurrencies: currencies,
-    independentField,
-    protocolVersion: derivedPositionInfo.protocolVersion,
-  })
+  const independentToken =
+    independentField === PositionField.TOKEN0 ? IndependentToken.TOKEN_0 : IndependentToken.TOKEN_1
   const dependentField = independentField === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0
   const independentAmount = currencyAmounts[independentField]
   const dependentAmount = currencyAmounts[dependentField]
@@ -1151,16 +1138,16 @@ export function generateCreateCalldataQueryParams({
     chainId: currencyAmounts.TOKEN0.currency.chainId,
     independentAmount: independentAmount?.quotient.toString(),
     independentToken,
-    initialDependentAmount: initialPrice && dependentAmount?.quotient?.toString(), // only set this if there is an initialPrice
+    initialDependentAmount: initialPrice && dependentAmount?.quotient.toString(), // only set this if there is an initialPrice
     initialPrice,
     slippageTolerance,
     position: {
-      tickLower,
-      tickUpper,
+      tickLower: tickLower ?? undefined,
+      tickUpper: tickUpper ?? undefined,
       pool: {
         tickSpacing,
-        token0: getCurrencyAddressForTradingApi(currencyAmounts[token0Index]?.currency),
-        token1: getCurrencyAddressForTradingApi(currencyAmounts[token1Index]?.currency),
+        token0: getTokenOrZeroAddress(sortedCurrencies.TOKEN0),
+        token1: getTokenOrZeroAddress(sortedCurrencies.TOKEN1),
         fee: positionState.fee.feeAmount,
         hooks: positionState.hook,
       },
@@ -1183,7 +1170,7 @@ export function generateCreatePositionTxRequest({
 }): CreatePositionTxAndGasInfo | undefined {
   const { currencyAmounts } = derivedDepositInfo
 
-  if (!createCalldata || !currencyAmounts?.TOKEN0 || !currencyAmounts?.TOKEN1) {
+  if (!createCalldata || !currencyAmounts?.TOKEN0 || !currencyAmounts.TOKEN1) {
     return undefined
   }
 
@@ -1258,14 +1245,14 @@ export function getPoolIdOrAddressFromCreatePositionInfo(positionInfo: CreatePos
     case ProtocolVersion.V2:
       return positionInfo.pair?.liquidityToken.address
     case ProtocolVersion.V3:
-      return positionInfo.pool?.chainId && positionInfo.currencies[0] && positionInfo.currencies[1]
-        ? PoolCache.getPoolAddress(
-            V3_CORE_FACTORY_ADDRESSES[positionInfo.pool.chainId],
-            positionInfo.currencies[0].wrapped,
-            positionInfo.currencies[1].wrapped,
-            positionInfo.pool.fee,
-            positionInfo.pool.chainId,
-          )
+      return positionInfo.pool?.chainId && positionInfo.currencies.sdk.TOKEN0 && positionInfo.currencies.sdk.TOKEN1
+        ? PoolCache.getPoolAddress({
+            factoryAddress: V3_CORE_FACTORY_ADDRESSES[positionInfo.pool.chainId],
+            tokenA: positionInfo.currencies.sdk.TOKEN0,
+            tokenB: positionInfo.currencies.sdk.TOKEN1,
+            fee: positionInfo.pool.fee,
+            chainId: positionInfo.pool.chainId,
+          })
         : undefined
     case ProtocolVersion.V4:
     default:
@@ -1273,12 +1260,12 @@ export function getPoolIdOrAddressFromCreatePositionInfo(positionInfo: CreatePos
   }
 }
 
-export function canUnwrapCurrency(currency: OptionalCurrency, protocolVersion?: ProtocolVersion): boolean {
+export function canUnwrapCurrency(currency: Maybe<Currency>, protocolVersion?: ProtocolVersion): boolean {
   if (protocolVersion === ProtocolVersion.V4 || !currency) {
     return false
   }
 
-  const wrappedNative = WRAPPED_NATIVE_CURRENCY[currency?.chainId]
+  const wrappedNative = WRAPPED_NATIVE_CURRENCY[currency.chainId]
   return areCurrenciesEqual(wrappedNative, currency)
 }
 
@@ -1293,14 +1280,14 @@ export function getCurrencyWithOptionalUnwrap({
   currency,
   shouldUnwrap,
 }: {
-  currency: OptionalCurrency
+  currency: Maybe<Currency>
   shouldUnwrap: boolean
-}): OptionalCurrency
+}): Maybe<Currency>
 export function getCurrencyWithOptionalUnwrap({
   currency,
   shouldUnwrap,
 }: {
-  currency: OptionalCurrency
+  currency: Maybe<Currency>
   shouldUnwrap: boolean
 }) {
   if (!currency) {

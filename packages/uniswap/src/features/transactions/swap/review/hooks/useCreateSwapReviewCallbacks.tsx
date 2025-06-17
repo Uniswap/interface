@@ -80,7 +80,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
       updateSwapForm({ exactAmountFiat: undefined, exactAmountToken: '', isSubmitting: false, showPendingUI: false })
       setScreen(TransactionScreen.Form)
     }
-    onClose?.()
+    onClose()
   }, [setScreen, updateSwapForm, onClose])
 
   const onPending = useCallback(() => {

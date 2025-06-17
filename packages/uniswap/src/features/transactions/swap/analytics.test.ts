@@ -1,5 +1,5 @@
-import { SwapEventName } from '@uniswap/analytics-events'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getRouteAnalyticsData, logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
 import { ClassicTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -67,7 +67,7 @@ describe('analytics', () => {
 
     logSwapQuoteFetch({ chainId: mockChainId })
 
-    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_QUOTE_FETCH, {
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SwapQuoteFetch, {
       chainId: mockChainId,
       isQuickRoute: false,
       time_to_first_quote_request: 100,
@@ -80,7 +80,7 @@ describe('analytics', () => {
 
     logSwapQuoteFetch({ chainId: mockChainId, isUSDQuote: true })
 
-    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_QUOTE_FETCH, {
+    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SwapQuoteFetch, {
       chainId: mockChainId,
       isQuickRoute: false,
     })

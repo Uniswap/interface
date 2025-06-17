@@ -3,11 +3,15 @@ import { ExploreContext } from 'state/explore'
 import { use24hProtocolVolume, useDailyTVLWithChange } from 'state/explore/protocolStats'
 import { render, screen } from 'test-utils/render'
 import * as GatingHooks from 'uniswap/src/features/gating/hooks'
+import type { Mock } from 'vitest'
 
-jest.mock('uniswap/src/features/gating/hooks', () => ({
-  ...jest.requireActual('uniswap/src/features/gating/hooks'),
-  useFeatureFlagWithLoading: jest.fn(() => ({ value: true, isLoading: false })), // Ensure mock returns value immediately
-}))
+vi.mock('uniswap/src/features/gating/hooks', async () => {
+  const actual = await vi.importActual('uniswap/src/features/gating/hooks')
+  return {
+    ...actual,
+    useFeatureFlagWithLoading: vi.fn(() => ({ value: true, isLoading: false })), // Ensure mock returns value immediately
+  }
+})
 
 const createTimestampedAmount = (timestamp: number, value: number) => ({ timestamp, value })
 
@@ -53,7 +57,7 @@ const TestComponent24HrTVL = () => {
 }
 
 beforeEach(() => {
-  ;(GatingHooks.useFeatureFlagWithLoading as jest.Mock).mockReturnValue({ value: true, isLoading: false })
+  ;(GatingHooks.useFeatureFlagWithLoading as Mock).mockReturnValue({ value: true, isLoading: false })
 })
 
 describe('use24hProtocolVolume', () => {

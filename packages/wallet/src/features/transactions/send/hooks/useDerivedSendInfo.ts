@@ -27,19 +27,20 @@ export function useDerivedSendInfo(state: TransactionState): DerivedSendInfo {
 
   const currencyInInfo = useCurrencyInfo(
     tradeableAsset?.type === AssetType.Currency
-      ? buildCurrencyId(tradeableAsset?.chainId, tradeableAsset?.address)
+      ? buildCurrencyId(tradeableAsset.chainId, tradeableAsset.address)
       : undefined,
     { refetch: true },
   )
 
   const currencyIn = currencyInInfo?.currency
-  const { data: nftIn } = useNFT(
-    activeAccount?.address,
-    tradeableAsset?.address,
-    tradeableAsset?.type === AssetType.ERC1155 || tradeableAsset?.type === AssetType.ERC721
-      ? tradeableAsset.tokenId
-      : undefined,
-  )
+  const { data: nftIn } = useNFT({
+    owner: activeAccount?.address,
+    address: tradeableAsset?.address,
+    tokenId:
+      tradeableAsset?.type === AssetType.ERC1155 || tradeableAsset?.type === AssetType.ERC721
+        ? tradeableAsset.tokenId
+        : undefined,
+  })
 
   const currencies = useMemo(
     () => ({
@@ -53,10 +54,7 @@ export function useDerivedSendInfo(state: TransactionState): DerivedSendInfo {
     activeAccount?.address,
   )
 
-  const { balance: nativeInBalance } = useOnChainNativeCurrencyBalance(
-    chainId ?? defaultChainId,
-    activeAccount?.address,
-  )
+  const { balance: nativeInBalance } = useOnChainNativeCurrencyBalance(chainId, activeAccount?.address)
 
   const amountSpecified = useMemo(
     () =>

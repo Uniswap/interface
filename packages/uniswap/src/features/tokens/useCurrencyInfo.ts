@@ -9,7 +9,6 @@ import {
   buildWrappedNativeCurrencyId,
   currencyIdToAddress,
   currencyIdToChain,
-  isNativeCurrencyAddress,
 } from 'uniswap/src/utils/currencyId'
 
 export function useCurrencyInfo(
@@ -35,7 +34,7 @@ export function useCurrencyInfo(
       return undefined
     }
     if (chainId && address) {
-      const commonBase = getCommonBase(chainId, isNativeCurrencyAddress(chainId, address), address)
+      const commonBase = getCommonBase(chainId, address)
       if (commonBase) {
         // Creating new object to avoid error "Cannot assign to read only property"
         const copyCommonBase = { ...commonBase }

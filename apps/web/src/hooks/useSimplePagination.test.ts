@@ -24,7 +24,7 @@ describe('useSimplePagination', () => {
   })
 
   it('should call onComplete callback after incrementing page', () => {
-    const onComplete = jest.fn()
+    const onComplete = vi.fn()
     const { result } = renderHook(() => useSimplePagination())
 
     act(() => {

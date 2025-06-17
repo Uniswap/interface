@@ -14,7 +14,10 @@ const UNISWAP_X_ORDERS_ENDPOINT = `https://interface.gateway.uniswap.org/v2/orde
 
 test.describe('UniswapX', async () => {
   test.beforeEach(async ({ page, anvil }) => {
-    await anvil.setErc20Balance(assume0xAddress(WETH9[UniverseChainId.Mainnet].address), parseEther('1000000'))
+    await anvil.setErc20Balance({
+      address: assume0xAddress(WETH9[UniverseChainId.Mainnet].address),
+      balance: parseEther('1000000'),
+    })
     await page.route(`${uniswapUrls.tradingApiUrl}${uniswapUrls.tradingApiPaths.quote}`, async (route, request) => {
       const postData = await request.postData()
       const data = JSON.parse(postData ?? '{}')

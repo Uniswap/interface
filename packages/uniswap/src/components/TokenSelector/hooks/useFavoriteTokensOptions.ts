@@ -40,7 +40,7 @@ export function useFavoriteTokensOptions(
     (!portfolioBalancesById && portfolioBalancesByIdError) || (!favoriteCurrencies && favoriteCurrenciesError)
 
   const filteredFavoriteTokenOptions = useMemo(
-    () => favoriteTokenOptions && filter(favoriteTokenOptions, chainFilter),
+    () => favoriteTokenOptions && filter({ tokenOptions: favoriteTokenOptions, chainFilter }),
     [chainFilter, favoriteTokenOptions],
   )
 

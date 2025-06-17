@@ -45,7 +45,10 @@ export function RemoveLiquidityV2WithTokenRedirects() {
 
   const chainId = getChainIdFromChainUrlParam(chainParam) ?? connectedChainId ?? defaultChainId
 
-  const [currencyA, currencyB] = [useCurrency(currencyAddressA, chainId), useCurrency(currencyAddressB, chainId)]
+  const [currencyA, currencyB] = [
+    useCurrency({ address: currencyAddressA, chainId }),
+    useCurrency({ address: currencyAddressB, chainId }),
+  ]
 
   const [, pair] = useV2Pair(
     getCurrencyWithWrap(currencyA, ProtocolVersion.V2),

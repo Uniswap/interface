@@ -1,10 +1,9 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { usePositionDerivedInfo } from 'components/Liquidity/hooks'
 import { V3PositionInfo } from 'components/Liquidity/types'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
-import { getCurrencyAddressForTradingApi, getCurrencyForProtocol } from 'pages/Pool/Positions/create/utils'
+import { getCurrencyForProtocol, getTokenOrZeroAddress } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
@@ -15,7 +14,7 @@ import {
   ProtocolItems,
   UniversalRouterVersion,
 } from 'uniswap/src/data/tradingApi/__generated__'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   LiquidityTransactionType,
@@ -54,15 +53,14 @@ export function MigrateV3PositionTxContextProvider({
   const [hasMigrateErrorResponse, setHasMigrateErrorResponse] = useState(false)
 
   const { derivedPositionInfo, positionState, currentTransactionStep } = useCreatePositionContext()
-  const { feeValue0, feeValue1 } = usePositionDerivedInfo(positionInfo)
   const {
     derivedPriceRangeInfo,
     priceRangeState: { fullRange },
   } = usePriceRangeContext()
-  const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(positionInfo?.chainId)
+  const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(positionInfo.chainId)
 
   const increaseLiquidityApprovalParams: CheckApprovalLPRequest | undefined = useMemo(() => {
-    if (!positionInfo || !account.address) {
+    if (!account.address) {
       return undefined
     }
     return {
@@ -105,11 +103,8 @@ export function MigrateV3PositionTxContextProvider({
 
   const migratePositionRequestArgs: MigrateLPPositionRequest | undefined = useMemo(() => {
     if (
-      !derivedPositionInfo ||
-      !positionInfo ||
       !positionInfo.tokenId ||
-      !account?.address ||
-      !derivedPriceRangeInfo ||
+      !account.address ||
       derivedPositionInfo.protocolVersion !== ProtocolVersion.V4 ||
       derivedPriceRangeInfo.protocolVersion !== ProtocolVersion.V4 ||
       !positionInfo.pool ||
@@ -121,10 +116,10 @@ export function MigrateV3PositionTxContextProvider({
     if (!destinationPool) {
       return undefined
     }
-    const tickLower = fullRange ? derivedPriceRangeInfo.tickSpaceLimits[0] : derivedPriceRangeInfo.ticks?.[0]
-    const tickUpper = fullRange ? derivedPriceRangeInfo.tickSpaceLimits[1] : derivedPriceRangeInfo.ticks?.[1]
+    const tickLower = fullRange ? derivedPriceRangeInfo.tickSpaceLimits[0] : derivedPriceRangeInfo.ticks[0]
+    const tickUpper = fullRange ? derivedPriceRangeInfo.tickSpaceLimits[1] : derivedPriceRangeInfo.ticks[1]
 
-    if (tickLower === undefined || tickUpper === undefined || !positionInfo.pool || !positionInfo.liquidity) {
+    if (tickLower === undefined || tickUpper === undefined || !positionInfo.liquidity) {
       return undefined
     }
     return {
@@ -140,27 +135,27 @@ export function MigrateV3PositionTxContextProvider({
             ? ZERO_ADDRESS
             : positionInfo.currency1Amount.currency.address,
           fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
-          tickSpacing: positionInfo?.tickSpacing ? Number(positionInfo?.tickSpacing) : undefined,
+          tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
         },
         tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,
         tickUpper: positionInfo.tickUpper ? Number(positionInfo.tickUpper) : undefined,
       },
       inputPoolLiquidity: positionInfo.pool.liquidity.toString(),
       inputCurrentTick: positionInfo.pool.tickCurrent,
-      inputSqrtRatioX96: positionInfo.pool.sqrtRatioX96?.toString(),
+      inputSqrtRatioX96: positionInfo.pool.sqrtRatioX96.toString(),
       inputPositionLiquidity: positionInfo.liquidity,
 
       outputProtocol: ProtocolItems.V4,
       outputPosition: {
         pool: {
-          token0: getCurrencyAddressForTradingApi(destinationPool.currency0),
-          token1: getCurrencyAddressForTradingApi(destinationPool.currency1),
+          token0: getTokenOrZeroAddress(destinationPool.currency0),
+          token1: getTokenOrZeroAddress(destinationPool.currency1),
           fee: positionState.fee.feeAmount,
           hooks: positionState.hook,
           tickSpacing: destinationPool.tickSpacing,
         },
-        tickLower,
-        tickUpper,
+        tickLower: tickLower ?? undefined,
+        tickUpper: tickUpper ?? undefined,
       },
       outputPoolLiquidity: derivedPositionInfo.creatingPoolOrPair ? undefined : destinationPool.liquidity.toString(),
       outputSqrtRatioX96: derivedPositionInfo.creatingPoolOrPair ? undefined : destinationPool.sqrtRatioX96.toString(),
@@ -170,8 +165,8 @@ export function MigrateV3PositionTxContextProvider({
 
       chainId: positionInfo.currency0Amount.currency.chainId,
       walletAddress: account.address,
-      expectedTokenOwed0RawAmount: feeValue0?.quotient.toString() ?? '0',
-      expectedTokenOwed1RawAmount: feeValue1?.quotient.toString() ?? '0',
+      expectedTokenOwed0RawAmount: positionInfo.token0UncollectedFees ?? '0',
+      expectedTokenOwed1RawAmount: positionInfo.token1UncollectedFees ?? '0',
       amount0: positionInfo.currency0Amount.quotient.toString(),
       amount1: positionInfo.currency1Amount.quotient.toString(),
     }
@@ -183,8 +178,6 @@ export function MigrateV3PositionTxContextProvider({
     fullRange,
     positionState.fee.feeAmount,
     positionState.hook,
-    feeValue0?.quotient,
-    feeValue1?.quotient,
     approvalsNeeded,
   ])
 
@@ -227,7 +220,7 @@ export function MigrateV3PositionTxContextProvider({
       },
     })
 
-    sendAnalyticsEvent(InterfaceEventNameLocal.MigrateLiquidityFailed, {
+    sendAnalyticsEvent(InterfaceEventName.MigrateLiquidityFailed, {
       message,
     })
   }

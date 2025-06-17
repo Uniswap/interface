@@ -3,9 +3,8 @@ import { Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { ClassicTrade } from 'state/routing/types'
+import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import { RoutingDiagramEntry } from 'uniswap/src/utils/getRoutingDiagramEntries'
-
-const V2_DEFAULT_FEE_TIER = 3000
 
 /**
  * Loops through all routes on a trade and returns an array of diagram entries.

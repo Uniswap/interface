@@ -316,11 +316,6 @@
       "symbol": "https://images-currency.meld.io/fiat/OMR/symbol.png"
     },
     {
-      "fiatCurrencyCode": "THB",
-      "displayName": "Thai Baht",
-      "symbol": "https://images-currency.meld.io/fiat/THB/symbol.png"
-    },
-    {
       "fiatCurrencyCode": "VND",
       "displayName": "Vietnamese Dong",
       "symbol": "https://images-currency.meld.io/fiat/VND/symbol.png"

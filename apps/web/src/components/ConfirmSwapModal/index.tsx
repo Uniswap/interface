@@ -1,4 +1,3 @@
-import { SwapEventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import SwapError, { PendingModalError } from 'components/ConfirmSwapModal/Error'
 import { SwapHead } from 'components/ConfirmSwapModal/Head'
@@ -24,7 +23,9 @@ import { UniswapXOrderStatus } from 'types/uniswapx'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { ADAPTIVE_MODAL_ANIMATION_DURATION } from 'ui/src/components/modal/AdaptiveWebModal'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { SwapPriceUpdateUserResponse } from 'uniswap/src/features/telemetry/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SignatureExpiredError, UniswapXv2HardQuoteError } from 'utils/errors'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
@@ -175,11 +176,15 @@ export function ConfirmSwapModal({
   const { suppressPopups, unsuppressPopups } = useSuppressPopups([PopupType.Transaction, PopupType.Order])
 
   const onModalDismiss = useCallback(() => {
-    if (trade && doesTradeDiffer && confirmModalState !== ConfirmModalState.PENDING_CONFIRMATION) {
+    if (doesTradeDiffer && confirmModalState !== ConfirmModalState.PENDING_CONFIRMATION) {
       // If the user dismissed the modal while showing the price update, log the event as rejected.
       sendAnalyticsEvent(
-        SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
-        formatSwapPriceUpdatedEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED),
+        SwapEventName.SwapPriceUpdateAcknowledged,
+        formatSwapPriceUpdatedEventProperties({
+          trade,
+          priceUpdate,
+          response: SwapPriceUpdateUserResponse.REJECTED,
+        }),
       )
     }
     onDismiss()

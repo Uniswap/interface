@@ -6,7 +6,7 @@ import { call } from 'redux-saga/effects'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Experiments, PrivateRpcProperties } from 'uniswap/src/features/gating/experiments'
+import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { addTransaction, finalizeTransaction, updateTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   TransactionDetails,
@@ -43,8 +43,8 @@ jest.mock('uniswap/src/features/gating/hooks', () => {
     ...jest.requireActual('uniswap/src/features/gating/hooks'),
     getExperimentValue: jest
       .fn()
-      .mockImplementation((config: Experiments.PrivateRpc, key: PrivateRpcProperties, defaultVal: unknown) => {
-        return mockExperiments[config]?.[key] ?? defaultVal
+      .mockImplementation(({ defaultValue }: { config: Experiments; key: string; defaultValue: unknown }) => {
+        return mockExperiments.private_rpc?.flashbots_enabled ?? defaultValue
       }),
   }
 })
@@ -97,7 +97,7 @@ describe(executeTransactionLegacy, () => {
 
   afterAll(() => {
     // Unlock Time
-    dateNowSpy?.mockRestore()
+    dateNowSpy.mockRestore()
   })
 
   it('Sends valid transactions successfully', () => {
@@ -115,6 +115,7 @@ describe(executeTransactionLegacy, () => {
             provider: mockProvider,
             signerManager,
             viemClient: mockViemClient,
+            isRemoveDelegation: false,
           }),
           {
             transactionResponse: txResponse,
@@ -206,6 +207,7 @@ describe(executeTransactionLegacy, () => {
             provider: provider as providers.Provider,
             signerManager,
             viemClient,
+            isRemoveDelegation: false,
           }),
           throwError(new Error('Something went wrong with nonce')),
         ],
@@ -259,6 +261,7 @@ describe(executeTransactionLegacy, () => {
             provider: mockProvider,
             signerManager,
             viemClient,
+            isRemoveDelegation: false,
           }),
           { transactionResponse: txResponse, populatedRequest: { ...request, nonce: mockNonce } },
         ],
@@ -270,6 +273,7 @@ describe(executeTransactionLegacy, () => {
         provider: mockProvider,
         signerManager,
         viemClient,
+        isRemoveDelegation: false,
       })
       .silentRun()
   })

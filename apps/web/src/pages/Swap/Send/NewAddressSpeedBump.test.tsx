@@ -19,19 +19,19 @@ const mockSendContext: SendContextType = {
       address: '0x9984b4b4E408e8D618A879e5315BD30952c89103',
     },
   },
-  setSendState: jest.fn(),
+  setSendState: vi.fn(),
 }
 
-jest.mock('uniswap/src/features/gating/hooks', () => {
+vi.mock('uniswap/src/features/gating/hooks', () => {
   return {
-    useFeatureFlag: jest.fn(),
+    useFeatureFlag: vi.fn(),
   }
 })
 
 describe('NewAddressSpeedBumpModal', () => {
   it('should not render identicon if account has no ENS avatar/unitag pp', () => {
-    const mockOnCancel = jest.fn()
-    const mockOnConfirm = jest.fn()
+    const mockOnCancel = vi.fn()
+    const mockOnConfirm = vi.fn()
     render(
       <SendContext.Provider value={mockSendContext}>
         <NewAddressSpeedBumpModal isOpen onDismiss={mockOnCancel} onConfirm={mockOnConfirm} />

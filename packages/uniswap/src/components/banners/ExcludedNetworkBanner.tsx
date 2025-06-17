@@ -18,8 +18,8 @@ export const ExcludedNetworkBanner = memo(function ExcludedNetworkBanner({
   const chainInfo = chainIds.length === 1 && chainIds[0] !== undefined ? getChainInfo(chainIds[0]) : null
 
   const titleText = chainInfo
-    ? t('smartWallet.InsufficientFunds.single.network.banner.title', { chain: chainInfo.name })
-    : t('smartWallet.InsufficientFunds.network.banner.title', { count: chainIds.length })
+    ? t('smartWallet.insufficientFunds.single.network.banner.title', { chain: chainInfo.name })
+    : t('smartWallet.insufficientFunds.network.banner.title', { count: chainIds.length })
 
   return (
     <Flex grow backgroundColor="$statusCritical2" borderRadius="$rounded16" flexDirection="row" p="$spacing12">
@@ -31,7 +31,7 @@ export const ExcludedNetworkBanner = memo(function ExcludedNetworkBanner({
           </Text>
           <Flex row alignItems="center" gap="$gap8" minHeight={spacing.spacing20}>
             <Text ellipsizeMode="tail" numberOfLines={1} variant="body4" color="$neutral2">
-              {t('smartWallet.InsufficientFunds.network.banner.description')}
+              {t('smartWallet.insufficientFunds.network.banner.description')}
             </Text>
           </Flex>
         </Flex>

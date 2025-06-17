@@ -6,6 +6,12 @@ import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient
 import { authActions, authReducer, authSaga, authSagaName } from 'wallet/src/features/auth/saga'
 import { deviceLocaleWatcher } from 'wallet/src/features/i18n/deviceLocaleWatcherSaga'
 import { initProviders } from 'wallet/src/features/providers/saga'
+import {
+  removeDelegationActions,
+  removeDelegationReducer,
+  removeDelegationSaga,
+  removeDelegationSagaName,
+} from 'wallet/src/features/smartWallet/sagas/removeDelegationSaga'
 import { swapActions, swapReducer, swapSaga, swapSagaName } from 'wallet/src/features/transactions/swap/swapSaga'
 import {
   tokenWrapActions,
@@ -60,6 +66,12 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     wrappedSaga: tokenWrapSaga,
     reducer: tokenWrapReducer,
     actions: tokenWrapActions,
+  },
+  [removeDelegationSagaName]: {
+    name: removeDelegationSagaName,
+    wrappedSaga: removeDelegationSaga,
+    reducer: removeDelegationReducer,
+    actions: removeDelegationActions,
   },
 } as const
 

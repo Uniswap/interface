@@ -19,6 +19,7 @@ import { useInterval } from 'utilities/src/time/timing'
 import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from 'wallet/src/features/activity/utils'
 import { ApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
 import { BridgeSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/BridgeSummaryItem'
+import { LiquiditySummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/LiquiditySummaryItem'
 import { NFTApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTApproveSummaryItem'
 import { NFTMintSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'
 import { NFTTradeSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTTradeSummaryItem'
@@ -40,12 +41,17 @@ const MAX_SHOW_RETRY_TIME = 15 * ONE_MINUTE_MS
 export type ActivityItem = TransactionDetails | SectionHeader | LoadingItem
 export type ActivityItemRenderer = ({ item, index }: { item: ActivityItem; index: number }) => JSX.Element
 
-export function generateActivityItemRenderer(
-  loadingItem: JSX.Element,
-  sectionHeaderElement: React.FunctionComponent<{ title: string; index?: number }>,
-  swapCallbacks: SwapSummaryCallbacks | undefined,
-  authTrigger: ((args: { successCallback: () => void; failureCallback: () => void }) => Promise<void>) | undefined,
-): ActivityItemRenderer {
+export function generateActivityItemRenderer({
+  loadingItem,
+  sectionHeaderElement,
+  swapCallbacks,
+  authTrigger,
+}: {
+  loadingItem: JSX.Element
+  sectionHeaderElement: React.FunctionComponent<{ title: string; index?: number }>
+  swapCallbacks: SwapSummaryCallbacks | undefined
+  authTrigger: ((args: { successCallback: () => void; failureCallback: () => void }) => Promise<void>) | undefined
+}): ActivityItemRenderer {
   return function ActivityItemComponent({ item, index }: { item: ActivityItem; index: number }): JSX.Element {
     // if it's a loading item, render the loading placeholder
     if (isLoadingItem(item)) {
@@ -94,6 +100,13 @@ export function generateActivityItemRenderer(
         break
       case TransactionType.Wrap:
         SummaryItem = WrapSummaryItem
+        break
+      case TransactionType.Claim:
+      case TransactionType.CreatePair:
+      case TransactionType.CreatePool:
+      case TransactionType.LiquidityIncrease:
+      case TransactionType.LiquidityDecrease:
+        SummaryItem = LiquiditySummaryItem
         break
       default:
         SummaryItem = UnknownSummaryItem
@@ -276,6 +289,46 @@ function getTransactionTypeVerbs(
         canceled: t('transaction.status.sale.canceled'), // Offramp transactions are not cancellable
       }
     }
+    case TransactionType.LiquidityIncrease:
+      return {
+        success: t('transaction.status.liquidityIncrease.success'),
+        pending: t('transaction.status.liquidityIncrease.pending'),
+        failed: t('transaction.status.liquidityIncrease.failed'),
+        canceling: t('transaction.status.liquidityIncrease.canceling'),
+        canceled: t('transaction.status.liquidityIncrease.canceled'),
+      }
+    case TransactionType.LiquidityDecrease:
+      return {
+        success: t('transaction.status.liquidityDecrease.success'),
+        pending: t('transaction.status.liquidityDecrease.pending'),
+        failed: t('transaction.status.liquidityDecrease.failed'),
+        canceling: t('transaction.status.liquidityDecrease.canceling'),
+        canceled: t('transaction.status.liquidityDecrease.canceled'),
+      }
+    case TransactionType.Claim:
+      return {
+        success: t('transaction.status.claim.success'),
+        pending: t('transaction.status.claim.pending'),
+        failed: t('transaction.status.claim.failed'),
+        canceling: t('transaction.status.claim.canceling'),
+        canceled: t('transaction.status.claim.canceled'),
+      }
+    case TransactionType.CreatePair:
+      return {
+        success: t('transaction.status.createPair.success'),
+        pending: t('transaction.status.createPair.pending'),
+        failed: t('transaction.status.createPair.failed'),
+        canceling: t('transaction.status.createPair.canceling'),
+        canceled: t('transaction.status.createPair.canceled'),
+      }
+    case TransactionType.CreatePool:
+      return {
+        success: t('transaction.status.createPool.success'),
+        pending: t('transaction.status.createPool.pending'),
+        failed: t('transaction.status.createPool.failed'),
+        canceling: t('transaction.status.createPool.canceling'),
+        canceled: t('transaction.status.createPool.canceled'),
+      }
     case TransactionType.Unknown:
     case TransactionType.WCConfirm:
     default:
@@ -348,11 +401,11 @@ export function useOnRetrySwap(
   swapCallbacks: SwapSummaryCallbacks | undefined,
 ): (() => void) | undefined {
   // For retrying failed, locally submitted swaps
-  const swapFormState = swapCallbacks?.useSwapFormTransactionState(
-    transaction.from,
-    transaction.chainId,
-    transaction.id,
-  )
+  const swapFormState = swapCallbacks?.useSwapFormTransactionState({
+    address: transaction.from,
+    chainId: transaction.chainId,
+    txId: transaction.id,
+  })
 
   const latestSwapTx = swapCallbacks?.useLatestSwapTransaction(transaction.from)
   const isTheLatestSwap = latestSwapTx && latestSwapTx.id === transaction.id

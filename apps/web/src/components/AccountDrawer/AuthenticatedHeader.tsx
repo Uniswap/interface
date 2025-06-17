@@ -1,5 +1,4 @@
 import { NetworkStatus } from '@apollo/client'
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
 import { ActionTile } from 'components/AccountDrawer/ActionTile'
@@ -22,6 +21,7 @@ import { useIsUniExtensionConnected } from 'hooks/useIsUniExtensionConnected'
 import { useModalState } from 'hooks/useModalState'
 import { useSignOutWithPasskey } from 'hooks/useSignOutWithPasskey'
 import { useAtom } from 'jotai'
+import { SendFormModal } from 'pages/Swap/Send/SendFormModal'
 import { useCallback, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -30,7 +30,7 @@ import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/ho
 import { CopyHelper } from 'theme/components/CopyHelper'
 import { Button, Flex, Text } from 'ui/src'
 import { ArrowDownCircleFilled } from 'ui/src/components/icons/ArrowDownCircleFilled'
-import { Bank } from 'ui/src/components/icons/Bank'
+import { SendAction } from 'ui/src/components/icons/SendAction'
 import { Shine } from 'ui/src/loading/Shine'
 import AnimatedNumber, {
   BALANCE_CHANGE_INDICATION_DURATION,
@@ -49,14 +49,13 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { useHasAccountMismatchOnAnyChain } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import { isPathBlocked } from 'utils/blockedPaths'
 
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
   const { disconnect } = useDisconnect()
@@ -66,7 +65,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
 
   const [modalState, setModalState] = useAtom(miniPortfolioModalStateAtom)
 
-  const shouldShowBuyFiatButton = !isPathBlocked('/buy')
   const isUniExtensionConnected = useIsUniExtensionConnected()
   const { isTestnetModeEnabled } = useEnabledChains()
   const connectedAccount = useAccount()
@@ -99,6 +97,11 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const openAddressQRModal = useEvent(() => setModalState(ModalState.QR_CODE))
   const openCEXTransferModal = useEvent(() => setModalState(ModalState.CEX_TRANSFER))
   const openReceiveCryptoModal = useEvent(() => setModalState(ModalState.DEFAULT))
+  const {
+    isOpen: isSendFormModalOpen,
+    openModal: openSendFormModal,
+    closeModal: closeSendFormModal,
+  } = useModalState(ModalName.Send)
 
   const { data, networkStatus, loading } = usePortfolioTotalValue({
     address: account,
@@ -146,7 +149,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             />
             <Trace
               logPress
-              element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}
+              element={ElementName.DisconnectWalletButton}
               properties={{ connector_id: connectedAccount.connector?.id }}
             >
               <IconWithConfirmTextButton
@@ -214,14 +217,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               ) : (
                 <>
                   <Flex row gap="$gap8">
-                    {shouldShowBuyFiatButton && (
-                      <ActionTile
-                        dataTestId={TestID.WalletBuyCrypto}
-                        Icon={<Bank size={24} color="$accent1" />}
-                        name={t('common.buy.label')}
-                        onClick={handleBuyCryptoClick}
-                      />
-                    )}
+                    <ActionTile
+                      dataTestId={TestID.Send}
+                      Icon={<SendAction size={24} color="$accent1" />}
+                      name={t('common.send.button')}
+                      onClick={openSendFormModal}
+                    />
                     <ActionTile
                       dataTestId={TestID.WalletReceiveCrypto}
                       Icon={<ArrowDownCircleFilled size={24} color="$accent1" />}
@@ -248,6 +249,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         </Flex>
       </Flex>
       {modalState !== undefined && <ReceiveCryptoModal />}
+      {isSendFormModalOpen && <SendFormModal isModalOpen={isSendFormModalOpen} onClose={closeSendFormModal} />}
       {displayDelegationMismatchModal && (
         <DelegationMismatchModal onClose={() => setDisplayDelegationMismatchModal(false)} />
       )}

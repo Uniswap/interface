@@ -20,7 +20,10 @@ export function useWalletSearchResults(
   exactUnitagMatch: boolean
 } {
   const { defaultChainId } = useEnabledChains()
-  const validAddress: Address | undefined = useMemo(() => getValidAddress(query, true, false) ?? undefined, [query])
+  const validAddress: Address | undefined = useMemo(
+    () => getValidAddress({ address: query, withChecksum: true, log: false }) ?? undefined,
+    [query],
+  )
 
   const querySkippedIfValidAddress = validAddress ? null : query
 
@@ -64,7 +67,7 @@ export function useWalletSearchResults(
 
   // Prioritize unitags
 
-  if (unitagByName?.address?.address && unitagByName?.username) {
+  if (unitagByName?.address?.address && unitagByName.username) {
     results.push({
       type: SearchResultType.Unitag,
       address: unitagByName.address.address,
@@ -82,7 +85,7 @@ export function useWalletSearchResults(
   const nameMatch = unitagByAddress?.username && query.startsWith(unitagByAddress.username)
   const addressOrNameMatch = addressMatch || (nameMatch && showUnitagOverEns)
   const showUnitagByAddress =
-    !unitagByName?.address?.address && unitagByAddress?.address && unitagByAddress?.username && addressOrNameMatch
+    !unitagByName?.address?.address && unitagByAddress?.address && unitagByAddress.username && addressOrNameMatch
   if (showUnitagByAddress) {
     results.push({
       type: SearchResultType.Unitag,

@@ -13,11 +13,15 @@ import { useBalance, useReadContracts } from 'wagmi'
 /**
  * Returns a map of token addresses to their eventually consistent token balances for a single account.
  */
-export function useRpcTokenBalancesWithLoadingIndicator(
-  address?: string,
-  tokens?: (Token | undefined)[],
-  skip?: boolean,
-): [{ [tokenAddress: string]: CurrencyAmount<Token> | undefined }, boolean] {
+export function useRpcTokenBalancesWithLoadingIndicator({
+  address,
+  tokens,
+  skip,
+}: {
+  address?: string
+  tokens?: (Token | undefined)[]
+  skip?: boolean
+}): [{ [tokenAddress: string]: CurrencyAmount<Token> | undefined }, boolean] {
   const { chainId } = useAccount()
   const validatedTokens: Token[] = useMemo(
     () =>
@@ -48,7 +52,8 @@ export function useRpcTokenBalancesWithLoadingIndicator(
   return useMemo(
     () => [
       address && validatedTokens.length > 0
-        ? validatedTokens.reduce<{ [tokenAddress: string]: CurrencyAmount<Token> | undefined }>((memo, token, i) => {
+        ? // eslint-disable-next-line max-params
+          validatedTokens.reduce<{ [tokenAddress: string]: CurrencyAmount<Token> | undefined }>((memo, token, i) => {
             const value = data?.[i].result
             if (!value) {
               return memo
@@ -71,7 +76,7 @@ function useRpcTokenBalances(
   address?: string,
   tokens?: (Token | undefined)[],
 ): { [tokenAddress: string]: CurrencyAmount<Token> | undefined } {
-  return useRpcTokenBalancesWithLoadingIndicator(address, tokens)[0]
+  return useRpcTokenBalancesWithLoadingIndicator({ address, tokens })[0]
 }
 
 function useRpcCurrencyBalances(
@@ -98,13 +103,14 @@ function useRpcCurrencyBalances(
         if (!account || !currency || currency.chainId !== chainId) {
           return undefined
         }
+
         if (currency.isToken) {
           return tokenBalances[currency.address]
-        }
-        if (currency.isNative && nativeBalance?.value) {
+        } else if (nativeBalance?.value) {
           return CurrencyAmount.fromRawAmount(currency, nativeBalance.value.toString())
+        } else {
+          return undefined
         }
-        return undefined
       }) ?? [],
     [account, chainId, currencies, nativeBalance?.value, tokenBalances],
   )
@@ -134,6 +140,7 @@ function useGqlCurrencyBalances(
       const key = currencyKey(currency)
       const balance = balanceMap[key]
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (balance) {
         const currencyAmount = getCurrencyAmount({
           value: balance.balance.toString(),

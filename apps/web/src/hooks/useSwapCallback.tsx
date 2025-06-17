@@ -45,12 +45,17 @@ function getUniversalRouterFeeFields(trade?: InterfaceTrade): UniversalRouterFee
 
 // Returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
-export function useSwapCallback(
-  trade: InterfaceTrade | undefined, // trade to execute, required
-  fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }, // usd values for amount in and out, and the fee value, logged for analytics
-  allowedSlippage: Percent, // in bips
-  permitSignature: PermitSignature | undefined,
-) {
+export function useSwapCallback({
+  trade,
+  fiatValues,
+  allowedSlippage,
+  permitSignature,
+}: {
+  trade?: InterfaceTrade // trade to execute
+  fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number } // usd values for amount in and out, and the fee value, logged for analytics
+  allowedSlippage: Percent // in bips
+  permitSignature?: PermitSignature
+}) {
   const addTransaction = useTransactionAdder()
   const addOrder = useAddOrder()
   const account = useAccount()
@@ -63,15 +68,15 @@ export function useSwapCallback(
     fiatValues,
   })
 
-  const universalRouterSwapCallback = useUniversalRouterSwapCallback(
-    isClassicTrade(trade) ? trade : undefined,
+  const universalRouterSwapCallback = useUniversalRouterSwapCallback({
+    trade: isClassicTrade(trade) ? trade : undefined,
     fiatValues,
-    {
+    options: {
       slippageTolerance: allowedSlippage,
       permit: permitSignature,
       ...getUniversalRouterFeeFields(trade),
     },
-  )
+  })
 
   const selectChain = useSelectChain()
   const swapCallback = isUniswapXTrade(trade) ? uniswapXSwapCallback : universalRouterSwapCallback
@@ -114,15 +119,15 @@ export function useSwapCallback(
     switch (result.type) {
       case TradeFillType.UniswapX:
       case TradeFillType.UniswapXv2:
-        addOrder(
-          account.address,
-          result.response.orderHash,
-          supportedConnectedChainId as UniverseChainId, // satisfies type-checker; already checked & switched chain above if !supportedConnectedChainId
-          result.response.deadline,
-          swapInfo as UniswapXOrderDetails['swapInfo'],
-          result.response.encodedOrder,
-          isUniswapXTrade(trade) ? trade.offchainOrderType : OffchainOrderType.DUTCH_AUCTION, // satisfying type-checker; isUniswapXTrade should always be true
-        )
+        addOrder({
+          offerer: account.address,
+          orderHash: result.response.orderHash,
+          chainId: supportedConnectedChainId as UniverseChainId, // satisfies type-checker; already checked & switched chain above if !supportedConnectedChainId
+          expiry: result.response.deadline,
+          swapInfo: swapInfo as UniswapXOrderDetails['swapInfo'],
+          encodedOrder: result.response.encodedOrder,
+          offchainOrderType: isUniswapXTrade(trade) ? trade.offchainOrderType : OffchainOrderType.DUTCH_AUCTION, // satisfying type-checker; isUniswapXTrade should always be true
+        })
         break
       default:
         addTransaction(result.response, swapInfo, result.deadline?.toNumber())

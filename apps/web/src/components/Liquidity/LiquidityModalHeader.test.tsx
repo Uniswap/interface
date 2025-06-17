@@ -6,7 +6,7 @@ import { TransactionSettingKey } from 'uniswap/src/features/transactions/compone
 
 describe('LiquidityModalHeader', () => {
   it('should render with given title and call close callback', () => {
-    const onClose = jest.fn()
+    const onClose = vi.fn()
     const { getByText, getByTestId } = render(
       <WebUniswapProvider>
         <TransactionSettingsContextProvider settingKey={TransactionSettingKey.Swap}>

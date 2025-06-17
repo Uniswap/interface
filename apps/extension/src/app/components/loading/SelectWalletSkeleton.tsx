@@ -5,6 +5,7 @@ import { WALLET_PREVIEW_CARD_MIN_HEIGHT } from 'wallet/src/components/WalletPrev
 export function SelectWalletsSkeleton({ repeat = 3 }: { repeat?: number }): JSX.Element {
   return (
     <Flex fill gap="$spacing12">
+      {/* eslint-disable-next-line max-params */}
       {new Array(repeat).fill(null).map((_, i, { length }) => (
         <WalletSkeleton key={i} opacity={(length - i) / length} />
       ))}

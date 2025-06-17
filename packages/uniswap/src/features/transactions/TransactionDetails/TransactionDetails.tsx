@@ -1,4 +1,3 @@
-import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -8,6 +7,7 @@ import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExpectedFailureBanner } from 'uniswap/src/features/transactions/TransactionDetails/ExpectedFailureBanner'
 import { FeeOnTransferFeeGroup } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
@@ -21,9 +21,9 @@ import {
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
-import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippageUpdate/SlippageUpdate'
+import { EstimatedTime } from 'uniswap/src/features/transactions/swap/components/EstimatedTime'
+import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippageUpdate/SlippageUpdate'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
-import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isInterface } from 'utilities/src/platform'
@@ -97,7 +97,7 @@ export function TransactionDetails({
 
   const onPressToggleShowChildren = (): void => {
     if (!showChildren) {
-      sendAnalyticsEvent(SwapEventName.SWAP_DETAILS_EXPANDED)
+      sendAnalyticsEvent(SwapEventName.SwapDetailsExpanded)
     }
     setShowChildren(!showChildren)
   }

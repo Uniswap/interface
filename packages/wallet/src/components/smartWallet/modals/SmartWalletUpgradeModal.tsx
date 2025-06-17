@@ -15,6 +15,7 @@ import {
 import { setHasDismissedSmartWalletHomeScreenNudge } from 'wallet/src/features/behaviorHistory/slice'
 import { SmartWalletModal } from 'wallet/src/features/smartWallet/modals/SmartWalletModal'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 const IMAGE_FALLBACK_HEIGHT = 200
 
@@ -33,6 +34,7 @@ export function SmartWalletUpgradeModals({
   const dispatch = useDispatch()
   const { status: delegationStatus } = useSmartWalletDelegationStatus({ isSmartWalletUpgradeModal: true })
   const [showModal, setShowModal] = useState(true)
+  const selectedWalletDisplayName = useDisplayName(account.address, { includeUnitagSuffix: true })
 
   useEffect(() => {
     if (delegationStatus !== SmartWalletDelegationAction.None) {
@@ -47,51 +49,47 @@ export function SmartWalletUpgradeModals({
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element: ElementName.SmartWalletNotNow })
   }
 
-  if (delegationStatus === SmartWalletDelegationAction.None) {
-    return null
-  }
-
-  if (delegationStatus === SmartWalletDelegationAction.ShowConflict) {
-    return (
-      <SmartWalletUnavailableModal
-        isOpen={showModal}
-        onClose={() => {
-          handleSmartWalletDismiss()
-        }}
-      />
-    )
-  }
-
   const handleEnableSmartWalletClick = (): void => {
     onEnableSmartWallet(() => setShowModal(false))
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element: ElementName.SmartWalletEnabled })
   }
 
-  if (delegationStatus === SmartWalletDelegationAction.PromptUpgrade) {
-    return (
-      <SmartWalletModal
-        hideHandlebar
-        isOpen={showModal}
-        video={video}
-        icon={
-          <Flex width="100%" borderRadius="$rounded12" overflow="hidden">
-            <Image height={IMAGE_FALLBACK_HEIGHT} source={SMART_WALLET_UPGRADE_FALLBACK} maxWidth="100%" />
-          </Flex>
-        }
-        title={t('delegation.upgradeModal.title')}
-        subtext={t('delegation.upgradeModal.description')}
-        primaryButtonText={t('delegation.upgradeModal.enableSmartWallet')}
-        primaryButtonOnClick={handleEnableSmartWalletClick}
-        secondaryButtonText={t('common.button.later')}
-        secondaryButtonEmphasis="text-only"
-        secondaryButtonOnClick={handleSmartWalletDismiss}
-        learnMoreUrl={uniswapUrls.helpArticleUrls.smartWalletDelegation}
-        modalName={ModalName.SmartWalletUpgradeModal}
-        isDismissible={false}
-        onClose={handleSmartWalletDismiss}
-      />
-    )
+  switch (delegationStatus) {
+    case SmartWalletDelegationAction.None:
+      return null
+    case SmartWalletDelegationAction.ShowConflict:
+      return (
+        <SmartWalletUnavailableModal
+          isOpen={showModal}
+          displayName={selectedWalletDisplayName?.name || account.address}
+          onClose={() => {
+            handleSmartWalletDismiss()
+          }}
+        />
+      )
+    case SmartWalletDelegationAction.PromptUpgrade:
+      return (
+        <SmartWalletModal
+          hideHandlebar
+          isOpen={showModal}
+          video={video}
+          icon={
+            <Flex width="100%" borderRadius="$rounded12" overflow="hidden">
+              <Image height={IMAGE_FALLBACK_HEIGHT} source={SMART_WALLET_UPGRADE_FALLBACK} maxWidth="100%" />
+            </Flex>
+          }
+          title={t('delegation.upgradeModal.title')}
+          subtext={t('delegation.upgradeModal.description')}
+          primaryButtonText={t('delegation.upgradeModal.enableSmartWallet')}
+          primaryButtonOnClick={handleEnableSmartWalletClick}
+          secondaryButtonText={t('common.button.later')}
+          secondaryButtonEmphasis="text-only"
+          secondaryButtonOnClick={handleSmartWalletDismiss}
+          learnMoreUrl={uniswapUrls.helpArticleUrls.smartWalletDelegation}
+          modalName={ModalName.SmartWalletUpgradeModal}
+          isDismissible={false}
+          onClose={handleSmartWalletDismiss}
+        />
+      )
   }
-
-  return null
 }

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TDP Skeleton should render correctly 1`] = `
+exports[`TDP Skeleton > should render correctly 1`] = `
 <DocumentFragment>
   .c4 {
   box-sizing: border-box;
@@ -236,9 +236,8 @@ exports[`TDP Skeleton should render correctly 1`] = `
             style="text-decoration: none;"
           >
             <span
-              class="font_unset  font_body "
+              class="font_body _textDecoration-_platformweb_none _color-0hover-neutral2Hov3121676 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _display-flex _alignItems-center"
               data-disable-theme="true"
-              style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; word-wrap: break-word; display: flex; align-items: center; text-decoration: none; color: rgba(19, 19, 19, 0.63); font-size: 16px; line-height: 20.8px; font-weight: 485;"
             >
               Explore 
               <svg
@@ -263,9 +262,8 @@ exports[`TDP Skeleton should render correctly 1`] = `
             style="text-decoration: none;"
           >
             <span
-              class="font_unset  font_body "
+              class="font_body _textDecoration-_platformweb_none _color-0hover-neutral2Hov3121676 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _display-flex _alignItems-center"
               data-disable-theme="true"
-              style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; word-wrap: break-word; display: flex; align-items: center; text-decoration: none; color: rgba(19, 19, 19, 0.63); font-size: 16px; line-height: 20.8px; font-weight: 485;"
             >
               Tokens 
               <svg
@@ -307,7 +305,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
           </div>
         </div>
         <div
-          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; justify-content: space-between; align-items: center; gap: 20px; padding-top: 8px; margin-bottom: 20px; z-index: 1;"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-gap1598 _pt-t-space-pad95589114 _mb-t-space-spa1360334051 _zIndex-t-zIndex-de97204770"
         >
           <div
             class="_flexDirection-_md_column _alignItems-_md_flex-start _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _pt-t-space-spa94665589 _minWidth-32px"
@@ -1022,7 +1020,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
 </DocumentFragment>
 `;
 
-exports[`getLoadingTitle should return correct title 1`] = `
+exports[`getLoadingTitle > should return correct title 1`] = `
 <DocumentFragment>
   <span
     class=""

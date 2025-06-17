@@ -57,10 +57,12 @@ test.describe('Errors', () => {
 
       const poolContent = await anvil.getTxpoolContent()
       const currentTransaction = Object.entries(
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         poolContent.pending[TEST_WALLET_ADDRESS.toLowerCase() as `0x${string}`] ?? {},
-      )?.[0]
+      )[0]
 
-      hash = currentTransaction?.[1]?.hash
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      hash = currentTransaction[1]?.hash
     }
 
     await anvil.dropTransaction({

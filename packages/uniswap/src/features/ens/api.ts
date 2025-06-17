@@ -44,7 +44,15 @@ async function getAvatarFetch(address: string, provider: providers.JsonRpcProvid
   return checkedName ? await provider.getAvatar(checkedName) : null
 }
 
-async function getTextFetch(key: string, name: string, provider: providers.JsonRpcProvider) {
+async function getTextFetch({
+  key,
+  name,
+  provider,
+}: {
+  key: string
+  name: string
+  provider: providers.JsonRpcProvider
+}) {
   const resolver = await provider.getResolver(name)
   const text = resolver?.getText(key)
   return text ?? null
@@ -53,7 +61,7 @@ async function getTextFetch(key: string, name: string, provider: providers.JsonR
 async function getOnChainEnsFetch(params: EnsLookupParams): Promise<string | null> {
   const { type, nameOrAddress } = params
 
-  const provider = createEthersProvider(UniverseChainId.Mainnet)
+  const provider = createEthersProvider({ chainId: UniverseChainId.Mainnet })
 
   if (!provider) {
     return null
@@ -67,9 +75,9 @@ async function getOnChainEnsFetch(params: EnsLookupParams): Promise<string | nul
     case EnsLookupType.Avatar:
       return await getAvatarFetch(nameOrAddress, provider)
     case EnsLookupType.Description:
-      return await getTextFetch('description', nameOrAddress, provider)
+      return await getTextFetch({ key: 'description', name: nameOrAddress, provider })
     case EnsLookupType.TwitterUsername:
-      return await getTextFetch('com.twitter', nameOrAddress, provider)
+      return await getTextFetch({ key: 'com.twitter', name: nameOrAddress, provider })
     default:
       throw new Error(`Invalid ENS lookup type: ${type}`)
   }

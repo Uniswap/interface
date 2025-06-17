@@ -17,7 +17,7 @@ describe('safeNamehash', () => {
   // suppress console.debug for the next test
   beforeEach(() => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    jest.spyOn(console, 'info').mockImplementation(() => {})
+    vi.spyOn(console, 'info').mockImplementation(() => {})
   })
 
   it('namehash does not work', () => {

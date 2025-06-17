@@ -67,81 +67,145 @@ export function useExperimentValue<
   Exp extends keyof ExperimentProperties,
   Param extends ExperimentProperties[Exp],
   ValType,
->(experiment: Exp, param: Param, defaultValue: ValType, customTypeGuard?: (x: unknown) => x is ValType): ValType {
+>({
+  experiment,
+  param,
+  defaultValue,
+  customTypeGuard,
+}: {
+  experiment: Exp
+  param: Param
+  defaultValue: ValType
+  customTypeGuard?: (x: unknown) => x is ValType
+}): ValType {
   const statsigExperiment = useExperiment(experiment)
   const value = statsigExperiment.get(param, defaultValue)
-  return checkTypeGuard(value, defaultValue, customTypeGuard)
+  return checkTypeGuard({ value, defaultValue, customTypeGuard })
 }
 
 export function getExperimentValue<
   Exp extends keyof ExperimentProperties,
   Param extends ExperimentProperties[Exp],
   ValType,
->(experiment: Exp, param: Param, defaultValue: ValType, customTypeGuard?: (x: unknown) => x is ValType): ValType {
+>({
+  experiment,
+  param,
+  defaultValue,
+  customTypeGuard,
+}: {
+  experiment: Exp
+  param: Param
+  defaultValue: ValType
+  customTypeGuard?: (x: unknown) => x is ValType
+}): ValType {
   const statsigExperiment = getStatsigClient().getExperiment(experiment)
   const value = statsigExperiment.get(param, defaultValue)
-  return checkTypeGuard(value, defaultValue, customTypeGuard)
+  return checkTypeGuard({ value, defaultValue, customTypeGuard })
 }
 
 export function useExperimentValueWithExposureLoggingDisabled<
   Exp extends keyof ExperimentProperties,
   Param extends ExperimentProperties[Exp],
   ValType,
->(experiment: Exp, param: Param, defaultValue: ValType, customTypeGuard?: (x: unknown) => x is ValType): ValType {
+>({
+  experiment,
+  param,
+  defaultValue,
+  customTypeGuard,
+}: {
+  experiment: Exp
+  param: Param
+  defaultValue: ValType
+  customTypeGuard?: (x: unknown) => x is ValType
+}): ValType {
   const statsigExperiment = useExperiment(experiment, { disableExposureLog: true })
   const value = statsigExperiment.get(param, defaultValue)
-  return checkTypeGuard(value, defaultValue, customTypeGuard)
+  return checkTypeGuard({ value, defaultValue, customTypeGuard })
 }
 
 export function useDynamicConfigValue<
   Conf extends keyof DynamicConfigKeys,
   Key extends DynamicConfigKeys[Conf],
   ValType,
->(config: Conf, key: Key, defaultValue: ValType, customTypeGuard?: (x: unknown) => x is ValType): ValType {
+>({
+  config,
+  key,
+  defaultValue,
+  customTypeGuard,
+}: {
+  config: Conf
+  key: Key
+  defaultValue: ValType
+  customTypeGuard?: (x: unknown) => x is ValType
+}): ValType {
   const dynamicConfig = useDynamicConfig(config)
   const value = dynamicConfig.get(key, defaultValue)
-  return checkTypeGuard(value, defaultValue, customTypeGuard)
+  return checkTypeGuard({ value, defaultValue, customTypeGuard })
 }
 
 export function getDynamicConfigValue<
   Conf extends keyof DynamicConfigKeys,
   Key extends DynamicConfigKeys[Conf],
   ValType,
->(config: Conf, key: Key, defaultValue: ValType, customTypeGuard?: (x: unknown) => x is ValType): ValType {
+>({
+  config,
+  key,
+  defaultValue,
+  customTypeGuard,
+}: {
+  config: Conf
+  key: Key
+  defaultValue: ValType
+  customTypeGuard?: (x: unknown) => x is ValType
+}): ValType {
   const dynamicConfig = getStatsigClient().getDynamicConfig(config)
   const value = dynamicConfig.get(key, defaultValue)
-  return checkTypeGuard(value, defaultValue, customTypeGuard)
+  return checkTypeGuard({ value, defaultValue, customTypeGuard })
 }
 
-export function getExperimentValueFromLayer<Layer extends string, Exp extends keyof ExperimentProperties, ValType>(
-  layerName: Layer,
-  param: ExperimentProperties[Exp],
-  defaultValue: ValType,
-  customTypeGuard?: (x: unknown) => x is ValType,
-): ValType {
+export function getExperimentValueFromLayer<Layer extends string, Exp extends keyof ExperimentProperties, ValType>({
+  layerName,
+  param,
+  defaultValue,
+  customTypeGuard,
+}: {
+  layerName: Layer
+  param: ExperimentProperties[Exp]
+  defaultValue: ValType
+  customTypeGuard?: (x: unknown) => x is ValType
+}): ValType {
   const layer = getStatsigClient().getLayer(layerName)
   const value = layer.get(param, defaultValue)
   // we directly get param from layer; these are spread from experiments
-  return checkTypeGuard(value, defaultValue, customTypeGuard)
+  return checkTypeGuard({ value, defaultValue, customTypeGuard })
 }
 
-export function useExperimentValueFromLayer<Layer extends string, Exp extends keyof ExperimentProperties, ValType>(
-  layerName: Layer,
-  param: ExperimentProperties[Exp],
-  defaultValue: ValType,
-  customTypeGuard?: (x: unknown) => x is ValType,
-): ValType {
+export function useExperimentValueFromLayer<Layer extends string, Exp extends keyof ExperimentProperties, ValType>({
+  layerName,
+  param,
+  defaultValue,
+  customTypeGuard,
+}: {
+  layerName: Layer
+  param: ExperimentProperties[Exp]
+  defaultValue: ValType
+  customTypeGuard?: (x: unknown) => x is ValType
+}): ValType {
   const layer = useLayer(layerName)
   const value = layer.get(param, defaultValue)
   // we directly get param from layer; these are spread from experiments
-  return checkTypeGuard(value, defaultValue, customTypeGuard)
+  return checkTypeGuard({ value, defaultValue, customTypeGuard })
 }
 
-export function checkTypeGuard<ValType>(
-  value: TypedReturn<ValType>,
-  defaultValue: ValType,
-  customTypeGuard?: (x: unknown) => x is ValType,
-): ValType {
+export function checkTypeGuard<ValType>({
+  value,
+  defaultValue,
+  customTypeGuard,
+}: {
+  value: TypedReturn<ValType>
+  defaultValue: ValType
+  customTypeGuard?: (x: unknown) => x is ValType
+}): ValType {
   const isOfDefaultValueType = (val: unknown): val is ValType => typeof val === typeof defaultValue
 
   if (customTypeGuard?.(value) || isOfDefaultValueType(value)) {

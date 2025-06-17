@@ -38,20 +38,18 @@ export function SwapSummaryItem({
     const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)
     const { currency: inputCurrency } = inputCurrencyInfo
     const { currency: outputCurrency } = outputCurrencyInfo
-    const currencyAmount = getFormattedCurrencyAmount(
-      inputCurrency,
-      inputCurrencyAmountRaw,
+    const currencyAmount = getFormattedCurrencyAmount({
+      currency: inputCurrency,
+      amount: inputCurrencyAmountRaw,
       formatter,
-      //** isApproximateAmount - input value and confirmed amount are both exact so this should be false **//
-      isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_OUTPUT,
-    )
-    const otherCurrencyAmount = getFormattedCurrencyAmount(
-      outputCurrency,
-      outputCurrencyAmountRaw,
+      isApproximateAmount: isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_OUTPUT,
+    })
+    const otherCurrencyAmount = getFormattedCurrencyAmount({
+      currency: outputCurrency,
+      amount: outputCurrencyAmountRaw,
       formatter,
-      //** isApproximateAmount - input value and confirmed amount are both exact so this should be false **//
-      isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_INPUT,
-    )
+      isApproximateAmount: isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_INPUT,
+    })
     return `${currencyAmount}${getSymbolDisplayText(
       inputCurrency.symbol,
     )} → ${otherCurrencyAmount}${getSymbolDisplayText(outputCurrency.symbol)}`

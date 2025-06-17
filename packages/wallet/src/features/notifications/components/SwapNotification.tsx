@@ -30,23 +30,23 @@ export function SwapNotification({
   const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
   const outputCurrencyInfo = useCurrencyInfo(outputCurrencyId)
 
-  const title = formSwapNotificationTitle(
+  const title = formSwapNotificationTitle({
     formatter,
     txStatus,
-    inputCurrencyInfo?.currency,
-    outputCurrencyInfo?.currency,
+    inputCurrency: inputCurrencyInfo?.currency,
+    outputCurrency: outputCurrencyInfo?.currency,
     inputCurrencyId,
     outputCurrencyId,
     inputCurrencyAmountRaw,
     outputCurrencyAmountRaw,
     tradeType,
-  )
+  })
 
   const { t } = useTranslation()
 
   const { navigateToAccountActivityList, navigateToSwapFlow } = useWalletNavigation()
 
-  const swapFormState = useCreateSwapFormState(address, chainId, txId)
+  const swapFormState = useCreateSwapFormState({ address, chainId, txId })
 
   const onRetry = (): void => {
     navigateToSwapFlow(swapFormState ? { initialState: swapFormState } : undefined)

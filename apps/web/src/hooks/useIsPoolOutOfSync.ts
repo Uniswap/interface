@@ -11,13 +11,13 @@ const DECIMAL_SCALAR = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 function useMarketPrice(baseCurrency?: Currency, quoteCurrency?: Currency) {
   const baseCurrencyUSDPrice = useUSDCValue(
     baseCurrency
-      ? CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(parseUnits('1', baseCurrency?.decimals)))
+      ? CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(parseUnits('1', baseCurrency.decimals)))
       : undefined,
   )
 
   const quoteCurrencyUSDPrice = useUSDCValue(
     quoteCurrency
-      ? CurrencyAmount.fromRawAmount(quoteCurrency, JSBI.BigInt(parseUnits('1', quoteCurrency?.decimals)))
+      ? CurrencyAmount.fromRawAmount(quoteCurrency, JSBI.BigInt(parseUnits('1', quoteCurrency.decimals)))
       : undefined,
   )
 
@@ -55,7 +55,7 @@ export function useIsPoolOutOfSync(poolPrice?: Price<Currency, Currency>) {
       .quote(
         CurrencyAmount.fromRawAmount(
           poolPrice.baseCurrency,
-          JSBI.BigInt(parseUnits('1', poolPrice.baseCurrency?.decimals)),
+          JSBI.BigInt(parseUnits('1', poolPrice.baseCurrency.decimals)),
         ),
       )
       .multiply(DECIMAL_SCALAR)

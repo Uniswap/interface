@@ -17,7 +17,12 @@ export function ApproveNotification({
 
   const currencyInfo = useCurrencyInfo(buildCurrencyId(chainId, tokenAddress))
 
-  const title = formApproveNotificationTitle(txStatus, currencyInfo?.currency, tokenAddress, spender)
+  const title = formApproveNotificationTitle({
+    txStatus,
+    currency: currencyInfo?.currency,
+    tokenAddress,
+    spender,
+  })
 
   const icon = (
     <LogoWithTxStatus

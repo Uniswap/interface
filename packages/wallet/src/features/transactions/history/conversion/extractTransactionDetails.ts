@@ -1,7 +1,7 @@
 import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { SpamCode } from 'uniswap/src/data/types'
-import { DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/chainInfo'
+import { DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import {
@@ -64,23 +64,22 @@ export default function extractTransactionDetails(
   // No match found, default to unknown.
   if (!typeInfo) {
     // If a parsing util returns undefined type info, we still want to check if its spam
-    const isSpam =
-      transaction.details.assetChanges?.some((change) => {
-        switch (change?.__typename) {
-          case 'NftTransfer':
-            return change.asset?.isSpam
-          case 'TokenTransfer':
-            return change.asset.project?.isSpam || change.asset.project?.spamCode === SpamCode.HIGH
-          default:
-            return false
-        }
-      }) ?? true
+    const isSpam = transaction.details.assetChanges.some((change) => {
+      switch (change?.__typename) {
+        case 'NftTransfer':
+          return change.asset.isSpam
+        case 'TokenTransfer':
+          return change.asset.project?.isSpam || change.asset.project?.spamCode === SpamCode.HIGH
+        default:
+          return false
+      }
+    })
 
     const dappInfo = transaction.details.application?.address
       ? {
-          name: transaction.details.application?.name,
-          address: transaction.details.application?.address,
-          icon: transaction.details.application?.icon?.url,
+          name: transaction.details.application.name,
+          address: transaction.details.application.address,
+          icon: transaction.details.application.icon?.url,
         }
       : undefined
     typeInfo = {
@@ -94,7 +93,7 @@ export default function extractTransactionDetails(
   const chainId = fromGraphQLChain(transaction.chain)
 
   const networkFee =
-    chainId && transaction.details.networkFee?.quantity && transaction.details.networkFee?.tokenSymbol
+    chainId && transaction.details.networkFee?.quantity && transaction.details.networkFee.tokenSymbol
       ? {
           quantity: transaction.details.networkFee.quantity,
           tokenSymbol: transaction.details.networkFee.tokenSymbol,

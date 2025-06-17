@@ -46,7 +46,7 @@ export default function NFTs({ account }: { account: string }) {
     )
   }
 
-  if (!walletAssets || walletAssets?.length === 0) {
+  if (!walletAssets || walletAssets.length === 0) {
     return <EmptyWalletModule onNavigateClick={accountDrawer.close} />
   }
 
@@ -56,18 +56,18 @@ export default function NFTs({ account }: { account: string }) {
         next={loadMore}
         hasMore={hasNext ?? false}
         loader={
-          Boolean(hasNext && walletAssets?.length) && (
+          Boolean(hasNext && walletAssets.length) && (
             <AssetsContainer>
               <LoadingAssets count={2} />
             </AssetsContainer>
           )
         }
-        dataLength={walletAssets?.length ?? 0}
+        dataLength={walletAssets.length}
         style={{ overflow: 'unset' }}
         scrollableTarget="wallet-dropdown-scroll-wrapper"
       >
         <AssetsContainer>
-          {walletAssets?.length
+          {walletAssets.length
             ? walletAssets.map((asset, index) => {
                 return (
                   <NFT

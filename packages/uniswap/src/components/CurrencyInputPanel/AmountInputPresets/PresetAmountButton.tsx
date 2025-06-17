@@ -4,16 +4,20 @@ import { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, TouchableAreaEvent } from 'ui/src'
 import { ButtonProps } from 'ui/src/components/buttons/Button/types'
-import { PRESET_MAX } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/constants'
-import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
+import type {
+  PresetPercentage,
+  PresetPercentageNumber,
+} from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
+import { isMaxPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/utils'
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { MaxBalanceInfoModal } from 'uniswap/src/features/transactions/modals/MaxBalanceInfoModal'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { useEvent } from 'utilities/src/react/hooks'
 
 /**
  * Returns the currency amount for the specified percentage of the passed in raw value.
@@ -27,7 +31,7 @@ function getPercentageOfCurrencyAmount({
 }: {
   currency: Maybe<Currency>
   rawBalanceAmount: Maybe<JSBI>
-  percent: PresetPercentage
+  percent: PresetPercentageNumber
   rawMaxAmount?: JSBI
 }): Maybe<CurrencyAmount<Currency>> {
   if (!rawBalanceAmount) {
@@ -36,10 +40,11 @@ function getPercentageOfCurrencyAmount({
 
   const rawPercentageValue = JSBI.divide(JSBI.multiply(rawBalanceAmount, JSBI.BigInt(percent)), JSBI.BigInt(100))
 
-  const amount = JSBI.GT(rawPercentageValue, rawMaxAmount) ? '0' : rawPercentageValue.toString()
+  // return the minimum of the rawMaxAmount and the rawPercantageValue to account for gas
+  const amount = JSBI.GT(rawPercentageValue, rawMaxAmount) ? rawMaxAmount : rawPercentageValue
 
   return getCurrencyAmount({
-    value: amount,
+    value: amount?.toString() ?? '0',
     valueType: ValueType.Raw,
     currency,
   })
@@ -50,8 +55,8 @@ interface PresetAmountButtonProps {
   currencyBalance: CurrencyAmount<Currency> | null | undefined
   onSetPresetValue: (amount: string, percentage: PresetPercentage) => void
   currencyField: CurrencyField
-  elementName?: ElementNameType
-  percentage?: PresetPercentage
+  elementName?: ElementName
+  percentage: PresetPercentage
   transactionType?: TransactionType
   buttonProps?: ButtonProps
 }
@@ -59,7 +64,7 @@ interface PresetAmountButtonProps {
 export function PresetAmountButton({
   currencyAmount,
   currencyBalance,
-  percentage = 100,
+  percentage,
   elementName,
   onSetPresetValue,
   currencyField,
@@ -74,7 +79,7 @@ export function PresetAmountButton({
     txType: transactionType,
   })
   const presetValueAmount = useMemo(() => {
-    if (percentage === 100) {
+    if (isMaxPercentage(percentage)) {
       return maxInputAmount
     }
 
@@ -90,31 +95,28 @@ export function PresetAmountButton({
   const disablePresetButton =
     !presetValueAmount ||
     !presetValueAmount.greaterThan(0) ||
-    (percentage === PRESET_MAX && currencyAmount?.toExact() === presetValueAmount.toExact())
+    (isMaxPercentage(percentage) && currencyAmount?.toExact() === presetValueAmount.toExact())
 
   const presetValueAmountRef = useRef(presetValueAmount)
   presetValueAmountRef.current = presetValueAmount
 
-  const onPress = useCallback(
-    (event: TouchableAreaEvent): void => {
-      event.stopPropagation()
+  const onPress = useEvent((event: TouchableAreaEvent): void => {
+    event.stopPropagation()
 
-      if (disablePresetButton) {
-        if (isNativeAsset) {
-          setIsShowingMaxNativeBalanceModal(true)
-        }
-        return
-      }
+    if (presetValueAmountRef.current) {
+      // We use `maxPresetAmountRef` instead of `maxPresetAmount` so that we can get the latest value
+      // and avoid this callback function having to depend on `maxPresetAmount` because that would mean
+      // it would recreate this function on every render (which would cause the button to re-render and ignore the `memo`).
+      onSetPresetValue(presetValueAmountRef.current.toExact(), percentage)
+    }
+  })
 
-      if (presetValueAmountRef.current) {
-        // We use `maxPresetAmountRef` instead of `maxPresetAmount` so that we can get the latest value
-        // and avoid this callback function having to depend on `maxPresetAmount` because that would mean
-        // it would recreate this function on every render (which would cause the button to re-render and ignore the `memo`).
-        onSetPresetValue(presetValueAmountRef.current.toExact(), percentage)
-      }
-    },
-    [disablePresetButton, onSetPresetValue, isNativeAsset, percentage],
-  )
+  const onDisabledPress = useEvent((event: TouchableAreaEvent): void => {
+    event.stopPropagation()
+    if (isNativeAsset) {
+      setIsShowingMaxNativeBalanceModal(true)
+    }
+  })
 
   // We split this out into 2 components so it can be efficiently memoized.
   return (
@@ -129,6 +131,7 @@ export function PresetAmountButton({
       setIsShowingMaxNativeBalanceModal={setIsShowingMaxNativeBalanceModal}
       {...buttonProps}
       onPress={onPress}
+      onDisabledPress={onDisabledPress}
     />
   )
 }
@@ -137,6 +140,7 @@ const PresetButtonContent = memo(function _PresetButtonContent({
   percentage,
   disabled,
   onPress,
+  onDisabledPress,
   currencyField,
   isShowingMaxNativeBalanceModal,
   isNativeAsset,
@@ -152,10 +156,11 @@ const PresetButtonContent = memo(function _PresetButtonContent({
   percentage: PresetPercentage
   disabled: boolean
   onPress: (event: TouchableAreaEvent) => void
+  onDisabledPress: (event: TouchableAreaEvent) => void
   currencyField: CurrencyField
   isShowingMaxNativeBalanceModal: boolean
   isNativeAsset: boolean
-  elementName?: ElementNameType
+  elementName?: ElementName
   currencySymbol?: string
   setIsShowingMaxNativeBalanceModal: (value: boolean) => void
 } & ButtonProps): JSX.Element {
@@ -165,7 +170,7 @@ const PresetButtonContent = memo(function _PresetButtonContent({
     setIsShowingMaxNativeBalanceModal(false)
   }, [setIsShowingMaxNativeBalanceModal])
 
-  const isMax = percentage === PRESET_MAX
+  const isMax = isMaxPercentage(percentage)
 
   return (
     <MaxBalanceInfoModal
@@ -200,6 +205,7 @@ const PresetButtonContent = memo(function _PresetButtonContent({
             scale: 1.02,
           }}
           onPress={onPress}
+          onDisabledPress={onDisabledPress}
           {...rest}
         >
           {isMax ? t('swap.button.max') : `${percentage}%`}

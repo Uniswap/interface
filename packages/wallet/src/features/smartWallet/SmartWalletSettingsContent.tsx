@@ -1,71 +1,42 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ElementAfterText, Flex, Text, TouchableArea } from 'ui/src'
-import { CloudSlash, QuestionInCircleFilled, Unitag } from 'ui/src/components/icons'
+import { useDispatch } from 'react-redux'
+import { Flex, ScrollView, Text, TouchableArea } from 'ui/src'
+import { CloudSlash, QuestionInCircleFilled, RoundExclamation } from 'ui/src/components/icons'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
+import { logger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { SmartWalletEducationalModal } from 'wallet/src/components/smartWallet/modals/SmartWalletEducationalModal'
 import { SmartWalletEnabledModal } from 'wallet/src/components/smartWallet/modals/SmartWalletEnabledModal'
 import { SmartWalletUnavailableModal } from 'wallet/src/components/smartWallet/modals/SmartWalletUnavailableModal'
+import { setHasDismissedSmartWalletHomeScreenNudge } from 'wallet/src/features/behaviorHistory/slice'
 import { SmartWalletDisableModal } from 'wallet/src/features/smartWallet/SmartWalletDisableModal'
+import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
+import { useNetworkBalances } from 'wallet/src/features/smartWallet/hooks/useNetworkBalances'
+import { useSmartWalletData } from 'wallet/src/features/smartWallet/hooks/useSmartWalletData'
 import { useTranslateSmartWalletStatus } from 'wallet/src/features/smartWallet/hooks/useTranslateSmartWalletStatus'
+import { SmartWalletActionRequiredModal } from 'wallet/src/features/smartWallet/modals/SmartWalletActionRequiredModal'
+import { SmartWalletConfirmDisableModal } from 'wallet/src/features/smartWallet/modals/SmartWalletConfirmDisableModal'
 import { WalletData, WalletStatus } from 'wallet/src/features/smartWallet/types'
+import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
 
-// TODO(WALL-6562): Replace with actual data from the state/API
-const mockWallets: WalletData[] = [
-  {
-    name: 'zack',
-    walletAddress: '0x1db6aD3344F1Ae0A495b28B031B80cDDd99f2FD0',
-    delegatorAddress: '0xB2cb3e92969828C2207367D9f4331a701B9464e6',
-    status: WalletStatus.Active,
-  },
-  {
-    name: 'fullylucid.eth',
-    walletAddress: '0xE42f1873e7111d6D91C79B5ae946902A5C47f08D',
-    delegatorAddress: '0xB2cb3e92969828C2207367D9f4331a701B9464e6',
-    status: WalletStatus.Active,
-  },
-  {
-    name: 'Wallet 2',
-    walletAddress: '0x5258E00Ece6E2c99575cfE7067e8674a90c5E5BF',
-    delegatorAddress: '0xB2cb3e92969828C2207367D9f4331a701B9464e6',
-    status: WalletStatus.Inactive,
-  },
-  {
-    name: 'Wallet 3',
-    walletAddress: '0xb3b62D6b12Ac281Fd93746981EFE4BF42F12Eb10',
-    delegatorAddress: '0xB2cb3e92969828C2207367D9f4331a701B9464e6',
-    status: WalletStatus.Inactive,
-  },
-  {
-    name: 'wowwow.eth',
-    walletAddress: '0xa7D4be42bE3300523C2E6f297DD0b0dDfac39EA8',
-    delegatorAddress: '0xB2cb3e92969828C2207367D9f4331a701B9464e6',
-    status: WalletStatus.Unavailable,
-  },
-]
-
-function WalletItem({
-  wallet,
-  setSelected,
-  handleEnableSmartWallet,
-  handleUnavailableWalletPress,
-}: {
-  wallet: WalletData
-  setSelected: (wallet: WalletData) => void
-  handleEnableSmartWallet: (wallet: WalletData) => void
-  handleUnavailableWalletPress: () => void
-}): JSX.Element {
+function WalletItem({ wallet, onPress }: { wallet: WalletData; onPress: (wallet: WalletData) => void }): JSX.Element {
   const { t } = useTranslation()
 
   const isInactive = wallet.status === WalletStatus.Inactive
   const isUnavailable = wallet.status === WalletStatus.Unavailable
-  const isActive = wallet.status === WalletStatus.Active
+
+  const onPressCallback = useCallback((): void => {
+    onPress(wallet)
+  }, [onPress, wallet])
 
   const actionIcon = useMemo(() => {
     if (isInactive) {
@@ -77,7 +48,7 @@ function WalletItem({
           backgroundColor="$accent2"
           height="$spacing36"
           px="$padding12"
-          onPress={() => handleEnableSmartWallet(wallet)}
+          onPress={onPressCallback}
         >
           <Text color="$accent1" variant="buttonLabel4">
             {t('settings.setting.smartWallet.action.enable')}
@@ -89,18 +60,10 @@ function WalletItem({
       return <CloudSlash size="$icon.20" color="$neutral3" />
     }
     return <RotatableChevron color="$neutral3" direction="right" height={iconSizes.icon20} width={iconSizes.icon20} />
-  }, [isInactive, isUnavailable, handleEnableSmartWallet, wallet, t])
+  }, [isInactive, isUnavailable, onPressCallback, t])
 
   const { avatar } = useAvatar(wallet.walletAddress)
-  const { unitag } = useUnitagByAddress(wallet?.walletAddress)
-
-  const onPress = useCallback((): void => {
-    if (isActive) {
-      setSelected(wallet)
-    } else if (isUnavailable) {
-      handleUnavailableWalletPress()
-    }
-  }, [isActive, isUnavailable, setSelected, wallet, handleUnavailableWalletPress])
+  const displayName = useDisplayName(wallet.walletAddress)
 
   return (
     <TouchableArea
@@ -111,37 +74,43 @@ function WalletItem({
       gap="$spacing12"
       justifyContent="space-between"
       mb="$spacing12"
-      opacity={isUnavailable ? 0.5 : 1}
-      // we need to listen to the onPress event to trigger the unavailable modal
-      disabled={!isActive && !isUnavailable}
-      cursor={!isActive ? 'default' : 'pointer'}
-      onPress={onPress}
+      cursor={isInactive ? 'default' : 'pointer'}
+      onPress={!isInactive ? onPressCallback : undefined}
     >
-      <Flex row alignItems="center" gap="$spacing12">
-        <Flex
-          backgroundColor="$surface1"
-          borderRadius="$roundedFull"
-          height={32}
-          width={32}
-          overflow="hidden"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <AccountIcon avatarUri={avatar} address={wallet.walletAddress} size={32} />
+      <Flex row alignItems="center" gap="$spacing12" opacity={isUnavailable || isInactive ? 0.5 : 1}>
+        <Flex>
+          {wallet.status === WalletStatus.ActionRequired && (
+            <Flex bottom={-2} position="absolute" right={-3} zIndex={zIndexes.mask}>
+              <Flex
+                centered
+                backgroundColor="$surface1"
+                borderRadius="$roundedFull"
+                width={iconSizes.icon16}
+                height={iconSizes.icon16}
+              >
+                <RoundExclamation size={iconSizes.icon16} />
+              </Flex>
+            </Flex>
+          )}
+          <Flex
+            centered
+            backgroundColor="$surface1"
+            borderRadius="$roundedFull"
+            height={iconSizes.icon32}
+            width={iconSizes.icon32}
+            overflow="hidden"
+          >
+            <AccountIcon avatarUri={avatar} address={wallet.walletAddress} size={iconSizes.icon32} />
+          </Flex>
         </Flex>
         <Flex>
-          <ElementAfterText
-            wrapperProps={{
-              grow: true,
-              shrink: true,
-              gap: '$gap4',
-            }}
+          <DisplayNameText
+            displayName={displayName}
             textProps={{
               variant: 'subheading2',
               color: '$neutral1',
             }}
-            element={unitag?.username ? <Unitag size="$icon.16" /> : undefined}
-            text={wallet.name}
+            includeUnitagSuffix={false}
           />
 
           <Text variant="body3" color="$neutral2">
@@ -157,10 +126,19 @@ function WalletItem({
 }
 
 export function SmartWalletSettingsContent(): JSX.Element {
+  const dispatch = useDispatch()
   const getTranslatedStatus = useTranslateSmartWalletStatus()
+  const wallets = useSmartWalletData()
+  const activeAccount = useActiveAccountWithThrow()
+  const { refreshDelegationData } = useWalletDelegationContext()
 
   const [selectedWallet, setSelectedWallet] = useState<WalletData | undefined>(undefined)
 
+  const {
+    value: showDisableSmartWalletModal,
+    setTrue: setShowDisableSmartWalletModal,
+    setFalse: setHideDisableSmartWalletModal,
+  } = useBooleanState(false)
   const {
     value: showSmartWalletEnabledModal,
     setTrue: setShowSmartWalletEnabledModal,
@@ -173,23 +151,90 @@ export function SmartWalletSettingsContent(): JSX.Element {
     setFalse: setHideSmartWalletUnavailableModal,
   } = useBooleanState(false)
 
-  const handleDisableConfirm = useCallback(() => {
-    // TODO: Implement actual disable logic
-    setSelectedWallet(undefined)
-  }, [])
+  const {
+    value: showConfirmDisableSmartWalletModal,
+    setTrue: setShowConfirmDisableSmartWalletModal,
+    setFalse: setHideConfirmDisableSmartWalletModal,
+  } = useBooleanState(false)
 
-  const handleEnableSmartWallet = useCallback(
-    (_: WalletData): void => {
-      // TODO(WALL-6561): Implement actual enable logic
+  const {
+    value: showActionRequiredModal,
+    setTrue: setShowActionRequiredModal,
+    setFalse: setHideActionRequiredModal,
+  } = useBooleanState(false)
+
+  const networkBalances = useNetworkBalances(selectedWallet?.walletAddress)
+  const selectedWalletDisplayName = useDisplayName(selectedWallet?.walletAddress, { includeUnitagSuffix: true })
+
+  // Refresh delegation data when component mounts
+  useEffect(() => {
+    refreshDelegationData().catch((error) => {
+      logger.error(error, {
+        tags: { file: 'SmartWalletSettingsContent', function: 'useEffect' },
+      })
+    })
+  }, [refreshDelegationData])
+
+  const handleDisableConfirm = useCallback(async () => {
+    if (!selectedWallet?.walletAddress || activeAccount.type !== AccountType.SignerMnemonic) {
+      return
+    }
+
+    const activeDelegations = selectedWallet.activeDelegationNetworkToAddress
+    if (Object.keys(activeDelegations).length === 0) {
+      // No active delegations
+      dispatch(
+        setSmartWalletConsent({
+          address: selectedWallet.walletAddress,
+          smartWalletConsent: false,
+        }),
+      )
+      // Prevent the nudge from showing again
+      dispatch(
+        setHasDismissedSmartWalletHomeScreenNudge({ walletAddress: selectedWallet.walletAddress, hasDismissed: true }),
+      )
+      setHideDisableSmartWalletModal()
+      setSelectedWallet(undefined)
+      return
+    }
+
+    setShowConfirmDisableSmartWalletModal()
+  }, [dispatch, selectedWallet, activeAccount, setShowConfirmDisableSmartWalletModal, setHideDisableSmartWalletModal])
+
+  const handleReactivateSmartWallet = useCallback(() => {
+    if (selectedWallet) {
+      dispatch(
+        setSmartWalletConsent({
+          address: selectedWallet.walletAddress,
+          smartWalletConsent: true,
+        }),
+      )
+    }
+  }, [dispatch, selectedWallet])
+
+  const handleOnWalletPress = useEvent((wallet: WalletData) => {
+    setSelectedWallet(wallet)
+    if (wallet.status === WalletStatus.Active) {
+      setShowDisableSmartWalletModal()
+    } else if (wallet.status === WalletStatus.ActionRequired) {
+      setShowActionRequiredModal()
+    } else if (wallet.status === WalletStatus.Unavailable) {
+      setShowSmartWalletUnavailableModal()
+    } else {
+      dispatch(
+        setSmartWalletConsent({
+          address: wallet.walletAddress,
+          smartWalletConsent: true,
+        }),
+      )
       setShowSmartWalletEnabledModal()
-    },
-    [setShowSmartWalletEnabledModal],
-  )
+    }
+  })
 
   const renderWalletSection = useCallback(
     (status: WalletStatus): JSX.Element | undefined => {
-      const wallets = mockWallets.filter((w) => w.status === status)
-      if (!wallets.length) {
+      const walletsForStatus = wallets.filter((w) => w.status === status)
+      if (!walletsForStatus.length) {
         return undefined
       }
 
@@ -198,39 +243,72 @@ export function SmartWalletSettingsContent(): JSX.Element {
           <Text color="$neutral1" variant="subheading2">
             {getTranslatedStatus(status)}
           </Text>
-          {wallets.map((wallet) => (
-            <WalletItem
-              key={wallet.walletAddress}
-              handleEnableSmartWallet={handleEnableSmartWallet}
-              handleUnavailableWalletPress={setShowSmartWalletUnavailableModal}
-              setSelected={setSelectedWallet}
-              wallet={wallet}
-            />
+          {walletsForStatus.map((wallet) => (
+            <WalletItem key={wallet.walletAddress} wallet={wallet} onPress={handleOnWalletPress} />
           ))}
         </Flex>
       )
     },
-    [getTranslatedStatus, handleEnableSmartWallet, setSelectedWallet, setShowSmartWalletUnavailableModal],
+    [wallets, getTranslatedStatus, handleOnWalletPress],
   )
+
+  const unavailableWalletDisplayName = selectedWalletDisplayName?.name || selectedWallet?.walletAddress
 
   return (
     <>
-      <Flex px="$padding8" gap="$gap20">
-        {renderWalletSection(WalletStatus.Active)}
-        {renderWalletSection(WalletStatus.Inactive)}
-        {renderWalletSection(WalletStatus.Unavailable)}
-      </Flex>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Flex gap="$gap20" px="$padding8">
+          {renderWalletSection(WalletStatus.ActionRequired)}
+          {renderWalletSection(WalletStatus.Active)}
+          {renderWalletSection(WalletStatus.Inactive)}
+          {renderWalletSection(WalletStatus.Unavailable)}
+        </Flex>
+      </ScrollView>
 
-      <SmartWalletDisableModal
-        selectedWallet={selectedWallet}
-        onClose={() => setSelectedWallet(undefined)}
-        onConfirm={handleDisableConfirm}
-      />
       <SmartWalletEnabledModal isOpen={showSmartWalletEnabledModal} onClose={setHideSmartWalletEnabledModal} />
-      <SmartWalletUnavailableModal
-        isOpen={showSmartWalletUnavailableModal}
-        onClose={setHideSmartWalletUnavailableModal}
-      />
+      {unavailableWalletDisplayName && (
+        <SmartWalletUnavailableModal
+          isOpen={showSmartWalletUnavailableModal}
+          displayName={unavailableWalletDisplayName}
+          onClose={setHideSmartWalletUnavailableModal}
+        />
+      )}
+      {selectedWallet && (
+        <>
+          <SmartWalletDisableModal
+            wallet={selectedWallet}
+            isOpen={showDisableSmartWalletModal}
+            onClose={() => {
+              setHideDisableSmartWalletModal()
+              setSelectedWallet(undefined)
+            }}
+            onConfirm={handleDisableConfirm}
+          />
+          <SmartWalletConfirmDisableModal
+            isOpen={showConfirmDisableSmartWalletModal}
+            networkBalances={networkBalances}
+            walletAddress={selectedWallet.walletAddress}
+            onClose={() => {
+              setHideConfirmDisableSmartWalletModal()
+              setHideDisableSmartWalletModal()
+              setSelectedWallet(undefined)
+            }}
+          />
+          <SmartWalletActionRequiredModal
+            isOpen={showActionRequiredModal}
+            networkBalances={networkBalances}
+            onClose={setHideActionRequiredModal}
+            onConfirm={() => {
+              setHideActionRequiredModal()
+              setShowConfirmDisableSmartWalletModal()
+            }}
+            onReactivate={() => {
+              setHideActionRequiredModal()
+              handleReactivateSmartWallet()
+            }}
+          />
+        </>
+      )}
     </>
   )
 }

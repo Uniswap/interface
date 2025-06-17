@@ -38,11 +38,15 @@ const createUniverseSwapTransaction = (
   } as UniswapTransactionDetails
 }
 
-const createUniverseBridgeTransaction = (
-  info: BridgeTransactionInfo,
-  inputChainId: UniverseChainId,
-  outputChainId: UniverseChainId,
-) => {
+function createUniverseBridgeTransaction({
+  info,
+  inputChainId,
+  outputChainId,
+}: {
+  info: BridgeTransactionInfo
+  inputChainId: UniverseChainId
+  outputChainId: UniverseChainId
+}) {
   const inputCurrencyId = info.inputCurrencyId === 'ETH' ? null : buildCurrencyId(inputChainId, info.inputCurrencyId)
   const outputCurrencyId =
     info.outputCurrencyId === 'ETH' ? null : buildCurrencyId(outputChainId, info.outputCurrencyId)
@@ -87,7 +91,15 @@ const createUniverseWrapTransaction = (info: WrapTransactionInfo) => {
 // If a new transaction type is added to web try to map it to a universe transaction type.
 // Some transactions (like APPROVAL) only update the native token balance and don't need to be mapped.
 // TODO(WEB-5565): Align web and universe transaction types
-export const createUniverseTransaction = (info: TransactionInfo, chainId: UniverseChainId, address: string) => {
+export const createUniverseTransaction = ({
+  info,
+  chainId,
+  address,
+}: {
+  info: TransactionInfo
+  chainId: UniverseChainId
+  address: string
+}) => {
   const baseTransaction: Partial<UniswapTransactionDetails> = {
     chainId,
     from: address,
@@ -100,7 +112,11 @@ export const createUniverseTransaction = (info: TransactionInfo, chainId: Univer
       transaction = createUniverseSwapTransaction(info, chainId)
       break
     case TransactionType.BRIDGE:
-      transaction = createUniverseBridgeTransaction(info, info.inputChainId, info.outputChainId)
+      transaction = createUniverseBridgeTransaction({
+        info,
+        inputChainId: info.inputChainId,
+        outputChainId: info.outputChainId,
+      })
       break
     case TransactionType.SEND:
       transaction = createUniverseSendTransaction(info, chainId)

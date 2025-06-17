@@ -14,7 +14,7 @@ export interface Log {
  */
 export function filterToKey(filter: Filter): string {
   return `${filter.address ?? ''}:${
-    filter.topics?.map((topic) => (topic ? (Array.isArray(topic) ? topic.join(';') : topic) : '\0'))?.join('-') ?? ''
+    filter.topics?.map((topic) => (topic ? (Array.isArray(topic) ? topic.join(';') : topic) : '\0')).join('-') ?? ''
   }:${filter.fromBlock ?? ''}:${filter.toBlock ?? ''}`
 }
 

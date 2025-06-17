@@ -30,6 +30,6 @@ describe(LearnMoreLink, () => {
     fireEvent.press(learnMoreLink, ON_PRESS_EVENT_PAYLOAD)
 
     expect(openUri).toHaveBeenCalledTimes(1)
-    expect(openUri).toHaveBeenCalledWith('https://example.com')
+    expect(openUri).toHaveBeenCalledWith({ uri: 'https://example.com' })
   })
 })

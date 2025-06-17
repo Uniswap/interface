@@ -4,7 +4,7 @@ import { Button, Text, TextProps, TouchableArea, TouchableAreaProps } from 'ui/s
 import { openUri } from 'uniswap/src/utils/linking'
 import { isMobileApp, isWeb } from 'utilities/src/platform'
 
-const onPressLearnMore = (url: string): Promise<void> => openUri(url)
+const onPressLearnMore = (uri: string): Promise<void> => openUri({ uri })
 
 export const LearnMoreLink = ({
   url,

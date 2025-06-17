@@ -82,7 +82,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
       }),
     )
   } else if (typeInfo.type === TransactionType.Send) {
-    if (typeInfo?.assetType === AssetType.Currency && typeInfo?.currencyAmountRaw) {
+    if (typeInfo.assetType === AssetType.Currency && typeInfo.currencyAmountRaw) {
       yield* put(
         pushNotification({
           ...baseNotificationData,
@@ -95,8 +95,8 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         }),
       )
     } else if (
-      (typeInfo?.assetType === AssetType.ERC1155 || typeInfo?.assetType === AssetType.ERC721) &&
-      typeInfo?.tokenId
+      (typeInfo.assetType === AssetType.ERC1155 || typeInfo.assetType === AssetType.ERC721) &&
+      typeInfo.tokenId
     ) {
       yield* put(
         pushNotification({
@@ -131,7 +131,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         ...baseNotificationData,
         type: AppNotificationType.Transaction,
         txType: TransactionType.Unknown,
-        tokenAddress: typeInfo?.tokenAddress,
+        tokenAddress: typeInfo.tokenAddress,
       }),
     )
   }

@@ -102,7 +102,7 @@ export const useModalContent = ({
     // removing mnemonic account
     if (account?.type === AccountType.SignerMnemonic && currentStep === RemoveWalletStep.Final) {
       const associatedAccountNames = associatedAccounts
-        .filter((aa): aa is Account => aa.address !== account?.address)
+        .filter((aa): aa is Account => aa.address !== account.address)
         .map((aa) => aa.name ?? '')
 
       return {

@@ -1,3 +1,4 @@
+/* eslint-disable max-params */
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
 import { Bytes, Signer, UnsignedTransaction, providers, utils } from 'ethers'

@@ -56,7 +56,7 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }:
     const listener = addScreenshotListener(() =>
       navigate(ModalName.ScreenshotWarning, { acknowledgeText: t('common.button.close') }),
     )
-    return () => listener?.remove()
+    return () => listener.remove()
   }, [showSeedPhrase, t])
 
   return (

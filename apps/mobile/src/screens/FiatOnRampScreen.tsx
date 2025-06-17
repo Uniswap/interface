@@ -115,7 +115,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     selectionRef.current = { start, end }
     if (!isWeb && inputRef.current) {
       setTimeout(() => {
-        inputRef.current?.textInputRef.current?.setNativeProps?.({ selection: { start, end } })
+        inputRef.current?.textInputRef.current?.setNativeProps({ selection: { start, end } })
       }, 0)
     }
   }, [])
@@ -144,7 +144,11 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   } = useFiatOnRampContext()
 
   const { appFiatCurrencySupportedInMeld, meldSupportedFiatCurrency, supportedFiatCurrencies } =
-    useMeldFiatCurrencySupportInfo(countryCode, false, isOffRamp ? RampDirection.OFFRAMP : RampDirection.ONRAMP)
+    useMeldFiatCurrencySupportInfo({
+      countryCode,
+      skip: false,
+      rampDirection: isOffRamp ? RampDirection.OFFRAMP : RampDirection.ONRAMP,
+    })
 
   const debouncedFiatAmount = useDebounce(fiatAmount, DEFAULT_DELAY * 2)
   const debouncedTokenAmount = useDebounce(tokenAmount, DEFAULT_DELAY * 2)
@@ -278,6 +282,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     newAmount: string,
     source: FORAmountEnteredProperties['source'],
     newIsTokenInputMode?: boolean,
+    // eslint-disable-next-line max-params
   ): void => {
     amountUpdatedTimeRef.current = Date.now()
     sendAnalyticsEvent(
@@ -296,11 +301,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     const currentIsTokenInputMode = newIsTokenInputMode !== undefined ? newIsTokenInputMode : isTokenInputMode
 
     const maxDecimals = currentIsTokenInputMode ? tokenMaxDecimals : MAX_FIAT_INPUT_DECIMALS
-
-    // Appease TS this should not happen
-    if (maxDecimals === undefined) {
-      return
-    }
 
     const truncatedValue = truncateToMaxDecimals({
       value: newAmount,
@@ -353,7 +353,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   }, [isOffRamp, isTokenInputMode, resetSelection, selectedQuote, setIsTokenInputMode])
 
   const onContinue = (): void => {
-    if (quotes && quoteCurrency?.currencyInfo?.currency) {
+    if (quotes && quoteCurrency.currencyInfo?.currency) {
       setBaseCurrencyInfo(meldSupportedFiatCurrency)
       navigation.navigate(FiatOnRampScreens.ServiceProviders)
     }
@@ -393,7 +393,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
         {
           token: currency.currencyInfo.currency.symbol.toLowerCase(),
           isUnsupported: !isSupportedFORCurrency(currency),
-          chainId: currency.currencyInfo?.currency.chainId,
+          chainId: currency.currencyInfo.currency.chainId,
           externalTransactionIdSuffix,
         },
       )
@@ -445,8 +445,8 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
 
       navigateToSwapFlow({
         currencyField: CurrencyField.INPUT,
-        currencyAddress: currencyIdToAddress(unsupportedCurrency.currencyInfo?.currencyId),
-        currencyChainId: unsupportedCurrency.currencyInfo?.currency.chainId,
+        currencyAddress: currencyIdToAddress(unsupportedCurrency.currencyInfo.currencyId),
+        currencyChainId: unsupportedCurrency.currencyInfo.currency.chainId,
       })
     }
   }, [navigateToSwapFlow, unsupportedCurrency])
@@ -564,7 +564,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               <Flex grow justifyContent="flex-end">
                 <DecimalPadInput
                   ref={decimalPadRef}
-                  maxDecimals={isTokenInputMode ? tokenMaxDecimals ?? MAX_FIAT_INPUT_DECIMALS : MAX_FIAT_INPUT_DECIMALS}
+                  maxDecimals={isTokenInputMode ? tokenMaxDecimals : MAX_FIAT_INPUT_DECIMALS}
                   resetSelection={resetSelection}
                   selectionRef={selectionRef}
                   setValue={(newValue: string): void => {

@@ -7,13 +7,16 @@ import Sortable from 'react-native-sortables'
 import { useDispatch, useSelector } from 'react-redux'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteTokenCard from 'src/components/explore/FavoriteTokenCard'
-import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { getTokenValue } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { Flex } from 'ui/src/components/layout/Flex'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { setFavoriteTokens } from 'uniswap/src/features/favorites/slice'
+import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
+import { ExpandoRow } from 'wallet/src/components/ExpandoRow/ExpandoRow'
 
 const NUM_COLUMNS = 2
+const DEFAULT_TOKENS_TO_DISPLAY = 4
 
 type FavoriteTokensGridProps = {
   showLoading: boolean
@@ -27,6 +30,7 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
   const dispatch = useDispatch()
 
   const [isEditing, setIsEditing] = useState(false)
+  const [showAll, setShowAll] = useState(false)
   const favoriteCurrencyIds = useSelector(selectFavoriteTokens)
 
   // Reset edit mode when there are no favorite tokens
@@ -35,6 +39,17 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
       setIsEditing(false)
     }
   }, [favoriteCurrencyIds.length])
+
+  // Automatically expand when entering edit mode
+  useEffect(() => {
+    if (isEditing) {
+      setShowAll(true)
+    }
+  }, [isEditing])
+
+  const toggleShowMore = useCallback((): void => {
+    setShowAll(!showAll)
+  }, [showAll])
 
   const handleDragStart = useCallback(async () => {
     await hapticFeedback.light()
@@ -62,7 +77,12 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
     [isEditing, showLoading],
   )
 
+  const hasMoreTokens = favoriteCurrencyIds.length > DEFAULT_TOKENS_TO_DISPLAY
+  const visibleTokens =
+    showAll || !hasMoreTokens ? favoriteCurrencyIds : favoriteCurrencyIds.slice(0, DEFAULT_TOKENS_TO_DISPLAY)
+
   const GRID_GAP = getTokenValue('$spacing8')
+
   return (
     <Sortable.Layer>
       <AnimatedFlex entering={FadeIn}>
@@ -73,20 +93,31 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
           title={t('explore.tokens.favorite.title.default')}
           onPress={(): void => setIsEditing(!isEditing)}
         />
-        <Sortable.Grid
-          {...rest}
-          animateHeight
-          scrollableRef={listRef}
-          data={favoriteCurrencyIds}
-          sortEnabled={isEditing}
-          autoScrollActivationOffset={[75, 100]}
-          columns={NUM_COLUMNS}
-          renderItem={renderItem}
-          rowGap={GRID_GAP}
-          columnGap={GRID_GAP}
-          onDragEnd={handleDragEnd}
-          onDragStart={handleDragStart}
-        />
+
+        <Flex>
+          <Sortable.Grid
+            {...rest}
+            animateHeight
+            scrollableRef={listRef}
+            data={visibleTokens}
+            sortEnabled={isEditing}
+            autoScrollActivationOffset={[75, 100]}
+            columns={NUM_COLUMNS}
+            renderItem={renderItem}
+            rowGap={GRID_GAP}
+            columnGap={GRID_GAP}
+            onDragEnd={handleDragEnd}
+            onDragStart={handleDragStart}
+          />
+          {hasMoreTokens && (
+            <ExpandoRow
+              isExpanded={showAll}
+              label={showAll ? t('common.showLess.button') : t('common.showMore.button')}
+              mx="$spacing16"
+              onPress={toggleShowMore}
+            />
+          )}
+        </Flex>
       </AnimatedFlex>
     </Sortable.Layer>
   )

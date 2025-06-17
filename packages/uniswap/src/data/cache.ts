@@ -108,14 +108,12 @@ export function setupSharedApolloCache(): InMemoryCache {
   })
 }
 
+// eslint-disable-next-line max-params
 function ignoreIncomingNullValue(
   existing: Reference | StoreObject,
   incoming: Reference | StoreObject,
   { mergeObjects }: FieldFunctionOptions<Record<string, unknown>, Record<string, unknown>>,
 ): Reference | StoreObject {
-  if (existing && !incoming) {
-    return existing
-  }
   return mergeObjects(existing, incoming)
 }
 

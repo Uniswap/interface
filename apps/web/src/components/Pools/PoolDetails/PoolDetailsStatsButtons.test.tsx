@@ -15,14 +15,21 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import type { Mock } from 'vitest'
 
-jest.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
+vi.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
 
-jest.mock('hooks/useAccount')
+vi.mock('hooks/useAccount')
 
-jest.mock('uniswap/src/contexts/UniswapContext')
+vi.mock('uniswap/src/contexts/UniswapContext')
 
-jest.mock('uniswap/src/features/transactions/swap/contexts/SwapFormContext')
+vi.mock('uniswap/src/features/transactions/swap/contexts/SwapFormContext')
+
+vi.mock('pages/Swap', () => {
+  return {
+    Swap: () => <div>Swap Component</div>,
+  }
+})
 
 describe('PoolDetailsStatsButton', () => {
   const mockProps = {
@@ -46,6 +53,7 @@ describe('PoolDetailsStatsButton', () => {
     navigateToReceive: () => {},
     handleShareToken: () => {},
     navigateToTokenDetails: () => {},
+    navigateToPoolDetails: () => {},
     navigateToExternalProfile: () => {},
     navigateToNftCollection: () => {},
     onSwapChainsChanged: () => {},
@@ -56,10 +64,10 @@ describe('PoolDetailsStatsButton', () => {
     useProviderHook: () => undefined,
   }
 
-  const useSwapFormContextMock = useSwapFormContext as jest.Mock
+  const useSwapFormContextMock = useSwapFormContext as Mock
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     // Setup mocks
     useSwapFormContextMock.mockReturnValue({
@@ -121,7 +129,7 @@ describe('PoolDetailsStatsButton', () => {
   })
 
   it('renders both buttons correctly', async () => {
-    jest.useFakeTimers()
+    vi.useFakeTimers()
     window.history.pushState({}, '', '/swap')
     const { asFragment } = await act(() => render(<PoolDetailsStatsButtons {...mockProps} />))
 
@@ -129,7 +137,7 @@ describe('PoolDetailsStatsButton', () => {
 
     expect(screen.getByTestId(TestID.PoolDetailsAddLiquidityButton)).toBeVisible()
     expect(screen.getByTestId(TestID.PoolDetailsSwapButton)).toBeVisible()
-    jest.useRealTimers()
+    vi.useRealTimers()
   })
 
   it('clicking swap reveals swap modal', async () => {

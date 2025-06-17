@@ -161,6 +161,7 @@ function InitiatePasskeyAuthContent(): JSX.Element {
           message: unknown,
           _sender: unknown,
           sendResponse: (response: unknown) => void,
+          // eslint-disable-next-line max-params
         ) => {
           try {
             logger.debug('InitiatePasskeyAuth.tsx', 'handleMessagePasskeySignInFlowOpened', 'Message received', {

@@ -43,8 +43,8 @@ export const useDeviceDimensions = (): DeviceDimensions => {
 
   if (isExtension) {
     return {
-      fullHeight: extensionHeight ?? 0,
-      fullWidth: extensionWidth ?? 0,
+      fullHeight: extensionHeight,
+      fullWidth: extensionWidth,
     }
   }
 

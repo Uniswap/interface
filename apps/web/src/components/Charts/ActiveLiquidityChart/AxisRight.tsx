@@ -15,23 +15,21 @@ const Axis = ({
   yScale: ScaleLinear<number, number>
 }) => {
   const axisRef = (axis: SVGGElement) => {
-    if (axis) {
-      select(axis)
-        .call(axisGenerator)
-        .call((g) => g.select('.domain').remove())
-        .call((g) =>
-          g.selectAll('text').attr('transform', function (d) {
-            const yCoordinate = yScale(d as number)
-            if (yCoordinate < TEXT_Y_OFFSET) {
-              return `translate(0, ${TEXT_Y_OFFSET})`
-            }
-            if (yCoordinate > height - TEXT_Y_OFFSET) {
-              return `translate(0, ${-TEXT_Y_OFFSET})`
-            }
-            return ''
-          }),
-        )
-    }
+    select(axis)
+      .call(axisGenerator)
+      .call((g) => g.select('.domain').remove())
+      .call((g) =>
+        g.selectAll('text').attr('transform', function (d) {
+          const yCoordinate = yScale(d as number)
+          if (yCoordinate < TEXT_Y_OFFSET) {
+            return `translate(0, ${TEXT_Y_OFFSET})`
+          }
+          if (yCoordinate > height - TEXT_Y_OFFSET) {
+            return `translate(0, ${-TEXT_Y_OFFSET})`
+          }
+          return ''
+        }),
+      )
   }
 
   return <g ref={axisRef} />

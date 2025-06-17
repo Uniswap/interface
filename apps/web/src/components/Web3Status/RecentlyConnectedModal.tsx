@@ -57,7 +57,10 @@ function RecentlyConnectedModalUI({
   const { t } = useTranslation()
   const shadowProps = useShadowPropsShort()
   const modalRef = useRef<HTMLDivElement>(null)
-  useOnClickOutside(modalRef, onClose)
+  useOnClickOutside({
+    node: modalRef,
+    handler: onClose,
+  })
   const isMobile = useIsMobile()
 
   return (
@@ -154,13 +157,19 @@ function RecentlyConnectedModalUI({
   )
 }
 
-function shouldShowModal(
-  walletAddress: string | undefined,
-  account: ReturnType<typeof useAccount>,
-  isEmbeddedWalletEnabled: boolean,
-  isOpenRef: MutableRefObject<boolean>,
-  recentConnectorId?: string,
-) {
+function shouldShowModal({
+  walletAddress,
+  account,
+  isEmbeddedWalletEnabled,
+  isOpenRef,
+  recentConnectorId,
+}: {
+  walletAddress?: string
+  account: ReturnType<typeof useAccount>
+  isEmbeddedWalletEnabled: boolean
+  isOpenRef: MutableRefObject<boolean>
+  recentConnectorId?: string
+}) {
   return (
     !!walletAddress &&
     !(account.isConnected || account.isConnecting) &&
@@ -183,7 +192,15 @@ export function RecentlyConnectedModal() {
   const walletDisplay = useWalletDisplay(walletAddress)
 
   useEffect(() => {
-    if (shouldShowModal(walletAddress, account, isEmbeddedWalletEnabled, isOpenRef, recentConnectorId)) {
+    if (
+      shouldShowModal({
+        walletAddress,
+        account,
+        isEmbeddedWalletEnabled,
+        isOpenRef,
+        recentConnectorId,
+      })
+    ) {
       openModal()
       isOpenRef.current = true
     }

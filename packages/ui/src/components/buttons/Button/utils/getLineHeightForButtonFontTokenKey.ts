@@ -5,7 +5,7 @@ export const getLineHeightForButtonFontTokenKey = (size: '$micro' | '$small' | '
   try {
     const { fontsParsed } = getConfig()
 
-    const maybeTamaguiVariable = fontsParsed?.$button?.lineHeight?.[size]
+    const maybeTamaguiVariable = fontsParsed.$button?.lineHeight?.[size]
 
     if (typeof maybeTamaguiVariable === 'number') {
       return maybeTamaguiVariable

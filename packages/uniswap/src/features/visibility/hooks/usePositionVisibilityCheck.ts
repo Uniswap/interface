@@ -15,7 +15,7 @@ export function usePositionVisibilityCheck(): (params: VisibilityCheckParams) =>
   const positionVisibilities = useSelector((state: UniswapRootState) => selectPositionsVisibility(state))
 
   const isPositionVisible = ({ poolId, tokenId, chainId, isFlaggedSpam = false }: VisibilityCheckParams): boolean => {
-    const positionId = getUniquePositionId(poolId, tokenId, chainId)
+    const positionId = getUniquePositionId({ poolId, tokenId, chainId })
     const positionState = positionVisibilities[positionId]
 
     if (positionState === undefined) {

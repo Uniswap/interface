@@ -1,0 +1,50 @@
+---
+description: Mobile styling conventions
+globs: apps/mobile/**/*.ts*
+alwaysApply: false
+---
+# Mobile Styling Conventions
+
+## Component Styling
+- Use the `styled` function from `ui/src` for consistent styling
+- Prefer Tamagui styling over React Native StyleSheet when possible
+- Use StyleSheet.create for performance-critical styles or when Tamagui isn't suitable
+
+## StyleSheet Usage
+- Define styles outside of the component body to prevent recreation on renders
+- Use descriptive names for style objects
+- Group related styles together
+
+Example:
+```typescript
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: spacing.spacing16,
+  },
+  header: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+})
+```
+
+## Theme Usage
+- Use theme tokens from the UI package instead of hardcoded values
+- Reference color tokens like `$neutral1` instead of hex values
+- Use spacing tokens like `$spacing16` instead of raw numbers
+
+## Layout
+- Use `Flex` from `ui/src` instead of View when possible
+- Avoid nested ScrollViews which can cause performance issues
+- Minimize view hierarchy depth
+
+## Platform Specific Code
+- Use `$platform-web` for platform-specific styling in Tamagui
+- Use `.ios.tsx` and `.android.tsx` extensions for platform-specific components
+- Use the `Platform.select` API for inline platform-specific code
+
+## Performance
+- Memoize complex style calculations
+- Avoid large inline styles
+- Use hardware acceleration for animations when possible

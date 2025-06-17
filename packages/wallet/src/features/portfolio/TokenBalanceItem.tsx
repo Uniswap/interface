@@ -3,8 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Shine, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
+import { useRestTokenBalanceMainParts, useRestTokenBalanceQuantityParts } from 'uniswap/src/data/rest/getPortfolio'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -14,6 +17,7 @@ import {
   useTokenBalanceMainPartsFragment,
   useTokenBalanceQuantityPartsFragment,
 } from 'wallet/src/features/portfolio/fragments'
+import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { disableOnPress } from 'wallet/src/utils/disableOnPress'
 
 /**
@@ -42,6 +46,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   isHidden,
 }: TokenBalanceItemProps) {
   const { currency } = currencyInfo
+  const address = useActiveAccount()?.address
 
   // Ensure items rerender when theme is switched
   useIsDarkMode()
@@ -83,13 +88,23 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
             {currency.name ?? shortenedSymbol}
           </Text>
           <Flex row alignItems="center" gap="$spacing8" minHeight={20}>
-            <TokenBalanceQuantity portfolioBalanceId={portfolioBalanceId} shortenedSymbol={shortenedSymbol} />
+            <TokenBalanceQuantity
+              portfolioBalanceId={portfolioBalanceId}
+              shortenedSymbol={shortenedSymbol}
+              currencyId={currencyInfo.currencyId}
+              address={address}
+            />
           </Flex>
         </Flex>
       </Flex>
 
       {currencyInfo.isSpam === true && isHidden ? undefined : (
-        <TokenBalanceRightSideColumn portfolioBalanceId={portfolioBalanceId} isLoading={isLoading} />
+        <TokenBalanceRightSideColumn
+          portfolioBalanceId={portfolioBalanceId}
+          isLoading={isLoading}
+          currencyId={currencyInfo.currencyId}
+          address={address}
+        />
       )}
     </TouchableArea>
   )
@@ -98,18 +113,26 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
 function TokenBalanceQuantity({
   portfolioBalanceId,
   shortenedSymbol,
+  currencyId,
+  address,
 }: {
   portfolioBalanceId: string
   shortenedSymbol: Maybe<string>
+  currencyId: CurrencyId
+  address?: string
 }): JSX.Element {
   const { formatNumberOrString } = useLocalizationContext()
+  const isRestEnabled = useFeatureFlag(FeatureFlags.GqlToRestBalances)
 
-  // By relying on this cached fragment instead of a query with many fields, we can avoid re-renders unless these specific fields change.
-  const { data: tokenBalance } = useTokenBalanceQuantityPartsFragment({ id: portfolioBalanceId })
+  // By relying on this cached data we can avoid re-renders unless these specific fields change.
+  const gqlTokenBalance = useTokenBalanceQuantityPartsFragment({ id: portfolioBalanceId })
+  const restTokenBalance = useRestTokenBalanceQuantityParts({ currencyId, address })
+
+  const tokenBalance = isRestEnabled ? restTokenBalance.data : gqlTokenBalance.data
 
   return (
     <Text color="$neutral2" numberOfLines={1} variant={isWeb ? 'body3' : 'body2'}>
-      {`${formatNumberOrString({ value: tokenBalance.quantity })}`} {shortenedSymbol}
+      {`${formatNumberOrString({ value: tokenBalance?.quantity })}`} {shortenedSymbol}
     </Text>
   )
 }
@@ -117,16 +140,23 @@ function TokenBalanceQuantity({
 function TokenBalanceRightSideColumn({
   portfolioBalanceId,
   isLoading,
+  currencyId,
+  address,
 }: {
   portfolioBalanceId: string
   isLoading?: boolean
+  currencyId: CurrencyId
+  address?: string
 }): JSX.Element {
   const { t } = useTranslation()
   const { isTestnetModeEnabled } = useEnabledChains()
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const isRestEnabled = useFeatureFlag(FeatureFlags.GqlToRestBalances)
 
-  // By relying on this cached fragment instead of a query with many fields, we can avoid re-renders unless these specific fields change.
-  const { data: tokenBalance } = useTokenBalanceMainPartsFragment({ id: portfolioBalanceId })
+  // By relying on this cached data we can avoid re-renders unless these specific fields change.
+  const gqlTokenBalance = useTokenBalanceMainPartsFragment({ id: portfolioBalanceId })
+  const restTokenBalance = useRestTokenBalanceMainParts({ currencyId, address })
+  const tokenBalance = isRestEnabled ? restTokenBalance.data : gqlTokenBalance.data
 
   const balanceUSD = tokenBalance?.denominatedValue?.value
   const relativeChange24 = tokenBalance?.tokenProjectMarket?.relativeChange24?.value

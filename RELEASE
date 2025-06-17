@@ -1,7 +1,33 @@
-We are back with a large update: Smart wallets are here! Enable smart wallets from your home screen to benefit from faster, lower-cost transactions, enabled via an EIP 7702 smart contract.
+IPFS hash of the deployment:
+- CIDv0: `QmVuXaTYWCcthVdeE4392V3N7z7e8eqiBRUm8Aq6pmbMAK`
+- CIDv1: `bafybeidqnxuudksoq77x4k7pfabqxvrdnoztw2n2mmvl3w3e45ikupxxtq`
 
-Other changes:
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-- Users can now enjoy multi-account signing, as well as 1 click Auth support, when connecting to external dapps via WalletConnect
-- When connecting to external dapps, users can benefit from better malicious dapp detection.
-- Various bug fixes and performance improvements
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
+
+IPFS gateways:
+- https://bafybeidqnxuudksoq77x4k7pfabqxvrdnoztw2n2mmvl3w3e45ikupxxtq.ipfs.dweb.link/
+- [ipfs://QmVuXaTYWCcthVdeE4392V3N7z7e8eqiBRUm8Aq6pmbMAK/](ipfs://QmVuXaTYWCcthVdeE4392V3N7z7e8eqiBRUm8Aq6pmbMAK/)
+
+### 5.99.1 (2025-06-17)
+
+
+### Bug Fixes
+
+* **web:** 06 16 fix web pdp base vs quote mismatch staging (#20927) 317fc47
+* **web:** fix reset behavior for liquidity range chart (#20931) 2e09a49
+* **web:** safari NPE fix (#20906) ed4b3e5
+* **web:** send modal recipient selection - staging (#20957) f645f41
+* **web:** tamagui scroll bug (staging) (#20907) 2962b23
+* **web:** tdp top pools (#20939) ccbc3ea
+
+
+### Continuous Integration
+
+* **web:** update sitemaps c61a54e
+
+

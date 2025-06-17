@@ -1,8 +1,8 @@
-import { SwapEventName } from '@uniswap/analytics-events'
 import { expect, test } from 'playwright/fixtures'
 import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 test.describe('Time-to-swap logging', () => {
@@ -19,14 +19,14 @@ test.describe('Time-to-swap logging', () => {
     await page.getByTestId(TestID.AmountInputIn).fill('.1')
 
     // Verify first swap action
-    await amplitude.waitForEvent(SwapEventName.SWAP_FIRST_ACTION).then((event: any) => {
+    await amplitude.waitForEvent(SwapEventName.SwapFirstAction).then((event: any) => {
       expect(event.event_properties).toHaveProperty('time_to_first_swap_action')
       expect(typeof event.event_properties.time_to_first_swap_action).toBe('number')
       expect(event.event_properties.time_to_first_swap_action).toBeGreaterThanOrEqual(0)
     })
 
     // Verify Swap Quote
-    await amplitude.waitForEvent(SwapEventName.SWAP_QUOTE_FETCH).then((event: any) => {
+    await amplitude.waitForEvent(SwapEventName.SwapQuoteFetch).then((event: any) => {
       expect(event.event_properties).toHaveProperty('time_to_first_quote_request')
       expect(typeof event.event_properties.time_to_first_quote_request).toBe('number')
       expect(event.event_properties.time_to_first_quote_request).toBeGreaterThanOrEqual(0)
@@ -40,7 +40,7 @@ test.describe('Time-to-swap logging', () => {
     await page.getByTestId(TestID.Swap).click()
 
     // Verify logging
-    await amplitude.waitForEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED).then((event: any) => {
+    await amplitude.waitForEvent(SwapEventName.SwapTransactionCompleted).then((event: any) => {
       expect(event.event_properties).toHaveProperty('time_to_swap')
       expect(typeof event.event_properties.time_to_swap).toBe('number')
       expect(event.event_properties.time_to_swap).toBeGreaterThanOrEqual(0)
@@ -55,7 +55,7 @@ test.describe('Time-to-swap logging', () => {
     await expect(page.getByTestId(TestID.AmountInputIn)).toHaveValue(/.+/)
 
     // Verify second Swap Quote
-    await amplitude.waitForEvent(SwapEventName.SWAP_QUOTE_FETCH).then((event: any) => {
+    await amplitude.waitForEvent(SwapEventName.SwapQuoteFetch).then((event: any) => {
       expect(event.event_properties.time_to_first_quote_request).toBeUndefined()
       expect(event.event_properties.time_to_first_quote_request_since_first_input).toBeUndefined()
     })
@@ -65,7 +65,7 @@ test.describe('Time-to-swap logging', () => {
     await page.getByTestId(TestID.Swap).click()
 
     // Verify second swap completion logging does not include TTS properties
-    await amplitude.waitForEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED).then((event: any) => {
+    await amplitude.waitForEvent(SwapEventName.SwapTransactionCompleted).then((event: any) => {
       expect(event.event_properties).not.toHaveProperty('time_to_swap')
       expect(event.event_properties).not.toHaveProperty('time_to_swap_since_first_input')
     })

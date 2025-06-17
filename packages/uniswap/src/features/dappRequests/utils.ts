@@ -11,6 +11,6 @@ export const isSignTypedDataRequest = (request: { type: EthMethod }): boolean =>
  * @param data The transaction data
  * @returns True if this is a self-call with data, false otherwise
  */
-export function isSelfCallWithData(from?: string, to?: string, data?: string): boolean {
+export function isSelfCallWithData({ from, to, data }: { from?: string; to?: string; data?: string }): boolean {
   return !!from && !!to && areAddressesEqual(from, to) && data !== undefined && data !== '0x'
 }

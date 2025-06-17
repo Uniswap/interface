@@ -75,7 +75,12 @@ export function useActivityData({
   }, [onRetryGenerator])
 
   const renderActivityItem = useMemo(() => {
-    return generateActivityItemRenderer(<Loader.Transaction />, SectionTitle, swapCallbacks, authTrigger)
+    return generateActivityItemRenderer({
+      loadingItem: <Loader.Transaction />,
+      sectionHeaderElement: SectionTitle,
+      swapCallbacks,
+      authTrigger,
+    })
   }, [swapCallbacks, authTrigger])
 
   const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity({

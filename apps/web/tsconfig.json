@@ -28,7 +28,7 @@
     "strictNullChecks": true,
     "target": "ESNext",
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo/build", // avoid clobbering the cypress tsbuildinfo
-    "types": ["jest", "chrome"],
+    "types": ["chrome", "vitest/globals"],
     "useUnknownInCatchVariables": false,
     "paths": {
       "ui/src/*": ["../../packages/ui/src/*"],

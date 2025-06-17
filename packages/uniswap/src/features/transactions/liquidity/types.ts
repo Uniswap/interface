@@ -5,11 +5,7 @@ import {
   IncreaseLPPositionRequest,
   MigrateLPPositionRequest,
 } from 'uniswap/src/data/tradingApi/__generated__'
-import {
-  PermitMethod,
-  PermitTransaction,
-  PermitTypedData,
-} from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { PermitTransaction, PermitTypedData } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 
 export enum LiquidityTransactionType {
@@ -155,18 +151,16 @@ function validateLiquidityTxContext(
     return undefined
   }
 
-  if (liquidityTxContext.action) {
-    const { action, txRequest, permit } = liquidityTxContext
-    const unsigned =
-      (liquidityTxContext.type === 'increase' || liquidityTxContext.type === 'create') && liquidityTxContext.unsigned
-    if (unsigned) {
-      if (!permit || permit.method !== PermitMethod.TypedData) {
-        return undefined
-      }
-      return { ...liquidityTxContext, action, unsigned, txRequest: undefined, permit }
-    } else if (txRequest) {
-      return { ...liquidityTxContext, action, unsigned, txRequest, permit: undefined }
+  const { action, txRequest, permit } = liquidityTxContext
+  const unsigned =
+    (liquidityTxContext.type === 'increase' || liquidityTxContext.type === 'create') && liquidityTxContext.unsigned
+  if (unsigned) {
+    if (!permit) {
+      return undefined
     }
+    return { ...liquidityTxContext, action, unsigned, txRequest: undefined, permit }
+  } else if (txRequest) {
+    return { ...liquidityTxContext, action, unsigned, txRequest, permit: undefined }
   }
 
   return undefined

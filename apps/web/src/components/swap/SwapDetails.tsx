@@ -1,4 +1,3 @@
-import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { ReactComponent as ExpandoIconClosed } from 'assets/svg/expando-icon-closed.svg'
 import { ReactComponent as ExpandoIconOpened } from 'assets/svg/expando-icon-opened.svg'
@@ -11,7 +10,7 @@ import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult } from 'hooks/useSwapCallback'
 import styled from 'lib/styled-components'
 import ms from 'ms'
-import { ReactNode, useMemo, useState } from 'react'
+import { PropsWithChildren, ReactNode, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { InterfaceTrade, LimitOrderTrade, RouterPreference } from 'state/routing/types'
 import { isClassicTrade, isLimitTrade } from 'state/routing/utils'
@@ -21,6 +20,7 @@ import { ExternalLink } from 'theme/components/Links'
 import { Button, Flex, HeightAnimator, Separator, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
@@ -69,13 +69,24 @@ interface HelpLink {
   url: string
 }
 
-function DropdownController({ open, onClick }: { open: boolean; onClick: () => void }) {
+// TODO: Extract to Spore ExpandoRow component (WEB-7906)
+export function DropdownController({
+  open,
+  onClick,
+  children,
+}: PropsWithChildren & { open: boolean; onClick: () => void }) {
   return (
     <DropdownButton onClick={onClick}>
       <Separator />
       <DropdownControllerWrapper>
         <ThemedText.BodySmall color="neutral2">
-          {open ? <Trans i18nKey="common.showLess.button" /> : <Trans i18nKey="common.showMore.button" />}
+          {children ? (
+            children
+          ) : open ? (
+            <Trans i18nKey="common.showLess.button" />
+          ) : (
+            <Trans i18nKey="common.showMore.button" />
+          )}
         </ThemedText.BodySmall>
         {open ? <ExpandoIconOpened /> : <ExpandoIconClosed />}
       </DropdownControllerWrapper>
@@ -176,8 +187,8 @@ export function SwapDetails({
         <AutoRow>
           <Trace
             logPress
-            element={InterfaceElementName.CONFIRM_SWAP_BUTTON}
-            eventOnTrigger={SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED}
+            element={ElementName.ConfirmSwapButton}
+            eventOnTrigger={SwapEventName.SwapSubmittedButtonClicked}
             properties={{
               ...formatSwapButtonClickEventProperties({
                 trade,
@@ -199,7 +210,7 @@ export function SwapDetails({
               loading={isLoading}
               onPress={onConfirm}
               isDisabled={disabledConfirm}
-              id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+              id={ElementName.ConfirmSwapButton}
             >
               {isLoading ? t('swap.finalizingQuote') : callToAction.buttonText}
             </Button>
@@ -265,18 +276,17 @@ function SwapLineItems({
   )
 }
 
-function ExpandableLineItems(props: {
+function ExpandableLineItems({
+  open,
+  trade,
+  allowedSlippage,
+  priceImpact,
+}: {
   trade: InterfaceTrade
   allowedSlippage: Percent
   open: boolean
   priceImpact?: Percent
 }) {
-  const { open, trade, allowedSlippage, priceImpact } = props
-
-  if (!trade) {
-    return null
-  }
-
   const lineItemProps = { trade, allowedSlippage, syncing: false, priceImpact }
 
   return (

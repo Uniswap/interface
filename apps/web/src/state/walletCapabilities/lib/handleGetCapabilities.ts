@@ -52,10 +52,10 @@ enum AtomicBatchingStatus {
 
 export function isAtomicBatchingSupported(chainCapabilities: ChainCapabilities): boolean {
   return (
-    chainCapabilities?.atomic?.status === AtomicBatchingStatus.Supported ||
-    chainCapabilities?.atomic?.status === AtomicBatchingStatus.Ready ||
+    chainCapabilities.atomic?.status === AtomicBatchingStatus.Supported ||
+    chainCapabilities.atomic?.status === AtomicBatchingStatus.Ready ||
     // TODO(WEB-7872): Remove temporary support for v1 of atomic batching schema for coinbase wallet (remove line below)
-    chainCapabilities?.atomicBatch?.supported === true
+    chainCapabilities.atomicBatch?.supported === true
   )
 }
 
@@ -65,6 +65,7 @@ export function isAtomicBatchingSupportedByChainId(
 ): boolean {
   const key = ensure0xHex(numberToHex(chainId))
   const chainCapabilities = chainCapabilitiesResult[key]
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!chainCapabilities) {
     return false
   }

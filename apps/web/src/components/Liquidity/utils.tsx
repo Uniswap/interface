@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import {
   PairPosition,
   PoolPosition,
@@ -38,14 +39,14 @@ export function hasLPFoTTransferError(
   const currency = currencyInfo?.currency
 
   // FoT is only an issue for v3 + v4
-  if (!protocolVersion || protocolVersion === ProtocolVersion.V2 || !currency || currency?.isNative) {
+  if (!protocolVersion || protocolVersion === ProtocolVersion.V2 || !currency || currency.isNative) {
     return undefined
   }
 
-  return currency?.wrapped.buyFeeBps?.gt(0) ||
-    (currencyInfo?.safetyInfo?.blockaidFees?.buyFeePercent ?? 0) > 0 ||
-    currency?.wrapped.sellFeeBps?.gt(0) ||
-    (currencyInfo?.safetyInfo?.blockaidFees?.sellFeePercent ?? 0) > 0
+  return currency.wrapped.buyFeeBps?.gt(0) ||
+    (currencyInfo.safetyInfo?.blockaidFees?.buyFeePercent ?? 0) > 0 ||
+    currency.wrapped.sellFeeBps?.gt(0) ||
+    (currencyInfo.safetyInfo?.blockaidFees?.sellFeePercent ?? 0) > 0
     ? currencyInfo
     : undefined
 }
@@ -87,19 +88,6 @@ export function getProtocolStatusLabel(status: PositionStatus, t: AppTFunction):
   return undefined
 }
 
-export function parseProtocolVersion(version: string | undefined): ProtocolVersion | undefined {
-  switch (version?.toLowerCase()) {
-    case 'v2':
-      return ProtocolVersion.V2
-    case 'v3':
-      return ProtocolVersion.V3
-    case 'v4':
-      return ProtocolVersion.V4
-    default:
-      return undefined
-  }
-}
-
 export function getPositionUrl(position: PositionInfo): string {
   const chainUrlParam = getChainUrlParam(position.chainId)
   if (position.version === ProtocolVersion.V2) {
@@ -135,8 +123,8 @@ export function getPoolFromRest({
   hooks,
 }: {
   pool?: RestPool | PoolPosition
-  token0?: Currency
-  token1?: Currency
+  token0: Maybe<Currency>
+  token1: Maybe<Currency>
   protocolVersion: ProtocolVersion.V4
   hooks: string
 }): V4Pool | undefined
@@ -156,8 +144,8 @@ export function getPoolFromRest({
     }
   | {
       pool?: RestPool | PoolPosition
-      token0?: Currency
-      token1?: Currency
+      token0: Maybe<Currency>
+      token1: Maybe<Currency>
       protocolVersion: ProtocolVersion.V4
       hooks: string
     }): V3Pool | V4Pool | undefined {
@@ -197,7 +185,7 @@ export function getPoolFromRest({
       }
     }
 
-    const fee = parseInt(pool.feeTier ?? '')
+    const fee = parseInt(pool.feeTier)
     return new V4Pool(
       token0,
       token1,
@@ -301,6 +289,8 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
             tickUpper: Number(v3Position.tickUpper),
           })
         : undefined
+      const fee0Amount = CurrencyAmount.fromRawAmount(token0, v3Position.token0UncollectedFees)
+      const fee1Amount = CurrencyAmount.fromRawAmount(token1, v3Position.token1UncollectedFees)
 
       return {
         status: position.status,
@@ -317,6 +307,8 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
         tokenId: v3Position.tokenId,
         token0UncollectedFees: v3Position.token0UncollectedFees,
         token1UncollectedFees: v3Position.token1UncollectedFees,
+        fee0Amount,
+        fee1Amount,
         currency0Amount: CurrencyAmount.fromRawAmount(token0, v3Position.amount0),
         currency1Amount: CurrencyAmount.fromRawAmount(token1, v3Position.amount1),
         apr: v3Position.apr,
@@ -350,6 +342,8 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
           })
         : undefined
       const poolId = V4Pool.getPoolId(token0, token1, Number(v4Position.feeTier), Number(v4Position.tickSpacing), hook)
+      const fee0Amount = CurrencyAmount.fromRawAmount(token0, v4Position.token0UncollectedFees)
+      const fee1Amount = CurrencyAmount.fromRawAmount(token1, v4Position.token1UncollectedFees)
       return {
         status: position.status,
         feeTier: v4Position.feeTier,
@@ -363,10 +357,12 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
         tickLower: v4Position.tickLower,
         tickUpper: v4Position.tickUpper,
         tickSpacing: Number(v4Position.tickSpacing),
-        currency0Amount: CurrencyAmount.fromRawAmount(token0, v4Position.amount0 ?? 0),
-        currency1Amount: CurrencyAmount.fromRawAmount(token1, v4Position.amount1 ?? 0),
+        currency0Amount: CurrencyAmount.fromRawAmount(token0, v4Position.amount0),
+        currency1Amount: CurrencyAmount.fromRawAmount(token1, v4Position.amount1),
         token0UncollectedFees: v4Position.token0UncollectedFees,
         token1UncollectedFees: v4Position.token1UncollectedFees,
+        fee0Amount,
+        fee1Amount,
         liquidity: v4Position.liquidity,
         apr: v4Position.apr,
         owner: v4Position.owner,
@@ -374,8 +370,8 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
         totalApr: position.position.value.poolPosition?.totalApr,
         unclaimedRewardsAmountUni: position.position.value.poolPosition?.unclaimedRewardsAmountUni,
         boostedApr: position.position.value.poolPosition?.boostedApr,
-        token0Address: v4Position?.token0?.address,
-        token1Address: v4Position?.token1?.address,
+        token0Address: v4Position.token0?.address,
+        token1Address: v4Position.token1?.address,
       }
     } else {
       return undefined
@@ -520,12 +516,17 @@ export function getFlagWarning(flag: HookFlag, t: AppTFunction): FlagWarning | u
   }
 }
 
-export function mergeFeeTiers(
-  feeTiers: Record<number, FeeTierData>,
-  feeData: FeeData[],
-  formatPercent: (percent: string | number | undefined, maxDecimals?: 2 | 3 | 4) => string,
-  formattedDynamicFeeTier: string,
-): Record<number, FeeTierData> {
+export function mergeFeeTiers({
+  feeTiers,
+  feeData,
+  formatPercent,
+  formattedDynamicFeeTier,
+}: {
+  feeTiers: Record<number, FeeTierData>
+  feeData: FeeData[]
+  formatPercent: (percent: string | number | undefined, maxDecimals?: 2 | 3 | 4) => string
+  formattedDynamicFeeTier: string
+}): Record<number, FeeTierData> {
   const result: Record<number, FeeTierData> = {}
   for (const feeTier of feeData) {
     result[feeTier.feeAmount] = {
@@ -656,6 +657,7 @@ export function getDefaultFeeTiersWithData({
   ] as const
 
   return feeTiers.filter(
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     (feeTier) => feeTier.value !== undefined && Object.keys(feeTierData).includes(feeTier.tier.toString()),
   )
 }

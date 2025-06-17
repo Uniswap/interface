@@ -40,8 +40,8 @@ class TVLChartModel extends ChartModel<StackedLineData> {
     this.fitContent()
 
     this.api.subscribeCrosshairMove((param) => {
-      if (param?.logical !== this.hoveredLogicalIndex) {
-        this.hoveredLogicalIndex = param?.logical
+      if (param.logical !== this.hoveredLogicalIndex) {
+        this.hoveredLogicalIndex = param.logical
         this.series.applyOptions({
           hoveredLogicalIndex: this.hoveredLogicalIndex ?? (-1 as Logical), // -1 is used because series will use prev value if undefined is passed
         } as DeepPartial<StackedAreaSeriesOptions>)
@@ -118,7 +118,7 @@ export function LineChart({ height, data, sources, stale }: LineChartProps) {
     <Chart Model={TVLChartModel} params={params} height={height}>
       {(crosshairData: StackedLineData | undefined) => (
         <ChartHeader
-          value={(crosshairData ?? lastEntry)?.values.reduce((v, sum) => (sum += v), 0)}
+          value={(crosshairData ?? lastEntry).values.reduce((v, sum) => (sum += v), 0)}
           time={crosshairData?.time}
           protocolData={sources?.map((source, index) => ({ protocol: source, value: crosshairData?.values[index] }))}
         />

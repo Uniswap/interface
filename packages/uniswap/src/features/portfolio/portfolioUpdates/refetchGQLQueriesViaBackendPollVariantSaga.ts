@@ -47,11 +47,11 @@ export function* refetchGQLQueriesViaBackendPollVariant({
     isTestnetMode,
   })
 
-  const maxRefetchAttempts = getDynamicConfigValue(
-    DynamicConfigs.NetworkRequests,
-    NetworkRequestsConfigKey.BalanceMaxRefetchAttempts,
-    MAX_REFETCH_ATTEMPTS_FALLBACK,
-  )
+  const maxRefetchAttempts = getDynamicConfigValue({
+    config: DynamicConfigs.NetworkRequests,
+    key: NetworkRequestsConfigKey.BalanceMaxRefetchAttempts,
+    defaultValue: MAX_REFETCH_ATTEMPTS_FALLBACK,
+  })
 
   if (owner !== activeAddress) {
     // We can ignore if the transaction does not belong to the active account.

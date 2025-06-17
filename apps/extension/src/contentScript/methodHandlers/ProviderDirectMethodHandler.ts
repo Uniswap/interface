@@ -16,14 +16,21 @@ export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereu
     [key: string]: (provider: JsonRpcProvider, params: any[]) => Promise<any>
   }
 
-  constructor(
-    getChainId: () => string | undefined,
-    getProvider: () => JsonRpcProvider | undefined,
-    getConnectedAddresses: () => Address[] | undefined,
-    setChainIdAndMaybeEmit: (newChainId: string) => void,
-    setProvider: (newProvider: JsonRpcProvider) => void,
-    setConnectedAddressesAndMaybeEmit: (newConnectedAddresses: Address[]) => void,
-  ) {
+  constructor({
+    getChainId,
+    getProvider,
+    getConnectedAddresses,
+    setChainIdAndMaybeEmit,
+    setProvider,
+    setConnectedAddressesAndMaybeEmit,
+  }: {
+    getChainId: () => string | undefined
+    getProvider: () => JsonRpcProvider | undefined
+    getConnectedAddresses: () => Address[] | undefined
+    setChainIdAndMaybeEmit: (newChainId: string) => void
+    setProvider: (newProvider: JsonRpcProvider) => void
+    setConnectedAddressesAndMaybeEmit: (newConnectedAddresses: Address[]) => void
+  }) {
     super(
       getChainId,
       getProvider,
@@ -62,28 +69,31 @@ export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereu
         return
       }
       const response = handler(provider, request.params)
-      this.handleResponse(response, source, request.requestId)
+      this.handleResponse({ response, source, requestId: request.requestId })
     } else {
       // We shouldn't end up here because injected.ts checks that the method is supported before calling this function
-      logContentScriptError(
-        'Unexpected method requested',
-        'ProviderDirectMethodHandler.ts',
-        'handleRequest',
-        undefined,
-        {
+      logContentScriptError({
+        errorMessage: 'Unexpected method requested',
+        fileName: 'ProviderDirectMethodHandler.ts',
+        functionName: 'handleRequest',
+        extra: {
           method: request.method,
           dapp: window.origin,
         },
-      )
+      })
     }
   }
 
-  private handleResponse(
+  private handleResponse({
+    response,
+    source,
+    requestId,
+  }: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    response: Promise<any>,
-    source: MessageEventSource | null,
-    requestId: string,
-  ): void {
+    response: Promise<any>
+    source: MessageEventSource | null
+    requestId: string
+  }): void {
     response
       .then((result) => {
         source?.postMessage({

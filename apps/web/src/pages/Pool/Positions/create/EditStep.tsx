@@ -42,9 +42,14 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
   const { reset: resetPriceRangeState } = usePriceRangeContext()
   const { reset: resetDepositState } = useDepositContext()
 
-  const { creatingPoolOrPair, currencies, protocolVersion, defaultInitialPrice } = derivedPositionInfo
+  const {
+    creatingPoolOrPair,
+    currencies: { display },
+    protocolVersion,
+    defaultInitialPrice,
+  } = derivedPositionInfo
   const { fee, hook } = positionState
-  const [token0, token1] = currencies
+  const { TOKEN0, TOKEN1 } = display
   const versionLabel = getProtocolVersionLabel(protocolVersion)
   const media = useMedia()
 
@@ -58,12 +63,15 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
     <EditStep onClick={handleEdit} {...props}>
       <Flex gap="$gap12" width="100%">
         <Flex row gap="$gap12">
-          <DoubleCurrencyLogo currencies={[token0, token1]} size={media.md ? iconSizes.icon44 : iconSizes.icon32} />
+          <DoubleCurrencyLogo
+            currencies={[TOKEN0 ?? undefined, TOKEN1 ?? undefined]}
+            size={media.md ? iconSizes.icon44 : iconSizes.icon32}
+          />
           <Flex row gap="$gap12" $md={{ flexDirection: 'column', gap: '$gap4' }}>
             <Flex row gap="$gap8" alignItems="center">
-              <Text variant="subheading1">{token0?.symbol}</Text>
+              <Text variant="subheading1">{TOKEN0?.symbol}</Text>
               <Text variant="subheading1">/</Text>
-              <Text variant="subheading1">{token1?.symbol}</Text>
+              <Text variant="subheading1">{TOKEN1?.symbol}</Text>
             </Flex>
             <Flex row gap={2} alignItems="center">
               <LiquidityPositionInfoBadges

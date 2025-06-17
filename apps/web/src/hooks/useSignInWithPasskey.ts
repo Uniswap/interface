@@ -1,4 +1,3 @@
-import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
 import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
 import { useConnect } from 'hooks/useConnect'
@@ -12,8 +11,9 @@ import {
   signInWithPasskey as signInWithPasskeyAPI,
   signMessagesWithPasskey,
 } from 'uniswap/src/features/passkey/embeddedWallet'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { WalletConnectionResult } from 'uniswap/src/features/telemetry/types'
 import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
 import { logger } from 'utilities/src/logger/logger'
 import { isIFramed } from 'utils/isIFramed'
@@ -70,21 +70,21 @@ export function useSignInWithPasskey({
         }
 
         if (unitag) {
-          const unitagResult = await claimUnitag(
-            {
+          const unitagResult = await claimUnitag({
+            claim: {
               address: walletAddress,
               username: unitag,
             },
-            {
+            context: {
               source: 'onboarding',
               hasENSAddress: false,
             },
-            walletAddress,
-            async (message) => {
+            address: walletAddress,
+            signMessage: async (message) => {
               const messages = await signMessagesWithPasskey([message])
               return messages?.[0] || ''
             },
-          )
+          })
 
           if (unitagResult.claimError) {
             // TODO(WEB-7294): retry unitag flow
@@ -108,10 +108,10 @@ export function useSignInWithPasskey({
         setIsConnected(true)
         connection.connect({ connector })
         if (createNewWallet) {
-          sendAnalyticsEvent(InterfaceEventNameLocal.EmbeddedWalletCreated)
+          sendAnalyticsEvent(InterfaceEventName.EmbeddedWalletCreated)
         } else {
-          sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
-            result: WalletConnectionResult.SUCCEEDED,
+          sendAnalyticsEvent(InterfaceEventName.WalletConnected, {
+            result: WalletConnectionResult.Succeeded,
             wallet_name: connector.name,
             wallet_type: walletTypeToAmplitudeWalletType(connector.type),
             wallet_address: walletAddress,

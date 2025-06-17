@@ -4,7 +4,7 @@ import DeviceInfo from 'react-native-device-info'
 import { call, delay, fork, select } from 'typed-redux-saga'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { MobileUserPropertyName } from 'uniswap/src/features/telemetry/user'
-import { getUniqueId } from 'utilities/src/device/getUniqueId'
+import { getUniqueId } from 'utilities/src/device/uniqueId'
 import { isAndroid } from 'utilities/src/platform'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
@@ -15,18 +15,16 @@ import { watchTransactionEvents } from 'wallet/src/features/transactions/watcher
 export function* telemetrySaga() {
   yield* delay(1)
   const allowAnalytics = yield* select(selectAllowAnalytics)
-  yield* call(
-    analytics.init,
-    new ApplicationTransport({
+  yield* call(analytics.init, {
+    transportProvider: new ApplicationTransport({
       serverUrl: uniswapUrls.amplitudeProxyUrl,
       appOrigin: OriginApplication.MOBILE,
       originOverride: uniswapUrls.apiOrigin,
       appBuild: DeviceInfo.getBundleId(),
     }),
-    allowAnalytics,
-    undefined,
-    async () => getUniqueId(),
-  )
+    allowed: allowAnalytics,
+    userIdGetter: getUniqueId,
+  })
   if (isAndroid) {
     // Only need GAID, not using IDFA
     const advertisingInfoResponse = yield* call(ReactNativeIdfaAaid.getAdvertisingInfo)
@@ -35,7 +33,7 @@ export function* telemetrySaga() {
       yield* call(
         analytics.setUserProperty,
         MobileUserPropertyName.AdvertisingId,
-        adTrackingAllowed && advertisingInfoResponse.id ? advertisingInfoResponse.id : ANONYMOUS_DEVICE_ID,
+        advertisingInfoResponse.id ? advertisingInfoResponse.id : ANONYMOUS_DEVICE_ID,
       )
     }
   }

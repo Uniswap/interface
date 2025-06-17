@@ -66,7 +66,7 @@ export function OnboardingStepsProvider({
     }
   }, [disableRedirect, isOnboarded, isResetting])
 
-  const initialStep = Object.keys(steps)[0] as Step
+  const initialStep = Object.keys(steps)[0] as Step | undefined
 
   if (!initialStep) {
     throw new Error('`steps` must have at least one `step`')
@@ -121,7 +121,7 @@ export function OnboardingStepsProvider({
       // we are only updating onboardingScreen here once per unique title so
       // the state in this component is accurate, but subsequent updates go
       // through the emitter
-      if (onboardingScreenKey(prev?.onboardingScreen) !== onboardingScreenKey(next)) {
+      if (onboardingScreenKey(prev.onboardingScreen) !== onboardingScreenKey(next)) {
         return {
           ...prev,
           onboardingScreen: next,
@@ -156,7 +156,7 @@ export function OnboardingStepsProvider({
 
   const goToNextStep = useCallback(() => {
     const stepIndex = Object.keys(steps).indexOf(step)
-    const nextStep = Object.keys(steps)[stepIndex + 1] as Step
+    const nextStep = Object.keys(steps)[stepIndex + 1] as Step | undefined
 
     if (!nextStep) {
       throw new Error('No next step')
@@ -171,7 +171,7 @@ export function OnboardingStepsProvider({
 
   const goToPreviousStep = useCallback(() => {
     const stepIndex = Object.keys(steps).indexOf(step)
-    const previousStep = Object.keys(steps)[stepIndex - 1] as Step
+    const previousStep = Object.keys(steps)[stepIndex - 1] as Step | undefined
 
     if (!previousStep) {
       throw new Error('No previous step')
@@ -261,7 +261,7 @@ export function OnboardingStepsProvider({
                   y="$spacing16"
                   onLayout={(e) => setBelowFrameHeight(e.nativeEvent.layout.height)}
                 >
-                  {onboardingScreen?.belowFrameContent}
+                  {onboardingScreen.belowFrameContent}
                 </Flex>
               )}
             </Frame>

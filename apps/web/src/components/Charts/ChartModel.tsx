@@ -43,6 +43,7 @@ interface ChartDataParams<TDataType extends SeriesDataItemType> {
   data: TDataType[]
   /** Repesents whether `data` is stale. If true, stale UI will appear */
   stale?: boolean
+  hideTooltipBorder?: boolean
 }
 
 export type ChartModelParams<TDataType extends SeriesDataItemType> = ChartUtilParams<TDataType> &
@@ -106,7 +107,7 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
       ) {
         this._hoverData = newHoverData
         // Dynamically accesses this.onCrosshairMove rather than params.onCrosshairMove so we only ever have to make one subscribeCrosshairMove call
-        this.onSeriesHover?.(newHoverData)
+        this.onSeriesHover(newHoverData)
       }
     })
   }
@@ -132,7 +133,9 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
 
     const y = hoverData.y
     const flip = y <= 20 + 100
-    const yPx = y + (flip ? 1 : -1) * 20
+    // Add extra offset when in upper left to prevent cursor overlap
+    const extraOffset = y < 50 && hoverData.x < 100 ? 10 : 0
+    const yPx = y + (flip ? 1 : -1) * (20 + extraOffset)
     const yPct = flip ? '' : ' - 100%'
     const transformY = `calc(${yPx}px${yPct})`
 
@@ -143,7 +146,7 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
       tooltip.style.transform = `translate(${transformX}, ${transformY})`
 
       const tooltipMeasurement = tooltip.getBoundingClientRect()
-      this._lastTooltipWidth = tooltipMeasurement?.width || null
+      this._lastTooltipWidth = tooltipMeasurement.width || null
     }
     if (legend) {
       // keep legend centered on mouse cursor if hovered
@@ -248,7 +251,10 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
   }
 }
 
-const isBetween = (num: number, lower: number, upper: number) => num > lower && num < upper
+// eslint-disable-next-line max-params
+function isBetween(num: number, lower: number, upper: number): boolean {
+  return num > lower && num < upper
+}
 
 /** Returns a div injected with a lightweight-chart, corresponding to the given Model and params */
 export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType extends SeriesDataItemType>({
@@ -312,10 +318,12 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
     }
   }, [setRefitChartContent])
 
-  useOnClickOutside({ current: chartDivElement } as React.RefObject<HTMLDivElement>, () => setCrosshairData(undefined))
+  useOnClickOutside({
+    node: { current: chartDivElement } as React.RefObject<HTMLDivElement>,
+    handler: () => setCrosshairData(undefined),
+  })
 
   const touchMoveHandler = disableChartTouchPanning ? (e: TouchEvent<HTMLElement>) => e.stopPropagation() : undefined
-
   return (
     <Flex
       width="100%"
@@ -328,7 +336,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
     >
       {children && children(crosshairData)}
       {TooltipBody && crosshairData && (
-        <ChartTooltip id={chartModelRef.current?.tooltipId}>
+        <ChartTooltip id={chartModelRef.current?.tooltipId} includeBorder={!params.hideTooltipBorder}>
           <TooltipBody data={crosshairData} />
         </ChartTooltip>
       )}
@@ -343,13 +351,21 @@ const ChartTooltip = styled(Flex, {
   left: 0,
   top: 0,
   zIndex: '$tooltip',
-  backgroundColor: '$surface5',
-  backdropFilter: 'blur(8px)',
-  borderRadius: '$rounded8',
-  borderColor: '$surface3',
+  borderWidth: 0,
   borderStyle: 'solid',
-  borderWidth: 1,
-  p: '$spacing8',
+  pointerEvents: 'none', // Prevent tooltip from interfering with mouse events
+  variants: {
+    includeBorder: {
+      true: {
+        backgroundColor: '$surface5',
+        backdropFilter: 'blur(8px)',
+        borderRadius: '$rounded8',
+        borderColor: '$surface3',
+        borderWidth: 1,
+        p: '$spacing8',
+      },
+    },
+  },
 })
 
 const StaleBannerWrapper = styled(ChartTooltip, {

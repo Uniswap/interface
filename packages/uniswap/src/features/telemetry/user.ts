@@ -1,4 +1,3 @@
-import { CustomUserProperties } from '@uniswap/analytics-events'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { UserPropertyValue, analytics } from 'utilities/src/telemetry/analytics/analytics'
 
@@ -44,6 +43,8 @@ export enum ExtensionUserPropertyName {
   Currency = 'currency',
   DarkMode = 'is_dark_mode',
   BackupTypes = 'backup_types',
+  HasLoadedENS = 'has_loaded_ens',
+  HasLoadedUnitag = 'has_loaded_unitag',
   IsHideSmallBalancesEnabled = 'is_hide_small_balances_enabled',
   IsHideSpamTokensEnabled = 'is_hide_spam_tokens_enabled',
   Language = 'language',
@@ -55,20 +56,33 @@ export enum ExtensionUserPropertyName {
 }
 
 export enum InterfaceUserPropertyName {
+  AllWalletAddressesConnected = 'all_wallet_addresses_connected',
+  AllWalletChainIds = 'all_wallet_chain_ids',
+  Browser = 'browser',
+  ChainId = 'chain_id',
+  DarkMode = 'is_dark_mode',
+  ExpertMode = 'is_expert_mode',
+  GitCommitHash = 'git_commit_hash',
+  PeerWalletAgent = 'peer_wallet_agent',
+  RouterPreference = 'router_preference',
+  ScreenResolutionHeight = 'screen_resolution_height',
+  ScreenResolutionWidth = 'screen_resolution_width',
   SupportsAtomicBatching = 'supports_atomic_batching',
+  TestnetModeEnabled = 'testnet_mode_enabled',
+  UserAgent = 'user_agent',
+  WalletAddress = 'wallet_address',
+  WalletName = 'wallet_name',
+  WalletType = 'wallet_type',
+  WalletVersion = 'wallet_version',
 }
 
 export enum UniswapUserPropertyName {
   IsDelegatedEOA = 'is_delegated_eoa',
 }
 
+// eslint-disable-next-line max-params
 export function setUserProperty(
-  property:
-    | MobileUserPropertyName
-    | ExtensionUserPropertyName
-    | CustomUserProperties
-    | InterfaceUserPropertyName
-    | UniswapUserPropertyName,
+  property: MobileUserPropertyName | ExtensionUserPropertyName | InterfaceUserPropertyName | UniswapUserPropertyName,
   value: UserPropertyValue,
   insert?: boolean,
 ): void {

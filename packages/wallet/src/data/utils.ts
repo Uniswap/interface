@@ -36,17 +36,21 @@ export function useRefetchQueries(): (
 
   return useCallback(
     async (include: Parameters<ApolloClient<NormalizedCacheObject>['refetchQueries']>[0]['include'] = 'active') => {
-      await client?.refetchQueries({ include })
+      await client.refetchQueries({ include })
     },
     [client],
   )
 }
 
-export async function createOnRampTransactionsAuth(
-  limit: number,
-  account: Account,
-  signerManager: SignerManager,
-): Promise<OnRampTransactionsAuth> {
+export async function createOnRampTransactionsAuth({
+  limit,
+  account,
+  signerManager,
+}: {
+  limit: number
+  account: Account
+  signerManager: SignerManager
+}): Promise<OnRampTransactionsAuth> {
   const { requestParams, signature } = await createSignedRequestParams({
     data: { limit }, // Parameter needed by graphql server when fetching onramp transactions
     address: account.address,

@@ -7,6 +7,7 @@ import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/components/SwapRateRatio'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { CanonicalBridgeLinkBanner } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/CanonicalBridgeLinkBanner'
 import { GasInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/GasInfoRow'
@@ -14,7 +15,6 @@ import { TradeWarning } from 'uniswap/src/features/transactions/swap/form/SwapFo
 import { useDebouncedTrade } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/useDebouncedTrade'
 import type { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
-import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/shared-components/SwapRateRatio'
 import { isInterface, isMobileApp } from 'utilities/src/platform'
 
 // TradeInfoRow take `gasInfo` as a prop (rather than directly using useDebouncedGasInfo) because on mobile,

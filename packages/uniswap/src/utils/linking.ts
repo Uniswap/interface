@@ -21,14 +21,20 @@ const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
  * @param controlsColor When opening in an in-app browser, determines the controls color
  * @param throwOnError whether to throw errors instead of just logging them
  **/
-export async function openUri(
-  uri: string,
+export async function openUri({
+  uri,
   openExternalBrowser = false,
   isSafeUri = false,
-  // NOTE: okay to use colors object directly as we want the same color for light/dark modes
   controlsColor = colorsLight.accent1,
   throwOnError = false,
-): Promise<void> {
+}: {
+  uri: string
+  openExternalBrowser?: boolean
+  isSafeUri?: boolean
+  // NOTE: okay to use colors object directly as we want the same color for light/dark modes
+  controlsColor?: string
+  throwOnError?: boolean
+}): Promise<void> {
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {
     const error = new Error('User attempted to open potentially unsafe url')
@@ -99,9 +105,21 @@ export enum ExplorerDataType {
  * @param data the data to return a link for
  * @param type the type of the data
  */
-export function getExplorerLink(chainId: UniverseChainId, data: string, type: ExplorerDataType): string {
+export function getExplorerLink({
+  chainId,
+  data,
+  type,
+}: {
+  chainId: UniverseChainId
+  data?: string
+  type: ExplorerDataType
+}): string {
   const { explorer, nativeCurrency } = getChainInfo(chainId)
   const prefix = explorer.url
+
+  if (!data) {
+    return prefix
+  }
 
   switch (type) {
     case ExplorerDataType.TRANSACTION:
@@ -109,7 +127,7 @@ export function getExplorerLink(chainId: UniverseChainId, data: string, type: Ex
 
     case ExplorerDataType.TOKEN:
       if (data === nativeCurrency.address && nativeCurrency.explorerLink) {
-        return nativeCurrency.explorerLink ?? `${prefix}token/${data}`
+        return nativeCurrency.explorerLink
       }
       return `${prefix}token/${data}`
 
@@ -134,7 +152,7 @@ export function getExplorerLink(chainId: UniverseChainId, data: string, type: Ex
       return `${prefix}nft/${data}`
 
     default:
-      return `${prefix}`
+      return prefix
   }
 }
 
@@ -163,7 +181,7 @@ export function getTokenDetailsURL({
 
   const adjustedAddress = isNativeCurrencyAddress(chain, address) ? NATIVE_TOKEN_PLACEHOLDER : address
 
-  const chainName = chainUrlParam || String(chainInfo)?.toLowerCase() || Chain.Ethereum.toLowerCase()
+  const chainName = chainUrlParam || String(chainInfo).toLowerCase() || Chain.Ethereum.toLowerCase()
   const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
   return `/explore/tokens/${chainName}/${adjustedAddress}${inputAddressSuffix}`
 }

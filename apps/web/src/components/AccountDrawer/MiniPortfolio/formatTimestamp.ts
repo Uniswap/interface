@@ -3,7 +3,15 @@ export enum FormatType {
   Long = 'long',
 }
 
-export function formatTimestamp(timestamp: number | undefined, includeYear?: boolean, type = FormatType.Long): string {
+export function formatTimestamp({
+  timestamp,
+  includeYear = false,
+  type,
+}: {
+  timestamp?: number
+  includeYear?: boolean
+  type?: FormatType
+}): string {
   const options: Intl.DateTimeFormatOptions =
     type === FormatType.Long
       ? {

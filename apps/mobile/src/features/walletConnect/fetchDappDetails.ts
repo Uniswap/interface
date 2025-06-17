@@ -8,11 +8,11 @@ export function fetchDappDetails(
   try {
     const sessions = currentState.sessions
 
-    if (sessions && sessions[topic]) {
+    if (sessions[topic]) {
       const wcSession = sessions[topic]
       return {
-        dappIcon: wcSession?.dappRequestInfo?.icon || null,
-        dappName: wcSession?.dappRequestInfo?.name || '',
+        dappIcon: wcSession?.dappRequestInfo.icon || null,
+        dappName: wcSession?.dappRequestInfo.name || '',
       }
     }
   } catch (error) {

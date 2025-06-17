@@ -38,6 +38,7 @@ export function getChromeWithThrow(): typeof chrome {
  * and we want to be able to have access to these types while preventing accidental use when not available.
  */
 export function getChromeRuntime(): typeof chrome.runtime | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof chrome !== 'undefined' && chrome.runtime) {
     return chrome.runtime
   }
@@ -52,6 +53,7 @@ export function getChromeRuntime(): typeof chrome.runtime | undefined {
  * Use this when the code is running in the Extension context.
  */
 export function getChromeRuntimeWithThrow(): typeof chrome.runtime {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof chrome !== 'undefined' && chrome.runtime) {
     return chrome.runtime
   }

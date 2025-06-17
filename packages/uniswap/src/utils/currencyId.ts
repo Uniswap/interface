@@ -1,11 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
 import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
-import {
-  DEFAULT_NATIVE_ADDRESS,
-  DEFAULT_NATIVE_ADDRESS_LEGACY,
-  getChainInfo,
-} from 'uniswap/src/features/chains/chainInfo'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -14,7 +11,10 @@ import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 export function currencyId(tradeableAsset: TradeableAsset): CurrencyId
 export function currencyId(currency: Currency): CurrencyId
 export function currencyId(currency: Currency | undefined): CurrencyId | undefined
-export function currencyId(currencyOrTradeableAsset: Currency | TradeableAsset | undefined): CurrencyId | undefined {
+export function currencyId(currency: Maybe<Currency>): CurrencyId | undefined
+export function currencyId(
+  currencyOrTradeableAsset: Maybe<Currency> | TradeableAsset | undefined,
+): CurrencyId | undefined {
   if (!currencyOrTradeableAsset) {
     return undefined
   }
@@ -37,7 +37,7 @@ export function buildCurrencyId(chainId: UniverseChainId, address: string): stri
 export function isCurrencyIdValid(_currencyId: CurrencyId): boolean {
   try {
     const [chainId, address] = _currencyId.split('-')
-    const validAddress = getValidAddress(address)
+    const validAddress = getValidAddress({ address })
     const validChainId = toSupportedChainId(chainId)
     return !!validChainId && !!validAddress
   } catch (error) {
@@ -57,7 +57,7 @@ export function areCurrencyIdsEqual(id1: CurrencyId, id2: CurrencyId): boolean {
   return id1.toLowerCase() === id2.toLowerCase()
 }
 
-export function areCurrenciesEqual(currency1?: Currency, currency2?: Currency): boolean {
+export function areCurrenciesEqual(currency1?: Maybe<Currency>, currency2?: Maybe<Currency>): boolean {
   if (!(currency1 && currency2)) {
     return currency1 === currency2
   }

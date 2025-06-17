@@ -414,7 +414,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     const onboardingAddresses = onboardingAccounts.map((a) => a.address)
 
     // Activate all pending accounts
-    if (onboardingAccounts) {
+    if (onboardingAccounts.length > 0) {
       dispatch(
         createAccountsActions.trigger({
           accounts: onboardingAccounts,
@@ -427,15 +427,15 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
 
     // Claim unitag if there's a claim to process
     if (unitagClaim && isValidUnitagClaimState && onboardingAccount && !isWatchFlow) {
-      const { claimError } = await claimUnitag(
-        unitagClaim,
-        {
+      const { claimError } = await claimUnitag({
+        claim: unitagClaim,
+        context: {
           source: 'onboarding',
           hasENSAddress: false,
         },
-        onboardingAccount?.address,
-        generateSignerFunc(onboardingAccount, signerManager),
-      )
+        address: onboardingAccount.address,
+        signMessage: generateSignerFunc(onboardingAccount, signerManager),
+      })
 
       if (claimError && !extensionOnboardingFlow) {
         dispatch(
@@ -449,7 +449,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
 
     // enables push notifications for mobile based on account settings
     onboardingAccounts.forEach((acc) => {
-      if (acc?.pushNotificationsEnabled) {
+      if (acc.pushNotificationsEnabled) {
         dispatch(
           editAccountActions.trigger({
             type: EditAccountAction.TogglePushNotification,
@@ -512,7 +512,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
    */
   const addOnboardingAccountMnemonic = (mnemonic: string[]): void => {
     throwIfNotExtension()
-    if (!mnemonic || (mnemonic.length !== 12 && mnemonic.length !== 24)) {
+    if (mnemonic.length !== 12 && mnemonic.length !== 24) {
       throw new Error('Incorrect mnemonic value passed to addOnboardingAccountMnemonic function')
     }
     setOnboardingAccountMnemonic(mnemonic)

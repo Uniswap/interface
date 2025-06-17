@@ -2,7 +2,7 @@ import React from 'react'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 
 export function OptionCard({
@@ -20,7 +20,7 @@ export function OptionCard({
   blurb: string
   icon: React.ReactNode
   onPress: () => void
-  elementName: ElementNameType
+  elementName: ElementName
   testID: TestIDType
   disabled?: boolean
   opacity?: number

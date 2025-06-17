@@ -15,19 +15,19 @@ export function TransferNFTNotification({ notification }: { notification: Transf
   const userAddress = useActiveAccountAddressWithThrow()
   const senderOrRecipient = txType === TransactionType.Send ? notification.recipient : notification.sender
   const nftOwner = txType === TransactionType.Send ? notification.recipient : userAddress
-  const { data: nft } = useNFT(nftOwner, tokenAddress, tokenId)
+  const { data: nft } = useNFT({ owner: nftOwner, address: tokenAddress, tokenId })
   const { name: displayName, type: displayNameType } =
     useDisplayName(senderOrRecipient, { includeUnitagSuffix: true }) ?? {}
   const showUnicon = txStatus !== TransactionStatus.Canceled && displayNameType === DisplayNameType.Unitag
 
-  const title = formTransferNFTNotificationTitle(
+  const title = formTransferNFTNotificationTitle({
     txType,
     txStatus,
     nft,
     tokenAddress,
     tokenId,
-    displayName ?? senderOrRecipient,
-  )
+    senderOrRecipient: displayName ?? senderOrRecipient,
+  })
 
   const { navigateToAccountActivityList } = useWalletNavigation()
 

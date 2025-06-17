@@ -391,7 +391,7 @@ export const MNW = new Token(
   'Morpheus.Network',
 )
 
-export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
+export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
   ...(WETH9 as Record<UniverseChainId, Token>),
   [UniverseChainId.ArbitrumOne]: new Token(
     UniverseChainId.ArbitrumOne,

@@ -59,7 +59,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
 
   // Note that if a user has a Unitag AND ENS, this prioritizes the Unitag's metadata over the ENS metadata
   const nameToFetchENSMetadata =
-    (displayName?.type === DisplayNameType.ENS || displayName?.type === DisplayNameType.Unitag) && displayName?.name
+    (displayName?.type === DisplayNameType.ENS || displayName?.type === DisplayNameType.Unitag) && displayName.name
       ? displayName.name
       : undefined
 
@@ -116,7 +116,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
 
   const onPressTwitter = useCallback(async () => {
     if (twitter) {
-      await openUri(`https://twitter.com/${twitter}`)
+      await openUri({ uri: `https://twitter.com/${twitter}` })
     }
   }, [twitter])
 

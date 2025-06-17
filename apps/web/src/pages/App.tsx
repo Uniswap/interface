@@ -50,7 +50,7 @@ export default function App() {
   const staticDescription = findRouteByPath(pathname)?.getDescription(pathname)
 
   // redirect address to landing pages until implemented
-  const shouldRedirectToAppInstall = pathname?.startsWith('/address/')
+  const shouldRedirectToAppInstall = pathname.startsWith('/address/')
   useLayoutEffect(() => {
     if (shouldRedirectToAppInstall) {
       window.location.href = MICROSITE_LINK

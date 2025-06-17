@@ -1,10 +1,10 @@
-import { SwapEventName } from '@uniswap/analytics-events'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
@@ -69,12 +69,13 @@ export function useSwapCallback(): SwapCallback {
       })
       appDispatch(swapActions.trigger({ swapTxContext, txId, account, analytics, onSuccess, onFailure, onPending }))
 
-      const blockNumber = getClassicQuoteFromResponse(trade?.quote)?.blockNumber?.toString()
+      const blockNumber = getClassicQuoteFromResponse(trade.quote)?.blockNumber?.toString()
 
-      sendAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
+      sendAnalyticsEvent(SwapEventName.SwapSubmittedButtonClicked, {
         ...analytics,
         estimated_network_fee_wei: gasFee.value,
-        gas_limit: isClassic(swapTxContext) ? toStringish(swapTxContext.txRequests?.[0]?.gasLimit) : undefined,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        gas_limit: isClassic(swapTxContext) ? toStringish(swapTxContext.txRequests[0]?.gasLimit) : undefined,
         transaction_deadline_seconds: trade.deadline,
         swap_quote_block_number: blockNumber,
         is_auto_slippage: isAutoSlippage,

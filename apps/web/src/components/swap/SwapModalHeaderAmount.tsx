@@ -75,7 +75,7 @@ export function SwapModalHeaderAmount({
               value: amount,
               type: NumberType.TokenTx,
             })}{' '}
-            {currency?.symbol}
+            {currency.symbol}
           </ResponsiveHeadline>
           <ThemedText.BodySmall color="neutral2">
             {convertFiatAmountFormatted(usdAmount, NumberType.FiatTokenQuantity)}

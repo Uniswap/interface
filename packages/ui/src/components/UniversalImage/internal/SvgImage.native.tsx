@@ -42,7 +42,7 @@ const getHTML = (svgContent: string): string => `
 export function SvgImage({ uri, size, autoplay, fallback }: SvgImageProps): JSX.Element | null {
   const svgData = useSvgData(uri, autoplay)
 
-  if (!svgData?.content || !svgData?.aspectRatio) {
+  if (!svgData?.content || !svgData.aspectRatio) {
     return fallback ?? <Loader.Image />
   }
 

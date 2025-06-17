@@ -80,7 +80,7 @@ const testCases: [MockJsonRpcProvider, WalletMeta | undefined][] = [
 
 describe('meta', () => {
   describe.each(testCases)('getWalletMeta/getWalletName returns the project meta/name', (provider, meta) => {
-    it(`${provider?.name} ${provider.arg}`, () => {
+    it(`${provider.name} ${provider.arg}`, () => {
       expect(getWalletMeta(provider)).toEqual(meta)
     })
   })

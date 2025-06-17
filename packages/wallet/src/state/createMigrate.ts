@@ -13,7 +13,8 @@ export function createMigrate(
         return Promise.resolve(undefined)
       }
 
-      const inboundVersion: number = state._persist?.version ?? DEFAULT_VERSION
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      const inboundVersion: number = state._persist.version ?? DEFAULT_VERSION
 
       if (inboundVersion === currentVersion) {
         logger.debug('redux-persist', 'createMigrate', `versions match (${currentVersion}), noop migration`)

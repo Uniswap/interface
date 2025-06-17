@@ -25,9 +25,36 @@ export enum FiatOnRampEventName {
   FiatOnRampTransactionUpdated = 'Fiat OnRamp Transaction Updated',
   FiatOnRampTokenSelected = 'Fiat OnRamp Token Selected',
   FiatOnRampWidgetOpened = 'Fiat OnRamp Widget Opened',
+  FiatOnRampTransferWidgetOpened = 'Fiat OnRamp Transfer Widget Opened',
 }
 
-export enum InstitutionTransferEventName {
-  InstitutionTransferTransactionUpdated = 'Institution Transfer Transaction Updated',
-  InstitutionTransferWidgetOpened = 'Institution Transfer Widget Opened',
+export enum SwapEventName {
+  SwapAutorouterVisualizationExpanded = 'Swap Autorouter Visualization Expanded',
+  SwapDetailsExpanded = 'Swap Details Expanded',
+  SwapError = 'Swap Error',
+  SwapEstimateGasCallFailed = 'Swap Estimate Gas Call Failed',
+  SwapFirstAction = 'Swap First Action',
+  SwapFirstSignatureRequested = 'Swap First Signature Requested',
+  SwapMaxTokenAmountSelected = 'Swap Max Token Amount Selected',
+  SwapModifiedInWallet = 'Swap Modified in Wallet',
+  SwapPreselectAssetSelected = 'Swap Preselect Asset Selected',
+  SwapPresetTokenAmountSelected = 'Swap Preset Token Amount Selected',
+  SwapPriceImpactAcknowledged = 'Swap Price Impact Acknowledged',
+  SwapPriceUpdateAcknowledged = 'Swap Price Update Acknowledged',
+  SwapQuoteFetch = 'Swap Quote Fetch',
+  SwapQuoteReceived = 'Swap Quote Received',
+  SwapSigned = 'Swap Signed',
+  SwapSubmittedButtonClicked = 'Swap Submit Button Clicked',
+  SwapTokensReversed = 'Swap Tokens Reversed',
+  SwapTransactionCompleted = 'Swap Transaction Completed',
+  SwapTransactionFailed = 'Swap Transaction Failed',
+}
+
+export enum LiquidityEventName {
+  AddLiquiditySubmitted = 'Add Liquidity Submitted',
+  CollectLiquiditySubmitted = 'Collect Liquidity Submitted',
+  MigrateLiquiditySubmitted = 'Migrate Liquidity Submitted',
+  RemoveLiquiditySubmitted = 'Remove Liquidity Submitted',
+  SelectLiquidityPoolFeeTier = 'Select Liquidity Pool Fee Tier',
+  TransactionModifiedInWallet = 'Transaction Modified in Wallet',
 }

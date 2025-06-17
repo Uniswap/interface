@@ -49,15 +49,23 @@ function getAssetMediaType(asset: GenieAsset | WalletAsset) {
 }
 
 // eslint-disable-next-line consistent-return
-export function getNftDisplayComponent(
-  asset: GenieAsset | WalletAsset,
-  mediaShouldBePlaying: boolean,
-  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void,
-  uniformAspectRatio?: UniformAspectRatio,
-  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void,
-  renderedHeight?: number,
-  setRenderedHeight?: (renderedHeight: number | undefined) => void,
-) {
+export function getNftDisplayComponent({
+  asset,
+  mediaShouldBePlaying,
+  setCurrentTokenPlayingMedia,
+  uniformAspectRatio,
+  setUniformAspectRatio,
+  renderedHeight,
+  setRenderedHeight,
+}: {
+  asset: GenieAsset | WalletAsset
+  mediaShouldBePlaying: boolean
+  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
+  uniformAspectRatio?: UniformAspectRatio
+  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
+  renderedHeight?: number
+  setRenderedHeight?: (renderedHeight: number | undefined) => void
+}) {
   switch (getAssetMediaType(asset)) {
     case AssetMediaType.Image:
       return (
@@ -159,13 +167,19 @@ export function getMarketplaceIcon(market: Markets): ReactNode {
   }
 }
 
-export const handleUniformAspectRatio = (
-  uniformAspectRatio: UniformAspectRatio,
-  e: React.SyntheticEvent<HTMLElement, Event>,
-  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void,
-  renderedHeight?: number,
-  setRenderedHeight?: (renderedHeight: number | undefined) => void,
-) => {
+export function handleUniformAspectRatio({
+  uniformAspectRatio,
+  e,
+  setUniformAspectRatio,
+  renderedHeight,
+  setRenderedHeight,
+}: {
+  uniformAspectRatio: UniformAspectRatio
+  e: React.SyntheticEvent<HTMLElement, Event>
+  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
+  renderedHeight?: number
+  setRenderedHeight?: (renderedHeight: number | undefined) => void
+}): void {
   if (uniformAspectRatio !== UniformAspectRatios.square && setUniformAspectRatio) {
     const height = e.currentTarget.clientHeight
     const width = e.currentTarget.clientWidth

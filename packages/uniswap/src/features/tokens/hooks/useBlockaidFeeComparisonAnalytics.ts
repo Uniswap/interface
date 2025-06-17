@@ -3,7 +3,7 @@ import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { UniswapEventName } from 'uniswap/src/features/telemetry/constants/uniswap'
+import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
 import { getTokenProtectionFeeOnTransfer } from 'uniswap/src/features/tokens/safetyUtils'
 
@@ -45,8 +45,8 @@ export function useBlockaidFeeComparisonAnalytics(currencyInfo: Maybe<CurrencyIn
         chainId: currencyInfo.currency.chainId,
         buyFeePercent,
         sellFeePercent,
-        blockaidBuyFeePercent: currencyInfo?.safetyInfo?.blockaidFees?.buyFeePercent,
-        blockaidSellFeePercent: currencyInfo?.safetyInfo?.blockaidFees?.sellFeePercent,
+        blockaidBuyFeePercent: currencyInfo.safetyInfo?.blockaidFees?.buyFeePercent,
+        blockaidSellFeePercent: currencyInfo.safetyInfo?.blockaidFees?.sellFeePercent,
         attackType: currencyInfo.safetyInfo?.attackType,
         protectionResult: currencyInfo.safetyInfo?.protectionResult,
       })

@@ -61,7 +61,7 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
   }, [totalRequestCount])
 
   const dappUrl = extractBaseUrl(request?.senderTabInfo.url) || ''
-  const dappIconUrl = request?.senderTabInfo?.favIconUrl || ''
+  const dappIconUrl = request?.senderTabInfo.favIconUrl || ''
 
   let currentAccount = activeAccount
   if (request?.dappInfo) {

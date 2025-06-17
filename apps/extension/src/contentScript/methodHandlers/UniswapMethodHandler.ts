@@ -22,14 +22,22 @@ import { logger } from 'utilities/src/logger/logger'
 export class UniswapMethodHandler extends BaseMethodHandler<WindowEthereumRequest> {
   private readonly requestIdToSourceMap: Map<string, PendingResponseInfo> = new Map()
 
-  constructor(
-    getChainId: () => string | undefined,
-    getProvider: () => JsonRpcProvider | undefined,
-    getConnectedAddresses: () => Address[] | undefined,
-    setChainIdAndMaybeEmit: (newChainId: string) => void,
-    setProvider: (newProvider: JsonRpcProvider) => void,
-    setConnectedAddressesAndMaybeEmit: (newConnectedAddresses: Address[]) => void,
-  ) {
+  // eslint-disable-next-line max-params
+  constructor({
+    getChainId,
+    getProvider,
+    getConnectedAddresses,
+    setChainIdAndMaybeEmit,
+    setProvider,
+    setConnectedAddressesAndMaybeEmit,
+  }: {
+    getChainId: () => string | undefined
+    getProvider: () => JsonRpcProvider | undefined
+    getConnectedAddresses: () => Address[] | undefined
+    setChainIdAndMaybeEmit: (newChainId: string) => void
+    setProvider: (newProvider: JsonRpcProvider) => void
+    setConnectedAddressesAndMaybeEmit: (newConnectedAddresses: Address[]) => void
+  }) {
     super(
       getChainId,
       getProvider,
@@ -40,11 +48,11 @@ export class UniswapMethodHandler extends BaseMethodHandler<WindowEthereumReques
     )
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.UniswapOpenSidebarResponse, (message) => {
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.UniswapOpenSidebarResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.UniswapOpenSidebarResponse,
+      })?.source
 
       source?.postMessage({
         requestId: message.requestId,

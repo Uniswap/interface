@@ -8,7 +8,15 @@ import { useAnalyticsNavigationContext } from 'utilities/src/telemetry/trace/Ana
 import { ITraceContext, TraceContext, useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getEventHandlers } from 'utilities/src/telemetry/trace/utils'
 
-export function getEventsFromProps(logPress?: boolean, logFocus?: boolean, logKeyPress?: boolean): string[] {
+function getEventsFromProps({
+  logPress = false,
+  logFocus = false,
+  logKeyPress = false,
+}: {
+  logPress?: boolean
+  logFocus?: boolean
+  logKeyPress?: boolean
+}): string[] {
   const events = []
   if (logPress) {
     events.push(isWeb ? 'onClick' : 'onPress')
@@ -71,7 +79,7 @@ function _Trace({
   const parentTrace = useTrace()
 
   const events = useMemo(() => {
-    return getEventsFromProps(logPress, logFocus, logKeyPress)
+    return getEventsFromProps({ logPress, logFocus, logKeyPress })
   }, [logFocus, logKeyPress, logPress])
 
   // Component props are destructured to ensure shallow comparison
@@ -124,14 +132,14 @@ function _Trace({
             // For each child, augment event handlers defined in `actionProps` with event tracing
             return React.cloneElement(
               child,
-              getEventHandlers(
+              getEventHandlers({
                 child,
                 consumedProps,
-                events,
-                eventOnTrigger ?? SharedEventName.ELEMENT_CLICKED,
+                triggers: events,
+                eventName: eventOnTrigger ?? SharedEventName.ELEMENT_CLICKED,
                 element,
                 properties,
-              ),
+              }),
             )
           })
         }

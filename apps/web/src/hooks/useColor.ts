@@ -11,10 +11,24 @@ export function useColor(currency?: Currency, contrastSettings?: ContrastSetting
   const currencyInfo = useCurrencyInfo(currency)
   const src = currencyInfo?.logoUrl ?? undefined
 
-  return useSrcColor(src, currency?.name, contrastSettings?.backgroundColor).tokenColor ?? theme.accent1
+  return (
+    useSrcColor({
+      src,
+      currencyName: currency?.name,
+      backgroundColor: contrastSettings?.backgroundColor,
+    }).tokenColor ?? theme.accent1
+  )
 }
 
-export function useSrcColor(src?: string, currencyName?: string, backgroundColor?: string) {
+export function useSrcColor({
+  src,
+  currencyName,
+  backgroundColor,
+}: {
+  src?: string
+  currencyName?: string
+  backgroundColor?: string
+}) {
   const theme = useTheme()
 
   const extractSrc = useMemo(
@@ -22,5 +36,10 @@ export function useSrcColor(src?: string, currencyName?: string, backgroundColor
     [src],
   )
 
-  return useExtractedTokenColor(extractSrc, currencyName, backgroundColor ?? theme.surface1, theme.accent1)
+  return useExtractedTokenColor({
+    imageUrl: extractSrc,
+    tokenName: currencyName,
+    backgroundColor: backgroundColor ?? theme.surface1,
+    defaultColor: theme.accent1,
+  })
 }

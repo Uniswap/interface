@@ -49,9 +49,7 @@ function findClosestElementBinarySearch(data: ChartEntry[], target?: number) {
   const closestElement =
     Math.abs(closest.price0 - target) <= Math.abs(nextClosest.price0 - target) ? closest : nextClosest
 
-  if (closestElement) {
-    priceDataCache.set(target.toString(), closestElement)
-  }
+  priceDataCache.set(target.toString(), closestElement)
   return closestElement
 }
 
@@ -122,7 +120,7 @@ export function ActiveLiquidityChart({
   }, [min, max, series, height, width, axisLabelPaneWidth, contentWidth])
 
   const hoveredTick = useMemo(() => {
-    if (!hoverY || !yScale) {
+    if (!hoverY) {
       return undefined
     }
     const price = yScale.invert(hoverY)
@@ -209,7 +207,7 @@ export function ActiveLiquidityChart({
           if (!svgRef.current) {
             return
           }
-          const rect = svgRef.current?.getBoundingClientRect()
+          const rect = svgRef.current.getBoundingClientRect()
           const y = event.clientY - rect.top
           const x = event.clientX - rect.left
           if (x > width - axisLabelPaneWidth - contentWidth) {

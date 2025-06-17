@@ -19,11 +19,15 @@ const FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT = ONE_MINUTE_MS * 5
 /**
  * Utility to fetch FOR transactions
  */
-export async function fetchFORTransaction(
-  previousTransactionDetails: FORTransactionDetails,
-  forceFetch: boolean,
-  activeAccountAddress: Address | null,
-): Promise<FORTransactionDetails | undefined> {
+export async function fetchFORTransaction({
+  previousTransactionDetails,
+  forceFetch,
+  activeAccountAddress,
+}: {
+  previousTransactionDetails: FORTransactionDetails
+  forceFetch: boolean
+  activeAccountAddress: Address | null
+}): Promise<FORTransactionDetails | undefined> {
   const isOffRamp = isOffRampTransaction(previousTransactionDetails)
   const isRecent = dayjs(previousTransactionDetails.addedTime).isAfter(
     dayjs().subtract(FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT, 'ms'),
@@ -72,15 +76,20 @@ export async function fetchFORTransaction(
     }
   }
 
-  return extractFORTransactionDetails(transaction, isOffRamp, activeAccountAddress)
+  return extractFORTransactionDetails({ transaction, isOffRamp, activeAccountAddress })
 }
 
-export async function fetchOffRampTransferDetails(
-  sessionId: string | null,
-  baseCurrencyCode: string | null,
-  baseCurrencyAmount: number | null,
-  depositWalletAddress: string | null,
-): Promise<OffRampTransferDetailsResponse> {
+export async function fetchOffRampTransferDetails({
+  sessionId,
+  baseCurrencyCode,
+  baseCurrencyAmount,
+  depositWalletAddress,
+}: {
+  sessionId: string | null
+  baseCurrencyCode: string | null
+  baseCurrencyAmount: number | null
+  depositWalletAddress: string | null
+}): Promise<OffRampTransferDetailsResponse> {
   let requestParams: OffRampTransferDetailsRequest | undefined
 
   if (baseCurrencyCode && baseCurrencyAmount && depositWalletAddress) {

@@ -144,7 +144,7 @@ export function RadioButton({ value, variant = 'default', ...rest }: RadioButton
       <Flex
         alignItems="center"
         animation="simple"
-        borderColor={getFocusedRingColor(variant, isFocused, isSelected, accentColor)}
+        borderColor={getFocusedRingColor({ variant, isFocused, isSelected, accentColor })}
         borderRadius="$roundedFull"
         borderWidth="$spacing1"
         height={sizes.FocusRing}
@@ -163,12 +163,17 @@ function getAccentColor(variant: SporeComponentVariant, isHovered: boolean): Get
   return isHovered ? '$accent3Hovered' : '$accent3'
 }
 
-function getFocusedRingColor(
-  variant: SporeComponentVariant,
-  isFocused: boolean,
-  isSelected: boolean,
-  accentColor: GetThemeValueForKey<'backgroundColor'>,
-): GetThemeValueForKey<'borderColor'> {
+function getFocusedRingColor({
+  variant,
+  isFocused,
+  isSelected,
+  accentColor,
+}: {
+  variant: SporeComponentVariant
+  isFocused: boolean
+  isSelected: boolean
+  accentColor: GetThemeValueForKey<'backgroundColor'>
+}): GetThemeValueForKey<'borderColor'> {
   if (!isFocused) {
     return 'transparent'
   }

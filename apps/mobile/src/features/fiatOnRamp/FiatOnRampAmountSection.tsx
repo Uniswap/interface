@@ -13,7 +13,7 @@ import {
   useShakeAnimation,
   useSporeColors,
 } from 'ui/src'
-import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
+import { ArrowDownArrowUp } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
@@ -105,7 +105,11 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
       onLayout: onInputLayout,
       fontSize,
       onSetFontSize,
-    } = useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE)
+    } = useDynamicFontSizing({
+      maxCharWidthAtMaxFontSize: MAX_CHAR_PIXEL_WIDTH,
+      maxFontSize: MAX_INPUT_FONT_SIZE,
+      minFontSize: MIN_INPUT_FONT_SIZE,
+    })
     const prevErrorText = usePrevious(errorText)
     const { fullHeight } = useDeviceDimensions()
 
@@ -300,7 +304,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
               >
                 {formattedDerivedAmount}
               </Text>
-              <ArrowUpDown color="$neutral2" maxWidth={16} size="$icon.16" />
+              <ArrowDownArrowUp color="$neutral2" maxWidth={16} size="$icon.16" />
             </Flex>
           </TouchableArea>
         )}

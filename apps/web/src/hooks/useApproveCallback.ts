@@ -28,6 +28,10 @@ export function useApproveCallback(
   amountToApprove?: CurrencyAmount<Currency>,
   spender?: string,
 ): [ApprovalState, () => Promise<void>] {
-  const [approval, getApproval] = useApproval(amountToApprove, spender, useHasPendingApproval)
+  const [approval, getApproval] = useApproval({
+    amountToApprove,
+    spender,
+    useIsPendingApproval: useHasPendingApproval,
+  })
   return [approval, useGetAndTrackApproval(getApproval)]
 }

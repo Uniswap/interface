@@ -36,7 +36,7 @@ export function getChainLabel(chainId: UniverseChainId): string {
 }
 
 export function isTestnetChain(chainId: UniverseChainId): boolean {
-  return Boolean(getChainInfo(chainId)?.testnet)
+  return Boolean(getChainInfo(chainId).testnet)
 }
 
 export function getChainIdByInfuraPrefix(prefix: string): UniverseChainId | undefined {
@@ -54,7 +54,7 @@ export function isBackendSupportedChain(chain: Chain): chain is GqlChainId {
     return false
   }
 
-  return chainId && isBackendSupportedChainId(chainId)
+  return isBackendSupportedChainId(chainId)
 }
 
 export function chainIdToHexadecimalString(chainId: UniverseChainId): string {

@@ -24,7 +24,7 @@ const slice = createSlice({
     addTokensToBalanceOverride: (state, action: PayloadAction<{ ownerAddress: Address; currencyIds: string[] }>) => {
       const { ownerAddress, currencyIds } = action.payload
 
-      const accountId = getValidAddress(ownerAddress)
+      const accountId = getValidAddress({ address: ownerAddress })
 
       if (!accountId) {
         logger.error(new Error('Unexpected call to `addTokensToBalanceOverride` with an invalid address'), {
@@ -51,7 +51,7 @@ const slice = createSlice({
     ) => {
       const { ownerAddress, chainId, tokenAddress } = action.payload
 
-      const accountId = getValidAddress(ownerAddress)
+      const accountId = getValidAddress({ address: ownerAddress })
 
       if (!accountId) {
         logger.error(new Error('Unexpected call to `removeTokenFromBalanceOverride` with an invalid address'), {

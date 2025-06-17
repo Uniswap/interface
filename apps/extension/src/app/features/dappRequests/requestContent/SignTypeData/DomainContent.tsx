@@ -13,7 +13,9 @@ export const DomainContent = ({
 }: EIP712DomainType): JSX.Element => {
   const chainId = toSupportedChainId(domainChainId)
   const verifyingContractLink =
-    chainId && verifyingContract ? getExplorerLink(chainId, verifyingContract, ExplorerDataType.ADDRESS) : undefined
+    chainId && verifyingContract
+      ? getExplorerLink({ chainId, data: verifyingContract, type: ExplorerDataType.ADDRESS })
+      : undefined
   return (
     <>
       {name && (

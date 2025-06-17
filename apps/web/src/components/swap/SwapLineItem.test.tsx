@@ -18,8 +18,8 @@ import {
 import { render, screen } from 'test-utils/render'
 
 // Forces tooltips to render in snapshots
-jest.mock('react-dom', () => {
-  const original = jest.requireActual('react-dom')
+vi.mock('react-dom', () => {
+  const original = vi.importActual('react-dom')
   return {
     ...original,
     createPortal: (node: any) => node,
@@ -27,7 +27,7 @@ jest.mock('react-dom', () => {
 })
 
 // Prevents uuid from generating unpredictable values in snapshots
-jest.mock('uuid', () => ({
+vi.mock('uuid', () => ({
   v4: () => 'fixed-uuid-value',
 }))
 

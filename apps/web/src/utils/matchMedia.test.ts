@@ -3,11 +3,11 @@ import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedi
 describe('addMediaQueryListener', () => {
   test('adds event listener to media query', () => {
     const mediaQuery = {
-      addEventListener: jest.fn(),
-      addListener: jest.fn(),
+      addEventListener: vi.fn(),
+      addListener: vi.fn(),
     } as unknown as MediaQueryList
 
-    const listener = jest.fn()
+    const listener = vi.fn()
     addMediaQueryListener(mediaQuery, listener)
 
     expect(mediaQuery.addEventListener).toHaveBeenCalledWith('change', listener)
@@ -16,10 +16,10 @@ describe('addMediaQueryListener', () => {
 
   test('falls back to addMediaQueryListener for older browsers', () => {
     const mediaQuery = {
-      addListener: jest.fn(),
+      addListener: vi.fn(),
     } as unknown as MediaQueryList
 
-    const listener = jest.fn()
+    const listener = vi.fn()
     addMediaQueryListener(mediaQuery, listener)
 
     expect(mediaQuery.addListener).toHaveBeenCalledWith(listener)
@@ -29,11 +29,11 @@ describe('addMediaQueryListener', () => {
 describe('removeMediaQueryListener', () => {
   test('removes event listener from media query', () => {
     const mediaQuery = {
-      removeEventListener: jest.fn(),
-      removeListener: jest.fn(),
+      removeEventListener: vi.fn(),
+      removeListener: vi.fn(),
     } as unknown as MediaQueryList
 
-    const listener = jest.fn()
+    const listener = vi.fn()
     removeMediaQueryListener(mediaQuery, listener)
 
     expect(mediaQuery.removeEventListener).toHaveBeenCalledWith('change', listener)
@@ -42,10 +42,10 @@ describe('removeMediaQueryListener', () => {
 
   test('falls back to removeMediaQueryListener for older browsers', () => {
     const mediaQuery = {
-      removeListener: jest.fn(),
+      removeListener: vi.fn(),
     } as unknown as MediaQueryList
 
-    const listener = jest.fn()
+    const listener = vi.fn()
     removeMediaQueryListener(mediaQuery, listener)
 
     expect(mediaQuery.removeListener).toHaveBeenCalledWith(listener)

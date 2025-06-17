@@ -12,8 +12,8 @@ export function BaseQuoteFiatAmount({
   variant,
 }: {
   price?: Price<Currency, Currency>
-  base?: Currency
-  quote?: Currency
+  base: Maybe<Currency>
+  quote: Maybe<Currency>
   variant?: TextProps['variant']
 }) {
   const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
@@ -27,8 +27,8 @@ export function BaseQuoteFiatAmount({
   return (
     <>
       <Text variant={variant ?? 'body3'} color="$neutral1">
-        {formatNumberOrString({ value: price.toSignificant(), type: NumberType.TokenTx })} {quote?.symbol} = 1{' '}
-        {base?.symbol}
+        {formatNumberOrString({ value: price.toSignificant(), type: NumberType.TokenTx })} {quote.symbol} = 1{' '}
+        {base.symbol}
       </Text>{' '}
       <Text variant={variant ?? 'body3'} color="$neutral2">
         ({convertFiatAmountFormatted(usdPrice?.toExact(), NumberType.FiatTokenPrice)})

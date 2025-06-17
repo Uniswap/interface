@@ -5,7 +5,7 @@ import { fireEvent, render, screen } from 'test-utils/render'
 
 describe('ProviderConnectedView', () => {
   it('should render the component and call callbacks', () => {
-    const closeModal = jest.fn()
+    const closeModal = vi.fn()
 
     const { container } = render(
       <BuyFormContext.Provider value={mockBuyFormContext}>

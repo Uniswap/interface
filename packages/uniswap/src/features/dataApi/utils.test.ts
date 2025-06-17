@@ -166,8 +166,8 @@ describe(gqlTokenToCurrencyInfo, () => {
         name: token.name,
       }),
       currencyId: `${fromGraphQLChain(token.chain)}-${token.address}`,
-      logoUrl: token.project?.logoUrl,
-      isSpam: token.project?.isSpam,
+      logoUrl: token.project.logoUrl,
+      isSpam: token.project.isSpam,
     })
   })
 

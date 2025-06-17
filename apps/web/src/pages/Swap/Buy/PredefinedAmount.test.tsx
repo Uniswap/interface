@@ -8,7 +8,7 @@ describe('PredefinedAmount', () => {
     [1000, false],
     [1000, true],
   ])('renders correctly with amount= %p , disabled= %p', async (amount, disabled) => {
-    const clickHandler = jest.fn()
+    const clickHandler = vi.fn()
     const { container } = render(<PredefinedAmount disabled={disabled} onPress={clickHandler} label={`$${amount}`} />)
     screen.getByText('$' + amount).click()
     expect(clickHandler).toHaveBeenCalledTimes(disabled ? 0 : 1)

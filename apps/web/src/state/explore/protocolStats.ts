@@ -2,11 +2,15 @@ import { TimestampedAmount } from '@uniswap/client-explore/dist/uniswap/explore/
 import { useContext, useMemo } from 'react'
 import { ExploreContext } from 'state/explore'
 
-function mapDataByTimestamp(
-  v2Data?: TimestampedAmount[],
-  v3Data?: TimestampedAmount[],
-  v4Data?: TimestampedAmount[],
-): Record<number, Record<string, number>> {
+function mapDataByTimestamp({
+  v2Data,
+  v3Data,
+  v4Data,
+}: {
+  v2Data?: TimestampedAmount[]
+  v3Data?: TimestampedAmount[]
+  v4Data?: TimestampedAmount[]
+}): Record<number, Record<string, number>> {
   const dataByTime: Record<number, Record<string, number>> = {}
   v2Data?.forEach((v2Point) => {
     const timestamp = Number(v2Point.timestamp)
@@ -14,6 +18,7 @@ function mapDataByTimestamp(
   })
   v3Data?.forEach((v3Point) => {
     const timestamp = Number(v3Point.timestamp)
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!dataByTime[timestamp]) {
       dataByTime[timestamp] = { ['v2']: 0, ['v3']: Number(v3Point.value), ['v4']: 0 }
     } else {
@@ -22,6 +27,7 @@ function mapDataByTimestamp(
   })
   v4Data?.forEach((v4Point) => {
     const timestamp = Number(v4Point.timestamp)
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!dataByTime[timestamp]) {
       dataByTime[timestamp] = { ['v2']: 0, ['v3']: 0, ['v4']: Number(v4Point.value) }
     } else {
@@ -46,7 +52,7 @@ export function use24hProtocolVolume() {
   const v3Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v3
   const v4Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v4
 
-  const dataByTime = mapDataByTimestamp(v2Data, v3Data, v4Data)
+  const dataByTime = mapDataByTimestamp({ v2Data, v3Data, v4Data })
 
   const sortedTimestamps = Object.keys(dataByTime)
     .map(Number)
@@ -58,10 +64,12 @@ export function use24hProtocolVolume() {
 
   // Get the volume values for the latest and previous periods; missing values default to 0
   const latestVolumes = useMemo(
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     () => dataByTime[latestTimestamp] || { v2: 0, v3: 0, v4: 0 },
     [dataByTime, latestTimestamp],
   )
   const previousVolumes = useMemo(
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     () => dataByTime[previousTimestamp] || { v2: 0, v3: 0, v4: 0 },
     [dataByTime, previousTimestamp],
   )
@@ -111,7 +119,7 @@ export function useDailyTVLWithChange() {
   const v4Data: TimestampedAmount[] | undefined = data?.dailyProtocolTvl?.v4
 
   return useMemo(() => {
-    const dataByTime = mapDataByTimestamp(v2Data, v3Data, v4Data)
+    const dataByTime = mapDataByTimestamp({ v2Data, v3Data, v4Data })
     const sortedTimestamps = Object.keys(dataByTime)
       .map(Number)
       .sort((a, b) => b - a)

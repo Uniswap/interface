@@ -33,7 +33,7 @@ function getFetchFn(config?: {
 }): (params: CreateSwapRequest) => Promise<SwapData> {
   const { canBatchTransactions, swapDelegationAddress, includesDelegation } = config ?? {}
   if (swapDelegationAddress) {
-    return (params) => fetch7702(swapDelegationAddress, params, includesDelegation)
+    return (params) => fetch7702({ swapDelegationAddress, params, includesDelegation })
   }
 
   if (canBatchTransactions) {
@@ -43,11 +43,15 @@ function getFetchFn(config?: {
   return fetchLegacy
 }
 
-async function fetch7702(
-  swapDelegationAddress: string,
-  params: CreateSwapRequest,
-  includesDelegation?: boolean,
-): Promise<SwapData> {
+async function fetch7702({
+  swapDelegationAddress,
+  params,
+  includesDelegation,
+}: {
+  swapDelegationAddress: string
+  params: CreateSwapRequest
+  includesDelegation?: boolean
+}): Promise<SwapData> {
   return convertSwap7702ResponseToSwapData(
     await fetchSwap7702({ ...params, smartContractDelegationAddress: swapDelegationAddress }),
     includesDelegation,

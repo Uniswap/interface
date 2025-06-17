@@ -5,7 +5,6 @@ import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel
 import { CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { DecimalPadInputRef } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
-import { useSwapFormHoverStyles } from 'uniswap/src/features/transactions/swap/form/context/hooks/useSwapFormHoverStyles'
 import { TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
@@ -28,7 +27,6 @@ export interface SwapFormScreenContextState {
   exactFieldIsInput: boolean
   exactFieldIsOutput: boolean
   exactOutputDisabled: boolean
-  isSwapDataLoading: boolean
   resetSelection: (params: { start: number; end?: number; currencyField?: CurrencyField }) => void
   currencyAmountsUSDValue: { [field in CurrencyField]: Maybe<CurrencyAmount<Currency>> }
   exactValue: string | undefined
@@ -58,9 +56,6 @@ export interface SwapFormScreenContextState {
   onShowTokenSelectorOutput: () => void
   showTemporaryFoTWarning: () => void
   onDecimalPadTriggerInputShake: () => void
-
-  // Styles
-  hoverStyles: ReturnType<typeof useSwapFormHoverStyles>
 }
 
 export const SwapFormScreenContext = createContext<SwapFormScreenContextState | undefined>(undefined)

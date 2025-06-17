@@ -25,7 +25,7 @@ export async function getOnChainBalancesFetch(params: BalanceLookupParams): Prom
     throw new Error(`currencyAddress, chainId, or accountAddress is not defined`)
   }
 
-  const provider = createEthersProvider(chainId)
+  const provider = createEthersProvider({ chainId })
   if (!provider) {
     return { balance: undefined }
   }
@@ -33,7 +33,7 @@ export async function getOnChainBalancesFetch(params: BalanceLookupParams): Prom
   // native amount lookup
   if (currencyIsNative) {
     const nativeBalance = await provider.getBalance(accountAddress)
-    return { balance: nativeBalance?.toString() }
+    return { balance: nativeBalance.toString() }
   }
 
   // erc20 lookup

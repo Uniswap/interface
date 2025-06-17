@@ -20,18 +20,18 @@ import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 
 const TokenSortMethods = {
   [TokenSortMethod.PRICE]: (a: TokenStat, b: TokenStat) =>
-    giveExploreStatDefaultValue(b?.price?.value) - giveExploreStatDefaultValue(a?.price?.value),
+    giveExploreStatDefaultValue(b.price?.value) - giveExploreStatDefaultValue(a.price?.value),
   [TokenSortMethod.DAY_CHANGE]: (a: TokenStat, b: TokenStat) =>
-    giveExploreStatDefaultValue(b?.pricePercentChange1Day?.value) -
-    giveExploreStatDefaultValue(a?.pricePercentChange1Day?.value),
+    giveExploreStatDefaultValue(b.pricePercentChange1Day?.value) -
+    giveExploreStatDefaultValue(a.pricePercentChange1Day?.value),
   [TokenSortMethod.HOUR_CHANGE]: (a: TokenStat, b: TokenStat) =>
-    giveExploreStatDefaultValue(b?.pricePercentChange1Hour?.value) -
-    giveExploreStatDefaultValue(a?.pricePercentChange1Hour?.value),
+    giveExploreStatDefaultValue(b.pricePercentChange1Hour?.value) -
+    giveExploreStatDefaultValue(a.pricePercentChange1Hour?.value),
   [TokenSortMethod.VOLUME]: (a: TokenStat, b: TokenStat) =>
-    giveExploreStatDefaultValue(b?.volume?.value) - giveExploreStatDefaultValue(a?.volume?.value),
+    giveExploreStatDefaultValue(b.volume?.value) - giveExploreStatDefaultValue(a.volume?.value),
   [TokenSortMethod.FULLY_DILUTED_VALUATION]: (a: TokenStat, b: TokenStat) =>
-    giveExploreStatDefaultValue(b?.fullyDilutedValuation?.value) -
-    giveExploreStatDefaultValue(a?.fullyDilutedValuation?.value),
+    giveExploreStatDefaultValue(b.fullyDilutedValuation?.value) -
+    giveExploreStatDefaultValue(a.fullyDilutedValuation?.value),
 }
 
 function convertPriceHistoryToPricePoints(priceHistory?: PriceHistory): PricePoint[] | undefined {
@@ -103,11 +103,11 @@ function useFilteredTokens(tokens: TokenStat[] | undefined) {
     }
     let returnTokens = tokens
     if (lowercaseFilterString) {
-      returnTokens = returnTokens?.filter((token) => {
-        const addressIncludesFilterString = token?.address?.toLowerCase().includes(lowercaseFilterString)
-        const projectNameIncludesFilterString = token?.project?.name?.toLowerCase().includes(lowercaseFilterString)
-        const nameIncludesFilterString = token?.name?.toLowerCase().includes(lowercaseFilterString)
-        const symbolIncludesFilterString = token?.symbol?.toLowerCase().includes(lowercaseFilterString)
+      returnTokens = returnTokens.filter((token) => {
+        const addressIncludesFilterString = token.address.toLowerCase().includes(lowercaseFilterString)
+        const projectNameIncludesFilterString = token.project?.name?.toLowerCase().includes(lowercaseFilterString)
+        const nameIncludesFilterString = token.name?.toLowerCase().includes(lowercaseFilterString)
+        const symbolIncludesFilterString = token.symbol?.toLowerCase().includes(lowercaseFilterString)
         return (
           projectNameIncludesFilterString ||
           nameIncludesFilterString ||
@@ -127,14 +127,15 @@ export function useTopTokens() {
   const {
     exploreStats: { data, isLoading, error: isError },
   } = useContext(ExploreContext)
-  const tokenStats = data?.stats?.tokenStats?.map((tokenStat: TokenStats) =>
+  const tokenStats = data?.stats?.tokenStats.map((tokenStat: TokenStats) =>
     convertTokenStatsToTokenStat(tokenStat, duration),
   )
   const sortedTokenStats = useSortedTokens(tokenStats)
   const tokenSortRank = useMemo(
     () =>
+      // eslint-disable-next-line max-params
       sortedTokenStats?.reduce((acc, cur, i) => {
-        if (!cur?.address) {
+        if (!cur.address) {
           return acc
         }
         const currCurrencyId = buildCurrencyId(fromGraphQLChain(cur.chain) ?? UniverseChainId.Mainnet, cur.address)
@@ -148,14 +149,14 @@ export function useTopTokens() {
   const filteredTokens = useFilteredTokens(sortedTokenStats)?.slice(0, MAX_TOP_TOKENS)
   const sparklines = useMemo(() => {
     const unwrappedTokens = filteredTokens?.map((tokenStat) => {
-      const chainId = getChainIdFromChainUrlParam(tokenStat?.chain.toLowerCase())
+      const chainId = getChainIdFromChainUrlParam(tokenStat.chain.toLowerCase())
       return chainId ? unwrapToken(chainId, tokenStat) : undefined
     })
     const map: SparklineMap = {}
     unwrappedTokens?.forEach((current) => {
       if (current !== undefined) {
-        const address = current?.address === NATIVE_CHAIN_ID ? NATIVE_CHAIN_ID : current?.address?.toLowerCase()
-        map[address] = current?.priceHistory
+        const address = current.address === NATIVE_CHAIN_ID ? NATIVE_CHAIN_ID : current.address.toLowerCase()
+        map[address] = current.priceHistory
       }
     })
     return map

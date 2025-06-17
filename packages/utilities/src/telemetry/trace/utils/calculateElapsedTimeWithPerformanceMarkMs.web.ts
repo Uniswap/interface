@@ -7,6 +7,7 @@ export function calculateElapsedTimeWithPerformanceMarkMs(
   fallbackStartTime?: number,
 ): number | undefined {
   const elapsedTime = performance.mark(markName)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (elapsedTime) {
     return elapsedTime.startTime
   }

@@ -1,12 +1,12 @@
 import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
 export interface ActionCardItem {
   title: string
   blurb: string
   icon: JSX.Element
-  elementName: ElementNameType
+  elementName: ElementName
   badgeText?: string
   containerProps?: FlexProps
   hoverStyle?: FlexProps

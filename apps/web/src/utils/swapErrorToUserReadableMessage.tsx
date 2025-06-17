@@ -20,7 +20,7 @@ export function didUserReject(error: any): boolean {
     // ethers v5.7.0 wrapped error
     error?.code === 'ACTION_REJECTED' ||
     // For Rainbow :
-    (reason?.match(/request/i) && reason?.match(/reject/i)) ||
+    (reason?.match(/request/i) && reason.match(/reject/i)) ||
     // For Frame:
     reason?.match(/declined/i) ||
     // For SafePal:
@@ -72,7 +72,7 @@ export function swapErrorToUserReadableMessage(t: TFunction, error: any): string
     case 'TF':
       return t('swap.error.v3.transferOutput')
     default:
-      if (reason?.indexOf('undefined is not an object') !== -1) {
+      if (reason && reason.indexOf('undefined is not an object') !== -1) {
         logger.warn(
           'swapErrorToUserReadableMessage',
           'swapErrorToUserReadableMessage',

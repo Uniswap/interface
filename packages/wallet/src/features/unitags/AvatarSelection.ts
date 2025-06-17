@@ -46,7 +46,7 @@ export function useAvatarSelectionHandler({
   })
   const nftItems = formatNftItems(nftsData)
 
-  const hasNFTs = nftItems !== undefined && nftItems?.length > 0
+  const hasNFTs = nftItems !== undefined && nftItems.length > 0
   const hasAvatarImage = avatarImageUri && avatarImageUri !== ''
 
   if (hasNFTs || hasAvatarImage) {

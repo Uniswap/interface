@@ -19,7 +19,7 @@ const HeadingWrapper = styled.h1.withConfig({
   font-family: inherit;
   font-weight: 485;
   font-size: ${({ fontSize }) => fontSize};
-  margin: ${({ margin }) => margin ?? 0};
+  margin: ${({ margin }) => margin};
   letter-spacing: -0.02em;
 `
 

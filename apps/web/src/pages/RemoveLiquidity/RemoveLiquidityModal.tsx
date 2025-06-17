@@ -21,11 +21,11 @@ function RemoveLiquidityModalInner() {
   const { closeModal } = useModalState(ModalName.RemoveLiquidity)
   const { t } = useTranslation()
   const { step, setStep, positionInfo } = useRemoveLiquidityModalContext()
-  const autoSlippageTolerance = useLPSlippageValue(
-    positionInfo?.version,
-    positionInfo?.currency0Amount.currency,
-    positionInfo?.currency1Amount.currency,
-  )
+  const autoSlippageTolerance = useLPSlippageValue({
+    version: positionInfo?.version,
+    currencyA: positionInfo?.currency0Amount.currency,
+    currencyB: positionInfo?.currency1Amount.currency,
+  })
 
   let modalContent
   switch (step) {

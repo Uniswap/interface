@@ -5,12 +5,12 @@ import { render } from 'test-utils/render'
 
 const ACCOUNT = '0x0'
 
-jest.mock('hooks/useAccount')
-jest.mock('uniswap/src/features/unitags/hooks', () => ({
+vi.mock('hooks/useAccount')
+vi.mock('uniswap/src/features/unitags/hooks', () => ({
   useUnitagByAddress: () => ({ unitag: undefined, loading: false }),
 }))
 
-jest.mock('../../hooks/useSocksBalance', () => ({
+vi.mock('../../hooks/useSocksBalance', () => ({
   useHasSocks: () => true,
 }))
 
@@ -29,7 +29,7 @@ describe('StatusIcon', () => {
 
   describe('with account', () => {
     it('renders children in correct order', () => {
-      jest.spyOn(console, 'error').mockImplementation(() => null)
+      vi.spyOn(console, 'error').mockImplementation(() => null)
       mocked(useAccount).mockReturnValue({
         address: ACCOUNT,
         connector: { id: 'io.metamask' },

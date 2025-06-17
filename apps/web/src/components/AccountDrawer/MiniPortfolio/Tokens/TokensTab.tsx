@@ -1,4 +1,3 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
@@ -22,6 +21,7 @@ import { useSortedPortfolioBalances } from 'uniswap/src/features/dataApi/balance
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
@@ -34,7 +34,7 @@ export default function Tokens() {
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
   const { data: sortedPortfolioBalances, loading } = useSortedPortfolioBalances({
-    address: account?.address,
+    address: account.address,
   })
 
   const isLoading = loading && !sortedPortfolioBalances
@@ -137,7 +137,7 @@ function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
   return (
     <Trace
       logPress
-      element={InterfaceElementName.MINI_PORTFOLIO_TOKEN_ROW}
+      element={ElementName.MiniPortfolioTokenRow}
       properties={{
         chain_id: chainId,
         token_name: name,

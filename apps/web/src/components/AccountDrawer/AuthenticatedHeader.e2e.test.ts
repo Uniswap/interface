@@ -23,7 +23,15 @@ test.describe('AuthenticatedHeader unitag and ENS display', () => {
    * @param expectedPrimaryText The primary text to verify (unitag or ENS name)
    * @param walletAddress The wallet address to verify in shortened form
    */
-  async function openAccountDrawerAndVerify(page: Page, expectedPrimaryText?: string, walletAddress?: string) {
+  async function openAccountDrawerAndVerify({
+    page,
+    expectedPrimaryText,
+    walletAddress,
+  }: {
+    page: Page
+    expectedPrimaryText?: string
+    walletAddress?: string
+  }) {
     await page.getByTestId(TestID.Web3StatusConnected).click()
 
     if (expectedPrimaryText) {
@@ -44,26 +52,26 @@ test.describe('AuthenticatedHeader unitag and ENS display', () => {
 
   test('shows address if no Unitag or ENS exists', async ({ page }) => {
     await page.goto(`/swap?eagerlyConnectAddress=${ACCOUNT_WITH_NO_USERNAME}`)
-    await openAccountDrawerAndVerify(page, undefined, ACCOUNT_WITH_NO_USERNAME)
+    await openAccountDrawerAndVerify({ page, walletAddress: ACCOUNT_WITH_NO_USERNAME })
   })
 
   test('shows Unitag, followed by address when Unitag exists but not ENS', async ({ page }) => {
-    await mockUnitagResponse(page, TEST_WALLET_ADDRESS, UNITAG_NAME)
+    await mockUnitagResponse({ page, address: TEST_WALLET_ADDRESS, unitag: UNITAG_NAME })
     await page.goto('/swap')
 
-    await openAccountDrawerAndVerify(page, UNITAG_NAME, TEST_WALLET_ADDRESS)
+    await openAccountDrawerAndVerify({ page, expectedPrimaryText: UNITAG_NAME, walletAddress: TEST_WALLET_ADDRESS })
   })
 
   test('shows ENS, followed by address when ENS exists but not Unitag', async ({ page }) => {
     await page.goto(`/swap?eagerlyConnectAddress=${ACCOUNT_WITH_ENS}`)
 
-    await openAccountDrawerAndVerify(page, HAYDEN_ENS, ACCOUNT_WITH_ENS)
+    await openAccountDrawerAndVerify({ page, expectedPrimaryText: HAYDEN_ENS, walletAddress: ACCOUNT_WITH_ENS })
   })
 
   test('shows Unitag when user has both Unitag and ENS', async ({ page }) => {
-    await mockUnitagResponse(page, ACCOUNT_WITH_ENS, UNITAG_NAME)
+    await mockUnitagResponse({ page, address: ACCOUNT_WITH_ENS, unitag: UNITAG_NAME })
     await page.goto(`/swap?eagerlyConnectAddress=${ACCOUNT_WITH_ENS}`)
 
-    await openAccountDrawerAndVerify(page, UNITAG_NAME, ACCOUNT_WITH_ENS)
+    await openAccountDrawerAndVerify({ page, expectedPrimaryText: UNITAG_NAME, walletAddress: ACCOUNT_WITH_ENS })
   })
 })

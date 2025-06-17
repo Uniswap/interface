@@ -34,6 +34,7 @@ export const migration17 = (state: PersistAppStateV17 | undefined) => {
 
   // dedupe search history
   const dedupedSearchHistory = newState.searchHistory.results.filter(
+    // eslint-disable-next-line max-params
     (result: SearchResult, index: number, self: SearchResult[]) =>
       self.findIndex((t) => t.searchId === result.searchId) === index,
   )

@@ -60,7 +60,7 @@ export function FeeOption({ feeAmount, selected, poolState, distributions, onCli
 
           {distributions && (
             <Text variant="body4" color="$neutral2">
-              {!distributions || poolState === PoolState.NOT_EXISTS || poolState === PoolState.INVALID ? (
+              {poolState === PoolState.NOT_EXISTS || poolState === PoolState.INVALID ? (
                 <Trans i18nKey="common.notCreated.label" />
               ) : distributions[feeAmount] !== undefined ? (
                 <Trans i18nKey="fee.selectPercent" values={{ pct }} />

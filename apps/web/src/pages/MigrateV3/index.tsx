@@ -1,4 +1,5 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
@@ -17,6 +18,8 @@ import {
   DepositContextProvider,
   PriceRangeContextProvider,
 } from 'pages/Pool/Positions/create/ContextProviders'
+import { CreateLiquidityContextProvider } from 'pages/Pool/Positions/create/CreateLiquidityContextProvider'
+import { SharedCreateModals } from 'pages/Pool/Positions/create/CreatePosition'
 import {
   DEFAULT_DEPOSIT_STATE,
   DEFAULT_PRICE_RANGE_STATE,
@@ -32,7 +35,7 @@ import { Container } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { getCurrencyForProtocol } from 'pages/Pool/Positions/create/utils'
 import { LoadingRow } from 'pages/Pool/Positions/shared'
-import { useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -40,7 +43,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { PositionField } from 'types/position'
 import { Flex, Main, Text, styled, useMedia } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
@@ -50,8 +52,10 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
@@ -75,7 +79,15 @@ const BodyWrapper = styled(Main, {
   p: 24,
 })
 
-function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
+function MigrateV3Inner({
+  positionInfo,
+  currencyInputs,
+  setCurrencyInputs,
+}: {
+  positionInfo: PositionInfo
+  currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
+  setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
+}) {
   const { chainName, tokenId } = useParams<{ tokenId: string; chainName: string }>()
   const trace = useTrace()
   const { t } = useTranslation()
@@ -102,8 +114,8 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
 
   const { currency0Amount, currency1Amount, owner } = positionInfo
 
-  const currency0FiatAmount = useUSDCValue(currency0Amount) ?? undefined
-  const currency1FiatAmount = useUSDCValue(currency1Amount) ?? undefined
+  const currency0FiatAmount = useUSDCValue(currency0Amount)
+  const currency1FiatAmount = useUSDCValue(currency1Amount)
 
   if (!isSameAddress(account?.address, owner)) {
     navigate('/positions')
@@ -138,10 +150,10 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
               setPositionState({
                 ...DEFAULT_POSITION_STATE,
                 protocolVersion,
-                currencyInputs: {
-                  [PositionField.TOKEN0]: getCurrencyForProtocol(currency0Amount.currency, protocolVersion),
-                  [PositionField.TOKEN1]: getCurrencyForProtocol(currency1Amount.currency, protocolVersion),
-                },
+              })
+              setCurrencyInputs({
+                tokenA: getCurrencyForProtocol(currency0Amount.currency, protocolVersion),
+                tokenB: getCurrencyForProtocol(currency1Amount.currency, protocolVersion),
               })
               setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
               setDepositState(DEFAULT_DEPOSIT_STATE)
@@ -181,6 +193,8 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
                 width="100%"
                 maxWidth="unset"
                 tokensLocked
+                currencyInputs={currencyInputs}
+                setCurrencyInputs={setCurrencyInputs}
                 onContinue={() => {
                   setStep(PositionFlowStep.PRICE_RANGE)
                 }}
@@ -196,7 +210,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
                     onDisableContinue={!txInfo || Boolean(error)}
                     onContinue={() => {
                       const isValidTx = isValidLiquidityTxContext(txInfo)
-                      if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
+                      if (!account || account.type !== AccountType.SignerMnemonic || !isValidTx) {
                         return
                       }
                       dispatch(
@@ -216,6 +230,10 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
                             ...getLPBaseAnalyticsProperties({
                               trace,
                               fee: positionInfo.feeTier,
+                              tickSpacing: positionInfo.tickSpacing,
+                              tickLower: positionInfo.tickLower,
+                              tickUpper: positionInfo.tickUpper,
+                              hook: undefined,
                               currency0: currency0Amount.currency,
                               currency1: currency1Amount.currency,
                               currency0AmountUsd: currency0FiatAmount,
@@ -244,29 +262,49 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
         onClose={onClose}
         isDismissible
         isModalOpen={Boolean(currentTransactionStep)}
+        padding="$none"
       >
-        <LiquidityModalHeader title={t('pool.migrateLiquidity')} closeModal={onClose} />
-        <Flex gap="$gap16" px="$padding16" my="$spacing8">
-          <TokenInfo currencyAmount={currency0Amount} currencyUSDAmount={currency0FiatAmount} isMigrating />
-          <Text variant="body3" color="$neutral2">
-            {t('common.and')}
-          </Text>
-          <TokenInfo currencyAmount={currency1Amount} currencyUSDAmount={currency1FiatAmount} isMigrating />
+        <Flex px="$spacing8" pt="$spacing12" pb="$spacing8" gap="$spacing24">
+          <LiquidityModalHeader title={t('pool.migrateLiquidity')} closeModal={onClose} />
+          <Flex gap="$gap16" px="$padding16" my="$spacing8">
+            <TokenInfo currencyAmount={currency0Amount} currencyUSDAmount={currency0FiatAmount} isMigrating />
+            <Text variant="body3" color="$neutral2">
+              {t('common.and')}
+            </Text>
+            <TokenInfo currencyAmount={currency1Amount} currencyUSDAmount={currency1FiatAmount} isMigrating />
+          </Flex>
+          <ProgressIndicator steps={transactionSteps} currentStep={currentTransactionStep} />
         </Flex>
-        <ProgressIndicator steps={transactionSteps} currentStep={currentTransactionStep} />
       </Modal>
     </>
   )
+}
+
+function getCurrencyInputs(positionInfo?: PositionInfo) {
+  if (positionInfo?.version !== ProtocolVersion.V3) {
+    return {
+      tokenA: undefined,
+      tokenB: undefined,
+    }
+  }
+
+  return {
+    tokenA: getCurrencyForProtocol(positionInfo.pool?.token0, ProtocolVersion.V4),
+    tokenB: getCurrencyForProtocol(positionInfo.pool?.token1, ProtocolVersion.V4),
+  }
 }
 
 /**
  * The page for migrating any v3 LP position to v4.
  */
 export default function MigrateV3() {
+  const isCreateLiquidityRefactorEnabled = useFeatureFlag(FeatureFlags.CreateLiquidityRefactor)
   const { tokenId } = useParams<{ tokenId: string }>()
   const chainId = useChainIdFromUrlParam()
   const account = useAccount()
-  const autoSlippageTolerance = useLPSlippageValue(ProtocolVersion.V3)
+  const autoSlippageTolerance = useLPSlippageValue({
+    version: ProtocolVersion.V3,
+  })
   const { data, isLoading: positionLoading } = useGetPositionQuery(
     account.address
       ? {
@@ -284,6 +322,15 @@ export default function MigrateV3() {
 
   // Need the initial position when migrating out of range positions.
   const initialPosition = useInitialPosition(positionInfo)
+  const initialCurrencyInputs = useMemo(() => getCurrencyInputs(positionInfo), [positionInfo])
+
+  const [currencyInputs, setCurrencyInputs] = useState<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>(
+    initialCurrencyInputs,
+  )
+
+  useEffect(() => {
+    setCurrencyInputs(getCurrencyInputs(positionInfo))
+  }, [positionInfo])
 
   // TODO (WEB-4920): show error state for non-v3 position here.
   if (positionLoading || !position || !positionInfo || positionInfo.version !== ProtocolVersion.V3) {
@@ -311,7 +358,7 @@ export default function MigrateV3() {
   return (
     <Trace
       logImpression
-      page={InterfacePageNameLocal.MigrateV3}
+      page={InterfacePageName.MigrateV3}
       properties={{
         pool_address: positionInfo.poolId,
         chain_id: chainId ?? account.chainId,
@@ -326,23 +373,45 @@ export default function MigrateV3() {
           settingKey={TransactionSettingKey.LP}
           autoSlippageTolerance={autoSlippageTolerance}
         >
-          <CreatePositionContextProvider
-            initialState={{
-              initialPosition,
-              currencyInputs: {
-                [PositionField.TOKEN0]: getCurrencyForProtocol(currency0Amount.currency, ProtocolVersion.V4),
-                [PositionField.TOKEN1]: getCurrencyForProtocol(currency1Amount.currency, ProtocolVersion.V4),
-              },
-            }}
-          >
-            <PriceRangeContextProvider>
-              <DepositContextProvider>
-                <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
-                  <MigrateV3Inner positionInfo={positionInfo} />
-                </MigrateV3PositionTxContextProvider>
-              </DepositContextProvider>
-            </PriceRangeContextProvider>
-          </CreatePositionContextProvider>
+          {isCreateLiquidityRefactorEnabled ? (
+            <CreateLiquidityContextProvider
+              initialState={{
+                initialPosition,
+              }}
+              currencyInputs={currencyInputs}
+              setCurrencyInputs={setCurrencyInputs}
+            >
+              <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
+                <MigrateV3Inner
+                  positionInfo={positionInfo}
+                  currencyInputs={currencyInputs}
+                  setCurrencyInputs={setCurrencyInputs}
+                />
+              </MigrateV3PositionTxContextProvider>
+              <SharedCreateModals />
+            </CreateLiquidityContextProvider>
+          ) : (
+            <CreatePositionContextProvider
+              initialState={{
+                initialPosition,
+              }}
+              currencyInputs={currencyInputs}
+              setCurrencyInputs={setCurrencyInputs}
+            >
+              <PriceRangeContextProvider>
+                <DepositContextProvider>
+                  <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
+                    <MigrateV3Inner
+                      positionInfo={positionInfo}
+                      currencyInputs={currencyInputs}
+                      setCurrencyInputs={setCurrencyInputs}
+                    />
+                  </MigrateV3PositionTxContextProvider>
+                </DepositContextProvider>
+              </PriceRangeContextProvider>
+              <SharedCreateModals />
+            </CreatePositionContextProvider>
+          )}
         </TransactionSettingsContextProvider>
       </MultichainContextProvider>
     </Trace>

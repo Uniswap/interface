@@ -26,11 +26,15 @@ export type PriceNumberOfDigits = {
 /**
  * @returns Token price history for requested duration
  */
-export function useTokenPriceHistory(
-  currencyId: string,
-  initialDuration: HistoryDuration = HistoryDuration.Day,
-  skip: boolean = false,
-): Omit<
+export function useTokenPriceHistory({
+  currencyId,
+  initialDuration = HistoryDuration.Day,
+  skip = false,
+}: {
+  currencyId: string
+  initialDuration?: HistoryDuration
+  skip?: boolean
+}): Omit<
   GqlResult<{
     priceHistory?: TLineChartData
     spot?: TokenSpotData
@@ -66,7 +70,7 @@ export function useTokenPriceHistory(
   })
 
   const offChainData = priceData?.tokenProjects?.[0]?.markets?.[0]
-  const onChainData = priceData?.tokenProjects?.[0]?.tokens?.[0]?.market
+  const onChainData = priceData?.tokenProjects?.[0]?.tokens[0]?.market
 
   const price = offChainData?.price?.value ?? onChainData?.price?.value ?? lastPrice.current
   lastPrice.current = price

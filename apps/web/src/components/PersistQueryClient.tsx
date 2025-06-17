@@ -2,6 +2,7 @@ import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persist
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { type PropsWithChildren } from 'react'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
+import { sharedDehydrateOptions } from 'uniswap/src/data/apiClients/sharedDehydrateOptions'
 import { MAX_REACT_QUERY_CACHE_TIME_MS } from 'utilities/src/time/time'
 
 const persistOptions: React.ComponentProps<typeof PersistQueryClientProvider>['persistOptions'] = {
@@ -9,6 +10,7 @@ const persistOptions: React.ComponentProps<typeof PersistQueryClientProvider>['p
   buster: 'v0',
   maxAge: MAX_REACT_QUERY_CACHE_TIME_MS,
   persister: createSyncStoragePersister({ storage: localStorage }),
+  dehydrateOptions: sharedDehydrateOptions,
 }
 
 export function QueryClientPersistProvider({ children }: PropsWithChildren): JSX.Element {

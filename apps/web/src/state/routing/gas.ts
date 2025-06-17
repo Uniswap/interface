@@ -13,12 +13,17 @@ import { getContract } from 'utilities/src/contracts/getContract'
 // TODO(UniswapX): add fallback gas limits per chain? l2s have higher costs
 const APPROVE_FALLBACK_GAS_LIMIT_IN_GWEI = 65_000
 
-export async function getApproveInfo(
-  account: string | undefined,
-  currency: Currency,
-  amount: string,
-  usdCostPerGas?: number,
-): Promise<ApproveInfo> {
+export async function getApproveInfo({
+  account,
+  currency,
+  amount,
+  usdCostPerGas,
+}: {
+  account?: string
+  currency: Currency
+  amount: string
+  usdCostPerGas?: number
+}): Promise<ApproveInfo> {
   // native currencies do not need token approvals
   if (currency.isNative) {
     return { needsApprove: false }
@@ -36,7 +41,7 @@ export async function getApproveInfo(
   }
 
   const provider = RPC_PROVIDERS[currency.chainId as UniverseChainId]
-  const tokenContract = getContract(currency.address, ERC20_ABI, provider) as Erc20
+  const tokenContract = getContract({ address: currency.address, ABI: ERC20_ABI, provider }) as Erc20
 
   let approveGasUseEstimate
   try {
@@ -60,13 +65,19 @@ export async function getApproveInfo(
   return { needsApprove: true, approveGasEstimateUSD: approveGasUseEstimate * usdCostPerGas }
 }
 
-export async function getWrapInfo(
-  needsWrap: boolean,
-  account: string | undefined,
-  chainId: UniverseChainId,
-  amount: string,
-  usdCostPerGas?: number,
-): Promise<WrapInfo> {
+export async function getWrapInfo({
+  needsWrap,
+  account,
+  chainId,
+  amount,
+  usdCostPerGas,
+}: {
+  needsWrap: boolean
+  account?: string
+  chainId: UniverseChainId
+  amount: string
+  usdCostPerGas?: number
+}): Promise<WrapInfo> {
   if (!needsWrap) {
     return { needsWrap: false }
   }
@@ -80,7 +91,7 @@ export async function getWrapInfo(
   }
   let wrapGasUseEstimate
   try {
-    const wethContract = getContract(wethAddress, WETH_ABI, provider, account) as Weth
+    const wethContract = getContract({ address: wethAddress, ABI: WETH_ABI, provider, account }) as Weth
     const wethTx = await wethContract.populateTransaction.deposit({ value: amount })
 
     // estimateGas will error if the account doesn't have sufficient ETH balance, but we should show an estimated cost anyway

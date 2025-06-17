@@ -49,7 +49,7 @@ export interface BadRequest extends FORApiError {
 }
 
 export function isBadRequestAmountTooLow(error: FORApiError): error is BadRequest {
-  const e = error as BadRequest
+  const e = error
   return (
     e.data.statusCode === 400 &&
     e.data.errorName === 'BadRequest' &&
@@ -59,7 +59,7 @@ export function isBadRequestAmountTooLow(error: FORApiError): error is BadReques
 }
 
 export function isBadRequestAmountTooHigh(error: FORApiError): error is BadRequest {
-  const e = error as BadRequest
+  const e = error
   return (
     e.data.statusCode === 400 &&
     e.data.errorName === 'BadRequest' &&
@@ -69,11 +69,11 @@ export function isBadRequestAmountTooHigh(error: FORApiError): error is BadReque
 }
 
 export function isInvalidRequestAmountTooLow(error: FORApiError): error is InvalidRequestAmountTooLow {
-  const e = error as InvalidRequestAmountTooLow
+  const e = error
   return (
     e.data.statusCode === 400 &&
     e.data.errorName === 'InvalidRequestAmountTooLow' &&
-    typeof e.data.context?.minimumAllowed === 'number'
+    typeof (e as InvalidRequestAmountTooLow).data.context.minimumAllowed === 'number'
   )
 }
 
@@ -89,11 +89,11 @@ export interface InvalidRequestAmountTooHigh extends FORApiError {
 }
 
 export function isInvalidRequestAmountTooHigh(error: FORApiError): error is InvalidRequestAmountTooHigh {
-  const e = error as InvalidRequestAmountTooHigh
+  const e = error
   return (
     e.data.statusCode === 400 &&
     e.data.errorName === 'InvalidRequestAmountTooHigh' &&
-    typeof e.data.context?.maximumAllowed === 'number'
+    typeof (e as InvalidRequestAmountTooHigh).data.context.maximumAllowed === 'number'
   )
 }
 
@@ -105,7 +105,7 @@ export interface NoQuotesError extends FORApiError {
 }
 
 export function isNoQuotesError(error: FORApiError): error is InvalidRequestAmountTooHigh {
-  const e = error as NoQuotesError
+  const e = error
   return e.data.statusCode === 400 && e.data.errorName === 'NoQuotes'
 }
 
@@ -114,6 +114,7 @@ export function isFiatOnRampApiError(error: unknown): error is FORApiError {
     const e = error as FORApiError
     return (
       typeof e.data === 'object' &&
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       e.data !== null &&
       typeof e.data.statusCode === 'number' &&
       typeof e.data.errorName === 'string'

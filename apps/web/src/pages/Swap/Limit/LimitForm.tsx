@@ -1,4 +1,3 @@
-import { InterfaceElementName, InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
@@ -46,7 +45,7 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useIsMismatchAccountQuery } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, InterfacePageName, SectionName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
@@ -169,6 +168,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   }, [inputCurrency, limitState.outputAmount, onSwitchTokens, outputCurrency, setLimitState])
 
   const onSelectCurrency = useCallback(
+    // eslint-disable-next-line max-params
     (type: keyof CurrencyState, newCurrency: Currency, isResettingWETHAfterWrap?: boolean) => {
       if ((type === 'inputCurrency' ? outputCurrency : inputCurrency)?.equals(newCurrency)) {
         switchTokens()
@@ -256,11 +256,11 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   const hasInsufficientFunds =
     parsedAmounts.input && currencyBalances.input ? currencyBalances.input.lessThan(parsedAmounts.input) : false
 
-  const allowance = usePermit2Allowance(
-    parsedAmounts.input?.currency?.isNative ? undefined : (parsedAmounts.input as CurrencyAmount<Token>),
-    isSupportedChain ? UNIVERSAL_ROUTER_ADDRESS(UniversalRouterVersion.V1_2, chainId) : undefined,
-    TradeFillType.UniswapX,
-  )
+  const allowance = usePermit2Allowance({
+    amount: parsedAmounts.input?.currency.isNative ? undefined : (parsedAmounts.input as CurrencyAmount<Token>),
+    spender: isSupportedChain ? UNIVERSAL_ROUTER_ADDRESS(UniversalRouterVersion.V1_2, chainId) : undefined,
+    tradeFillType: TradeFillType.UniswapX,
+  })
 
   const fiatValueTradeInput = useUSDPrice(parsedAmounts.input)
   const fiatValueTradeOutput = useUSDPrice(parsedAmounts.output)
@@ -306,17 +306,14 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
     return { amountIn: fiatValueTradeInput.data, amountOut: fiatValueTradeOutput.data }
   }, [fiatValueTradeInput.data, fiatValueTradeOutput.data])
 
-  const swapCallback = useSwapCallback(
-    limitOrderTrade,
+  const swapCallback = useSwapCallback({
+    trade: limitOrderTrade,
     fiatValues,
-    ZERO_PERCENT,
-    allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined,
-  )
+    allowedSlippage: ZERO_PERCENT,
+    permitSignature: allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined,
+  })
 
   const handleSubmit = useCallback(async () => {
-    if (!swapCallback) {
-      return
-    }
     try {
       const result = await swapCallback()
       setSwapResult(result)
@@ -331,7 +328,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         <LimitPriceInputPanel onCurrencySelect={onSelectCurrency} />
       </CustomHeightSwapSection>
       <SwapSection>
-        <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
+        <Trace section={SectionName.SwapCurrencyInput}>
           <SwapCurrencyInputPanel
             label={<Trans i18nKey="common.sell.label" />}
             value={formattedAmounts[CurrencyField.INPUT]}
@@ -342,15 +339,15 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
             onCurrencySelect={(currency) => onSelectCurrency('inputCurrency', currency)}
             otherCurrency={outputCurrency}
             onMax={handleMaxInput}
-            id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
+            id={SectionName.SwapCurrencyInput}
           />
         </Trace>
       </SwapSection>
       <ShortArrowWrapper clickable={isSupportedChain}>
         <Trace
           logPress
-          eventOnTrigger={SwapEventName.SWAP_TOKENS_REVERSED}
-          element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
+          eventOnTrigger={SwapEventName.SwapTokensReversed}
+          element={ElementName.SwapTokensReverseArrowButton}
         >
           <ArrowContainer data-testid="swap-currency-button" onPress={switchTokens}>
             <ArrowDown size="16" color={theme.neutral1} />
@@ -358,7 +355,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         </Trace>
       </ShortArrowWrapper>
       <SwapSection>
-        <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
+        <Trace section={SectionName.SwapCurrencyOutput}>
           <SwapCurrencyInputPanel
             label={<Trans i18nKey="common.buy.label" />}
             value={formattedAmounts[CurrencyField.OUTPUT]}
@@ -368,7 +365,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
             onUserInput={onTypeInput('outputAmount')}
             onCurrencySelect={(currency) => onSelectCurrency('outputCurrency', currency)}
             otherCurrency={inputCurrency}
-            id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
+            id={SectionName.SwapCurrencyOutput}
           />
         </Trace>
       </SwapSection>
@@ -459,6 +456,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           }}
           fiatValueInput={fiatValueTradeInput}
           fiatValueOutput={fiatValueTradeOutput}
+          // eslint-disable-next-line max-params
           onCurrencySelection={(field: CurrencyField, currency, isResettingWETHAfterWrap) =>
             onSelectCurrency(
               field === CurrencyField.INPUT ? 'inputCurrency' : 'outputCurrency',
@@ -543,7 +541,7 @@ function SubmitOrderButton({
 
 export function LimitFormWrapper(props: LimitFormProps) {
   return (
-    <Trace page={InterfacePageNameLocal.Limit}>
+    <Trace page={InterfacePageName.Limit}>
       <LimitContextProvider>
         <LimitForm {...props} />
       </LimitContextProvider>

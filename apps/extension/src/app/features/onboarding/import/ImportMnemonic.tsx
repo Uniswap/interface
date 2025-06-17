@@ -230,7 +230,7 @@ export function ImportMnemonic(): JSX.Element {
             <Flex row flexWrap="wrap" gap="$spacing16">
               {mnemonic.map(
                 (word, index) =>
-                  Boolean(expanded || (!expanded && index < 12)) && (
+                  Boolean(expanded || index < 12) && (
                     <Flex key={index} style={styles.recoveryPhraseWord}>
                       <RecoveryPhraseWord
                         key={index + 'input'}

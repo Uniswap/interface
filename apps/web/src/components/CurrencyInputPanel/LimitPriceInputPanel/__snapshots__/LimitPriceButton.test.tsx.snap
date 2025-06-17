@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`LimitCustomMarketPriceButton renders the custom amount correctly 1`] = `
+exports[`LimitCustomMarketPriceButton > renders the custom amount correctly 1`] = `
 .c0 {
   box-sizing: border-box;
   margin: 0;
@@ -161,7 +161,7 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly 1`] = 
 </span>
 `;
 
-exports[`LimitCustomMarketPriceButton renders the custom amount correctly, negative change 1`] = `
+exports[`LimitCustomMarketPriceButton > renders the custom amount correctly, negative change 1`] = `
 .c0 {
   box-sizing: border-box;
   margin: 0;
@@ -321,7 +321,7 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly, negat
 </span>
 `;
 
-exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected false 1`] = `
+exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 0 false false 1`] = `
 .c1 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -382,7 +382,7 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected
 </span>
 `;
 
-exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected true 1`] = `
+exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 0 false true 1`] = `
 .c1 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -443,7 +443,7 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected
 </span>
 `;
 
-exports[`LimitPresetPriceButton renders 0 correctly, disabled true and selected false 1`] = `
+exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 0 true false 1`] = `
 .c1 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -491,7 +491,7 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled true and selected 
 </span>
 `;
 
-exports[`LimitPresetPriceButton renders 5 correctly, disabled false and selected true 1`] = `
+exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 5 false true 1`] = `
 .c1 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -553,7 +553,7 @@ exports[`LimitPresetPriceButton renders 5 correctly, disabled false and selected
 </span>
 `;
 
-exports[`LimitPresetPriceButton renders 5 correctly, disabled true and selected false 1`] = `
+exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 5 true false 1`] = `
 .c1 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -602,7 +602,7 @@ exports[`LimitPresetPriceButton renders 5 correctly, disabled true and selected 
 </span>
 `;
 
-exports[`LimitPresetPriceButton renders 10 correctly, disabled false and selected true 1`] = `
+exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 10 false true 1`] = `
 .c1 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;

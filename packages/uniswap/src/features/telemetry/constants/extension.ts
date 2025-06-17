@@ -23,4 +23,5 @@ export enum ExtensionEventName {
   UnknownMethodRequest = 'Unknown Method Request',
   UnsupportedMethodRequest = 'Unsupported Method Request',
   UnrecognizedMethodRequest = 'Unrecognized Method Request',
+  // alphabetize additional values.
 }

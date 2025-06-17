@@ -1,6 +1,7 @@
 // TODO(MOB-203): reduce component complexity
 /* eslint-disable complexity */
 import { BigNumber } from '@ethersproject/bignumber'
+import { Direction, OnChainTransaction, OnChainTransactionLabel } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import {
   TokenStandard,
   TransactionDirection,
@@ -35,7 +36,7 @@ export default function parseTradeTransaction(
   transaction: NonNullable<TransactionListQueryResponse>,
 ): ConfirmedSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {
   // ignore UniswapX transactions for now
-  if (transaction?.details?.__typename !== TransactionDetailsType.Transaction) {
+  if (transaction.details.__typename !== TransactionDetailsType.Transaction) {
     return undefined
   }
 
@@ -44,10 +45,9 @@ export default function parseTradeTransaction(
     return undefined
   }
 
-  const txAssetChanges =
-    transaction.details.assetChanges?.filter(
-      (t): t is TransferAssetChange => t?.__typename === 'TokenTransfer' || t?.__typename === 'NftTransfer',
-    ) ?? []
+  const txAssetChanges = transaction.details.assetChanges.filter(
+    (t): t is TransferAssetChange => t?.__typename === 'TokenTransfer' || t?.__typename === 'NftTransfer',
+  )
 
   // for detecting wraps
   const nativeCurrencyID = buildNativeCurrencyId(chainId).toLocaleLowerCase()
@@ -65,7 +65,7 @@ export default function parseTradeTransaction(
       }
 
       const isRefundInternalTx =
-        t?.__typename === 'TokenTransfer' && t.asset.id === sent?.asset.id && t.tokenStandard === TokenStandard.Native
+        t.__typename === 'TokenTransfer' && t.asset.id === sent?.asset.id && t.tokenStandard === TokenStandard.Native
 
       if (isRefundInternalTx) {
         acc.refund = t
@@ -107,33 +107,33 @@ export default function parseTradeTransaction(
         : received.asset.address
           ? buildCurrencyId(chainId, received.asset.address)
           : null
-    let inputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
-      sent.tokenStandard,
-      sent.asset.chain,
-      sent.asset.address,
-      sent.asset.decimals,
-      sent.quantity,
-    )
+    let inputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse({
+      tokenStandard: sent.tokenStandard,
+      chain: sent.asset.chain,
+      address: sent.asset.address,
+      decimals: sent.asset.decimals,
+      quantity: sent.quantity,
+    })
 
     if (refund && refund.tokenStandard === sent.tokenStandard) {
-      const refundCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
-        refund.tokenStandard,
-        refund.asset.chain,
-        refund.asset.address,
-        refund.asset.decimals,
-        refund.quantity,
-      )
+      const refundCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse({
+        tokenStandard: refund.tokenStandard,
+        chain: refund.asset.chain,
+        address: refund.asset.address,
+        decimals: refund.asset.decimals,
+        quantity: refund.quantity,
+      })
 
       inputCurrencyAmountRaw = BigNumber.from(inputCurrencyAmountRaw).sub(refundCurrencyAmountRaw).toString()
     }
 
-    const outputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
-      received.tokenStandard,
-      received.asset.chain,
-      received.asset.address,
-      received.asset.decimals,
-      received.quantity,
-    )
+    const outputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse({
+      tokenStandard: received.tokenStandard,
+      chain: received.asset.chain,
+      address: received.asset.address,
+      decimals: received.asset.decimals,
+      quantity: received.quantity,
+    })
 
     const transactedUSDValue = parseUSDValueFromAssetChange(sent.transactedValue)
 
@@ -173,23 +173,23 @@ export default function parseTradeTransaction(
     if (nftChange?.__typename !== 'NftTransfer' || tokenChange?.__typename !== 'TokenTransfer') {
       return undefined
     }
-    const name = nftChange.asset?.name
-    const collectionName = nftChange.asset?.collection?.name
-    const imageURL = nftChange.asset?.image?.url
-    const tokenId = nftChange.asset?.tokenId
+    const name = nftChange.asset.name
+    const collectionName = nftChange.asset.collection?.name
+    const imageURL = nftChange.asset.image?.url
+    const tokenId = nftChange.asset.tokenId
     const purchaseCurrencyId =
       tokenChange.tokenStandard === TokenStandard.Native
         ? buildNativeCurrencyId(chainId)
-        : tokenChange.asset?.address
+        : tokenChange.asset.address
           ? buildCurrencyId(chainId, tokenChange.asset.address)
           : undefined
-    const purchaseCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
-      tokenChange.tokenStandard,
-      tokenChange.asset.chain,
-      tokenChange.asset.address,
-      tokenChange.asset.decimals,
-      tokenChange.quantity,
-    )
+    const purchaseCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse({
+      tokenStandard: tokenChange.tokenStandard,
+      chain: tokenChange.asset.chain,
+      address: tokenChange.asset.address,
+      decimals: tokenChange.asset.decimals,
+      quantity: tokenChange.quantity,
+    })
     const tradeType = nftChange.direction === 'IN' ? NFTTradeType.BUY : NFTTradeType.SELL
 
     const transactedUSDValue = parseUSDValueFromAssetChange(tokenChange.transactedValue)
@@ -224,4 +224,53 @@ export default function parseTradeTransaction(
   }
 
   return undefined
+}
+
+/**
+ * Parse a swap transaction from the REST API
+ */
+export function parseRestSwapTransaction(transaction: OnChainTransaction): ConfirmedSwapTransactionInfo | undefined {
+  const { transfers, chainId } = transaction
+  if (transfers.length < 2) {
+    return undefined
+  }
+
+  const sentTransfer = transfers.find((t) => t.direction === Direction.SEND)
+  const receivedTransfer = transfers.find((t) => t.direction === Direction.RECEIVE)
+  if (!sentTransfer || !receivedTransfer) {
+    return undefined
+  }
+
+  const inputToken = sentTransfer.asset.value
+  const outputToken = receivedTransfer.asset.value
+  if (!inputToken || !outputToken) {
+    return undefined
+  }
+
+  return {
+    type: TransactionType.Swap,
+    inputCurrencyId: buildCurrencyId(chainId, inputToken.address),
+    outputCurrencyId: buildCurrencyId(chainId, outputToken.address),
+    inputCurrencyAmountRaw: sentTransfer.amount?.raw ?? '',
+    outputCurrencyAmountRaw: receivedTransfer.amount?.raw ?? '',
+    transactedUSDValue: undefined,
+  }
+}
+
+/**
+ * Parse a Wrap transaction from the REST API
+ */
+export function parseRestWrapTransaction(transaction: OnChainTransaction): WrapTransactionInfo | undefined {
+  const { transfers, label } = transaction
+  const firstTransfer = transfers[0]
+
+  if (transfers.length < 2) {
+    return undefined
+  }
+
+  return {
+    type: TransactionType.Wrap,
+    unwrapped: label === OnChainTransactionLabel.WITHDRAW || label === OnChainTransactionLabel.UNWRAP,
+    currencyAmountRaw: firstTransfer?.amount?.raw ?? '',
+  }
 }

@@ -4,8 +4,8 @@ import { fireEvent, render, screen } from 'test-utils/render'
 
 describe('ProviderConnectionError', () => {
   it('should render the component and call callbacks', () => {
-    const onBack = jest.fn()
-    const closeModal = jest.fn()
+    const onBack = vi.fn()
+    const closeModal = vi.fn()
 
     const { container } = render(
       <ProviderConnectionError onBack={onBack} closeModal={closeModal} selectedServiceProvider={mockServiceProvider} />,

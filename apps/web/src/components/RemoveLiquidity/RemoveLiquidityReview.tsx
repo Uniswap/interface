@@ -2,7 +2,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
-import { useGetPoolTokenPercentage, usePositionCurrentPrice, usePositionDerivedInfo } from 'components/Liquidity/hooks'
+import { useGetPoolTokenPercentage, usePositionCurrentPrice } from 'components/Liquidity/hooks'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxContext } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
@@ -20,6 +20,7 @@ import { iconSizes } from 'ui/src/theme'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -37,9 +38,9 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
     useRemoveLiquidityModalContext()
   const [steps, setSteps] = useState<TransactionStep[]>([])
   const removeLiquidityTxContext = useRemoveLiquidityTxContext()
-  const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
-  const currency0FiatAmount = useUSDCValue(positionInfo?.currency0Amount) ?? undefined
-  const currency1FiatAmount = useUSDCValue(positionInfo?.currency1Amount) ?? undefined
+  const { formatCurrencyAmount, formatPercent, convertFiatAmountFormatted } = useLocalizationContext()
+  const currency0FiatAmount = useUSDCValue(positionInfo?.currency0Amount)
+  const currency1FiatAmount = useUSDCValue(positionInfo?.currency1Amount)
   const selectChain = useSelectChain()
   const connectedAccount = useAccount()
   const startChainId = connectedAccount.chainId
@@ -64,18 +65,31 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
     throw new Error('RemoveLiquidityModal must have an initial state when opening')
   }
 
-  const { feeValue0, feeValue1, fiatFeeValue0, fiatFeeValue1 } = usePositionDerivedInfo(positionInfo)
+  const { fee0Amount, fee1Amount } = positionInfo
+  const fiatFeeValue0 = useUSDCValue(fee0Amount, PollingInterval.Slow)
+  const fiatFeeValue1 = useUSDCValue(fee1Amount, PollingInterval.Slow)
 
-  const { currency0Amount, currency1Amount, chainId, feeTier, version, poolId } = positionInfo
+  const {
+    currency0Amount,
+    currency1Amount,
+    chainId,
+    feeTier,
+    tickSpacing,
+    tickLower,
+    tickUpper,
+    version,
+    poolId,
+    v4hook,
+  } = positionInfo
 
   const currentPrice = usePositionCurrentPrice(positionInfo)
 
   const currency0 = getCurrencyWithOptionalUnwrap({
-    currency: positionInfo?.currency0Amount.currency,
+    currency: positionInfo.currency0Amount.currency,
     shouldUnwrap: unwrapNativeCurrency,
   })
   const currency1 = getCurrencyWithOptionalUnwrap({
-    currency: positionInfo?.currency1Amount.currency,
+    currency: positionInfo.currency1Amount.currency,
     shouldUnwrap: unwrapNativeCurrency,
   })
 
@@ -119,7 +133,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const onDecreaseLiquidity = () => {
     const isValidTx = isValidLiquidityTxContext(txContext)
-    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx || !positionInfo) {
+    if (!account || account.type !== AccountType.SignerMnemonic || !isValidTx) {
       return
     }
     dispatch(
@@ -136,6 +150,10 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
           ...getLPBaseAnalyticsProperties({
             trace,
             fee: feeTier,
+            tickSpacing,
+            tickLower,
+            tickUpper,
+            hook: v4hook,
             poolId,
             currency0,
             currency1,
@@ -143,8 +161,8 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
             currency1AmountUsd: currency1AmountToRemoveUSD,
             version,
           }),
-          expectedAmountBaseRaw: unwrappedCurrency0AmountToRemove?.quotient.toString() ?? '-',
-          expectedAmountQuoteRaw: unwrappedCurrency1AmountToRemove?.quotient.toString() ?? '-',
+          expectedAmountBaseRaw: unwrappedCurrency0AmountToRemove.quotient.toString(),
+          expectedAmountQuoteRaw: unwrappedCurrency1AmountToRemove.quotient.toString(),
           closePosition: percent === '100',
         },
       }),
@@ -177,9 +195,9 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
                 <Text variant="body3">{currency0Amount.currency.symbol} fees</Text>
               </Flex>
               <Flex row alignItems="center" gap="$spacing4">
-                <Text variant="body3">{formatCurrencyAmount({ value: feeValue0 })}</Text>{' '}
+                <Text variant="body3">{formatCurrencyAmount({ value: fee0Amount })}</Text>{' '}
                 <Text variant="body3" color="$neutral2">
-                  ({formatCurrencyAmount({ value: fiatFeeValue0, type: NumberType.FiatTokenPrice })})
+                  ({convertFiatAmountFormatted(fiatFeeValue0?.toExact(), NumberType.FiatTokenPrice)})
                 </Text>
               </Flex>
             </Flex>
@@ -190,9 +208,9 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
                 <Text variant="body3">{currency1Amount.currency.symbol} fees</Text>
               </Flex>
               <Flex row alignItems="center" gap="$spacing4">
-                <Text variant="body3">{formatCurrencyAmount({ value: feeValue1 })}</Text>{' '}
+                <Text variant="body3">{formatCurrencyAmount({ value: fee1Amount })}</Text>{' '}
                 <Text variant="body3" color="$neutral2">
-                  ({formatCurrencyAmount({ value: fiatFeeValue1, type: NumberType.FiatTokenPrice })})
+                  ({convertFiatAmountFormatted(fiatFeeValue1?.toExact(), NumberType.FiatTokenPrice)})
                 </Text>
               </Flex>
             </Flex>
@@ -228,7 +246,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
                   <Flex row gap="$gap4">
                     <Text variant="body3">
                       {formatCurrencyAmount({ value: newCurrency0Amount, type: NumberType.TokenNonTx })}{' '}
-                      {getSymbolDisplayText(newCurrency0Amount?.currency.symbol)}
+                      {getSymbolDisplayText(newCurrency0Amount.currency.symbol)}
                     </Text>
                     <Text variant="body3" color="$neutral2">
                       {`(${formatCurrencyAmount({ value: newCurrency0AmountUSD, type: NumberType.FiatStandard })})`}
@@ -248,7 +266,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
                   <Flex row gap="$gap4">
                     <Text variant="body3">
                       {formatCurrencyAmount({ value: newCurrency1Amount, type: NumberType.TokenNonTx })}{' '}
-                      {getSymbolDisplayText(newCurrency1Amount?.currency.symbol)}
+                      {getSymbolDisplayText(newCurrency1Amount.currency.symbol)}
                     </Text>
                     <Text variant="body3" color="$neutral2">
                       {`(${formatCurrencyAmount({ value: newCurrency1AmountUSD, type: NumberType.FiatStandard })})`}

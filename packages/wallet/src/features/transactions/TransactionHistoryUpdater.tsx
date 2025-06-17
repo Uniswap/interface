@@ -68,7 +68,7 @@ export function TransactionHistoryUpdater(): JSX.Element | null {
   return (
     <>
       {combinedPortfoliosData.map((portfolio) => {
-        if (!portfolio?.ownerAddress || !portfolio?.assetActivities) {
+        if (!portfolio?.ownerAddress || !portfolio.assetActivities) {
           return null
         }
 
@@ -143,6 +143,7 @@ function AddressTransactionHistoryUpdater({
         }
       })
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (newTransactionsFound && address === activeAccountAddress) {
         // Fetch full recent txn history and dispatch receive notification if needed.
         await fetchAndDispatchReceiveNotification(address, lastTxNotificationUpdateTimestamp, hideSpamTokens)
@@ -185,6 +186,7 @@ export function useFetchAndDispatchReceiveNotification(): (
     address: string,
     lastTxNotificationUpdateTimestamp: number | undefined,
     hideSpamTokens = false,
+    // eslint-disable-next-line max-params
   ): Promise<void> => {
     // Fetch full transaction history for user address.
     const { data: fullTransactionData } = await fetchFullTransactionData({
@@ -192,12 +194,12 @@ export function useFetchAndDispatchReceiveNotification(): (
       fetchPolicy: 'network-only', // Ensure latest data.
     })
 
-    const notification = getReceiveNotificationFromData(
-      fullTransactionData,
+    const notification = getReceiveNotificationFromData({
+      data: fullTransactionData,
       address,
       lastTxNotificationUpdateTimestamp,
       hideSpamTokens,
-    )
+    })
 
     if (notification) {
       dispatch(pushNotification(notification))
@@ -205,17 +207,25 @@ export function useFetchAndDispatchReceiveNotification(): (
   }
 }
 
-export function getReceiveNotificationFromData(
-  data: TransactionListQuery | undefined,
-  address: Address,
-  lastTxNotificationUpdateTimestamp: number | undefined,
+export function getReceiveNotificationFromData({
+  data,
+  address,
+  lastTxNotificationUpdateTimestamp,
   hideSpamTokens = false,
-): ReceiveCurrencyTxNotification | ReceiveNFTNotification | undefined {
+}: {
+  data?: TransactionListQuery
+  address: Address
+  lastTxNotificationUpdateTimestamp?: number
+  hideSpamTokens?: boolean
+}): ReceiveCurrencyTxNotification | ReceiveNFTNotification | undefined {
   if (!data || !lastTxNotificationUpdateTimestamp) {
     return undefined
   }
 
-  const parsedTxHistory = parseDataResponseToTransactionDetails(data, hideSpamTokens)
+  const parsedTxHistory = parseDataResponseToTransactionDetails({
+    data,
+    hideSpamTokens,
+  })
   if (!parsedTxHistory) {
     return undefined
   }

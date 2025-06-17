@@ -67,7 +67,7 @@ export function PasskeysHelpModal({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const onPressGetHelp = async (): Promise<void> => {
-    await openUri(uniswapUrls.helpArticleUrls.passkeysInfo)
+    await openUri({ uri: uniswapUrls.helpArticleUrls.passkeysInfo })
   }
   const displayName = accountName ?? t('common.thisAccount')
   const modalContent = passkeysHelpModalContent[type]

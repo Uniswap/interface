@@ -90,21 +90,21 @@ export function* executeTransactionLegacy(params: ExecuteTransactionParams): Sag
         provider,
         signerManager,
         viemClient,
+        isRemoveDelegation: typeInfo.type === TransactionType.RemoveDelegation,
       },
     )
     logger.debug('executeTransaction', '', 'Tx submitted:', transactionResponse.hash)
 
     // Update the transaction with the hash and populated request
-    yield* call(
-      updateSubmittedTransaction,
-      unsubmittedTransaction,
-      transactionResponse.hash,
+    yield* call(updateSubmittedTransaction, {
+      transaction: unsubmittedTransaction,
+      hash: transactionResponse.hash,
       timestampBeforeSign,
       timestampBeforeSend,
       populatedRequest,
       provider,
-      params.analytics,
-    )
+      analytics: params.analytics,
+    })
 
     // Log metric for successfully submitted transactions to datadog for alerting %
     logger.info('sendTransactionSaga', 'sendTransaction', 'Transaction successfully submitted', {
@@ -161,15 +161,23 @@ function* addUnsubmittedTransaction(
   return transaction
 }
 
-function* updateSubmittedTransaction(
-  transaction: OnChainTransactionDetails,
-  hash: string,
-  timestampBeforeSign: number,
-  timestampBeforeSend: number,
-  populatedRequest: providers.TransactionRequest,
-  provider: providers.Provider,
-  analytics?: SwapTradeBaseProperties,
-): SagaIterator<void> {
+function* updateSubmittedTransaction({
+  transaction,
+  hash,
+  timestampBeforeSign,
+  timestampBeforeSend,
+  populatedRequest,
+  provider,
+  analytics,
+}: {
+  transaction: OnChainTransactionDetails
+  hash: string
+  timestampBeforeSign: number
+  timestampBeforeSend: number
+  populatedRequest: providers.TransactionRequest
+  provider: providers.Provider
+  analytics?: SwapTradeBaseProperties
+}): SagaIterator<void> {
   // Get the internal (cached) block number if not older than 1000ms.
   // The block number is fetched when submitting the transaction, so it should be recent.
   const baseProvider = provider as BaseProvider

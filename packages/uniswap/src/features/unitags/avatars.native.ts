@@ -143,7 +143,7 @@ export const tryUploadAvatar = async ({
 }): Promise<{ success: boolean; skipped: boolean }> => {
   const needsAvatarUpload = !!avatarImageUri && isLocalFileUri(avatarImageUri)
   const isPreSignedUrlReady =
-    !avatarUploadUrlLoading && !!avatarUploadUrlResponse?.preSignedUrl && !!avatarUploadUrlResponse?.s3UploadFields
+    !avatarUploadUrlLoading && !!avatarUploadUrlResponse?.preSignedUrl && !!avatarUploadUrlResponse.s3UploadFields
   const shouldTryAvatarUpload = needsAvatarUpload && isPreSignedUrlReady
 
   if (!shouldTryAvatarUpload) {

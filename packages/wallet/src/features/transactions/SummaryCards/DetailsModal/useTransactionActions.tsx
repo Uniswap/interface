@@ -64,9 +64,6 @@ export const useTransactionActions = ({
   const baseActionItems = useTransactionActionItems(transaction)
 
   const handleCancel = (txRequest: providers.TransactionRequest): void => {
-    if (!transaction) {
-      return
-    }
     dispatch(
       cancelTransaction({
         chainId: transaction.chainId,
@@ -131,14 +128,12 @@ export const useTransactionActions = ({
       )}
       {showCancelModal && (
         <Modal hideHandlebar={false} name={ModalName.TransactionCancellation} onClose={handleCancelModalClose}>
-          {transaction && (
-            <CancelConfirmationView
-              authTrigger={authTrigger}
-              transactionDetails={transaction}
-              onBack={handleCancelConfirmationBack}
-              onCancel={handleCancel}
-            />
-          )}
+          <CancelConfirmationView
+            authTrigger={authTrigger}
+            transactionDetails={transaction}
+            onBack={handleCancelConfirmationBack}
+            onCancel={handleCancel}
+          />
         </Modal>
       )}
     </>
@@ -163,7 +158,7 @@ function useTransactionActionItems(transactionDetails: TransactionDetails): Tran
     transactionDetails.typeInfo.type === TransactionType.OnRampPurchase ||
     transactionDetails.typeInfo.type === TransactionType.OnRampTransfer ||
     transactionDetails.typeInfo.type === TransactionType.OffRampSale
-      ? transactionDetails.typeInfo.serviceProvider?.name
+      ? transactionDetails.typeInfo.serviceProvider.name
       : undefined
 
   if (transactionId) {
@@ -229,7 +224,7 @@ async function openSupportLink(transactionDetails: TransactionDetails): Promise<
       params.append(SupportLinkParams.ReportType, isWeb ? 'uniswap_extension_issue' : 'uw_ios_app') // Report Type Dropdown
       params.append(SupportLinkParams.IssueType, 'uw_transaction_details_page_submission') // Issue type Dropdown
       params.append(SupportLinkParams.TransactionId, transactionDetails.hash ?? 'N/A') // Transaction id
-      return openUri(uniswapUrls.helpRequestUrl + '?' + params.toString()).catch((e) =>
+      return openUri({ uri: uniswapUrls.helpRequestUrl + '?' + params.toString() }).catch((e) =>
         logger.error(e, { tags: { file: 'TransactionActionsModal', function: 'getHelpLink' } }),
       )
   }

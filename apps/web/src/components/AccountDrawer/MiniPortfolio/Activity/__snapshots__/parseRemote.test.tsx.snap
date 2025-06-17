@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`parseRemote parseRemoteActivities should parse NFT Mint 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse NFT Mint 1`] = `
 {
   "chainId": 1,
   "descriptor": "1 SomeCollectionName",
@@ -18,7 +18,7 @@ exports[`parseRemote parseRemoteActivities should parse NFT Mint 1`] = `
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse NFT approval 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse NFT approval 1`] = `
 {
   "chainId": 1,
   "descriptor": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
@@ -34,7 +34,7 @@ exports[`parseRemote parseRemoteActivities should parse NFT approval 1`] = `
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse NFT approval for all 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse NFT approval for all 1`] = `
 {
   "chainId": 1,
   "descriptor": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
@@ -50,7 +50,7 @@ exports[`parseRemote parseRemoteActivities should parse NFT approval for all 1`]
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse NFT receive 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse NFT receive 1`] = `
 {
   "chainId": 1,
   "currencies": undefined,
@@ -70,7 +70,7 @@ exports[`parseRemote parseRemoteActivities should parse NFT receive 1`] = `
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse eth wrap 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse eth wrap 1`] = `
 {
   "chainId": 1,
   "currencies": [
@@ -110,7 +110,7 @@ exports[`parseRemote parseRemoteActivities should parse eth wrap 1`] = `
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse expired UniswapX order 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse expired UniswapX order 1`] = `
 {
   "chainId": 1,
   "currencies": [
@@ -167,14 +167,14 @@ exports[`parseRemote parseRemoteActivities should parse expired UniswapX order 1
     "txHash": undefined,
     "type": undefined,
   },
-  "prefixIconSrc": "bolt.svg",
+  "prefixIconSrc": "data:image/svg+xml,%3csvg%20width='10'%20height='14'%20viewBox='0%200%2010%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M9.97119%206.19815C9.91786%206.07749%209.79854%206.00016%209.66654%206.00016H6.66654V1.00016C6.66654%200.862156%206.58189%200.738159%206.45255%200.688826C6.32255%200.638826%206.17787%200.674818%206.0852%200.776818L0.0852016%207.44349C-0.00279838%207.54149%20-0.025439%207.68149%200.028561%207.80216C0.0818943%207.92283%200.201208%208.00016%200.333208%208.00016H3.33321V13.0002C3.33321%2013.1382%203.41786%2013.2622%203.5472%2013.3115C3.58653%2013.3262%203.62654%2013.3335%203.66654%2013.3335C3.75921%2013.3335%203.84988%2013.2948%203.91455%2013.2228L9.91455%206.55616C10.0025%206.45882%2010.0245%206.31815%209.97119%206.19815Z'%20fill='url(%23paint0_linear_1816_1801)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_1816_1801'%20x1='-10.1808'%20y1='-12.0005'%20x2='10.6572'%20y2='-11.6015'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%234673FA'/%3e%3cstop%20offset='1'%20stop-color='%239646FA'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e",
   "status": "FAILED",
   "timestamp": 10000,
   "title": "Swap expired",
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse filledUniswapX order 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse filledUniswapX order 1`] = `
 {
   "chainId": 1,
   "currencies": [
@@ -231,14 +231,14 @@ exports[`parseRemote parseRemoteActivities should parse filledUniswapX order 1`]
     "txHash": "someHash",
     "type": undefined,
   },
-  "prefixIconSrc": "bolt.svg",
+  "prefixIconSrc": "data:image/svg+xml,%3csvg%20width='10'%20height='14'%20viewBox='0%200%2010%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M9.97119%206.19815C9.91786%206.07749%209.79854%206.00016%209.66654%206.00016H6.66654V1.00016C6.66654%200.862156%206.58189%200.738159%206.45255%200.688826C6.32255%200.638826%206.17787%200.674818%206.0852%200.776818L0.0852016%207.44349C-0.00279838%207.54149%20-0.025439%207.68149%200.028561%207.80216C0.0818943%207.92283%200.201208%208.00016%200.333208%208.00016H3.33321V13.0002C3.33321%2013.1382%203.41786%2013.2622%203.5472%2013.3115C3.58653%2013.3262%203.62654%2013.3335%203.66654%2013.3335C3.75921%2013.3335%203.84988%2013.2948%203.91455%2013.2228L9.91455%206.55616C10.0025%206.45882%2010.0245%206.31815%209.97119%206.19815Z'%20fill='url(%23paint0_linear_1816_1801)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_1816_1801'%20x1='-10.1808'%20y1='-12.0005'%20x2='10.6572'%20y2='-11.6015'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%234673FA'/%3e%3cstop%20offset='1'%20stop-color='%239646FA'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e",
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Swapped",
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse moonpay purchase 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse moonpay purchase 1`] = `
 {
   "chainId": 1,
   "currencies": [
@@ -259,7 +259,7 @@ exports[`parseRemote parseRemoteActivities should parse moonpay purchase 1`] = `
   "hash": "someHash",
   "isSpam": false,
   "logos": [
-    "moonpay.svg",
+    "data:image/svg+xml,%3csvg%20width='36'%20height='36'%20viewBox='0%200%2036%2036'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='36'%20height='36'%20rx='18'%20fill='%237D00FF'/%3e%3cpath%20d='M24.933%2014.14a3.07%203.07%200%200%200%200-6.14%203.07%203.07%200%200%200%200%206.14ZM15.5%2028A7.495%207.495%200%200%201%208%2020.493a7.495%207.495%200%200%201%207.5-7.506c4.149%200%207.5%203.354%207.5%207.506A7.495%207.495%200%200%201%2015.5%2028Z'%20fill='%23fff'/%3e%3c/svg%3e",
   ],
   "nonce": 12345,
   "status": "CONFIRMED",
@@ -269,7 +269,7 @@ exports[`parseRemote parseRemoteActivities should parse moonpay purchase 1`] = `
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse nft purchase 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse nft purchase 1`] = `
 {
   "chainId": 1,
   "descriptor": "1 SomeCollectionName",
@@ -287,7 +287,7 @@ exports[`parseRemote parseRemoteActivities should parse nft purchase 1`] = `
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse receive 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse receive 1`] = `
 {
   "chainId": 1,
   "currencies": [
@@ -319,7 +319,7 @@ exports[`parseRemote parseRemoteActivities should parse receive 1`] = `
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse remove liquidity 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse remove liquidity 1`] = `
 {
   "chainId": 1,
   "currencies": [
@@ -362,7 +362,7 @@ exports[`parseRemote parseRemoteActivities should parse remove liquidity 1`] = `
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse send 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse send 1`] = `
 {
   "chainId": 1,
   "currencies": [
@@ -394,7 +394,7 @@ exports[`parseRemote parseRemoteActivities should parse send 1`] = `
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse swap 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse swap 1`] = `
 {
   "chainId": 1,
   "currencies": [
@@ -436,7 +436,7 @@ exports[`parseRemote parseRemoteActivities should parse swap 1`] = `
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse swap order 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse swap order 1`] = `
 {
   "chainId": 1,
   "currencies": [
@@ -491,7 +491,7 @@ exports[`parseRemote parseRemoteActivities should parse swap order 1`] = `
     },
     "txHash": "someHash",
   },
-  "prefixIconSrc": "bolt.svg",
+  "prefixIconSrc": "data:image/svg+xml,%3csvg%20width='10'%20height='14'%20viewBox='0%200%2010%2014'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M9.97119%206.19815C9.91786%206.07749%209.79854%206.00016%209.66654%206.00016H6.66654V1.00016C6.66654%200.862156%206.58189%200.738159%206.45255%200.688826C6.32255%200.638826%206.17787%200.674818%206.0852%200.776818L0.0852016%207.44349C-0.00279838%207.54149%20-0.025439%207.68149%200.028561%207.80216C0.0818943%207.92283%200.201208%208.00016%200.333208%208.00016H3.33321V13.0002C3.33321%2013.1382%203.41786%2013.2622%203.5472%2013.3115C3.58653%2013.3262%203.62654%2013.3335%203.66654%2013.3335C3.75921%2013.3335%203.84988%2013.2948%203.91455%2013.2228L9.91455%206.55616C10.0025%206.45882%2010.0245%206.31815%209.97119%206.19815Z'%20fill='url(%23paint0_linear_1816_1801)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_1816_1801'%20x1='-10.1808'%20y1='-12.0005'%20x2='10.6572'%20y2='-11.6015'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%234673FA'/%3e%3cstop%20offset='1'%20stop-color='%239646FA'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e",
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Swapped",
@@ -499,7 +499,7 @@ exports[`parseRemote parseRemoteActivities should parse swap order 1`] = `
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse token approval 1`] = `
+exports[`parseRemote > parseRemoteActivities > should parse token approval 1`] = `
 {
   "chainId": 1,
   "currencies": [

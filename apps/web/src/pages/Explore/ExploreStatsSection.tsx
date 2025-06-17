@@ -58,6 +58,7 @@ const ExploreStatsSection = () => {
       { label: t('explore.v4TVL'), value: formatPrice(protocolTVL.v4), change: protocolChangePercent.v4 },
     ]
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return stats.filter((state): state is Exclude<typeof state, null> => state !== null)
   }, [
     t,

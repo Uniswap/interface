@@ -24,7 +24,7 @@ import { Flex, Text, TouchableArea } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 
 function EmptyState({ message }: { message: ReactNode }) {
   return (
@@ -89,10 +89,10 @@ export default function MigrateV2() {
   }, [tokenPairsWithLiquidityTokens])
 
   // fetch pair balances
-  const [pairBalances, fetchingPairBalances] = useRpcTokenBalancesWithLoadingIndicator(
-    account.address,
-    allLiquidityTokens,
-  )
+  const [pairBalances, fetchingPairBalances] = useRpcTokenBalancesWithLoadingIndicator({
+    address: account.address,
+    tokens: allLiquidityTokens,
+  })
 
   // filter for v2 liquidity tokens that the user has a balance in
   const tokenPairsWithV2Balance = useMemo(() => {
@@ -133,7 +133,7 @@ export default function MigrateV2() {
   }
 
   return (
-    <Trace logImpression page={InterfacePageNameLocal.MigrateV2}>
+    <Trace logImpression page={InterfacePageName.MigrateV2}>
       <BodyWrapper style={{ padding: 24 }}>
         <Flex gap="$gap16">
           <Flex row alignItems="center" justifyContent="space-between" gap="$gap8">
@@ -158,7 +158,7 @@ export default function MigrateV2() {
             <Trans i18nKey="migrate.v2Instruction" />
           </Text>
 
-          {!account ? (
+          {!account.isConnected ? (
             <LightCard padding="40px">
               <Text variant="body2" color="$neutral3" textAlign="center">
                 <Trans i18nKey="migrate.connectWallet" />

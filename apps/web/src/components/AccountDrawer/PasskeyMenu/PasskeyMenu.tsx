@@ -122,7 +122,7 @@ const AuthenticatorRow = ({
   const formattedDate = createdAtDate?.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
-    year: createdAtDate?.getFullYear() === new Date().getFullYear() ? undefined : 'numeric',
+    year: createdAtDate.getFullYear() === new Date().getFullYear() ? undefined : 'numeric',
   })
 
   return (

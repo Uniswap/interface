@@ -40,7 +40,11 @@ export function SendFormButton({
   } = useSendContext()
   const { walletNeedsRestore } = useTransactionModalContext()
   const hasValueGreaterThanZero = useMemo(() => {
-    return isAmountGreaterThanZero(exactAmountToken, exactAmountFiat, currencyInInfo?.currency)
+    return isAmountGreaterThanZero({
+      exactAmountToken,
+      exactAmountFiat,
+      currency: currencyInInfo?.currency,
+    })
   }, [exactAmountToken, exactAmountFiat, currencyInInfo?.currency])
 
   const isViewOnlyWallet = account.type === AccountType.Readonly

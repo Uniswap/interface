@@ -17,23 +17,35 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useConnect } from 'wagmi'
 
-const UserAgentMock = jest.requireMock('utilities/src/platform')
-jest.mock('utilities/src/platform', () => ({
-  ...jest.requireActual('utilities/src/platform'),
-}))
+let mockIsMobileWeb = false
+vi.mock('utilities/src/platform', async () => {
+  const actual = await vi.importActual('utilities/src/platform')
+  return {
+    ...actual,
+    get isMobileWeb() {
+      return mockIsMobileWeb
+    },
+  }
+})
 
-jest.mock('wagmi', () => ({
-  ...jest.requireActual('wagmi'),
-  useConnect: jest.fn(),
-}))
+vi.mock('wagmi', async () => {
+  const actual = await vi.importActual('wagmi')
+  return {
+    ...actual,
+    useConnect: vi.fn(),
+  }
+})
 
-jest.mock('components/Web3Provider/constants', () => ({
-  ...jest.requireActual('components/Web3Provider/constants'),
-  useRecentConnectorId: jest.fn(),
-}))
+vi.mock('components/Web3Provider/constants', async () => {
+  const actual = await vi.importActual('components/Web3Provider/constants')
+  return {
+    ...actual,
+    useRecentConnectorId: vi.fn(),
+  }
+})
 
-jest.mock('uniswap/src/features/gating/hooks', () => ({
-  useFeatureFlag: jest.fn(),
+vi.mock('uniswap/src/features/gating/hooks', () => ({
+  useFeatureFlag: vi.fn(),
 }))
 
 const DEFAULT_CONNECTORS = [
@@ -46,11 +58,12 @@ const DEFAULT_CONNECTORS = [
 
 describe('useOrderedConnections', () => {
   beforeEach(() => {
-    UserAgentMock.isMobileWeb = false
+    mockIsMobileWeb = false
     mocked(useConnect).mockReturnValue({
       connectors: DEFAULT_CONNECTORS,
     } as unknown as ReturnType<typeof useConnect>)
     mocked(useFeatureFlag).mockReturnValue(false)
+    mocked(useRecentConnectorId).mockReturnValue(undefined)
   })
 
   it('should return ordered connectors', () => {
@@ -72,7 +85,7 @@ describe('useOrderedConnections', () => {
     mocked(useConnect).mockReturnValue({ connectors: [WALLET_CONNECT_CONNECTOR] } as unknown as ReturnType<
       typeof useConnect
     >)
-    jest.spyOn(console, 'error').mockImplementation(() => undefined)
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
     const { result } = renderHook(() => useOrderedConnections())
     expect(result.error?.message).toEqual('Expected connector injected missing from wagmi context.')
   })
@@ -94,14 +107,14 @@ describe('useOrderedConnections', () => {
   })
 
   it('should return only injected connectors for in-wallet browsers', () => {
-    UserAgentMock.isMobileWeb = true
+    mockIsMobileWeb = true
     const { result } = renderHook(() => useOrderedConnections())
     expect(result.current.length).toEqual(1)
     expect(result.current[0].id).toEqual(CONNECTION_PROVIDER_IDS.METAMASK_RDNS)
   })
 
   it('should return only the Coinbase injected connector in the Coinbase Wallet', async () => {
-    UserAgentMock.isMobileWeb = true
+    mockIsMobileWeb = true
     mocked(useConnect).mockReturnValue({
       connectors: [
         INJECTED_CONNECTOR,
@@ -158,7 +171,7 @@ describe('useOrderedConnections', () => {
   })
 
   it('should include only the fallback injected provider when no eip6963 injectors are present on mobile', async () => {
-    UserAgentMock.isMobileWeb = true
+    mockIsMobileWeb = true
     window.ethereum = true as any
     mocked(useConnect).mockReturnValue({
       connectors: [INJECTED_CONNECTOR, WALLET_CONNECT_CONNECTOR, COINBASE_SDK_CONNECTOR, EMBEDDED_WALLET_CONNECTOR],

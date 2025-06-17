@@ -13,7 +13,7 @@ import { getChainUrlParam } from 'utils/chainParams'
 
 type AmountRow = {
   currencyInfo: CurrencyInfo
-  fiatValue?: CurrencyAmount<Currency>
+  fiatValue: Maybe<CurrencyAmount<Currency>>
   currencyAmount: CurrencyAmount<Currency>
 }
 
@@ -43,7 +43,7 @@ export function LiquidityPositionAmountRows({ rows }: LiquidityPositionAmountRow
           <TouchableArea onPress={() => navigate(getLink(row.currencyInfo))} {...ClickableTamaguiStyle}>
             <Flex row alignItems="center" gap="$gap12" maxWidth={160}>
               <CurrencyLogo currencyInfo={row.currencyInfo} size={24} />
-              <Text variant="subheading1" color="neutral1" $lg={{ variant: 'subheading2' }} numberOfLines={1}>
+              <Text variant="subheading1" color="neutral1" $lg={{ variant: 'subheading2' }}>
                 {formatCurrencyAmount({ value: row.fiatValue, type: NumberType.FiatTokenPrice })}
               </Text>
             </Flex>

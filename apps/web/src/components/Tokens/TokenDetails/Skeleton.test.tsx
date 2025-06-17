@@ -13,7 +13,14 @@ describe('TDP Skeleton', () => {
 describe('getLoadingTitle', () => {
   it('should return correct title', () => {
     const { asFragment } = render(
-      <>{getLoadingTitle(USDC_MAINNET, USDC_MAINNET.address, UniverseChainId.Mainnet, 'ethereum')}</>,
+      <>
+        {getLoadingTitle({
+          token: USDC_MAINNET,
+          tokenAddress: USDC_MAINNET.address,
+          chainId: UniverseChainId.Mainnet,
+          chainName: 'ethereum',
+        })}
+      </>,
     )
     expect(asFragment()).toMatchSnapshot()
     expect(asFragment().textContent).toContain('token data for')

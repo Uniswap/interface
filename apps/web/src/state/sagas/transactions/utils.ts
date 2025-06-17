@@ -80,7 +80,7 @@ export function* handleSignatureStep({ setCurrentStep, step, ignoreInterrupt, ac
   setCurrentStep({ step, accepted: false })
 
   const signer = yield* call(getSigner, account.address)
-  const signature = yield* call(signTypedData, signer, step.domain, step.types, step.values) // TODO(WEB-5077): look into removing / simplifying signTypedData
+  const signature = yield* call(signTypedData, { signer, domain: step.domain, types: step.types, value: step.values }) // TODO(WEB-5077): look into removing / simplifying signTypedData
   // If the transaction flow was interrupted, throw an error after the step has completed
   yield* call(throwIfInterrupted)
 
@@ -110,7 +110,7 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   addTransactionBreadcrumb({ step, data: { ...info } })
 
   // Avoid sending prompting a transaction if the user already submitted an equivalent tx, e.g. by closing and reopening a transaction flow
-  const duplicativeTx = yield* findDuplicativeTx(info, account, chainId, allowDuplicativeTx)
+  const duplicativeTx = yield* findDuplicativeTx({ info, account, chainId, allowDuplicativeTx })
   if (duplicativeTx) {
     if (duplicativeTx.status === TransactionStatus.Confirmed) {
       addTransactionBreadcrumb({ step, data: { duplicativeTx: true, hash: duplicativeTx.hash }, status: 'complete' })
@@ -299,16 +299,22 @@ function isRecentTx(tx: TransactionDetails) {
   return !failed && currentTime - tx.addedTime < ms('30s') // 30s is an arbitrary upper limit to combat e.g. a duplicative approval to be included in tx steps, caused by polling intervals.
 }
 
-function* findDuplicativeTx(
-  info: TransactionInfo,
-  account: AccountMeta,
-  chainId: number,
-  allowDuplicativeTx?: boolean,
-) {
+function* findDuplicativeTx({
+  info,
+  account,
+  chainId,
+  allowDuplicativeTx,
+}: {
+  info: TransactionInfo
+  account: AccountMeta
+  chainId: number
+  allowDuplicativeTx?: boolean
+}) {
   if (allowDuplicativeTx) {
     return undefined
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const transactionMap = (yield* select((state: InterfaceState) => state.localWebTransactions[chainId])) ?? {}
   const transactionsForAccount = Object.values(transactionMap).filter((tx) => isSameAddress(tx.from, account.address))
 
@@ -435,11 +441,15 @@ export function addTransactionBreadcrumb({
   })
 }
 
-export function getDisplayableError(
-  error: Error,
-  step: TransactionStep,
-  flow: string = 'swap',
-): TransactionError | undefined {
+export function getDisplayableError({
+  error,
+  step,
+  flow = 'swap',
+}: {
+  error: Error
+  step: TransactionStep
+  flow?: string
+}): TransactionError | undefined {
   const userRejected = didUserReject(error)
   // If the user rejects a request, or it's a known interruption e.g. trade update, we handle gracefully / do not show error UI
   if (userRejected || error instanceof HandledTransactionInterrupt) {

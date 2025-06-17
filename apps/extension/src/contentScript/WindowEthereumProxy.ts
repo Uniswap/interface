@@ -96,11 +96,14 @@ export class WindowEthereumProxy extends EventEmitter {
         // Generate a unique ID for this request and store the promise callbacks
         const requestId = uuidv4()
         this.pendingRequests[requestId] = { resolve, reject }
-        const responseListener = addWindowMessageListener<ExtensionResponse>(isValidExtensionResponse, (response) => {
-          if (response.requestId === requestId) {
-            this.handleResponse(response)
-            removeWindowMessageListener(responseListener)
-          }
+        const responseListener = addWindowMessageListener<ExtensionResponse>({
+          validator: isValidExtensionResponse,
+          handler: (response) => {
+            if (response.requestId === requestId) {
+              this.handleResponse(response)
+              removeWindowMessageListener(responseListener)
+            }
+          },
         })
         window.postMessage({
           ...ethereumRequest,

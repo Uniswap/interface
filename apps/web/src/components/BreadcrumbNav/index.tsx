@@ -106,7 +106,7 @@ export const CurrentPageBreadcrumb = ({
       onMouseLeave={() => setHover(false)}
     >
       <PageTitleText>{currency ? tokenSymbolName : poolName}</PageTitleText>{' '}
-      {(!currency || (currency && !isNative)) && (
+      {(!currency || !isNative) && (
         <TokenAddressHoverContainer
           data-testid="breadcrumb-token-address"
           isDisabled={!shouldEnableCopy}

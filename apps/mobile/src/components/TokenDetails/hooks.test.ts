@@ -112,7 +112,7 @@ describe(useCrossChainBalances, () => {
 
       const bridgeInfo = tokenBalances.map((balance) => ({
         chain: balance.token.chain,
-        address: balance.token?.address,
+        address: balance.token.address,
       }))
       const Portfolio = portfolio({ tokenBalances })
       const [currentChainBalance, ...otherChainBalances] = portfolioBalances({

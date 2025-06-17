@@ -75,20 +75,29 @@ function useOnActivityUpdate(): OnActivityUpdate {
         const batchId = original.batchInfo?.batchId
 
         if (original.info.type === TransactionType.SWAP) {
-          logSwapFinalized(hash, batchId, chainId, chainId, analyticsContext, update.status, original.info.type)
-        } else if (original.info.type === TransactionType.BRIDGE) {
-          logSwapFinalized(
+          logSwapFinalized({
             hash,
             batchId,
-            original.info.inputChainId,
-            original.info.outputChainId,
+            chainInId: chainId,
+            chainOutId: chainId,
             analyticsContext,
-            update.status,
-            original.info.type,
-          )
+            status: update.status,
+            type: original.info.type,
+          })
+        } else if (original.info.type === TransactionType.BRIDGE) {
+          logSwapFinalized({
+            hash,
+            batchId,
+            chainInId: original.info.inputChainId,
+            chainOutId: original.info.outputChainId,
+            analyticsContext,
+            status: update.status,
+            type: original.info.type,
+          })
         }
 
         popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       } else if (activity.type === 'signature') {
         const { chainId, original, update } = activity
 
@@ -112,14 +121,14 @@ function useOnActivityUpdate(): OnActivityUpdate {
 
           // Only track swap success for non-limit orders; limit order fill-time will throw off time tracking analytics
           if (original.type !== SignatureType.SIGN_LIMIT) {
-            logUniswapXSwapFinalized(
+            logUniswapXSwapFinalized({
               hash,
-              updatedOrder.orderHash,
+              orderHash: updatedOrder.orderHash,
               chainId,
               analyticsContext,
               signatureType,
-              UniswapXOrderStatus.FILLED,
-            )
+              status: UniswapXOrderStatus.FILLED,
+            })
           }
         } else if (original.status !== updatedOrder.status) {
           const orderHash = original.orderHash
@@ -129,14 +138,13 @@ function useOnActivityUpdate(): OnActivityUpdate {
             updatedOrder.status === UniswapXOrderStatus.CANCELLED ||
             updatedOrder.status === UniswapXOrderStatus.EXPIRED
           ) {
-            logUniswapXSwapFinalized(
-              undefined,
-              updatedOrder.orderHash,
+            logUniswapXSwapFinalized({
+              orderHash: updatedOrder.orderHash,
               chainId,
               analyticsContext,
               signatureType,
-              updatedOrder.status,
-            )
+              status: updatedOrder.status,
+            })
           }
         }
       }

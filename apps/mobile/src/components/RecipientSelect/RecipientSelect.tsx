@@ -97,7 +97,7 @@ function _RecipientSelect({
           endAdornment={<QRScannerIconButton onPress={onPressQRScanner} />}
           hideBackButton={hideBackButton}
           placeholder={t('send.recipient.input.placeholder')}
-          value={pattern ?? ''}
+          value={pattern}
           onBack={recipient ? onHideRecipientSelector : undefined}
           onChangeText={setPattern}
         />

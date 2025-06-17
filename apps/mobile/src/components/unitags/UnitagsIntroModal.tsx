@@ -23,14 +23,10 @@ export function UnitagsIntroModal({ route }: AppStackScreenProp<typeof ModalName
   const { onClose } = useReactNavigationModal()
 
   const params = route.params
-  const address = params?.address
-  const entryPoint = params?.entryPoint
+  const address = params.address
+  const entryPoint = params.entryPoint
 
   const onPressClaimOneNow = (): void => {
-    if (!entryPoint) {
-      throw new Error('Missing entry point in UnitagsIntroModal')
-    }
-
     appDispatch(setHasCompletedUnitagsIntroModal(true))
     onClose()
     navigate(MobileScreens.UnitagStack, {

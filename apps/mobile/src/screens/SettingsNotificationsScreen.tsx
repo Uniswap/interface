@@ -249,7 +249,7 @@ function _AddressNotificationsSwitch({ address }: { address: string }): JSX.Elem
   const [showDisabled, setShowDisabled] = useState(false)
 
   useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout>
+    let timeoutId: ReturnType<typeof setTimeout> | undefined
 
     if (isPending) {
       timeoutId = setTimeout(() => {

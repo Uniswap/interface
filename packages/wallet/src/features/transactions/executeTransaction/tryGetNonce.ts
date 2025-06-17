@@ -35,11 +35,11 @@ export function* tryGetNonce(
   try {
     const isPrivateRpcEnabled = getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.PrivateRpc))
 
-    const flashbotsEnabled = getExperimentValue<Experiments.PrivateRpc, PrivateRpcProperties, boolean>(
-      Experiments.PrivateRpc,
-      PrivateRpcProperties.FlashbotsEnabled,
-      DEFAULT_FLASHBOTS_ENABLED,
-    )
+    const flashbotsEnabled = getExperimentValue({
+      experiment: Experiments.PrivateRpc,
+      param: PrivateRpcProperties.FlashbotsEnabled,
+      defaultValue: DEFAULT_FLASHBOTS_ENABLED,
+    })
 
     const shouldUseFlashbots = isPrivateRpcEnabled && chainId === UniverseChainId.Mainnet && flashbotsEnabled
 

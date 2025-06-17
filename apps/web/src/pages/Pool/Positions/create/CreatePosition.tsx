@@ -3,7 +3,8 @@ import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { ErrorCallout } from 'components/ErrorCallout'
-import { getProtocolVersionLabel, parseProtocolVersion } from 'components/Liquidity/utils'
+import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
+import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
 import {
   CreatePositionContextProvider,
@@ -11,6 +12,7 @@ import {
   DepositContextProvider,
   PriceRangeContextProvider,
 } from 'pages/Pool/Positions/create/ContextProviders'
+import { CreateLiquidityContextProvider } from 'pages/Pool/Positions/create/CreateLiquidityContextProvider'
 import {
   DEFAULT_DEPOSIT_STATE,
   DEFAULT_PRICE_RANGE_STATE,
@@ -20,6 +22,7 @@ import {
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { DepositStep } from 'pages/Pool/Positions/create/Deposit'
+import { DynamicFeeTierSpeedbump } from 'pages/Pool/Positions/create/DynamicFeeTierSpeedbump'
 import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import ResetCreatePositionFormModal from 'pages/Pool/Positions/create/ResetCreatePositionsFormModal'
@@ -28,27 +31,29 @@ import { useInitialPoolInputs } from 'pages/Pool/Positions/create/hooks'
 import { useLPSlippageValue } from 'pages/Pool/Positions/create/hooks/useLPSlippageValues'
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { PositionField } from 'types/position'
 import { Button, Flex, Text, TouchableArea, styled, useMedia } from 'ui/src'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
+import { parseRestProtocolVersion } from 'uniswap/src/data/rest/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { InterfacePageNameLocal, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import {
   TransactionSettingsContextProvider,
   useTransactionSettingsContext,
 } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
-import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/SwapFormSettings'
-import { Deadline } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/deadline/Deadline/Deadline'
-import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
+import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SwapFormSettings'
+import { Deadline } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/deadline/Deadline/Deadline'
+import { Slippage } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 const WIDTH = {
@@ -56,7 +61,13 @@ const WIDTH = {
   sidebar: 360,
 }
 
-function CreatePositionInner() {
+function CreatePositionInner({
+  currencyInputs,
+  setCurrencyInputs,
+}: {
+  currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
+  setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
+}) {
   const {
     positionState: { protocolVersion },
     derivedPositionInfo: { creatingPoolOrPair },
@@ -76,12 +87,16 @@ function CreatePositionInner() {
     } else {
       setStep((prevStep) => prevStep + 1)
     }
-  }, [creatingPoolOrPair, setStep, step, v2Selected])
+  }, [creatingPoolOrPair, step, v2Selected, setStep])
 
   if (step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER) {
     return (
       <Trace logImpression section={SectionName.CreatePositionSelectTokensStep}>
-        <SelectTokensStep onContinue={handleContinue} />
+        <SelectTokensStep
+          currencyInputs={currencyInputs}
+          onContinue={handleContinue}
+          setCurrencyInputs={setCurrencyInputs}
+        />
       </Trace>
     )
   }
@@ -110,6 +125,52 @@ function CreatePositionInner() {
   )
 }
 
+function CreatePositionWrapper({ children }: { children: React.ReactNode }) {
+  const { t } = useTranslation()
+  const media = useMedia()
+
+  return (
+    <Flex
+      mt="$spacing24"
+      width="100%"
+      px="$spacing40"
+      maxWidth={WIDTH.positionCard + WIDTH.sidebar + 80}
+      $xl={{
+        px: '$spacing12',
+        maxWidth: WIDTH.positionCard,
+        mx: 'auto',
+      }}
+    >
+      <BreadcrumbNavContainer aria-label="breadcrumb-nav">
+        <BreadcrumbNavLink to="/positions">
+          {t('pool.positions.title')} <ChevronRight size={14} />
+        </BreadcrumbNavLink>
+        <Text color="$neutral2">{t('pool.newPosition.title')}</Text>
+      </BreadcrumbNavContainer>
+      <Flex
+        row
+        alignSelf="flex-end"
+        alignItems="center"
+        gap="$gap20"
+        width="100%"
+        justifyContent="space-between"
+        mr="auto"
+        mb="$spacing32"
+        $md={{ flexDirection: 'column', alignItems: 'stretch' }}
+      >
+        <Text variant="heading2">{t('position.new')}</Text>
+        <Toolbar />
+      </Flex>
+      <Flex row gap="$spacing20" justifyContent="space-between" width="100%">
+        {!media.xl && <Sidebar />}
+        <Flex gap="$spacing24" flex={1} maxWidth={WIDTH.positionCard} mb="$spacing28">
+          {children}
+        </Flex>
+      </Flex>
+    </Flex>
+  )
+}
+
 const Sidebar = () => {
   const { t } = useTranslation()
   const {
@@ -119,32 +180,52 @@ const Sidebar = () => {
     setStep,
   } = useCreatePositionContext()
 
+  const { setPriceRangeState } = usePriceRangeContext()
+
   const PoolProgressSteps = useMemo(() => {
-    const createStep = (label: string, stepEnum: PositionFlowStep) => ({
+    const createStep = ({
+      label,
+      stepEnum,
+      onPress,
+    }: {
+      label: string
+      stepEnum: PositionFlowStep
+      onPress?: () => void
+    }) => ({
       label,
       active: step === stepEnum,
       // This relies on the ordering of PositionFlowStep enum values matching the actual order in the form.
-      onPress: stepEnum < step ? () => setStep(stepEnum) : undefined,
+      onPress: () => {
+        onPress?.()
+
+        if (stepEnum < step) {
+          setStep(stepEnum)
+        }
+      },
     })
 
     if (protocolVersion === ProtocolVersion.V2) {
       if (creatingPoolOrPair) {
         return [
-          createStep(t(`position.step.select`), PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER),
-          createStep(t('position.step.price'), PositionFlowStep.PRICE_RANGE),
+          createStep({ label: t(`position.step.select`), stepEnum: PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER }),
+          createStep({ label: t('position.step.price'), stepEnum: PositionFlowStep.PRICE_RANGE }),
         ]
       }
       return [
-        createStep(t('position.step.select'), PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER),
-        createStep(t('position.step.deposit'), PositionFlowStep.DEPOSIT),
+        createStep({ label: t('position.step.select'), stepEnum: PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER }),
+        createStep({ label: t('position.step.deposit'), stepEnum: PositionFlowStep.DEPOSIT }),
       ]
     }
 
     return [
-      createStep(t('position.step.select'), PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER),
-      createStep(t('position.step.range'), PositionFlowStep.PRICE_RANGE),
+      createStep({
+        label: t('position.step.select'),
+        stepEnum: PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER,
+        onPress: () => setPriceRangeState(DEFAULT_PRICE_RANGE_STATE),
+      }),
+      createStep({ label: t('position.step.range'), stepEnum: PositionFlowStep.PRICE_RANGE }),
     ]
-  }, [creatingPoolOrPair, protocolVersion, setStep, step, t])
+  }, [creatingPoolOrPair, protocolVersion, setStep, step, t, setPriceRangeState])
 
   return (
     <Flex
@@ -184,10 +265,16 @@ const ToolbarContainer = styled(Flex, {
   },
 })
 
-const Toolbar = ({ defaultInitialToken }: { defaultInitialToken: Currency }) => {
+const Toolbar = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const { positionState, setPositionState, setStep, reset: resetCreatePositionState } = useCreatePositionContext()
+  const {
+    areTokensUnchanged,
+    positionState,
+    setPositionState,
+    setStep,
+    reset: resetCreatePositionState,
+  } = useCreatePositionContext()
   const { protocolVersion } = positionState
   const { setPriceRangeState } = usePriceRangeContext()
   const { customSlippageTolerance } = useTransactionSettingsContext()
@@ -205,21 +292,13 @@ const Toolbar = ({ defaultInitialToken }: { defaultInitialToken: Currency }) => 
   const isFormUnchanged = useMemo(() => {
     // Check if all form fields (except protocol version) are set to their default values
     return (
-      positionState.currencyInputs.TOKEN0 === defaultInitialToken &&
-      !positionState.currencyInputs.TOKEN1 &&
+      areTokensUnchanged &&
       positionState.fee === DEFAULT_POSITION_STATE.fee &&
       positionState.hook === DEFAULT_POSITION_STATE.hook &&
       priceRangeState.initialPrice === DEFAULT_PRICE_RANGE_STATE.initialPrice &&
       depositState === DEFAULT_DEPOSIT_STATE
     )
-  }, [
-    positionState.currencyInputs,
-    positionState.fee,
-    positionState.hook,
-    priceRangeState,
-    depositState,
-    defaultInitialToken,
-  ])
+  }, [positionState.fee, positionState.hook, priceRangeState, depositState, areTokensUnchanged])
 
   const handleReset = useCallback(() => {
     resetCreatePositionState()
@@ -241,11 +320,10 @@ const Toolbar = ({ defaultInitialToken }: { defaultInitialToken: Currency }) => 
         navigate(`/positions/create/${versionUrl}`)
       }
 
-      setPositionState((prevState) => ({
+      setPositionState({
         ...DEFAULT_POSITION_STATE,
-        currencyInputs: prevState.currencyInputs,
         protocolVersion: version,
-      }))
+      })
       setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
       setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
       setVersionDropdownOpen(false)
@@ -315,81 +393,77 @@ const Toolbar = ({ defaultInitialToken }: { defaultInitialToken: Currency }) => 
   )
 }
 
-export default function CreatePosition() {
-  const media = useMedia()
-  const { t } = useTranslation()
+export const SharedCreateModals = () => {
+  return (
+    <>
+      <FeeTierSearchModal />
+      <DynamicFeeTierSpeedbump />
+    </>
+  )
+}
 
+export default function CreatePosition() {
   // URL format is `/positions/create/:protocolVersion`, with possible searchParams `?currencyA=...&currencyB=...&chain=...&feeTier=...&hook=...`
   const { protocolVersion } = useParams<{
     protocolVersion: string
   }>()
-  const paramsProtocolVersion = parseProtocolVersion(protocolVersion)
+  const isCreateLiquidityRefactorEnabled = useFeatureFlag(FeatureFlags.CreateLiquidityRefactor)
+  const paramsProtocolVersion = parseRestProtocolVersion(protocolVersion)
 
-  const autoSlippageTolerance = useLPSlippageValue(paramsProtocolVersion)
+  const autoSlippageTolerance = useLPSlippageValue({
+    version: paramsProtocolVersion,
+  })
 
   const initialInputs = useInitialPoolInputs()
   const initialProtocolVersion = paramsProtocolVersion ?? ProtocolVersion.V4
+  const [currencyInputs, setCurrencyInputs] = useState<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>(
+    initialInputs,
+  )
 
   return (
-    <Trace logImpression page={InterfacePageNameLocal.CreatePosition}>
-      <MultichainContextProvider initialChainId={initialInputs[PositionField.TOKEN0].chainId}>
+    <Trace logImpression page={InterfacePageName.CreatePosition}>
+      <MultichainContextProvider initialChainId={initialInputs.tokenA.chainId}>
         <TransactionSettingsContextProvider
           autoSlippageTolerance={autoSlippageTolerance}
           settingKey={TransactionSettingKey.LP}
         >
-          <CreatePositionContextProvider
-            initialState={{
-              currencyInputs: initialInputs,
-              hook: initialInputs.hook,
-              fee: initialInputs.fee,
-              protocolVersion: initialProtocolVersion,
-            }}
-          >
-            <PriceRangeContextProvider>
-              <DepositContextProvider>
-                <CreateTxContextProvider>
-                  <Flex
-                    mt="$spacing24"
-                    width="100%"
-                    px="$spacing40"
-                    maxWidth={WIDTH.positionCard + WIDTH.sidebar + 80}
-                    $xl={{
-                      px: '$spacing12',
-                      maxWidth: WIDTH.positionCard,
-                      mx: 'auto',
-                    }}
-                  >
-                    <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-                      <BreadcrumbNavLink to="/positions">
-                        {t('pool.positions.title')} <ChevronRight size={14} />
-                      </BreadcrumbNavLink>
-                      <BreadcrumbNavLink to="/positions/create">{t('pool.newPosition.title')}</BreadcrumbNavLink>
-                    </BreadcrumbNavContainer>
-                    <Flex
-                      row
-                      alignSelf="flex-end"
-                      alignItems="center"
-                      gap="$gap20"
-                      width="100%"
-                      justifyContent="space-between"
-                      mr="auto"
-                      mb="$spacing32"
-                      $md={{ flexDirection: 'column', alignItems: 'stretch' }}
-                    >
-                      <Text variant="heading2">{t('position.new')}</Text>
-                      <Toolbar defaultInitialToken={initialInputs[PositionField.TOKEN0]} />
-                    </Flex>
-                    <Flex row gap="$spacing20" justifyContent="space-between" width="100%">
-                      {!media.xl && <Sidebar />}
-                      <Flex gap="$spacing24" flex={1} maxWidth={WIDTH.positionCard} mb="$spacing28">
-                        <CreatePositionInner />
-                      </Flex>
-                    </Flex>
-                  </Flex>
-                </CreateTxContextProvider>
-              </DepositContextProvider>
-            </PriceRangeContextProvider>
-          </CreatePositionContextProvider>
+          {isCreateLiquidityRefactorEnabled ? (
+            <CreateLiquidityContextProvider
+              initialState={{
+                hook: initialInputs.hook,
+                fee: initialInputs.fee,
+                protocolVersion: initialProtocolVersion,
+              }}
+              currencyInputs={currencyInputs}
+              setCurrencyInputs={setCurrencyInputs}
+            >
+              <CreatePositionWrapper>
+                <CreatePositionInner currencyInputs={currencyInputs} setCurrencyInputs={setCurrencyInputs} />
+              </CreatePositionWrapper>
+              <SharedCreateModals />
+            </CreateLiquidityContextProvider>
+          ) : (
+            <CreatePositionContextProvider
+              initialState={{
+                hook: initialInputs.hook,
+                fee: initialInputs.fee,
+                protocolVersion: initialProtocolVersion,
+              }}
+              currencyInputs={currencyInputs}
+              setCurrencyInputs={setCurrencyInputs}
+            >
+              <PriceRangeContextProvider>
+                <DepositContextProvider>
+                  <CreateTxContextProvider>
+                    <CreatePositionWrapper>
+                      <CreatePositionInner currencyInputs={currencyInputs} setCurrencyInputs={setCurrencyInputs} />
+                    </CreatePositionWrapper>
+                    <SharedCreateModals />
+                  </CreateTxContextProvider>
+                </DepositContextProvider>
+              </PriceRangeContextProvider>
+            </CreatePositionContextProvider>
+          )}
         </TransactionSettingsContextProvider>
       </MultichainContextProvider>
     </Trace>

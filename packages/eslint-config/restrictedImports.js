@@ -150,7 +150,7 @@ const nativeRules = {
     },
     {
       name: 'expo-haptics',
-      message: "Use our internal `HapticFeedback` wrapper instead: `import { HapticFeedback } from 'mobile/src'`",
+      message: "Use our internal `HapticFeedback` wrapper instead: `import { HapticFeedback } from 'packages/uniswap/src/features/settings/useHapticFeedback/types'`",
     },
     {
       name: 'react-router-dom',

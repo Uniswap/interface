@@ -7,7 +7,7 @@ import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { SwapFormState, useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { getShouldResetExactAmountToken } from 'uniswap/src/features/transactions/swap/form/body/utils'
+import { getShouldResetExactAmountToken } from 'uniswap/src/features/transactions/swap/form/utils'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
 import {
   getTokenAddressFromChainForTradingApi,
@@ -84,7 +84,7 @@ export function useOnSelectCurrency({
       const isBridgePair =
         // `forceIsBridgePair` means the user explicitly selected a bridge pair.
         forceIsBridgePair ||
-        (tradeableAsset && otherFieldTradeableAsset
+        (otherFieldTradeableAsset
           ? checkIsBridgePair({
               queryClient,
               input: field === CurrencyField.INPUT ? tradeableAsset : otherFieldTradeableAsset,
@@ -101,8 +101,8 @@ export function useOnSelectCurrency({
         newState.focusOnCurrencyField = newState.exactCurrencyField
         newState[otherField] = previouslySelectedTradableAsset
       } else if (otherFieldTradeableAsset && currency.chainId !== otherFieldTradeableAsset.chainId && !isBridgePair) {
-        const otherCurrencyInNewChain = otherFieldTokenProjects?.data?.find(
-          (project) => project?.currency.chainId === currency.chainId,
+        const otherCurrencyInNewChain = otherFieldTokenProjects.data?.find(
+          (project) => project.currency.chainId === currency.chainId,
         )
 
         // if new token chain changes, try to find the other token's match on the new chain
@@ -136,8 +136,8 @@ export function useOnSelectCurrency({
 
       // TODO(WEB-6230): This value is not what we want here, as it breaks bridging in the interface's TDP.
       //                 Instead, what we want is the `Currency` object from `newState[otherField] || otherFieldTradeableAsset`.
-      const todoFixMeOtherCurrency = otherFieldTokenProjects?.data?.find(
-        (project) => project?.currency.chainId === currency.chainId,
+      const todoFixMeOtherCurrency = otherFieldTokenProjects.data?.find(
+        (project) => project.currency.chainId === currency.chainId,
       )
 
       const currencyState: { inputCurrency?: Currency; outputCurrency?: Currency } = {

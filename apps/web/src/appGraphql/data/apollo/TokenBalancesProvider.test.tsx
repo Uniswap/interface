@@ -6,27 +6,40 @@ import { render, renderHook } from 'test-utils/render'
 import { Flex } from 'ui/src'
 
 // TODO(WEB-5370): Remove this delay + waitFor once we've integrated wallet's refetch logic
-jest.setTimeout(10000)
-const mockLazyFetch = jest.fn()
-const mockBalanceQueryResponse = [
-  mockLazyFetch,
-  {
-    data: undefined,
-    loading: true,
-  },
-]
+setTimeout(() => {}, 10000)
 
-jest.mock('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks.ts', () => ({
-  ...jest.requireActual('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks.ts'),
-  usePortfolioBalancesLazyQuery: () => mockBalanceQueryResponse,
-}))
+const { mockLazyFetch, mockBalanceQueryResponse } = vi.hoisted(() => {
+  const mockLazyFetch = vi.fn()
+  const mockBalanceQueryResponse = [
+    mockLazyFetch,
+    {
+      data: undefined,
+      loading: true,
+    },
+  ]
+  return { mockLazyFetch, mockBalanceQueryResponse }
+})
 
-jest.mock('hooks/useAccount', () => ({
-  useAccount: jest.fn(),
-}))
+vi.mock('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks.ts', async () => {
+  const actual = await vi.importActual('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks.ts')
+  return {
+    ...actual,
+    usePortfolioBalancesLazyQuery: () => mockBalanceQueryResponse,
+  }
+})
+
+vi.mock('hooks/useAccount', async () => {
+  const actual = await vi.importActual('hooks/useAccount')
+  return {
+    ...actual,
+    useAccount: vi.fn(),
+  }
+})
 
 describe('TokenBalancesProvider', () => {
   beforeEach(() => {
+    vi.clearAllMocks()
+    mockLazyFetch.mockClear()
     mocked(useAccount).mockReturnValue({ address: '0xaddress1', chainId: 1 } as any)
   })
 

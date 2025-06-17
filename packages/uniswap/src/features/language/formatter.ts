@@ -53,7 +53,8 @@ export function useLocalizedFormatter(): LocalizedFormatter {
     [locale],
   )
   const formatPercentInner = useCallback(
-    (value: Maybe<number | string>, maxDecimals?: 2 | 3 | 4): string => formatPercent(value, locale, maxDecimals),
+    (value: Maybe<number | string>, maxDecimals?: 2 | 3 | 4): string =>
+      formatPercent({ rawPercentage: value, locale, maxDecimals }),
     [locale],
   )
 

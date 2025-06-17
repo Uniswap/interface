@@ -121,7 +121,7 @@ const TokenBalanceItems = ({ animated, rows }: { animated?: boolean; rows: strin
         exitStyle: { opacity: 0, y: -10 },
       })}
     >
-      {rows?.map((balance: TokenBalanceListRow) => {
+      {rows.map((balance: TokenBalanceListRow) => {
         return <TokenBalanceItemRow key={balance} item={balance} />
       })}
     </Flex>
@@ -205,7 +205,7 @@ function TokenContextMenu({
   const { menuActions } = useTokenContextMenu({
     currencyId: portfolioBalance.currencyInfo.currencyId,
     isBlocked: portfolioBalance.currencyInfo.safetyInfo?.tokenList === TokenList.Blocked,
-    tokenSymbolForNotification: portfolioBalance?.currencyInfo?.currency?.symbol,
+    tokenSymbolForNotification: portfolioBalance.currencyInfo.currency.symbol,
     portfolioBalance,
   })
 

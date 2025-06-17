@@ -1,8 +1,8 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { isInputGreaterThanDecimals } from 'components/NumericalInput'
+import { SwitchNetworkAction } from 'components/Popups/types'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { AlternateCurrencyDisplay } from 'pages/Swap/common/AlternateCurrencyDisplay'
 import {
@@ -21,6 +21,7 @@ import { ThemedText } from 'theme/components'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Button, Flex, Text, styled, type ButtonProps } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { useCurrencyInputFontSize } from 'uniswap/src/components/CurrencyInputPanel/hooks/useCurrencyInputFontSize'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
@@ -28,6 +29,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
@@ -146,6 +148,16 @@ export default function SendCurrencyInputForm({
   const displayValue = inputInFiat ? exactAmountFiat : exactAmountToken
   const hiddenObserver = useResizeObserver<HTMLElement>()
 
+  const { fontSize, lineHeight, onLayout } = useCurrencyInputFontSize({
+    value: displayValue,
+    focus: undefined,
+    options: {
+      maxFontSize: 70,
+      minFontSize: 48,
+      maxCharWidthAtMaxFontSize: 28,
+    },
+  })
+
   const handleUserInput = useCallback(
     (newValue: string) => {
       setSendState((prev) => ({
@@ -220,17 +232,19 @@ export default function SendCurrencyInputForm({
     [maxInputAmount, setSendState],
   )
 
+  const adjustedWidth = displayValue && hiddenObserver.width ? hiddenObserver.width + 10 : undefined
+
   return (
     <Wrapper disabled={disabled}>
       <InputWrapper>
-        <Flex position="absolute" top="16px" left="16px">
-          <Text variant="body3" userSelect="none" color="$neutral2">
-            <Trans i18nKey="common.youreSending" />
-          </Text>
-        </Flex>
         <NumericalInputWrapper>
           {inputInFiat && (
-            <NumericalInputSymbolContainer showPlaceholder={!displayValue}>{fiatSymbol}</NumericalInputSymbolContainer>
+            <NumericalInputSymbolContainer
+              showPlaceholder={!displayValue}
+              style={{ lineHeight: `${lineHeight}px`, fontSize: `${fontSize}px` }}
+            >
+              {fiatSymbol}
+            </NumericalInputSymbolContainer>
           )}
           <StyledNumericalInput
             value={displayValue}
@@ -238,13 +252,21 @@ export default function SendCurrencyInputForm({
             onUserInput={handleUserInput}
             placeholder="0"
             $hasPrefix={inputInFiat}
-            $width={displayValue && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
+            $width={adjustedWidth}
             maxDecimals={inputInFiat ? 6 : inputCurrency?.decimals}
+            $fontSize={fontSize}
+            style={{ lineHeight: `${lineHeight}px` }}
           />
-          <NumericalInputMimic ref={hiddenObserver.ref}>{displayValue}</NumericalInputMimic>
+          <NumericalInputMimic
+            ref={hiddenObserver.ref}
+            style={{ lineHeight: `${lineHeight}px`, fontSize: `${fontSize}px` }}
+          >
+            {displayValue}
+          </NumericalInputMimic>
+          <Flex onLayout={onLayout} position="absolute" opacity={0} width="100%" height={20} zIndex={-1} />
         </NumericalInputWrapper>
         {isTestnetModeEnabled ? null : (
-          <Trace logPress element={InterfaceElementName.SEND_FIAT_TOGGLE}>
+          <Trace logPress element={ElementName.SendFiatToggle}>
             <AlternateCurrencyDisplay
               inputCurrency={inputCurrency}
               inputInFiat={inputInFiat}
@@ -290,7 +312,7 @@ export default function SendCurrencyInputForm({
             </Flex>
             <Flex row>
               {showMaxButton && (
-                <Trace logPress element={InterfaceElementName.SEND_MAX_BUTTON}>
+                <Trace logPress element={ElementName.SendMaxButton}>
                   <Flex centered>
                     <Flex row mr="$spacing4">
                       <MaxButton onPress={handleMaxInput} />
@@ -308,6 +330,7 @@ export default function SendCurrencyInputForm({
         onDismiss={() => setTokenSelectorOpen(false)}
         onCurrencySelect={handleSelectCurrency}
         selectedCurrency={inputCurrency}
+        switchNetworkAction={SwitchNetworkAction.Send}
       />
     </Wrapper>
   )

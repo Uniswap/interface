@@ -5,7 +5,7 @@ import { render } from 'test-utils/render'
 
 const mockToken = new Token(1, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', 18, 'WETH', 'Wrapped Ether')
 
-jest.mock('pages/TokenDetails/TDPContext', () => ({
+vi.mock('pages/TokenDetails/TDPContext', () => ({
   useTDPContext: () => {
     return {
       currency: mockToken,

@@ -5,7 +5,7 @@ import { mocked } from 'test-utils/mocked'
 import { fireEvent, render, screen, waitFor } from 'test-utils/render'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-jest.mock('hooks/useAccount')
+vi.mock('hooks/useAccount')
 
 describe('Multiple routing options', () => {
   beforeEach(() => {

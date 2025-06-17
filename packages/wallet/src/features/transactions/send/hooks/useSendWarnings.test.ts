@@ -122,39 +122,39 @@ const insufficientBalanceState: DerivedSendInfo = {
 
 describe(getSendWarnings, () => {
   it('does not error when Currency with balances and amounts is provided', () => {
-    const warnings = getSendWarnings(i18n.t, sendCurrency, false)
+    const warnings = getSendWarnings({ t: i18n.t, derivedSendInfo: sendCurrency, offline: false })
     expect(warnings.length).toBe(0)
   })
 
   it('errors if there is no internet', () => {
-    const warnings = getSendWarnings(i18n.t, sendCurrency, true)
+    const warnings = getSendWarnings({ t: i18n.t, derivedSendInfo: sendCurrency, offline: true })
     expect(warnings.length).toBe(1)
   })
 
   it('does not error when offline is false', () => {
-    const warnings = getSendWarnings(i18n.t, sendNFT, false)
+    const warnings = getSendWarnings({ t: i18n.t, derivedSendInfo: sendNFT, offline: false })
     expect(warnings.length).toBe(0)
   })
 
   it('does not error when correctly formed NFT is provided', () => {
-    const warnings = getSendWarnings(i18n.t, sendNFT, false)
+    const warnings = getSendWarnings({ t: i18n.t, derivedSendInfo: sendNFT, offline: false })
     expect(warnings.length).toBe(0)
   })
 
   it('catches incomplete form errors: no recipient', async () => {
-    const warnings = getSendWarnings(i18n.t, sendState, false)
+    const warnings = getSendWarnings({ t: i18n.t, derivedSendInfo: sendState, offline: false })
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches incomplete form errors: no amount', async () => {
-    const warnings = getSendWarnings(i18n.t, sendState2, false)
+    const warnings = getSendWarnings({ t: i18n.t, derivedSendInfo: sendState2, offline: false })
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches insufficient balance errors', () => {
-    const warnings = getSendWarnings(i18n.t, insufficientBalanceState, false)
+    const warnings = getSendWarnings({ t: i18n.t, derivedSendInfo: insufficientBalanceState, offline: false })
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.InsufficientFunds)
   })
@@ -168,7 +168,11 @@ describe(getSendWarnings, () => {
       },
     }
 
-    const warnings = getSendWarnings(i18n.t, incompleteAndInsufficientBalanceState, false)
+    const warnings = getSendWarnings({
+      t: i18n.t,
+      derivedSendInfo: incompleteAndInsufficientBalanceState,
+      offline: false,
+    })
     expect(warnings.length).toBe(2)
   })
 })

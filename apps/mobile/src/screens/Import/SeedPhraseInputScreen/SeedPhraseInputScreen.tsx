@@ -99,7 +99,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
   )
 
   const onPressRecoveryHelpButton = useCallback(
-    () => openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport),
+    () => openUri({ uri: uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport }),
     [],
   )
 

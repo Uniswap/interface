@@ -1,10 +1,10 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ModalState, miniPortfolioModalStateAtom } from 'components/AccountDrawer/constants'
+import { SwitchNetworkAction } from 'components/Popups/types'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersProvider } from 'hooks/useEthersProvider'
 import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useModalState } from 'hooks/useModalState'
-import { useShowSwapNetworkNotification } from 'hooks/useShowSwapNetworkNotification'
 import { useUpdateAtom } from 'jotai/utils'
 import { useOneClickSwapSetting } from 'pages/Swap/settings/OneClickSwap'
 import React, { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
@@ -27,9 +27,10 @@ import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useGetCanSignPermits } from 'uniswap/src/features/transactions/hooks/useGetCanSignPermits'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
+import { getPoolDetailsURL, getTokenDetailsURL } from 'uniswap/src/utils/linking'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import noop from 'utilities/src/react/noop'
+import { showSwitchNetworkNotification } from 'utils/showSwitchNetworkNotification'
 import { Connector } from 'wagmi'
 
 // Adapts useEthersProvider to fit uniswap context hook shape
@@ -70,7 +71,6 @@ export function WebUniswapProvider({ children }: PropsWithChildren): JSX.Element
 function WebUniswapProviderInner({ children }: PropsWithChildren) {
   const { account, connector } = useWagmiAccount()
   const signer = useEthersSigner()
-  const showSwapNetworkNotification = useShowSwapNetworkNotification()
   const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()
   const navigateToFiatOnRamp = useCallback(() => navigate(`/buy`, { replace: true }), [navigate])
@@ -86,6 +86,15 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
         outputChainId: outputCurrencyId ? currencyIdToChain(outputCurrencyId) : undefined,
       })
       navigate(`/swap${queryParams}`, { replace: true })
+      closeSearchModal()
+    },
+    [navigate, closeSearchModal],
+  )
+
+  const navigateToPoolDetails = useCallback(
+    ({ poolId, chainId }: { poolId: Address; chainId: UniverseChainId }) => {
+      const url = getPoolDetailsURL(poolId, chainId)
+      navigate(url)
       closeSearchModal()
     },
     [navigate, closeSearchModal],
@@ -162,9 +171,17 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
   const setActiveChainId = useSetActiveChainId()
 
   const onSwapChainsChanged = useEvent(
-    ({ chainId, prevChainId }: { chainId: UniverseChainId; prevChainId?: UniverseChainId }) => {
+    ({
+      chainId,
+      prevChainId,
+      outputChainId,
+    }: {
+      chainId: UniverseChainId
+      outputChainId?: UniverseChainId
+      prevChainId?: UniverseChainId
+    }) => {
       setActiveChainId(chainId)
-      showSwapNetworkNotification({ chainId, prevChainId })
+      showSwitchNetworkNotification({ chainId, outputChainId, prevChainId, action: SwitchNetworkAction.Swap })
     },
   )
 
@@ -184,6 +201,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       navigateToTokenDetails={navigateToTokenDetails}
       navigateToExternalProfile={navigateToExternalProfile}
       navigateToNftCollection={navigateToNftCollection}
+      navigateToPoolDetails={navigateToPoolDetails}
       handleShareToken={handleShareToken}
       onConnectWallet={accountDrawer.open}
       getCanSignPermits={getCanSignPermits}
@@ -204,8 +222,8 @@ const MismatchContextWrapper = React.memo(function MismatchContextWrapper({ chil
   return (
     <MismatchContextProvider
       mismatchCallback={getHasMismatch}
-      address={account?.address}
-      chainId={account?.chainId}
+      address={account.address}
+      chainId={account.chainId}
       onHasAnyMismatch={onHasAnyMismatch}
       chains={chains}
       defaultChainId={defaultChainId}

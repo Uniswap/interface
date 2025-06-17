@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
@@ -5,7 +6,7 @@ import { ThemeKeys, type ColorTokens } from 'ui/src/index'
 import { colorsLight } from 'ui/src/theme'
 import { ColorStrategy, ExtractedColors, getExtractedColors } from 'ui/src/utils/colors/getExtractedColors'
 import { isSVGUri } from 'utilities/src/format/urls'
-import { useAsyncData } from 'utilities/src/react/hooks'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { hex } from 'wcag-contrast'
 
 /** The contrast threshold for token colors is currently lower than the WCAG AA standard of 3.0 because a slightly lower threshold leads to better results right now due to imitations of the color extraction library. */
@@ -114,7 +115,11 @@ export function useExtractedColors(
     [imageUrl, options.fallback, options.cache, sporeColors, options.colorStrategy],
   )
 
-  const { data: colors, isLoading: colorsLoading } = useAsyncData(getImageColors)
+  const { data: colors, isLoading: colorsLoading } = useQuery({
+    queryKey: [ReactQueryCacheKey.ExtractedColors, imageUrl],
+    queryFn: getImageColors,
+    enabled: !!imageUrl,
+  })
 
   return { colors, colorsLoading }
 }
@@ -151,12 +156,17 @@ function getSpecialCaseTokenColor(imageUrl: Maybe<string>, isDarkMode: boolean):
  * @param defaultColor The color that will be returned while the extraction is still loading
  * @returns The extracted color as a hex code string
  */
-export function useExtractedTokenColor(
-  imageUrl: Maybe<string>,
-  tokenName: Maybe<string>,
-  backgroundColor: string,
-  defaultColor: string,
-): { tokenColor: Nullable<string>; tokenColorLoading: boolean } {
+export function useExtractedTokenColor({
+  imageUrl,
+  tokenName,
+  backgroundColor,
+  defaultColor,
+}: {
+  imageUrl: Maybe<string>
+  tokenName: Maybe<string>
+  backgroundColor: string
+  defaultColor: string
+}): { tokenColor: Nullable<string>; tokenColorLoading: boolean } {
   const sporeColors = useSporeColors()
   const { colors, colorsLoading } = useExtractedColors(imageUrl)
   const [tokenColor, setTokenColor] = useState(defaultColor)
@@ -183,7 +193,7 @@ export function useExtractedTokenColor(
 
   if (isSVGUri(imageUrl)) {
     // Fall back to a more neutral color for SVG's since they fail extraction but we can render them elsewhere
-    return { tokenColor: sporeColors.neutral1?.val, tokenColorLoading: false }
+    return { tokenColor: sporeColors.neutral1.val, tokenColorLoading: false }
   }
 
   if (!imageUrl) {
@@ -295,7 +305,15 @@ export function useColorSchemeFromSeed(seed: string): {
   return { foreground, background }
 }
 
-export function passesContrast(color: string, backgroundColor: string, contrastThreshold: number): boolean {
+export function passesContrast({
+  color,
+  backgroundColor,
+  contrastThreshold,
+}: {
+  color: string
+  backgroundColor: string
+  contrastThreshold: number
+}): boolean {
   // sometimes the extracted colors come back as black or white, discard those
   if (!color || color === '#000000' || color === '#FFFFFF') {
     return false
@@ -303,6 +321,48 @@ export function passesContrast(color: string, backgroundColor: string, contrastT
 
   const contrast = hex(color, backgroundColor)
   return contrast >= contrastThreshold
+}
+
+/**
+ * Determines if a color is gray (all RGB values are close to each other).
+ * @param color The hex or rgb color to check
+ * @returns boolean indicating if the color is gray
+ */
+export function isGrayColor(color: Maybe<string>): boolean {
+  if (!color) {
+    return false
+  }
+
+  let r: number
+  let g: number
+  let b: number
+
+  if (color.startsWith('#')) {
+    if (color.length < 7) {
+      return false
+    }
+
+    r = parseInt(color.slice(1, 3), 16)
+    g = parseInt(color.slice(3, 5), 16)
+    b = parseInt(color.slice(5, 7), 16)
+  } else if (color.startsWith('rgb')) {
+    const rgbMatch = color.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i)
+    if (!rgbMatch || !rgbMatch[1] || !rgbMatch[2] || !rgbMatch[3]) {
+      return false
+    }
+
+    r = parseInt(rgbMatch[1], 10)
+    g = parseInt(rgbMatch[2], 10)
+    b = parseInt(rgbMatch[3], 10)
+  } else {
+    return false
+  }
+
+  // Calculate the maximum difference between any two RGB components
+  const maxDiff = Math.max(Math.abs(r - g), Math.abs(r - b), Math.abs(g - b))
+
+  // If the max difference is less than this threshold, the color is considered gray
+  return maxDiff < 10
 }
 
 /**
@@ -328,7 +388,18 @@ function pickContrastPassingTokenColor(extractedColors: ExtractedColors, backgro
   // - locally cache the result with the image logo URL as a key
   // - move this logic to the backend
   for (const c of colorsInOrder) {
-    if (!!c && passesContrast(c, backgroundHex, MIN_TOKEN_COLOR_CONTRAST_THRESHOLD)) {
+    if (
+      !!c &&
+      passesContrast({
+        color: c,
+        backgroundColor: backgroundHex,
+        contrastThreshold: MIN_TOKEN_COLOR_CONTRAST_THRESHOLD,
+      })
+    ) {
+      // If the color passes contrast but is gray, use a stronger color instead
+      if (isGrayColor(c)) {
+        return colorsLight.neutral1
+      }
       return c
     }
   }

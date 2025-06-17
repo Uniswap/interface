@@ -252,26 +252,6 @@ export type URAQuoteResponse =
   | URADutchOrderV3QuoteResponse
   | URAPriorityOrderQuoteResponse
 
-export type QuickRouteResponse = {
-  tokenIn: {
-    address: string
-    decimals: number
-    symbol: string
-    name: string
-  }
-  tokenOut: {
-    address: string
-    decimals: number
-    symbol: string
-    name: string
-  }
-  tradeType: 'EXACT_IN' | 'EXACT_OUT'
-  quote: {
-    amount: string
-    path: string
-  }
-}
-
 export function isClassicQuoteResponse(data: URAQuoteResponse): data is URAClassicQuoteResponse {
   return data.routing === URAQuoteType.CLASSIC
 }
@@ -882,13 +862,13 @@ export class LimitOrderTrade {
         additionalValidationContract: AddressZero,
         additionalValidationData: '0x',
         nonce: options?.nonce ?? BigNumber.from(0),
-        // decay timings dont matter at all
+        // decay timings don't matter at all
         decayStartTime: nowSecs,
         decayEndTime: nowSecs,
         exclusiveFiller: AddressZero,
         exclusivityOverrideBps: BigNumber.from(0),
         input: {
-          token: this.amountIn.currency.isNative ? AddressZero : this.amountIn.currency.address,
+          token: this.amountIn.currency.address,
           startAmount: BigNumber.from(this.amountIn.quotient.toString()),
           endAmount: BigNumber.from(this.amountIn.quotient.toString()),
         },
@@ -964,24 +944,10 @@ export type TradeResult =
   | {
       state: QuoteState.NOT_FOUND
       trade?: undefined
-      latencyMs?: number
     }
   | {
       state: QuoteState.SUCCESS
       trade: SubmittableTrade
-      latencyMs?: number
-    }
-
-export type PreviewTradeResult =
-  | {
-      state: QuoteState.NOT_FOUND
-      trade?: undefined
-      latencyMs?: number
-    }
-  | {
-      state: QuoteState.SUCCESS
-      trade: PreviewTrade
-      latencyMs?: number
     }
 
 export enum PoolType {

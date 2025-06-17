@@ -46,8 +46,8 @@ function isValidUniswapXSpender(data: {
 }): boolean {
   try {
     const { message, domain } = data
-    const spender = message.spender?.toLowerCase()
-    const uniswapXAddress = REACTOR_ADDRESS_MAPPING?.[Number(domain.chainId)]?.Dutch_V2?.toLowerCase()
+    const spender = message.spender.toLowerCase()
+    const uniswapXAddress = REACTOR_ADDRESS_MAPPING[Number(domain.chainId)]?.Dutch_V2?.toLowerCase()
     return Boolean(uniswapXAddress && spender === uniswapXAddress)
   } catch {
     return false

@@ -2,7 +2,7 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { id } from '@ethersproject/hash'
 import { resolveProperties } from '@ethersproject/properties'
-import { BlockTag, JsonRpcProvider } from '@ethersproject/providers'
+import { BlockTag, JsonRpcProvider, Networkish } from '@ethersproject/providers'
 import { ConnectionInfo, fetchJson } from '@ethersproject/web'
 import {
   FLASHBOTS_SIGNATURE_HEADER,
@@ -16,9 +16,9 @@ import {
 class AuthenticatedJsonRpcProvider extends JsonRpcProvider {
   protected readonly signer?: Signer
 
-  constructor(url: string, signer?: Signer) {
-    super(url)
-    this.signer = signer
+  constructor(config: { url: string; signer?: Signer; network?: Networkish }) {
+    super(config.url, config.network)
+    this.signer = config.signer
   }
 }
 
@@ -35,12 +35,20 @@ export class FlashbotsRpcProvider extends AuthenticatedJsonRpcProvider {
    *    @default 50
    *    @see {@link https://docs.flashbots.net/flashbots-protect/settings-guide#refunds}
    */
-  constructor(signerInfo?: SignerInfo, refundPercent?: number) {
+  constructor({
+    signerInfo,
+    refundPercent,
+    network,
+  }: {
+    signerInfo?: SignerInfo
+    refundPercent?: number
+    network?: Networkish
+  }) {
     const url = buildFlashbotsUrl({
       address: signerInfo?.address,
       refundPercent,
     })
-    super(url, signerInfo?.signer)
+    super({ url, signer: signerInfo?.signer, network })
   }
 
   /**

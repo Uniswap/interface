@@ -67,7 +67,7 @@ export async function createNewEmbeddedWallet(unitag: string): Promise<`0x${stri
     }
 
     const createWalletResp = await fetchCreateWalletRequest({ credential: passkeyCredential })
-    if (createWalletResp?.walletAddress) {
+    if (createWalletResp.walletAddress) {
       logger.debug(
         'embeddedWallet.ts',
         'createNewEmbeddedWallet',
@@ -180,7 +180,7 @@ export async function signInWithPasskey(): Promise<WalletSigninResponse | undefi
       return undefined
     }
     const signInResp = await fetchWalletSigninRequest({ credential })
-    if (signInResp?.walletAddress) {
+    if (signInResp.walletAddress) {
       return signInResp
     }
     return undefined

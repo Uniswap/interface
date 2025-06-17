@@ -7,6 +7,7 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AttackType, CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { logger } from 'utilities/src/logger/logger'
 import { isInterface } from 'utilities/src/platform'
 
 export enum TokenProtectionWarning {
@@ -83,7 +84,7 @@ export function getTokenProtectionFeeOnTransfer(currencyInfo: Maybe<CurrencyInfo
 
 // eslint-disable-next-line complexity
 export function getTokenProtectionWarning(currencyInfo?: Maybe<CurrencyInfo>): TokenProtectionWarning {
-  if (!currencyInfo?.currency || !currencyInfo?.safetyInfo) {
+  if (!currencyInfo?.currency || !currencyInfo.safetyInfo) {
     return TokenProtectionWarning.NonDefault
   }
   const { currency, safetyInfo } = currencyInfo
@@ -215,7 +216,9 @@ export function useModalHeaderText({
     return null
   }
   if (!shouldHavePluralTreatment && tokenSymbol1) {
-    throw new Error('Should only combine into one plural-languaged modal if BOTH are low or BOTH are blocked')
+    logger.error('Should only combine into one plural-languaged modal if BOTH are low or BOTH are blocked', {
+      tags: { file: 'safetyUtils.ts', function: 'useModalHeaderText' },
+    })
   }
   switch (tokenProtectionWarning) {
     case TokenProtectionWarning.Blocked:
@@ -352,7 +355,7 @@ export function useTokenWarningCardText(currencyInfo: Maybe<CurrencyInfo>): {
     buyFeePercent,
     sellFeePercent,
   })
-  if (!currencyInfo || !currencyInfo?.safetyInfo) {
+  if (!currencyInfo || !currencyInfo.safetyInfo) {
     return {
       heading: null,
       description: null,

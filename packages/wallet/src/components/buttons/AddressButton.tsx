@@ -23,7 +23,7 @@ export function AddressButton({ address, chainId, ...rest }: AddressButtonProps)
       label={name || shortenAddress(address)}
       size={iconSizes.icon16}
       textVariant="body3"
-      url={getExplorerLink(supportedChainId, address, ExplorerDataType.ADDRESS)}
+      url={getExplorerLink({ chainId: supportedChainId, data: address, type: ExplorerDataType.ADDRESS })}
       {...rest}
     />
   )

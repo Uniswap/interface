@@ -2,9 +2,9 @@ import { DynamicConfigs, ForceUpgradeConfigKey, ForceUpgradeTranslations } from 
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 
 export function useForceUpgradeTranslations(): ForceUpgradeTranslations {
-  return useDynamicConfigValue<DynamicConfigs.ForceUpgrade, ForceUpgradeConfigKey, ForceUpgradeTranslations>(
-    DynamicConfigs.ForceUpgrade,
-    ForceUpgradeConfigKey.Translations,
-    {},
-  )
+  return useDynamicConfigValue({
+    config: DynamicConfigs.ForceUpgrade,
+    key: ForceUpgradeConfigKey.Translations,
+    defaultValue: {},
+  })
 }

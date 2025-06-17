@@ -173,8 +173,9 @@ async function getDenominatedValue({
 
   const tokenAddress = token.address ?? getNativeAddress(universeChainId)
 
-  const stablecoinCurrency = STABLECOIN_AMOUNT_OUT[universeChainId]?.currency
+  const stablecoinCurrency = STABLECOIN_AMOUNT_OUT[universeChainId].currency
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!stablecoinCurrency) {
     logger.error(new Error('[ITBU] No `stablecoinCurrency` found'), {
       tags: {

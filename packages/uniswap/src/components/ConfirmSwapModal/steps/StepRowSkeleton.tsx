@@ -45,12 +45,12 @@ export function StepRowSkeleton(props: StepRowSkeletonProps): JSX.Element {
   const currency0Info = useCurrencyInfo(currency0Id)
   const currency1Info = useCurrencyInfo(currency1Id)
 
-  const { tokenColor } = useExtractedTokenColor(
-    currency0Info ? currency0Info.logoUrl : currencyInfo?.logoUrl,
-    currency0Info ? currency0Info.currency.symbol : currency?.symbol,
-    /*background=*/ colors.surface1.val,
-    /*default=*/ colors.neutral3.val,
-  )
+  const { tokenColor } = useExtractedTokenColor({
+    imageUrl: currency0Info ? currency0Info.logoUrl : currencyInfo?.logoUrl,
+    tokenName: currency0Info ? currency0Info.currency.symbol : currency?.symbol,
+    backgroundColor: colors.surface1.val,
+    defaultColor: colors.neutral3.val,
+  })
 
   const titleColor = status === StepStatus.Active || status === StepStatus.InProgress ? '$neutral1' : '$neutral2'
 

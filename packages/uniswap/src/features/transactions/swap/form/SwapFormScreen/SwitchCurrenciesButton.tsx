@@ -1,10 +1,9 @@
-import { SwapEventName } from '@uniswap/analytics-events'
 import { memo } from 'react'
 import { Flex, useIsShortMobileDevice } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/form/body/SwapArrowButton'
+import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
+import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/components/SwapArrowButton'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const SWAP_DIRECTION_BUTTON_SIZE = {
@@ -51,7 +50,7 @@ export const SwitchCurrenciesButton = memo(function _SwitchCurrenciesButton({
           <Trace
             logPress
             element={ElementName.SwitchCurrenciesButton}
-            eventOnTrigger={SwapEventName.SWAP_TOKENS_REVERSED}
+            eventOnTrigger={SwapEventName.SwapTokensReversed}
           >
             <SwapArrowButton
               backgroundColor="$surface2"

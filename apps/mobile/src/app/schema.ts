@@ -679,8 +679,25 @@ export const v86Schema = {
   batchedTransactions: {},
 }
 
-const v87Schema = v86Schema
+export const v87Schema = v86Schema
+
+const v88SchemaIntermediate = {
+  ...v87Schema,
+  appearanceSettings: {
+    ...v87Schema.appearanceSettings,
+    hapticsEnabled: undefined,
+  },
+  userSettings: {
+    ...v87Schema.userSettings,
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    hapticsEnabled: v87Schema.appearanceSettings.hapticsEnabled ?? true,
+  },
+}
+delete v88SchemaIntermediate.appearanceSettings.hapticsEnabled
+export const v88Schema = v88SchemaIntermediate
+
+const v89Schema = { ...v88Schema }
 
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v87Schema => v87Schema
+export const getSchema = (): typeof v89Schema => v89Schema

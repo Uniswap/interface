@@ -91,8 +91,8 @@ export const MouseoverTooltip = memo(function MouseoverTooltip(props: MouseoverT
           <TooltipContainer
             padding={padding}
             size={props.size ?? TooltipSize.Small}
-            onMouseEnter={disabled ? noop : open}
-            onMouseLeave={disabled ? noop : close}
+            onMouseEnter={open}
+            onMouseLeave={close}
           >
             {text}
           </TooltipContainer>
@@ -101,7 +101,7 @@ export const MouseoverTooltip = memo(function MouseoverTooltip(props: MouseoverT
       show={forceShow || show}
       {...rest}
     >
-      <Flex onMouseEnter={disabled ? noop : open} onMouseLeave={disabled || timeout ? noop : close}>
+      <Flex onMouseEnter={open} onMouseLeave={timeout ? noop : close}>
         {children}
       </Flex>
     </Popover>

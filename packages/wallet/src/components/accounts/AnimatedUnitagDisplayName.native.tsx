@@ -30,7 +30,7 @@ function _AnimatedUnitagDisplayName({
 }: AnimatedUnitagDisplayNameProps): JSX.Element {
   const dispatch = useDispatch()
   const [showUnitagSuffix, setShowUnitagSuffix] = useState(false)
-  const isUnitag = displayName?.type === DisplayNameType.Unitag
+  const isUnitag = displayName.type === DisplayNameType.Unitag
 
   const { width: nameTextWidth, onLayout: onNameTextLayout } = useLayoutWidth(showUnitagSuffix)
   const { width: unitagSuffixTextWidth, onLayout: onUnitagSuffixTextLayout } = useLayoutWidth()
@@ -79,12 +79,12 @@ function _AnimatedUnitagDisplayName({
           unitagSlideX: showUnitagSuffix ? unitagSuffixTextWidth : 0,
         }
       : {
-          paddingRight: isUnitag ? (shouldAnimateSlide ? getTokenValue('$spacing16') : 0) : 0,
+          paddingRight: 0,
           widthAdjust: showUnitagSuffix ? unitagSuffixTextWidth : 0,
           unitagOffset: showUnitagSuffix ? 0 : -unitagSuffixTextWidth,
           unitagSlideX: 0,
         }
-  }, [shouldAnimateSlide, unitagSuffixTextWidth, showUnitagSuffix, isUnitag])
+  }, [shouldAnimateSlide, unitagSuffixTextWidth, showUnitagSuffix])
 
   return (
     <Flex flexGrow={1} cursor="pointer" onPress={isUnitag ? onPressUnitag : undefined} onLayout={onViewWidthLayout}>
@@ -104,7 +104,7 @@ function _AnimatedUnitagDisplayName({
           variant="subheading1"
           onLayout={onNameTextLayout}
         >
-          {displayName?.name}
+          {displayName.name}
         </Text>
 
         {isUnitag && (

@@ -1,4 +1,3 @@
-import { InterfaceEventName } from '@uniswap/analytics-events'
 import DefaultMenu from 'components/AccountDrawer/DefaultMenu'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Web3StatusRef } from 'components/Web3Status'
@@ -25,6 +24,7 @@ import {
 } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 
 const DRAWER_SPECS = {
   WIDTH_XL: '390px',
@@ -138,15 +138,13 @@ function AccountDropdown({ isOpen, onClose, children }: AccountDrawerProps) {
   const modalRef = useRef<HTMLDivElement>(null)
   const [web3StatusRef] = useAtom(Web3StatusRef)
 
-  useOnClickOutside(
-    modalRef,
-    () => {
-      onClose()
-    },
+  useOnClickOutside({
+    node: modalRef,
+    handler: onClose,
     // Prevents quick close & re-open when tapping the Web3Status
     // stopPropagation does not work here
-    web3StatusRef ? [web3StatusRef] : [],
-  )
+    ignoredNodes: web3StatusRef ? [web3StatusRef] : [],
+  })
   return (
     <AnimatePresence>
       {isOpen && (
@@ -181,7 +179,7 @@ function AccountSideDrawer({ isOpen, onClose, children }: AccountDrawerProps) {
   return (
     <Flex row height={`calc(100% - 2 * ${DRAWER_SPECS.MARGIN})`}>
       {isOpen && (
-        <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'close' }}>
+        <Trace logPress eventOnTrigger={InterfaceEventName.MiniPortfolioToggled} properties={{ type: 'close' }}>
           <TouchableArea group zIndex={zIndexes.background} width={60}>
             <CloseDrawer onPress={onClose} data-testid="close-account-drawer">
               <ChevronsRight color={colors.neutral2.val} size={24} />

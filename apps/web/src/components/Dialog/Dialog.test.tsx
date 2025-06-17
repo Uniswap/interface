@@ -3,13 +3,13 @@ import { Dialog } from 'components/Dialog/Dialog'
 import { fireEvent, render, screen } from 'test-utils/render'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-const mockOnClose = jest.fn()
-const mockPrimaryClick = jest.fn()
-const mockSecondaryClick = jest.fn()
+const mockOnClose = vi.fn()
+const mockPrimaryClick = vi.fn()
+const mockSecondaryClick = vi.fn()
 
 describe('Dialog component', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   const renderDialog = (props = {}) => {

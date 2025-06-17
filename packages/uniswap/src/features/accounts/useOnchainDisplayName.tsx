@@ -29,7 +29,7 @@ export function useOnchainDisplayName(address: Maybe<string>, options?: DisplayN
   const hookOptions = { ...defaultOptions, ...options }
   const { showShortenedEns, includeUnitagSuffix, overrideDisplayName } = hookOptions
 
-  const validated = getValidAddress(address)
+  const validated = getValidAddress({ address })
   const ens = useENSName(validated ?? undefined)
   const { unitag } = useUnitagByAddress(validated ?? undefined)
 

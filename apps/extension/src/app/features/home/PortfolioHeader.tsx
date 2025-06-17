@@ -100,7 +100,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
 
   const displayName = useDisplayName(address)
   const { avatar } = useAvatar(address)
-  const walletHasName = displayName && displayName?.type !== DisplayNameType.Address
+  const walletHasName = displayName && displayName.type !== DisplayNameType.Address
   const formattedAddress = sanitizeAddressText(shortenAddress(address))
   const { isOpen: isPopupOpen } = useSelector(selectPopupState(PopupName.Connect))
 

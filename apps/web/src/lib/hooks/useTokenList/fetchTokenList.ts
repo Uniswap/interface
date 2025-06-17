@@ -12,12 +12,16 @@ const listCache = new Map<string, TokenList>()
  * For a given token list URL, we try to fetch the list from all the possible HTTP URLs.
  * For example, IPFS URLs can be fetched through multiple gateways.
  */
-export default async function fetchTokenList(
-  listUrl: string,
-  resolveENSContentHash: (ensName: string) => Promise<string>,
-  skipValidation?: boolean,
-): Promise<TokenList> {
-  const cached = listCache?.get(listUrl) // avoid spurious re-fetches
+export default async function fetchTokenList({
+  listUrl,
+  resolveENSContentHash,
+  skipValidation,
+}: {
+  listUrl: string
+  resolveENSContentHash: (ensName: string) => Promise<string>
+  skipValidation?: boolean
+}): Promise<TokenList> {
+  const cached = listCache.get(listUrl) // avoid spurious re-fetches
   if (cached) {
     return cached
   }
@@ -71,7 +75,7 @@ export default async function fetchTokenList(
       // A response can be invalid if it's not a valid JSON or if it doesn't match the TokenList schema.
       const json = await response.json()
       const list = skipValidation ? json : await validateTokenList(json)
-      listCache?.set(listUrl, list)
+      listCache.set(listUrl, list)
       return list
     } catch (error) {
       logger.debug(

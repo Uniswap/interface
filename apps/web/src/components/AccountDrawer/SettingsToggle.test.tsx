@@ -4,7 +4,7 @@ import { act, render } from 'test-utils/render'
 describe('SettingsToggle', () => {
   it('Updates value on click', () => {
     let mockActive = false
-    const mockToggle = jest.fn().mockImplementation(() => (mockActive = !mockActive))
+    const mockToggle = vi.fn().mockImplementation(() => (mockActive = !mockActive))
     const component = render(
       <SettingsToggle
         dataid="testId"

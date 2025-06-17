@@ -5,7 +5,7 @@ import { UnsignedV2DutchOrderInfo, V2DutchOrderTrade, PriorityOrderTrade as IPri
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { Route as V4RouteSDK } from '@uniswap/v4-sdk'
-import { BridgeQuoteResponse, ClassicQuoteResponse, DutchQuoteResponse, DutchV3QuoteResponse, PriorityQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { BridgeQuoteResponse, ClassicQuoteResponse, DutchQuoteResponse, DutchV3QuoteResponse, PriorityQuoteResponse, WrapQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { BigNumber, providers } from 'ethers/lib/ethers'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
@@ -60,7 +60,15 @@ function getQuoteOutputAmount<T extends QuoteResponseWithAggregatedOutputs>(quot
  * const amount = getQuoteOutputAmountUserWillReceive(quote, USDC, '0x123') // Returns 100 USDC
  * 
  */
-function getQuoteOutputAmountUserWillReceive<T extends QuoteResponseWithAggregatedOutputs>(quote: T | undefined, outputCurrency: Currency, recipient: string | undefined): CurrencyAmount<Currency> {
+function getQuoteOutputAmountUserWillReceive<T extends QuoteResponseWithAggregatedOutputs>({
+  quote,
+  outputCurrency,
+  recipient,
+}: {
+  quote?: T
+  outputCurrency: Currency
+  recipient?: string
+}): CurrencyAmount<Currency> {
   if (!quote || !recipient) {
     return CurrencyAmount.fromRawAmount(outputCurrency, '0')
   }
@@ -112,7 +120,11 @@ export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, Trade
   }
 
   public get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
-    return getQuoteOutputAmountUserWillReceive(this.quote, this.outputAmount.currency, this.quote.quote.orderInfo.swapper)
+    return getQuoteOutputAmountUserWillReceive({
+      quote: this.quote,
+      outputCurrency: this.outputAmount.currency,
+      recipient: this.quote.quote.orderInfo.swapper,
+    })
   }
 }
 
@@ -162,7 +174,11 @@ export class UniswapXV3Trade extends V3DutchOrderTrade<Currency, Currency, Trade
   }
 
   public get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
-    return getQuoteOutputAmountUserWillReceive(this.quote, this.outputAmount.currency, this.quote.quote.orderInfo.swapper)
+    return getQuoteOutputAmountUserWillReceive({
+      quote: this.quote,
+      outputCurrency: this.outputAmount.currency,
+      recipient: this.quote.quote.orderInfo.swapper,
+    })
   }
 }
 
@@ -212,7 +228,11 @@ export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, 
   }
 
   public get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
-    return getQuoteOutputAmountUserWillReceive(this.quote, this.outputAmount.currency, this.quote.quote.orderInfo.swapper)
+    return getQuoteOutputAmountUserWillReceive({
+      quote: this.quote,
+      outputCurrency: this.outputAmount.currency,
+      recipient: this.quote.quote.orderInfo.swapper,
+    })
   }
 }
 
@@ -261,7 +281,7 @@ export class ClassicTrade<
     super(routes)
     this.quote = quote
     this.deadline = deadline
-    this.slippageTolerance = quote?.quote.slippage ?? MAX_AUTO_SLIPPAGE_TOLERANCE
+    this.slippageTolerance = quote.quote.slippage ?? MAX_AUTO_SLIPPAGE_TOLERANCE
     this.swapFee = getSwapFee(quote)
   }
 
@@ -270,7 +290,7 @@ export class ClassicTrade<
   // Overrides trade sdk price impact with backend price impact when available, as sdk price impact formula can be inaccurate.
   public get priceImpact(): Percent {
     if (!this._cachedPriceImpact) {
-      const quotePriceImpact = this.quote?.quote.priceImpact
+      const quotePriceImpact = this.quote.quote.priceImpact
       this._cachedPriceImpact = quotePriceImpact ? new Percent(Math.round(quotePriceImpact * 100), 10000) : super.priceImpact
     }
     return this._cachedPriceImpact
@@ -281,7 +301,11 @@ export class ClassicTrade<
   }
 
   public get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
-    return getQuoteOutputAmountUserWillReceive(this.quote, this.outputAmount.currency, this.quote?.quote.swapper)
+    return getQuoteOutputAmountUserWillReceive({
+      quote: this.quote,
+      outputCurrency: this.outputAmount.currency,
+      recipient: this.quote.quote.swapper,
+    })
   }
 }
 
@@ -289,7 +313,7 @@ export type Trade<
   TInput extends Currency = Currency,
   TOutput extends Currency = Currency,
   TTradeType extends TradeType = TradeType,
-> = ClassicTrade<TInput, TOutput, TTradeType> | UniswapXTrade | BridgeTrade
+> = ClassicTrade<TInput, TOutput, TTradeType> | UniswapXTrade | BridgeTrade | WrapTrade | UnwrapTrade
 
 export type TradeWithSlippage = Exclude<Trade, BridgeTrade>
 
@@ -372,7 +396,7 @@ function transformToV2DutchOrderInfo(orderInfo: DutchOrderInfoV2): UnsignedV2Dut
       endAmount: BigNumber.from(orderInfo.input.endAmount),
     },
     outputs: orderInfo.outputs.map((output) => ({
-      token: output.token ?? '',
+      token: output.token,
       startAmount: BigNumber.from(output.startAmount),
       endAmount: BigNumber.from(output.endAmount),
       recipient: output.recipient,
@@ -389,17 +413,17 @@ function transformToV3DutchOrderInfo(orderInfo: DutchOrderInfoV3): UnsignedV3Dut
     additionalValidationContract: orderInfo.additionalValidationContract ?? '',
     additionalValidationData: orderInfo.additionalValidationData ?? '',
     input: {
-      token: orderInfo.input.token ?? '',
+      token: orderInfo.input.token,
       startAmount: BigNumber.from(orderInfo.input.startAmount),
       curve: {
-        relativeBlocks: orderInfo.input.curve?.relativeBlocks ?? [],
-        relativeAmounts: orderInfo.input.curve?.relativeAmounts?.map((amount) => BigInt(amount)) ?? [],
+        relativeBlocks: orderInfo.input.curve.relativeBlocks ?? [],
+        relativeAmounts: orderInfo.input.curve.relativeAmounts?.map((amount) => BigInt(amount)) ?? [],
       },
       maxAmount: BigNumber.from(orderInfo.input.maxAmount),
       adjustmentPerGweiBaseFee: BigNumber.from(orderInfo.input.adjustmentPerGweiBaseFee),
     },
     outputs: orderInfo.outputs.map((output) => ({
-      token: output.token ?? '',
+      token: output.token,
       startAmount: BigNumber.from(output.startAmount),
       curve: {
         relativeBlocks: output.curve.relativeBlocks ?? [],
@@ -420,12 +444,12 @@ function transformToPriorityOrderInfo(orderInfo: PriorityOrderInfo): UnsignedPri
     additionalValidationContract: orderInfo.additionalValidationContract ?? '',
     additionalValidationData: orderInfo.additionalValidationData ?? '',
     input: {
-      token: orderInfo.input.token ?? '',
+      token: orderInfo.input.token,
       amount: BigNumber.from(orderInfo.input.amount),
       mpsPerPriorityFeeWei:  BigNumber.from(orderInfo.input.mpsPerPriorityFeeWei),
     },
     outputs: orderInfo.outputs.map((output) => ({
-      token: output.token ?? '',
+      token: output.token,
       amount: BigNumber.from(output.amount),
       mpsPerPriorityFeeWei:  BigNumber.from(output.mpsPerPriorityFeeWei),
       recipient: output.recipient,
@@ -557,3 +581,61 @@ export class BridgeTrade {
     return this.outputAmount
   }
 }
+
+abstract class BaseWrapTrade<TWrapType extends Routing.WRAP | Routing.UNWRAP> {
+  inputAmount: CurrencyAmount<Currency>
+  outputAmount: CurrencyAmount<Currency>
+  executionPrice: Price<Currency, Currency>
+  quote: WrapQuoteResponse<TWrapType>
+  tradeType: TradeType
+  abstract routing: TWrapType
+  readonly indicative = false
+  readonly swapFee?: SwapFee
+  readonly inputTax: Percent = ZERO_PERCENT
+  readonly outputTax: Percent = ZERO_PERCENT
+  readonly slippageTolerance = 0
+  readonly priceImpact: undefined
+  readonly deadline: undefined
+  constructor({ quote, currencyIn, currencyOut, tradeType }: { quote: WrapQuoteResponse<TWrapType>, currencyIn: Currency, currencyOut: Currency, tradeType: TradeType}) {
+    this.quote = quote
+    const quoteInputAmount = quote.quote.input?.amount
+    const quoteOutputAmount = quote.quote.output?.amount
+    if (!quoteInputAmount || !quoteOutputAmount) {
+      throw new Error('Error parsing wrap/unwrap quote currency amounts')
+    }
+    const inputAmount = getCurrencyAmount({ value: quoteInputAmount, valueType: ValueType.Raw, currency: currencyIn })
+    const outputAmount = getCurrencyAmount({ value: quoteOutputAmount, valueType: ValueType.Raw, currency: currencyOut })
+    if (!inputAmount || !outputAmount) {
+      throw new Error('Error parsing wrap/unwrap quote currency amounts')
+    }
+    this.inputAmount = inputAmount
+    this.outputAmount = outputAmount
+    this.executionPrice = new Price(currencyIn, currencyOut, 1, 1)
+    this.tradeType = tradeType
+  }
+  /* Wrap trades have no slippage or fees hence a static execution price. */
+  worstExecutionPrice(_threshold: Percent): Price<Currency, Currency> {
+    return this.executionPrice
+  }
+  maximumAmountIn(_slippageTolerance: Percent, _amountIn?: CurrencyAmount<Currency>): CurrencyAmount<Currency> {
+    return this.inputAmount
+  }
+  minimumAmountOut(_slippageTolerance: Percent, _amountOut?: CurrencyAmount<Currency>): CurrencyAmount<Currency> {
+    return this.outputAmount
+  }
+  public get quoteOutputAmount(): CurrencyAmount<Currency> {
+    return this.outputAmount
+  }
+  public get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
+    return this.outputAmount
+  }
+}
+
+export class WrapTrade extends BaseWrapTrade<Routing.WRAP> {
+  readonly routing = Routing.WRAP
+}
+
+export class UnwrapTrade extends BaseWrapTrade<Routing.UNWRAP> {
+  readonly routing = Routing.UNWRAP
+}
+

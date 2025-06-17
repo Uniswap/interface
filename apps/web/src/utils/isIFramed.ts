@@ -1,5 +1,6 @@
 export function isIFramed(redirect = false): boolean {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (window.location.ancestorOrigins !== undefined) {
       // Does not exist in IE and firefox.
       // See https://developer.mozilla.org/en-US/docs/Web/API/Location/ancestorOrigins for how this works

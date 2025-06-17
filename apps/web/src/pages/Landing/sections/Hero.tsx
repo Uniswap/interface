@@ -23,7 +23,10 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
   const media = useMedia()
   const { height: scrollPosition } = useScroll({ enabled: !media.sm })
   const { defaultChainId } = useEnabledChains()
-  const initialInputCurrency = useCurrency('ETH', defaultChainId)
+  const initialInputCurrency = useCurrency({
+    address: 'ETH',
+    chainId: defaultChainId,
+  })
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { translateY, opacityY } = useMemo(

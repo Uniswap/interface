@@ -10,11 +10,15 @@ export enum MnemonicValidationError {
   InvalidPhrase = 'InvalidPhrase',
 }
 
-export function translateMnemonicErrorMessage(
-  error: MnemonicValidationError,
-  invalidWord: string | undefined,
-  t: AppTFunction,
-): string {
+export function translateMnemonicErrorMessage({
+  error,
+  invalidWord,
+  t,
+}: {
+  error: MnemonicValidationError
+  invalidWord: string | undefined
+  t: AppTFunction
+}): string {
   switch (error) {
     case MnemonicValidationError.InvalidPhrase:
       return t('account.recoveryPhrase.error.invalid')

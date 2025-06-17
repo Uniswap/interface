@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TokenDescription no description or social buttons shown when not available 1`] = `
+exports[`TokenDescription > no description or social buttons shown when not available 1`] = `
 <DocumentFragment>
   .c1 {
   color: rgba(19,19,19,0.35);
@@ -125,7 +125,7 @@ exports[`TokenDescription no description or social buttons shown when not availa
 </DocumentFragment>
 `;
 
-exports[`TokenDescription renders token information correctly with defaults 1`] = `
+exports[`TokenDescription > renders token information correctly with defaults 1`] = `
 <DocumentFragment>
   .c0 {
   -webkit-text-decoration: none;
@@ -313,7 +313,7 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
 </DocumentFragment>
 `;
 
-exports[`TokenDescription truncates description and shows more 1`] = `
+exports[`TokenDescription > truncates description and shows more 1`] = `
 <DocumentFragment>
   .c0 {
   -webkit-text-decoration: none;

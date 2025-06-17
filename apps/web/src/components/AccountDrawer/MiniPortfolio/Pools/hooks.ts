@@ -22,11 +22,15 @@ import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currency
 type ContractMap<T extends BaseContract> = { [key: number]: T }
 
 // Constructs a chain-to-contract map, using the wallet's provider when available
-function useContractMultichain<T extends BaseContract>(
-  addressMap: { [chainId: number]: string | undefined },
-  ABI: any,
-  chainIds?: UniverseChainId[],
-): ContractMap<T> {
+function useContractMultichain<T extends BaseContract>({
+  addressMap,
+  ABI,
+  chainIds,
+}: {
+  addressMap: { [chainId: number]: string | undefined }
+  ABI: any
+  chainIds?: UniverseChainId[]
+}): ContractMap<T> {
   const account = useAccount()
   const { provider: walletProvider } = useWeb3React()
   const isSupportedChain = useIsSupportedChainIdCallback()
@@ -46,7 +50,7 @@ function useContractMultichain<T extends BaseContract>(
             ? RPC_PROVIDERS[chainId]
             : undefined
       if (provider) {
-        acc[chainId] = getContract(addressMap[chainId] ?? '', ABI, provider) as T
+        acc[chainId] = getContract({ address: addressMap[chainId] ?? '', ABI, provider }) as T
       }
       return acc
     }, {})
@@ -54,11 +58,19 @@ function useContractMultichain<T extends BaseContract>(
 }
 
 export function useV3ManagerContracts(chainIds: UniverseChainId[]): ContractMap<NonfungiblePositionManager> {
-  return useContractMultichain<NonfungiblePositionManager>(V3NFT_ADDRESSES, NFTPositionManagerJSON.abi, chainIds)
+  return useContractMultichain<NonfungiblePositionManager>({
+    addressMap: V3NFT_ADDRESSES,
+    ABI: NFTPositionManagerJSON.abi,
+    chainIds,
+  })
 }
 
 export function useInterfaceMulticallContracts(chainIds: UniverseChainId[]): ContractMap<UniswapInterfaceMulticall> {
-  return useContractMultichain<UniswapInterfaceMulticall>(MULTICALL_ADDRESSES, MulticallJSON.abi, chainIds)
+  return useContractMultichain<UniswapInterfaceMulticall>({
+    addressMap: MULTICALL_ADDRESSES,
+    ABI: MulticallJSON.abi,
+    chainIds,
+  })
 }
 
 type PriceMap = { [key: CurrencyKey]: number | undefined }

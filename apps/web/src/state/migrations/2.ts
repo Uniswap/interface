@@ -12,7 +12,7 @@ export type PersistAppStateV2 = {
  */
 export const migration2 = (state: PersistAppStateV2 | undefined) => {
   // @ts-ignore this is intentionally a string and not the `RouterPreference` enum because `client` is a deprecated option
-  if (state?.user && state.user?.userRouterPreference === 'client') {
+  if (state?.user && state.user.userRouterPreference === 'client') {
     return {
       ...state,
       user: {

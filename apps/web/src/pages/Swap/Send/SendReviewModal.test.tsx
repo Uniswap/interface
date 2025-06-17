@@ -1,7 +1,7 @@
 import 'test-utils/tokens/mocks'
 
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { SendReviewModal } from 'pages/Swap/Send/SendReviewModal'
+import { SendReviewModalInner } from 'pages/Swap/Send/SendReviewModal'
 import { MultichainContext } from 'state/multichain/types'
 import { SendContext, SendContextType } from 'state/send/SendContext'
 import { SwapAndLimitContext } from 'state/swap/types'
@@ -11,9 +11,9 @@ import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { shortenAddress } from 'utilities/src/addresses'
 
 const mockMultichainContextValue = {
-  reset: jest.fn(),
-  setSelectedChainId: jest.fn(),
-  setIsUserSelectedToken: jest.fn(),
+  reset: vi.fn(),
+  setSelectedChainId: vi.fn(),
+  setIsUserSelectedToken: vi.fn(),
   isSwapAndLimitContext: true,
   isUserSelectedToken: false,
   isMultichainContext: true,
@@ -24,9 +24,9 @@ const mockSwapAndLimitContextValue = {
     inputCurrency: DAI,
     outputCurrency: undefined,
   },
-  setCurrencyState: jest.fn(),
+  setCurrencyState: vi.fn(),
   currentTab: SwapTab.Limit,
-  setCurrentTab: jest.fn(),
+  setCurrentTab: vi.fn(),
 }
 
 const mockedSendContextFiatInput: SendContextType = {
@@ -45,7 +45,7 @@ const mockedSendContextFiatInput: SendContextType = {
       ensName: 'hayden.eth',
     },
   },
-  setSendState: jest.fn(),
+  setSendState: vi.fn(),
 }
 
 const mockedSendContextTokenInput: SendContextType = {
@@ -64,7 +64,7 @@ const mockedSendContextTokenInput: SendContextType = {
       ensName: 'hayden.eth',
     },
   },
-  setSendState: jest.fn(),
+  setSendState: vi.fn(),
 }
 
 describe('SendReviewModal', () => {
@@ -73,7 +73,7 @@ describe('SendReviewModal', () => {
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <SendContext.Provider value={mockedSendContextFiatInput}>
-            <SendReviewModal isOpen onDismiss={jest.fn()} onConfirm={jest.fn()} />
+            <SendReviewModalInner onDismiss={vi.fn()} onConfirm={vi.fn()} />
           </SendContext.Provider>
         </SwapAndLimitContext.Provider>
       </MultichainContext.Provider>,
@@ -91,7 +91,7 @@ describe('SendReviewModal', () => {
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <SendContext.Provider value={mockedSendContextTokenInput}>
-            <SendReviewModal isOpen onDismiss={jest.fn()} onConfirm={jest.fn()} />
+            <SendReviewModalInner onDismiss={vi.fn()} onConfirm={vi.fn()} />
           </SendContext.Provider>
         </SwapAndLimitContext.Provider>
       </MultichainContext.Provider>,

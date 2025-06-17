@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Delta should render correctly 1`] = `
+exports[`Delta > should render correctly 1`] = `
 <DocumentFragment>
   .c0 {
   color: #0C8911;
@@ -31,7 +31,7 @@ exports[`Delta should render correctly 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Delta should render correctly when delta is negative 1`] = `
+exports[`Delta > should render correctly when delta is negative 1`] = `
 <DocumentFragment>
   .c0 {
   color: #E10F0F;
@@ -62,7 +62,7 @@ exports[`Delta should render correctly when delta is negative 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Delta should render correctly when delta is positive 1`] = `
+exports[`Delta > should render correctly when delta is positive 1`] = `
 <DocumentFragment>
   .c0 {
   color: #0C8911;
@@ -93,7 +93,7 @@ exports[`Delta should render correctly when delta is positive 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Delta should render negative zero when delta is close to zero but negative 1`] = `
+exports[`Delta > should render negative zero when delta is close to zero but negative 1`] = `
 <DocumentFragment>
   .c0 {
   color: #0C8911;
@@ -124,7 +124,7 @@ exports[`Delta should render negative zero when delta is close to zero but negat
 </DocumentFragment>
 `;
 
-exports[`Delta should render positive zero when delta is 0 1`] = `
+exports[`Delta > should render positive zero when delta is 0 1`] = `
 <DocumentFragment>
   .c0 {
   color: #0C8911;
@@ -155,7 +155,7 @@ exports[`Delta should render positive zero when delta is 0 1`] = `
 </DocumentFragment>
 `;
 
-exports[`Delta should render positive zero when delta is close to zero but positive 1`] = `
+exports[`Delta > should render positive zero when delta is close to zero but positive 1`] = `
 <DocumentFragment>
   .c0 {
   color: #0C8911;
@@ -186,7 +186,7 @@ exports[`Delta should render positive zero when delta is close to zero but posit
 </DocumentFragment>
 `;
 
-exports[`Delta should render positive zero when delta is parsed as positive zero 1`] = `
+exports[`Delta > should render positive zero when delta is parsed as positive zero 1`] = `
 <DocumentFragment>
   .c0 {
   color: #0C8911;

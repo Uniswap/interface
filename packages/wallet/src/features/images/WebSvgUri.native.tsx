@@ -42,7 +42,7 @@ const getHTML = (svgContent: string): string => `
 export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps): JSX.Element {
   const svgData = useSvgData(uri, autoplay)
 
-  if (svgData?.content && svgData?.aspectRatio) {
+  if (svgData?.content && svgData.aspectRatio) {
     const html = getHTML(svgData.content)
 
     return (

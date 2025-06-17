@@ -1,9 +1,9 @@
 // Disable sorting imports with Prettier for this file so that it doesn't change the order
 // organize-imports-ignore
 import './wdyr'
-import { isNonJestDev } from 'utilities/src/environment/constants'
+import { isNonTestDev } from 'utilities/src/environment/constants'
 
-if (isNonJestDev) {
+if (isNonTestDev) {
   require('./ReactotronConfig')
 }
 

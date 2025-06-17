@@ -21,8 +21,7 @@ import {
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { PoolOutOfSyncError } from 'pages/Pool/Positions/create/PoolOutOfSyncError'
-import { formatPrices } from 'pages/Pool/Positions/create/shared'
-import { getInvertedTuple, getPoolIdOrAddressFromCreatePositionInfo } from 'pages/Pool/Positions/create/utils'
+import { getPoolIdOrAddressFromCreatePositionInfo } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -37,7 +36,6 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -63,20 +61,39 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
     depositState: { exactField },
   } = useDepositContext()
   const { t } = useTranslation()
-  const { currencies, protocolVersion, creatingPoolOrPair } = derivedPositionInfo
+  const { creatingPoolOrPair, chainId } = derivedPositionInfo
   const { formattedAmounts, currencyAmounts, currencyAmountsUSDValue } = derivedDepositInfo
 
-  const token0CurrencyInfo = useCurrencyInfo(currencyAmounts?.TOKEN0?.currency)
-  const token1CurrencyInfo = useCurrencyInfo(currencyAmounts?.TOKEN1?.currency)
+  const token0 = currencyAmounts?.TOKEN0?.currency
+  const token1 = currencyAmounts?.TOKEN1?.currency
+  const token0CurrencyInfo = useCurrencyInfo(token0)
+  const token1CurrencyInfo = useCurrencyInfo(token1)
 
   const { formatNumberOrString, formatCurrencyAmount } = useLocalizationContext()
-  const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, priceInverted)
 
-  const { formattedPrices } = useMemo(() => {
-    return formatPrices(derivedPriceRangeInfo, formatNumberOrString)
-  }, [formatNumberOrString, derivedPriceRangeInfo])
+  const baseCurrency = derivedPriceRangeInfo.price?.baseCurrency
+  const quoteCurrency = derivedPriceRangeInfo.price?.quoteCurrency
 
-  const versionLabel = getProtocolVersionLabel(protocolVersion)
+  const formattedPrices = useMemo(() => {
+    if (derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2) {
+      return ['', '']
+    }
+
+    const { ticksAtLimit, prices } = derivedPriceRangeInfo
+
+    const lowerPriceFormatted = ticksAtLimit[0]
+      ? '0'
+      : formatNumberOrString({ value: prices[0]?.toSignificant(), type: NumberType.TokenTx })
+
+    const upperPriceFormatted = ticksAtLimit[1]
+      ? '∞'
+      : formatNumberOrString({ value: prices[1]?.toSignificant(), type: NumberType.TokenTx })
+
+    const postfix = `${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`
+    return [`${lowerPriceFormatted} ${postfix}`, `${upperPriceFormatted} ${postfix}`]
+  }, [formatNumberOrString, derivedPriceRangeInfo, baseCurrency, quoteCurrency])
+
+  const versionLabel = getProtocolVersionLabel(derivedPriceRangeInfo.protocolVersion)
 
   const [steps, setSteps] = useState<TransactionStep[]>([])
   const dispatch = useDispatch()
@@ -103,19 +120,26 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
       getLiquidityRangeChartProps({
         positionInfo: derivedPositionInfo,
         priceRangeInfo: derivedPriceRangeInfo,
-        pricesInverted: priceInverted,
+        priceInverted,
       }),
     [derivedPositionInfo, derivedPriceRangeInfo, priceInverted],
   )
+
+  const ticks = useMemo(() => {
+    if (derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V4) {
+      return [derivedPriceRangeInfo.ticks[0], derivedPriceRangeInfo.ticks[1]]
+    }
+    return []
+  }, [derivedPriceRangeInfo])
 
   const handleCreate = useCallback(() => {
     const isValidTx = isValidLiquidityTxContext(txInfo)
     if (
       !account ||
-      account?.type !== AccountType.SignerMnemonic ||
+      account.type !== AccountType.SignerMnemonic ||
       !isValidTx ||
       !currencyAmounts?.TOKEN0 ||
-      !currencyAmounts?.TOKEN1
+      !currencyAmounts.TOKEN1
     ) {
       return
     }
@@ -135,16 +159,20 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
         analytics: {
           ...getLPBaseAnalyticsProperties({
             trace,
-            version: protocolVersion,
+            hook,
+            version: derivedPriceRangeInfo.protocolVersion,
+            tickLower: ticks[0]?.toString(),
+            tickUpper: ticks[1]?.toString(),
             fee: fee.feeAmount,
+            tickSpacing: fee.tickSpacing,
             currency0: currencyAmounts.TOKEN0.currency,
             currency1: currencyAmounts.TOKEN1.currency,
             currency0AmountUsd: currencyAmountsUSDValue?.TOKEN0,
             currency1AmountUsd: currencyAmountsUSDValue?.TOKEN1,
             poolId: getPoolIdOrAddressFromCreatePositionInfo(derivedPositionInfo),
           }),
-          expectedAmountBaseRaw: currencyAmounts.TOKEN0.quotient?.toString() ?? '0',
-          expectedAmountQuoteRaw: currencyAmounts.TOKEN1.quotient?.toString() ?? '0',
+          expectedAmountBaseRaw: currencyAmounts.TOKEN0.quotient.toString(),
+          expectedAmountQuoteRaw: currencyAmounts.TOKEN1.quotient.toString(),
           createPool: creatingPoolOrPair,
           createPosition: true,
         },
@@ -161,15 +189,17 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
     setCurrentTransactionStep,
     onSuccess,
     trace,
-    protocolVersion,
+    derivedPriceRangeInfo.protocolVersion,
     fee.feeAmount,
+    fee.tickSpacing,
+    ticks,
+    hook,
     currencyAmountsUSDValue?.TOKEN0,
     currencyAmountsUSDValue?.TOKEN1,
     derivedPositionInfo,
     creatingPoolOrPair,
   ])
 
-  const [token0, token1] = currencies
   const { updatedFormattedAmounts, updatedUSDAmounts } = useUpdatedAmountsFromDependentAmount({
     token0,
     token1,
@@ -198,9 +228,9 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
             <Flex row alignItems="center" justifyContent="space-between">
               <Flex>
                 <Flex row gap="$gap8">
-                  <Text variant="heading3">{currencyAmounts?.TOKEN0?.currency?.symbol}</Text>
+                  <Text variant="heading3">{currencyAmounts?.TOKEN0?.currency.symbol}</Text>
                   <Text variant="heading3">/</Text>
-                  <Text variant="heading3">{currencyAmounts?.TOKEN1?.currency?.symbol}</Text>
+                  <Text variant="heading3">{currencyAmounts?.TOKEN1?.currency.symbol}</Text>
                 </Flex>
                 <Flex row gap={2} alignItems="center">
                   <LiquidityPositionInfoBadges
@@ -216,7 +246,8 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
                 size={iconSizes.icon36}
               />
             </Flex>
-            {(protocolVersion === ProtocolVersion.V3 || protocolVersion === ProtocolVersion.V4) && (
+            {(derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V3 ||
+              derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V4) && (
               <>
                 {!creatingPoolOrPair && !!liquidityRangeChartProps && (
                   <WrappedLiquidityPositionRangeChart width="100%" {...liquidityRangeChartProps} />
@@ -226,13 +257,13 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
                     <Text variant="body3" color="$neutral2">
                       <Trans i18nKey="common.min" />
                     </Text>
-                    <Text variant="body3">{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+                    <Text variant="body3">{formattedPrices[0]}</Text>
                   </Flex>
                   <Flex fill gap="$gap4">
                     <Text variant="body3" color="$neutral2">
                       <Trans i18nKey="common.max" />
                     </Text>
-                    <Text variant="body3">{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+                    <Text variant="body3">{formattedPrices[1]}</Text>
                   </Flex>
                 </Flex>
               </>
@@ -245,11 +276,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               </Text>
               <BaseQuoteFiatAmount
                 variant="body1"
-                price={
-                  derivedPriceRangeInfo.invertPrice
-                    ? derivedPriceRangeInfo.price?.invert()
-                    : derivedPriceRangeInfo.price
-                }
+                price={derivedPriceRangeInfo.price}
                 base={baseCurrency}
                 quote={quoteCurrency}
               />
@@ -271,9 +298,9 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               </Flex>
               <TokenLogo
                 size={iconSizes.icon36}
-                chainId={currencyAmounts?.TOKEN0?.currency?.chainId}
-                name={currencyAmounts?.TOKEN0?.currency?.name}
-                symbol={currencyAmounts?.TOKEN0?.currency?.symbol}
+                chainId={currencyAmounts?.TOKEN0?.currency.chainId}
+                name={currencyAmounts?.TOKEN0?.currency.name}
+                symbol={currencyAmounts?.TOKEN0?.currency.symbol}
                 url={token0CurrencyInfo?.logoUrl}
               />
             </Flex>
@@ -289,9 +316,9 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               </Flex>
               <TokenLogo
                 size={iconSizes.icon36}
-                chainId={currencyAmounts?.TOKEN1?.currency?.chainId}
-                name={currencyAmounts?.TOKEN1?.currency?.name}
-                symbol={currencyAmounts?.TOKEN1?.currency?.symbol}
+                chainId={currencyAmounts?.TOKEN1?.currency.chainId}
+                name={currencyAmounts?.TOKEN1?.currency.name}
+                symbol={currencyAmounts?.TOKEN1?.currency.symbol}
                 url={token1CurrencyInfo?.logoUrl}
               />
             </Flex>
@@ -314,11 +341,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
                   ),
                   Value: () => (
                     <Flex row gap="$gap4" alignItems="center">
-                      <NetworkLogo
-                        chainId={baseCurrency?.chainId || UniverseChainId.Mainnet}
-                        size={iconSizes.icon16}
-                        shape="square"
-                      />
+                      <NetworkLogo chainId={chainId ?? null} size={iconSizes.icon16} shape="square" />
                       <Text variant="body3">
                         {formatCurrencyAmount({ value: gasFeeEstimateUSD, type: NumberType.FiatGasPrice })}
                       </Text>

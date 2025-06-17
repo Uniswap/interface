@@ -64,7 +64,7 @@ export function PriceAmount({
     <Flex centered row gap={gap} overflow="hidden">
       {!isUSD && (
         // @ts-expect-error TODO(MOB-1566) convert to specific icon size token, avoiding doing too big of a change in this PR
-        <Ethereum color={iconColor || '$neutral1'} height={iconSize} width={iconSize} />
+        <Ethereum color={iconColor} height={iconSize} width={iconSize} />
       )}
       <Text color={textColor} variant={textVariant}>
         {formattedAmount}

@@ -95,11 +95,11 @@ export class OrderWatcher {
 
         const updatedStatus = ORDER_STATUS_TO_TX_STATUS[remoteOrder.orderStatus]
 
-        const isUnchanged = updatedStatus === localOrder?.status
+        const isUnchanged = updatedStatus === localOrder.status
         const isFinal = isFinalizedTxStatus(updatedStatus)
 
         // Ignore non-final order statuses if the tx is being cancelled locally; the backend is not yet aware of cancellation
-        const isOngoingCancel = !isFinal && localOrder?.status === TransactionStatus.Cancelling
+        const isOngoingCancel = !isFinal && localOrder.status === TransactionStatus.Cancelling
 
         if (isUnchanged || isOngoingCancel) {
           continue

@@ -23,7 +23,7 @@ describe(getValidAddress, () => {
     ${{ meow: 'woof' }}                     | ${null}                                   | ${false} | ${'handles unexpected object'}
     ${true}                                 | ${null}                                   | ${false} | ${'handles unexpected boolean'}
   `('$desc for checksum=$checksum $input should return $expected', async ({ input, expected, checksum }) => {
-    expect(getValidAddress(input, checksum)).toEqual(expected)
+    expect(getValidAddress({ address: input, withChecksum: checksum })).toEqual(expected)
   })
 })
 

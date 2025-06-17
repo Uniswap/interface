@@ -12,8 +12,8 @@ import { isAddress } from 'utilities/src/addresses'
 
 type Maybe<T> = T | undefined
 
-export function useCurrency(address?: string, chainId?: UniverseChainId, skip?: boolean): Maybe<Currency> {
-  const currencyInfo = useCurrencyInfo(address, chainId, skip)
+export function useCurrency({ address, chainId }: { address?: string; chainId?: UniverseChainId }): Maybe<Currency> {
+  const currencyInfo = useCurrencyInfo(address, chainId, false)
   return currencyInfo?.currency
 }
 
@@ -23,6 +23,7 @@ export function useCurrency(address?: string, chainId?: UniverseChainId, skip?: 
  */
 export function useCurrencyInfo(currency?: Currency, chainId?: UniverseChainId, skip?: boolean): Maybe<CurrencyInfo>
 export function useCurrencyInfo(address?: string, chainId?: UniverseChainId, skip?: boolean): Maybe<CurrencyInfo>
+// eslint-disable-next-line max-params
 export function useCurrencyInfo(
   addressOrCurrency?: string | Currency,
   chainId?: UniverseChainId,
@@ -36,7 +37,7 @@ export function useCurrencyInfo(
 
   const isNative = useMemo(() => checkIsNative(addressOrCurrency), [addressOrCurrency])
   const address = useMemo(
-    () => getAddress(isNative, nativeAddressWithFallback, addressOrCurrency),
+    () => getAddress({ isNative, nativeAddressWithFallback, addressOrCurrency }),
     [isNative, nativeAddressWithFallback, addressOrCurrency],
   )
 
@@ -54,17 +55,21 @@ export function useCurrencyInfo(
   }, [addressOrCurrency, skip, currencyInfo])
 }
 
-export const checkIsNative = (addressOrCurrency?: string | Currency): boolean => {
+export function checkIsNative(addressOrCurrency?: string | Currency): boolean {
   return typeof addressOrCurrency === 'string'
     ? [NATIVE_CHAIN_ID, 'native', 'eth'].includes(addressOrCurrency.toLowerCase())
     : addressOrCurrency?.isNative ?? false
 }
 
-const getAddress = (
-  isNative: boolean,
-  nativeAddressWithFallback: string,
-  addressOrCurrency?: string | Currency,
-): string | undefined => {
+function getAddress({
+  isNative,
+  nativeAddressWithFallback,
+  addressOrCurrency,
+}: {
+  isNative: boolean
+  nativeAddressWithFallback: string
+  addressOrCurrency?: string | Currency
+}): string | undefined {
   if (typeof addressOrCurrency === 'string') {
     if (isNative) {
       return nativeAddressWithFallback
@@ -76,7 +81,7 @@ const getAddress = (
   if (addressOrCurrency) {
     if (addressOrCurrency.isNative) {
       return nativeAddressWithFallback
-    } else if (addressOrCurrency) {
+    } else {
       return addressOrCurrency.address
     }
   }
@@ -87,7 +92,10 @@ const getAddress = (
 export function useToken(tokenAddress?: string, chainId?: UniverseChainId): Maybe<Token> {
   const formattedAddress = isAddress(tokenAddress)
   const { chainId: connectedChainId } = useAccount()
-  const currency = useCurrency(formattedAddress ? formattedAddress : undefined, chainId ?? connectedChainId)
+  const currency = useCurrency({
+    address: formattedAddress ? formattedAddress : undefined,
+    chainId: chainId ?? connectedChainId,
+  })
 
   return useMemo(() => {
     if (currency && currency.isToken) {

@@ -145,11 +145,19 @@ export function useMinGenericL2ForGas(txType?: TransactionType): JSBI {
 }
 
 export function useLowBalanceWarningGasPercentage(): number {
-  return useDynamicConfigValue(DynamicConfigs.Swap, SwapConfigKey.LowBalanceWarningGasPercentage, 100)
+  return useDynamicConfigValue({
+    config: DynamicConfigs.Swap,
+    key: SwapConfigKey.LowBalanceWarningGasPercentage,
+    defaultValue: 100,
+  })
 }
 
 export function useCalculateMinForGas(amount: SwapConfigKey, defaultAmount: number): JSBI {
-  const multiplier = useDynamicConfigValue(DynamicConfigs.Swap, amount, defaultAmount)
+  const multiplier = useDynamicConfigValue({
+    config: DynamicConfigs.Swap,
+    key: amount,
+    defaultValue: defaultAmount,
+  })
 
   return JSBI.multiply(
     JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(NATIVE_CURRENCY_DECIMAL_OFFSET)),

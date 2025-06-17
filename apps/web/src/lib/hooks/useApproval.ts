@@ -1,12 +1,12 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useTokenContract } from 'hooks/useContract'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { useCallback, useMemo } from 'react'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -18,15 +18,19 @@ export enum ApprovalState {
   APPROVED = 'APPROVED',
 }
 
-function useApprovalStateForSpender(
-  amountToApprove: CurrencyAmount<Currency> | undefined,
-  spender: string | undefined,
-  useIsPendingApproval: (token?: Token, spender?: string) => boolean,
-): ApprovalState {
+function useApprovalStateForSpender({
+  amountToApprove,
+  spender,
+  useIsPendingApproval,
+}: {
+  amountToApprove?: CurrencyAmount<Currency>
+  spender?: string
+  useIsPendingApproval: (token?: Token, spender?: string) => boolean
+}): ApprovalState {
   const account = useAccount()
-  const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
+  const token = amountToApprove?.currency.isToken ? amountToApprove.currency : undefined
 
-  const { tokenAllowance } = useTokenAllowance(token, account.address, spender)
+  const { tokenAllowance } = useTokenAllowance({ token, owner: account.address, spender })
   const pendingApproval = useIsPendingApproval(token, spender)
 
   return useMemo(() => {
@@ -50,11 +54,15 @@ function useApprovalStateForSpender(
   }, [amountToApprove, pendingApproval, spender, tokenAllowance])
 }
 
-export function useApproval(
-  amountToApprove: CurrencyAmount<Currency> | undefined,
-  spender: string | undefined,
-  useIsPendingApproval: (token?: Token, spender?: string) => boolean,
-): [
+export function useApproval({
+  amountToApprove,
+  spender,
+  useIsPendingApproval,
+}: {
+  amountToApprove?: CurrencyAmount<Currency>
+  spender?: string
+  useIsPendingApproval: (token?: Token, spender?: string) => boolean
+}): [
   ApprovalState,
   () => Promise<
     | { response: TransactionResponse; tokenAddress: string; spenderAddress: string; amount: CurrencyAmount<Currency> }
@@ -62,12 +70,19 @@ export function useApproval(
   >,
 ] {
   const { chainId } = useAccount()
-  const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
+  const token = amountToApprove?.currency.isToken ? amountToApprove.currency : undefined
 
   // check the current approval status
-  const approvalState = useApprovalStateForSpender(amountToApprove, spender, useIsPendingApproval)
+  const approvalState = useApprovalStateForSpender({
+    amountToApprove,
+    spender,
+    useIsPendingApproval,
+  })
 
-  const tokenContract = useTokenContract(token?.address, undefined, token?.chainId)
+  const tokenContract = useTokenContract({
+    tokenAddress: token?.address,
+    chainId: token?.chainId,
+  })
 
   const approve = useCallback(async () => {
     function logFailure(error: Error | string): undefined {
@@ -108,28 +123,31 @@ export function useApproval(
       return tokenContract.estimateGas.approve(spender, amountToApprove.quotient.toString())
     })
 
-    return tokenContract
-      .approve(spender, useExact ? amountToApprove.quotient.toString() : MaxUint256, {
-        gasLimit: calculateGasMargin(estimatedGas),
-      })
-      .then((response) => {
-        const eventProperties = {
-          chain_id: chainId,
-          token_symbol: token?.symbol,
-          token_address: getTokenAddress(token),
-        }
-        sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
-        return {
-          response,
-          tokenAddress: token.address,
-          spenderAddress: spender,
-          amount: amountToApprove,
-        }
-      })
-      .catch((error: Error) => {
-        logFailure(error)
-        throw error
-      })
+    return (
+      tokenContract
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        .approve(spender, useExact ? amountToApprove.quotient.toString() : MaxUint256, {
+          gasLimit: calculateGasMargin(estimatedGas),
+        })
+        .then((response) => {
+          const eventProperties = {
+            chain_id: chainId,
+            token_symbol: token.symbol,
+            token_address: getTokenAddress(token),
+          }
+          sendAnalyticsEvent(InterfaceEventName.ApproveTokenTxnSubmitted, eventProperties)
+          return {
+            response,
+            tokenAddress: token.address,
+            spenderAddress: spender,
+            amount: amountToApprove,
+          }
+        })
+        .catch((error: Error) => {
+          logFailure(error)
+          throw error
+        })
+    )
   }, [approvalState, token, tokenContract, amountToApprove, spender, chainId])
 
   return [approvalState, approve]

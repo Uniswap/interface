@@ -62,11 +62,15 @@ const getNameSearchPattern = (
  * @param chainFilter chain id to keep
  * @param searchFilter filter to apply to currency adddress, name, and symbol
  */
-export function filter(
-  tokenOptions: TokenOption[] | null,
-  chainFilter: UniverseChainId | null,
-  searchFilter?: string,
-): TokenOption[] {
+export function filter({
+  tokenOptions,
+  chainFilter,
+  searchFilter,
+}: {
+  tokenOptions: TokenOption[] | null
+  chainFilter: UniverseChainId | null
+  searchFilter?: string
+}): TokenOption[] {
   if (!tokenOptions || !tokenOptions.length) {
     return []
   }

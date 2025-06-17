@@ -59,7 +59,7 @@ export function SmartWalletNudgesProvider({ children }: { children: ReactNode })
   const delegationStatus = useSmartWalletDelegationStatus({ overrideAddress: last5792DappInfo?.activeConnectedAddress })
   const hasShownNudge = useSelector((state: WalletState) =>
     last5792DappInfo
-      ? selectHasShownEip5792Nudge(state, last5792DappInfo?.activeConnectedAddress, last5792DappInfo?.url)
+      ? selectHasShownEip5792Nudge(state, last5792DappInfo.activeConnectedAddress, last5792DappInfo.url)
       : false,
   )
 
@@ -72,7 +72,7 @@ export function SmartWalletNudgesProvider({ children }: { children: ReactNode })
         icon: last5792DappInfo.iconUrl,
         name: last5792DappInfo.displayName || extractUrlHost(last5792DappInfo.url),
       })
-      openModal(ModalName.PostSwapSmartWalletNudge)
+      openModal(ModalName.SmartWalletNudge)
       dispatch(
         setHasShown5792Nudge({
           walletAddress: last5792DappInfo.activeConnectedAddress,

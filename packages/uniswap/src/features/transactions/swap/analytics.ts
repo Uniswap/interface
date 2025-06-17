@@ -1,4 +1,3 @@
-import { SwapEventName } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -11,6 +10,7 @@ import { Address, Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapRouting, SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
@@ -147,7 +147,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
     trade: { trade },
   } = derivedSwapInfo
 
-  const quoteId = trade?.quote?.requestId
+  const quoteId = trade?.quote.requestId
 
   const account = useAccountMeta()
 
@@ -162,7 +162,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
     }
 
     sendAnalyticsEvent(
-      SwapEventName.SWAP_QUOTE_RECEIVED,
+      SwapEventName.SwapQuoteReceived,
       getBaseTradeAnalyticsProperties({
         formatter,
         trade,
@@ -206,7 +206,7 @@ export function getBaseTradeAnalyticsProperties({
   includesDelegation?: boolean
   isSmartWalletTransaction?: boolean
 }): SwapTradeBaseProperties {
-  const portionAmount = getClassicQuoteFromResponse(trade?.quote)?.portionAmount
+  const portionAmount = getClassicQuoteFromResponse(trade.quote)?.portionAmount
 
   const feeCurrencyAmount = getCurrencyAmount({
     value: portionAmount,
@@ -214,7 +214,7 @@ export function getBaseTradeAnalyticsProperties({
     currency: trade.outputAmount.currency,
   })
 
-  const classicQuote = getClassicQuoteFromResponse(trade?.quote)
+  const classicQuote = getClassicQuoteFromResponse(trade.quote)
 
   const finalOutputAmount = feeCurrencyAmount ? trade.outputAmount.subtract(feeCurrencyAmount) : trade.outputAmount
 
@@ -228,7 +228,7 @@ export function getBaseTradeAnalyticsProperties({
     token_out_symbol: trade.outputAmount.currency.symbol,
     token_in_address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
     token_out_address: getCurrencyAddressForAnalytics(trade.outputAmount.currency),
-    price_impact_basis_points: isClassic(trade) ? trade.priceImpact?.multiply(100).toSignificant() : undefined,
+    price_impact_basis_points: isClassic(trade) ? trade.priceImpact.multiply(100).toSignificant() : undefined,
     chain_id:
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
         ? trade.inputAmount.currency.chainId
@@ -248,13 +248,13 @@ export function getBaseTradeAnalyticsProperties({
       trade.slippageTolerance !== undefined ? parseFloat(trade.slippageTolerance.toFixed(2)) : undefined,
     allowed_slippage_basis_points: trade.slippageTolerance ? trade.slippageTolerance * 100 : undefined,
     fee_amount: portionAmount,
-    requestId: trade.quote?.requestId,
-    ura_request_id: trade.quote?.requestId,
-    ura_block_number: isClassic(trade) ? trade.quote?.quote.blockNumber : undefined,
+    requestId: trade.quote.requestId,
+    ura_request_id: trade.quote.requestId,
+    ura_block_number: isClassic(trade) ? trade.quote.quote.blockNumber : undefined,
     quoteId: classicQuote?.quoteId,
     transactionOriginType: TransactionOriginType.Internal,
     swap_quote_block_number: classicQuote?.blockNumber,
-    estimated_network_fee_usd: isClassic(trade) ? trade.quote?.quote.gasFeeUSD : undefined,
+    estimated_network_fee_usd: isClassic(trade) ? trade.quote.quote.gasFeeUSD : undefined,
     fee_usd: currencyOutAmountUSD
       ? getSwapFeeUsd({
           trade,
@@ -268,7 +268,7 @@ export function getBaseTradeAnalyticsProperties({
     token_out_amount_min: trade.minimumAmountOut(slippagePercent).toExact(),
     token_in_detected_tax: parseFloat(trade.inputTax.toFixed(2)),
     token_out_detected_tax: parseFloat(trade.outputTax.toFixed(2)),
-    simulation_failure_reasons: isClassic(trade) ? trade.quote?.quote.txFailureReasons : undefined,
+    simulation_failure_reasons: isClassic(trade) ? trade.quote.quote.txFailureReasons : undefined,
     ...getRouteAnalyticsData(trade),
     is_batch: isBatched,
     included_permit_transaction_step: includedPermitTransactionStep,
@@ -299,7 +299,7 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
 
   const slippageTolerance = transactionSettings.customSlippageTolerance ?? transactionSettings.autoSlippageTolerance
 
-  const portionAmount = getClassicQuoteFromResponse(derivedSwapInfo.trade?.trade?.quote)?.portionAmount
+  const portionAmount = getClassicQuoteFromResponse(derivedSwapInfo.trade.trade?.quote)?.portionAmount
 
   const feeCurrencyAmount = getCurrencyAmount({
     value: portionAmount,
@@ -316,10 +316,9 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
     ...trace,
     token_in_symbol: inputCurrencyAmount?.currency.symbol,
     token_out_symbol: outputCurrencyAmount?.currency.symbol,
-    token_in_address: inputCurrencyAmount ? getCurrencyAddressForAnalytics(inputCurrencyAmount?.currency) : '',
-    token_out_address: outputCurrencyAmount ? getCurrencyAddressForAnalytics(outputCurrencyAmount?.currency) : '',
-    price_impact_basis_points:
-      trade && isClassic(trade) ? trade?.priceImpact?.multiply(100)?.toSignificant() : undefined,
+    token_in_address: inputCurrencyAmount ? getCurrencyAddressForAnalytics(inputCurrencyAmount.currency) : '',
+    token_out_address: outputCurrencyAmount ? getCurrencyAddressForAnalytics(outputCurrencyAmount.currency) : '',
+    price_impact_basis_points: trade && isClassic(trade) ? trade.priceImpact.multiply(100).toSignificant() : undefined,
     estimated_network_fee_usd: undefined,
     chain_id: chainId,
     token_in_amount: inputCurrencyAmount?.toExact() ?? '',
@@ -358,8 +357,8 @@ export function logSwapQuoteFetch({
 
     performanceMetrics = { time_to_first_quote_request, time_to_first_quote_request_since_first_input }
   }
-  sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_FETCH, { chainId, isQuickRoute, ...performanceMetrics })
-  logger.info('analytics', 'logSwapQuoteFetch', SwapEventName.SWAP_QUOTE_FETCH, {
+  sendAnalyticsEvent(SwapEventName.SwapQuoteFetch, { chainId, isQuickRoute, ...performanceMetrics })
+  logger.info('analytics', 'logSwapQuoteFetch', SwapEventName.SwapQuoteFetch, {
     chainId,
     // we explicitly log it here to show on Datadog dashboard
     chainLabel: getChainLabel(chainId),

@@ -48,11 +48,15 @@ import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 
 const PADDING_WIDTH = isExtension ? '$none' : '$spacing16'
 
-const isProfileMetadataEdited = (
-  loading: boolean,
-  updatedMetadata: ProfileMetadata,
-  initialMetadata?: ProfileMetadata,
-): boolean => {
+function isProfileMetadataEdited({
+  loading,
+  updatedMetadata,
+  initialMetadata,
+}: {
+  loading: boolean
+  updatedMetadata: ProfileMetadata
+  initialMetadata?: ProfileMetadata
+}): boolean {
   return (
     !loading &&
     (isFieldEdited(initialMetadata?.avatar, updatedMetadata.avatar) ||
@@ -143,11 +147,11 @@ export function EditUnitagProfileContent({
     setTwitterInput(normalizedInput)
   }
 
-  const profileMetadataEdited = isProfileMetadataEdited(
-    updateResponseLoading || isSaving,
+  const profileMetadataEdited = isProfileMetadataEdited({
+    loading: updateResponseLoading || isSaving,
     updatedMetadata,
-    unitagMetadata,
-  )
+    initialMetadata: unitagMetadata,
+  })
 
   const { colors: avatarColors } = useExtractedColors(avatarImageUri)
 
@@ -200,8 +204,7 @@ export function EditUnitagProfileContent({
         return
       }
 
-      const uploadedNewAvatar = success && !skipped
-      await updateProfileMetadata(uploadedNewAvatar)
+      await updateProfileMetadata(!skipped)
     } catch (e) {
       logger.error(e, {
         tags: { file: 'EditUnitagProfileScreen', function: 'onPressSaveChanges' },

@@ -53,11 +53,7 @@ import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
-import {
-  DatadogSessionSampleRateKey,
-  DatadogSessionSampleRateValType,
-  DynamicConfigs,
-} from 'uniswap/src/features/gating/configs'
+import { DatadogSessionSampleRateKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
@@ -141,15 +137,11 @@ function App(): JSX.Element | null {
 
   const onStatsigInit = (): void => {
     setDatadogSessionSampleRate(
-      getDynamicConfigValue<
-        DynamicConfigs.DatadogSessionSampleRate,
-        DatadogSessionSampleRateKey,
-        DatadogSessionSampleRateValType
-      >(
-        DynamicConfigs.DatadogSessionSampleRate,
-        DatadogSessionSampleRateKey.Rate,
-        MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE,
-      ),
+      getDynamicConfigValue({
+        config: DynamicConfigs.DatadogSessionSampleRate,
+        key: DatadogSessionSampleRateKey.Rate,
+        defaultValue: MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE,
+      }),
     )
   }
 
@@ -336,7 +328,7 @@ function DataUpdaters(): JSX.Element {
   const { code } = useAppFiatCurrencyInfo()
 
   // Refreshes widgets when bringing app to foreground
-  useAppStateTrigger('background', 'active', processWidgetEvents)
+  useAppStateTrigger({ from: 'background', to: 'active', callback: processWidgetEvents })
 
   useEffect(() => {
     setFavoritesUserDefaults(favoriteTokens)

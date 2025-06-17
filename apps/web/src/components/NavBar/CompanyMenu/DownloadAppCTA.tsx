@@ -1,4 +1,3 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { MobileAppLogo } from 'components/Icons/MobileAppLogo'
 import { useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
 import { useAccount } from 'hooks/useAccount'
@@ -7,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
 import { Anchor, Flex, TextProps, styled, useIsTouchDevice } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { openDownloadApp } from 'utils/openDownloadApp'
 
@@ -53,8 +52,8 @@ export function DownloadApp({ onClick }: { onClick?: () => void }) {
   return (
     <Trace
       logPress
-      element={InterfaceElementName.UNISWAP_WALLET_NAVBAR_MENU_DOWNLOAD_BUTTON}
-      properties={{ connector_id: account?.connector?.id }}
+      element={ElementName.UniswapWalletNavbarMenuDownloadButton}
+      properties={{ connector_id: account.connector?.id }}
     >
       <DownloadCTA
         isMobile={isTouchDevice || isMobileDrawer}
@@ -63,7 +62,7 @@ export function DownloadApp({ onClick }: { onClick?: () => void }) {
             onClick()
           }
           if (isWebIOS || isWebAndroid) {
-            openDownloadApp({ element: InterfaceElementName.UNISWAP_WALLET_NAVBAR_MENU_DOWNLOAD_BUTTON })
+            openDownloadApp({ element: ElementName.UniswapWalletNavbarMenuDownloadButton })
           } else {
             openGetTheAppModal()
           }

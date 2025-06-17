@@ -12,11 +12,15 @@ export interface TokenApprovalTransactionStep extends OnChainTransactionFields {
   amount: string
 }
 
-export function createApprovalTransactionStep(
-  txRequest: ValidatedTransactionRequest | undefined,
-  amountIn?: CurrencyAmount<Currency>,
-  pair?: [Currency, Currency],
-): TokenApprovalTransactionStep | undefined {
+export function createApprovalTransactionStep({
+  txRequest,
+  amountIn,
+  pair,
+}: {
+  txRequest?: ValidatedTransactionRequest
+  amountIn?: CurrencyAmount<Currency>
+  pair?: [Currency, Currency]
+}): TokenApprovalTransactionStep | undefined {
   if (!txRequest?.data || !amountIn) {
     return undefined
   }

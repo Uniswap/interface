@@ -10,7 +10,6 @@ import { Field } from 'state/mint/actions'
 import { MintState } from 'state/mint/reducer'
 import { Field as FieldV3 } from 'state/mint/v3/actions'
 import { FullRange, MintState as MintV3State } from 'state/mint/v3/reducer'
-import { quickRouteApi } from 'state/routing/quickRouteSlice'
 import { routingApi } from 'state/routing/slice'
 import { RouterPreference } from 'state/routing/types'
 import { SignatureState } from 'state/signatures/reducer'
@@ -70,7 +69,6 @@ type ExpectedAppState = CombinedState<{
   readonly mintV3: MintV3State
   readonly logs: LogsState
   readonly [routingApi.reducerPath]: ReturnType<typeof routingApi.reducer>
-  readonly [quickRouteApi.reducerPath]: ReturnType<typeof quickRouteApi.reducer>
 
   // Uniswap State
   readonly [fiatOnRampAggregatorApi.reducerPath]: ReturnType<typeof fiatOnRampAggregatorApi.reducer>

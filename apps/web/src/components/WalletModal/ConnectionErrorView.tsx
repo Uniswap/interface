@@ -30,21 +30,21 @@ export default function ConnectionErrorView() {
   const connection = useConnect()
 
   const retry = useCallback(() => {
-    const connector = connection?.variables?.connector
-    connection?.reset()
+    const connector = connection.variables?.connector
+    connection.reset()
 
     if (!connector) {
       return
     }
 
-    connection?.connect({ connector })
+    connection.connect({ connector })
   }, [connection])
 
-  return connection?.error ? (
+  return connection.error ? (
     <Modal
       name={ModalName.ConnectionError}
-      isModalOpen={Boolean(connection?.error)}
-      onClose={connection?.reset}
+      isModalOpen={Boolean(connection.error)}
+      onClose={connection.reset}
       padding={0}
     >
       <Wrapper>
@@ -66,7 +66,7 @@ export default function ConnectionErrorView() {
             p="$none"
             mt="$spacing20"
             // Reset connection to prevent being stuck in an error state
-            onPress={connection?.reset}
+            onPress={connection.reset}
           >
             <Trans i18nKey="common.close" />
           </Button>

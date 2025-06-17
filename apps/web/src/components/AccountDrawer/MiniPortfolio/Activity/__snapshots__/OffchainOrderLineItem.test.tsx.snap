@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`OffchainOrderLineItem should render type EXCHANGE_RATE 1`] = `
+exports[`OffchainOrderLineItem > should render type EXCHANGE_RATE 1`] = `
 <DocumentFragment>
   .c0 {
   color: #131313;
@@ -88,7 +88,7 @@ exports[`OffchainOrderLineItem should render type EXCHANGE_RATE 1`] = `
 </DocumentFragment>
 `;
 
-exports[`OffchainOrderLineItem should render type NETWORK_COST 1`] = `
+exports[`OffchainOrderLineItem > should render type NETWORK_COST 1`] = `
 <DocumentFragment>
   .c0 {
   color: #131313;
@@ -136,7 +136,7 @@ exports[`OffchainOrderLineItem should render type NETWORK_COST 1`] = `
 </DocumentFragment>
 `;
 
-exports[`OffchainOrderLineItem should render type TRANSACTION_ID 1`] = `
+exports[`OffchainOrderLineItem > should render type TRANSACTION_ID 1`] = `
 <DocumentFragment>
   .c0 {
   color: #131313;

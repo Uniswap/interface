@@ -2,24 +2,25 @@ import 'test-utils/tokens/mocks'
 
 import { Percent } from '@uniswap/sdk-core'
 import { ExploreTopPoolTable } from 'components/Pools/PoolTable/PoolTable'
-import Router from 'react-router-dom'
 import { useExploreContextTopPools } from 'state/explore/topPools'
 import { mocked } from 'test-utils/mocked'
-import { validParams, validRestPoolToken0, validRestPoolToken1 } from 'test-utils/pools/fixtures'
+import { validRestPoolToken0, validRestPoolToken1 } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-jest.mock('state/explore/topPools')
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useParams: jest.fn(),
-}))
+vi.mock('state/explore/topPools')
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom')
+  return {
+    ...actual,
+    default: actual,
+    useParams: vi
+      .fn()
+      .mockReturnValue({ poolAddress: '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640', chainName: 'ethereum' }),
+  }
+})
 
 describe('PoolTable', () => {
-  beforeEach(() => {
-    jest.spyOn(Router, 'useParams').mockReturnValue(validParams)
-  })
-
   it('renders loading state', () => {
     mocked(useExploreContextTopPools).mockReturnValue({
       isLoading: true,

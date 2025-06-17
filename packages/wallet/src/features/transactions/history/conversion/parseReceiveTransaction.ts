@@ -1,3 +1,4 @@
+import { OnChainTransaction, SpamCode as RestSpamCode } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { SpamCode } from 'uniswap/src/data/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import {
@@ -6,6 +7,10 @@ import {
   TransactionListQueryResponse,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  AssetCase,
+  mapTokenTypeToAssetType,
+} from 'wallet/src/features/transactions/history/conversion/extractOnChainTransactionDetails'
 import {
   deriveCurrencyAmountFromAssetResponse,
   getAddressFromAsset,
@@ -19,7 +24,7 @@ export default function parseReceiveTransaction(
     return undefined
   }
 
-  const change = transaction.details.assetChanges?.[0]
+  const change = transaction.details.assetChanges[0]
 
   if (!change) {
     return undefined
@@ -27,33 +32,31 @@ export default function parseReceiveTransaction(
 
   // Found NFT transfer
   if (change.__typename === 'NftTransfer') {
-    if (change.nftStandard) {
-      const assetType = change.nftStandard === 'ERC1155' ? AssetType.ERC1155 : AssetType.ERC721
-      const sender = change.sender
-      const name = change.asset?.name
-      const tokenAddress = change.asset.nftContract?.address
-      const collectionName = change.asset?.collection?.name
-      const imageURL = change.asset.image?.url
-      const tokenId = change.asset.tokenId
-      const isSpam = change.asset?.isSpam ?? false
+    const assetType = change.nftStandard === 'ERC1155' ? AssetType.ERC1155 : AssetType.ERC721
+    const sender = change.sender
+    const name = change.asset.name
+    const tokenAddress = change.asset.nftContract?.address
+    const collectionName = change.asset.collection?.name
+    const imageURL = change.asset.image?.url
+    const tokenId = change.asset.tokenId
+    const isSpam = change.asset.isSpam ?? false
 
-      if (!(sender && tokenAddress && collectionName && imageURL && name && tokenId)) {
-        return undefined
-      }
-      return {
-        type: TransactionType.Receive,
-        assetType,
-        tokenAddress,
-        sender,
-        nftSummaryInfo: {
-          name,
-          collectionName,
-          imageURL,
-          tokenId,
-          address: tokenAddress,
-        },
-        isSpam,
-      }
+    if (!(sender && tokenAddress && collectionName && imageURL && name && tokenId)) {
+      return undefined
+    }
+    return {
+      type: TransactionType.Receive,
+      assetType,
+      tokenAddress,
+      sender,
+      nftSummaryInfo: {
+        name,
+        collectionName,
+        imageURL,
+        tokenId,
+        address: tokenAddress,
+      },
+      isSpam,
     }
   }
 
@@ -67,13 +70,13 @@ export default function parseReceiveTransaction(
       tokenStandard: change.tokenStandard,
     })
 
-    const currencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
-      change.tokenStandard,
-      change.asset.chain,
-      change.asset.address,
-      change.asset.decimals,
-      change.quantity,
-    )
+    const currencyAmountRaw = deriveCurrencyAmountFromAssetResponse({
+      tokenStandard: change.tokenStandard,
+      chain: change.asset.chain,
+      address: change.asset.address,
+      decimals: change.asset.decimals,
+      quantity: change.quantity,
+    })
 
     const transactedUSDValue = parseUSDValueFromAssetChange(change.transactedValue)
 
@@ -95,5 +98,64 @@ export default function parseReceiveTransaction(
     } as ReceiveTokenTransactionInfo
   }
 
+  return undefined
+}
+
+/**
+ * Parse a receive transaction from the REST API
+ */
+export function parseRestReceiveTransaction(transaction: OnChainTransaction): ReceiveTokenTransactionInfo | undefined {
+  const { transfers } = transaction
+  const firstTransfer = transfers[0]
+
+  if (!firstTransfer) {
+    return undefined
+  }
+
+  if (firstTransfer.asset.case === AssetCase.Nft) {
+    const nftAsset = firstTransfer.asset.value
+    const sender = firstTransfer.from
+    const tokenAddress = nftAsset.address
+    const tokenId = nftAsset.tokenId
+
+    if (!(sender && tokenAddress && tokenId)) {
+      return undefined
+    }
+
+    return {
+      type: TransactionType.Receive,
+      assetType: mapTokenTypeToAssetType(nftAsset.type),
+      tokenAddress,
+      sender,
+      nftSummaryInfo: {
+        name: nftAsset.name,
+        collectionName: nftAsset.collectionName,
+        imageURL: nftAsset.imageUrl,
+        tokenId,
+        address: tokenAddress,
+      },
+      isSpam: nftAsset.isSpam,
+    }
+  }
+
+  if (firstTransfer.asset.case === AssetCase.Token) {
+    const tokenAsset = firstTransfer.asset.value
+    const tokenAddress = tokenAsset.address
+    const sender = firstTransfer.from
+
+    if (!(sender && tokenAddress)) {
+      return undefined
+    }
+
+    return {
+      type: TransactionType.Receive,
+      assetType: AssetType.Currency,
+      tokenAddress,
+      sender,
+      currencyAmountRaw: firstTransfer.amount?.raw,
+      transactedUSDValue: undefined,
+      isSpam: tokenAsset.metadata?.spamCode === RestSpamCode.SPAM,
+    }
+  }
   return undefined
 }

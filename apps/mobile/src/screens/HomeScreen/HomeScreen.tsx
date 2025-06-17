@@ -53,7 +53,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
-import { ModalName, SectionName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
+import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -111,7 +111,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   const { trigger } = useBiometricPrompt()
 
-  const [routeTabIndex, setRouteTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
+  const [routeTabIndex, setRouteTabIndex] = useState(props?.route.params?.tab ?? HomeScreenTabIndex.Tokens)
   // Ensures that tabIndex has the proper value between the empty state and non-empty state
   const tabIndex = showEmptyWalletState ? HomeScreenTabIndex.Tokens : routeTabIndex
 
@@ -248,7 +248,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     ],
   )
 
-  const { sync } = useScrollSync(currentTabIndex, scrollPairs, headerConfig)
+  const { sync } = useScrollSync({ currentTabIndex, scrollPairs, headerConfig })
 
   const onPressViewOnlyLabel = useCallback(() => navigate(ModalName.ViewOnlyExplainer), [])
 
@@ -298,6 +298,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     return (
       <Flex borderRadius="$rounded16" width="100%" aspectRatio={16 / 9} overflow="hidden" mb="$spacing8">
         <Video
+          disableFocus={true}
           source={SMART_WALLET_UPGRADE_VIDEO}
           poster={SMART_WALLET_UPGRADE_FALLBACK}
           resizeMode="cover"
@@ -426,11 +427,11 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       route,
     }: {
       route: {
-        key: SectionNameType
+        key: SectionName
         title: string
       }
     }) => {
-      switch (route?.key) {
+      switch (route.key) {
         case SectionName.HomeTokensTab:
           return (
             <Freeze freeze={tabIndex !== HomeScreenTabIndex.Tokens && isHomeScreenBlur}>
@@ -440,7 +441,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
                     ref={tokensTabScrollRef}
                     containerProps={sharedProps}
                     headerHeight={headerHeight}
-                    owner={activeAccount?.address}
+                    owner={activeAccount.address}
                     refreshing={refreshing}
                     scrollHandler={tokensTabScrollHandler}
                     testID={TestID.TokensTab}
@@ -457,7 +458,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
                 ref={nftsTabScrollRef}
                 containerProps={sharedProps}
                 headerHeight={headerHeight}
-                owner={activeAccount?.address}
+                owner={activeAccount.address}
                 refreshing={refreshing}
                 scrollHandler={nftsTabScrollHandler}
                 testID={TestID.NFTsTab}
@@ -473,7 +474,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
                 ref={activityTabScrollRef}
                 containerProps={sharedProps}
                 headerHeight={headerHeight}
-                owner={activeAccount?.address}
+                owner={activeAccount.address}
                 refreshing={refreshing}
                 scrollHandler={activityTabScrollHandler}
                 testID={TestID.ActivityTab}
@@ -487,7 +488,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
               ref={exploreTabScrollRef}
               containerProps={sharedProps}
               headerHeight={headerHeight}
-              owner={activeAccount?.address}
+              owner={activeAccount.address}
               refreshing={refreshing}
               scrollHandler={exploreTabScrollHandler}
               onRefresh={onRefreshHomeData}
@@ -503,7 +504,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       tokensTabScrollRef,
       sharedProps,
       headerHeight,
-      activeAccount?.address,
+      activeAccount.address,
       refreshing,
       tokensTabScrollHandler,
       onRefreshHomeData,
@@ -554,7 +555,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         return
       }
 
-      navigate(ModalName.PostSwapSmartWalletNudge, {
+      navigate(ModalName.SmartWalletNudge, {
         onEnableSmartWallet: async () => {
           const successAction = (): void => {
             dispatch(setSmartWalletConsent({ address: activeAccount.address, smartWalletConsent: true }))

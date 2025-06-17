@@ -2,7 +2,7 @@
 import { CurrencyAmount, Token, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import type { ImageSourcePropType } from 'react-native'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { Chain as WagmiChain } from 'wagmi/chains'
 
 export function isUniverseChainId(chainId?: number | UniverseChainId | null): chainId is UniverseChainId {
@@ -110,7 +110,7 @@ export interface UniverseChainInfo extends WagmiChain {
   readonly blockWaitMsBeforeWarning: number | undefined
   readonly bridge?: string
   readonly docs: string
-  readonly elementName: ElementNameType
+  readonly elementName: ElementName
   readonly explorer: {
     name: string
     url: `${string}/`

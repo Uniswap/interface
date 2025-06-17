@@ -22,10 +22,14 @@ export interface SummaryItemProps {
 
 export interface SwapSummaryCallbacks {
   useLatestSwapTransaction: (address: string) => TransactionDetails | undefined
-  useSwapFormTransactionState: (
-    address: Address | undefined,
-    chainId: UniverseChainId | undefined,
-    txId: string | undefined,
-  ) => TransactionState | undefined
+  useSwapFormTransactionState: ({
+    address,
+    chainId,
+    txId,
+  }: {
+    address?: Address
+    chainId?: UniverseChainId
+    txId?: string
+  }) => TransactionState | undefined
   onRetryGenerator?: (swapFormState: TransactionState | undefined) => () => void
 }

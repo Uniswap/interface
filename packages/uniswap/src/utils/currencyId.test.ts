@@ -1,6 +1,6 @@
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI } from 'uniswap/src/constants/tokens'
-import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import {
@@ -43,6 +43,7 @@ describe('currencyId', () => {
 
   it.each([[UniverseChainId.Mainnet, DAI.address, `${UniverseChainId.Mainnet}-${DAI.address}`]])(
     'buildCurrencyId builds correct ID for chainId=%s + address=%s = %s',
+    // eslint-disable-next-line max-params
     (chainId, address, expectedId) => {
       expect(buildCurrencyId(chainId, address)).toEqual(expectedId)
     },
@@ -54,6 +55,7 @@ describe('currencyId', () => {
     [currencyId(DAI), currencyId(ETH), false],
   ])(
     'areCurrencyIdsEqual returns correct comparison for currencyId1=%s and currencyId2=%s = %s',
+    // eslint-disable-next-line max-params
     (currencyId1, currencyId2, expected) => {
       expect(areCurrencyIdsEqual(currencyId1, currencyId2)).toBe(expected)
     },
@@ -91,6 +93,7 @@ describe('currencyId', () => {
     [UniverseChainId.Mainnet, DEFAULT_NATIVE_ADDRESS, true],
   ])(
     'isNativeCurrencyAddress returns correct result for chainId=%s + address=%s = %s',
+    // eslint-disable-next-line max-params
     (chainId, address, expected) => {
       expect(isNativeCurrencyAddress(chainId, address)).toEqual(expected)
     },

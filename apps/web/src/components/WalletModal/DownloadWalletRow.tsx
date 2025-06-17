@@ -1,4 +1,3 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import { Wiggle } from 'components/animations/Wiggle'
 import { useTranslation } from 'react-i18next'
@@ -8,6 +7,7 @@ import { RightArrow } from 'ui/src/components/icons/RightArrow'
 import { GoogleChromeLogo } from 'ui/src/components/logos/GoogleChromeLogo'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { isMobileWeb, isWebAndroid, isWebIOS } from 'utilities/src/platform'
 
 export function DownloadWalletRow({
@@ -36,7 +36,7 @@ export function DownloadWalletRow({
         <Text variant={titleTextVariant} color="$accent1" mr="auto" $md={{ variant: 'buttonLabel3' }}>
           {isMobileWeb ? t('common.getUniswapWallet.mobile') : t('common.getUniswapWallet')}
         </Text>
-        <Trace logPress element={InterfaceElementName.EXTENSION_DOWNLOAD_BUTTON}>
+        <Trace logPress element={ElementName.ExtensionDownloadButton}>
           <Anchor
             href={uniswapUrls.chromeExtension}
             target="_blank"
@@ -51,7 +51,7 @@ export function DownloadWalletRow({
           </Anchor>
         </Trace>
         {(isWebIOS || !isMobileWeb) && (
-          <Trace logPress element={InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON}>
+          <Trace logPress element={ElementName.UniswapWalletModalDownloadButton}>
             <Anchor
               href={uniswapUrls.appStoreDownloadUrl}
               target="_blank"
@@ -66,7 +66,7 @@ export function DownloadWalletRow({
           </Trace>
         )}
         {(isWebAndroid || !isMobileWeb) && (
-          <Trace logPress element={InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON}>
+          <Trace logPress element={ElementName.UniswapWalletModalDownloadButton}>
             <Anchor
               href={uniswapUrls.playStoreDownloadUrl}
               target="_blank"

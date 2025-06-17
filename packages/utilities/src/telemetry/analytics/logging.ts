@@ -1,4 +1,4 @@
-import { isNonJestDev } from 'utilities/src/environment/constants'
+import { isNonTestDev } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
@@ -17,22 +17,22 @@ export function generateAnalyticsLoggers(fileName: string): ErrorLoggers {
       logger.error(error, { tags: { file: fileName, function: 'init' } })
     },
     sendEvent(eventName: string, eventProperties?: Record<string, unknown>): void {
-      if (isNonJestDev) {
+      if (isNonTestDev) {
         logger.info('analytics', 'sendEvent', `[Event: ${eventName}]`, eventProperties ?? {})
       }
     },
     setAllowAnalytics(allow: boolean): void {
-      if (isNonJestDev) {
+      if (isNonTestDev) {
         logger.info('analytics', 'setAnonymous', `user allows analytics: ${allow}`)
       }
     },
     flushEvents(): void {
-      if (isNonJestDev) {
+      if (isNonTestDev) {
         logger.info('analytics', 'flushEvents', 'flushing analytics events')
       }
     },
     setUserProperty(property: string, value: UserPropertyValue): void {
-      if (isNonJestDev) {
+      if (isNonTestDev) {
         logger.info('analytics', 'setUserProperty', `[Property: ${property}]: ${value}`)
       }
     },

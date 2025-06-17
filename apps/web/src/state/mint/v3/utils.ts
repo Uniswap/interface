@@ -10,7 +10,15 @@ import {
 import JSBI from 'jsbi'
 import { convertScientificNotationToNumber } from 'utilities/src/format/convertScientificNotation'
 
-export function tryParsePrice<T extends Currency>(baseToken?: T, quoteToken?: T, value?: string) {
+export function tryParsePrice<T extends Currency>({
+  baseToken,
+  quoteToken,
+  value,
+}: {
+  baseToken?: T
+  quoteToken?: T
+  value?: string
+}): Price<T, T> | undefined {
   if (!baseToken || !quoteToken || !value) {
     return undefined
   }
@@ -24,7 +32,9 @@ export function tryParsePrice<T extends Currency>(baseToken?: T, quoteToken?: T,
 
   const [whole, fraction] = decimalValue.split('.')
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const decimals = fraction?.length ?? 0
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const withoutDecimals = JSBI.BigInt((whole ?? '') + (fraction ?? ''))
 
   return new Price(
@@ -35,17 +45,22 @@ export function tryParsePrice<T extends Currency>(baseToken?: T, quoteToken?: T,
   )
 }
 
-export function tryParseTick(
-  baseToken?: Token,
-  quoteToken?: Token,
-  feeAmount?: FeeAmount,
-  value?: string,
-): number | undefined {
+export function tryParseTick({
+  baseToken,
+  quoteToken,
+  feeAmount,
+  value,
+}: {
+  baseToken?: Maybe<Token>
+  quoteToken?: Maybe<Token>
+  feeAmount?: FeeAmount
+  value?: string
+}): number | undefined {
   if (!baseToken || !quoteToken || !feeAmount || !value) {
     return undefined
   }
 
-  const price = tryParsePrice(baseToken, quoteToken, value)
+  const price = tryParsePrice({ baseToken, quoteToken, value })
 
   if (!price) {
     return undefined

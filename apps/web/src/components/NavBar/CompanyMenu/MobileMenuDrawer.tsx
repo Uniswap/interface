@@ -63,7 +63,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
   const changeView = useCallback(
     (view: PreferencesView) => {
       setSettingsView(view)
-      if (dropdownRef?.current) {
+      if (dropdownRef.current) {
         dropdownRef.current.scroll({
           top: 0,
         })

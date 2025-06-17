@@ -1,4 +1,3 @@
-import { InterfaceModalName } from '@uniswap/analytics-events'
 import { AutoColumn } from 'components/deprecated/Column'
 import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
@@ -20,7 +19,7 @@ export function SwapModal({
   onDismiss: () => void
 }>) {
   return (
-    <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
+    <Trace modal={ModalName.ConfirmSwap}>
       <Modal name={ModalName.SwapReview} isModalOpen onClose={onDismiss} padding={0}>
         <Content>{children}</Content>
       </Modal>

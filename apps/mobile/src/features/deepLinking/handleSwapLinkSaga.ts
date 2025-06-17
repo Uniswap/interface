@@ -3,7 +3,7 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
 import { put } from 'typed-redux-saga'
 import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
-import { ALL_CHAIN_IDS, SUPPORTED_TESTNET_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ALL_CHAIN_IDS, SUPPORTED_TESTNET_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
@@ -84,10 +84,10 @@ const parseAndValidateSwapParams = (url: URL) => {
     throw new Error('No outputCurrencyId')
   }
 
-  const inputChain = currencyIdToChain(inputCurrencyId) as UniverseChainId
+  const inputChain = currencyIdToChain(inputCurrencyId)
   const inputAddress = currencyIdToAddress(inputCurrencyId)
 
-  const outputChain = currencyIdToChain(outputCurrencyId) as UniverseChainId
+  const outputChain = currencyIdToChain(outputCurrencyId)
   const outputAddress = currencyIdToAddress(outputCurrencyId)
 
   if (!inputChain || !inputAddress) {
@@ -98,11 +98,11 @@ const parseAndValidateSwapParams = (url: URL) => {
     throw new Error('Invalid outputCurrencyId. Must be of format `<chainId>-<tokenAddress>`')
   }
 
-  if (!getValidAddress(inputAddress, true)) {
+  if (!getValidAddress({ address: inputAddress, withChecksum: true })) {
     throw new Error('Invalid tokenAddress provided within inputCurrencyId')
   }
 
-  if (!getValidAddress(outputAddress, true)) {
+  if (!getValidAddress({ address: outputAddress, withChecksum: true })) {
     throw new Error('Invalid tokenAddress provided within outputCurrencyId')
   }
 
@@ -127,7 +127,7 @@ const parseAndValidateSwapParams = (url: URL) => {
   const isInputTestnet = SUPPORTED_TESTNET_CHAIN_IDS.includes(inputChain)
   const isOutputTestnet = SUPPORTED_TESTNET_CHAIN_IDS.includes(outputChain)
 
-  if (inputChain && outputChain && isInputTestnet !== isOutputTestnet) {
+  if (isInputTestnet !== isOutputTestnet) {
     throw new Error('Cannot swap between testnet and mainnet')
   }
 

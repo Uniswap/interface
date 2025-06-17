@@ -31,6 +31,7 @@ export const SwapReviewStateContext = createContext<SwapReviewState>({
 
 export const useSwapReviewState = (): SwapReviewState => {
   const context = useContext(SwapReviewStateContext)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!context) {
     throw new Error('SwapReviewStateContext not found')
   }

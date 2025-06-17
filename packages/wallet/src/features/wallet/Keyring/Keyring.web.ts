@@ -1,3 +1,4 @@
+/* eslint-disable max-params */
 /* eslint-disable max-lines */
 import { HDKey } from '@scure/bip32'
 import { Buffer } from 'buffer'
@@ -6,16 +7,13 @@ import { SigningKey, defaultPath, joinSignature } from 'ethers/lib/utils'
 import { logger } from 'utilities/src/logger/logger'
 import { IKeyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import {
-  PBKDF2_PARAMS,
   SecretPayload,
+  addEncryptedCiphertextToSecretPayload,
   convertBase64SeedToCryptoKey,
+  createEmptySecretPayload,
   decodeFromStorage,
   decrypt,
-  encodeForStorage,
-  encrypt,
   exportKey,
-  generateNewIV,
-  generateNewSalt,
   getEncryptionKeyFromPassword,
 } from 'wallet/src/features/wallet/Keyring/crypto'
 import { ENCRYPTION_KEY_STORAGE_KEY, PersistedStorage, prefix } from 'wallet/src/utils/persistedStorage'
@@ -159,7 +157,7 @@ export class WebKeyring implements IKeyring {
         throw new Error('Could not parse secret payload')
       }
 
-      const encryptionKey = await getEncryptionKeyFromPassword(password, secretPayload)
+      const encryptionKey = await getEncryptionKeyFromPassword({ password, secretPayload })
       await this.retrieveMnemonic(secretPayload, encryptionKey, firstMnemonicId)
       const keyBase64 = await exportKey(encryptionKey)
       await this.session.setItem(ENCRYPTION_KEY_STORAGE_KEY, keyBase64)
@@ -190,7 +188,7 @@ export class WebKeyring implements IKeyring {
       if (!secretPayload || !secretPayload.ciphertext) {
         return false
       }
-      const passwordPasswordEncryptionKey = await getEncryptionKeyFromPassword(password, secretPayload)
+      const passwordPasswordEncryptionKey = await getEncryptionKeyFromPassword({ password, secretPayload })
       const passwordPasswordBase64String = await exportKey(passwordPasswordEncryptionKey)
       return currentPasswordBase64String === passwordPasswordBase64String
     } catch (e) {
@@ -240,7 +238,7 @@ export class WebKeyring implements IKeyring {
 
     const address = wallet.address
 
-    const mnemonicId = await this.storeNewMnemonic(mnemonic, password, address, changingPassword)
+    const mnemonicId = await this.storeNewMnemonic({ mnemonic, password, address, forceOverwrite: changingPassword })
     if (!mnemonicId) {
       throw changingPassword
         ? new Error(`${ErrorType.StoreMnemonicError}: Failed to store mnemonic with new password`)
@@ -271,18 +269,23 @@ export class WebKeyring implements IKeyring {
     const mnemonic = newWallet.mnemonic.phrase
     const address = newWallet.address
 
-    if (!(await this.storeNewMnemonic(mnemonic, password, address))) {
+    if (!(await this.storeNewMnemonic({ mnemonic, password, address }))) {
       throw new Error(`${ErrorType.StoreMnemonicError}: Failed to generate and store mnemonic`)
     }
     return address
   }
 
-  private async storeNewMnemonic(
-    mnemonic: string,
-    password: string,
-    address: string,
+  private async storeNewMnemonic({
+    mnemonic,
+    password,
+    address,
     forceOverwrite = false,
-  ): Promise<string | undefined> {
+  }: {
+    mnemonic: string
+    password: string
+    address: string
+    forceOverwrite?: boolean
+  }): Promise<string | undefined> {
     const mnemonicKey = this.keyForMnemonicId(address)
     const mnemonicStorageValue = await this.storage.getItem(mnemonicKey)
 
@@ -292,23 +295,18 @@ export class WebKeyring implements IKeyring {
       return address
     }
 
-    const salt = generateNewSalt()
-    const iv = generateNewIV()
-    const secretPayload: SecretPayload = {
-      ...PBKDF2_PARAMS,
-      iv: encodeForStorage(iv),
-      salt: encodeForStorage(salt),
-    }
-    const encryptionKey = await getEncryptionKeyFromPassword(password, secretPayload)
-    const ciphertext = await encrypt({
+    const secretPayload = await createEmptySecretPayload()
+
+    const encryptionKey = await getEncryptionKeyFromPassword({ password, secretPayload })
+
+    const secretPayloadWithCiphertext = await addEncryptedCiphertextToSecretPayload({
+      secretPayload,
       plaintext: mnemonic,
       encryptionKey,
-      iv,
       additionalData: address,
     })
-    secretPayload.ciphertext = ciphertext
 
-    await this.storage.setItem(mnemonicKey, JSON.stringify(secretPayload))
+    await this.storage.setItem(mnemonicKey, JSON.stringify(secretPayloadWithCiphertext))
     const keyBase64 = await exportKey(encryptionKey)
     await this.session.setItem(ENCRYPTION_KEY_STORAGE_KEY, keyBase64)
 
@@ -499,24 +497,18 @@ export class WebKeyring implements IKeyring {
     const encryptionKey = await convertBase64SeedToCryptoKey(encryptionKeyString)
 
     try {
-      const salt = generateNewSalt()
-      const iv = generateNewIV()
-      const secretPayload: SecretPayload = {
-        ...PBKDF2_PARAMS,
-        iv: encodeForStorage(iv),
-        salt: encodeForStorage(salt),
-      }
-      const ciphertext = await encrypt({
+      const secretPayload = await createEmptySecretPayload()
+
+      const secretPayloadWithCiphertext = await addEncryptedCiphertextToSecretPayload({
+        secretPayload,
         plaintext: privateKey,
         encryptionKey,
-        iv,
         additionalData: address,
       })
-      secretPayload.ciphertext = ciphertext
 
       const newPrivateKeyStorageKey = this.keyForPrivateKey(address)
       logger.debug('Keyring.web', 'storeNewPrivateKey', 'storing new private key')
-      await this.storage.setItem(newPrivateKeyStorageKey, JSON.stringify(secretPayload))
+      await this.storage.setItem(newPrivateKeyStorageKey, JSON.stringify(secretPayloadWithCiphertext))
 
       return address
     } catch (e) {
@@ -554,6 +546,7 @@ export class WebKeyring implements IKeyring {
 
       // validate private key (will throw if invalid)
       const wallet = new Wallet(privateKey)
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!wallet) {
         throw new Error('Invalid private key')
       }

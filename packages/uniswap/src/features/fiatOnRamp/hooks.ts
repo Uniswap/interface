@@ -55,19 +55,29 @@ export function useFormatExactCurrencyAmount(currencyAmount: string, currency: M
     return undefined
   }
 
-  const formattedAmount = getFormattedCurrencyAmount(currency, currencyAmount, formatter, false, ValueType.Exact)
+  const formattedAmount = getFormattedCurrencyAmount({
+    currency,
+    amount: currencyAmount,
+    formatter,
+    valueType: ValueType.Exact,
+  })
 
   // when formattedAmount is not empty it has an empty space in the end
   return formattedAmount === '' ? '0 ' : formattedAmount
 }
 
 /** Returns a new externalTransactionId and a callback to store the transaction. */
-export function useFiatOnRampTransactionCreator(
-  ownerAddress: string,
-  chainId: UniverseChainId,
-  serviceProvider?: string,
-  idSuffix?: string,
-): {
+export function useFiatOnRampTransactionCreator({
+  ownerAddress,
+  chainId,
+  serviceProvider,
+  idSuffix,
+}: {
+  ownerAddress: string
+  chainId: UniverseChainId
+  serviceProvider?: string
+  idSuffix?: string
+}): {
   externalTransactionId: string
   dispatchAddTransaction: ({ isOffRamp }: { isOffRamp: boolean }) => void
 } {
@@ -102,11 +112,15 @@ export function useFiatOnRampTransactionCreator(
   return { externalTransactionId: externalTransactionId.current, dispatchAddTransaction }
 }
 
-export function useMeldFiatCurrencySupportInfo(
-  countryCode: string,
-  skip: boolean = false,
-  rampDirection?: RampDirection,
-): {
+export function useMeldFiatCurrencySupportInfo({
+  countryCode,
+  skip = false,
+  rampDirection,
+}: {
+  countryCode: string
+  skip?: boolean
+  rampDirection?: RampDirection
+}): {
   appFiatCurrencySupportedInMeld: boolean
   meldSupportedFiatCurrency: FiatCurrencyInfo
   supportedFiatCurrencies: FORSupportedFiatCurrency[] | undefined
@@ -204,7 +218,7 @@ export function useFiatOnRampSupportedTokens({
   const error = Boolean(supportedTokensError || currenciesError)
   const refetch = async (): Promise<void> => {
     if (supportedTokensError) {
-      await refetchSupportedTokens?.()
+      await refetchSupportedTokens()
     }
     if (currenciesError) {
       refetchCurrencies?.()
@@ -339,10 +353,10 @@ export function useIsSupportedFiatOnRampCurrency(
     undefined,
     { skip },
   )
-  const { meldSupportedFiatCurrency } = useMeldFiatCurrencySupportInfo(
-    ipCountryData?.countryCode ?? fallbackCountryCode,
+  const { meldSupportedFiatCurrency } = useMeldFiatCurrencySupportInfo({
+    countryCode: ipCountryData?.countryCode ?? fallbackCountryCode,
     skip,
-  )
+  })
   const {
     list: supportedTokensList,
     loading: supportedTokensLoading,

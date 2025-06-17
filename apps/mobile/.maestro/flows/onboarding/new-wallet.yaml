@@ -1,4 +1,6 @@
 appId: com.uniswap.mobile.dev
+tags:
+  - language-agnostic
 ---
 - runFlow: ../../shared-flows/start.yaml
 - tapOn:

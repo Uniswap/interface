@@ -12,7 +12,15 @@ import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__g
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 
 /** Detects transactions from same account with the same nonce and different hash */
-function findCancelTx(localActivity: Activity, remoteMap: ActivityMap, account: string): string | undefined {
+function findCancelTx({
+  localActivity,
+  remoteMap,
+  account,
+}: {
+  localActivity: Activity
+  remoteMap: ActivityMap
+  account: string
+}): string | undefined {
   // handles locally cached tx's that were stored before we started tracking nonces
   if (!localActivity.nonce || localActivity.status !== TransactionStatus.Pending) {
     return undefined
@@ -42,13 +50,13 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
   const txHashes = [...new Set([...Object.keys(localMap), ...Object.keys(remoteMap)])]
 
   return txHashes.reduce((acc: Array<Activity>, hash) => {
-    const localActivity = (localMap?.[hash] ?? {}) as Activity
-    const remoteActivity = (remoteMap?.[hash] ?? {}) as Activity
+    const localActivity = (localMap[hash] ?? {}) as Activity
+    const remoteActivity = (remoteMap[hash] ?? {}) as Activity
 
     if (localActivity.cancelled) {
       // Hides misleading activities caused by cross-chain nonce collisions previously being incorrectly labelled as cancelled txs in redux
       // If there is no remote activity fallback to local activity
-      if (remoteActivity.chainId && localActivity.chainId !== remoteActivity.chainId) {
+      if (localActivity.chainId !== remoteActivity.chainId) {
         acc.push(remoteActivity)
         return acc
       }
@@ -85,7 +93,7 @@ export function useAllActivities(account: string) {
         return
       }
 
-      const cancelHash = findCancelTx(localActivity, remoteMap, account)
+      const cancelHash = findCancelTx({ localActivity, remoteMap, account })
 
       if (cancelHash) {
         updateCancelledTx(localActivity.hash, localActivity.chainId, cancelHash)
@@ -100,12 +108,10 @@ export function useAllActivities(account: string) {
 
 export function useOpenLimitOrders(account: string) {
   const { activities, loading } = useAllActivities(account)
-  const openLimitOrders =
-    activities?.filter(
-      (activity) =>
-        activity.offchainOrderDetails?.type === SignatureType.SIGN_LIMIT &&
-        activity.status === TransactionStatus.Pending,
-    ) ?? []
+  const openLimitOrders = activities.filter(
+    (activity) =>
+      activity.offchainOrderDetails?.type === SignatureType.SIGN_LIMIT && activity.status === TransactionStatus.Pending,
+  )
   return {
     openLimitOrders,
     loading,
@@ -140,7 +146,7 @@ export function useCancelOrdersGasEstimate(orders?: UniswapXOrderDetails[]): Gas
         : undefined,
     [orders],
   )
-  const cancelTransaction = useCreateCancelTransactionRequest(cancelTransactionParams)
+  const cancelTransaction = useCreateCancelTransactionRequest(cancelTransactionParams) ?? undefined
   const gasEstimate = useTransactionGasFee(cancelTransaction, GasSpeed.Fast)
   return gasEstimate
 }

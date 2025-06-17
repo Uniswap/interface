@@ -5,7 +5,6 @@ import { AppTFunction } from 'ui/src/i18n/types'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { ForceUpgradeTranslations } from 'uniswap/src/features/gating/configs'
 import {
-  DEFAULT_LOCALE,
   Language,
   Locale,
   PLATFORM_SUPPORTED_LANGUAGES,
@@ -466,7 +465,7 @@ export function useCurrentLocale(): Locale {
 
   return useMemo(() => {
     if (isInterface) {
-      return urlLocale ?? currentLocale ?? navigatorLocale() ?? DEFAULT_LOCALE
+      return urlLocale ?? currentLocale
     } else {
       return currentLocale
     }

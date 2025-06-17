@@ -1,6 +1,8 @@
+import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PasswordInput } from 'src/app/components/PasswordInput'
+import { PasswordInputWithBiometrics } from 'src/app/components/PasswordInput'
+import { reauthenticateWithBiometricCredential } from 'src/app/features/biometricUnlock/useUnlockWithBiometricCredentialMutation'
 import { Button, Flex, Square, Text, inputStyles, useSporeColors } from 'ui/src'
 import { Lock } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -11,10 +13,12 @@ export function EnterPasswordModal({
   isOpen,
   onNext,
   onClose,
+  shouldReturnPassword = false,
 }: {
   isOpen: boolean
-  onNext: () => void
+  onNext: (password?: string) => void
   onClose: () => void
+  shouldReturnPassword?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -34,8 +38,17 @@ export function EnterPasswordModal({
       setShowPasswordError(true)
       return
     }
-    onNext()
+    onNext(shouldReturnPassword ? password : undefined)
   }
+
+  const { mutate: onPressReauthenticateWithBiometricCredential } = useMutation({
+    mutationFn: reauthenticateWithBiometricCredential,
+    onSuccess: ({ password: credentialPassword }) => {
+      if (credentialPassword) {
+        onNext(shouldReturnPassword ? credentialPassword : undefined)
+      }
+    },
+  })
 
   return (
     <Modal
@@ -51,10 +64,12 @@ export function EnterPasswordModal({
         <Square backgroundColor="$surface2" borderRadius="$rounded12" size="$spacing48">
           <Lock color="$neutral1" size="$icon.24" />
         </Square>
+
         <Text py="$spacing4" textAlign="center" variant="subheading2">
-          {t('settings.setting.recoveryPhrase.password.title')}
+          {t('extension.passwordPrompt.title')}
         </Text>
-        <PasswordInput
+
+        <PasswordInputWithBiometrics
           autoFocus
           backgroundColor={showPasswordError ? '$statusCritical2' : '$surface1'}
           focusStyle={inputStyles.inputFocus}
@@ -65,10 +80,13 @@ export function EnterPasswordModal({
           onSubmitEditing={checkPassword}
           onToggleHideInput={setHideInput}
           {...(showPasswordError && { borderColor: '$statusCritical' })}
+          onPressBiometricUnlock={onPressReauthenticateWithBiometricCredential}
         />
+
         <Text color="$statusCritical" minHeight="$spacing24" textAlign="center" variant="body2">
-          {showPasswordError ? t('setting.recoveryPhrase.remove.password.error') : ''}
+          {showPasswordError ? t('extension.passwordPrompt.error.wrongPassword') : ''}
         </Text>
+
         <Flex row width="100%">
           <Button isDisabled={!password.length} emphasis="primary" onPress={checkPassword}>
             {t('common.button.continue')}

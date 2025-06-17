@@ -16,7 +16,7 @@ export class FetchError extends Error {
 export function isRateLimitFetchError(error: unknown): boolean {
   return (
     error instanceof FetchError &&
-    !!error.response?.status &&
+    !!error.response.status &&
     // This checks for our backend non-standard rate limit error codes.
     error.response.status >= 412 &&
     error.response.status <= 429
@@ -24,5 +24,5 @@ export function isRateLimitFetchError(error: unknown): boolean {
 }
 
 export function is404Error(error: unknown): boolean {
-  return error instanceof FetchError && !!error.response?.status && error.response.status === 404
+  return error instanceof FetchError && !!error.response.status && error.response.status === 404
 }

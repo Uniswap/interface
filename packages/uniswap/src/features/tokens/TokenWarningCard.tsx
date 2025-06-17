@@ -33,14 +33,18 @@ type TokenWarningCardProps = {
   setChecked?: (checked: boolean) => void
 }
 
-function useTokenWarningOverrides(
-  currencyInfo: Maybe<CurrencyInfo>,
-  tokenProtectionWarningOverride?: TokenProtectionWarning,
+function useTokenWarningOverrides({
+  currencyInfo,
+  tokenProtectionWarningOverride,
+  feeOnTransferOverride,
+}: {
+  currencyInfo: Maybe<CurrencyInfo>
+  tokenProtectionWarningOverride?: TokenProtectionWarning
   feeOnTransferOverride?: {
     buyFeePercent?: number
     sellFeePercent?: number
-  },
-): { severity: WarningSeverity; heading: string | null; description: string | null } {
+  }
+}): { severity: WarningSeverity; heading: string | null; description: string | null } {
   const { heading: headingDefault, description: descriptionDefault } = useTokenWarningCardText(currencyInfo)
   const { buyFeePercent, sellFeePercent } = getTokenProtectionFeeOnTransfer(currencyInfo)
 
@@ -79,11 +83,11 @@ export function TokenWarningCard({
   onPress,
 }: TokenWarningCardProps): JSX.Element | null {
   const { t } = useTranslation()
-  const { severity, heading, description } = useTokenWarningOverrides(
+  const { severity, heading, description } = useTokenWarningOverrides({
     currencyInfo,
     tokenProtectionWarningOverride,
     feeOnTransferOverride,
-  )
+  })
   useBlockaidFeeComparisonAnalytics(currencyInfo)
 
   if (!currencyInfo || !severity || !description) {

@@ -12,15 +12,21 @@ import { DAI } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-jest.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', () => ({
-  ...jest.requireActual('components/AccountDrawer/MiniPortfolio/Activity/hooks'),
-  useOpenLimitOrders: jest.fn(),
-}))
+vi.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', async () => {
+  const actual = await vi.importActual('components/AccountDrawer/MiniPortfolio/Activity/hooks')
+  return {
+    ...actual,
+    useOpenLimitOrders: vi.fn(),
+  }
+})
 
-jest.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => ({
-  ...jest.requireActual('components/AccountDrawer/MiniPortfolio/formatTimestamp'),
-  formatTimestamp: () => 'January 26, 2024 at 1:52PM',
-}))
+vi.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', async () => {
+  const actual = await vi.importActual('components/AccountDrawer/MiniPortfolio/formatTimestamp')
+  return {
+    ...actual,
+    formatTimestamp: () => 'January 26, 2024 at 1:52PM',
+  }
+})
 
 const mockOrderDetails: UniswapXOrderDetails = {
   type: SignatureType.SIGN_LIMIT,
@@ -59,7 +65,7 @@ describe('LimitsMenu', () => {
   it('should render when there is one open order', async () => {
     // Addresses a console.error -- `Warning: React does not recognize the `scaleIcon` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `scaleicon` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
     // This is from tamagui's Checkbox component`
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    vi.spyOn(console, 'error').mockImplementation(() => {})
 
     mocked(useOpenLimitOrders).mockReturnValue({
       openLimitOrders: [mockLimitActivity],
@@ -67,7 +73,7 @@ describe('LimitsMenu', () => {
     })
 
     await act(async () => {
-      return render(<LimitsMenu onClose={jest.fn()} account="0x123" />)
+      return render(<LimitsMenu onClose={vi.fn()} account="0x123" />)
     })
     // TODO(WEB-4881): re-enable after identifying issue with tamagui snapshots on CI
     // expect(container).toMatchSnapshot()
@@ -81,7 +87,7 @@ describe('LimitsMenu', () => {
       loading: false,
     })
     await act(async () => {
-      return render(<LimitsMenu onClose={jest.fn()} account="0x123" />)
+      return render(<LimitsMenu onClose={vi.fn()} account="0x123" />)
     })
     // TODO(WEB-4881): re-enable after identifying issue with tamagui snapshots on CI
     // expect(container).toMatchSnapshot()
@@ -90,7 +96,7 @@ describe('LimitsMenu', () => {
   })
 
   it('should call the close callback', async () => {
-    const onClose = jest.fn()
+    const onClose = vi.fn()
     mocked(useOpenLimitOrders).mockReturnValue({
       openLimitOrders: [mockLimitActivity],
       loading: false,

@@ -87,7 +87,7 @@ export function* approveAndSwap(params: SwapParams) {
         tokenAddress: approveTxRequest.to,
         spender: permit2Address(chainId),
         swapTxId: txId,
-        gasEstimates: gasFeeEstimation?.approvalEstimates,
+        gasEstimates: gasFeeEstimation.approvalEstimates,
       }
       const options: TransactionOptions = {
         request: { ...approveTxRequest, nonce },
@@ -144,7 +144,11 @@ export function* approveAndSwap(params: SwapParams) {
     // Default to input for USD volume amount
     const transactedUSDValue = analytics.token_in_amount_usd
 
-    const typeInfo = tradeToTransactionInfo(swapTxContext.trade, transactedUSDValue, gasFeeEstimation?.swapEstimates)
+    const typeInfo = tradeToTransactionInfo({
+      trade: swapTxContext.trade,
+      transactedUSDValue,
+      gasEstimates: gasFeeEstimation.swapEstimates,
+    })
 
     // Swap Logic - UniswapX
     if (isUniswapXRouting) {
@@ -167,11 +171,12 @@ export function* approveAndSwap(params: SwapParams) {
       yield* call(submitUniswapXOrder, submitOrderParams)
     } else if (swapTxContext.routing === Routing.BRIDGE) {
       const options: TransactionOptions = {
-        request: { ...swapTxContext.txRequests?.[0], nonce },
+        request: { ...swapTxContext.txRequests[0], nonce },
         submitViaPrivateRpc,
         userSubmissionTimestampMs,
-        includesDelegation: swapTxContext?.includesDelegation,
-        isSmartWalletTransaction: swapTxContext.txRequests?.[0]?.to === account.address,
+        includesDelegation: swapTxContext.includesDelegation,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        isSmartWalletTransaction: swapTxContext.txRequests[0]?.to === account.address,
       }
       const executeTransactionParams: ExecuteTransactionParams = {
         txId,
@@ -227,7 +232,10 @@ export const {
   wrappedSaga: swapSaga,
   reducer: swapReducer,
   actions: swapActions,
-} = createMonitoredSaga(approveAndSwap, 'swap')
+} = createMonitoredSaga({
+  saga: approveAndSwap,
+  name: 'swap',
+})
 
 export function* shouldSubmitViaPrivateRpc(chainId: number) {
   const swapProtectionSetting = yield* select(selectWalletSwapProtectionSetting)

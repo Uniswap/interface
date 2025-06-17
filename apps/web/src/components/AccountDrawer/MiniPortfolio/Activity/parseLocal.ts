@@ -12,6 +12,11 @@ import {
   OrderTextTable,
   getActivityTitle,
 } from 'components/AccountDrawer/MiniPortfolio/constants'
+import { FiatOnRampTransactionStatus } from 'state/fiatOnRampTransactions/types'
+import {
+  forTransactionStatusToTransactionStatus,
+  statusToTransactionInfoStatus,
+} from 'state/fiatOnRampTransactions/utils'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
@@ -39,6 +44,7 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import i18n from 'uniswap/src/i18n'
 import { isAddress } from 'utilities/src/addresses'
@@ -47,29 +53,37 @@ import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 type FormatNumberFunctionType = ReturnType<typeof useLocalizationContext>['formatNumberOrString']
+type FormatFiatPriceFunctionType = ReturnType<typeof useLocalizationContext>['convertFiatAmountFormatted']
 
-function buildCurrencyDescriptor(
-  currencyA: Currency | undefined,
-  amtA: string,
-  currencyB: Currency | undefined,
-  amtB: string,
-  formatNumber: FormatNumberFunctionType,
+function buildCurrencyDescriptor({
+  currencyA,
+  amtA,
+  currencyB,
+  amtB,
+  formatNumber,
   isSwap = false,
-) {
+}: {
+  currencyA?: Currency
+  amtA: string
+  currencyB?: Currency
+  amtB: string
+  formatNumber: FormatNumberFunctionType
+  isSwap?: boolean
+}) {
   const formattedA = currencyA
     ? formatNumber({
         value: parseFloat(CurrencyAmount.fromRawAmount(currencyA, amtA).toSignificant()),
         type: NumberType.TokenNonTx,
       })
     : i18n.t('common.unknown')
-  const symbolA = currencyA?.symbol ? ` ${currencyA?.symbol}` : ''
+  const symbolA = currencyA?.symbol ? ` ${currencyA.symbol}` : ''
   const formattedB = currencyB
     ? formatNumber({
         value: parseFloat(CurrencyAmount.fromRawAmount(currencyB, amtB).toSignificant()),
         type: NumberType.TokenNonTx,
       })
     : i18n.t('common.unknown')
-  const symbolB = currencyB?.symbol ? ` ${currencyB?.symbol}` : ''
+  const symbolB = currencyB?.symbol ? ` ${currencyB.symbol}` : ''
 
   const amountWithSymbolA = `${formattedA}${symbolA}`
   const amountWithSymbolB = `${formattedB}${symbolB}`
@@ -85,11 +99,15 @@ function buildCurrencyDescriptor(
       })
 }
 
-async function parseSwap(
-  swap: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo,
-  chainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Partial<Activity>> {
+async function parseSwap({
+  swap,
+  chainId,
+  formatNumber,
+}: {
+  swap: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
+  chainId: UniverseChainId
+  formatNumber: FormatNumberFunctionType
+}): Promise<Partial<Activity>> {
   const [tokenIn, tokenOut] = await Promise.all([
     getCurrency(swap.inputCurrencyId, chainId),
     getCurrency(swap.outputCurrencyId, chainId),
@@ -100,18 +118,30 @@ async function parseSwap(
       : [swap.expectedInputCurrencyAmountRaw, swap.outputCurrencyAmountRaw]
 
   return {
-    descriptor: buildCurrencyDescriptor(tokenIn, inputRaw, tokenOut, outputRaw, formatNumber, true),
+    descriptor: buildCurrencyDescriptor({
+      currencyA: tokenIn,
+      amtA: inputRaw,
+      currencyB: tokenOut,
+      amtB: outputRaw,
+      formatNumber,
+      isSwap: true,
+    }),
     currencies: [tokenIn, tokenOut],
     prefixIconSrc: swap.isUniswapXOrder ? UniswapXBolt : undefined,
   }
 }
 
-async function parseBridge(
-  bridge: BridgeTransactionInfo,
-  inputChainId: UniverseChainId,
-  outputChainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Partial<Activity>> {
+async function parseBridge({
+  bridge,
+  inputChainId,
+  outputChainId,
+  formatNumber,
+}: {
+  bridge: BridgeTransactionInfo
+  inputChainId: UniverseChainId
+  outputChainId: UniverseChainId
+  formatNumber: FormatNumberFunctionType
+}): Promise<Partial<Activity>> {
   const [tokenIn, tokenOut] = await Promise.all([
     getCurrency(bridge.inputCurrencyId, inputChainId),
     getCurrency(bridge.outputCurrencyId, outputChainId),
@@ -137,43 +167,56 @@ async function parseBridge(
   }
 }
 
-function parseWrap(
-  wrap: WrapTransactionInfo,
-  chainId: UniverseChainId,
-  status: TransactionStatus,
-  formatNumber: FormatNumberFunctionType,
-): Partial<Activity> {
+function parseWrap({
+  wrap,
+  chainId,
+  status,
+  formatNumber,
+}: {
+  wrap: WrapTransactionInfo
+  chainId: UniverseChainId
+  status: TransactionStatus
+  formatNumber: FormatNumberFunctionType
+}): Partial<Activity> {
   const native = nativeOnChain(chainId)
   const wrapped = native.wrapped
   const [input, output] = wrap.unwrapped ? [wrapped, native] : [native, wrapped]
 
-  const descriptor = buildCurrencyDescriptor(
-    input,
-    wrap.currencyAmountRaw,
-    output,
-    wrap.currencyAmountRaw,
+  const descriptor = buildCurrencyDescriptor({
+    currencyA: input,
+    amtA: wrap.currencyAmountRaw,
+    currencyB: output,
+    amtB: wrap.currencyAmountRaw,
     formatNumber,
-    true,
-  )
-  const title = getActivityTitle(TransactionType.WRAP, status, wrap.unwrapped)
+    isSwap: true,
+  })
+  const title = getActivityTitle({
+    type: TransactionType.WRAP,
+    status,
+    alternate: wrap.unwrapped,
+  })
   const currencies = wrap.unwrapped ? [wrapped, native] : [native, wrapped]
 
   return { title, descriptor, currencies }
 }
 
-async function parseApproval(
-  approval: ApproveTransactionInfo,
-  chainId: UniverseChainId,
-  status: TransactionStatus,
-): Promise<Partial<Activity>> {
+async function parseApproval({
+  approval,
+  chainId,
+  status,
+}: {
+  approval: ApproveTransactionInfo
+  chainId: UniverseChainId
+  status: TransactionStatus
+}): Promise<Partial<Activity>> {
   const currency = await getCurrency(approval.tokenAddress, chainId)
   const descriptor = currency?.symbol ?? currency?.name ?? i18n.t('common.unknown')
   return {
-    title: getActivityTitle(
-      TransactionType.APPROVAL,
+    title: getActivityTitle({
+      type: TransactionType.APPROVAL,
       status,
-      BigNumber.from(approval.amount).eq(0) /* use alternate if it's a revoke */,
-    ),
+      alternate: BigNumber.from(approval.amount).eq(0), // use alternate if it's a revoke
+    }),
     descriptor,
     currencies: [currency],
   }
@@ -183,42 +226,66 @@ type GenericLegacyLPInfo = Omit<
   AddLiquidityV3PoolTransactionInfo | RemoveLiquidityV3TransactionInfo | AddLiquidityV2PoolTransactionInfo,
   'type'
 >
-async function parseLegacyLP(
-  lp: GenericLegacyLPInfo,
-  chainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Partial<Activity>> {
+async function parseLegacyLP({
+  lpInfo,
+  chainId,
+  formatNumber,
+}: {
+  lpInfo: GenericLegacyLPInfo
+  chainId: UniverseChainId
+  formatNumber: FormatNumberFunctionType
+}): Promise<Partial<Activity>> {
   const [baseCurrency, quoteCurrency] = await Promise.all([
-    getCurrency(lp.baseCurrencyId, chainId),
-    getCurrency(lp.quoteCurrencyId, chainId),
+    getCurrency(lpInfo.baseCurrencyId, chainId),
+    getCurrency(lpInfo.quoteCurrencyId, chainId),
   ])
-  const [baseRaw, quoteRaw] = [lp.expectedAmountBaseRaw, lp.expectedAmountQuoteRaw]
-  const descriptor = buildCurrencyDescriptor(baseCurrency, baseRaw, quoteCurrency, quoteRaw, formatNumber)
+  const [baseRaw, quoteRaw] = [lpInfo.expectedAmountBaseRaw, lpInfo.expectedAmountQuoteRaw]
+  const descriptor = buildCurrencyDescriptor({
+    currencyA: baseCurrency,
+    amtA: baseRaw,
+    currencyB: quoteCurrency,
+    amtB: quoteRaw,
+    formatNumber,
+  })
 
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
 
 type GenericLiquidityInfo = Omit<IncreaseLiquidityTransactionInfo | DecreaseLiquidityTransactionInfo, 'type'>
-async function parseLiquidity(
-  lp: GenericLiquidityInfo,
-  chainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Partial<Activity>> {
+async function parseLiquidity({
+  lp,
+  chainId,
+  formatNumber,
+}: {
+  lp: GenericLiquidityInfo
+  chainId: UniverseChainId
+  formatNumber: FormatNumberFunctionType
+}): Promise<Partial<Activity>> {
   const [token0Currency, token1Currency] = await Promise.all([
     getCurrency(lp.token0CurrencyId, chainId),
     getCurrency(lp.token1CurrencyId, chainId),
   ])
   const [token0Raw, token1Raw] = [lp.token0CurrencyAmountRaw, lp.token1CurrencyAmountRaw]
-  const descriptor = buildCurrencyDescriptor(token0Currency, token0Raw, token1Currency, token1Raw, formatNumber)
+  const descriptor = buildCurrencyDescriptor({
+    currencyA: token0Currency,
+    amtA: token0Raw,
+    currencyB: token1Currency,
+    amtB: token1Raw,
+    formatNumber,
+  })
 
   return { descriptor, currencies: [token0Currency, token1Currency] }
 }
 
-async function parseCollectFees(
-  collect: CollectFeesTransactionInfo,
-  chainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Partial<Activity>> {
+async function parseCollectFees({
+  collect,
+  chainId,
+  formatNumber,
+}: {
+  collect: CollectFeesTransactionInfo
+  chainId: UniverseChainId
+  formatNumber: FormatNumberFunctionType
+}): Promise<Partial<Activity>> {
   // Adapts CollectFeesTransactionInfo to generic LP type
   const {
     token0CurrencyId: baseCurrencyId,
@@ -226,17 +293,20 @@ async function parseCollectFees(
     token0CurrencyAmountRaw: expectedAmountBaseRaw,
     token1CurrencyAmountRaw: expectedAmountQuoteRaw,
   } = collect
-  return parseLegacyLP(
-    { baseCurrencyId, quoteCurrencyId, expectedAmountBaseRaw, expectedAmountQuoteRaw },
+  return parseLegacyLP({
+    lpInfo: { baseCurrencyId, quoteCurrencyId, expectedAmountBaseRaw, expectedAmountQuoteRaw },
     chainId,
     formatNumber,
-  )
+  })
 }
 
-async function parseMigrateCreateV3(
-  lp: MigrateV2LiquidityToV3TransactionInfo | CreateV3PoolTransactionInfo,
-  chainId: UniverseChainId,
-): Promise<Partial<Activity>> {
+async function parseMigrateCreateV3({
+  lp,
+  chainId,
+}: {
+  lp: MigrateV2LiquidityToV3TransactionInfo | CreateV3PoolTransactionInfo
+  chainId: UniverseChainId
+}): Promise<Partial<Activity>> {
   const [baseCurrency, quoteCurrency] = await Promise.all([
     getCurrency(lp.baseCurrencyId, chainId),
     getCurrency(lp.quoteCurrencyId, chainId),
@@ -251,11 +321,15 @@ async function parseMigrateCreateV3(
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
 
-async function parseSend(
-  send: SendTransactionInfo,
-  chainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Partial<Activity>> {
+async function parseSend({
+  send,
+  chainId,
+  formatNumber,
+}: {
+  send: SendTransactionInfo
+  chainId: UniverseChainId
+  formatNumber: FormatNumberFunctionType
+}): Promise<Partial<Activity>> {
   const { currencyId, amount, recipient } = send
   const currency = await getCurrency(currencyId, chainId)
   const formattedAmount = currency
@@ -276,10 +350,13 @@ async function parseSend(
   }
 }
 
-async function parseLpIncentivesClaim(
-  info: LpIncentivesClaimTransactionInfo,
-  chainId: UniverseChainId,
-): Promise<Partial<Activity>> {
+async function parseLpIncentivesClaim({
+  info,
+  chainId,
+}: {
+  info: LpIncentivesClaimTransactionInfo
+  chainId: UniverseChainId
+}): Promise<Partial<Activity>> {
   const token = await getCurrency(info.tokenAddress, chainId)
   const symbol = token?.symbol ?? i18n.t('common.unknown')
   return {
@@ -288,11 +365,15 @@ async function parseLpIncentivesClaim(
   }
 }
 
-export async function transactionToActivity(
-  details: TransactionDetails | undefined,
-  chainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-): Promise<Activity | undefined> {
+export async function transactionToActivity({
+  details,
+  chainId,
+  formatNumber,
+}: {
+  details?: TransactionDetails
+  chainId: UniverseChainId
+  formatNumber: FormatNumberFunctionType
+}): Promise<Activity | undefined> {
   if (!details) {
     return undefined
   }
@@ -300,7 +381,7 @@ export async function transactionToActivity(
     const defaultFields = {
       hash: details.hash,
       chainId,
-      title: getActivityTitle(details.info.type, details.status),
+      title: getActivityTitle({ type: details.info.type, status: details.status }),
       status: details.status,
       timestamp: (isConfirmedTx(details) ? details.confirmedTime : details.addedTime) / 1000,
       from: details.from,
@@ -311,37 +392,77 @@ export async function transactionToActivity(
     let additionalFields: Partial<Activity> = {}
     const info = details.info
     if (info.type === TransactionType.SWAP) {
-      additionalFields = await parseSwap(info, chainId, formatNumber)
+      additionalFields = await parseSwap({
+        swap: info,
+        chainId,
+        formatNumber,
+      })
     } else if (info.type === TransactionType.BRIDGE) {
-      additionalFields = await parseBridge(info, chainId, info.outputChainId ?? chainId, formatNumber)
+      additionalFields = await parseBridge({
+        bridge: info,
+        inputChainId: chainId,
+        outputChainId: info.outputChainId,
+        formatNumber,
+      })
     } else if (info.type === TransactionType.APPROVAL) {
-      additionalFields = await parseApproval(info, chainId, details.status)
+      additionalFields = await parseApproval({
+        approval: info,
+        chainId,
+        status: details.status,
+      })
     } else if (info.type === TransactionType.WRAP) {
-      additionalFields = parseWrap(info, chainId, details.status, formatNumber)
+      additionalFields = parseWrap({
+        wrap: info,
+        chainId,
+        status: details.status,
+        formatNumber,
+      })
     } else if (
       info.type === TransactionType.ADD_LIQUIDITY_V3_POOL ||
       info.type === TransactionType.REMOVE_LIQUIDITY_V3 ||
       info.type === TransactionType.ADD_LIQUIDITY_V2_POOL
     ) {
-      additionalFields = await parseLegacyLP(info, chainId, formatNumber)
+      additionalFields = await parseLegacyLP({
+        lpInfo: info,
+        chainId,
+        formatNumber,
+      })
     } else if (
       info.type === TransactionType.INCREASE_LIQUIDITY ||
       info.type === TransactionType.DECREASE_LIQUIDITY ||
       info.type === TransactionType.CREATE_POSITION ||
       info.type === TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4
     ) {
-      additionalFields = await parseLiquidity(info, chainId, formatNumber)
+      additionalFields = await parseLiquidity({
+        lp: info,
+        chainId,
+        formatNumber,
+      })
     } else if (info.type === TransactionType.COLLECT_FEES) {
-      additionalFields = await parseCollectFees(info, chainId, formatNumber)
+      additionalFields = await parseCollectFees({
+        collect: info,
+        chainId,
+        formatNumber,
+      })
     } else if (
       info.type === TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3 ||
       info.type === TransactionType.CREATE_V3_POOL
     ) {
-      additionalFields = await parseMigrateCreateV3(info, chainId)
+      additionalFields = await parseMigrateCreateV3({
+        lp: info,
+        chainId,
+      })
     } else if (info.type === TransactionType.SEND) {
-      additionalFields = await parseSend(info, chainId, formatNumber)
+      additionalFields = await parseSend({
+        send: info,
+        chainId,
+        formatNumber,
+      })
     } else if (info.type === TransactionType.LP_INCENTIVES_CLAIM_REWARDS) {
-      additionalFields = await parseLpIncentivesClaim(info, chainId)
+      additionalFields = await parseLpIncentivesClaim({
+        info,
+        chainId,
+      })
     } else if (info.type === TransactionType.PERMIT) {
       additionalFields = {
         title: i18n.t('common.permit'),
@@ -364,14 +485,18 @@ export async function transactionToActivity(
   }
 }
 
-export function getTransactionToActivityQueryOptions(
-  transaction: TransactionDetails | undefined,
-  chainId: UniverseChainId,
-  formatNumber: FormatNumberFunctionType,
-) {
+export function getTransactionToActivityQueryOptions({
+  transaction,
+  chainId,
+  formatNumber,
+}: {
+  transaction?: TransactionDetails
+  chainId: UniverseChainId
+  formatNumber: FormatNumberFunctionType
+}) {
   return queryOptions({
     queryKey: [ReactQueryCacheKey.TransactionToActivity, transaction, chainId],
-    queryFn: async () => transactionToActivity(transaction, chainId, formatNumber),
+    queryFn: async () => transactionToActivity({ details: transaction, chainId, formatNumber }),
   })
 }
 
@@ -383,6 +508,66 @@ export function getSignatureToActivityQueryOptions(
     queryKey: [ReactQueryCacheKey.SignatureToActivity, signature],
     queryFn: async () => signatureToActivity(signature, formatNumber),
   })
+}
+
+export function getFORTransactionToActivityQueryOptions({
+  transaction,
+  formatNumber,
+  formatFiatPrice,
+}: {
+  transaction?: FORTransaction
+  formatNumber: FormatNumberFunctionType
+  formatFiatPrice: FormatFiatPriceFunctionType
+}) {
+  return queryOptions({
+    queryKey: [ReactQueryCacheKey.TransactionToActivity, transaction],
+    queryFn: async () => forTransactionToActivity({ transaction, formatNumber, formatFiatPrice }),
+  })
+}
+
+async function forTransactionToActivity({
+  transaction,
+  formatNumber,
+  formatFiatPrice,
+}: {
+  transaction?: FORTransaction
+  formatNumber: FormatNumberFunctionType
+  formatFiatPrice: FormatFiatPriceFunctionType
+}): Promise<Activity | undefined> {
+  if (!transaction) {
+    return undefined
+  }
+
+  const chainId = Number(transaction.cryptoDetails.chainId) as UniverseChainId
+  const currency = await getCurrency(transaction.sourceCurrencyCode, chainId)
+  const status = statusToTransactionInfoStatus(transaction.status)
+  const serviceProvider = transaction.serviceProviderDetails.name
+  const tokenAmount = formatNumber({ value: transaction.sourceAmount, type: NumberType.TokenNonTx })
+  const fiatAmount = formatFiatPrice(transaction.destinationAmount, NumberType.FiatTokenPrice)
+
+  let title = ''
+  switch (status) {
+    case FiatOnRampTransactionStatus.PENDING:
+      title = i18n.t('transaction.status.sale.pendingOn', { serviceProvider })
+      break
+    case FiatOnRampTransactionStatus.COMPLETE:
+      title = i18n.t('transaction.status.sale.successOn', { serviceProvider })
+      break
+    case FiatOnRampTransactionStatus.FAILED:
+      title = i18n.t('transaction.status.sale.failedOn', { serviceProvider })
+      break
+  }
+
+  return {
+    hash: transaction.externalSessionId,
+    chainId,
+    title,
+    descriptor: `${tokenAmount} ${transaction.sourceCurrencyCode} ${i18n.t('common.for').toLocaleLowerCase()} ${fiatAmount}`,
+    currencies: [currency],
+    status: forTransactionStatusToTransactionStatus(status),
+    timestamp: convertToSecTimestamp(Number(transaction.createdAt)),
+    from: transaction.cryptoDetails.walletAddress,
+  }
 }
 
 function convertToSecTimestamp(timestamp: number) {
@@ -413,22 +598,29 @@ export async function signatureToActivity(
         return undefined
       }
 
-      const { title, statusMessage, status } =
+      const orderTextTableEntry =
         signature.type === SignatureType.SIGN_LIMIT
           ? LimitOrderTextTable[signature.status]
           : OrderTextTable[signature.status]
+
+      const title = orderTextTableEntry.getTitle()
+      const statusMessage = orderTextTableEntry.getStatusMessage?.()
 
       return {
         hash: signature.orderHash,
         chainId: signature.chainId,
         title,
-        status,
+        status: orderTextTableEntry.status,
         offchainOrderDetails: signature,
         timestamp: convertToSecTimestamp(signature.addedTime),
         from: signature.offerer,
         statusMessage,
         prefixIconSrc: UniswapXBolt,
-        ...(await parseSwap(signature.swapInfo, signature.chainId, formatNumber)),
+        ...(await parseSwap({
+          swap: signature.swapInfo,
+          chainId: signature.chainId,
+          formatNumber,
+        })),
       }
     }
     default:
@@ -448,7 +640,9 @@ export function useLocalActivities(account: string): ActivityMap {
       const transactions = Object.values(allTransactions)
         .filter(([transaction]) => transaction.from === account)
         .filter(([, chainId]) => chains.includes(chainId))
-        .map(([transaction, chainId]) => transactionToActivity(transaction, chainId, formatNumberOrString))
+        .map(([transaction, chainId]) =>
+          transactionToActivity({ details: transaction, chainId, formatNumber: formatNumberOrString }),
+        )
       const signatures = Object.values(allSignatures)
         .filter((signature) => signature.offerer === account)
         .map((signature) => signatureToActivity(signature, formatNumberOrString))

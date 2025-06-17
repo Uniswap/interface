@@ -37,7 +37,7 @@ export function KoreaCexTransferInfoModal(): JSX.Element {
           <Button
             size="large"
             emphasis="secondary"
-            onPress={() => openUri(uniswapUrls.helpArticleUrls.cexTransferKorea)}
+            onPress={() => openUri({ uri: uniswapUrls.helpArticleUrls.cexTransferKorea })}
           >
             {t('common.button.learn')}
           </Button>

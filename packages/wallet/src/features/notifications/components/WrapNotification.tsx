@@ -23,22 +23,22 @@ export function WrapNotification({
   const inputCurrencyInfo = unwrapped ? wrappedCurrencyInfo : nativeCurrencyInfo
   const outputCurrencyInfo = unwrapped ? nativeCurrencyInfo : wrappedCurrencyInfo
 
-  const title = formWrapNotificationTitle(
+  const title = formWrapNotificationTitle({
     formatter,
     txStatus,
-    inputCurrencyInfo?.currency,
-    outputCurrencyInfo?.currency,
+    inputCurrency: inputCurrencyInfo?.currency,
+    outputCurrency: outputCurrencyInfo?.currency,
     currencyAmountRaw,
     unwrapped,
-  )
+  })
 
-  const wrapFormState = useCreateWrapFormState(
+  const wrapFormState = useCreateWrapFormState({
     address,
     chainId,
     txId,
-    inputCurrencyInfo?.currency,
-    outputCurrencyInfo?.currency,
-  )
+    inputCurrency: inputCurrencyInfo?.currency,
+    outputCurrency: outputCurrencyInfo?.currency,
+  })
 
   const { navigateToAccountActivityList, navigateToSwapFlow } = useWalletNavigation()
 

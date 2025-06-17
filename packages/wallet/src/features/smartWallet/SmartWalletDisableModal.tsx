@@ -1,61 +1,83 @@
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, ElementAfterText, Flex, Separator, Text, TouchableArea } from 'ui/src'
-import { ExternalLink, Unitag } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
+import { Button, Flex, Separator, Text, TouchableArea } from 'ui/src'
+import { GlobeFilled, InfoCircle, RotatableChevron } from 'ui/src/components/icons'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
-import { shortenAddress } from 'utilities/src/addresses'
-import { isMobileApp } from 'utilities/src/platform'
+import { isMobileApp, isWeb } from 'utilities/src/platform'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
+import { ActiveNetworkExpando } from 'wallet/src/features/smartWallet/ActiveNetworkExpando'
+import { useEnabledActiveNetworkDelegations } from 'wallet/src/features/smartWallet/hooks/useEnabledActiveNetworkDelegations'
 import { useTranslateSmartWalletStatus } from 'wallet/src/features/smartWallet/hooks/useTranslateSmartWalletStatus'
 import { WalletData } from 'wallet/src/features/smartWallet/types'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 interface SmartWalletDisableModalProps {
-  selectedWallet?: WalletData
+  wallet: WalletData
   onClose: () => void
   onConfirm: () => void
+  isOpen?: boolean
 }
 
 export function SmartWalletDisableModal({
-  selectedWallet,
+  wallet,
   onClose,
   onConfirm,
+  isOpen,
 }: SmartWalletDisableModalProps): JSX.Element | null {
   const { t } = useTranslation()
   const getTranslatedStatus = useTranslateSmartWalletStatus()
 
-  const { avatar } = useAvatar(selectedWallet?.walletAddress)
-  const { unitag } = useUnitagByAddress(selectedWallet?.walletAddress)
+  const {
+    value: isActiveNetworksExpanded,
+    toggle: toggleActiveNetworksCollapsed,
+    setFalse: collapseActiveNetworks,
+  } = useBooleanState(false)
 
-  if (!selectedWallet) {
-    return null
-  }
+  useEffect(() => {
+    collapseActiveNetworks()
+  }, [collapseActiveNetworks, wallet])
 
-  const { walletAddress, delegatorAddress, name: walletName } = selectedWallet
+  const { avatar } = useAvatar(wallet.walletAddress)
 
-  // TODO(WALL-6572): remove hard coded chain id
-  const scannerLink = getExplorerLink(UniverseChainId.Sepolia, delegatorAddress, ExplorerDataType.ADDRESS)
+  const activeDelegations = useEnabledActiveNetworkDelegations(wallet.activeDelegationNetworkToAddress)
+
+  const { walletAddress } = wallet
+  const displayName = useDisplayName(walletAddress)
 
   return (
-    <Modal isModalOpen alignment="top" name={ModalName.SmartWalletDisableModal} onClose={onClose}>
+    <Modal
+      isModalOpen={isOpen}
+      maxHeight={isMobileApp ? '100%' : undefined}
+      alignment="top"
+      name={ModalName.SmartWalletDisableModal}
+      onClose={onClose}
+    >
       <Flex
         backgroundColor="$surface1"
         borderRadius="$rounded16"
+        overflow="hidden"
         gap="$gap16"
         p={isMobileApp ? '$spacing24' : undefined}
         mb={isMobileApp ? '$spacing36' : undefined}
         pt={isMobileApp ? '$none' : undefined}
+        maxHeight="100%"
+        {...(isWeb && { flex: 1, overflowY: 'hidden' })}
       >
         <Flex row alignItems="center" gap="$spacing12">
           <AccountIcon avatarUri={avatar} address={walletAddress} size={iconSizes.icon40} />
           <Flex>
             <Text variant="body2">{t('settings.setting.smartWallet.action.smartWallet')}</Text>
             <Text variant="body3" color="$accent1">
-              {getTranslatedStatus(selectedWallet.status)}
+              {getTranslatedStatus(wallet.status)}
             </Text>
           </Flex>
         </Flex>
@@ -63,22 +85,57 @@ export function SmartWalletDisableModal({
         <Separator />
 
         <Flex row justifyContent="space-between">
-          <Text variant="body4" color="$neutral2">
-            {t('common.text.contract')}
-          </Text>
-          <Flex row alignItems="center" gap="$spacing4">
-            <TouchableArea
-              flexDirection="row"
-              gap="$gap8"
-              onPress={async (): Promise<void> => {
-                await openUri(scannerLink)
+          <Flex row>
+            <WarningInfo
+              infoButton={
+                <LearnMoreLink
+                  textVariant="buttonLabel4"
+                  textColor={isWeb ? '$accent1' : '$accent3'}
+                  url={uniswapUrls.helpArticleUrls.multichainDelegation}
+                />
+              }
+              trigger={<InfoCircle alignSelf="flex-start" color="$neutral3" size="$icon.16" />}
+              modalProps={{
+                caption: t('smartWallets.activeNetworks.description'),
+                rejectText: t('common.button.close'),
+                modalName: ModalName.NetworkFeeInfo,
+                severity: WarningSeverity.None,
+                icon: <GlobeFilled size="$icon.24" />,
+                title: t('common.activeNetworks'),
+                zIndex: zIndexes.popover,
+              }}
+              tooltipProps={{
+                text: <Text variant="body4">{t('smartWallets.activeNetworks.description')}</Text>,
+                placement: 'top',
               }}
             >
-              <Text variant="body4">{shortenAddress(walletAddress)}</Text>
-              <ExternalLink color="$neutral3" size="$icon.16" />
-            </TouchableArea>
+              <Text variant="body4" color="$neutral2" marginEnd="$spacing1">
+                {t('common.activeNetworks')}
+              </Text>
+            </WarningInfo>
           </Flex>
+
+          {activeDelegations.length > 0 ? (
+            <TouchableArea
+              justifyContent="center"
+              flexDirection="row"
+              gap="$gap4"
+              onPress={toggleActiveNetworksCollapsed}
+            >
+              <Text variant="body3">{activeDelegations.length}</Text>
+              <RotatableChevron
+                color="$neutral2"
+                direction={isActiveNetworksExpanded ? 'up' : 'down'}
+                height={iconSizes.icon16}
+                width={iconSizes.icon16}
+              />
+            </TouchableArea>
+          ) : (
+            <Text variant="body3">{activeDelegations.length}</Text>
+          )}
         </Flex>
+
+        <ActiveNetworkExpando isOpen={isActiveNetworksExpanded} activeDelegations={activeDelegations} />
 
         <Flex row justifyContent="space-between">
           <Text variant="body4" color="$neutral2">
@@ -86,17 +143,10 @@ export function SmartWalletDisableModal({
           </Text>
           <Flex row alignItems="center" gap="$spacing4">
             <AccountIcon avatarUri={avatar} address={walletAddress} size={iconSizes.icon16} />
-            <ElementAfterText
-              wrapperProps={{
-                grow: true,
-                shrink: true,
-              }}
-              textProps={{
-                variant: 'body4',
-                color: '$neutral1',
-              }}
-              element={unitag?.username ? <Unitag size="$icon.16" /> : undefined}
-              text={walletName}
+            <DisplayNameText
+              displayName={displayName}
+              textProps={{ variant: 'body3', color: '$neutral1' }}
+              unitagIconSize="$icon.18"
             />
           </Flex>
         </Flex>

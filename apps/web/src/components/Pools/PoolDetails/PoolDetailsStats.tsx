@@ -134,7 +134,7 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
   const isLargeScreen = !media.xl
   const { formatNumberOrString } = useLocalizationContext()
   const unwrappedToken = chainId ? unwrapToken(chainId, token) : token
-  const isNative = unwrappedToken?.address === NATIVE_CHAIN_ID
+  const isNative = unwrappedToken.address === NATIVE_CHAIN_ID
   const currency = isNative && chainId ? nativeOnChain(chainId) : token.currency
   const { defaultChainId } = useEnabledChains()
 
@@ -171,24 +171,30 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
   const isLargeScreen = !media.xl
   const theme = useTheme()
 
-  const currency0 = useCurrency(poolData?.token0?.address, chainId)
-  const currency1 = useCurrency(poolData?.token1?.address, chainId)
+  const currency0 = useCurrency({
+    address: poolData?.token0.address,
+    chainId,
+  })
+  const currency1 = useCurrency({
+    address: poolData?.token1.address,
+    chainId,
+  })
 
-  const [token0, token1] = useMemo(() => {
+  const [token0, token1]: [TokenFullData | undefined, TokenFullData | undefined] = useMemo(() => {
     if (poolData && poolData.tvlToken0 && poolData.token0Price && poolData.tvlToken1 && poolData.token1Price) {
-      const fullWidth = poolData?.tvlToken0 * poolData?.token0Price + poolData?.tvlToken1 * poolData?.token1Price
+      const fullWidth = poolData.tvlToken0 * poolData.token0Price + poolData.tvlToken1 * poolData.token1Price
       const token0FullData: TokenFullData = {
-        ...poolData?.token0,
-        price: poolData?.token0Price,
-        tvl: poolData?.tvlToken0,
-        percent: (poolData?.tvlToken0 * poolData?.token0Price) / fullWidth,
+        ...poolData.token0,
+        price: poolData.token0Price,
+        tvl: poolData.tvlToken0,
+        percent: (poolData.tvlToken0 * poolData.token0Price) / fullWidth,
         currency: currency0,
       }
       const token1FullData: TokenFullData = {
-        ...poolData?.token1,
-        price: poolData?.token1Price,
-        tvl: poolData?.tvlToken1,
-        percent: (poolData?.tvlToken1 * poolData?.token1Price) / fullWidth,
+        ...poolData.token1,
+        price: poolData.token1Price,
+        tvl: poolData.tvlToken1,
+        percent: (poolData.tvlToken1 * poolData.token1Price) / fullWidth,
         currency: currency1,
       }
       return isReversed ? [token1FullData, token0FullData] : [token0FullData, token1FullData]
@@ -233,21 +239,21 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
           </Row>
         )}
       </StatItemColumn>
-      {poolData?.tvlUSD && (
+      {poolData.tvlUSD && (
         <StatItem
           title={<Trans i18nKey="common.totalValueLocked" />}
           value={poolData.tvlUSD}
           delta={poolData.tvlUSDChange}
         />
       )}
-      {poolData?.volumeUSD24H !== undefined && (
+      {poolData.volumeUSD24H !== undefined && (
         <StatItem
           title={<Trans i18nKey="stats.24volume" />}
           value={poolData.volumeUSD24H}
           delta={poolData.volumeUSD24HChange}
         />
       )}
-      {poolData?.volumeUSD24H !== undefined && poolData?.feeTier !== undefined && (
+      {poolData.volumeUSD24H !== undefined && poolData.feeTier !== undefined && (
         <StatItem
           title={<Trans i18nKey="stats.24fees" />}
           value={poolData.volumeUSD24H * (poolData.feeTier / 1000000)}

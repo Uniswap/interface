@@ -1,4 +1,7 @@
+import { PlainMessage } from '@bufbuild/protobuf'
+import { Platform, PlatformAddress, WalletAccount } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { ProtectionInfo as ProtectionInfoProtobuf } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import {
   ProtectionAttackType,
   ProtectionInfo,
@@ -71,4 +74,69 @@ export function parseProtectionInfo(protectionInfo?: ProtectionInfoProtobuf): Pr
   }
 
   return { attackTypes, result: protectionResult }
+}
+
+export function parseRestProtocolVersion(version: string | undefined): ProtocolVersion | undefined {
+  switch (version?.toLowerCase()) {
+    case 'v2':
+      return ProtocolVersion.V2
+    case 'v3':
+      return ProtocolVersion.V3
+    case 'v4':
+      return ProtocolVersion.V4
+    default:
+      return undefined
+  }
+}
+
+/**
+ * Helps simplify REST endpoint interfaces that expect a walletAccount object instead
+ * of simple address fields
+ */
+export function createWalletAccount({ evmAddress, svmAddress }: { evmAddress?: string; svmAddress?: string }): {
+  walletAccount: PlainMessage<WalletAccount>
+} {
+  const platformAddresses: PlainMessage<PlatformAddress>[] = []
+
+  if (evmAddress) {
+    platformAddresses.push({ platform: Platform.EVM, address: evmAddress })
+  }
+
+  if (svmAddress) {
+    platformAddresses.push({ platform: Platform.SVM, address: svmAddress })
+  }
+
+  return {
+    walletAccount: {
+      platformAddresses,
+    },
+  }
+}
+
+export type WithoutWalletAccount<T> = Omit<T, 'walletAccount'>
+
+/**
+ * Helper function to transform input that includes evmAddress/svmAddress to use walletAccount instead
+ */
+export function transformInput<T extends { walletAccount?: never }>(
+  input: (T & { evmAddress?: string; svmAddress?: string }) | undefined,
+):
+  | (Omit<T, 'evmAddress' | 'svmAddress' | 'walletAccount'> & { walletAccount: PlainMessage<WalletAccount> })
+  | undefined {
+  if (!input) {
+    return undefined
+  }
+
+  const {
+    evmAddress,
+    svmAddress,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    walletAccount: _walletAccount,
+    ...restInput
+  } = input
+
+  return {
+    ...createWalletAccount({ evmAddress, svmAddress }),
+    ...restInput,
+  }
 }

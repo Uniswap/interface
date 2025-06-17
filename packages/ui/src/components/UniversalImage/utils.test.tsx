@@ -13,7 +13,7 @@ describe(fetchSVG, () => {
       }),
     ) as jest.Mock
 
-    const result = await fetchSVG('regular.svg', false)
+    const result = await fetchSVG({ uri: 'regular.svg', autoplay: false })
 
     expect(result.content).toEqual(REGULAR_SVG)
     expect(result.aspectRatio).toEqual(10 / 20)
@@ -26,7 +26,7 @@ describe(fetchSVG, () => {
       }),
     ) as jest.Mock
 
-    const result = await fetchSVG('with-animate.svg', false)
+    const result = await fetchSVG({ uri: 'with-animate.svg', autoplay: false })
 
     expect(result.content).toEqual(SVG_WITH_ANIMATES_STRIPPED)
     expect(result.aspectRatio).toEqual(15 / 25)

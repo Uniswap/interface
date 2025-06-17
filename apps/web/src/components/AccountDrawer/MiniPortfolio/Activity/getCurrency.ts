@@ -15,13 +15,13 @@ import { isSameAddress } from 'utilities/src/addresses'
 
 export async function getCurrency(currencyId: string, chainId: UniverseChainId): Promise<Currency | undefined> {
   const isNative =
-    currencyId === NATIVE_CHAIN_ID || currencyId?.toLowerCase() === 'native' || currencyId?.toLowerCase() === 'eth'
+    currencyId === NATIVE_CHAIN_ID || currencyId.toLowerCase() === 'native' || currencyId.toLowerCase() === 'eth'
   if (isNative) {
     return nativeOnChain(chainId)
   }
-  const commonBase = chainId
-    ? COMMON_BASES[chainId]?.find((base) => base.currency.isToken && isSameAddress(base.currency.address, currencyId))
-    : undefined
+  const commonBase = COMMON_BASES[chainId].find(
+    (base) => base.currency.isToken && isSameAddress(base.currency.address, currencyId),
+  )
   if (commonBase) {
     return commonBase.currency
   }
@@ -32,5 +32,5 @@ export async function getCurrency(currencyId: string, chainId: UniverseChainId):
       chain: toGraphQLChain(chainId),
     },
   })
-  return gqlTokenToCurrencyInfo(data?.token as Token)?.currency
+  return gqlTokenToCurrencyInfo(data.token as Token)?.currency
 }

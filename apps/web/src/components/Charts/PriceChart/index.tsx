@@ -203,13 +203,13 @@ interface PriceChartDeltaProps {
 }
 
 export function PriceChartDelta({ startingPrice, endingPrice, noColor }: PriceChartDeltaProps) {
-  const delta = calculateDelta(startingPrice.close ?? startingPrice.value, endingPrice.close ?? endingPrice.value)
+  const delta = calculateDelta(startingPrice.close, endingPrice.close)
   const { formatPercent } = useLocalizationContext()
 
   return (
     <Text variant="body2" display="flex" alignItems="center" gap="$gap4">
-      <DeltaArrow delta={delta} formattedDelta={formatPercent(Math.abs(delta))} noColor={noColor} />
-      <DeltaText delta={delta}>{formatPercent(Math.abs(delta))}</DeltaText>
+      {delta && <DeltaArrow delta={delta} formattedDelta={formatPercent(Math.abs(delta))} noColor={noColor} />}
+      <DeltaText delta={delta}>{delta ? formatPercent(Math.abs(delta)) : '-'}</DeltaText>
     </Text>
   )
 }
@@ -265,8 +265,8 @@ export function PriceChart({ data, height, type, stale }: PriceChartProps) {
     >
       {(crosshairData) => (
         <ChartHeader
-          value={(crosshairData ?? lastPrice)?.value ?? (crosshairData ?? lastPrice)?.close}
-          additionalFields={<PriceChartDelta startingPrice={data?.[0]} endingPrice={crosshairData ?? lastPrice} />}
+          value={(crosshairData ?? lastPrice).value}
+          additionalFields={<PriceChartDelta startingPrice={data[0]} endingPrice={crosshairData ?? lastPrice} />}
           valueFormatterType={NumberType.FiatTokenPrice}
           time={crosshairData?.time}
         />

@@ -114,7 +114,7 @@ export const SettingsRow = memo(
       } else if (navigationModal) {
         navigate(navigationModal, navigationProps)
       } else if (externalLink) {
-        await openUri(externalLink)
+        await openUri({ uri: externalLink })
       }
     }, [checkIfCanProceed, onToggle, screen, navigation, screenProps, navigationProps, navigationModal, externalLink])
 

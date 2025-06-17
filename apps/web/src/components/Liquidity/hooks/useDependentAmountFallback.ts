@@ -65,16 +65,16 @@ export function useUpdatedAmountsFromDependentAmount({
   deposit0Disabled,
   deposit1Disabled,
 }: {
-  token0?: Currency
-  token1?: Currency
+  token0: Maybe<Currency>
+  token1: Maybe<Currency>
   dependentAmount?: string
   exactField: PositionField
   deposit0Disabled: boolean
   deposit1Disabled: boolean
 } & Pick<DepositInfo, 'currencyAmounts' | 'currencyAmountsUSDValue' | 'formattedAmounts'>): {
   updatedFormattedAmounts?: { [field in PositionField]?: string }
-  updatedUSDAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
-  updatedCurrencyAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
+  updatedUSDAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
+  updatedCurrencyAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   updatedDeposit0Disabled: boolean
   updatedDeposit1Disabled: boolean
 } {
@@ -82,20 +82,20 @@ export function useUpdatedAmountsFromDependentAmount({
     dependentAmount && exactField === PositionField.TOKEN1 && token0
       ? CurrencyAmount.fromRawAmount(token0, dependentAmount)
       : undefined
-  const dependentAmount0USDValue = useUSDCValue(dependentAmount0) ?? undefined
+  const dependentAmount0USDValue = useUSDCValue(dependentAmount0)
 
   const dependentAmount1 =
     dependentAmount && exactField === PositionField.TOKEN0 && token1
       ? CurrencyAmount.fromRawAmount(token1, dependentAmount)
       : undefined
-  const dependentAmount1USDValue = useUSDCValue(dependentAmount1) ?? undefined
+  const dependentAmount1USDValue = useUSDCValue(dependentAmount1)
 
   return useMemo(() => {
     if (dependentAmount0) {
       return {
         updatedFormattedAmounts: {
           ...formattedAmounts,
-          TOKEN0: dependentAmount0?.toExact() ?? formattedAmounts?.TOKEN0,
+          TOKEN0: dependentAmount0.toExact(),
         },
         updatedUSDAmounts: {
           ...currencyAmountsUSDValue,
@@ -103,7 +103,7 @@ export function useUpdatedAmountsFromDependentAmount({
         },
         updatedCurrencyAmounts: {
           ...currencyAmounts,
-          TOKEN0: dependentAmount0 ?? currencyAmounts?.TOKEN0,
+          TOKEN0: dependentAmount0,
         },
         updatedDeposit0Disabled: !dependentAmount0.greaterThan(0),
         updatedDeposit1Disabled: deposit1Disabled,
@@ -112,7 +112,7 @@ export function useUpdatedAmountsFromDependentAmount({
       return {
         updatedFormattedAmounts: {
           ...formattedAmounts,
-          TOKEN1: dependentAmount1?.toExact() ?? formattedAmounts?.TOKEN1,
+          TOKEN1: dependentAmount1.toExact(),
         },
         updatedUSDAmounts: {
           ...currencyAmountsUSDValue,
@@ -120,7 +120,7 @@ export function useUpdatedAmountsFromDependentAmount({
         },
         updatedCurrencyAmounts: {
           ...currencyAmounts,
-          TOKEN1: dependentAmount1 ?? currencyAmounts?.TOKEN1,
+          TOKEN1: dependentAmount1,
         },
         updatedDeposit0Disabled: deposit0Disabled,
         updatedDeposit1Disabled: !dependentAmount1.greaterThan(0),

@@ -1,0 +1,54 @@
+---
+description: Shared Typescript conventions and best practices
+globs: *.ts,*.tsx
+alwaysApply: false
+---
+# Shared Typescript conventions and best practices
+
+## Types
+- Avoid using `any`, prefer `unknown` for unknown types
+- Use generics for reusable type patterns
+- Use explicit return types for functions, especially in non-test files
+- Prefer type safety with proper typing rather than type assertions
+
+## Naming Conventions
+- Use PascalCase for type names, interfaces, and enums
+- Use camelCase for variables and functions
+- Use UPPER_CASE for constants
+- Use PascalCase for enum members according to ESLint rules
+
+## Enums
+- Always use initializers with enums
+- Prefer string enums for better runtime behavior
+
+Example:
+```typescript
+// Good
+export enum TransactionStatus {
+  Pending = 'PENDING',
+  Complete = 'COMPLETE',
+  Failed = 'FAILED',
+}
+
+// Avoid
+export enum TransactionStatus {
+  Pending,
+  Complete,
+  Failed,
+}
+```
+
+## Interfaces vs Types
+- Use interfaces for public API definitions
+- Use type aliases for unions, intersections, and complex types
+- Prefer interfaces when extending/implementing is needed
+
+## Imports
+- Avoid relative imports when possible, use path aliases
+- Group imports by source: external libraries first, then internal modules
+- Sort imports alphabetically within groups
+
+## Error Handling
+- Use typed errors and proper error handling patterns
+- Avoid throwing generic Error instances
+- Always handle promise rejections

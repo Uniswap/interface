@@ -2,6 +2,12 @@ import { routes } from 'pages/RouteDefinitions'
 import { getExploreTitle } from 'pages/getExploreTitle'
 import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
 import { paths } from 'pages/paths'
+import React from 'react'
+
+// Mock the actual components since they're not needed to test route definitions.
+vi.mock('pages/Swap', () => ({
+  default: () => React.createElement(React.Fragment),
+}))
 
 describe('Paths', () => {
   it('should have every path in the app RouteDefinitions', () => {

@@ -67,7 +67,7 @@ function _SortButton({ orderBy, onOrderByChange }: FilterGroupProps): JSX.Elemen
         py="$spacing8"
         style={{ padding: 5 }}
       >
-        {icon && icon}
+        {icon}
         <Text>{label}</Text>
         {active && <CheckCircleFilled color="$neutral1" size="$icon.16" />}
       </Flex>

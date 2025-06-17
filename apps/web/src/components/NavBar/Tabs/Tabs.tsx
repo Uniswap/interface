@@ -86,7 +86,7 @@ const Tab = ({
       <Popover.Trigger data-testid={`${label}-tab`}>{Label}</Popover.Trigger>
       <NavDropdown isOpen={isOpen} dataTestId={`${label}-menu`}>
         <NavDropdownTabWrapper>
-          {items?.map((item, index) => (
+          {items.map((item, index) => (
             <Item
               key={`${item.label}_${index}`}
               icon={item.icon}

@@ -10,7 +10,11 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
     if (!poolAddress) {
       return response
     }
-    return transformResponse(request, await response, () => getPool(networkName, poolAddress, request.url))
+    return transformResponse({
+      request,
+      response: await response,
+      data: () => getPool({ networkName, poolAddress, url: request.url }),
+    })
   } catch (e) {
     return response
   }

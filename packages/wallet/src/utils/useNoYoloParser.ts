@@ -24,9 +24,8 @@ export function useNoYoloParser(
 
     const explorerAbiFetcher = new ExplorerAbiFetcher(apiURL)
 
-    const rpcUrl =
-      rpcUrls?.default?.http[0] || rpcUrls?.[RPCType.Public]?.http[0] || rpcUrls?.[RPCType.PublicAlt]?.http[0]
-    const provider = new JsonRpcProvider(rpcUrl)
+    const rpcUrl = rpcUrls.default.http[0] || rpcUrls[RPCType.Public]?.http[0] || rpcUrls[RPCType.PublicAlt]?.http[0]
+    const provider = new JsonRpcProvider(rpcUrl, chainId)
 
     const proxyAbiFetcher = new ProxyAbiFetcher(provider, [explorerAbiFetcher])
 

@@ -22,7 +22,7 @@ export function OffRampTransferSummaryItem({
   const { destinationTokenSymbol, destinationTokenAddress, destinationTokenAmount } = typeInfo
 
   const outputCurrencyInfo = useCurrencyInfo(buildCurrencyId(chainId, destinationTokenAddress))
-  const cryptoAmount = `${typeInfo?.sourceAmount ?? ''} ${getSymbolDisplayText(typeInfo?.sourceCurrency)}`
+  const cryptoAmount = `${typeInfo.sourceAmount ?? ''} ${getSymbolDisplayText(typeInfo.sourceCurrency)}`
   const cryptoSaleAmount = formatNumberOrString({ value: destinationTokenAmount }) + ' ' + destinationTokenSymbol
 
   return (

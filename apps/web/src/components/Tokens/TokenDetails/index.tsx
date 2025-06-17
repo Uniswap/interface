@@ -1,4 +1,3 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { getTokenDetailsURL } from 'appGraphql/data/util'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
@@ -28,6 +27,7 @@ import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -95,8 +95,14 @@ function useSwapInitialCurrencies() {
   }, [currency.chainId, currency.isNative, parsedQs.outputCurrency])
 
   return {
-    inputCurrency: useCurrency(inputTokenAddress, currency.chainId),
-    outputCurrency: useCurrency(outputTokenAddress, currency.chainId),
+    inputCurrency: useCurrency({
+      address: inputTokenAddress,
+      chainId: currency.chainId,
+    }),
+    outputCurrency: useCurrency({
+      address: outputTokenAddress,
+      chainId: currency.chainId,
+    }),
   }
 }
 
@@ -153,7 +159,10 @@ function TDPSwapComponent() {
         return
       }
 
-      const preloadedLogoSrc = getInitialLogoUrl(newDefaultToken.wrapped.address, newDefaultToken.chainId)
+      const preloadedLogoSrc = getInitialLogoUrl({
+        address: newDefaultToken.wrapped.address,
+        chainId: newDefaultToken.chainId,
+      })
       const url = getTokenDetailsURL({
         // The function falls back to "NATIVE" if the address is null
         address: newDefaultToken.isNative ? null : newDefaultToken.address,
@@ -199,7 +208,7 @@ function TDPAnalytics({ children }: PropsWithChildren) {
   return (
     <Trace
       logImpression
-      page={InterfacePageName.TOKEN_DETAILS_PAGE}
+      page={InterfacePageName.TokenDetailsPage}
       properties={{
         tokenAddress: address,
         tokenSymbol: currency.symbol,

@@ -1,39 +1,42 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { CHROME_EXTENSION_UNINSTALL_URL_PATH } from 'uniswap/src/constants/urls'
+import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 
 export function getCurrentPageFromLocation(locationPathname: string): InterfacePageName | undefined {
   switch (true) {
     case locationPathname.startsWith('/swap'):
-      return InterfacePageName.SWAP_PAGE
+      return InterfacePageName.SwapPage
     case locationPathname.startsWith('/explore/tokens') &&
       (locationPathname.includes('0x') || locationPathname.includes(NATIVE_CHAIN_ID)):
-      return InterfacePageName.TOKEN_DETAILS_PAGE
+      return InterfacePageName.TokenDetailsPage
     case locationPathname.startsWith('/explore/pools') && locationPathname.includes('0x'):
-      return InterfacePageName.POOL_DETAILS_PAGE
+      return InterfacePageName.PoolDetailsPage
     case locationPathname.startsWith('/explore'):
-      return InterfacePageName.EXPLORE_PAGE
+      return InterfacePageName.ExplorePage
     case locationPathname.startsWith('/vote'):
-      return InterfacePageName.VOTE_PAGE
+      return InterfacePageName.VotePage
     case locationPathname.startsWith('/positions/v2'):
     case locationPathname.startsWith('/positions/v3'):
     case locationPathname.startsWith('/positions/v4'):
-      return InterfacePageName.POOL_DETAILS_PAGE
+      return InterfacePageName.PoolDetailsPage
     case locationPathname.startsWith('/positions'):
     case locationPathname.startsWith('/pools'):
     case locationPathname.startsWith('/pool'):
     case locationPathname.startsWith('/add'):
     case locationPathname.startsWith('/remove'):
-      return InterfacePageName.POOL_PAGE
+      return InterfacePageName.PoolPage
     case locationPathname.startsWith('/tokens'):
-      return InterfacePageName.TOKENS_PAGE
+      return InterfacePageName.TokensPage
     case locationPathname.startsWith('/nfts/profile'):
-      return InterfacePageName.NFT_PROFILE_PAGE
+      return InterfacePageName.NftProfilePage
     case locationPathname.startsWith('/nfts/asset'):
-      return InterfacePageName.NFT_DETAILS_PAGE
+      return InterfacePageName.NftDetailsPage
     case locationPathname.startsWith('/nfts/collection'):
-      return InterfacePageName.NFT_COLLECTION_PAGE
+      return InterfacePageName.NftCollectionPage
     case locationPathname.startsWith('/nfts'):
-      return InterfacePageName.NFT_EXPLORE_PAGE
+      return InterfacePageName.NftExplorePage
+    case locationPathname.startsWith(CHROME_EXTENSION_UNINSTALL_URL_PATH):
+      return InterfacePageName.ExtensionUninstall
     default:
       return undefined
   }

@@ -195,19 +195,24 @@ const LoadingFooterLink = styled(Anchor, {
 })
 
 // exported for testing
-export function getLoadingTitle(
-  token: Currency | undefined,
-  tokenAddress: string,
-  chainId: number,
-  chainName: string | undefined,
-): ReactNode {
+export function getLoadingTitle({
+  token,
+  tokenAddress,
+  chainId,
+  chainName,
+}: {
+  token?: Currency
+  tokenAddress: string
+  chainId: number
+  chainName?: string
+}): ReactNode {
   let tokenName = ''
-  if (token?.name && token?.symbol) {
-    tokenName = `${token?.name} (${token?.symbol})`
+  if (token?.name && token.symbol) {
+    tokenName = `${token.name} (${token.symbol})`
   } else if (token?.name) {
-    tokenName = token?.name
+    tokenName = token.name
   } else if (token?.symbol) {
-    tokenName = token?.symbol
+    tokenName = token.symbol
   } else {
     tokenName = tokenAddress || ''
   }
@@ -215,7 +220,7 @@ export function getLoadingTitle(
     <>{tokenName}</>
   ) : (
     <LoadingFooterLink
-      href={getExplorerLink(chainId, tokenAddress, ExplorerDataType.TOKEN)}
+      href={getExplorerLink({ chainId, data: tokenAddress, type: ExplorerDataType.TOKEN })}
       target="_blank"
       rel="noopener noreferrer"
     >
@@ -271,7 +276,10 @@ function LoadingStats() {
 function TokenDetailsSkeleton() {
   const { id: chainId, urlParam } = getChainInfo(useChainIdFromUrlParam() ?? UniverseChainId.Mainnet)
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
-  const token = useCurrency(tokenAddress === NATIVE_CHAIN_ID ? 'ETH' : tokenAddress, chainId)
+  const token = useCurrency({
+    address: tokenAddress === NATIVE_CHAIN_ID ? 'ETH' : tokenAddress,
+    chainId,
+  })
 
   return (
     <LeftPanel>
@@ -314,7 +322,9 @@ function TokenDetailsSkeleton() {
       {tokenAddress && (
         <LoadingFooterHeaderContainer gap="xs">
           <Trans i18nKey="common.loading" />
-          <LoadingFooterHeader>{getLoadingTitle(token, tokenAddress, chainId, urlParam)}</LoadingFooterHeader>
+          <LoadingFooterHeader>
+            {getLoadingTitle({ token, tokenAddress, chainId, chainName: urlParam })}
+          </LoadingFooterHeader>
         </LoadingFooterHeaderContainer>
       )}
     </LeftPanel>

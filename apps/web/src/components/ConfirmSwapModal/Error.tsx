@@ -107,7 +107,11 @@ export default function Error({ errorType, trade, showTrade, swapResult, onRetry
         {supportArticleURL && <LearnMoreLink url={supportArticleURL} centered />}
         {swapResult && swapResult.type === TradeFillType.Classic && (
           <ExternalLink
-            href={getExplorerLink(swapResult.response.chainId, swapResult.response.hash, ExplorerDataType.TRANSACTION)}
+            href={getExplorerLink({
+              chainId: swapResult.response.chainId,
+              data: swapResult.response.hash,
+              type: ExplorerDataType.TRANSACTION,
+            })}
             color="neutral2"
           >
             {t('common.viewOnExplorer')}

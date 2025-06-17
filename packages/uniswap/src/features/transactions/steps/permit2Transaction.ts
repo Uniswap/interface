@@ -11,11 +11,15 @@ export interface Permit2TransactionStep extends OnChainTransactionFields {
   amount: string
 }
 
-export function createPermit2TransactionStep(
-  txRequest: ValidatedTransactionRequest | undefined,
-  amountIn?: CurrencyAmount<Currency>,
-  pair?: [Currency, Currency],
-): Permit2TransactionStep | undefined {
+export function createPermit2TransactionStep({
+  txRequest,
+  amountIn,
+  pair,
+}: {
+  txRequest?: ValidatedTransactionRequest
+  amountIn?: CurrencyAmount<Currency>
+  pair?: [Currency, Currency]
+}): Permit2TransactionStep | undefined {
   if (!txRequest?.data || !amountIn) {
     return undefined
   }

@@ -38,8 +38,8 @@ export function RemoveRecoveryPhraseVerify(): JSX.Element {
 
   const onRemove = async (): Promise<void> => {
     const accountsToRemove = associatedAccounts
-    const mnemonicId = accountsToRemove?.[0]?.mnemonicId
-    const accAddress = accountsToRemove?.[0]?.address
+    const mnemonicId = accountsToRemove[0]?.mnemonicId
+    const accAddress = accountsToRemove[0]?.address
 
     if (!accAddress) {
       logger.error(new Error('No accounts to remove'), {
@@ -117,7 +117,7 @@ export function RemoveRecoveryPhraseVerify(): JSX.Element {
               {...(showPasswordError && { borderColor: '$statusCritical' })}
             />
             <Text color="$statusCritical" minHeight="$spacing24" textAlign="center" variant="body2">
-              {showPasswordError ? t('setting.recoveryPhrase.remove.password.error') : ''}
+              {showPasswordError ? t('extension.passwordPrompt.error.wrongPassword') : ''}
             </Text>
           </Flex>
           <Flex pb="$spacing24">

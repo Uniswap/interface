@@ -45,7 +45,7 @@ export const Switch = memo(function Switch({
   const trackStyle = useAnimatedStyle(() => {
     const isOn = progress.value
     return {
-      backgroundColor: withTiming(getTrackColor(isOn, disabled, isBranded, colors), ANIMATION_CONFIG),
+      backgroundColor: withTiming(getTrackColor({ isOn, disabled, isBranded, colors }), ANIMATION_CONFIG),
       opacity: disabled && isOn ? 0.6 : 1,
     }
   })
@@ -61,7 +61,7 @@ export const Switch = memo(function Switch({
           ),
         },
       ],
-      backgroundColor: withTiming(getThumbColor(isOn, disabled, isBranded, colors), ANIMATION_CONFIG),
+      backgroundColor: withTiming(getThumbColor({ isOn, disabled, colors }), ANIMATION_CONFIG),
     }
   })
 
@@ -93,7 +93,7 @@ export const Switch = memo(function Switch({
       <Animated.View style={[styles.track, style, trackStyle]}>
         <Animated.View style={[styles.thumb, thumbStyle]}>
           <Animated.View style={[styles.iconContainer, iconStyle]}>
-            <Check size={14} color={getIconColor(progress.value, disabled, isBranded, colors)} />
+            <Check size={14} color={getIconColor({ isOn: progress.value, disabled, isBranded, colors })} />
           </Animated.View>
         </Animated.View>
       </Animated.View>
@@ -102,12 +102,17 @@ export const Switch = memo(function Switch({
 })
 
 // Shared worklets for color calculations
-function getTrackColor(
-  isOn: number,
-  disabled: boolean | undefined,
-  isBranded: boolean,
-  colors: ReturnType<typeof useSporeColors>,
-): string {
+function getTrackColor({
+  isOn,
+  disabled,
+  isBranded,
+  colors,
+}: {
+  isOn: number
+  disabled: boolean | undefined
+  isBranded: boolean
+  colors: ReturnType<typeof useSporeColors>
+}): string {
   'worklet'
   if (disabled && !isOn) {
     return colors.surface3.val
@@ -118,12 +123,15 @@ function getTrackColor(
   return isOn ? colors.accent3.val : colors.neutral3.val
 }
 
-function getThumbColor(
-  isOn: number,
-  disabled: boolean | undefined,
-  isBranded: boolean,
-  colors: ReturnType<typeof useSporeColors>,
-): string {
+function getThumbColor({
+  isOn,
+  disabled,
+  colors,
+}: {
+  isOn: number
+  disabled: boolean | undefined
+  colors: ReturnType<typeof useSporeColors>
+}): string {
   'worklet'
   if (disabled && !isOn) {
     return colors.neutral3.val
@@ -131,12 +139,17 @@ function getThumbColor(
   return colors.white.val
 }
 
-function getIconColor(
-  isOn: number,
-  disabled: boolean | undefined,
-  isBranded: boolean,
-  colors: ReturnType<typeof useSporeColors>,
-): string {
+function getIconColor({
+  isOn,
+  disabled,
+  isBranded,
+  colors,
+}: {
+  isOn: number
+  disabled: boolean | undefined
+  isBranded: boolean
+  colors: ReturnType<typeof useSporeColors>
+}): string {
   'worklet'
   if (disabled && !isOn) {
     return colors.white.val

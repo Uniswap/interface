@@ -44,6 +44,7 @@ export function setupi18n(): undefined {
         return import(`./locales/translations/${locale}.json`)
       }),
     )
+    // eslint-disable-next-line max-params
     .on('failedLoading', (language, namespace, msg) => {
       logger.error(new Error(`Error loading language ${language} ${namespace}: ${msg}`), {
         tags: {

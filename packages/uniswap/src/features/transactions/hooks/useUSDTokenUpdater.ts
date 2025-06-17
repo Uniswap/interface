@@ -46,10 +46,10 @@ export function useUSDTokenUpdater({
       const stablecoinAmount = getCurrencyAmount({
         value: exactAmountUSD,
         valueType: ValueType.Exact,
-        currency: STABLECOIN_AMOUNT_OUT[currency.chainId]?.currency,
+        currency: STABLECOIN_AMOUNT_OUT[currency.chainId].currency,
       })
 
-      const currencyAmount = stablecoinAmount ? price?.invert().quote(stablecoinAmount) : undefined
+      const currencyAmount = stablecoinAmount ? price.invert().quote(stablecoinAmount) : undefined
 
       return onTokenAmountUpdated(currencyAmount?.toExact() ?? '')
     }
@@ -59,7 +59,7 @@ export function useUSDTokenUpdater({
       valueType: ValueType.Exact,
       currency,
     })
-    const usdPrice = exactCurrencyAmount ? price?.quote(exactCurrencyAmount) : undefined
+    const usdPrice = exactCurrencyAmount ? price.quote(exactCurrencyAmount) : undefined
     const fiatPrice = parseFloat(usdPrice?.toExact() ?? '0') * conversionRate
 
     return onFiatAmountUpdated(fiatPrice ? fiatPrice.toFixed(NUM_DECIMALS_DISPLAY) : '')

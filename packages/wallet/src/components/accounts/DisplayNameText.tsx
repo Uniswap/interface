@@ -26,7 +26,7 @@ export function DisplayNameText({
   ...rest
 }: DisplayNameProps): JSX.Element {
   const isUnitag = displayName?.type === DisplayNameType.Unitag
-  const name = isUnitag ? displayName?.name.replaceAll(UNITAG_SUFFIX, '') : displayName?.name
+  const name = isUnitag ? displayName.name.replaceAll(UNITAG_SUFFIX, '') : displayName?.name
 
   return (
     <Flex row alignItems="center" {...rest} width={disableForcedWidth ? undefined : forcedWidth}>

@@ -1,29 +1,25 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native'
 import { Button, Flex, Separator, Text } from 'ui/src'
 import { InsufficientGas } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
-import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { InsufficientFundsNetworkRow, NetworkInfo } from 'wallet/src/features/smartWallet/InsufficientFundsNetworkRow'
-import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 const maxHeightList = 300
 
 export type SmartWalletInsufficientFundsOnNetworkModalProps = {
   isOpen: boolean
-  canContinue?: boolean
   isDisabled?: boolean
   onClose: () => void
-  onContinueButton?: (networkInfo: NetworkInfo[]) => void
-  onDisableButton?: (networkInfo: NetworkInfo[]) => void
+  onContinueButton?: (sortedData: NetworkInfo[]) => void
+  onDisableButton?: (sortedData: NetworkInfo[]) => void
   onReactivateButton?: () => void
-  showInsufficientFundsOnly?: boolean
+  networkBalances?: NetworkInfo[]
+  showActiveDelegatedNetworks?: boolean
 }
 
 export type SmartWalletInsufficientFundsOnNetworkModalState = Omit<
@@ -33,70 +29,31 @@ export type SmartWalletInsufficientFundsOnNetworkModalState = Omit<
 
 export function SmartWalletInsufficientFundsOnNetworkModal({
   isOpen,
-  canContinue,
   isDisabled,
   onClose,
   onContinueButton,
   onDisableButton,
   onReactivateButton,
-  showInsufficientFundsOnly = false,
+  networkBalances,
+  showActiveDelegatedNetworks = false,
 }: SmartWalletInsufficientFundsOnNetworkModalProps): JSX.Element {
   const { t } = useTranslation()
   const insets = useAppInsets()
-  const activeAccount = useActiveAccount()
-  const [networkInfo, setNetworkInfo] = useState<NetworkInfo[]>([])
 
-  useEffect(() => {
-    async function checkBalances(): Promise<void> {
-      if (!activeAccount?.address) {
-        setNetworkInfo([])
-        return
-      }
-
-      const networkInfoPromises = SUPPORTED_CHAIN_IDS.map(async (chainId): Promise<NetworkInfo | undefined> => {
-        try {
-          const provider = createEthersProvider(chainId)
-          const nativeBalance = (await provider?.getBalance(activeAccount.address)) ?? 0
-          const chainInfo = getChainInfo(chainId)
-
-          return {
-            chainId,
-            name: chainInfo.label ?? t('common.unknown'),
-            nativeCurrency: chainInfo.nativeCurrency.name ?? t('common.unknown'),
-            // TODO: Connect to the new gast estimate
-            hasSufficientFunds: parseInt(nativeBalance.toString(), 10) > 0,
-          }
-        } catch (error) {
-          return undefined
-        }
-      })
-
-      const networkFundsInfo = (await Promise.all(networkInfoPromises)).filter((info): info is NetworkInfo => {
-        if (info === undefined) {
-          return false
-        }
-        return !showInsufficientFundsOnly || info.hasSufficientFunds
-      })
-
-      setNetworkInfo(networkFundsInfo)
-    }
-
-    checkBalances().catch(() => {
-      setNetworkInfo([])
-    })
-  }, [activeAccount, showInsufficientFundsOnly, t])
+  const sortedData = [...(networkBalances ?? [])].sort(
+    (a, b) => Number(a.hasSufficientFunds) - Number(b.hasSufficientFunds),
+  )
+  const sufficientFundsCount = sortedData.filter((chain) => chain.hasSufficientFunds === false).length
+  const canContinue = sortedData.some((chain) => chain.hasSufficientFunds)
 
   const onConfirm = useCallback(() => {
-    onClose()
-
-    onContinueButton?.(networkInfo)
-  }, [onClose, onContinueButton, networkInfo])
+    onContinueButton?.(sortedData)
+  }, [onContinueButton, sortedData])
 
   const onDisable = useCallback(() => {
     onClose()
-
-    onDisableButton?.(networkInfo)
-  }, [onClose, onDisableButton, networkInfo])
+    onDisableButton?.(sortedData)
+  }, [onClose, onDisableButton, sortedData])
 
   const renderItem = ({ item, index }: { item: NetworkInfo; index: number }): JSX.Element => (
     <Flex>
@@ -108,8 +65,8 @@ export function SmartWalletInsufficientFundsOnNetworkModal({
 
   return (
     <Modal name={ModalName.SmartWalletInsufficientFundsOnNetworkModal} isModalOpen={isOpen} onClose={onClose}>
-      <Flex p="$spacing24">
-        <Flex centered pb="$spacing24">
+      <Flex px="$spacing24" pt="$spacing24">
+        <Flex centered>
           <Flex
             backgroundColor="$accent2"
             borderRadius="$rounded12"
@@ -122,17 +79,21 @@ export function SmartWalletInsufficientFundsOnNetworkModal({
             <InsufficientGas size="$icon.24" />
           </Flex>
           <Text variant="subheading1" color="$neutral1" mb="$spacing8">
-            {t('smartWallet.Insufficient.title', {
-              amount: networkInfo.length,
-            })}
+            {showActiveDelegatedNetworks
+              ? sortedData.length > 1
+                ? t('smartWallet.activeNetworks.title.plural', { amount: sortedData.length })
+                : t('smartWallet.activeNetworks.title')
+              : sufficientFundsCount > 1
+                ? t('smartWallet.insufficient.title.plural', { amount: sufficientFundsCount })
+                : t('smartWallet.insufficient.title')}
           </Text>
           <Text textAlign="center" variant="body3" color="$neutral2">
-            {t('smartWallet.Insufficient.description')}
+            {t('smartWallet.insufficient.description')}
           </Text>
         </Flex>
         <Flex maxHeight={maxHeightList} pb="$spacing16">
           <FlatList
-            data={networkInfo}
+            data={sortedData}
             renderItem={renderItem}
             keyExtractor={(item, index) => `${index}-${item.chainId}`}
             showsHorizontalScrollIndicator={false}
@@ -148,7 +109,7 @@ export function SmartWalletInsufficientFundsOnNetworkModal({
                 size="medium"
                 emphasis={onDisableButton ? (isDisabled ? 'tertiary' : 'primary') : 'tertiary'}
                 isDisabled={onDisableButton && isDisabled}
-                onPress={onDisable || onConfirm}
+                onPress={isDisabled ? onDisable : onConfirm}
               >
                 {t(
                   onDisableButton && isDisabled

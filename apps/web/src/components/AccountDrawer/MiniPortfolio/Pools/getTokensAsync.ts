@@ -40,7 +40,7 @@ async function fetchChunk(multicall: UniswapInterfaceMulticall, chunk: Call[]): 
   }
 }
 
-function tryParseToken(address: string, chainId: UniverseChainId, data: CallResult[]) {
+function tryParseToken({ address, chainId, data }: { address: string; chainId: UniverseChainId; data: CallResult[] }) {
   try {
     const [nameData, symbolData, decimalsData, nameDataBytes32, symbolDataBytes32] = data
 
@@ -63,11 +63,20 @@ function tryParseToken(address: string, chainId: UniverseChainId, data: CallResu
   }
 }
 
-function parseTokens(addresses: string[], chainId: UniverseChainId, returnData: CallResult[]) {
+function parseTokens({
+  addresses,
+  chainId,
+  returnData,
+}: {
+  addresses: string[]
+  chainId: UniverseChainId
+  returnData: CallResult[]
+}) {
   const tokenDataSlices = arrayToSlices(returnData, 5)
 
+  // eslint-disable-next-line max-params
   return tokenDataSlices.reduce((acc: TokenMap, slice, index) => {
-    const parsedToken = tryParseToken(addresses[index], chainId, slice)
+    const parsedToken = tryParseToken({ address: addresses[index], chainId, data: slice })
     if (parsedToken) {
       acc[parsedToken.address] = parsedToken
     }
@@ -92,11 +101,15 @@ function createCallsForToken(address: string) {
 const TokenPromiseCache: { [key: CurrencyKey]: Promise<Token | undefined> | undefined } = {}
 
 // Returns tokens using a single RPC call to the multicall contract
-export async function getTokensAsync(
-  addresses: string[],
-  chainId: UniverseChainId,
-  multicall: UniswapInterfaceMulticall,
-): Promise<TokenMap> {
+export async function getTokensAsync({
+  addresses,
+  chainId,
+  multicall,
+}: {
+  addresses: string[]
+  chainId: UniverseChainId
+  multicall: UniswapInterfaceMulticall
+}): Promise<TokenMap> {
   if (addresses.length === 0) {
     return {}
   }
@@ -119,7 +132,9 @@ export async function getTokensAsync(
     }
   })
 
-  const calledTokens = fetchChunk(multicall, calls).then((returnData) => parseTokens(addresses, chainId, returnData))
+  const calledTokens = fetchChunk(multicall, calls).then((returnData) =>
+    parseTokens({ addresses, chainId, returnData }),
+  )
 
   // Caches tokens currently being fetched for further calls to use
   formattedAddresses.forEach(

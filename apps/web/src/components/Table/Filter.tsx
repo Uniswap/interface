@@ -61,7 +61,7 @@ export function Filter<T extends string>({
   const media = useMedia()
   const isMobile = media.md
   const filterModalRef = useRef<HTMLDivElement>(null)
-  useOnClickOutside(filterModalRef, isOpen ? toggleFilterModal : undefined)
+  useOnClickOutside({ node: filterModalRef, handler: isOpen ? toggleFilterModal : undefined })
 
   const handleFilterOptionClick = useCallback(
     (filter: T) => {

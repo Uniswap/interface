@@ -23,7 +23,7 @@ const pendingTransactionResponse = {
   hash: '0x123',
   timestamp: 1000,
   from: '0x123',
-  wait: jest.fn(),
+  wait: vi.fn(),
   nonce: 1,
   gasLimit: BigNumber.from(1000),
   data: '0x',
@@ -46,7 +46,7 @@ const mockRevocationTransactionInfo: TransactionInfo = {
   amount: '0',
 }
 
-jest.mock('hooks/useAccount')
+vi.mock('hooks/useAccount')
 
 describe('Transactions hooks', () => {
   beforeEach(() => {
@@ -56,8 +56,14 @@ describe('Transactions hooks', () => {
       status: 'connected',
     } as unknown as ReturnType<typeof useAccount>)
 
-    jest.useFakeTimers()
+    vi.useFakeTimers()
     store.dispatch(clearAllTransactions({ chainId: UniverseChainId.Mainnet }))
+
+    vi.spyOn(console, 'info').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   function addPendingTransaction(txInfo: TransactionInfo) {

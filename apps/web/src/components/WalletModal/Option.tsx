@@ -1,5 +1,4 @@
 import { UseMutateFunction } from '@tanstack/react-query'
-import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import Loader from 'components/Icons/LoadingSpinner'
 import { DetectedBadge } from 'components/WalletModal/shared'
 import { ConnectorID, useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
@@ -25,6 +24,7 @@ import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { isMobileWeb } from 'utilities/src/platform'
 import { isIFramed } from 'utils/isIFramed'
@@ -231,13 +231,13 @@ export function Option({
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const { signInWithPasskey } = useSignInWithPasskey()
   const [, setPersistHideMobileAppPromoBanner] = useAtom(persistHideMobileAppPromoBannerAtom)
-  const isPendingConnection = connection.isPending && connection.variables?.connector === connector
+  const isPendingConnection = connection.isPending && connection.variables.connector === connector
   const isRecent = connectorId === useRecentConnectorId()
   const themeColors = useSporeColors()
   const icon = getIcon({ connector, connectorId, isEmbeddedWalletEnabled, themeColors })
   const text = getConnectorText({ connector, connectorId, t })
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
-  const isDisabled = Boolean(connection?.isPending && !isIFramed())
+  const isDisabled = Boolean(connection.isPending && !isIFramed())
 
   const handleConnectionFn = useMemo(
     () =>
@@ -269,12 +269,12 @@ export function Option({
     >
       <Trace
         logPress
-        eventOnTrigger={InterfaceEventName.WALLET_SELECTED}
+        eventOnTrigger={InterfaceEventName.WalletSelected}
         properties={{
           wallet_name: connector?.name ?? connectorId,
           wallet_type: walletTypeToAmplitudeWalletType(connector?.type ?? connectorId),
         }}
-        element={InterfaceElementName.WALLET_TYPE_OPTION}
+        element={ElementName.WalletTypeOption}
       >
         <Flex row alignItems="center" gap="$gap12">
           {icon}

@@ -15,7 +15,7 @@ export function getSymbolDisplayText(symbol: Maybe<string>): Maybe<string> {
   }
 
   return symbol.length > DEFAULT_MAX_SYMBOL_CHARACTERS
-    ? symbol?.substring(0, DEFAULT_MAX_SYMBOL_CHARACTERS - 1) + '…'
+    ? symbol.substring(0, DEFAULT_MAX_SYMBOL_CHARACTERS - 1) + '…'
     : symbol
 }
 
@@ -50,15 +50,21 @@ export function deserializeToken(serializedToken: SerializedToken): Token {
   )
 }
 
-export function getFormattedCurrencyAmount(
-  currency: Maybe<Currency>,
-  currencyAmountRaw: string,
-  formatter: LocalizationContextState,
+export function getFormattedCurrencyAmount({
+  currency,
+  amount,
+  formatter,
   isApproximateAmount = false,
   valueType = ValueType.Raw,
-): string {
+}: {
+  currency: Maybe<Currency>
+  amount: string
+  formatter: LocalizationContextState
+  isApproximateAmount?: boolean
+  valueType?: ValueType
+}): string {
   const currencyAmount = getCurrencyAmount({
-    value: currencyAmountRaw,
+    value: amount,
     valueType,
     currency,
   })
@@ -81,7 +87,7 @@ export function getCurrencyDisplayText(
     return symbolDisplayText
   }
 
-  return tokenAddressString && getValidAddress(tokenAddressString, true)
+  return tokenAddressString && getValidAddress({ address: tokenAddressString, withChecksum: true })
     ? shortenAddress(tokenAddressString)
     : tokenAddressString
 }

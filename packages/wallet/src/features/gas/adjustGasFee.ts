@@ -15,11 +15,15 @@ export type FeeDetails =
  *
  * This happens if gas service returns different gas param type than what ethers expects for the chain.
  */
-export function getAdjustedGasFeeDetails(
-  request: providers.TransactionRequest,
-  currentGasFeeParams: NonNullable<GasFeeResult['params']>,
-  adjustmentFactor: number,
-): FeeDetails {
+export function getAdjustedGasFeeDetails({
+  request,
+  currentGasFeeParams,
+  adjustmentFactor,
+}: {
+  request: providers.TransactionRequest
+  currentGasFeeParams: NonNullable<GasFeeResult['params']>
+  adjustmentFactor: number
+}): FeeDetails {
   // Txn needs to be submitted with legacy gas params
   if (request.gasPrice) {
     const currentGasPrice =
@@ -28,7 +32,11 @@ export function getAdjustedGasFeeDetails(
     return {
       type: FeeType.LEGACY,
       params: {
-        gasPrice: multiplyByFactor(request.gasPrice, currentGasPrice, adjustmentFactor),
+        gasPrice: multiplyByFactor({
+          value: request.gasPrice,
+          minValue: currentGasPrice,
+          adjustmentFactor,
+        }),
       },
     }
   }
@@ -44,12 +52,16 @@ export function getAdjustedGasFeeDetails(
     return {
       type: FeeType.EIP1559,
       params: {
-        maxFeePerGas: multiplyByFactor(request.maxFeePerGas, currentMaxFeePerGas, adjustmentFactor),
-        maxPriorityFeePerGas: multiplyByFactor(
-          request.maxPriorityFeePerGas,
-          currentMaxPriorityFeePerGas,
+        maxFeePerGas: multiplyByFactor({
+          value: request.maxFeePerGas,
+          minValue: currentMaxFeePerGas,
           adjustmentFactor,
-        ),
+        }),
+        maxPriorityFeePerGas: multiplyByFactor({
+          value: request.maxPriorityFeePerGas,
+          minValue: currentMaxPriorityFeePerGas,
+          adjustmentFactor,
+        }),
       },
     }
   }
@@ -118,7 +130,15 @@ function determineError(
   return new Error('Unable to determine gas fee structure.')
 }
 
-function multiplyByFactor(value: BigNumberish, minValue: BigNumberish | null, adjustmentFactor: number): string {
+function multiplyByFactor({
+  value,
+  minValue,
+  adjustmentFactor,
+}: {
+  value: BigNumberish
+  minValue: BigNumberish | null
+  adjustmentFactor: number
+}): string {
   const baseValue = BigNumberMax(BigNumber.from(value), BigNumber.from(minValue ?? 0))
   return Math.floor(baseValue.toNumber() * adjustmentFactor).toString()
 }

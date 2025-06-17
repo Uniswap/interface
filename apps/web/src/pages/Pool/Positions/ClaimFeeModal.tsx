@@ -2,7 +2,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
-import { useModalLiquidityInitialState, usePositionDerivedInfo } from 'components/Liquidity/hooks'
+import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
 import { getProtocolItems } from 'components/Liquidity/utils'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ZERO_ADDRESS } from 'constants/misc'
@@ -19,6 +19,7 @@ import { Passkey } from 'ui/src/components/icons/Passkey'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
@@ -28,9 +29,10 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
-import { InterfaceEventNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import {
   CollectFeesTxAndGasInfo,
   LiquidityTransactionType,
@@ -82,7 +84,7 @@ function UnwrapUnderCard({
 export function ClaimFeeModal() {
   const { t } = useTranslation()
   const trace = useTrace()
-  const { formatCurrencyAmount } = useLocalizationContext()
+  const { formatCurrencyAmount, convertFiatAmountFormatted } = useLocalizationContext()
   const positionInfo = useModalLiquidityInitialState()
   const account = useAccountMeta()
   const [currentTransactionStep, setCurrentTransactionStep] = useState<
@@ -96,19 +98,17 @@ export function ClaimFeeModal() {
   const canUnwrap = positionInfo && chainId && (canUnwrap0 || canUnwrap1)
 
   const { closeModal } = useModalState(ModalName.ClaimFee)
-  const {
-    feeValue0: token0Fees,
-    feeValue1: token1Fees,
-    fiatFeeValue0: token0FeesUsd,
-    fiatFeeValue1: token1FeesUsd,
-  } = usePositionDerivedInfo(positionInfo)
+
+  const { fee0Amount, fee1Amount, token0UncollectedFees, token1UncollectedFees } = positionInfo ?? {}
+  const fee0AmountUsd = useUSDCValue(fee0Amount, PollingInterval.Slow)
+  const fee1AmountUsd = useUSDCValue(fee1Amount, PollingInterval.Slow)
 
   const currency0 = getCurrencyWithOptionalUnwrap({
-    currency: token0Fees?.currency,
+    currency: fee0Amount?.currency,
     shouldUnwrap: unwrapNativeCurrency && canUnwrap0,
   })
   const currency1 = getCurrencyWithOptionalUnwrap({
-    currency: token1Fees?.currency,
+    currency: fee1Amount?.currency,
     shouldUnwrap: unwrapNativeCurrency && canUnwrap1,
   })
   const currencyInfo0 = useCurrencyInfo(currencyId(currency0))
@@ -139,16 +139,14 @@ export function ClaimFeeModal() {
           token0: currency0.isNative ? ZERO_ADDRESS : currency0.address,
           token1: currency1.isNative ? ZERO_ADDRESS : currency1.address,
           fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
-          tickSpacing: positionInfo?.tickSpacing ? Number(positionInfo?.tickSpacing) : undefined,
+          tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
           hooks: positionInfo.v4hook,
         },
         tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,
         tickUpper: positionInfo.tickUpper ? Number(positionInfo.tickUpper) : undefined,
       },
-      expectedTokenOwed0RawAmount:
-        positionInfo.version !== ProtocolVersion.V4 ? token0Fees?.quotient.toString() : undefined,
-      expectedTokenOwed1RawAmount:
-        positionInfo.version !== ProtocolVersion.V4 ? token1Fees?.quotient.toString() : undefined,
+      expectedTokenOwed0RawAmount: positionInfo.version !== ProtocolVersion.V4 ? token0UncollectedFees : undefined,
+      expectedTokenOwed1RawAmount: positionInfo.version !== ProtocolVersion.V4 ? token1UncollectedFees : undefined,
       collectAsWETH: positionInfo.version !== ProtocolVersion.V4 ? !unwrapNativeCurrency : undefined,
     } satisfies ClaimLPFeesRequest
   }, [
@@ -156,8 +154,8 @@ export function ClaimFeeModal() {
     currency0,
     currency1,
     positionInfo,
-    token0Fees?.quotient,
-    token1Fees?.quotient,
+    token0UncollectedFees,
+    token1UncollectedFees,
     unwrapNativeCurrency,
   ])
 
@@ -181,7 +179,7 @@ export function ClaimFeeModal() {
       },
     })
 
-    sendAnalyticsEvent(InterfaceEventNameLocal.CollectLiquidityFailed, {
+    sendAnalyticsEvent(InterfaceEventName.CollectLiquidityFailed, {
       message,
     })
   }
@@ -195,19 +193,19 @@ export function ClaimFeeModal() {
 
     return {
       type: LiquidityTransactionType.Collect,
-      protocolVersion: positionInfo?.version,
+      protocolVersion: positionInfo.version,
       action: {
         type: LiquidityTransactionType.Collect,
-        currency0Amount: token0Fees || CurrencyAmount.fromRawAmount(positionInfo.currency0Amount.currency, 0),
-        currency1Amount: token1Fees || CurrencyAmount.fromRawAmount(positionInfo.currency1Amount.currency, 0),
+        currency0Amount: fee0Amount || CurrencyAmount.fromRawAmount(positionInfo.currency0Amount.currency, 0),
+        currency1Amount: fee1Amount || CurrencyAmount.fromRawAmount(positionInfo.currency1Amount.currency, 0),
       },
       txRequest: validatedTxRequest,
     }
-  }, [data?.claim, token0Fees, token1Fees, positionInfo])
+  }, [data?.claim, fee0Amount, fee1Amount, positionInfo])
 
   const onPressConfirm = async () => {
     const isValidTx = isValidLiquidityTxContext(txInfo)
-    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
+    if (!account || account.type !== AccountType.SignerMnemonic || !isValidTx) {
       return
     }
 
@@ -226,16 +224,20 @@ export function ClaimFeeModal() {
           setCurrentTransactionStep(undefined)
         },
         analytics:
-          positionInfo && token0Fees?.currency && token1Fees?.currency
+          positionInfo && fee0Amount?.currency && fee1Amount?.currency
             ? {
                 ...getLPBaseAnalyticsProperties({
                   trace,
+                  tickSpacing: positionInfo.tickSpacing,
+                  tickLower: positionInfo.tickLower,
+                  tickUpper: positionInfo.tickUpper,
+                  hook: positionInfo.v4hook,
                   poolId: positionInfo.poolId,
-                  currency0: currencyInfo0?.currency ?? token0Fees.currency,
-                  currency1: currencyInfo1?.currency ?? token1Fees.currency,
-                  currency0AmountUsd: token0FeesUsd,
-                  currency1AmountUsd: token1FeesUsd,
-                  version: positionInfo?.version,
+                  currency0: currencyInfo0?.currency ?? fee0Amount.currency,
+                  currency1: currencyInfo1?.currency ?? fee1Amount.currency,
+                  currency0AmountUsd: fee0AmountUsd,
+                  currency1AmountUsd: fee1AmountUsd,
+                  version: positionInfo.version,
                 }),
               }
             : undefined,
@@ -252,7 +254,7 @@ export function ClaimFeeModal() {
           closeModal={closeModal}
           closeDataTestId="ClaimFeeModal-close-icon"
         />
-        {token0Fees && token1Fees && (
+        {fee0Amount && fee1Amount && (
           <Flex gap="$gap4">
             <Flex
               backgroundColor="$surface2"
@@ -272,11 +274,11 @@ export function ClaimFeeModal() {
                 </Flex>
                 <Flex row gap="$gap8" alignItems="center">
                   <Text variant="body1" color="$neutral1">
-                    {formatCurrencyAmount({ value: token0Fees })}
+                    {formatCurrencyAmount({ value: fee0Amount })}
                   </Text>
-                  {token0FeesUsd && (
+                  {fee0AmountUsd && (
                     <Text variant="body1" color="$neutral2">
-                      ({formatCurrencyAmount({ value: token0FeesUsd, type: NumberType.FiatTokenPrice })})
+                      ({convertFiatAmountFormatted(fee0AmountUsd.toExact(), NumberType.FiatTokenPrice)})
                     </Text>
                   )}
                 </Flex>
@@ -290,11 +292,11 @@ export function ClaimFeeModal() {
                 </Flex>
                 <Flex row gap="$gap8" alignItems="center">
                   <Text variant="body1" color="$neutral1">
-                    {formatCurrencyAmount({ value: token1Fees })}
+                    {formatCurrencyAmount({ value: fee1Amount })}
                   </Text>
-                  {token1FeesUsd && (
+                  {fee1AmountUsd && (
                     <Text variant="body1" color="$neutral2">
-                      ({formatCurrencyAmount({ value: token1FeesUsd, type: NumberType.FiatTokenPrice })})
+                      ({convertFiatAmountFormatted(fee1AmountUsd.toExact(), NumberType.FiatTokenPrice)})
                     </Text>
                   )}
                 </Flex>

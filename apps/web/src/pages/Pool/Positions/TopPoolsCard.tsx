@@ -32,7 +32,7 @@ export function TopPoolsCard({ pool }: { pool: PoolStat }) {
       justifyContent="space-between"
       cursor="pointer"
       hoverStyle={{ backgroundColor: '$surface1Hovered', borderColor: '$surface3Hovered' }}
-      onPress={() => navigate(`/explore/pools/${toGraphQLChain(chainId ?? defaultChainId).toLowerCase()}/${pool.id}`)}
+      onPress={() => navigate(`/explore/pools/${toGraphQLChain(chainId).toLowerCase()}/${pool.id}`)}
     >
       <Flex row gap="$gap16">
         <DoubleCurrencyLogo currencies={[token0, token1]} size={44} />

@@ -64,7 +64,18 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
     throw new Error('a position must be defined')
   }
 
-  const { version, poolId, currency0Amount, currency1Amount, feeTier, chainId } = increaseLiquidityState.position
+  const {
+    version,
+    poolId,
+    currency0Amount,
+    currency1Amount,
+    feeTier,
+    v4hook,
+    tickSpacing,
+    tickLower,
+    tickUpper,
+    chainId,
+  } = increaseLiquidityState.position
 
   const currentPrice = usePositionCurrentPrice(increaseLiquidityState.position)
   const poolTokenPercentage = useGetPoolTokenPercentage(increaseLiquidityState.position)
@@ -75,10 +86,10 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
     }
 
     const additionalToken0Amount = CurrencyAmount.fromRawAmount(
-      updatedCurrencyAmounts?.TOKEN0?.currency,
+      updatedCurrencyAmounts.TOKEN0.currency,
       currency0Amount.quotient,
     )
-    return updatedCurrencyAmounts?.TOKEN0?.add(additionalToken0Amount)
+    return updatedCurrencyAmounts.TOKEN0.add(additionalToken0Amount)
   }, [currency0Amount, updatedCurrencyAmounts?.TOKEN0])
   const newToken0AmountUSD = useUSDCValue(newToken0Amount)
 
@@ -88,10 +99,10 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
     }
 
     const additionalToken1Amount = CurrencyAmount.fromRawAmount(
-      updatedCurrencyAmounts?.TOKEN1?.currency,
+      updatedCurrencyAmounts.TOKEN1.currency,
       currency1Amount.quotient,
     )
-    return updatedCurrencyAmounts?.TOKEN1?.add(additionalToken1Amount)
+    return updatedCurrencyAmounts.TOKEN1.add(additionalToken1Amount)
   }, [currency1Amount, updatedCurrencyAmounts?.TOKEN1])
   const newToken1AmountUSD = useUSDCValue(newToken1Amount)
 
@@ -109,7 +120,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
     const isValidTx = isValidLiquidityTxContext(txInfo)
     if (
       !account ||
-      account?.type !== AccountType.SignerMnemonic ||
+      account.type !== AccountType.SignerMnemonic ||
       !isValidTx ||
       !increaseLiquidityState.position ||
       !currencyAmounts?.TOKEN0 ||
@@ -132,15 +143,19 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
           ...getLPBaseAnalyticsProperties({
             trace,
             fee: feeTier,
+            tickSpacing,
+            tickLower,
+            tickUpper,
+            hook: v4hook,
             version,
             poolId,
-            currency0: currencyAmounts?.TOKEN0?.currency,
-            currency1: currencyAmounts?.TOKEN1?.currency,
+            currency0: currencyAmounts.TOKEN0.currency,
+            currency1: currencyAmounts.TOKEN1.currency,
             currency0AmountUsd: currencyAmountsUSDValue?.TOKEN0,
             currency1AmountUsd: currencyAmountsUSDValue?.TOKEN1,
           }),
-          expectedAmountBaseRaw: currencyAmounts?.TOKEN0.quotient?.toString() ?? '-',
-          expectedAmountQuoteRaw: currencyAmounts?.TOKEN1.quotient?.toString() ?? '-',
+          expectedAmountBaseRaw: currencyAmounts.TOKEN0.quotient.toString(),
+          expectedAmountQuoteRaw: currencyAmounts.TOKEN1.quotient.toString(),
           createPosition: false,
         },
       }),

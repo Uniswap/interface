@@ -34,13 +34,13 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
   const [hovered, setHovered] = useState(false)
 
   const amounts = useOrderAmounts(order.offchainOrderDetails)
-  const amountsDefined = !!amounts?.inputAmount?.currency && !!amounts?.outputAmount?.currency
+  const amountsDefined = !!amounts?.inputAmount.currency && !!amounts.outputAmount.currency
 
   const displayPrice = useMemo(() => {
     if (!amountsDefined) {
       return undefined
     }
-    const tradePrice = new Price({ baseAmount: amounts?.inputAmount, quoteAmount: amounts?.outputAmount })
+    const tradePrice = new Price({ baseAmount: amounts.inputAmount, quoteAmount: amounts.outputAmount })
     return tradePrice.quote(
       CurrencyAmount.fromRawAmount(
         amounts.inputAmount.currency,
@@ -71,11 +71,17 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
             <Text variant="body4" color="$neutral2">
               <Trans i18nKey="common.pending.cancellation" />
             </Text>
-          ) : offchainOrderDetails?.expiry ? (
+          ) : offchainOrderDetails.expiry ? (
             <Text variant="body4" color="$neutral2">
               <Trans
                 i18nKey="common.limits.expires"
-                values={{ timestamp: formatTimestamp(offchainOrderDetails.expiry * 1000, true, FormatType.Short) }}
+                values={{
+                  timestamp: formatTimestamp({
+                    timestamp: offchainOrderDetails.expiry * 1000,
+                    includeYear: true,
+                    type: FormatType.Short,
+                  }),
+                }}
               />
             </Text>
           ) : undefined

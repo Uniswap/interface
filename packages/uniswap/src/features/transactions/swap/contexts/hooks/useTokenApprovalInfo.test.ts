@@ -6,7 +6,7 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/hooks'
+import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/utils'
 import {
   TokenApprovalInfoParams,
   useTokenApprovalInfo,

@@ -1,36 +1,52 @@
 import { usePoolData } from 'appGraphql/data/pools/usePoolData'
 import PoolDetails from 'pages/PoolDetails'
-import Router from 'react-router-dom'
+import React from 'react'
+import { useParams } from 'react-router-dom'
 import store from 'state'
 import { mocked } from 'test-utils/mocked'
 import { validParams, validPoolDataResponse } from 'test-utils/pools/fixtures'
-import { render, screen, waitFor } from 'test-utils/render'
+import { act, render, waitFor } from 'test-utils/render'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useParams: jest.fn(),
+// eslint-disable-next-line import/no-unused-modules, jest/no-export
+export const mockNavigate = vi.fn()
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom')
+  return {
+    ...actual,
+    default: actual,
+    useParams: vi.fn(),
+    useNavigate: () => mockNavigate,
+  }
+})
+
+vi.mock('appGraphql/data/pools/usePoolData', async () => {
+  const actual = await vi.importActual('appGraphql/data/pools/usePoolData')
+  return {
+    ...actual,
+    usePoolData: vi.fn(),
+  }
+})
+
+vi.mock('hooks/useColor', async () => {
+  const actual = await vi.importActual('hooks/useColor')
+  return {
+    ...actual,
+    useColor: vi.fn().mockReturnValue('#FFFFFF'),
+  }
+})
+
+vi.mock('pages/Swap', () => ({
+  default: () => React.createElement(React.Fragment),
 }))
-
-jest.mock('appGraphql/data/pools/usePoolData', () => {
-  const originalModule = jest.requireActual('appGraphql/data/pools/usePoolData')
-  return {
-    ...originalModule,
-    usePoolData: jest.fn(),
-  }
-})
-
-jest.mock('hooks/useColor', () => {
-  const originalModule = jest.requireActual('hooks/useColor')
-  return {
-    ...originalModule,
-    useColor: jest.fn().mockReturnValue('#FFFFFF'),
-  }
-})
 
 describe('PoolDetailsPage', () => {
   beforeEach(() => {
-    jest.spyOn(Router, 'useParams').mockReturnValue(validParams)
+    // Reset all mocks
+    vi.clearAllMocks()
+
+    mocked(useParams).mockReturnValue(validParams)
     mocked(usePoolData).mockReturnValue(validPoolDataResponse)
     store.dispatch(
       dismissTokenWarning({
@@ -56,36 +72,46 @@ describe('PoolDetailsPage', () => {
     )
   })
 
-  it('not found page displayed when given no poolAddress', () => {
-    jest.spyOn(Router, 'useParams').mockReturnValue({ chainName: validParams.chainName })
+  it('navigates to not found page when given no poolAddress', async () => {
+    mocked(useParams).mockReturnValue({ chainName: validParams.chainName })
     render(<PoolDetails />)
 
-    waitFor(() => {
-      expect(screen.getByText(/not found/i)).toBeInTheDocument()
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1))
+    })
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/explore/pools?type=pools&result=not-found')
     })
   })
 
-  it('not found page displayed when given no chainName', () => {
-    jest.spyOn(Router, 'useParams').mockReturnValue({ poolAddress: validParams.poolAddress })
+  it('navigates to not found page when given no chainName', async () => {
+    mocked(useParams).mockReturnValue({ poolAddress: validParams.poolAddress })
     render(<PoolDetails />)
 
-    waitFor(() => {
-      expect(screen.getByText(/not found/i)).toBeInTheDocument()
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1))
+    })
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/explore/pools?type=pools&result=not-found')
     })
   })
 
-  it('not found page displayed when given invalid chainName', () => {
-    jest
-      .spyOn(Router, 'useParams')
-      .mockReturnValue({ poolAddress: validParams.poolAddress, chainName: 'invalid-chain' })
+  it('navigates to not found page when given invalid chainName', async () => {
+    mocked(useParams).mockReturnValue({ poolAddress: validParams.poolAddress, chainName: 'invalid-chain' })
     render(<PoolDetails />)
 
-    waitFor(() => {
-      expect(screen.getByText(/not found/i)).toBeInTheDocument()
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1))
+    })
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/explore/pools?type=pools&result=not-found')
     })
   })
 
-  it('not found page displayed when no data is received from backend', () => {
+  it('navigates to not found page when no data is received from backend', async () => {
     mocked(usePoolData).mockReturnValue({
       data: undefined,
       loading: false,
@@ -93,21 +119,12 @@ describe('PoolDetailsPage', () => {
     })
     render(<PoolDetails />)
 
-    waitFor(() => {
-      expect(screen.getByText(/not found/i)).toBeInTheDocument()
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1))
     })
-  })
 
-  it('nothing displayed while data is loading', () => {
-    mocked(usePoolData).mockReturnValue({
-      data: undefined,
-      loading: true,
-      error: false,
-    })
-    render(<PoolDetails />)
-
-    waitFor(() => {
-      expect(screen.getByTestId('pdp-links-loading-skeleton')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/explore/pools?type=pools&result=not-found')
     })
   })
 })

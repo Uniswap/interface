@@ -139,7 +139,15 @@ function showAlert(title: string, message: string): Promise<boolean> {
   })
 }
 
-function* cancelErrorSession(dappName: string, chainLabels: string, proposalId: number) {
+function* cancelErrorSession({
+  dappName,
+  chainLabels,
+  proposalId,
+}: {
+  dappName: string
+  chainLabels: string
+  proposalId: number
+}) {
   yield* call([wcWeb3Wallet, wcWeb3Wallet.rejectSession], {
     id: proposalId,
     reason: getSdkError('UNSUPPORTED_CHAINS'),
@@ -167,12 +175,12 @@ export function* handleSessionProposal(proposal: ProposalTypes.Struct & { verify
     proposer: { metadata: dapp },
   } = proposal
 
-  const namespaceCheck = proposal.requiredNamespaces
+  const namespaceCheck = proposal.optionalNamespaces
   const firstNamespace = Object.keys(namespaceCheck)[0]
 
   if (firstNamespace && firstNamespace !== 'eip155') {
     const chainLabels = ALL_CHAIN_IDS.map(getChainLabel).join(', ')
-    yield* cancelErrorSession(dapp.name, chainLabels, proposal.id)
+    yield* cancelErrorSession({ dappName: dapp.name, chainLabels, proposalId: proposal.id })
     return
   }
 
@@ -228,7 +236,7 @@ export function* handleSessionProposal(proposal: ProposalTypes.Struct & { verify
   } catch (e) {
     const chainLabels = ALL_CHAIN_IDS.map(getChainLabel).join(', ')
 
-    yield* cancelErrorSession(dapp.name, chainLabels, proposal.id)
+    yield* cancelErrorSession({ dappName: dapp.name, chainLabels, proposalId: proposal.id })
 
     logger.debug(
       'WalletConnectSaga',
@@ -329,7 +337,7 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
   }
 
   if (eip5792Methods.includes(method)) {
-    const eip5792MethodsEnabled = getFeatureFlag(FeatureFlags.Eip5792Methods) ?? false
+    const eip5792MethodsEnabled = getFeatureFlag(FeatureFlags.Eip5792Methods)
     if (!eip5792MethodsEnabled) {
       yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
         topic,
@@ -348,14 +356,34 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
     case EthMethod.PersonalSign:
     case EthMethod.SignTypedData:
     case EthMethod.SignTypedDataV4: {
-      const request = parseSignRequest(method, topic, id, chainId, dapp, requestParams)
+      const request = parseSignRequest({
+        method,
+        topic,
+        internalId: id,
+        chainId,
+        dapp,
+        requestParams,
+      })
       yield* put(addRequest(request))
       break
     }
     case EthMethod.EthSendTransaction: {
-      const request = parseTransactionRequest(method, topic, id, chainId, dapp, requestParams)
+      const request = parseTransactionRequest({
+        method,
+        topic,
+        internalId: id,
+        chainId,
+        dapp,
+        requestParams,
+      })
       // Validate for self-call with data
-      if (isSelfCallWithData(request.transaction.from, request.transaction.to, request.transaction.data)) {
+      if (
+        isSelfCallWithData({
+          from: request.transaction.from,
+          to: request.transaction.to,
+          data: request.transaction.data,
+        })
+      ) {
         yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
           topic,
           response: {
@@ -370,10 +398,17 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
       break
     }
     case EthMethod.WalletSendCalls: {
-      const request = parseSendCallsRequest(topic, id, chainId, dapp, requestParams, accountAddress)
+      const request = parseSendCallsRequest({
+        topic,
+        internalId: id,
+        chainId,
+        dapp,
+        requestParams,
+        account: accountAddress,
+      })
       // Validate for self-call with data in any of the calls
       const hasSelfCall = request.calls.some((batchCall) =>
-        isSelfCallWithData(request.account, batchCall.to, batchCall.data),
+        isSelfCallWithData({ from: request.account, to: batchCall.to, data: batchCall.data }),
       )
       if (hasSelfCall) {
         yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
@@ -386,12 +421,19 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
         })
         return
       }
-      yield* call(handleSendCalls, topic, id, request)
+      yield* call(handleSendCalls, { topic, requestId: id, request })
       break
     }
     case EthMethod.WalletGetCallsStatus: {
-      const { id: batchId } = parseGetCallsStatusRequest(topic, id, chainId, dapp, requestParams, accountAddress)
-      yield* call(handleGetCallsStatus, topic, id, batchId, accountAddress)
+      const { id: batchId } = parseGetCallsStatusRequest({
+        topic,
+        internalId: id,
+        chainId,
+        dapp,
+        requestParams,
+        account: accountAddress,
+      })
+      yield* call(handleGetCallsStatus, { topic, requestId: id, batchId, accountAddress })
       break
     }
     case EthMethod.WalletGetCapabilities: {
@@ -399,7 +441,7 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
         account,
         chainIds,
         dappRequestInfo: { url: dappUrl },
-      } = parseGetCapabilitiesRequest(method, topic, id, dapp, requestParams)
+      } = parseGetCapabilitiesRequest({ method, topic, internalId: id, dapp, requestParams })
       yield* call(handleGetCapabilities, {
         topic,
         requestId: id,
@@ -408,7 +450,7 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
         chainIdsFromRequest: chainIds,
         dappName: dapp.name,
         dappUrl,
-        dappIconUrl: dapp.icons?.[0],
+        dappIconUrl: dapp.icons[0],
       })
       break
     }

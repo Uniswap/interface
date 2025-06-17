@@ -1,4 +1,3 @@
-import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import PortfolioDrawer from 'components/AccountDrawer'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
@@ -20,7 +19,7 @@ import { breakpoints } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isIFramed } from 'utils/isIFramed'
@@ -105,7 +104,7 @@ function Web3StatusInner() {
 
   const accountDrawer = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
-    sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
+    sendAnalyticsEvent(InterfaceEventName.AccountDropdownButtonClicked)
     accountDrawer.toggle()
   }, [accountDrawer])
 
@@ -134,7 +133,7 @@ function Web3StatusInner() {
 
   if (account.address) {
     return (
-      <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'open' }}>
+      <Trace logPress eventOnTrigger={InterfaceEventName.MiniPortfolioToggled} properties={{ type: 'open' }}>
         <Web3StatusGeneric
           isDisabled={Boolean(switchingChain)}
           data-testid={TestID.Web3StatusConnected}
@@ -164,8 +163,8 @@ function Web3StatusInner() {
   return (
     <Trace
       logPress
-      eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
-      element={InterfaceElementName.CONNECT_WALLET_BUTTON}
+      eventOnTrigger={InterfaceEventName.ConnectWalletButtonClicked}
+      element={ElementName.ConnectWalletButton}
     >
       {/* eslint-disable-next-line react/forbid-elements */}
       <div onKeyDown={(e) => e.key === 'Enter' && handleWalletDropdownClick()}>

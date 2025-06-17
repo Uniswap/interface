@@ -402,8 +402,8 @@ describe(usePortfolioTotalValue, () => {
       expect(result.current).toEqual({
         data: {
           balanceUSD: Portfolio.tokensTotalDenominatedValue?.value,
-          percentChange: Portfolio.tokensTotalDenominatedValueChange?.percentage?.value,
-          absoluteChangeUSD: Portfolio.tokensTotalDenominatedValueChange?.absolute?.value,
+          percentChange: Portfolio.tokensTotalDenominatedValueChange?.percentage.value,
+          absoluteChangeUSD: Portfolio.tokensTotalDenominatedValueChange?.absolute.value,
         },
         loading: false,
         networkStatus: NetworkStatus.ready,
@@ -638,7 +638,7 @@ describe(sortPortfolioBalances, () => {
     expect(result.map((t) => t.currencyInfo.currency.isNative)).toEqual([true, true, false, false])
 
     expect(result.map((t) => t.currencyInfo.currencyId)).toEqual(
-      [nativeBalances[0], nativeBalances[1], tokenBalances[1], tokenBalances[0]].map((t) => t?.currencyInfo.currencyId),
+      [nativeBalances[0], nativeBalances[1], tokenBalances[1], tokenBalances[0]].map((t) => t.currencyInfo.currencyId),
     )
   })
 
@@ -658,8 +658,8 @@ describe(sortPortfolioBalances, () => {
     const namelessTokenBalance = {
       ...tokenBalances[1],
       currencyInfo: {
-        ...tokenBalances[1]?.currencyInfo,
-        currency: { ...tokenBalances[1]?.currencyInfo?.currency, name: undefined },
+        ...tokenBalances[1].currencyInfo,
+        currency: { ...tokenBalances[1].currencyInfo.currency, name: undefined },
       },
     }
     const result = sortPortfolioBalances({

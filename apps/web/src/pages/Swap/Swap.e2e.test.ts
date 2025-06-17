@@ -3,6 +3,7 @@ import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import { USDT } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { assume0xAddress } from 'utils/wagmi'
 import { parseEther } from 'viem'
@@ -18,7 +19,7 @@ test.describe('Swap', () => {
   })
 
   test('should load erc20 balances', async ({ page, anvil }) => {
-    await anvil.setErc20Balance(assume0xAddress(USDT.address), 100_000_000n)
+    await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: 100_000_000n })
     await page.goto(`/swap?outputCurrency=${USDT.address}`)
 
     const USDTBalance = await anvil.getErc20Balance(assume0xAddress(USDT.address))
@@ -108,5 +109,28 @@ test.describe('Swap', () => {
     await page.getByTestId(TestID.AmountInputIn).clear()
     await expect(page.getByTestId(TestID.AmountInputIn)).toHaveValue('')
     await expect(page.getByTestId(TestID.AmountInputOut)).toHaveValue('')
+  })
+
+  test('should bridge from ETH to L2', async ({ page, anvil }) => {
+    await page.goto(`/swap?inputCurrency=ETH`)
+    await page.getByTestId(TestID.ChooseOutputToken).click()
+    await page.getByTestId(`token-option-${UniverseChainId.Base}-ETH`).first().click()
+    expect(
+      await page
+        .locator('div')
+        .filter({ hasText: /^EthereumBase$/ })
+        .first(),
+    ).toBeVisible()
+    await page.getByTestId(TestID.AmountInputIn).click()
+    await page.getByTestId(TestID.AmountInputIn).fill('1')
+    await page.getByTestId(TestID.ReviewSwap).click()
+    await page.getByTestId(TestID.Confirm).click()
+    await page.getByTestId(TestID.Swap).click()
+
+    const ethBalance = await anvil.getBalance({
+      address: TEST_WALLET_ADDRESS,
+    })
+
+    await expect(ethBalance).toBeLessThan(parseEther('9999'))
   })
 })

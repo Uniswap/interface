@@ -9,8 +9,8 @@ import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generat
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 
-jest.mock('hooks/Tokens', () => ({
-  useCurrencyInfo: jest.fn(),
+vi.mock('hooks/Tokens', () => ({
+  useCurrencyInfo: vi.fn(),
 }))
 
 describe('DoubleLogo', () => {

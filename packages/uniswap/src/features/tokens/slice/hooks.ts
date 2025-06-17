@@ -16,13 +16,11 @@ export function useDismissedTokenWarnings(info: Maybe<Currency | BasicTokenInfo>
 
   const isBasicInfo = isBasicTokenInfo(info)
 
-  const lowercasedAddress = getValidAddress(
-    isBasicInfo ? info.address : info?.isToken ? info?.address : undefined,
-    false,
-  )
-  const tokenWarningDismissed = Boolean(
-    info && lowercasedAddress && dismissedTokens && dismissedTokens[info.chainId]?.[lowercasedAddress],
-  )
+  const lowercasedAddress = getValidAddress({
+    address: isBasicInfo ? info.address : info?.isToken ? info.address : undefined,
+    withChecksum: false,
+  })
+  const tokenWarningDismissed = Boolean(info && lowercasedAddress && dismissedTokens[info.chainId]?.[lowercasedAddress])
 
   const onDismissTokenWarning = useCallback(() => {
     if (isBasicInfo) {

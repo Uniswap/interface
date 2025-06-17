@@ -27,7 +27,7 @@ export const CHART_TYPE_LABELS: Record<ChartType | PriceChartType, JSX.Element> 
  * Custom time formatter used to customize tick mark labels on the time scale.
  * Follows the function signature of lightweight-charts' TickMarkFormatter.
  */
-// eslint-disable-next-line consistent-return
+// eslint-disable-next-line consistent-return, max-params
 export function formatTickMarks(time: UTCTimestamp, tickMarkType: TickMarkType, locale: string): string {
   const date = new Date(time.valueOf() * 1000)
   switch (tickMarkType) {
@@ -44,15 +44,23 @@ export function formatTickMarks(time: UTCTimestamp, tickMarkType: TickMarkType, 
   }
 }
 
-export function roundRect(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  radii?: number | DOMPointInit | Iterable<number | DOMPointInit> | undefined,
-): void {
+export function roundRect({
+  ctx,
+  x,
+  y,
+  w,
+  h,
+  radii,
+}: {
+  ctx: CanvasRenderingContext2D
+  x: number
+  y: number
+  w: number
+  h: number
+  radii?: number | DOMPointInit | Iterable<number | DOMPointInit>
+}): void {
   // roundRect might need to polyfilled for older browsers
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (ctx.roundRect) {
     ctx.beginPath()
     ctx.roundRect(x, y, w, h, radii)

@@ -10,6 +10,7 @@ import { InputPanel } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel
 import { formatCurrencySymbol } from 'components/CurrencyInputPanel/utils'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
+import { SwitchNetworkAction } from 'components/Popups/types'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import Row from 'components/deprecated/Row'
 import { parseUnits } from 'ethers/lib/utils'
@@ -23,7 +24,7 @@ import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ThemedText } from 'theme/components'
 import { ClickableStyle } from 'theme/components/styles'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -117,7 +118,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
     }
     const oneUnitOfBaseCurrency = CurrencyAmount.fromRawAmount(
       baseCurrency,
-      JSBI.BigInt(parseUnits('1', baseCurrency?.decimals)),
+      JSBI.BigInt(parseUnits('1', baseCurrency.decimals)),
     )
     const getAdjustedPrice = (priceAdjustmentPercentage: number) => {
       return new Price({
@@ -153,7 +154,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
       }
       const oneUnitOfBaseCurrency = CurrencyAmount.fromRawAmount(
         baseCurrency,
-        JSBI.BigInt(parseUnits('1', baseCurrency?.decimals)),
+        JSBI.BigInt(parseUnits('1', baseCurrency.decimals)),
       )
       const marketOutputAmount = adjustedPrice?.quote(oneUnitOfBaseCurrency)
       changeLimitPrice(
@@ -163,7 +164,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
           placeholder: limitPrice,
         }),
       )
-      sendAnalyticsEvent(InterfaceEventNameLocal.LimitPresetRateSelected, { value: adjustmentPercentage })
+      sendAnalyticsEvent(InterfaceEventName.LimitPresetRateSelected, { value: adjustmentPercentage })
     },
     [baseCurrency, limitPrice, changeLimitPrice, formatCurrencyAmount],
   )
@@ -182,14 +183,14 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
         formatCurrencyAmount({
           value: marketPrice
             .invert()
-            .quote(CurrencyAmount.fromRawAmount(quoteCurrency, JSBI.BigInt(parseUnits('1', quoteCurrency?.decimals)))),
+            .quote(CurrencyAmount.fromRawAmount(quoteCurrency, JSBI.BigInt(parseUnits('1', quoteCurrency.decimals)))),
           type: NumberType.SwapTradeAmount,
           placeholder: '',
         }),
       )
     }
     setLimitState((prev) => ({ ...prev, limitPriceInverted: !prev.limitPriceInverted, limitPriceEdited: true }))
-    sendAnalyticsEvent(InterfaceEventNameLocal.LimitPriceReversed)
+    sendAnalyticsEvent(InterfaceEventName.LimitPriceReversed)
   }, [baseCurrency, marketPrice, quoteCurrency, changeLimitPrice, setLimitState, formatCurrencyAmount])
 
   const presets = limitPriceInverted ? INVERTED_PRICE_ADJUSTMENT_PRESETS : PRICE_ADJUSTMENT_PRESETS
@@ -260,6 +261,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
       </Row>
       <CurrencySearchModal
         isOpen={Boolean(currencySelectModalField)}
+        switchNetworkAction={SwitchNetworkAction.Limit}
         onDismiss={() => setCurrencySelectModalField(undefined)}
         onCurrencySelect={(currency) => {
           if (!currencySelectModalField) {

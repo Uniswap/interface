@@ -58,7 +58,7 @@ export function getIsCancelable(tx: TransactionDetails): boolean {
   if (isBridge(tx) && tx.sendConfirmed) {
     return false
   }
-  if (tx.status === TransactionStatus.Pending && (isUniswapX(tx) || Object.keys(tx.options?.request).length > 0)) {
+  if (tx.status === TransactionStatus.Pending && (isUniswapX(tx) || Object.keys(tx.options.request).length > 0)) {
     return true
   }
   return false
@@ -77,16 +77,20 @@ export function receiptFromEthersReceipt(
     transactionIndex: ethersReceipt.transactionIndex,
     confirmations: ethersReceipt.confirmations,
     confirmedTime: Date.now(),
-    gasUsed: ethersReceipt.gasUsed?.toNumber(),
-    effectiveGasPrice: ethersReceipt.effectiveGasPrice?.toNumber(),
+    gasUsed: ethersReceipt.gasUsed.toNumber(),
+    effectiveGasPrice: ethersReceipt.effectiveGasPrice.toNumber(),
   }
 }
 
-export const isAmountGreaterThanZero = (
-  exactAmountToken: string | undefined,
-  exactAmountFiat: string | undefined,
-  currency: Currency | undefined,
-): boolean => {
+export function isAmountGreaterThanZero({
+  exactAmountToken,
+  exactAmountFiat,
+  currency,
+}: {
+  exactAmountToken: string | undefined
+  exactAmountFiat: string | undefined
+  currency: Currency | undefined
+}): boolean {
   if (exactAmountToken) {
     return (
       getCurrencyAmount({
@@ -135,7 +139,7 @@ export function getOptionalTransactionProperty<T>(
   transaction: TransactionDetails,
   accessor: (options: TransactionOptions) => T,
 ): T | undefined {
-  if ('options' in transaction && transaction.options) {
+  if ('options' in transaction) {
     return accessor(transaction.options)
   }
   return undefined

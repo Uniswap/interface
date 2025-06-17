@@ -71,9 +71,9 @@ function TokenDetailsWrapper(): JSX.Element {
     () => ({
       chain: chainId,
       address,
-      currencyName: token?.name,
+      currencyName: token.name,
     }),
-    [address, chainId, token?.name],
+    [address, chainId, token.name],
   )
 
   return (
@@ -293,7 +293,7 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     fiatOnRampCurrency,
     bridgingTokenWithHighestBalance,
     hasZeroNativeBalance,
-    tokenSymbol: token?.symbol,
+    tokenSymbol: token.symbol,
     onPressBuyFiatOnRamp,
     onPressGet,
     onPressSwap,
@@ -342,7 +342,7 @@ const TokenBalancesWrapper = memo(function _TokenBalancesWrapper(): JSX.Element 
   const activeAddress = useActiveAccountAddressWithThrow()
   const { currencyId, isChainEnabled } = useTokenDetailsContext()
 
-  const projectTokens = useTokenBasicProjectPartsFragment({ currencyId }).data?.project?.tokens
+  const projectTokens = useTokenBasicProjectPartsFragment({ currencyId }).data.project?.tokens
 
   const crossChainTokens: Array<{
     address: string | null

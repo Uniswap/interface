@@ -49,7 +49,7 @@ export function ManageWalletsModal({ route }: AppStackScreenProp<typeof ModalNam
 
   const { defaultChainId } = useEnabledChains()
   const { unitag } = useUnitagByAddress(address)
-  const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId })?.name
+  const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId }).name
   const onlyLabeledWallet = ensName === null && unitag?.username === undefined
 
   const { canClaimUnitag } = useCanAddressClaimUnitag(address)
@@ -135,7 +135,7 @@ export function ManageWalletsModal({ route }: AppStackScreenProp<typeof ModalNam
           ...(currentAccount?.type === AccountType.SignerMnemonic && !onlyLabeledWallet
             ? []
             : [editNicknameSectionOption]),
-          ...(ensName === undefined || unitag?.username !== undefined ? [editLabelSectionOption] : []),
+          ...(unitag?.username !== undefined ? [editLabelSectionOption] : []),
           {
             navigationModal: ModalName.ConnectionsDappListModal,
             text: t('settings.setting.wallet.connections.title'),
@@ -173,7 +173,7 @@ export function ManageWalletsModal({ route }: AppStackScreenProp<typeof ModalNam
               />
             </Flex>
 
-            {showUnitagBanner && currentAccount?.type === AccountType.SignerMnemonic && (
+            {showUnitagBanner && (
               <UnitagBanner compact address={address} entryPoint={MobileScreens.Settings} onPressClaim={onClose} />
             )}
 

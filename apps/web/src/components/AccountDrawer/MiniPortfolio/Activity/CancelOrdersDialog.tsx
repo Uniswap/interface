@@ -117,7 +117,16 @@ export function CancelOrdersDialog(props: CancelOrdersDialogProps) {
           <Row justify="center" marginTop="32px" minHeight="24px">
             {cancelSubmitted ? (
               <ExternalLink
-                href={firstOrder ? getExplorerLink(firstOrder.chainId, cancelTxHash, ExplorerDataType.TRANSACTION) : ''}
+                href={
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                  firstOrder
+                    ? getExplorerLink({
+                        chainId: firstOrder.chainId,
+                        data: cancelTxHash,
+                        type: ExplorerDataType.TRANSACTION,
+                      })
+                    : ''
+                }
                 disabled={!firstOrder}
                 color="neutral2"
               >
@@ -158,6 +167,7 @@ export function CancelOrdersDialog(props: CancelOrdersDialogProps) {
         displayHelpCTA
         hasIconBackground
       >
+        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
         <GasEstimateDisplay chainId={orders[0].chainId} gasEstimateValue={gasEstimate?.value} />
       </Dialog>
     )

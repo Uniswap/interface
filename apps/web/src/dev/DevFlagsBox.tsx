@@ -28,7 +28,7 @@ export default function DevFlagsBox() {
 
   const overrides = [...gateOverrides, ...configOverrides].map(([name, value]) => Override(name, value))
 
-  const hasOverrides = overrides.some((g) => g !== null)
+  const hasOverrides = overrides.length > 0
 
   const [isOpen, setIsOpen] = useState(false)
   const { toggleModal: toggleFeatureFlagsModal } = useModalState(ModalName.FeatureFlags)

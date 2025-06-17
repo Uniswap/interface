@@ -55,7 +55,7 @@ describe('visibility slice', () => {
       const newState = visibilityReducer(initialState, action)
 
       expect(newState.positions[positionId]?.isVisible).toBe(false)
-      expect(getUniquePositionId).toHaveBeenCalledWith(poolId, tokenId, chainId)
+      expect(getUniquePositionId).toHaveBeenCalledWith({ poolId, tokenId, chainId })
     })
 
     it('should toggle visibility from false to true', () => {

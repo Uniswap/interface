@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { ApolloError } from '@apollo/client'
-import { createColumnHelper } from '@tanstack/react-table'
-import { InterfaceElementName } from '@uniswap/analytics-events'
+import { Row, createColumnHelper } from '@tanstack/react-table'
 import { TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { Percent, Token } from '@uniswap/sdk-core'
 import { PoolSortFields, TablePool } from 'appGraphql/data/pools/useTopPools'
 import { OrderDirection, gqlToCurrency, supportedChainIdFromGQLChain, unwrapToken } from 'appGraphql/data/util'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentiveFeeStatTooltip'
+import { isDynamicFeeTierAmount } from 'components/Liquidity/utils'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
@@ -42,6 +43,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -146,7 +148,7 @@ function PoolTableHeader({
     <Flex width="100%">
       <MouseoverTooltip
         disabled={!HEADER_DESCRIPTIONS[category]}
-        size={TooltipSize.Max}
+        size={TooltipSize.Small}
         text={HEADER_DESCRIPTIONS[category]}
         placement="top"
       >
@@ -282,18 +284,18 @@ export function PoolsTable({
           volOverTvl: pool.volOverTvl,
           apr: pool.apr,
           rewardApr: pool.boostedApr,
-          link: `/explore/pools/${getChainUrlParam(chainId ?? defaultChainId)}/${isGqlPool ? pool.hash : pool.id}`,
+          link: `/explore/pools/${getChainUrlParam(chainId)}/${isGqlPool ? pool.hash : pool.id}`,
           token0CurrencyId: currency0Id,
           token1CurrencyId: currency1Id,
           analytics: {
-            elementName: InterfaceElementName.POOLS_TABLE_ROW,
+            elementName: ElementName.PoolsTableRow,
             properties: {
               chain_id: chainId,
-              pool_address: isGqlPool ? pool.hash : pool?.id,
-              token0_address: pool?.token0?.address,
-              token0_symbol: pool?.token0?.symbol,
-              token1_address: pool?.token1?.address,
-              token1_symbol: pool?.token1?.symbol,
+              pool_address: isGqlPool ? pool.hash : pool.id,
+              token0_address: pool.token0?.address,
+              token0_symbol: pool.token0?.symbol,
+              token1_address: pool.token1?.address,
+              token1_symbol: pool.token1?.symbol,
               pool_list_index: index,
               pool_list_rank: poolSortRank,
               pool_list_length: pools.length,
@@ -372,7 +374,11 @@ export function PoolsTable({
         ),
         cell: (feeTier) => (
           <Cell loading={showLoadingSkeleton}>
-            <TableText>{feeTier.getValue?.() ? `${(feeTier.getValue()! / BIPS_BASE).toFixed(2)}%` : '-'}</TableText>
+            <TableText>
+              {feeTier.getValue?.()
+                ? `${isDynamicFeeTierAmount(feeTier.getValue()!) ? t('common.dynamic') : (feeTier.getValue()! / BIPS_BASE).toFixed(2) + '%'}`
+                : '-'}
+            </TableText>
           </Cell>
         ),
       }),
@@ -430,7 +436,7 @@ export function PoolsTable({
               </HeaderCell>
             ),
             sortingFn: 'basic',
-            cell: ({ row }) => {
+            cell: ({ row }: { row?: Row<PoolTableValues> }) => {
               if (!row?.original) {
                 return null
               }
@@ -465,7 +471,9 @@ export function PoolsTable({
             cell: (volume24h) => {
               return (
                 <Cell loading={showLoadingSkeleton}>
-                  <TableText>{convertFiatAmountFormatted(volume24h.getValue?.(), NumberType.FiatTokenStats)}</TableText>
+                  <TableText>
+                    {convertFiatAmountFormatted(volume24h?.getValue?.(), NumberType.FiatTokenStats)}
+                  </TableText>
                 </Cell>
               )
             },
@@ -535,7 +543,7 @@ export function PoolsTable({
   return (
     <Table
       columns={columns}
-      data={poolTableValues ?? []}
+      data={poolTableValues}
       loading={loading}
       error={error}
       loadMore={loadMore}

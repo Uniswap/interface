@@ -25,7 +25,7 @@ import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudPro
 import { logger } from 'utilities/src/logger/logger'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { Account, BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { Account, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsCloudBackupStatus>
@@ -41,7 +41,8 @@ export function SettingsCloudBackupStatus({
   const dimensions = useDeviceDimensions()
   const dispatch = useDispatch()
   const accounts = useAccounts()
-  const mnemonicId = (accounts[address] as SignerMnemonicAccount)?.mnemonicId
+  const account = accounts[address]
+  const mnemonicId = account?.type === AccountType.SignerMnemonic ? account.mnemonicId : undefined
   const backups = useCloudBackups(mnemonicId)
   const associatedAccounts = Object.values(accounts).filter(
     (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === mnemonicId,
@@ -58,6 +59,9 @@ export function SettingsCloudBackupStatus({
 
   const deleteBackup = async (): Promise<void> => {
     try {
+      if (!mnemonicId) {
+        throw new Error('Mnemonic ID is required')
+      }
       await deleteCloudStorageMnemonicBackup(mnemonicId)
       dispatch(
         editAccountActions.trigger({

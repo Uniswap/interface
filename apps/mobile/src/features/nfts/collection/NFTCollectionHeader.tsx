@@ -198,7 +198,7 @@ export function NFTCollectionHeader({
 
           {/* Collection description */}
           {data?.description ? (
-            <LongMarkdownText initialDisplayedLines={3} text={data?.description} />
+            <LongMarkdownText initialDisplayedLines={3} text={data.description} />
           ) : loading ? (
             <Flex gap="$spacing8">
               <Loader.Box height={spacing.spacing16} width="100%" />

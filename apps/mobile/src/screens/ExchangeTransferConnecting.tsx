@@ -14,7 +14,7 @@ import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
-import { InstitutionTransferEventName } from 'uniswap/src/features/telemetry/constants'
+import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { openUri } from 'uniswap/src/utils/linking'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -38,11 +38,11 @@ export function ExchangeTransferConnecting({
   const [timeoutElapsed, setTimeoutElapsed] = useState(false)
   const { isOffRamp } = useFiatOnRampContext()
 
-  const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
-    activeAccountAddress,
-    UniverseChainId.Mainnet,
-    serviceProvider.serviceProvider,
-  )
+  const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator({
+    ownerAddress: activeAccountAddress,
+    chainId: UniverseChainId.Mainnet,
+    serviceProvider: serviceProvider.serviceProvider,
+  })
 
   const onError = useCallback((): void => {
     dispatch(
@@ -76,12 +76,12 @@ export function ExchangeTransferConnecting({
     }
     async function navigateToWidget(widgetUrl: string): Promise<void> {
       onClose()
-      sendAnalyticsEvent(InstitutionTransferEventName.InstitutionTransferWidgetOpened, {
+      sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampTransferWidgetOpened, {
         externalTransactionId,
         serviceProvider: serviceProvider.serviceProvider,
       })
 
-      await openUri(widgetUrl).catch(onError)
+      await openUri({ uri: widgetUrl }).catch(onError)
       dispatchAddTransaction({ isOffRamp: false })
     }
     if (timeoutElapsed && !widgetLoading && widgetData) {

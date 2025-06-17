@@ -25,7 +25,7 @@ export {
   useStatsigUser,
 } from '@statsig/react-native-bindings'
 
-let localOverrideAdapter: LocalOverrideAdapterWrapper
+let localOverrideAdapter: LocalOverrideAdapterWrapper | undefined
 
 export const getOverrideAdapter = (): LocalOverrideAdapterWrapper => {
   if (!localOverrideAdapter) {

@@ -74,7 +74,7 @@ class ChromeMessageChannel {
     const promises: Promise<void>[] = []
     chrome.tabs.query({ url: urlMatcher }, (tabs) => {
       tabs.forEach((tab) => {
-        if (tab?.id) {
+        if (tab.id) {
           promises.push(
             // eslint-disable-next-line no-restricted-syntax
             chrome.tabs.sendMessage(tab.id, { [this.channelName]: message }).catch(() => {
@@ -165,6 +165,7 @@ abstract class TypedMessageChannel<
     }
 
     const messageParser = this.messageParsers[type]
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!messageParser) {
       throw new Error(`No message parser found for type ${type}`)
     }

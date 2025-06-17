@@ -8,6 +8,14 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
  * @param chainId - The chain ID where the position exists
  * @returns A string representing the unique position identifier
  */
-export const getUniquePositionId = (poolId: string, tokenId: string | undefined, chainId: UniverseChainId): string => {
+export function getUniquePositionId({
+  poolId,
+  tokenId,
+  chainId,
+}: {
+  poolId: string
+  tokenId: string | undefined
+  chainId: UniverseChainId
+}): string {
   return `${poolId}-${tokenId}-${chainId}`
 }

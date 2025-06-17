@@ -43,14 +43,20 @@ export function calculate1DVolOverTvl(volume24h: number | undefined, tvl: number
  * @param feeTier the feeTier of the pool or 300 for a v2 pair
  * @returns APR expressed as a percent
  */
-export function calculateApr(volume24h?: number, tvl?: number, feeTier?: number): Percent {
+export function calculateApr({
+  volume24h,
+  tvl,
+  feeTier,
+}: {
+  volume24h?: number
+  tvl?: number
+  feeTier?: number
+}): Percent {
   if (!volume24h || !feeTier || !tvl || !Math.round(tvl)) {
     return new Percent(0)
   }
   return new Percent(Math.round(volume24h * (feeTier / (BIPS_BASE * 100)) * 365), Math.round(tvl))
 }
-
-export const V2_BIPS = 3000
 
 export interface TablePool {
   hash: string

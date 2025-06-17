@@ -19,13 +19,13 @@ const mockSendContext: SendContextType = {
       address: '0x9984b4b4E408e8D618A879e5315BD30952c89103',
     },
   },
-  setSendState: jest.fn(),
+  setSendState: vi.fn(),
 }
 
 describe('SmartContractSpeedBumpModal', () => {
   it('should render correctly', () => {
-    const mockOnCancel = jest.fn()
-    const mockOnConfirm = jest.fn()
+    const mockOnCancel = vi.fn()
+    const mockOnConfirm = vi.fn()
     render(
       <SendContext.Provider value={mockSendContext}>
         <SmartContractSpeedBumpModal isOpen onDismiss={mockOnCancel} onConfirm={mockOnConfirm} />

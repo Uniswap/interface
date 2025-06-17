@@ -60,11 +60,15 @@ function tokenOptionComparator(tokenOption: TokenOption, otherTokenOption: Token
  * Utility to merge the search results with the bridging tokens.
  * Also updates the search results section name accordingly
  */
-export function mergeSearchResultsWithBridgingTokens(
-  searchResults: OnchainItemSection<TokenOption>[] | undefined,
-  bridgingTokens: TokenOption[] | undefined,
-  sectionHeaderString: string | undefined,
-): OnchainItemSection<TokenOption>[] | undefined {
+export function mergeSearchResultsWithBridgingTokens({
+  searchResults,
+  bridgingTokens,
+  sectionHeaderString,
+}: {
+  searchResults?: OnchainItemSection<TokenOption>[]
+  bridgingTokens?: TokenOption[]
+  sectionHeaderString?: string
+}): OnchainItemSection<TokenOption>[] | undefined {
   if (!searchResults || !bridgingTokens || bridgingTokens.length === 0) {
     return searchResults
   }
@@ -109,6 +113,7 @@ export function mergeSearchResultsWithBridgingTokens(
 }
 
 export function isTokenOptionArray(option: OnchainItemListOption): option is TokenOption[] {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return Array.isArray(option) && option.every((item) => item.type === OnchainItemListOptionType.Token)
 }
 

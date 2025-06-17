@@ -5,7 +5,7 @@ import { Flex, GeneratedIcon, InlineCard, LabeledCheckbox, Text, TouchableArea }
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { getWarningIcon, getWarningIconColors } from 'uniswap/src/components/warnings/utils'
-import { ElementName } from 'uniswap/src/features/telemetry/constants/trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { openUri } from 'uniswap/src/utils/linking'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -96,7 +96,7 @@ export function InlineWarningCard({
         <TouchableArea
           onPress={async (e) => {
             e.stopPropagation()
-            await openUri(learnMoreUrl)
+            await openUri({ uri: learnMoreUrl })
           }}
         >
           <Text color="$neutral1" variant="body3">

@@ -83,7 +83,7 @@ function V2PositionPage() {
     isLoading: positionLoading,
     refetch,
   } = useGetPositionQuery({
-    owner: account?.address ?? ZERO_ADDRESS,
+    owner: account.address ?? ZERO_ADDRESS,
     protocolVersion: ProtocolVersion.V2,
     pairAddress,
     chainId: chainId ?? supportedAccountChainId,
@@ -108,7 +108,11 @@ function V2PositionPage() {
   const token1USDValue = useUSDCValue(currency1Amount)
   const poolTokenPercentage = useGetPoolTokenPercentage(positionInfo)
   const liquidityTokenAddress = positionInfo?.liquidityToken?.isToken ? positionInfo.liquidityToken.address : undefined
-  const isOwner = usePositionOwnerV2(account?.address, liquidityTokenAddress, positionInfo?.chainId)
+  const isOwner = usePositionOwnerV2({
+    account: account.address,
+    address: liquidityTokenAddress,
+    chainId: positionInfo?.chainId,
+  })
 
   if (!positionLoading && (!positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount)) {
     return (
@@ -168,6 +172,7 @@ function V2PositionPage() {
                 $sm={{ width: '100%' }}
                 isDisabled={positionLoading}
                 onPress={() => {
+                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                   if (pair && chainId && pairAddress && !savedSerializedPairs[chainId]?.[pairAddress]) {
                     addPair(pair)
                   }
@@ -237,7 +242,7 @@ function V2PositionPage() {
                     <Text variant="body2">
                       {formatCurrencyAmount({ value: liquidityAmount, type: NumberType.TokenNonTx })}
                     </Text>
-                    <DoubleCurrencyLogo currencies={[currency0Amount?.currency, currency1Amount?.currency]} size={24} />
+                    <DoubleCurrencyLogo currencies={[currency0Amount.currency, currency1Amount.currency]} size={24} />
                   </Flex>
                 </Flex>
                 <Flex row width="100%" justifyContent="space-between">
@@ -251,7 +256,7 @@ function V2PositionPage() {
                     <Text variant="body2">
                       {formatCurrencyAmount({ value: currency0Amount, type: NumberType.TokenNonTx })}
                     </Text>
-                    <DoubleCurrencyLogo currencies={[currency0Amount?.currency]} size={24} />
+                    <DoubleCurrencyLogo currencies={[currency0Amount.currency]} size={24} />
                   </Flex>
                 </Flex>
                 <Flex row width="100%" justifyContent="space-between">
@@ -265,7 +270,7 @@ function V2PositionPage() {
                     <Text variant="body2">
                       {formatCurrencyAmount({ value: currency1Amount, type: NumberType.TokenNonTx })}
                     </Text>
-                    <DoubleCurrencyLogo currencies={[currency1Amount?.currency]} size={24} />
+                    <DoubleCurrencyLogo currencies={[currency1Amount.currency]} size={24} />
                   </Flex>
                 </Flex>
                 <Flex row width="100%" justifyContent="space-between">

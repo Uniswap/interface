@@ -108,14 +108,24 @@ const PoolButton = ({ isOpen, icon, onPress, children, 'data-testid': dataTestId
   )
 }
 
-function findMatchingPosition(positions: PositionInfo[], token0?: Token, token1?: Token, feeTier?: number) {
-  return positions?.find(
+function findMatchingPosition({
+  positions,
+  token0,
+  token1,
+  feeTier,
+}: {
+  positions: PositionInfo[]
+  token0?: Token
+  token1?: Token
+  feeTier?: number
+}) {
+  return positions.find(
     (position) =>
-      (position?.details.token0.toLowerCase() === token0?.address ||
-        position?.details.token0.toLowerCase() === token1?.address) &&
-      (position?.details.token1.toLowerCase() === token0?.address ||
-        position?.details.token1.toLowerCase() === token1?.address) &&
-      position?.details.fee == feeTier &&
+      (position.details.token0.toLowerCase() === token0?.address ||
+        position.details.token0.toLowerCase() === token1?.address) &&
+      (position.details.token1.toLowerCase() === token0?.address ||
+        position.details.token1.toLowerCase() === token1?.address) &&
+      position.details.fee == feeTier &&
       !position.closed,
   )
 }
@@ -132,7 +142,8 @@ export function PoolDetailsStatsButtons({
   const account = useAccount()
   const { t } = useTranslation()
   const { positions: userOwnedPositions } = useMultiChainPositions(account.address ?? '')
-  const position = userOwnedPositions && findMatchingPosition(userOwnedPositions, token0, token1, feeTier)
+  const position =
+    userOwnedPositions && findMatchingPosition({ positions: userOwnedPositions, token0, token1, feeTier })
   const tokenId = position?.details.tokenId
 
   const navigate = useNavigate()

@@ -59,7 +59,7 @@ function FavoriteTokenCard({
     returnPartialData: true,
   })
 
-  usePollOnFocusOnly(startPolling, stopPolling, PollingInterval.Fast)
+  usePollOnFocusOnly({ startPolling, stopPolling, pollingInterval: PollingInterval.Fast })
 
   const token = data?.token
 
@@ -136,7 +136,7 @@ function FavoriteTokenCard({
             <Flex grow row alignItems="center" gap="$spacing8">
               <TokenLogo
                 loading={loading}
-                chainId={chainId ?? undefined}
+                chainId={chainId}
                 name={token?.name ?? undefined}
                 size={imageSizes.image20}
                 symbol={token?.symbol ?? undefined}
@@ -184,7 +184,7 @@ function getCoingeckoPrice(token?: FavoriteTokenCardQuery['token']): {
   pricePercentChange: number | undefined
 } | null {
   const market = token?.project?.markets?.[0]
-  if (!market?.price?.value || !market?.pricePercentChange24h?.value) {
+  if (!market?.price?.value || !market.pricePercentChange24h?.value) {
     return null
   }
 

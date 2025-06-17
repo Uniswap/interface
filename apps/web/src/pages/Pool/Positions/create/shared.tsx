@@ -1,14 +1,10 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { PriceRangeInfo } from 'pages/Pool/Positions/create/types'
 import { useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, GeneratedIcon, Text, styled } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
-import { NumberType } from 'utilities/src/format/types'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
 export const Container = styled(Flex, {
   gap: 32,
@@ -34,7 +30,7 @@ export function AdvancedButton({
   tooltipText?: string
   Icon: GeneratedIcon
   onPress: () => void
-  elementName?: ElementNameType
+  elementName?: ElementName
 }) {
   const { t } = useTranslation()
   return (
@@ -66,38 +62,4 @@ export function AdvancedButton({
       )}
     </Flex>
   )
-}
-
-export function formatPrices(
-  derivedPriceRangeInfo: PriceRangeInfo,
-  formatter: (input: FormatNumberOrStringInput) => string,
-): {
-  formattedPrices: [string, string]
-  isFullRange: boolean
-} {
-  if (derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2) {
-    return { formattedPrices: ['', ''], isFullRange: true }
-  }
-
-  const { ticksAtLimit, isSorted, prices, invertPrice } = derivedPriceRangeInfo
-
-  const isLowerAtLimit = ticksAtLimit[isSorted ? 0 : 1]
-  const [lowerPrice, upperPrice] = isSorted ? [prices?.[0], prices?.[1]] : [prices?.[1], prices?.[0]]
-
-  const lowerPriceFormatted = isLowerAtLimit
-    ? '0'
-    : formatter({
-        value: (invertPrice ? lowerPrice?.invert() : lowerPrice)?.toSignificant(),
-        type: NumberType.TokenTx,
-      })
-
-  const isUpperAtLimit = ticksAtLimit[isSorted ? 1 : 0]
-  const upperPriceFormatted = isUpperAtLimit
-    ? '∞'
-    : formatter({
-        value: (invertPrice ? upperPrice?.invert() : upperPrice)?.toSignificant(),
-        type: NumberType.TokenTx,
-      })
-
-  return { formattedPrices: [lowerPriceFormatted, upperPriceFormatted], isFullRange: isLowerAtLimit && isUpperAtLimit }
 }

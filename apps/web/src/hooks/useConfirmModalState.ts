@@ -83,14 +83,14 @@ export function useConfirmModalState({
   const nativeCurrency = useNativeCurrency(chainId)
 
   const [wrapTxHash, setWrapTxHash] = useState<string>()
-  const { execute: onWrap } = useWrapCallback(
-    nativeCurrency,
-    trade.inputAmount.currency,
-    formatCurrencyAmount({
+  const { execute: onWrap } = useWrapCallback({
+    inputCurrency: nativeCurrency,
+    outputCurrency: trade.inputAmount.currency,
+    typedValue: formatCurrencyAmount({
       value: trade.inputAmount,
       type: NumberType.SwapTradeAmount,
     }),
-  )
+  })
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
   const prevWrapConfirmed = usePrevious(wrapConfirmed)
   const catchUserReject = useCallback(
@@ -204,7 +204,13 @@ export function useConfirmModalState({
     )
   }
 
-  const doesTradeDiffer = originalTrade && tradeMeaningfullyDiffers(trade, originalTrade, allowedSlippage)
+  const doesTradeDiffer =
+    originalTrade &&
+    tradeMeaningfullyDiffers({
+      currentTrade: trade,
+      newTrade: originalTrade,
+      slippage: allowedSlippage,
+    })
   useEffect(() => {
     // Automatically triggers the next phase if the local modal state still thinks we're in the approval phase,
     // but the allowance has been set. This will automaticaly trigger the swap.
@@ -227,10 +233,10 @@ export function useConfirmModalState({
     setApprovalError(undefined)
   }
 
-  const [lastExecutionPrice, setLastExecutionPrice] = useState(trade?.executionPrice)
+  const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
   const [priceUpdate, setPriceUpdate] = useState<number>()
   useEffect(() => {
-    if (lastExecutionPrice && !trade.executionPrice.equalTo(lastExecutionPrice)) {
+    if (!trade.executionPrice.equalTo(lastExecutionPrice)) {
       setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
       setLastExecutionPrice(trade.executionPrice)
     }

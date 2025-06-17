@@ -54,7 +54,12 @@ export const TouchableArea = forwardRef<TamaguiElement, TouchableAreaProps>(func
 
         const isDragEvent =
           touchActivationPositionRef.current &&
-          isDrag(touchActivationPositionRef.current.pageX, touchActivationPositionRef.current.pageY, pageX, pageY)
+          isDrag({
+            activationX: touchActivationPositionRef.current.pageX,
+            activationY: touchActivationPositionRef.current.pageY,
+            releaseX: pageX,
+            releaseY: pageY,
+          })
 
         if (isDragEvent) {
           return
@@ -114,7 +119,19 @@ export const AnimatedTouchableArea = withAnimated(TouchableArea)
  * @link https://github.com/satya164/react-native-tab-view/issues/1241#issuecomment-1022400366
  * @returns true if press was after a drag gesture
  */
-function isDrag(activationX: number, activationY: number, releaseX: number, releaseY: number, threshold = 2): boolean {
+function isDrag({
+  activationX,
+  activationY,
+  releaseX,
+  releaseY,
+  threshold = 2,
+}: {
+  activationX: number
+  activationY: number
+  releaseX: number
+  releaseY: number
+  threshold?: number
+}): boolean {
   const absX = Math.abs(activationX - releaseX)
   const absY = Math.abs(activationY - releaseY)
 

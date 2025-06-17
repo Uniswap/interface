@@ -7,7 +7,15 @@ import { useEvent } from 'utilities/src/react/hooks'
 type AppStateTransition = { from: AppStateStatus; to: AppStateStatus }
 
 /** Invokes `callback` when app state goes from `from` to `to`. */
-export function useAppStateTrigger(from: AppStateStatus, to: AppStateStatus, callback: () => void): void {
+export function useAppStateTrigger({
+  from,
+  to,
+  callback,
+}: {
+  from: AppStateStatus
+  to: AppStateStatus
+  callback: () => void
+}): void {
   useAppStateTransitionTrigger([{ from, to }], callback)
 }
 

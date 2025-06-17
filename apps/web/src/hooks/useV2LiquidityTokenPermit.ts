@@ -13,5 +13,10 @@ export function useV2LiquidityTokenPermit(
   spender: string | null | undefined,
 ) {
   const transactionDeadline = useTransactionDeadline()
-  return useERC20Permit(liquidityAmount, spender, transactionDeadline, REMOVE_V2_LIQUIDITY_PERMIT_INFO)
+  return useERC20Permit({
+    currencyAmount: liquidityAmount,
+    spender,
+    transactionDeadline,
+    overridePermitInfo: REMOVE_V2_LIQUIDITY_PERMIT_INFO,
+  })
 }

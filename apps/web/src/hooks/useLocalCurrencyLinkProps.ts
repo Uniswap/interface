@@ -7,7 +7,7 @@ import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { setCurrentFiatCurrency } from 'uniswap/src/features/settings/slice'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
 export function useLocalCurrencyLinkProps(localCurrency?: FiatCurrency): {
@@ -31,7 +31,7 @@ export function useLocalCurrencyLinkProps(localCurrency?: FiatCurrency): {
             },
             onClick: () => {
               dispatch(setCurrentFiatCurrency(localCurrency))
-              sendAnalyticsEvent(InterfaceEventNameLocal.LocalCurrencySelected, {
+              sendAnalyticsEvent(InterfaceEventName.LocalCurrencySelected, {
                 previous_local_currency: activeLocalCurrency,
                 new_local_currency: localCurrency,
               })

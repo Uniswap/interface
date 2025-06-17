@@ -24,7 +24,7 @@ function _TokenPill({
   const media = useMedia()
 
   const onPress = (): void => {
-    onSelectCurrency?.(token.currencyInfo, section, index)
+    onSelectCurrency(token.currencyInfo, section, index)
   }
 
   return (

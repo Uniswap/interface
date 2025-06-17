@@ -89,10 +89,10 @@ function _OptionItem({
     ? {
         backgroundColor: isFocused ? '$surface1Hovered' : undefined,
         onMouseEnter: (): void => {
-          setFocusedRowIndex?.(rowIndex)
+          setFocusedRowIndex(rowIndex)
         },
         onMouseLeave: (): void => {
-          setFocusedRowIndex?.(undefined)
+          setFocusedRowIndex(undefined)
         },
       }
     : { hoverStyle: { backgroundColor: '$surface1Hovered' } }

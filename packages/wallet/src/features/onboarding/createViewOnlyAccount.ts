@@ -4,7 +4,7 @@ import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { ReadOnlyAccount } from 'wallet/src/features/wallet/accounts/types'
 
 export const createViewOnlyAccount = (address: string): ReadOnlyAccount => {
-  const formattedAddress = getValidAddress(address, true)
+  const formattedAddress = getValidAddress({ address, withChecksum: true })
   if (!formattedAddress) {
     throw new Error('Cannot import invalid view-only address')
   }

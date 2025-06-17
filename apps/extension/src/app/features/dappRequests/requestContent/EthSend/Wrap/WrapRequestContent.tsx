@@ -24,8 +24,8 @@ function getTransactionTypeInfo({
     ? {
         type: TransactionType.Swap,
         tradeType: 0, // TradeType.EXACT_INPUT, but TradeType doesn't matter for the UI
-        inputCurrencyId: inputCurrencyInfo?.currencyId,
-        outputCurrencyId: outputCurrencyInfo?.currencyId,
+        inputCurrencyId: inputCurrencyInfo.currencyId,
+        outputCurrencyId: outputCurrencyInfo.currencyId,
         inputCurrencyAmountRaw: inputAmountRaw,
         expectedOutputCurrencyAmountRaw: outputAmountRaw,
         minimumOutputCurrencyAmountRaw: outputAmountRaw,

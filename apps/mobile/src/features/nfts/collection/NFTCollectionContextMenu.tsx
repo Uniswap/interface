@@ -43,14 +43,14 @@ export function NFTCollectionContextMenu({
     if (!twitterURL) {
       return
     }
-    await openUri(twitterURL)
+    await openUri({ uri: twitterURL })
   }
 
   const openExplorerLink = async (): Promise<void> => {
     if (!homepageUrl) {
       return
     }
-    await openUri(homepageUrl)
+    await openUri({ uri: homepageUrl })
   }
 
   const onSharePress = useCallback(async () => {

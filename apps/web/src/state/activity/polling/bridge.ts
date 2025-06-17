@@ -72,6 +72,7 @@ export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpd
 
             const fullTxDetails = allTxMap[txHash ?? '']
             const updatedStatus = status ? SWAP_STATUS_TO_FINALIZED_STATUS[status] : undefined
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (txHash && updatedStatus && fullTxDetails) {
               onActivityUpdate({
                 type: 'transaction',

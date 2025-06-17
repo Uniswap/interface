@@ -18,7 +18,11 @@ export function* watchFiatOnRampTransaction(transaction: FORTransactionDetails):
   try {
     while (true) {
       const activeAddress = yield* select(selectActiveAccountAddress)
-      const updatedTransaction = yield* call(fetchFORTransaction, transaction, forceFetch, activeAddress)
+      const updatedTransaction = yield* call(fetchFORTransaction, {
+        previousTransactionDetails: transaction,
+        forceFetch,
+        activeAccountAddress: activeAddress,
+      })
 
       forceFetch = false
       // We've got an invalid response from backend

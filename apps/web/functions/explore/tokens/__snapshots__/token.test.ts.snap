@@ -1,17 +1,21 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`should inject metadata for valid tokens 1`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh"
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/@vite/client"></script>
+
     <meta charset="utf-8" />
 
     <title>Uniswap Interface</title>
 
-    <!--
-       will be replaced with the URL of the \`public\` folder during build.
-      Only files inside the \`public\` folder can be referenced from the HTML.
-    -->
+    <!-- Vite uses / for public assets instead of %PUBLIC_URL% -->
     <link rel="shortcut icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="/images/192x192_App_Icon.png" />
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
@@ -20,8 +24,7 @@ exports[`should inject metadata for valid tokens 1`] = `
     <meta name="theme-color" content="#fff" />
     <meta name="format-detection" content="telephone=no">
 
-    <!-- Skip the CSP in specified test environments -->
-    
+    <!-- CSP will be injected here -->
 
     <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
@@ -29,9 +32,6 @@ exports[`should inject metadata for valid tokens 1`] = `
     <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
 
-    <!-- Include <link rel="preload"> for js assets so that they are loaded with high priority. -->
-    <link rel="preload" href="/static/js/bundle.js" as="script" />
-   
     <style>
       * {
         font-family: 'Basel', sans-serif;
@@ -39,8 +39,8 @@ exports[`should inject metadata for valid tokens 1`] = `
       }
 
       /**
-          Explicitly load Basel var from public/ so it does not block LCP's critical path.
-        */
+        Explicitly load Basel var from public/ so it does not block LCP's critical path.
+      */
       @font-face {
         font-family: 'Basel';
         font-weight: 535;
@@ -74,10 +74,6 @@ exports[`should inject metadata for valid tokens 1`] = `
       }
 
       /* Only apply overflow-x: hidden on desktop */
-      /* This is to prevent ugly horizontal scrollbar from appearing on desktop */
-      /* We need to set it on html element specifically because otherwise we break */
-      /* sticky positioning of some child elements. */
-      /* Applying this on mobile breaks tamagui/remove-scroll. */
       @media (min-width: 768px) {
         html {
           overflow-x: hidden;
@@ -117,13 +113,16 @@ exports[`should inject metadata for valid tokens 1`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Get USDC on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="Get USDC on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="Get USDC on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true"><meta property="twitter:image:alt" content="Get USDC on Uniswap" data-rh="true"></head>
+  <meta property="og:title" content="Get USDC on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="Get USDC on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="Get USDC on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true"><meta property="twitter:image:alt" content="Get USDC on Uniswap" data-rh="true"></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
     <div id="root"></div>
     <div id="background-radial-gradient"></div>
+
+    <!-- Vite entry point -->
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>
 "
@@ -133,14 +132,18 @@ exports[`should inject metadata for valid tokens 2`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh"
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/@vite/client"></script>
+
     <meta charset="utf-8" />
 
     <title>Uniswap Interface</title>
 
-    <!--
-       will be replaced with the URL of the \`public\` folder during build.
-      Only files inside the \`public\` folder can be referenced from the HTML.
-    -->
+    <!-- Vite uses / for public assets instead of %PUBLIC_URL% -->
     <link rel="shortcut icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="/images/192x192_App_Icon.png" />
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
@@ -149,8 +152,7 @@ exports[`should inject metadata for valid tokens 2`] = `
     <meta name="theme-color" content="#fff" />
     <meta name="format-detection" content="telephone=no">
 
-    <!-- Skip the CSP in specified test environments -->
-    
+    <!-- CSP will be injected here -->
 
     <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
@@ -158,9 +160,6 @@ exports[`should inject metadata for valid tokens 2`] = `
     <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
 
-    <!-- Include <link rel="preload"> for js assets so that they are loaded with high priority. -->
-    <link rel="preload" href="/static/js/bundle.js" as="script" />
-   
     <style>
       * {
         font-family: 'Basel', sans-serif;
@@ -168,8 +167,8 @@ exports[`should inject metadata for valid tokens 2`] = `
       }
 
       /**
-          Explicitly load Basel var from public/ so it does not block LCP's critical path.
-        */
+        Explicitly load Basel var from public/ so it does not block LCP's critical path.
+      */
       @font-face {
         font-family: 'Basel';
         font-weight: 535;
@@ -203,10 +202,6 @@ exports[`should inject metadata for valid tokens 2`] = `
       }
 
       /* Only apply overflow-x: hidden on desktop */
-      /* This is to prevent ugly horizontal scrollbar from appearing on desktop */
-      /* We need to set it on html element specifically because otherwise we break */
-      /* sticky positioning of some child elements. */
-      /* Applying this on mobile breaks tamagui/remove-scroll. */
       @media (min-width: 768px) {
         html {
           overflow-x: hidden;
@@ -246,13 +241,16 @@ exports[`should inject metadata for valid tokens 2`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Get ETH on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/NATIVE" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="Get ETH on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/NATIVE" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="Get ETH on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/NATIVE" data-rh="true"><meta property="twitter:image:alt" content="Get ETH on Uniswap" data-rh="true"></head>
+  <meta property="og:title" content="Get ETH on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/NATIVE" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="Get ETH on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/NATIVE" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="Get ETH on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/NATIVE" data-rh="true"><meta property="twitter:image:alt" content="Get ETH on Uniswap" data-rh="true"></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
     <div id="root"></div>
     <div id="background-radial-gradient"></div>
+
+    <!-- Vite entry point -->
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>
 "
@@ -262,14 +260,18 @@ exports[`should inject metadata for valid tokens 3`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh"
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/@vite/client"></script>
+
     <meta charset="utf-8" />
 
     <title>Uniswap Interface</title>
 
-    <!--
-       will be replaced with the URL of the \`public\` folder during build.
-      Only files inside the \`public\` folder can be referenced from the HTML.
-    -->
+    <!-- Vite uses / for public assets instead of %PUBLIC_URL% -->
     <link rel="shortcut icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="/images/192x192_App_Icon.png" />
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
@@ -278,8 +280,7 @@ exports[`should inject metadata for valid tokens 3`] = `
     <meta name="theme-color" content="#fff" />
     <meta name="format-detection" content="telephone=no">
 
-    <!-- Skip the CSP in specified test environments -->
-    
+    <!-- CSP will be injected here -->
 
     <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
@@ -287,9 +288,6 @@ exports[`should inject metadata for valid tokens 3`] = `
     <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
 
-    <!-- Include <link rel="preload"> for js assets so that they are loaded with high priority. -->
-    <link rel="preload" href="/static/js/bundle.js" as="script" />
-   
     <style>
       * {
         font-family: 'Basel', sans-serif;
@@ -297,8 +295,8 @@ exports[`should inject metadata for valid tokens 3`] = `
       }
 
       /**
-          Explicitly load Basel var from public/ so it does not block LCP's critical path.
-        */
+        Explicitly load Basel var from public/ so it does not block LCP's critical path.
+      */
       @font-face {
         font-family: 'Basel';
         font-weight: 535;
@@ -332,10 +330,6 @@ exports[`should inject metadata for valid tokens 3`] = `
       }
 
       /* Only apply overflow-x: hidden on desktop */
-      /* This is to prevent ugly horizontal scrollbar from appearing on desktop */
-      /* We need to set it on html element specifically because otherwise we break */
-      /* sticky positioning of some child elements. */
-      /* Applying this on mobile breaks tamagui/remove-scroll. */
       @media (min-width: 768px) {
         html {
           overflow-x: hidden;
@@ -375,13 +369,16 @@ exports[`should inject metadata for valid tokens 3`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Get POL on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="Get POL on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/polygon/NATIVE" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="Get POL on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE" data-rh="true"><meta property="twitter:image:alt" content="Get POL on Uniswap" data-rh="true"></head>
+  <meta property="og:title" content="Get POL on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="Get POL on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/polygon/NATIVE" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="Get POL on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE" data-rh="true"><meta property="twitter:image:alt" content="Get POL on Uniswap" data-rh="true"></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
     <div id="root"></div>
     <div id="background-radial-gradient"></div>
+
+    <!-- Vite entry point -->
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>
 "
@@ -391,14 +388,18 @@ exports[`should inject metadata for valid tokens 4`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh"
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/@vite/client"></script>
+
     <meta charset="utf-8" />
 
     <title>Uniswap Interface</title>
 
-    <!--
-       will be replaced with the URL of the \`public\` folder during build.
-      Only files inside the \`public\` folder can be referenced from the HTML.
-    -->
+    <!-- Vite uses / for public assets instead of %PUBLIC_URL% -->
     <link rel="shortcut icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="/images/192x192_App_Icon.png" />
     <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
@@ -407,8 +408,7 @@ exports[`should inject metadata for valid tokens 4`] = `
     <meta name="theme-color" content="#fff" />
     <meta name="format-detection" content="telephone=no">
 
-    <!-- Skip the CSP in specified test environments -->
-    
+    <!-- CSP will be injected here -->
 
     <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
@@ -416,9 +416,6 @@ exports[`should inject metadata for valid tokens 4`] = `
     <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
 
-    <!-- Include <link rel="preload"> for js assets so that they are loaded with high priority. -->
-    <link rel="preload" href="/static/js/bundle.js" as="script" />
-   
     <style>
       * {
         font-family: 'Basel', sans-serif;
@@ -426,8 +423,8 @@ exports[`should inject metadata for valid tokens 4`] = `
       }
 
       /**
-          Explicitly load Basel var from public/ so it does not block LCP's critical path.
-        */
+        Explicitly load Basel var from public/ so it does not block LCP's critical path.
+      */
       @font-face {
         font-family: 'Basel';
         font-weight: 535;
@@ -461,10 +458,6 @@ exports[`should inject metadata for valid tokens 4`] = `
       }
 
       /* Only apply overflow-x: hidden on desktop */
-      /* This is to prevent ugly horizontal scrollbar from appearing on desktop */
-      /* We need to set it on html element specifically because otherwise we break */
-      /* sticky positioning of some child elements. */
-      /* Applying this on mobile breaks tamagui/remove-scroll. */
       @media (min-width: 768px) {
         html {
           overflow-x: hidden;
@@ -504,13 +497,16 @@ exports[`should inject metadata for valid tokens 4`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Get PEPE on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="Get PEPE on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="Get PEPE on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933" data-rh="true"><meta property="twitter:image:alt" content="Get PEPE on Uniswap" data-rh="true"></head>
+  <meta property="og:title" content="Get PEPE on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="Get PEPE on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="Get PEPE on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933" data-rh="true"><meta property="twitter:image:alt" content="Get PEPE on Uniswap" data-rh="true"></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
     <div id="root"></div>
     <div id="background-radial-gradient"></div>
+
+    <!-- Vite entry point -->
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>
 "

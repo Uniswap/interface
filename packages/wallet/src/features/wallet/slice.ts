@@ -42,7 +42,7 @@ const slice = createSlice({
   reducers: {
     addAccount: (state, action: PayloadAction<Account>) => {
       const { address } = action.payload
-      const id = getValidAddress(address, true)
+      const id = getValidAddress({ address, withChecksum: true })
       if (!id) {
         throw new Error(`Cannot add an account with an invalid address ${address}`)
       }
@@ -51,7 +51,7 @@ const slice = createSlice({
     addAccounts: (state, action: PayloadAction<Account[]>) => {
       const accounts = action.payload
       accounts.forEach((account) => {
-        const id = getValidAddress(account.address, true)
+        const id = getValidAddress({ address: account.address, withChecksum: true })
         if (!id) {
           throw new Error(`Cannot add an account with an invalid address ${account.address}`)
         }
@@ -61,7 +61,7 @@ const slice = createSlice({
     removeAccounts: (state, action: PayloadAction<Address[]>) => {
       const addressesToRemove = action.payload
       addressesToRemove.forEach((address) => {
-        const id = getValidAddress(address, true)
+        const id = getValidAddress({ address, withChecksum: true })
         if (!id) {
           throw new Error('Cannot remove an account with an invalid address')
         }
@@ -82,7 +82,7 @@ const slice = createSlice({
     },
     editAccount: (state, action: PayloadAction<{ address: Address; updatedAccount: Account }>) => {
       const { address, updatedAccount } = action.payload
-      const id = getValidAddress(address, true)
+      const id = getValidAddress({ address, withChecksum: true })
       if (!id) {
         throw new Error('Cannot edit an account with an invalid address')
       }
@@ -93,7 +93,7 @@ const slice = createSlice({
     },
     setAccountAsActive: (state, action: PayloadAction<Address>) => {
       const address = action.payload
-      const id = getValidAddress(address, true)
+      const id = getValidAddress({ address, withChecksum: true })
       if (!id) {
         throw new Error('Cannot activate an account with an invalid address')
       }
@@ -139,7 +139,7 @@ const slice = createSlice({
     restoreMnemonicComplete: (state) => state,
     setHasBalanceOrActivity: (state, action: PayloadAction<{ address: Address; hasBalanceOrActivity?: boolean }>) => {
       const { address, hasBalanceOrActivity } = action.payload
-      const id = getValidAddress(address, true)
+      const id = getValidAddress({ address, withChecksum: true })
       if (!id) {
         logger.error('Unexpected call to `setHasBalanceOrActivity` with invalid `address`', {
           extra: { payload: action.payload },
@@ -154,7 +154,7 @@ const slice = createSlice({
     },
     setSmartWalletConsent: (state, action: PayloadAction<{ address: Address; smartWalletConsent: boolean }>) => {
       const { address, smartWalletConsent } = action.payload
-      const id = getValidAddress(address, true)
+      const id = getValidAddress({ address, withChecksum: true })
       if (!id) {
         logger.error(new Error('Unexpected call to `setSmartWalletConsent` with invalid `address`'), {
           extra: { payload: action.payload },

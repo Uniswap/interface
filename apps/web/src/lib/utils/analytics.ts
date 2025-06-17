@@ -67,14 +67,21 @@ function tradeRoutingToOffchainOrderType(routing: Routing): OffchainOrderType | 
   }
 }
 
-export function formatCommonPropertiesForTrade(
-  trade: InterfaceTrade | ClassicTrade | UniswapXTrade | BridgeTrade,
-  allowedSlippage: Percent,
-  outputFeeFiatValue?: number,
-  isBatched?: boolean,
-  batchId?: string,
-  includedPermitTransactionStep?: boolean,
-): SwapTradeBaseProperties {
+export function formatCommonPropertiesForTrade({
+  trade,
+  allowedSlippage,
+  outputFeeFiatValue,
+  isBatched,
+  batchId,
+  includedPermitTransactionStep,
+}: {
+  trade: InterfaceTrade | ClassicTrade | UniswapXTrade | BridgeTrade
+  allowedSlippage: Percent
+  outputFeeFiatValue?: number
+  isBatched?: boolean
+  batchId?: string
+  includedPermitTransactionStep?: boolean
+}): SwapTradeBaseProperties {
   const isUniversalSwapFlow =
     trade instanceof ClassicTrade ||
     trade instanceof UniswapXV2Trade ||
@@ -85,15 +92,15 @@ export function formatCommonPropertiesForTrade(
   return {
     routing: isUniversalSwapFlow ? tradeRoutingToFillType(trade) : trade.fillType,
     type: trade.tradeType,
-    ura_quote_id: isUniversalSwapFlow ? trade.quote?.quote.quoteId : isUniswapXTrade(trade) ? trade.quoteId : undefined,
+    ura_quote_id: isUniversalSwapFlow ? trade.quote.quote.quoteId : isUniswapXTrade(trade) ? trade.quoteId : undefined,
     ura_request_id: isUniversalSwapFlow
-      ? trade.quote?.requestId
+      ? trade.quote.requestId
       : isSubmittableTrade(trade)
         ? trade.requestId
         : undefined,
     ura_quote_block_number: isUniversalSwapFlow
       ? isClassic(trade)
-        ? trade.quote?.quote.blockNumber
+        ? trade.quote.quote.blockNumber
         : undefined
       : isClassicTrade(trade)
         ? trade.blockNumber ?? undefined
@@ -116,7 +123,7 @@ export function formatCommonPropertiesForTrade(
     chain_id_out: trade.outputAmount.currency.chainId,
     estimated_network_fee_usd: isUniversalSwapFlow
       ? trade instanceof ClassicTrade
-        ? trade.quote?.quote.gasFeeUSD
+        ? trade.quote.quote.gasFeeUSD
         : undefined
       : getEstimatedNetworkFee(trade)?.toString(),
     minimum_output_after_slippage: trade.minimumAmountOut(allowedSlippage).toSignificant(6),
@@ -168,14 +175,14 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   // measures the amount of time the user took to sign the permit message or swap tx in their wallet
   time_to_sign_since_request_ms: timeToSignSinceRequestMs,
   ...['routing' in trade ? getRouteAnalyticsData(trade) : undefined],
-  ...formatCommonPropertiesForTrade(
+  ...formatCommonPropertiesForTrade({
     trade,
     allowedSlippage,
-    fiatValues.feeUsd,
+    outputFeeFiatValue: fiatValues.feeUsd,
     isBatched,
     batchId,
     includedPermitTransactionStep,
-  ),
+  }),
 })
 
 function getQuoteMethod(trade: InterfaceTrade) {

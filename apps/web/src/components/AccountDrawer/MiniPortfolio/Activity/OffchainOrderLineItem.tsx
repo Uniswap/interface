@@ -47,10 +47,10 @@ function useLineItem(details: OffchainOrderLineItemProps): LineItemData | undefi
           <TradePrice
             price={
               new Price(
-                details.amounts?.inputAmount.currency,
-                details.amounts?.outputAmount.currency,
-                details.amounts?.inputAmount.quotient,
-                details.amounts?.outputAmount.quotient,
+                details.amounts.inputAmount.currency,
+                details.amounts.outputAmount.currency,
+                details.amounts.inputAmount.quotient,
+                details.amounts.outputAmount.quotient,
               )
             }
           />
@@ -59,7 +59,7 @@ function useLineItem(details: OffchainOrderLineItemProps): LineItemData | undefi
     case OffchainOrderLineItemType.EXPIRY:
       return {
         Label: () => <Trans i18nKey="common.expiry" />,
-        Value: () => <span>{details.order.expiry && formatTimestamp(details.order.expiry * 1000)}</span>,
+        Value: () => <span>{details.order.expiry && formatTimestamp({ timestamp: details.order.expiry * 1000 })}</span>,
       }
     case OffchainOrderLineItemType.NETWORK_COST:
       return {
@@ -70,7 +70,7 @@ function useLineItem(details: OffchainOrderLineItemProps): LineItemData | undefi
       return {
         Label: () => <Trans i18nKey="common.transactionId" />,
         Value: () => (
-          <ExternalLink href={details.explorerLink}>{ellipseMiddle(details.order.txHash ?? '')}</ExternalLink>
+          <ExternalLink href={details.explorerLink}>{ellipseMiddle({ str: details.order.txHash ?? '' })}</ExternalLink>
         ),
       }
     default:

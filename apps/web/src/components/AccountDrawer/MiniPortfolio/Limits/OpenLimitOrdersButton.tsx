@@ -30,7 +30,7 @@ export function OpenLimitOrdersButton({
   const colors = useSporeColors()
   const extraWarning = getExtraWarning(openLimitOrders)
 
-  if (!openLimitOrders || openLimitOrders.length < 1) {
+  if (openLimitOrders.length < 1) {
     return null
   }
 

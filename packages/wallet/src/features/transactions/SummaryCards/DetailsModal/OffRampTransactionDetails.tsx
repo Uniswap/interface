@@ -1,11 +1,7 @@
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import {
-  OffRampSaleInfo,
-  TransactionDetails,
-  TransactionType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { OffRampSaleInfo, TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { CurrencyTransferContent } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransferTransactionDetails'
@@ -37,7 +33,7 @@ export function OffRampTransactionDetails({
   return (
     <CurrencyTransferContent
       currencyInfo={currencyInfo}
-      showValueAsHeading={typeInfo.type === TransactionType.OffRampSale}
+      showValueAsHeading={true}
       tokenAmountWithSymbol={tokenAmountWithSymbol}
       value={value}
       onClose={onClose}

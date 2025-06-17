@@ -7,7 +7,7 @@ export default function AddLiquidityV2WithTokenRedirects() {
   if (currencyIdA) {
     url.searchParams.append('currencyA', currencyIdA)
   }
-  if (currencyIdB && currencyIdA?.toLowerCase() !== currencyIdB?.toLowerCase()) {
+  if (currencyIdB && currencyIdA?.toLowerCase() !== currencyIdB.toLowerCase()) {
     url.searchParams.append('currencyB', currencyIdB)
   }
   return <Navigate to={url.pathname + url.search} replace />

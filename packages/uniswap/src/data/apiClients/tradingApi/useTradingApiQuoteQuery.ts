@@ -21,9 +21,7 @@ export function useTradingApiQuoteQuery({
     queryFn: params
       ? async (): ReturnType<typeof fetchQuote> => {
           const { isUSDQuote, ...fetchParams } = params
-          if (fetchParams.tokenInChainId) {
-            logSwapQuoteFetch({ chainId: fetchParams.tokenInChainId, isUSDQuote })
-          }
+          logSwapQuoteFetch({ chainId: fetchParams.tokenInChainId, isUSDQuote })
           return await fetchQuote(fetchParams)
         }
       : skipToken,

@@ -38,10 +38,6 @@ const slice = createSlice({
       state,
       { payload }: PayloadAction<Partial<TransactionSettingsState> & { settingKey: TransactionSettingKey }>,
     ) => {
-      if (!payload.settingKey) {
-        throw new Error('TransactionSettingsState settingKey not provided')
-      }
-
       const { settingKey, ...settings } = payload
       Object.assign(state[settingKey], settings)
     },

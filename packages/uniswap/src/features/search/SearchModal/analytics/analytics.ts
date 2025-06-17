@@ -1,28 +1,31 @@
-import { InterfaceEventName, NavBarSearchTypes } from '@uniswap/analytics-events'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { OnchainItemListOptionType, SearchModalOption } from 'uniswap/src/components/lists/items/types'
 import { SearchContext, SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { SearchResultType, extractDomain } from 'uniswap/src/features/search/SearchResult'
-import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { NavBarSearchTypes } from 'uniswap/src/features/telemetry/types'
 import { isMobileApp } from 'utilities/src/platform'
 
 export function sendSearchOptionItemClickedAnalytics({
   item,
   section,
   rowIndex,
+  sectionIndex,
   searchFilters,
 }: {
   item: SearchModalOption
   section: OnchainItemSection<SearchModalOption>
   rowIndex: number
+  sectionIndex: number
   searchFilters: SearchFilterContext
 }): void {
   const searchContext: SearchContext = {
     ...searchFilters,
     category: section.sectionKey,
-    isHistory: section.sectionKey === OnchainItemSectionName.RecentSearches, // history item click
-    position: rowIndex,
+    isHistory: section.sectionKey === OnchainItemSectionName.RecentSearches,
+    position: rowIndex, // rowIndex accounts for header items as well, so the first header in the list has index 0 and first item in the list has index 1
+    sectionPosition: sectionIndex + 1, // 1-indexed position of item in section
     suggestionCount: section.data.length, // suggestionCount is # of suggestions in this SECTION, not total # of suggestions
   }
 
@@ -38,16 +41,16 @@ export function sendSearchOptionItemClickedAnalytics({
           type: 'token',
         })
       } else {
-        sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, {
+        sendAnalyticsEvent(InterfaceEventName.NavbarResultSelected, {
           ...searchContext,
           chainId: currency.chainId,
-          suggestion_type: searchContext?.isHistory
-            ? NavBarSearchTypes.RECENT_SEARCH
-            : searchContext?.query && searchContext?.query.length > 0
-              ? NavBarSearchTypes.TOKEN_SUGGESTION
-              : NavBarSearchTypes.TOKEN_TRENDING,
-          total_suggestions: searchContext?.suggestionCount,
-          query_text: searchContext?.query ?? '',
+          suggestion_type: searchContext.isHistory
+            ? NavBarSearchTypes.RecentSearch
+            : searchContext.query && searchContext.query.length > 0
+              ? NavBarSearchTypes.TokenSuggestion
+              : NavBarSearchTypes.TokenTrending,
+          total_suggestions: searchContext.suggestionCount,
+          query_text: searchContext.query ?? '',
           selected_search_result_name: currency.name ?? '',
           selected_search_result_address: currency.isNative ? 'NATIVE' : currency.address,
         })

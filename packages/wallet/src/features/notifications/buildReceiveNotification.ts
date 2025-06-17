@@ -37,7 +37,7 @@ export function buildReceiveNotification(
   }
 
   // Currency receive txn.
-  if (typeInfo?.assetType === AssetType.Currency && typeInfo?.currencyAmountRaw && typeInfo?.sender) {
+  if (typeInfo.assetType === AssetType.Currency && typeInfo.currencyAmountRaw && typeInfo.sender) {
     return {
       ...baseNotificationData,
       type: AppNotificationType.Transaction,
@@ -50,7 +50,7 @@ export function buildReceiveNotification(
   }
 
   // NFT receive txn.
-  if ((typeInfo?.assetType === AssetType.ERC1155 || typeInfo?.assetType === AssetType.ERC721) && typeInfo?.tokenId) {
+  if ((typeInfo.assetType === AssetType.ERC1155 || typeInfo.assetType === AssetType.ERC721) && typeInfo.tokenId) {
     return {
       ...baseNotificationData,
       type: AppNotificationType.Transaction,

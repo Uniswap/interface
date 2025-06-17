@@ -1,54 +1,25 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
-import { Position as V3Position } from '@uniswap/v3-sdk'
-import { Position as V4Position } from '@uniswap/v4-sdk'
-import {
-  BasePositionDerivedInfo,
-  FeeTierData,
-  PositionDerivedInfo,
-  PositionInfo,
-  PriceOrdering,
-  V2PositionDerivedInfo,
-  V3OrV4PositionDerivedInfo,
-} from 'components/Liquidity/types'
+import { Currency, Percent, Price } from '@uniswap/sdk-core'
+import { FeeTierData, PositionInfo, PriceOrdering } from 'components/Liquidity/types'
 import {
   MAX_FEE_TIER_DECIMALS,
   calculateInvertedValues,
   getDefaultFeeTiersForChainWithDynamicFeeTier,
   mergeFeeTiers,
 } from 'components/Liquidity/utils'
-import { ZERO_ADDRESS } from 'constants/misc'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import JSBI from 'jsbi'
-import { OptionalCurrency } from 'pages/Pool/Positions/create/types'
-import { getCurrencyAddressForTradingApi, getSortedCurrenciesTupleWithWrap } from 'pages/Pool/Positions/create/utils'
+import { getTokenOrZeroAddress } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LiquidityModalInitialState } from 'state/application/reducer'
 import { useAppSelector } from 'state/hooks'
 import { Bound } from 'state/mint/v3/actions'
-import { BIPS_BASE, PollingInterval } from 'uniswap/src/constants/misc'
+import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
-
-function getPriceOrderingFromPositionForUI(position?: V3Position | V4Position): PriceOrdering {
-  if (!position) {
-    return {}
-  }
-
-  const token0 = position.amount0.currency
-  const token1 = position.amount1.currency
-
-  return {
-    priceLower: position.token0PriceLower,
-    priceUpper: position.token0PriceUpper,
-    quote: token1,
-    base: token0,
-  }
-}
 
 /**
  * @returns map of fee tier (in hundredths of bips) to more data about the Pool
@@ -57,45 +28,45 @@ function getPriceOrderingFromPositionForUI(position?: V3Position | V4Position): 
 export function useAllFeeTierPoolData({
   chainId,
   protocolVersion,
-  currencies,
+  sdkCurrencies,
   withDynamicFeeTier = false,
   hook,
 }: {
   chainId?: number
   protocolVersion: ProtocolVersion
-  currencies: [OptionalCurrency, OptionalCurrency]
+  sdkCurrencies: { TOKEN0: Maybe<Currency>; TOKEN1: Maybe<Currency> }
   hook: string
   withDynamicFeeTier?: boolean
 }): { feeTierData: Record<number, FeeTierData>; hasExistingFeeTiers: boolean } {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
-  const sortedCurrencies = getSortedCurrenciesTupleWithWrap(currencies[0], currencies[1], protocolVersion)
 
   const { data: poolData } = useGetPoolsByTokens(
     {
       chainId,
       protocolVersions: [protocolVersion],
-      token0: getCurrencyAddressForTradingApi(sortedCurrencies[0]),
-      token1: getCurrencyAddressForTradingApi(sortedCurrencies[1]),
-      hooks: hook ?? ZERO_ADDRESS,
+      token0: getTokenOrZeroAddress(sdkCurrencies.TOKEN0),
+      token1: getTokenOrZeroAddress(sdkCurrencies.TOKEN1),
+      hooks: hook,
     },
-    Boolean(chainId && sortedCurrencies?.[0] && sortedCurrencies?.[1]),
+    Boolean(chainId && sdkCurrencies.TOKEN0 && sdkCurrencies.TOKEN1),
   )
 
   return useMemo(() => {
     const liquiditySum = poolData?.pools.reduce(
-      (sum, pool) => BigNumber.from(pool.totalLiquidityUsd.split('.')?.[0] ?? '0').add(sum),
+      (sum, pool) => BigNumber.from(pool.totalLiquidityUsd.split('.')[0] ?? '0').add(sum),
       BigNumber.from(0),
     )
 
     const feeTierData: Record<number, FeeTierData> = {}
-    if (poolData && liquiditySum && sortedCurrencies?.[0] && sortedCurrencies?.[1]) {
+    if (poolData && liquiditySum && sdkCurrencies.TOKEN0 && sdkCurrencies.TOKEN1) {
       for (const pool of poolData.pools) {
         const feeTier = pool.fee
-        const totalLiquidityUsdTruncated = Number(pool.totalLiquidityUsd.split('.')?.[0] ?? '0')
+        const totalLiquidityUsdTruncated = Number(pool.totalLiquidityUsd.split('.')[0] ?? '0')
         const percentage = liquiditySum.isZero()
           ? new Percent(0, 100)
           : new Percent(totalLiquidityUsdTruncated, liquiditySum.toString())
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (feeTierData[feeTier]) {
           feeTierData[feeTier].totalLiquidityUsd += totalLiquidityUsdTruncated
           feeTierData[feeTier].percentage = feeTierData[feeTier].percentage.add(percentage)
@@ -120,9 +91,9 @@ export function useAllFeeTierPoolData({
     }
 
     return {
-      feeTierData: mergeFeeTiers(
-        feeTierData,
-        Object.values(
+      feeTierData: mergeFeeTiers({
+        feeTiers: feeTierData,
+        feeData: Object.values(
           getDefaultFeeTiersForChainWithDynamicFeeTier({
             chainId,
             dynamicFeeTierEnabled: withDynamicFeeTier,
@@ -130,108 +101,11 @@ export function useAllFeeTierPoolData({
           }),
         ),
         formatPercent,
-        t('fee.dynamic'),
-      ),
+        formattedDynamicFeeTier: t('fee.dynamic'),
+      }),
       hasExistingFeeTiers: Object.values(feeTierData).length > 0,
     }
-  }, [poolData, sortedCurrencies, chainId, withDynamicFeeTier, formatPercent, protocolVersion, t])
-}
-
-export function usePositionDerivedInfo(positionInfo?: PositionInfo): PositionDerivedInfo {
-  const {
-    token0UncollectedFees,
-    token1UncollectedFees,
-    currency0Amount,
-    currency1Amount,
-    liquidity,
-    tickLower,
-    tickUpper,
-    apr,
-  } = positionInfo ?? {}
-  const { price: price0 } = useUSDCPrice(positionInfo?.currency0Amount?.currency, PollingInterval.Slow)
-  const { price: price1 } = useUSDCPrice(positionInfo?.currency1Amount?.currency, PollingInterval.Slow)
-
-  const { feeValue0, feeValue1 } = useMemo(() => {
-    if (!currency0Amount || !currency1Amount) {
-      return {}
-    }
-    return {
-      feeValue0: token0UncollectedFees
-        ? CurrencyAmount.fromRawAmount(currency0Amount.currency, token0UncollectedFees)
-        : undefined,
-      feeValue1: token1UncollectedFees
-        ? CurrencyAmount.fromRawAmount(currency1Amount.currency, token1UncollectedFees)
-        : undefined,
-    }
-  }, [currency0Amount, currency1Amount, token0UncollectedFees, token1UncollectedFees])
-
-  const { fiatFeeValue0, fiatFeeValue1 } = useMemo(() => {
-    const amount0 = feeValue0 ? price0?.quote(feeValue0) : undefined
-    const amount1 = feeValue1 ? price1?.quote(feeValue1) : undefined
-    return {
-      fiatFeeValue0: amount0,
-      fiatFeeValue1: amount1,
-    }
-  }, [price0, price1, feeValue0, feeValue1])
-
-  const { fiatValue0, fiatValue1 } = useMemo(() => {
-    if (!price0 || !price1 || !currency0Amount || !currency1Amount) {
-      return {}
-    }
-    const amount0 = price0.quote(currency0Amount)
-    const amount1 = price1.quote(currency1Amount)
-    return {
-      fiatValue0: amount0,
-      fiatValue1: amount1,
-    }
-  }, [price0, price1, currency0Amount, currency1Amount])
-
-  const priceOrdering = useMemo(() => {
-    if (
-      (positionInfo?.version !== ProtocolVersion.V3 && positionInfo?.version !== ProtocolVersion.V4) ||
-      !positionInfo.position ||
-      !liquidity ||
-      !tickLower ||
-      !tickUpper
-    ) {
-      return {}
-    }
-    return getPriceOrderingFromPositionForUI(positionInfo.position)
-  }, [liquidity, tickLower, tickUpper, positionInfo])
-
-  return useMemo(() => {
-    const baseInfo: BasePositionDerivedInfo = {
-      fiatFeeValue0,
-      fiatFeeValue1,
-      fiatValue0,
-      fiatValue1,
-      priceOrdering,
-      feeValue0,
-      feeValue1,
-      apr,
-      token0CurrentPrice: undefined,
-      token1CurrentPrice: undefined,
-    }
-    if (!positionInfo) {
-      return baseInfo
-    }
-
-    if (positionInfo.version === ProtocolVersion.V2) {
-      return {
-        ...baseInfo,
-        version: ProtocolVersion.V2,
-        token0CurrentPrice: undefined,
-        token1CurrentPrice: undefined,
-      } satisfies V2PositionDerivedInfo
-    }
-
-    return {
-      ...baseInfo,
-      version: positionInfo.version,
-      token0CurrentPrice: positionInfo.pool?.token0Price,
-      token1CurrentPrice: positionInfo.pool?.token1Price,
-    } satisfies V3OrV4PositionDerivedInfo
-  }, [fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceOrdering, feeValue0, feeValue1, positionInfo, apr])
+  }, [poolData, sdkCurrencies, chainId, withDynamicFeeTier, formatPercent, protocolVersion, t])
 }
 
 function useFormatTickPrice({
@@ -283,7 +157,7 @@ export function useGetRangeDisplay({
     invert: pricesInverted,
   })
 
-  const isTickAtLimit = useIsTickAtLimit(tickSpacing, Number(tickLower), Number(tickUpper))
+  const isTickAtLimit = useIsTickAtLimit({ tickSpacing, tickLower: Number(tickLower), tickUpper: Number(tickUpper) })
 
   const minPrice = useFormatTickPrice({
     price: priceLower,

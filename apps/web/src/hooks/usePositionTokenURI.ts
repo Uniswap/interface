@@ -41,11 +41,15 @@ function useNFTPositionManagerContract(
   return version === ProtocolVersion.V3 ? v3Contract : v4Contract
 }
 
-export function usePositionTokenURI(
-  tokenId: TokenId | undefined,
-  chainId?: UniverseChainId,
-  version?: ProtocolVersion,
-): UsePositionTokenURIResult {
+export function usePositionTokenURI({
+  tokenId,
+  chainId,
+  version,
+}: {
+  tokenId?: TokenId
+  chainId?: UniverseChainId
+  version?: ProtocolVersion
+}): UsePositionTokenURIResult {
   const contract = useNFTPositionManagerContract(version ?? ProtocolVersion.V3, chainId)
   const { data, isLoading, error } = useQuery({
     queryKey: [ReactQueryCacheKey.PositionTokenURI, tokenId, chainId, version],

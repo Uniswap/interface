@@ -42,7 +42,7 @@ describe(watchTransaction, () => {
     dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => txReceipt.confirmedTime)
   })
   afterAll(() => {
-    dateNowSpy?.mockRestore()
+    dateNowSpy.mockRestore()
   })
 
   const { chainId, id, from, options } = txDetailsPending
@@ -137,7 +137,7 @@ describe(watchTransaction, () => {
       })
       .provide([
         [call(getProvider, chainId), receiptProvider],
-        [call(waitForSameNonceFinalized, chainId, id, options.request.nonce), true],
+        [call(waitForSameNonceFinalized, { chainId, id, nonce: options.request.nonce }), true],
       ])
       .call(deleteTransaction, txDetailsPending)
       .dispatch(transactionActions.deleteTransaction({ address: from, id, chainId }))
@@ -155,7 +155,7 @@ describe(watchTransaction, () => {
       })
       .provide([
         [call(getProvider, chainId), receiptProvider],
-        [call(waitForBridgeSendCompleted, chainId, id, options.request.nonce), true],
+        [call(waitForBridgeSendCompleted, { chainId, id, nonce: options.request.nonce }), true],
       ])
       .call(deleteTransaction, txDetailsPending)
       .dispatch(transactionActions.deleteTransaction({ address: from, id, chainId }))

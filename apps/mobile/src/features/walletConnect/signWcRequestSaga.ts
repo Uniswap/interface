@@ -56,7 +56,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
     const signerManager = yield* call(getSignerManager)
     let result: string | SendCallsResult = ''
     if (method === EthMethod.PersonalSign || method === EthMethod.EthSign) {
-      result = yield* call(signMessage, params.message, account, signerManager)
+      result = yield* call(signMessage, { message: params.message, account, signerManager })
 
       // TODO: add `isCheckIn` type to uwulink request info so that this can be generalized
       if (
@@ -71,7 +71,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         )
       }
     } else if (method === EthMethod.SignTypedData || method === EthMethod.SignTypedDataV4) {
-      result = yield* call(signTypedDataMessage, params.message, account, signerManager)
+      result = yield* call(signTypedDataMessage, { message: params.message, account, signerManager })
     } else if (method === EthMethod.EthSendTransaction && params.request.type === UwULinkMethod.Erc20Send) {
       const txParams: ExecuteTransactionParams = {
         chainId: params.transaction.chainId || defaultChainId,
@@ -113,6 +113,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
           chainId: txParams.chainId,
         }),
       )
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     } else if (method === EthMethod.WalletSendCalls && params.request.type === EthMethod.WalletSendCalls) {
       const txParams: ExecuteTransactionParams = {
         chainId: params.request.chainId,
@@ -178,6 +179,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
           result,
         },
       })
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     } else if (params.dappRequestInfo.requestType === DappRequestType.UwULink && params.dappRequestInfo.webhook) {
       fetch(params.dappRequestInfo.webhook, {
         method: 'POST',

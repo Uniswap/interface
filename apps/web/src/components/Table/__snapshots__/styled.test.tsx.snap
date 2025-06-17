@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TokenLinkCell renders known token on a different chain 1`] = `
+exports[`TokenLinkCell > renders known token on a different chain 1`] = `
 <DocumentFragment>
   .c0 {
   -webkit-text-decoration: none;
@@ -99,7 +99,7 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
 </DocumentFragment>
 `;
 
-exports[`TokenLinkCell renders known token on mainnet 1`] = `
+exports[`TokenLinkCell > renders known token on mainnet 1`] = `
 <DocumentFragment>
   .c0 {
   -webkit-text-decoration: none;
@@ -173,7 +173,7 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
 </DocumentFragment>
 `;
 
-exports[`TokenLinkCell renders unknown token 1`] = `
+exports[`TokenLinkCell > renders unknown token 1`] = `
 <DocumentFragment>
   .c0 {
   -webkit-text-decoration: none;

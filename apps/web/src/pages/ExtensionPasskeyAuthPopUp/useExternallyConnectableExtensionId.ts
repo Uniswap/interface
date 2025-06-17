@@ -7,11 +7,11 @@ export function useExternallyConnectableExtensionId(): string {
     DynamicConfigs.ExternallyConnectableExtension,
     ExternallyConnectableExtensionConfigKey.ExtensionId,
     string
-  >(
-    DynamicConfigs.ExternallyConnectableExtension,
-    ExternallyConnectableExtensionConfigKey.ExtensionId,
-    TRUSTED_CHROME_EXTENSION_IDS.prod,
-  )
+  >({
+    config: DynamicConfigs.ExternallyConnectableExtension,
+    key: ExternallyConnectableExtensionConfigKey.ExtensionId,
+    defaultValue: TRUSTED_CHROME_EXTENSION_IDS.prod,
+  })
 
   return extensionId
 }

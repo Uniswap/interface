@@ -88,10 +88,7 @@ export function LiquidityPositionInfo({
     currencyId(currency1Amount.currency),
   ])
 
-  const includeNetworkInLogo = useMemo(
-    () => !includeNetwork || (includeNetwork && media.lg),
-    [includeNetwork, media.lg],
-  )
+  const includeNetworkInLogo = useMemo(() => !includeNetwork || media.lg, [includeNetwork, media.lg])
 
   const migrateToV4Button = (): JSX.Element => {
     return (
@@ -131,12 +128,12 @@ export function LiquidityPositionInfo({
             {linkToPool ? (
               <Anchor href={getPoolDetailsURL(positionInfo.poolId, positionInfo.chainId)} textDecorationLine="none">
                 <Text variant="subheading1" {...ClickableTamaguiStyle}>
-                  {currency0Amount?.currency.symbol} / {currency1Amount?.currency.symbol}
+                  {currency0Amount.currency.symbol} / {currency1Amount.currency.symbol}
                 </Text>
               </Anchor>
             ) : (
               <Text variant="subheading1">
-                {currency0Amount?.currency.symbol} / {currency1Amount?.currency.symbol}
+                {currency0Amount.currency.symbol} / {currency1Amount.currency.symbol}
               </Text>
             )}
           </Flex>

@@ -17,7 +17,7 @@ import {
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Pair } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
-import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
+import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
 import { SerializedToken } from 'uniswap/src/features/tokens/slice/types'
 import { deserializeToken } from 'uniswap/src/utils/currency'
 
@@ -26,7 +26,7 @@ export function useGetPositionsQuery(
   disabled?: boolean,
 ): UseQueryResult<ListPositionsResponse, ConnectError> {
   return useQuery(listPositions, input, {
-    transport: uniswapGetTransport,
+    transport: uniswapPostTransport,
     enabled: !!input && !disabled,
     placeholderData: keepPreviousData,
   })
@@ -37,8 +37,8 @@ export function useGetPositionsInfiniteQuery(
   disabled?: boolean,
 ): UseInfiniteQueryResult<InfiniteData<ListPositionsResponse>, ConnectError> {
   return useInfiniteQuery(listPositions, input, {
-    transport: uniswapGetTransport,
-    enabled: !!input && !disabled,
+    transport: uniswapPostTransport,
+    enabled: !disabled,
     pageParamKey: 'pageToken',
     getNextPageParam: (lastPage) => lastPage.nextPageToken,
     placeholderData: keepPreviousData,
@@ -54,7 +54,7 @@ export function useGetPositionsForPairs(
   account?: Address,
 ): UseQueryResult<GetPositionResponse, ConnectError>[] {
   const positionsQueryOptions = useMemo(() => {
-    return Object.keys(serializedPairs || {})
+    return Object.keys(serializedPairs)
       .flatMap((chainId) => {
         const pairsForChain = serializedPairs[Number(chainId)]
         if (!pairsForChain) {
@@ -77,7 +77,7 @@ export function useGetPositionsForPairs(
                   owner: account,
                 }
               : undefined,
-            { transport: uniswapGetTransport },
+            { transport: uniswapPostTransport },
           )
         })
       })

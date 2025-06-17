@@ -22,6 +22,7 @@ export function cspMetaTagPlugin(): Plugin {
     name: 'inject-csp-meta',
 
     transformIndexHtml(html) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       const env = process.env.NODE_ENV ?? 'development'
       const skip = process.env.VITE_SKIP_CSP === 'true'
 

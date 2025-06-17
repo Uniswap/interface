@@ -18,13 +18,21 @@ export async function getRGBColor(imageUrl: string | undefined, checkDistance = 
     const buffer = Buffer.from(await data.arrayBuffer())
 
     const type = data.headers.get('content-type') ?? ''
-    return getAverageColor(buffer, type, checkDistance)
+    return getAverageColor({ arrayBuffer: buffer, type, checkDistance })
   } catch (e) {
     return DEFAULT_COLOR
   }
 }
 
-function getAverageColor(arrayBuffer: Uint8Array, type: string, checkDistance: boolean) {
+function getAverageColor({
+  arrayBuffer,
+  type,
+  checkDistance,
+}: {
+  arrayBuffer: Uint8Array
+  type: string
+  checkDistance?: boolean
+}) {
   let pixels
   switch (type) {
     case 'image/png': {
@@ -32,6 +40,7 @@ function getAverageColor(arrayBuffer: Uint8Array, type: string, checkDistance: b
       pixels = image.decode()
       break
     }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     case 'image/jpeg' || 'image/jpg': {
       const jpeg = JPEG.decode(arrayBuffer, { useTArray: true })
       pixels = jpeg.data

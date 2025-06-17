@@ -7,7 +7,7 @@ import { X } from 'ui/src/components/icons/X'
 import { zIndexes } from 'ui/src/theme/zIndexes'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { UniswapEventName } from 'uniswap/src/features/telemetry/constants/uniswap'
+import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { isMobileWeb } from 'utilities/src/platform'
 

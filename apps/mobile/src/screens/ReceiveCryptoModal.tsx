@@ -126,7 +126,7 @@ export function ReceiveCryptoModal({ route }: AppStackScreenProp<typeof ModalNam
           </Text>
           <Separator />
         </Flex>
-        <ServiceProviderSelector serviceProviders={serviceProviders || []} onClose={onClose} />
+        <ServiceProviderSelector serviceProviders={serviceProviders} onClose={onClose} />
       </Flex>
     </Modal>
   )

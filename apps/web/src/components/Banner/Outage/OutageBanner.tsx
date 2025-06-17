@@ -9,7 +9,6 @@ import { capitalize } from 'tsafe'
 import { Flex, Text, styled as tamaguiStyled } from 'ui/src'
 import { iconSizes, zIndexes } from 'ui/src/theme'
 import { useShadowPropsShort } from 'ui/src/theme/shadows'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainUrlParam } from 'utils/chainParams'
 
@@ -18,7 +17,7 @@ export function getOutageBannerSessionStorageKey(chainId: UniverseChainId) {
 }
 
 // TODO replace with IconButton when it's available from buttons migration
-export const OutageCloseButton = tamaguiStyled(X, {
+const OutageCloseButton = tamaguiStyled(X, {
   ...ClickableTamaguiStyle,
   size: iconSizes.icon24,
   p: '$spacing4',
@@ -34,8 +33,7 @@ export function OutageBanner({ chainId, version }: ChainOutageData) {
   const [hidden, setHidden] = useState(false)
   const theme = useTheme()
   const versionName = version ? version.toString().toLowerCase() + ' data' : 'Data'
-  const { defaultChainId } = useEnabledChains()
-  const chainName = capitalize(getChainUrlParam(chainId ?? defaultChainId))
+  const chainName = capitalize(getChainUrlParam(chainId))
   const versionDescription = version ? ' ' + version.toString().toLowerCase() : ''
   const shadowProps = useShadowPropsShort()
 

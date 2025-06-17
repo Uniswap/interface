@@ -10,7 +10,7 @@ import { Dispatch, SetStateAction } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, styled, useMedia } from 'ui/src'
-import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
+import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -251,7 +251,7 @@ export function MinMaxRange({
               display="none"
               $group-item-hover={{ display: 'flex' }}
             >
-              <ArrowUpDown color="$neutral2" size="$icon.16" rotate="90deg" />
+              <ArrowDownArrowUp color="$neutral2" size="$icon.16" rotate="90deg" />
             </Flex>
           </Flex>
         </Flex>

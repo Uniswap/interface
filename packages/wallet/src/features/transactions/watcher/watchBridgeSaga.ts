@@ -75,7 +75,7 @@ export function* waitForBridgingStatus(transaction: TransactionDetails): SagaGen
         'Local update found: ',
         updatedTransaction.status,
       )
-      return updatedTransaction?.status
+      return updatedTransaction.status
     }
 
     pollIndex++

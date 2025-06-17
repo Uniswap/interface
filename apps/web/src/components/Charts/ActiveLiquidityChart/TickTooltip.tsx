@@ -1,8 +1,9 @@
 import { Currency, Percent } from '@uniswap/sdk-core'
+import { LiquidityBarData } from 'components/Charts/LiquidityChart/types'
 import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { Flex, Text } from 'ui/src'
+import { Flex, FlexProps, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
@@ -20,7 +21,7 @@ export function TickTooltip({
   baseCurrency,
 }: {
   hoverY: number
-  hoveredTick: ChartEntry
+  hoveredTick: ChartEntry | LiquidityBarData
   currentPrice: number
   currentTick?: number
   containerHeight: number
@@ -29,8 +30,41 @@ export function TickTooltip({
   quoteCurrency: Currency
   baseCurrency: Currency
 }) {
-  const { formatPercent, convertFiatAmountFormatted } = useLocalizationContext()
+  const atTop = hoverY < 20
+  const atBottom = containerHeight - hoverY < 20
 
+  return (
+    <TickTooltipContent
+      position="absolute"
+      top={hoverY - 18}
+      right={contentWidth + axisLabelPaneWidth + 8}
+      transform={atBottom ? 'translateY(-12px)' : atTop ? 'translateY(14px)' : undefined}
+      currentPrice={currentPrice}
+      hoveredTick={hoveredTick}
+      currentTick={currentTick}
+      quoteCurrency={quoteCurrency}
+      baseCurrency={baseCurrency}
+    />
+  )
+}
+
+export function TickTooltipContent({
+  currentPrice,
+  hoveredTick,
+  currentTick,
+  quoteCurrency,
+  baseCurrency,
+  showQuoteCurrencyFirst = true,
+  ...props
+}: {
+  currentPrice: number
+  hoveredTick: ChartEntry | LiquidityBarData
+  currentTick?: number
+  quoteCurrency: Currency
+  baseCurrency: Currency
+  showQuoteCurrencyFirst?: boolean
+} & FlexProps) {
+  const { formatPercent, convertFiatAmountFormatted } = useLocalizationContext()
   const amountBaseLockedUSD = useUSDCValue(tryParseCurrencyAmount(hoveredTick.amount1Locked?.toFixed(2), baseCurrency))
   const amountQuoteLockedUSD = useUSDCValue(
     tryParseCurrencyAmount(hoveredTick.amount0Locked?.toFixed(2), quoteCurrency),
@@ -40,25 +74,22 @@ export function TickTooltip({
     return null
   }
 
-  const atTop = hoverY < 20
-  const atBottom = containerHeight - hoverY < 20
+  const price0 = typeof hoveredTick.price0 === 'string' ? parseFloat(hoveredTick.price0) : hoveredTick.price0
+  const showQuoteCurrency = showQuoteCurrencyFirst ? currentPrice >= price0 : currentPrice <= price0
 
   return (
     <Flex
-      position="absolute"
       p="$padding8"
       gap="$gap4"
-      top={hoverY - 18}
       minWidth={150}
-      right={contentWidth + axisLabelPaneWidth + 8}
       borderRadius="$rounded12"
       borderColor="$surface3"
       borderWidth="$spacing1"
       backgroundColor="$surface2"
       pointerEvents="none"
-      transform={atBottom ? 'translateY(-12px)' : atTop ? 'translateY(14px)' : undefined}
+      {...props}
     >
-      {(currentPrice >= hoveredTick.price0 || hoveredTick.tick === currentTick) && (
+      {(showQuoteCurrency || hoveredTick.tick === currentTick) && (
         <Flex justifyContent="space-between" row alignItems="center" gap="$gap8">
           <Flex row gap="$gap4" alignItems="center">
             <DoubleCurrencyLogo currencies={[quoteCurrency]} size={iconSizes.icon16} />
@@ -68,22 +99,20 @@ export function TickTooltip({
             <Text variant="body4">
               {convertFiatAmountFormatted(amountQuoteLockedUSD.toExact(), NumberType.FiatTokenStats)}
             </Text>
-            {amountBaseLockedUSD && (
-              <Text variant="body4" color="$neutral2">
-                {formatPercent(
-                  hoveredTick.tick === currentTick
-                    ? new Percent(
-                        amountQuoteLockedUSD.quotient,
-                        amountBaseLockedUSD.add(amountQuoteLockedUSD).quotient,
-                      ).toSignificant()
-                    : 100,
-                )}
-              </Text>
-            )}
+            <Text variant="body4" color="$neutral2">
+              {formatPercent(
+                hoveredTick.tick === currentTick
+                  ? new Percent(
+                      amountQuoteLockedUSD.quotient,
+                      amountBaseLockedUSD.add(amountQuoteLockedUSD).quotient,
+                    ).toSignificant()
+                  : 100,
+              )}
+            </Text>
           </Flex>
         </Flex>
       )}
-      {(currentPrice <= hoveredTick.price0 || hoveredTick.tick === currentTick) && (
+      {(!showQuoteCurrency || hoveredTick.tick === currentTick) && (
         <Flex justifyContent="space-between" row alignItems="center" gap="$gap8">
           <Flex row gap="$gap4" alignItems="center">
             <DoubleCurrencyLogo currencies={[baseCurrency]} size={iconSizes.icon16} />
@@ -93,18 +122,16 @@ export function TickTooltip({
             <Text variant="body4">
               {convertFiatAmountFormatted(amountBaseLockedUSD.toExact(), NumberType.FiatTokenStats)}
             </Text>
-            {amountQuoteLockedUSD && (
-              <Text variant="body4" color="$neutral2">
-                {formatPercent(
-                  hoveredTick.tick === currentTick
-                    ? new Percent(
-                        amountBaseLockedUSD.quotient,
-                        amountQuoteLockedUSD.add(amountBaseLockedUSD).quotient,
-                      ).toSignificant()
-                    : 100,
-                )}
-              </Text>
-            )}
+            <Text variant="body4" color="$neutral2">
+              {formatPercent(
+                hoveredTick.tick === currentTick
+                  ? new Percent(
+                      amountBaseLockedUSD.quotient,
+                      amountQuoteLockedUSD.add(amountBaseLockedUSD).quotient,
+                    ).toSignificant()
+                  : 100,
+              )}
+            </Text>
           </Flex>
         </Flex>
       )}

@@ -10,7 +10,7 @@ async function getSignature(permitData: NullablePermit, signer: Signer): Promise
   if (!domain || !types || !values) {
     return undefined
   }
-  return signTypedData(domain, types, values, signer)
+  return signTypedData({ domain, types, value: values, signer })
 }
 
 export type PresignPermitFn = (permitData: NullablePermit) => Promise<string | undefined>

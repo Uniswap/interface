@@ -20,7 +20,7 @@ export function isEffectivelyInfinity(value: number): boolean {
   return Math.abs(value) >= 1e20 || Math.abs(value) <= 1e-20
 }
 
-export function priceToNumber(price: Price<Currency, Currency> | undefined, defaultValue: number): number {
+export function priceToNumber(price: Maybe<Price<Currency, Currency>>, defaultValue: number): number {
   const baseCurrency = price?.baseCurrency
   if (!baseCurrency) {
     return defaultValue
@@ -29,9 +29,7 @@ export function priceToNumber(price: Price<Currency, Currency> | undefined, defa
   const sigFigs = Boolean(baseCurrency.decimals) && baseCurrency.decimals > 0 ? baseCurrency.decimals : 6
 
   const numPrice = Number(
-    price
-      .quote(CurrencyAmount.fromRawAmount(baseCurrency, Math.pow(10, baseCurrency.decimals)))
-      ?.toSignificant(sigFigs) ?? 0,
+    price.quote(CurrencyAmount.fromRawAmount(baseCurrency, Math.pow(10, baseCurrency.decimals))).toSignificant(sigFigs),
   )
 
   if (isEffectivelyInfinity(numPrice)) {

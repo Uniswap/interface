@@ -57,7 +57,7 @@ export async function initializeWeb3Wallet(): Promise<void> {
 
     const clientId = await wcWeb3Wallet.engine.signClient.core.crypto.getClientId()
     await registerWCClientForPushNotifications(clientId)
-    wcWeb3WalletReadyResolve?.()
+    wcWeb3WalletReadyResolve()
   } catch (e) {
     logger.error(e, {
       tags: { file: 'walletConnect/walletConnectClient', function: 'initializeWeb3Wallet' },

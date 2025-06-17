@@ -67,6 +67,7 @@ export function getAllKeysOfNestedObject(obj: Record<string, unknown>, prefix = 
 }
 
 export function sortKeysRecursively<T extends Record<string, unknown>>(input: T): T {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof input !== 'object' || input === null || Array.isArray(input)) {
     return input
   }

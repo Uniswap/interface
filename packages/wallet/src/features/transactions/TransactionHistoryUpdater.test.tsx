@@ -1,9 +1,6 @@
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
-import {
-  AssetActivity,
-  TransactionListQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { AssetActivity } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { erc20RecentReceiveAssetActivity, erc20StaleReceiveAssetActivity, portfolio } from 'uniswap/src/test/fixtures'
@@ -94,6 +91,10 @@ const portfolioWithReceive = portfolio({
 const portfolioWithStaleReceive = portfolio({
   ownerAddress: account1.address,
   assetActivities: [erc20StaleReceiveAssetActivity()],
+})
+const portfolioWithNoReceive = portfolio({
+  ownerAddress: account1.address,
+  assetActivities: [],
 })
 
 const { resolvers } = queryResolvers({
@@ -210,7 +211,11 @@ describe(getReceiveNotificationFromData, () => {
     // Ensure all transactions will be "new" compared to this
     const newTimestamp = 1
 
-    const notification = getReceiveNotificationFromData(txnData, account1.address, newTimestamp)
+    const notification = getReceiveNotificationFromData({
+      data: txnData,
+      address: account1.address,
+      lastTxNotificationUpdateTimestamp: newTimestamp,
+    })
 
     const assetChange = receiveAssetActivity.details.assetChanges[0]!
 
@@ -232,12 +237,16 @@ describe(getReceiveNotificationFromData, () => {
 
   it('returns undefined if no receive txns found', () => {
     // No receive type txn in this mock
-    const txnDataWithoutReceiveTxns = { portfolios } as TransactionListQuery
+    const txnDataWithoutReceiveTxns = { portfolios: [portfolioWithNoReceive] }
 
     // Ensure all transactions will be "new" compared to this
     const newTimestamp = 1
 
-    const notification = getReceiveNotificationFromData(txnDataWithoutReceiveTxns, account1.address, newTimestamp)
+    const notification = getReceiveNotificationFromData({
+      data: txnDataWithoutReceiveTxns,
+      address: account1.address,
+      lastTxNotificationUpdateTimestamp: newTimestamp,
+    })
 
     expect(notification).toBeUndefined()
   })
@@ -250,7 +259,11 @@ describe(getReceiveNotificationFromData, () => {
     // mocked receive is made to be 5 minutes ago
     const oldTimestamp = Date.now() - ONE_MINUTE_MS
 
-    const notification = getReceiveNotificationFromData(txnData, account1.address, oldTimestamp)
+    const notification = getReceiveNotificationFromData({
+      data: txnData,
+      address: account1.address,
+      lastTxNotificationUpdateTimestamp: oldTimestamp,
+    })
 
     expect(notification).toBeUndefined()
   })
@@ -263,7 +276,11 @@ describe(getReceiveNotificationFromData, () => {
     // mocked receive is made to be 5 minutes ago
     const newTimestamp = 1
 
-    const notification = getReceiveNotificationFromData(txnData, account1.address, newTimestamp)
+    const notification = getReceiveNotificationFromData({
+      data: txnData,
+      address: account1.address,
+      lastTxNotificationUpdateTimestamp: newTimestamp,
+    })
 
     expect(notification).toBeUndefined()
   })

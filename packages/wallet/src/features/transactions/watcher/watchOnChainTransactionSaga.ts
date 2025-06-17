@@ -38,6 +38,7 @@ export async function waitForReceipt(
   provider: providers.Provider,
 ): Promise<providers.TransactionReceipt> {
   const txReceipt = await provider.waitForTransaction(hash)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (txReceipt) {
     logger.debug('watchOnChainTransactionSaga', 'waitForReceipt', 'Tx receipt received', hash)
   }
@@ -98,7 +99,7 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     }
   }
 
-  if ((isBridge(transaction) || isClassic(transaction)) && !transaction.options?.rpcSubmissionTimestampMs) {
+  if ((isBridge(transaction) || isClassic(transaction)) && !transaction.options.rpcSubmissionTimestampMs) {
     // Transaction was not submitted yet, ignore it for now
     // Once it's submitted, it'll be updated and the watcher will pick it up
     return undefined
@@ -116,7 +117,7 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     return undefined
   }
 
-  if (isClassic(transaction) && transaction.options?.submitViaPrivateRpc) {
+  if (isClassic(transaction) && transaction.options.submitViaPrivateRpc) {
     const flashbotsStatus = yield* call(getFlashbotsTransactionStatus, transaction, hash)
     if (flashbotsStatus === TransactionStatus.Failed || flashbotsStatus === TransactionStatus.Canceled) {
       // Status is final and we won't get a receipt from ethers. Return early and finalize the transaction
@@ -137,7 +138,7 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
 
   if (
     isBridge(transaction) &&
-    getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status) === TransactionStatus.Success
+    getFinalizedTransactionStatus(transaction.status, ethersReceipt.status) === TransactionStatus.Success
   ) {
     // Only the send part was successful, wait for receive part to be confirmed on chain.
     // Bridge swaps become non-cancellable after the send transaction is confirmed on chain.
@@ -159,7 +160,7 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
 
   // Classic transaction status is based on receipt, while UniswapX status is based backend response.
   if (isClassic(transaction)) {
-    status = getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
+    status = getFinalizedTransactionStatus(transaction.status, ethersReceipt.status)
   }
 
   return { ...transaction, status, receipt, hash, networkFee }
@@ -182,11 +183,13 @@ export function* checkIfTransactionInvalidated(
   }
 
   const tx = yield* call([provider, provider.getTransaction], transaction.hash)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (tx) {
     // Transaction is known to the provider, so it's still valid
     return false
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!tx && !transaction.options.submitViaPrivateRpc) {
     // If submitted via public RPC and not found, we can consider it lost/invalidated
     return true
@@ -203,14 +206,18 @@ export function* checkIfTransactionInvalidated(
   return false
 }
 
-function* handleTimeout(
-  transaction: TransactionDetails,
-  apolloClient: ApolloClient<NormalizedCacheObject>,
-  provider: providers.Provider,
-) {
+function* handleTimeout({
+  transaction,
+  apolloClient,
+  provider,
+}: {
+  transaction: TransactionDetails
+  apolloClient: ApolloClient<NormalizedCacheObject>
+  provider: providers.Provider
+}) {
   if (
     isUniswapX(transaction) ||
-    !transaction.options?.timeoutTimestampMs ||
+    !transaction.options.timeoutTimestampMs ||
     !TEMPORARY_TRANSACTION_STATUSES.includes(transaction.status)
   ) {
     return
@@ -233,6 +240,7 @@ function* handleTimeout(
   }
 
   const isInvalidated = yield* call(checkIfTransactionInvalidated, transaction, provider)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (isInvalidated) {
     const failedTransaction = { ...transaction, status: TransactionStatus.Failed } as FinalizedTransactionDetails
     yield* call(finalizeTransaction, {
@@ -245,6 +253,7 @@ function* handleTimeout(
 function* waitForCancellation(chainId: UniverseChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof cancelTransaction>>(cancelTransaction.type)
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (payload.cancelRequest && payload.chainId === chainId && payload.id === id) {
       return payload.cancelRequest
     }
@@ -260,11 +269,13 @@ function* waitForReplacement(chainId: UniverseChainId, id: string) {
   }
 }
 
-export function* waitForSameNonceFinalized(
-  chainId: UniverseChainId,
-  id: string,
-  nonce: BigNumberish | undefined,
-): Generator<unknown, boolean> {
+type WaitForParams = {
+  chainId: UniverseChainId
+  id: string
+  nonce?: BigNumberish
+}
+
+export function* waitForSameNonceFinalized({ chainId, id, nonce }: WaitForParams): Generator<unknown, boolean> {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof transactionActions.finalizeTransaction>>(
       transactionActions.finalizeTransaction.type,
@@ -285,11 +296,7 @@ export function* waitForSameNonceFinalized(
  * When we're canceling a bridge tx, we should invalidate the cancel tx as soon as the send part
  * of the bridge is confirmed on chain, instead of waiting for the full completion of the bridge.
  */
-export function* waitForBridgeSendCompleted(
-  chainId: UniverseChainId,
-  id: string,
-  nonce: BigNumberish | undefined,
-): Generator<unknown, boolean> {
+export function* waitForBridgeSendCompleted({ chainId, id, nonce }: WaitForParams): Generator<unknown, boolean> {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof transactionActions.updateTransaction>>(
       transactionActions.updateTransaction.type,
@@ -311,14 +318,10 @@ export function* waitForBridgeSendCompleted(
  * Monitor for transactions with the same nonce as the current transaction. If any duplicate is finalized, it means
  * the current transaction has been invalidated and wont be picked up on chain.
  */
-export function* waitForTxnInvalidated(
-  chainId: UniverseChainId,
-  id: string,
-  nonce: BigNumberish | undefined,
-): Generator<unknown, boolean> {
+function* waitForTxnInvalidated({ chainId, id, nonce }: WaitForParams): Generator<unknown, boolean> {
   yield* race({
-    sameNonceFinalized: call(waitForSameNonceFinalized, chainId, id, nonce),
-    bridgeSendCompleted: call(waitForBridgeSendCompleted, chainId, id, nonce),
+    sameNonceFinalized: call(waitForSameNonceFinalized, { chainId, id, nonce }),
+    bridgeSendCompleted: call(waitForBridgeSendCompleted, { chainId, id, nonce }),
   })
 
   return true
@@ -336,14 +339,14 @@ export function* watchTransaction({
   logger.debug('watchOnChainTransactionSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
   const provider = yield* call(getProvider, chainId)
   const options = isUniswapX(transaction) ? undefined : transaction.options
-  const timeoutTask = yield* fork(handleTimeout, transaction, apolloClient, provider)
+  const timeoutTask = yield* fork(handleTimeout, { transaction, apolloClient, provider })
   const listenForAppBackgrounded = options && !options.appBackgroundedWhilePending
 
   const { updatedTransaction, cancelTx, replace, invalidated, appBackgrounded } = yield* race({
     updatedTransaction: call(waitForRemoteUpdate, transaction, provider),
     cancelTx: call(waitForCancellation, chainId, id),
     replace: call(waitForReplacement, chainId, id),
-    invalidated: call(waitForTxnInvalidated, chainId, id, options?.request.nonce),
+    invalidated: call(waitForTxnInvalidated, { chainId, id, nonce: options?.request.nonce }),
     ...(listenForAppBackgrounded ? { appBackgrounded: call(watchForAppBackgrounded) } : {}),
   })
 
@@ -379,7 +382,7 @@ export function* watchTransaction({
   if (replace) {
     // Same logic as cancelation, but skip directly to replacement
     yield* fork(watchTransaction, { transaction, apolloClient })
-    yield* call(attemptReplaceTransaction, transaction, replace.newTxParams)
+    yield* call(attemptReplaceTransaction, { transaction, newTxRequest: replace.newTxParams })
     return
   }
 

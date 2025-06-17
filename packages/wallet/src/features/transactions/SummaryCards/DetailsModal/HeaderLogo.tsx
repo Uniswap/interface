@@ -12,6 +12,11 @@ import {
 import {
   ApproveTransactionInfo,
   BridgeTransactionInfo,
+  ClaimTransactionInfo,
+  CreatePairTransactionInfo,
+  CreatePoolTransactionInfo,
+  LiquidityDecreaseTransactionInfo,
+  LiquidityIncreaseTransactionInfo,
   NFTApproveTransactionInfo,
   NFTMintTransactionInfo,
   NFTTradeTransactionInfo,
@@ -20,6 +25,7 @@ import {
   OnRampTransferInfo,
   Permit2ApproveTransactionInfo,
   ReceiveTokenTransactionInfo,
+  RemoveDelegationTransactionInfo,
   SendCallsTransactionInfo,
   SendTokenTransactionInfo,
   TransactionDetails,
@@ -43,6 +49,7 @@ import {
   isOnRampTransferTransactionInfo,
   isPermit2ApproveTransactionInfo,
   isReceiveTokenTransactionInfo,
+  isRemoveDelegationTransactionInfo,
   isSendCallsTransactionInfo,
   isSendTokenTransactionInfo,
   isSwapTransactionInfo,
@@ -118,6 +125,9 @@ export function HeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element
       return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else if (isPermit2ApproveTransactionInfo(typeInfo)) {
       // TODO: Add Permit2ApproveHeaderLogo
+      return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+    } else if (isRemoveDelegationTransactionInfo(typeInfo)) {
+      // TODO WALL-7056: Implement Remove Delegation Header Logo
       return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else {
       return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
@@ -257,7 +267,15 @@ function UnknownHeaderLogo({
   transactionDetails,
   typeInfo,
 }: SpecificHeaderLogoProps<
-  UnknownTransactionInfo | SendCallsTransactionInfo | Permit2ApproveTransactionInfo
+  | UnknownTransactionInfo
+  | SendCallsTransactionInfo
+  | Permit2ApproveTransactionInfo
+  | ClaimTransactionInfo
+  | CreatePairTransactionInfo
+  | CreatePoolTransactionInfo
+  | LiquidityIncreaseTransactionInfo
+  | LiquidityDecreaseTransactionInfo
+  | RemoveDelegationTransactionInfo
 >): JSX.Element {
   const colors = useSporeColors()
   // Check if dappInfo exists since it may not exist on all transaction types

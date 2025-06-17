@@ -1,4 +1,5 @@
 import { PricePoint } from 'appGraphql/data/util'
+import { PriceChartData } from 'components/Charts/PriceChart'
 import { CandlestickData } from 'lightweight-charts'
 
 /**
@@ -45,4 +46,20 @@ export function getCandlestickPriceBounds(data: CandlestickData[]): { min: numbe
   }
 
   return { min, max }
+}
+
+/**
+ * Returns the currentPrice or the most recent price from the data array.
+ */
+export function getEffectivePrice({
+  currentPrice,
+  data,
+}: {
+  currentPrice: number | undefined
+  data: PriceChartData[]
+}): number {
+  if (currentPrice) {
+    return currentPrice
+  }
+  return data[data.length - 1]?.value ?? 0
 }

@@ -6,7 +6,7 @@ import { useMemo, useRef } from 'react'
 import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { Chain, useTokenSpotPriceQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useTokenSpotPriceQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
@@ -42,7 +42,7 @@ function useETHPrice(currency?: Currency): {
       return { data: undefined, isLoading: false }
     }
 
-    if (currency?.wrapped.equals(nativeOnChain(chainId).wrapped)) {
+    if (currency.wrapped.equals(nativeOnChain(chainId).wrapped)) {
       return {
         data: new Price(currency, currency, '1', '1'),
         isLoading: false,
@@ -54,7 +54,7 @@ function useETHPrice(currency?: Currency): {
     }
 
     // if initial quoting fails, we may end up with a DutchOrderTrade
-    if (trade && trade instanceof ClassicTrade) {
+    if (trade instanceof ClassicTrade) {
       const { numerator, denominator } = trade.routes[0].midPrice
       const price = new Price(currency, nativeOnChain(chainId), denominator, numerator)
       return { data: price, isLoading: false }
@@ -87,7 +87,7 @@ function useStablecoinPrice(currency?: Currency): {
       return undefined
     }
     // handle usdc
-    if (currency?.wrapped.equals(stablecoin)) {
+    if (currency.wrapped.equals(stablecoin)) {
       return new Price(stablecoin, stablecoin, '1', '1')
     }
     // if initial quoting fails, we may end up with a DutchOrderTrade
@@ -129,7 +129,7 @@ export function useUSDPrice(
   const { data: tokenEthPrice, isLoading: isTokenEthPriceLoading } = useETHPrice(currency)
   const isTokenEthPriced = Boolean(tokenEthPrice || isTokenEthPriceLoading)
   const { data, networkStatus } = useTokenSpotPriceQuery({
-    variables: { chain: chain ?? Chain.Ethereum, address: getNativeTokenDBAddress(chain ?? Chain.Ethereum) },
+    variables: { chain, address: getNativeTokenDBAddress(chain) },
     skip: !isTokenEthPriced || !isWindowVisible,
     pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,

@@ -16,11 +16,12 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const tokenAddress = String(index[1])
 
     const cacheUrl = origin + '/tokens/' + networkName + '/' + tokenAddress
-    const data = await getRequest(
-      cacheUrl,
-      () => getToken(networkName, tokenAddress, cacheUrl),
-      (data): data is NonNullable<Awaited<ReturnType<typeof getToken>>> => Boolean(data.tokenData?.symbol && data.name),
-    )
+    const data = await getRequest({
+      url: cacheUrl,
+      getData: () => getToken({ networkName, tokenAddress, url: cacheUrl }),
+      validateData: (data): data is NonNullable<Awaited<ReturnType<typeof getToken>>> =>
+        Boolean(data.tokenData?.symbol && data.name),
+    })
 
     if (!data) {
       return new Response('Token not found.', { status: 404 })

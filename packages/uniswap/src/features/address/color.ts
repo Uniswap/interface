@@ -20,14 +20,14 @@ export function useAddressColorProps(address: Address): string {
     const contrastThreshold = 3 // WCAG AA standard for contrast
     const backgroundColor = colors.surface2.val // replace with your actual background color
 
-    if (hasAvatar && avatarColors && avatarColors.primary) {
-      if (passesContrast(avatarColors.primary, backgroundColor, contrastThreshold)) {
+    if (hasAvatar && avatarColors.primary) {
+      if (passesContrast({ color: avatarColors.primary, backgroundColor, contrastThreshold })) {
         return avatarColors.primary
       }
-      if (passesContrast(avatarColors.base, backgroundColor, contrastThreshold)) {
+      if (passesContrast({ color: avatarColors.base, backgroundColor, contrastThreshold })) {
         return avatarColors.base
       }
-      if (passesContrast(avatarColors.detail, backgroundColor, contrastThreshold)) {
+      if (passesContrast({ color: avatarColors.detail, backgroundColor, contrastThreshold })) {
         return avatarColors.detail
       }
       // Modify the color if it doesn't pass the contrast check

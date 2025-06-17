@@ -73,24 +73,24 @@ function createWithPerformanceLogger(ctx?: {
       }
 
       const start = performance.now()
-      try {
-        const result = await fn(...args)
-        const end = performance.now()
-        ctx.logger.info(ctx.filename, ctx.name, `${ctx.name} took ${end - start}ms`)
-        return result
-      } catch (error) {
-        const end = performance.now()
-        ctx.logger.error(error, {
-          tags: {
-            file: ctx.filename,
-            function: ctx.name,
-          },
-          extra: {
-            duration: end - start,
-          },
-        })
-        throw error
-      }
+      const result = await fn(...args)
+      const end = performance.now()
+      ctx.logger.debug(ctx.filename, ctx.name, `${ctx.name} took ${end - start}ms`)
+      return result
+      // TODO: re-enable performance logger when WALL-7050 is fixed
+      // } catch (error) {
+      //   const end = performance.now()
+      //   ctx.logger.error(error, {
+      //     tags: {
+      //       file: ctx.filename,
+      //       function: ctx.name,
+      //     },
+      //     extra: {
+      //       duration: end - start,
+      //     },
+      //   })
+      //   throw error
+      // }
     }
   }
 }

@@ -33,7 +33,7 @@ export function EditLabelSettingsModal({
   const entryPoint = accessPoint ?? MobileScreens.SettingsWallet
 
   const displayName = useDisplayName(address)
-  const [nickname, setNickname] = useState(displayName?.type === DisplayNameType.Local ? displayName?.name : '')
+  const [nickname, setNickname] = useState(displayName?.type === DisplayNameType.Local ? displayName.name : '')
   const [isUpdatingWalletLabel, setIsUpdatingWalletLabel] = useState(false)
 
   const accountNameIsEditable =
@@ -44,7 +44,7 @@ export function EditLabelSettingsModal({
   const onFinishEditing = (): void => {
     dismissNativeKeyboard()
 
-    setNickname(nickname?.trim())
+    setNickname(nickname.trim())
   }
 
   const onPressSaveChanges = (): void => {
@@ -54,7 +54,7 @@ export function EditLabelSettingsModal({
       editAccountActions.trigger({
         type: EditAccountAction.Rename,
         address,
-        newName: nickname?.trim() ?? '',
+        newName: nickname.trim(),
       }),
     )
     onPressBack()

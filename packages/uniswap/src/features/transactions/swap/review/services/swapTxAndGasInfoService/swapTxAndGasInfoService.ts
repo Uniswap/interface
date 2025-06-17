@@ -4,44 +4,33 @@ import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/cont
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 
-export type SwapTxAndGasInfoParameters<T extends Trade | undefined> = {
+export type SwapTxAndGasInfoParameters<T extends Trade = Trade> = {
   account?: AccountMeta
   derivedSwapInfo: DerivedSwapInfo
   trade: T
   approvalTxInfo: ApprovalTxInfo
 }
 
-export interface SwapTxAndGasInfoService<T extends Trade | undefined> {
+export interface SwapTxAndGasInfoService<T extends Trade = Trade> {
   getSwapTxAndGasInfo: (ctx: SwapTxAndGasInfoParameters<T>) => Promise<SwapTxAndGasInfo>
 }
 
 export type RoutingServicesMap = { [K in Routing]: SwapTxAndGasInfoService<Trade & { routing: K }> }
 
-export function createSwapTxAndGasInfoService(ctx: {
-  services: RoutingServicesMap
-  tradelessWrapService: SwapTxAndGasInfoService<undefined>
-}): SwapTxAndGasInfoService<Trade | undefined> {
+export function createSwapTxAndGasInfoService(ctx: { services: RoutingServicesMap }): SwapTxAndGasInfoService<Trade> {
   function getServiceForTrade<T extends Trade>(trade: T): SwapTxAndGasInfoService<T> {
     const service = ctx.services[trade.routing]
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!service) {
       throw new Error(`Unsupported routing: ${trade.routing}`)
     }
     return service as SwapTxAndGasInfoService<T>
   }
 
-  const service: SwapTxAndGasInfoService<Trade | undefined> = {
+  const service: SwapTxAndGasInfoService<Trade> = {
     async getSwapTxAndGasInfo(params) {
-      const { trade, derivedSwapInfo } = params
-      // TODO(WEB-7243): Remove special casing for wraps once we have a Trade variant for wraps
-      if (!trade) {
-        if (derivedSwapInfo.wrapType !== WrapType.NotApplicable) {
-          return ctx.tradelessWrapService.getSwapTxAndGasInfo({ ...params, trade })
-        }
-        throw new Error('Trade is undefined')
-      }
-
+      const { trade } = params
       return getServiceForTrade(trade).getSwapTxAndGasInfo({ ...params, trade })
     },
   }

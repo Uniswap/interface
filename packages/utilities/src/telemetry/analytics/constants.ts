@@ -1,4 +1,4 @@
-import { SharedEventName, SwapEventName } from '@uniswap/analytics-events'
+import { SharedEventName } from '@uniswap/analytics-events'
 
 export const DUMMY_KEY = '00000000000000000000000000000000'
 
@@ -20,5 +20,5 @@ export const AMPLITUDE_NATIVE_TRACKING_OPTIONS = {
 export const ANONYMOUS_EVENT_NAMES: string[] = [
   SharedEventName.ANALYTICS_SWITCH_TOGGLED.valueOf(),
   SharedEventName.HEARTBEAT.valueOf(),
-  SwapEventName.SWAP_TRANSACTION_COMPLETED.valueOf(),
+  'Swap Transaction Completed', // equal to SwapEventName.SwapTransactionCompleted, but can't import in utilities
 ]

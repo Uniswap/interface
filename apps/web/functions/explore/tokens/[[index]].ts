@@ -10,7 +10,11 @@ export const onRequest: PagesFunction = async ({ params, request, next }) => {
     if (!tokenAddress) {
       return response
     }
-    return transformResponse(request, await response, () => getToken(networkName, tokenAddress, request.url))
+    return transformResponse({
+      request,
+      response: await response,
+      data: () => getToken({ networkName, tokenAddress, url: request.url }),
+    })
   } catch (e) {
     return response
   }

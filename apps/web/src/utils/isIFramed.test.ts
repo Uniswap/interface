@@ -1,7 +1,7 @@
 import { isIFramed } from 'utils/isIFramed'
 
-const dispatchMock = jest.fn()
-jest.mock('state/hooks', () => ({
+const dispatchMock = vi.fn()
+vi.mock('state/hooks', () => ({
   useAppDispatch: () => dispatchMock,
 }))
 

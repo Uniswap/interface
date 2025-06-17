@@ -32,6 +32,7 @@ const previousState: PersistAppStateV20 = {
     currentLanguage: Language.English,
     hideSmallBalances: true,
     hideSpamTokens: true,
+    hapticsEnabled: false,
   },
 }
 

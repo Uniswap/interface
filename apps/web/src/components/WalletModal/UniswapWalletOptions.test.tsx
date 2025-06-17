@@ -6,12 +6,12 @@ import { UNISWAP_EXTENSION_CONNECTOR, WALLET_CONNECT_CONNECTOR } from 'test-util
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
-jest.mock('components/WalletModal/useOrderedConnections', () => ({
-  useConnectorWithId: jest.fn(),
+vi.mock('components/WalletModal/useOrderedConnections', () => ({
+  useConnectorWithId: vi.fn(),
 }))
 
-jest.mock('uniswap/src/features/gating/hooks', () => ({
-  useFeatureFlag: jest.fn(),
+vi.mock('uniswap/src/features/gating/hooks', () => ({
+  useFeatureFlag: vi.fn(),
 }))
 
 describe('UniswapWalletOptions Test', () => {

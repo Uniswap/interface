@@ -52,7 +52,7 @@ export function useCommonTokensOptions(
     (!portfolioBalancesById && portfolioBalancesByIdError) || (!commonBaseCurrencies && commonBaseCurrenciesError)
 
   const filteredCommonBaseTokenOptions = useMemo(
-    () => commonBaseTokenOptions && filter(commonBaseTokenOptions, chainFilter),
+    () => commonBaseTokenOptions && filter({ tokenOptions: commonBaseTokenOptions, chainFilter }),
     [chainFilter, commonBaseTokenOptions],
   )
 

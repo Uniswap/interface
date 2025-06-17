@@ -8,7 +8,6 @@ import {
   useV3TokenTransactionsQuery,
   useV4TokenTransactionsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
@@ -19,12 +18,15 @@ export enum TokenTransactionType {
 
 const TokenTransactionDefaultQuerySize = 25
 
-export function useTokenTransactions(
-  address: string,
-  chainId: UniverseChainId,
-  filter: TokenTransactionType[] = [TokenTransactionType.BUY, TokenTransactionType.SELL],
-) {
-  const { defaultChainId } = useEnabledChains()
+export function useTokenTransactions({
+  address,
+  chainId,
+  filter = [TokenTransactionType.BUY, TokenTransactionType.SELL],
+}: {
+  address: string
+  chainId: UniverseChainId
+  filter?: TokenTransactionType[]
+}) {
   const {
     data: dataV4,
     loading: loadingV4,
@@ -33,7 +35,7 @@ export function useTokenTransactions(
   } = useV4TokenTransactionsQuery({
     variables: {
       address: address.toLowerCase(),
-      chain: toGraphQLChain(chainId ?? defaultChainId),
+      chain: toGraphQLChain(chainId),
       first: TokenTransactionDefaultQuerySize,
     },
   })
@@ -45,7 +47,7 @@ export function useTokenTransactions(
   } = useV3TokenTransactionsQuery({
     variables: {
       address: address.toLowerCase(),
-      chain: toGraphQLChain(chainId ?? defaultChainId),
+      chain: toGraphQLChain(chainId),
       first: TokenTransactionDefaultQuerySize,
     },
   })
@@ -76,21 +78,17 @@ export function useTokenTransactions(
       querySizeRef.current += TokenTransactionDefaultQuerySize
       fetchMoreV4({
         variables: {
-          cursor: dataV4?.token?.v4Transactions?.[dataV4.token?.v4Transactions.length - 1]?.timestamp,
+          cursor: dataV4?.token?.v4Transactions?.[dataV4.token.v4Transactions.length - 1]?.timestamp,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) {
-            loadingMoreV4.current = false
-            return prev
-          }
           if (!loadingMoreV3.current && !loadingMoreV2.current) {
             onComplete?.()
           }
           const mergedData = {
             token: {
               ...prev.token,
-              id: prev?.token?.id ?? '',
-              chain: prev?.token?.chain ?? Chain.Ethereum,
+              id: prev.token?.id ?? '',
+              chain: prev.token?.chain ?? Chain.Ethereum,
               v4Transactions: [...(prev.token?.v4Transactions ?? []), ...(fetchMoreResult.token?.v4Transactions ?? [])],
             },
           }
@@ -100,21 +98,17 @@ export function useTokenTransactions(
       })
       fetchMoreV3({
         variables: {
-          cursor: dataV3?.token?.v3Transactions?.[dataV3.token?.v3Transactions.length - 1]?.timestamp,
+          cursor: dataV3?.token?.v3Transactions?.[dataV3.token.v3Transactions.length - 1]?.timestamp,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) {
-            loadingMoreV3.current = false
-            return prev
-          }
           if (!loadingMoreV2.current && !loadingMoreV4.current) {
             onComplete?.()
           }
           const mergedData = {
             token: {
               ...prev.token,
-              id: prev?.token?.id ?? '',
-              chain: prev?.token?.chain ?? Chain.Ethereum,
+              id: prev.token?.id ?? '',
+              chain: prev.token?.chain ?? Chain.Ethereum,
               v3Transactions: [...(prev.token?.v3Transactions ?? []), ...(fetchMoreResult.token?.v3Transactions ?? [])],
             },
           }
@@ -124,21 +118,17 @@ export function useTokenTransactions(
       })
       fetchMoreV2({
         variables: {
-          cursor: dataV2?.token?.v2Transactions?.[dataV2.token?.v2Transactions.length - 1]?.timestamp,
+          cursor: dataV2?.token?.v2Transactions?.[dataV2.token.v2Transactions.length - 1]?.timestamp,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) {
-            loadingMoreV2.current = false
-            return prev
-          }
           if (!loadingMoreV3.current && !loadingMoreV4.current) {
             onComplete?.()
           }
           const mergedData = {
             token: {
               ...prev.token,
-              id: prev?.token?.id ?? '',
-              chain: prev?.token?.chain ?? Chain.Ethereum,
+              id: prev.token?.id ?? '',
+              chain: prev.token?.chain ?? Chain.Ethereum,
               v2Transactions: [...(prev.token?.v2Transactions ?? []), ...(fetchMoreResult.token?.v2Transactions ?? [])],
             },
           }
@@ -180,9 +170,7 @@ export function useTokenTransactions(
         ...(dataV2?.token?.v2Transactions ?? []),
       ]
         .filter(filterTransaction)
-        .sort((a, b): number =>
-          a?.timestamp && b?.timestamp ? b.timestamp - a.timestamp : a?.timestamp === null ? -1 : 1,
-        )
+        .sort((a, b): number => (a?.timestamp && b?.timestamp ? b.timestamp - a.timestamp : 1))
         .slice(0, querySizeRef.current),
     [dataV2?.token?.v2Transactions, dataV3?.token?.v3Transactions, dataV4?.token?.v4Transactions, filterTransaction],
   )

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers/lib/ethers'
@@ -227,6 +228,16 @@ export enum TransactionType {
 
   // Send Calls
   SendCalls = 'send-calls',
+
+  // Liquidity
+  Claim = 'claim',
+  CreatePair = 'create-pair',
+  CreatePool = 'create-pool',
+  LiquidityIncrease = 'liquidity-increase',
+  LiquidityDecrease = 'liquidity-decrease',
+
+  // Smart Wallet
+  RemoveDelegation = 'remove-delegation',
 }
 
 export interface BaseTransactionInfo {
@@ -252,6 +263,11 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
 export interface Permit2ApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Permit2Approve
   spender: string
+  dappInfo?: DappInfoTransactionDetails
+}
+
+export interface RemoveDelegationTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.RemoveDelegation
   dappInfo?: DappInfoTransactionDetails
 }
 
@@ -424,6 +440,21 @@ export interface SendCallsTransactionInfo extends BaseTransactionInfo {
   dappInfo?: DappInfoTransactionDetails
 }
 
+export interface LiquidityTransactionInfoBase<T extends TransactionType> extends BaseTransactionInfo {
+  type: T
+  inputCurrencyId?: string
+  outputCurrencyId?: string
+  inputCurrencyAmountRaw?: string
+  outputCurrencyAmountRaw?: string
+  dappInfo?: DappInfoTransactionDetails
+}
+
+export type LiquidityIncreaseTransactionInfo = LiquidityTransactionInfoBase<TransactionType.LiquidityIncrease>
+export type LiquidityDecreaseTransactionInfo = LiquidityTransactionInfoBase<TransactionType.LiquidityDecrease>
+export type ClaimTransactionInfo = LiquidityTransactionInfoBase<TransactionType.Claim>
+export type CreatePairTransactionInfo = LiquidityTransactionInfoBase<TransactionType.CreatePair>
+export type CreatePoolTransactionInfo = LiquidityTransactionInfoBase<TransactionType.CreatePool>
+
 export type TransactionTypeInfo =
   | ApproveTransactionInfo
   | Permit2ApproveTransactionInfo
@@ -445,6 +476,12 @@ export type TransactionTypeInfo =
   | LocalOnRampTransactionInfo
   | LocalOffRampTransactionInfo
   | SendCallsTransactionInfo
+  | ClaimTransactionInfo
+  | CreatePairTransactionInfo
+  | CreatePoolTransactionInfo
+  | LiquidityIncreaseTransactionInfo
+  | LiquidityDecreaseTransactionInfo
+  | RemoveDelegationTransactionInfo
 
   export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is ConfirmedSwapTransactionInfo {
   return Boolean(

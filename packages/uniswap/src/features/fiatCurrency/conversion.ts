@@ -26,7 +26,6 @@ type SupportedServerCurrency = Extract<
   | Currency.Pkr
   | Currency.Rub
   | Currency.Sgd
-  | Currency.Thb
   | Currency.Try
   | Currency.Uah
   | Currency.Usd
@@ -51,7 +50,6 @@ const mapServerCurrencyToFiatCurrency: Record<Currency, FiatCurrency | undefined
   [Currency.Pkr]: FiatCurrency.PakistaniRupee,
   [Currency.Rub]: FiatCurrency.RussianRuble,
   [Currency.Sgd]: FiatCurrency.SingaporeDollar,
-  [Currency.Thb]: FiatCurrency.ThaiBaht,
   [Currency.Try]: FiatCurrency.TurkishLira,
   [Currency.Uah]: FiatCurrency.UkrainianHryvnia,
   [Currency.Usd]: FiatCurrency.UnitedStatesDollar,
@@ -78,7 +76,6 @@ export const mapFiatCurrencyToServerCurrency: Record<FiatCurrency, SupportedServ
   [FiatCurrency.PakistaniRupee]: Currency.Pkr,
   [FiatCurrency.RussianRuble]: Currency.Rub,
   [FiatCurrency.SingaporeDollar]: Currency.Sgd,
-  [FiatCurrency.ThaiBaht]: Currency.Thb,
   [FiatCurrency.TurkishLira]: Currency.Try,
   [FiatCurrency.UkrainianHryvnia]: Currency.Uah,
   [FiatCurrency.UnitedStatesDollar]: Currency.Usd,
@@ -140,6 +137,7 @@ export function useFiatConverter({
     [conversionRate, outputCurrency, toCurrency],
   )
   const convertFiatAmountFormattedInner = useCallback(
+    // eslint-disable-next-line max-params
     (fromAmount: Maybe<number | string>, numberType: FiatNumberType, placeholder = '-'): string => {
       if (fromAmount === undefined || fromAmount === null) {
         return placeholder

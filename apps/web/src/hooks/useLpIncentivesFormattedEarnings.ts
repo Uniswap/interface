@@ -12,8 +12,8 @@ import { NumberType } from 'utilities/src/format/types'
 
 interface UseLpIncentivesFormattedEarningsProps {
   liquidityPosition: PositionInfo
-  fiatFeeValue0?: CurrencyAmount<Currency>
-  fiatFeeValue1?: CurrencyAmount<Currency>
+  fiatFeeValue0: Maybe<CurrencyAmount<Currency>>
+  fiatFeeValue1: Maybe<CurrencyAmount<Currency>>
 }
 
 interface LpIncentivesEarningsResult {

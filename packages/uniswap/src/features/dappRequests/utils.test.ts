@@ -68,7 +68,7 @@ describe('isSelfCallWithData', () => {
 
   testCases.forEach((testCase) => {
     it(`${testCase.name}`, () => {
-      const result = isSelfCallWithData(testCase.from, testCase.to, testCase.data)
+      const result = isSelfCallWithData({ from: testCase.from, to: testCase.to, data: testCase.data })
       expect(result).toBe(testCase.expected)
     })
   })

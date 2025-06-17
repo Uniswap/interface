@@ -1,11 +1,15 @@
 import { SectionListData } from 'react-native'
 import { SearchableRecipient } from 'uniswap/src/features/address/types'
 
-export function filterSections(
-  sections: SectionListData<SearchableRecipient>[],
-  filteredAddresses: string[],
+export function filterSections({
+  sections,
+  filteredAddresses,
   includeTitle = true,
-): ({ title: string; data: SearchableRecipient[] } | { data: SearchableRecipient[] })[] {
+}: {
+  sections: SectionListData<SearchableRecipient>[]
+  filteredAddresses: string[]
+  includeTitle?: boolean
+}): ({ title: string; data: SearchableRecipient[] } | { data: SearchableRecipient[] })[] {
   return sections
     .map((section) => {
       const { title, data } = section

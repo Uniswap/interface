@@ -29,14 +29,19 @@ function supportsV4(provider: JsonRpcProvider): boolean {
  *
  * @see https://github.com/ethers-io/ethers.js/blob/c80fcddf50a9023486e9f9acb1848aba4c19f7b6/packages/providers/src.ts/json-rpc-provider.ts#L334
  */
-export async function signTypedData(
-  signer: JsonRpcSigner,
-  domain: TypedDataDomain,
-  types: Record<string, TypedDataField[]>,
+export async function signTypedData({
+  signer,
+  domain,
+  types,
+  value,
+}: {
+  signer: JsonRpcSigner
+  domain: TypedDataDomain
+  types: Record<string, TypedDataField[]>
   // Use Record<string, any> for the value to match the JsonRpcSigner._signTypedData signature.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value: Record<string, any>,
-) {
+  value: Record<string, any>
+}) {
   // Populate any ENS names (in-place)
   const populated = await _TypedDataEncoder.resolveNames(domain, types, value, (name: string) => {
     return signer.provider.resolveName(name) as Promise<string>

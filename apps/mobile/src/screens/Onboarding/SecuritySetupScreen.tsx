@@ -46,12 +46,12 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
   }, [isLoadingAccount, onCompleteOnboarding])
 
   const onSkipPressed = useCallback(async () => {
-    if (params?.importType === ImportType.Watch) {
+    if (params.importType === ImportType.Watch) {
       await onPressNext()
     } else {
       setShowWarningModal(true)
     }
-  }, [onPressNext, params?.importType])
+  }, [onPressNext, params.importType])
 
   const onPressEnableSecurity = useCallback(async () => {
     const isOSBiometricAuthEnabled = await checkOsBiometricAuthEnabled()

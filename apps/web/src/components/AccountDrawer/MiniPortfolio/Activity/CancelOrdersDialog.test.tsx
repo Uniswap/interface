@@ -32,28 +32,31 @@ const mockOrderDetails: UniswapXOrderDetails = {
   offerer: '0x1234',
 }
 
-jest.mock('hooks/useTransactionGasFee', () => ({
-  ...jest.requireActual('hooks/useTransactionGasFee'),
-  useTransactionGasFee: jest.fn(),
+vi.mock('hooks/useTransactionGasFee', async () => {
+  const actual = await vi.importActual('hooks/useTransactionGasFee')
+  return {
+    ...actual,
+    useTransactionGasFee: vi.fn(),
+  }
+})
+
+vi.mock('components/AccountDrawer/MiniPortfolio/Activity/utils', () => ({
+  useCreateCancelTransactionRequest: vi.fn(),
 }))
 
-jest.mock('components/AccountDrawer/MiniPortfolio/Activity/utils', () => ({
-  useCreateCancelTransactionRequest: jest.fn(),
-}))
-
-jest.mock('utilities/src/logger/logger', () => ({
+vi.mock('utilities/src/logger/logger', () => ({
   logger: {
-    error: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    debug: jest.fn(),
+    error: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
   },
 }))
 
 describe('CancelOrdersDialog', () => {
   it('should render order cancel correctly', async () => {
-    const mockOnCancel = jest.fn()
-    const mockOnConfirm = jest.fn()
+    const mockOnCancel = vi.fn()
+    const mockOnConfirm = vi.fn()
     render(
       <CancelOrdersDialog
         onCancel={mockOnCancel}
@@ -73,8 +76,8 @@ describe('CancelOrdersDialog', () => {
     ).toBeInTheDocument()
   })
   it('should render limit order text', async () => {
-    const mockOnCancel = jest.fn()
-    const mockOnConfirm = jest.fn()
+    const mockOnCancel = vi.fn()
+    const mockOnConfirm = vi.fn()
     render(
       <CancelOrdersDialog
         onCancel={mockOnCancel}

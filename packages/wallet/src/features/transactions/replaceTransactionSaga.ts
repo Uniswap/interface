@@ -19,11 +19,15 @@ import { getSerializableTransactionRequest } from 'wallet/src/features/transacti
 import { getPrivateProvider, getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 
-export function* attemptReplaceTransaction(
-  transaction: OnChainTransactionDetails,
-  newTxRequest: providers.TransactionRequest,
+export function* attemptReplaceTransaction({
+  transaction,
+  newTxRequest,
   isCancellation = false,
-) {
+}: {
+  transaction: OnChainTransactionDetails
+  newTxRequest: providers.TransactionRequest
+  isCancellation?: boolean
+}) {
   const { chainId, hash, options } = transaction
   logger.debug('replaceTransaction', '', 'Attempting tx replacement', hash)
   const replacementTxnId = createTransactionId()
@@ -35,7 +39,7 @@ export function* attemptReplaceTransaction(
     }
 
     const accounts = yield* select(selectAccounts)
-    const checksummedAddress = getValidAddress(from, true, false)
+    const checksummedAddress = getValidAddress({ address: from, withChecksum: true, log: false })
     if (!checksummedAddress) {
       throw new Error(`Cannot replace transaction, address is invalid: ${checksummedAddress}`)
     }

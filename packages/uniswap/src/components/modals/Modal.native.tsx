@@ -120,6 +120,7 @@ function BottomSheetModalContents({
   useModalBackHandler(modalRef, isDismissible && dismissOnBackPress)
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     modalRef.current?.present?.()
     // Close modal when it is unmounted
     return modalRef.current?.close
@@ -176,7 +177,7 @@ function BottomSheetModalContents({
     const interpolatedRadius = interpolate(
       animatedPosition.value,
       [0, insets.top],
-      [0, borderRadius ?? borderRadii.rounded24],
+      [0, borderRadius],
       Extrapolate.CLAMP,
     )
     return { borderTopLeftRadius: interpolatedRadius, borderTopRightRadius: interpolatedRadius }
@@ -316,6 +317,7 @@ export function BottomSheetDetachedModal({
   useModalBackHandler(modalRef, isDismissible && dismissOnBackPress)
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     modalRef.current?.present?.()
     // Close modal when it is unmounted
     return modalRef.current?.close

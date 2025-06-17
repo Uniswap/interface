@@ -30,12 +30,16 @@ export function WrapSummaryItem({
 
     const { currency: inputCurrency } = inputCurrencyInfo
     const { currency: outputCurrency } = outputCurrencyInfo
-    const currencyAmount = getFormattedCurrencyAmount(inputCurrency, transaction.typeInfo.currencyAmountRaw, formatter)
-    const otherCurrencyAmount = getFormattedCurrencyAmount(
-      outputCurrency,
-      transaction.typeInfo.currencyAmountRaw,
+    const currencyAmount = getFormattedCurrencyAmount({
+      currency: inputCurrency,
+      amount: transaction.typeInfo.currencyAmountRaw,
       formatter,
-    )
+    })
+    const otherCurrencyAmount = getFormattedCurrencyAmount({
+      currency: outputCurrency,
+      amount: transaction.typeInfo.currencyAmountRaw,
+      formatter,
+    })
     return `${currencyAmount}${inputCurrency.symbol} → ${otherCurrencyAmount}${outputCurrency.symbol}`
   }, [nativeCurrencyInfo, transaction.typeInfo.currencyAmountRaw, unwrapped, wrappedCurrencyInfo, formatter])
 

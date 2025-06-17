@@ -74,7 +74,13 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
   const { data: encoded7702data } = useWalletEncode7702Query({
     enabled: !!chainId,
     params: {
-      calls: chainId ? transformCallsToTransactionRequests(dappRequest.calls, chainId, activeAccountAddress) : [],
+      calls: chainId
+        ? transformCallsToTransactionRequests({
+            calls: dappRequest.calls,
+            chainId,
+            accountAddress: activeAccountAddress,
+          })
+        : [],
       smartContractDelegationAddress: UNISWAP_DELEGATION_ADDRESS,
       // @ts-ignore - walletAddress is needed for the API but not in the type yet
       // TODO: remove this once the API is updated
@@ -94,11 +100,11 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
     [chainId, encodedTransaction],
   )
 
-  const transactionGasFeeResult = useTransactionGasFee(
-    formattedTxnForGasQuery,
-    /*skip=*/ !formattedTxnForGasQuery.to,
-    /*pollingInterval=*/ PollingInterval.LightningMcQueen,
-  )
+  const transactionGasFeeResult = useTransactionGasFee({
+    tx: formattedTxnForGasQuery,
+    skip: !formattedTxnForGasQuery.to,
+    refetchInterval: PollingInterval.LightningMcQueen,
+  })
 
   const onConfirmRequest = useCallback(async () => {
     const transactionTypeInfo: TransactionTypeInfo = {

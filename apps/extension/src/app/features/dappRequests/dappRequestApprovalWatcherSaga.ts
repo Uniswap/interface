@@ -89,8 +89,8 @@ function* dappRequestApproval({
   }
 
   const requestId =
-    ('dappRequest' in request && request?.dappRequest?.requestId) ||
-    ('errorResponse' in request && request?.errorResponse?.requestId)
+    ('dappRequest' in request && request.dappRequest.requestId) ||
+    ('errorResponse' in request && request.errorResponse.requestId)
   const { id: senderTabId } = request.senderTabInfo
 
   if (!senderTabId) {
@@ -132,30 +132,32 @@ function* dappRequestApproval({
           const validatedRequest: GetPermissionsRequest = GetPermissionsRequestSchema.parse(
             confirmedRequest.dappRequest,
           )
-          yield* call(
-            handleGetPermissionsRequest,
-            validatedRequest,
-            confirmedRequest.senderTabInfo,
-            confirmedRequest.dappInfo,
-          )
+          yield* call(handleGetPermissionsRequest, {
+            request: validatedRequest,
+            senderTabInfo: confirmedRequest.senderTabInfo,
+            dappInfo: confirmedRequest.dappInfo,
+          })
           break
         }
         case DappRequestType.SendTransaction: {
           const validatedRequest: BaseSendTransactionRequest = BaseSendTransactionRequestSchema.parse(
             confirmedRequest.dappRequest,
           )
-          yield* call(
-            handleSendTransaction,
-            validatedRequest,
-            confirmedRequest.senderTabInfo,
-            confirmedRequest.dappInfo,
-            confirmedRequest.transactionTypeInfo,
-          )
+          yield* call(handleSendTransaction, {
+            request: validatedRequest,
+            senderTabInfo: confirmedRequest.senderTabInfo,
+            dappInfo: confirmedRequest.dappInfo,
+            transactionTypeInfo: confirmedRequest.transactionTypeInfo,
+          })
           break
         }
         case DappRequestType.GetAccount: {
           const validatedRequest: GetAccountRequest = GetAccountRequestSchema.parse(confirmedRequest.dappRequest)
-          yield* call(getAccount, validatedRequest, confirmedRequest.senderTabInfo, confirmedRequest.dappInfo)
+          yield* call(getAccount, {
+            dappRequest: validatedRequest,
+            senderTabInfo: confirmedRequest.senderTabInfo,
+            dappInfo: confirmedRequest.dappInfo,
+          })
           break
         }
         case DappRequestType.RequestAccount: {
@@ -167,7 +169,11 @@ function* dappRequestApproval({
         }
         case DappRequestType.GetChainId: {
           const validatedRequest: GetChainIdRequest = GetChainIdRequestSchema.parse(confirmedRequest.dappRequest)
-          yield* call(getChainId, validatedRequest, confirmedRequest.senderTabInfo, confirmedRequest.dappInfo)
+          yield* call(getChainId, {
+            request: validatedRequest,
+            senderTabInfo: confirmedRequest.senderTabInfo,
+            dappInfo: confirmedRequest.dappInfo,
+          })
           break
         }
         case DappRequestType.ChangeChain: {
@@ -177,12 +183,20 @@ function* dappRequestApproval({
         }
         case DappRequestType.SignMessage: {
           const validatedRequest: SignMessageRequest = SignMessageRequestSchema.parse(confirmedRequest.dappRequest)
-          yield* call(handleSignMessage, validatedRequest, confirmedRequest.senderTabInfo, confirmedRequest.dappInfo)
+          yield* call(handleSignMessage, {
+            request: validatedRequest,
+            senderTabInfo: confirmedRequest.senderTabInfo,
+            dappInfo: confirmedRequest.dappInfo,
+          })
           break
         }
         case DappRequestType.SignTypedData: {
           const validatedRequest: SignTypedDataRequest = SignTypedDataRequestSchema.parse(confirmedRequest.dappRequest)
-          yield* call(handleSignTypedData, validatedRequest, confirmedRequest.senderTabInfo, confirmedRequest.dappInfo)
+          yield* call(handleSignTypedData, {
+            dappRequest: validatedRequest,
+            senderTabInfo: confirmedRequest.senderTabInfo,
+            dappInfo: confirmedRequest.dappInfo,
+          })
           break
         }
         case DappRequestType.GetCapabilities: {
@@ -194,20 +208,23 @@ function* dappRequestApproval({
         }
         case DappRequestType.SendCalls: {
           const validatedRequest: SendCallsRequest = SendCallsRequestSchema.parse(confirmedRequest.dappRequest)
-          yield* call(
-            handleSendCalls,
-            validatedRequest,
-            confirmedRequest.senderTabInfo,
-            confirmedRequest.dappInfo,
-            confirmedRequest.transactionTypeInfo,
-          )
+          yield* call(handleSendCalls, {
+            request: validatedRequest,
+            senderTabInfo: confirmedRequest.senderTabInfo,
+            dappInfo: confirmedRequest.dappInfo,
+            transactionTypeInfo: confirmedRequest.transactionTypeInfo,
+          })
           break
         }
         case DappRequestType.GetCallsStatus: {
           const validatedRequest: GetCallsStatusRequest = GetCallsStatusRequestSchema.parse(
             confirmedRequest.dappRequest,
           )
-          yield* call(handleGetCallsStatus, validatedRequest, confirmedRequest.senderTabInfo, confirmedRequest.dappInfo)
+          yield* call(handleGetCallsStatus, {
+            request: validatedRequest,
+            senderTabInfo: confirmedRequest.senderTabInfo,
+            dappInfo: confirmedRequest.dappInfo,
+          })
           break
         }
         // Add more request types here
@@ -238,13 +255,20 @@ function* dappRequestApproval({
           const validatedRequest: GetPermissionsRequest = GetPermissionsRequestSchema.parse(
             confirmedRequest.dappRequest,
           )
-          yield* call(handleGetPermissionsRequest, validatedRequest, confirmedRequest.senderTabInfo)
+          yield* call(handleGetPermissionsRequest, {
+            request: validatedRequest,
+            senderTabInfo: confirmedRequest.senderTabInfo,
+          })
           break
         }
         case DappRequestType.GetChainId: {
           const validatedRequest: GetChainIdRequest = GetChainIdRequestSchema.parse(confirmedRequest.dappRequest)
           const { defaultChainId } = yield getEnabledChainIdsSaga()
-          yield* call(getChainIdNoDappInfo, validatedRequest, confirmedRequest.senderTabInfo, defaultChainId)
+          yield* call(getChainIdNoDappInfo, {
+            request: validatedRequest,
+            senderTabInfo: confirmedRequest.senderTabInfo,
+            defaultChainId,
+          })
           break
         }
         case DappRequestType.UniswapOpenSidebar: {

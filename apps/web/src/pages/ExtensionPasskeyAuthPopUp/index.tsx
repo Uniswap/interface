@@ -18,6 +18,7 @@ import {
 } from 'uniswap/src/extension/messagePassing/types/requests'
 import { authenticatePasskey } from 'uniswap/src/features/passkey/passkey'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { getChromeRuntime, getChromeRuntimeWithThrow } from 'utilities/src/chrome/chrome'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -157,8 +158,7 @@ export default function ExtensionPasskeyAuthPopUp() {
   }, EXTENSION_REFERRER_VERIFICATION_TIMEOUT)
 
   return (
-    // TODO(WALL-6386): add InterfacePageName.EXTENSION_PASSKEY_SIGN_IN_PAGE to @uniswap/analytics-events
-    <Trace logImpression page="extension-passkey-sign-in-page">
+    <Trace logImpression page={InterfacePageName.ExtensionPasskeySignInPage}>
       <Flex flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh">
         <Flex width="400px" padding="$spacing16" flexDirection="column" gap="$spacing16">
           <Flex row justifyContent="flex-end">

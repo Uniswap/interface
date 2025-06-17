@@ -45,7 +45,7 @@ export function changeChain({
   if (dappUrl) {
     dappStore.updateDappLatestChainId(dappUrl, updatedChainId)
     sendAnalyticsEvent(ExtensionEventName.DappChangeChain, {
-      dappUrl: dappUrl ?? '',
+      dappUrl,
       chainId: updatedChainId,
       activeConnectedAddress: activeConnectedAddress ?? '',
     })

@@ -34,7 +34,7 @@ export function RestoreWalletModal({ route }: AppStackScreenProp<typeof ModalNam
   const dispatch = useDispatch()
   const { onClose } = useReactNavigationModal()
 
-  const restoreType = route.params?.restoreType ?? WalletRestoreType.None
+  const restoreType = route.params.restoreType
   const { title, description, isDismissible } = useMemo(() => {
     switch (restoreType) {
       case WalletRestoreType.SeedPhrase:

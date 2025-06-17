@@ -1,4 +1,3 @@
-import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { WETH_ADDRESS as getWethAddress } from '@uniswap/universal-router-sdk'
 import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
@@ -8,6 +7,7 @@ import { useEffect, useState } from 'react'
 import FOT_DETECTOR_ABI from 'uniswap/src/abis/fee-on-transfer-detector.json'
 import { FeeOnTransferDetector } from 'uniswap/src/abis/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -37,11 +37,16 @@ function getFeeOnTransferAddress(chainId?: UniverseChainId) {
 
 function useFeeOnTransferDetectorContract(chainId?: UniverseChainId): FeeOnTransferDetector | null {
   const account = useAccount()
-  const contract = useContract<FeeOnTransferDetector>(getFeeOnTransferAddress(chainId), FOT_DETECTOR_ABI, true, chainId)
+  const contract = useContract<FeeOnTransferDetector>({
+    address: getFeeOnTransferAddress(chainId),
+    ABI: FOT_DETECTOR_ABI,
+    withSignerIfPossible: true,
+    chainId,
+  })
 
   useEffect(() => {
     if (contract && account.address) {
-      sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
+      sendAnalyticsEvent(InterfaceEventName.WalletProviderUsed, {
         source: 'useFeeOnTransferDetectorContract',
         contract: {
           name: 'FeeOnTransferDetector',
@@ -57,12 +62,17 @@ const AMOUNT_TO_BORROW = 10000 // smallest amount that has full precision over b
 
 const FEE_CACHE: { [address in string]?: { sellTax?: Percent; buyTax?: Percent } } = {}
 
-async function getSwapTaxes(
-  fotDetector: FeeOnTransferDetector,
-  inputTokenAddress: string | undefined,
-  outputTokenAddress: string | undefined,
-  chainId: UniverseChainId,
-) {
+async function getSwapTaxes({
+  fotDetector,
+  inputTokenAddress,
+  outputTokenAddress,
+  chainId,
+}: {
+  fotDetector: FeeOnTransferDetector
+  inputTokenAddress?: string
+  outputTokenAddress?: string
+  chainId: UniverseChainId
+}) {
   const addresses = []
   if (inputTokenAddress && FEE_CACHE[inputTokenAddress] === undefined) {
     addresses.push(inputTokenAddress)
@@ -95,7 +105,15 @@ async function getSwapTaxes(
 }
 
 // Use the buyFeeBps/sellFeeBps fields from Token GQL query where possible instead of this hook
-export function useSwapTaxes(inputTokenAddress?: string, outputTokenAddress?: string, tokenChainId?: UniverseChainId) {
+export function useSwapTaxes({
+  inputTokenAddress,
+  outputTokenAddress,
+  tokenChainId,
+}: {
+  inputTokenAddress?: string
+  outputTokenAddress?: string
+  tokenChainId?: UniverseChainId
+}) {
   const account = useAccount()
   const chainId = tokenChainId ?? account.chainId
   const fotDetector = useFeeOnTransferDetectorContract(chainId)
@@ -105,7 +123,7 @@ export function useSwapTaxes(inputTokenAddress?: string, outputTokenAddress?: st
     if (!fotDetector || !chainId) {
       return
     }
-    getSwapTaxes(fotDetector, inputTokenAddress, outputTokenAddress, chainId).then(setTaxes)
+    getSwapTaxes({ fotDetector, inputTokenAddress, outputTokenAddress, chainId }).then(setTaxes)
   }, [fotDetector, inputTokenAddress, outputTokenAddress, chainId])
 
   return { inputTax, outputTax }

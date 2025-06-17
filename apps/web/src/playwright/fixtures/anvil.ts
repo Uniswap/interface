@@ -21,11 +21,24 @@ const anvil = anvilClient
     async getWalletAddress() {
       return TEST_WALLET_ADDRESS
     },
-    async setErc20Balance(address: Address, balance: bigint, walletAddress: Address = TEST_WALLET_ADDRESS) {
+    async setErc20Balance({
+      address,
+      balance,
+      walletAddress = TEST_WALLET_ADDRESS,
+    }: {
+      address: Address
+      balance: bigint
+      walletAddress?: Address
+    }) {
       if (!allowedErc20BalanceAddresses.includes(address)) {
         throw new Error(`Token ${address} is not allowed. Allowed tokens: ${allowedErc20BalanceAddresses.join(', ')}`)
       }
-      await setErc20BalanceWithMultipleSlots(client, address, walletAddress, balance)
+      await setErc20BalanceWithMultipleSlots({
+        client,
+        erc20Address: address,
+        user: walletAddress,
+        newBalance: balance,
+      })
     },
     async getErc20Balance(address: Address, owner?: Address) {
       return await client.readContract({
@@ -67,7 +80,7 @@ export const test = base.extend<{ anvil: typeof anvil; delegateToZeroAddress?: t
         const nonce = await anvil.getTransactionCount({
           address: TEST_WALLET_ADDRESS,
         })
-        const auth = await anvil.account.experimental_signAuthorization({
+        const auth = await anvil.account.signAuthorization({
           contractAddress: ZERO_ADDRESS,
           chainId: anvil.chain.id,
           nonce: nonce + 1,

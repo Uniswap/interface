@@ -1,4 +1,3 @@
-import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
@@ -9,6 +8,7 @@ import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
 import { getDefaultFeeTiersWithData, hasLPFoTTransferError, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
+import { SwitchNetworkAction } from 'components/Popups/types'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { BIPS_BASE, ZERO_ADDRESS } from 'constants/misc'
@@ -17,13 +17,12 @@ import { AddHook } from 'pages/Pool/Positions/create/AddHook'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { AdvancedButton, Container } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE, FeeData } from 'pages/Pool/Positions/create/types'
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { PositionField } from 'types/position'
 import { Button, DropdownButton, DropdownButtonProps, Flex, FlexProps, HeightAnimator, Text, styled } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -37,7 +36,9 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { FeePoolSelectAction } from 'uniswap/src/features/telemetry/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -71,7 +72,7 @@ export const CurrencySelector = ({
             chainId={currency.chainId}
             name={currency.name}
             symbol={currency.symbol}
-            url={currencyInfo?.logoUrl}
+            url={currencyInfo.logoUrl}
           />
         )}
         <Text variant="buttonLabel2" color={currency ? '$neutral1' : '$surface1'}>
@@ -156,10 +157,17 @@ const FeeTier = ({
 }
 
 export function SelectTokensStep({
+  currencyInputs,
+  setCurrencyInputs,
   onContinue,
   tokensLocked,
   ...rest
-}: { tokensLocked?: boolean; onContinue: () => void } & FlexProps) {
+}: {
+  tokensLocked?: boolean
+  onContinue: () => void
+  currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
+  setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
+} & FlexProps) {
   const { formatPercent } = useLocalizationContext()
   const { t } = useTranslation()
   const { setSelectedChainId } = useMultichainContext()
@@ -168,14 +176,15 @@ export function SelectTokensStep({
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
   const {
-    positionState: { hook, userApprovedHook, currencyInputs, fee, protocolVersion },
+    positionState: { hook, userApprovedHook, fee, protocolVersion },
     setPositionState,
     derivedPositionInfo,
     setFeeTierSearchModalOpen,
   } = useCreatePositionContext()
 
-  const [token0, token1] = derivedPositionInfo.currencies
-  const [currencySearchInputState, setCurrencySearchInputState] = useState<PositionField | undefined>(undefined)
+  const token0 = currencyInputs.tokenA
+  const token1 = currencyInputs.tokenB
+  const [currencySearchInputState, setCurrencySearchInputState] = useState<'tokenA' | 'tokenB' | undefined>(undefined)
   const [isShowMoreFeeTiersEnabled, toggleShowMoreFeeTiersEnabled] = useReducer((state) => !state, false)
   const isV4UnsupportedTokenSelected =
     protocolVersion === ProtocolVersion.V4 &&
@@ -193,8 +202,7 @@ export function SelectTokensStep({
         return
       }
 
-      const otherInputState =
-        currencySearchInputState === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0
+      const otherInputState = currencySearchInputState === 'tokenA' ? 'tokenB' : 'tokenA'
       const otherCurrency = currencyInputs[otherInputState]
       const wrappedCurrencyNew = currency.isNative ? currency.wrapped : currency
       const wrappedCurrencyOther = otherCurrency?.isNative ? otherCurrency.wrapped : otherCurrency
@@ -202,47 +210,45 @@ export function SelectTokensStep({
       setSelectedChainId(currency.chainId)
 
       if (areCurrenciesEqual(currency, otherCurrency) || areCurrenciesEqual(wrappedCurrencyNew, wrappedCurrencyOther)) {
-        setPositionState((prevState) => ({
+        setCurrencyInputs((prevState) => ({
           ...prevState,
-          currencyInputs: {
-            ...prevState.currencyInputs,
-            [otherInputState]: undefined,
-            [currencySearchInputState]: currency,
-          },
+          [otherInputState]: undefined,
+          [currencySearchInputState]: currency,
         }))
         return
       }
 
-      if (otherCurrency && otherCurrency?.chainId !== currency.chainId) {
-        setPositionState((prevState) => ({
+      if (otherCurrency && otherCurrency.chainId !== currency.chainId) {
+        setCurrencyInputs((prevState) => ({
           ...prevState,
-          currencyInputs: { [otherInputState]: undefined, [currencySearchInputState]: currency },
+          [otherInputState]: undefined,
+          [currencySearchInputState]: currency,
         }))
         return
       }
 
       switch (currencySearchInputState) {
-        case PositionField.TOKEN0:
-        case PositionField.TOKEN1:
+        case 'tokenA':
+        case 'tokenB':
           // If the tokens change, we want to reset the default fee tier in the useEffect below.
           setDefaultFeeTierSelected(false)
-          setPositionState((prevState) => ({
+          setCurrencyInputs((prevState) => ({
             ...prevState,
-            currencyInputs: { ...prevState.currencyInputs, [currencySearchInputState]: currency },
+            [currencySearchInputState]: currency,
           }))
           break
         default:
           break
       }
     },
-    [currencyInputs, currencySearchInputState, setPositionState, setSelectedChainId],
+    [currencySearchInputState, setCurrencyInputs, currencyInputs, setSelectedChainId],
   )
 
   const handleFeeTierSelect = useCallback(
     (feeData: FeeData) => {
       setPositionState((prevState) => ({ ...prevState, fee: feeData }))
-      sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
-        action: FeePoolSelectAction.MANUAL,
+      sendAnalyticsEvent(LiquidityEventName.SelectLiquidityPoolFeeTier, {
+        action: FeePoolSelectAction.Manual,
         fee_tier: feeData.feeAmount,
         ...trace,
       })
@@ -253,7 +259,7 @@ export function SelectTokensStep({
   const { feeTierData, hasExistingFeeTiers } = useAllFeeTierPoolData({
     chainId: token0?.chainId,
     protocolVersion,
-    currencies: derivedPositionInfo.currencies,
+    sdkCurrencies: derivedPositionInfo.currencies.sdk,
     hook: hook ?? ZERO_ADDRESS,
   })
 
@@ -265,7 +271,7 @@ export function SelectTokensStep({
 
   const [defaultFeeTierSelected, setDefaultFeeTierSelected] = useState(false)
   const mostUsedFeeTier = useMemo(() => {
-    if (hasExistingFeeTiers && feeTierData && Object.keys(feeTierData).length > 0) {
+    if (hasExistingFeeTiers && Object.keys(feeTierData).length > 0) {
       return Object.values(feeTierData).reduce((highest, current) => {
         return current.percentage.greaterThan(highest.percentage) ? current : highest
       })
@@ -281,8 +287,8 @@ export function SelectTokensStep({
         ...prevState,
         fee: mostUsedFeeTier.fee,
       }))
-      sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
-        action: FeePoolSelectAction.RECOMMENDED,
+      sendAnalyticsEvent(LiquidityEventName.SelectLiquidityPoolFeeTier, {
+        action: FeePoolSelectAction.Recommended,
         fee_tier: mostUsedFeeTier.fee.feeAmount,
         ...trace,
       })
@@ -311,7 +317,7 @@ export function SelectTokensStep({
       return undefined
     }
 
-    const wethToken0 = token0 && WRAPPED_NATIVE_CURRENCY[token0?.chainId]
+    const wethToken0 = token0 && WRAPPED_NATIVE_CURRENCY[token0.chainId]
     if (token0 && wethToken0?.equals(token0)) {
       const nativeToken = nativeOnChain(token0.chainId)
       return {
@@ -325,7 +331,7 @@ export function SelectTokensStep({
       }
     }
 
-    const wethToken1 = token1 && WRAPPED_NATIVE_CURRENCY[token1?.chainId]
+    const wethToken1 = token1 && WRAPPED_NATIVE_CURRENCY[token1.chainId]
     if (token1 && wethToken1?.equals(token1)) {
       const nativeToken = nativeOnChain(token1.chainId)
       return {
@@ -401,12 +407,12 @@ export function SelectTokensStep({
                   <CurrencySelector
                     emphasis={token0CurrencyInfo ? undefined : 'primary'}
                     currencyInfo={token0CurrencyInfo}
-                    onPress={() => setCurrencySearchInputState(PositionField.TOKEN0)}
+                    onPress={() => setCurrencySearchInputState('tokenA')}
                   />
                   <CurrencySelector
                     emphasis={token1CurrencyInfo ? undefined : 'primary'}
                     currencyInfo={token1CurrencyInfo}
-                    onPress={() => setCurrencySearchInputState(PositionField.TOKEN1)}
+                    onPress={() => setCurrencySearchInputState('tokenB')}
                   />
                 </Flex>
               )}
@@ -495,7 +501,7 @@ export function SelectTokensStep({
                     </Flex>
                     <Button
                       fill={false}
-                      isDisabled={!currencyInputs.TOKEN0 || !currencyInputs.TOKEN1}
+                      isDisabled={!currencyInputs.tokenA || !currencyInputs.tokenB}
                       size="xsmall"
                       maxWidth="fit-content"
                       emphasis="secondary"
@@ -596,6 +602,7 @@ export function SelectTokensStep({
         <CurrencySearchModal
           isOpen={currencySearchInputState !== undefined}
           onDismiss={() => setCurrencySearchInputState(undefined)}
+          switchNetworkAction={SwitchNetworkAction.LP}
           onCurrencySelect={handleCurrencySelect}
           chainIds={supportedChains}
         />
@@ -646,11 +653,10 @@ function SelectStepError({
         action={t('position.fot.warning.cta')}
         onPress={() => {
           navigate('/positions/create/v2')
-          setPositionState((prevState) => ({
+          setPositionState({
             ...DEFAULT_POSITION_STATE,
-            currencyInputs: prevState.currencyInputs,
             protocolVersion: ProtocolVersion.V2,
-          }))
+          })
         }}
       />
     )

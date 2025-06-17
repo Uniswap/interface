@@ -1,7 +1,7 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { expect, test } from 'playwright/fixtures'
 import { Mocks } from 'playwright/mocks/mocks'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 test.describe('ActivityTab activity history', () => {
@@ -20,7 +20,7 @@ test.describe('ActivityTab activity history', () => {
 
     // Open account drawer and navigate to activity tab
     await page.getByTestId(TestID.Web3StatusConnected).click()
-    await page.getByTestId(InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_TAB).click()
+    await page.getByTestId(ElementName.MiniPortfolioActivityTab).click()
 
     // Wait for activity content to be visible
     await expect(page.getByTestId(TestID.ActivityContent)).toBeVisible()

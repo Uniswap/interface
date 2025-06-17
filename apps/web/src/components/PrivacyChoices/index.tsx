@@ -1,4 +1,3 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { PRIVACY_SHARING_OPT_OUT_STORAGE_KEY } from 'components/PrivacyChoices/constants'
 import { useModalState } from 'hooks/useModalState'
 import { useAtom } from 'jotai'
@@ -10,7 +9,7 @@ import { Lock } from 'ui/src/components/icons/Lock'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function PrivacyChoicesModal() {
   const { isOpen, closeModal } = useModalState(ModalName.PrivacyChoices)
@@ -35,7 +34,7 @@ export function PrivacyChoicesModal() {
       <Flex fill>
         <Flex py="$spacing20" px="$spacing24" gap="$spacing24">
           <Flex row justifyContent="flex-end">
-            <Trace logPress element={InterfaceElementName.CLOSE_BUTTON}>
+            <Trace logPress element={ElementName.CloseButton}>
               <ModalCloseIcon onClose={closeAndResetModal} />
             </Trace>
           </Flex>

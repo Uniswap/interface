@@ -86,6 +86,7 @@ module.exports = {
       new DefinePlugin({
         __DEV__: isDev,
         'process.env.EXPO_OS': '"web"',
+        'process.env.REACT_APP_WEB_BUILD_TYPE': JSON.stringify('craco'),
       }),
       // Webpack 5 does not polyfill node globals, so we do so for those necessary:
       new ProvidePlugin({

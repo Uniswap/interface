@@ -4,6 +4,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 /**
  * Generic helper function to stub trading API endpoints and disable transaction simulation
  */
+// eslint-disable-next-line max-params
 export async function stubTradingApiEndpoint(page: Page, endpoint: string, modifyData?: (data: any) => any) {
   await page.route(`${uniswapUrls.tradingApiUrl}${endpoint}`, async (route) => {
     const request = route.request()

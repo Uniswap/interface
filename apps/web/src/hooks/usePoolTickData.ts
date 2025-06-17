@@ -6,9 +6,10 @@ import { TickData, Ticks } from 'appGraphql/data/AllV3TicksQuery'
 import { ZERO_ADDRESS } from 'constants/misc'
 import JSBI from 'jsbi'
 import ms from 'ms'
-import { getCurrencyAddressWithWrap, poolEnabledProtocolVersion } from 'pages/Pool/Positions/create/utils'
+import { getTokenOrZeroAddress, poolEnabledProtocolVersion } from 'pages/Pool/Positions/create/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
+import { PositionField } from 'types/position'
 import {
   useAllV3TicksQuery,
   useAllV4TicksQuery,
@@ -23,19 +24,30 @@ import computeSurroundingTicks, { TickProcessed } from 'utils/computeSurrounding
 
 const PRICE_FIXED_DIGITS = 8
 
-const getActiveTick = (
-  tickCurrent: number | undefined,
-  feeAmount: FeeAmount | undefined,
-  tickSpacing: number | undefined,
-) => (tickCurrent && feeAmount && tickSpacing ? Math.floor(tickCurrent / tickSpacing) * tickSpacing : undefined)
+function getActiveTick({
+  tickCurrent,
+  feeAmount,
+  tickSpacing,
+}: {
+  tickCurrent?: number
+  feeAmount?: FeeAmount
+  tickSpacing?: number
+}): number | undefined {
+  return tickCurrent && feeAmount && tickSpacing ? Math.floor(tickCurrent / tickSpacing) * tickSpacing : undefined
+}
 
 const MAX_TICK_FETCH_VALUE = 1000
-function usePaginatedTickQuery(
-  poolId: string | undefined,
-  version: ProtocolVersion,
-  skip = 0,
-  chainId: UniverseChainId,
-) {
+function usePaginatedTickQuery({
+  poolId,
+  version,
+  skip,
+  chainId,
+}: {
+  poolId?: string
+  version: ProtocolVersion
+  skip?: number
+  chainId: UniverseChainId
+}) {
   const { defaultChainId } = useEnabledChains()
   const supportedChainId = useSupportedChainId(chainId)
 
@@ -77,8 +89,7 @@ function usePaginatedTickQuery(
 
 // Fetches all ticks for a given pool
 function useAllPoolTicks({
-  currencyA,
-  currencyB,
+  sdkCurrencies,
   feeAmount,
   chainId,
   version,
@@ -86,8 +97,7 @@ function useAllPoolTicks({
   hooks,
   precalculatedPoolId,
 }: {
-  currencyA?: Currency
-  currencyB?: Currency
+  sdkCurrencies: { [field in PositionField]: Maybe<Currency> }
   feeAmount?: FeeAmount
   chainId: UniverseChainId
   version: ProtocolVersion
@@ -107,32 +117,37 @@ function useAllPoolTicks({
     if (precalculatedPoolId) {
       return precalculatedPoolId
     }
+    const { TOKEN0, TOKEN1 } = sdkCurrencies
     const v3PoolAddress =
-      currencyA && currencyB && feeAmount && version === ProtocolVersion.V3
-        ? V3Pool.getAddress(
-            currencyA?.wrapped,
-            currencyB?.wrapped,
-            feeAmount,
-            undefined,
-            chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined,
-          )
+      TOKEN0 && TOKEN1 && feeAmount && version === ProtocolVersion.V3
+        ? V3Pool.getAddress(TOKEN0.wrapped, TOKEN1.wrapped, feeAmount, undefined, V3_CORE_FACTORY_ADDRESSES[chainId])
         : undefined
 
     const v4PoolId =
-      version === ProtocolVersion.V4 && currencyA && currencyB && feeAmount && tickSpacing && hooks
-        ? V4Pool.getPoolId(currencyA, currencyB, feeAmount, tickSpacing, hooks)
+      version === ProtocolVersion.V4 && TOKEN0 && TOKEN1 && feeAmount && tickSpacing && hooks
+        ? V4Pool.getPoolId(TOKEN0, TOKEN1, feeAmount, tickSpacing, hooks)
         : undefined
     return version === ProtocolVersion.V3 ? v3PoolAddress : v4PoolId
-  }, [chainId, currencyA, currencyB, feeAmount, hooks, precalculatedPoolId, tickSpacing, version])
+  }, [chainId, sdkCurrencies, feeAmount, hooks, precalculatedPoolId, tickSpacing, version])
 
-  const { data, error, loading: isLoading } = usePaginatedTickQuery(poolId, version, skipNumber, chainId)
+  const {
+    data,
+    error,
+    loading: isLoading,
+  } = usePaginatedTickQuery({
+    poolId,
+    version,
+    skip: skipNumber,
+    chainId,
+  })
   // TODO: fix typing on usePaginatedTickQuery function to avoid casting to any
-  const ticks: Ticks = ((data as any)?.v3Pool?.ticks as Ticks) ?? ((data as any)?.v4Pool?.ticks as Ticks)
+  const ticks: Ticks | undefined =
+    ((data as any)?.v3Pool?.ticks as Ticks | undefined) ?? ((data as any)?.v4Pool?.ticks as Ticks | undefined)
 
   useEffect(() => {
     if (ticks?.length) {
       setTickData((tickData) => [...tickData, ...ticks])
-      if (ticks?.length === MAX_TICK_FETCH_VALUE) {
+      if (ticks.length === MAX_TICK_FETCH_VALUE) {
         setSkipNumber((skipNumber) => skipNumber + MAX_TICK_FETCH_VALUE)
       }
     }
@@ -146,8 +161,7 @@ function useAllPoolTicks({
 }
 
 export function usePoolActiveLiquidity({
-  currencyA,
-  currencyB,
+  sdkCurrencies,
   feeAmount,
   chainId,
   version,
@@ -157,8 +171,7 @@ export function usePoolActiveLiquidity({
   skip,
 }: {
   poolId?: string
-  currencyA?: Currency
-  currencyB?: Currency
+  sdkCurrencies: { [field in PositionField]: Maybe<Currency> }
   feeAmount?: number
   version: ProtocolVersion
   chainId?: UniverseChainId
@@ -176,14 +189,16 @@ export function usePoolActiveLiquidity({
 } {
   const multichainContext = useMultichainContext()
   const defaultChainId = multichainContext.chainId ?? UniverseChainId.Mainnet
-  const poolsQueryEnabled = Boolean(poolEnabledProtocolVersion(version) && currencyA && currencyB && !skip)
+  const poolsQueryEnabled = Boolean(
+    poolEnabledProtocolVersion(version) && sdkCurrencies.TOKEN0 && sdkCurrencies.TOKEN1 && !skip,
+  )
   const { data: poolData, isLoading: poolIsLoading } = useGetPoolsByTokens(
     {
       fee: feeAmount,
       chainId: chainId ?? defaultChainId,
       protocolVersions: [version],
-      token0: getCurrencyAddressWithWrap(currencyA, version),
-      token1: getCurrencyAddressWithWrap(currencyB, version),
+      token0: getTokenOrZeroAddress(sdkCurrencies.TOKEN0),
+      token1: getTokenOrZeroAddress(sdkCurrencies.TOKEN1),
       hooks: hooks ?? ZERO_ADDRESS,
     },
     poolsQueryEnabled,
@@ -197,23 +212,24 @@ export function usePoolActiveLiquidity({
   const currentTick = pool?.tick
   // Find nearest valid tick for pool in case tick is not initialized.
   const activeTick = useMemo(
-    () => getActiveTick(currentTick, feeAmount, tickSpacing),
+    () => getActiveTick({ tickCurrent: currentTick, feeAmount, tickSpacing }),
     [currentTick, feeAmount, tickSpacing],
   )
 
   const { isLoading, error, ticks } = useAllPoolTicks({
-    currencyA,
-    currencyB,
+    sdkCurrencies,
     feeAmount,
     precalculatedPoolId: poolId,
     chainId: chainId ?? defaultChainId,
-    version: version ?? ProtocolVersion.V3,
+    version,
     tickSpacing,
     hooks,
   })
 
   return useMemo(() => {
-    if (!currencyA || !currencyB || activeTick === undefined || !pool || !ticks || ticks.length === 0 || isLoading) {
+    const token0 = sdkCurrencies.TOKEN0
+    const token1 = sdkCurrencies.TOKEN1
+    if (!token0 || !token1 || activeTick === undefined || !pool || !ticks || ticks.length === 0 || isLoading) {
       return {
         isLoading: isLoading || poolIsLoading,
         error,
@@ -221,9 +237,6 @@ export function usePoolActiveLiquidity({
         data: undefined,
       }
     }
-
-    const token0 = version === ProtocolVersion.V3 ? currencyA?.wrapped : currencyA
-    const token1 = version === ProtocolVersion.V3 ? currencyB?.wrapped : currencyB
 
     // find where the active tick would be to partition the array
     // if the active tick is initialized, the pivot will be an element
@@ -268,7 +281,7 @@ export function usePoolActiveLiquidity({
     }
 
     const activeTickProcessed: TickProcessed = {
-      liquidityActive: JSBI.BigInt(pool?.liquidity ?? 0),
+      liquidityActive: JSBI.BigInt(pool.liquidity),
       tick: activeTick,
       liquidityNet:
         Number(ticks[pivot]?.tick) === activeTick ? JSBI.BigInt(ticks[pivot]?.liquidityNet ?? 0) : JSBI.BigInt(0),
@@ -276,9 +289,25 @@ export function usePoolActiveLiquidity({
       sdkPrice,
     }
 
-    const subsequentTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, ticks, pivot, true, version)
+    const subsequentTicks = computeSurroundingTicks({
+      token0,
+      token1,
+      activeTickProcessed,
+      sortedTickData: ticks,
+      pivot,
+      ascending: true,
+      version,
+    })
 
-    const previousTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, ticks, pivot, false, version)
+    const previousTicks = computeSurroundingTicks({
+      token0,
+      token1,
+      activeTickProcessed,
+      sortedTickData: ticks,
+      pivot,
+      ascending: false,
+      version,
+    })
 
     const ticksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks)
 
@@ -292,8 +321,7 @@ export function usePoolActiveLiquidity({
       data: ticksProcessed,
     }
   }, [
-    currencyA,
-    currencyB,
+    sdkCurrencies,
     activeTick,
     pool,
     ticks,

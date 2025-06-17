@@ -23,9 +23,9 @@ import {
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
-import { benignSafetyInfo } from 'uniswap/src/test/fixtures'
+import { benignSafetyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
-import { UseAccountReturnType } from 'wagmi'
+import { UseAccountReturnType, type Register as WagmiRegister } from 'wagmi'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
 export const TEST_TOKEN_1_INFO: CurrencyInfo = {
@@ -35,6 +35,7 @@ export const TEST_TOKEN_1_INFO: CurrencyInfo = {
   currencyId: 'ABC',
   safetyInfo: benignSafetyInfo,
 }
+
 export const TEST_TOKEN_2 = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'DEF', 'Def')
 export const TEST_TOKEN_2_INFO: CurrencyInfo = {
   currency: TEST_TOKEN_2,
@@ -341,7 +342,7 @@ export const USDC_ARBITRUM_INFO: CurrencyInfo = {
 export const USE_DISCONNECTED_ACCOUNT = {
   address: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
   chainId: 1,
-} as unknown as UseAccountReturnType
+} as unknown as UseAccountReturnType<WagmiRegister['config']>
 
 // Fiat On Ramp countries
 

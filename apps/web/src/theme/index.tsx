@@ -18,6 +18,7 @@ const MAX_CONTENT_WIDTH_PX = 1200
 const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
   MEDIA_WIDTHS,
 ).reduce((acc, size) => {
+  // eslint-disable-next-line max-params
   acc[size] = (a: any, b: any, c: any) => css`
     @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
       ${css(a, b, c)}

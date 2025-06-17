@@ -62,7 +62,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
     const { validMnemonic, error, invalidWord } = validateMnemonic(value)
 
     if (error) {
-      setErrorMessage(translateMnemonicErrorMessage(error, invalidWord, t))
+      setErrorMessage(translateMnemonicErrorMessage({ error, invalidWord, t }))
       return
     }
 
@@ -92,7 +92,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
   const onBlur = useCallback(() => {
     const { error, invalidWord } = validateMnemonic(value)
     if (error) {
-      setErrorMessage(translateMnemonicErrorMessage(error, invalidWord, t))
+      setErrorMessage(translateMnemonicErrorMessage({ error, invalidWord, t }))
     }
   }, [t, value])
 
@@ -107,13 +107,14 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
     if (!error || suppressError) {
       setErrorMessage(undefined)
     } else {
-      setErrorMessage(translateMnemonicErrorMessage(error, invalidWord, t))
+      setErrorMessage(translateMnemonicErrorMessage({ error, invalidWord, t }))
     }
 
     setValue(text)
   }
 
-  const onPressRecoveryHelpButton = (): Promise<void> => openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport)
+  const onPressRecoveryHelpButton = (): Promise<void> =>
+    openUri({ uri: uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport })
 
   const onPressTryAgainButton = (): void => {
     navigation.replace(OnboardingScreens.RestoreCloudBackupLoading, params)

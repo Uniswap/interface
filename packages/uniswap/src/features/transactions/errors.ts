@@ -61,11 +61,11 @@ export class TransactionStepFailedError extends TransactionError {
         'code' in this.originalError &&
         (typeof this.originalError.code === 'string' || typeof this.originalError.code === 'number')
       ) {
-        fingerprint.push(String(this.originalError?.code))
+        fingerprint.push(String(this.originalError.code))
       }
 
       if (this.originalError?.message) {
-        fingerprint.push(String(this.originalError?.message))
+        fingerprint.push(String(this.originalError.message))
       }
 
       if (this.isBackendRejection && this.originalError instanceof FetchError && this.originalError.data?.detail) {

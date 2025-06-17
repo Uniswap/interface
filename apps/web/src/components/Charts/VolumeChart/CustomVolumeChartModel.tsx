@@ -43,8 +43,8 @@ export class CustomVolumeChartModel<TDataType extends CustomHistogramData> exten
     this.fitContent()
 
     this.api.subscribeCrosshairMove((param) => {
-      if (param?.point?.x !== this.hoveredXPos) {
-        this.hoveredXPos = param?.point?.x
+      if (param.point?.x !== this.hoveredXPos) {
+        this.hoveredXPos = param.point?.x
         this.series.applyOptions({
           hoveredXPos: this.hoveredXPos ?? -1, // -1 is used because series will use prev value if undefined is passed
         } as DeepPartial<CustomHistogramSeriesOptions>)

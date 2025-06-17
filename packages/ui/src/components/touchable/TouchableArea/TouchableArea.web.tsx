@@ -122,7 +122,7 @@ const TouchableAreaComponentWithoutMemo = forwardRef<TamaguiElement, TouchableAr
       return
     }
 
-    if (typeof event?.stopPropagation === 'function') {
+    if (typeof event.stopPropagation === 'function') {
       event.stopPropagation()
     }
 
@@ -136,7 +136,7 @@ const TouchableAreaComponentWithoutMemo = forwardRef<TamaguiElement, TouchableAr
       return
     }
 
-    if (typeof event?.stopPropagation === 'function') {
+    if (typeof event.stopPropagation === 'function') {
       event.stopPropagation()
     }
 
@@ -149,7 +149,7 @@ const TouchableAreaComponentWithoutMemo = forwardRef<TamaguiElement, TouchableAr
       return
     }
 
-    if (typeof event?.stopPropagation === 'function') {
+    if (typeof event.stopPropagation === 'function') {
       event.stopPropagation()
     }
 

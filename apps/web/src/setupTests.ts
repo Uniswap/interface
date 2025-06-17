@@ -3,10 +3,10 @@ import '@testing-library/jest-dom' // jest custom assertions
 import 'jest-styled-components' // adds style diffs to snapshot tests
 import 'polyfills' // add polyfills
 import { setupi18n } from 'uniswap/src/i18n/i18n-setup-interface'
-import 'utilities/src/logger/mocks'
 
-import type { createPopper } from '@popperjs/core'
+import { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
+import { config as loadEnv } from 'dotenv'
 import failOnConsole from 'jest-fail-on-console'
 import { disableNetConnect, restore as restoreNetConnect } from 'nock'
 import React from 'react'
@@ -14,13 +14,28 @@ import { Readable } from 'stream'
 import { toBeVisible } from 'test-utils/matchers'
 import { mocked } from 'test-utils/mocked'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import * as gatingHooks from 'uniswap/src/features/gating/hooks'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { TextDecoder, TextEncoder } from 'util'
 
-// Mock EXPO_OS environment variable
+loadEnv()
+
+vi.mock('react-native-reanimated', async () => {
+  const mock = await vi.importActual<any>('react-native-reanimated/src/mock')
+  return {
+    ...mock,
+    default: {
+      ...mock.default,
+      createAnimatedComponent: (component: any) => component,
+    },
+    createAnimatedComponent: (component: any) => component,
+  }
+})
+
+// Mock environment variables
 process.env.EXPO_OS = 'web'
+process.env.REACT_APP_ANALYTICS_REQUEST_TIMEOUT_MS = '10000'
+process.env.REACT_APP_ANALYTICS_FLUSH_TIMEOUT_MS = '5000'
 
 setupi18n()
 
@@ -30,8 +45,8 @@ globalThis.origin = 'https://app.uniswap.org'
 
 // Polyfill browser APIs (jest is a node.js environment):
 {
-  window.open = jest.fn()
-  window.getComputedStyle = jest.fn()
+  window.open = vi.fn()
+  window.getComputedStyle = vi.fn()
 
   if (typeof globalThis.TextEncoder === 'undefined') {
     globalThis.ReadableStream = Readable as unknown as typeof globalThis.ReadableStream
@@ -40,6 +55,7 @@ globalThis.origin = 'https://app.uniswap.org'
   }
 
   globalThis.matchMedia =
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     globalThis.matchMedia ||
     ((query) => {
       const reducedMotion = query.match(/prefers-reduced-motion: ([a-zA-Z0-9-]+)/)
@@ -47,22 +63,171 @@ globalThis.origin = 'https://app.uniswap.org'
       return {
         // Needed for reanimated to disable reduced motion warning in tests
         matches: reducedMotion ? reducedMotion[1] === 'no-preference' : false,
-        addListener: jest.fn(),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
+        addListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
       }
     })
 
-  globalThis.performance.measure = jest.fn()
-  globalThis.performance.mark = jest.fn()
+  globalThis.performance.measure = vi.fn()
+  globalThis.performance.mark = vi.fn()
 
   globalThis.React = React
 }
 
-jest.mock('react-native-svg', () => require('@tamagui/react-native-svg'))
+vi.mock('react-native-svg', () => require('@tamagui/react-native-svg'))
 
-jest.mock('@popperjs/core', () => {
-  const core = jest.requireActual('@popperjs/core')
+vi.mock('expo-blur', () => ({
+  BlurView: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+}))
+
+vi.mock('ui/src/components/touchable/TouchableArea', () => ({
+  TouchableArea: ({ children, ..._props }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+}))
+
+vi.mock('@datadog/browser-logs', () => ({
+  datadogLogs: {
+    // leave it empty as we should avoid it in test mode
+    logger: {},
+  },
+}))
+
+// This package must be mocked because it doesn't support ESM
+vi.mock('@uniswap/analytics-events', () => {
+  return {
+    SharedEventName: {},
+    sendAnalyticsEvent: vi.fn(),
+    trace: vi.fn(),
+  }
+})
+
+vi.mock('@tamagui/animations-moti', () => ({
+  createAnimations: () => ({
+    '100ms': {
+      type: 'timing',
+      duration: 100,
+    },
+    fast: {
+      type: 'timing',
+      duration: 100,
+    },
+    slow: {
+      type: 'timing',
+      duration: 100,
+    },
+  }),
+  MotiView: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+}))
+
+vi.mock('@uniswap/analytics', () => ({
+  Trace: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  TraceEvent: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  sendAnalyticsEvent: vi.fn(),
+  trace: vi.fn(),
+  analytics: {
+    track: vi.fn(),
+    identify: vi.fn(),
+    flush: vi.fn(),
+  },
+  __esModule: true,
+}))
+
+vi.mock('utilities/src/telemetry/analytics/constants', () => ({
+  ANALYTICS_FLUSH_TIMEOUT: 5000,
+  ANALYTICS_REQUEST_TIMEOUT: 10000,
+  ANALYTICS_BATCH_SIZE: 100,
+  DEFAULT_ANALYTICS_CONFIG: {},
+  ALLOW_ANALYTICS_ATOM_KEY: 'allow-analytics',
+  __esModule: true,
+}))
+
+vi.mock('utilities/src/platform', async () => {
+  const actual = await vi.importActual('utilities/src/platform')
+  return {
+    ...actual,
+    isWeb: true,
+    isInterface: true,
+    isMobileWeb: false,
+    isExtension: false,
+  }
+})
+
+vi.mock('uniswap/src/features/telemetry/Trace', () => ({
+  default: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  Trace: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+}))
+
+vi.mock('expo-web-browser', () => ({
+  openBrowserAsync: vi.fn().mockResolvedValue({ type: 'opened' }),
+  dismissBrowser: vi.fn().mockResolvedValue(undefined),
+  openAuthSessionAsync: vi.fn().mockResolvedValue({ type: 'success', url: '' }),
+  maybeCompleteAuthSession: vi.fn().mockResolvedValue(undefined),
+  warmUpAsync: vi.fn().mockResolvedValue(undefined),
+  coolDownAsync: vi.fn().mockResolvedValue(undefined),
+  WebBrowserResultType: {
+    CANCEL: 'cancel',
+    DISMISS: 'dismiss',
+    OPENED: 'opened',
+    LOCKED: 'locked',
+  },
+}))
+
+vi.mock('expo-clipboard', () => ({
+  Clipboard: {
+    getStringAsync: vi.fn().mockResolvedValue(''),
+    setStringAsync: vi.fn().mockResolvedValue(undefined),
+    hasStringAsync: vi.fn().mockResolvedValue(false),
+    getImageAsync: vi.fn().mockResolvedValue(null),
+    setImageAsync: vi.fn().mockResolvedValue(undefined),
+    hasImageAsync: vi.fn().mockResolvedValue(false),
+  },
+  ClipboardPasteButton: ({ children, onPress, ...props }: any) => {
+    return React.createElement('button', { onClick: onPress, ...props }, children)
+  },
+}))
+
+vi.mock('moti', () => ({
+  View: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  Text: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  AnimatePresence: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  MotiView: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  MotiText: ({ children }: any) => {
+    return React.createElement(React.Fragment, {}, children)
+  },
+  useAnimationState: () => ({
+    current: 'initial',
+    transitionTo: vi.fn(),
+  }),
+  useDynamicAnimation: () => ({
+    animate: vi.fn(),
+  }),
+  __esModule: true,
+}))
+
+vi.mock('@popperjs/core', async () => {
+  const core: any = await vi.importActual('@popperjs/core')
   return {
     ...core,
     createPopper: (...args: Parameters<typeof createPopper>) => {
@@ -70,7 +235,7 @@ jest.mock('@popperjs/core', () => {
 
       // Prevent popper from making state updates asynchronously.
       // This is necessary to avoid warnings during tests, as popper will asynchronously update state outside of test setup.
-      options?.modifiers?.push({
+      options.modifiers?.push({
         name: 'synchronousUpdate',
         enabled: true,
         phase: 'beforeMain',
@@ -87,23 +252,23 @@ jest.mock('@popperjs/core', () => {
   }
 })
 
-jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
+vi.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 
-jest.mock('@web3-react/core', () => {
-  const web3React = jest.requireActual('@web3-react/core')
-  const { Empty } = jest.requireActual('@web3-react/empty')
+vi.mock('@web3-react/core', async () => {
+  const web3React: any = await vi.importActual('@web3-react/core')
+  const { Empty }: any = await vi.importActual('@web3-react/empty')
   return {
     ...web3React,
     initializeConnector: () =>
       web3React.initializeConnector(
         (actions: Parameters<typeof web3React.initializeConnector>[0]) => new Empty(actions),
       ),
-    useWeb3React: jest.fn(),
+    useWeb3React: vi.fn(),
   }
 })
 
-jest.mock('state/routing/slice', () => {
-  const routingSlice = jest.requireActual('state/routing/slice')
+vi.mock('state/routing/slice', async () => {
+  const routingSlice = await vi.importActual('state/routing/slice')
   return {
     ...routingSlice,
     // Prevents unit tests from logging errors from failed getQuote queries
@@ -116,25 +281,11 @@ jest.mock('state/routing/slice', () => {
   }
 })
 
-jest.mock('state/routing/quickRouteSlice', () => {
-  const quickRouteSlice = jest.requireActual('state/routing/quickRouteSlice')
-  return {
-    ...quickRouteSlice,
-    // Prevents unit tests from logging errors from failed getQuote queries
-    useGetQuickRouteQuery: () => ({
-      isError: false,
-      data: undefined,
-      error: undefined,
-      currentData: undefined,
-    }),
-  }
-})
-
 /**
  * Fail tests if anything is logged to the console. This keeps the console clean and ensures test output stays readable.
  * If something should log to the console, it should be stubbed and asserted:
  * @example
- * beforeEach(() => jest.spyOn(console, 'error').mockReturnsValue())
+ * beforeEach(() => vi.spyOn(console, 'error').mockReturnsValue())
  * it('should log an error', () => {
  *   example()
  *   expect(console.error).toHaveBeenCalledWith(expect.any(Error))
@@ -155,13 +306,34 @@ failOnConsole({
         return true
       }
     }
+    if (type === 'warn') {
+      // Allow UniversalImage warnings about not being able to retrieve remote images in test environment
+      if (message.includes('Could not retrieve and format remote image for uri')) {
+        return true
+      }
+    }
     return false
   },
 })
 
-jest.mock('uniswap/src/features/gating/hooks', () => {
+vi.mock('uniswap/src/features/gating/hooks', async () => {
+  const genMock = await vi.importActual('uniswap/src/features/gating/hooks')
   return {
-    ...jest.genMockFromModule<typeof gatingHooks>('uniswap/src/features/gating/hooks'),
+    ...genMock,
+    useFeatureFlag: vi.fn(),
+    useFeatureFlagWithLoading: vi.fn(),
+    getFeatureFlag: vi.fn(),
+    getFeatureFlagWithExposureLoggingDisabled: vi.fn(),
+    useExperimentGroupNameWithLoading: vi.fn(),
+    useExperimentGroupName: vi.fn(),
+    useExperimentValue: vi.fn(),
+    getExperimentValue: vi.fn(),
+    useExperimentValueWithExposureLoggingDisabled: vi.fn(),
+    useDynamicConfigValue: vi.fn(),
+    getDynamicConfigValue: vi.fn(),
+    getExperimentValueFromLayer: vi.fn(),
+    useExperimentValueFromLayer: vi.fn(),
+    checkTypeGuard: vi.fn(),
     useStatsigClientStatus: () => ({
       isStatsigLoading: false,
       isStatsigReady: true,
@@ -170,14 +342,15 @@ jest.mock('uniswap/src/features/gating/hooks', () => {
   }
 })
 
-jest.mock('uniswap/src/features/chains/hooks/useOrderedChainIds', () => {
+vi.mock('uniswap/src/features/chains/hooks/useOrderedChainIds', () => {
   return {
     useOrderedChainIds: (chainIds: UniverseChainId[]) => chainIds,
   }
 })
 
 function muteStatsigWarnings() {
-  jest.spyOn(console, 'warn').mockImplementation((message, ...args) => {
+  const originalWarn = console.warn
+  vi.spyOn(console, 'warn').mockImplementation((message, ...args) => {
     const isStatsigWarning = args.some((arg) => {
       return typeof arg === 'string' && arg.includes('Statsig')
     })
@@ -185,8 +358,8 @@ function muteStatsigWarnings() {
     if (isStatsigWarning) {
       return
     } else {
-      // Forward all other warnings to console.warn to avoid losing them
-      console.warn(message, ...args)
+      // Forward all other warnings to the original console.warn to avoid losing them
+      originalWarn(message, ...args)
     }
   })
 }
@@ -208,7 +381,7 @@ beforeEach(() => {
   mocked(useFeatureFlag).mockReturnValue(false)
 
   // Prevent amplitude debugs from triggering failOnConsole
-  console.debug = jest.fn((...args) => {
+  console.debug = vi.fn((...args) => {
     if (typeof args[0] === 'string' && args[0].includes('[amplitude(Identify)')) {
       return
     }

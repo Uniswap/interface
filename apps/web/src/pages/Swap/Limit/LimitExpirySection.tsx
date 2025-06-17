@@ -5,7 +5,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useLimitContext } from 'state/limit/LimitContext'
 import { ThemedText } from 'theme/components'
 import { ClickableStyle } from 'theme/components/styles'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 
@@ -63,7 +63,7 @@ export function LimitExpirySection() {
               if (expiry === limitState.expiry) {
                 return
               }
-              sendAnalyticsEvent(InterfaceEventNameLocal.LimitExpirySelected, {
+              sendAnalyticsEvent(InterfaceEventName.LimitExpirySelected, {
                 value: expiry,
               })
               setLimitState((prev) => ({

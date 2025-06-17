@@ -58,11 +58,11 @@ export function SwapFormDecimalPad({
   decimalPadValueRef,
   onDecimalPadTriggerInputShake,
 }: SwapFormDecimalPadProps): JSX.Element {
-  const areInputPresetsEnabled = useExperimentValueFromLayer<Layers.SwapPage, Experiments.SwapPresets, boolean>(
-    Layers.SwapPage,
-    SwapPresetsProperties.InputEnabled,
-    false,
-  )
+  const areInputPresetsEnabled = useExperimentValueFromLayer<Layers.SwapPage, Experiments.SwapPresets, boolean>({
+    layerName: Layers.SwapPage,
+    param: SwapPresetsProperties.InputEnabled,
+    defaultValue: false,
+  })
 
   const {
     isFiatMode,

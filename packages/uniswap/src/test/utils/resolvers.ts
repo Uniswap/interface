@@ -34,6 +34,7 @@ type ResolverResponses<T extends QueryResolvers> = {
 function isResolverWithResolve<T extends Resolver<any, any, any, any>>(
   resolver: T,
 ): resolver is Extract<T, ResolverWithResolve<any, any, any, any>> {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return typeof resolver === 'object' && resolver !== null && 'resolve' in resolver
 }
 
@@ -80,6 +81,7 @@ export function queryResolvers<T extends QueryResolvers>(
             const resultObj = cloneDeepWith(resolvedValue, undefinedToNull) as ResolverReturnType<R>
 
             // Resolve the corresponding promise
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (promiseResolvers[key]) {
               promiseResolvers[key](resultObj)
             }

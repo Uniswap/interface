@@ -26,6 +26,7 @@ export function usePasskeyAuthWithHelpModal<TData = unknown, TError = Error, TVa
   return useMutation({
     mutationFn,
     ...options,
+    // eslint-disable-next-line max-params
     onError: (error: TError, variables: TVariables, context: TContext | undefined) => {
       const errorContext = {
         variables,

@@ -9,23 +9,23 @@ export const AVERAGE_L1_BLOCK_TIME_MS = 12 * ONE_SECOND_MS
 const AVERAGE_L2_BLOCK_TIME_MS = 3 * ONE_SECOND_MS
 
 export function usePollingIntervalByChain(chainId?: UniverseChainId): number {
-  const averageL1BlockTimeMs = useDynamicConfigValue(
-    DynamicConfigs.Swap,
-    SwapConfigKey.AverageL1BlockTimeMs,
-    AVERAGE_L1_BLOCK_TIME_MS,
-  )
+  const averageL1BlockTimeMs = useDynamicConfigValue({
+    config: DynamicConfigs.Swap,
+    key: SwapConfigKey.AverageL1BlockTimeMs,
+    defaultValue: AVERAGE_L1_BLOCK_TIME_MS,
+  })
 
-  const averageL2BlockTimeMs = useDynamicConfigValue(
-    DynamicConfigs.Swap,
-    SwapConfigKey.AverageL2BlockTimeMs,
-    AVERAGE_L2_BLOCK_TIME_MS,
-  )
+  const averageL2BlockTimeMs = useDynamicConfigValue({
+    config: DynamicConfigs.Swap,
+    key: SwapConfigKey.AverageL2BlockTimeMs,
+    defaultValue: AVERAGE_L2_BLOCK_TIME_MS,
+  })
 
-  const monadTestnetPollingIntervalMs = useDynamicConfigValue(
-    DynamicConfigs.Swap,
-    SwapConfigKey.MonadTestnetPollingIntervalMs,
-    AVERAGE_L2_BLOCK_TIME_MS,
-  )
+  const monadTestnetPollingIntervalMs = useDynamicConfigValue({
+    config: DynamicConfigs.Swap,
+    key: SwapConfigKey.MonadTestnetPollingIntervalMs,
+    defaultValue: AVERAGE_L2_BLOCK_TIME_MS,
+  })
 
   // TODO(WEB-6132): remove this flag once short term experiment is complete
   const enableTwoSecondInterval = useFeatureFlag(FeatureFlags.TwoSecondSwapQuotePollingInterval)

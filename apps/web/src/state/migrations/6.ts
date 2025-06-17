@@ -13,7 +13,7 @@ export const migration6 = (state: PersistAppStateV6 | undefined) => {
     return state
   }
   // Remove a previously-persisted variable
-  if (state?.user && 'selectedWallet' in state.user) {
+  if (state.user && 'selectedWallet' in state.user) {
     const connectionType = state.user.selectedWallet
     if (connectionType !== undefined) {
       state.user.recentConnectionMeta = { type: connectionType }

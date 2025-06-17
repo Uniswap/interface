@@ -1,11 +1,12 @@
 import { MismatchToastItem } from 'components/Popups/MismatchToastItem'
 import {
+  FORTransactionPopupContent,
   FailedNetworkSwitchPopup,
   TransactionPopupContent,
   UniswapXOrderPopupContent,
 } from 'components/Popups/PopupContent'
 import { ToastRegularSimple } from 'components/Popups/ToastRegularSimple'
-import { PopupContent, PopupType } from 'components/Popups/types'
+import { PopupContent, PopupType, SwitchNetworkAction } from 'components/Popups/types'
 import { useAccount } from 'hooks/useAccount'
 import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +16,6 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 export function PopupItem({ content, onClose }: { content: PopupContent; popKey: string; onClose: () => void }) {
   const { t } = useTranslation()
@@ -40,7 +40,11 @@ export function PopupItem({ content, onClose }: { content: PopupContent; popKey:
         <ToastRegularSimple
           onDismiss={onClose}
           icon={<NetworkLogo chainId={content.chainId} />}
-          text={getSwitchNetworkTitle(t, content.action, content.chainId as UniverseChainId)}
+          text={getSwitchNetworkTitle({
+            t,
+            action: content.action,
+            chainId: content.chainId,
+          })}
         />
       )
     }
@@ -55,17 +59,38 @@ export function PopupItem({ content, onClose }: { content: PopupContent; popKey:
     case PopupType.Mismatch: {
       return <MismatchToastItem onDismiss={onClose} />
     }
+    case PopupType.FORTransaction: {
+      return <FORTransactionPopupContent transaction={content.transaction} onClose={onClose} />
+    }
   }
 }
 
-function getSwitchNetworkTitle(t: TFunction, action: SwapTab, chainId: UniverseChainId) {
+function getSwitchNetworkTitle({
+  t,
+  action,
+  chainId,
+}: {
+  t: TFunction
+  action: SwitchNetworkAction
+  chainId: UniverseChainId
+}) {
   const { label } = getChainInfo(chainId)
 
   switch (action) {
-    case SwapTab.Swap:
+    case SwitchNetworkAction.Swap:
       return t('notification.swap.network', { network: label })
-    case SwapTab.Send:
+    case SwitchNetworkAction.Send:
       return t('notification.send.network', { network: label })
+    case SwitchNetworkAction.Buy:
+      return t('notification.buy.network', { network: label })
+    case SwitchNetworkAction.Sell:
+      return t('notification.sell.network', { network: label })
+    case SwitchNetworkAction.LP:
+      return t('notification.lp.network', { network: label })
+    case SwitchNetworkAction.Limit:
+      return t('notification.limit.network', { network: label })
+    case SwitchNetworkAction.PoolFinder:
+      return t('notification.poolFinder.network', { network: label })
     default:
       return ''
   }

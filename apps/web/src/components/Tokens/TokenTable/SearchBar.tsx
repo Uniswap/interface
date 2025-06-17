@@ -1,4 +1,3 @@
-import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { ReactComponent as SearchIcon } from 'assets/svg/search.svg'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import useDebounce from 'hooks/useDebounce'
@@ -11,6 +10,7 @@ import { Flex, IconButton, Input, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { zIndexes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 
 export default function SearchBar({ tab }: { tab?: string }) {
   const { t } = useTranslation()
@@ -52,11 +52,7 @@ export default function SearchBar({ tab }: { tab?: string }) {
   }
 
   return (
-    <Trace
-      logFocus
-      eventOnTrigger={InterfaceEventName.EXPLORE_SEARCH_SELECTED}
-      element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
-    >
+    <Trace logFocus eventOnTrigger={InterfaceEventName.ExploreSearchSelected} element={ElementName.ExploreSearchInput}>
       <Flex
         $md={{
           position: isOpen ? 'absolute' : 'relative',

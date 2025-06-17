@@ -3,6 +3,7 @@ import { SpaceTokens, getToken } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions/useDeviceDimensions'
 import { FlexLoader, FlexLoaderProps } from 'ui/src/loading/FlexLoader'
+import { InsufficientFundsNetworkRowLoader } from 'ui/src/loading/InsufficientFundsNetworkRowLoader'
 import { NftCardLoader } from 'ui/src/loading/NftCardLoader'
 import { Skeleton } from 'ui/src/loading/Skeleton'
 import { TokenLoader } from 'ui/src/loading/TokenLoader'
@@ -14,6 +15,7 @@ const Transaction = memo(function _Transaction({ repeat = 1 }: { repeat?: number
   return (
     <Skeleton>
       <Flex>
+        {/* eslint-disable-next-line max-params */}
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
             <TransactionLoader opacity={(length - i) / length} />
@@ -77,9 +79,32 @@ function Token({
   return (
     <Skeleton contrast={contrast}>
       <Flex grow gap={gap}>
+        {/* eslint-disable-next-line max-params */}
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
             <TokenLoader opacity={(length - i) / length} withPrice={withPrice} />
+          </React.Fragment>
+        ))}
+      </Flex>
+    </Skeleton>
+  )
+}
+
+function InsufficientFundsNetworkRow({
+  repeat = 1,
+  contrast,
+  gap = '$spacing4',
+}: {
+  repeat?: number
+  contrast?: boolean
+  gap?: SpaceTokens
+}): JSX.Element {
+  return (
+    <Skeleton contrast={contrast}>
+      <Flex grow gap={gap}>
+        {Array.from({ length: repeat }, (_, i) => (
+          <React.Fragment key={i}>
+            <InsufficientFundsNetworkRowLoader opacity={(repeat - i) / repeat} />
           </React.Fragment>
         ))}
       </Flex>
@@ -94,6 +119,7 @@ function NFT({ repeat = 1 }: { repeat?: number }): JSX.Element {
         <NftCardLoader opacity={1} />
       ) : (
         <Flex>
+          {/* eslint-disable-next-line max-params */}
           {new Array(Math.floor(repeat / 2)).fill(null).map((_, i, { length }) => {
             const opacity = (length - i) / length
             return (
@@ -123,6 +149,7 @@ function Wallets({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
     <Skeleton>
       <Flex gap="$spacing12">
+        {/* eslint-disable-next-line max-params */}
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
             <WalletLoader opacity={(length - i) / length} />
@@ -135,6 +162,7 @@ function Wallets({ repeat = 1 }: { repeat?: number }): JSX.Element {
 
 export const Loader = {
   Box,
+  InsufficientFundsNetworkRow,
   NFT,
   Image,
   SearchResult,

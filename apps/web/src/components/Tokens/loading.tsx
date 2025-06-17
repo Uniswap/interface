@@ -26,7 +26,7 @@ export const LoadingBubble = ({
         width={width ?? '50%'}
         m={margin}
         $platform-web={{
-          background: `linear-gradient(to left, ${colors.surface3.val} 25%, ${lighten(0.075, colors.surface3.val ?? '#FFFFFF12')} 50%, ${colors.surface3.val} 75%)`,
+          background: `linear-gradient(to left, ${colors.surface3.val} 25%, ${lighten(0.075, colors.surface3.val)} 50%, ${colors.surface3.val} 75%)`,
         }}
         {...rest}
       />

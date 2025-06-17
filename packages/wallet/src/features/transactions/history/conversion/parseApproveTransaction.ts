@@ -1,3 +1,4 @@
+import { OnChainTransaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import {
   ApproveTransactionInfo,
   NFTApproveTransactionInfo,
@@ -13,13 +14,13 @@ export default function parseApproveTransaction(
     return undefined
   }
 
-  const change = transaction.details.assetChanges?.[0]
+  const change = transaction.details.assetChanges[0]
   if (!change) {
     return undefined
   }
 
   if (change.__typename === 'TokenApproval' && change.tokenStandard === 'ERC20') {
-    const tokenAddress = change.asset?.address
+    const tokenAddress = change.asset.address
     const spender = change.approvedAddress
     const approvalAmount = change.quantity
     if (!(tokenAddress && spender)) {
@@ -28,9 +29,9 @@ export default function parseApproveTransaction(
 
     const dappInfo = transaction.details.application?.address
       ? {
-          name: transaction.details.application?.name,
+          name: transaction.details.application.name,
           address: transaction.details.application.address,
-          icon: transaction.details.application?.icon?.url,
+          icon: transaction.details.application.icon?.url,
         }
       : undefined
     return {
@@ -42,4 +43,29 @@ export default function parseApproveTransaction(
     }
   }
   return undefined
+}
+
+/**
+ * Parse an approve transaction from the REST API
+ */
+export function parseRestApproveTransaction(transaction: OnChainTransaction): ApproveTransactionInfo | undefined {
+  const { approvals, to, protocol } = transaction
+  const firstApproval = approvals[0]
+  if (!firstApproval) {
+    return undefined
+  }
+  const token = firstApproval.asset.value
+  const dappInfo = protocol?.name
+    ? {
+        name: protocol.name,
+        icon: protocol.logoUrl,
+      }
+    : undefined
+  return {
+    type: TransactionType.Approve,
+    tokenAddress: token?.address ?? '',
+    spender: to,
+    approvalAmount: String(firstApproval.amount?.amount ?? ''),
+    dappInfo,
+  }
 }

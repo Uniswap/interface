@@ -24,7 +24,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 describe('migration to v21', () => {
   beforeEach(() => {
-    jest.spyOn(console, 'warn').mockImplementation(() => {})
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
   })
 
   const migrator = createMigrate(

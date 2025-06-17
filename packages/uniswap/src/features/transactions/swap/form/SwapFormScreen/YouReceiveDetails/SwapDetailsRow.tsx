@@ -5,15 +5,12 @@ import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, zIndexes } from 'ui/src/theme'
-import { useRefetchAnimationStyle } from 'uniswap/src/components/CurrencyInputPanel/hooks/useRefetchAnimationStyle'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import {
-  LargePriceDifferenceTooltip,
-  SwapFeeOnTransferTooltip,
-} from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/SwapFormTooltips'
+import { SwapFeeOnTransferTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/FeeDetailsTooltip'
+import { LargePriceDifferenceTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/LargePriceDifferenceTooltip'
 import { UsePriceDifferenceReturnType } from 'uniswap/src/features/transactions/swap/hooks/usePriceDifference'
 import { isWeb } from 'utilities/src/platform'
 
@@ -124,7 +121,7 @@ const ReceivingAmount = ({
 }): JSX.Element => {
   const hasFeeOnTransfer =
     feeOnTransferProps &&
-    (feeOnTransferProps?.inputTokenInfo.fee.greaterThan(0) || feeOnTransferProps?.outputTokenInfo.fee.greaterThan(0))
+    (feeOnTransferProps.inputTokenInfo.fee.greaterThan(0) || feeOnTransferProps.outputTokenInfo.fee.greaterThan(0))
   const { value: userReceivesOutputAmount, color: userReceivesOutputAmountColor } = useIndicativeTextDisplay({
     currencyAmount: amount,
     isLoading,
@@ -134,12 +131,8 @@ const ReceivingAmount = ({
 
   const priceDifferenceWarningColor = priceDifferenceWarning?.priceDifferenceColor
 
-  const refetchAnimationStyle = useRefetchAnimationStyle({
-    currencyAmount: amount,
-    isLoading,
-    isIndicativeLoading: isLoadingIndicative,
-    valueIsIndicative: isIndicative,
-  })
+  const textColor =
+    isLoading || isLoadingIndicative ? '$neutral2' : priceDifferenceWarningColor ?? userReceivesOutputAmountColor
 
   return (
     <WarningInfo
@@ -160,11 +153,11 @@ const ReceivingAmount = ({
         zIndex: zIndexes.popover,
       }}
       trigger={
-        <AnimatedFlex row gap="$spacing4" alignItems="center" style={refetchAnimationStyle}>
+        <AnimatedFlex row gap="$spacing4" alignItems="center">
           {(hasFeeOnTransfer || priceDifferenceWarning?.showPriceDifferenceWarning) && (
-            <AlertTriangleFilled color={priceDifferenceWarningColor ?? 'neutral2'} size="$icon.16" />
+            <AlertTriangleFilled color={textColor} size="$icon.16" />
           )}
-          <Text variant="body3" color={priceDifferenceWarningColor ?? userReceivesOutputAmountColor}>
+          <Text variant="body3" color={textColor}>
             {userReceivesOutputAmount}
           </Text>
         </AnimatedFlex>

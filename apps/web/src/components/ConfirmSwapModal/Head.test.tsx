@@ -5,7 +5,7 @@ import { fireEvent, render, screen } from 'test-utils/render'
 describe('ConfirmSwapModal/Head', () => {
   it('should render correctly for a classic swap', () => {
     const { asFragment } = render(
-      <SwapHead onDismiss={jest.fn()} isLimitTrade={false} confirmModalState={ConfirmModalState.REVIEWING} />,
+      <SwapHead onDismiss={vi.fn()} isLimitTrade={false} confirmModalState={ConfirmModalState.REVIEWING} />,
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText('Review swap')).toBeInTheDocument()
@@ -13,14 +13,14 @@ describe('ConfirmSwapModal/Head', () => {
 
   it('should render correctly for a Limit order', () => {
     const { asFragment } = render(
-      <SwapHead onDismiss={jest.fn()} isLimitTrade={true} confirmModalState={ConfirmModalState.REVIEWING} />,
+      <SwapHead onDismiss={vi.fn()} isLimitTrade={true} confirmModalState={ConfirmModalState.REVIEWING} />,
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText('Review limit')).toBeInTheDocument()
   })
 
   it('should call the close callback', () => {
-    const callback = jest.fn()
+    const callback = vi.fn()
     const component = render(
       <SwapHead onDismiss={callback} isLimitTrade={false} confirmModalState={ConfirmModalState.REVIEWING} />,
     )

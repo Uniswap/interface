@@ -9,10 +9,10 @@ import { validTokenProjectResponse } from 'test-utils/tokens/fixtures'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-jest.mock('hooks/Tokens')
+vi.mock('hooks/Tokens')
 
-jest.mock('pages/TokenDetails/TDPContext', () => ({
-  useTDPContext: jest.fn(),
+vi.mock('pages/TokenDetails/TDPContext', () => ({
+  useTDPContext: vi.fn(),
 }))
 
 describe('TokenDescription', () => {

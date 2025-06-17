@@ -14,20 +14,29 @@ import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-jest.mock('state/transactions/hooks', () => ({
-  ...jest.requireActual('state/transactions/hooks'),
-  useIsTransactionConfirmed: jest.fn(),
-}))
+vi.mock('state/transactions/hooks', async () => {
+  const actual = await vi.importActual('state/transactions/hooks')
+  return {
+    ...actual,
+    useIsTransactionConfirmed: vi.fn(),
+  }
+})
 
-jest.mock('hooks/useSwapCallback', () => ({
-  ...jest.requireActual('hooks/useSwapCallback'),
-  useSwapTransactionStatus: jest.fn(),
-}))
+vi.mock('hooks/useSwapCallback', async () => {
+  const actual = await vi.importActual('hooks/useSwapCallback')
+  return {
+    ...actual,
+    useSwapTransactionStatus: vi.fn(),
+  }
+})
 
-jest.mock('state/signatures/hooks', () => ({
-  ...jest.requireActual('state/signatures/hooks'),
-  useOrder: jest.fn(),
-}))
+vi.mock('state/signatures/hooks', async () => {
+  const actual = await vi.importActual('state/signatures/hooks')
+  return {
+    ...actual,
+    useOrder: vi.fn(),
+  }
+})
 
 const classicSwapResult: SwapResult = {
   type: TradeFillType.Classic,
@@ -35,7 +44,7 @@ const classicSwapResult: SwapResult = {
     hash: '0x123',
     timestamp: 1000,
     from: '0x123',
-    wait: jest.fn(),
+    wait: vi.fn(),
     nonce: 1,
     gasLimit: BigNumber.from(1000),
     data: '0x',
@@ -87,6 +96,7 @@ describe('Pending - classic trade titles', () => {
     [false, false, undefined, TEST_TRADE_EXACT_INPUT, undefined, undefined, 'Confirm swap'],
   ])(
     'renders classic trade correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p',
+    // eslint-disable-next-line max-params
     async (approvalPending, revocationPending, wrapTxHash, trade, swapResult, swapTxStatus, expectedTitle) => {
       mocked(useSwapTransactionStatus).mockReturnValue(swapTxStatus)
       const { asFragment } = render(
@@ -111,6 +121,7 @@ describe('Pending - uniswapX trade titles', () => {
     [false, false, undefined, LIMIT_ORDER_TRADE, undefined, undefined, 'Confirm limit'],
   ])(
     'renders limit order correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p',
+    // eslint-disable-next-line max-params
     async (approvalPending, revocationPending, wrapTxHash, trade, swapResult, orderDetails, expectedTitle) => {
       mocked(useOrder).mockReturnValue(orderDetails)
       const { asFragment } = render(

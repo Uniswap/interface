@@ -18,7 +18,7 @@ if (isAndroid) {
 export function easeInEaseOutLayoutAnimation(options?: LayoutAnimationOptions): void {
   const mergedOptions = options ? { ...DEFAULT_OPTIONS, ...options } : DEFAULT_OPTIONS
 
-  if (mergedOptions?.shouldSkip) {
+  if (mergedOptions.shouldSkip) {
     return
   }
 

@@ -32,7 +32,7 @@ export function RestoreMethodScreen({ navigation, route: { params } }: Props): J
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
   const shouldShowPrivateKeys = useFeatureFlag(FeatureFlags.EnableExportPrivateKeys)
-  const entryPoint = params?.entryPoint
+  const entryPoint = params.entryPoint
 
   useNavigationHeader(navigation)
 

@@ -13,7 +13,7 @@ export function useAvatar(address: Maybe<string>): {
   avatar: Maybe<string>
   loading: boolean
 } {
-  const validated = getValidAddress(address)
+  const validated = getValidAddress({ address })
   const { data: ensAvatar, isLoading: ensLoading } = useENSAvatar(validated)
   const { unitag, loading: unitagLoading } = useUnitagByAddress(validated || undefined)
 

@@ -4,9 +4,9 @@ import { mocked } from 'test-utils/mocked'
 import { owner, useMultiChainPositionsReturnValue } from 'test-utils/pools/fixtures'
 import { render } from 'test-utils/render'
 
-jest.mock('./useMultiChainPositions')
+vi.mock('./useMultiChainPositions')
 
-jest.spyOn(console, 'warn').mockImplementation()
+vi.spyOn(console, 'warn').mockImplementation(() => {})
 
 beforeEach(() => {
   mocked(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)

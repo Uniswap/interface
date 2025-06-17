@@ -48,6 +48,7 @@ function appStateSubscription(onChange: (value: AppStateStatus) => void): () => 
   let blurSubscription: ReturnType<typeof AppState.addEventListener> | undefined
   let focusSubscription: ReturnType<typeof AppState.addEventListener> | undefined
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (isAndroid && IS_ANDROID_SUBSCRIPTION_ENABLED) {
     blurSubscription = AppState.addEventListener('blur', () => {
       onChange('inactive' as AppStateStatus)

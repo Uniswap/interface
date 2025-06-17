@@ -23,10 +23,10 @@ interface SparklineChartProps {
 function _SparklineChart({ width, height, tokenData, pricePercentChange, sparklineMap }: SparklineChartProps) {
   const colors = useSporeColors()
   // for sparkline
-  const chainId = getChainIdFromChainUrlParam(tokenData?.chain.toLowerCase())
+  const chainId = getChainIdFromChainUrlParam(tokenData.chain.toLowerCase())
   const chainInfo = chainId && getChainInfo(chainId)
-  const isNative = areAddressesEqual(tokenData?.address, chainInfo?.wrappedNativeCurrency.address)
-  const pricePoints = tokenData?.address
+  const isNative = areAddressesEqual(tokenData.address, chainInfo?.wrappedNativeCurrency.address)
+  const pricePoints = tokenData.address
     ? sparklineMap[isNative ? NATIVE_CHAIN_ID : tokenData.address.toLowerCase()]
     : null
 

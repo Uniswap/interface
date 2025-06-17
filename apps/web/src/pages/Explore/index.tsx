@@ -1,4 +1,4 @@
-import { InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
+import { SharedEventName } from '@uniswap/analytics-events'
 import { getTokenExploreURL } from 'appGraphql/data/util'
 import PoolNotFoundModal from 'components/NotFoundModal/PoolNotFoundModal'
 import TokenNotFoundModal from 'components/NotFoundModal/TokenNotFoundModal'
@@ -26,16 +26,17 @@ import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Button, Flex, Text, styled as tamaguiStyled, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isBackendSupportedChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants/trace'
+import { ElementName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { getChainUrlParam, useChainIdFromUrlParam } from 'utils/chainParams'
 
 interface Page {
   title: React.ReactNode
   key: ExploreTab
   component: NamedExoticComponent<object>
-  loggingElementName: InterfaceElementName
+  loggingElementName: ElementName
 }
 
 function usePages(): Array<Page> {
@@ -45,19 +46,19 @@ function usePages(): Array<Page> {
       title: t('common.tokens'),
       key: ExploreTab.Tokens,
       component: TopTokensTable,
-      loggingElementName: InterfaceElementName.EXPLORE_TOKENS_TAB,
+      loggingElementName: ElementName.ExploreTokensTab,
     },
     {
       title: t('common.pools'),
       key: ExploreTab.Pools,
       component: ExploreTopPoolTable,
-      loggingElementName: InterfaceElementName.EXPLORE_POOLS_TAB,
+      loggingElementName: ElementName.ExplorePoolsTab,
     },
     {
       title: t('common.transactions'),
       key: ExploreTab.Transactions,
       component: RecentTransactions,
-      loggingElementName: InterfaceElementName.EXPLORE_TRANSACTIONS_TAB,
+      loggingElementName: ElementName.ExploreTransactionsTab,
     },
   ]
 }
@@ -164,9 +165,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   // Automatically trigger a navigation when the app chain changes
   useOnGlobalChainSwitch(
     useCallback(
-      (chain) => {
-        const chainName = chain && toGraphQLChain(chain)
-        if (chainName && isBackendSupportedChain(chainName)) {
+      (chain: UniverseChainId) => {
+        if (isBackendSupportedChain(toGraphQLChain(chain))) {
           navigate(getTokenExploreURL({ tab, chainUrlParam: getChainUrlParam(chain) }))
         }
       },
@@ -175,11 +175,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   )
 
   return (
-    <Trace
-      logImpression
-      page={InterfacePageName.EXPLORE_PAGE}
-      properties={{ chainName: chainInfo?.backendChain.chain }}
-    >
+    <Trace logImpression page={InterfacePageName.ExplorePage} properties={{ chainName: chainInfo?.backendChain.chain }}>
       <ExploreContextProvider chainId={chainInfo?.id}>
         <Flex width="100%" minWidth={320} pt="$spacing24" pb="$spacing48" px="$spacing40" $md={{ p: '$spacing16' }}>
           <ExploreStatsSection />

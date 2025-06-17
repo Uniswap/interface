@@ -23,14 +23,14 @@ export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.
   const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
 
   const [stableIncludesDelegation, setStableIncludesDelegation] = useState<boolean | undefined>(
-    swapTxContext?.includesDelegation,
+    swapTxContext.includesDelegation,
   )
 
   useEffect(() => {
-    if (swapTxContext?.includesDelegation !== undefined) {
+    if (swapTxContext.includesDelegation !== undefined) {
       setStableIncludesDelegation(swapTxContext.includesDelegation)
     }
-  }, [swapTxContext?.includesDelegation])
+  }, [swapTxContext.includesDelegation])
 
   if (!derivedSwapInfo || !acceptedDerivedSwapInfo) {
     return null

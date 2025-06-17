@@ -23,7 +23,7 @@ export const TokenDetailsHeader = memo(function _TokenDetailsHeader(): JSX.Eleme
   const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
 
   const handleCopyAddress = async (): Promise<void> => {
-    if (!token?.address) {
+    if (!token.address) {
       return
     }
 
@@ -38,9 +38,9 @@ export const TokenDetailsHeader = memo(function _TokenDetailsHeader(): JSX.Eleme
   return (
     <Flex row gap="$spacing12" mx="$spacing16">
       <TokenLogo
-        chainId={fromGraphQLChain(token?.chain) ?? undefined}
-        name={token?.name ?? undefined}
-        symbol={token?.symbol ?? undefined}
+        chainId={fromGraphQLChain(token.chain) ?? undefined}
+        name={token.name ?? undefined}
+        symbol={token.symbol ?? undefined}
         url={project?.logoUrl ?? undefined}
         size={iconSizes.icon48}
       />
@@ -53,9 +53,9 @@ export const TokenDetailsHeader = memo(function _TokenDetailsHeader(): JSX.Eleme
           testID={TestID.TokenDetailsHeaderText}
           variant="subheading1"
         >
-          {token?.name || FALLBACK_COPY}
+          {token.name || FALLBACK_COPY}
         </Text>
-        <TouchableArea disabled={!token?.address} flexDirection="row" gap="$spacing4" onPress={handleCopyAddress}>
+        <TouchableArea disabled={!token.address} flexDirection="row" gap="$spacing4" onPress={handleCopyAddress}>
           <Text
             color="$neutral2"
             numberOfLines={1}
@@ -63,9 +63,9 @@ export const TokenDetailsHeader = memo(function _TokenDetailsHeader(): JSX.Eleme
             testID={TestID.TokenDetailsHeaderText}
             variant="body3"
           >
-            {token?.symbol || FALLBACK_COPY}
+            {token.symbol || FALLBACK_COPY}
           </Text>
-          {token?.address && <CopyAlt color="$neutral3" size="$icon.16" alignSelf="center" />}
+          {token.address && <CopyAlt color="$neutral3" size="$icon.16" alignSelf="center" />}
         </TouchableArea>
       </Flex>
     </Flex>

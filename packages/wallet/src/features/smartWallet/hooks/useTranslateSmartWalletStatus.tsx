@@ -14,6 +14,8 @@ export function useTranslateSmartWalletStatus(): (status: WalletStatus) => strin
           return t('settings.setting.smartWallet.status.inactive')
         case WalletStatus.Unavailable:
           return t('settings.setting.smartWallet.status.unavailable')
+        case WalletStatus.ActionRequired:
+          return t('settings.setting.smartWallet.status.actionRequired')
         default:
           return status
       }

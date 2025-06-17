@@ -33,7 +33,7 @@ export function HeaderText({
           i18nKey="qrScanner.request.withAmount"
           values={{
             dappName: dappRequestInfo.name,
-            currencySymbol: permitCurrency?.symbol,
+            currencySymbol: permitCurrency.symbol,
             amount: readablePermitAmount,
           }}
         />
@@ -46,7 +46,7 @@ export function HeaderText({
           i18nKey="qrScanner.request.withoutAmount"
           values={{
             dappName: dappRequestInfo.name,
-            currencySymbol: permitCurrency?.symbol,
+            currencySymbol: permitCurrency.symbol,
           }}
         />
       </Text>

@@ -94,7 +94,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     const listener = addScreenshotListener(() =>
       navigate(ModalName.ScreenshotWarning, { acknowledgeText: t('common.button.ok') }),
     )
-    return () => listener?.remove()
+    return () => listener.remove()
   }, [view, t])
 
   useEffect(() => {

@@ -1,7 +1,6 @@
 import { useTokenBalancesQuery } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { PortfolioBalance } from 'appGraphql/data/portfolios'
 import { useAccount } from 'hooks/useAccount'
-import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import { useMemo } from 'react'
 import {
   QuickTokenBalancePartsFragment,
@@ -9,6 +8,8 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { currencyKeyFromGraphQL } from 'utils/currencyKey'
+
+type TokenBalances = { [tokenAddress: string]: { usdValue: number; balance: number } }
 
 /**
  * Returns the user's token balances via graphql as a map and list.
@@ -36,22 +37,21 @@ export function useTokenBalances({ cacheOnly }: { cacheOnly?: boolean } = {}): {
 
   return useMemo(() => {
     const balanceList = data?.portfolios?.[0]?.tokenBalances ?? []
-    const balanceMap =
-      balanceList?.reduce((balanceMap, tokenBalance) => {
-        if (!tokenBalance?.token) {
-          return balanceMap
-        }
-
-        const key = currencyKeyFromGraphQL({
-          address: tokenBalance.token.address,
-          chain: tokenBalance.token.chain,
-          standard: tokenBalance.token.standard,
-        })
-        const usdValue = tokenBalance.denominatedValue?.value ?? 0
-        const balance = tokenBalance.quantity ?? 0
-        balanceMap[key] = { usdValue, balance }
+    const balanceMap = balanceList.reduce((balanceMap, tokenBalance) => {
+      if (!tokenBalance?.token) {
         return balanceMap
-      }, {} as TokenBalances) ?? {}
+      }
+
+      const key = currencyKeyFromGraphQL({
+        address: tokenBalance.token.address,
+        chain: tokenBalance.token.chain,
+        standard: tokenBalance.token.standard,
+      })
+      const usdValue = tokenBalance.denominatedValue?.value ?? 0
+      const balance = tokenBalance.quantity ?? 0
+      balanceMap[key] = { usdValue, balance }
+      return balanceMap
+    }, {} as TokenBalances)
     return { balanceMap, balanceList, loading }
   }, [data?.portfolios, loading])
 }

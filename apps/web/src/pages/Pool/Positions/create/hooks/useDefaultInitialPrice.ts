@@ -10,8 +10,8 @@ export function useDefaultInitialPrice({
   skip,
 }: {
   currencies: {
-    [PositionField.TOKEN0]?: Currency
-    [PositionField.TOKEN1]?: Currency
+    [PositionField.TOKEN0]?: Maybe<Currency>
+    [PositionField.TOKEN1]?: Maybe<Currency>
   }
   skip?: boolean
 }) {

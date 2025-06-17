@@ -1,4 +1,3 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import flowerImage from 'assets/images/flower.png'
 import { Page, downloadAppModalPageAtom } from 'components/NavBar/DownloadApp/Modal'
 import { useAccount } from 'hooks/useAccount'
@@ -13,7 +12,7 @@ import { X } from 'ui/src/components/icons/X'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { setEmbeddedWalletGraduateCardDismissed } from 'uniswap/src/features/behaviorHistory/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_DAY_MS } from 'utilities/src/time/time'
 
@@ -30,14 +29,14 @@ export function DownloadGraduatedWalletCard(): JSX.Element | null {
   const setPage = useUpdateAtom(downloadAppModalPageAtom)
 
   const account = useAccount()
-  const isEmbeddedWallet = account?.connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
+  const isEmbeddedWallet = account.connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
   const isEWBackedUp = useAppSelector((state) => state.user.isEmbeddedWalletBackedUp)
   const dismissedTimestamp = useAppSelector(
-    (state) => state.uniswapBehaviorHistory.embeddedWalletGraduateCardDismissed?.[account?.address ?? ''],
+    (state) => state.uniswapBehaviorHistory.embeddedWalletGraduateCardDismissed?.[account.address ?? ''],
   )
 
   const isSessionDismissed = useAppSelector((state) =>
-    state.application.downloadGraduatedWalletCardsDismissed.includes(account?.address ?? ''),
+    state.application.downloadGraduatedWalletCardsDismissed.includes(account.address ?? ''),
   )
 
   const onPressCard = useEvent(() => {
@@ -47,7 +46,7 @@ export function DownloadGraduatedWalletCard(): JSX.Element | null {
 
   const handleDismiss = useEvent((e: BaseSyntheticEvent) => {
     e.stopPropagation()
-    dispatch(setEmbeddedWalletGraduateCardDismissed({ walletAddress: account?.address ?? '' }))
+    dispatch(setEmbeddedWalletGraduateCardDismissed({ walletAddress: account.address ?? '' }))
   })
 
   // check if the dismissed timestamp is newer than 30 days
@@ -59,7 +58,7 @@ export function DownloadGraduatedWalletCard(): JSX.Element | null {
   }
 
   return (
-    <Trace logPress element={InterfaceElementName.DOWNLOAD_BUTTON}>
+    <Trace logPress element={ElementName.DownloadButton}>
       <TouchableArea onPress={onPressCard}>
         <Flex
           row

@@ -58,11 +58,8 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
 
   const renderItem = ({ item }: ListRenderItemInfo<FORQuote>): JSX.Element => {
     const onPress = (): void => {
-      const serviceProvider = item.serviceProviderDetails
-      if (serviceProvider) {
-        setSelectedQuote(item)
-        navigation.navigate(FiatOnRampScreens.Connecting)
-      }
+      setSelectedQuote(item)
+      navigation.navigate(FiatOnRampScreens.Connecting)
     }
     return (
       <Flex px="$spacing12" py="$spacing8">

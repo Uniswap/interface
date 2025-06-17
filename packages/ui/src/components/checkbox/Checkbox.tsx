@@ -65,7 +65,7 @@ export function Checkbox({ checked, variant = 'default', size = '$icon.20', ...r
     <Flex
       alignItems="center"
       {...animationProp}
-      borderColor={getFocusedRingColor(variant, isFocused, checked, accentColor)}
+      borderColor={getFocusedRingColor({ variant, isFocused, isSelected: checked, accentColor })}
       borderRadius="$rounded6"
       borderWidth="$spacing1"
       height={sizes.FocusRing}
@@ -146,12 +146,17 @@ function getAccentColor(variant: SporeComponentVariant, isHovered: boolean): Get
   return isHovered ? '$accent3Hovered' : '$accent3'
 }
 
-function getFocusedRingColor(
-  variant: SporeComponentVariant,
-  isFocused: boolean,
-  isSelected: boolean,
-  accentColor: GetThemeValueForKey<'backgroundColor'>,
-): GetThemeValueForKey<'borderColor'> {
+function getFocusedRingColor({
+  variant,
+  isFocused,
+  isSelected,
+  accentColor,
+}: {
+  variant: SporeComponentVariant
+  isFocused: boolean
+  isSelected: boolean
+  accentColor: GetThemeValueForKey<'backgroundColor'>
+}): GetThemeValueForKey<'borderColor'> {
   if (!isFocused) {
     return 'transparent'
   }

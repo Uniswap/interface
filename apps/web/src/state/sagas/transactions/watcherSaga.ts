@@ -22,11 +22,7 @@ function* watchTransactions(params: WatchTransactionsCallbackParams) {
   const { address, chainId, pendingDiff, apolloClient } = params
 
   const info = pendingDiff[0].info
-  const transaction = createUniverseTransaction(info, chainId, address)
-
-  if (!transaction) {
-    return
-  }
+  const transaction = createUniverseTransaction({ info, chainId, address })
 
   yield call(refetchGQLQueries, { transaction, apolloClient, activeAddress: address })
 }

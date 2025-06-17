@@ -15,7 +15,13 @@ describe('tradeMeaningfullyDiffers', () => {
   const slippage = new Percent('1', '100') // Assuming 1% slippage for simplicity
 
   it('should return true if trade types differ', () => {
-    expect(tradeMeaningfullyDiffers(TEST_TRADE_EXACT_INPUT, TEST_TRADE_EXACT_OUTPUT, slippage)).toBe(true)
+    expect(
+      tradeMeaningfullyDiffers({
+        currentTrade: TEST_TRADE_EXACT_INPUT,
+        newTrade: TEST_TRADE_EXACT_OUTPUT,
+        slippage,
+      }),
+    ).toBe(true)
   })
 
   it('should return true if input currencies differ', () => {
@@ -33,7 +39,13 @@ describe('tradeMeaningfullyDiffers', () => {
       approveInfo: { needsApprove: false },
       quoteMethod: QuoteMethod.CLIENT_SIDE_FALLBACK,
     })
-    expect(tradeMeaningfullyDiffers(TEST_TRADE_EXACT_INPUT, newTrade, slippage)).toBe(true)
+    expect(
+      tradeMeaningfullyDiffers({
+        currentTrade: TEST_TRADE_EXACT_INPUT,
+        newTrade,
+        slippage,
+      }),
+    ).toBe(true)
   })
 
   it('should return true if output currencies differ', () => {
@@ -51,20 +63,38 @@ describe('tradeMeaningfullyDiffers', () => {
       approveInfo: { needsApprove: false },
       quoteMethod: QuoteMethod.CLIENT_SIDE_FALLBACK,
     })
-    expect(tradeMeaningfullyDiffers(TEST_TRADE_EXACT_INPUT, newTrade, slippage)).toBe(true)
+    expect(
+      tradeMeaningfullyDiffers({
+        currentTrade: TEST_TRADE_EXACT_INPUT,
+        newTrade,
+        slippage,
+      }),
+    ).toBe(true)
   })
 
   it('should return true if new trade execution price is less than worst execution price with slippage', () => {
     // Mock price comparison
     const newTrade = TEST_TRADE_EXACT_INPUT
-    newTrade.executionPrice.lessThan = jest.fn().mockReturnValue(true)
-    expect(tradeMeaningfullyDiffers(TEST_TRADE_EXACT_INPUT, newTrade, slippage)).toBe(true)
+    newTrade.executionPrice.lessThan = vi.fn().mockReturnValue(true)
+    expect(
+      tradeMeaningfullyDiffers({
+        currentTrade: TEST_TRADE_EXACT_INPUT,
+        newTrade,
+        slippage,
+      }),
+    ).toBe(true)
   })
 
   it('should return false if none of the conditions are met', () => {
     const newTrade = TEST_TRADE_EXACT_INPUT
-    newTrade.executionPrice.lessThan = jest.fn().mockReturnValue(false)
+    newTrade.executionPrice.lessThan = vi.fn().mockReturnValue(false)
 
-    expect(tradeMeaningfullyDiffers(TEST_TRADE_EXACT_INPUT, newTrade, slippage)).toBe(false)
+    expect(
+      tradeMeaningfullyDiffers({
+        currentTrade: TEST_TRADE_EXACT_INPUT,
+        newTrade,
+        slippage,
+      }),
+    ).toBe(false)
   })
 })

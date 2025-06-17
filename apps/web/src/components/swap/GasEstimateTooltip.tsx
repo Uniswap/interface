@@ -1,4 +1,3 @@
-import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Gas } from 'components/Icons/Gas'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { UniswapXGradient, UniswapXRouterIcon } from 'components/RouterLabel/UniswapXRouterLabel'
@@ -12,6 +11,7 @@ import { isUniswapXTrade } from 'state/routing/utils'
 import { ThemedText } from 'theme/components'
 import { chainSupportsGasEstimates } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NumberType } from 'utilities/src/format/types'
 const StyledGasIcon = styled(Gas)`
@@ -36,8 +36,8 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Submitt
       size={TooltipSize.Small}
       text={<GasBreakdownTooltip trade={trade} />}
       onOpen={() => {
-        sendAnalyticsEvent(SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED, {
-          element: InterfaceElementName.AUTOROUTER_VISUALIZATION_ROW,
+        sendAnalyticsEvent(SwapEventName.SwapAutorouterVisualizationExpanded, {
+          element: ElementName.AutorouterVisualizationRow,
         })
       }}
       placement="right"

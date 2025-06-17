@@ -80,4 +80,7 @@ export const {
   wrappedSaga: tokenWrapSaga,
   reducer: tokenWrapReducer,
   actions: tokenWrapActions,
-} = createMonitoredSaga(wrap, 'wrap')
+} = createMonitoredSaga({
+  saga: wrap,
+  name: 'wrap',
+})

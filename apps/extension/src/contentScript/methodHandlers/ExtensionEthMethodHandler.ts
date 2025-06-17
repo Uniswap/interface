@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { getPermissions } from 'src/app/features/dappRequests/permissions'
 import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
@@ -53,14 +54,21 @@ import { extractBaseUrl } from 'utilities/src/format/urls'
 export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumRequest> {
   private readonly requestIdToSourceMap: Map<string, PendingResponseInfo> = new Map()
 
-  constructor(
-    getChainId: () => string | undefined,
-    getProvider: () => JsonRpcProvider | undefined,
-    getConnectedAddresses: () => Address[] | undefined,
-    setChainIdAndMaybeEmit: (newChainId: string) => void,
-    setProvider: (newProvider: JsonRpcProvider) => void,
-    setConnectedAddressesAndMaybeEmit: (newConnectedAddresses: Address[]) => void,
-  ) {
+  constructor({
+    getChainId,
+    getProvider,
+    getConnectedAddresses,
+    setChainIdAndMaybeEmit,
+    setProvider,
+    setConnectedAddressesAndMaybeEmit,
+  }: {
+    getChainId: () => string | undefined
+    getProvider: () => JsonRpcProvider | undefined
+    getConnectedAddresses: () => Address[] | undefined
+    setChainIdAndMaybeEmit: (newChainId: string) => void
+    setProvider: (newProvider: JsonRpcProvider) => void
+    setConnectedAddressesAndMaybeEmit: (newConnectedAddresses: Address[]) => void
+  }) {
     super(
       getChainId,
       getProvider,
@@ -71,13 +79,17 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     )
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.AccountResponse, (message) => {
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.AccountResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.AccountResponse,
+      })?.source
 
-      this.handleDappUpdate(message.connectedAddresses, message.chainId, message.providerUrl)
+      this.handleDappUpdate({
+        connectedAddresses: message.connectedAddresses,
+        chainId: message.chainId,
+        providerUrl: message.providerUrl,
+      })
       source?.postMessage({
         requestId: message.requestId,
         result: message.connectedAddresses,
@@ -85,11 +97,11 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     })
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.ChainIdResponse, (message) => {
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.ChainIdResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.ChainIdResponse,
+      })?.source
 
       source?.postMessage({
         requestId: message.requestId,
@@ -110,14 +122,14 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     })
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.ChainChangeResponse, (message) => {
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.ChainChangeResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.ChainChangeResponse,
+      })?.source
 
       this.setChainIdAndMaybeEmit(message.chainId)
-      this.setProvider(new JsonRpcProvider(message.providerUrl))
+      this.setProvider(new JsonRpcProvider(message.providerUrl, BigNumber.from(message.chainId).toString()))
       source?.postMessage({
         requestId: message.requestId,
         result: message.chainId,
@@ -125,11 +137,11 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     })
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.SendTransactionResponse, (message) => {
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.SendTransactionResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.SendTransactionResponse,
+      })?.source
 
       source?.postMessage({
         requestId: message.requestId,
@@ -138,11 +150,11 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     })
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.SignMessageResponse, (message) => {
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.SignMessageResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.SignMessageResponse,
+      })?.source
 
       source?.postMessage({
         requestId: message.requestId,
@@ -151,11 +163,11 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     })
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.SignTransactionResponse, (message) => {
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.SignTransactionResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.SignTransactionResponse,
+      })?.source
 
       source?.postMessage({
         requestId: message.requestId,
@@ -164,11 +176,11 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     })
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.SignTypedDataResponse, (message) => {
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.SignTypedDataResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.SignTypedDataResponse,
+      })?.source
 
       source?.postMessage({
         requestId: message.requestId,
@@ -179,13 +191,13 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     dappResponseMessageChannel.addMessageListener(DappResponseType.RequestPermissionsResponse, (message) => {
       if (message.accounts) {
         const { connectedAddresses, chainId, providerUrl } = message.accounts
-        this.handleDappUpdate(connectedAddresses, chainId, providerUrl)
+        this.handleDappUpdate({ connectedAddresses, chainId, providerUrl })
       }
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.RequestPermissionsResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.RequestPermissionsResponse,
+      })?.source
 
       source?.postMessage({
         requestId: message.requestId,
@@ -194,11 +206,11 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     })
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.RevokePermissionsResponse, (message) => {
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.RevokePermissionsResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.RevokePermissionsResponse,
+      })?.source
 
       source?.postMessage({
         requestId: message.requestId,
@@ -207,21 +219,21 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     })
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.ErrorResponse, (message) => {
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.ErrorResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.ErrorResponse,
+      })?.source
 
       source?.postMessage(message)
     })
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.SendCallsResponse, (message) => {
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.SendCallsResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.SendCallsResponse,
+      })?.source
 
       source?.postMessage({
         requestId: message.requestId,
@@ -230,11 +242,11 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     })
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.GetCallsStatusResponse, (message) => {
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.GetCallsStatusResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.GetCallsStatusResponse,
+      })?.source
 
       source?.postMessage({
         requestId: message.requestId,
@@ -243,11 +255,11 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     })
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.GetCapabilitiesResponse, (message) => {
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.GetCapabilitiesResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.GetCapabilitiesResponse,
+      })?.source
 
       source?.postMessage({
         requestId: message.requestId,
@@ -266,10 +278,18 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     return Boolean(this.getConnectedAddresses()?.length && this.getChainId() && this.getProvider())
   }
 
-  private handleDappUpdate(connectedAddresses: string[], chainId: string, providerUrl: string): void {
+  private handleDappUpdate({
+    connectedAddresses,
+    chainId,
+    providerUrl,
+  }: {
+    connectedAddresses: string[]
+    chainId: string
+    providerUrl: string
+  }): void {
     this.setConnectedAddressesAndMaybeEmit(connectedAddresses)
     this.setChainIdAndMaybeEmit(chainId)
-    this.setProvider(new JsonRpcProvider(providerUrl))
+    this.setProvider(new JsonRpcProvider(providerUrl, BigNumber.from(chainId).toString()))
   }
 
   // eslint-disable-next-line complexity
@@ -438,7 +458,13 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
 
   async handleEthSendTransaction(request: EthSendTransactionRequest, source: MessageEventSource | null): Promise<void> {
     // Reject transactions where from === to and data !== undefined (self-calls with data)
-    if (isSelfCallWithData(request.transaction.from, request.transaction.to, request.transaction.data)) {
+    if (
+      isSelfCallWithData({
+        from: request.transaction.from,
+        to: request.transaction.to,
+        data: request.transaction.data,
+      })
+    ) {
       rejectSelfCallWithData(request.requestId, source)
       return
     }
@@ -458,7 +484,11 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     if (request.transaction.data && request.transaction.data !== '0x') {
       Object.assign(
         sendTransactionRequest,
-        getCalldataInfoFromTransaction(request.transaction.data, request.transaction.to, request.transaction.chainId),
+        getCalldataInfoFromTransaction({
+          data: request.transaction.data,
+          to: request.transaction.to,
+          chainId: request.transaction.chainId,
+        }),
       )
     }
 
@@ -585,7 +615,9 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
    */
   async handleWalletSendCalls(request: WalletSendCallsRequest, source: MessageEventSource | null): Promise<void> {
     // Reject if any calls have from === to and data !== undefined
-    const hasSelfCallWithData = request.calls.some((call) => isSelfCallWithData(request.from, call.to, call.data))
+    const hasSelfCallWithData = request.calls.some((call) =>
+      isSelfCallWithData({ from: request.from, to: call.to, data: call.data }),
+    )
 
     if (hasSelfCallWithData) {
       rejectSelfCallWithData(request.requestId, source)

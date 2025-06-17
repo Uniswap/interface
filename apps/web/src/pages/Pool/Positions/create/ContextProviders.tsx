@@ -1,5 +1,5 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
+import { Currency } from '@uniswap/sdk-core'
 import { useCreatePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { DepositState } from 'components/Liquidity/types'
 import {
@@ -13,7 +13,6 @@ import {
   useDepositContext,
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
-import { DynamicFeeTierSpeedbump } from 'pages/Pool/Positions/create/DynamicFeeTierSpeedbump'
 import {
   useDerivedDepositInfo,
   useDerivedPositionInfo,
@@ -31,14 +30,14 @@ import {
   generateCreateCalldataQueryParams,
   generateCreatePositionTxRequest,
 } from 'pages/Pool/Positions/create/utils'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PositionField } from 'types/position'
 import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
@@ -49,16 +48,22 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 export function CreatePositionContextProvider({
   children,
   initialState = {},
+  currencyInputs,
+  setCurrencyInputs,
 }: {
   children: React.ReactNode
   initialState?: Partial<PositionState>
+  currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
+  setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
 }) {
+  const initialCurrencyInputs = useRef(currencyInputs).current
+
   const [positionState, setPositionState] = useState<PositionState>({ ...DEFAULT_POSITION_STATE, ...initialState })
   const [step, setStep] = useState<PositionFlowStep>(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   const [currentTransactionStep, setCurrentTransactionStep] = useState<
     { step: TransactionStep; accepted: boolean } | undefined
   >()
-  const derivedPositionInfo = useDerivedPositionInfo(positionState)
+  const derivedPositionInfo = useDerivedPositionInfo(currencyInputs, positionState)
   const [feeTierSearchModalOpen, setFeeTierSearchModalOpen] = useState(false)
   const [dynamicFeeTierSpeedbumpData, setDynamicFeeTierSpeedbumpData] = useState<DynamicFeeTierSpeedbumpData>({
     open: false,
@@ -70,22 +75,14 @@ export function CreatePositionContextProvider({
       ...DEFAULT_POSITION_STATE,
       ...initialState,
     })
+    setCurrencyInputs(initialCurrencyInputs)
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-  }, [initialState])
-
-  // initialState.currencyInputs can change because it relies on async data to populate token0 and token1
-  useEffect(() => {
-    if (initialState.currencyInputs) {
-      setPositionState((prevState) => ({
-        ...prevState,
-        currencyInputs: { ...prevState.currencyInputs, ...initialState.currencyInputs },
-      }))
-    }
-  }, [initialState.currencyInputs])
+  }, [initialState, initialCurrencyInputs, setCurrencyInputs])
 
   return (
     <CreatePositionContext.Provider
       value={{
+        areTokensUnchanged: currencyInputs.tokenA === initialCurrencyInputs.tokenA && !currencyInputs.tokenB,
         reset,
         step,
         setStep,
@@ -101,8 +98,6 @@ export function CreatePositionContextProvider({
       }}
     >
       {children}
-      <FeeTierSearchModal />
-      <DynamicFeeTierSpeedbump />
     </CreatePositionContext.Provider>
   )
 }
@@ -154,7 +149,7 @@ export function DepositContextProvider({ children }: { children: React.ReactNode
     } else if (derivedPriceRangeInfo.deposit0Disabled) {
       setDepositState((prev) => ({ ...prev, exactField: PositionField.TOKEN1 }))
     }
-  }, [derivedPriceRangeInfo?.deposit0Disabled, derivedPriceRangeInfo?.deposit1Disabled])
+  }, [derivedPriceRangeInfo.deposit0Disabled, derivedPriceRangeInfo.deposit1Disabled])
 
   const reset = useCallback(() => {
     setDepositState(DEFAULT_DEPOSIT_STATE)
@@ -174,9 +169,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   const { priceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
   const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
 
-  const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(
-    derivedPositionInfo.currencies[0]?.chainId,
-  )
+  const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(derivedPositionInfo.chainId)
 
   const hasError = Boolean(derivedDepositInfo.error)
   const [hasCreateErrorResponse, setHasCreateErrorResponse] = useState(false)
@@ -217,19 +210,19 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   }
 
   const gasFeeToken0USD = useUSDCurrencyAmountOfGasFee(
-    derivedPositionInfo.currencies?.[0]?.chainId,
+    derivedPositionInfo.chainId,
     approvalCalldata?.gasFeeToken0Approval,
   )
   const gasFeeToken1USD = useUSDCurrencyAmountOfGasFee(
-    derivedPositionInfo.currencies?.[1]?.chainId,
+    derivedPositionInfo.chainId,
     approvalCalldata?.gasFeeToken1Approval,
   )
   const gasFeeToken0PermitUSD = useUSDCurrencyAmountOfGasFee(
-    derivedPositionInfo.currencies?.[0]?.chainId,
+    derivedPositionInfo.chainId,
     approvalCalldata?.gasFeeToken0Permit,
   )
   const gasFeeToken1PermitUSD = useUSDCurrencyAmountOfGasFee(
-    derivedPositionInfo.currencies?.[1]?.chainId,
+    derivedPositionInfo.chainId,
     approvalCalldata?.gasFeeToken1Permit,
   )
 
@@ -297,7 +290,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     })
 
     if (createCalldataQueryParams) {
-      sendAnalyticsEvent(InterfaceEventNameLocal.CreatePositionFailed, {
+      sendAnalyticsEvent(InterfaceEventName.CreatePositionFailed, {
         message,
         ...createCalldataQueryParams,
       })
@@ -318,10 +311,10 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     approvalCalldata?.token0PermitTransaction ||
     approvalCalldata?.token1PermitTransaction
   )
-  const { value: calculatedGasFee } = useTransactionGasFee(
-    createCalldata?.create,
-    !!actualGasFee || needsApprovals /* skip */,
-  )
+  const { value: calculatedGasFee } = useTransactionGasFee({
+    tx: createCalldata?.create,
+    skip: !!actualGasFee || needsApprovals,
+  })
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
     toSupportedChainId(createCalldata?.create?.chainId) ?? undefined,
     actualGasFee || calculatedGasFee,

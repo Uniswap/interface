@@ -302,7 +302,10 @@ export const TokenLinkCell = ({ token, hideLogo }: { token: Token; hideLogo?: bo
   const chainId = fromGraphQLChain(token.chain) ?? defaultChainId
   const unwrappedToken = unwrapToken(chainId, token)
   const isNative = unwrappedToken.address === NATIVE_CHAIN_ID
-  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, chainId)
+  const nativeCurrency = useCurrency({
+    address: NATIVE_CHAIN_ID,
+    chainId,
+  })
   return (
     <StyledInternalLink
       to={getTokenDetailsURL({
@@ -311,7 +314,7 @@ export const TokenLinkCell = ({ token, hideLogo }: { token: Token; hideLogo?: bo
       })}
     >
       <Flex row gap="$gap8" maxWidth="100px" alignItems="center">
-        <EllipsisText>{unwrappedToken?.symbol ?? t('common.unknown').toUpperCase()}</EllipsisText>
+        <EllipsisText>{unwrappedToken.symbol ?? t('common.unknown').toUpperCase()}</EllipsisText>
         {!hideLogo && (
           <PortfolioLogo
             chainId={chainId}

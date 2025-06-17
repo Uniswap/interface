@@ -7,13 +7,14 @@ import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
  * DEV: AppSemVer.BuildNumber: e.g. 1.2.3.233
  * PROD: AppSemVer: eg. 1
  */
-export function getFullAppVersion(): string {
+export function getFullAppVersion({ includeBuildNumber = false }: { includeBuildNumber?: boolean } = {}): string {
   const version = DeviceInfo.getVersion()
   const buildVersion = DeviceInfo.getBuildNumber()
 
-  if (__DEV__) {
-    return `${version}.${buildVersion}`
+  if (includeBuildNumber || __DEV__) {
+    return `${version} (${buildVersion})`
   }
+
   return version
 }
 

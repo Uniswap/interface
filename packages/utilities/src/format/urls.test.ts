@@ -163,7 +163,6 @@ describe(formatDappURL, () => {
     ${'https://example.com/'}                      | ${'example.com'}
     ${'https://www.example.com/'}                  | ${'www.example.com'}
     ${'https://example.com?test=true&test2=false'} | ${'example.com'}
-    ${undefined}                                   | ${undefined}
     ${'not a url'}                                 | ${'not a url'}
     ${'should return only part of this'}           | ${'should return only p'}
   `('input=$input should be expected=$expected', async ({ input, expected }) => {

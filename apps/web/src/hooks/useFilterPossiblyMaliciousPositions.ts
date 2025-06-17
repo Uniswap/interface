@@ -114,10 +114,10 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
         // prioritize the token entity from the list if it exists
         // if the token isn't in the list, then use the data returned from chain calls
         let urlSymbolCount = 0
-        if (hasURL(currency0Info?.currency?.symbol ?? addressesToSymbol[position.token0])) {
+        if (hasURL(currency0Info?.currency.symbol ?? addressesToSymbol[position.token0])) {
           urlSymbolCount++
         }
-        if (hasURL(currency1Info?.currency?.symbol ?? addressesToSymbol[position.token1])) {
+        if (hasURL(currency1Info?.currency.symbol ?? addressesToSymbol[position.token1])) {
           urlSymbolCount++
         }
         // if one token is in the list, then one token can have a url symbol

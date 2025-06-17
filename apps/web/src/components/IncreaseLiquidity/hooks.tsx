@@ -70,6 +70,7 @@ export function useDerivedIncreaseLiquidityInfo(
       }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (positionInfo.version === ProtocolVersion.V4) {
       return {
         protocolVersion: ProtocolVersion.V4,

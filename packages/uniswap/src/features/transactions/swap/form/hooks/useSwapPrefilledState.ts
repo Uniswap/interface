@@ -15,15 +15,11 @@ export function useSwapPrefilledState(initialState: TransactionState | undefined
     }
 
     const inputChainFilterOverride =
-      initialState?.filteredChainIdsOverride?.input ??
-      (initialState?.selectingCurrencyField === CurrencyField.INPUT
-        ? initialState?.selectingCurrencyChainId
-        : undefined)
+      initialState.filteredChainIdsOverride?.input ??
+      (initialState.selectingCurrencyField === CurrencyField.INPUT ? initialState.selectingCurrencyChainId : undefined)
     const outputChainFilterOverride =
-      initialState?.filteredChainIdsOverride?.output ??
-      (initialState?.selectingCurrencyField === CurrencyField.OUTPUT
-        ? initialState?.selectingCurrencyChainId
-        : undefined)
+      initialState.filteredChainIdsOverride?.output ??
+      (initialState.selectingCurrencyField === CurrencyField.OUTPUT ? initialState.selectingCurrencyChainId : undefined)
 
     return {
       exactAmountFiat: initialState.exactAmountFiat,

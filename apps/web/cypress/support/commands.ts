@@ -16,7 +16,7 @@ declare global {
       /**
        * Wait for a specific event to be sent to amplitude. If the event is found, the subject will be the event.
        *
-       * @param {string} eventName - The type of the event to search for e.g. SwapEventName.SWAP_TRANSACTION_COMPLETED
+       * @param {string} eventName - The type of the event to search for e.g. SwapEventName.SwapTransactionCompleted
        * @param {number} timeout - The maximum amount of time (in ms) to wait for the event.
        * @returns {Chainable<Subject>}
        */
@@ -57,6 +57,7 @@ export function registerCommands() {
   // eslint-disable-next-line no-undef
   Cypress.Commands.overwrite(
     'visit',
+    // eslint-disable-next-line max-params
     (original, url: string | Partial<Cypress.VisitOptions>, options?: Partial<Cypress.VisitOptions>) => {
       if (typeof url !== 'string') {
         throw new Error('Invalid arguments. The first argument to cy.visit must be the path.')

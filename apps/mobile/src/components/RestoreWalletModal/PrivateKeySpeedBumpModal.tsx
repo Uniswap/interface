@@ -82,5 +82,5 @@ const PrivateKeySpeedBumpModalContent = ({
 }
 
 const openLearnMore = async (): Promise<void> => {
-  await openUri(uniswapUrls.helpArticleUrls.whatIsPrivateKey)
+  await openUri({ uri: uniswapUrls.helpArticleUrls.whatIsPrivateKey })
 }

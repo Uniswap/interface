@@ -37,11 +37,15 @@ function toPriceChartData(ohlc: CandlestickOhlcFragment): PriceChartData {
 const currentTimeSeconds = () => (Date.now() / 1000) as UTCTimestamp
 
 const CANDLESTICK_FALLBACK_THRESHOLD = 0.1
-export function useTDPPriceChartData(
-  variables: TDPChartQueryVariables,
-  skip: boolean,
-  priceChartType: PriceChartType,
-): ChartQueryResult<PriceChartData, ChartType.PRICE> & { disableCandlestickUI: boolean } {
+export function useTDPPriceChartData({
+  variables,
+  skip,
+  priceChartType,
+}: {
+  variables: TDPChartQueryVariables
+  skip: boolean
+  priceChartType: PriceChartType
+}): ChartQueryResult<PriceChartData, ChartType.PRICE> & { disableCandlestickUI: boolean } {
   const [fallback, enablePriceHistoryFallback] = useReducer(() => true, false)
   const { data, loading } = useTokenPriceQuery({ variables: { ...variables, fallback }, skip })
 
@@ -49,7 +53,7 @@ export function useTDPPriceChartData(
     const { ohlc, priceHistory, price } = data?.token?.market ?? {}
     let entries =
       (ohlc
-        ? ohlc?.filter((v): v is CandlestickOhlcFragment => v !== undefined).map(toPriceChartData)
+        ? ohlc.filter((v): v is CandlestickOhlcFragment => v !== undefined).map(toPriceChartData)
         : priceHistory
             ?.filter((v): v is PriceHistoryFallbackFragment => v !== undefined)
             .map(fallbackToPriceChartData)) ?? []
@@ -96,6 +100,7 @@ export function useTDPPriceChartData(
         }
       }
       // Special case: backend data for OHLC data is currently too granular, so points should be combined, halving the data
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       else if (priceChartType === PriceChartType.CANDLESTICK) {
         const combinedEntries = []
 
@@ -142,7 +147,7 @@ export function useTDPPriceChartData(
       }
     }
 
-    const dataQuality = checkDataQuality(entries, ChartType.PRICE, variables.duration)
+    const dataQuality = checkDataQuality({ data: entries, chartType: ChartType.PRICE, duration: variables.duration })
     return { chartType: ChartType.PRICE, entries, loading, dataQuality, disableCandlestickUI: fallback }
   }, [data?.token?.market, fallback, loading, priceChartType, variables.duration])
 }
@@ -157,7 +162,7 @@ export function useTDPVolumeChartData(
       data?.token?.market?.historicalVolume
         ?.filter((v): v is PriceHistoryFallbackFragment => v !== undefined)
         .map(withUTCTimestamp) ?? []
-    const dataQuality = checkDataQuality(entries, ChartType.VOLUME, variables.duration)
+    const dataQuality = checkDataQuality({ data: entries, chartType: ChartType.VOLUME, duration: variables.duration })
     return { chartType: ChartType.VOLUME, entries, loading, dataQuality }
   }, [data?.token?.market?.historicalVolume, loading, variables.duration])
 }
@@ -194,7 +199,7 @@ export function useTDPTVLChartData(
       }
     }
 
-    const dataQuality = checkDataQuality(entries, ChartType.TVL, variables.duration)
+    const dataQuality = checkDataQuality({ data: entries, chartType: ChartType.TVL, duration: variables.duration })
     return { chartType: ChartType.TVL, entries, loading, dataQuality }
   }, [data?.token?.market, loading, variables.duration])
 }

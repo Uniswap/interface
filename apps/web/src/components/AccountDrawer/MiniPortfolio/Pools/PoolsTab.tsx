@@ -1,4 +1,3 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { PortfolioSkeleton } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
@@ -17,6 +16,7 @@ import { AnimatePresence } from 'ui/src'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 
 function isPositionInfo(position: PositionInfo | undefined): position is PositionInfo {
@@ -99,7 +99,7 @@ export default function Pools({ account }: { account: string }) {
     return <PortfolioSkeleton />
   }
 
-  if (!openPositions || (openPositions?.length === 0 && closedPositions?.length === 0)) {
+  if (!openPositions || (openPositions.length === 0 && closedPositions?.length === 0)) {
     return <EmptyWalletModule type="pool" onNavigateClick={accountDrawer.close} />
   }
 
@@ -108,7 +108,7 @@ export default function Pools({ account }: { account: string }) {
       {visibleOpenPositions.map((positionInfo) => (
         <PositionListItem key={getPositionKey(positionInfo)} positionInfo={positionInfo} />
       ))}
-      {visibleClosedPositions && visibleClosedPositions.length > 0 && (
+      {visibleClosedPositions.length > 0 && (
         <ExpandoRow
           title={t('liquidityPool.positions.closed.title')}
           isExpanded={showClosed}
@@ -174,7 +174,7 @@ function PositionListItem({ positionInfo, isVisible = true }: { positionInfo: Po
   )
 
   return (
-    <Trace logPress element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW} properties={analyticsEventProperties}>
+    <Trace logPress element={ElementName.MiniPortfolioPoolsRow} properties={analyticsEventProperties}>
       <Link to={positionUrl} onClick={handleClick} style={{ textDecoration: 'none', display: 'block', margin: '16px' }}>
         <LiquidityPositionCard
           isMiniVersion

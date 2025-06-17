@@ -38,11 +38,11 @@ describe(LinkButton, () => {
       const button = getByText('link text')
       fireEvent.press(button, ON_PRESS_EVENT_PAYLOAD)
 
-      expect(require('uniswap/src/utils/linking').openUri).toHaveBeenCalledWith(
-        'https://example.com',
+      expect(require('uniswap/src/utils/linking').openUri).toHaveBeenCalledWith({
+        uri: 'https://example.com',
         openExternalBrowser,
         isSafeUri,
-      )
+      })
     })
   })
 })

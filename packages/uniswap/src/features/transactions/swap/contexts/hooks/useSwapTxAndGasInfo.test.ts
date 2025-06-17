@@ -4,8 +4,8 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import { AccountType, SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/utils'
 import { useSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/contexts/hooks/useSwapTxAndGasInfo'
 import { useTokenApprovalInfo } from 'uniswap/src/features/transactions/swap/contexts/hooks/useTokenApprovalInfo'
 import { useTransactionRequestInfo } from 'uniswap/src/features/transactions/swap/contexts/hooks/useTransactionRequestInfo'
@@ -19,12 +19,12 @@ jest.mock('uniswap/src/features/transactions/swap/contexts/hooks/useTokenApprova
 jest.mock('uniswap/src/features/transactions/swap/contexts/hooks/useTransactionRequestInfo')
 
 describe('useSwapTxAndGasInfo', () => {
-  const mockDerivedSwapInfo: DerivedSwapInfo = createMockDerivedSwapInfo(
-    UNI[UniverseChainId.Mainnet],
-    WBTC,
-    '1000000000000000000',
-    '1000000000',
-  )
+  const mockDerivedSwapInfo: DerivedSwapInfo = createMockDerivedSwapInfo({
+    inputCurrency: UNI[UniverseChainId.Mainnet],
+    outputCurrency: WBTC,
+    inputAmount: '1000000000000000000',
+    outputAmount: '1000000000',
+  })
 
   const mockAccount: SignerMnemonicAccountMeta = { address: '0x123', type: AccountType.SignerMnemonic }
 

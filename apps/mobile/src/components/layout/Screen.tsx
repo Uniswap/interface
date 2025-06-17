@@ -39,16 +39,16 @@ function SafeAreaWithInsets({ children, edges, noInsets, ...rest }: ScreenProps)
         paddingRight: insets.right,
       }
     }
-    if (edges?.includes('top')) {
+    if (edges.includes('top')) {
       style.paddingTop = insets.top
     }
-    if (edges?.includes('bottom')) {
+    if (edges.includes('bottom')) {
       style.paddingBottom = insets.bottom
     }
-    if (edges?.includes('left')) {
+    if (edges.includes('left')) {
       style.paddingLeft = insets.left
     }
-    if (edges?.includes('right')) {
+    if (edges.includes('right')) {
       style.paddingRight = insets.right
     }
     return style

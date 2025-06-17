@@ -14,13 +14,15 @@ export async function getAnalyticsAtomDirect(_forceRead?: boolean): Promise<bool
   throw new PlatformSplitStubError('getAnalyticsAtomDirect')
 }
 
+export type AnalyticsInitConfig = {
+  transportProvider: ApplicationTransport
+  allowed: boolean
+  initHash?: string
+  userIdGetter?: () => Promise<string>
+}
+
 export interface Analytics {
-  init(
-    transportProvider: ApplicationTransport,
-    allowed: boolean,
-    initHash?: string,
-    userIdGetter?: () => Promise<string>,
-  ): Promise<void>
+  init(config: AnalyticsInitConfig): Promise<void>
   setAllowAnalytics(allowed: boolean): Promise<void>
   setTestnetMode(enabled: boolean, _config: TestnetModeConfig): void
   sendEvent(eventName: string, eventProperties: Record<string, unknown>): void
@@ -29,12 +31,7 @@ export interface Analytics {
 }
 
 export const analytics: Analytics = {
-  init(
-    _transportProvider: ApplicationTransport,
-    _allowed: boolean,
-    _initHash?: string,
-    _userIdGetter?: () => Promise<string>,
-  ): Promise<void> {
+  init(_config: AnalyticsInitConfig): Promise<void> {
     throw new PlatformSplitStubError('initAnalytics')
   },
   setAllowAnalytics(_allowed: boolean): Promise<void> {
@@ -49,7 +46,8 @@ export const analytics: Analytics = {
   flushEvents(): void {
     throw new PlatformSplitStubError('flushAnalyticsEvents')
   },
-  setUserProperty(_property: string, _value: UserPropertyValue): void {
+  // eslint-disable-next-line max-params
+  setUserProperty(_property: string, _value: UserPropertyValue, _insert?: boolean): void {
     throw new PlatformSplitStubError('setUserProperty')
   },
 }

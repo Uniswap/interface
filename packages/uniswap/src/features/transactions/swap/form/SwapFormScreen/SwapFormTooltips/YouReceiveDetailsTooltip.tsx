@@ -1,0 +1,92 @@
+import { useTranslation } from 'react-i18next'
+import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
+import { UniswapX } from 'ui/src/components/icons/UniswapX'
+import { TransactionDetailsTooltip as Tooltip } from 'uniswap/src/components/TransactionDetailsTooltip'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
+import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { CurrencyField } from 'uniswap/src/types/currency'
+import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { NumberType } from 'utilities/src/format/types'
+
+export function YouReceiveDetailsTooltip({
+  receivedAmount,
+  feeOnTransferProps,
+}: {
+  receivedAmount: string
+  feeOnTransferProps?: FeeOnTransferFeeGroupProps
+}): JSX.Element {
+  const { t } = useTranslation()
+  const swapTxContext = useSwapTxContext()
+  const isUniswapXContext = isUniswapX(swapTxContext)
+  const { formatPercent } = useLocalizationContext()
+  const { derivedSwapInfo } = useSwapFormContext()
+  const swapFee = derivedSwapInfo.trade.trade?.swapFee
+  const swapFeeUsd = getSwapFeeUsdFromDerivedSwapInfo(derivedSwapInfo)
+  const formatter = useLocalizationContext()
+  const { convertFiatAmountFormatted } = formatter
+
+  const outputCurrencyUSDValue = useUSDCValue(derivedSwapInfo.outputAmountUserWillReceive)
+  const formattedOutputCurrencyUSDValue: string | undefined = outputCurrencyUSDValue
+    ? convertFiatAmountFormatted(outputCurrencyUSDValue.toExact(), NumberType.FiatTokenQuantity)
+    : undefined
+  const formattedSwapFee =
+    swapFee &&
+    getFormattedCurrencyAmount({
+      currency: derivedSwapInfo.currencies[CurrencyField.OUTPUT]?.currency,
+      amount: swapFee.amount,
+      formatter,
+    }) + getSymbolDisplayText(derivedSwapInfo.currencies[CurrencyField.OUTPUT]?.currency.symbol)
+  const formattedSwapFeeAmountFiat =
+    swapFeeUsd && !isNaN(swapFeeUsd) ? convertFiatAmountFormatted(swapFeeUsd, NumberType.FiatGasPrice) : undefined
+
+  return (
+    <Tooltip.Outer>
+      <Tooltip.Header
+        title={{
+          title: t('swap.bestPrice.through', { provider: isUniswapXContext ? 'UniswapX' : 'Uniswap API' }),
+        }}
+        Icon={isUniswapXContext ? UniswapX : UniswapLogo}
+        iconColor="$accent1"
+      />
+      <Tooltip.Content>
+        {feeOnTransferProps?.inputTokenInfo.fee.greaterThan(0) && (
+          <Tooltip.Row>
+            <Tooltip.LineItemLabel
+              label={`${t('swap.details.feeOnTransfer', { tokenSymbol: feeOnTransferProps.inputTokenInfo.tokenSymbol })} (${formatPercent(feeOnTransferProps.inputTokenInfo.fee.toFixed(8))})`}
+            />
+            <Tooltip.LineItemValue
+              value={feeOnTransferProps.inputTokenInfo.formattedAmount}
+              usdValue={feeOnTransferProps.inputTokenInfo.formattedUsdAmount}
+            />
+          </Tooltip.Row>
+        )}
+        {feeOnTransferProps?.outputTokenInfo.fee.greaterThan(0) && (
+          <Tooltip.Row>
+            <Tooltip.LineItemLabel
+              label={`${t('swap.details.feeOnTransfer', { tokenSymbol: feeOnTransferProps.outputTokenInfo.tokenSymbol })} (${formatPercent(feeOnTransferProps.outputTokenInfo.fee.toFixed(8))})`}
+            />
+            <Tooltip.LineItemValue
+              value={feeOnTransferProps.outputTokenInfo.formattedAmount}
+              usdValue={feeOnTransferProps.outputTokenInfo.formattedUsdAmount}
+            />
+          </Tooltip.Row>
+        )}
+        <Tooltip.Row>
+          <Tooltip.LineItemLabel label={t('fee.uniswap', { percent: formatPercent(0.25) })} />
+          <Tooltip.LineItemValue value={formattedSwapFee} usdValue={formattedSwapFeeAmountFiat} />
+        </Tooltip.Row>
+        <Tooltip.Row>
+          <Tooltip.LineItemLabel label={t('common.youReceive')} />
+          <Tooltip.LineItemValue value={receivedAmount} usdValue={formattedOutputCurrencyUSDValue} />
+        </Tooltip.Row>
+      </Tooltip.Content>
+      <Tooltip.Separator />
+      <Tooltip.Description text={t('swap.warning.uniswapFee.message')} />
+    </Tooltip.Outer>
+  )
+}

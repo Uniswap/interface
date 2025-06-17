@@ -1,6 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { DepositContextType, DepositState } from 'components/Liquidity/types'
+import { useCreateLiquidityContext } from 'pages/Pool/Positions/create/CreateLiquidityContextProvider'
 import {
   CreatePositionContextType,
   DEFAULT_POSITION_STATE,
@@ -10,9 +11,12 @@ import {
 } from 'pages/Pool/Positions/create/types'
 import React, { useContext } from 'react'
 import { PositionField } from 'types/position'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { CreatePositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
 
 export const CreatePositionContext = React.createContext<CreatePositionContextType>({
+  areTokensUnchanged: true,
   reset: () => undefined,
   step: PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER,
   setStep: () => undefined,
@@ -22,7 +26,10 @@ export const CreatePositionContext = React.createContext<CreatePositionContextTy
   setFeeTierSearchModalOpen: () => undefined,
   derivedPositionInfo: {
     protocolVersion: ProtocolVersion.V4,
-    currencies: [undefined, undefined],
+    currencies: {
+      display: { TOKEN0: undefined, TOKEN1: undefined },
+      sdk: { TOKEN0: undefined, TOKEN1: undefined },
+    },
     isPoolOutOfSync: false,
     refetchPoolData: () => undefined,
     defaultInitialPrice: undefined,
@@ -38,7 +45,18 @@ export const CreatePositionContext = React.createContext<CreatePositionContextTy
 })
 
 export const useCreatePositionContext = () => {
-  return useContext(CreatePositionContext)
+  const isCreateLiquidityRefactorEnabled = useFeatureFlag(FeatureFlags.CreateLiquidityRefactor)
+  const createPositionContext = useContext(CreatePositionContext)
+  const createLiquidityContext = useCreateLiquidityContext()
+
+  if (isCreateLiquidityRefactorEnabled) {
+    if (!createLiquidityContext) {
+      throw new Error('CreateLiquidityContext not found')
+    }
+    return createLiquidityContext
+  }
+
+  return createPositionContext
 }
 
 export const DEFAULT_PRICE_RANGE_STATE: PriceRangeState = {
@@ -55,9 +73,7 @@ export const PriceRangeContext = React.createContext<PriceRangeContextType>({
   setPriceRangeState: () => undefined,
   derivedPriceRangeInfo: {
     protocolVersion: ProtocolVersion.V4,
-    isSorted: false,
     ticksAtLimit: [false, false],
-    invertPrice: false,
     tickSpaceLimits: [0, 0],
     deposit0Disabled: false,
     deposit1Disabled: false,
@@ -72,7 +88,18 @@ export const PriceRangeContext = React.createContext<PriceRangeContextType>({
 })
 
 export const usePriceRangeContext = () => {
-  return useContext(PriceRangeContext)
+  const isCreateLiquidityRefactorEnabled = useFeatureFlag(FeatureFlags.CreateLiquidityRefactor)
+  const priceRangeContext = useContext(PriceRangeContext)
+  const createLiquidityContext = useCreateLiquidityContext()
+
+  if (isCreateLiquidityRefactorEnabled) {
+    if (!createLiquidityContext) {
+      throw new Error('CreateLiquidityContext not found')
+    }
+    return createLiquidityContext
+  }
+
+  return priceRangeContext
 }
 
 export const DEFAULT_DEPOSIT_STATE: DepositState = {
@@ -88,7 +115,18 @@ export const DepositContext = React.createContext<DepositContextType>({
 })
 
 export const useDepositContext = () => {
-  return useContext(DepositContext)
+  const isCreateLiquidityRefactorEnabled = useFeatureFlag(FeatureFlags.CreateLiquidityRefactor)
+  const depositContext = useContext(DepositContext)
+  const createLiquidityContext = useCreateLiquidityContext()
+
+  if (isCreateLiquidityRefactorEnabled) {
+    if (!createLiquidityContext) {
+      throw new Error('CreateLiquidityContext not found')
+    }
+    return createLiquidityContext
+  }
+
+  return depositContext
 }
 
 export const CreateTxContext = React.createContext<{
@@ -100,5 +138,16 @@ export const CreateTxContext = React.createContext<{
 }>({ error: false })
 
 export const useCreateTxContext = () => {
-  return useContext(CreateTxContext)
+  const isCreateLiquidityRefactorEnabled = useFeatureFlag(FeatureFlags.CreateLiquidityRefactor)
+  const createTxContext = useContext(CreateTxContext)
+  const createLiquidityContext = useCreateLiquidityContext()
+
+  if (isCreateLiquidityRefactorEnabled) {
+    if (!createLiquidityContext) {
+      throw new Error('CreateLiquidityContext not found')
+    }
+    return createLiquidityContext
+  }
+
+  return createTxContext
 }

@@ -8,13 +8,18 @@ import { logger } from 'utilities/src/logger/logger'
 export class ContractManager {
   private _contracts: Partial<Record<UniverseChainId, Record<string, Contract>>> = {}
 
-  createContract(
-    chainId: UniverseChainId,
-    address: Address,
-    provider: providers.Provider,
-    ABI: ContractInterface,
-  ): Contract {
-    if (isNativeCurrencyAddress(chainId, address) || !getValidAddress(address, true)) {
+  createContract({
+    chainId,
+    address,
+    provider,
+    ABI,
+  }: {
+    chainId: UniverseChainId
+    address: Address
+    provider: providers.Provider
+    ABI: ContractInterface
+  }): Contract {
+    if (isNativeCurrencyAddress(chainId, address) || !getValidAddress({ address, withChecksum: true })) {
       throw Error(`Invalid address for contract: ${address}`)
     }
     this._contracts[chainId] ??= {}
@@ -49,13 +54,18 @@ export class ContractManager {
     return (this._contracts[chainId]?.[address] as T | undefined) ?? null
   }
 
-  getOrCreateContract<T extends Contract = Contract>(
-    chainId: UniverseChainId,
-    address: Address,
-    provider: providers.Provider,
-    ABI: ContractInterface,
-  ): T {
+  getOrCreateContract<T extends Contract = Contract>({
+    chainId,
+    address,
+    provider,
+    ABI,
+  }: {
+    chainId: UniverseChainId
+    address: Address
+    provider: providers.Provider
+    ABI: ContractInterface
+  }): T {
     const cachedContract = this.getContract<T>(chainId, address)
-    return (cachedContract ?? this.createContract(chainId, address, provider, ABI)) as T
+    return (cachedContract ?? this.createContract({ chainId, address, provider, ABI })) as T
   }
 }

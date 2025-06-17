@@ -58,10 +58,9 @@ function getWalletConnectMeta(provider: WalletConnectProvider): WalletMeta {
 function getInjectedMeta(provider: ExternalProvider & Record<string, unknown>): WalletMeta {
   const properties = Object.getOwnPropertyNames(provider)
 
-  const names =
-    properties
-      .filter((name) => name.match(/^is.*$/) && (provider as Record<string, unknown>)[name] === true)
-      .map((name) => name.slice(2)) ?? []
+  const names = properties
+    .filter((name) => name.match(/^is.*$/) && (provider as Record<string, unknown>)[name] === true)
+    .map((name) => name.slice(2))
 
   // Many wallets spoof MetaMask by setting `isMetaMask` along with their own identifier,
   // so we sort MetaMask last so that these wallets' names come first.

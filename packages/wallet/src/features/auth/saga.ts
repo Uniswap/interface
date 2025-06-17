@@ -11,11 +11,9 @@ function* auth(params: UnlockParams | LockParams) {
 
   if (params.type === AuthActionType.Unlock) {
     return yield* call(unlock, params)
-  } else if (params.type === AuthActionType.Lock) {
+  } else {
     return yield* call(lock)
   }
-
-  return undefined
 }
 
 function* unlock({ password }: UnlockParams) {
@@ -44,4 +42,8 @@ export const {
   wrappedSaga: authSaga,
   reducer: authReducer,
   actions: authActions,
-} = createMonitoredSaga(auth, 'auth', { showErrorNotification: false, doNotLogErrors: [AuthSagaError.InvalidPassword] })
+} = createMonitoredSaga({
+  saga: auth,
+  name: 'auth',
+  options: { showErrorNotification: false, doNotLogErrors: [AuthSagaError.InvalidPassword] },
+})

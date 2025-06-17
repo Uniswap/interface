@@ -24,7 +24,7 @@ import {
 import { openSidePanel } from 'src/background/utils/chromeSidePanelUtils'
 import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType, EthMethod } from 'uniswap/src/features/dappRequests/types'
-import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants/extension'
+import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WindowEthereumRequestProperties } from 'uniswap/src/features/telemetry/types'
 import { extractBaseUrl } from 'utilities/src/format/urls'
@@ -92,7 +92,7 @@ export function initMessageBridge(): void {
     // The side panel needs to be opened here because it has to be in response to a user action.
     // Further down in the chain it will be opened in response to a message from the background script.
 
-    if (sender?.tab?.id === undefined || sender?.tab?.url === undefined) {
+    if (sender?.tab?.id === undefined || sender.tab.url === undefined) {
       logger.error(new Error('sender.tab id or url is not defined'), {
         tags: {
           file: 'background/background.ts',
@@ -116,7 +116,11 @@ export function initMessageBridge(): void {
       }
     }
 
-    await handleSidebarRequest(message, sender.tab.windowId, senderTabInfo)
+    await handleSidebarRequest({
+      request: message,
+      windowId: sender.tab.windowId,
+      senderTabInfo,
+    })
   })
 
   contentScriptUtilityMessageChannel.addMessageListener(ContentScriptUtilityMessageType.ErrorLog, async (message) => {
@@ -135,8 +139,8 @@ export function initMessageBridge(): void {
     ContentScriptUtilityMessageType.AnalyticsLog,
     async (message) => {
       const properties: WindowEthereumRequestProperties = {
-        method: message.tags?.method ?? '',
-        dappUrl: message.tags?.dappUrl ?? '',
+        method: message.tags.method ?? '',
+        dappUrl: message.tags.dappUrl ?? '',
       }
       const eventName = message.message
       switch (eventName) {
@@ -179,17 +183,33 @@ function handleSilentBackgroundRequest(request: DappRequest, senderTabInfo: Send
 
   switch (request.type) {
     case DappRequestType.ChangeChain:
-      handleChainChange(request, dappUrl, senderTabInfo.id).catch(() => {})
+      handleChainChange({
+        request,
+        dappUrl,
+        tabId: senderTabInfo.id,
+      }).catch(() => {})
       return true
     case DappRequestType.RevokePermissions:
-      handleRevokePermissions(request, dappUrl, senderTabInfo.id).catch(() => {})
+      handleRevokePermissions({
+        request,
+        dappUrl,
+        tabId: senderTabInfo.id,
+      }).catch(() => {})
       return true
     default:
       return false
   }
 }
 
-async function handleChainChange(request: ChangeChainRequest, dappUrl: string, tabId: number): Promise<void> {
+async function handleChainChange({
+  request,
+  dappUrl,
+  tabId,
+}: {
+  request: ChangeChainRequest
+  dappUrl: string
+  tabId: number
+}): Promise<void> {
   await dappStore.init()
   const { activeConnectedAddress } = dappStore.getDappInfo(dappUrl) ?? {}
   const updatedChainId = toSupportedChainId(hexadecimalStringToInt(request.chainId))
@@ -205,11 +225,15 @@ async function handleChainChange(request: ChangeChainRequest, dappUrl: string, t
   await dappResponseMessageChannel.sendMessageToTab(tabId, response)
 }
 
-async function handleRevokePermissions(
-  request: RevokePermissionsRequest,
-  dappUrl: string,
-  tabId: number,
-): Promise<void> {
+async function handleRevokePermissions({
+  request,
+  dappUrl,
+  tabId,
+}: {
+  request: RevokePermissionsRequest
+  dappUrl: string
+  tabId: number
+}): Promise<void> {
   await dappStore.init()
   const revokedPermissions = Object.keys(request.permissions)
 
@@ -234,11 +258,15 @@ class ExpectedNoPortError extends Error {
   }
 }
 
-async function handleSidebarRequest(
-  request: DappRequest,
-  windowId: number,
-  senderTabInfo: DappRequestMessage['senderTabInfo'],
-): Promise<void> {
+async function handleSidebarRequest({
+  request,
+  windowId,
+  senderTabInfo,
+}: {
+  request: DappRequest
+  windowId: number
+  senderTabInfo: DappRequestMessage['senderTabInfo']
+}): Promise<void> {
   const windowIdString = windowId.toString()
   const portChannel = windowIdToSidebarPortMap.get(windowIdString)
   const message: DappRequestMessage = {

@@ -45,9 +45,11 @@ jest.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
 }))
 
 jest.mock('uniswap/src/features/gating/hooks', () => ({
-  useDynamicConfigValue: jest.fn().mockImplementation((config: unknown, key: unknown, defaultVal: unknown) => {
-    return defaultVal
-  }),
+  useDynamicConfigValue: jest
+    .fn()
+    .mockImplementation(({ defaultValue }: { config: unknown; key: unknown; defaultValue: unknown }) => {
+      return defaultValue
+    }),
   useFeatureFlag: jest.fn().mockReturnValue(true),
   getFeatureFlag: jest.fn().mockReturnValue(true),
   useExperimentValue: jest.fn().mockReturnValue('CLASSIC'),

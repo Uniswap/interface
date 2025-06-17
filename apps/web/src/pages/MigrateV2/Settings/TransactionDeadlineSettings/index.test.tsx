@@ -18,7 +18,11 @@ describe('TransactionDeadlineSettings', () => {
     })
     it('is not expanded by default', () => {
       renderTransactionDeadlineSettings()
-      expect(getDeadlineInput()).not.toBeVisible()
+
+      // Input should exist in DOM but be collapsed via HeightAnimator
+      const deadlineInput = getDeadlineInput()
+      expect(deadlineInput).toBeInTheDocument()
+      expect(deadlineInput.parentElement?.offsetHeight).toBe(0)
     })
     it('is expanded by default when custom deadline is set', () => {
       store.dispatch(updateUserDeadline({ userDeadline: DEFAULT_DEADLINE_FROM_NOW * 2 }))

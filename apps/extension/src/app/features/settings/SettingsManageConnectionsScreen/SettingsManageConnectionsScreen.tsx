@@ -53,7 +53,7 @@ export function SettingsManageConnectionsScreen(): JSX.Element {
         dappUrl,
         chainId: dappInfo?.lastChainId,
         activeConnectedAddress: dappInfo?.activeConnectedAddress,
-        connectedAddresses: dappInfo?.connectedAccounts?.map((account) => account.address) ?? [],
+        connectedAddresses: dappInfo?.connectedAccounts.map((account) => account.address) ?? [],
       })
       await removeDappConnection(dappUrl, activeAccount)
     },
@@ -144,7 +144,7 @@ export function SettingsManageConnectionsScreen(): JSX.Element {
     [dappUrls, getHandleRemoveConnection, colors.neutral3],
   )
 
-  const hasConnections = Boolean(DappTiles?.length)
+  const hasConnections = Boolean(DappTiles.length)
 
   return (
     <Trace logImpression screen={ExtensionScreens.ManageDappConnectionsScreen}>

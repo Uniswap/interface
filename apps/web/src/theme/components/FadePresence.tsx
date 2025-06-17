@@ -153,7 +153,7 @@ export function FadePresence({
   $zIndex?: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  useUnmountingAnimation(ref, () => AnimationType.EXITING)
+  useUnmountingAnimation({ node: ref, getAnimatingClass: () => AnimationType.EXITING })
   return (
     <FadeWrapper
       ref={ref}

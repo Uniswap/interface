@@ -47,7 +47,11 @@ export function TransferTokenSummaryItem({
   const currencyAmount =
     currencyInfo &&
     transaction.typeInfo.currencyAmountRaw &&
-    getFormattedCurrencyAmount(currencyInfo.currency, transaction.typeInfo.currencyAmountRaw, formatter)
+    getFormattedCurrencyAmount({
+      currency: currencyInfo.currency,
+      amount: transaction.typeInfo.currencyAmountRaw,
+      formatter,
+    })
 
   const icon = useMemo(() => {
     if (isCurrency) {
@@ -87,7 +91,7 @@ export function TransferTokenSummaryItem({
   const personDisplayName = unitag?.username ?? ensName ?? shortenAddress(otherAddress)
 
   const tokenAmountWithSymbol = isCurrency
-    ? (currencyAmount ?? '') + (getSymbolDisplayText(currencyInfo?.currency?.symbol) ?? '')
+    ? (currencyAmount ?? '') + (getSymbolDisplayText(currencyInfo?.currency.symbol) ?? '')
     : transaction.typeInfo.nftSummaryInfo?.name
 
   let captionText = ''

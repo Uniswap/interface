@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex } from 'ui/src'
 import { validColor } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -20,7 +19,7 @@ export function BridgeTokenButton({
   onPress?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const { foreground, background } = useNetworkColors(outputToken.currency?.chainId ?? UniverseChainId.Mainnet)
+  const { foreground, background } = useNetworkColors(outputToken.currency.chainId)
   const primaryColor = validColor(foreground)
   const backgroundColor = validColor(background)
 

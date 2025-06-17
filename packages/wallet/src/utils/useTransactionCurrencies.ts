@@ -17,9 +17,7 @@ export function useTransactionCurrencies(args: {
   const addressesFound = [...(to ? [to] : []), ...addresses]
   const currencyIdsInvolved = chainId ? addressesFound.map((address) => buildCurrencyId(chainId, address)) : []
   const currenciesInvolved = useTokenProjects(currencyIdsInvolved)
-  const chainCurrencies = currenciesInvolved?.data?.filter(
-    (c) => c.currency.chainId === chainId && !c.currency.isNative,
-  )
+  const chainCurrencies = currenciesInvolved.data?.filter((c) => c.currency.chainId === chainId && !c.currency.isNative)
 
   return chainCurrencies || []
 }

@@ -43,7 +43,10 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
 
   const navigate = useNavigate()
   const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
-  const currency = useCurrency(address, chainId)
+  const currency = useCurrency({
+    address,
+    chainId,
+  })
   const tokenPromoQuery = useTokenPromoQuery({
     variables: {
       address: currency?.wrapped.address,

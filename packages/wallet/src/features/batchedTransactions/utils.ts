@@ -20,11 +20,15 @@ export function generateBatchId(): string {
  * Transforms an array of EIP-1193 calls into TransactionRequest format for the Trading API.
  * Filters out any calls missing required fields.
  */
-export function transformCallsToTransactionRequests(
-  calls: EthTransaction[],
-  chainId: number,
-  accountAddress: Address,
-): TransactionRequest[] {
+export function transformCallsToTransactionRequests({
+  calls,
+  chainId,
+  accountAddress,
+}: {
+  calls: EthTransaction[]
+  chainId: number
+  accountAddress: Address
+}): TransactionRequest[] {
   return calls
     .map((call): TransactionRequest | undefined => {
       if (call.to === undefined || call.data === undefined || !chainId) {

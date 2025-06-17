@@ -4,7 +4,7 @@ import { SwapDisplay } from 'src/app/features/dappRequests/requestContent/EthSen
 import { formatUnits, useSwapDetails } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/utils'
 import { UniswapXSwapRequest } from 'src/app/features/dappRequests/types/Permit2Types'
 import { UniversalRouterCall } from 'src/app/features/dappRequests/types/UniversalRouterTypes'
-import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/chainInfo'
+import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/defaults'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -29,8 +29,8 @@ function getTransactionTypeInfo({
     ? {
         type: TransactionType.Swap,
         tradeType: 0, // TradeType.EXACT_INPUT, but TradeType doesn't matter for the UI
-        inputCurrencyId: inputCurrencyInfo?.currencyId,
-        outputCurrencyId: outputCurrencyInfo?.currencyId,
+        inputCurrencyId: inputCurrencyInfo.currencyId,
+        outputCurrencyId: outputCurrencyInfo.currencyId,
         inputCurrencyAmountRaw: inputAmountRaw,
         expectedOutputCurrencyAmountRaw: outputAmountRaw,
         minimumOutputCurrencyAmountRaw: outputAmountRaw,

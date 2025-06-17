@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`PredefinedAmount renders correctly with amount= 100 , disabled= false 1`] = `
+exports[`PredefinedAmount > renders correctly with amount= %p , disabled= %p 100 false 1`] = `
 <span
   class=""
   style="display: contents;"
@@ -23,7 +23,7 @@ exports[`PredefinedAmount renders correctly with amount= 100 , disabled= false 1
 </span>
 `;
 
-exports[`PredefinedAmount renders correctly with amount= 300 , disabled= true 1`] = `
+exports[`PredefinedAmount > renders correctly with amount= %p , disabled= %p 300 true 1`] = `
 <span
   class=""
   style="display: contents;"
@@ -47,7 +47,7 @@ exports[`PredefinedAmount renders correctly with amount= 300 , disabled= true 1`
 </span>
 `;
 
-exports[`PredefinedAmount renders correctly with amount= 1000 , disabled= false 1`] = `
+exports[`PredefinedAmount > renders correctly with amount= %p , disabled= %p 1000 false 1`] = `
 <span
   class=""
   style="display: contents;"
@@ -70,7 +70,7 @@ exports[`PredefinedAmount renders correctly with amount= 1000 , disabled= false 
 </span>
 `;
 
-exports[`PredefinedAmount renders correctly with amount= 1000 , disabled= true 1`] = `
+exports[`PredefinedAmount > renders correctly with amount= %p , disabled= %p 1000 true 1`] = `
 <span
   class=""
   style="display: contents;"

@@ -4,7 +4,7 @@ import { useValueAsRef } from 'utilities/src/react/useValueAsRef'
 describe('useValueAsRef', () => {
   it('returns undefined if no value is passed on first render', () => {
     const { result } = renderHook(() => useValueAsRef(undefined))
-    expect(result.current?.current).toBe(undefined)
+    expect(result.current.current).toBe(undefined)
   })
 
   it('returns the new value on every render', () => {
@@ -12,12 +12,12 @@ describe('useValueAsRef', () => {
       initialProps: 'aaa',
     })
 
-    expect(result.current?.current).toBe('aaa')
+    expect(result.current.current).toBe('aaa')
 
     rerender('bbb')
-    expect(result.current?.current).toBe('bbb')
+    expect(result.current.current).toBe('bbb')
 
     rerender('ccc')
-    expect(result.current?.current).toBe('ccc')
+    expect(result.current.current).toBe('ccc')
   })
 })

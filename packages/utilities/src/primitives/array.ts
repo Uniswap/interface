@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-params
 function onlyUnique<T>(value: T, index: number, self: T[]): boolean {
   return self.indexOf(value) === index
 }
@@ -16,6 +17,7 @@ export function next<T>(array: T[], current: T): T | undefined {
 
 // get items in `array` that are not in `without`
 // e.g. difference([B, C, D], [A, B, C]) would return ([D])
+// eslint-disable-next-line max-params
 export function differenceWith<T>(array: T[], without: T[], comparator: (item1: T, item2: T) => boolean): T[] {
   return array.filter((item: T) => {
     const inWithout = Boolean(without.find((otherItem: T) => comparator(item, otherItem)))

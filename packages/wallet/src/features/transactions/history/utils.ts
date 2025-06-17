@@ -1,3 +1,4 @@
+import { ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { Token } from '@uniswap/sdk-core'
 import dayjs from 'dayjs'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
@@ -28,6 +29,9 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { getIsNftHidden } from 'wallet/src/features/nfts/utils'
 import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
+import extractRestOnChainTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractOnChainTransactionDetails'
+import extractRestFiatOnRampDetails from 'wallet/src/features/transactions/history/conversion/extractRestFiatOnRampDetails'
+import extractRestUniswapXOrderDetails from 'wallet/src/features/transactions/history/conversion/extractRestUniswapXOrderDetails'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
 import { extractUniswapXOrderDetails } from 'wallet/src/features/transactions/history/conversion/extractUniswapXOrderDetails'
 
@@ -82,8 +86,8 @@ export function formatTransactionsByDate(
     }
 
     // sort based on nonce if available, highest nonce first for reverse chronological order.
-    const nonceA = a.options?.request?.nonce
-    const nonceB = b.options?.request?.nonce
+    const nonceA = a.options.request.nonce
+    const nonceB = b.options.request.nonce
     return nonceA && nonceB ? (nonceA < nonceB ? 1 : -1) : 1
   })
 
@@ -112,11 +116,15 @@ export function formatTransactionsByDate(
   }
 }
 
-function isNftTransactionHidden(
-  parsed: TransactionDetails | null,
-  nftVisibility?: NFTKeyToVisibility,
-  isSpam?: boolean,
-): boolean {
+function isNftTransactionHidden({
+  parsed,
+  nftVisibility,
+  isSpam = false,
+}: {
+  parsed: TransactionDetails | null
+  nftVisibility?: NFTKeyToVisibility
+  isSpam?: boolean
+}): boolean {
   if (parsed?.typeInfo && 'nftSummaryInfo' in parsed.typeInfo && nftVisibility) {
     const nftSummaryInfo = parsed.typeInfo.nftSummaryInfo
 
@@ -136,30 +144,35 @@ function isNftTransactionHidden(
  * Transforms api txn data to formatted TransactionDetails array
  * @param data Transaction history data response
  */
-export function parseDataResponseToTransactionDetails(
-  data: TransactionListQuery,
-  hideSpamTokens: boolean,
-  nftVisibility?: NFTKeyToVisibility,
-  tokenVisibilityOverrides?: CurrencyIdToVisibility,
-): TransactionDetails[] | undefined {
+export function parseDataResponseToTransactionDetails({
+  data,
+  hideSpamTokens,
+  nftVisibility,
+  tokenVisibilityOverrides,
+}: {
+  data: TransactionListQuery
+  hideSpamTokens: boolean
+  nftVisibility?: NFTKeyToVisibility
+  tokenVisibilityOverrides?: CurrencyIdToVisibility
+}): TransactionDetails[] | undefined {
   if (data.portfolios?.[0]?.assetActivities) {
     return data.portfolios[0].assetActivities.reduce((accum: TransactionDetails[], t) => {
-      if (t?.details?.__typename === TransactionDetailsType.Transaction) {
+      if (t?.details.__typename === TransactionDetailsType.Transaction) {
         const parsed = extractTransactionDetails(t as TransactionListQueryResponse)
         const isSpam = parsed?.typeInfo.isSpam
         const currencyId = extractCurrencyIdFromTx(parsed)
         const spamOverride = currencyId ? tokenVisibilityOverrides?.[currencyId]?.isVisible : false
-        const isNFTSpam = isNftTransactionHidden(parsed, nftVisibility, isSpam)
+        const isNFTSpam = isNftTransactionHidden({ parsed, nftVisibility, isSpam })
 
         if (parsed && !(hideSpamTokens && isSpam && !spamOverride) && !isNFTSpam) {
           accum.push(parsed)
         }
-      } else if (t?.details?.__typename === TransactionDetailsType.OnRamp) {
+      } else if (t?.details.__typename === TransactionDetailsType.OnRamp) {
         const parsed = extractOnRampTransactionDetails(t as TransactionListQueryResponse)
         if (parsed) {
           accum.push(parsed)
         }
-      } else if (t?.details?.__typename === TransactionDetailsType.UniswapXOrder) {
+      } else if (t?.details.__typename === TransactionDetailsType.UniswapXOrder) {
         const parsed = extractUniswapXOrderDetails(t as TransactionListQueryResponse)
         if (parsed) {
           accum.push(parsed)
@@ -185,7 +198,7 @@ export function parseDataResponseToFeedTransactionDetails(
   for (const portfolio of data.portfolios ?? []) {
     if (portfolio?.assetActivities) {
       const transactions = portfolio.assetActivities.reduce((accum: TransactionDetails[], t) => {
-        if (t?.details?.__typename === TransactionDetailsType.Transaction) {
+        if (t?.details.__typename === TransactionDetailsType.Transaction) {
           const parsed = extractTransactionDetails(t as TransactionListQueryResponse)
           const isSpam = parsed?.typeInfo.isSpam
 
@@ -212,13 +225,19 @@ export function parseDataResponseToFeedTransactionDetails(
  * @param decimals // decimals ((optional) if native token)
  * @returns
  */
-export function deriveCurrencyAmountFromAssetResponse(
-  tokenStandard: TokenStandard,
-  chain: Chain,
-  address: Maybe<string>,
-  decimals: Maybe<number>,
-  quantity: string,
-): string {
+export function deriveCurrencyAmountFromAssetResponse({
+  tokenStandard,
+  chain,
+  address,
+  decimals,
+  quantity,
+}: {
+  tokenStandard: TokenStandard
+  chain: Chain
+  address: Maybe<string>
+  decimals: Maybe<number>
+  quantity: string
+}): string {
   const chainId = fromGraphQLChain(chain)
   if (!chainId) {
     return ''
@@ -316,4 +335,53 @@ export function remoteTxStatusToLocalTxStatus(
       }
       return TransactionStatus.Success
   }
+}
+
+export enum RestTransactionType {
+  OnChain = 'onChain',
+  UniswapX = 'uniswapX',
+  FiatOnRamp = 'fiatOnRamp',
+}
+
+export function parseRestResponseToTransactionDetails({
+  data,
+  hideSpamTokens,
+  nftVisibility,
+  tokenVisibilityOverrides,
+}: {
+  data: ListTransactionsResponse
+  hideSpamTokens: boolean
+  nftVisibility?: NFTKeyToVisibility
+  tokenVisibilityOverrides?: CurrencyIdToVisibility
+}): TransactionDetails[] | undefined {
+  return data.transactions.reduce((accum: TransactionDetails[], transaction) => {
+    switch (transaction.transaction.case) {
+      case RestTransactionType.OnChain: {
+        const parsed = extractRestOnChainTransactionDetails(transaction.transaction.value)
+        const isSpam = parsed?.typeInfo.isSpam
+        const currencyId = extractCurrencyIdFromTx(parsed)
+        const spamOverride = currencyId ? tokenVisibilityOverrides?.[currencyId]?.isVisible : false
+        const isNFTSpam = isNftTransactionHidden({ parsed, nftVisibility, isSpam })
+        if (parsed && !(hideSpamTokens && isSpam && !spamOverride) && !isNFTSpam) {
+          accum.push(parsed)
+        }
+        break
+      }
+      case RestTransactionType.UniswapX: {
+        const parsed = extractRestUniswapXOrderDetails(transaction.transaction.value)
+        if (parsed) {
+          accum.push(parsed)
+        }
+        break
+      }
+      case RestTransactionType.FiatOnRamp: {
+        const parsed = extractRestFiatOnRampDetails(transaction.transaction.value)
+        if (parsed) {
+          accum.push(parsed)
+        }
+        break
+      }
+    }
+    return accum
+  }, [])
 }

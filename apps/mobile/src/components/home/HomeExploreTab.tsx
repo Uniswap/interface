@@ -42,19 +42,19 @@ export const HomeExploreTab = memo(
     const appFiatCurrency = useAppFiatCurrency()
     const [maxTokenPriceWrapperWidth, setMaxTokenPriceWrapperWidth] = useState(0)
 
-    const ethChainId = useDynamicConfigValue(
-      DynamicConfigs.HomeScreenExploreTokens,
-      HomeScreenExploreTokensConfigKey.EthChainId,
-      Chain.Ethereum,
-      (x): x is Chain => Object.values(Chain).includes(x as Chain),
-    )
+    const ethChainId = useDynamicConfigValue({
+      config: DynamicConfigs.HomeScreenExploreTokens,
+      key: HomeScreenExploreTokensConfigKey.EthChainId,
+      defaultValue: Chain.Ethereum,
+      customTypeGuard: (x): x is Chain => Object.values(Chain).includes(x as Chain),
+    })
 
-    const recommendedTokens = useDynamicConfigValue(
-      DynamicConfigs.HomeScreenExploreTokens,
-      HomeScreenExploreTokensConfigKey.Tokens,
-      [],
-      isContractInputArrayType,
-    )
+    const recommendedTokens = useDynamicConfigValue({
+      config: DynamicConfigs.HomeScreenExploreTokens,
+      key: HomeScreenExploreTokensConfigKey.Tokens,
+      defaultValue: [],
+      customTypeGuard: isContractInputArrayType,
+    })
 
     const { onContentSizeChange } = useAdaptiveFooter(containerProps?.contentContainerStyle)
 
@@ -62,7 +62,7 @@ export const HomeExploreTab = memo(
     const tokenDataList = useMemo(
       () =>
         [data?.eth, ...(data?.tokens ?? [])]
-          ?.map((token) => gqlTokenToTokenItemData(token))
+          .map((token) => gqlTokenToTokenItemData(token))
           .filter((tokenItemData): tokenItemData is TokenItemData => !!tokenItemData),
       [data],
     )

@@ -16,7 +16,10 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { unchecksumDismissedTokenWarningKeys } from 'uniswap/src/state/uniswapMigrations'
+import {
+  removeThaiBahtFromFiatCurrency,
+  unchecksumDismissedTokenWarningKeys,
+} from 'uniswap/src/state/uniswapMigrations'
 import { DappRequestType } from 'uniswap/src/types/walletConnect'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -34,6 +37,7 @@ import {
   deleteWelcomeWalletCardBehaviorHistory,
   moveCurrencySetting,
   moveDismissedTokenWarnings,
+  moveHapticsToUserSettings,
   moveLanguageSetting,
   moveTokenAndNFTVisibility,
   moveUserSettings,
@@ -630,6 +634,7 @@ export const migrations = {
 
     const nftsData: AccountToNftData = {}
     for (const accountAddress of accountAddresses) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       nftsData[accountAddress] ??= {}
       const hiddenNftKeys = Object.keys(state.favorites.hiddenNfts[accountAddress])
 
@@ -1053,6 +1058,10 @@ export const migrations = {
       transactions: newTransactionState,
     }
   },
+
+  88: moveHapticsToUserSettings,
+
+  89: removeThaiBahtFromFiatCurrency,
 }
 
-export const MOBILE_STATE_VERSION = 87
+export const MOBILE_STATE_VERSION = 89

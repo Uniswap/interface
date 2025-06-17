@@ -250,7 +250,7 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
     return (
       <TokenBalanceItem
         padded
-        isHidden={portfolioBalance?.isHidden ?? false}
+        isHidden={portfolioBalance.isHidden ?? false}
         portfolioBalanceId={portfolioBalance.id}
         isLoading={isWarmLoading}
         currencyInfo={portfolioBalance.currencyInfo}

@@ -27,7 +27,14 @@ describe(watchFiatOnRampTransaction, () => {
     return (
       expectSaga(watchFiatOnRampTransaction, txDetailsPending)
         .provide([
-          [call(fetchFORTransaction, txDetailsPending, false, null), staleTx],
+          [
+            call(fetchFORTransaction, {
+              previousTransactionDetails: txDetailsPending,
+              forceFetch: false,
+              activeAccountAddress: null,
+            }),
+            staleTx,
+          ],
           [matchers.call.fn(sendAnalyticsEvent), undefined],
           [matchers.select(selectActiveAccountAddress), null],
         ])
@@ -117,7 +124,14 @@ describe(watchFiatOnRampTransaction, () => {
     const confirmedTx = { ...txDetailsPending, status: TransactionStatus.Success }
     return expectSaga(watchFiatOnRampTransaction, txDetailsPending)
       .provide([
-        [call(fetchFORTransaction, txDetailsPending, false, null), confirmedTx],
+        [
+          call(fetchFORTransaction, {
+            previousTransactionDetails: txDetailsPending,
+            forceFetch: false,
+            activeAccountAddress: null,
+          }),
+          confirmedTx,
+        ],
         [matchers.call.fn(sendAnalyticsEvent), undefined],
         [matchers.select(selectActiveAccountAddress), null],
       ])

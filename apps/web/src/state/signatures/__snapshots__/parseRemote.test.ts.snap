@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`parseRemote should parse expired UniswapX order 1`] = `
+exports[`parseRemote > should parse expired UniswapX order 1`] = `
 {
   "addedTime": 10000,
   "chainId": 1,
@@ -26,7 +26,7 @@ exports[`parseRemote should parse expired UniswapX order 1`] = `
 }
 `;
 
-exports[`parseRemote should parse filledUniswapX order 1`] = `
+exports[`parseRemote > should parse filledUniswapX order 1`] = `
 {
   "addedTime": 10000,
   "chainId": 1,
@@ -52,7 +52,7 @@ exports[`parseRemote should parse filledUniswapX order 1`] = `
 }
 `;
 
-exports[`parseRemote should parse open UniswapX order 1`] = `
+exports[`parseRemote > should parse open UniswapX order 1`] = `
 {
   "addedTime": 10000,
   "chainId": 1,

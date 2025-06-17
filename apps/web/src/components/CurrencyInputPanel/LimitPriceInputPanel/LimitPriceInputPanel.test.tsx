@@ -10,9 +10,9 @@ import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 const mockMultichainContextValue = {
-  reset: jest.fn(),
-  setSelectedChainId: jest.fn(),
-  setIsUserSelectedToken: jest.fn(),
+  reset: vi.fn(),
+  setSelectedChainId: vi.fn(),
+  setIsUserSelectedToken: vi.fn(),
   isSwapAndLimitContext: true,
   isUserSelectedToken: false,
   isMultichainContext: true,
@@ -24,9 +24,9 @@ const mockSwapAndLimitContextValue = {
     outputCurrency: undefined,
   },
   prefilledState: {},
-  setCurrencyState: jest.fn(),
+  setCurrencyState: vi.fn(),
   currentTab: SwapTab.Limit,
-  setCurrentTab: jest.fn(),
+  setCurrentTab: vi.fn(),
 }
 
 const mockLimitContextValue = {
@@ -39,7 +39,7 @@ const mockLimitContextValue = {
     limitPriceEdited: false,
     limitPriceInverted: false,
   },
-  setLimitState: jest.fn(),
+  setLimitState: vi.fn(),
   derivedLimitInfo: {
     currencyBalances: {},
     parsedAmounts: {},
@@ -48,7 +48,7 @@ const mockLimitContextValue = {
 
 describe('LimitPriceInputPanel', () => {
   it('should render the component with no currencies selected', async () => {
-    const onCurrencySelect = jest.fn()
+    const onCurrencySelect = vi.fn()
     await act(async () => {
       return render(<LimitPriceInputPanel onCurrencySelect={onCurrencySelect} />)
     })
@@ -63,7 +63,7 @@ describe('LimitPriceInputPanel', () => {
   })
 
   it('should render correct subheader with inputCurrency defined, but no price', () => {
-    const onCurrencySelect = jest.fn()
+    const onCurrencySelect = vi.fn()
     render(
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
@@ -78,7 +78,7 @@ describe('LimitPriceInputPanel', () => {
   })
 
   it('should render correct subheader with input currency and limit price defined', () => {
-    const onCurrencySelect = jest.fn()
+    const onCurrencySelect = vi.fn()
     render(
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
@@ -93,7 +93,7 @@ describe('LimitPriceInputPanel', () => {
   })
 
   it('should render the output currency when defined', () => {
-    const onCurrencySelect = jest.fn()
+    const onCurrencySelect = vi.fn()
     const { container } = render(
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider

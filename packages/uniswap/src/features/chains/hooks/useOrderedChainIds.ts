@@ -5,11 +5,11 @@ import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 
 // Returns the given chains ordered based on the statsig config
 export function useOrderedChainIds(chainIds: UniverseChainId[]): UniverseChainId[] {
-  const serverOrderedChains = useDynamicConfigValue(
-    DynamicConfigs.Chains,
-    ChainsConfigKey.OrderedChainIds,
-    ALL_CHAIN_IDS,
-  )
+  const serverOrderedChains = useDynamicConfigValue({
+    config: DynamicConfigs.Chains,
+    key: ChainsConfigKey.OrderedChainIds,
+    defaultValue: ALL_CHAIN_IDS,
+  })
 
   return useMemo(() => {
     const orderedChains = serverOrderedChains.filter((c) => chainIds.includes(c))

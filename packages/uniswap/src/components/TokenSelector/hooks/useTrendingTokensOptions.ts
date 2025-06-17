@@ -14,7 +14,7 @@ export function useTrendingTokensOptions(
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: portfolioBalancesByIdRefetch,
-    loading: loadingPorfolioBalancesById,
+    loading: loadingPortfolioBalancesById,
   } = usePortfolioBalancesForAddressById(address)
 
   const {
@@ -28,7 +28,7 @@ export function useTrendingTokensOptions(
 
   const refetch = useCallback(() => {
     portfolioBalancesByIdRefetch?.()
-    refetchTokens?.()
+    refetchTokens()
   }, [portfolioBalancesByIdRefetch, refetchTokens])
 
   const error =
@@ -38,6 +38,6 @@ export function useTrendingTokensOptions(
     data: tokenOptions,
     refetch,
     error,
-    loading: loadingPorfolioBalancesById || loadingTokens,
+    loading: loadingPortfolioBalancesById || loadingTokens,
   }
 }

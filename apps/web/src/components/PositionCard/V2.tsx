@@ -3,7 +3,6 @@ import { Pair } from '@uniswap/v2-sdk'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { CardNoise } from 'components/earn/styled'
-import { Dots } from 'components/swap/styled'
 import { BIG_INT_ZERO } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { useColor } from 'hooks/useColor'
@@ -49,7 +48,6 @@ export default function MigrateV2PositionCard({ pair, stakedBalance }: PositionC
       : undefined
 
   const [token0Deposited, token1Deposited] =
-    !!pair &&
     !!totalPoolTokens &&
     !!userPoolBalance &&
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
@@ -60,7 +58,7 @@ export default function MigrateV2PositionCard({ pair, stakedBalance }: PositionC
         ]
       : [undefined, undefined]
 
-  const backgroundColor = useColor(pair?.token0)
+  const backgroundColor = useColor(pair.token0)
 
   return (
     <Flex
@@ -75,13 +73,7 @@ export default function MigrateV2PositionCard({ pair, stakedBalance }: PositionC
         <Flex row alignItems="center" justifyContent="space-between">
           <Flex row gap="$spacing8">
             <DoubleCurrencyLogo currencies={[currency0, currency1]} size={20} />
-            <Text variant="body1">
-              {!currency0 || !currency1 ? (
-                <Dots>{t('common.loading')}</Dots>
-              ) : (
-                `${currency0.symbol}/${currency1.symbol}`
-              )}
-            </Text>
+            <Text variant="body1">{`${currency0.symbol}/${currency1.symbol}`}</Text>
           </Flex>
           <Flex row gap="$spacing8">
             <Button
@@ -114,7 +106,7 @@ export default function MigrateV2PositionCard({ pair, stakedBalance }: PositionC
               {token0Deposited ? (
                 <Flex row centered>
                   <Text variant="body2" mr="$spacing4">
-                    {token0Deposited?.toSignificant(6)}
+                    {token0Deposited.toSignificant(6)}
                   </Text>
                   <CurrencyLogo size={20} currency={currency0} />
                 </Flex>
@@ -128,7 +120,7 @@ export default function MigrateV2PositionCard({ pair, stakedBalance }: PositionC
               {token1Deposited ? (
                 <Flex row centered>
                   <Text variant="body2" mr="$spacing4">
-                    {token1Deposited?.toSignificant(6)}
+                    {token1Deposited.toSignificant(6)}
                   </Text>
                   <CurrencyLogo size={20} currency={currency1} />
                 </Flex>

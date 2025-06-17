@@ -67,12 +67,13 @@ export function useTokenContextMenu({
   const { navigateToSwapFlow, navigateToReceive, navigateToSend, handleShareToken } = useWalletNavigation()
 
   const activeAccountHoldsToken =
-    portfolioBalance && areCurrencyIdsEqual(currencyId, portfolioBalance?.currencyInfo.currencyId)
+    portfolioBalance && areCurrencyIdsEqual(currencyId, portfolioBalance.currencyInfo.currencyId)
   const isVisible = !portfolioBalance?.isHidden
 
   const currencyAddress = currencyIdToAddress(currencyId)
   const isNative = isNativeCurrency(currencyAddress)
-  const currencyChainId = (currencyIdToChain(currencyId) as UniverseChainId) ?? defaultChainId
+  const maybeCurrencyChainId = currencyIdToChain(currencyId)
+  const currencyChainId = maybeCurrencyChainId ? (maybeCurrencyChainId as UniverseChainId) : defaultChainId
   const { navigateToTokenDetails } = useWalletNavigation()
   const { isTestnetModeEnabled } = useEnabledChains()
 

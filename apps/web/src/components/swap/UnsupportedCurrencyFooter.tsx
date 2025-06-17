@@ -58,12 +58,7 @@ export default function UnsupportedCurrencyFooter({
   const { chainId } = useAccount()
   const [showDetails, setShowDetails] = useState(false)
 
-  const tokens =
-    chainId && currencies
-      ? currencies.map((currency) => {
-          return currency?.wrapped
-        })
-      : []
+  const tokens = chainId ? currencies.map((currency) => currency?.wrapped) : []
 
   return (
     <DetailsFooter show={show}>
@@ -83,7 +78,7 @@ export default function UnsupportedCurrencyFooter({
             </RowBetween>
             {tokens.map((token) => {
               return (
-                <UnsupportedTokenCard key={token?.address?.concat('not-supported')} token={token} chainId={chainId} />
+                <UnsupportedTokenCard key={token?.address.concat('not-supported')} token={token} chainId={chainId} />
               )
             })}
             <AutoColumn gap="lg">
@@ -111,14 +106,14 @@ function UnsupportedTokenCard({ token, chainId }: { token?: Token; chainId?: Uni
   }
 
   return (
-    <OutlineCard key={token?.address?.concat('not-supported')} data-testid="unsupported-token-card">
+    <OutlineCard key={token.address.concat('not-supported')} data-testid="unsupported-token-card">
       <AutoColumn gap="10px">
         <AutoRow gap="5px" align="center">
           <CurrencyLogo currency={token} size={24} />
           <ThemedText.DeprecatedBody fontWeight={535}>{token.symbol}</ThemedText.DeprecatedBody>
         </AutoRow>
         {chainId && (
-          <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
+          <ExternalLink href={getExplorerLink({ chainId, data: token.address, type: ExplorerDataType.ADDRESS })}>
             <AddressText>{shortenAddress(token.address)}</AddressText>
           </ExternalLink>
         )}

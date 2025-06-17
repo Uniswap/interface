@@ -7,7 +7,7 @@ import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
 import { PositionDetails } from 'types/position'
 
-jest.mock('./useTokenContractsConstant')
+vi.mock('./useTokenContractsConstant')
 
 const positions: PositionDetails[] = [
   {

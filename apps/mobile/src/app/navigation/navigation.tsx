@@ -46,11 +46,10 @@ import { PasskeyHelpModalScreen } from 'src/components/modals/ReactNavigationMod
 import { PasskeyManagementModalScreen } from 'src/components/modals/ReactNavigationModals/PasskeyManagementModalScreen'
 import { PermissionsSettingsScreen } from 'src/components/modals/ReactNavigationModals/PermissionsSettingsScreen'
 import { PortfolioBalanceSettingsScreen } from 'src/components/modals/ReactNavigationModals/PortfolioBalanceSettingsScreen'
-import { PostSwapSmartWalletNudgeScreen } from 'src/components/modals/ReactNavigationModals/PostSwapSmartWalletNudgeScreen'
-import { SmartWalletConfirmModalScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletConfirmModalScreen'
 import { SmartWalletCreatedModalScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletCreatedModalScreen'
 import { SmartWalletEnabledModalScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletEnabledModalScreen'
 import { SmartWalletInsufficientFundsOnNetworkScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletInsufficientFundsOnNetworkScreen'
+import { SmartWalletNudgeScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletNudgeScreen'
 import { TestnetModeModalScreen } from 'src/components/modals/ReactNavigationModals/TestnetModeModalScreen'
 import { UnitagsIntroModal } from 'src/components/unitags/UnitagsIntroModal'
 import { ExchangeTransferModal } from 'src/features/fiatOnRamp/ExchangeTransferModal'
@@ -427,7 +426,6 @@ export function AppStackNavigator(): JSX.Element {
         <AppStack.Screen component={ConnectionsDappListModal} name={ModalName.ConnectionsDappListModal} />
         <AppStack.Screen component={PrivateKeySpeedBumpModal} name={ModalName.PrivateKeySpeedBumpModal} />
         <AppStack.Screen component={AdvancedSettingsModal} name={ModalName.SmartWalletAdvancedSettingsModal} />
-        <AppStack.Screen component={SmartWalletConfirmModalScreen} name={ModalName.SmartWalletConfirmModal} />
         <AppStack.Screen component={SmartWalletCreatedModalScreen} name={ModalName.SmartWalletCreatedModal} />
         <AppStack.Screen component={SmartWalletEnabledModalScreen} name={ModalName.SmartWalletEnabledModal} />
         <AppStack.Screen component={SettingsAppearanceModal} name={ModalName.SettingsAppearance} />
@@ -438,7 +436,7 @@ export function AppStackNavigator(): JSX.Element {
           component={SmartWalletInsufficientFundsOnNetworkScreen}
           name={ModalName.SmartWalletInsufficientFundsOnNetworkModal}
         />
-        <AppStack.Screen component={PostSwapSmartWalletNudgeScreen} name={ModalName.PostSwapSmartWalletNudge} />
+        <AppStack.Screen component={SmartWalletNudgeScreen} name={ModalName.SmartWalletNudge} />
         {enabledInEnvOrDev &&
           ((): JSX.Element => {
             return <AppStack.Screen component={ExperimentsModal} name={ModalName.Experiments} />

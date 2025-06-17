@@ -89,19 +89,18 @@ export function UnitagChooseProfilePicContent({
   const attemptClaimUnitag = async (): Promise<void> => {
     setIsClaiming(true)
     const source = convertEntryPointToAnalyticsSource(entryPoint)
-    const { claimError: attemptClaimError } = await claimUnitag(
-      {
+    const { claimError: attemptClaimError } = await claimUnitag({
+      claim: {
         address,
         username: unitag,
         avatarUri: imageUri,
       },
-      {
+      context: {
         source,
         hasENSAddress: !!ensName,
       },
-      address,
-      generateSignerFunc(account, signerManager),
-    )
+      signMessage: generateSignerFunc(account, signerManager),
+    })
     setIsClaiming(false)
     setClaimError(attemptClaimError)
 

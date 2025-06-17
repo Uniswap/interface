@@ -60,14 +60,15 @@ export function ActionSheetDropdown({
   const insets = useAppInsets()
   const containerRef = useRef<View>(null)
   const [isOpen, setOpen] = useState(false)
-  const [toggleMeasurements, setToggleMeasurements] = useState<ToggleMeasurements>(null)
+  const [toggleMeasurements, setToggleMeasurements] = useState<ToggleMeasurements | null>(null)
 
   const openDropdown = (event: GestureResponderEvent): void => {
     onPress?.(event)
 
-    const containerNode = containerRef?.current
+    const containerNode = containerRef.current
 
     if (containerNode) {
+      // eslint-disable-next-line max-params
       containerNode.measureInWindow((x, y, width, height) => {
         setToggleMeasurements({
           x,
@@ -87,7 +88,8 @@ export function ActionSheetDropdown({
     }
 
     function resizeListener(): void {
-      containerRef?.current?.measureInWindow((x, y, width, height) => {
+      // eslint-disable-next-line max-params
+      containerRef.current?.measureInWindow((x, y, width, height) => {
         setToggleMeasurements((prev) => ({
           ...prev,
           x,
@@ -288,7 +290,7 @@ function DropdownContent({
     }
 
     function scrollListener(): void {
-      if (!toggleMeasurements?.sticky && window.scrollY >= 0) {
+      if (!toggleMeasurements.sticky && window.scrollY >= 0) {
         setWindowScrollY(window.scrollY - initialScrollY)
       }
     }
@@ -296,12 +298,10 @@ function DropdownContent({
     return () => {
       window.removeEventListener('scroll', scrollListener)
     }
-  }, [initialScrollY, toggleMeasurements?.sticky])
+  }, [initialScrollY, toggleMeasurements.sticky])
 
   useEffect(() => {
-    if (toggleMeasurements) {
-      setWindowScrollY(0)
-    }
+    setWindowScrollY(0)
   }, [toggleMeasurements])
 
   const position = useMemo((): { top?: number; bottom?: number } => {
@@ -365,11 +365,14 @@ function DropdownContent({
                   hoverable
                   borderRadius="$rounded8"
                   onPress={(event) => {
-                    executeWithFrameDelay(() => {
-                      if (closeOnSelect) {
-                        handleClose?.(event)
-                      }
-                    }, onPress)
+                    executeWithFrameDelay({
+                      firstAction: () => {
+                        if (closeOnSelect) {
+                          handleClose?.(event)
+                        }
+                      },
+                      secondAction: onPress,
+                    })
                   }}
                 >
                   <Flex testID={key}>{render()}</Flex>

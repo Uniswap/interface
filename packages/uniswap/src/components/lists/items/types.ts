@@ -1,4 +1,4 @@
-import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 

@@ -97,36 +97,29 @@ export const ExcludedNetworkLogos = memo(function ExcludedNetworkLogos({
   chainIds = [],
 }: ExcludedNetworkLogosProps): JSX.Element {
   const renderLogos = (): JSX.Element | null => {
-    const validChainIds = chainIds.filter((id): id is UniverseChainId => id !== undefined)
-    const logoCount = Math.min(validChainIds.length, MAX_LOGOS) as 1 | 2 | 3 | 4
+    const logoCount = Math.min(chainIds.length, MAX_LOGOS) as 1 | 2 | 3 | 4
 
-    if (!validChainIds.length) {
+    if (!chainIds.length) {
       return null
     }
 
     const logoComponents: { [key in 1 | 2 | 3 | 4]: JSX.Element | null } = {
-      1: validChainIds[0] ? <SingleLogo chainId={validChainIds[0]} /> : null,
+      1: chainIds[0] ? <SingleLogo chainId={chainIds[0]} /> : null,
       2:
-        validChainIds.length >= 2 ? (
-          <TwoLogos chainIds={[validChainIds[0], validChainIds[1]] as [UniverseChainId, UniverseChainId]} />
+        chainIds.length >= 2 ? (
+          <TwoLogos chainIds={[chainIds[0], chainIds[1]] as [UniverseChainId, UniverseChainId]} />
         ) : null,
       3:
-        validChainIds.length >= 3 ? (
+        chainIds.length >= 3 ? (
           <ThreeLogos
-            chainIds={
-              [validChainIds[0], validChainIds[1], validChainIds[2]] as [
-                UniverseChainId,
-                UniverseChainId,
-                UniverseChainId,
-              ]
-            }
+            chainIds={[chainIds[0], chainIds[1], chainIds[2]] as [UniverseChainId, UniverseChainId, UniverseChainId]}
           />
         ) : null,
       4:
-        validChainIds.length >= 4 ? (
+        chainIds.length >= 4 ? (
           <FourLogos
             chainIds={
-              [validChainIds[0], validChainIds[1], validChainIds[2], validChainIds[3]] as [
+              [chainIds[0], chainIds[1], chainIds[2], chainIds[3]] as [
                 UniverseChainId,
                 UniverseChainId,
                 UniverseChainId,

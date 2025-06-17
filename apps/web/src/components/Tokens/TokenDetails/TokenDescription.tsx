@@ -85,11 +85,11 @@ export function TokenDescription() {
   const { neutral1 } = useTheme()
 
   const { description, homepageUrl, twitterName } = tokenQuery.data?.token?.project ?? {}
-  const explorerUrl = getExplorerLink(
-    currency.chainId,
-    address,
-    currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN,
-  )
+  const explorerUrl = getExplorerLink({
+    chainId: currency.chainId,
+    data: address,
+    type: currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN,
+  })
 
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
@@ -100,7 +100,11 @@ export function TokenDescription() {
   const truncatedDescription = truncateDescription(description ?? '', TRUNCATE_CHARACTER_COUNT)
   const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
   const showTruncatedDescription = shouldTruncate && isDescriptionTruncated
-  const { inputTax: sellFee, outputTax: buyFee } = useSwapTaxes(address, address, currency.chainId)
+  const { inputTax: sellFee, outputTax: buyFee } = useSwapTaxes({
+    inputTokenAddress: address,
+    outputTokenAddress: address,
+    tokenChainId: currency.chainId,
+  })
   const { formatPercent } = useLocalizationContext()
   const { sellFeeString, buyFeeString } = {
     sellFeeString: formatPercent(sellFee.toSignificant()),

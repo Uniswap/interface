@@ -17,7 +17,7 @@ export const useKeyDown = ({
       const wasAnyKeyPressed = keys.some((key) => event.key === key)
       // Do not prevent default if the target element is an input
       const targetWasNotAnInput =
-        event.target instanceof HTMLElement && !['input', 'textarea'].includes(event.target?.tagName.toLowerCase())
+        event.target instanceof HTMLElement && !['input', 'textarea'].includes(event.target.tagName.toLowerCase())
       const shouldTrigger = wasAnyKeyPressed && (targetWasNotAnInput || shouldTriggerInInput)
 
       if (shouldTrigger) {

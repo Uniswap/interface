@@ -27,7 +27,7 @@ import {
   WALLETCONNECT_PROJECT_ID_BETA,
   WALLETCONNECT_PROJECT_ID_DEV,
 } from 'react-native-dotenv'
-import { isNonJestDev } from 'utilities/src/environment/constants'
+import { isNonTestDev } from 'utilities/src/environment/constants'
 
 /**
  * Naming requirements for different environments:
@@ -89,6 +89,7 @@ const _config: Config = {
   datadogClientToken:
     process.env.REACT_APP_DATADOG_CLIENT_TOKEN || process.env.DATADOG_CLIENT_TOKEN || DATADOG_CLIENT_TOKEN,
   datadogProjectId: process.env.REACT_APP_DATADOG_PROJECT_ID || process.env.DATADOG_PROJECT_ID || DATADOG_PROJECT_ID,
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   isE2ETest: process.env.IS_E2E_TEST?.toLowerCase() === 'true' || IS_E2E_TEST?.toLowerCase() === 'true',
   forApiUrlOverride: process.env.FOR_API_URL_OVERRIDE || FOR_API_URL_OVERRIDE,
   graphqlUrlOverride: process.env.GRAPHQL_URL_OVERRIDE || GRAPHQL_URL_OVERRIDE,
@@ -116,7 +117,7 @@ const _config: Config = {
 
 export const config = Object.freeze(_config)
 
-if (isNonJestDev) {
+if (isNonTestDev) {
   // Cannot use logger here, causes error from circular dep
   // eslint-disable-next-line no-console
   console.debug('Using app config:', config)

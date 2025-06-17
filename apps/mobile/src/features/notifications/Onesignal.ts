@@ -5,7 +5,7 @@ import { config } from 'uniswap/src/config'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/portfolio/portfolioUpdates/constants'
-import { getUniqueId } from 'utilities/src/device/getUniqueId'
+import { getUniqueId } from 'utilities/src/device/uniqueId'
 import { logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -20,7 +20,7 @@ export const initOneSignal = (): void => {
   OneSignal.Notifications.addEventListener('foregroundWillDisplay', (event) => {
     const notification = event.getNotification()
     const additionalData = notification.additionalData as { notification_type?: string }
-    const notificationType = additionalData?.notification_type
+    const notificationType = additionalData.notification_type
 
     let enabled = false
     // Some special notif filtering logic is needed for iOS

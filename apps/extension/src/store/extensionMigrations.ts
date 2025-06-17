@@ -59,7 +59,7 @@ export function migrateUnknownBackupAccountsToMaybeManualBackup(state: any): any
   const updatedAccounts = Object.entries(state.wallet.accounts as Record<Address, { backups?: BackupType[] }>).reduce(
     (acc, [address, account]) => {
       // Skip if not an object
-      if (!account || typeof account !== 'object') {
+      if (typeof account !== 'object') {
         return acc
       }
 

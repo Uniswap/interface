@@ -2,11 +2,11 @@ import { Experiments, Layers, PriceUxUpdateProperties } from 'uniswap/src/featur
 import { useExperimentValueFromLayer } from 'uniswap/src/features/gating/hooks'
 
 export function usePriceUXEnabled(): boolean {
-  const expValueFromLayer = useExperimentValueFromLayer<Layers.SwapPage, Experiments.PriceUxUpdate, boolean>(
-    Layers.SwapPage,
-    PriceUxUpdateProperties.UpdatedPriceUX,
-    false,
-  )
+  const expValueFromLayer = useExperimentValueFromLayer<Layers.SwapPage, Experiments.PriceUxUpdate, boolean>({
+    layerName: Layers.SwapPage,
+    param: PriceUxUpdateProperties.UpdatedPriceUX,
+    defaultValue: false,
+  })
 
   return expValueFromLayer
 }

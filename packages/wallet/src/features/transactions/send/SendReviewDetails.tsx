@@ -102,28 +102,28 @@ export function SendReviewDetails({
     inputCurrencyUSDValue,
   ])
 
-  const transferERC20Callback = useSendERC20Callback(
+  const transferERC20Callback = useSendERC20Callback({
     txId,
-    chainId as UniverseChainId,
-    recipient,
-    currencyInInfo ? currencyAddress(currencyInInfo.currency) : undefined,
-    currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
-    txRequest,
-    onNext,
+    chainId: chainId as UniverseChainId,
+    toAddress: recipient,
+    tokenAddress: currencyInInfo ? currencyAddress(currencyInInfo.currency) : undefined,
+    amountInWei: currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
+    transferTxWithGasSettings: txRequest,
+    onSubmit: onNext,
     currencyAmountUSD,
-    gasFee.gasEstimates,
-  )
+    gasEstimates: gasFee.gasEstimates,
+  })
 
-  const transferNFTCallback = useSendNFTCallback(
+  const transferNFTCallback = useSendNFTCallback({
     txId,
-    chainId as UniverseChainId,
-    recipient,
-    nftIn?.nftContract?.address,
-    nftIn?.tokenId,
+    chainId: chainId as UniverseChainId,
+    toAddress: recipient,
+    tokenAddress: nftIn?.nftContract?.address,
+    tokenId: nftIn?.tokenId,
     txRequest,
-    onNext,
-    gasFee.gasEstimates,
-  )
+    onSubmit: onNext,
+    gasEstimates: gasFee.gasEstimates,
+  })
 
   const submitTranaction = useCallback(() => {
     if (nftIn) {

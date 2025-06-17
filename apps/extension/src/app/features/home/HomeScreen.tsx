@@ -2,7 +2,6 @@ import { useApolloClient } from '@apollo/client'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import ReactPlayer from 'react-player'
 import { useDispatch, useSelector } from 'react-redux'
 import { ActivityTab } from 'src/app/components/tabs/ActivityTab'
 import { NftsTab } from 'src/app/components/tabs/NftsTab'
@@ -44,19 +43,19 @@ import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
 
 const MemoizedVideo = memo(() => (
   <Flex borderRadius="$rounded12" overflow="hidden" height="auto" maxWidth="100%" aspectRatio="16 / 9">
-    <ReactPlayer
-      url={SMART_WALLET_UPGRADE_VIDEO}
-      width="100%"
-      height="100%"
-      playing={true}
-      muted={true}
+    <video
+      src={SMART_WALLET_UPGRADE_VIDEO}
       style={{
+        width: '100%',
+        height: '100%',
         objectFit: 'cover',
       }}
-      fallback={undefined}
+      autoPlay
+      muted
     />
   </Flex>
 ))
+
 MemoizedVideo.displayName = 'MemoizedVideo'
 
 export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
@@ -109,7 +108,7 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
         return
       }
       dispatch(setIncrementNumPostSwapNudge({ walletAddress: address }))
-      openModal(ModalName.PostSwapSmartWalletNudge)
+      openModal(ModalName.SmartWalletNudge)
     }),
   )
 

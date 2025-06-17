@@ -1,4 +1,3 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
 import darkImage from 'assets/images/404-page-dark.png'
 import lightImage from 'assets/images/404-page-light.png'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
@@ -10,6 +9,7 @@ import { ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { Button, Flex } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 
 const Image = styled.img`
   max-width: 510px;
@@ -54,7 +54,7 @@ export default function NotFound({ title, subtitle, actionButton }: NotFoundProp
 
   return (
     <PageWrapper>
-      <Trace logImpression page={InterfacePageName.NOT_FOUND}>
+      <Trace logImpression page={InterfacePageName.NotFound}>
         <Header>
           <Container>
             {title ?? <Title>404</Title>}

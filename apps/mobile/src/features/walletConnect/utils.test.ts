@@ -109,9 +109,13 @@ describe(parseGetCapabilitiesRequest, () => {
   }
 
   it('handles request with address only', () => {
-    const result = parseGetCapabilitiesRequest(EthMethod.WalletGetCapabilities, mockTopic, mockInternalId, mockDapp, [
-      TEST_ADDRESS,
-    ])
+    const result = parseGetCapabilitiesRequest({
+      method: EthMethod.WalletGetCapabilities,
+      topic: mockTopic,
+      internalId: mockInternalId,
+      dapp: mockDapp,
+      requestParams: [TEST_ADDRESS],
+    })
 
     expect(result).toEqual({
       type: EthMethod.WalletGetCapabilities,
@@ -131,10 +135,13 @@ describe(parseGetCapabilitiesRequest, () => {
 
   it('handles request with address and chain IDs', () => {
     const chainIds = [UniverseChainId.Mainnet, UniverseChainId.Polygon]
-    const result = parseGetCapabilitiesRequest(EthMethod.WalletGetCapabilities, mockTopic, mockInternalId, mockDapp, [
-      TEST_ADDRESS,
-      chainIds.map((c) => `0x${c.toString(16)}`),
-    ])
+    const result = parseGetCapabilitiesRequest({
+      method: EthMethod.WalletGetCapabilities,
+      topic: mockTopic,
+      internalId: mockInternalId,
+      dapp: mockDapp,
+      requestParams: [TEST_ADDRESS, chainIds.map((c) => `0x${c.toString(16)}`)],
+    })
 
     expect(result).toEqual({
       type: EthMethod.WalletGetCapabilities,
@@ -168,7 +175,14 @@ describe(parseSignRequest, () => {
     const message = '0x48656c6c6f20576f726c64' // "Hello World" in hex
     const params = [message, TEST_ADDRESS]
 
-    const result = parseSignRequest(EthMethod.PersonalSign, mockTopic, mockInternalId, mockChainId, mockDapp, params)
+    const result = parseSignRequest({
+      method: EthMethod.PersonalSign,
+      topic: mockTopic,
+      internalId: mockInternalId,
+      chainId: mockChainId,
+      dapp: mockDapp,
+      requestParams: params,
+    })
 
     expect(result).toEqual({
       type: EthMethod.PersonalSign,
@@ -192,7 +206,14 @@ describe(parseSignRequest, () => {
     const message = '0x48656c6c6f20576f726c64' // "Hello World" in hex
     const params = [TEST_ADDRESS, message]
 
-    const result = parseSignRequest(EthMethod.EthSign, mockTopic, mockInternalId, mockChainId, mockDapp, params)
+    const result = parseSignRequest({
+      method: EthMethod.EthSign,
+      topic: mockTopic,
+      internalId: mockInternalId,
+      chainId: mockChainId,
+      dapp: mockDapp,
+      requestParams: params,
+    })
 
     expect(result).toEqual({
       type: EthMethod.EthSign,
@@ -216,7 +237,14 @@ describe(parseSignRequest, () => {
     const typedData = '{"types":{"EIP712Domain":[]},"domain":{},"primaryType":"Mail","message":{}}'
     const params = [TEST_ADDRESS, typedData]
 
-    const result = parseSignRequest(EthMethod.SignTypedData, mockTopic, mockInternalId, mockChainId, mockDapp, params)
+    const result = parseSignRequest({
+      method: EthMethod.SignTypedData,
+      topic: mockTopic,
+      internalId: mockInternalId,
+      chainId: mockChainId,
+      dapp: mockDapp,
+      requestParams: params,
+    })
 
     expect(result).toEqual({
       type: EthMethod.SignTypedData,
@@ -259,14 +287,14 @@ describe(parseTransactionRequest, () => {
       nonce: '0x1', // This should be omitted in the result
     }
 
-    const result = parseTransactionRequest(
-      EthMethod.EthSendTransaction,
-      mockTopic,
-      mockInternalId,
-      mockChainId,
-      mockDapp,
-      [txParams],
-    )
+    const result = parseTransactionRequest({
+      method: EthMethod.EthSendTransaction,
+      topic: mockTopic,
+      internalId: mockInternalId,
+      chainId: mockChainId,
+      dapp: mockDapp,
+      requestParams: [txParams],
+    })
 
     expect(result).toEqual({
       type: EthMethod.EthSendTransaction,
@@ -324,14 +352,14 @@ describe(parseSendCallsRequest, () => {
       },
     }
 
-    const result = parseSendCallsRequest(
-      mockTopic,
-      mockInternalId,
-      mockChainId,
-      mockDapp,
-      [sendCallsParams],
-      'fallback-address',
-    )
+    const result = parseSendCallsRequest({
+      topic: mockTopic,
+      internalId: mockInternalId,
+      chainId: mockChainId,
+      dapp: mockDapp,
+      requestParams: [sendCallsParams],
+      account: 'fallback-address',
+    })
 
     expect(result).toEqual({
       type: EthMethod.WalletSendCalls,
@@ -367,14 +395,14 @@ describe(parseSendCallsRequest, () => {
     }
 
     const fallbackAddress = '0xfallbackaddress'
-    const result = parseSendCallsRequest(
-      mockTopic,
-      mockInternalId,
-      mockChainId,
-      mockDapp,
-      [sendCallsParams],
-      fallbackAddress,
-    )
+    const result = parseSendCallsRequest({
+      topic: mockTopic,
+      internalId: mockInternalId,
+      chainId: mockChainId,
+      dapp: mockDapp,
+      requestParams: [sendCallsParams],
+      account: fallbackAddress,
+    })
 
     expect(result.account).toBe(fallbackAddress)
     expect(result.id).toBeTruthy() // Should generate a mock ID
@@ -396,7 +424,14 @@ describe(parseGetCallsStatusRequest, () => {
     const requestId = 'test-batch-id'
     const account = TEST_ADDRESS
 
-    const result = parseGetCallsStatusRequest(mockTopic, mockInternalId, mockChainId, mockDapp, [requestId], account)
+    const result = parseGetCallsStatusRequest({
+      topic: mockTopic,
+      internalId: mockInternalId,
+      chainId: mockChainId,
+      dapp: mockDapp,
+      requestParams: [requestId],
+      account,
+    })
 
     expect(result).toEqual({
       type: EthMethod.WalletGetCallsStatus,

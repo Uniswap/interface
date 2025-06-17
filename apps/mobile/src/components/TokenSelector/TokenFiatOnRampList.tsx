@@ -50,7 +50,7 @@ function TokenOptionItemWrapper({
         : null,
     [currencyInfo, balanceUSD, quantity, isUnsupported],
   )
-  const onPress = useCallback(() => onSelectCurrency?.(currency), [currency, onSelectCurrency])
+  const onPress = useCallback(() => onSelectCurrency(currency), [currency, onSelectCurrency])
   const { tokenWarningDismissed } = useDismissedTokenWarnings(currencyInfo?.currency)
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
@@ -100,7 +100,7 @@ function _TokenFiatOnRampList({
         return false
       }
 
-      const quantity = balancesById?.[c.currencyInfo?.currencyId]?.quantity ?? 0
+      const quantity = balancesById?.[c.currencyInfo.currencyId]?.quantity ?? 0
       return quantity > 0
     })
     .sort((a, b) => {
@@ -112,9 +112,7 @@ function _TokenFiatOnRampList({
       const bQuantity = balancesById?.[b.currencyInfo.currencyId]?.balanceUSD ?? 0
       return bQuantity - aQuantity
     })
-  const supportedAssetsWithoutBalance = list.filter(
-    (c) => c.currencyInfo && !balancesById?.[c.currencyInfo?.currencyId],
-  )
+  const supportedAssetsWithoutBalance = list.filter((c) => c.currencyInfo && !balancesById?.[c.currencyInfo.currencyId])
   const unsupportedAssetsWithBalance = getUnsupportedFORTokensWithBalance(list, balancesById)
 
   const tokenList = isOffRamp

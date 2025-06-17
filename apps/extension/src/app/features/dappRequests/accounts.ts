@@ -26,12 +26,17 @@ import { extractBaseUrl } from 'utilities/src/format/urls'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 
-function getAccountResponse(
-  chainId: UniverseChainId,
-  dappRequest: DappRequest,
-  provider: JsonRpcProvider,
-  dappInfo: DappInfo,
-): AccountResponse {
+function getAccountResponse({
+  chainId,
+  dappRequest,
+  provider,
+  dappInfo,
+}: {
+  chainId: UniverseChainId
+  dappRequest: DappRequest
+  provider: JsonRpcProvider
+  dappInfo: DappInfo
+}): AccountResponse {
   const orderedConnectedAddresses = getOrderedConnectedAddresses(
     dappInfo.connectedAccounts,
     dappInfo.activeConnectedAddress,
@@ -46,12 +51,17 @@ function getAccountResponse(
   }
 }
 
-function sendAccountResponseAnalyticsEvent(
-  senderUrl: string,
-  chainId: UniverseChainId,
-  dappInfo: DappInfo,
-  accountResponse: AccountResponse,
-): void {
+function sendAccountResponseAnalyticsEvent({
+  senderUrl,
+  chainId,
+  dappInfo,
+  accountResponse,
+}: {
+  senderUrl: string
+  chainId: UniverseChainId
+  dappInfo: DappInfo
+  accountResponse: AccountResponse
+}): void {
   const dappUrl = extractBaseUrl(senderUrl)
 
   sendAnalyticsEvent(ExtensionEventName.DappConnect, {
@@ -66,16 +76,20 @@ function sendAccountResponseAnalyticsEvent(
  * Gets the active account, and returns the account address, chainId, and providerUrl.
  * Chain id + provider url are from the last connected chain for the dApp and wallet. If this has not been set, it will be the default chain and provider.
  */
-export function* getAccount(
-  dappRequest: GetAccountRequest | RequestAccountRequest,
-  { id, url }: SenderTabInfo,
-  dappInfo: DappInfo,
-) {
+export function* getAccount({
+  dappRequest,
+  senderTabInfo: { id, url },
+  dappInfo,
+}: {
+  dappRequest: GetAccountRequest | RequestAccountRequest
+  senderTabInfo: SenderTabInfo
+  dappInfo: DappInfo
+}) {
   const chainId = dappInfo.lastChainId
   const provider = yield* call(getProvider, chainId)
 
-  const response = getAccountResponse(chainId, dappRequest, provider, dappInfo)
-  sendAccountResponseAnalyticsEvent(url, chainId, dappInfo, response)
+  const response = getAccountResponse({ chainId, dappRequest, provider, dappInfo })
+  sendAccountResponseAnalyticsEvent({ senderUrl: url, chainId, dappInfo, accountResponse: response })
 
   yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
 }
@@ -94,7 +108,7 @@ export function* saveAccount({ url, favIconUrl }: SenderTabInfo) {
     return undefined
   }
 
-  yield* call(saveDappConnection, dappUrl, activeAccount, favIconUrl)
+  yield* call(saveDappConnection, { dappUrl, account: activeAccount, iconUrl: favIconUrl })
   // No dapp info means that this is a first time connection request
   if (!dappInfo) {
     yield* put(

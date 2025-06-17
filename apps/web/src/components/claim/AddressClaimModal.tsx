@@ -72,8 +72,8 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
     closeModal()
   }
 
-  const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')
-  const unclaimedUni = unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')
+  const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' })
+  const unclaimedUni = unclaimedAmount?.toFixed(0, { groupSeparator: ',' })
 
   // Avoiding translating because the structure for "Claiming UNI for address" is wrong but this modal is rarely used
   // and ran into difficulties with testing it
@@ -184,7 +184,10 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
               </Text>
             )}
             {attempting && hash && !claimConfirmed && chainId && hash && (
-              <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)} style={{ zIndex: 99 }}>
+              <ExternalLink
+                href={getExplorerLink({ chainId, data: hash, type: ExplorerDataType.TRANSACTION })}
+                style={{ zIndex: 99 }}
+              >
                 View transaction on Explorer
               </ExternalLink>
             )}

@@ -132,7 +132,7 @@ function genMatrix(value: string | QRCodeSegment[], errorCorrectionLevel: QRCode
   const sqrt = Math.sqrt(arr.length)
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return arr.reduce(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, max-params
     (rows, key, index) => (index % sqrt === 0 ? rows.push([key]) : rows[rows.length - 1].push(key)) && rows,
     [],
   )

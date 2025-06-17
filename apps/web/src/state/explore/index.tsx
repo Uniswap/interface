@@ -54,15 +54,15 @@ export function ExploreContextProvider({
     data: exploreStatsData,
     isLoading: exploreStatsLoading,
     error: exploreStatsError,
-  } = useExploreStatsQuery({
-    chainId: isSupportedChain ? chainId?.toString() : ALL_NETWORKS_ARG,
+  } = useExploreStatsQuery<ExploreStatsResponse>({
+    input: { chainId: isSupportedChain ? chainId.toString() : ALL_NETWORKS_ARG },
   })
   const {
     data: protocolStatsData,
     isLoading: protocolStatsLoading,
     error: protocolStatsError,
   } = useProtocolStatsQuery({
-    chainId: isSupportedChain ? chainId?.toString() : ALL_NETWORKS_ARG,
+    chainId: isSupportedChain ? chainId.toString() : ALL_NETWORKS_ARG,
   })
 
   const exploreContext = useMemo(() => {

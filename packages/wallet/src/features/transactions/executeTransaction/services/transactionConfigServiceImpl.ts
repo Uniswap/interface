@@ -48,7 +48,11 @@ export function createTransactionConfigService(ctx: {
         Experiments.PrivateRpc,
         PrivateRpcProperties,
         boolean
-      >(Experiments.PrivateRpc, PrivateRpcProperties.FlashbotsEnabled, DEFAULT_FLASHBOTS_ENABLED)
+      >({
+        experiment: Experiments.PrivateRpc,
+        property: PrivateRpcProperties.FlashbotsEnabled,
+        defaultValue: DEFAULT_FLASHBOTS_ENABLED,
+      })
 
       return { flashbotsEnabled }
     },
@@ -58,7 +62,7 @@ export function createTransactionConfigService(ctx: {
      */
     getTransactionTimeoutMs(input: { chainId: UniverseChainId }): number {
       // Get chain-specific timeout or use default
-      return input.chainId ? chainTimeouts.get(input.chainId) || ONE_MINUTE_MS : ONE_MINUTE_MS
+      return chainTimeouts.get(input.chainId) || ONE_MINUTE_MS
     },
 
     /**

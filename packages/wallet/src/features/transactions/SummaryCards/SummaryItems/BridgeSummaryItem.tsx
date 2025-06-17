@@ -33,8 +33,16 @@ export function BridgeSummaryItem({
     const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)
     const { currency: inputCurrency } = inputCurrencyInfo
     const { currency: outputCurrency } = outputCurrencyInfo
-    const inputCurrencyAmount = getFormattedCurrencyAmount(inputCurrency, inputCurrencyAmountRaw, formatter)
-    const outputCurrencyAmount = getFormattedCurrencyAmount(outputCurrency, outputCurrencyAmountRaw, formatter)
+    const inputCurrencyAmount = getFormattedCurrencyAmount({
+      currency: inputCurrency,
+      amount: inputCurrencyAmountRaw,
+      formatter,
+    })
+    const outputCurrencyAmount = getFormattedCurrencyAmount({
+      currency: outputCurrency,
+      amount: outputCurrencyAmountRaw,
+      formatter,
+    })
 
     return (
       <BridgingCurrencyRow

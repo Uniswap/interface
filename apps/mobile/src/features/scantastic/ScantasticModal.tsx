@@ -47,15 +47,15 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
     throw new Error('This should not be accessed with no mnemonic accounts')
   }
 
-  const params = route.params?.params
+  const params = route.params.params
 
   const [OTP, setOTP] = useState('')
   // Once a user has scanned a QR they have 6 minutes to correctly input the OTP
   const [expirationTimestamp, setExpirationTimestamp] = useState<number>(Date.now() + 6 * ONE_MINUTE_MS)
-  const pubKey = params?.publicKey
-  const uuid = params?.uuid
-  const device = `${params?.vendor || ''} ${params?.model || ''}`.trim()
-  const browser = params?.browser || ''
+  const pubKey = params.publicKey
+  const uuid = params.uuid
+  const device = `${params.vendor || ''} ${params.model || ''}`.trim()
+  const browser = params.browser || ''
 
   const [expired, setExpired] = useState(false)
   const [redeemed, setRedeemed] = useState(false)
@@ -94,15 +94,15 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
   }, [expirationTimestamp, t])
 
   const onEncryptSeedphrase = async (): Promise<void> => {
-    if (!pubKey) {
-      return
-    }
-
     setError('')
     let encryptedSeedphrase = ''
     const { n, e } = pubKey
     try {
-      encryptedSeedphrase = await getEncryptedMnemonic(account?.address || '', n, e)
+      encryptedSeedphrase = await getEncryptedMnemonic({
+        mnemonicId: account.address,
+        modulus: n,
+        exponent: e,
+      })
     } catch (err) {
       setError(t('scantastic.error.encryption'))
       logger.error(err, {
@@ -111,7 +111,7 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
           function: 'onEncryptSeedphrase->getEncryptedMnemonic',
         },
         extra: {
-          address: account?.address,
+          address: account.address,
           n,
           e,
         },

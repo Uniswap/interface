@@ -1,5 +1,6 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Web3Provider } from '@ethersproject/providers'
+import { useQuery } from '@tanstack/react-query'
 import { permit2Address } from '@uniswap/permit2-sdk'
 import {
   CosignedPriorityOrder,
@@ -24,12 +25,13 @@ import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
 import { Permit2 } from 'uniswap/src/abis/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
-import { useAsyncData } from 'utilities/src/react/hooks'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { queryWithoutCache } from 'utilities/src/reactQuery/queryOptions'
 import { WrongChainError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
@@ -79,6 +81,7 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
     } else {
       const year = getYear(addedTime)
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!yearMap[year]) {
         yearMap[year] = [activity]
       } else {
@@ -135,7 +138,7 @@ export function useCancelMultipleOrdersCallback(
       return undefined
     }
 
-    sendAnalyticsEvent(InterfaceEventNameLocal.UniswapXOrderCancelInitiated, {
+    sendAnalyticsEvent(InterfaceEventName.UniswapXOrderCancelInitiated, {
       orders: orders.map((order) => order.orderHash),
     })
 
@@ -145,7 +148,7 @@ export function useCancelMultipleOrdersCallback(
       }),
       signer: account.address,
       provider,
-      chainId: orders?.[0].chainId,
+      chainId: orders[0].chainId,
       selectChain,
     }).then((result) => {
       orders.forEach((order) => {
@@ -173,8 +176,9 @@ async function cancelMultipleUniswapXOrders({
   selectChain: (targetChain: UniverseChainId) => Promise<boolean>
 }) {
   const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
-  const permit2 = provider && getContract(permit2Address(chainId), PERMIT2_ABI, provider, signer)
-  if (!permit2 || !provider) {
+  const permit2 =
+    provider && getContract({ address: permit2Address(chainId), ABI: PERMIT2_ABI, provider, account: signer })
+  if (!permit2) {
     return undefined
   }
   try {
@@ -196,13 +200,17 @@ async function cancelMultipleUniswapXOrders({
   }
 }
 
-async function getCancelMultipleUniswapXOrdersTransaction(
-  orders: Array<{ encodedOrder: string; type: SignatureType }>,
-  chainId: UniverseChainId,
-  permit2: Permit2,
-): Promise<TransactionRequest | undefined> {
+async function getCancelMultipleUniswapXOrdersTransaction({
+  orders,
+  chainId,
+  permit2,
+}: {
+  orders: Array<{ encodedOrder: string; type: SignatureType }>
+  chainId: UniverseChainId
+  permit2: Permit2
+}): Promise<TransactionRequest | undefined> {
   const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
-  if (!permit2 || cancelParams.length === 0) {
+  if (cancelParams.length === 0) {
     return undefined
   }
   try {
@@ -228,21 +236,28 @@ export function useCreateCancelTransactionRequest(
         chainId: UniverseChainId
       }
     | undefined,
-): TransactionRequest | undefined {
-  const permit2 = useContract<Permit2>(permit2Address(params?.chainId), PERMIT2_ABI, true)
+): Maybe<TransactionRequest> {
+  const permit2 = useContract<Permit2>({
+    address: permit2Address(params?.chainId),
+    ABI: PERMIT2_ABI,
+  })
   const transactionFetcher = useCallback(() => {
-    if (
-      !params ||
-      !params.orders ||
-      params.orders.filter(({ encodedOrder }) => Boolean(encodedOrder)).length === 0 ||
-      !permit2
-    ) {
-      return undefined
+    if (!params || params.orders.filter(({ encodedOrder }) => Boolean(encodedOrder)).length === 0 || !permit2) {
+      return null
     }
-    return getCancelMultipleUniswapXOrdersTransaction(params.orders, params.chainId, permit2)
+    return getCancelMultipleUniswapXOrdersTransaction({
+      orders: params.orders,
+      chainId: params.chainId,
+      permit2,
+    })
   }, [params, permit2])
 
-  return useAsyncData(transactionFetcher).data
+  return useQuery(
+    queryWithoutCache({
+      queryKey: [ReactQueryCacheKey.CancelTransactionRequest, params],
+      queryFn: transactionFetcher,
+    }),
+  ).data
 }
 
 export function isLimitCancellable(order: UniswapXOrderDetails) {

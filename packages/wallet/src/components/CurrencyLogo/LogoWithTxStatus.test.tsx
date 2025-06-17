@@ -210,6 +210,7 @@ describe(DappLogoWithTxStatus, () => {
       ['TransactionFailed', WalletConnectEvent.TransactionFailed, 'icon-alert'],
     ]
 
+    // eslint-disable-next-line max-params
     it.each(showedIconCases)('shows proper icon for %s event', (_, event, iconTestId) => {
       const { queryByTestId } = render(<DappLogoWithTxStatus {...props} event={event} />)
 

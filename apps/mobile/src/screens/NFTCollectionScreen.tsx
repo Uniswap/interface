@@ -42,24 +42,24 @@ const keyExtractor = (item: NFTItem | string, index: number): string =>
   typeof item === 'string' ? `${LOADING_ITEM}-${index}` : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
 
 function gqlNFTAssetToNFTItem(data: NftCollectionScreenQuery | undefined): NFTItem[] | undefined {
-  const items = data?.nftAssets?.edges?.flatMap((item) => item.node)
+  const items = data?.nftAssets?.edges.flatMap((item) => item.node)
   if (!items) {
     return undefined
   }
 
   return items.map((item): NFTItem => {
     return {
-      name: item?.name ?? undefined,
-      contractAddress: item?.nftContract?.address ?? undefined,
-      tokenId: item?.tokenId ?? undefined,
-      imageUrl: item?.image?.url ?? undefined,
-      collectionName: item?.collection?.name ?? undefined,
+      name: item.name ?? undefined,
+      contractAddress: item.nftContract?.address ?? undefined,
+      tokenId: item.tokenId,
+      imageUrl: item.image?.url ?? undefined,
+      collectionName: item.collection?.name ?? undefined,
       ownerAddress: item.ownerAddress ?? undefined,
       imageDimensions:
-        item?.image?.dimensions?.height && item?.image?.dimensions?.width
+        item.image?.dimensions?.height && item.image.dimensions.width
           ? { width: item.image.dimensions.width, height: item.image.dimensions.height }
           : undefined,
-      listPrice: item?.listings?.edges?.[0]?.node?.price ?? undefined,
+      listPrice: item.listings?.edges[0]?.node.price ?? undefined,
     }
   })
 }
@@ -87,7 +87,7 @@ export function NFTCollectionScreen({
   })
 
   // Parse response for overview data and collection grid data
-  const collectionData = data?.nftCollections?.edges?.[0]?.node
+  const collectionData = data?.nftCollections?.edges[0]?.node
   const collectionItems = useMemo(() => gqlNFTAssetToNFTItem(data), [data])
 
   // Fill in grid with loading boxes if we have incomplete data and are loading more
@@ -97,16 +97,16 @@ export function NFTCollectionScreen({
       : undefined
 
   const onListEndReached = useCallback(async () => {
-    if (!data?.nftAssets?.pageInfo?.hasNextPage) {
+    if (!data?.nftAssets?.pageInfo.hasNextPage) {
       return
     }
     await fetchMore({
       variables: {
         first: ASSET_FETCH_PAGE_SIZE,
-        after: data?.nftAssets?.pageInfo?.endCursor,
+        after: data.nftAssets.pageInfo.endCursor,
       },
     })
-  }, [data?.nftAssets?.pageInfo?.endCursor, data?.nftAssets?.pageInfo?.hasNextPage, fetchMore])
+  }, [data?.nftAssets?.pageInfo.endCursor, data?.nftAssets?.pageInfo.hasNextPage, fetchMore])
 
   // Scroll behavior for fixed scroll header
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -205,7 +205,7 @@ export function NFTCollectionScreen({
   }, [collectionItems, extraLoadingItemAmount, gridDataLoading])
 
   const traceProperties = useMemo(
-    () => (collectionData?.name ? { collectionAddress, collectionName: collectionData?.name } : undefined),
+    () => (collectionData?.name ? { collectionAddress, collectionName: collectionData.name } : undefined),
     [collectionAddress, collectionData?.name],
   )
 

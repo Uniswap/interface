@@ -1,4 +1,4 @@
-import { InterfaceElementName, InterfaceSectionName, SharedEventName } from '@uniswap/analytics-events'
+import { SharedEventName } from '@uniswap/analytics-events'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import Column from 'components/deprecated/Column'
@@ -12,6 +12,7 @@ import { ThemedText } from 'theme/components'
 import { Loader } from 'ui/src/loading/Loader'
 import { breakpoints } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 
 const Tokens = lazy(() => import('components/AccountDrawer/MiniPortfolio/Tokens/TokensTab'))
 const NFTs = lazy(() => import('components/AccountDrawer/MiniPortfolio/NFTs/NFTTab'))
@@ -71,7 +72,7 @@ interface Page {
   title: React.ReactNode
   key: string
   component: ({ account }: { account: string }) => JSX.Element
-  loggingElementName: InterfaceElementName
+  loggingElementName: ElementName
 }
 
 const Pages: Array<Page> = [
@@ -83,7 +84,7 @@ const Pages: Array<Page> = [
         <Tokens />
       </Suspense>
     ),
-    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_TOKENS_TAB,
+    loggingElementName: ElementName.MiniPortfolioTokensTab,
   },
   {
     title: <Trans i18nKey="common.nfts" />,
@@ -93,7 +94,7 @@ const Pages: Array<Page> = [
         <NFTs account={account} />
       </Suspense>
     ),
-    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB,
+    loggingElementName: ElementName.MiniPortfolioNftTab,
   },
   {
     title: <Trans i18nKey="common.pools" />,
@@ -103,7 +104,7 @@ const Pages: Array<Page> = [
         <Pools account={account} />
       </Suspense>
     ),
-    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB,
+    loggingElementName: ElementName.MiniPortfolioPoolsTab,
   },
   {
     title: <Trans i18nKey="common.activity" />,
@@ -113,7 +114,7 @@ const Pages: Array<Page> = [
         <ActivityTab account={account} />
       </Suspense>
     ),
-    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_TAB,
+    loggingElementName: ElementName.MiniPortfolioActivityTab,
   },
 ]
 
@@ -138,7 +139,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
   }, [currentKey, hasPendingActivity])
 
   return (
-    <Trace section={InterfaceSectionName.MINI_PORTFOLIO}>
+    <Trace section={SectionName.MiniPortfolio}>
       <Wrapper>
         <Nav data-testid="mini-portfolio-navbar">
           {Pages.map(({ title, loggingElementName, key }, index) => {

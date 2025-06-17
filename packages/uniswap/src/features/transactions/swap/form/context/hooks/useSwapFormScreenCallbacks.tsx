@@ -1,7 +1,7 @@
 import { RefObject, type MutableRefObject } from 'react'
 import type { TextInputProps } from 'react-native'
-import { PRESET_MAX } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/constants'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
+import { isMaxPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/utils'
 import { CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
 import { DecimalPadInputRef } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
@@ -82,7 +82,7 @@ export function useSwapFormScreenCallbacks({
 
       if (!isWeb && inputFieldRef) {
         setTimeout(() => {
-          inputFieldRef.current?.setNativeProps?.({ selection: { start, end } })
+          inputFieldRef.current?.setNativeProps({ selection: { start, end } })
         }, 0)
       }
     },
@@ -177,7 +177,7 @@ export function useSwapFormScreenCallbacks({
       exactAmountToken: amount,
       exactCurrencyField: CurrencyField.INPUT,
       focusOnCurrencyField: undefined,
-      isMax: percentage === PRESET_MAX,
+      isMax: isMaxPercentage(percentage),
       presetPercentage: percentage,
     })
 

@@ -73,14 +73,21 @@ export function parseAndFormatFiatOnRampFiatAmount(amount: string, fiatCurrencyI
   return undefined
 }
 
-export function formatFORErrorAmount(
-  amount: number,
-  isFiat: boolean,
-  fiatCurrencyInfo: FiatCurrencyInfo,
-  quoteCurrency: Currency | undefined,
-  formatNumberOrString: LocalizedFormatter['formatNumberOrString'],
-  getSymbolDisplayText: (symbol: Maybe<string>) => Maybe<string>,
-): string | undefined {
+export function formatFORErrorAmount({
+  amount,
+  isFiat,
+  fiatCurrencyInfo,
+  quoteCurrency,
+  formatNumberOrString,
+  getSymbolDisplayText,
+}: {
+  amount: number
+  isFiat: boolean
+  fiatCurrencyInfo: FiatCurrencyInfo
+  quoteCurrency?: Currency
+  formatNumberOrString: LocalizedFormatter['formatNumberOrString']
+  getSymbolDisplayText: (symbol: Maybe<string>) => Maybe<string>
+}): string | undefined {
   if (isFiat) {
     return formatFiatOnRampFiatAmount(amount, fiatCurrencyInfo)
   }
@@ -95,12 +102,17 @@ export function formatFORErrorAmount(
   return undefined
 }
 
-export function getOnRampInputAmount(
-  rampDirection: RampDirection,
-  inputAmount: string,
-  amountOut: string,
-  inputInFiat: boolean,
-) {
+export function getOnRampInputAmount({
+  rampDirection,
+  inputAmount,
+  amountOut,
+  inputInFiat,
+}: {
+  rampDirection: RampDirection
+  inputAmount: string
+  amountOut: string
+  inputInFiat: boolean
+}) {
   if (rampDirection === RampDirection.ONRAMP) {
     return inputInFiat ? inputAmount : amountOut
   }

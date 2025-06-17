@@ -31,7 +31,7 @@ describe('getContract', () => {
   it('should throw an error if the address is invalid', () => {
     addressMock.mockReturnValue(false)
 
-    expect(() => getContract('invalid_address', mockABI, mockProvider)).toThrow(
+    expect(() => getContract({ address: 'invalid_address', ABI: mockABI, provider: mockProvider })).toThrow(
       `Invalid 'address' parameter 'invalid_address'.`,
     )
     expect(isAddress).toHaveBeenCalledWith('invalid_address')
@@ -40,7 +40,7 @@ describe('getContract', () => {
   it('should throw an error if the address is AddressZero', () => {
     addressMock.mockReturnValue(true)
 
-    expect(() => getContract(AddressZero, mockABI, mockProvider)).toThrow(
+    expect(() => getContract({ address: AddressZero, ABI: mockABI, provider: mockProvider })).toThrow(
       `Invalid 'address' parameter '${AddressZero}'.`,
     )
   })
@@ -48,7 +48,7 @@ describe('getContract', () => {
   it('should return a Contract instance with provider when no account is provided', () => {
     addressMock.mockReturnValue(true)
 
-    getContract(mockAddress, mockABI, mockProvider)
+    getContract({ address: mockAddress, ABI: mockABI, provider: mockProvider })
 
     expect(Contract).toHaveBeenCalledWith(mockAddress, mockABI, mockProvider)
     expect(mockProvider.getSigner).not.toHaveBeenCalled()
@@ -57,7 +57,7 @@ describe('getContract', () => {
   it('should return a Contract instance with signer when account is provided', () => {
     addressMock.mockReturnValue(true)
 
-    getContract(mockAddress, mockABI, mockProvider, mockAccount)
+    getContract({ address: mockAddress, ABI: mockABI, provider: mockProvider, account: mockAccount })
 
     expect(mockProvider.getSigner).toHaveBeenCalledWith(mockAccount)
     expect(mockProvider.getSigner().connectUnchecked).toHaveBeenCalled()

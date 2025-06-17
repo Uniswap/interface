@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
+exports[`SwapSkeleton.tsx > renders a skeleton 1`] = `
 <DocumentFragment>
   .c2 {
   color: #131313;

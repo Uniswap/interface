@@ -73,12 +73,12 @@ export function WalletSettings(): JSX.Element {
             onPress={(): void => toggleViewAll()}
           />
 
-          {showAll && accountsWithoutActiveAccount?.map(renderAccountRow)}
+          {showAll && accountsWithoutActiveAccount.map(renderAccountRow)}
         </>
       ) : (
         <>
           {renderAccountRow(activeAccount)}
-          {accountsWithoutActiveAccount?.map(renderAccountRow)}
+          {accountsWithoutActiveAccount.map(renderAccountRow)}
         </>
       )}
     </Flex>

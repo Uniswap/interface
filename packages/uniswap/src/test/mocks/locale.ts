@@ -27,7 +27,7 @@ export function mockLocalizedFormatter(locale: Locale): LocalizationContextState
       })
     },
     formatPercent(value): string {
-      return formatPercent(value, locale)
+      return formatPercent({ rawPercentage: value, locale })
     },
     addFiatSymbolToNumber(input): string {
       return addFiatSymbolToNumber({
@@ -54,8 +54,9 @@ export function mockFiatConverter({
   return {
     conversionRate: 1,
     convertFiatAmount(amount): { amount: number; currency: FiatCurrency } {
-      return { amount: amount ?? 1, currency }
+      return { amount, currency }
     },
+    // eslint-disable-next-line max-params
     convertFiatAmountFormatted(fromAmount, numberType, placeholder): string {
       return mockLocalizedFormatter(locale).formatNumberOrString({
         value: fromAmount,

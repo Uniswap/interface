@@ -1,0 +1,45 @@
+---
+description: Enforce the use of correct styled library
+globs: apps/web/**/*.ts*
+alwaysApply: false
+---
+# Enforce the use of correct styled library
+
+- Always use `styled` from `ui/src` instead of styled-components
+- Never import from tamagui directly and instead import from `ui/src`
+
+## Usage Examples
+
+### Correct:
+```typescript
+import { styled } from 'ui/src'
+
+export const Container = styled(Flex, {
+  backgroundColor: '$surface2',
+  borderRadius: '$rounded16',
+})
+```
+
+### Incorrect:
+```typescript
+import styled from 'styled-components'
+
+export const Container = styled.div`
+  background-color: ${({ theme }) => theme.surface2};
+  border-radius: 16px;
+`
+```
+
+### Also Incorrect:
+```typescript
+import { styled } from 'tamagui'
+
+export const Container = styled(Flex, {
+  backgroundColor: '$surface2',
+  borderRadius: '$rounded16',
+})
+```
+
+## Rationale
+
+We are deprecating styled-components in favor of Tamagui, which provides better performance and cross-platform compatibility. Always import styling utilities from 'ui/src' to ensure consistent theming and styling across the application.

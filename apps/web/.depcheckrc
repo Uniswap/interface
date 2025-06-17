@@ -4,7 +4,6 @@ ignores: [
     '@web3-react/eip1193',
     '@web3-react/empty',
     '@swc/core',
-    '@swc/jest',
     '@swc/plugin-styled-components',
     '@typechain/ethers-v5',
     'buffer',
@@ -16,6 +15,7 @@ ignores: [
     '@rive-app/canvas',
     'babel-plugin-react-compiler',
     'react-compiler-runtime',
+    '@vitest/coverage-v8',
     # Dependencies that depcheck thinks are missing but are actually present or never used
     'stories',
     ## package.json scripts

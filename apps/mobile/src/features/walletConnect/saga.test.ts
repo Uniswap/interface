@@ -61,15 +61,14 @@ describe('WalletConnect Saga', () => {
             icons: ['https://valid-dapp.com/icon.png'],
           },
         },
-        requiredNamespaces: {
+        relays: [],
+        optionalNamespaces: {
           eip155: {
             chains: ['eip155:1'],
             methods: ['eth_signTransaction'],
             events: [],
           },
         },
-        relays: [],
-        optionalNamespaces: {},
         pairingTopic: 'valid-pairing-topic',
         expiryTimestamp: Date.now() + 1000 * 60 * 5,
         verifyContext: mockVerifyContext,

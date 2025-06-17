@@ -2,15 +2,15 @@ import { useTranslation } from 'react-i18next'
 import { Accordion, Flex, Text } from 'ui/src'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/components/AcrossRoutingInfo'
+import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/MaxSlippageRow'
+import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/PriceImpactRow'
+import { RoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo'
+import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/components/SwapRateRatio'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { useFeeOnTransferAmounts } from 'uniswap/src/features/transactions/swap/hooks/useFeeOnTransferAmount'
-import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
-import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/shared-components/AcrossRoutingInfo'
-import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/shared-components/MaxSlippageRow/MaxSlippageRow'
-import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/shared-components/PriceImpactRow/PriceImpactRow'
-import { RoutingInfo } from 'uniswap/src/features/transactions/swap/shared-components/RoutingInfo'
-import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/shared-components/SwapRateRatio'
+import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -56,7 +56,7 @@ export function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Elemen
           uniswapXGasBreakdown={uniswapXGasBreakdown}
           RoutingInfo={isBridge ? <AcrossRoutingInfo /> : <RoutingInfo gasFee={gasFee} chainId={chainId} />}
           RateInfo={
-            showPriceImpactWarning && trade.trade ? (
+            showPriceImpactWarning ? (
               <Flex row alignItems="center" justifyContent="space-between">
                 <Text color="$neutral2" variant="body3">
                   {t('swap.details.rate')}

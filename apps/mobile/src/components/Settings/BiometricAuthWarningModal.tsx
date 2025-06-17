@@ -11,9 +11,18 @@ type Props = {
   isTouchIdDevice: boolean
   onConfirm: WarningModalProps['onAcknowledge']
   onClose: WarningModalProps['onClose']
+  rejectText?: WarningModalProps['rejectText']
+  acknowledgeText?: WarningModalProps['acknowledgeText']
 }
 
-export function BiometricAuthWarningModal({ isOpen, isTouchIdDevice, onConfirm, onClose }: Props): JSX.Element {
+export function BiometricAuthWarningModal({
+  isOpen,
+  isTouchIdDevice,
+  onConfirm,
+  onClose,
+  rejectText,
+  acknowledgeText,
+}: Props): JSX.Element {
   const { t } = useTranslation()
   const biometricsMethod = useBiometricName(isTouchIdDevice)
   return (
@@ -23,8 +32,8 @@ export function BiometricAuthWarningModal({ isOpen, isTouchIdDevice, onConfirm, 
           ? t('settings.setting.biometrics.warning.message.android')
           : t('settings.setting.biometrics.warning.message.ios', { biometricsMethod })
       }
-      rejectText={t('common.button.back')}
-      acknowledgeText={t('common.button.skip')}
+      rejectText={rejectText ?? t('common.button.back')}
+      acknowledgeText={acknowledgeText ?? t('common.button.skip')}
       isOpen={isOpen}
       modalName={ModalName.FaceIDWarning}
       severity={WarningSeverity.Low}

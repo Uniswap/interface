@@ -10,20 +10,14 @@ import SettingsMenu from 'components/AccountDrawer/SettingsMenu'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import WalletModal from 'components/WalletModal'
 import { OtherWalletsModal } from 'components/WalletModal/OtherWalletsModal'
-import Column from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import { useAtom } from 'jotai'
-import styled from 'lib/styled-components'
 import { useCallback, useEffect, useMemo } from 'react'
+import { Flex } from 'ui/src'
 import { TransitionItem } from 'ui/src/animations'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-
-const DefaultMenuWrap = styled(Column)`
-  width: 100%;
-  height: 100%;
-`
 
 function DefaultMenu() {
   const account = useAccount()
@@ -57,7 +51,9 @@ function DefaultMenu() {
       return 'forward'
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const newIndex = menuIndices[menu] ?? 2
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const oldIndex = menuIndices[prevMenu] ?? 2
     return newIndex > oldIndex ? 'forward' : 'backward'
   }, [menu, prevMenu])
@@ -78,7 +74,7 @@ function DefaultMenu() {
       return
     } // menu is closed, don't log
 
-    sendAnalyticsEvent(InterfaceEventNameLocal.PortfolioMenuOpened, { name: menu })
+    sendAnalyticsEvent(InterfaceEventName.PortfolioMenuOpened, { name: menu })
   }, [menu])
 
   // eslint-disable-next-line consistent-return
@@ -129,11 +125,11 @@ function DefaultMenu() {
   ])
 
   return (
-    <DefaultMenuWrap>
+    <Flex width="100%" height="100%">
       <TransitionItem animationType={animationDirection} animation="100ms" childKey={menu}>
         {SubMenu}
       </TransitionItem>
-    </DefaultMenuWrap>
+    </Flex>
   )
 }
 

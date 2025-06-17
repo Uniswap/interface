@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { createStore, Store } from 'redux'
 import reducer, {
   addTransaction,

@@ -35,7 +35,7 @@ export const slice = createSlice({
         chainId: UniverseChainId
       }>,
     ) => {
-      const positionId = getUniquePositionId(poolId, tokenId, chainId)
+      const positionId = getUniquePositionId({ poolId, tokenId, chainId })
 
       const isVisible = state.positions[positionId]?.isVisible ?? true
       state.positions[positionId] = { isVisible: !isVisible }
@@ -50,8 +50,6 @@ export const slice = createSlice({
       state,
       { payload: { nftKey, isVisible } }: PayloadAction<{ nftKey: string; isVisible: boolean }>,
     ) => {
-      // Ensure state.nfts exists
-      state.nfts ??= {}
       state.nfts[nftKey] = { isVisible }
     },
   },

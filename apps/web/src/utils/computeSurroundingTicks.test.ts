@@ -27,7 +27,6 @@ describe('#computeSurroundingTicks', () => {
       sdkPrice: new Price(token0, token1, '1', '100'),
     }
     const pivot = 3
-    const ascending = true
     const sortedTickData: TickData[] = [
       getV3Tick(activeTickProcessed.tick - 4 * spacing, 10),
       getV3Tick(activeTickProcessed.tick - 2 * spacing, 20),
@@ -38,25 +37,25 @@ describe('#computeSurroundingTicks', () => {
       getV3Tick(activeTickProcessed.tick + 5 * spacing, 20),
     ]
 
-    const previous = computeSurroundingTicks(
+    const previous = computeSurroundingTicks({
       token0,
       token1,
       activeTickProcessed,
       sortedTickData,
       pivot,
-      !ascending,
-      ProtocolVersion.V3,
-    )
+      ascending: false,
+      version: ProtocolVersion.V3,
+    })
 
-    const subsequent = computeSurroundingTicks(
+    const subsequent = computeSurroundingTicks({
       token0,
       token1,
       activeTickProcessed,
       sortedTickData,
       pivot,
-      ascending,
-      ProtocolVersion.V3,
-    )
+      ascending: true,
+      version: ProtocolVersion.V3,
+    })
 
     expect(previous.length).toEqual(3)
     expect(previous.map((t) => [t.tick, parseFloat(t.liquidityActive.toString())])).toEqual([

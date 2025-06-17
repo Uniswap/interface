@@ -5,39 +5,39 @@ import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-jest.mock('components/claim/AddressClaimModal', () => ({
+vi.mock('components/claim/AddressClaimModal', () => ({
   __esModule: true,
   default: () => <div data-testid="mock-address-claim-modal">Address Claim Modal</div>,
 }))
 
-jest.mock('components/ConnectedAccountBlocked', () => ({
+vi.mock('components/ConnectedAccountBlocked', () => ({
   __esModule: true,
   default: () => <div data-testid="mock-connected-account-blocked">Connected Account Blocked</div>,
 }))
 
-jest.mock('components/AccountDrawer/UniwalletModal', () => ({
+vi.mock('components/AccountDrawer/UniwalletModal', () => ({
   __esModule: true,
   default: () => <div data-testid="mock-uniwallet-modal">Uniwallet Modal</div>,
 }))
 
-jest.mock('components/Banner/shared/Banners', () => ({
+vi.mock('components/Banner/shared/Banners', () => ({
   __esModule: true,
   Banners: () => <div data-testid="mock-banners">Banners</div>,
 }))
 
-jest.mock('components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal', () => ({
+vi.mock('components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal', () => ({
   __esModule: true,
   OffchainActivityModal: () => <div data-testid="mock-offchain-activity-modal">Offchain Activity Modal</div>,
 }))
 
-jest.mock('components/TopLevelModals/UkDisclaimerModal', () => ({
+vi.mock('components/TopLevelModals/UkDisclaimerModal', () => ({
   __esModule: true,
   UkDisclaimerModal: () => <div data-testid="mock-uk-disclaimer-modal">UK Disclaimer Modal</div>,
 }))
 
-jest.mock('state/hooks', () => ({
-  useAppSelector: jest.fn(),
-  useAppDispatch: jest.fn(),
+vi.mock('state/hooks', () => ({
+  useAppSelector: vi.fn(),
+  useAppDispatch: vi.fn(),
 }))
 
 describe('ModalRegistry', () => {

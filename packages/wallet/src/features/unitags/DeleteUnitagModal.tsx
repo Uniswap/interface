@@ -59,23 +59,22 @@ export function DeleteUnitagModal({
       })
       setIsDeleting(false)
 
-      if (!deleteResponse?.success) {
+      if (!deleteResponse.success) {
         handleDeleteError()
         return
       }
 
-      if (deleteResponse?.success) {
-        sendAnalyticsEvent(UnitagEventName.UnitagRemoved)
-        resetUnitagsQueries()
-        dispatch(
-          pushNotification({
-            type: AppNotificationType.Success,
-            title: t('unitags.notification.delete.title'),
-          }),
-        )
-        onSuccess?.()
-        onClose()
-      }
+      // Deletion was a success
+      sendAnalyticsEvent(UnitagEventName.UnitagRemoved)
+      resetUnitagsQueries()
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.Success,
+          title: t('unitags.notification.delete.title'),
+        }),
+      )
+      onSuccess?.()
+      onClose()
     } catch (e) {
       logger.error(e, {
         tags: { file: 'DeleteUnitagModal', function: 'onDelete' },

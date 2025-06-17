@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0 1`] = `
+exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic trade 0 1`] = `
 <DocumentFragment>
   .c1 {
   box-sizing: border-box;
@@ -118,9 +118,9 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
           </div>
         </div>
         <div
-          class=" is_TouchableArea  t_group_true"
+          class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
           role="button"
-          style="align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1); text-align: center;"
+          style="text-align: center;"
           tabindex="0"
         >
           <span
@@ -132,9 +132,8 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
         </div>
       </div>
       <button
-        class=" is_Button  t_group_item"
+        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-surface3Hov3121676 _backgroundColor-0focus-visible-surface3Hov3121676 _outlineColor-0focus-visible-neutral3Hov3121676 _transform-0active-scale0--981281 _backgroundColor-0active-surface3Hov3121676 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-surface3 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347366 _mt-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
         dd-action-name="Try again"
-        style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; min-height: 48px; margin-top: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
       >
         <span
           class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
@@ -150,7 +149,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
 </DocumentFragment>
 `;
 
-exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1 1`] = `
+exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic trade 1 1`] = `
 <DocumentFragment>
   .c1 {
   box-sizing: border-box;
@@ -268,9 +267,9 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
           </div>
         </div>
         <div
-          class=" is_TouchableArea  t_group_true"
+          class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
           role="button"
-          style="align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1); text-align: center;"
+          style="text-align: center;"
           tabindex="0"
         >
           <span
@@ -282,9 +281,8 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
         </div>
       </div>
       <button
-        class=" is_Button  t_group_item"
+        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-surface3Hov3121676 _backgroundColor-0focus-visible-surface3Hov3121676 _outlineColor-0focus-visible-neutral3Hov3121676 _transform-0active-scale0--981281 _backgroundColor-0active-surface3Hov3121676 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-surface3 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347366 _mt-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
         dd-action-name="Try again"
-        style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; min-height: 48px; margin-top: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
       >
         <span
           class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
@@ -300,7 +298,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
 </DocumentFragment>
 `;
 
-exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3 1`] = `
+exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic trade 3 1`] = `
 <DocumentFragment>
   .c1 {
   box-sizing: border-box;
@@ -418,9 +416,9 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
           </div>
         </div>
         <div
-          class=" is_TouchableArea  t_group_true"
+          class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
           role="button"
-          style="align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1); text-align: center;"
+          style="text-align: center;"
           tabindex="0"
         >
           <span
@@ -432,9 +430,8 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
         </div>
       </div>
       <button
-        class=" is_Button  t_group_item"
+        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-surface3Hov3121676 _backgroundColor-0focus-visible-surface3Hov3121676 _outlineColor-0focus-visible-neutral3Hov3121676 _transform-0active-scale0--981281 _backgroundColor-0active-surface3Hov3121676 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-surface3 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347366 _mt-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
         dd-action-name="Try again"
-        style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; min-height: 48px; margin-top: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
       >
         <span
           class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
@@ -450,7 +447,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
 </DocumentFragment>
 `;
 
-exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4 1`] = `
+exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic trade 4 1`] = `
 <DocumentFragment>
   .c1 {
   box-sizing: border-box;
@@ -568,9 +565,9 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
           </div>
         </div>
         <div
-          class=" is_TouchableArea  t_group_true"
+          class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
           role="button"
-          style="align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1); text-align: center;"
+          style="text-align: center;"
           tabindex="0"
         >
           <span
@@ -582,9 +579,8 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
         </div>
       </div>
       <button
-        class=" is_Button  t_group_item"
+        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-surface3Hov3121676 _backgroundColor-0focus-visible-surface3Hov3121676 _outlineColor-0focus-visible-neutral3Hov3121676 _transform-0active-scale0--981281 _backgroundColor-0active-surface3Hov3121676 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-surface3 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347366 _mt-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
         dd-action-name="Try again"
-        style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; min-height: 48px; margin-top: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
       >
         <span
           class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
@@ -600,7 +596,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
 </DocumentFragment>
 `;
 
-exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1`] = `
+exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p limit order 3 1`] = `
 <DocumentFragment>
   .c1 {
   box-sizing: border-box;
@@ -754,9 +750,9 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
           </div>
         </div>
         <div
-          class=" is_TouchableArea  t_group_true"
+          class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
           role="button"
-          style="align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1); text-align: center;"
+          style="text-align: center;"
           tabindex="0"
         >
           <span
@@ -768,9 +764,8 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
         </div>
       </div>
       <button
-        class=" is_Button  t_group_item"
+        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-surface3Hov3121676 _backgroundColor-0focus-visible-surface3Hov3121676 _outlineColor-0focus-visible-neutral3Hov3121676 _transform-0active-scale0--981281 _backgroundColor-0active-surface3Hov3121676 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-surface3 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347366 _mt-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
         dd-action-name="Try again"
-        style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; min-height: 48px; margin-top: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
       >
         <span
           class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
@@ -786,7 +781,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
 </DocumentFragment>
 `;
 
-exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1`] = `
+exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p limit order 4 1`] = `
 <DocumentFragment>
   .c1 {
   box-sizing: border-box;
@@ -942,9 +937,9 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
           </div>
         </div>
         <div
-          class=" is_TouchableArea  t_group_true"
+          class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
           role="button"
-          style="align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1); text-align: center;"
+          style="text-align: center;"
           tabindex="0"
         >
           <span
@@ -956,9 +951,8 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
         </div>
       </div>
       <button
-        class=" is_Button  t_group_item"
+        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-surface3Hov3121676 _backgroundColor-0focus-visible-surface3Hov3121676 _outlineColor-0focus-visible-neutral3Hov3121676 _transform-0active-scale0--981281 _backgroundColor-0active-surface3Hov3121676 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-surface3 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347366 _mt-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
         dd-action-name="Try again"
-        style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; min-height: 48px; margin-top: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
       >
         <span
           class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"

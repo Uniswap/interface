@@ -3,11 +3,15 @@ import { useCallback, useEffect } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 
-export function usePollOnFocusOnly(
-  startPolling: (interval: PollingInterval) => void,
-  stopPolling: () => void,
-  pollingInterval: PollingInterval,
-): void {
+export function usePollOnFocusOnly({
+  startPolling,
+  stopPolling,
+  pollingInterval,
+}: {
+  startPolling: (interval: PollingInterval) => void
+  stopPolling: () => void
+  pollingInterval: PollingInterval
+}): void {
   useFocusEffect(
     useCallback(() => {
       startPolling(pollingInterval)

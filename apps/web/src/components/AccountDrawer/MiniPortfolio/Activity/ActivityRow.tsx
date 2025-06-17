@@ -1,4 +1,3 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import { useTimeSince } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -19,6 +18,7 @@ import {
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isHash } from 'viem'
 
@@ -76,13 +76,13 @@ export function ActivityRow({ activity }: { activity: Activity }) {
 
   const openOffchainActivityModal = useOpenOffchainActivityModal()
 
-  const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
+  const explorerUrl = getExplorerLink({ chainId, data: hash, type: ExplorerDataType.TRANSACTION })
 
   const onClick = useCallback(() => {
     if (offchainOrderDetails) {
       openOffchainActivityModal(offchainOrderDetails, {
-        inputLogo: activity?.logos?.[0],
-        outputLogo: activity?.logos?.[1],
+        inputLogo: activity.logos?.[0],
+        outputLogo: activity.logos?.[1],
       })
       return
     }
@@ -92,12 +92,12 @@ export function ActivityRow({ activity }: { activity: Activity }) {
     }
 
     window.open(explorerUrl, '_blank')
-  }, [activity?.logos, activity.status, explorerUrl, hash, offchainOrderDetails, openOffchainActivityModal])
+  }, [activity.logos, activity.status, explorerUrl, hash, offchainOrderDetails, openOffchainActivityModal])
 
   return (
     <Trace
       logPress
-      element={InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_ROW}
+      element={ElementName.MiniPortfolioActivityRow}
       properties={{ hash, chain_id: chainId, explorer_url: explorerUrl }}
     >
       <PortfolioRow

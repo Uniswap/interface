@@ -71,11 +71,15 @@ function statusToTransactionInfoStatus(status: FORTransaction['status']): Transa
   }
 }
 
-export function extractFORTransactionDetails(
-  transaction: FORTransaction,
-  isOffRamp: boolean,
-  activeAccountAddress: Address | null,
-): FORTransactionDetails | undefined {
+export function extractFORTransactionDetails({
+  transaction,
+  isOffRamp,
+  activeAccountAddress,
+}: {
+  transaction: FORTransaction
+  isOffRamp: boolean
+  activeAccountAddress: Address | null
+}): FORTransactionDetails | undefined {
   try {
     const chainId = toSupportedChainId(transaction.cryptoDetails.chainId)
     if (!chainId) {

@@ -41,7 +41,7 @@ import { Flex } from 'ui/src'
 import { UseSporeColorsReturn, useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { INTERFACE_NAV_HEIGHT, breakpoints, zIndexes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const ROW_HEIGHT_DESKTOP = 56
@@ -63,7 +63,7 @@ const TableRow = ({ row }: { row: Row<RowData> }) => {
     linkState: LinkProps['state']
     testId: string
     analytics?: {
-      elementName: ElementNameType
+      elementName: ElementName
       properties: Record<string, unknown>
     }
   }
@@ -229,15 +229,15 @@ export function Table<T extends RowData>({
       loadMore({
         onComplete: () => {
           setLoadingMore(false)
-          if (data?.length === lastLoadedLengthRef.current) {
+          if (data.length === lastLoadedLengthRef.current) {
             canLoadMore.current = false
           } else {
-            lastLoadedLengthRef.current = data?.length ?? 0
+            lastLoadedLengthRef.current = data.length
           }
         },
       })
     }
-  }, [data?.length, distanceFromTop, distanceToBottom, error, loadMore, loading, loadingMore])
+  }, [data.length, distanceFromTop, distanceToBottom, error, loadMore, loading, loadingMore])
 
   const table = useReactTable({
     columns,

@@ -52,7 +52,7 @@ const TokenDetailsMarketData = memo(function _TokenDetailsMarketData(): JSX.Elem
 
   const { currencyId, tokenColor } = useTokenDetailsContext()
 
-  const tokenMarket = useTokenMarketPartsFragment({ currencyId }).data?.market
+  const tokenMarket = useTokenMarketPartsFragment({ currencyId }).data.market
   const projectMarkets = useTokenProjectMarketsPartsFragment({ currencyId }).data.project?.markets
 
   const price = projectMarkets?.[0]?.price?.value || tokenMarket?.price?.value || undefined
@@ -162,7 +162,7 @@ export const TokenDetailsStats = memo(function _TokenDetailsStats(): JSX.Element
     descriptions?.descriptionTranslations?.descriptionZhHans ||
     descriptions?.descriptionTranslations?.descriptionZhHant
 
-  const name = offChainData?.name ?? onChainData?.name
+  const name = offChainData?.name ?? onChainData.name
   const currentDescription = showTranslation && translatedDescription ? translatedDescription : description
 
   return (

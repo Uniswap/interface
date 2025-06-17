@@ -117,8 +117,8 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
   unitagStates[9] = useUnitagByAddress(addresses[9])
 
   // Using these values to recalculate dependency array
-  const unitagsCombined = unitagStates.map((unitagState) => unitagState?.unitag?.username).join('')
-  const unitagLoading = unitagStates.some((unitagState) => unitagState?.loading)
+  const unitagsCombined = unitagStates.map((unitagState) => unitagState.unitag?.username).join('')
+  const unitagLoading = unitagStates.some((unitagState) => unitagState.loading)
 
   const recoveryWalletInfos = useMemo((): RecoveryWalletInfo[] => {
     return addressesWithIndex.map((addressWithIndex, index): RecoveryWalletInfo => {
@@ -135,7 +135,7 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
   }, [addressesWithIndex, balances, balancesLoading, ensMap, unitagsCombined])
 
   const significantRecoveryWalletInfos = useMemo(
-    (): RecoveryWalletInfo[] => (recoveryWalletInfos ?? []).filter(hasBalanceOrName),
+    (): RecoveryWalletInfo[] => recoveryWalletInfos.filter(hasBalanceOrName),
     [recoveryWalletInfos],
   )
 

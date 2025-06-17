@@ -203,7 +203,7 @@ describe(approveAndSwap, () => {
 
   afterAll(() => {
     // Unlock Time
-    dateNowSpy?.mockRestore()
+    dateNowSpy.mockRestore()
   })
 
   it('sends a swap tx', async () => {

@@ -101,7 +101,7 @@ export function AdaptiveDropdown({
 }: AdaptiveDropdownProps) {
   const node = useRef<HTMLDivElement | null>(null)
   const dropdownNode = useRef<HTMLDivElement | null>(null)
-  useOnClickOutside(node, () => isOpen && toggleOpen(false))
+  useOnClickOutside({ node, handler: () => isOpen && toggleOpen(false) })
   const scrollbarStyles = useScrollbarStyles()
   const shadowProps = useShadowPropsMedium()
   const media = useMedia()

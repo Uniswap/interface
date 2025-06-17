@@ -15,7 +15,8 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
   const account = useAccount()
-  const signatures = useAppSelector((state) => state.signatures) ?? {}
+  const signatures = useAppSelector((state) => state.signatures)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!account.address || !signatures[account.address]) {
     return {}
   }
@@ -34,6 +35,7 @@ export function useOrder(orderHash: string): UniswapXOrderDetails | undefined {
   return useMemo(() => {
     const order = signatures[orderHash]
     if (
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       !order ||
       ![
         SignatureType.SIGN_UNISWAPX_ORDER,
@@ -53,15 +55,23 @@ export function useAddOrder() {
   const dispatch = useDispatch()
 
   return useCallback(
-    (
-      offerer: string,
-      orderHash: string,
-      chainId: UniverseChainId,
-      expiry: number,
-      swapInfo: UniswapXOrderDetails['swapInfo'],
-      encodedOrder: string,
-      offchainOrderType: OffchainOrderType,
-    ) => {
+    ({
+      offerer,
+      orderHash,
+      chainId,
+      expiry,
+      swapInfo,
+      encodedOrder,
+      offchainOrderType,
+    }: {
+      offerer: string
+      orderHash: string
+      chainId: UniverseChainId
+      expiry: number
+      swapInfo: UniswapXOrderDetails['swapInfo']
+      encodedOrder: string
+      offchainOrderType: OffchainOrderType
+    }) => {
       dispatch(
         addSignature({
           type: OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE[offchainOrderType],

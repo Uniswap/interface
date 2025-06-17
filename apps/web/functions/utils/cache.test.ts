@@ -20,7 +20,7 @@ beforeAll(() => {
 })
 
 test('Should put cache properly', async () => {
-  jest.spyOn(cacheMock, 'put')
+  vi.spyOn(cacheMock, 'put')
   await Cache.put(data, 'https://example.com')
   expect(cacheMock.put).toHaveBeenCalledWith('https://example.com', expect.anything())
   const call = mocked(cacheMock.put).mock.calls[0]
@@ -31,13 +31,13 @@ test('Should put cache properly', async () => {
 })
 
 test('Should match cache properly', async () => {
-  jest.spyOn(cacheMock, 'match').mockResolvedValueOnce(new Response(JSON.stringify(data)))
+  vi.spyOn(cacheMock, 'match').mockResolvedValueOnce(new Response(JSON.stringify(data)))
   const response = await Cache.match('https://example.com')
   expect(response).toStrictEqual(data)
 })
 
 test('Should return undefined if not all data is present', async () => {
-  jest.spyOn(cacheMock, 'match').mockResolvedValueOnce(new Response(JSON.stringify({ ...data, title: undefined })))
+  vi.spyOn(cacheMock, 'match').mockResolvedValueOnce(new Response(JSON.stringify({ ...data, title: undefined })))
   const response = await Cache.match('https://example.com')
   expect(response).toBeUndefined()
 })

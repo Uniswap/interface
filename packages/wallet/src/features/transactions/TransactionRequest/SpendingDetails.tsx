@@ -68,7 +68,7 @@ export function SpendingDetails({
     <ContentRow label={showLabel ? labelCopy : ''} variant={variant}>
       <Flex row alignItems="center" gap="$spacing4">
         <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon16} />
-        <Text variant={variant}>{getSymbolDisplayText(currencyInfo?.currency.symbol)}</Text>
+        <Text variant={variant}>{getSymbolDisplayText(currencyInfo.currency.symbol)}</Text>
       </Flex>
     </ContentRow>
   )

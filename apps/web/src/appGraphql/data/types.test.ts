@@ -10,7 +10,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
-import { removeSafetyInfo } from 'uniswap/src/test/fixtures'
+import { removeSafetyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
 
 const MAINNET_NATIVE_GQL_TOKEN = {
   __typename: 'Token',

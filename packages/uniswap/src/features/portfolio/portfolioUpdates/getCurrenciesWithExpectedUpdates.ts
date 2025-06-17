@@ -11,6 +11,7 @@ export function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails
   // All txs besides FOR at least use gas so check for update of gas token
   currenciesWithBalToUpdate.add(buildNativeCurrencyId(txChainId))
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   switch (transaction.typeInfo?.type) {
     case TransactionType.Swap:
     case TransactionType.Bridge:
@@ -36,6 +37,7 @@ export function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails
         'getCurrenciesWithExpectedUpdates',
         'Unhandled transaction type',
         {
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           type: transaction.typeInfo?.type,
           info: JSON.stringify(transaction.typeInfo),
         },

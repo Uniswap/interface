@@ -1,15 +1,16 @@
-import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useAccount } from 'hooks/useAccount'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
 import { Flex } from 'ui/src'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { WalletConnectionResult } from 'uniswap/src/features/telemetry/types'
 import { setUserProperty } from 'uniswap/src/features/telemetry/user'
 
-jest.mock('hooks/useAccount')
-jest.mock('hooks/useEthersProvider', () => ({
+vi.mock('hooks/useAccount')
+vi.mock('hooks/useEthersProvider', () => ({
   useEthersWeb3Provider: () => {
-    return { provider: {}, off: jest.fn(), send: jest.fn().mockResolvedValue('v1') }
+    return { provider: {}, off: vi.fn(), send: vi.fn().mockResolvedValue('v1') }
   },
 }))
 
@@ -18,13 +19,17 @@ const ACCOUNT2 = '0x0000000000000000000000000000000000000001'
 const account1Result = { address: ACCOUNT1, connector: { name: 'test' } } as unknown as ReturnType<typeof useAccount>
 const account2Result = { address: ACCOUNT2, connector: { name: 'test' } } as unknown as ReturnType<typeof useAccount>
 
-jest.mock('uniswap/src/features/telemetry/send', () => ({
-  sendAnalyticsEvent: jest.fn(),
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: vi.fn(),
 }))
 
-jest.mock('uniswap/src/features/telemetry/user', () => ({
-  setUserProperty: jest.fn(),
-}))
+vi.mock('uniswap/src/features/telemetry/user', async (importOriginal) => {
+  const original = (await importOriginal()) as any
+  return {
+    ...original,
+    setUserProperty: vi.fn(),
+  }
+})
 
 function first<T>(array: T[]): T {
   return array[0]
@@ -44,8 +49,8 @@ describe('Web3Provider', () => {
       // Assert
       expect(sendAnalyticsEvent).toHaveBeenCalledTimes(1)
       expect(setUserProperty).toHaveBeenCalledTimes(5)
-      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECTED, {
-        result: WalletConnectionResult.SUCCEEDED,
+      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WalletConnected, {
+        result: WalletConnectionResult.Succeeded,
         wallet_address: '0x0000000000000000000000000000000000000000',
         wallet_name: 'test',
         wallet_type: 'Network',
@@ -69,9 +74,9 @@ describe('Web3Provider', () => {
       rerender(<Flex />)
 
       // Assert
-      expect(sendAnalyticsEvent).toHaveBeenCalledTimes(3)
-      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECTED, {
-        result: WalletConnectionResult.SUCCEEDED,
+      expect(sendAnalyticsEvent).toHaveBeenCalledTimes(4)
+      expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WalletConnected, {
+        result: WalletConnectionResult.Succeeded,
         wallet_address: '0x0000000000000000000000000000000000000000',
         wallet_name: 'test',
         wallet_type: 'Network',

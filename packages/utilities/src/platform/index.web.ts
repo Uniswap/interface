@@ -39,7 +39,7 @@ export const isTouchable =
   typeof window !== 'undefined' &&
   typeof navigator !== 'undefined' &&
   ('ontouchstart' in window || navigator.maxTouchPoints > 0)
-export const isHoverable = isWeb && !isMobileWeb
+export const isHoverable = !isMobileWeb
 
 // Browser
 export const isChrome: boolean = typeof navigator !== 'undefined' && /Chrome/.test(navigator.userAgent || '')

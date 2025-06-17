@@ -7,7 +7,15 @@ import {
 import { Data } from 'utils/cache'
 import client from '../client'
 
-export default async function getPool(networkName: string, poolAddress: string, url: string) {
+export default async function getPool({
+  networkName,
+  poolAddress,
+  url,
+}: {
+  networkName: string
+  poolAddress: string
+  url: string
+}) {
   const origin = new URL(url).origin
   const image = origin + '/api/image/pools/' + networkName + '/' + poolAddress
   const uppercaseNetworkName = networkName.toUpperCase()
@@ -27,15 +35,15 @@ export default async function getPool(networkName: string, poolAddress: string, 
     },
     errorPolicy: 'all',
   })
-  const data = v3Data?.v3Pool ?? v2Data?.v2Pair
+  const data = v3Data.v3Pool ?? v2Data.v2Pair
   if (!data) {
     return undefined
   }
 
   const feeTier = `${(v3Data.v3Pool?.feeTier ?? 3000) / 10_000}%`
   const protocolVersion = data.protocolVersion
-  const token0 = data?.token0
-  const token1 = data?.token1
+  const token0 = data.token0
+  const token1 = data.token1
   const name = `${token0?.symbol}/${token1?.symbol}`
   const title = `${name} on Uniswap`
 

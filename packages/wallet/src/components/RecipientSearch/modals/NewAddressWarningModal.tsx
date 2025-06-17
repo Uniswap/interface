@@ -50,7 +50,7 @@ const LeftRightText = ({ leftText, rightChild }: { leftText: string; rightChild:
 export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewAddressWarningModalProps): JSX.Element {
   const { t } = useTranslation()
 
-  const validated = getValidAddress(address)
+  const validated = getValidAddress({ address })
   const displayName = useDisplayName(address, { includeUnitagSuffix: true })
   const ensDisplayName = useENSName(validated ?? undefined)
   const { data: ensAvatar } = useENSAvatar(validated)

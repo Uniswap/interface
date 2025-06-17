@@ -21,7 +21,7 @@ export function useTrendingTokensCurrencyInfos(
     !skip,
   )
 
-  const trendingTokens = data?.tokenRankings?.[CustomRankingType.Trending]?.tokens
+  const trendingTokens = data?.tokenRankings[CustomRankingType.Trending]?.tokens
   const formattedTokens = useMemo(
     () => trendingTokens?.map(tokenRankingsStatToCurrencyInfo).filter((t): t is CurrencyInfo => Boolean(t)),
     [trendingTokens],

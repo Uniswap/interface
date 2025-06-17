@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`StatusIcon with account renders children in correct order 1`] = `
+exports[`StatusIcon > with account > renders children in correct order 1`] = `
 .c1 {
   height: 16px;
   width: 16px;
@@ -154,7 +154,7 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
     <img
       alt="undefined icon"
       class="c4"
-      src="metamask-icon.svg"
+      src="/src/assets/wallets/metamask-icon.svg"
     />
   </div>
   <div
@@ -162,13 +162,13 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
   >
     <img
       class="c4"
-      src="socks.svg"
+      src="/src/assets/svg/socks.svg"
     />
   </div>
 </div>
 `;
 
-exports[`StatusIcon with no account renders children in correct order 1`] = `
+exports[`StatusIcon > with no account > renders children in correct order 1`] = `
 .c0 {
   position: relative;
   display: -webkit-box;
@@ -255,7 +255,7 @@ exports[`StatusIcon with no account renders children in correct order 1`] = `
   >
     <img
       class="c2"
-      src="socks.svg"
+      src="/src/assets/svg/socks.svg"
     />
   </div>
 </div>

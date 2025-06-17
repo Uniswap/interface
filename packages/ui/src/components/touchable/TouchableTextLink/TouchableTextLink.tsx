@@ -103,11 +103,11 @@ const TouchableTextLink_ = forwardRef<TamaguiElement, TouchableTextLinkProps>(fu
       // We need to blur it after the link is pressed so that it is not focused when the link is not focused
       setTimeout(() => {
         if (ref && 'current' in ref) {
-          ref.current?.blur?.()
+          ref.current?.blur()
         }
 
         if (textRef && 'current' in textRef) {
-          textRef.current?.blur?.()
+          textRef.current?.blur()
         }
       }, 0)
     }

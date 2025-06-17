@@ -1,7 +1,10 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { providerErrors, serializeError } from '@metamask/rpc-errors'
 import { dappStore } from 'src/app/features/dapp/store'
 import { getOrderedConnectedAddresses } from 'src/app/features/dapp/utils'
+import { isArcBrowser } from 'src/app/utils/chrome'
+import { getIsDefaultProviderFromStorage } from 'src/app/utils/provider'
 import { backgroundStore } from 'src/background/backgroundStore'
 import {
   contentScriptUtilityMessageChannel,
@@ -34,18 +37,15 @@ import {
   isValidWindowEthereumConfigRequest,
   isValidWindowEthereumRequest,
 } from 'src/contentScript/types'
+import { logContentScriptError } from 'src/contentScript/utils'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
-import { logger } from 'utilities/src/logger/logger'
-import { arraysAreEqual } from 'utilities/src/primitives/array'
-import { walletContextValue } from 'wallet/src/features/wallet/context'
-
-import { isArcBrowser } from 'src/app/utils/chrome'
-import { getIsDefaultProviderFromStorage } from 'src/app/utils/provider'
-import { logContentScriptError } from 'src/contentScript/utils'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { logger } from 'utilities/src/logger/logger'
+import { arraysAreEqual } from 'utilities/src/primitives/array'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { ZodError } from 'zod'
 
 // arc styles aren't available on load
@@ -89,7 +89,7 @@ const setChainIdAndMaybeEmit = (newChainId: string): void => {
 const setConnectedAddressesAndMaybeEmit = (newConnectedAddresses: Address[]): void => {
   // Only emit if the addresses have changed, and it's not the first time
   const normalizedNewAddresses: Address[] = newConnectedAddresses
-    .map((address) => getValidAddress(address))
+    .map((address) => getValidAddress({ address }))
     .filter((normalizedAddress): normalizedAddress is Address => normalizedAddress !== null)
 
   if (!connectedAddresses || !arraysAreEqual(connectedAddresses, normalizedNewAddresses)) {
@@ -98,108 +98,120 @@ const setConnectedAddressesAndMaybeEmit = (newConnectedAddresses: Address[]): vo
   connectedAddresses = normalizedNewAddresses
 }
 
-const extensionEthMethodHandler = new ExtensionEthMethodHandler(
+const extensionEthMethodHandler = new ExtensionEthMethodHandler({
   getChainId,
   getProvider,
   getConnectedAddresses,
   setChainIdAndMaybeEmit,
   setProvider,
   setConnectedAddressesAndMaybeEmit,
-)
-const providerDirectMethodHandler = new ProviderDirectMethodHandler(
+})
+
+const providerDirectMethodHandler = new ProviderDirectMethodHandler({
   getChainId,
   getProvider,
   getConnectedAddresses,
   setChainIdAndMaybeEmit,
   setProvider,
   setConnectedAddressesAndMaybeEmit,
-)
+})
 
-const uniswapMethodHandler = new UniswapMethodHandler(
+const uniswapMethodHandler = new UniswapMethodHandler({
   getChainId,
   getProvider,
   getConnectedAddresses,
   setChainIdAndMaybeEmit,
   setProvider,
   setConnectedAddressesAndMaybeEmit,
-)
+})
 
-addWindowMessageListener<WindowEthereumRequest>(isValidWindowEthereumRequest, async (request, source) => {
-  logger.debug('injected.ts', 'Request received for method', JSON.stringify(request), _provider)
+addWindowMessageListener<WindowEthereumRequest>({
+  validator: isValidWindowEthereumRequest,
+  handler: async (request, source) => {
+    logger.debug('injected.ts', 'Request received for method', JSON.stringify(request), _provider)
 
-  if (!backgroundStore.state.isOnboarded) {
-    rejectRequestNotOnboarded(request, source).catch((error) =>
-      logContentScriptError(
-        error?.message ?? 'Error rejecting request when not onboarded',
-        'injected.ts',
-        'WindowEthereumRequestListener',
-      ),
-    )
-    return
-  }
-
-  if (isProviderDirectMethod(request.method)) {
-    // Provider methods are handled directly by the provider instance
-    // (avoiding roundtrip to background service worker)
-    providerDirectMethodHandler.handleRequest(request, source)
-    return
-  }
-
-  if (isUniswapMethod(request.method)) {
-    try {
-      await uniswapMethodHandler.handleRequest(request, source)
-    } catch (e) {
-      if (e instanceof ZodError) {
-        postParsingError(source, request.requestId, request.method)
-      }
-      const errorMessage = e instanceof Error ? e.message : 'Unknown error'
-      await logContentScriptError(errorMessage, 'injected.ts', 'WindowEthereumRequest')
+    if (!backgroundStore.state.isOnboarded) {
+      rejectRequestNotOnboarded(request, source).catch((error) =>
+        logContentScriptError({
+          errorMessage: error?.message ?? 'Error rejecting request when not onboarded',
+          fileName: 'injected.ts',
+          functionName: 'WindowEthereumRequestListener',
+        }),
+      )
+      return
     }
-    return
-  }
 
-  if (isExtensionEthMethod(request.method)) {
-    try {
-      await extensionEthMethodHandler.handleRequest(request, source)
-    } catch (e) {
-      if (e instanceof ZodError) {
-        postParsingError(source, request.requestId, request.method)
-      }
-      const errorMessage = e instanceof Error ? e.message : 'Unknown error'
-      await logContentScriptError(errorMessage, 'injected.ts', 'WindowEthereumRequest')
+    if (isProviderDirectMethod(request.method)) {
+      // Provider methods are handled directly by the provider instance
+      // (avoiding roundtrip to background service worker)
+      providerDirectMethodHandler.handleRequest(request, source)
+      return
     }
-    return
-  }
 
-  if (isDeprecatedMethod(request.method)) {
-    postDeprecatedMethodError(source, request.requestId, request.method)
-    await passAnalytics(ExtensionEventName.DeprecatedMethodRequest, {
+    if (isUniswapMethod(request.method)) {
+      try {
+        await uniswapMethodHandler.handleRequest(request, source)
+      } catch (e) {
+        if (e instanceof ZodError) {
+          postParsingError({ source, requestId: request.requestId, method: request.method })
+        }
+        const errorMessage = e instanceof Error ? e.message : 'Unknown error'
+        await logContentScriptError({
+          errorMessage,
+          fileName: 'injected.ts',
+          functionName: 'WindowEthereumRequestListener',
+        })
+      }
+      return
+    }
+
+    if (isExtensionEthMethod(request.method)) {
+      try {
+        await extensionEthMethodHandler.handleRequest(request, source)
+      } catch (e) {
+        if (e instanceof ZodError) {
+          postParsingError({ source, requestId: request.requestId, method: request.method })
+        }
+        const errorMessage = e instanceof Error ? e.message : 'Unknown error'
+        await logContentScriptError({
+          errorMessage,
+          fileName: 'injected.ts',
+          functionName: 'WindowEthereumRequestListener',
+        })
+      }
+      return
+    }
+
+    if (isDeprecatedMethod(request.method)) {
+      postDeprecatedMethodError({ source, requestId: request.requestId, method: request.method })
+      await passAnalytics(ExtensionEventName.DeprecatedMethodRequest, {
+        method: request.method,
+        dappUrl,
+      })
+      return
+    }
+
+    if (isUnsupportedMethod(request.method)) {
+      postUnknownMethodError({ source, requestId: request.requestId, method: request.method })
+      await passAnalytics(ExtensionEventName.UnsupportedMethodRequest, {
+        method: request.method,
+        dappUrl,
+      })
+      return
+    }
+
+    // Handle any methods we don't know how to handle and are not in the metamask API
+    await passAnalytics(ExtensionEventName.UnrecognizedMethodRequest, {
       method: request.method,
       dappUrl,
     })
-    return
-  }
-
-  if (isUnsupportedMethod(request.method)) {
-    postUnknownMethodError(source, request.requestId, request.method)
-    await passAnalytics(ExtensionEventName.UnsupportedMethodRequest, {
-      method: request.method,
-      dappUrl,
-    })
-    return
-  }
-
-  // Handle any methods we don't know how to handle and are not in the metamask API
-  await passAnalytics(ExtensionEventName.UnrecognizedMethodRequest, {
-    method: request.method,
-    dappUrl,
-  })
-  postUnknownMethodError(source, request.requestId, request.method)
+    postUnknownMethodError({ source, requestId: request.requestId, method: request.method })
+  },
 })
 
 externalDappMessageChannel.addMessageListener(ExtensionToDappRequestType.SwitchChain, (message) => {
   setChainIdAndMaybeEmit(message.chainId)
-  setProvider(new JsonRpcProvider(message.providerUrl))
+  setProvider(new JsonRpcProvider(message.providerUrl, BigNumber.from(message.chainId).toString()))
 })
 
 externalDappMessageChannel.addMessageListener(ExtensionToDappRequestType.UpdateConnections, (message) => {
@@ -220,7 +232,11 @@ async function init(): Promise<void> {
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    await logContentScriptError(errorMessage, 'injected.ts', 'init')
+    await logContentScriptError({
+      errorMessage,
+      fileName: 'injected.ts',
+      functionName: 'init',
+    })
   }
 }
 
@@ -253,20 +269,20 @@ async function passAnalytics(message: string, tags: Record<string, string>): Pro
   await contentScriptUtilityMessageChannel.sendMessage(logMessage)
 }
 
-addWindowMessageListener<WindowEthereumConfigRequest>(
-  isValidWindowEthereumConfigRequest,
-  async () => {
+addWindowMessageListener<WindowEthereumConfigRequest>({
+  validator: isValidWindowEthereumConfigRequest,
+  handler: async () => {
     const isDefaultProvider = await getIsDefaultProviderFromStorage()
     window.postMessage({ type: ETH_PROVIDER_CONFIG.RESPONSE, config: { isDefaultProvider } })
   },
-  undefined,
-  { removeAfterHandled: true },
-)
+  options: { removeAfterHandled: true },
+})
 
 // check for arc stylesheet properties on load
 // notify background script if arc browser detected so we can disable the extension
 window.addEventListener('load', () => {
   // if styles aren't available at all, then we cannot check for the arc styles
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const isStylesAvailable = document.documentElement && !!getComputedStyle(document.documentElement).length
   if (!isStylesAvailable) {
     return

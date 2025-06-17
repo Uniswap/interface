@@ -35,7 +35,7 @@ export const makeSelectHasNotifications = (): Selector<UniswapState, boolean | u
       if (!address) {
         return undefined
       }
-      return notificationStatuses?.[address]
+      return notificationStatuses[address]
     },
   )
 

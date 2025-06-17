@@ -42,7 +42,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const address = account?.address
 
   const isCreatingNew =
-    params?.importType === ImportType.CreateNew || params?.entryPoint === OnboardingEntryPoint.BackupCard
+    params.importType === ImportType.CreateNew || params.entryPoint === OnboardingEntryPoint.BackupCard
   const screenTitle = isCreatingNew ? t('onboarding.backup.title.new') : t('onboarding.backup.title.existing')
   const fromBackupCard = params.entryPoint === OnboardingEntryPoint.BackupCard
 
@@ -58,7 +58,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   )
 
   useEffect(() => {
-    const shouldOverrideBackButton = params?.importType === ImportType.SeedPhrase
+    const shouldOverrideBackButton = params.importType === ImportType.SeedPhrase
     if (shouldOverrideBackButton) {
       navigation.setOptions({
         headerLeft: renderHeaderLeft,
@@ -110,7 +110,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
 
   const showSkipOption =
     hasExternalBackup(account) &&
-    (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
+    (params.importType === ImportType.SeedPhrase || params.importType === ImportType.Restore)
 
   const hasCloudBackup = hasBackup(BackupType.Cloud, account)
   const hasManualBackup = hasBackup(BackupType.Manual, account)

@@ -40,7 +40,7 @@ const MenuFlyout = styled(Flex, {
 
 function AutocompleteFlyout({ address, handleSelectAddress }: { address: string; handleSelectAddress: () => void }) {
   const { t } = useTranslation()
-  const validAddress = getValidAddress(address)
+  const validAddress = getValidAddress({ address })
 
   return (
     <MenuFlyout>
@@ -64,7 +64,10 @@ export function AddHook() {
   const handleFocus = useCallback((focus: boolean) => setFocus(focus), [])
 
   const inputWrapperNode = useRef<HTMLDivElement | null>(null)
-  useOnClickOutside(inputWrapperNode, isFocusing ? () => handleFocus(false) : undefined)
+  useOnClickOutside({
+    node: inputWrapperNode,
+    handler: isFocusing ? () => handleFocus(false) : undefined,
+  })
 
   const [hookModalOpen, setHookModalOpen] = useState(false)
 

@@ -28,6 +28,8 @@ const helpUrl = 'https://support.uniswap.org/hc/en-us'
 // The trading api uses custom builds for testing which may not use the v1 prefix
 const tradingApiVersionPrefix = config.tradingApiWebTestEnv === 'true' ? '' : '/v1'
 
+export const CHROME_EXTENSION_UNINSTALL_URL_PATH = '/extension/uninstall'
+
 export const uniswapUrls = {
   // Help and web articles/items
   helpUrl,
@@ -96,6 +98,7 @@ export const uniswapUrls = {
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
   chromeExtension: 'http://uniswap.org/ext',
+  chromeExtensionUninstallUrl: `https://uniswap.org${CHROME_EXTENSION_UNINSTALL_URL_PATH}`,
 
   // Download links
   appStoreDownloadUrl: 'https://apps.apple.com/us/app/uniswap-crypto-nft-wallet/id6443944476',
@@ -164,6 +167,7 @@ export const uniswapUrls = {
   // Web Interface Urls
   webInterfaceSwapUrl: `${UNISWAP_WEB_URL}/#/swap`,
   webInterfaceTokensUrl: `${UNISWAP_WEB_URL}/explore/tokens`,
+  webInterfacePoolsUrl: `${UNISWAP_WEB_URL}/explore/pools`,
   webInterfaceAddressUrl: `${UNISWAP_WEB_URL}/address`,
   webInterfaceNftItemUrl: `${UNISWAP_WEB_URL}/nfts/asset`,
   webInterfaceNftCollectionUrl: `${UNISWAP_WEB_URL}/nfts/collection`,

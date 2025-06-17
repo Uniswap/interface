@@ -42,7 +42,8 @@ export function FallbackEthSendRequestContent({
 
   const { value: sending, to: toAddress, chainId: transactionChainId } = dappRequest.transaction
   const chainId = transactionChainId || activeChain
-  const recipientLink = chainId && toAddress ? getExplorerLink(chainId, toAddress, ExplorerDataType.ADDRESS) : ''
+  const recipientLink =
+    chainId && toAddress ? getExplorerLink({ chainId, data: toAddress, type: ExplorerDataType.ADDRESS }) : ''
   const contractFunction = dappRequest.transaction.type
   const calldata = dappRequest.transaction.data ?? ''
 
@@ -79,7 +80,7 @@ export function FallbackEthSendRequestContent({
         width="100%"
       >
         {showSpendingEthDetails && <SpendingEthDetails chainId={chainId} value={sending} />}
-        {transactionCurrencies?.map((currencyInfo, i) => (
+        {transactionCurrencies.map((currencyInfo, i) => (
           <SpendingDetails
             key={currencyInfo.currencyId}
             currencyInfo={currencyInfo}
@@ -123,7 +124,7 @@ export function FallbackEthSendRequestContent({
               onPress={copyCalldata}
             >
               <Text color="$neutral1" variant="body4">
-                {calldata.length > MIN_CALLDATA_LENGTH ? ellipseMiddle(calldata) : calldata}
+                {calldata.length > MIN_CALLDATA_LENGTH ? ellipseMiddle({ str: calldata }) : calldata}
               </Text>
               <AnimatedCopySheets color="$neutral3" size="$icon.16" />
             </TouchableArea>

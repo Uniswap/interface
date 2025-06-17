@@ -17,7 +17,6 @@ function _TokenSelectorSearchResultsList({
   debouncedSearchFilter,
   debouncedParsedSearchFilter,
   isBalancesOnlySearch,
-  isKeyboardOpen,
   input,
 }: {
   onSelectCurrency: OnSelectCurrency
@@ -28,7 +27,6 @@ function _TokenSelectorSearchResultsList({
   debouncedSearchFilter: string | null
   debouncedParsedSearchFilter: string | null
   isBalancesOnlySearch: boolean
-  isKeyboardOpen?: boolean
   input: TradeableAsset | undefined
 }): JSX.Element {
   const { t } = useTranslation()
@@ -38,14 +36,15 @@ function _TokenSelectorSearchResultsList({
     loading,
     error,
     refetch,
-  } = useTokenSectionsForSearchResults(
-    activeAccountAddress,
-    chainFilter ?? parsedChainFilter,
-    debouncedParsedSearchFilter ?? debouncedSearchFilter,
+  } = useTokenSectionsForSearchResults({
+    address: activeAccountAddress,
+    chainFilter: chainFilter ?? parsedChainFilter,
+    searchFilter: debouncedParsedSearchFilter ?? debouncedSearchFilter,
     isBalancesOnlySearch,
     input,
-  )
+  })
 
+  // eslint-disable-next-line max-params
   const onSelectCurrency: OnSelectCurrency = (currencyInfo, section, index) => {
     parentOnSelectCurrency(currencyInfo, section, index)
     registerSearchTokenCurrencyInfo(currencyInfo)
@@ -64,7 +63,6 @@ function _TokenSelectorSearchResultsList({
       emptyElement={emptyElement}
       errorText={t('token.selector.search.error')}
       hasError={Boolean(error)}
-      isKeyboardOpen={isKeyboardOpen}
       loading={userIsTyping || loading}
       refetch={refetch}
       sections={sections}

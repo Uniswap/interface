@@ -123,7 +123,7 @@ export function useDerivedLimitInfo(state: LimitState): LimitInfo {
   const { trade } = useRoutingAPITrade(
     skip,
     TradeType.EXACT_INPUT,
-    parsedAmounts?.[CurrencyField.INPUT],
+    parsedAmounts[CurrencyField.INPUT],
     outputCurrency,
     RouterPreference.API,
   )
@@ -178,7 +178,13 @@ function useLimitOrderTrade({
       const usdCostPerGas = getUSDCostPerGas(gasUseEstimateUSD, gasUseEstimate)
 
       if (needsWrap) {
-        const wrapInfo = await getWrapInfo(needsWrap, account.address, currencyIn.chainId, '1', usdCostPerGas)
+        const wrapInfo = await getWrapInfo({
+          needsWrap,
+          account: account.address,
+          chainId: currencyIn.chainId,
+          amount: '1',
+          usdCostPerGas,
+        })
         setWrapInfo(wrapInfo)
       } else {
         setWrapInfo({ needsWrap: false })
@@ -188,10 +194,10 @@ function useLimitOrderTrade({
   }, [account.address, inputCurrency, trade])
 
   const limitOrderTrade = useMemo(() => {
-    if (!inputCurrency || !parsedAmounts?.[CurrencyField.INPUT] || !account.address || !outputAmount || !wrapInfo) {
+    if (!inputCurrency || !parsedAmounts[CurrencyField.INPUT] || !account.address || !outputAmount || !wrapInfo) {
       return undefined
     }
-    const amountIn = CurrencyAmount.fromRawAmount(inputCurrency.wrapped, parsedAmounts?.[CurrencyField.INPUT].quotient)
+    const amountIn = CurrencyAmount.fromRawAmount(inputCurrency.wrapped, parsedAmounts[CurrencyField.INPUT].quotient)
     return new LimitOrderTrade({
       amountIn,
       amountOut: outputAmount,
@@ -266,12 +272,13 @@ function useMarketPriceAndFee(
       return undefined
     }
 
-    if (!tradeA || !tradeB || !isClassicTrade(tradeA) || !isClassicTrade(tradeB)) {
+    if (!isClassicTrade(tradeA) || !isClassicTrade(tradeB)) {
       return undefined
     }
 
     const priceA = tradeA.routes[0]?.midPrice
     const priceB = tradeB.routes[0]?.midPrice
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!priceA || !priceB) {
       return undefined
     }

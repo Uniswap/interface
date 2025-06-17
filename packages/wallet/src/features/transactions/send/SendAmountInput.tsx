@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useLayoutEffect, useState } from 'react'
 import { NativeSyntheticEvent, TextInputSelectionChangeEventData } from 'react-native'
 import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
-import { ArrowUpDown } from 'ui/src/components/icons'
+import { ArrowDownArrowUp } from 'ui/src/components/icons'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { fonts } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
@@ -67,11 +67,11 @@ export function SendAmountInput({
     onToggleIsFiatMode(!isFiatInput)
   }, [isFiatInput, onToggleIsFiatMode])
 
-  const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
-    MAX_CHAR_PIXEL_WIDTH,
-    MAX_INPUT_FONT_SIZE,
-    MIN_INPUT_FONT_SIZE,
-  )
+  const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing({
+    maxCharWidthAtMaxFontSize: MAX_CHAR_PIXEL_WIDTH,
+    maxFontSize: MAX_INPUT_FONT_SIZE,
+    minFontSize: MIN_INPUT_FONT_SIZE,
+  })
   const [containerWidth, setContainerWidth] = useState(0)
 
   // Resize font value when value changes
@@ -151,7 +151,7 @@ export function SendAmountInput({
             <Text color={subTextValueColor} textAlign="center" variant="subheading2">
               {subTextValue}
             </Text>
-            {!warning && <ArrowUpDown color="$neutral3" size="$icon.16" />}
+            {!warning && <ArrowDownArrowUp color="$neutral3" size="$icon.16" />}
           </Flex>
         </TouchableArea>
       )}

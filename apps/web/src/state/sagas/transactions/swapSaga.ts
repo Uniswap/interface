@@ -1,4 +1,3 @@
-import { SwapEventName } from '@uniswap/analytics-events'
 import { useTotalBalancesUsdForAnalytics } from 'appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
@@ -27,6 +26,7 @@ import { call } from 'typed-redux-saga'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
@@ -81,7 +81,7 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
   const txRequest = yield* call(getSwapTxRequest, step, signature)
 
   const onModification = ({ hash, data }: VitalTxFields) => {
-    sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
+    sendAnalyticsEvent(SwapEventName.SwapModifiedInWallet, {
       ...analytics,
       txHash: hash,
       expected: txRequest.data?.toString() ?? '',
@@ -142,7 +142,7 @@ function handleSwapTransactionAnalytics(params: {
   const { trade, analytics, hash, batchId } = params
 
   sendAnalyticsEvent(
-    SwapEventName.SWAP_SIGNED,
+    SwapEventName.SwapSigned,
     formatSwapSignedAnalyticsEventProperties({
       trade,
       allowedSlippage: trade.slippageTolerance ? slippageToleranceToPercent(trade.slippageTolerance) : ZERO_PERCENT,
@@ -281,7 +281,7 @@ function* classicSwap(
         }
       }
     } catch (error) {
-      const displayableError = getDisplayableError(error, step)
+      const displayableError = getDisplayableError({ error, step })
       if (displayableError) {
         logger.error(displayableError, { tags: { file: 'swapSaga', function: 'classicSwap' } })
       }
@@ -328,7 +328,7 @@ function* uniswapXSwap(
         }
       }
     } catch (error) {
-      const displayableError = getDisplayableError(error, step)
+      const displayableError = getDisplayableError({ error, step })
       if (displayableError) {
         logger.error(displayableError, { tags: { file: 'swapSaga', function: 'uniswapXSwap' } })
       }
@@ -409,9 +409,9 @@ export function useSwapCallback(): SwapCallback {
       }
       appDispatch(swapSaga.actions.trigger(swapParams))
 
-      const blockNumber = getClassicQuoteFromResponse(trade?.quote)?.blockNumber?.toString()
+      const blockNumber = getClassicQuoteFromResponse(trade.quote)?.blockNumber?.toString()
 
-      sendAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
+      sendAnalyticsEvent(SwapEventName.SwapSubmittedButtonClicked, {
         ...analytics,
         estimated_network_fee_wei: gasFee.value,
         gas_limit: isClassicSwap ? swapTxContext.txRequests?.[0]?.gasLimit?.toString() : undefined,

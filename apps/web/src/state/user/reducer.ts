@@ -85,6 +85,7 @@ const userSlice = createSlice({
         serializedPair.token0.address !== serializedPair.token1.address
       ) {
         const chainId = serializedPair.token0.chainId
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         state.pairs[chainId] = state.pairs[chainId] || {}
         state.pairs[chainId][pairKey(serializedPair.token0.address, serializedPair.token1.address)] = serializedPair
       }

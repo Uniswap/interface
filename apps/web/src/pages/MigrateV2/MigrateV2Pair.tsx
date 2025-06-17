@@ -1,5 +1,4 @@
 import type { TransactionResponse } from '@ethersproject/providers'
-import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES, type Currency } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, TickMath, priceToClosestTick } from '@uniswap/v3-sdk'
@@ -47,8 +46,9 @@ import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfacePageName, LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { LiquiditySource } from 'uniswap/src/features/telemetry/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress } from 'utilities/src/addresses'
@@ -272,7 +272,7 @@ function V2PairMigration({
 
   // set up v3 pool
   const [feeAmount, setFeeAmount] = useState(FeeAmount.MEDIUM)
-  const [poolState, pool] = usePool(token0, token1, feeAmount)
+  const [poolState, pool] = usePool({ currencyA: token0, currencyB: token1, feeAmount })
   const noLiquidity = poolState === PoolState.NOT_EXISTS
 
   // get spot prices + price difference
@@ -282,22 +282,23 @@ function V2PairMigration({
   )
   const v3SpotPrice = poolState === PoolState.EXISTS ? pool?.token0Price : undefined
 
-  let priceDifferenceFraction: Fraction | undefined =
-    v2SpotPrice && v3SpotPrice ? v3SpotPrice.divide(v2SpotPrice).subtract(1).multiply(100) : undefined
+  let priceDifferenceFraction: Fraction | undefined = v3SpotPrice
+    ? v3SpotPrice.divide(v2SpotPrice).subtract(1).multiply(100)
+    : undefined
   if (priceDifferenceFraction?.lessThan(ZERO)) {
     priceDifferenceFraction = priceDifferenceFraction.multiply(-1)
   }
 
-  const largePriceDifference = priceDifferenceFraction && !priceDifferenceFraction?.lessThan(JSBI.BigInt(2))
+  const largePriceDifference = priceDifferenceFraction && !priceDifferenceFraction.lessThan(JSBI.BigInt(2))
 
   // the following is a small hack to get access to price range data/input handlers
   const [baseToken, setBaseToken] = useState(token0)
-  const { ticks, pricesAtTicks, invertPrice, invalidRange, outOfRange, ticksAtLimit } = useV3DerivedMintInfo(
-    token0,
-    token1,
+  const { ticks, pricesAtTicks, invertPrice, invalidRange, outOfRange, ticksAtLimit } = useV3DerivedMintInfo({
+    currencyA: token0,
+    currencyB: token1,
     feeAmount,
-    baseToken,
-  )
+    baseCurrency: baseToken,
+  })
 
   // get value and prices at ticks
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
@@ -387,7 +388,6 @@ function V2PairMigration({
       typeof tickLower !== 'number' ||
       typeof tickUpper !== 'number' ||
       !v3Amount0Min ||
-      !v3Amount1Min ||
       !account.chainId ||
       !networkSupportsV2
     ) {
@@ -456,10 +456,14 @@ function V2PairMigration({
         return migrator
           .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
           .then((response: TransactionResponse) => {
-            sendAnalyticsEvent(LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED, {
+            sendAnalyticsEvent(LiquidityEventName.MigrateLiquiditySubmitted, {
               ...getLPBaseAnalyticsProperties({
                 trace,
                 fee: feeAmount,
+                tickSpacing: undefined,
+                tickLower: undefined,
+                tickUpper: undefined,
+                hook: undefined,
                 currency0: token0,
                 currency1: token1,
                 poolId: pairAddress,
@@ -467,7 +471,7 @@ function V2PairMigration({
                 currency0AmountUsd: token0USD,
                 currency1AmountUsd: token1USD,
               }),
-              action: `${isNotUniswap ? LiquiditySource.SUSHISWAP : LiquiditySource.V2}->${LiquiditySource.V3}`,
+              action: `${isNotUniswap ? LiquiditySource.Sushiswap : LiquiditySource.V2}->${LiquiditySource.V3}`,
               transaction_hash: response.hash,
             })
 
@@ -527,11 +531,11 @@ function V2PairMigration({
         >
           <ExternalLink
             key="migration-contract"
-            href={getExplorerLink(
-              account.chainId ?? UniverseChainId.Mainnet,
-              migrator?.address ?? '',
-              ExplorerDataType.ADDRESS,
-            )}
+            href={getExplorerLink({
+              chainId: account.chainId ?? UniverseChainId.Mainnet,
+              data: migrator?.address ?? '',
+              type: ExplorerDataType.ADDRESS,
+            })}
           >
             <Text color="$accent1" display="inline">
               <Trans i18nKey="migrate.contract" /> ↗
@@ -593,24 +597,22 @@ function V2PairMigration({
                 <Trans i18nKey="migrate.highGasCost" />
               </Text>
 
-              {v2SpotPrice && (
-                <Flex gap="$gap8" mt="$spacing12">
-                  <Flex row justifyContent="space-between" alignItems="center">
-                    <Text variant="body2">
-                      <Trans
-                        i18nKey="migrate.symbolPrice"
-                        values={{
-                          protocolName: isNotUniswap ? 'SushiSwap' : 'V2',
-                          tokenSymbol: invertPrice ? currency1.symbol : currency0.symbol,
-                        }}
-                      />{' '}
-                      {invertPrice
-                        ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
-                        : `${v2SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
-                    </Text>
-                  </Flex>
+              <Flex gap="$gap8" mt="$spacing12">
+                <Flex row justifyContent="space-between" alignItems="center">
+                  <Text variant="body2">
+                    <Trans
+                      i18nKey="migrate.symbolPrice"
+                      values={{
+                        protocolName: isNotUniswap ? 'SushiSwap' : 'V2',
+                        tokenSymbol: invertPrice ? currency1.symbol : currency0.symbol,
+                      }}
+                    />{' '}
+                    {invertPrice
+                      ? `${v2SpotPrice.invert().toSignificant(6)} ${currency0.symbol}`
+                      : `${v2SpotPrice.toSignificant(6)} ${currency1.symbol}`}
+                  </Text>
                 </Flex>
-              )}
+              </Flex>
             </BlueCard>
           )}
 
@@ -629,8 +631,8 @@ function V2PairMigration({
                   </Text>
                   <Text variant="body3">
                     {invertPrice
-                      ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
-                      : `${v2SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
+                      ? `${v2SpotPrice.invert().toSignificant(6)} ${currency0.symbol}`
+                      : `${v2SpotPrice.toSignificant(6)} ${currency1.symbol}`}
                   </Text>
                 </Flex>
 
@@ -640,7 +642,7 @@ function V2PairMigration({
                   </Text>
                   <Text variant="body3">
                     {invertPrice
-                      ? `${v3SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
+                      ? `${v3SpotPrice?.invert().toSignificant(6)} ${currency0.symbol}`
                       : `${v3SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
                   </Text>
                 </Flex>
@@ -672,8 +674,8 @@ function V2PairMigration({
               </Text>
               <Text variant="body3">
                 {invertPrice
-                  ? `${v3SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
-                  : `${v3SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
+                  ? `${v3SpotPrice.invert().toSignificant(6)} ${currency0.symbol}`
+                  : `${v3SpotPrice.toSignificant(6)} ${currency1.symbol}`}
               </Text>
             </Flex>
           ) : null}
@@ -740,15 +742,9 @@ function V2PairMigration({
                       i18nKey="migrate.refund"
                       values={{
                         amtA: formatCurrencyAmount({ value: refund0, type: NumberType.TokenTx }),
-                        symA:
-                          account.chainId && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(token0)
-                            ? 'ETH'
-                            : token0.symbol,
+                        symA: WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(token0) ? 'ETH' : token0.symbol,
                         amtB: formatCurrencyAmount({ value: refund1, type: NumberType.TokenTx }),
-                        symB:
-                          account.chainId && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(token1)
-                            ? 'ETH'
-                            : token1.symbol,
+                        symB: WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(token1) ? 'ETH' : token1.symbol,
                       }}
                     />
                   </Text>
@@ -765,7 +761,6 @@ function V2PairMigration({
                     approval !== ApprovalState.NOT_APPROVED ||
                     signatureData !== null ||
                     !v3Amount0Min ||
-                    !v3Amount1Min ||
                     invalidRange ||
                     confirmingMigration
                   }
@@ -787,7 +782,6 @@ function V2PairMigration({
               <Button
                 isDisabled={
                   !v3Amount0Min ||
-                  !v3Amount1Min ||
                   invalidRange ||
                   (approval !== ApprovalState.APPROVED && signatureData === null) ||
                   confirmingMigration ||
@@ -854,7 +848,11 @@ export default function MigrateV2Pair() {
 
   // get data required for V2 pair migration
   const pairBalance = useTokenBalance(account.address, liquidityToken)
-  const isOwner = usePositionOwnerV2(account?.address, liquidityToken?.address, token0?.chainId)
+  const isOwner = usePositionOwnerV2({
+    account: account.address,
+    address: liquidityToken?.address,
+    chainId: token0?.chainId,
+  })
   const totalSupply = useTotalSupply(liquidityToken)
 
   const [reserve0Raw, reserve1Raw] =
@@ -877,7 +875,7 @@ export default function MigrateV2Pair() {
   }, [navigate])
 
   // redirect for invalid url params
-  if (!validatedAddress || !pair || (pair && !pairAddressesLoading && !token0Address && !account.isConnecting)) {
+  if (!validatedAddress || !pair || (!pairAddressesLoading && !token0Address && !account.isConnecting)) {
     logger.warn('MigrateV2Pair', 'MigrateV2Pair', 'Invalid pair address', {
       token0Address,
       token1Address,
@@ -889,7 +887,7 @@ export default function MigrateV2Pair() {
   return (
     <Trace
       logImpression
-      page={InterfacePageNameLocal.MigrateV2Pair}
+      page={InterfacePageName.MigrateV2Pair}
       properties={{
         pool_address: validatedAddress,
         chain_id: account.chainId,

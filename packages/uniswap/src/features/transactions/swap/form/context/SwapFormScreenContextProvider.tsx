@@ -14,7 +14,6 @@ import {
   SwapFormScreenContext,
   SwapFormScreenContextState,
 } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContext'
-import { useSwapFormHoverStyles } from 'uniswap/src/features/transactions/swap/form/context/hooks/useSwapFormHoverStyles'
 import { useSwapFormScreenCallbacks } from 'uniswap/src/features/transactions/swap/form/context/hooks/useSwapFormScreenCallbacks'
 import { useTemporaryFoTWarning } from 'uniswap/src/features/transactions/swap/form/context/hooks/useTemporaryFoTWarning'
 import { useUpdateSwapFormOnMountIfExactOutputWillFail } from 'uniswap/src/features/transactions/swap/form/context/hooks/useUpdateSwapFormOnMountIfExactOutputWillFail'
@@ -22,7 +21,6 @@ import { useDecimalPadControlledField } from 'uniswap/src/features/transactions/
 import { useSwapNetworkChangeEffect } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapNetworkChangeEffect'
 import { useSyncFiatAndTokenAmountUpdater } from 'uniswap/src/features/transactions/swap/form/hooks/useSyncFiatAndTokenAmountUpdater'
 import { getExactOutputWillFail } from 'uniswap/src/features/transactions/swap/utils/getExactOutputWillFail'
-import { isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
@@ -57,7 +55,7 @@ export function SwapFormScreenContextProvider({
     hideFooter,
   } = useSwapFormContext()
 
-  const { currencyAmounts, currencyBalances, currencies, currencyAmountsUSDValue, wrapType, trade } = derivedSwapInfo
+  const { currencyAmounts, currencyBalances, currencies, currencyAmountsUSDValue, trade } = derivedSwapInfo
 
   // When using fiat input mode, this hook updates the token amount based on the latest fiat conversion rate (currently polled every 15s).
   // In the Extension, the `SwapForm` is not unmounted when the user moves to the `SwapReview` screen,
@@ -86,9 +84,6 @@ export function SwapFormScreenContextProvider({
 
   const decimalPadControlledField = useDecimalPadControlledField()
 
-  // Quote is being fetched for first time or refetching
-  const isSwapDataLoading = Boolean(!isWrapAction(wrapType) && trade.isFetching)
-
   const inputRef = useRef<CurrencyInputPanelRef>(null)
   const outputRef = useRef<CurrencyInputPanelRef>(null)
   const decimalPadRef = useRef<DecimalPadInputRef>(null)
@@ -109,7 +104,7 @@ export function SwapFormScreenContextProvider({
 
   // If exact output will fail due to FoT tokens, the field should be disabled and un-focusable.
   // Also, for bridging, the output field should be disabled since Across does not have exact in vs. exact out.
-  const isBridge = Boolean(input && output && input?.chainId !== output?.chainId)
+  const isBridge = Boolean(input && output && input.chainId !== output.chainId)
   const exactOutputDisabled = isBridge || exactOutputWillFail
 
   const callbacks = useSwapFormScreenCallbacks({
@@ -141,8 +136,6 @@ export function SwapFormScreenContextProvider({
   const decimalPadValueRef = decimalPadControlledField === exactCurrencyField ? exactValueRef : formattedDerivedValueRef
 
   const { showWarning, showTemporaryFoTWarning } = useTemporaryFoTWarning()
-
-  const hoverStyles = useSwapFormHoverStyles()
 
   const isBlockedTokens =
     getTokenWarningSeverity(currencies.input) === WarningSeverity.Blocked ||
@@ -180,7 +173,6 @@ export function SwapFormScreenContextProvider({
     exactFieldIsInput,
     exactFieldIsOutput,
     exactOutputDisabled,
-    isSwapDataLoading,
     resetSelection: callbacks.resetSelection,
     currencyAmountsUSDValue,
     exactValue,
@@ -210,9 +202,6 @@ export function SwapFormScreenContextProvider({
     onShowTokenSelectorOutput: callbacks.onShowTokenSelectorOutput,
     showTemporaryFoTWarning,
     onDecimalPadTriggerInputShake: callbacks.onDecimalPadTriggerInputShake,
-
-    // Styles
-    hoverStyles,
   }
 
   return <SwapFormScreenContext.Provider value={contextValue}>{children}</SwapFormScreenContext.Provider>

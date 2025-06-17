@@ -17,11 +17,15 @@ function nodeContainsClick<T extends HTMLElement>(node: RefObject<T | undefined>
   return withinX && withinY
 }
 
-export function useOnClickOutside<T extends HTMLElement>(
-  node: RefObject<T | undefined>,
-  handler: undefined | (() => void),
-  ignoredNodes: Array<RefObject<HTMLElement | undefined>> = [],
-) {
+export function useOnClickOutside<T extends HTMLElement>({
+  node,
+  handler,
+  ignoredNodes = [],
+}: {
+  node: RefObject<T | undefined>
+  handler?: () => void
+  ignoredNodes?: Array<RefObject<HTMLElement | undefined>>
+}) {
   const handlerRef = useRef<undefined | (() => void)>(handler)
 
   useEffect(() => {

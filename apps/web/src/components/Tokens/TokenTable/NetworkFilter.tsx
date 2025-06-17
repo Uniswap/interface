@@ -1,4 +1,3 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { useTheme } from 'lib/styled-components'
@@ -21,7 +20,8 @@ import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks
 import { ALL_CHAIN_IDS, UniverseChainId, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { isBackendSupportedChainId, isTestnetChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getChainUrlParam, useChainIdFromUrlParam } from 'utils/chainParams'
 
 const NetworkLabel = styled(Flex, {
@@ -81,7 +81,7 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
                 <ChainLogo
                   chainId={currentChainId ?? UniverseChainId.Mainnet}
                   size={20}
-                  testId="tokens-network-filter-selected"
+                  testId={TestID.TokensNetworkFilterSelected}
                 />
               )}
             </NetworkLabel>
@@ -145,15 +145,15 @@ const TableNetworkItem = memo(function TableNetworkItem({
   return (
     <Trace
       logPress
-      page={InterfacePageName.EXPLORE_PAGE}
+      page={InterfacePageName.ExplorePage}
       properties={{
         tab,
         chain: chainName.toString(),
-        previousConnectedChain: currentChainInfo?.id ? toGraphQLChain(currentChainInfo?.id) : 'All networks',
+        previousConnectedChain: currentChainInfo?.id ? toGraphQLChain(currentChainInfo.id) : 'All networks',
       }}
     >
       <InternalMenuItem
-        data-testid={`tokens-network-filter-option-${chainName.toLowerCase()}`}
+        data-testid={`${TestID.TokensNetworkFilterOptionPrefix}${chainName.toLowerCase()}`}
         disabled={unsupported}
         onPress={() => {
           !unsupported && navigate(`/explore/${tab ?? ExploreTab.Tokens}${!isAllNetworks ? `/${chainUrlParam}` : ''}`)

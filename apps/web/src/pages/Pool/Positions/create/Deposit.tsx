@@ -19,7 +19,11 @@ import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 
 export const DepositStep = () => {
   const {
-    derivedPositionInfo: { currencies },
+    derivedPositionInfo: {
+      currencies: {
+        display: { TOKEN0, TOKEN1 },
+      },
+    },
   } = useCreatePositionContext()
   const { t } = useTranslation()
   const { onConnectWallet } = useUniswapContext()
@@ -69,12 +73,10 @@ export const DepositStep = () => {
     setIsReviewModalOpen(true)
   }, [priceDifference?.warning])
 
-  const [token0, token1] = currencies
-
   const { updatedFormattedAmounts, updatedUSDAmounts, updatedDeposit0Disabled, updatedDeposit1Disabled } =
     useUpdatedAmountsFromDependentAmount({
-      token0,
-      token1,
+      token0: TOKEN0,
+      token1: TOKEN1,
       dependentAmount,
       exactField,
       currencyAmounts,
@@ -84,7 +86,7 @@ export const DepositStep = () => {
       deposit1Disabled,
     })
 
-  if (!token0 || !token1) {
+  if (!TOKEN0 || !TOKEN1) {
     return null
   }
 
@@ -117,8 +119,8 @@ export const DepositStep = () => {
       )}
       <DepositInputForm
         autofocus={false}
-        token0={token0}
-        token1={token1}
+        token0={TOKEN0}
+        token1={TOKEN1}
         formattedAmounts={updatedFormattedAmounts}
         currencyAmounts={currencyAmounts}
         currencyAmountsUSDValue={updatedUSDAmounts}

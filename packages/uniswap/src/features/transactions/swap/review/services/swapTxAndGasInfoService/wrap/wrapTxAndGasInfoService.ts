@@ -1,44 +1,24 @@
-import { createFetchGasFee } from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
 import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { getWrapTransactionRequest } from 'uniswap/src/features/transactions/swap/contexts/hooks/useWrapTransactionRequest'
+import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { EVMSwapInstructionsService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapInstructionsService'
+import { createGetEVMSwapTransactionRequestInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/utils'
 import { SwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
-import {
-  getWrapTxAndGasInfo,
-  processWrapResponse,
-} from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
-import { tryCatch } from 'utilities/src/errors'
+import { getWrapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
+import { UnwrapTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 
-interface WrapTxAndGasInfoServiceContext {
+export function createWrapTxAndGasInfoService(ctx: {
+  instructionService: EVMSwapInstructionsService
   activeGasStrategy: GasStrategy
   shadowGasStrategies: GasStrategy[]
-  fallbackGasLimit?: number
-}
+  transactionSettings: TransactionSettingsContextState
+  v4SwapEnabled: boolean
+}): SwapTxAndGasInfoService<WrapTrade | UnwrapTrade> {
+  const getEVMSwapTransactionRequestInfo = createGetEVMSwapTransactionRequestInfo(ctx)
 
-export function createWrapTxAndGasInfoService(ctx: WrapTxAndGasInfoServiceContext): SwapTxAndGasInfoService<undefined> {
-  const { activeGasStrategy, shadowGasStrategies, fallbackGasLimit } = ctx
-  const fetchGasFee = createFetchGasFee({ activeGasStrategy, shadowGasStrategies })
-
-  const service: SwapTxAndGasInfoService<undefined> = {
-    async getSwapTxAndGasInfo({ account, derivedSwapInfo }) {
-      const currencyAmountIn = derivedSwapInfo.currencyAmounts.input
-      const from = account?.address
-
-      if (!currencyAmountIn) {
-        throw new Error('Currency amount in is required')
-      }
-
-      const wrapTxRequest = await getWrapTransactionRequest({ currencyAmountIn, from })
-
-      // TODO(WALL-6421): Remove this handling once GasFeeResult shape is decoupled from state fields
-      const { data: statelessGasFeeResult, error } = await tryCatch(
-        fetchGasFee({ tx: wrapTxRequest, fallbackGasLimit }),
-      )
-      const gasFeeResult: GasFeeResult = { ...statelessGasFeeResult, error, isLoading: false }
-
-      const swapTxInfo = processWrapResponse({ gasFeeResult, wrapTxRequest })
-
-      return getWrapTxAndGasInfo({ swapTxInfo })
+  const service: SwapTxAndGasInfoService<WrapTrade | UnwrapTrade> = {
+    async getSwapTxAndGasInfo(params) {
+      const swapTxInfo = await getEVMSwapTransactionRequestInfo(params)
+      return getWrapTxAndGasInfo({ ...params, swapTxInfo })
     },
   }
 

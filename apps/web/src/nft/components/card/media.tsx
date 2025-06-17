@@ -74,7 +74,13 @@ export const NftImage = ({
         draggable={false}
         onError={() => setNoContent(true)}
         onLoad={(e) => {
-          handleUniformAspectRatio(uniformAspectRatio, e, setUniformAspectRatio, renderedHeight, setRenderedHeight)
+          handleUniformAspectRatio({
+            uniformAspectRatio,
+            e,
+            setUniformAspectRatio,
+            renderedHeight,
+            setRenderedHeight,
+          })
           setLoaded(true)
         }}
       />
@@ -165,7 +171,13 @@ export const NftPlayableMedia = ({
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={(e) => {
-            handleUniformAspectRatio(uniformAspectRatio, e, setUniformAspectRatio, renderedHeight, setRenderedHeight)
+            handleUniformAspectRatio({
+              uniformAspectRatio,
+              e,
+              setUniformAspectRatio,
+              renderedHeight,
+              setRenderedHeight,
+            })
             setImageLoaded(true)
           }}
           $hidden={shouldPlay && !isAudio}

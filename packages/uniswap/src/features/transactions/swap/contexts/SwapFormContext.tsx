@@ -124,7 +124,7 @@ export function SwapFormContextProvider({
       setSwapForm((oldVal) => {
         return {
           ...oldVal,
-          selectingCurrencyField: prefilledState?.selectingCurrencyField,
+          selectingCurrencyField: prefilledState.selectingCurrencyField,
           filteredChainIds: prefilledState.filteredChainIds,
           isSelectingCurrencyFieldPrefilled: true,
         }

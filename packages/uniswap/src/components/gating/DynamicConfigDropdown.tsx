@@ -66,8 +66,7 @@ export function DynamicConfigDropdown({
             {selectedOption?.label ??
               (selectedOption && 'value' in selectedOption
                 ? selectedOption.value
-                : JSON.stringify(selectedOption?.jsonValue)) ??
-              selected}
+                : JSON.stringify(selectedOption?.jsonValue))}
           </Text>
         </ActionSheetDropdown>
       </Flex>

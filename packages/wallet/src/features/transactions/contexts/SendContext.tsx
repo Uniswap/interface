@@ -96,11 +96,12 @@ export function SendContextProvider({
   )
 
   const warnings = useSendWarnings(t, derivedSendInfo)
-  const txRequest = useSendTransactionRequest(derivedSendInfo)
-  const gasFee = useTransactionGasFee(
-    txRequest,
-    warnings.some((warning) => warning.action === WarningAction.DisableReview),
-  )
+  const { data: txRequest } = useSendTransactionRequest(derivedSendInfo)
+  const gasFee = useTransactionGasFee({
+    tx: txRequest ?? undefined,
+    skip: warnings.some((warning) => warning.action === WarningAction.DisableReview),
+    shouldUsePreviousValueDuringLoading: true,
+  })
   const txRequestWithGasSettings = useMemo(
     (): providers.TransactionRequest => ({ ...txRequest, ...gasFee.params }),
     [gasFee.params, txRequest],

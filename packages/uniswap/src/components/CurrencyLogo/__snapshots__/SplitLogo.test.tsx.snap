@@ -169,13 +169,13 @@ exports[`SplitLogo renders without error 1`] = `
       style={
         {
           "borderColor": "#131313",
-          "borderRadius": 2.1,
+          "borderRadius": 2.16,
           "borderStyle": "solid",
-          "borderWidth": 1.5,
+          "borderWidth": 1.6,
           "flexDirection": "column",
-          "height": 7,
+          "height": 7.2,
           "overflow": "hidden",
-          "width": 7,
+          "width": 7.2,
           "zIndex": 10,
         }
       }

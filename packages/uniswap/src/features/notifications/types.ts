@@ -27,6 +27,7 @@ export enum AppNotificationType {
   DappDisconnected = 17,
   NotSupportedNetwork = 18,
   PasswordChanged = 19,
+  SmartWalletDisabled = 20,
 }
 
 export interface AppNotificationBase {
@@ -169,6 +170,11 @@ export interface SuccessNotification extends AppNotificationBase {
   title: string
 }
 
+export interface SmartWalletDisabledNotification extends AppNotificationBase {
+  type: AppNotificationType.SmartWalletDisabled
+  title: string
+}
+
 export interface NetworkChangedNotification extends AppNotificationBase {
   type: AppNotificationType.NetworkChanged
   chainId: UniverseChainId
@@ -243,6 +249,7 @@ export type AppNotification =
   | ChangeAssetVisibilityNotification
   | SuccessNotification
   | ScantasticCompleteNotification
+  | SmartWalletDisabledNotification
   | DappConnectedNotification
   | DappDisconnectedNotification
   | NotSupportedNetworkNotification

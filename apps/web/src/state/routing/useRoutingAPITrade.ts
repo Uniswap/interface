@@ -60,6 +60,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
  * @param amountSpecified the exact amount to swap in/out
  * @param otherCurrency the desired output/payment currency
  */
+// eslint-disable-next-line max-params
 export function useRoutingAPITrade<TTradeType extends TradeType>(
   skipFetch = false,
   tradeType: TTradeType,
@@ -111,7 +112,6 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
         state: TradeState.STALE,
         trade: tradeResult?.trade,
         currentTrade: currentData?.trade,
-        swapQuoteLatency: tradeResult?.latencyMs,
       }
     } else if (!amountSpecified || isError || queryArgs === skipToken) {
       return {
@@ -127,9 +127,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     } else {
       return {
         state: isFetching ? TradeState.LOADING : TradeState.VALID,
-        trade: tradeResult?.trade,
+        trade: tradeResult.trade,
         currentTrade: currentData?.trade,
-        swapQuoteLatency: tradeResult?.latencyMs,
       }
     }
   }, [
@@ -138,7 +137,6 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     isError,
     isFetching,
     queryArgs,
-    tradeResult?.latencyMs,
     tradeResult?.state,
     tradeResult?.trade,
     currentData?.trade,

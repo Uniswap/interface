@@ -9,7 +9,7 @@ import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 export function useGatingUserPropertyUsernames(): void {
   const activeAccount = useActiveAccount()
-  const validatedAddress = getValidAddress(activeAccount?.address)
+  const validatedAddress = getValidAddress({ address: activeAccount?.address })
   const { data: ens } = useENSName(validatedAddress ?? undefined)
   const { unitag } = useUnitagByAddress(validatedAddress ?? undefined)
 
@@ -22,7 +22,7 @@ export function useGatingUserPropertyUsernames(): void {
         .updateUserAsync({
           ...user,
           privateAttributes: {
-            ...user?.privateAttributes,
+            ...user.privateAttributes,
             unitag: unitag?.username,
             ens: newEns,
           },

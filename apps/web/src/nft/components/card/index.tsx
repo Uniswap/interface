@@ -99,7 +99,7 @@ export const NftCard = ({
           tokenType={tokenType}
           listedPrice={listedPrice}
         />
-        {getNftDisplayComponent(
+        {getNftDisplayComponent({
           asset,
           mediaShouldBePlaying,
           setCurrentTokenPlayingMedia,
@@ -107,7 +107,7 @@ export const NftCard = ({
           setUniformAspectRatio,
           renderedHeight,
           setRenderedHeight,
-        )}
+        })}
       </MediaContainer>
       {!hideDetails && (
         <>

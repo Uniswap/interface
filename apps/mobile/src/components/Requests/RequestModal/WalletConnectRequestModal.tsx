@@ -76,7 +76,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
   const signerAccounts = useSignerAccounts()
   const signerAccount = signerAccounts.find((account) => areAddressesEqual(account.address, request.account))
-  const gasFee = useTransactionGasFee(tx)
+  const gasFee = useTransactionGasFee({ tx })
 
   const hasSufficientFunds = useHasSufficientFunds({
     account: request.account,
@@ -88,11 +88,11 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const { isBlocked: isSenderBlocked, isBlockedLoading: isSenderBlockedLoading } = useIsBlockedActiveAddress()
   const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlocked(tx?.to)
 
-  const isBlocked = isSenderBlocked ?? isRecipientBlocked
+  const isBlocked = isSenderBlocked || isRecipientBlocked
   const isBlockedLoading = isSenderBlockedLoading || isRecipientBlockedLoading
 
   const getHasMismatch = useHasAccountMismatchCallback()
-  const hasMismatch = chainId ? getHasMismatch(chainId) : false
+  const hasMismatch = getHasMismatch(chainId)
   // When link mode is active we can sign messages through universal links on device
   const suppressOfflineWarning = request.isLinkModeSupported
 

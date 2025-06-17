@@ -1,4 +1,4 @@
-import { InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { SharedEventName } from '@uniswap/analytics-events'
 import { MouseFollowTooltip, TooltipSize } from 'components/Tooltip'
 import { NftCard } from 'nft/components/card'
 import { VerifiedIcon } from 'nft/components/iconExports'
@@ -11,6 +11,7 @@ import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { GqlChainId } from 'uniswap/src/features/chains/types'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -32,9 +33,9 @@ export function NFT({
     asset.chain && isTestnetModeEnabled ? gqlChains.includes(asset.chain as GqlChainId) : asset.chain === Chain.Ethereum
 
   const onPress = () => {
-    if (asset.asset_contract?.address && asset.tokenId) {
+    if (enabled && asset.asset_contract.address && asset.tokenId) {
       window.open(
-        `https://opensea.io/assets/${asset.asset_contract.address}/${asset.tokenId}`,
+        `https://opensea.io/item/${asset.chain?.toLowerCase()}/${asset.asset_contract.address}/${asset.tokenId}`,
         '_blank',
         'noopener,noreferrer',
       )
@@ -69,7 +70,7 @@ export function NFT({
           onCardClick={onPress}
           sendAnalyticsEvent={() =>
             sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-              element: InterfaceElementName.MINI_PORTFOLIO_NFT_ITEM,
+              element: ElementName.MiniPortfolioNftItem,
               collection_name: asset.collection?.name,
               collection_address: asset.collection?.address,
               token_id: asset.tokenId,

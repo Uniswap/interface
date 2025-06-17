@@ -45,7 +45,7 @@ export async function tryLocalAuthenticate(): Promise<BiometricAuthenticationSta
                   and thats why we have to call authenticateAsync to be able to distinguish between different errors.
      */
     const enrolled = await isEnrolledAsync()
-    const disableDeviceFallback = isAndroid ?? (await DeviceInfo.getApiLevel()) < 30
+    const disableDeviceFallback = isAndroid && (await DeviceInfo.getApiLevel()) < 30
 
     const result = await authenticateAsync({
       cancelLabel: i18n.t('common.button.cancel'),

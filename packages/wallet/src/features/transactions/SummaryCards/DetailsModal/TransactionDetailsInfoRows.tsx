@@ -58,7 +58,7 @@ export function TransactionDetailsInfoRows({
   pt?: FlexProps['pt']
   onClose: () => void
 }): JSX.Element {
-  const rows = useTransactionDetailsInfoRows(transactionDetails, isShowingMore, onClose)
+  const rows = useTransactionDetailsInfoRows({ transactionDetails, isShowingMore, onClose })
 
   return (
     <Flex gap="$spacing8" px="$spacing8" pt={pt}>
@@ -67,11 +67,15 @@ export function TransactionDetailsInfoRows({
   )
 }
 
-export function useTransactionDetailsInfoRows(
-  transactionDetails: TransactionDetails,
-  isShowingMore: boolean,
-  onClose: () => void,
-): JSX.Element[] {
+function useTransactionDetailsInfoRows({
+  transactionDetails,
+  isShowingMore,
+  onClose,
+}: {
+  transactionDetails: TransactionDetails
+  isShowingMore: boolean
+  onClose: () => void
+}): JSX.Element[] {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
 
@@ -160,6 +164,11 @@ export function useTransactionDetailsInfoRows(
         }
       }
       break
+    case TransactionType.LiquidityIncrease:
+    case TransactionType.LiquidityDecrease:
+    case TransactionType.Claim:
+    case TransactionType.CreatePair:
+    case TransactionType.CreatePool:
     case TransactionType.Wrap:
     case TransactionType.NFTTrade:
       // For now, these cases don't add any specific rows
@@ -177,14 +186,20 @@ export function useTransactionDetailsInfoRows(
             />,
           )
         }
-        const address = typeInfo.dappInfo?.address
+        const address = typeInfo.dappInfo.address
         if (address) {
           specificRows.push(
             <InfoRow key="contract" label={t('common.text.contract')}>
               <Text variant="body3">{shortenAddress(address)}</Text>
               <TouchableArea
                 onPress={async (): Promise<void> => {
-                  await openUri(getExplorerLink(transactionDetails.chainId, address, ExplorerDataType.ADDRESS))
+                  await openUri({
+                    uri: getExplorerLink({
+                      chainId: transactionDetails.chainId,
+                      data: address,
+                      type: ExplorerDataType.ADDRESS,
+                    }),
+                  })
                 }}
               >
                 <ExternalLink color="$neutral3" size="$icon.16" />

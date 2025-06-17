@@ -41,6 +41,8 @@ import {
   Trade,
   UniswapXV2Trade,
   UniswapXV3Trade,
+  UnwrapTrade,
+  WrapTrade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   DEFAULT_PROTOCOL_OPTIONS,
@@ -69,7 +71,11 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
 
   switch (data?.routing) {
     case Routing.CLASSIC: {
-      const routes = computeRoutes(currencyIn.isNative, currencyOut.isNative, data)
+      const routes = computeRoutes({
+        tokenInIsNative: currencyIn.isNative,
+        tokenOutIsNative: currencyOut.isNative,
+        quoteResponse: data,
+      })
 
       if (!routes || !deadline) {
         return null
@@ -78,10 +84,10 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
       return new ClassicTrade({
         quote: data,
         deadline,
-        v2Routes: routes?.flatMap((r) => (r?.routev2 ? { ...r, routev2: r.routev2 } : [])) ?? [],
-        v3Routes: routes?.flatMap((r) => (r?.routev3 ? { ...r, routev3: r.routev3 } : [])) ?? [],
-        v4Routes: routes?.flatMap((r) => (r?.routev4 ? { ...r, routev4: r.routev4 } : [])) ?? [],
-        mixedRoutes: routes?.flatMap((r) => (r?.mixedRoute ? { ...r, mixedRoute: r.mixedRoute } : [])) ?? [],
+        v2Routes: routes.flatMap((r) => (r.routev2 ? { ...r, routev2: r.routev2 } : [])),
+        v3Routes: routes.flatMap((r) => (r.routev3 ? { ...r, routev3: r.routev3 } : [])),
+        v4Routes: routes.flatMap((r) => (r.routev4 ? { ...r, routev4: r.routev4 } : [])),
+        mixedRoutes: routes.flatMap((r) => (r.mixedRoute ? { ...r, mixedRoute: r.mixedRoute } : [])),
         tradeType,
       })
     }
@@ -110,6 +116,12 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
     case Routing.BRIDGE: {
       return new BridgeTrade({ quote: data, currencyIn, currencyOut, tradeType })
     }
+    case Routing.WRAP: {
+      return new WrapTrade({ quote: data, currencyIn, currencyOut, tradeType })
+    }
+    case Routing.UNWRAP: {
+      return new UnwrapTrade({ quote: data, currencyIn, currencyOut, tradeType })
+    }
     default: {
       return null
     }
@@ -120,11 +132,15 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
  * Transforms a trading API quote into an array of routes that can be used to
  * create a `Trade`.
  */
-export function computeRoutes(
-  tokenInIsNative: boolean,
-  tokenOutIsNative: boolean,
-  quoteResponse?: QuoteResponse,
-):
+function computeRoutes({
+  tokenInIsNative,
+  tokenOutIsNative,
+  quoteResponse,
+}: {
+  tokenInIsNative: boolean
+  tokenOutIsNative: boolean
+  quoteResponse?: QuoteResponse
+}):
   | {
       routev4: V4Route<Currency, Currency> | null
       routev3: V3Route<Currency, Currency> | null
@@ -135,13 +151,13 @@ export function computeRoutes(
     }[]
   | undefined {
   // TODO : remove quote type check for Uniswap X integration
-  if (!quoteResponse || !quoteResponse.quote || !isClassicQuote(quoteResponse.quote)) {
+  if (!quoteResponse || !isClassicQuote(quoteResponse.quote)) {
     return undefined
   }
 
   const { quote } = quoteResponse
 
-  if (!quote.route || quote.route?.length === 0) {
+  if (!quote.route || quote.route.length === 0) {
     return undefined
   }
 
@@ -417,7 +433,7 @@ export function validateTrade({
     return null
   }
 
-  const inputsMatch = areAddressesEqual(currencyIn.wrapped.address, trade?.inputAmount.currency.wrapped.address)
+  const inputsMatch = areAddressesEqual(currencyIn.wrapped.address, trade.inputAmount.currency.wrapped.address)
   const outputsMatch = areAddressesEqual(currencyOut.wrapped.address, trade.outputAmount.currency.wrapped.address)
 
   const tokenAddressesMatch = inputsMatch && outputsMatch
@@ -512,11 +528,11 @@ export function useQuoteSlippageParams({
   tokenOutChainId,
   isUSDQuote,
 }: UseQuoteSlippageParamsArgs): Pick<QuoteRequest, 'autoSlippage' | 'slippageTolerance'> | undefined {
-  const minAutoSlippageToleranceL2 = useDynamicConfigValue(
-    DynamicConfigs.Swap,
-    SwapConfigKey.MinAutoSlippageToleranceL2,
-    DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE,
-  )
+  const minAutoSlippageToleranceL2 = useDynamicConfigValue({
+    config: DynamicConfigs.Swap,
+    key: SwapConfigKey.MinAutoSlippageToleranceL2,
+    defaultValue: DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE,
+  })
 
   return useMemo(() => {
     if (customSlippageTolerance) {

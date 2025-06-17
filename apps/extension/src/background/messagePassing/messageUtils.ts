@@ -7,12 +7,17 @@ type InvalidWindowMessageHandler = (message: unknown, source?: MessageEventSourc
 
 // Message listener for chrome.window with validation logic.
 // Used to pass messages between the site – and content scripts – and the extension (eg receive external messages from dapps).
-export function addWindowMessageListener<T extends Message>(
-  validator: MessageValidator<T>,
-  handler: WindowMessageHandler<T>,
-  invalidMessageHandler?: InvalidWindowMessageHandler,
-  options?: { removeAfterHandled?: boolean },
-): (event: MessageEvent) => void {
+export function addWindowMessageListener<T extends Message>({
+  validator,
+  handler,
+  invalidMessageHandler,
+  options,
+}: {
+  validator: MessageValidator<T>
+  handler: WindowMessageHandler<T>
+  invalidMessageHandler?: InvalidWindowMessageHandler
+  options?: { removeAfterHandled?: boolean }
+}): (event: MessageEvent) => void {
   const listener = (event: MessageEvent): void => {
     if (event.source !== window || !validator(event.data)) {
       invalidMessageHandler?.(event.data, event.source)

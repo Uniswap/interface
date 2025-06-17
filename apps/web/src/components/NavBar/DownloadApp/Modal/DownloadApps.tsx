@@ -1,4 +1,3 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import AppStoreBadge from 'assets/images/app-store-badge.png'
 import ExtensionIllustration from 'assets/images/extensionIllustration.png'
 import PlayStoreBadge from 'assets/images/play-store-badge.png'
@@ -32,7 +31,7 @@ import { GoogleChromeLogo } from 'ui/src/components/logos/GoogleChromeLogo'
 import { iconSizes, zIndexes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 
 const LazyWalletOneLinkQR = lazy(async () => {
@@ -135,8 +134,8 @@ function DownloadMobile() {
       </BadgeLink>
       <Trace
         logPress
-        element={InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON}
-        properties={{ connector_id: account?.connector?.id }}
+        element={ElementName.UniswapWalletModalDownloadButton}
+        properties={{ connector_id: account.connector?.id }}
       >
         <Flex row justifyContent="center" gap="$spacing16">
           <BadgeLink href="https://apps.apple.com/us/app/uniswap-crypto-nft-wallet/id6443944476">
@@ -163,13 +162,13 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
   const dispatch = useDispatch()
 
   const onPressCard = useEvent(() => {
-    if (account?.address) {
+    if (account.address) {
       dispatch(updateDownloadGraduatedWalletCardsDismissed({ walletAddress: account.address }))
     }
   })
 
   return (
-    <Trace logImpression modal={ModalName.DownloadApp} properties={{ connector_id: account?.connector?.id }}>
+    <Trace logImpression modal={ModalName.DownloadApp} properties={{ connector_id: account.connector?.id }}>
       <ModalContent
         title={t('downloadApp.modal.getTheApp.title')}
         subtext={t('downloadApp.modal.uniswapProducts.subtitle')}
@@ -181,7 +180,7 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
             flex="1 1 auto"
             onClick={() => {
               setPage(Page.DownloadMobile)
-              onPressCard?.()
+              onPressCard()
             }}
           >
             <IllustrationContainer>
@@ -190,8 +189,8 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
             <CardInfo title={t('common.uniswapMobile')} details={t('common.iOSAndroid')}>
               <Trace
                 logPress
-                element={InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON}
-                properties={{ connector_id: account?.connector?.id }}
+                element={ElementName.UniswapWalletModalDownloadButton}
+                properties={{ connector_id: account.connector?.id }}
               >
                 <Flex row gap="$spacing8" alignItems="center">
                   <WiggleIcon>
@@ -204,11 +203,11 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
               </Trace>
             </CardInfo>
           </Card>
-          <Trace logPress element={InterfaceElementName.EXTENSION_DOWNLOAD_BUTTON}>
+          <Trace logPress element={ElementName.ExtensionDownloadButton}>
             <Card
               onClick={() => {
                 window.open(uniswapUrls.chromeExtension)
-                onPressCard?.()
+                onPressCard()
               }}
             >
               <IllustrationContainer>

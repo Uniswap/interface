@@ -34,7 +34,7 @@ export function BridgeNotification({ notification }: { notification: BridgeTxNot
   const outputCurrencyInfo = useCurrencyInfo(outputCurrencyId)
 
   const title = formBridgeNotificationTitle(txStatus)
-  const swapFormState = useCreateSwapFormState(address, chainId, txId)
+  const swapFormState = useCreateSwapFormState({ address, chainId, txId })
 
   const onRetry = (): void => {
     navigateToSwapFlow(swapFormState ? { initialState: swapFormState } : undefined)
@@ -48,17 +48,17 @@ export function BridgeNotification({ notification }: { notification: BridgeTxNot
         }
       : undefined
 
-  const formattedInputTokenAmount = getFormattedCurrencyAmount(
-    inputCurrencyInfo?.currency,
-    inputCurrencyAmountRaw,
+  const formattedInputTokenAmount = getFormattedCurrencyAmount({
+    currency: inputCurrencyInfo?.currency,
+    amount: inputCurrencyAmountRaw,
     formatter,
-  )
+  })
 
-  const formattedOutputTokenAmount = getFormattedCurrencyAmount(
-    outputCurrencyInfo?.currency,
-    outputCurrencyAmountRaw,
+  const formattedOutputTokenAmount = getFormattedCurrencyAmount({
+    currency: outputCurrencyInfo?.currency,
+    amount: outputCurrencyAmountRaw,
     formatter,
-  )
+  })
 
   const contentOverride = (
     <Flex grow row gap="$spacing12" alignItems="center" width="100%">

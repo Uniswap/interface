@@ -38,9 +38,7 @@ export function NetworkOption({
   } else {
     content = (
       <Flex row gap="$spacing12">
-        {(chainId && <NetworkLogo chainId={chainId} size={NETWORK_OPTION_ICON_SIZE} />) || (
-          <Flex width={NETWORK_OPTION_ICON_SIZE} />
-        )}
+        <NetworkLogo chainId={chainId} size={NETWORK_OPTION_ICON_SIZE} />
         <ElementAfterText
           element={isNew ? <NewTag ml={OPTION_GAP} /> : undefined}
           text={info.label}

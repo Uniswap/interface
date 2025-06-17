@@ -122,11 +122,19 @@ export function TraceUserProperties(): null {
   useEffect(() => {
     setUserProperty(
       MobileUserPropertyName.AppOpenAuthMethod,
-      getAuthMethod(biometricsAppSettingsState.requiredForAppAccess, touchId, faceId),
+      getAuthMethod({
+        isSettingEnabled: biometricsAppSettingsState.requiredForAppAccess,
+        isTouchIdSupported: touchId,
+        isFaceIdSupported: faceId,
+      }),
     )
     setUserProperty(
       MobileUserPropertyName.TransactionAuthMethod,
-      getAuthMethod(biometricsAppSettingsState.requiredForTransactions, touchId, faceId),
+      getAuthMethod({
+        isSettingEnabled: biometricsAppSettingsState.requiredForTransactions,
+        isTouchIdSupported: touchId,
+        isFaceIdSupported: faceId,
+      }),
     )
   }, [allowAnalytics, biometricsAppSettingsState, touchId, faceId])
 

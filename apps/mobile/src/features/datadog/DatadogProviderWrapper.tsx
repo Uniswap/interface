@@ -52,7 +52,11 @@ async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
         DynamicConfigs.DatadogIgnoredErrors,
         DatadogIgnoredErrorsConfigKey,
         DatadogIgnoredErrorsValType
-      >(DynamicConfigs.DatadogIgnoredErrors, DatadogIgnoredErrorsConfigKey.Errors, [])
+      >({
+        config: DynamicConfigs.DatadogIgnoredErrors,
+        key: DatadogIgnoredErrorsConfigKey.Errors,
+        defaultValue: [],
+      })
 
       const ignoredError = ignoredErrors.find(({ messageContains }) => event?.message.includes(messageContains))
       if (ignoredError) {
@@ -64,6 +68,7 @@ async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
     sessionSamplingRate,
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (localDevDatadogEnabled) {
     Object.assign(datadogConfig, {
       sessionSamplingRate: 100,

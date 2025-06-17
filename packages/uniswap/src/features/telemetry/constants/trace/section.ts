@@ -1,0 +1,35 @@
+export enum SectionName {
+  CurrencyInputPanel = 'currency-input-panel',
+  CurrencyOutputPanel = 'currency-output-panel',
+  ExploreFavoriteTokensSection = 'explore-favorite-tokens-section',
+  ExploreSearch = 'explore-search',
+  ExploreTopTokensSection = 'explore-top-tokens-section',
+  HomeActivityTab = 'home-activity-tab',
+  HomeExploreTab = 'home-explore-tab',
+  HomeNFTsTab = 'home-nfts-tab',
+  HomeTokensTab = 'home-tokens-tab',
+  ImportAccountForm = 'import-account-form',
+  MiniPortfolio = 'mini-portfolio',
+  NavbarSearch = 'Navbar Search',
+  ProfileActivityTab = 'profile-activity-tab',
+  ProfileNftsTab = 'profile-nfts-tab',
+  ProfileTokensTab = 'profile-tokens-tab',
+  SwapCurrencyInput = 'swap-currency-input',
+  SwapCurrencyOutput = 'swap-currency-output',
+  SwapForm = 'swap-form',
+  SwapPending = 'swap-pending',
+  SwapReview = 'swap-review',
+  TokenSelector = 'token-selector',
+  TokenDetails = 'token-details',
+
+  // These name / values don't match because we refactored code to use "send", but wanted to preserve old names for dashboards
+  SendForm = 'transfer-form',
+  SendReview = 'transfer-review',
+  SendRecipientSelectFullScreen = 'send-recipient-select',
+
+  ChainSelector = 'chain-selector',
+  CreatePositionDepositStep = 'create-position-deposit-step',
+  CreatePositionPriceRangeStep = 'create-position-price-range-step',
+  CreatePositionSelectTokensStep = 'create-position-select-tokens-step',
+  // alphabetize additional values.
+}

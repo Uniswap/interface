@@ -141,7 +141,7 @@ export async function focusOrCreateUniswapInterfaceTab({
   const isInNewTabPage = activeTabUrl === 'chrome://newtab/'
 
   const shouldReuseActiveTab = reuseActiveTabIfItMatches
-    ? activeTabUrl && reuseActiveTabIfItMatches?.test(activeTabUrl)
+    ? activeTabUrl && reuseActiveTabIfItMatches.test(activeTabUrl)
     : false
 
   if (activeTab?.id && (shouldReuseActiveTab || isInNewTabPage)) {

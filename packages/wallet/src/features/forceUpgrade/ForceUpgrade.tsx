@@ -85,7 +85,7 @@ function ForceUpgradeModal({
 
   // signerAccounts could be empty if no seed phrase imported or in onboarding
   const signerAccounts = useSignerAccounts()
-  const mnemonicId = signerAccounts.length > 0 ? (signerAccounts?.[0] as SignerMnemonicAccount)?.mnemonicId : undefined
+  const mnemonicId = signerAccounts.length > 0 ? (signerAccounts[0] as SignerMnemonicAccount).mnemonicId : undefined
 
   const onClose = useEvent(() => {
     setUserDismissed(true)
@@ -97,13 +97,13 @@ function ForceUpgradeModal({
     }
 
     if (isExtension) {
-      await openUri(EXTENSION_FORCED_UPGRADE_HELP_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
+      await openUri({ uri: EXTENSION_FORCED_UPGRADE_HELP_LINK, openExternalBrowser: true, isSafeUri: true })
       return
     }
 
     if (isIOS) {
       // iOS doesn't support in-app updates, just open the App Store
-      await openUri(MOBILE_APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
+      await openUri({ uri: MOBILE_APP_STORE_LINK, openExternalBrowser: true, isSafeUri: true })
       return
     }
 
@@ -112,7 +112,7 @@ function ForceUpgradeModal({
 
     // If in-app update wasn't available or failed, fall back to store link
     if (!updateStarted) {
-      await openUri(MOBILE_APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
+      await openUri({ uri: MOBILE_APP_STORE_LINK, openExternalBrowser: true, isSafeUri: true })
     }
   })
 

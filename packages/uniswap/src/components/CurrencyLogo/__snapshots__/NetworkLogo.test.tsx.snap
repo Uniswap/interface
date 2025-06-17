@@ -35,13 +35,13 @@ exports[`TransactionSummaryNetworkLogo renders without error 1`] = `
   style={
     {
       "borderColor": "#131313",
-      "borderRadius": 6.8999999999999995,
+      "borderRadius": 6.96,
       "borderStyle": "solid",
-      "borderWidth": 1.5,
+      "borderWidth": 1.6,
       "flexDirection": "column",
-      "height": 23,
+      "height": 23.2,
       "overflow": "hidden",
-      "width": 23,
+      "width": 23.2,
       "zIndex": 10,
     }
   }

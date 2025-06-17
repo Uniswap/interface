@@ -100,9 +100,9 @@ export function LongMarkdownText(props: LongMarkdownTextProps): JSX.Element {
         </Flex>
         <Markdown
           style={markdownStyle}
-          onLinkPress={(url): false => {
+          onLinkPress={(uri): false => {
             // add our own custom link handler since it has security checks that only open http/https links
-            openUri(url).catch(() => undefined)
+            openUri({ uri }).catch(() => undefined)
             return false
           }}
           // HACK: children prop no in TS definition

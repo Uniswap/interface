@@ -1,9 +1,13 @@
-/* eslint-disable rulesdir/no-undefined-or */
 import { useMemo } from 'react'
 import { useSupportedChainIdWithConnector } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { UseAccountReturnType as UseAccountReturnTypeWagmi, useAccount as useAccountWagmi, useChainId } from 'wagmi'
+import {
+  useAccount as useAccountWagmi,
+  useChainId,
+  type Register,
+  type UseAccountReturnType as UseAccountReturnTypeWagmi,
+} from 'wagmi'
 
 type ReplaceChainId<T> = T extends { chainId: number }
   ? Omit<T, 'chainId'> & { chainId: UniverseChainId | undefined }
@@ -11,7 +15,7 @@ type ReplaceChainId<T> = T extends { chainId: number }
     ? Omit<T, 'chainId'> & { chainId: UniverseChainId | undefined }
     : T
 
-type UseAccountReturnType = ReplaceChainId<UseAccountReturnTypeWagmi>
+type UseAccountReturnType = ReplaceChainId<UseAccountReturnTypeWagmi<Register['config']>>
 
 export function useAccount(): UseAccountReturnType {
   const { chainId, ...rest } = useAccountWagmi()

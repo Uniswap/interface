@@ -38,11 +38,11 @@ export const TokenDetailsHeader = () => {
 
   const tokenSymbolName = currency.symbol ?? t('tdp.symbolNotFound')
 
-  const explorerUrl = getExplorerLink(
-    currency.chainId,
-    address,
-    currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN,
-  )
+  const explorerUrl = getExplorerLink({
+    chainId: currency.chainId,
+    data: address,
+    type: currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN,
+  })
 
   const { homepageUrl, twitterName } = tokenQuery.data?.token?.project ?? {}
   const twitterUrl = twitterName && `https://x.com/${twitterName}`
@@ -52,9 +52,7 @@ export const TokenDetailsHeader = () => {
   const currentLocation = window.location.href + utmTag
 
   const twitterShareName =
-    currency.name && currency.symbol
-      ? `${currency.name} (${currency.symbol})`
-      : currency?.name || currency?.symbol || ''
+    currency.name && currency.symbol ? `${currency.name} (${currency.symbol})` : currency.name || currency.symbol || ''
 
   const [isCopied, setCopied] = useCopyClipboard()
 

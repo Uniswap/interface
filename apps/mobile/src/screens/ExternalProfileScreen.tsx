@@ -16,7 +16,7 @@ import { Flex, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { SectionName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
+import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -78,11 +78,11 @@ export function ExternalProfileScreen({
       route,
     }: {
       route: {
-        key: SectionNameType
+        key: SectionName
         title: string
       }
     }) => {
-      switch (route?.key) {
+      switch (route.key) {
         case SectionName.ProfileActivityTab:
           return (
             <ActivityTab

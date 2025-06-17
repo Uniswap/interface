@@ -5,7 +5,7 @@ import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
 import { useIncreasePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { getProtocolItems, hasLPFoTTransferError } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { getCurrencyAddressForTradingApi } from 'pages/Pool/Positions/create/utils'
+import { getTokenOrZeroAddress } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -19,7 +19,7 @@ import {
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
@@ -61,7 +61,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   const account = useAccount()
 
   const increaseLiquidityApprovalParams: CheckApprovalLPRequest | undefined = useMemo(() => {
-    if (!positionInfo || !account.address || !currencyAmounts?.TOKEN0 || !currencyAmounts?.TOKEN1) {
+    if (!positionInfo || !account.address || !currencyAmounts?.TOKEN0 || !currencyAmounts.TOKEN1) {
       return undefined
     }
     return {
@@ -69,10 +69,10 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       walletAddress: account.address,
       chainId: positionInfo.currency0Amount.currency.chainId,
       protocol: getProtocolItems(positionInfo.version),
-      token0: getCurrencyAddressForTradingApi(positionInfo.currency0Amount.currency),
-      token1: getCurrencyAddressForTradingApi(positionInfo.currency1Amount.currency),
-      amount0: currencyAmounts?.TOKEN0?.quotient.toString(),
-      amount1: currencyAmounts?.TOKEN1?.quotient.toString(),
+      token0: getTokenOrZeroAddress(positionInfo.currency0Amount.currency),
+      token1: getTokenOrZeroAddress(positionInfo.currency1Amount.currency),
+      amount0: currencyAmounts.TOKEN0.quotient.toString(),
+      amount1: currencyAmounts.TOKEN1.quotient.toString(),
       generatePermitAsTransaction:
         positionInfo.version === ProtocolVersion.V4 ? generatePermitAsTransaction : undefined,
     }
@@ -148,13 +148,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
 
   const increaseCalldataQueryParams = useMemo((): IncreaseLPPositionRequest | undefined => {
     const apiProtocolItems = getProtocolItems(positionInfo?.version)
-    if (
-      !positionInfo ||
-      !account.address ||
-      !apiProtocolItems ||
-      !currencyAmounts?.TOKEN0 ||
-      !currencyAmounts?.TOKEN1
-    ) {
+    if (!positionInfo || !account.address || !apiProtocolItems || !currencyAmounts?.TOKEN0 || !currencyAmounts.TOKEN1) {
       return undefined
     }
 
@@ -238,7 +232,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     })
 
     if (increaseCalldataQueryParams) {
-      sendAnalyticsEvent(InterfaceEventNameLocal.IncreaseLiquidityFailed, {
+      sendAnalyticsEvent(InterfaceEventName.IncreaseLiquidityFailed, {
         message,
         ...increaseCalldataQueryParams,
       })
@@ -250,7 +244,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     isQueryEnabled && Boolean(calldataError),
   )
 
-  const { value: calculatedGasFee } = useTransactionGasFee(increase, !!actualGasFee)
+  const { value: calculatedGasFee } = useTransactionGasFee({ tx: increase, skip: !!actualGasFee })
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
     toSupportedChainId(increaseCalldata?.increase?.chainId) ?? undefined,
     actualGasFee || calculatedGasFee,
@@ -263,7 +257,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       isCalldataLoading ||
       !increaseCalldata ||
       !currencyAmounts?.TOKEN0 ||
-      !currencyAmounts?.TOKEN1
+      !currencyAmounts.TOKEN1
     ) {
       return undefined
     }
@@ -281,11 +275,11 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
 
     return {
       type: LiquidityTransactionType.Increase,
-      protocolVersion: positionInfo?.version,
+      protocolVersion: positionInfo.version,
       action: {
         type: LiquidityTransactionType.Increase,
-        currency0Amount: currencyAmounts?.TOKEN0,
-        currency1Amount: currencyAmounts?.TOKEN1,
+        currency0Amount: currencyAmounts.TOKEN0,
+        currency1Amount: currencyAmounts.TOKEN1,
         liquidityToken: positionInfo.liquidityToken,
       },
       approveToken0Request,

@@ -1,4 +1,3 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
@@ -9,6 +8,7 @@ import { LoadingOpacityContainer } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
+import { SwitchNetworkAction } from 'components/Popups/types'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { AutoColumn } from 'components/deprecated/Column'
@@ -27,6 +27,7 @@ import { AnimatePresence, Button, Flex, Text } from 'ui/src'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -356,7 +357,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                           ) : null}
                           {pair ? (
                             <StyledTokenName className="pair-name-container">
-                              {pair?.token0.symbol}:{pair?.token1.symbol}
+                              {pair.token0.symbol}:{pair.token1.symbol}
                             </StyledTokenName>
                           ) : (
                             <StyledTokenName
@@ -387,7 +388,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                     <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} testId={`fiat-value-${id}`} />
                   )}
                 </LoadingOpacityContainer>
-                {account && !initialCurrencyLoading ? (
+                {!initialCurrencyLoading ? (
                   <RowFixed style={{ height: '16px' }}>
                     <ThemedText.DeprecatedBody
                       data-testid="balance-text"
@@ -413,7 +414,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                       ) : null}
                     </ThemedText.DeprecatedBody>
                     {showMaxButton && selectedCurrencyBalance ? (
-                      <Trace logPress element={InterfaceElementName.MAX_TOKEN_AMOUNT_BUTTON}>
+                      <Trace logPress element={ElementName.MaxTokenAmountButton}>
                         <Button
                           variant="branded"
                           emphasis="secondary"
@@ -443,6 +444,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
             onCurrencySelect={onCurrencySelect}
             selectedCurrency={currency}
             otherSelectedCurrency={otherCurrency}
+            switchNetworkAction={SwitchNetworkAction.Swap}
           />
         )}
       </InputPanel>

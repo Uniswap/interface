@@ -2,7 +2,7 @@ import { MetaTagInjector } from './metaTagInjector'
 
 test('should append meta tag to element', () => {
   const element = {
-    append: jest.fn(),
+    append: vi.fn(),
   } as unknown as Element
   const property = 'property'
   const content = 'content'
@@ -73,7 +73,7 @@ test('should append meta tag to element', () => {
 
 test('should pass through header blocked paths', () => {
   const element = {
-    append: jest.fn(),
+    append: vi.fn(),
   } as unknown as Element
   const request = new Request('http://localhost')
   request.headers.set('x-blocked-paths', '/')

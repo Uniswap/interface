@@ -1,8 +1,8 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
+import { SwitchNetworkAction } from 'components/Popups/types'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { useAccount } from 'hooks/useAccount'
@@ -22,6 +22,7 @@ import { Button, Flex, Text } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -78,7 +79,7 @@ export default function PoolFinder() {
   }
 
   return (
-    <Trace logImpression page={InterfacePageName.POOL_PAGE}>
+    <Trace logImpression page={InterfacePageName.PoolPage}>
       <Flex width="100%" py="$spacing48" px="$spacing40" maxWidth={650}>
         <BreadcrumbNavContainer aria-label="breadcrumb-nav">
           <BreadcrumbNavLink style={{ gap: '8px' }} to="/positions">
@@ -185,6 +186,7 @@ export default function PoolFinder() {
         <CurrencySearchModal
           isOpen={currencySearchInputState !== undefined}
           onDismiss={() => setCurrencySearchInputState(undefined)}
+          switchNetworkAction={SwitchNetworkAction.PoolFinder}
           onCurrencySelect={(currency) => {
             if (currencySearchInputState === PositionField.TOKEN0) {
               setCurrency0(currency)

@@ -1,55 +1,56 @@
 import { handleRouteToPasskeyManagement } from 'pages/PasskeyManagement/index'
 
-jest.mock('components/AccountDrawer/MiniPortfolio/hooks', () => ({
-  useAccountDrawer: jest.fn(),
+vi.mock('components/AccountDrawer/MiniPortfolio/hooks', () => ({
+  useAccountDrawer: vi.fn(),
 }))
 
-jest.mock('hooks/useAccount', () => ({
-  useAccount: jest.fn(),
+vi.mock('hooks/useAccount', () => ({
+  useAccount: vi.fn(),
 }))
 
-jest.mock('hooks/useDisconnect', () => ({
-  useDisconnect: jest.fn(),
+vi.mock('hooks/useDisconnect', () => ({
+  useDisconnect: vi.fn(),
 }))
 
-jest.mock('hooks/useSignInWithPasskey', () => ({
-  useSignInWithPasskey: jest.fn(),
+vi.mock('hooks/useSignInWithPasskey', () => ({
+  useSignInWithPasskey: vi.fn(),
 }))
 
-jest.mock('react-router-dom', () => ({
-  useNavigate: jest.fn(),
-  useParams: jest.fn(),
+vi.mock('react-router-dom', () => ({
+  useNavigate: vi.fn(),
+  useParams: vi.fn(),
 }))
 
-jest.mock('state/application/hooks', () => ({
-  useCloseModal: jest.fn(),
+vi.mock('state/application/hooks', () => ({
+  useCloseModal: vi.fn(),
 }))
 
-jest.mock('react-redux', () => ({
-  useDispatch: jest.fn(),
+vi.mock('react-redux', () => ({
+  useDispatch: vi.fn(),
+  useSelector: vi.fn(),
 }))
 
-jest.mock('pages/Swap', () => ({
+vi.mock('pages/Swap', () => ({
   __esModule: true,
   default: () => null,
 }))
 
 describe('handleRouteToPasskeyManagement', () => {
-  const mockSignInWithPasskey = jest.fn()
-  const mockNavigate = jest.fn()
-  const mockCloseRecentlyConnectedModal = jest.fn()
-  const mockDisconnect = jest.fn()
-  const mockNavigateToPasskeyManagement = jest.fn()
-  const mockDispatch = jest.fn()
+  const mockSignInWithPasskey = vi.fn()
+  const mockNavigate = vi.fn()
+  const mockCloseRecentlyConnectedModal = vi.fn()
+  const mockDisconnect = vi.fn()
+  const mockNavigateToPasskeyManagement = vi.fn()
+  const mockDispatch = vi.fn()
 
   const accountDrawerHasBeenOpenedRef = { current: false }
   const passkeyConnectionAttemptedRef = { current: false }
 
   const mockAccountDrawer = {
-    open: jest.fn(),
+    open: vi.fn(),
     isOpen: false,
-    close: jest.fn(),
-    toggle: jest.fn(),
+    close: vi.fn(),
+    toggle: vi.fn(),
   }
 
   const defaultDependencies = {
@@ -70,7 +71,7 @@ describe('handleRouteToPasskeyManagement', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     accountDrawerHasBeenOpenedRef.current = false
     passkeyConnectionAttemptedRef.current = false
   })

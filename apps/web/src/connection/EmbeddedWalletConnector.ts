@@ -27,9 +27,7 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
     type: 'embeddedUniswapWallet',
     async setup() {
       const provider = await this.getProvider()
-      if (provider) {
-        provider.on('connect', this.onConnect.bind(this) as Listener)
-      }
+      provider.on('connect', this.onConnect.bind(this) as Listener)
     },
     async getProvider() {
       return embeddedWalletProvider
@@ -69,12 +67,12 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
             }
             return { id: currentChainId }
           })
-          currentChainId = chain?.id ?? currentChainId
+          currentChainId = chain.id
         }
 
         await config.storage?.removeItem('embeddedUniswapWallet.disconnected')
 
-        if (!accounts || accounts.length === 0) {
+        if (accounts.length === 0) {
           throw new ResourceUnavailableRpcError(new Error('No accounts available'))
         }
 
@@ -109,7 +107,7 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
     },
     async getChainId() {
       const provider = await this.getProvider()
-      const chainId = provider.getChainId() || (await provider?.request({ method: 'eth_chainId' }))
+      const chainId = provider.getChainId()
       return Number(chainId)
     },
     async isAuthorized() {
@@ -176,12 +174,10 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
       config.emitter.emit('connect', { accounts, chainId })
 
       const provider = await this.getProvider()
-      if (provider) {
-        provider.removeListener('connect', this.onConnect.bind(this))
-        provider.on('accountsChanged', this.onAccountsChanged.bind(this) as any)
-        provider.on('chainChanged', this.onChainChanged as any)
-        provider.on('disconnect', this.onDisconnect.bind(this) as any)
-      }
+      provider.removeListener('connect', this.onConnect.bind(this))
+      provider.on('accountsChanged', this.onAccountsChanged.bind(this) as any)
+      provider.on('chainChanged', this.onChainChanged as any)
+      provider.on('disconnect', this.onDisconnect.bind(this) as any)
     },
     // this can accept an `error` argument if needed.
     async onDisconnect() {

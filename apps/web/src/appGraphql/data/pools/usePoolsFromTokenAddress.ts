@@ -1,30 +1,35 @@
 import {
   PoolTableSortState,
   TablePool,
-  V2_BIPS,
   calculate1DVolOverTvl,
   calculateApr,
   sortPools,
 } from 'appGraphql/data/pools/useTopPools'
 import { useCallback, useMemo, useRef } from 'react'
+import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import {
   useTopV2PairsQuery,
   useTopV3PoolsQuery,
   useTopV4PoolsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
 const DEFAULT_QUERY_SIZE = 20
 
-export function usePoolsFromTokenAddress(
-  tokenAddress: string,
-  sortState: PoolTableSortState,
-  chainId?: UniverseChainId,
-) {
-  const { defaultChainId } = useEnabledChains()
-  const chain = toGraphQLChain(chainId ?? defaultChainId)
+export function usePoolsFromTokenAddress({
+  tokenAddress,
+  sortState,
+  chainId,
+  isNative,
+}: {
+  tokenAddress: string
+  sortState: PoolTableSortState
+  chainId: UniverseChainId
+  isNative?: boolean
+}) {
+  const chain = toGraphQLChain(chainId)
   const {
     loading: loadingV4,
     error: errorV4,
@@ -33,7 +38,7 @@ export function usePoolsFromTokenAddress(
   } = useTopV4PoolsQuery({
     variables: {
       first: DEFAULT_QUERY_SIZE,
-      tokenAddress,
+      tokenAddress: isNative ? DEFAULT_NATIVE_ADDRESS : tokenAddress,
       chain,
     },
   })
@@ -83,7 +88,7 @@ export function usePoolsFromTokenAddress(
           cursor: dataV4?.topV4Pools?.[dataV4.topV4Pools.length - 1]?.totalLiquidity?.value,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult || !prev || !Object.keys(prev).length) {
+          if (!Object.keys(prev).length) {
             loadingMoreV4.current = false
             return prev
           }
@@ -102,7 +107,7 @@ export function usePoolsFromTokenAddress(
           cursor: dataV3?.topV3Pools?.[dataV3.topV3Pools.length - 1]?.totalLiquidity?.value,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult || !prev || !Object.keys(prev).length) {
+          if (!Object.keys(prev).length) {
             loadingMoreV3.current = false
             return prev
           }
@@ -121,7 +126,7 @@ export function usePoolsFromTokenAddress(
           cursor: dataV2?.topV2Pairs?.[dataV2.topV2Pairs.length - 1]?.totalLiquidity?.value,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult || !prev || !Object.keys(prev).length) {
+          if (!Object.keys(prev).length) {
             loadingMoreV2.current = false
             return prev
           }
@@ -150,7 +155,11 @@ export function usePoolsFromTokenAddress(
           volume24h: pool.volume24h?.value,
           volume30d: pool.volume30d?.value,
           volOverTvl: calculate1DVolOverTvl(pool.volume24h?.value, pool.totalLiquidity?.value),
-          apr: calculateApr(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
+          apr: calculateApr({
+            volume24h: pool.volume24h?.value,
+            tvl: pool.totalLiquidity?.value,
+            feeTier: pool.feeTier,
+          }),
           feeTier: pool.feeTier,
           protocolVersion: pool.protocolVersion,
           hookAddress: pool.hook?.address,
@@ -167,7 +176,11 @@ export function usePoolsFromTokenAddress(
           volume24h: pool.volume24h?.value,
           volume30d: pool.volume30d?.value,
           volOverTvl: calculate1DVolOverTvl(pool.volume24h?.value, pool.totalLiquidity?.value),
-          apr: calculateApr(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
+          apr: calculateApr({
+            volume24h: pool.volume24h?.value,
+            tvl: pool.totalLiquidity?.value,
+            feeTier: pool.feeTier,
+          }),
           feeTier: pool.feeTier,
           protocolVersion: pool.protocolVersion,
         } as TablePool
@@ -182,8 +195,12 @@ export function usePoolsFromTokenAddress(
           volume24h: pool.volume24h?.value,
           volume30d: pool.volume30d?.value,
           volOverTvl: calculate1DVolOverTvl(pool.volume24h?.value, pool.totalLiquidity?.value),
-          apr: calculateApr(pool.volume24h?.value, pool.totalLiquidity?.value, V2_BIPS),
-          feeTier: V2_BIPS,
+          apr: calculateApr({
+            volume24h: pool.volume24h?.value,
+            tvl: pool.totalLiquidity?.value,
+            feeTier: V2_DEFAULT_FEE_TIER,
+          }),
+          feeTier: V2_DEFAULT_FEE_TIER,
           protocolVersion: pool.protocolVersion,
         } as TablePool
       }) ?? []

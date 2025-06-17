@@ -3,9 +3,13 @@ import type { FeatureFlags } from 'uniswap/src/features/gating/flags'
 
 export interface FeatureFlagService {
   isFeatureEnabled(flagName: FeatureFlags): boolean
-  getExperimentValue<E extends keyof ExperimentProperties, P extends ExperimentProperties[E], T>(
-    experiment: E,
-    property: P,
-    defaultValue: T,
-  ): T
+  getExperimentValue<E extends keyof ExperimentProperties, P extends ExperimentProperties[E], T>({
+    experiment,
+    property,
+    defaultValue,
+  }: {
+    experiment: E
+    property: P
+    defaultValue: T
+  }): T
 }

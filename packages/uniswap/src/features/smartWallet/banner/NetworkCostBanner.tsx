@@ -5,7 +5,7 @@ import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { SmartWallet } from 'ui/src/components/icons/SmartWallet'
 import { openUri } from 'uniswap/src/utils/linking'
 
-const onPressLearnMore = (url: string): Promise<void> => openUri(url)
+const onPressLearnMore = (uri: string): Promise<void> => openUri({ uri })
 
 type NetworkCostBannerProps = {
   bannerText: string

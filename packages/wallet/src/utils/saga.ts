@@ -40,11 +40,15 @@ interface MonitoredSagaOptions {
  * Use to create complex sagas that need more coordination with the UI.
  * Note: the wrapped saga and reducer this returns must be added to rootSaga.ts
  */
-export function createMonitoredSaga<SagaParams, SagaYieldType, SagaResultType>(
-  saga: (params: SagaParams) => Generator<SagaYieldType, SagaResultType, unknown>,
-  name: string,
-  options?: MonitoredSagaOptions,
-): {
+export function createMonitoredSaga<SagaParams, SagaYieldType, SagaResultType>({
+  saga,
+  name,
+  options,
+}: {
+  saga: (params: SagaParams) => Generator<SagaYieldType, SagaResultType, unknown>
+  name: string
+  options?: MonitoredSagaOptions
+}): {
   name: string
   wrappedSaga: () => Generator
   reducer: ReducerWithInitialState<SagaState>
@@ -118,7 +122,7 @@ export function createMonitoredSaga<SagaParams, SagaYieldType, SagaResultType>(
           })
         }
         yield* put(errorAction(errorMessage))
-        if (options?.showErrorNotification === undefined || options?.showErrorNotification) {
+        if (options?.showErrorNotification === undefined || options.showErrorNotification) {
           yield* put(
             pushNotification({
               type: AppNotificationType.Error,

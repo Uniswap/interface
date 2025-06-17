@@ -13,12 +13,12 @@ export default function RateToggle({
   currencyB: Currency
   handleRateToggle: () => void
 }) {
-  const tokenA = currencyA?.wrapped
-  const tokenB = currencyB?.wrapped
+  const tokenA = currencyA.wrapped
+  const tokenB = currencyB.wrapped
 
-  const isSorted = tokenA && tokenB && tokenA.sortsBefore(tokenB)
+  const isSorted = tokenA.sortsBefore(tokenB)
 
-  return tokenA && tokenB ? (
+  return (
     <Flex width="fit-content" alignItems="center" onPress={handleRateToggle}>
       <ToggleWrapper width="fit-content">
         <ToggleElement isActive={isSorted} fontSize="12px">
@@ -29,5 +29,5 @@ export default function RateToggle({
         </ToggleElement>
       </ToggleWrapper>
     </Flex>
-  ) : null
+  )
 }

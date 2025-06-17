@@ -27,7 +27,7 @@ export function AnimatedUnitagDisplayName({
   const dispatch = useDispatch()
   const [showUnitagSuffix, setShowUnitagSuffix] = useState(false)
   const [textWidth, setTextWidth] = useState(0)
-  const isUnitag = displayName?.type === DisplayNameType.Unitag
+  const isUnitag = displayName.type === DisplayNameType.Unitag
 
   const onTextLayout = (event: LayoutChangeEvent): void => {
     setTextWidth(event.nativeEvent.layout.width)

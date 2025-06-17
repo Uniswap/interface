@@ -123,7 +123,7 @@ function FeeRow({ trade: { swapFee, outputAmount } }: { trade: SubmittableTrade 
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const feeCurrencyAmount = CurrencyAmount.fromRawAmount(outputAmount.currency, swapFee?.amount ?? 0)
-  const { data: outputFeeFiatValue } = useUSDPrice(feeCurrencyAmount, feeCurrencyAmount?.currency)
+  const { data: outputFeeFiatValue } = useUSDPrice(feeCurrencyAmount, feeCurrencyAmount.currency)
 
   // Fallback to displaying token amount if fiat value is not available
   if (outputFeeFiatValue === undefined) {
@@ -253,7 +253,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       }
       return {
         Label: () => <Trans i18nKey="common.expiry" />,
-        Value: () => <Row>{formatTimestamp(trade.deadline, true)}</Row>,
+        Value: () => <Row>{formatTimestamp({ timestamp: trade.deadline, includeYear: true })}</Row>,
       }
   }
 }

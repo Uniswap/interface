@@ -39,12 +39,12 @@ describe('signing', () => {
     let signer: JsonRpcSigner
     beforeEach(() => {
       signer = new JsonRpcProvider().getSigner()
-      jest.spyOn(signer, 'getAddress').mockResolvedValue(wallet)
+      vi.spyOn(signer, 'getAddress').mockResolvedValue(wallet)
     })
 
     function itFallsBackToEthSignIfUnimplemented(signingMethod: string) {
       it.each(['not found', 'not implemented'])(`falls back to eth_sign if ${signingMethod} is %s`, async (message) => {
-        const send = jest
+        const send = vi
           .spyOn(signer.provider, 'send')
           .mockImplementationOnce((method) => {
             if (method === signingMethod) {
@@ -58,9 +58,9 @@ describe('signing', () => {
             }
             throw new Error('Unimplemented')
           })
-        jest.spyOn(console, 'warn').mockImplementation(() => undefined)
+        vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 
-        await signTypedData(signer, domain, types, value)
+        await signTypedData({ signer, domain, types, value })
         expect(console.warn).toHaveBeenCalledWith(
           expect.anything(),
           expect.anything(),
@@ -77,14 +77,14 @@ describe('signing', () => {
 
     function itFailsIfRejected(signingMethod: string) {
       it('fails if rejected', async () => {
-        const send = jest.spyOn(signer.provider, 'send').mockImplementationOnce((method) => {
+        const send = vi.spyOn(signer.provider, 'send').mockImplementationOnce((method) => {
           if (method === signingMethod) {
             return Promise.reject(new Error('User rejected'))
           }
           throw new Error('Unimplemented')
         })
 
-        await expect(async () => await signTypedData(signer, domain, types, value)).rejects.toThrow('User rejected')
+        await expect(async () => await signTypedData({ signer, domain, types, value })).rejects.toThrow('User rejected')
         expect(send).toHaveBeenCalledTimes(1)
         expect(send).toHaveBeenCalledWith(signingMethod, [wallet, expect.anything()])
         const data = send.mock.lastCall?.[1]?.[1]
@@ -93,14 +93,14 @@ describe('signing', () => {
     }
 
     it('signs using eth_signTypedData_v4', async () => {
-      const send = jest.spyOn(signer.provider, 'send').mockImplementationOnce((method) => {
+      const send = vi.spyOn(signer.provider, 'send').mockImplementationOnce((method) => {
         if (method === 'eth_signTypedData_v4') {
           return Promise.resolve()
         }
         throw new Error('Unimplemented')
       })
 
-      await signTypedData(signer, domain, types, value)
+      await signTypedData({ signer, domain, types, value })
       expect(send).toHaveBeenCalledTimes(1)
       expect(send).toHaveBeenCalledWith('eth_signTypedData_v4', [wallet, expect.anything()])
       const data = send.mock.lastCall?.[1]?.[1]
@@ -121,14 +121,14 @@ describe('signing', () => {
         })
 
         it('signs using eth_signTypedData', async () => {
-          const send = jest.spyOn(signer.provider, 'send').mockImplementationOnce((method) => {
+          const send = vi.spyOn(signer.provider, 'send').mockImplementationOnce((method) => {
             if (method === 'eth_signTypedData') {
               return Promise.resolve()
             }
             throw new Error('Unimplemented')
           })
 
-          await signTypedData(signer, domain, types, value)
+          await signTypedData({ signer, domain, types, value })
           expect(send).toHaveBeenCalledTimes(1)
           expect(send).toHaveBeenCalledWith('eth_signTypedData', [wallet, expect.anything()])
           const data = send.mock.lastCall?.[1]?.[1]
@@ -150,15 +150,15 @@ describe('signing', () => {
       })
 
       it('signs using eth_sign', async () => {
-        jest.spyOn(console, 'warn').mockReturnValue()
-        const send = jest.spyOn(signer.provider, 'send').mockImplementation((method) => {
+        vi.spyOn(console, 'warn').mockReturnValue()
+        const send = vi.spyOn(signer.provider, 'send').mockImplementation((method) => {
           if (method === 'eth_sign') {
             return Promise.resolve()
           }
           throw new Error('TrustWalletConnect.WCError error 1')
         })
 
-        await signTypedData(signer, domain, types, value)
+        await signTypedData({ signer, domain, types, value })
         expect(send).toHaveBeenCalledTimes(2)
         expect(send).toHaveBeenCalledWith('eth_sign', [wallet, expect.anything()])
       })

@@ -8,9 +8,9 @@ export function ExchangeTransferModal({
   route,
 }: AppStackScreenProp<typeof ModalName.ExchangeTransferModal>): JSX.Element | null {
   const { onClose } = useReactNavigationModal()
-  const serviceProvider = route.params.initialState?.serviceProvider
+  const serviceProvider = route.params.initialState.serviceProvider
 
-  return serviceProvider ? (
+  return (
     <Modal
       fullScreen
       hideHandlebar
@@ -21,5 +21,5 @@ export function ExchangeTransferModal({
     >
       <ExchangeTransferConnecting serviceProvider={serviceProvider} onClose={onClose} />
     </Modal>
-  ) : null
+  )
 }

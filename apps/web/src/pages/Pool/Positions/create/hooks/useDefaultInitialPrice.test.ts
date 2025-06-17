@@ -6,17 +6,17 @@ import { PositionField } from 'types/position'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { USDC } from 'uniswap/src/constants/tokens'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
-import { ETH } from 'uniswap/src/test/fixtures'
+import { ETH } from 'uniswap/src/test/fixtures/lib/sdk'
 
-jest.mock('uniswap/src/features/transactions/swap/hooks/useTrade', () => ({
-  useTrade: jest.fn(),
+vi.mock('uniswap/src/features/transactions/swap/hooks/useTrade', () => ({
+  useTrade: vi.fn(),
 }))
 
-const useTradeMock = jest.mocked(useTrade)
+const useTradeMock = vi.mocked(useTrade)
 
 describe('useDefaultInitialPrice', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should call useTrade with correct parameters', () => {
@@ -109,7 +109,7 @@ describe('useDefaultInitialPrice', () => {
     const { result } = renderHook(() => useDefaultInitialPrice({ currencies }))
 
     expect(result.current.price?.toSignificant(8)).toEqual('2000')
-    expect(result.current.price?.invert()?.toSignificant(8)).toEqual('0.0005')
+    expect(result.current.price?.invert().toSignificant(8)).toEqual('0.0005')
     expect(result.current.isLoading).toEqual(false)
   })
 })

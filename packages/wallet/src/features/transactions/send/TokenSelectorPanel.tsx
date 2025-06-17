@@ -87,8 +87,9 @@ export function TokenSelectorPanel({
             </Flex>
           </Flex>
           <Flex row gap="$spacing12">
-            {showMaxButton && onSetMax && (
+            {showMaxButton && (
               <PresetAmountButton
+                percentage="max"
                 currencyAmount={currencyAmount}
                 currencyBalance={currencyBalance}
                 currencyField={CurrencyField.INPUT}

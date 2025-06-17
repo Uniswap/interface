@@ -18,6 +18,7 @@ function getConnectorWithId(
   options: { shouldThrow: true },
 ): Connector
 function getConnectorWithId(connectors: readonly Connector[], id: ConnectorID): Connector | undefined
+// eslint-disable-next-line max-params
 function getConnectorWithId(
   connectors: readonly Connector[],
   id: ConnectorID,
@@ -121,6 +122,8 @@ export function useOrderedConnections(options?: { showSecondaryConnectors?: bool
       CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
       SHOULD_THROW,
     )
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!coinbaseSdkConnector || !walletConnectConnector) {
       throw new Error('Expected connector(s) missing from wagmi context.')
     }
@@ -144,7 +147,7 @@ export function useOrderedConnections(options?: { showSecondaryConnectors?: bool
 
     // Injected connectors should appear next in the list, as the user intentionally installed/uses them.
     if (showSecondaryConnectors) {
-      if (isMobileWeb) {
+      if (isMobileWeb && isEmbeddedWalletEnabled) {
         orderedConnectors.push(embeddedWalletConnector)
       }
       const secondaryConnectors = [walletConnectConnector, coinbaseSdkConnector]

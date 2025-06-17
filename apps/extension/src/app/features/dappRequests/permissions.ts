@@ -39,11 +39,15 @@ export function getPermissions(dappUrl: string | undefined, connectedAddresses: 
   return permissions
 }
 
-export function* handleGetPermissionsRequest(
-  request: GetPermissionsRequest,
-  { id, url }: SenderTabInfo,
-  dappInfo?: DappInfo,
-) {
+export function* handleGetPermissionsRequest({
+  request,
+  senderTabInfo: { id, url },
+  dappInfo,
+}: {
+  request: GetPermissionsRequest
+  senderTabInfo: SenderTabInfo
+  dappInfo?: DappInfo
+}) {
   const permissions: Permission[] = []
   if (dappInfo) {
     permissions.push({

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { Token } from '@uniswap/sdk-core'
@@ -55,11 +56,11 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
   const filterAnchorRef = useRef<HTMLDivElement>(null)
   const [filter, setFilters] = useState<TokenTransactionType[]>([TokenTransactionType.BUY, TokenTransactionType.SELL])
-  const { transactions, loading, loadMore, errorV2, errorV3 } = useTokenTransactions(
-    referenceToken.address,
+  const { transactions, loading, loadMore, errorV2, errorV3 } = useTokenTransactions({
+    address: referenceToken.address,
     chainId,
     filter,
-  )
+  })
   const combinedError =
     errorV2 && errorV3
       ? new ApolloError({
@@ -121,7 +122,11 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
           <Cell loading={showLoadingSkeleton} justifyContent="flex-start" grow>
             <TimestampCell
               timestamp={Number(row.getValue?.().timestamp)}
-              link={getExplorerLink(chainId, row.getValue?.().hash, ExplorerDataType.TRANSACTION)}
+              link={getExplorerLink({
+                chainId,
+                data: row.getValue?.().hash,
+                type: ExplorerDataType.TRANSACTION,
+              })}
             />
           </Cell>
         ),
@@ -250,7 +255,13 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
         ),
         cell: (makerAddress) => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end">
-            <StyledExternalLink href={getExplorerLink(chainId, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}>
+            <StyledExternalLink
+              href={getExplorerLink({
+                chainId,
+                data: makerAddress.getValue?.(),
+                type: ExplorerDataType.ADDRESS,
+              })}
+            >
               <TableText>{shortenAddress(makerAddress.getValue?.())}</TableText>
             </StyledExternalLink>
           </Cell>

@@ -45,7 +45,7 @@ export async function getSupportedURI(
     return undefined
   }
 
-  const maybeAddress = getValidAddress(uri, /*withChecksum=*/ true, /*log=*/ false)
+  const maybeAddress = getValidAddress({ address: uri, withChecksum: true, log: false })
   if (maybeAddress) {
     return { type: URIType.Address, value: maybeAddress }
   }
@@ -123,7 +123,7 @@ function getMetamaskAddress(uri: string): Nullable<string> {
     return null
   }
 
-  return getValidAddress(uriParts[1], /*withChecksum=*/ true, /*log=*/ false)
+  return getValidAddress({ address: uriParts[1], withChecksum: true, log: false })
 }
 
 // format is uniswap://scantastic?<params>

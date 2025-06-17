@@ -12,11 +12,15 @@ import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
 
-const formatDateRange = (
-  startTimestamp: number | undefined,
-  endTimestamp: number | undefined,
-  locale: ReturnType<typeof useCurrentLanguage>,
-): string => {
+function formatDateRange({
+  startTimestamp,
+  endTimestamp,
+  locale,
+}: {
+  startTimestamp?: number
+  endTimestamp?: number
+  locale: ReturnType<typeof useCurrentLanguage>
+}): string {
   if (!startTimestamp || !endTimestamp) {
     return ''
   }
@@ -152,7 +156,11 @@ export const LpIncentivesPoolDetailsRewardsDistribution = ({
   const formattedTotalFiat = convertFiatAmountFormatted(totalRewardAllocationFiat?.toExact(), NumberType.FiatTokenStats)
 
   const daysRemaining = getDaysRemaining(rewardsCampaign.endTimestamp, t)
-  const dateRange = formatDateRange(rewardsCampaign.startTimestamp, rewardsCampaign.endTimestamp, currentLanguage)
+  const dateRange = formatDateRange({
+    startTimestamp: rewardsCampaign.startTimestamp,
+    endTimestamp: rewardsCampaign.endTimestamp,
+    locale: currentLanguage,
+  })
 
   return (
     <Flex

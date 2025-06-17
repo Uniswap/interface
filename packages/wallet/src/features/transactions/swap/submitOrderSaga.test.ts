@@ -106,13 +106,12 @@ describe(submitUniswapXOrder, () => {
       .next(mockSignerManager)
       .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
       .next(mockSigner)
-      .call(
-        signTypedData,
-        mockPermit.typedData.domain,
-        mockPermit.typedData.types,
-        mockPermit.typedData.values,
-        mockSigner,
-      )
+      .call(signTypedData, {
+        domain: mockPermit.typedData.domain,
+        types: mockPermit.typedData.types,
+        value: mockPermit.typedData.values,
+        signer: mockSigner,
+      })
       .next(mockSignature)
       .call(submitOrder, expectedOrderRequest)
       .next()
@@ -150,13 +149,12 @@ describe(submitUniswapXOrder, () => {
       .next(mockSignerManager)
       .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
       .next(mockSigner)
-      .call(
-        signTypedData,
-        mockPermit.typedData.domain,
-        mockPermit.typedData.types,
-        mockPermit.typedData.values,
-        mockSigner,
-      )
+      .call(signTypedData, {
+        domain: mockPermit.typedData.domain,
+        types: mockPermit.typedData.types,
+        value: mockPermit.typedData.values,
+        signer: mockSigner,
+      })
       .next(mockSignature)
       .call(submitOrder, expectedOrderRequest)
       .throw(new Error('pretend the order endpoint failed'))
@@ -197,13 +195,12 @@ describe(submitUniswapXOrder, () => {
         .next(mockSignerManager)
         .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
         .next(mockSigner)
-        .call(
-          signTypedData,
-          mockPermit.typedData.domain,
-          mockPermit.typedData.types,
-          mockPermit.typedData.values,
-          mockSigner,
-        )
+        .call(signTypedData, {
+          domain: mockPermit.typedData.domain,
+          types: mockPermit.typedData.types,
+          value: mockPermit.typedData.values,
+          signer: mockSigner,
+        })
         .next(mockSignature)
         .call(submitOrder, expectedOrderRequest)
         .next()

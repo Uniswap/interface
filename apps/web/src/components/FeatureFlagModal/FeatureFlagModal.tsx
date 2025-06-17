@@ -203,8 +203,8 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.ArbitrumDutchV3} label="Enable Dutch V3 on Arbitrum" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="LP">
+            <FeatureFlagOption flag={FeatureFlags.CreateLiquidityRefactor} label="Enable Create Liquidity Refactor" />
             <FeatureFlagOption flag={FeatureFlags.LpIncentives} label="Enable LP Incentives" />
-            <FeatureFlagOption flag={FeatureFlags.PositionPageV2} label="Enable Position Page V2" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="FOR">
             <FeatureFlagOption flag={FeatureFlags.FiatOffRamp} label="Enable Fiat OffRamp" />
@@ -222,16 +222,13 @@ export default function FeatureFlagModal() {
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Search">
-            <FeatureFlagOption flag={FeatureFlags.SearchRevamp} label="Enable search revamp" />
             <FeatureFlagOption
               flag={FeatureFlags.PoolSearch}
               label="Enable pool search (turn on search_revamp as well to see)"
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="New Chains">
-            <FeatureFlagOption flag={FeatureFlags.MonadTestnet} label="Enable Monad Testnet" />
             <FeatureFlagOption flag={FeatureFlags.Soneium} label="Enable Soneium" />
-            <FeatureFlagOption flag={FeatureFlags.MonadTestnetDown} label="Enable Monad Testnet Down Banner" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Network Requests">
             <DynamicConfigDropdown

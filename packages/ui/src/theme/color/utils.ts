@@ -24,7 +24,7 @@ export function opacify(opacity: number, color: string): ColorTokens {
 export function opacifyRaw(opacity: number, color: string): string {
   'worklet'
   try {
-    if (opacity === undefined || opacity === null || opacity < 0 || opacity > 100) {
+    if (opacity < 0 || opacity > 100) {
       throw new Error(`provided opacity ${opacity} should be between 0 and 100`)
     }
 

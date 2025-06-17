@@ -21,8 +21,7 @@ export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }
   })
 
   const pricePercentChange = useMemo(() => {
-    const value = tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
-    return value ?? 0
+    return tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
   }, [tokenPromoQuery.data?.token?.market?.pricePercentChange?.value])
 
   return (

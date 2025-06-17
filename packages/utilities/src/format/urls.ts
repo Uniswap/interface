@@ -107,7 +107,7 @@ function parseUrl(url?: string): URL | undefined {
  * See tests for examples.
  */
 export function formatDappURL(url: string): string {
-  return parseUrl(url)?.origin?.replace('https://', '') ?? url?.slice(0, 20)
+  return parseUrl(url)?.origin.replace('https://', '') ?? url.slice(0, 20)
 }
 
 /** Returns the url host (doesn't include http or https) */

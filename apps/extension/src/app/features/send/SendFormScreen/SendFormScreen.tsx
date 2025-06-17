@@ -92,7 +92,11 @@ export function SendFormScreen(): JSX.Element {
   const showTokenSelector = selectingCurrencyField === CurrencyField.INPUT
 
   const hasValueGreaterThanZero = useMemo(() => {
-    return isAmountGreaterThanZero(exactAmountToken, exactAmountFiat, currencyInInfo?.currency)
+    return isAmountGreaterThanZero({
+      exactAmountToken,
+      exactAmountFiat,
+      currency: currencyInInfo?.currency,
+    })
   }, [exactAmountToken, exactAmountFiat, currencyInInfo?.currency])
 
   // blocked addresses

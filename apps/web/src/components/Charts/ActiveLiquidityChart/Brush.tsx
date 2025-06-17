@@ -15,6 +15,7 @@ const BRUSH_EXTENT_MARGIN_PX = 2
  * Returns true if every element in `a` maps to the
  * same pixel coordinate as elements in `b`
  */
+// eslint-disable-next-line max-params
 const compare = (a: [number, number], b: [number, number], yScale: ScaleLinear<number, number>): boolean => {
   // normalize pixels to 1 decimals
   const aNorm = a.map((y) => yScale(y).toFixed(1))
@@ -164,15 +165,11 @@ export const Brush = ({
   const flipNorthHandle = yScale(normalizedBrushExtent[1]) < FLIP_HANDLE_THRESHOLD_PX
   const flipSouthHandle = yScale(normalizedBrushExtent[0]) > height - FLIP_HANDLE_THRESHOLD_PX
 
-  const showNorthArrow =
-    normalizedBrushExtent && (yScale(normalizedBrushExtent[0]) < 0 || yScale(normalizedBrushExtent[1]) < 0)
-  const showSouthArrow =
-    normalizedBrushExtent && (yScale(normalizedBrushExtent[0]) > height || yScale(normalizedBrushExtent[1]) > height)
+  const showNorthArrow = yScale(normalizedBrushExtent[0]) < 0 || yScale(normalizedBrushExtent[1]) < 0
+  const showSouthArrow = yScale(normalizedBrushExtent[0]) > height || yScale(normalizedBrushExtent[1]) > height
 
-  const southHandleInView =
-    normalizedBrushExtent && yScale(normalizedBrushExtent[0]) >= 0 && yScale(normalizedBrushExtent[0]) <= height
-  const northHandleInView =
-    normalizedBrushExtent && yScale(normalizedBrushExtent[1]) >= 0 && yScale(normalizedBrushExtent[1]) <= height
+  const southHandleInView = yScale(normalizedBrushExtent[0]) >= 0 && yScale(normalizedBrushExtent[0]) <= height
+  const northHandleInView = yScale(normalizedBrushExtent[1]) >= 0 && yScale(normalizedBrushExtent[1]) <= height
 
   return useMemo(
     () => (
@@ -193,7 +190,7 @@ export const Brush = ({
         <g ref={brushRef} clipPath={`url(#${id}-brush-clip)`} />
 
         {/* custom brush handles */}
-        {normalizedBrushExtent && !hideHandles && (
+        {!hideHandles && (
           <>
             {northHandleInView ? (
               <g

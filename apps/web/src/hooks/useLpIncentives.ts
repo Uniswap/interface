@@ -34,7 +34,7 @@ export function useLpIncentives(): UseLpIncentivesResult {
 
   // Refetch rewards on transaction success with "reload" true to bust the Merkl cache for users wallet address
   const { refetch } = useGetPoolsRewards(
-    { walletAddress: account?.address, chainIds: [UniverseChainId.Mainnet], reload: true },
+    { walletAddress: account.address, chainIds: [UniverseChainId.Mainnet], reload: true },
     false,
   )
 
@@ -43,7 +43,7 @@ export function useLpIncentives(): UseLpIncentivesResult {
     setHasCollectedRewards(true)
 
     // Reload rewards data from the API
-    if (account?.address) {
+    if (account.address) {
       try {
         const { data: rewardsData } = await refetch()
 
@@ -60,7 +60,7 @@ export function useLpIncentives(): UseLpIncentivesResult {
         setLastClaimed(null)
       }
     }
-  }, [refetch, account?.address, setLastClaimed])
+  }, [refetch, account.address, setLastClaimed])
 
   const openModal = useCallback(() => {
     setIsModalOpen(true)

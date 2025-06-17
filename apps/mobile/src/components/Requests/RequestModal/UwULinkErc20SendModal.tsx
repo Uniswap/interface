@@ -99,7 +99,7 @@ function UwULinkErc20SendModalContent({
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const { chainId, isStablecoin } = request
-  const nativeCurrency = chainId && NativeCurrency.onChain(chainId)
+  const nativeCurrency = NativeCurrency.onChain(chainId)
 
   if (loading || !currencyInfo) {
     return (
@@ -115,7 +115,7 @@ function UwULinkErc20SendModalContent({
     currency: { name, symbol, decimals },
   } = currencyInfo
 
-  const recipientLogoUrl = isDarkMode ? request?.recipient?.logo?.dark : request?.recipient?.logo?.light
+  const recipientLogoUrl = isDarkMode ? request.recipient.logo?.dark : request.recipient.logo?.light
 
   const formattedTokenAmount = isStablecoin
     ? convertFiatAmountFormatted(formatUnits(request.amount, decimals), NumberType.FiatStandard)
@@ -153,7 +153,7 @@ function UwULinkErc20SendModalContent({
       {!hasSufficientGasFunds && (
         <Text color="$statusWarning" pt="$spacing8" textAlign="center" variant="body3">
           {t('walletConnect.request.error.insufficientFunds', {
-            currencySymbol: nativeCurrency?.symbol,
+            currencySymbol: nativeCurrency.symbol,
           })}
         </Text>
       )}

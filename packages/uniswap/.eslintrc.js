@@ -23,6 +23,7 @@ module.exports = {
       files: [
         'src/index.ts',
         'src/features/telemetry/constants/index.ts',
+        'src/features/telemetry/constants/trace/index.ts',
         'src/i18n/index.ts',
         'src/state/index.ts',
         'src/test/**',

@@ -67,7 +67,7 @@ export function OnchainItemList<T extends OnchainItemListOption>({
           let listIndex = 0
           for (let i = 0; i < sectionIndex; i++) {
             const section = sections[i]
-            listIndex += section?.data?.length ?? 0
+            listIndex += section?.data.length ?? 0
           }
           listIndex += itemIndex
 
@@ -116,6 +116,7 @@ export function OnchainItemList<T extends OnchainItemListOption>({
 
   // Used for rendering the sticky header
   const activeSessionIndex = useMemo(() => {
+    // eslint-disable-next-line max-params
     return items.slice(0, firstVisibleIndex + 1).reduceRight((acc, item, index) => {
       return acc === -1 && isSectionHeader(item) ? index : acc
     }, -1)
@@ -324,10 +325,6 @@ function _Row<T extends OnchainItemListOption>({ index, itemData, style, updateR
   )
 
   const item = useMemo((): JSX.Element | null => {
-    if (!itemData) {
-      return null
-    }
-
     if (isSectionHeader(itemData)) {
       return itemData.renderSectionHeader?.(itemData) ?? null
     }
@@ -336,7 +333,7 @@ function _Row<T extends OnchainItemListOption>({ index, itemData, style, updateR
   }, [itemData])
 
   return (
-    <Flex key={itemData?.key ?? index} grow alignItems="center" justifyContent="center" style={style}>
+    <Flex key={itemData.key ?? index} grow alignItems="center" justifyContent="center" style={style}>
       <Flex ref={rowRef} width="100%" onLayout={handleLayout}>
         {item}
       </Flex>

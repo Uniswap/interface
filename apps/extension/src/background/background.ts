@@ -15,6 +15,7 @@ import {
 } from 'src/background/messagePassing/types/requests'
 import { setSidePanelBehavior, setSidePanelOptions } from 'src/background/utils/chromeSidePanelUtils'
 import { readIsOnboardedFromStorage } from 'src/background/utils/persistedStateUtils'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { logger } from 'utilities/src/logger/logger'
 
 let isArcBrowser = false
@@ -39,6 +40,9 @@ async function initApp(): Promise<void> {
   backgroundStore.addOnboardingChangedListener(async (isOnboarded) => {
     await setSidebarState(isOnboarded)
   })
+
+  // Sets uninstall URL
+  chrome.runtime.setUninstallURL(uniswapUrls.chromeExtensionUninstallUrl)
 
   await backgroundStore.init()
 }

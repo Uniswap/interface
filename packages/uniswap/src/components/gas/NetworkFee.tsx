@@ -4,6 +4,7 @@ import { Flex, Text, UniswapXText } from 'ui/src'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
 import { IndicativeLoadingWrapper } from 'uniswap/src/components/misc/IndicativeLoadingWrapper'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
@@ -12,7 +13,6 @@ import {
   useGasFeeHighRelativeToValue,
 } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { NetworkFeeWarning } from 'uniswap/src/features/transactions/modals/NetworkFeeWarning'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isInterface } from 'utilities/src/platform'

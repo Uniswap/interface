@@ -132,13 +132,13 @@ export function NotificationToast({
 
   const onFling = ({ nativeEvent }: FlingGestureHandlerGestureEvent): void => {
     if (nativeEvent.state === State.ACTIVE) {
-      cancelDismiss?.()
+      cancelDismiss()
       dismissLatest()
     }
   }
 
   const onNotificationPress = (): void => {
-    cancelDismiss?.()
+    cancelDismiss()
     if (onPress) {
       dispatch(popNotification({ address }))
       onPress()
@@ -148,7 +148,7 @@ export function NotificationToast({
   }
 
   const onActionButtonPress = (): void => {
-    cancelDismiss?.()
+    cancelDismiss()
     dismissLatest()
     actionButton?.onPress()
   }

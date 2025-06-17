@@ -316,8 +316,7 @@ function processTokenRankings(
       continue
     }
 
-    const tokens = rankings?.tokens ?? []
-    const processedTokens = processTokens(tokens, tokenMetadataDisplayType)
+    const processedTokens = processTokens(rankings.tokens, tokenMetadataDisplayType)
 
     if (processedTokens.length > 0) {
       result[orderByKey] = processedTokens

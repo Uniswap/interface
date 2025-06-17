@@ -11,20 +11,20 @@ export async function openTransactionLink(hash: string | undefined, chainId: Uni
   if (!hash) {
     return undefined
   }
-  const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
-  return openUri(explorerUrl)
+  const explorerUrl = getExplorerLink({ chainId, data: hash, type: ExplorerDataType.TRANSACTION })
+  return openUri({ uri: explorerUrl })
 }
 
 export async function openUniswapHelpLink(): Promise<void> {
-  return openUri(uniswapUrls.helpRequestUrl)
+  return openUri({ uri: uniswapUrls.helpRequestUrl })
 }
 
 export async function openFORSupportLink(serviceProvider: ServiceProviderInfo): Promise<void> {
-  return openUri(serviceProvider.supportUrl ?? uniswapUrls.helpRequestUrl)
+  return openUri({ uri: serviceProvider.supportUrl ?? uniswapUrls.helpRequestUrl })
 }
 
 export async function openOfframpPendingSupportLink(): Promise<void> {
-  return openUri(uniswapUrls.helpArticleUrls.fiatOffRampHelp)
+  return openUri({ uri: uniswapUrls.helpArticleUrls.fiatOffRampHelp })
 }
 
 /**
@@ -53,7 +53,7 @@ export function getProfileUrl(walletAddress: string): string {
 const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'
 
 export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = false): string | undefined {
-  const chainId = currencyIdToChain(currencyId) as UniverseChainId
+  const chainId = currencyIdToChain(currencyId)
   if (!chainId) {
     return undefined
   }

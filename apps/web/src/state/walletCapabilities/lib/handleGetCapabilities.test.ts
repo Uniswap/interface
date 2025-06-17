@@ -5,30 +5,31 @@ import {
 } from 'state/walletCapabilities/lib/handleGetCapabilities'
 import { GetCapabilitiesResult } from 'state/walletCapabilities/lib/types'
 import { getLogger } from 'utilities/src/logger/logger'
+import type { Mock } from 'vitest'
 
 // Mock dependencies
-jest.mock('@wagmi/core/experimental', () => ({
-  getCapabilities: jest.fn(),
+vi.mock('@wagmi/core/experimental', () => ({
+  getCapabilities: vi.fn(),
 }))
 
-jest.mock('components/Web3Provider/wagmiConfig', () => ({
+vi.mock('components/Web3Provider/wagmiConfig', () => ({
   wagmiConfig: {},
 }))
 
-jest.mock('utilities/src/logger/logger', () => ({
-  getLogger: jest.fn(() => ({
-    error: jest.fn(),
-    warn: jest.fn(),
+vi.mock('utilities/src/logger/logger', () => ({
+  getLogger: vi.fn(() => ({
+    error: vi.fn(),
+    warn: vi.fn(),
   })),
 }))
 
 describe('walletCapabilities', () => {
   beforeEach(() => {
-    jest.resetAllMocks()
-    jest.useFakeTimers()
+    vi.resetAllMocks()
+    vi.useFakeTimers()
   })
 
-  afterEach(() => jest.useRealTimers())
+  afterEach(() => vi.useRealTimers())
 
   describe('handleGetCapabilities', () => {
     const mockCapabilities: GetCapabilitiesResult = {
@@ -36,34 +37,34 @@ describe('walletCapabilities', () => {
     }
 
     it('returns capabilities for valid response', async () => {
-      ;(wagmi_getCapabilities as jest.Mock).mockResolvedValue(mockCapabilities)
+      ;(wagmi_getCapabilities as Mock).mockResolvedValue(mockCapabilities)
       expect(await handleGetCapabilities()).toEqual(mockCapabilities)
     })
 
     it('returns null for invalid response', async () => {
       // Make sure the logger is properly mocked before the test
-      const mockLoggerWarn = jest.fn()
-      ;(getLogger as jest.Mock).mockReturnValue({ error: jest.fn(), warn: mockLoggerWarn })
+      const mockLoggerWarn = vi.fn()
+      ;(getLogger as Mock).mockReturnValue({ error: vi.fn(), warn: mockLoggerWarn })
 
       // Invalid mock response (missing 0x prefix)
-      ;(wagmi_getCapabilities as jest.Mock).mockResolvedValue({ asdada: { atomic: { status: 'supported' } } })
+      ;(wagmi_getCapabilities as Mock).mockResolvedValue({ asdada: { atomic: { status: 'supported' } } })
 
       expect(await handleGetCapabilities()).toBeNull()
       expect(mockLoggerWarn).toHaveBeenCalled()
     })
 
     it('returns null on timeout', async () => {
-      ;(wagmi_getCapabilities as jest.Mock).mockImplementation(() => new Promise(() => {}))
+      ;(wagmi_getCapabilities as Mock).mockImplementation(() => new Promise(() => {}))
       const resultPromise = handleGetCapabilities()
-      jest.advanceTimersByTime(5000)
+      vi.advanceTimersByTime(5000)
       expect(await resultPromise).toBeNull()
     })
 
     it('returns null on error', async () => {
       // Make sure the logger is properly mocked before the test
-      const mockLoggerWarn = jest.fn()
-      ;(getLogger as jest.Mock).mockReturnValue({ error: jest.fn(), warn: mockLoggerWarn })
-      ;(wagmi_getCapabilities as jest.Mock).mockRejectedValue(new Error('API error'))
+      const mockLoggerWarn = vi.fn()
+      ;(getLogger as Mock).mockReturnValue({ error: vi.fn(), warn: mockLoggerWarn })
+      ;(wagmi_getCapabilities as Mock).mockRejectedValue(new Error('API error'))
 
       expect(await handleGetCapabilities()).toBeNull()
       expect(mockLoggerWarn).toHaveBeenCalled()

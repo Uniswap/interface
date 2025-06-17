@@ -69,7 +69,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
             <UnitagProfilePicture
               address={onboardingAccountAddress ?? ''}
               size={iconSizes.icon64}
-              unitagAvatarUri={unitagClaim?.avatarUri}
+              unitagAvatarUri={unitagClaim.avatarUri}
             />
           ) : (
             <AccountIcon

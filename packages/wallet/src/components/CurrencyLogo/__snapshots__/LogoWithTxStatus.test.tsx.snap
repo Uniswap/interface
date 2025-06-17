@@ -139,13 +139,13 @@ exports[`DappLogoWithWCBadge renders without error 1`] = `
         style={
           {
             "borderColor": "#FFFFFF",
-            "borderRadius": 5.7,
+            "borderRadius": 5.76,
             "borderStyle": "solid",
-            "borderWidth": 1.5,
+            "borderWidth": 1.6,
             "flexDirection": "column",
-            "height": 19,
+            "height": 19.2,
             "overflow": "hidden",
-            "width": 19,
+            "width": 19.2,
             "zIndex": 10,
           }
         }

@@ -46,7 +46,7 @@ export function CountryListModal({
   const filteredData: FORCountry[] = useMemo(() => {
     const sorted = bubbleToTop(countryList, (c) => c.countryCode === selectedCountry?.countryCode)
     if (searchQuery) {
-      return sorted.filter((item) => item?.displayName.toLowerCase().startsWith(searchQuery.toLowerCase()))
+      return sorted.filter((item) => item.displayName.toLowerCase().startsWith(searchQuery.toLowerCase()))
     } else {
       return sorted
     }

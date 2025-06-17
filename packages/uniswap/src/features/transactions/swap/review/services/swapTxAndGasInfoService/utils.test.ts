@@ -10,17 +10,17 @@ import {
   TransactionFailureReason,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { FeeType, GasStrategy } from 'uniswap/src/data/tradingApi/types'
-import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/utils'
 import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { UNKNOWN_SIM_ERROR } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import {
   createPrepareSwapRequestParams,
   createProcessSwapResponse,
-  getBridgeOrClassicQuoteResponse,
   getShouldSkipSwapRequest,
   getSimulationError,
+  getSwapQuoteQuoteResponse,
   processWrapResponse,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
@@ -194,7 +194,7 @@ describe('getBridgeOrClassicQuoteResponse', () => {
   it('should return classic quote response', () => {
     const quote = { routing: Routing.CLASSIC } as QuoteResponse
 
-    const result = getBridgeOrClassicQuoteResponse({ quote })
+    const result = getSwapQuoteQuoteResponse({ quote })
 
     expect(result).toBe(quote)
   })
@@ -202,7 +202,23 @@ describe('getBridgeOrClassicQuoteResponse', () => {
   it('should return bridge quote response', () => {
     const quote = { routing: Routing.BRIDGE } as QuoteResponse
 
-    const result = getBridgeOrClassicQuoteResponse({ quote })
+    const result = getSwapQuoteQuoteResponse({ quote })
+
+    expect(result).toBe(quote)
+  })
+
+  it('should return wrap quote response', () => {
+    const quote = { routing: Routing.WRAP } as QuoteResponse
+
+    const result = getSwapQuoteQuoteResponse({ quote })
+
+    expect(result).toBe(quote)
+  })
+
+  it('should return unwrap quote response', () => {
+    const quote = { routing: Routing.UNWRAP } as QuoteResponse
+
+    const result = getSwapQuoteQuoteResponse({ quote })
 
     expect(result).toBe(quote)
   })
@@ -210,7 +226,7 @@ describe('getBridgeOrClassicQuoteResponse', () => {
   it('should return undefined for other routing types', () => {
     const quote = { routing: Routing.DUTCH_V2 } as QuoteResponse
 
-    const result = getBridgeOrClassicQuoteResponse({ quote })
+    const result = getSwapQuoteQuoteResponse({ quote })
 
     expect(result).toBeUndefined()
   })
@@ -294,23 +310,6 @@ describe('getShouldSkipSwapRequest', () => {
         [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(USDC, '1000'),
         [CurrencyField.OUTPUT]: CurrencyAmount.fromRawAmount(DAI, '1000'),
       },
-    } as unknown as DerivedSwapInfo
-
-    // When
-    const result = getShouldSkipSwapRequest({
-      ...baseValidInput,
-      derivedSwapInfo,
-    })
-
-    // Then
-    expect(result).toBe(true)
-  })
-
-  it('should return true when wrap is passed', () => {
-    // Given
-    const derivedSwapInfo = {
-      ...baseDerivedSwapInfo,
-      wrapType: WrapType.Wrap,
     } as unknown as DerivedSwapInfo
 
     // When

@@ -6,17 +6,14 @@ import { LPPriceChartModel } from 'components/Charts/LiquidityPositionRangeChart
 import { useRangeInputSizes } from 'components/Charts/LiquidityRangeInput/constants'
 import { useDensityChartData } from 'components/Charts/LiquidityRangeInput/hooks'
 import { ChartErrorView } from 'components/Charts/LoadingState'
-import { getCandlestickPriceBounds } from 'components/Charts/PriceChart/utils'
+import { PriceChartData } from 'components/Charts/PriceChart'
+import { getCandlestickPriceBounds, getEffectivePrice } from 'components/Charts/PriceChart/utils'
 import { PriceChartType } from 'components/Charts/utils'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
-import {
-  getCurrencyAddressWithWrap,
-  getCurrencyWithWrap,
-  getSortedCurrenciesTupleWithWrap,
-} from 'pages/Pool/Positions/create/utils'
+import { UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
@@ -69,11 +66,14 @@ const PlusMinusButton = ({ children, ...props }: TouchableAreaProps) => {
 export function LiquidityRangeInput({
   quoteCurrency,
   baseCurrency,
+  sdkCurrencies,
+  priceInverted,
   feeTier,
   tickSpacing,
   protocolVersion,
   poolId,
   hook,
+  midPrice: currentPrice,
   minPrice,
   maxPrice,
   setMinPrice,
@@ -83,11 +83,17 @@ export function LiquidityRangeInput({
 }: {
   quoteCurrency: Currency
   baseCurrency: Currency
+  sdkCurrencies: {
+    TOKEN0: Maybe<Currency>
+    TOKEN1: Maybe<Currency>
+  }
+  priceInverted: boolean
   feeTier: number | string
   tickSpacing?: number
   protocolVersion: ProtocolVersion
   hook?: string
   poolId: string
+  midPrice?: number
   minPrice?: number
   maxPrice?: number
   disableBrushInteraction?: boolean
@@ -99,15 +105,11 @@ export function LiquidityRangeInput({
   const colors = useSporeColors()
   const { t } = useTranslation()
 
-  const sortedCurrencies = getSortedCurrenciesTupleWithWrap(quoteCurrency, baseCurrency, protocolVersion)
-  const baseCurrencyMaybeWrapped = getCurrencyWithWrap(baseCurrency, protocolVersion)
-  const isReversed = baseCurrencyMaybeWrapped?.equals(sortedCurrencies[0]) ?? false
-
   const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<HistoryDuration>(HistoryDuration.Month)
 
-  const priceData = usePoolPriceChartData(
+  const priceData = usePoolPriceChartData({
     // If the Pool doesn't exist, the poolId is undefined and we skip this query.
-    {
+    variables: {
       addressOrId: poolId,
       chain: chainInfo.backendChain.chain,
       duration: selectedHistoryDuration,
@@ -115,10 +117,22 @@ export function LiquidityRangeInput({
       isV3: protocolVersion === ProtocolVersion.V3,
       isV2: false,
     },
-    quoteCurrency,
-    protocolVersion,
-    getCurrencyAddressWithWrap(sortedCurrencies[0], protocolVersion),
-  )
+    priceInverted,
+  })
+
+  const currentPriceData: PriceChartData | undefined = useMemo(() => {
+    if (!currentPrice) {
+      return undefined
+    }
+    return {
+      time: new Date().getTime() as UTCTimestamp,
+      value: currentPrice,
+      open: currentPrice,
+      high: currentPrice,
+      low: currentPrice,
+      close: currentPrice,
+    }
+  }, [currentPrice])
 
   // Set via a callback from the LiquidityPositionRangeChart, which is important when the price axis is auto-scaled.
   // This is also used to set the bounds of the ActiveLiquidityChart, so it's necessary to keep separate from the zooming state.
@@ -131,14 +145,14 @@ export function LiquidityRangeInput({
     return { dataMin, dataMax }
   }, [priceData.entries])
 
-  const [midPrice, setMidPrice] = useState<number>()
+  const [midPrice, setMidPrice] = useState<number | undefined>(currentPrice)
   const [showDiffIndicators, setShowDiffIndicators] = useState(false)
 
   useEffect(() => {
     if (priceData.entries.length > 0) {
-      setMidPrice(priceData.entries[priceData.entries.length - 1]?.value)
+      setMidPrice(getEffectivePrice({ currentPrice, data: priceData.entries }))
     }
-  }, [priceData.entries])
+  }, [priceData.entries, currentPrice])
 
   const scrollIncrement = (dataMax - dataMin) / 10
 
@@ -150,7 +164,7 @@ export function LiquidityRangeInput({
         maxVisiblePrice: dataMax,
       }
     }
-    const mostRecentPrice = priceData.entries[priceData.entries.length - 1]?.value
+    const mostRecentPrice = getEffectivePrice({ currentPrice, data: priceData.entries })
     // Calculate the default range based on the current price.
     const maxSpread = Math.max(mostRecentPrice - dataMin, dataMax - mostRecentPrice)
     // Initial unscaled range to fit all values with the current price centered
@@ -161,14 +175,15 @@ export function LiquidityRangeInput({
       minVisiblePrice: midPrice - newRange / 2,
       maxVisiblePrice: midPrice + newRange / 2,
     }
-  }, [dataMax, dataMin, midPrice, priceData.entries, zoomFactor])
+  }, [dataMax, dataMin, midPrice, currentPrice, priceData.entries, zoomFactor])
 
   const containerRef = useRef<HTMLDivElement>(null)
   const sizes = useRangeInputSizes(containerRef.current?.clientWidth)
 
   const priceChartParams = useMemo(() => {
+    const data = [...priceData.entries, currentPriceData].filter(Boolean) as PriceChartData[]
     return {
-      data: priceData.entries,
+      data,
       stale: priceData.dataQuality === DataQuality.STALE,
       type: PriceChartType.LINE,
       height: sizes.chartHeight,
@@ -179,7 +194,6 @@ export function LiquidityRangeInput({
       minVisiblePrice,
       maxVisiblePrice,
       setBoundaryPrices,
-      isReversed,
       disableExtendedTimeScale: !isMobileWeb,
       allowScrollInteractions: false,
       priceScaleMargins: {
@@ -194,14 +208,13 @@ export function LiquidityRangeInput({
     colors,
     minVisiblePrice,
     maxVisiblePrice,
-    isReversed,
+    currentPriceData,
   ])
 
   const { formattedData, isLoading: liquidityDataLoading } = useDensityChartData({
     poolId,
-    currencyA: sortedCurrencies[0],
-    currencyB: sortedCurrencies[1],
-    invertPrices: !isReversed,
+    sdkCurrencies,
+    priceInverted,
     version: protocolVersion,
     feeAmount: Number(feeTier),
     tickSpacing,
@@ -327,7 +340,7 @@ export function LiquidityRangeInput({
           overflow="hidden"
           zIndex={1}
         >
-          {(priceData.loading || showChartErrorView) && (!priceData.entries || priceData.entries.length === 0) && (
+          {(priceData.loading || showChartErrorView) && priceData.entries.length === 0 && (
             <Shine height={sizes.chartHeight} disabled={showChartErrorView} zIndex={0}>
               <LoadingPriceCurve
                 size={showChartErrorView ? sizes.chartContainerWidth : sizes.loadedPriceChartWidth}
@@ -374,7 +387,7 @@ export function LiquidityRangeInput({
               <ActiveLiquidityChart
                 data={{
                   series: sortedFormattedData,
-                  current: priceData.entries[priceData.entries.length - 1]?.value,
+                  current: currentPrice ?? priceData.entries[priceData.entries.length - 1]?.value,
                   min: boundaryPrices[0],
                   max: boundaryPrices[1],
                 }}
@@ -509,9 +522,10 @@ export function LiquidityRangeInput({
           onPress={() => {
             setSelectedHistoryDuration(HistoryDuration.Month)
             setZoomFactor(1)
+            setBoundaryPrices(undefined)
             setMinPrice(undefined)
             setMaxPrice(undefined)
-            setMidPrice(priceData.entries[priceData.entries.length - 1]?.value)
+            setMidPrice(getEffectivePrice({ currentPrice, data: priceChartParams.data }))
           }}
           icon={isMobileWeb ? <RotateLeft /> : undefined}
         >

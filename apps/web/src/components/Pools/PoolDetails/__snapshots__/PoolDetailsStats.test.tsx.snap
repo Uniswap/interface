@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
+exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
 <DocumentFragment>
   .c12 {
   color: #E10F0F;
@@ -399,7 +399,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
 </DocumentFragment>
 `;
 
-exports[`PoolDetailsStats renders stats text correctly 1`] = `
+exports[`PoolDetailsStats > renders stats text correctly 1`] = `
 <DocumentFragment>
   .c14 {
   color: #E10F0F;

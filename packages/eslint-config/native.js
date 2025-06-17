@@ -151,6 +151,7 @@ module.exports = {
     // use throughout the app when importing devtools, or in test files
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-require-imports': 'off',
+    'max-params': ['error', { max: 2 }],
   },
   overrides: [
     {

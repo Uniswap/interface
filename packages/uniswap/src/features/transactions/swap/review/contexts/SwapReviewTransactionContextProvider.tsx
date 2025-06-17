@@ -1,7 +1,7 @@
 import { ReactNode, useMemo } from 'react'
 import { getRelevantTokenWarningSeverity } from 'uniswap/src/features/transactions/TransactionDetails/utils/getRelevantTokenWarningSeverity'
 import { useFeeOnTransferAmounts } from 'uniswap/src/features/transactions/swap/hooks/useFeeOnTransferAmount'
-import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
+import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import {
   SwapReviewTransactionContext,
   SwapReviewTransactionContextState,
@@ -16,7 +16,7 @@ export interface SwapReviewContextProviderProps {
   children: ReactNode
   derivedSwapInfo: DerivedSwapInfo
   swapTxContext: SwapTxAndGasInfo
-  swapAcceptedDerivedSwapInfo?: DerivedSwapInfo
+  acceptedDerivedSwapInfo?: DerivedSwapInfo
   newTradeRequiresAcceptance: boolean
 }
 
@@ -24,7 +24,7 @@ export function SwapReviewTransactionContextProvider({
   children,
   derivedSwapInfo,
   swapTxContext,
-  swapAcceptedDerivedSwapInfo,
+  acceptedDerivedSwapInfo,
   newTradeRequiresAcceptance,
 }: SwapReviewContextProviderProps): JSX.Element {
   const uniswapXGasBreakdown = isUniswapX(swapTxContext) ? swapTxContext.gasFeeBreakdown : undefined
@@ -38,7 +38,6 @@ export function SwapReviewTransactionContextProvider({
 
   const { blockingWarning, reviewScreenWarning } = useParsedSwapWarnings()
   const isWrap = isWrapAction(wrapType)
-  const acceptedDerivedSwapInfo = isWrap ? derivedSwapInfo : swapAcceptedDerivedSwapInfo
   const acceptedTrade = acceptedDerivedSwapInfo?.trade.trade
   const feeOnTransferProps = useFeeOnTransferAmounts(acceptedDerivedSwapInfo)
   const tokenWarningProps = getRelevantTokenWarningSeverity(acceptedDerivedSwapInfo)
@@ -47,7 +46,7 @@ export function SwapReviewTransactionContextProvider({
     if (!trade || !isClassic(trade)) {
       return undefined
     }
-    return trade.quote?.quote.txFailureReasons
+    return trade.quote.quote.txFailureReasons
   }, [trade])
 
   // Pack up all the values and callbacks into the context value

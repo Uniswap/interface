@@ -9,12 +9,23 @@ jest.mock('utilities/src/platform', () => ({
 }))
 
 // Helper function to create LayoutChangeEvent objects
-const createLayoutEvent = (width: number, height: number, x = 0, y = 0): LayoutChangeEvent =>
-  ({
+function createLayoutEvent({
+  width,
+  height,
+  x = 0,
+  y = 0,
+}: {
+  width: number
+  height: number
+  x?: number
+  y?: number
+}): LayoutChangeEvent {
+  return {
     nativeEvent: {
       layout: { x, y, width, height },
     },
-  }) as LayoutChangeEvent
+  } as LayoutChangeEvent
+}
 
 // Helper constants
 const MIN_WIDTH_IOS = 44
@@ -123,7 +134,7 @@ describe('useAutoHitSlop', () => {
 
     // Act - Simulate layout event with small dimensions
     await act(async () => {
-      onLayout(createLayoutEvent(20, 50))
+      onLayout(createLayoutEvent({ width: 20, height: 50 }))
     })
 
     // Assert
@@ -140,7 +151,7 @@ describe('useAutoHitSlop', () => {
     const mockOnLayout = jest.fn()
     const { result } = renderHook(() => useAutoHitSlop(mockOnLayout))
     const onLayout = result.current[1]
-    const layoutEvent = createLayoutEvent(20, 20)
+    const layoutEvent = createLayoutEvent({ width: 20, height: 20 })
 
     // Act
     await act(async () => {
@@ -155,7 +166,7 @@ describe('useAutoHitSlop', () => {
     // Arrange
     const { result } = renderHook(() => useAutoHitSlop())
     const onLayout = result.current[1]
-    const layoutEvent = createLayoutEvent(20, 20)
+    const layoutEvent = createLayoutEvent({ width: 20, height: 20 })
 
     // Act - Call onLayout with same dimensions twice
     await act(async () => {

@@ -23,7 +23,7 @@ export function PasskeyManagementModal({ isOpen, onClose, address }: PasskeyMana
   const passkeyManagementUrl = new URL(uniswapUrls.passkeysManagementUrl)
 
   const launchPasskeyManagement = async (): Promise<void> => {
-    await openUri(passkeyManagementUrl.toString() + (address ? `/${address}` : ''))
+    await openUri({ uri: passkeyManagementUrl.toString() + (address ? `/${address}` : '') })
     onClose()
   }
 

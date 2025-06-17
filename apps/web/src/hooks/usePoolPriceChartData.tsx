@@ -1,10 +1,7 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { ChartType } from 'components/Charts/utils'
 import { ChartQueryResult, DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { UTCTimestamp } from 'lightweight-charts'
-import { OptionalCurrency } from 'pages/Pool/Positions/create/types'
-import { getCurrencyAddressWithWrap } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
 import {
   Chain,
@@ -12,7 +9,6 @@ import {
   TimestampedPoolPrice,
   usePoolPriceHistoryQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { isSameAddress } from 'utilities/src/addresses'
 import { removeOutliers } from 'utils/prices'
 
 export type PDPChartQueryVars = {
@@ -24,23 +20,22 @@ export type PDPChartQueryVars = {
   isV4: boolean
 }
 
-export function usePoolPriceChartData(
-  variables: PDPChartQueryVars | undefined,
-  currencyA: OptionalCurrency,
-  protocolVersion: ProtocolVersion,
-  token0Address: string,
-): ChartQueryResult<PriceChartData, ChartType.PRICE> {
+export function usePoolPriceChartData({
+  variables,
+  priceInverted,
+}: {
+  variables?: PDPChartQueryVars
+  priceInverted: boolean
+}): ChartQueryResult<PriceChartData, ChartType.PRICE> {
   const { data, loading } = usePoolPriceHistoryQuery({ variables, skip: !variables?.addressOrId })
   return useMemo(() => {
     const { priceHistory } = data?.v2Pair ?? data?.v3Pool ?? data?.v4Pool ?? {}
 
-    const baseTokenIsToken0 = isSameAddress(token0Address, getCurrencyAddressWithWrap(currencyA, protocolVersion))
-
     const entries =
       priceHistory
-        ?.filter((price): price is TimestampedPoolPrice => price !== null)
+        ?.filter((price): price is TimestampedPoolPrice => price !== undefined)
         .map((price) => {
-          const value = baseTokenIsToken0 ? price?.token0Price : price?.token1Price
+          const value = priceInverted ? price.token0Price : price.token1Price
 
           return {
             time: price.timestamp as UTCTimestamp,
@@ -59,5 +54,5 @@ export function usePoolPriceChartData(
     const dataQuality = loading || !priceHistory || !priceHistory.length ? DataQuality.INVALID : DataQuality.VALID
 
     return { chartType: ChartType.PRICE, entries: filteredEntries, loading, dataQuality }
-  }, [data?.v2Pair, data?.v3Pool, data?.v4Pool, loading, token0Address, currencyA, protocolVersion])
+  }, [data?.v2Pair, data?.v3Pool, data?.v4Pool, loading, priceInverted])
 }

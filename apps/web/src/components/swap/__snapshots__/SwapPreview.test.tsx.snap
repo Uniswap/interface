@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
+exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
 <DocumentFragment>
   .c2 {
   display: -webkit-box;
@@ -190,7 +190,7 @@ exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
 </DocumentFragment>
 `;
 
-exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 1`] = `
+exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swap 1`] = `
 <DocumentFragment>
   .c2 {
   display: -webkit-box;
@@ -399,7 +399,7 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
 </DocumentFragment>
 `;
 
-exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX v2 swap 1`] = `
+exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 swap 1`] = `
 <DocumentFragment>
   .c2 {
   display: -webkit-box;
@@ -608,7 +608,7 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX v2 sw
 </DocumentFragment>
 `;
 
-exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
+exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
 <DocumentFragment>
   .c2 {
   display: -webkit-box;
@@ -798,7 +798,7 @@ exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
 </DocumentFragment>
 `;
 
-exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
+exports[`SwapPreview.tsx > test trade exact output, no recipient 1`] = `
 <DocumentFragment>
   .c2 {
   display: -webkit-box;

@@ -16,6 +16,7 @@ import {
   useModalSubtitleText,
   useTokenWarningCardText,
 } from 'uniswap/src/features/tokens/safetyUtils'
+import { logger } from 'utilities/src/logger/logger'
 
 jest.mock('react-i18next', () => ({
   useTranslation: (): { t: (str: string) => string } => {
@@ -198,6 +199,7 @@ describe('getFeeColor', () => {
     [18, '$statusCritical', 'high fee'],
     [85, '$statusCritical', 'very high fee'],
     [100, '$statusCritical', 'honeypot fee'],
+    // eslint-disable-next-line max-params
   ])('should return %s for %s', (fee, expectedColor, _) => {
     expect(getFeeColor(fee)).toBe(expectedColor)
   })
@@ -398,6 +400,7 @@ describe('getTokenProtectionWarning', () => {
       TokenProtectionWarning.FotVeryHigh,
       'malicious high fees attack -> FotVeryHigh',
     ],
+    // eslint-disable-next-line max-params
   ])('%s', (currencyInfo, expectedWarning, _) => {
     expect(getTokenProtectionWarning(currencyInfo)).toBe(expectedWarning)
   })
@@ -424,6 +427,7 @@ describe('getFeeWarning', () => {
     // Honeypot (100%)
     [100, TokenProtectionWarning.MaliciousHoneypot, '100% -> MaliciousHoneypot'],
     [100, TokenProtectionWarning.MaliciousHoneypot, '100% -> MaliciousHoneypot'],
+    // eslint-disable-next-line max-params
   ])('%s', (fee, expectedWarning, _) => {
     expect(getFeeWarning(fee)).toBe(expectedWarning)
   })
@@ -434,15 +438,20 @@ describe('useModalHeaderText', () => {
     expect(useModalHeaderText({ tokenProtectionWarning: undefined })).toBeNull()
   })
 
-  it('throws error when tokenSymbol1 provided without plural treatment', () => {
-    expect(() =>
-      useModalHeaderText({
-        tokenProtectionWarning: TokenProtectionWarning.FotLow,
-        tokenSymbol0: 'ABC',
-        tokenSymbol1: 'XYZ',
-        shouldHavePluralTreatment: false,
-      }),
-    ).toThrow('Should only combine into one plural-languaged modal if BOTH are low or BOTH are blocked')
+  it('logs error when tokenSymbol1 provided without plural treatment', () => {
+    const mockLogger = jest.spyOn(logger, 'error')
+    useModalHeaderText({
+      tokenProtectionWarning: TokenProtectionWarning.FotLow,
+      tokenSymbol0: 'ABC',
+      tokenSymbol1: 'XYZ',
+      shouldHavePluralTreatment: false,
+    })
+    expect(mockLogger).toHaveBeenCalledWith(
+      'Should only combine into one plural-languaged modal if BOTH are low or BOTH are blocked',
+      {
+        tags: { file: 'safetyUtils.ts', function: 'useModalHeaderText' },
+      },
+    )
   })
 
   it('returns correct text for blocked tokens with plural treatment', () => {

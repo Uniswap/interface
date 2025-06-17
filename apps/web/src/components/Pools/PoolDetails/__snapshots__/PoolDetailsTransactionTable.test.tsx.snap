@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
+exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
 <DocumentFragment>
   .c2 {
   display: inline-block;
@@ -81,7 +81,8 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-12px _pl-12px _pt-16px _pb-16px _alignItems-center"
               >
                 <div
-                  style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; align-items: center; user-select: none; gap: 4px; cursor: pointer; text-decoration: none; transition-duration: 0.2s; text-decoration-line: none; transition: 100ms; opacity: 1;"
+                  class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _userSelect-none _gap-t-space-gap52 _cursor-pointer"
+                  style="transition: 100ms;"
                 >
                   <svg
                     class="c1"
@@ -293,7 +294,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
 </DocumentFragment>
 `;
 
-exports[`PoolDetailsTransactionsTable renders error state 1`] = `
+exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
 <DocumentFragment>
   .c3 {
   color: #131313;
@@ -391,7 +392,8 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-12px _pl-12px _pt-16px _pb-16px _alignItems-center"
               >
                 <div
-                  style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; align-items: center; user-select: none; gap: 4px; cursor: pointer; text-decoration: none; transition-duration: 0.2s; text-decoration-line: none; transition: 100ms; opacity: 1;"
+                  class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _userSelect-none _gap-t-space-gap52 _cursor-pointer"
+                  style="transition: 100ms;"
                 >
                   <svg
                     class="c1"
@@ -4130,7 +4132,7 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
 </DocumentFragment>
 `;
 
-exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
+exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
 <DocumentFragment>
   .c1 {
   position: relative;
@@ -4182,7 +4184,8 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-12px _pl-12px _pt-16px _pb-16px _alignItems-center"
               >
                 <div
-                  style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; align-items: center; user-select: none; gap: 4px; cursor: pointer; text-decoration: none; transition-duration: 0.2s; text-decoration-line: none; transition: 100ms; opacity: 1;"
+                  class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _userSelect-none _gap-t-space-gap52 _cursor-pointer"
+                  style="transition: 100ms;"
                 >
                   <svg
                     class="c1"

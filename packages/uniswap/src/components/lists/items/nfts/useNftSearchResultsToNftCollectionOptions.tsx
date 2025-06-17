@@ -11,7 +11,7 @@ import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 function gqlNFTToNFTCollectionOption(
   node: NonNullable<NonNullable<NonNullable<NonNullable<CollectionSearchQuery>['nftCollections']>['edges']>[0]>['node'],
 ): NFTCollectionOption | null {
-  const contract = node?.nftContracts?.[0]
+  const contract = node.nftContracts?.[0]
   // Only show NFT results that have fully populated results
   const chainId = fromGraphQLChain(contract?.chain ?? Chain.Ethereum)
   if (node.name && contract?.address && chainId) {
@@ -20,7 +20,7 @@ function gqlNFTToNFTCollectionOption(
       chainId,
       address: contract.address,
       name: node.name,
-      imageUrl: node?.image?.url ?? null,
+      imageUrl: node.image?.url ?? null,
       isVerified: Boolean(node.isVerified),
     }
   }
@@ -39,7 +39,7 @@ export function useNftSearchResultsToNftCollectionOptions(
     const collections = nftSearchResultsData
       ? 'nftCollections' in nftSearchResultsData
         ? (nftSearchResultsData.nftCollections as NonNullable<CollectionSearchQuery>['nftCollections'])
-        : (nftSearchResultsData?.topCollections as NonNullable<SearchPopularNftCollectionsQuery>['topCollections'])
+        : (nftSearchResultsData.topCollections as NonNullable<SearchPopularNftCollectionsQuery>['topCollections'])
       : undefined
     if (!collections) {
       return []

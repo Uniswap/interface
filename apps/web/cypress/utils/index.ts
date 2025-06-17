@@ -17,8 +17,6 @@ export const HARDHAT_TIMEOUT = 48_000
 
 export const getTestSelector = (selectorId: string) => `[data-testid=${selectorId}]`
 
-export const getTestSelectorStartsWith = (selectorId: string) => `[data-testid^=${selectorId}]`
-
 /**
  * Sets up hardhat, and reverts it after tests to ensure isolation.
  * This reverts the fork, but not options like automine.

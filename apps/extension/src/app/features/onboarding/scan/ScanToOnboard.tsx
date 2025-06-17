@@ -119,7 +119,7 @@ export function ScanToOnboard(): JSX.Element {
         throw new Error(`Scantastic OTP check response did not include the requested OTP state`)
       }
 
-      setExpirationTimestamp((current) => data?.expiresAtInSeconds * ONE_SECOND_MS ?? current)
+      setExpirationTimestamp(data.expiresAtInSeconds * ONE_SECOND_MS)
 
       // mobile app has received the OTP and the user should input it into this UI
       if (otpState === 'ready') {
@@ -181,12 +181,14 @@ export function ScanToOnboard(): JSX.Element {
     }
   }, [qrScale])
 
-  return (
-    <Trace
-      logImpression
-      properties={{ flow: ExtensionOnboardingFlow.Scantastic }}
-      screen={ExtensionOnboardingScreens.OnboardingQRCode}
-    >
+  /*
+   * This needs to be memoized in order to avoid a rerender loop when navigating back to
+   * this screen automatically on expiration or on HTTP error from within the Scantastic context.
+   * This happens because of the way we animate these screens (see `OnboardingSteps.tsx`).
+   * See WALL-6908 for original issue.
+   */
+  const onboardingScreen = useMemo(() => {
+    return (
       <OnboardingScreen
         belowFrameContent={
           errorDerivingQR ? (
@@ -273,8 +275,9 @@ export function ScanToOnboard(): JSX.Element {
             ) : (
               <>
                 {/*
-                NOTE: if you modify the style or colors of the QR code, make sure to thoroughly test how they perform when scanning them both on light and dark modes.
-               */}
+                NOTE: if you modify the style or colors of the QR code, make sure to thoroughly test
+                how they perform when scanning them both on light and dark modes.
+                */}
                 <AnimatedFlex
                   alignItems="center"
                   backgroundColor={isLoadingUUID ? '$transparent' : '$surface1'}
@@ -327,6 +330,16 @@ export function ScanToOnboard(): JSX.Element {
           </Flex>
         </Flex>
       </OnboardingScreen>
+    )
+  }, [colors.black.val, colors.white.val, errorDerivingQR, isLoadingUUID, qrAnimatedStyle, scantasticValue, t])
+
+  return (
+    <Trace
+      logImpression
+      properties={{ flow: ExtensionOnboardingFlow.Scantastic }}
+      screen={ExtensionOnboardingScreens.OnboardingQRCode}
+    >
+      {onboardingScreen}
     </Trace>
   )
 }

@@ -52,7 +52,7 @@ export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }:
   const icon = useMemo(() => {
     if (renderBiometricsIcon) {
       return renderBiometricsIcon({})
-    } else if (passkeyAuthStatus?.isSignedInWithPasskey && !passkeyAuthStatus?.isSessionAuthenticated) {
+    } else if (passkeyAuthStatus?.isSignedInWithPasskey && !passkeyAuthStatus.isSessionAuthenticated) {
       return <Passkey size="$icon.24" />
     }
     return undefined
@@ -139,7 +139,7 @@ const getSwapAction = ({
   }
 
   const hasPermitTx =
-    swapTxContext && isClassic(swapTxContext) ? swapTxContext?.permit?.method === PermitMethod.Transaction : false
+    swapTxContext && isClassic(swapTxContext) ? swapTxContext.permit?.method === PermitMethod.Transaction : false
   const hasApproveTx = Boolean(swapTxContext?.approveTxRequest)
 
   if (isInterface && (hasPermitTx || hasApproveTx)) {

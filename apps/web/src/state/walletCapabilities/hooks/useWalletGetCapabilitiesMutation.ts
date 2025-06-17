@@ -40,7 +40,7 @@ export function useWalletGetCapabilitiesMutation() {
       }
     },
     onError: (error) => {
-      logger?.error(error, {
+      logger.error(error, {
         tags: {
           file: 'useWalletCapabilities.ts',
           function: 'useWalletGetCapabilitiesMutation',

@@ -668,3 +668,9 @@ export function testAddBatchedTransactions(migration: (state: any) => any, prevS
   expect(result.batchedTransactions).toBeDefined()
   expect(result.batchedTransactions).toEqual({})
 }
+
+export function testMoveHapticsToUserSettings(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+  expect(result.appearanceSettings.hapticsEnabled).toBeUndefined()
+  expect(result.userSettings.hapticsEnabled).toBe(prevSchema.appearanceSettings.hapticsEnabled)
+}

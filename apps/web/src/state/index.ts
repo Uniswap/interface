@@ -5,7 +5,6 @@ import { PersistConfig, persistReducer, persistStore } from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
 import { updateVersion } from 'state/global/actions'
 import { INDEXED_DB_REDUX_TABLE_NAME, PERSIST_VERSION, customCreateMigrate, migrations } from 'state/migrations'
-import { quickRouteApi } from 'state/routing/quickRouteSlice'
 import { routingApi } from 'state/routing/slice'
 import { rootWebSaga } from 'state/sagas/root'
 import { walletCapabilitiesListenerMiddleware } from 'state/walletCapabilities/reducer'
@@ -65,7 +64,7 @@ export function createDefaultStore() {
               // meta.arg and meta.baseQueryMeta are defaults. payload.trade is a nonserializable return value, but that's ok
               // because we are not adding it into any persisted store that requires serialization (e.g. localStorage)
               ignoredActionPaths: ['meta.arg', 'meta.baseQueryMeta', 'payload.trade'],
-              ignoredPaths: [routingApi.reducerPath, quickRouteApi.reducerPath],
+              ignoredPaths: [routingApi.reducerPath],
               ignoredActions: [
                 // ignore the redux-persist actions
                 'persist/PERSIST',
@@ -76,7 +75,6 @@ export function createDefaultStore() {
             },
       })
         .concat(routingApi.middleware)
-        .concat(quickRouteApi.middleware)
         .concat(fiatOnRampAggregatorApi.middleware)
         .concat(sagaMiddleware)
         .concat(walletCapabilitiesListenerMiddleware.middleware)

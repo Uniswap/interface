@@ -1,0 +1,91 @@
+---
+description: State management conventions for web
+globs: apps/web/**/*.ts*
+alwaysApply: false
+---
+# State Management Conventions
+
+## General Guidelines
+- Keep state as local as possible
+- Lift state only when necessary
+- Prefer React Context for shared state that doesn't change frequently
+- Use Redux for global application state with frequent updates
+
+## Local Component State
+- Use `useState` for simple component state
+- Use `useReducer` for complex state logic within a component
+- Extract reusable state logic into custom hooks
+
+## Global State (Redux vs Jotai)
+- **Redux** is preferred for:
+  - Complex application state
+  - State that requires middleware
+  - Data that might need migration paths in the future
+  - Global state that multiple components need to access
+  - State that requires complex update logic
+
+- **Jotai** is appropriate for:
+  - Simple state (especially booleans and primitive values)
+  - One-off values that don't have an obvious place in Redux
+  - State that doesn't require Redux middleware
+  - State that doesn't need migration paths
+  - When you need lightweight state management with minimal boilerplate
+
+- Consider organizing Jotai atoms more centrally to improve visibility of what state is being managed through Jotai
+
+## Global State (Redux)
+- Use slices to organize related state
+- Define clear action types and follow naming conventions
+- Use selectors to access state
+- Normalize complex data structures
+- Prefer RTK Query for API calls
+
+## Type Safety
+- Define strong types for all state
+- Use discriminated unions for action types
+- Type Redux state and actions properly
+
+Example:
+```typescript
+// State type
+interface UserState {
+  data: User | null
+  loading: boolean
+  error: string | null
+}
+
+// Action types
+enum UserActionType {
+  FetchRequest = 'user/fetchRequest',
+  FetchSuccess = 'user/fetchSuccess',
+  FetchFailure = 'user/fetchFailure',
+}
+
+// Actions
+interface FetchRequestAction {
+  type: UserActionType.FetchRequest
+}
+
+interface FetchSuccessAction {
+  type: UserActionType.FetchSuccess
+  payload: User
+}
+
+interface FetchFailureAction {
+  type: UserActionType.FetchFailure
+  payload: string
+}
+
+type UserAction = FetchRequestAction | FetchSuccessAction | FetchFailureAction
+```
+
+## Side Effects
+- Use sagas for complex async workflows
+- Handle loading states and errors consistently
+- Use the appropriate effect pattern based on requirements
+
+## Performance
+- Memoize selectors with reselect
+- Avoid unnecessary state updates
+- Structure state to minimize re-renders
+- Use middleware for centralized side effect handling

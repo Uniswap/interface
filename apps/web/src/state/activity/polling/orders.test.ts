@@ -14,15 +14,20 @@ import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { TransactionType } from 'state/transactions/types'
 import { act, renderHook } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import type { Mock } from 'vitest'
 
-jest.mock('state/signatures/hooks', () => ({
-  ...jest.requireActual('state/signatures/hooks'),
-  usePendingOrders: jest.fn(),
-}))
-
-jest.mock('hooks/useAccount', () => {
+vi.mock('state/signatures/hooks', async () => {
+  const actual = await vi.importActual('state/signatures/hooks')
   return {
-    ...jest.requireActual('hooks/useAccount'),
+    ...actual,
+    usePendingOrders: vi.fn(),
+  }
+})
+
+vi.mock('hooks/useAccount', async () => {
+  const actual = await vi.importActual('hooks/useAccount')
+  return {
+    ...actual,
     useAccount: () => {
       return {
         address: '0x123',
@@ -61,18 +66,18 @@ const mockL2Order: UniswapXOrderDetails = {
 
 describe('getQuickPollingInterval', () => {
   beforeEach(() => {
-    jest.useFakeTimers()
+    vi.useFakeTimers()
   })
 
   afterEach(() => {
-    jest.useRealTimers()
+    vi.useRealTimers()
   })
 
   it('returns initial interval (500ms) when order is less than 10s old', () => {
     const now = Date.now()
     const orderStartTime = now - ms('5s') // 5 seconds ago
 
-    jest.setSystemTime(now)
+    vi.setSystemTime(now)
 
     expect(getQuickPollingInterval(orderStartTime)).toBe(QUICK_POLL_INITIAL_INTERVAL)
   })
@@ -81,7 +86,7 @@ describe('getQuickPollingInterval', () => {
     const now = Date.now()
     const orderStartTime = now - ms('100s') // 100 seconds ago
 
-    jest.setSystemTime(now)
+    vi.setSystemTime(now)
 
     expect(getQuickPollingInterval(orderStartTime)).toBe(QUICK_POLL_MEDIUM_INTERVAL)
   })
@@ -90,14 +95,14 @@ describe('getQuickPollingInterval', () => {
     const now = Date.now()
     const orderStartTime = now - ms('300s') // 300 seconds ago
 
-    jest.setSystemTime(now)
+    vi.setSystemTime(now)
 
     expect(getQuickPollingInterval(orderStartTime)).toBe(QUICK_POLL_MAX_INTERVAL)
   })
 
   it('handles edge cases at phase boundaries', () => {
     const now = Date.now()
-    jest.setSystemTime(now)
+    vi.setSystemTime(now)
 
     // Test exactly at 10s (should return medium interval)
     expect(getQuickPollingInterval(now - QUICK_POLL_INITIAL_PHASE)).toBe(QUICK_POLL_MEDIUM_INTERVAL)
@@ -109,33 +114,33 @@ describe('getQuickPollingInterval', () => {
 
 describe('useStandardPolling', () => {
   beforeEach(() => {
-    jest.useFakeTimers()
-    global.fetch = jest.fn()
+    vi.useFakeTimers()
+    global.fetch = vi.fn()
   })
 
   afterEach(() => {
-    jest.useRealTimers()
-    jest.clearAllMocks()
+    vi.useRealTimers()
+    vi.clearAllMocks()
   })
 
   it('should not poll when no orders exist', () => {
-    const onActivityUpdate = jest.fn()
-    jest.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
+    const onActivityUpdate = vi.fn()
+    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
 
     renderHook(() => usePollPendingOrders(onActivityUpdate))
 
     act(() => {
-      jest.advanceTimersByTime(5000)
+      vi.advanceTimersByTime(5000)
     })
 
     expect(global.fetch).not.toHaveBeenCalled()
   })
 
   it('should poll L1 orders with exponential backoff', async () => {
-    const onActivityUpdate = jest.fn()
-    jest.spyOn(hooks, 'usePendingOrders').mockReturnValue([mockL1Order])
+    const onActivityUpdate = vi.fn()
+    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([mockL1Order])
     const mockResponse = { orders: [{ ...mockL1Order, orderStatus: UniswapXOrderStatus.OPEN }] }
-    ;(global.fetch as jest.Mock).mockImplementation(() =>
+    ;(global.fetch as Mock).mockImplementation(() =>
       Promise.resolve({
         json: () => Promise.resolve(mockResponse),
       }),
@@ -145,36 +150,36 @@ describe('useStandardPolling', () => {
 
     // First poll at 2s
     await act(async () => {
-      jest.advanceTimersByTime(2000)
+      vi.advanceTimersByTime(2000)
     })
     expect(global.fetch).toHaveBeenCalledTimes(1)
 
     // Second poll at 3s (2s * 1.5)
     await act(async () => {
-      jest.advanceTimersByTime(3000)
+      vi.advanceTimersByTime(3000)
     })
     expect(global.fetch).toHaveBeenCalledTimes(2)
 
     // Third poll at 4.5s (3s * 1.5)
     await act(async () => {
-      jest.advanceTimersByTime(4500)
+      vi.advanceTimersByTime(4500)
     })
     expect(global.fetch).toHaveBeenCalledTimes(3)
 
     // Fourth poll at 6.75s (4.5s * 1.5)
     await act(async () => {
-      jest.advanceTimersByTime(6750)
+      vi.advanceTimersByTime(6750)
     })
     expect(global.fetch).toHaveBeenCalledTimes(4)
   })
 
   it('should stop polling when order is filled', async () => {
-    const onActivityUpdate = jest.fn()
+    const onActivityUpdate = vi.fn()
     const mockOrder = { ...mockL1Order }
 
     // Start with returning the open order
-    jest.spyOn(hooks, 'usePendingOrders').mockReturnValue([mockOrder])
-    ;(global.fetch as jest.Mock)
+    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([mockOrder])
+    ;(global.fetch as Mock)
       .mockImplementationOnce(() =>
         Promise.resolve({
           json: () =>
@@ -196,24 +201,24 @@ describe('useStandardPolling', () => {
 
     // After the second poll returns FILLED, update the mock to return no pending orders
     setTimeout(() => {
-      jest.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
+      vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
     }, 3500)
 
     // First poll - order is open
     await act(async () => {
-      jest.advanceTimersByTime(2000)
+      vi.advanceTimersByTime(2000)
     })
     expect(global.fetch).toHaveBeenCalledTimes(1)
 
     // Second poll - order becomes filled
     await act(async () => {
-      jest.advanceTimersByTime(3000)
+      vi.advanceTimersByTime(3000)
     })
     expect(global.fetch).toHaveBeenCalledTimes(2)
 
     // Verify no more polling occurs
     await act(async () => {
-      jest.advanceTimersByTime(4500)
+      vi.advanceTimersByTime(4500)
     })
     expect(global.fetch).toHaveBeenCalledTimes(2)
   })
@@ -221,40 +226,40 @@ describe('useStandardPolling', () => {
 
 describe('useQuickPolling', () => {
   beforeEach(() => {
-    jest.useFakeTimers()
-    global.fetch = jest.fn()
+    vi.useFakeTimers()
+    global.fetch = vi.fn()
   })
 
   afterEach(() => {
-    jest.useRealTimers()
-    jest.clearAllMocks()
+    vi.useRealTimers()
+    vi.clearAllMocks()
   })
 
   it('should not poll when no orders exist', () => {
-    const onActivityUpdate = jest.fn()
-    jest.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
+    const onActivityUpdate = vi.fn()
+    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
 
     renderHook(() => usePollPendingOrders(onActivityUpdate))
 
     act(() => {
-      jest.advanceTimersByTime(5000)
+      vi.advanceTimersByTime(5000)
     })
 
     expect(global.fetch).not.toHaveBeenCalled()
   })
 
   it('should poll L2 orders with quick polling intervals', async () => {
-    const onActivityUpdate = jest.fn()
+    const onActivityUpdate = vi.fn()
     const now = Date.now()
-    jest.setSystemTime(now)
+    vi.setSystemTime(now)
 
     const recentOrder = {
       ...mockL2Order,
       addedTime: now,
     }
 
-    jest.spyOn(hooks, 'usePendingOrders').mockReturnValue([recentOrder])
-    ;(global.fetch as jest.Mock).mockImplementation(() =>
+    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([recentOrder])
+    ;(global.fetch as Mock).mockImplementation(() =>
       Promise.resolve({
         json: () => Promise.resolve({ orders: [{ ...recentOrder, orderStatus: 'open' }] }),
       }),
@@ -265,7 +270,7 @@ describe('useQuickPolling', () => {
     // Poll every 500ms for first 10 seconds
     for (let i = 0; i < 20; i++) {
       await act(async () => {
-        jest.advanceTimersByTime(500)
+        vi.advanceTimersByTime(500)
       })
       expect(global.fetch).toHaveBeenCalledTimes(i + 1)
     }
@@ -273,7 +278,7 @@ describe('useQuickPolling', () => {
     // After 10 seconds, poll every 2 seconds up to 200 seconds
     for (let i = 0; i < 95; i++) {
       await act(async () => {
-        jest.advanceTimersByTime(2000)
+        vi.advanceTimersByTime(2000)
       })
       expect(global.fetch).toHaveBeenCalledTimes(20 + i + 1)
     }
@@ -281,7 +286,7 @@ describe('useQuickPolling', () => {
     // After 200 seconds, poll every 30 seconds
     for (let i = 0; i < 6; i++) {
       await act(async () => {
-        jest.advanceTimersByTime(30000)
+        vi.advanceTimersByTime(30000)
       })
       expect(global.fetch).toHaveBeenCalledTimes(115 + i + 1)
     }

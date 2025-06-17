@@ -8,9 +8,14 @@ import { SmartWalletModal } from 'wallet/src/features/smartWallet/modals/SmartWa
 interface SmartWalletUnavailableModalProps {
   isOpen: boolean
   onClose: () => void
+  displayName: string
 }
 
-export function SmartWalletUnavailableModal({ isOpen, onClose }: SmartWalletUnavailableModalProps): JSX.Element {
+export function SmartWalletUnavailableModal({
+  isOpen,
+  onClose,
+  displayName,
+}: SmartWalletUnavailableModalProps): JSX.Element {
   const { t } = useTranslation()
   return (
     <SmartWalletModal
@@ -29,7 +34,7 @@ export function SmartWalletUnavailableModal({ isOpen, onClose }: SmartWalletUnav
         </Flex>
       }
       title={t('smartWallets.unavailableModal.title')}
-      subtext={t('smartWallets.unavailableModal.description')}
+      subtext={t('smartWallets.unavailableModal.description', { displayName })}
       modalName={ModalName.SmartWalletUnavailableModal}
       learnMoreUrl={uniswapUrls.helpArticleUrls.mismatchedImports}
       primaryButtonText={t('common.close')}

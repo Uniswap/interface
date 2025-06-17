@@ -156,7 +156,7 @@ export function BatchedTransactionDetails({
             contentWidth: nativeEvent.contentSize.width,
             containerWidth: nativeEvent.layoutMeasurement.width,
           }
-        } else if (evt.currentTarget) {
+        } else {
           // Web event
           const target = evt.currentTarget as HTMLDivElement
           return {
@@ -165,7 +165,6 @@ export function BatchedTransactionDetails({
             containerWidth: target.clientWidth,
           }
         }
-        return null
       }
 
       const metrics = getScrollMetrics(event)
@@ -235,11 +234,11 @@ export function BatchedTransactionDetails({
         <ScrollArrow side="left" onPress={() => scrollToIndex(currentIndex - 1)} />
       )}
 
-      {/* Scrollable Content Area */}
+      {/* Scrollable Content Area for extension */}
       {isExtension ? (
         <Flex
           ref={scrollRef as React.RefObject<HTMLDivElement>}
-          {...(isExtension && {
+          {...{
             overflowX: 'hidden',
             overflowY: 'hidden',
             UNSAFE_style: {
@@ -251,10 +250,10 @@ export function BatchedTransactionDetails({
               },
             },
             onScroll: handleScroll as (event: React.UIEvent<HTMLDivElement>) => void,
-          })}
+          }}
           row
           flex={1}
-          px={isExtension ? spacing.spacing12 : spacing.spacing24}
+          px={spacing.spacing12}
           gap={cardGap}
         >
           {calls.map((call, index) => (

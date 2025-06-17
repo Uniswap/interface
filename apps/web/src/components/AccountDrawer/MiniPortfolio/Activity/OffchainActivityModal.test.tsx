@@ -10,8 +10,8 @@ import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-jest.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => ({
-  formatTimestamp: jest.fn(),
+vi.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => ({
+  formatTimestamp: vi.fn(),
 }))
 
 describe('OrderContent', () => {

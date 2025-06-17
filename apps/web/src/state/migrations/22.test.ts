@@ -25,22 +25,22 @@ import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import * as languageUtils from 'uniswap/src/features/language/utils'
 
-jest.mock('utilities/src/platform', () => ({
+vi.mock('utilities/src/platform', () => ({
   isInterface: true,
 }))
 
-jest.mock('uniswap/src/features/language/utils', () => ({
-  getCurrentLanguageFromNavigator: jest.fn().mockReturnValue('en'),
+vi.mock('uniswap/src/features/language/utils', () => ({
+  getCurrentLanguageFromNavigator: vi.fn().mockReturnValue('en'),
 }))
 
-const mockGetCurrentLanguageFromNavigator = jest.mocked(languageUtils.getCurrentLanguageFromNavigator)
+const mockGetCurrentLanguageFromNavigator = vi.mocked(languageUtils.getCurrentLanguageFromNavigator)
 
-jest.mock('utilities/src/platform', () => ({
+vi.mock('utilities/src/platform', () => ({
   isInterface: true,
 }))
 
-jest.mock('uniswap/src/features/language/hooks', () => ({
-  navigatorLocale: jest.fn().mockReturnValue('en-US'),
+vi.mock('uniswap/src/features/language/hooks', () => ({
+  navigatorLocale: vi.fn().mockReturnValue('en-US'),
 }))
 
 const previousState = {

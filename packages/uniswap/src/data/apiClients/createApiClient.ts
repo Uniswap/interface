@@ -84,11 +84,11 @@ export function createApiClient({
 
     get post() {
       return async <T>(path: string, options: CustomOptions): Promise<T> => {
-        const _options = options ?? {}
+        const _options = options
 
         _options.headers = {
           'Content-Type': 'application/json',
-          ...(options?.headers ?? {}),
+          ...(options.headers ?? {}),
         }
 
         return await this.get(path, { ..._options, method: 'POST' })
@@ -97,11 +97,11 @@ export function createApiClient({
 
     get put() {
       return async <T>(path: string, options: CustomOptions): Promise<T> => {
-        const _options = options ?? {}
+        const _options = options
 
         _options.headers = {
           'Content-Type': 'application/json',
-          ...(options?.headers ?? {}),
+          ...(options.headers ?? {}),
         }
 
         return await this.get(path, { ..._options, method: 'PUT' })

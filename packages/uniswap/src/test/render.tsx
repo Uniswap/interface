@@ -136,6 +136,7 @@ export function renderHookWithProviders<P extends any[], R>(
     ...(renderOptions as RenderHookOptions<P>),
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const { rerender, ...rest } = RNRenderHook<R, P>((args: P) => hook(...(args ?? [])), options)
 
   // Return an object with the store and all of RTL's query functions

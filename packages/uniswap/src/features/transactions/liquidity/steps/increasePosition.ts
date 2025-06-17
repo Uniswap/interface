@@ -1,6 +1,6 @@
 import { createLpPosition, increaseLpPosition } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { CreateLPPositionRequest, IncreaseLPPositionRequest } from 'uniswap/src/data/tradingApi/__generated__'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { OnChainTransactionFields, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
@@ -56,12 +56,10 @@ export function createCreatePositionAsyncStep(
             },
           })
 
-          if (createPositionRequestArgs) {
-            sendAnalyticsEvent(InterfaceEventNameLocal.CreatePositionFailed, {
-              message,
-              ...createPositionRequestArgs,
-            })
-          }
+          sendAnalyticsEvent(InterfaceEventName.CreatePositionFailed, {
+            message,
+            ...createPositionRequestArgs,
+          })
         }
         throw new Error('create failed to get transaction request', {
           cause: message,
@@ -98,12 +96,10 @@ export function createIncreasePositionAsyncStep(
               function: 'createIncreasePositionAsyncStep',
             },
           })
-          if (increasePositionRequestArgs) {
-            sendAnalyticsEvent(InterfaceEventNameLocal.IncreaseLiquidityFailed, {
-              message,
-              ...increasePositionRequestArgs,
-            })
-          }
+          sendAnalyticsEvent(InterfaceEventName.IncreaseLiquidityFailed, {
+            message,
+            ...increasePositionRequestArgs,
+          })
         }
         throw new Error('increase failed to get transaction request', {
           cause: message,

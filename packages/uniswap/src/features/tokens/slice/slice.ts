@@ -20,7 +20,7 @@ const slice = createSlice({
       } = action.payload
       const { token } = action.payload
       state.dismissedTokenWarnings[chainId] = state.dismissedTokenWarnings[chainId] || {}
-      const lowercasedAddress = getValidAddress(address, false)
+      const lowercasedAddress = getValidAddress({ address, withChecksum: false })
       if (lowercasedAddress) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         state.dismissedTokenWarnings[chainId]![lowercasedAddress] = token

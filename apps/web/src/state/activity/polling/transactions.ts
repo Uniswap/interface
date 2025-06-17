@@ -79,14 +79,15 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
   const dispatch = useAppDispatch()
 
   const getReceipt = useCallback(
-    (tx: PendingTransactionDetails): { promise: Promise<TransactionReceipt>; cancel: () => void } => {
+    (tx: PendingTransactionDetails): { promise: Promise<TransactionReceipt['status']>; cancel: () => void } => {
       if (!publicClient || !account.chainId) {
         throw new Error('No publicClient or chainId')
       }
-      const retryOptions = getChainInfo(account.chainId)?.pendingTransactionsRetryOptions ?? DEFAULT_RETRY_OPTIONS
+      const retryOptions = getChainInfo(account.chainId).pendingTransactionsRetryOptions ?? DEFAULT_RETRY_OPTIONS
       return retry(
         () =>
           publicClient.getTransactionReceipt({ hash: tx.hash as `0x${string}` }).then(async (receipt) => {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (receipt === null) {
               if (account.isConnected) {
                 // Remove transactions past their deadline or - if there is no deadline - older than 6 hours.
@@ -101,7 +102,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
               }
               throw new RetryableError()
             }
-            return receipt
+            return receipt.status
           }),
         retryOptions,
       )
@@ -119,7 +120,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
       .map((tx) => {
         const { promise, cancel } = getReceipt(tx)
         promise
-          .then((receipt) => {
+          .then((status) => {
             if (!account.chainId) {
               return
             }
@@ -128,7 +129,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
               chainId: account.chainId,
               original: tx,
               update: {
-                status: receipt.status === 'success' ? TransactionStatus.Confirmed : TransactionStatus.Failed,
+                status: status === 'success' ? TransactionStatus.Confirmed : TransactionStatus.Failed,
                 info: tx.info,
               },
             })

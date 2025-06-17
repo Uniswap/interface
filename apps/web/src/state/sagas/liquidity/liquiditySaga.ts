@@ -1,4 +1,3 @@
-import { LiquidityEventName } from '@uniswap/analytics-events'
 import { getLiquidityEventName } from 'components/Liquidity/analytics'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
@@ -21,6 +20,7 @@ import {
 import invariant from 'tiny-invariant'
 import { call } from 'typed-redux-saga'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { InterfaceEventName, LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { CollectFeesTransactionStep } from 'uniswap/src/features/transactions/liquidity/steps/collectFees'
@@ -50,10 +50,10 @@ type LiquidityParams = {
   startChainId?: number
   account: SignerMnemonicAccountMeta
   analytics?:
-    | Omit<UniverseEventProperties[LiquidityEventName.ADD_LIQUIDITY_SUBMITTED], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.AddLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.RemoveLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.MigrateLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.CollectLiquiditySubmitted], 'transaction_hash'>
   liquidityTxContext: ValidatedLiquidityTxContext
   setCurrentStep: SetCurrentStepFn
   setSteps: (steps: TransactionStep[]) => void
@@ -101,10 +101,10 @@ interface HandlePositionStepParams extends Omit<HandleOnChainStepParams, 'step' 
   signature?: string
   action: LiquidityAction
   analytics?:
-    | Omit<UniverseEventProperties[LiquidityEventName.ADD_LIQUIDITY_SUBMITTED], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.AddLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.RemoveLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.MigrateLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.CollectLiquiditySubmitted], 'transaction_hash'>
 }
 function* handlePositionTransactionStep(params: HandlePositionStepParams) {
   const { action, step, signature, analytics } = params
@@ -113,7 +113,7 @@ function* handlePositionTransactionStep(params: HandlePositionStepParams) {
 
   const onModification = ({ hash, data }: { hash: string; data: string }) => {
     if (analytics) {
-      sendAnalyticsEvent(LiquidityEventName.TRANSACTION_MODIFIED_IN_WALLET, {
+      sendAnalyticsEvent(LiquidityEventName.TransactionModifiedInWallet, {
         ...analytics,
         transaction_hash: hash,
         expected: txRequest.data?.toString(),
@@ -124,23 +124,35 @@ function* handlePositionTransactionStep(params: HandlePositionStepParams) {
 
   // Now that we have the txRequest, we can create a definitive LiquidityTransactionStep, incase we started with an async step.
   const onChainStep = { ...step, txRequest }
-  const hash = yield* call(handleOnChainStep, {
-    ...params,
-    info,
-    step: onChainStep,
-    shouldWaitForConfirmation: false,
-    onModification,
-  })
+  let hash: string | undefined
+  try {
+    hash = yield* call(handleOnChainStep, {
+      ...params,
+      info,
+      step: onChainStep,
+      shouldWaitForConfirmation: false,
+      onModification,
+    })
+  } catch (e) {
+    if (analytics) {
+      sendAnalyticsEvent(InterfaceEventName.OnChainAddLiquidityFailed, {
+        ...analytics,
+        message: e.message,
+      })
+    }
+
+    throw e
+  }
 
   if (analytics) {
     sendAnalyticsEvent(getLiquidityEventName(onChainStep.type), {
       ...analytics,
       transaction_hash: hash,
     } satisfies
-      | UniverseEventProperties[LiquidityEventName.ADD_LIQUIDITY_SUBMITTED]
-      | UniverseEventProperties[LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED]
-      | UniverseEventProperties[LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED]
-      | UniverseEventProperties[LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED])
+      | UniverseEventProperties[LiquidityEventName.AddLiquiditySubmitted]
+      | UniverseEventProperties[LiquidityEventName.RemoveLiquiditySubmitted]
+      | UniverseEventProperties[LiquidityEventName.MigrateLiquiditySubmitted]
+      | UniverseEventProperties[LiquidityEventName.CollectLiquiditySubmitted])
   }
 
   popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash)
@@ -188,7 +200,7 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
         }
       }
     } catch (e) {
-      const displayableError = getDisplayableError(e, step, 'liquidity')
+      const displayableError = getDisplayableError({ error: e, step, flow: 'liquidity' })
 
       if (displayableError) {
         logger.error(displayableError, { tags: { file: 'liquiditySaga', function: 'modifyLiquidity' } })

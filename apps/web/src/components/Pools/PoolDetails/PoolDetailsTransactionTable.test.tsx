@@ -2,21 +2,25 @@ import { ApolloError } from '@apollo/client'
 import { PoolTableTransactionType, usePoolTransactions } from 'appGraphql/data/pools/usePoolTransactions'
 import { PoolDetailsTransactionsTable } from 'components/Pools/PoolDetails/PoolDetailsTransactionsTable'
 import { useAbbreviatedTimeString } from 'components/Table/utils'
-import Router from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { mocked } from 'test-utils/mocked'
 import { usdcWethPoolAddress, validParams } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
 
-jest.mock('appGraphql/data/pools/usePoolTransactions')
-jest.mock('components/Table/utils')
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useParams: jest.fn(),
-}))
+vi.mock('appGraphql/data/pools/usePoolTransactions')
+vi.mock('components/Table/utils')
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom')
+  return {
+    ...actual,
+    default: actual.default,
+    useParams: vi.fn(),
+  }
+})
 
 describe('PoolDetailsTransactionsTable', () => {
   beforeEach(() => {
-    jest.spyOn(Router, 'useParams').mockReturnValue(validParams)
+    mocked(useParams).mockReturnValue(validParams)
   })
 
   it('renders loading state', () => {
@@ -24,7 +28,7 @@ describe('PoolDetailsTransactionsTable', () => {
       loading: true,
       error: undefined,
       transactions: [],
-      loadMore: jest.fn(),
+      loadMore: vi.fn(),
     })
 
     const { asFragment } = render(<PoolDetailsTransactionsTable poolAddress={usdcWethPoolAddress} />)
@@ -37,7 +41,7 @@ describe('PoolDetailsTransactionsTable', () => {
       loading: false,
       error: new ApolloError({ errorMessage: 'error fetching data' }),
       transactions: [],
-      loadMore: jest.fn(),
+      loadMore: vi.fn(),
     })
 
     const { asFragment } = render(<PoolDetailsTransactionsTable poolAddress={usdcWethPoolAddress} />)
@@ -71,7 +75,7 @@ describe('PoolDetailsTransactionsTable', () => {
       transactions: mockData,
       loading: false,
       error: undefined,
-      loadMore: jest.fn(),
+      loadMore: vi.fn(),
     })
     mocked(useAbbreviatedTimeString).mockReturnValue('1mo ago')
 

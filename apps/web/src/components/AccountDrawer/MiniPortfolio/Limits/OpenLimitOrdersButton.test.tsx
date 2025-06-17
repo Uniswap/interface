@@ -5,10 +5,13 @@ import { act, fireEvent, render, screen } from 'test-utils/render'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-jest.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', () => ({
-  ...jest.requireActual('components/AccountDrawer/MiniPortfolio/Activity/hooks'),
-  useOpenLimitOrders: jest.fn(),
-}))
+vi.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', async () => {
+  const actual = await vi.importActual('components/AccountDrawer/MiniPortfolio/Activity/hooks')
+  return {
+    ...actual,
+    useOpenLimitOrders: vi.fn(),
+  }
+})
 
 const mockLimitActivity = {
   hash: '0x123',
@@ -22,7 +25,7 @@ const mockLimitActivity = {
 describe('OpenLimitOrdersButton', () => {
   it('should not render if there are no open limit orders', () => {
     mocked(useOpenLimitOrders).mockReturnValue({ openLimitOrders: [], loading: false })
-    const { container } = render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={jest.fn()} />)
+    const { container } = render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={vi.fn()} />)
     expect(container.firstChild?.firstChild?.firstChild).toBeNull()
   })
   it('should render if there are open limit orders', () => {
@@ -30,7 +33,7 @@ describe('OpenLimitOrdersButton', () => {
       openLimitOrders: [mockLimitActivity],
       loading: false,
     })
-    const { container } = render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={jest.fn()} />)
+    const { container } = render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={vi.fn()} />)
     expect(container).toMatchSnapshot()
     expect(screen.getByText('1 open limit')).toBeInTheDocument()
   })
@@ -39,7 +42,7 @@ describe('OpenLimitOrdersButton', () => {
       openLimitOrders: [mockLimitActivity],
       loading: false,
     })
-    const clickCallback = jest.fn()
+    const clickCallback = vi.fn()
     const { container } = render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={clickCallback} />)
     act(() => {
       fireEvent.click(container.firstChild?.firstChild as HTMLElement)
@@ -51,7 +54,7 @@ describe('OpenLimitOrdersButton', () => {
       openLimitOrders: Array(100).fill(mockLimitActivity),
       loading: false,
     })
-    render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={jest.fn()} />)
+    render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={vi.fn()} />)
     expect(screen.getByText('Cancel limits to proceed')).toBeInTheDocument()
   })
 
@@ -60,7 +63,7 @@ describe('OpenLimitOrdersButton', () => {
       openLimitOrders: Array(90).fill(mockLimitActivity),
       loading: false,
     })
-    render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={jest.fn()} />)
+    render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={vi.fn()} />)
     expect(screen.getByText('Approaching 100 limit maximum')).toBeInTheDocument()
   })
 })

@@ -62,7 +62,7 @@ export function GenericImportForm({
     setFocused(true)
     onFocus?.()
     // Need this to allow for focus on click on container.
-    textInputRef?.current?.focus()
+    textInputRef.current?.focus()
   }
 
   const handleSubmit = (): void => {
@@ -79,7 +79,7 @@ export function GenericImportForm({
           return
         }
         isKeyboardVisibleRef.current = false
-        textInputRef?.current?.blur()
+        textInputRef.current?.blur()
       }),
     ]
 

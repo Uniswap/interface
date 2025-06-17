@@ -1,5 +1,4 @@
 import { EventConsumer, EventMapBase } from '@react-navigation/core'
-import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LayoutChangeEvent } from 'react-native'
@@ -93,11 +92,11 @@ export function ClaimUnitagContent({
     debouncedInputValue || undefined, // set to undefined if the input is empty to clear the error
   )
 
-  const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
-    MAX_CHAR_PIXEL_WIDTH,
-    MAX_INPUT_FONT_SIZE,
-    MIN_INPUT_FONT_SIZE,
-  )
+  const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing({
+    maxCharWidthAtMaxFontSize: MAX_CHAR_PIXEL_WIDTH,
+    maxFontSize: MAX_INPUT_FONT_SIZE,
+    minFontSize: MIN_INPUT_FONT_SIZE,
+  })
 
   const focusUnitagTextInput = useCallback((): void | null => {
     textInputRef.current?.focus()
@@ -158,7 +157,7 @@ export function ClaimUnitagContent({
         onSetFontSize(text + UNITAG_SUFFIX_CHARS_ONLY)
       }
 
-      setUnitagInputValue(text?.trim())
+      setUnitagInputValue(text.trim())
     },
     [inputPlaceholder, onSetFontSize, t],
   )
@@ -289,13 +288,7 @@ export function ClaimUnitagContent({
         >
           {!showTextInputView && (
             <Flex position="absolute">
-              <UnitagName
-                animateText
-                animateIcon
-                textProps={{ fontSize }}
-                name={unitagInputValue}
-                opacity={showTextInputView ? 0 : 1}
-              />
+              <UnitagName animateText animateIcon textProps={{ fontSize }} name={unitagInputValue} opacity={1} />
             </Flex>
           )}
           <AnimatePresence>
@@ -368,7 +361,7 @@ export function ClaimUnitagContent({
             onPress={onPressAddressTooltip}
           >
             <Text color="$neutral2" variant="subheading2">
-              {shortenAddress(unitagAddress ?? ADDRESS_ZERO)}
+              {shortenAddress(unitagAddress)}
             </Text>
             <TouchableArea onPress={onPressAddressTooltip}>
               <InfoCircleFilled color="$neutral3" size="$icon.20" />

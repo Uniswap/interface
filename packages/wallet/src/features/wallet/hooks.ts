@@ -24,26 +24,50 @@ export function useAccounts(): Record<string, Account> {
 }
 
 /**
- * Hook used to get a list of all accounts
- * @returns list of accounts, with signer accounts first sorted by derivation index then view only accounts sorted by time imported
+ * Hook used to get a list of signer mnemonic accounts sorted by derivation index
+ * @returns list of signer mnemonic accounts sorted by derivation index
  */
-export function useAccountsList(): Account[] {
+export function useSignerMnemonicAccountsSorted(): SignerMnemonicAccount[] {
   const addressToAccount = useAccounts()
 
   return useMemo(() => {
     const accounts = Object.values(addressToAccount)
-    const _mnemonicWallets = accounts
+    return accounts
       .filter((a): a is SignerMnemonicAccount => a.type === AccountType.SignerMnemonic)
       .sort((a, b) => {
         return a.derivationIndex - b.derivationIndex
       })
-    const _viewOnlyWallets = accounts
+  }, [addressToAccount])
+}
+
+/**
+ * Hook used to get a list of view-only accounts sorted by time imported
+ * @returns list of view-only accounts sorted by time imported
+ */
+export function useViewOnlyAccountsSorted(): Account[] {
+  const addressToAccount = useAccounts()
+
+  return useMemo(() => {
+    const accounts = Object.values(addressToAccount)
+    return accounts
       .filter((a) => a.type === AccountType.Readonly)
       .sort((a, b) => {
         return a.timeImportedMs - b.timeImportedMs
       })
-    return [..._mnemonicWallets, ..._viewOnlyWallets]
   }, [addressToAccount])
+}
+
+/**
+ * Hook used to get a list of all accounts
+ * @returns list of accounts, with signer accounts first sorted by derivation index then view only accounts sorted by time imported
+ */
+export function useAccountsList(): Account[] {
+  const signerMnemonicAccounts = useSignerMnemonicAccountsSorted()
+  const viewOnlyAccounts = useViewOnlyAccountsSorted()
+
+  return useMemo(() => {
+    return [...signerMnemonicAccounts, ...viewOnlyAccounts]
+  }, [signerMnemonicAccounts, viewOnlyAccounts])
 }
 
 export function useAccount(address: Address): Account {

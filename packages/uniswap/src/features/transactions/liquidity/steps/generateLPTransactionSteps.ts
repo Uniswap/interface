@@ -54,29 +54,37 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
       txContext.revokeToken1Request,
       action.currency1Amount.currency.wrapped,
     )
-    const approvalToken0 = createApprovalTransactionStep(approveToken0Request, action.currency0Amount)
-    const approvalToken1 = createApprovalTransactionStep(approveToken1Request, action.currency1Amount)
-    const approvalPositionToken = createApprovalTransactionStep(
-      approvePositionTokenRequest,
-      action.liquidityToken ? CurrencyAmount.fromRawAmount(action.liquidityToken, 1) : undefined,
-      [action.currency0Amount.currency, action.currency1Amount.currency],
-    )
+    const approvalToken0 = createApprovalTransactionStep({
+      txRequest: approveToken0Request,
+      amountIn: action.currency0Amount,
+    })
+    const approvalToken1 = createApprovalTransactionStep({
+      txRequest: approveToken1Request,
+      amountIn: action.currency1Amount,
+    })
+    const approvalPositionToken = createApprovalTransactionStep({
+      txRequest: approvePositionTokenRequest,
+      amountIn: action.liquidityToken ? CurrencyAmount.fromRawAmount(action.liquidityToken, 1) : undefined,
+      pair: [action.currency0Amount.currency, action.currency1Amount.currency],
+    })
 
-    const token0PermitTransactionStep = createPermit2TransactionStep(token0PermitTransaction, action.currency0Amount, [
-      action.currency0Amount.currency,
-      action.currency1Amount.currency,
-    ])
+    const token0PermitTransactionStep = createPermit2TransactionStep({
+      txRequest: token0PermitTransaction,
+      amountIn: action.currency0Amount,
+      pair: [action.currency0Amount.currency, action.currency1Amount.currency],
+    })
 
-    const token1PermitTransactionStep = createPermit2TransactionStep(token1PermitTransaction, action.currency1Amount, [
-      action.currency0Amount.currency,
-      action.currency1Amount.currency,
-    ])
+    const token1PermitTransactionStep = createPermit2TransactionStep({
+      txRequest: token1PermitTransaction,
+      amountIn: action.currency1Amount,
+      pair: [action.currency0Amount.currency, action.currency1Amount.currency],
+    })
 
-    const positionTokenPermitTransactionStep = createPermit2TransactionStep(
-      positionTokenPermitTransaction,
-      action.currency1Amount,
-      [action.currency0Amount.currency, action.currency1Amount.currency],
-    )
+    const positionTokenPermitTransactionStep = createPermit2TransactionStep({
+      txRequest: positionTokenPermitTransaction,
+      amountIn: action.currency1Amount,
+      pair: [action.currency0Amount.currency, action.currency1Amount.currency],
+    })
 
     switch (txContext.type) {
       case 'decrease':

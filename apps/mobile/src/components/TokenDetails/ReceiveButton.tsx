@@ -15,7 +15,7 @@ export function ReceiveButton({ onPress }: { onPress: () => void }): JSX.Element
           size="medium"
           emphasis="secondary"
           onPress={() => {
-            onPress?.()
+            onPress()
             openReceiveModal()
           }}
         >

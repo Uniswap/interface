@@ -8,7 +8,7 @@ import { PoolOutOfSyncError } from 'pages/Pool/Positions/create/PoolOutOfSyncErr
 import { PositionOutOfRangeError } from 'pages/Pool/Positions/create/PositionOutOfRangeError'
 import { useTokenControlOptions } from 'pages/Pool/Positions/create/hooks/useTokenControlOptions'
 import { CreatePositionInfo, PriceRangeState } from 'pages/Pool/Positions/create/types'
-import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
+import { getBaseAndQuoteCurrencies } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
@@ -44,7 +44,7 @@ export function DisplayCurrentPrice({ price, isLoading }: { price?: Price<Curren
           <Text variant="body3" color="$neutral2">
             <Trans i18nKey="common.marketPrice.label" />
           </Text>
-          <BaseQuoteFiatAmount price={price} base={price?.baseCurrency} quote={price?.quoteCurrency} />
+          <BaseQuoteFiatAmount price={price} base={price.baseCurrency} quote={price.quoteCurrency} />
         </>
       ) : (
         <Flex row alignItems="center" gap="$spacing4">
@@ -78,7 +78,7 @@ const InitialPriceInput = () => {
       return ''
     }
 
-    return priceInverted ? defaultInitialPrice?.invert().toSignificant(8) : defaultInitialPrice?.toSignificant(8)
+    return priceInverted ? defaultInitialPrice.invert().toSignificant(8) : defaultInitialPrice.toSignificant(8)
   }, [defaultInitialPrice, priceInverted])
 
   useEffect(() => {
@@ -90,31 +90,31 @@ const InitialPriceInput = () => {
     }
   }, [formattedDefaultInitialPrice, isInitialPriceDirty, setPriceRangeState])
 
+  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(
+    derivedPositionInfo.currencies.display,
+    priceInverted,
+  )
   useEffect(() => {
     try {
-      const base = priceInverted ? derivedPositionInfo.currencies[1] : derivedPositionInfo.currencies[0]
-      const quote = priceInverted ? derivedPositionInfo.currencies[0] : derivedPositionInfo.currencies[1]
-
-      if (initialPrice && base && quote) {
-        const parsedPrice = tryParsePrice(base, quote, initialPrice)
+      if (initialPrice && baseCurrency && quoteCurrency) {
+        const parsedPrice = tryParsePrice({
+          baseToken: baseCurrency,
+          quoteToken: quoteCurrency,
+          value: initialPrice,
+        })
         setOtherCurrencyPrice(parsedPrice?.invert().toSignificant(8))
       }
     } catch (error) {
       setOtherCurrencyPrice(undefined)
     }
-  }, [derivedPositionInfo.currencies, initialPrice, priceInverted])
+  }, [baseCurrency, quoteCurrency, initialPrice, priceInverted])
 
-  const [token0, token1] = derivedPositionInfo.currencies
-  const [initialPriceBaseToken, initialPriceQuoteToken] = getInvertedTuple(
-    derivedPositionInfo.currencies,
-    priceInverted,
-  )
-
-  const controlOptions = useTokenControlOptions([token0, token1], 'large')
+  const { TOKEN0, TOKEN1 } = derivedPositionInfo.currencies.display
+  const controlOptions = useTokenControlOptions([TOKEN0, TOKEN1], 'large')
 
   const handleSelectInitialPriceBaseToken = useCallback(
     (option: string) => {
-      if (option === token0?.symbol) {
+      if (option === TOKEN0?.symbol) {
         setPriceRangeState((prevState) => ({
           ...prevState,
           priceInverted: false,
@@ -128,7 +128,7 @@ const InitialPriceInput = () => {
         }))
       }
     },
-    [token0?.symbol, otherCurrencyPrice, setPriceRangeState],
+    [TOKEN0?.symbol, otherCurrencyPrice, setPriceRangeState],
   )
 
   const handleUseMarketPrice = useCallback(() => {
@@ -165,7 +165,7 @@ const InitialPriceInput = () => {
             {media.sm && (
               <SegmentedControl
                 options={controlOptions}
-                selectedOption={initialPriceBaseToken?.symbol ?? ''}
+                selectedOption={baseCurrency?.symbol ?? ''}
                 onSelectOption={handleSelectInitialPriceBaseToken}
                 size="smallThumbnail"
               />
@@ -204,7 +204,7 @@ const InitialPriceInput = () => {
             {!media.sm && (
               <SegmentedControl
                 options={controlOptions}
-                selectedOption={initialPriceBaseToken?.symbol ?? ''}
+                selectedOption={baseCurrency?.symbol ?? ''}
                 onSelectOption={handleSelectInitialPriceBaseToken}
                 size="largeThumbnail"
               />
@@ -212,7 +212,7 @@ const InitialPriceInput = () => {
           </Flex>
           <Flex row $sm={{ row: false, alignItems: 'flex-start' }} alignItems="center" justifyContent="space-between">
             <Text variant="body2" color="$neutral2" $md={{ variant: 'body3' }} flexShrink={0}>
-              {initialPriceQuoteToken?.symbol} = 1 {initialPriceBaseToken?.symbol}
+              {quoteCurrency?.symbol} = 1 {baseCurrency?.symbol}
             </Text>
             <AnimatePresence>
               {priceDifference?.warning && (
@@ -322,7 +322,10 @@ function RangeInput({
   } = usePriceRangeContext()
 
   const [typedValue, setTypedValue] = useState('')
-  const [baseCurrency, quoteCurrency] = getInvertedTuple(derivedPositionInfo.currencies, priceInverted)
+  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(
+    derivedPositionInfo.currencies.display,
+    priceInverted,
+  )
   const [displayUserTypedValue, setDisplayUserTypedValue] = useState(false)
 
   const handlePriceRangeInput = useCallback(
@@ -397,6 +400,7 @@ function RangeInput({
             fontSize: fonts.subheading2.fontSize,
             fontWeight: fonts.subheading2.fontWeight,
           }}
+          testID={`${TestID.RangeInput}-${input}`}
         />
         <Text variant="body3" color="$neutral2">
           {quoteCurrency?.symbol} = 1 {baseCurrency?.symbol}
@@ -453,25 +457,28 @@ export const SelectPriceRangeStep = ({
   } = useCreatePositionContext()
   const { priceRangeState, setPriceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
 
-  const [token0, token1] = derivedPositionInfo.currencies
-  const [baseCurrency, quoteCurrency] = getInvertedTuple(derivedPositionInfo.currencies, priceRangeState.priceInverted)
+  const { TOKEN0, TOKEN1 } = derivedPositionInfo.currencies.display
+  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(
+    derivedPositionInfo.currencies.display,
+    priceRangeState.priceInverted,
+  )
   const creatingPoolOrPair = derivedPositionInfo.creatingPoolOrPair
 
-  const controlOptions = useTokenControlOptions([token0, token1], 'small')
+  const controlOptions = useTokenControlOptions([TOKEN0, TOKEN1], 'small')
 
   const handleSelectToken = useCallback(
     (option: string) => {
-      if (option === token0?.symbol) {
+      if (option === TOKEN0?.symbol) {
         setPriceRangeState((prevState) => ({ ...prevState, priceInverted: false }))
       } else {
         setPriceRangeState((prevState) => ({ ...prevState, priceInverted: true }))
       }
     },
-    [token0?.symbol, setPriceRangeState],
+    [TOKEN0?.symbol, setPriceRangeState],
   )
 
   const { price } = derivedPriceRangeInfo
-  const { ticks, isSorted, prices, ticksAtLimit, invalidPrice, invalidRange, invertPrice } = useMemo(() => {
+  const { ticks, prices, ticksAtLimit, invalidPrice, invalidRange } = useMemo(() => {
     if (derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2) {
       return {
         ticks: undefined,
@@ -481,7 +488,6 @@ export const SelectPriceRangeStep = ({
         ticksAtLimit: [false, false],
         invalidPrice: false,
         invalidRange: false,
-        invertPrice: false,
       }
     }
 
@@ -553,18 +559,18 @@ export const SelectPriceRangeStep = ({
   ]
 
   const rangeSelectionInputValues = useMemo(() => {
-    const leftPrice = isSorted ? prices?.[0] : prices?.[1]?.invert()
-    const rightPrice = isSorted ? prices?.[1] : prices?.[0]?.invert()
+    const leftPrice = prices?.[0]
+    const rightPrice = prices?.[1]
 
     if (initialPosition?.isOutOfRange) {
       return [leftPrice?.toSignificant(8) ?? '', rightPrice?.toSignificant(8) ?? '']
     }
 
     return [
-      ticksAtLimit[isSorted ? 0 : 1] ? '0' : leftPrice?.toSignificant(8) ?? '',
-      ticksAtLimit[isSorted ? 1 : 0] ? '∞' : rightPrice?.toSignificant(8) ?? '',
+      ticksAtLimit[0] ? '0' : leftPrice?.toSignificant(8) ?? '',
+      ticksAtLimit[1] ? '∞' : rightPrice?.toSignificant(8) ?? '',
     ]
-  }, [isSorted, prices, ticksAtLimit, initialPosition])
+  }, [prices, ticksAtLimit, initialPosition])
 
   const handleChartRangeInput = useCallback(
     (input: RangeSelectionInput, value: string | undefined) => {
@@ -587,18 +593,11 @@ export const SelectPriceRangeStep = ({
       }
     }
 
-    if (invertPrice) {
-      return {
-        rangeInputMinPrice: prices?.[1] ? parseFloat(prices?.[1].invert().toSignificant(8)) : undefined,
-        rangeInputMaxPrice: prices?.[0] ? parseFloat(prices?.[0].invert().toSignificant(8)) : undefined,
-      }
-    }
-
     return {
-      rangeInputMinPrice: prices?.[0] ? parseFloat(prices?.[0].toSignificant(8)) : undefined,
-      rangeInputMaxPrice: prices?.[1] ? parseFloat(prices?.[1].toSignificant(8)) : undefined,
+      rangeInputMinPrice: prices?.[0] ? parseFloat(prices[0].toSignificant(8)) : undefined,
+      rangeInputMaxPrice: prices?.[1] ? parseFloat(prices[1].toSignificant(8)) : undefined,
     }
-  }, [priceRangeState.fullRange, prices, invertPrice, initialPosition])
+  }, [priceRangeState.fullRange, prices, initialPosition])
 
   const invalidState =
     onDisableContinue ||
@@ -681,7 +680,7 @@ export const SelectPriceRangeStep = ({
               bottom={0}
               opacity={0}
               backgroundColor="$surface3"
-              cursor={isDisabled ? 'not-allowed' : 'auto'}
+              cursor="not-allowed"
               zIndex={zIndexes.overlay}
             />
           )}
@@ -703,11 +702,11 @@ export const SelectPriceRangeStep = ({
                 alignItems="center"
                 $sm={{ row: false, alignItems: 'flex-start', gap: '$gap8' }}
               >
-                <DisplayCurrentPrice price={invertPrice ? price?.invert() : price} />
+                <DisplayCurrentPrice price={price} />
                 {!creatingPoolOrPair && (
                   <SegmentedControl
                     options={controlOptions}
-                    selectedOption={baseCurrency?.symbol ?? ''}
+                    selectedOption={baseCurrency.symbol ?? ''}
                     onSelectOption={handleSelectToken}
                     size="smallThumbnail"
                   />
@@ -717,12 +716,15 @@ export const SelectPriceRangeStep = ({
                 key={buildRangeInputKey({ derivedPositionInfo, priceRangeState })}
                 quoteCurrency={quoteCurrency}
                 baseCurrency={baseCurrency}
+                sdkCurrencies={derivedPositionInfo.currencies.sdk}
+                priceInverted={priceRangeState.priceInverted}
                 feeTier={fee.feeAmount}
                 hook={hook}
                 tickSpacing={derivedPositionInfo.pool?.tickSpacing}
                 protocolVersion={derivedPositionInfo.protocolVersion}
                 poolId={derivedPositionInfo.poolId}
                 disableBrushInteraction={priceRangeState.fullRange}
+                midPrice={Number(price?.toSignificant())}
                 minPrice={rangeInputMinPrice}
                 maxPrice={rangeInputMaxPrice}
                 setMinPrice={(minPrice?: number) => {
@@ -738,16 +740,17 @@ export const SelectPriceRangeStep = ({
           <Flex row gap="$gap4" $lg={{ row: false }}>
             <RangeInput
               input={RangeSelectionInput.MIN}
-              decrement={isSorted ? getDecrementLower : getIncrementUpper}
-              increment={isSorted ? getIncrementLower : getDecrementUpper}
+              // TODO: [WEB-8003: `useRangeHopCallbacks` should look at priceInverted and then return the appropriate callback depending on that rather than doing that check here.](https://linear.app/uniswap/issue/WEB-8003/userangehopcallbacks-should-look-at-priceinverted-and-then-return-the)
+              decrement={priceRangeState.priceInverted ? getIncrementUpper : getDecrementLower}
+              increment={priceRangeState.priceInverted ? getDecrementUpper : getIncrementLower}
               value={rangeSelectionInputValues[0]}
               showIncrementButtons={showIncrementButtons}
               isInvalid={invalidRange}
             />
             <RangeInput
               input={RangeSelectionInput.MAX}
-              decrement={isSorted ? getDecrementUpper : getIncrementLower}
-              increment={isSorted ? getIncrementUpper : getDecrementLower}
+              decrement={priceRangeState.priceInverted ? getIncrementLower : getDecrementUpper}
+              increment={priceRangeState.priceInverted ? getDecrementLower : getIncrementUpper}
               value={rangeSelectionInputValues[1]}
               showIncrementButtons={showIncrementButtons}
               isInvalid={invalidRange}

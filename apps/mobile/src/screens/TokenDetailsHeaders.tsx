@@ -38,13 +38,13 @@ export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Elemen
 
   const { currencyId } = useTokenDetailsContext()
 
-  const token = useTokenBasicInfoPartsFragment({ currencyId })?.data
-  const project = useTokenBasicProjectPartsFragment({ currencyId })?.data.project
+  const token = useTokenBasicInfoPartsFragment({ currencyId }).data
+  const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
 
   const logo = project?.logoUrl ?? undefined
-  const symbol = token?.symbol
-  const name = token?.name
-  const chain = token?.chain
+  const symbol = token.symbol
+  const name = token.name
+  const chain = token.chain
 
   return (
     <Flex alignItems="center" justifyContent="space-between" ml="$spacing32">
@@ -111,7 +111,7 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
         label: action.title,
         Icon: actionTypeToIcon[action.name],
         textColor: action.destructive ? colors.statusCritical.val : undefined,
-        iconColor: action.destructive ? colors.statusCritical.val : colors.neutral2.val ?? undefined,
+        iconColor: action.destructive ? colors.statusCritical.val : colors.neutral2.val,
       }
     })
   }, [isVisible, menuActions, colors.statusCritical.val, colors.neutral2.val])

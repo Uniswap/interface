@@ -21,14 +21,14 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ModalName } from 'uniswap/src/features/telemetry/constants/trace'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
-function useOnChainToken(address: string | undefined, chainId: UniverseChainId, skip: boolean) {
-  const token = useCurrency(!skip ? address : undefined, chainId)
+function useOnChainToken({ address, chainId, skip }: { address?: string; chainId: UniverseChainId; skip: boolean }) {
+  const token = useCurrency({ address: !skip ? address : undefined, chainId })
 
-  if (skip || !address || (token && token?.symbol === UNKNOWN_TOKEN_SYMBOL)) {
+  if (skip || !address || (token && token.symbol === UNKNOWN_TOKEN_SYMBOL)) {
     return undefined
   } else {
     return token
@@ -36,12 +36,17 @@ function useOnChainToken(address: string | undefined, chainId: UniverseChainId, 
 }
 
 /** Resolves a currency object from the following sources in order of preference: statically stored natives, query data, backup on-chain fetch data */
-function useTDPCurrency(
-  tokenQuery: ReturnType<typeof useTokenWebQuery>,
-  tokenAddress: string,
-  currencyChainId: UniverseChainId,
-  isNative: boolean,
-) {
+function useTDPCurrency({
+  tokenQuery,
+  tokenAddress,
+  currencyChainId,
+  isNative,
+}: {
+  tokenQuery: ReturnType<typeof useTokenWebQuery>
+  tokenAddress: string
+  currencyChainId: UniverseChainId
+  isNative: boolean
+}) {
   const { chainId } = useAccount()
   const appChainId = chainId ?? UniverseChainId.Mainnet
 
@@ -56,7 +61,11 @@ function useTDPCurrency(
   }, [isNative, currencyChainId, tokenQuery.data?.token])
   // fetches on-chain token if query data is missing and page chain matches global chain (else fetch won't work)
   const skipOnChainFetch = Boolean(queryCurrency) || currencyChainId !== appChainId
-  const onChainToken = useOnChainToken(tokenAddress, currencyChainId, skipOnChainFetch)
+  const onChainToken = useOnChainToken({
+    address: tokenAddress,
+    chainId: currencyChainId,
+    skip: skipOnChainFetch,
+  })
   const currency = queryCurrency ?? onChainToken
   const currencyWasFetchedOnChain = !queryCurrency
 
@@ -74,15 +83,14 @@ function useMultiChainMap(tokenQuery: ReturnType<typeof useTokenWebQuery>) {
       return {}
     }
     return tokensAcrossChains.reduce<MultiChainMap>((map, current) => {
-      if (current) {
-        if (!map[current.chain]) {
-          map[current.chain] = {}
-        }
-        const update = map[current.chain] ?? {}
-        update.address = current.address
-        update.balance = tokenBalances?.find((tokenBalance) => tokenBalance?.token?.id === current.id)
-        map[current.chain] = update
+      if (!map[current.chain]) {
+        map[current.chain] = {}
       }
+      const update = map[current.chain] ?? {}
+      update.address = current.address
+      update.balance = tokenBalances?.find((tokenBalance) => tokenBalance?.token?.id === current.id)
+      map[current.chain] = update
+
       return map
     }, {})
   }, [balanceQuery?.portfolios, tokenQuery.data?.token?.project?.tokens])
@@ -108,23 +116,24 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
 
   const multiChainMap = useMultiChainMap(tokenQuery)
 
-  const { currency, currencyWasFetchedOnChain } = useTDPCurrency(
+  const { currency, currencyWasFetchedOnChain } = useTDPCurrency({
     tokenQuery,
     tokenAddress,
-    currencyChainInfo.id,
+    currencyChainId: currencyChainInfo.id,
     isNative,
-  )
+  })
 
   // Extract color for page usage
   const colors = useSporeColors()
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const { preloadedLogoSrc } = (useLocation().state as { preloadedLogoSrc?: string }) ?? {}
   const extractedColorSrc = tokenQuery.data?.token?.project?.logoUrl ?? preloadedLogoSrc
   const tokenColor =
-    useSrcColor(
-      extractedColorSrc,
-      tokenQuery.data?.token?.name ?? tokenQuery.data?.token?.project?.name,
-      colors.surface2.val,
-    ).tokenColor ?? undefined
+    useSrcColor({
+      src: extractedColorSrc,
+      currencyName: tokenQuery.data?.token?.name ?? tokenQuery.data?.token?.project?.name,
+      backgroundColor: colors.surface2.val,
+    }).tokenColor ?? undefined
 
   return useMemo(() => {
     return {
@@ -184,7 +193,7 @@ export default function TokenDetailsPage() {
   return (
     <>
       <Helmet>
-        <title>{getTokenPageTitle(t, currency, currencyChainId)}</title>
+        <title>{getTokenPageTitle({ t, currency, chainId: currencyChainId })}</title>
         {metatags.map((tag, index) => (
           <meta key={index} {...tag} />
         ))}

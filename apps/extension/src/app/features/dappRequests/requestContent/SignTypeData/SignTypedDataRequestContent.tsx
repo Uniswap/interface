@@ -55,7 +55,7 @@ function SignTypedDataRequestContentInner({ dappRequest }: SignTypedDataRequestP
     return <NonStandardTypedDataRequestContent dappRequest={dappRequest} />
   }
 
-  const { name, version, chainId: domainChainId, verifyingContract, salt } = parsedTypedData?.domain || {}
+  const { name, version, chainId: domainChainId, verifyingContract, salt } = parsedTypedData.domain || {}
   const chainId = toSupportedChainId(domainChainId)
 
   const hasMismatch = chainId ? getHasMismatch(chainId) : false
@@ -84,7 +84,7 @@ function SignTypedDataRequestContentInner({ dappRequest }: SignTypedDataRequestP
       )
     }
     if (typeof message === 'string' && isAddress(message) && chainId) {
-      const href = getExplorerLink(chainId, message, ExplorerDataType.ADDRESS)
+      const href = getExplorerLink({ chainId, data: message, type: ExplorerDataType.ADDRESS })
       return <MaybeExplorerLinkedAddress address={message} link={href} />
     }
     if (typeof message === 'string' || typeof message === 'number' || typeof message === 'boolean') {

@@ -3,7 +3,7 @@ import {
   getQuicknodeChainId,
   getQuicknodeChainIdPathSuffix,
   getQuicknodeEndpointUrl,
-} from 'uniswap/src/features/chains/chainInfo'
+} from 'uniswap/src/features/chains/evm/rpc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 jest.mock('uniswap/src/config', () => ({
@@ -32,6 +32,7 @@ describe('getQuicknodeChainIdPathSuffix', () => {
     [UniverseChainId.Zora, '', 'Zora chain'],
   ]
 
+  // eslint-disable-next-line max-params
   it.each(testCases)('returns correct path suffix for %s', (chainId, expectedSuffix, _testName) => {
     expect(getQuicknodeChainIdPathSuffix(chainId)).toBe(expectedSuffix)
   })

@@ -119,7 +119,7 @@ export function HookModal({
     }
   }, [address, t])
 
-  const canContinue = !hasDangerous || (hasDangerous && disclaimerChecked)
+  const canContinue = !hasDangerous || disclaimerChecked
   const handleContinue = () => {
     if (canContinue) {
       onContinue()

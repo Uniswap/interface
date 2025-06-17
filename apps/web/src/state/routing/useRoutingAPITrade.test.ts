@@ -16,22 +16,22 @@ import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hook
 
 const USDCAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '10000')
 
-jest.mock('hooks/useIsWindowVisible')
-jest.mock('./slice', () => {
+vi.mock('hooks/useIsWindowVisible')
+vi.mock('./slice', () => {
   return {
-    useGetQuoteQuery: jest.fn(),
-    useGetQuoteQueryState: jest.fn(),
+    useGetQuoteQuery: vi.fn(),
+    useGetQuoteQueryState: vi.fn(),
   }
 })
-jest.mock('state/user/hooks')
-jest.mock('uniswap/src/features/gating/hooks', () => {
+vi.mock('state/user/hooks')
+vi.mock('uniswap/src/features/gating/hooks', () => {
   return {
-    useFeatureFlag: jest.fn(),
-    useExperimentValue: jest.fn(),
+    useFeatureFlag: vi.fn(),
+    useExperimentValue: vi.fn(),
   }
 })
-jest.mock('uniswap/src/features/smartWallet/mismatch/hooks', () => ({
-  useIsMismatchAccountQuery: jest.fn(),
+vi.mock('uniswap/src/features/smartWallet/mismatch/hooks', () => ({
+  useIsMismatchAccountQuery: vi.fn(),
 }))
 
 beforeEach(() => {
@@ -40,7 +40,7 @@ beforeEach(() => {
   // @ts-ignore we dont use the response from this hook in useRoutingAPITrade so fine to mock as undefined
   mocked(useGetQuoteQuery).mockReturnValue(undefined)
   mocked(useGetQuoteQueryState).mockReturnValue({
-    refetch: jest.fn(),
+    refetch: vi.fn(),
     isError: false,
     data: undefined,
     error: false,
@@ -86,7 +86,7 @@ describe('#useRoutingAPITrade ExactIn', () => {
       pollingInterval: AVERAGE_L1_BLOCK_TIME_MS,
       refetchOnMountOrArgChange: 2 * 60,
     })
-    expect(result.current?.trade).toEqual(undefined)
+    expect(result.current.trade).toEqual(undefined)
   })
 
   it('does call routing api when window is focused for quote requests', () => {
@@ -113,7 +113,7 @@ describe('#useRoutingAPITrade pricing', () => {
       pollingInterval: ms(`1m`),
       refetchOnMountOrArgChange: 2 * 60,
     })
-    expect(result.current?.trade).toEqual(undefined)
+    expect(result.current.trade).toEqual(undefined)
   })
 
   it('does call routing api when window is focused for pricing requests', () => {

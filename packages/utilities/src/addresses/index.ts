@@ -26,6 +26,7 @@ export function isSameAddress(a?: string, b?: string): boolean {
  * @param chars - The number of characters to show at the beginning after the 0x and end.
  * @param charsEnd - (Optional) The number of characters to show at the end if different from chars.
  */
+// eslint-disable-next-line max-params
 export function shortenAddress(address = '', chars = 4, charsEnd?: number): string {
   const parsed = isAddress(address)
   if (!parsed) {
@@ -46,19 +47,20 @@ export function shortenAddress(address = '', chars = 4, charsEnd?: number): stri
 
 /**
  * Shorten an address and add 0x to the start if missing
- * @param targetAddress
+ * @param address
  * @param charsStart amount of character to shorten (from both ends / in the beginning)
  * @param charsEnd amount of characters to shorten in the end
  * @returns formatted string
  */
-function ellipseAddressAdd0x(targetAddress: string, charsStart = 4, charsEnd = 4): string {
-  const hasPrefix = targetAddress.startsWith('0x')
+// eslint-disable-next-line max-params
+function ellipseAddressAdd0x(address: string, charsStart = 4, charsEnd = 4): string {
+  const hasPrefix = address.startsWith('0x')
   const prefix = hasPrefix ? '' : '0x'
-  const wholeAddress = prefix + targetAddress
+  const wholeAddress = prefix + address
   if (charsStart + charsEnd >= wholeAddress.length) {
     return wholeAddress
   }
-  return ellipseMiddle(prefix + targetAddress, charsStart + 2, charsEnd)
+  return ellipseMiddle({ str: prefix + address, charsStart: charsStart + 2, charsEnd })
 }
 
 /**
@@ -68,6 +70,14 @@ function ellipseAddressAdd0x(targetAddress: string, charsStart = 4, charsEnd = 4
  * @param charsEnd amount of characters to shorten in the end
  * @returns formatted string
  */
-export function ellipseMiddle(target: string, charsStart = 4, charsEnd = 4): string {
-  return `${target.slice(0, charsStart)}...${target.slice(target.length - charsEnd)}`
+export function ellipseMiddle({
+  str,
+  charsStart = 4,
+  charsEnd = 4,
+}: {
+  str: string
+  charsStart?: number
+  charsEnd?: number
+}): string {
+  return `${str.slice(0, charsStart)}...${str.slice(str.length - charsEnd)}`
 }

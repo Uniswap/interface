@@ -74,14 +74,14 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
     const zeroY = priceToCoordinate(0) ?? 0
     const colorsCount = options.colors.length
     const isV4DataEnabled = options.colors.length === 3
-    const { linesMeshed, hoverInfo } = this._createLinePaths(
+    const { linesMeshed, hoverInfo } = this._createLinePaths({
       bars,
-      this._data.visibleRange,
+      visibleRange: this._data.visibleRange,
       renderingScope,
-      zeroY * renderingScope.verticalPixelRatio,
-      options.hoveredLogicalIndex,
+      zeroY: zeroY * renderingScope.verticalPixelRatio,
+      hoveredIndex: options.hoveredLogicalIndex,
       isV4DataEnabled,
-    )
+    })
 
     const fullLinesMeshed = linesMeshed.slice(0, colorsCount + 1)
     const highlightLinesMeshed = options.hoveredLogicalIndex ? linesMeshed.slice(colorsCount + 1) : []
@@ -154,10 +154,6 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
     })
 
     highlightLinesMeshed.toReversed().forEach((linePath, index) => {
-      if (!linePath) {
-        ctx.globalAlpha = 1
-        return
-      }
       const color = options.colors[colorsCount - (index + 1)]
       ctx.strokeStyle = color
       ctx.fillStyle = color
@@ -170,14 +166,21 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
   }
 
   /** Builds canvas line paths based on input data  */
-  _createLinePaths(
-    bars: StackedAreaBarItem[],
-    visibleRange: Range<number>,
-    renderingScope: BitmapCoordinatesRenderingScope,
-    zeroY: number,
-    hoveredIndex?: number | null,
-    isV4DataEnabled?: boolean,
-  ) {
+  _createLinePaths({
+    bars,
+    visibleRange,
+    renderingScope,
+    zeroY,
+    hoveredIndex,
+    isV4DataEnabled,
+  }: {
+    bars: StackedAreaBarItem[]
+    visibleRange: Range<number>
+    renderingScope: BitmapCoordinatesRenderingScope
+    zeroY: number
+    hoveredIndex?: number | null
+    isV4DataEnabled?: boolean
+  }) {
     const { horizontalPixelRatio, verticalPixelRatio } = renderingScope
     const v2Lines: LinePathData[] = []
     const v3Lines: LinePathData[] = []

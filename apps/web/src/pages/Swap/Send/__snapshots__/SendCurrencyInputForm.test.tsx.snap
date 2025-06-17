@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
+exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
 .c4 {
   color: #131313;
   pointer-events: auto;
@@ -86,6 +86,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
   max-height: 84px;
   max-width: calc(100% - 43px);
   width: 43px;
+  font-size: 70px;
   text-align: left;
   font-size: 70px;
   font-weight: 500;
@@ -150,20 +151,11 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
       class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface2 _pr-t-space-gap1569 _pl-t-space-gap1569 _pb-60px _height-256px _alignItems-center _justifyContent-flex-end _gap-t-space-gap52 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-16px _left-16px"
-      >
-        <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _userSelect-none"
-          data-disable-theme="true"
-        >
-          You’re sending
-        </span>
-      </div>
-      <div
         class="c0 c1 c2"
       >
         <span
           class="c3"
+          style="line-height: 84px; font-size: 70px;"
         >
           $
         </span>
@@ -177,38 +169,37 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
           pattern="^[0-9]*[.,]?[0-9]*$"
           placeholder="0"
           spellcheck="false"
+          style="line-height: 84px;"
           type="text"
           value="1000"
         />
         <span
           class="c6"
+          style="line-height: 84px; font-size: 70px;"
         >
           1000
         </span>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _opacity-0 _width-10037 _height-20px _zIndex--1"
+        />
       </div>
       <div
         class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
         style="transition: 100ms;"
       >
         <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
           data-disable-theme="true"
         >
           100.00 DAI
         </span>
         <svg
           fill="none"
-          height="100%"
-          stroke-width="8"
-          style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.35);"
-          viewBox="0 0 16 16"
-          width="100%"
-        >
-          <path
-            d="M7.33336 4.00003V14C7.33336 14.2694 7.1714 14.5127 6.92206 14.6161C6.8394 14.6501 6.75269 14.6667 6.66669 14.6667C6.49336 14.6667 6.32267 14.5987 6.19534 14.4714L2.862 11.1381C2.60134 10.8774 2.60134 10.456 2.862 10.1953C3.12267 9.93468 3.54405 9.93468 3.80471 10.1953L6.00002 12.3907V4.00003C6.00002 3.63203 6.29802 3.33337 6.66669 3.33337C7.03536 3.33337 7.33336 3.63203 7.33336 4.00003ZM13.8047 4.86201L10.4714 1.52868C10.2807 1.33801 9.99532 1.28132 9.74465 1.38399C9.49532 1.48732 9.33336 1.7307 9.33336 2.00003V12C9.33336 12.368 9.63136 12.6667 10 12.6667C10.3687 12.6667 10.6667 12.368 10.6667 12V3.60941L12.862 5.80472C13.1227 6.06539 13.544 6.06539 13.8047 5.80472C14.0654 5.54405 14.0654 5.12268 13.8047 4.86201Z"
-            fill="currentColor"
-          />
-        </svg>
+          height="20"
+          viewBox="0 3 24 24"
+          width="20"
+          xmlns="http://www.w3.org/2000/svg"
+        />
       </div>
     </div>
     <div
@@ -309,7 +300,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
           >
             <div
-              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; transform: rotate([object Object]); border-top-left-radius: [object Object]; border-top-right-radius: [object Object]; border-bottom-right-radius: [object Object]; border-bottom-left-radius: [object Object];"
+              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-rotate270de41674"
             >
               <svg
                 fill="none"
@@ -335,7 +326,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
       <h2
         class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
         data-disable-theme="true"
-        id="title-:r2e:"
+        id="title-:r28:"
         role="heading"
       />
     </span>
@@ -346,7 +337,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
 </span>
 `;
 
-exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
+exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
 .c3 {
   color: #131313;
   pointer-events: auto;
@@ -432,6 +423,7 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
   max-height: 84px;
   max-width: 100%;
   width: 43px;
+  font-size: 70px;
   text-align: left;
   font-size: 70px;
   font-weight: 500;
@@ -484,16 +476,6 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
       class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface2 _pr-t-space-gap1569 _pl-t-space-gap1569 _pb-60px _height-256px _alignItems-center _justifyContent-flex-end _gap-t-space-gap52 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-16px _left-16px"
-      >
-        <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _userSelect-none"
-          data-disable-theme="true"
-        >
-          You’re sending
-        </span>
-      </div>
-      <div
         class="c0 c1 c2"
       >
         <input
@@ -506,38 +488,37 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
           pattern="^[0-9]*[.,]?[0-9]*$"
           placeholder="0"
           spellcheck="false"
+          style="line-height: 84px;"
           type="text"
           value="1"
         />
         <span
           class="c5"
+          style="line-height: 84px; font-size: 70px;"
         >
           1
         </span>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _opacity-0 _width-10037 _height-20px _zIndex--1"
+        />
       </div>
       <div
         class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
         style="transition: 100ms;"
       >
         <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
           data-disable-theme="true"
         >
           $100.00
         </span>
         <svg
           fill="none"
-          height="100%"
-          stroke-width="8"
-          style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.35);"
-          viewBox="0 0 16 16"
-          width="100%"
-        >
-          <path
-            d="M7.33336 4.00003V14C7.33336 14.2694 7.1714 14.5127 6.92206 14.6161C6.8394 14.6501 6.75269 14.6667 6.66669 14.6667C6.49336 14.6667 6.32267 14.5987 6.19534 14.4714L2.862 11.1381C2.60134 10.8774 2.60134 10.456 2.862 10.1953C3.12267 9.93468 3.54405 9.93468 3.80471 10.1953L6.00002 12.3907V4.00003C6.00002 3.63203 6.29802 3.33337 6.66669 3.33337C7.03536 3.33337 7.33336 3.63203 7.33336 4.00003ZM13.8047 4.86201L10.4714 1.52868C10.2807 1.33801 9.99532 1.28132 9.74465 1.38399C9.49532 1.48732 9.33336 1.7307 9.33336 2.00003V12C9.33336 12.368 9.63136 12.6667 10 12.6667C10.3687 12.6667 10.6667 12.368 10.6667 12V3.60941L12.862 5.80472C13.1227 6.06539 13.544 6.06539 13.8047 5.80472C14.0654 5.54405 14.0654 5.12268 13.8047 4.86201Z"
-            fill="currentColor"
-          />
-        </svg>
+          height="20"
+          viewBox="0 3 24 24"
+          width="20"
+          xmlns="http://www.w3.org/2000/svg"
+        />
       </div>
     </div>
     <div
@@ -638,7 +619,7 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
           >
             <div
-              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; transform: rotate([object Object]); border-top-left-radius: [object Object]; border-top-right-radius: [object Object]; border-bottom-right-radius: [object Object]; border-bottom-left-radius: [object Object];"
+              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-rotate270de41674"
             >
               <svg
                 fill="none"
@@ -664,7 +645,7 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
       <h2
         class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
         data-disable-theme="true"
-        id="title-:r3n:"
+        id="title-:r3e:"
         role="heading"
       />
     </span>
@@ -675,7 +656,7 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
 </span>
 `;
 
-exports[`SendCurrencyInputform should render placeholder values 1`] = `
+exports[`SendCurrencyInputform > should render placeholder values 1`] = `
 .c4 {
   color: #131313;
   pointer-events: auto;
@@ -761,6 +742,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   max-height: 84px;
   max-width: calc(100% - 43px);
   width: 43px;
+  font-size: 70px;
   text-align: left;
   font-size: 70px;
   font-weight: 500;
@@ -826,20 +808,11 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
       class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface2 _pr-t-space-gap1569 _pl-t-space-gap1569 _pb-60px _height-256px _alignItems-center _justifyContent-flex-end _gap-t-space-gap52 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-16px _left-16px"
-      >
-        <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _userSelect-none"
-          data-disable-theme="true"
-        >
-          You’re sending
-        </span>
-      </div>
-      <div
         class="c0 c1 c2"
       >
         <span
           class="c3"
+          style="line-height: 84px; font-size: 70px;"
         >
           $
         </span>
@@ -853,11 +826,16 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
           pattern="^[0-9]*[.,]?[0-9]*$"
           placeholder="0"
           spellcheck="false"
+          style="line-height: 84px;"
           type="text"
           value=""
         />
         <span
           class="c6"
+          style="line-height: 84px; font-size: 70px;"
+        />
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _opacity-0 _width-10037 _height-20px _zIndex--1"
         />
       </div>
       <div
@@ -865,24 +843,18 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
         style="transition: 100ms;"
       >
         <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
           data-disable-theme="true"
         >
           0 DAI
         </span>
         <svg
           fill="none"
-          height="100%"
-          stroke-width="8"
-          style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.35);"
-          viewBox="0 0 16 16"
-          width="100%"
-        >
-          <path
-            d="M7.33336 4.00003V14C7.33336 14.2694 7.1714 14.5127 6.92206 14.6161C6.8394 14.6501 6.75269 14.6667 6.66669 14.6667C6.49336 14.6667 6.32267 14.5987 6.19534 14.4714L2.862 11.1381C2.60134 10.8774 2.60134 10.456 2.862 10.1953C3.12267 9.93468 3.54405 9.93468 3.80471 10.1953L6.00002 12.3907V4.00003C6.00002 3.63203 6.29802 3.33337 6.66669 3.33337C7.03536 3.33337 7.33336 3.63203 7.33336 4.00003ZM13.8047 4.86201L10.4714 1.52868C10.2807 1.33801 9.99532 1.28132 9.74465 1.38399C9.49532 1.48732 9.33336 1.7307 9.33336 2.00003V12C9.33336 12.368 9.63136 12.6667 10 12.6667C10.3687 12.6667 10.6667 12.368 10.6667 12V3.60941L12.862 5.80472C13.1227 6.06539 13.544 6.06539 13.8047 5.80472C14.0654 5.54405 14.0654 5.12268 13.8047 4.86201Z"
-            fill="currentColor"
-          />
-        </svg>
+          height="20"
+          viewBox="0 3 24 24"
+          width="20"
+          xmlns="http://www.w3.org/2000/svg"
+        />
       </div>
     </div>
     <div
@@ -983,7 +955,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
           >
             <div
-              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; transform: rotate(270deg); border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px;"
+              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-rotate270de41674"
             >
               <svg
                 fill="none"
@@ -1009,7 +981,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
       <h2
         class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
         data-disable-theme="true"
-        id="title-:r15:"
+        id="title-:r12:"
         role="heading"
       />
     </span>

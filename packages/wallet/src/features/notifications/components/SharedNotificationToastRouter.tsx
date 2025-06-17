@@ -12,6 +12,7 @@ import { DefaultNotification } from 'wallet/src/features/notifications/component
 import { ErrorNotification } from 'wallet/src/features/notifications/components/ErrorNotification'
 import { NetworkChangedBridgeNotification } from 'wallet/src/features/notifications/components/NetworkChangedBridgeNotification'
 import { NetworkChangedNotification } from 'wallet/src/features/notifications/components/NetworkChangedNotification'
+import { SmartWalletDisabledNotification } from 'wallet/src/features/notifications/components/SmartWalletDisabledNotification'
 import { SuccessNotification } from 'wallet/src/features/notifications/components/SuccessNotification'
 import { SwapNotification } from 'wallet/src/features/notifications/components/SwapNotification'
 import { SwapPendingNotification } from 'wallet/src/features/notifications/components/SwapPendingNotification'
@@ -35,6 +36,8 @@ export function SharedNotificationToastRouter({ notification }: { notification: 
       return <CopyFailedNotification notification={notification} />
     case AppNotificationType.Success:
       return <SuccessNotification notification={notification} />
+    case AppNotificationType.SmartWalletDisabled:
+      return <SmartWalletDisabledNotification notification={notification} />
     case AppNotificationType.Error:
       return <ErrorNotification notification={notification} />
     case AppNotificationType.ChooseCountry:

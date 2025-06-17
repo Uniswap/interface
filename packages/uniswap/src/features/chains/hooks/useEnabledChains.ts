@@ -38,8 +38,10 @@ function getConnectorSupportedChains(connector?: Connector): UniverseChainId[] {
     case CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID:
     case CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID:
       // Wagmi currently offers no way to discriminate a Connector as a WalletConnect connector providing access to getNamespaceChainsIds.
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       return (connector as WalletConnectConnector).getNamespaceChainsIds?.().length
-        ? (connector as WalletConnectConnector).getNamespaceChainsIds?.()
+        ? // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          (connector as WalletConnectConnector).getNamespaceChainsIds?.()
         : ALL_CHAIN_IDS
     default:
       return ALL_CHAIN_IDS

@@ -68,7 +68,7 @@ export class ProviderManager {
       cachedProviderDetails.address !== signerAddress ||
       cachedProviderDetails.status !== ProviderStatus.Connected
     ) {
-      this.createPrivateProvider(chainId, signer, signerAddress)
+      this.createPrivateProvider({ chainId, signer, address: signerAddress })
     }
 
     const providerDetails = this._providers[chainId]?.private
@@ -80,7 +80,7 @@ export class ProviderManager {
   }
 
   createProvider(chainId: UniverseChainId): undefined {
-    const provider = createEthersProvider(chainId)
+    const provider = createEthersProvider({ chainId })
     if (!provider) {
       return
     }
@@ -92,9 +92,20 @@ export class ProviderManager {
     this.onUpdate?.()
   }
 
-  createPrivateProvider(chainId: UniverseChainId, signer?: Signer, address?: Address): undefined {
-    const signerInfo = signer && address ? { signer, address } : undefined
-    const provider = createEthersProvider(chainId, RPCType.Private, signerInfo)
+  private createPrivateProvider({
+    chainId,
+    signer,
+    address,
+  }: {
+    chainId: UniverseChainId
+    signer?: Signer
+    address?: Address
+  }): undefined {
+    const provider = createEthersProvider({
+      chainId,
+      rpcType: RPCType.Private,
+      signerInfo: signer && address ? { signer, address } : undefined,
+    })
     if (!provider) {
       return
     }

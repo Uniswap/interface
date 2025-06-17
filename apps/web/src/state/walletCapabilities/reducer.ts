@@ -6,7 +6,7 @@ import {
 } from 'state/walletCapabilities/lib/handleGetCapabilities'
 import type { GetCapabilitiesResult } from 'state/walletCapabilities/lib/types'
 import { GetCapabilitiesStatus, WalletCapabilitiesState } from 'state/walletCapabilities/types'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants/interface'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
 import { InterfaceUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { hexToNumber } from 'uniswap/src/utils/hex'
@@ -60,12 +60,7 @@ export const selectIsAtomicBatchingSupportedByChainId = (state: {
       return undefined
     }
     const areCapabilitiesSupported = selectWalletCapabilitiesSupported(state)
-    if (!areCapabilitiesSupported) {
-      return false
-    }
-    const atomicBatchingSupported = isAtomicBatchingSupportedByChainId(state.walletCapabilities.byChain, chainId)
-    // if undefined, the chain is not supported
-    return atomicBatchingSupported ?? false
+    return areCapabilitiesSupported && isAtomicBatchingSupportedByChainId(state.walletCapabilities.byChain, chainId)
   }
 }
 
@@ -90,7 +85,7 @@ function onAtomicSupportedChainIdsDetected(chainIds: number[]) {
 
 function onWalletCapabilitiesDetected(chainCapabilitiesResult: GetCapabilitiesResult) {
   for (const [chainId, capabilities] of Object.entries(chainCapabilitiesResult)) {
-    sendAnalyticsEvent(InterfaceEventNameLocal.WalletCapabilitiesDetected, {
+    sendAnalyticsEvent(InterfaceEventName.WalletCapabilitiesDetected, {
       chainId: hexToNumber(chainId),
       capabilities,
     })

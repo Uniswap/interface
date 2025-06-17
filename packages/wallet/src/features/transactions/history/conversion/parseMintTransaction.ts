@@ -1,3 +1,4 @@
+import { OnChainTransaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import {
   NFTMintTransactionInfo,
@@ -18,8 +19,8 @@ export default function parseNFTMintTransaction(
     return undefined
   }
 
-  const tokenChange = transaction.details.assetChanges?.find((change) => change?.__typename === 'TokenTransfer')
-  const nftChange = transaction.details.assetChanges?.find((change) => change?.__typename === 'NftTransfer')
+  const tokenChange = transaction.details.assetChanges.find((change) => change?.__typename === 'TokenTransfer')
+  const nftChange = transaction.details.assetChanges.find((change) => change?.__typename === 'NftTransfer')
 
   // Mints must include the NFT minted
   if (!nftChange || nftChange.__typename !== 'NftTransfer') {
@@ -31,7 +32,7 @@ export default function parseNFTMintTransaction(
   const imageURL = nftChange.asset.image?.url
   const tokenId = nftChange.asset.tokenId
   const chainId = fromGraphQLChain(transaction.chain)
-  const isSpam = nftChange.asset?.isSpam ?? false
+  const isSpam = nftChange.asset.isSpam ?? false
   const address = nftChange.asset.nftContract?.address
 
   let transactedUSDValue: number | undefined
@@ -46,25 +47,25 @@ export default function parseNFTMintTransaction(
     purchaseCurrencyId =
       tokenChange.tokenStandard === 'NATIVE'
         ? buildNativeCurrencyId(chainId)
-        : tokenChange.asset?.address
+        : tokenChange.asset.address
           ? buildCurrencyId(chainId, tokenChange.asset.address)
           : undefined
-    purchaseCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
-      tokenChange.tokenStandard,
-      tokenChange.asset.chain,
-      tokenChange.asset.address,
-      tokenChange.asset.decimals,
-      tokenChange.quantity,
-    )
+    purchaseCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse({
+      tokenStandard: tokenChange.tokenStandard,
+      chain: tokenChange.asset.chain,
+      address: tokenChange.asset.address,
+      decimals: tokenChange.asset.decimals,
+      quantity: tokenChange.quantity,
+    })
 
     transactedUSDValue = parseUSDValueFromAssetChange(tokenChange.transactedValue)
   }
 
   const dappInfo = transaction.details.application?.address
     ? {
-        name: transaction.details.application?.name,
+        name: transaction.details.application.name,
         address: transaction.details.application.address,
-        icon: transaction.details.application?.icon?.url,
+        icon: transaction.details.application.icon?.url,
       }
     : undefined
   return {
@@ -81,5 +82,39 @@ export default function parseNFTMintTransaction(
     transactedUSDValue,
     isSpam,
     dappInfo,
+  }
+}
+
+/**
+ * Parse an NFT mint transaction from the REST API
+ */
+export function parseRestNFTMintTransaction(transaction: OnChainTransaction): NFTMintTransactionInfo | undefined {
+  const { transfers } = transaction
+  const firstTransfer = transfers[0]
+  if (!firstTransfer || firstTransfer.asset.case !== 'nft') {
+    return undefined
+  }
+  const nftTransfer = firstTransfer.asset.value
+  const { tokenId, address } = nftTransfer
+  if (!tokenId || !address) {
+    return undefined
+  }
+  return {
+    type: TransactionType.NFTMint,
+    nftSummaryInfo: {
+      name: nftTransfer.name,
+      collectionName: nftTransfer.collectionName,
+      imageURL: nftTransfer.imageUrl,
+      tokenId,
+      address,
+    },
+    purchaseCurrencyId: buildCurrencyId(nftTransfer.chainId, address),
+    purchaseCurrencyAmountRaw: transaction.fee?.amount?.raw,
+    transactedUSDValue: undefined,
+    dappInfo: {
+      name: transaction.protocol?.name,
+      icon: transaction.protocol?.logoUrl,
+    },
+    isSpam: nftTransfer.isSpam,
   }
 }

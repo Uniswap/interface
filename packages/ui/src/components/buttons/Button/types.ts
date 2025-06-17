@@ -42,5 +42,5 @@ export type ButtonProps = Omit<CustomButtonFrameProps, 'variant' | 'disabled'> &
     /**
      * Callback function to be called when the button is disabled
      */
-    onDisabledPress?: () => void
+    onDisabledPress?: CustomButtonFrameProps['onPress']
   }
