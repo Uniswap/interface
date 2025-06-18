@@ -289,7 +289,7 @@ function PositionPage() {
         pool_address: positionInfo.poolId,
         label: [currency0Amount.currency.symbol, currency1Amount.currency.symbol].join('/'),
         type: positionInfo.version,
-        fee_tier: typeof positionInfo.feeTier === 'string' ? parseInt(positionInfo.feeTier) : positionInfo.feeTier,
+        fee_tier: positionInfo.feeTier?.feeAmount,
         baseCurrencyId: currencyIdToAddress(currencyId(currency0Amount.currency)),
         quoteCurrencyId: currencyIdToAddress(currencyId(currency1Amount.currency)),
       }}
@@ -438,7 +438,7 @@ function PositionPage() {
                   poolAddressOrId={positionInfo.poolId}
                   chainId={positionInfo.chainId}
                   tickSpacing={positionInfo.tickSpacing}
-                  feeTier={positionInfo.feeTier}
+                  feeTier={positionInfo.feeTier?.feeAmount}
                   hook={positionInfo.v4hook}
                   positionStatus={status}
                   priceOrdering={

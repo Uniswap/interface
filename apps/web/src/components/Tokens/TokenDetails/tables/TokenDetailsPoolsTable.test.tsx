@@ -7,6 +7,7 @@ import { TokenDetailsPoolsTable } from 'components/Tokens/TokenDetails/tables/To
 import { mocked } from 'test-utils/mocked'
 import { validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
+import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -67,7 +68,11 @@ describe('TDPPoolTable', () => {
       {
         token0: validBEPoolToken0,
         token1: validBEPoolToken1,
-        feeTier: 10000,
+        feeTier: {
+          feeAmount: 10000,
+          tickSpacing: DEFAULT_TICK_SPACING,
+          isDynamic: false,
+        },
         hash: '0x123',
         txCount: 200,
         tvl: 300,

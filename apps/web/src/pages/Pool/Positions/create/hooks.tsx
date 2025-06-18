@@ -4,7 +4,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { DepositInfo, DepositState } from 'components/Liquidity/types'
-import { getPoolFromRest } from 'components/Liquidity/utils'
+import { getPoolFromRest, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { checkIsNative, useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
@@ -569,7 +569,15 @@ function getParsedFeeTierParam(params: ParsedQs): FeeData | undefined {
     return DEFAULT_FEE_DATA
   }
 
-  return { feeAmount: feeTierNumber, tickSpacing }
+  return {
+    feeAmount: feeTierNumber,
+    tickSpacing,
+    isDynamic: isDynamicFeeTier({
+      feeAmount: feeTierNumber,
+      tickSpacing,
+      isDynamic: false,
+    }),
+  }
 }
 
 // Prefill currency inputs from URL search params ?currencyA=ETH&currencyB=0x123...&chain=base&feeTier=10000&hook=0x123...

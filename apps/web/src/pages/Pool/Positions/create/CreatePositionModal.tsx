@@ -233,12 +233,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
                   <Text variant="heading3">{currencyAmounts?.TOKEN1?.currency.symbol}</Text>
                 </Flex>
                 <Flex row gap={2} alignItems="center">
-                  <LiquidityPositionInfoBadges
-                    size="small"
-                    versionLabel={versionLabel}
-                    v4hook={hook}
-                    feeTier={fee.feeAmount}
-                  />
+                  <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={hook} feeTier={fee} />
                 </Flex>
               </Flex>
               <DoubleCurrencyLogo

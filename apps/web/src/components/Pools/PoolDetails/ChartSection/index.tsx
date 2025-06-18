@@ -180,7 +180,7 @@ export default function ChartSection(props: ChartSectionProps) {
 
     const selectedChartProps = {
       ...props,
-      feeTier: Number(props.poolData.feeTier),
+      feeTier: Number(props.poolData.feeTier?.feeAmount),
       height: PDP_CHART_HEIGHT_PX,
       timePeriod,
       tokenA: currencyA,

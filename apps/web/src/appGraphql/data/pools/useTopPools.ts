@@ -1,5 +1,6 @@
 import { Percent } from '@uniswap/sdk-core'
 import { OrderDirection } from 'appGraphql/data/util'
+import { FeeData } from 'pages/Pool/Positions/create/types'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
@@ -67,7 +68,7 @@ export interface TablePool {
   volume30d: number
   apr: Percent
   volOverTvl: number
-  feeTier: number
+  feeTier: FeeData
   protocolVersion: ProtocolVersion
   hookAddress?: string
   boostedApr?: number

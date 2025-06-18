@@ -6,7 +6,7 @@ import {
   sortPools,
 } from 'appGraphql/data/pools/useTopPools'
 import { useCallback, useMemo, useRef } from 'react'
-import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
+import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import {
   useTopV2PairsQuery,
   useTopV3PoolsQuery,
@@ -42,6 +42,7 @@ export function usePoolsFromTokenAddress({
       chain,
     },
   })
+
   const {
     loading: loadingV3,
     error: errorV3,
@@ -160,7 +161,13 @@ export function usePoolsFromTokenAddress({
             tvl: pool.totalLiquidity?.value,
             feeTier: pool.feeTier,
           }),
-          feeTier: pool.feeTier,
+          feeTier: pool.feeTier
+            ? {
+                feeAmount: pool.feeTier,
+                tickSpacing: DEFAULT_TICK_SPACING,
+                isDynamic: pool.isDynamicFee ?? false,
+              }
+            : undefined,
           protocolVersion: pool.protocolVersion,
           hookAddress: pool.hook?.address,
         } as TablePool
@@ -181,7 +188,13 @@ export function usePoolsFromTokenAddress({
             tvl: pool.totalLiquidity?.value,
             feeTier: pool.feeTier,
           }),
-          feeTier: pool.feeTier,
+          feeTier: pool.feeTier
+            ? {
+                feeAmount: pool.feeTier,
+                tickSpacing: DEFAULT_TICK_SPACING,
+                isDynamic: false,
+              }
+            : undefined,
           protocolVersion: pool.protocolVersion,
         } as TablePool
       }) ?? []
@@ -200,7 +213,11 @@ export function usePoolsFromTokenAddress({
             tvl: pool.totalLiquidity?.value,
             feeTier: V2_DEFAULT_FEE_TIER,
           }),
-          feeTier: V2_DEFAULT_FEE_TIER,
+          feeTier: {
+            feeAmount: V2_DEFAULT_FEE_TIER,
+            tickSpacing: DEFAULT_TICK_SPACING,
+            isDynamic: false,
+          },
           protocolVersion: pool.protocolVersion,
         } as TablePool
       }) ?? []

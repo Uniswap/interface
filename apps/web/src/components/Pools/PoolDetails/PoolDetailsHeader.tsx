@@ -15,6 +15,7 @@ import Row from 'components/deprecated/Row'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import styled, { useTheme } from 'lib/styled-components'
 import { ReversedArrowsIcon } from 'nft/components/iconExports'
+import { FeeData } from 'pages/Pool/Positions/create/types'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
@@ -85,7 +86,7 @@ const PoolDetailsTitle = ({
   token0?: Token
   token1?: Token
   chainId?: UniverseChainId
-  feeTier?: number
+  feeTier?: FeeData
   protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
   hookAddress?: string
@@ -267,7 +268,7 @@ interface PoolDetailsHeaderProps {
   poolAddress?: string
   token0?: Token
   token1?: Token
-  feeTier?: number
+  feeTier?: FeeData
   protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
   loading?: boolean

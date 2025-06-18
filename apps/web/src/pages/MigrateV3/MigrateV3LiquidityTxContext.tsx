@@ -134,7 +134,7 @@ export function MigrateV3PositionTxContextProvider({
           token1: positionInfo.currency1Amount.currency.isNative
             ? ZERO_ADDRESS
             : positionInfo.currency1Amount.currency.address,
-          fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
+          fee: positionInfo.feeTier?.feeAmount,
           tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
         },
         tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,

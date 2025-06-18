@@ -7,6 +7,7 @@ import { PoolDetailsBreadcrumb, PoolDetailsHeader } from 'components/Pools/PoolD
 import store from 'state'
 import { usdcWethPoolAddress, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
+import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 
 vi.mock('nft/components/iconExports', () => ({
@@ -55,7 +56,7 @@ describe('PoolDetailsHeader', () => {
     onChartTypeChange: vi.fn(),
     priceChartType: PriceChartType.LINE,
     onPriceChartTypeChange: vi.fn(),
-    feeTier: 500,
+    feeTier: { feeAmount: 500, tickSpacing: DEFAULT_TICK_SPACING, isDynamic: false },
     toggleReversed: vi.fn(),
   }
 

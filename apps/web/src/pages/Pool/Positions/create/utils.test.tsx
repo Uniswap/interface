@@ -138,6 +138,7 @@ describe('getV3PriceRangeInfo', () => {
       fee: {
         feeAmount: FeeAmount.MEDIUM,
         tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM],
+        isDynamic: false,
       },
     }
 
@@ -344,6 +345,7 @@ describe('getV3PriceRangeInfo', () => {
       fee: {
         feeAmount: FeeAmount.MEDIUM,
         tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM],
+        isDynamic: false,
       },
     }
 
@@ -712,6 +714,7 @@ describe('getV4PriceRangeInfo', () => {
       fee: {
         feeAmount: FeeAmount.MEDIUM,
         tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM],
+        isDynamic: false,
       },
     }
 
@@ -927,6 +930,7 @@ describe('getV4PriceRangeInfo', () => {
       fee: {
         feeAmount: FeeAmount.MEDIUM,
         tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM],
+        isDynamic: false,
       },
     }
 

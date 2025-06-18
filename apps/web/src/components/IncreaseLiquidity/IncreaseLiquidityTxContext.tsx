@@ -176,7 +176,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
         pool: {
           token0: token0.isNative ? ZERO_ADDRESS : token0.address,
           token1: token1.isNative ? ZERO_ADDRESS : token1.address,
-          fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
+          fee: positionInfo.feeTier?.feeAmount,
           tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
           hooks: positionInfo.v4hook,
         },

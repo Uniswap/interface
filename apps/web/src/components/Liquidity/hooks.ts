@@ -74,6 +74,7 @@ export function useAllFeeTierPoolData({
           feeTierData[feeTier] = {
             id: pool.poolId,
             fee: {
+              isDynamic: pool.isDynamicFee,
               feeAmount: pool.fee,
               tickSpacing: pool.tickSpacing,
             },

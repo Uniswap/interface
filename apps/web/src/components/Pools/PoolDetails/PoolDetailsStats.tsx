@@ -256,7 +256,7 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
       {poolData.volumeUSD24H !== undefined && poolData.feeTier !== undefined && (
         <StatItem
           title={<Trans i18nKey="stats.24fees" />}
-          value={poolData.volumeUSD24H * (poolData.feeTier / 1000000)}
+          value={poolData.volumeUSD24H * (poolData.feeTier.feeAmount / 1000000)}
         />
       )}
     </StatsWrapper>

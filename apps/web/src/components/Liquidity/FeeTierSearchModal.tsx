@@ -290,6 +290,7 @@ export function FeeTierSearchModal() {
                   setPositionState((prevState) => ({
                     ...prevState,
                     fee: {
+                      isDynamic: false,
                       feeAmount: feeHundredthsOfBips,
                       tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips),
                     },
@@ -390,6 +391,7 @@ export function FeeTierSearchModal() {
                         setPositionState((prevState) => ({
                           ...prevState,
                           fee: {
+                            isDynamic: pool.fee.isDynamic,
                             feeAmount: pool.fee.feeAmount,
                             tickSpacing: pool.fee.tickSpacing,
                           },

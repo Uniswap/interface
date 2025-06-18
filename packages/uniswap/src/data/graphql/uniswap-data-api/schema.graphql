@@ -2,32 +2,6 @@
 directive @defer on FIELD
 
 """
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service which subscriptions will be published to when this mutation is
-called. This directive is deprecated use @aws_susbscribe directive instead.
-"""
-directive @aws_publish(
-  """
-  List of subscriptions which will be published to when this mutation is called.
-  """
-  subscriptions: [String]
-) on FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by a Cognito User Pools token.
 """
 directive @aws_cognito_user_pools(
@@ -40,6 +14,33 @@ Tells the service this field/object has access authorized by a Lambda Authorizer
 """
 directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service which subscriptions will be published to when this mutation is
+called. This directive is deprecated use @aws_susbscribe directive instead.
+"""
+directive @aws_publish(
+  """
+  List of subscriptions which will be published to when this mutation is called.
+  """
+  subscriptions: [String]
+) on FIELD_DEFINITION
+
 """Tells the service which mutation triggers this subscription."""
 directive @aws_subscribe(
   """
@@ -48,11 +49,10 @@ directive @aws_subscribe(
   mutations: [String]
 ) on FIELD_DEFINITION
 
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on FIELD_DEFINITION
+"""
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """
   Types, unions, and inputs (alphabetized):
@@ -203,6 +203,7 @@ enum Chain {
   MONAD_TESTNET
   ARBITRUM_SEPOLIA
   BASE_SEPOLIA
+  SOLANA
   UNKNOWN_CHAIN
 }
 
@@ -233,9 +234,11 @@ enum Currency {
   MATIC
   MXN
   NGN
+  NZD
   PKR
   RUB
   SGD
+  THB
   TRY
   UAH
   USD
@@ -1222,6 +1225,7 @@ type Token implements IContract {
   v4Transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
   v3Transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
   v2Transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
+  source: TokenSource
 }
 
 type TokenAmount {
@@ -1337,9 +1341,14 @@ enum TokenSortableField {
   POPULARITY
 }
 
+enum TokenSource {
+  TOKEN_FACTORY
+}
+
 enum TokenStandard {
   NATIVE
   ERC20
+  SPL
 }
 
 input TokenTradeInput {
@@ -1534,6 +1543,7 @@ type V4Pool {
   token1Supply: Float
   txCount: Int
   feeTier: Float
+  isDynamicFee: Boolean
   hook: V4PoolHook
   totalLiquidityPercentChange24h: Amount
   cumulativeVolume(duration: HistoryDuration!): Amount

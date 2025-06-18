@@ -116,7 +116,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
         pool: {
           token0: currency0.isNative ? ZERO_ADDRESS : currency0.address,
           token1: currency1.isNative ? ZERO_ADDRESS : currency1.address,
-          fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
+          fee: positionInfo.feeTier?.feeAmount,
           tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
           hooks: positionInfo.v4hook,
         },
