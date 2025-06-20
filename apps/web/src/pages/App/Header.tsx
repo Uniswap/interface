@@ -1,3 +1,4 @@
+import AggtraderNavbar from 'components/NavBar/AggtraderNavbar'
 import Navbar from 'components/NavBar/index'
 import { MobileAppPromoBanner, useMobileAppPromoBannerEligible } from 'components/TopLevelBanners/MobileAppPromoBanner'
 import { UkBanner, useRenderUkBanner } from 'components/TopLevelBanners/UkBanner'
@@ -44,6 +45,7 @@ export const Header = memo(function Header() {
         borderBottomWidth={1}
         pointerEvents="auto"
       >
+        <AggtraderNavbar />
         <Navbar />
       </Flex>
     </Flex>
