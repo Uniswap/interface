@@ -8,9 +8,9 @@ import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: ['src/v3/schema.graphql'],
+  schema: ['generated/schema.graphql'],
   // pulls every graphql files in a single config
-  documents: ['../../apps/{mobile,extension,web}/src/**/*.graphql', '../../packages/{wallet,uniswap}/src/**/*.graphql'],
+  documents: ['../../apps/web/src/**/*.graphql'],
   generates: {
     // generates a single output for every app and package
     'generated/types-and-hooks.ts': {

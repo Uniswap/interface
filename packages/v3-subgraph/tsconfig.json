@@ -2,7 +2,16 @@
   "compilerOptions": {
     "lib": [
       "es6",
-      "dom" 
+      "dom"
     ],
-  }
+    "composite": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.json",
+    "src/**/*.mts",
+    "generated/**/*.ts"
+  ],
 }

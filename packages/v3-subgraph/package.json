@@ -5,6 +5,7 @@
   "license": "GPL-3.0-or-later",
   "scripts": {
     "build": "cross-env ts-node ./script/build",
+    "graphql:schema": "get-graphql-schema https://tango.quartzo.studio/subgraphs/name/smartbch > ./generated/schema.graphql",
     "graphql:generate": "graphql-codegen --config codegen.ts",
     "lint": "eslint . --ext .ts --fix"
   },
@@ -27,6 +28,7 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^6.1.0",
     "fs-extra": "^11.1.0",
+    "get-graphql-schema": "2.1.2",
     "mustache": "^3.1.0",
     "prettier": "^1.18.2",
     "ts-node": "^10.9.1",
