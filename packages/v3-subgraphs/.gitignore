@@ -1,0 +1,11 @@
+node_modules/
+.DS_STORE
+yarn-error.log
+build/
+generated/
+.vscode
+.env
+/.subgraph-env
+subgraph.yaml
+/src/common/chain.ts
+/*subgraph.yaml

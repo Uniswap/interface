@@ -50068,6 +50068,12 @@ __metadata:
   dependencies:
     "@graphprotocol/graph-cli": ^0.64.1
     "@graphprotocol/graph-ts": ^0.38.1
+    "@graphql-codegen/cli": 3.3.1
+    "@graphql-codegen/client-preset": 3.0.1
+    "@graphql-codegen/typescript": 3.0.4
+    "@graphql-codegen/typescript-operations": 3.0.4
+    "@graphql-codegen/typescript-react-apollo": 3.3.7
+    "@graphql-codegen/typescript-resolvers": 3.2.1
     "@types/fs-extra": ^11.0.1
     "@types/node": ^18.11.18
     "@typescript-eslint/eslint-plugin": ^2.0.0
