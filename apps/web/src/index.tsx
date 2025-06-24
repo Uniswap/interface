@@ -10,7 +10,7 @@ import Web3Provider, { Web3ProviderUpdater } from 'components/Web3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
 import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
 import { TokenBalancesProvider } from 'graphql/data/apollo/TokenBalancesProvider'
-import { apolloClient } from 'graphql/data/apollo/client'
+import { apolloClient, apolloSubgraphClient } from 'graphql/data/apollo/client'
 import { useAccount } from 'hooks/useAccount'
 import { LanguageProvider } from 'i18n/LanguageProvider'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
@@ -74,10 +74,12 @@ function Updaters() {
 
 function GraphqlProviders({ children }: { children: React.ReactNode }) {
   return (
-    <ApolloProvider client={apolloClient}>
-      <AssetActivityProvider>
-        <TokenBalancesProvider>{children}</TokenBalancesProvider>
-      </AssetActivityProvider>
+    <ApolloProvider client={apolloSubgraphClient}>
+      <ApolloProvider client={apolloClient}>
+        <AssetActivityProvider>
+          <TokenBalancesProvider>{children}</TokenBalancesProvider>
+        </AssetActivityProvider>
+      </ApolloProvider>
     </ApolloProvider>
   )
 }
