@@ -297,6 +297,7 @@
     "use-resize-observer": "9.1.0",
     "utilities": "workspace:^",
     "uuid": "9.0.0",
+    "v3-subgraph": "workspace:^",
     "video-extensions": "1.2.0",
     "viem": "2.x",
     "wagmi": "2.9.3",
