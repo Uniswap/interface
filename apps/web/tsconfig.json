@@ -40,6 +40,9 @@
     },
     {
       "path": "../../packages/uniswap"
+    },
+    {
+      "path": "../../packages/v3-subgraph"
     }
   ]
 }
