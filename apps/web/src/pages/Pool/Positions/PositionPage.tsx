@@ -9,11 +9,11 @@ import { LiquidityPositionAmountRows } from 'components/Liquidity/LiquidityPosit
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
 import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
-import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { ZERO_ADDRESS } from 'constants/misc'
+import { apolloSubgraphClient } from 'graphql/data/apollo/client'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
+import { fromPositionToPositionInfo } from 'lib/utils/subgraph'
 import NotFound from 'pages/NotFound'
 import { LegacyPositionPage } from 'pages/Pool/Positions/LegacyPositionPage'
 import { BaseQuoteFiatAmount } from 'pages/Pool/Positions/create/BaseQuoteFiatAmount'
@@ -22,7 +22,7 @@ import { useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
@@ -35,9 +35,7 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { breakpoints } from 'ui/src/theme/breakpoints'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -48,6 +46,7 @@ import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
+import { useGetPositionQuery } from 'v3-subgraph/generated/types-and-hooks'
 import { useAccount } from 'wagmi'
 
 function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
@@ -75,28 +74,25 @@ export default function PositionPageWrapper() {
 
 function PositionPage() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId: string }>()
+
   const tokenId = parseTokenId(tokenIdFromUrl)
   const chainId = useChainIdFromUrlParam()
   const chainInfo = chainId ? getChainInfo(chainId) : undefined
   const account = useAccount()
-  const supportedAccountChainId = useSupportedChainId(account.chainId)
-  const { pathname } = useLocation()
+
   const {
     data,
-    isLoading: positionLoading,
+    loading: positionLoading,
     refetch,
   } = useGetPositionQuery({
-    owner: account?.address ?? ZERO_ADDRESS,
-    protocolVersion: pathname.includes('v3')
-      ? ProtocolVersion.V3
-      : pathname.includes('v4')
-        ? ProtocolVersion.V4
-        : ProtocolVersion.UNSPECIFIED,
-    tokenId: tokenIdFromUrl,
-    chainId: chainId ?? supportedAccountChainId,
+    client: apolloSubgraphClient,
+    variables: {
+      id: tokenIdFromUrl ?? '',
+    },
   })
+
   const position = data?.position
-  const positionInfo = useMemo(() => parseRestPosition(position), [position])
+  const positionInfo = useMemo(() => fromPositionToPositionInfo(position), [position])
   const metadata = usePositionTokenURI(tokenId, chainInfo?.id, positionInfo?.version)
   usePendingLPTransactionsChangeListener(refetch)
 

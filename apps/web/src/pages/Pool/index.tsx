@@ -4,12 +4,14 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool as PoolIcon } from 'components/Icons/Pool'
 import { LiquidityPositionCard, LiquidityPositionCardLoader } from 'components/Liquidity/LiquidityPositionCard'
 import { PositionInfo } from 'components/Liquidity/types'
-import { getPositionUrl, parseRestPosition } from 'components/Liquidity/utils'
+import { getPositionUrl } from 'components/Liquidity/utils'
 import { sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
+import { apolloSubgraphClient } from 'graphql/data/apollo/client'
 import { OrderDirection } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import { atom, useAtom } from 'jotai'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
+import { fromPositionToPositionInfo } from 'lib/utils/subgraph'
 import { PositionsHeader } from 'pages/Pool/Positions/PositionsHeader'
 import { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -23,7 +25,6 @@ import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes } from 'ui/src/theme'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
-import { useGetPositionsInfiniteQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -31,6 +32,7 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
+import { useGetPositionsQuery } from 'v3-subgraph/generated/types-and-hooks'
 
 const PAGE_SIZE = 25
 
@@ -167,53 +169,27 @@ export default function Pool() {
     }
   }, [isV4DataEnabled, setVersionFilter])
 
-  const { data, isPlaceholderData, refetch, isLoading, fetchNextPage, hasNextPage, isFetching } =
-    useGetPositionsInfiniteQuery(
-      {
-        address,
-        chainIds: chainFilter ? [chainFilter] : currentModeChains,
-        positionStatuses: statusFilter,
-        protocolVersions: versionFilter,
-        pageSize: PAGE_SIZE,
-        pageToken: '',
-        includeHidden: true,
-      },
-      !isConnected,
-    )
+  const isPlaceholderData = false
 
-  const loadedPositions = useMemo(() => {
-    return data?.pages.flatMap((positionsResponse) => positionsResponse.positions) || []
-  }, [data])
+  const {
+    data,
+    loading: isLoading,
+    refetch,
+  } = useGetPositionsQuery({
+    client: apolloSubgraphClient,
+    skip: !isConnected,
+    variables: {
+      where: {
+        owner: address,
+      },
+    },
+  })
 
   const savedPositions = useRequestPositionsForSavedPairs()
 
   const isLoadingPositions = !!account.address && (isLoading || !data)
 
-  const combinedPositions = useMemo(() => {
-    return [
-      ...loadedPositions,
-      ...(savedPositions
-        .filter((position) => {
-          const matchesChain = !chainFilter || position.data?.position?.chainId === chainFilter
-          const matchesStatus =
-            position.data?.position?.status && statusFilter.includes(position.data?.position?.status)
-          const matchesVersion =
-            position.data?.position?.protocolVersion && versionFilter.includes(position.data?.position?.protocolVersion)
-          return matchesChain && matchesStatus && matchesVersion
-        })
-        .map((p) => p.data?.position) ?? []),
-    ]
-      .map(parseRestPosition)
-      .filter((position): position is PositionInfo => !!position)
-      .reduce<PositionInfo[]>((unique, position) => {
-        const positionId = `${position.poolId}-${position.tokenId}-${position.chainId}`
-        const exists = unique.some((p) => `${p.poolId}-${p.tokenId}-${p.chainId}` === positionId)
-        if (!exists) {
-          unique.push(position)
-        }
-        return unique
-      }, [])
-  }, [loadedPositions, savedPositions, chainFilter, statusFilter, versionFilter])
+  const combinedPositions = (data?.positions ?? []).map(fromPositionToPositionInfo)
 
   const { visiblePositions, hiddenPositions } = useMemo(() => {
     const visiblePositions: PositionInfo[] = []
@@ -238,6 +214,10 @@ export default function Pool() {
   }, [combinedPositions, isPositionVisible])
 
   usePendingLPTransactionsChangeListener(refetch)
+
+  const hasNextPage = false
+  const isFetching = false
+  const fetchNextPage = () => {}
 
   const loadMorePositions = () => {
     if (hasNextPage && !isFetching) {
