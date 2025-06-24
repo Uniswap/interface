@@ -3,8 +3,7 @@
     "lib": [
       "es6",
       "dom"
-    ],
-    "composite": true
+    ]
   },
   "include": [
     "src/**/*.ts",

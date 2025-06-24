@@ -1,5 +1,5 @@
 {
-  "name": "uniswap-v3-subgraph",
+  "name": "v3-subgraph",
   "version": "1.0.0",
   "repository": "https://github.com/graph-buildersdao/uniswap-v3-subgraph",
   "license": "GPL-3.0-or-later",
