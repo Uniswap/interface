@@ -4270,76 +4270,150 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
-export type GetPoolsAndPositionsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetPositionQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
 
 
-export type GetPoolsAndPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, liquidity: any, token0: { __typename?: 'Token', symbol: string }, token1: { __typename?: 'Token', symbol: string } }>, pools: Array<{ __typename?: 'Pool', createdAtTimestamp: any, liquidity: any, token0: { __typename?: 'Token', id: any, name: string, symbol: string }, token1: { __typename?: 'Token', id: any, name: string, symbol: string }, mints: Array<{ __typename?: 'Mint', id: string, owner: any, sender?: any | undefined, transaction: { __typename?: 'Transaction', id: string, gasUsed: any } }> }> };
+export type GetPositionQuery = { __typename?: 'Query', position?: { __typename?: 'Position', id: string, owner: any, tickLower: any, tickUpper: any, liquidity: any, depositedToken0: any, depositedToken1: any, withdrawnToken0: any, withdrawnToken1: any, collectedFeesToken0: any, collectedFeesToken1: any, closed: boolean, pool: { __typename?: 'Pool', id: any, feeTier: any, sqrtPrice: any, liquidity: any, tick?: any | undefined, token0Price: any, token1Price: any, volumeUSD: any, feesUSD: any, totalValueLockedUSD: any, token0: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string }, token1: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string } } } | undefined };
+
+export type PoolFragment = { __typename?: 'Pool', id: any, feeTier: any, sqrtPrice: any, liquidity: any, tick?: any | undefined, token0Price: any, token1Price: any, volumeUSD: any, feesUSD: any, totalValueLockedUSD: any, token0: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string }, token1: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string } };
+
+export type GetPositionsQueryVariables = Exact<{
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Position_Filter>;
+}>;
 
 
-export const GetPoolsAndPositionsDocument = gql`
-    query GetPoolsAndPositions {
-  positions {
+export type GetPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, owner: any, tickLower: any, tickUpper: any, liquidity: any, depositedToken0: any, depositedToken1: any, withdrawnToken0: any, withdrawnToken1: any, collectedFeesToken0: any, collectedFeesToken1: any, closed: boolean, pool: { __typename?: 'Pool', id: any, feeTier: any, sqrtPrice: any, liquidity: any, tick?: any | undefined, token0Price: any, token1Price: any, volumeUSD: any, feesUSD: any, totalValueLockedUSD: any, token0: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string }, token1: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string } } }> };
+
+export const PoolFragmentDoc = gql`
+    fragment Pool on Pool {
+  id
+  token0 {
     id
-    liquidity
-    token0 {
-      symbol
-    }
-    token1 {
-      symbol
-    }
+    decimals
+    symbol
+    name
   }
-  pools {
-    createdAtTimestamp
-    token0 {
-      id
-      name
-      symbol
-    }
-    token1 {
-      id
-      name
-      symbol
-    }
-    mints {
-      id
-      owner
-      sender
-      transaction {
-        id
-        gasUsed
-      }
-    }
-    liquidity
+  token1 {
+    id
+    decimals
+    symbol
+    name
   }
+  feeTier
+  sqrtPrice
+  liquidity
+  tick
+  token0Price
+  token1Price
+  volumeUSD
+  feesUSD
+  totalValueLockedUSD
 }
     `;
+export const GetPositionDocument = gql`
+    query GetPosition($id: ID!) {
+  position(id: $id) {
+    id
+    owner
+    tickLower
+    tickUpper
+    liquidity
+    depositedToken0
+    depositedToken1
+    withdrawnToken0
+    withdrawnToken1
+    collectedFeesToken0
+    collectedFeesToken1
+    closed
+    pool {
+      ...Pool
+    }
+  }
+}
+    ${PoolFragmentDoc}`;
 
 /**
- * __useGetPoolsAndPositionsQuery__
+ * __useGetPositionQuery__
  *
- * To run a query within a React component, call `useGetPoolsAndPositionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPoolsAndPositionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetPositionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPositionQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetPoolsAndPositionsQuery({
+ * const { data, loading, error } = useGetPositionQuery({
  *   variables: {
+ *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetPoolsAndPositionsQuery(baseOptions?: Apollo.QueryHookOptions<GetPoolsAndPositionsQuery, GetPoolsAndPositionsQueryVariables>) {
+export function useGetPositionQuery(baseOptions: Apollo.QueryHookOptions<GetPositionQuery, GetPositionQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetPoolsAndPositionsQuery, GetPoolsAndPositionsQueryVariables>(GetPoolsAndPositionsDocument, options);
+        return Apollo.useQuery<GetPositionQuery, GetPositionQueryVariables>(GetPositionDocument, options);
       }
-export function useGetPoolsAndPositionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPoolsAndPositionsQuery, GetPoolsAndPositionsQueryVariables>) {
+export function useGetPositionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPositionQuery, GetPositionQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetPoolsAndPositionsQuery, GetPoolsAndPositionsQueryVariables>(GetPoolsAndPositionsDocument, options);
+          return Apollo.useLazyQuery<GetPositionQuery, GetPositionQueryVariables>(GetPositionDocument, options);
         }
-export type GetPoolsAndPositionsQueryHookResult = ReturnType<typeof useGetPoolsAndPositionsQuery>;
-export type GetPoolsAndPositionsLazyQueryHookResult = ReturnType<typeof useGetPoolsAndPositionsLazyQuery>;
-export type GetPoolsAndPositionsQueryResult = Apollo.QueryResult<GetPoolsAndPositionsQuery, GetPoolsAndPositionsQueryVariables>;
+export type GetPositionQueryHookResult = ReturnType<typeof useGetPositionQuery>;
+export type GetPositionLazyQueryHookResult = ReturnType<typeof useGetPositionLazyQuery>;
+export type GetPositionQueryResult = Apollo.QueryResult<GetPositionQuery, GetPositionQueryVariables>;
+export const GetPositionsDocument = gql`
+    query GetPositions($skip: Int, $first: Int, $where: Position_filter) {
+  positions(skip: $skip, first: $first, where: $where) {
+    id
+    owner
+    tickLower
+    tickUpper
+    liquidity
+    depositedToken0
+    depositedToken1
+    withdrawnToken0
+    withdrawnToken1
+    collectedFeesToken0
+    collectedFeesToken1
+    closed
+    pool {
+      ...Pool
+    }
+  }
+}
+    ${PoolFragmentDoc}`;
+
+/**
+ * __useGetPositionsQuery__
+ *
+ * To run a query within a React component, call `useGetPositionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPositionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPositionsQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      first: // value for 'first'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetPositionsQuery(baseOptions?: Apollo.QueryHookOptions<GetPositionsQuery, GetPositionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPositionsQuery, GetPositionsQueryVariables>(GetPositionsDocument, options);
+      }
+export function useGetPositionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPositionsQuery, GetPositionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPositionsQuery, GetPositionsQueryVariables>(GetPositionsDocument, options);
+        }
+export type GetPositionsQueryHookResult = ReturnType<typeof useGetPositionsQuery>;
+export type GetPositionsLazyQueryHookResult = ReturnType<typeof useGetPositionsLazyQuery>;
+export type GetPositionsQueryResult = Apollo.QueryResult<GetPositionsQuery, GetPositionsQueryVariables>;
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
