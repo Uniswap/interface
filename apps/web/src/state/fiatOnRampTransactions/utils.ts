@@ -1,6 +1,6 @@
 import { FiatOnRampTransactionStatus } from 'state/fiatOnRampTransactions/types'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export function statusToTransactionInfoStatus(status: FORTransaction['status']): FiatOnRampTransactionStatus {
   switch (status) {
@@ -19,7 +19,7 @@ export function forTransactionStatusToTransactionStatus(status: FiatOnRampTransa
     case FiatOnRampTransactionStatus.FAILED:
       return TransactionStatus.Failed
     case FiatOnRampTransactionStatus.COMPLETE:
-      return TransactionStatus.Confirmed
+      return TransactionStatus.Success
     case FiatOnRampTransactionStatus.PENDING:
     default:
       return TransactionStatus.Pending

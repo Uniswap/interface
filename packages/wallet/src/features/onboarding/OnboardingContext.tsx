@@ -433,7 +433,6 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
           source: 'onboarding',
           hasENSAddress: false,
         },
-        address: onboardingAccount.address,
         signMessage: generateSignerFunc(onboardingAccount, signerManager),
       })
 

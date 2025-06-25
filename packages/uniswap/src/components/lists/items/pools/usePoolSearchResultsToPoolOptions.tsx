@@ -1,6 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { useMemo } from 'react'
 import { OnchainItemListOptionType, PoolOption } from 'uniswap/src/components/lists/items/types'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import { PoolSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -47,7 +48,7 @@ export function usePoolSearchResultsToPoolOptions(searchResults: PoolSearchResul
           poolId,
           chainId,
           protocolVersion,
-          hookAddress,
+          hookAddress: hookAddress && hookAddress !== ZERO_ADDRESS ? hookAddress : undefined,
           feeTier: protocolVersion === ProtocolVersion.V2 ? V2_DEFAULT_FEE_TIER : feeTier,
           token0CurrencyInfo,
           token1CurrencyInfo,

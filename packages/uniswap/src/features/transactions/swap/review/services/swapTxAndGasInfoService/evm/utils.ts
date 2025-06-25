@@ -25,12 +25,12 @@ type GetEVMSwapTransactionRequestInfoFn = (params: {
 
 export function createGetEVMSwapTransactionRequestInfo(ctx: {
   instructionService: EVMSwapInstructionsService
-  activeGasStrategy: GasStrategy
+  gasStrategy: GasStrategy
   transactionSettings: TransactionSettingsContextState
 }): GetEVMSwapTransactionRequestInfoFn {
-  const { activeGasStrategy, transactionSettings, instructionService } = ctx
+  const { gasStrategy, transactionSettings, instructionService } = ctx
 
-  const processSwapResponse = createProcessSwapResponse({ activeGasStrategy })
+  const processSwapResponse = createProcessSwapResponse({ gasStrategy })
 
   const getEVMSwapTransactionRequestInfo: GetEVMSwapTransactionRequestInfoFn = async ({
     trade,

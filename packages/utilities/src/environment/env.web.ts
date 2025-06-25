@@ -8,7 +8,6 @@ export function isTestEnv(): boolean {
     !!process.env.JEST_WORKER_ID ||
     !!process.env.VITEST_WORKER_ID ||
     process.env.NODE_ENV === 'test' ||
-    !!(typeof window !== 'undefined' && window.Cypress) ||
     !!isPlaywrightEnv()
   )
 }

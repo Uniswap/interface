@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { NetworkLogoWarning } from 'uniswap/src/components/CurrencyLogo/NetworkLogoWarning'
 import { GasFeeResultWithoutState } from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
+import { isExtension, isMobileApp } from 'utilities/src/platform'
 
 export interface NetworkInfo {
   chainId: number
@@ -31,27 +32,52 @@ export const InsufficientFundsNetworkRow = memo(function _InsufficientFundsNetwo
     >
       <Flex row shrink alignItems="center" gap="$spacing12" overflow="hidden">
         <NetworkLogoWarning hasSufficientFunds={networkInfo.hasSufficientFunds} chainId={networkInfo.chainId} />
-        <Flex shrink alignItems="flex-start">
-          <Text ellipsizeMode="tail" numberOfLines={1} variant="body2">
-            {networkInfo.name}
-          </Text>
-        </Flex>
-      </Flex>
-      <Flex justifyContent="space-between" position="relative">
-        <Flex centered fill>
-          {!networkInfo.hasSufficientFunds ? (
-            <Text color="$statusCritical" variant="body3">
-              {t('smartWallet.insufficientFunds.network.text', {
-                nativeCurrency: networkInfo.nativeCurrency,
-              })}
+
+        {isExtension && (
+          <Flex shrink alignItems="flex-start">
+            <Text ellipsizeMode="tail" numberOfLines={1} variant="body2">
+              {networkInfo.name}
             </Text>
-          ) : (
-            <Text color="$neutral2" variant="body3">
-              {t('smartWallet.insufficientFunds.network.disable.text')}
+
+            {!networkInfo.hasSufficientFunds ? (
+              <Text color="$statusCritical" variant="body3">
+                {t('smartWallet.insufficientFunds.network.text', {
+                  nativeCurrency: networkInfo.nativeCurrency,
+                })}
+              </Text>
+            ) : (
+              <Text color="$neutral2" variant="body3">
+                {t('smartWallet.insufficientFunds.network.disable.text')}
+              </Text>
+            )}
+          </Flex>
+        )}
+
+        {isMobileApp && (
+          <Flex shrink alignItems="flex-start">
+            <Text ellipsizeMode="tail" numberOfLines={1} variant="body2">
+              {networkInfo.name}
             </Text>
-          )}
-        </Flex>
+          </Flex>
+        )}
       </Flex>
+      {isMobileApp && (
+        <Flex justifyContent="space-between" position="relative">
+          <Flex centered fill>
+            {!networkInfo.hasSufficientFunds ? (
+              <Text color="$statusCritical" variant="body3">
+                {t('smartWallet.insufficientFunds.network.text', {
+                  nativeCurrency: networkInfo.nativeCurrency,
+                })}
+              </Text>
+            ) : (
+              <Text color="$neutral2" variant="body3">
+                {t('smartWallet.insufficientFunds.network.disable.text')}
+              </Text>
+            )}
+          </Flex>
+        </Flex>
+      )}
     </Flex>
   )
 })

@@ -79,7 +79,6 @@ export function useSignInWithPasskey({
               source: 'onboarding',
               hasENSAddress: false,
             },
-            address: walletAddress,
             signMessage: async (message) => {
               const messages = await signMessagesWithPasskey([message])
               return messages?.[0] || ''

@@ -33,3 +33,5 @@ export const Separator = styled(Stack, {
     },
   } as const,
 })
+
+Separator.displayName = 'Separator'

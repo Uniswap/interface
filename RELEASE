@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmbnHL5TQqNFjVrQtUdXNUci2KGYPBypTjbTEm8PQJjBSX`
-- CIDv1: `bafybeighxdnvvampcjgznnlroji2h4t4fes5acglqdugvuezoob3hvkmga`
+- CIDv0: `QmVzsLbRpsi2d5BKNShX4XHtieNHiwLTMAnf78ehMM1YZ8`
+- CIDv1: `bafybeidrzqulidzlilytjjw4hihdvu2iyod7xvuy2f35koh6vebadxnf4m`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeighxdnvvampcjgznnlroji2h4t4fes5acglqdugvuezoob3hvkmga.ipfs.dweb.link/
-- [ipfs://QmbnHL5TQqNFjVrQtUdXNUci2KGYPBypTjbTEm8PQJjBSX/](ipfs://QmbnHL5TQqNFjVrQtUdXNUci2KGYPBypTjbTEm8PQJjBSX/)
+- https://bafybeidrzqulidzlilytjjw4hihdvu2iyod7xvuy2f35koh6vebadxnf4m.ipfs.dweb.link/
+- [ipfs://QmVzsLbRpsi2d5BKNShX4XHtieNHiwLTMAnf78ehMM1YZ8/](ipfs://QmVzsLbRpsi2d5BKNShX4XHtieNHiwLTMAnf78ehMM1YZ8/)
 
-### 5.99.3 (2025-06-18)
+### 5.100.1 (2025-06-25)
 
 
 ### Bug Fixes
 
-* **web:** dynamic fee hotfix prod (#21010) 6fb9aea
+* **web:** use SERVICE_ACCOUNT_PAT instead of GITHUB_TOKEN (#21251) b92a468
 
 

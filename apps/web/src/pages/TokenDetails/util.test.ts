@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
-import { ZERO_ADDRESS } from 'constants/misc'
 import { getTokenPageTitle } from 'pages/TokenDetails/utils'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import i18n from 'uniswap/src/i18n'
 
 describe('pages/TokenDetails/util', () => {

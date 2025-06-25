@@ -145,7 +145,8 @@ export function useRestPortfolioValueModifiers(
 export function useRestPortfolioValueModifier(
   address?: Address,
 ): PartialMessage<RestPortfolioValueModifier> | undefined {
-  const modifiers = useRestPortfolioValueModifiers(address ? [address] : undefined)
+  const addressArray = useMemo(() => (address ? [address] : undefined), [address])
+  const modifiers = useRestPortfolioValueModifiers(addressArray)
   return modifiers?.[0] ?? undefined
 }
 
@@ -301,13 +302,15 @@ export function useRESTPortfolioTotalValue({
   address,
   pollInterval,
   fetchPolicy,
+  enabled = true,
 }: {
   address?: Address
   pollInterval?: PollingInterval
   fetchPolicy?: WatchQueryFetchPolicy
+  enabled?: boolean
 }): PortfolioTotalValueResult {
   const { chains: chainIds } = useEnabledChains()
-  const modifier = useRestPortfolioValueModifier(address)
+  const modifier = useRestPortfolioValueModifier(enabled ? address : undefined)
 
   const { pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
     fetchPolicy,
@@ -336,7 +339,7 @@ export function useRESTPortfolioTotalValue({
     status: restStatus,
   } = useGetPortfolioQuery({
     input: { evmAddress: address, chainIds, modifier },
-    enabled: !!address,
+    enabled: !!address && enabled,
     refetchInterval: internalPollInterval,
     select: selectFormattedData,
   })

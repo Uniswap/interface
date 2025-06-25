@@ -61,7 +61,6 @@ export function WalletUniswapProvider({ children }: PropsWithChildren): JSX.Elem
 
 // Abstracts wallet-specific transaction flow objects for usage in cross-platform flows in the `uniswap` package.
 function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Element {
-  const account = useActiveAccount() ?? undefined
   const signer = useWalletSigner()
   const {
     navigateToTokenDetails,
@@ -103,7 +102,6 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
 
   return (
     <UniswapProvider
-      account={account}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       navigateToSwapFlow={navigateToSwapFromCurrencyIds}

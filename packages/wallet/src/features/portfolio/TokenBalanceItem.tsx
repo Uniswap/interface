@@ -126,7 +126,11 @@ function TokenBalanceQuantity({
 
   // By relying on this cached data we can avoid re-renders unless these specific fields change.
   const gqlTokenBalance = useTokenBalanceQuantityPartsFragment({ id: portfolioBalanceId })
-  const restTokenBalance = useRestTokenBalanceQuantityParts({ currencyId, address })
+  const restTokenBalance = useRestTokenBalanceQuantityParts({
+    currencyId,
+    address,
+    enabled: isRestEnabled,
+  })
 
   const tokenBalance = isRestEnabled ? restTokenBalance.data : gqlTokenBalance.data
 
@@ -155,7 +159,11 @@ function TokenBalanceRightSideColumn({
 
   // By relying on this cached data we can avoid re-renders unless these specific fields change.
   const gqlTokenBalance = useTokenBalanceMainPartsFragment({ id: portfolioBalanceId })
-  const restTokenBalance = useRestTokenBalanceMainParts({ currencyId, address })
+  const restTokenBalance = useRestTokenBalanceMainParts({
+    currencyId,
+    address,
+    enabled: isRestEnabled,
+  })
   const tokenBalance = isRestEnabled ? restTokenBalance.data : gqlTokenBalance.data
 
   const balanceUSD = tokenBalance?.denominatedValue?.value

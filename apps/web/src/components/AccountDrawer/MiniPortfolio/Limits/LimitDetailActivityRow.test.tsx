@@ -7,8 +7,8 @@ import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 vi.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', async () => {
   const actual = await vi.importActual('components/AccountDrawer/MiniPortfolio/formatTimestamp')

@@ -92,7 +92,8 @@ export function ExploreScreen(): JSX.Element {
         <ExploreScreenSearchResultsList
           searchQuery={searchFilter ?? ''}
           parsedSearchQuery={parsedSearchFilter}
-          chainFilter={chainFilter ?? parsedChainFilter}
+          chainFilter={chainFilter}
+          parsedChainFilter={parsedChainFilter}
         />
       ) : (
         isSheetReady && canRenderList && <ExploreSections listRef={listRef} />

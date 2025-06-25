@@ -69,6 +69,7 @@ export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
     placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when hiding/unhiding tokens
     refetchInterval,
     enabled: enabled ?? undefined,
+    subscribed: !!enabled,
     select,
   })
 }
@@ -80,12 +81,14 @@ export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
 export function useRestTokenBalanceQuantityParts({
   currencyId,
   address,
+  enabled = true,
 }: {
   currencyId?: CurrencyId
   address?: string
+  enabled?: boolean
 }): UseQueryResult<TokenBalanceQuantityParts | undefined> {
   const { chains: chainIds } = useEnabledChains()
-  const modifier = useRestPortfolioValueModifier(address)
+  const modifier = useRestPortfolioValueModifier(enabled ? address : undefined)
 
   const selectQuantityParts = useEvent((data: GetPortfolioResponse | undefined) => {
     const balance = _findBalanceFromCurrencyId(data, currencyId)
@@ -95,6 +98,7 @@ export function useRestTokenBalanceQuantityParts({
   return useQuery({
     ...getPortfolioQuery({ input: { evmAddress: address, chainIds, modifier } }),
     select: selectQuantityParts,
+    enabled,
   })
 }
 
@@ -105,12 +109,14 @@ export function useRestTokenBalanceQuantityParts({
 export function useRestTokenBalanceMainParts({
   currencyId,
   address,
+  enabled = true,
 }: {
   currencyId?: CurrencyId
   address?: string
+  enabled?: boolean
 }): UseQueryResult<TokenBalanceMainParts | undefined> {
   const { chains: chainIds } = useEnabledChains()
-  const modifier = useRestPortfolioValueModifier(address)
+  const modifier = useRestPortfolioValueModifier(enabled ? address : undefined)
 
   const selectMainParts = useEvent((data: GetPortfolioResponse | undefined) => {
     const balance = _findBalanceFromCurrencyId(data, currencyId)
@@ -128,6 +134,7 @@ export function useRestTokenBalanceMainParts({
   return useQuery({
     ...getPortfolioQuery({ input: { evmAddress: address, chainIds, modifier } }),
     select: selectMainParts,
+    enabled,
   })
 }
 

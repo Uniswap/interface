@@ -30,6 +30,7 @@ export function SwapFormButton({ tokenColor }: { tokenColor?: string }): JSX.Ele
           <Button
             variant={buttonVariant}
             emphasis={buttonEmphasis}
+            // TODO(WALL-7186): make loading state more representative of the trade state
             loading={!!indicative}
             isDisabled={disabled}
             backgroundColor={buttonBackgroundColor}

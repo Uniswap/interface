@@ -734,7 +734,9 @@ export type UniverseEventProperties = {
     import_type?: string
     screen: OnboardingScreens
     is_restoring_mnemonic: boolean
+    restore_type?: string
   }
+  [MobileEventName.SeedPhraseInputSubmitError]: undefined
   [MobileEventName.ShareLinkOpened]: {
     entity: ShareableEntity
     url: string

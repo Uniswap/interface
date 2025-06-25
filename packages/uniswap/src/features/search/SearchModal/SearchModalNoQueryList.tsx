@@ -125,7 +125,7 @@ function useSectionsForNoQuerySearch({
         sections = [...(recentSearchSection ?? []), ...(trendingPoolSection ?? [])]
         return {
           data: sections,
-          loading: topPoolsLoading,
+          loading: topPoolsLoading || Boolean(topPools?.length && !trendingPoolOptions.length),
           error: topPoolsError ?? undefined,
           refetch: refetchPools,
         }
@@ -160,6 +160,8 @@ function useSectionsForNoQuerySearch({
     }
   }, [
     activeTab,
+    topPools?.length,
+    trendingPoolOptions.length,
     topPoolsError,
     topPoolsLoading,
     favoriteWalletsSection,

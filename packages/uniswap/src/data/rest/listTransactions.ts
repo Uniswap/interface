@@ -50,6 +50,7 @@ export const getListTransactionsQuery = <TSelectData = ListTransactionsResponse>
     placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when refetching
     refetchInterval,
     enabled: !!input && enabled,
+    subscribed: !!enabled,
     select,
   })
 }

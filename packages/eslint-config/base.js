@@ -152,22 +152,12 @@ module.exports = {
     // Test Files
     {
       files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)', '*.e2e.js'],
-      excludedFiles: '**/cypress/**',
       env: {
         jest: true,
         'jest/globals': true,
       },
       extends: ['plugin:jest/recommended'],
       plugins: ['jest'],
-    },
-    // Cypress Files
-    {
-      files: ['**/cypress/**/*.[jt]s?(x)'],
-      env: {
-        'cypress/globals': true,
-      },
-      extends: ['plugin:cypress/recommended'],
-      plugins: ['cypress'],
     },
   ],
 }

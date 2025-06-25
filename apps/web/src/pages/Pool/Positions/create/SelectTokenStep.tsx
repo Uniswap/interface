@@ -11,7 +11,7 @@ import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprD
 import { SwitchNetworkAction } from 'components/Popups/types'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { BIPS_BASE, ZERO_ADDRESS } from 'constants/misc'
+import { BIPS_BASE } from 'constants/misc'
 import { SUPPORTED_V2POOL_CHAIN_IDS } from 'hooks/useNetworkSupportsV2'
 import { AddHook } from 'pages/Pool/Positions/create/AddHook'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
@@ -30,11 +30,13 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Search } from 'ui/src/components/icons/Search'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { AllowedV4WethHookAddressesConfigKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -44,7 +46,6 @@ import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
-
 interface WrappedNativeWarning {
   wrappedToken: Currency
   nativeToken: Currency
@@ -156,6 +157,8 @@ const FeeTier = ({
   )
 }
 
+const DEFAULT_ADDRESSES: string[] = [] // this has to be a const to prevent a rerender loop
+
 export function SelectTokensStep({
   currencyInputs,
   setCurrencyInputs,
@@ -173,7 +176,13 @@ export function SelectTokensStep({
   const { setSelectedChainId } = useMultichainContext()
   const trace = useTrace()
   const [hookModalOpen, setHookModalOpen] = useState(false)
+  const [showWrappedNativeWarning, setShowWrappedNativeWarning] = useState(false)
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
+  const allowedV4WethHookAddresses: string[] = useDynamicConfigValue({
+    config: DynamicConfigs.AllowedV4WethHookAddresses,
+    key: AllowedV4WethHookAddressesConfigKey.HookAddresses,
+    defaultValue: DEFAULT_ADDRESSES,
+  })
 
   const {
     positionState: { hook, userApprovedHook, fee, protocolVersion },
@@ -305,6 +314,11 @@ export function SelectTokensStep({
   }, [protocolVersion, chains])
 
   const handleOnContinue = () => {
+    if (wrappedNativeWarning) {
+      setShowWrappedNativeWarning(true)
+      return
+    }
+
     if (hook !== userApprovedHook) {
       setHookModalOpen(true)
     } else {
@@ -314,6 +328,11 @@ export function SelectTokensStep({
 
   const wrappedNativeWarning = useMemo((): WrappedNativeWarning | undefined => {
     if (protocolVersion !== ProtocolVersion.V4) {
+      setShowWrappedNativeWarning(false)
+      return undefined
+    }
+
+    if (hook && allowedV4WethHookAddresses.includes(hook)) {
       return undefined
     }
 
@@ -345,8 +364,9 @@ export function SelectTokensStep({
       }
     }
 
+    setShowWrappedNativeWarning(false)
     return undefined
-  }, [token0, token1, protocolVersion])
+  }, [token0, token1, protocolVersion, hook, allowedV4WethHookAddresses])
 
   const token0CurrencyInfo = useCurrencyInfo(currencyId(token0))
   const token1CurrencyInfo = useCurrencyInfo(currencyId(token1))
@@ -355,7 +375,7 @@ export function SelectTokensStep({
   const token1FoTError = hasLPFoTTransferError(token1CurrencyInfo, protocolVersion)
   const fotErrorToken = token0FoTError || token1FoTError
 
-  const hasError = isV4UnsupportedTokenSelected || Boolean(wrappedNativeWarning) || Boolean(fotErrorToken)
+  const hasError = isV4UnsupportedTokenSelected || Boolean(fotErrorToken)
 
   const lpIncentiveRewardApr = useMemo(() => {
     if (!isLpIncentivesEnabled || protocolVersion !== ProtocolVersion.V4) {
@@ -418,7 +438,7 @@ export function SelectTokensStep({
               )}
               <SelectStepError
                 isV4UnsupportedTokenSelected={isV4UnsupportedTokenSelected}
-                wrappedNativeWarning={wrappedNativeWarning}
+                wrappedNativeWarning={undefined}
                 fotToken={fotErrorToken}
               />
               {!hasError && protocolVersion === ProtocolVersion.V4 && <AddHook />}
@@ -592,11 +612,18 @@ export function SelectTokensStep({
               key="SelectTokensStep-continue"
               onPress={handleOnContinue}
               loading={Boolean(!continueButtonEnabled && token0 && token1)}
-              isDisabled={!continueButtonEnabled || hasError}
+              isDisabled={!continueButtonEnabled || hasError || (showWrappedNativeWarning && !!wrappedNativeWarning)}
             >
               {t('common.button.continue')}
             </Button>
           </Flex>
+          {showWrappedNativeWarning && wrappedNativeWarning && (
+            <SelectStepError
+              isV4UnsupportedTokenSelected={false}
+              wrappedNativeWarning={wrappedNativeWarning}
+              fotToken={undefined}
+            />
+          )}
         </Container>
 
         <CurrencySearchModal

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { Flex } from 'ui/src'
@@ -8,8 +8,10 @@ import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/c
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { logger } from 'utilities/src/logger/logger'
 import { WalletSwapFlow } from 'wallet/src/features/transactions/swap/WalletSwapFlow'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { invalidateAndRefetchWalletDelegationQueries } from 'wallet/src/features/transactions/watcher/transactionFinalizationSaga'
+import { useActiveAccountWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 export function SwapFlowScreen(): JSX.Element {
   const { navigateBack, locationState } = useExtensionNavigation()
@@ -26,6 +28,17 @@ export function SwapFlowScreen(): JSX.Element {
     defaultChainId,
     filteredChainIdsOverride: ignorePersistedFilteredChainIds ? undefined : persistedFilteredChainIds,
   })
+
+  const signerMnemonicAccounts = useSignerAccounts()
+  const chains = useEnabledChains()
+  const accountAddresses = signerMnemonicAccounts.map((account) => account.address)
+
+  // Update flow start timestamp every time modal is opened for logging
+  useEffect(() => {
+    invalidateAndRefetchWalletDelegationQueries({ accountAddresses, chainIds: chains.chains }).catch((error) =>
+      logger.debug('SwapFlowScreen', 'useEffect', 'Failed to invalidate and refetch wallet delegation queries', error),
+    )
+  }, [accountAddresses, chains.chains])
 
   /** Initialize the initial state once. On navigation the locationState changes causing an unwanted re-render. */
   const [initialTransactionState] = useState(() => locationState?.initialTransactionState ?? initialState)

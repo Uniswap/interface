@@ -48,8 +48,6 @@ ignores: [
     'detect-package-manager',
     'eslint-plugin-storybook',
     'prop-types',
-    ## Testing
-    '@types/testing-library__cypress',
     ## i18n
     'dotenv-cli',
     '@crowdin/cli',
@@ -70,6 +68,7 @@ ignores: [
     'constants',
     'dev',
     'featureFlags',
+    'features',
     'hooks',
     'lib',
     'locales',

@@ -11,11 +11,7 @@ import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSma
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FormattedUniswapXGasFeeInfo, GasFeeResult } from 'uniswap/src/features/gas/types'
-import {
-  getActiveGasStrategy,
-  getShadowGasStrategies,
-  hasSufficientFundsIncludingGas,
-} from 'uniswap/src/features/gas/utils'
+import { getActiveGasStrategy, hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { GasStrategyType } from 'uniswap/src/features/gating/configs'
 import { useStatsigClientStatus } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -43,12 +39,6 @@ export type CancellationGasFeeDetails = {
 export function useActiveGasStrategy(chainId: number | undefined, type: GasStrategyType): GasStrategy {
   const { isStatsigReady } = useStatsigClientStatus()
   return useMemo(() => getActiveGasStrategy({ chainId, type, isStatsigReady }), [isStatsigReady, chainId, type])
-}
-
-// Hook to use shadow GasStrategies for a specific chain.
-export function useShadowGasStrategies(chainId: number | undefined, type: GasStrategyType): GasStrategy[] {
-  const { isStatsigReady } = useStatsigClientStatus()
-  return useMemo(() => getShadowGasStrategies({ chainId, type, isStatsigReady }), [isStatsigReady, chainId, type])
 }
 
 /**

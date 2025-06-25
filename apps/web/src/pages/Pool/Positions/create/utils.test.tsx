@@ -3,7 +3,6 @@ import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, TickMath, Pool as V3Pool, nearestUsableTick } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
-import { ZERO_ADDRESS } from 'constants/misc'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import {
@@ -25,6 +24,7 @@ import {
   getV4PriceRangeInfo,
 } from 'pages/Pool/Positions/create/utils'
 import { ETH_MAINNET } from 'test-utils/constants'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI, USDT, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getTickToPrice, getV4TickToPrice } from 'utils/getTickToPrice'

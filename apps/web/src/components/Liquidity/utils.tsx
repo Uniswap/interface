@@ -15,13 +15,14 @@ import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-s
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
 import { defaultFeeTiers } from 'components/Liquidity/constants'
 import { FeeTierData, PositionInfo } from 'components/Liquidity/types'
-import { BIPS_BASE, ZERO_ADDRESS } from 'constants/misc'
+import { BIPS_BASE } from 'constants/misc'
 import { DYNAMIC_FEE_DATA, DynamicFeeData, FeeData } from 'pages/Pool/Positions/create/types'
 import { GeneratedIcon } from 'ui/src'
 import { Flag } from 'ui/src/components/icons/Flag'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { SwapCoin } from 'ui/src/components/icons/SwapCoin'
 import { AppTFunction } from 'ui/src/i18n/types'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
@@ -350,7 +351,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       return {
         status: position.status,
         feeTier: {
-          feeAmount: Number(v4Position.feeTier),
+          feeAmount: v4Position.isDynamicFee ? DYNAMIC_FEE_DATA.feeAmount : Number(v4Position.feeTier),
           tickSpacing: Number(v4Position.tickSpacing),
           isDynamic: v4Position.isDynamicFee,
         },

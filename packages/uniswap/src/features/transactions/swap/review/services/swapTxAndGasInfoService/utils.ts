@@ -83,7 +83,10 @@ export function processWrapResponse({
   const wrapTxRequestWithGasFee = { ...wrapTxRequest, ...gasParams }
 
   const gasEstimate: SwapGasFeeEstimation = {
-    wrapEstimates: gasFeeResult.gasEstimates,
+    wrapEstimates: {
+      activeEstimate: gasFeeResult.gasEstimate,
+      shadowEstimates: [],
+    },
   }
 
   return {
@@ -94,13 +97,7 @@ export function processWrapResponse({
   }
 }
 
-export function createPrepareSwapRequestParams({
-  activeGasStrategy,
-  shadowGasStrategies,
-}: {
-  activeGasStrategy: GasStrategy
-  shadowGasStrategies: GasStrategy[]
-}) {
+export function createPrepareSwapRequestParams({ gasStrategy }: { gasStrategy: GasStrategy }) {
   return function prepareSwapRequestParams({
     swapQuoteResponse,
     signature,
@@ -139,7 +136,7 @@ export function createPrepareSwapRequestParams({
       simulateTransaction: shouldSimulateTxn,
       deadline,
       refreshGasPrice: true,
-      gasStrategies: [activeGasStrategy, ...shadowGasStrategies],
+      gasStrategies: [gasStrategy],
       urgency: SWAP_GAS_URGENCY_OVERRIDE,
     }
   }
@@ -200,7 +197,7 @@ export function getSimulationError({
   return null
 }
 
-export function createProcessSwapResponse({ activeGasStrategy }: { activeGasStrategy: GasStrategy }) {
+export function createProcessSwapResponse({ gasStrategy }: { gasStrategy: GasStrategy }) {
   return function processSwapResponse({
     response,
     error,
@@ -223,7 +220,7 @@ export function createProcessSwapResponse({ activeGasStrategy }: { activeGasStra
     // We use the gasFee estimate from quote, as its more accurate
     const swapGasFee = {
       value: swapQuote?.gasFee,
-      displayValue: convertGasFeeToDisplayValue(swapQuote?.gasFee, activeGasStrategy),
+      displayValue: convertGasFeeToDisplayValue(swapQuote?.gasFee, gasStrategy),
     }
 
     // This is a case where simulation fails on backend, meaning txn is expected to fail
@@ -238,7 +235,7 @@ export function createProcessSwapResponse({ activeGasStrategy }: { activeGasStra
       error: gasEstimateError,
     }
 
-    const activeGasEstimate = response?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))
+    const activeGasEstimate = response?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, gasStrategy))
     const swapGasEstimate: GasFeeEstimates | undefined = activeGasEstimate
       ? {
           activeEstimate: activeGasEstimate,
@@ -348,7 +345,10 @@ export function createGasFields({
 
   const gasFeeEstimation: SwapGasFeeEstimation = {
     ...swapTxInfo.gasEstimate,
-    approvalEstimates: approvalGasFeeResult.gasEstimates,
+    approvalEstimates: {
+      activeEstimate: approvalGasFeeResult.gasEstimate,
+      shadowEstimates: [],
+    },
   }
 
   return {
@@ -424,9 +424,9 @@ const EMPTY_PERMIT_TX_INFO: PermitTxInfo = {
 
 export function usePermitTxInfo({ quote }: { quote?: DiscriminatedQuoteResponse }): PermitTxInfo {
   const classicQuote = quote && isClassic(quote) ? quote : undefined
-  const activeGasStrategy = useActiveGasStrategy(classicQuote?.quote.chainId, 'swap')
+  const gasStrategy = useActiveGasStrategy(classicQuote?.quote.chainId, 'swap')
 
-  const getPermitTxInfo = useMemo(() => createGetPermitTxInfo({ activeGasStrategy }), [activeGasStrategy])
+  const getPermitTxInfo = useMemo(() => createGetPermitTxInfo({ gasStrategy }), [gasStrategy])
   return useMemo(() => {
     if (!classicQuote) {
       return EMPTY_PERMIT_TX_INFO
@@ -436,7 +436,7 @@ export function usePermitTxInfo({ quote }: { quote?: DiscriminatedQuoteResponse 
   }, [getPermitTxInfo, classicQuote])
 }
 
-export function createGetPermitTxInfo({ activeGasStrategy }: { activeGasStrategy: GasStrategy }) {
+export function createGetPermitTxInfo({ gasStrategy }: { gasStrategy: GasStrategy }) {
   return function getPermitTxInfo({ quote }: { quote: ClassicQuoteResponse }): PermitTxInfo {
     const permitTxRequest = validateTransactionRequest(quote.permitTransaction)
 
@@ -448,7 +448,7 @@ export function createGetPermitTxInfo({ activeGasStrategy }: { activeGasStrategy
       permitTxRequest,
       gasFeeResult: {
         value: quote.permitGasFee,
-        displayValue: convertGasFeeToDisplayValue(quote.permitGasFee, activeGasStrategy),
+        displayValue: convertGasFeeToDisplayValue(quote.permitGasFee, gasStrategy),
         isLoading: false,
         error: null,
       },

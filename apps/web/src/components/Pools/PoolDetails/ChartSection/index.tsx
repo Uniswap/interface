@@ -27,13 +27,16 @@ import {
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { useAtomValue } from 'jotai/utils'
 import styled, { useTheme } from 'lib/styled-components'
+import { getTokenOrZeroAddress } from 'pages/Pool/Positions/create/utils'
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { EllipsisStyle } from 'theme/components/styles'
 import { textFadeIn } from 'theme/styles'
 import { Flex, SegmentedControl, useMedia } from 'ui/src'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { parseRestProtocolVersion } from 'uniswap/src/data/rest/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -189,7 +192,6 @@ export default function ChartSection(props: ChartSectionProps) {
       poolId: props.poolData.idOrAddress,
       hooks: props.poolData.hookAddress,
       version: parseRestProtocolVersion(props.poolData.protocolVersion) ?? RestProtocolVersion.V3,
-      tickSpacing: props.poolData.tickSpacing,
     }
 
     // TODO(WEB-3740): Integrate BE tick query, remove special casing for liquidity chart
@@ -347,7 +349,6 @@ function LiquidityChart({
   isReversed,
   chainId,
   version,
-  tickSpacing,
   hooks,
   poolId,
 }: {
@@ -357,7 +358,6 @@ function LiquidityChart({
   isReversed: boolean
   chainId: UniverseChainId
   version: RestProtocolVersion
-  tickSpacing?: number
   hooks?: string
   poolId?: string
 }) {
@@ -365,18 +365,35 @@ function LiquidityChart({
   const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t('common.tokenA')
   const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t('common.tokenB')
 
-  const { tickData, activeTick, loading } = useLiquidityBarData({
-    sdkCurrencies: {
+  const { data: poolData } = useGetPoolsByTokens(
+    {
+      fee: feeTier,
+      chainId,
+      protocolVersions: [version],
+      token0: getTokenOrZeroAddress(tokenA),
+      token1: getTokenOrZeroAddress(tokenB),
+      hooks: hooks ?? ZERO_ADDRESS,
+    },
+    true,
+  )
+
+  const sdkCurrencies = useMemo(
+    () => ({
       TOKEN0: tokenA,
       TOKEN1: tokenB,
-    },
+    }),
+    [tokenA, tokenB],
+  )
+
+  const { tickData, activeTick, loading } = useLiquidityBarData({
+    sdkCurrencies,
     feeTier,
     isReversed,
     chainId,
     version,
-    tickSpacing,
     hooks,
     poolId,
+    tickSpacing: poolData?.pools[0]?.tickSpacing,
   })
 
   const theme = useTheme()

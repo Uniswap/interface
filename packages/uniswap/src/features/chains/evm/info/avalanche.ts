@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { AVALANCHE_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { USDC_AVALANCHE } from 'uniswap/src/constants/tokens'
@@ -18,12 +17,10 @@ import { avalanche } from 'wagmi/chains'
 export const AVALANCHE_CHAIN_INFO = {
   ...avalanche,
   id: UniverseChainId.Avalanche,
-  sdkId: UniswapSDKChainId.AVALANCHE,
   assetRepoNetworkName: 'avalanchec',
   backendChain: {
     chain: BackendChainId.Avalanche as GqlChainId,
     backendSupported: true,
-    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 6,
@@ -36,9 +33,6 @@ export const AVALANCHE_CHAIN_INFO = {
     url: 'https://snowtrace.io/',
     apiURL: 'https://api.snowscan.xyz',
   },
-  helpCenterUrl: undefined,
-  infoLink: 'https://app.uniswap.org/explore/tokens/avalanche',
-  infuraPrefix: 'avalanche-mainnet',
   interfaceName: 'avalanche',
   label: 'Avalanche',
   logo: AVALANCHE_LOGO,
@@ -60,8 +54,6 @@ export const AVALANCHE_CHAIN_INFO = {
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_AVALANCHE, 10_000e6),
   stablecoins: [USDC_AVALANCHE],
   statusPage: undefined,
-  supportsInterfaceClientSideRouting: true,
-  supportsGasEstimates: true,
   supportsV4: true,
   urlParam: 'avalanche',
   wrappedNativeCurrency: {

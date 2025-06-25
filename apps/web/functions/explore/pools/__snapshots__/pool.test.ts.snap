@@ -121,6 +121,7 @@ window.$RefreshSig$ = () => (type) => type;</script>
     <div id="root"></div>
     <div id="background-radial-gradient"></div>
 
+    <script type="module" src="/zone-events.js"></script>
     <!-- Vite entry point -->
     <script type="module" src="/src/index.tsx"></script>
   </body>
@@ -249,6 +250,7 @@ window.$RefreshSig$ = () => (type) => type;</script>
     <div id="root"></div>
     <div id="background-radial-gradient"></div>
 
+    <script type="module" src="/zone-events.js"></script>
     <!-- Vite entry point -->
     <script type="module" src="/src/index.tsx"></script>
   </body>
@@ -377,6 +379,7 @@ window.$RefreshSig$ = () => (type) => type;</script>
     <div id="root"></div>
     <div id="background-radial-gradient"></div>
 
+    <script type="module" src="/zone-events.js"></script>
     <!-- Vite entry point -->
     <script type="module" src="/src/index.tsx"></script>
   </body>

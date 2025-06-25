@@ -6,12 +6,12 @@ import { Pool as PoolV4, tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
 import { ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { LiquidityBarSeries } from 'components/Charts/LiquidityChart/liquidity-bar-series'
 import { LiquidityBarData, LiquidityBarProps, LiquidityBarSeriesOptions } from 'components/Charts/LiquidityChart/types'
-import { ZERO_ADDRESS } from 'constants/misc'
 import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 import { ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useState } from 'react'
 import { PositionField } from 'types/position'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
@@ -263,7 +263,7 @@ export async function calculateTokensLockedV4({
         liquidityNet: JSBI.multiply(tick.liquidityNet, JSBI.BigInt('-1')),
       },
       {
-        index: tick.tick + TICK_SPACINGS[feeTier],
+        index: tick.tick + tickSpacing,
         liquidityGross: liqGross,
         liquidityNet: tick.liquidityNet,
       },
@@ -332,9 +332,10 @@ export function useLiquidityBarData({
     activeRangePercentage?: number
   }>()
 
+  const { data: ticksProcessed, activeTick, currentTick, liquidity, sqrtPriceX96 } = activePoolData
+
   useEffect(() => {
     async function formatData() {
-      const ticksProcessed = activePoolData.data
       if (!ticksProcessed) {
         return
       }
@@ -348,14 +349,14 @@ export function useLiquidityBarData({
 
         // Lightweight-charts require the x-axis to be time; a fake time base on index is provided
         const fakeTime = (isReversed ? index * 1000 : (ticksProcessed.length - index) * 1000) as UTCTimestamp
-        const isActive = activePoolData.activeTick === t.tick
+        const isActive = activeTick === t.tick
 
         let price0 = t.sdkPrice
         let price1 = t.sdkPrice.invert()
 
-        if (isActive && activePoolData.activeTick && activePoolData.currentTick) {
+        if (isActive && activeTick && currentTick) {
           activeRangeIndex = index
-          activeRangePercentage = (activePoolData.currentTick - t.tick) / TICK_SPACINGS[feeTier]
+          activeRangePercentage = (currentTick - t.tick) / TICK_SPACINGS[feeTier]
 
           price0 =
             version === ProtocolVersion.V3
@@ -407,7 +408,7 @@ export function useLiquidityBarData({
           token1: sdkCurrencies.TOKEN1.wrapped,
           feeTier,
           tick: ticksProcessed[activeRangeIndex],
-          poolData: activePoolData,
+          poolData: { currentTick, liquidity, sqrtPriceX96 },
         })
         barData[activeRangeIndex] = { ...activeRangeData, ...activeTickTvl }
       }
@@ -422,7 +423,20 @@ export function useLiquidityBarData({
     }
 
     formatData()
-  }, [activePoolData, sdkCurrencies, formatNumberOrString, isReversed, feeTier, version, tickSpacing, hooks])
+  }, [
+    ticksProcessed,
+    activeTick,
+    currentTick,
+    liquidity,
+    sqrtPriceX96,
+    sdkCurrencies,
+    formatNumberOrString,
+    isReversed,
+    feeTier,
+    version,
+    tickSpacing,
+    hooks,
+  ])
 
   return { tickData, activeTick: activePoolData.activeTick, loading: activePoolData.isLoading || !tickData }
 }

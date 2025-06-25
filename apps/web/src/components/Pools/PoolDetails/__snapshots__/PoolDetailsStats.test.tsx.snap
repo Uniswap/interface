@@ -246,7 +246,12 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
                   />
                 </div>
               </div>
-              90.9M
+              <h3
+                class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-20px _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
+              >
+                90.9M
+              </h3>
               <a
                 class="c9"
                 href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
@@ -280,7 +285,12 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
                   />
                 </div>
               </div>
-              82.5K
+              <h3
+                class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-20px _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
+              >
+                82.5K
+              </h3>
               <a
                 class="c9"
                 href="/explore/tokens/ethereum/NATIVE"
@@ -644,7 +654,12 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
             <div
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
             >
-              90.9M
+              <h3
+                class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-20px _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
+              >
+                90.9M
+              </h3>
               <a
                 class="c9"
                 href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
@@ -659,7 +674,12 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
             <div
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
             >
-              82.5K
+              <h3
+                class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-20px _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
+              >
+                82.5K
+              </h3>
               <a
                 class="c9"
                 href="/explore/tokens/ethereum/NATIVE"

@@ -29,7 +29,6 @@ export interface PoolData {
   txCount?: number
   protocolVersion?: ProtocolVersion
   hookAddress?: string
-  tickSpacing?: number
 
   // token info
   token0: Token

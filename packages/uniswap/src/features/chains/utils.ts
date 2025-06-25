@@ -1,13 +1,7 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import {
-  GQL_MAINNET_CHAINS,
-  GQL_TESTNET_CHAINS,
-  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-  UNIVERSE_CHAIN_INFO,
-  getChainInfo,
-} from 'uniswap/src/features/chains/chainInfo'
+import { GQL_MAINNET_CHAINS, GQL_TESTNET_CHAINS, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import {
   ALL_CHAIN_IDS,
   EnabledChainsInfo,
@@ -27,10 +21,6 @@ export function toSupportedChainId(chainId?: BigNumberish): UniverseChainId | nu
   return parseInt(chainId.toString(), 10) as UniverseChainId
 }
 
-export function chainSupportsGasEstimates(chainId: UniverseChainId): boolean {
-  return getChainInfo(chainId).supportsGasEstimates
-}
-
 export function getChainLabel(chainId: UniverseChainId): string {
   return getChainInfo(chainId).label
 }
@@ -39,13 +29,9 @@ export function isTestnetChain(chainId: UniverseChainId): boolean {
   return Boolean(getChainInfo(chainId).testnet)
 }
 
-export function getChainIdByInfuraPrefix(prefix: string): UniverseChainId | undefined {
-  return Object.values(UNIVERSE_CHAIN_INFO).find((i) => i.infuraPrefix === prefix)?.id
-}
-
 export function isBackendSupportedChainId(chainId: UniverseChainId): boolean {
   const info = getChainInfo(chainId)
-  return info.backendChain.backendSupported && !info.backendChain.isSecondaryChain
+  return info.backendChain.backendSupported
 }
 
 export function isBackendSupportedChain(chain: Chain): chain is GqlChainId {

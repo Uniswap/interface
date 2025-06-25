@@ -2,6 +2,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
+import { useShouldShowBiometricUnlock } from 'src/app/features/biometricUnlock/useShouldShowBiometricUnlock'
+import { useShouldShowBiometricUnlockEnrollment } from 'src/app/features/biometricUnlock/useShouldShowBiometricUnlockEnrollment'
+import { useDeviceAccessScreenTitle } from 'src/app/features/settings/DeviceAccessScreen'
 import { SettingsItemWithDropdown } from 'src/app/features/settings/SettingsItemWithDropdown'
 import ThemeToggle from 'src/app/features/settings/ThemeToggle'
 import { SettingsItem } from 'src/app/features/settings/components/SettingsItem'
@@ -69,7 +72,12 @@ export function SettingsScreen(): JSX.Element {
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const hasViewedConnectionMigration = useSelector(selectHasViewedConnectionMigration)
 
-  const isBiometricUnlockEnabled = useFeatureFlag(FeatureFlags.ExtensionBiometricUnlock)
+  const hasBiometricUnlockCredential = useShouldShowBiometricUnlock()
+  const showBiometricUnlockEnrollment = useShouldShowBiometricUnlockEnrollment({ flow: 'settings' })
+  const showNewDeviceAccessPage = hasBiometricUnlockCredential || showBiometricUnlockEnrollment
+
+  const deviceAccessScreenTitle = useDeviceAccessScreenTitle()
+
   const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWalletSettings)
 
   const signerAccount = useSignerAccounts()[0]
@@ -118,7 +126,7 @@ export function SettingsScreen(): JSX.Element {
   const handleAdvancedModalClose = useCallback(() => setIsAdvancedModalOpen(false), [])
 
   const handleSmartWalletPress = useCallback(() => {
-    navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.SmartWallet}`)
+    navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.SmartWallet}`)
     setIsAdvancedModalOpen(false)
   }, [navigateTo])
 
@@ -184,7 +192,7 @@ export function SettingsScreen(): JSX.Element {
                 <SettingsItem
                   Icon={Settings}
                   title="Developer Settings"
-                  onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.DevMenu}`)}
+                  onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.DevMenu}`)}
                 />
               )}
             </>
@@ -273,23 +281,23 @@ export function SettingsScreen(): JSX.Element {
           )}
           <Flex pt="$padding16">
             <SettingsSection title={t('settings.section.privacyAndSecurity')}>
-              {isBiometricUnlockEnabled ? (
+              {showNewDeviceAccessPage ? (
                 <SettingsItem
                   Icon={Lock}
-                  title={t('settings.setting.deviceAccess.title')}
-                  onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.DeviceAccess}`)}
+                  title={deviceAccessScreenTitle}
+                  onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.DeviceAccess}`)}
                 />
               ) : (
                 <SettingsItem
                   Icon={Key}
                   title={t('settings.setting.password.title')}
-                  onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ChangePassword}`)}
+                  onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ChangePassword}`)}
                 />
               )}
               <SettingsItem
                 Icon={FileListLock}
                 title={t('settings.setting.recoveryPhrase.title')}
-                onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ViewRecoveryPhrase}`)}
+                onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ViewRecoveryPhrase}`)}
               />
               <>
                 {hasPasskeyBackup && (

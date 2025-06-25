@@ -66,7 +66,7 @@ export function CurrencyInputPanelHeader({
         </Flex>
       )}
       {showDefaultTokenOptions && isInterfaceDesktop && (
-        <Flex position="absolute" right={0} top={-spacing.spacing4}>
+        <Flex position="absolute" right={0} top={-spacing.spacing6}>
           <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
         </Flex>
       )}

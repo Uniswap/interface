@@ -1,11 +1,11 @@
 import { isDynamicFeeTier } from 'components/Liquidity/utils'
-import { ZERO_ADDRESS } from 'constants/misc'
 import { FeeData } from 'pages/Pool/Positions/create/types'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components/CopyHelper'
 import { styled, Text } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 
 const PositionInfoBadge = styled(Text, {

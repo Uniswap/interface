@@ -16,7 +16,6 @@ import { logger } from 'utilities/src/logger/logger'
 type ClaimUnitagInput = {
   claim: UnitagClaim
   context: UnitagClaimContext
-  address?: string
   signMessage?: SignMessageFunc
 }
 
@@ -29,10 +28,13 @@ export const useClaimUnitag = (): ((input: ClaimUnitagInput) => Promise<{ claimE
   const dispatch = useDispatch()
   const resetUnitagsQueries = useResetUnitagsQueries()
 
-  return async ({ claim, context, address, signMessage }: ClaimUnitagInput) => {
+  return async ({ claim, context, signMessage }: ClaimUnitagInput) => {
     const deviceId = await getUniqueId()
 
-    if (!claim.address || !deviceId || !signMessage || !address) {
+    if (!claim.address || !deviceId || !signMessage) {
+      logger.error('Missing required parameters', {
+        tags: { file: 'useClaimUnitag', function: 'claimUnitag' },
+      })
       return { claimError: t('unitags.claim.error.default') }
     }
 
@@ -45,7 +47,7 @@ export const useClaimUnitag = (): ((input: ClaimUnitagInput) => Promise<{ claimE
             avatar: claim.avatarUri && isLocalFileUri(claim.avatarUri) ? undefined : claim.avatarUri,
           },
         },
-        address,
+        address: claim.address,
         signMessage,
       })
 
@@ -62,7 +64,7 @@ export const useClaimUnitag = (): ((input: ClaimUnitagInput) => Promise<{ claimE
           const { success: uploadUpdateAvatarSuccess } = await uploadAndUpdateAvatarAfterClaim({
             username: claim.username,
             imageUri: claim.avatarUri,
-            address,
+            address: claim.address,
             signMessage,
           })
 

@@ -23,9 +23,3 @@ if (WalletConnect) {
 // adding these so webpack won't tree shake this away, sideEffects was giving trouble
 setupi18n()
 setupWagmiAutoConnect()
-
-// Temporary work-around for Floating UI < 1.6.8 (via @tamagui/floating).
-// Without zone.js the lib adds passive wheel/touch listeners and breaks
-// inner scrolling; importing it forces the non-passive path. Remove after upgrading Tamagui/Floating UI.
-// https://github.com/floating-ui/floating-ui/issues/3264?utm_source=chatgpt.com
-import 'zone.js'

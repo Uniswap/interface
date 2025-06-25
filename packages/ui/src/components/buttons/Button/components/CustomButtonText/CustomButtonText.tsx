@@ -89,3 +89,5 @@ export const CustomButtonText = styled(Text, {
     },
   } as const,
 })
+
+CustomButtonText.displayName = 'CustomButtonText'

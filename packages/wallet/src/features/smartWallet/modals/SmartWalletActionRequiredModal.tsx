@@ -6,6 +6,7 @@ import { spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
+import { isExtension } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { InsufficientFundsNetworkRow, NetworkInfo } from 'wallet/src/features/smartWallet/InsufficientFundsNetworkRow'
 
@@ -65,43 +66,55 @@ export function SmartWalletActionRequiredModal({
         : t('smartWallet.actionRequired.cta')
 
   return (
-    <Modal name={ModalName.SmartWalletActionRequiredModal} isModalOpen={isOpen} onClose={onClose}>
-      <Flex px="$spacing24" pt="$spacing24">
-        <Flex centered>
-          <Flex
-            backgroundColor="$accent2"
-            borderRadius="$rounded12"
-            height="$spacing48"
-            width="$spacing48"
-            alignItems="center"
-            justifyContent="center"
-            mb="$spacing16"
-          >
-            <InsufficientGas size="$icon.24" />
+    <Modal
+      fullScreen={isExtension}
+      name={ModalName.SmartWalletActionRequiredModal}
+      isModalOpen={isOpen}
+      onClose={onClose}
+    >
+      <Flex
+        flex={isExtension ? 1 : 0}
+        px="$spacing24"
+        pt="$spacing24"
+        justifyContent={isExtension ? 'space-between' : 'unset'}
+      >
+        <Flex grow>
+          <Flex centered>
+            <Flex
+              backgroundColor="$accent2"
+              borderRadius="$rounded12"
+              height="$spacing48"
+              width="$spacing48"
+              alignItems="center"
+              justifyContent="center"
+              mb="$spacing16"
+            >
+              <InsufficientGas size="$icon.24" />
+            </Flex>
+            <Text
+              loading={isLoading}
+              variant="subheading1"
+              color="$neutral1"
+              loadingPlaceholderText={t('smartWallet.actionRequired.title')}
+            >
+              {sortedData.length > 1
+                ? t('smartWallet.actionRequired.title.plural', { amount: sortedData.length })
+                : t('smartWallet.actionRequired.title')}
+            </Text>
+            <Text textAlign="center" variant="body3" color="$neutral2" mt="$spacing8">
+              {t('smartWallet.actionRequired.description')}
+            </Text>
           </Flex>
-          <Text
-            loading={isLoading}
-            variant="subheading1"
-            color="$neutral1"
-            loadingPlaceholderText={t('smartWallet.actionRequired.title')}
-          >
-            {sortedData.length > 1
-              ? t('smartWallet.actionRequired.title.plural', { amount: sortedData.length })
-              : t('smartWallet.actionRequired.title')}
-          </Text>
-          <Text textAlign="center" variant="body3" color="$neutral2" mt="$spacing8">
-            {t('smartWallet.actionRequired.description')}
-          </Text>
-        </Flex>
-        <Flex maxHeight={maxHeightList} p="$spacing16">
-          {isLoading && <Loader.InsufficientFundsNetworkRow repeat={1} />}
-          <FlatList
-            data={sortedData}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => `${index}-${item.chainId}`}
-            showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={renderItemSeparator}
-          />
+          <Flex maxHeight={maxHeightList} p="$spacing16">
+            {isLoading && <Loader.InsufficientFundsNetworkRow repeat={1} />}
+            <FlatList
+              data={sortedData}
+              renderItem={renderItem}
+              keyExtractor={(item, index) => `${index}-${item.chainId}`}
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={renderItemSeparator}
+            />
+          </Flex>
         </Flex>
 
         <Flex backgroundColor="$surface1" gap="$gap12" pb={insets.bottom + spacing.spacing12} alignSelf="stretch">

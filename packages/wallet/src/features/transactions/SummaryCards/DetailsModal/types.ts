@@ -1,6 +1,6 @@
 import {
   BridgeTransactionInfo,
-  ClaimTransactionInfo,
+  CollectFeesTransactionInfo,
   ConfirmedSwapTransactionInfo,
   CreatePairTransactionInfo,
   CreatePoolTransactionInfo,
@@ -117,8 +117,8 @@ export function isLiquidityDecreaseTransactionInfo(
   return typeInfo.type === TransactionType.LiquidityDecrease
 }
 
-export function isClaimTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is ClaimTransactionInfo {
-  return typeInfo.type === TransactionType.Claim
+export function isCollectFeesTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is CollectFeesTransactionInfo {
+  return typeInfo.type === TransactionType.CollectFees
 }
 
 export function isCreatePairTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is CreatePairTransactionInfo {

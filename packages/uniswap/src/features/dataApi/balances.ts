@@ -242,10 +242,12 @@ export function useGraphQLPortfolioTotalValue({
   address,
   pollInterval,
   fetchPolicy,
+  enabled = true,
 }: {
   address?: Address
   pollInterval?: PollingInterval
   fetchPolicy?: WatchQueryFetchPolicy
+  enabled?: boolean
 }): PortfolioTotalValueResult {
   const { fetchPolicy: internalFetchPolicy, pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
     fetchPolicy,
@@ -266,7 +268,7 @@ export function useGraphQLPortfolioTotalValue({
     notifyOnNetworkStatusChange: true,
     pollInterval: internalPollInterval,
     variables: address ? { ownerAddress: address, valueModifiers, chains: gqlChains } : undefined,
-    skip: !address,
+    skip: !address || !enabled,
     // Prevents wiping out the cache with partial data on error.
     errorPolicy: 'none',
   })
@@ -318,12 +320,14 @@ export function usePortfolioTotalValue({
     address,
     pollInterval,
     fetchPolicy,
+    enabled: !isRestEnabled,
   })
 
   const restResult = useRESTPortfolioTotalValue({
     address,
     pollInterval,
     fetchPolicy,
+    enabled: isRestEnabled,
   })
 
   return isRestEnabled ? restResult : graphqlResult

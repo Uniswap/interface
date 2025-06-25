@@ -23,10 +23,11 @@ import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
 import { Permit2 } from 'uniswap/src/abis/types'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TransactionStatus as TransactionStatusGQL } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
@@ -41,6 +42,19 @@ interface ActivityGroup {
 }
 
 const sortActivities = (a: Activity, b: Activity) => b.timestamp - a.timestamp
+
+export function convertGQLTransactionStatus(status: TransactionStatusGQL): TransactionStatus {
+  switch (status) {
+    case TransactionStatusGQL.Confirmed:
+      return TransactionStatus.Success
+    case TransactionStatusGQL.Failed:
+      return TransactionStatus.Failed
+    case TransactionStatusGQL.Pending:
+      return TransactionStatus.Pending
+    default:
+      throw new Error(`Unknown transaction status: ${status}`)
+  }
+}
 
 export const createGroups = (activities: Array<Activity> = [], hideSpam = false) => {
   if (activities.length === 0) {

@@ -129,6 +129,7 @@ export enum ElementName {
   OpenCameraRoll = 'open-camera-roll',
   OpenNftsList = 'open-nfts-list',
   PoolsTableRow = 'pools-table-row',
+  PoolOutOfSyncError = 'pool-out-of-sync-error',
   PreselectAsset = 'preselect-asset',
   PresetPercentage = 'preset-percentage',
   PriceUpdateAcceptButton = 'price-update-accept-button',

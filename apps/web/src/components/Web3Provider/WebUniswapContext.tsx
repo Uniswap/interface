@@ -69,7 +69,7 @@ export function WebUniswapProvider({ children }: PropsWithChildren): JSX.Element
 
 // Abstracts web-specific transaction flow objects for usage in cross-platform flows in the `uniswap` package.
 function WebUniswapProviderInner({ children }: PropsWithChildren) {
-  const { account, connector } = useWagmiAccount()
+  const { connector } = useWagmiAccount()
   const signer = useEthersSigner()
   const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()
@@ -189,7 +189,6 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
 
   return (
     <UniswapProvider
-      account={account}
       signer={signer}
       connector={connector}
       useProviderHook={useWebProvider}

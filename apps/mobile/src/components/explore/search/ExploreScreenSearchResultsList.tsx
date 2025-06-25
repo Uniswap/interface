@@ -14,10 +14,12 @@ export const ExploreScreenSearchResultsList = memo(function _ExploreScreenSearch
   searchQuery,
   parsedSearchQuery,
   chainFilter,
+  parsedChainFilter,
 }: {
   searchQuery: string
   parsedSearchQuery: string | null
   chainFilter: UniverseChainId | null
+  parsedChainFilter: UniverseChainId | null
 }): JSX.Element {
   const debouncedSearchQuery = useDebounce(searchQuery)
   const debouncedParsedSearchQuery = useDebounce(parsedSearchQuery)
@@ -58,6 +60,7 @@ export const ExploreScreenSearchResultsList = memo(function _ExploreScreenSearch
         {searchQuery && searchQuery.length > 0 ? (
           <SearchModalResultsList
             chainFilter={chainFilter}
+            parsedChainFilter={parsedChainFilter}
             debouncedParsedSearchFilter={debouncedParsedSearchQuery}
             debouncedSearchFilter={debouncedSearchQuery}
             searchFilter={searchQuery}

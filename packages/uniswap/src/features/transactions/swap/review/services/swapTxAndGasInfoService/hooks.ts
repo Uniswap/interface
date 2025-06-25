@@ -4,7 +4,7 @@ import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapC
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
+import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
@@ -34,6 +34,7 @@ import { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/s
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import type { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { WithOptional } from 'utilities/src/typescript/withOptional'
@@ -57,25 +58,22 @@ const EMPTY_SWAP_TX_AND_GAS_INFO: SwapTxAndGasInfo = {
 // TODO(swap arch): replace with swap config service
 function useSwapConfig(): {
   v4SwapEnabled: boolean
-  activeGasStrategy: GasStrategy
-  shadowGasStrategies: GasStrategy[]
+  gasStrategy: GasStrategy
   getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
   getSwapDelegationInfo?: (chainId: UniverseChainId | undefined) => SwapDelegationInfo
 } {
   const { chainId } = useSwapFormContext().derivedSwapInfo
-  const activeGasStrategy = useActiveGasStrategy(chainId, 'general')
-  const shadowGasStrategies = useShadowGasStrategies(chainId, 'general')
+  const gasStrategy = useActiveGasStrategy(chainId, 'general')
   const v4SwapEnabled = useV4SwapEnabled(chainId)
   const { getCanBatchTransactions, getSwapDelegationInfo } = useUniswapContext()
   return useMemo(
     () => ({
       v4SwapEnabled,
-      activeGasStrategy,
-      shadowGasStrategies,
+      gasStrategy,
       getCanBatchTransactions,
       getSwapDelegationInfo,
     }),
-    [v4SwapEnabled, activeGasStrategy, shadowGasStrategies, getCanBatchTransactions, getSwapDelegationInfo],
+    [v4SwapEnabled, gasStrategy, getCanBatchTransactions, getSwapDelegationInfo],
   )
 }
 
@@ -208,16 +206,19 @@ function createGetQueryOptions(ctx: {
 }) {
   return function getQueryOptions(
     params: SwapQueryParams,
-  ): QueryOptionsResult<SwapTxAndGasInfo, Error, SwapTxAndGasInfo, (string | SwapQueryKeyParams)[]> {
+  ): QueryOptionsResult<
+    SwapTxAndGasInfo | null,
+    Error,
+    SwapTxAndGasInfo | null,
+    [ReactQueryCacheKey.SwapTxAndGasInfo, SwapQueryKeyParams]
+  > {
     const { trade } = params
-    const queryFn = trade
-      ? (): Promise<SwapTxAndGasInfo> => ctx.swapTxAndGasInfoService.getSwapTxAndGasInfo({ ...params, trade })
-      : undefined
 
     return queryOptions({
-      queryKey: ['swapTxAndGasInfo', parseQueryKeyParams(params)],
-      queryFn,
+      queryKey: [ReactQueryCacheKey.SwapTxAndGasInfo, parseQueryKeyParams(params)],
+      queryFn: async () => (trade ? ctx.swapTxAndGasInfoService.getSwapTxAndGasInfo({ ...params, trade }) : null),
       refetchInterval: ctx.refetchInterval,
+      enabled: !!trade,
     })
   }
 }
@@ -258,7 +259,7 @@ function useSwapTxAndGasInfoQuery(input: {
   trade: Trade | undefined
   approvalTxInfo: ApprovalTxInfo
   derivedSwapInfo: DerivedSwapInfo
-}): UseQueryResult<SwapTxAndGasInfo, Error> {
+}): UseQueryResult<SwapTxAndGasInfo | null, Error> {
   const swapTxAndGasInfoService = useSwapTxAndGasInfoService()
 
   const refetchInterval = useDynamicConfigValue({

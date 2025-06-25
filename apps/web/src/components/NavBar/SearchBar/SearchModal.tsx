@@ -131,7 +131,8 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
         <Flex grow>
           {searchFilter && searchFilter.length > 0 ? (
             <SearchModalResultsList
-              chainFilter={chainFilter ?? parsedChainFilter}
+              chainFilter={chainFilter}
+              parsedChainFilter={parsedChainFilter}
               debouncedParsedSearchFilter={debouncedParsedSearchFilter}
               debouncedSearchFilter={debouncedSearchFilter}
               searchFilter={searchFilter}

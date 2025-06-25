@@ -96,26 +96,27 @@ const PoolDetailsTitle = ({
   const graphQLChain = toGraphQLChain(chainId ?? defaultChainId)
   return (
     <Flex row gap="$spacing12" alignItems="center" width="max-content">
-      <Flex>
-        <Text variant="heading1" fontSize={24} color="neutral1" $md={{ variant: 'subheading1', fontSize: 18 }}>
-          <StyledLink
-            to={getTokenDetailsURL({
-              address: token0?.address,
-              chain: graphQLChain,
-            })}
-          >
-            {token0?.symbol}
-          </StyledLink>
-          &nbsp;/&nbsp;
-          <StyledLink
-            to={getTokenDetailsURL({
-              address: token1?.address,
-              chain: graphQLChain,
-            })}
-          >
+      <Flex row>
+        <StyledLink
+          to={getTokenDetailsURL({
+            address: token0?.address,
+            chain: graphQLChain,
+          })}
+        >
+          <Text variant="heading1" fontSize={24} $md={{ variant: 'subheading1' }}>
+            {token0?.symbol} /{' '}
+          </Text>
+        </StyledLink>
+        <StyledLink
+          to={getTokenDetailsURL({
+            address: token1?.address,
+            chain: graphQLChain,
+          })}
+        >
+          <Text variant="heading1" fontSize={24} $md={{ variant: 'subheading1' }}>
             {token1?.symbol}
-          </StyledLink>
-        </Text>
+          </Text>
+        </StyledLink>
       </Flex>
       <Flex row gap="$spacing2">
         <LiquidityPositionInfoBadges

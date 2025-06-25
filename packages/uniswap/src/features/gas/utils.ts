@@ -132,23 +132,3 @@ export function getActiveGasStrategy({
   )
   return activeStrategy ? activeStrategy.strategy : DEFAULT_GAS_STRATEGY
 }
-
-export function getShadowGasStrategies({
-  chainId,
-  type,
-  isStatsigReady,
-}: {
-  chainId: number | undefined
-  type: GasStrategyType
-  isStatsigReady: boolean
-}): GasStrategy[] {
-  if (!isStatsigReady) {
-    return []
-  }
-  const config = getStatsigClient().getDynamicConfig('GasStrategies')
-  const gasStrategies = isValidGasStrategies(config.value) ? config.value : undefined
-  const shadowStrategies = gasStrategies?.strategies
-    .filter((s) => s.conditions.chainId === chainId && s.conditions.types === type && !s.conditions.isActive)
-    .map((s) => s.strategy)
-  return shadowStrategies ?? []
-}

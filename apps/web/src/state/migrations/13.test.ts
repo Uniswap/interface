@@ -2,7 +2,7 @@ import { createMigrate } from 'redux-persist'
 import { migration1 } from 'state/migrations/1'
 import { migration10 } from 'state/migrations/10'
 import { migration11 } from 'state/migrations/11'
-import { PersistAppStateV12, migration12 } from 'state/migrations/12'
+import { NewTransactionState, PersistAppStateV12, migration12 } from 'state/migrations/12'
 import { migration13 } from 'state/migrations/13'
 import { migration2 } from 'state/migrations/2'
 import { migration3 } from 'state/migrations/3'
@@ -12,10 +12,9 @@ import { migration6 } from 'state/migrations/6'
 import { migration7 } from 'state/migrations/7'
 import { migration8 } from 'state/migrations/8'
 import { migration9 } from 'state/migrations/9'
-import { LocalWebTransactionState } from 'state/transactions/reducer'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-const transactionState: LocalWebTransactionState = {
+const transactionState: NewTransactionState = {
   [1]: {
     ['0x0']: {
       status: TransactionStatus.Confirmed,

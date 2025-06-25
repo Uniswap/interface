@@ -6,7 +6,10 @@ import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/ho
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 
 const useIsReviewButtonDisabled = (): boolean => {
-  const { isSubmitting } = useSwapFormContext()
+  const {
+    derivedSwapInfo: { trade },
+    isSubmitting,
+  } = useSwapFormContext()
   const activeAccount = useAccountMeta()
   const { blockingWarning } = useParsedSwapWarnings()
   const { isBlocked: isBlockedAccount, isBlockedLoading: isBlockedAccountLoading } = useIsBlocked(
@@ -14,7 +17,16 @@ const useIsReviewButtonDisabled = (): boolean => {
   )
   const { walletNeedsRestore } = useTransactionModalContext()
 
-  return !!blockingWarning || isBlockedAccount || isBlockedAccountLoading || walletNeedsRestore || isSubmitting
+  const tradeMissing = !trade.trade
+
+  return (
+    !!blockingWarning ||
+    isBlockedAccount ||
+    isBlockedAccountLoading ||
+    walletNeedsRestore ||
+    isSubmitting ||
+    tradeMissing
+  )
 }
 
 // TODO(WEB-5090): Simplify logic, deduplicate disabled vs isReviewButtonDisabled

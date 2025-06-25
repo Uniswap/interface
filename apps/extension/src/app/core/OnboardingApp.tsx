@@ -35,6 +35,7 @@ import { OTPInput } from 'src/app/features/onboarding/scan/OTPInput'
 import { ScanToOnboard } from 'src/app/features/onboarding/scan/ScanToOnboard'
 import { ScantasticContextProvider } from 'src/app/features/onboarding/scan/ScantasticContextProvider'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
+import { ROUTER_FUTURE_FLAGS, ROUTER_PROVIDER_FUTURE_FLAGS } from 'src/app/navigation/routerConfig'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
@@ -139,14 +140,19 @@ const allRoutes = [
   },
 ]
 
-const router = createHashRouter([
+const router = createHashRouter(
+  [
+    {
+      path: `/${TopLevelRoutes.Onboarding}`,
+      element: <OnboardingWrapper />,
+      errorElement: <ErrorElement />,
+      children: !supportsSidePanel ? [unsupportedRoute] : allRoutes,
+    },
+  ],
   {
-    path: `/${TopLevelRoutes.Onboarding}`,
-    element: <OnboardingWrapper />,
-    errorElement: <ErrorElement />,
-    children: !supportsSidePanel ? [unsupportedRoute] : allRoutes,
+    future: ROUTER_FUTURE_FLAGS,
   },
-])
+)
 
 function ScantasticFlow({ isResetting = false }: { isResetting?: boolean }): JSX.Element {
   return (
@@ -193,7 +199,7 @@ export default function OnboardingApp(): JSX.Element {
     <PersistGate persistor={getReduxPersistor()}>
       <BaseAppContainer appName={DatadogAppNameTag.Onboarding}>
         <PrimaryAppInstanceDebuggerLazy />
-        <RouterProvider router={router} />
+        <RouterProvider router={router} future={ROUTER_PROVIDER_FUTURE_FLAGS} />
       </BaseAppContainer>
     </PersistGate>
   )

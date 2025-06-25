@@ -60,3 +60,5 @@ export const DropdownButtonFrame = styled(CustomButtonFrame, {
     },
   } as const,
 })
+
+DropdownButtonFrame.displayName = 'DropdownButtonFrame'

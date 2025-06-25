@@ -39,7 +39,7 @@ export function RestoreMethodScreen({ navigation, route: { params } }: Props): J
   const handleOnPress = async (nav: OnboardingScreens, importType: ImportType): Promise<void> => {
     navigation.navigate({
       name: nav,
-      params: { importType, entryPoint },
+      params: { ...params, importType, entryPoint },
       merge: true,
     })
   }

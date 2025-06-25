@@ -13,7 +13,7 @@ const WETH_ADDRESS = WRAPPED_NATIVE_CURRENCY[UniverseChainId.Mainnet]!.address
 
 test.describe('Create position', () => {
   test('Create position with full range', async ({ page, anvil, graphql }) => {
-    await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.createLp)
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.createLp })
     await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
     await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
     await page.goto('/positions/create')
@@ -31,7 +31,7 @@ test.describe('Create position', () => {
   })
 
   test('Create position with custom range', async ({ page, anvil, graphql }) => {
-    await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.createLp)
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.createLp })
     await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
     await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
     await page.goto('/positions/create')

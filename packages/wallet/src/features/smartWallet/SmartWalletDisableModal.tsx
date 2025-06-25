@@ -66,7 +66,7 @@ export function SmartWalletDisableModal({
         borderRadius="$rounded16"
         overflow="hidden"
         gap="$gap16"
-        p={isMobileApp ? '$spacing24' : undefined}
+        px={isMobileApp ? '$spacing24' : undefined}
         mb={isMobileApp ? '$spacing36' : undefined}
         pt={isMobileApp ? '$none' : undefined}
         maxHeight="100%"
@@ -124,7 +124,7 @@ export function SmartWalletDisableModal({
             >
               <Text variant="body3">{activeDelegations.length}</Text>
               <RotatableChevron
-                color="$neutral2"
+                color="$neutral3"
                 direction={isActiveNetworksExpanded ? 'up' : 'down'}
                 height={iconSizes.icon16}
                 width={iconSizes.icon16}
@@ -144,16 +144,18 @@ export function SmartWalletDisableModal({
           <Flex row alignItems="center" gap="$spacing4">
             <AccountIcon avatarUri={avatar} address={walletAddress} size={iconSizes.icon16} />
             <DisplayNameText
+              gap="$spacing4"
               displayName={displayName}
               textProps={{ variant: 'body3', color: '$neutral1' }}
               unitagIconSize="$icon.18"
             />
           </Flex>
         </Flex>
-
-        <Button fill size="small" minHeight="$spacing48" emphasis="secondary" onPress={onConfirm}>
-          {t('common.button.disable')}
-        </Button>
+        <Flex row>
+          <Button fill size="medium" emphasis="secondary" onPress={onConfirm}>
+            {t('common.button.disable')}
+          </Button>
+        </Flex>
       </Flex>
     </Modal>
   )
