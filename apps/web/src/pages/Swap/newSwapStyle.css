@@ -8,7 +8,7 @@
   /* size from the Figma inspector (optional – adjust / remove if you’re using auto-layout) */
 
   /* layout */
-  padding: 32px 11px;          /* top/bottom 32 px, sides 11 px */
+  padding: 22px 11px;          /* top/bottom 32 px, sides 11 px */
   border-radius: 12px;         /* same 12 px corner radius */
 
   /* dark “glass” background (80 % opacity) */
@@ -26,4 +26,24 @@
 
 body {
     background-color: black !important;
+}
+
+.neon-panel {
+  /* layout  */
+  width: 100%;
+  padding: 32px;
+  border-radius: 16px;
+
+  /* glass background  */
+  background: rgba(5, 5, 18, 0.65);   /* ≈ #050512 @ 65 % */
+  backdrop-filter: blur(40px);
+
+  /* inner rim + soft bloom  */
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 255, 233, 0.35),  /* crisp stroke */
+    inset 0 0 30px rgba(0, 255, 233, 0.20);   /* teal glow */
+  
+  /* position context for ::before halo  */
+  position: relative;
+  overflow: hidden;               /* clip pseudo-blur */
 }

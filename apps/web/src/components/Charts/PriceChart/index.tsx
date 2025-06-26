@@ -219,6 +219,9 @@ interface PriceChartProps {
   height: number
   data: PriceChartData[]
   stale: boolean
+  symbol?: string
+  fdv?: number
+  vol?: number
 }
 
 const CandlestickTooltipRow = styled(Flex, {
@@ -253,7 +256,7 @@ function CandlestickTooltip({ data }: { data: PriceChartData }) {
   )
 }
 
-export function PriceChart({ data, height, type, stale }: PriceChartProps) {
+export function PriceChart({ data, height, type, stale, symbol, fdv, vol }: PriceChartProps) {
   const lastPrice = data[data.length - 1]
 
   return (
@@ -265,6 +268,9 @@ export function PriceChart({ data, height, type, stale }: PriceChartProps) {
     >
       {(crosshairData) => (
         <ChartHeader
+          symbol={symbol}
+          fdv={fdv}
+          vol={vol}
           value={(crosshairData ?? lastPrice).value}
           additionalFields={<PriceChartDelta startingPrice={data[0]} endingPrice={crosshairData ?? lastPrice} />}
           valueFormatterType={NumberType.FiatTokenPrice}

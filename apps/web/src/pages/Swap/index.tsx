@@ -3,6 +3,7 @@ import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBal
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { SwapBottomCard } from 'components/SwapBottomCard'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import TokenBalancesCard from 'components/TokenBalancesCard'
 import ChartSection, { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
 import { PageWrapper } from 'components/swap/styled'
 import { useAccount } from 'hooks/useAccount'
@@ -302,25 +303,42 @@ function UniversalSwapFlow({
     address: string
     decimals: number
     name: string
+    logo: string
   }
 
   const TOKENS: TokenInfo[] = [
     {
-      symbol: 'USDC',
+      symbol: 'UNI',
       // conventional placeholder for native ETH (use 0x0 if your lib expects that)
-      address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      decimals: 6,
-      name: 'USD Coin',
+      address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
+      decimals: 18,
+      name: 'Uniswap',
+      logo: '/images/logos/Arbitrum_Logo.png',
     },
     {
       symbol: 'WBTC',
       address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
       decimals: 8,
       name: 'Wrapped Bitcoin',
+      logo: '/images/logos/Arbitrum_Logo.png',
+    },
+    {
+      symbol: 'MATIC',
+      address: '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0',
+      decimals: 18,
+      name: 'Matic Token',
+      logo: '/images/logos/Arbitrum_Logo.png',
+    },
+    {
+      symbol: 'rETH',
+      address: '0xae78736cd615f374d3085123a210448e74fc6393',
+      decimals: 18,
+      name: 'Rocket Pool ETH',
+      logo: '/images/logos/Arbitrum_Logo.png',
     },
   ]
 
-  const [selected, setSelected] = useState<TokenInfo>(TOKENS[0])
+  const [selected, setSelected] = useState<TokenInfo>(TOKENS[1])
 
   let tokenState = useSelectedTokenState() // WBTC
 
@@ -384,6 +402,43 @@ function UniversalSwapFlow({
     },
   }
 
+  const [fdv, setFdv] = useState(0)
+  const [vol, setVol] = useState(0)
+
+  async function setChartData(contractAddress: string) {
+    const url = `https://api.coingecko.com/api/v3/coins/ethereum/contract/${contractAddress}`
+
+    try {
+      setFdv(0)
+      setVol(0)
+
+      const response = await fetch(url)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      console.log('CHARTDATA::', data)
+
+      const fdv = data?.market_data?.fully_diluted_valuation?.usd
+      const volume24h = data?.market_data?.total_volume?.usd
+
+      if (fdv === undefined || volume24h === undefined) {
+        throw new Error('FDV or 24h volume not found in response.')
+      }
+
+      setFdv(fdv)
+      setVol(volume24h)
+    } catch (err) {
+      console.error('Failed to fetch token stats:', err.message)
+    }
+  }
+
+  useEffect(() => {
+    setChartData(selected.address)
+  }, [selected])
+
   return (
     <TDPProvider contextValue={contextValue}>
       <div style={styles.wrapper}>
@@ -397,15 +452,15 @@ function UniversalSwapFlow({
           }}
         >
           {TOKENS.map((t) => (
-            <option key={t.symbol} value={t.symbol}>
-              {t.symbol}
+            <option key={t.symbol} value={t.symbol} style={{ display: 'flex', gap: '10px' }}>
+              <img style={{ width: '100px' }} src={t.logo} alt="logo" /> <p>{t.symbol}</p>
             </option>
           ))}
         </select>
       </div>
       <div className="newSwap">
         <div style={{ width: '70%' }} className="swap-main">
-          <ChartSection />
+          <ChartSection symbol={selected.symbol} fdv={fdv} vol={vol} />
         </div>
         <div className="swap-main">
           <Flex>
@@ -468,6 +523,9 @@ function UniversalSwapFlow({
             )}
           </Flex>
         </div>
+      </div>
+      <div style={{ marginTop: '20px' }}>
+        <TokenBalancesCard />
       </div>
     </TDPProvider>
   )

@@ -5,7 +5,7 @@ import { ComponentProps, memo, useCallback, useEffect, useMemo, useState } from 
 import { useTranslation } from 'react-i18next'
 import { Flex, ModalCloseIcon, Text, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { spacing, zIndexes } from 'ui/src/theme'
+import { spacing } from 'ui/src/theme'
 import { TokenSelectorEmptySearchList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorEmptySearchList'
 import { TokenSelectorSearchResultsList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSearchResultsList'
 import { TokenSelectorSendList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSendList'
@@ -40,7 +40,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { getClipboard } from 'uniswap/src/utils/clipboard'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isExtension, isInterface, isMobileApp, isMobileWeb, isWeb } from 'utilities/src/platform'
+import { isInterface, isMobileApp, isMobileWeb, isWeb } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useDebounce } from 'utilities/src/time/timing'
 
@@ -99,8 +99,22 @@ export function TokenSelectorContent({
   onSelectChain,
   onSelectCurrency,
 }: Omit<TokenSelectorProps, 'isModalOpen'>): JSX.Element {
-  const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
-    useFilterCallbacks(chainId ?? null, flowToModalName(flow))
+  // const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
+  //   useFilterCallbacks(chainId ?? null, flowToModalName(flow))
+  // ――― force mainnet (1) no matter what comes from props or user
+  const ETHEREUM_MAINNET = 1 as UniverseChainId
+
+  const {
+    onChangeChainFilter: _onChangeChainFilter,
+    onChangeText,
+    searchFilter,
+    chainFilter,
+    parsedChainFilter,
+    parsedSearchFilter,
+  } = useFilterCallbacks(ETHEREUM_MAINNET, flowToModalName(flow))
+
+  // a no-op that keeps TypeScript happy but never lets users flip chains
+  const onChangeChainFilter = () => {}
   const debouncedSearchFilter = useDebounce(searchFilter)
   const debouncedParsedSearchFilter = useDebounce(parsedSearchFilter)
   const scrollbarStyles = useScrollbarStyles()
@@ -302,12 +316,12 @@ export function TokenSelectorContent({
                 {hasClipboardString && <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />}
                 <NetworkFilter
                   includeAllNetworks={!isTestnetModeEnabled}
-                  chainIds={chainIds || enabledChains}
+                  chainIds={[1]}
                   selectedChain={chainFilter}
-                  styles={isExtension || isMobileWeb ? { dropdownZIndex: zIndexes.overlay } : undefined}
-                  onDismiss={dismissNativeKeyboard}
+                  // styles={isExtension || isMobileWeb ? { dropdownZIndex: zIndexes.overlay } : undefined}
+                  // onDismiss={dismissNativeKeyboard}
                   onPressChain={(newChainId) => {
-                    onChangeChainFilter(newChainId)
+                    onChangeChainFilter()
                     onSelectChain?.(newChainId)
                   }}
                 />

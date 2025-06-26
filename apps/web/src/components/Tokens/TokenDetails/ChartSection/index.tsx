@@ -28,7 +28,7 @@ import { ThemeProvider } from 'theme'
 import { Flex, SegmentedControl, SegmentedControlOption, styled, useMedia } from 'ui/src'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-export const TDP_CHART_HEIGHT_PX = 400
+export const TDP_CHART_HEIGHT_PX = 450
 const TDP_CHART_SELECTOR_OPTIONS = [ChartType.PRICE, ChartType.VOLUME, ChartType.TVL] as const
 type TokenDetailsChartType = (typeof TDP_CHART_SELECTOR_OPTIONS)[number]
 
@@ -108,7 +108,7 @@ export function useCreateTDPChartState(tokenDBAddress: string | undefined, curre
   }, [chartType, priceQuery, volumeQuery, tvlQuery, timePeriod, priceChartType])
 }
 
-export default function ChartSection() {
+export default function ChartSection({ symbol, fdv, vol }: any) {
   const { activeQuery, timePeriod, priceChartType } = useTDPContext().chartState
   const { tokenColor } = useTDPContext()
 
@@ -128,7 +128,15 @@ export default function ChartSection() {
     switch (activeQuery.chartType) {
       case ChartType.PRICE:
         return (
-          <PriceChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} type={priceChartType} stale={stale} />
+          <PriceChart
+            symbol={symbol}
+            fdv={fdv}
+            vol={vol}
+            data={activeQuery.entries}
+            height={TDP_CHART_HEIGHT_PX}
+            type={priceChartType}
+            stale={stale}
+          />
         )
       case ChartType.VOLUME:
         return (

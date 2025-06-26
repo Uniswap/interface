@@ -2,8 +2,6 @@ import { ChainSelector } from 'components/NavBar/ChainSelector'
 import { NewUserCTAButton } from 'components/NavBar/DownloadApp/NewUserCTAButton'
 import { PreferenceMenu } from 'components/NavBar/PreferencesMenu'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
-import { SearchBar } from 'components/NavBar/SearchBar'
-import { Tabs } from 'components/NavBar/Tabs/Tabs'
 import TestnetModeTooltip from 'components/NavBar/TestnetMode/TestnetModeTooltip'
 import Web3Status from 'components/Web3Status'
 import Row from 'components/deprecated/Row'
@@ -87,24 +85,26 @@ export default function Navbar() {
 
   return (
     <Nav>
-      <UnpositionedFlex row centered width="100%">
-        <Left>
-          <h2 style={{ color: '#00F5E0' }}>AggTrade</h2>
-          {areTabsVisible && <Tabs />}
-        </Left>
+      <div style={{ paddingInline: '30px' }}>
+        <UnpositionedFlex row centered width="100%">
+          <Left>
+            <h2 style={{ color: '#00F5E0' }}>AggTrade - Swap</h2>
+            {/* {areTabsVisible && <Tabs />} */}
+          </Left>
 
-        {!collapseSearchBar && <SearchBar />}
+          {/* {!collapseSearchBar && <SearchBar />} */}
 
-        <Right>
-          {collapseSearchBar && <SearchBar />}
-          {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
-          {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
-          {!hideChainSelector && <ChainSelector />}
-          {isTestnetModeEnabled && <TestnetModeTooltip />}
-          {isEmbeddedWalletEnabled && !account.address && <NewUserCTAButton />}
-          <Web3Status />
-        </Right>
-      </UnpositionedFlex>
+          <Right>
+            {/* {collapseSearchBar && <SearchBar />} */}
+            {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
+            {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
+            {!hideChainSelector && <ChainSelector />}
+            {isTestnetModeEnabled && <TestnetModeTooltip />}
+            {isEmbeddedWalletEnabled && !account.address && <NewUserCTAButton />}
+            <Web3Status />
+          </Right>
+        </UnpositionedFlex>
+      </div>
     </Nav>
   )
 }

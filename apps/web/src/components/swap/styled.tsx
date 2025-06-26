@@ -5,8 +5,8 @@ import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled
 export const PAGE_WRAPPER_MAX_WIDTH = 480
 
 export const PageWrapper = TamaguiStyled(Flex, {
-  pt: '$spacing60',
-  px: '$spacing16', // gives better spacing for full width
+  pt: '$spacing16',
+  px: '$spacing5', // gives better spacing for full width
   pb: '$spacing40',
   width: '100%',
   height: '100%',

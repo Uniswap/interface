@@ -68,9 +68,37 @@ interface HeaderValueDisplayProps {
   value?: number | ReactElement
   /** Used to override default format NumberType (FiatTokenStats) */
   valueFormatterType?: FiatNumberType
+  symbol?: string
+  fdv?: number
+  vol?: number
 }
 
-function HeaderValueDisplay({ value, valueFormatterType = NumberType.FiatTokenStats }: HeaderValueDisplayProps) {
+function formatUSDCompact(value: number) {
+  if (value === null || value === undefined || isNaN(value)) return '$0.00'
+
+  const abs = Math.abs(value)
+
+  let formatted
+  if (abs >= 1_000_000_000) {
+    formatted = (value / 1_000_000_000).toFixed(2) + 'B'
+  } else if (abs >= 1_000_000) {
+    formatted = (value / 1_000_000).toFixed(2) + 'M'
+  } else if (abs >= 1_000) {
+    formatted = (value / 1_000).toFixed(2) + 'K'
+  } else {
+    formatted = value.toFixed(2)
+  }
+
+  return `$${formatted}`
+}
+
+function HeaderValueDisplay({
+  value,
+  valueFormatterType = NumberType.FiatTokenStats,
+  symbol,
+  fdv,
+  vol,
+}: HeaderValueDisplayProps) {
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   if (typeof value !== 'number' && typeof value !== 'undefined') {
@@ -78,9 +106,30 @@ function HeaderValueDisplay({ value, valueFormatterType = NumberType.FiatTokenSt
   }
 
   return (
-    <Text variant="heading2" {...EllipsisTamaguiStyle}>
-      {convertFiatAmountFormatted(value, valueFormatterType)}
-    </Text>
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ width: '40px' }}>
+          <img src="/images/logos/Arbitrum_Logo.png" alt="" style={{ width: '100%', objectFit: 'cover' }} />
+        </div>
+        <p style={{ fontSize: '20px' }}>{symbol} - </p>
+        <Text variant="heading3" {...EllipsisTamaguiStyle}>
+          {convertFiatAmountFormatted(value, valueFormatterType)}
+        </Text>
+      </div>
+
+      {fdv && vol && (
+        <div style={{ display: 'flex', gap: '20px', marginRight: '-100px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <p style={{ fontSize: '16px', opacity: 0.7 }}>FDV</p>
+            <p style={{ fontSize: '18px', marginTop: '-16px' }}>{formatUSDCompact(fdv)}</p>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <p style={{ fontSize: '16px', opacity: 0.7 }}>24H VOL</p>
+            <p style={{ fontSize: '18px', marginTop: '-16px' }}>{formatUSDCompact(vol)}</p>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -102,6 +151,9 @@ function HeaderTimeDisplay({ time, timePlaceholder }: HeaderTimeDisplayProps) {
 interface ChartHeaderProps extends HeaderValueDisplayProps, HeaderTimeDisplayProps {
   protocolData?: ChartHeaderProtocolInfo[]
   additionalFields?: ReactNode
+  symbol?: string
+  fdv?: number
+  vol?: number
 }
 
 export function ChartHeader({
@@ -111,6 +163,9 @@ export function ChartHeader({
   timePlaceholder,
   protocolData,
   additionalFields,
+  symbol,
+  fdv,
+  vol,
 }: ChartHeaderProps) {
   const isHovered = !!time
   return (
@@ -125,7 +180,7 @@ export function ChartHeader({
       id="chart-header"
     >
       <Flex position="absolute" gap="$gap4" pb={14} pointerEvents="none" width="80%">
-        <HeaderValueDisplay value={value} valueFormatterType={valueFormatterType} />
+        <HeaderValueDisplay fdv={fdv} vol={vol} symbol={symbol} value={value} valueFormatterType={valueFormatterType} />
         <Flex row gap="$gap8" {...EllipsisTamaguiStyle}>
           {additionalFields}
           <HeaderTimeDisplay time={time} timePlaceholder={timePlaceholder} />
