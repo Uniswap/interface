@@ -1,0 +1,29 @@
+.newSwap {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+}
+
+.swap-main {
+  /* size from the Figma inspector (optional – adjust / remove if you’re using auto-layout) */
+
+  /* layout */
+  padding: 32px 11px;          /* top/bottom 32 px, sides 11 px */
+  border-radius: 12px;         /* same 12 px corner radius */
+
+  /* dark “glass” background (80 % opacity) */
+  background: rgba(5, 5, 18, 0.8);
+
+  /* the magic ✨ – two inset box-shadows to mimic the cyan rim + soft glow */
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 255, 233, 0.30),   /* crisp inner stroke */
+    inset 0 4px 34px rgba(0, 255, 233, 0.40);  /* blurred neon bloom */
+
+  /* adds the subtle frosted-glass blur visible behind the card */
+  backdrop-filter: blur(40px);
+  padding-inline: 40px;
+}
+
+body {
+    background-color: black !important;
+}

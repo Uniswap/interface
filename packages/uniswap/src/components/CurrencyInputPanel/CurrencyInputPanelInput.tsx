@@ -203,7 +203,7 @@ export const CurrencyInputPanelInput = memo(
             <SelectTokenButton
               selectedCurrencyInfo={currencyInfo}
               testID={currencyField === CurrencyField.INPUT ? TestID.ChooseInputToken : TestID.ChooseOutputToken}
-              tokenColor={tokenColor}
+              tokenColor={'rgba(0, 245, 224, 0.5)'} // Select Token
               onPress={onShowTokenSelector}
             />
           </Flex>

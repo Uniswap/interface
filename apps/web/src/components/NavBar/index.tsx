@@ -1,5 +1,4 @@
 import { ChainSelector } from 'components/NavBar/ChainSelector'
-import { CompanyMenu } from 'components/NavBar/CompanyMenu'
 import { NewUserCTAButton } from 'components/NavBar/DownloadApp/NewUserCTAButton'
 import { PreferenceMenu } from 'components/NavBar/PreferencesMenu'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
@@ -90,7 +89,7 @@ export default function Navbar() {
     <Nav>
       <UnpositionedFlex row centered width="100%">
         <Left>
-          <CompanyMenu />
+          <h2 style={{ color: '#00F5E0' }}>AggTrade</h2>
           {areTabsVisible && <Tabs />}
         </Left>
 

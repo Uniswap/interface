@@ -32,7 +32,7 @@ export function SwapFormButton({ tokenColor }: { tokenColor?: string }): JSX.Ele
             emphasis={buttonEmphasis}
             loading={!!indicative}
             isDisabled={disabled}
-            backgroundColor={buttonBackgroundColor}
+            backgroundColor={'rgba(0, 245, 224, 0.5)'}
             size={isShortMobileDevice ? 'small' : 'large'}
             testID={TestID.ReviewSwap}
             animation="simple"

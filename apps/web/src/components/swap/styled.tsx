@@ -6,10 +6,14 @@ export const PAGE_WRAPPER_MAX_WIDTH = 480
 
 export const PageWrapper = TamaguiStyled(Flex, {
   pt: '$spacing60',
-  px: '$spacing8',
+  px: '$spacing16', // gives better spacing for full width
   pb: '$spacing40',
   width: '100%',
-  maxWidth: PAGE_WRAPPER_MAX_WIDTH,
+  height: '100%',
+  maxWidth: '100%', // previously 480
+  flex: 1,
+  alignSelf: 'stretch',
+
   $lg: {
     pt: '$spacing48',
   },

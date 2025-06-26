@@ -28,7 +28,7 @@ import { ThemeProvider } from 'theme'
 import { Flex, SegmentedControl, SegmentedControlOption, styled, useMedia } from 'ui/src'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-export const TDP_CHART_HEIGHT_PX = 356
+export const TDP_CHART_HEIGHT_PX = 400
 const TDP_CHART_SELECTOR_OPTIONS = [ChartType.PRICE, ChartType.VOLUME, ChartType.TVL] as const
 type TokenDetailsChartType = (typeof TDP_CHART_SELECTOR_OPTIONS)[number]
 

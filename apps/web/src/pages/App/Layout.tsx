@@ -18,7 +18,6 @@ const AppBody = styled.div`
   grid-area: ${GRID_AREAS.MAIN};
   width: 100vw;
   min-height: 100%;
-  max-width: ${({ theme }) => `${theme.maxWidth}px`};
   display: flex;
   flex-direction: column;
   position: relative;
@@ -26,6 +25,7 @@ const AppBody = styled.div`
   flex: 1;
   position: relative;
   margin: auto;
+  padding-inline: 100px;
 
   @media screen and (max-width: ${breakpoints.md}px) {
     padding-left: 10px;

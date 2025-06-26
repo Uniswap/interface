@@ -1,15 +1,18 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { SwapBottomCard } from 'components/SwapBottomCard'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import ChartSection, { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
 import { PageWrapper } from 'components/swap/styled'
 import { useAccount } from 'hooks/useAccount'
 import { useDeferredComponent } from 'hooks/useDeferredComponent'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import { useModalState } from 'hooks/useModalState'
+import { useSelectedTokenState } from 'hooks/useSelectedTokenAddress'
 import { useResetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
 import { useWebSwapSettings } from 'pages/Swap/settings/useWebSwapSettings'
+import { TDPProvider } from 'pages/TokenDetails/TDPContext'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -20,10 +23,12 @@ import { useWrapCallback } from 'state/sagas/transactions/wrapSaga'
 import { SwapAndLimitContextProvider } from 'state/swap/SwapContext'
 import { useInitialCurrencyState } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
-import { Flex, SegmentedControl, SegmentedControlOption, Text, Tooltip, styled } from 'ui/src'
+import { Flex, SegmentedControlOption, Text, Tooltip, styled } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { zIndexes } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsModeMismatch } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
@@ -50,6 +55,7 @@ import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { isMobileWeb } from 'utilities/src/platform'
 import noop from 'utilities/src/react/noop'
 import { isIFramed } from 'utils/isIFramed'
+import './newSwapStyle.css'
 
 export default function SwapPage() {
   const navigate = useNavigate()
@@ -158,7 +164,7 @@ export function Swap({
         >
           <PrefetchBalancesWrapper>
             <SwapFormContextProvider prefilledState={prefilledState} hideSettings={hideHeader} hideFooter={hideFooter}>
-              <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
+              <div style={{ width: '100%' }}>
                 {isSharedSwapDisabled && <DisabledSwapOverlay />}
                 <UniversalSwapFlow
                   hideHeader={hideHeader}
@@ -169,7 +175,7 @@ export function Swap({
                   prefilledState={prefilledState}
                   tokenColor={tokenColor}
                 />
-              </Flex>
+              </div>
             </SwapFormContextProvider>
           </PrefetchBalancesWrapper>
         </SwapAndLimitContextProvider>
@@ -178,7 +184,7 @@ export function Swap({
   )
 }
 
-const SWAP_TABS = [SwapTab.Swap, SwapTab.Limit, SwapTab.Buy, SwapTab.Sell]
+const SWAP_TABS = [SwapTab.Swap, SwapTab.Buy]
 
 const TAB_TYPE_TO_LABEL = {
   [SwapTab.Swap]: (t: AppTFunction) => t('swap.form.header'),
@@ -290,55 +296,180 @@ function UniversalSwapFlow({
   const connectorId = useAccount().connector?.id
   const passkeyAuthStatus = useGetPasskeyAuthStatus(connectorId)
 
+  // Chart Context
+  interface TokenInfo {
+    symbol: string
+    address: string
+    decimals: number
+    name: string
+  }
+
+  const TOKENS: TokenInfo[] = [
+    {
+      symbol: 'USDC',
+      // conventional placeholder for native ETH (use 0x0 if your lib expects that)
+      address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      decimals: 6,
+      name: 'USD Coin',
+    },
+    {
+      symbol: 'WBTC',
+      address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+      decimals: 8,
+      name: 'Wrapped Bitcoin',
+    },
+  ]
+
+  const [selected, setSelected] = useState<TokenInfo>(TOKENS[0])
+
+  let tokenState = useSelectedTokenState() // WBTC
+
+  let wbtcAddress = '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'
+  const chainInfo = getChainInfo(UniverseChainId.Mainnet)
+
+  const tokenQuery = useTokenWebQuery({
+    variables: { address: selected.address, chain: chainInfo.backendChain.chain },
+    errorPolicy: 'all',
+  })
+
+  const chartState = useCreateTDPChartState(selected.address, chainInfo.backendChain.chain)
+
+  const mockCurrency = new Token(
+    1, // chainId
+    selected.address, // address
+    selected.decimals, // decimals
+    selected.symbol, // symbol
+    selected.name, // name
+  )
+
+  const contextValue = useMemo(() => {
+    return {
+      currency: mockCurrency, // not needed for chart to work
+      currencyChain: chainInfo.backendChain.chain,
+      currencyChainId: chainInfo.id,
+      address: wbtcAddress,
+      currencyWasFetchedOnChain: false,
+      tokenQuery,
+      chartState,
+      multiChainMap: {},
+      tokenColor: '#f7931a', // use your own color if needed
+    }
+  }, [tokenQuery, chartState, selected])
+
+  const styles: Record<string, React.CSSProperties> = {
+    wrapper: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '8px',
+      width: '200px',
+      fontFamily: 'Inter, sans-serif',
+      marginBottom: '20px',
+    },
+    select: {
+      appearance: 'none',
+      padding: '10px 14px',
+      borderRadius: '8px',
+      background: '#141414',
+      color: '#fff',
+      border: 'none',
+      outline: 'none',
+      /* subtle inner glow */
+      boxShadow: 'inset 0 0 0 1px rgba(0,255,233,.3), inset 0 4px 18px rgba(0,255,233,.25)',
+      cursor: 'pointer',
+    },
+    addressLabel: {
+      fontSize: '12px',
+      color: '#7ee8ff',
+      wordBreak: 'break-all',
+    },
+  }
+
   return (
-    <Flex>
-      {!hideHeader && (
-        <Flex row gap="$spacing16">
-          <SegmentedControl
-            outlined={false}
-            size="large"
-            options={SWAP_TAB_OPTIONS}
-            selectedOption={currentTab}
-            onSelectOption={onTabClick}
-            gap={isMobileWeb ? '$spacing8' : undefined}
-          />
-        </Flex>
-      )}
-      {currentTab === SwapTab.Swap && (
-        <Flex gap="$spacing16">
-          <SwapDependenciesContextProvider swapCallback={swapCallback} wrapCallback={wrapCallback}>
-            <SwapFlow
-              settings={swapSettings}
-              hideHeader={hideHeader}
-              hideFooter={hideFooter}
-              onClose={noop}
-              swapRedirectCallback={swapRedirectCallback}
-              onCurrencyChange={onCurrencyChange}
-              prefilledState={prefilledState}
-              tokenColor={tokenColor}
-              onSubmitSwap={resetDisableOneClickSwap}
-              passkeyAuthStatus={passkeyAuthStatus}
-            />
-          </SwapDependenciesContextProvider>
-          <SwapBottomCard />
-        </Flex>
-      )}
-      {currentTab === SwapTab.Limit && LimitFormWrapper && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
-      {currentTab === SwapTab.Buy && BuyForm && (
-        <BuyForm
-          rampDirection={RampDirection.ONRAMP}
-          disabled={disableTokenInputs}
-          initialCurrency={prefilledState?.output}
-        />
-      )}
-      {currentTab === SwapTab.Sell && BuyForm && (
-        <BuyForm
-          rampDirection={RampDirection.OFFRAMP}
-          disabled={disableTokenInputs}
-          initialCurrency={prefilledState?.output}
-        />
-      )}
-    </Flex>
+    <TDPProvider contextValue={contextValue}>
+      <div style={styles.wrapper}>
+        {/* dropdown */}
+        <select
+          style={styles.select}
+          value={selected.symbol}
+          onChange={(e) => {
+            const token = TOKENS.find((t) => t.symbol === e.target.value)!
+            setSelected(token)
+          }}
+        >
+          {TOKENS.map((t) => (
+            <option key={t.symbol} value={t.symbol}>
+              {t.symbol}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="newSwap">
+        <div style={{ width: '70%' }} className="swap-main">
+          <ChartSection />
+        </div>
+        <div className="swap-main">
+          <Flex>
+            {!hideHeader && (
+              <Flex row gap="$spacing16">
+                {/* <SegmentedControl
+                outlined={false}
+                size="large"
+                options={SWAP_TAB_OPTIONS}
+                selectedOption={currentTab}
+                onSelectOption={onTabClick}
+                gap={isMobileWeb ? '$spacing8' : undefined}
+              /> */}
+
+                <div className="tab">
+                  <p>Swap</p>
+                </div>
+              </Flex>
+            )}
+            {currentTab === SwapTab.Swap && (
+              <Flex gap="$spacing16" flexDirection="row">
+                {/* Chart placeholder (white box) */}
+
+                {/* Swap Form */}
+                <Flex flex={1}>
+                  <SwapDependenciesContextProvider swapCallback={swapCallback} wrapCallback={wrapCallback}>
+                    <SwapFlow
+                      settings={swapSettings}
+                      hideHeader={hideHeader}
+                      hideFooter={hideFooter}
+                      onClose={noop}
+                      swapRedirectCallback={swapRedirectCallback}
+                      onCurrencyChange={onCurrencyChange}
+                      prefilledState={prefilledState}
+                      tokenColor={tokenColor}
+                      onSubmitSwap={resetDisableOneClickSwap}
+                      passkeyAuthStatus={passkeyAuthStatus}
+                    />
+                  </SwapDependenciesContextProvider>
+                </Flex>
+                <SwapBottomCard />
+              </Flex>
+            )}
+            {currentTab === SwapTab.Limit && LimitFormWrapper && (
+              <LimitFormWrapper onCurrencyChange={onCurrencyChange} />
+            )}
+            {currentTab === SwapTab.Buy && BuyForm && (
+              <BuyForm
+                rampDirection={RampDirection.ONRAMP}
+                disabled={disableTokenInputs}
+                initialCurrency={prefilledState?.output}
+              />
+            )}
+            {currentTab === SwapTab.Sell && BuyForm && (
+              <BuyForm
+                rampDirection={RampDirection.OFFRAMP}
+                disabled={disableTokenInputs}
+                initialCurrency={prefilledState?.output}
+              />
+            )}
+          </Flex>
+        </div>
+      </div>
+    </TDPProvider>
   )
 }
 
