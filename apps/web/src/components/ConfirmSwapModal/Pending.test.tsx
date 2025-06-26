@@ -11,8 +11,8 @@ import { LIMIT_ORDER_TRADE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 vi.mock('state/transactions/hooks', async () => {
   const actual = await vi.importActual('state/transactions/hooks')
@@ -92,7 +92,7 @@ const filledOrderDetails: UniswapXOrderDetails = {
 describe('Pending - classic trade titles', () => {
   it.each([
     [false, false, undefined, TEST_TRADE_EXACT_INPUT, classicSwapResult, TransactionStatus.Pending, 'Swap submitted'],
-    [false, false, undefined, TEST_TRADE_EXACT_INPUT, classicSwapResult, TransactionStatus.Success, 'Swap success!'],
+    [false, false, undefined, TEST_TRADE_EXACT_INPUT, classicSwapResult, TransactionStatus.Confirmed, 'Swap success!'],
     [false, false, undefined, TEST_TRADE_EXACT_INPUT, undefined, undefined, 'Confirm swap'],
   ])(
     'renders classic trade correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p',

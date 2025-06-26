@@ -10,10 +10,6 @@ vi.mock('tamagui', async () => {
   }
 })
 
-vi.mock('uniswap/src/components/modals/ScrollLock', () => ({
-  useUpdateScrollLock: vi.fn(),
-}))
-
 describe('disable nft on searchbar', () => {
   beforeEach(() => {
     mockMediaSize('xxl')

@@ -3,9 +3,9 @@ import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { useTokenContract } from 'hooks/useContract'
 import { useTriggerOnTransactionType } from 'hooks/useTriggerOnTransactionType'
 import { useCallback, useMemo, useRef } from 'react'
+import { ApproveTransactionInfo, TransactionType } from 'state/transactions/types'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ApproveTransactionInfo, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { UserRejectedRequestError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -34,7 +34,7 @@ export function useTokenAllowance({ token, owner, spender }: { token?: Token; ow
   })
 
   // Refetch when any approval transactions confirm
-  useTriggerOnTransactionType(TransactionType.Approve, refetchAllowance)
+  useTriggerOnTransactionType(TransactionType.APPROVAL, refetchAllowance)
 
   const allowance = useMemo(
     () => (token && rawAmount !== undefined ? CurrencyAmount.fromRawAmount(token, rawAmount.toString()) : undefined),
@@ -97,7 +97,7 @@ export function useUpdateTokenAllowance(
       return {
         response,
         info: {
-          type: TransactionType.Approve,
+          type: TransactionType.APPROVAL,
           tokenAddress: contract.address,
           spender,
           amount: allowance,

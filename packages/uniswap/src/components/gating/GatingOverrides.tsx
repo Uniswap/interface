@@ -1,10 +1,7 @@
-import React, { PropsWithChildren, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { Accordion, Flex, Separator, Switch, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import {
-  DynamicConfigDropdown,
-  DynamicConfigDropdownBoolean,
-} from 'uniswap/src/components/gating/DynamicConfigDropdown'
+import { DynamicConfigDropdown } from 'uniswap/src/components/gating/DynamicConfigDropdown'
 import { GatingButton } from 'uniswap/src/components/gating/GatingButton'
 import { ExperimentRow, LayerRow } from 'uniswap/src/components/gating/Rows'
 import {
@@ -14,18 +11,13 @@ import {
 } from 'uniswap/src/components/gating/dynamicConfigOverrides'
 import { useForceUpgradeStatus } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeStatus'
 import { useForceUpgradeTranslations } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeTranslations'
-import {
-  DynamicConfigs,
-  EmbeddedWalletConfigKey,
-  ExtensionBiometricUnlockConfigKey,
-  ForceUpgradeConfigKey,
-} from 'uniswap/src/features/gating/configs'
+import { DynamicConfigs, EmbeddedWalletConfigKey, ForceUpgradeConfigKey } from 'uniswap/src/features/gating/configs'
 import { Experiments, Layers } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { getOverrideAdapter } from 'uniswap/src/features/gating/sdk/statsig'
 import { useEmbeddedWalletBaseUrl } from 'uniswap/src/features/passkey/hooks/useEmbeddedWalletBaseUrl'
-import { isExtension, isMobileApp } from 'utilities/src/platform'
+import { isMobileApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function GatingOverrides(): JSX.Element {
@@ -142,62 +134,40 @@ export function GatingOverrides(): JSX.Element {
               Clear all local dynamic config overrides
             </GatingButton>
 
-            <Flex mt="$spacing12" gap="$spacing12">
-              <DynamicConfigGroup title="Biometric Unlock" hidden={!isExtension}>
-                <DynamicConfigDropdownBoolean
-                  config={DynamicConfigs.ExtensionBiometricUnlock}
-                  configKey={ExtensionBiometricUnlockConfigKey.EnableUnlocking}
-                  label="Unlocking"
-                />
+            <Flex gap="$spacing12" mt="$spacing12">
+              <DynamicConfigDropdown
+                config={DynamicConfigs.EmbeddedWalletConfig}
+                configKey={EmbeddedWalletConfigKey.BaseUrl}
+                label="Embedded Wallet Base URL"
+                options={EMBEDDED_WALLET_BASE_URL_OPTIONS}
+                selected={useEmbeddedWalletBaseUrl()}
+              />
 
-                <DynamicConfigDropdownBoolean
-                  config={DynamicConfigs.ExtensionBiometricUnlock}
-                  configKey={ExtensionBiometricUnlockConfigKey.EnableOnboardingEnrollment}
-                  label="Onboarding Enrollment"
-                />
+              <DynamicConfigDropdown
+                config={DynamicConfigs.ForceUpgrade}
+                configKey={ForceUpgradeConfigKey.Status}
+                label="Force Upgrade Status"
+                options={FORCE_UPGRADE_STATUS_OPTIONS}
+                selected={useForceUpgradeStatus()}
+              />
 
-                <DynamicConfigDropdownBoolean
-                  config={DynamicConfigs.ExtensionBiometricUnlock}
-                  configKey={ExtensionBiometricUnlockConfigKey.EnableSettingsEnrollment}
-                  label="Settings Enrollment"
-                />
-              </DynamicConfigGroup>
-
-              <DynamicConfigGroup title="Embedded Wallet">
-                <DynamicConfigDropdown
-                  config={DynamicConfigs.EmbeddedWalletConfig}
-                  configKey={EmbeddedWalletConfigKey.BaseUrl}
-                  label="Base URL"
-                  options={EMBEDDED_WALLET_BASE_URL_OPTIONS}
-                  selected={useEmbeddedWalletBaseUrl()}
-                />
-              </DynamicConfigGroup>
-
-              <DynamicConfigGroup title="Force/Soft Upgrade">
-                <DynamicConfigDropdown
-                  config={DynamicConfigs.ForceUpgrade}
-                  configKey={ForceUpgradeConfigKey.Status}
-                  label="Status"
-                  options={FORCE_UPGRADE_STATUS_OPTIONS}
-                  selected={useForceUpgradeStatus()}
-                />
-
-                <DynamicConfigDropdown
-                  config={DynamicConfigs.ForceUpgrade}
-                  configKey={ForceUpgradeConfigKey.Translations}
-                  label="Translations"
-                  options={FORCE_UPGRADE_TRANSLATIONS_OPTIONS}
-                  selected={JSON.stringify(useForceUpgradeTranslations())}
-                />
-              </DynamicConfigGroup>
+              <DynamicConfigDropdown
+                config={DynamicConfigs.ForceUpgrade}
+                configKey={ForceUpgradeConfigKey.Translations}
+                label="Force Upgrade Translations"
+                options={FORCE_UPGRADE_TRANSLATIONS_OPTIONS}
+                selected={JSON.stringify(useForceUpgradeTranslations())}
+              />
             </Flex>
           </Accordion.Content>
         </Accordion.Item>
       </Flex>
 
-      <GatingButton mt="$spacing12" onPress={onClearAllGatingOverrides}>
-        Clear all gating overrides
-      </GatingButton>
+      <Flex row>
+        <GatingButton mt="$spacing12" onPress={onClearAllGatingOverrides}>
+          Clear all gating overrides
+        </GatingButton>
+      </Flex>
     </>
   )
 }
@@ -239,22 +209,6 @@ function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
       <Flex minWidth={52}>
         <Switch checked={status} variant="branded" onCheckedChange={onChackedChange} />
       </Flex>
-    </Flex>
-  )
-}
-
-function DynamicConfigGroup({
-  title,
-  hidden = false,
-  children,
-}: PropsWithChildren<{
-  title: string
-  hidden?: boolean
-}>): JSX.Element | null {
-  return hidden ? null : (
-    <Flex flexDirection="column" backgroundColor="$surface2" p="$spacing16" borderRadius="$rounded16" gap="$spacing12">
-      <Text variant="subheading1">{title}</Text>
-      {children}
     </Flex>
   )
 }

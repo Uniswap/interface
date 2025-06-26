@@ -46,8 +46,6 @@ const TouchableTextLinkFrame = styled(TouchableAreaFrame, {
   borderRadius: '$none',
 })
 
-TouchableTextLinkFrame.displayName = 'TouchableTextLinkFrame'
-
 const TouchableTextLink_ = forwardRef<TamaguiElement, TouchableTextLinkProps>(function TouchableTextLink(
   {
     children,

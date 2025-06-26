@@ -781,7 +781,7 @@ const MOCK_CREATE_POOL: OnChainTransaction = {
   },
 } as OnChainTransaction
 
-const MOCK_COLLECT_FEES: OnChainTransaction = {
+const MOCK_CLAIM: OnChainTransaction = {
   ...TRANSACTION_BASE,
   label: OnChainTransactionLabel.CLAIM,
   transfers: [
@@ -855,9 +855,9 @@ describe(parseRestLiquidityTransaction, () => {
     })
   })
 
-  it('Liquidity: parse collect fees', () => {
-    expect(parseRestLiquidityTransaction(MOCK_COLLECT_FEES)).toEqual({
-      type: TransactionType.CollectFees,
+  it('Liquidity: parse claim', () => {
+    expect(parseRestLiquidityTransaction(MOCK_CLAIM)).toEqual({
+      type: TransactionType.Claim,
       inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       outputCurrencyId: undefined,
       inputCurrencyAmountRaw: '100000000000000000',
@@ -917,8 +917,8 @@ describe(extractRestOnChainTransactionDetails, () => {
     expect(txn?.typeInfo.type).toEqual(TransactionType.CreatePool)
   })
   it('Claim', () => {
-    const txn = extractRestOnChainTransactionDetails(MOCK_COLLECT_FEES)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.CollectFees)
+    const txn = extractRestOnChainTransactionDetails(MOCK_CLAIM)
+    expect(txn?.typeInfo.type).toEqual(TransactionType.Claim)
   })
   it('Bridge', () => {
     const txn = extractRestOnChainTransactionDetails(MOCK_BRIDGE)

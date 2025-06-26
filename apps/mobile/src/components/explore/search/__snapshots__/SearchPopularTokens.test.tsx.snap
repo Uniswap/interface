@@ -1,0 +1,831 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchPopularTokens renders without error 1`] = `
+<View
+  style={
+    {
+      "flexDirection": "column",
+      "paddingBottom": 8,
+      "paddingLeft": 8,
+      "paddingRight": 8,
+      "paddingTop": 8,
+    }
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      {
+        "flexDirection": "column",
+        "opacity": 0,
+      }
+    }
+    testID="shimmer-placeholder"
+  >
+    <View
+      style={
+        {
+          "flexDirection": "column",
+          "flexGrow": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "minHeight": 56,
+            "opacity": 1,
+            "paddingBottom": 8,
+            "paddingTop": 8,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "flexGrow": 1,
+              "gap": 12,
+              "overflow": "hidden",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "#CECECE",
+                "borderBottomLeftRadius": 999999,
+                "borderBottomRightRadius": 999999,
+                "borderTopLeftRadius": 999999,
+                "borderTopRightRadius": 999999,
+                "flexDirection": "column",
+                "minHeight": 40,
+                "minWidth": 40,
+              }
+            }
+          />
+          <View
+            style={
+              {
+                "alignItems": "flex-start",
+                "flexDirection": "column",
+                "flexGrow": 1,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                }
+              }
+              testID="text-placeholder"
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "position": "relative",
+                  }
+                }
+              >
+                <View
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no-hide-descendants"
+                >
+                  <Text
+                    allowFontScaling={true}
+                    maxFontSizeMultiplier={1.4}
+                    numberOfLines={1}
+                    style={
+                      {
+                        "color": "transparent",
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 19,
+                        "lineHeight": 24,
+                        "opacity": 0,
+                      }
+                    }
+                    suppressHighlighting={true}
+                  >
+                    Token Full Name
+                  </Text>
+                </View>
+                <View
+                  style={
+                    {
+                      "backgroundColor": "#F9F9F9",
+                      "borderBottomLeftRadius": 4,
+                      "borderBottomRightRadius": 4,
+                      "borderTopLeftRadius": 4,
+                      "borderTopRightRadius": 4,
+                      "bottom": "5%",
+                      "flexDirection": "column",
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": "5%",
+                    }
+                  }
+                />
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "gap": 8,
+                  "minHeight": 20,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+                testID="text-placeholder"
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <View
+                    accessibilityElementsHidden={true}
+                    importantForAccessibility="no-hide-descendants"
+                  >
+                    <Text
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.4}
+                      numberOfLines={1}
+                      style={
+                        {
+                          "color": "transparent",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 24,
+                          "opacity": 0,
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      1,000 TFN
+                    </Text>
+                  </View>
+                  <View
+                    style={
+                      {
+                        "backgroundColor": "#F9F9F9",
+                        "borderBottomLeftRadius": 4,
+                        "borderBottomRightRadius": 4,
+                        "borderTopLeftRadius": 4,
+                        "borderTopRightRadius": 4,
+                        "bottom": "5%",
+                        "flexDirection": "column",
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": "5%",
+                      }
+                    }
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "minHeight": 56,
+            "opacity": 0.5,
+            "paddingBottom": 8,
+            "paddingTop": 8,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "flexGrow": 1,
+              "gap": 12,
+              "overflow": "hidden",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "#CECECE",
+                "borderBottomLeftRadius": 999999,
+                "borderBottomRightRadius": 999999,
+                "borderTopLeftRadius": 999999,
+                "borderTopRightRadius": 999999,
+                "flexDirection": "column",
+                "minHeight": 40,
+                "minWidth": 40,
+              }
+            }
+          />
+          <View
+            style={
+              {
+                "alignItems": "flex-start",
+                "flexDirection": "column",
+                "flexGrow": 1,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                }
+              }
+              testID="text-placeholder"
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "position": "relative",
+                  }
+                }
+              >
+                <View
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no-hide-descendants"
+                >
+                  <Text
+                    allowFontScaling={true}
+                    maxFontSizeMultiplier={1.4}
+                    numberOfLines={1}
+                    style={
+                      {
+                        "color": "transparent",
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 19,
+                        "lineHeight": 24,
+                        "opacity": 0,
+                      }
+                    }
+                    suppressHighlighting={true}
+                  >
+                    Token Full Name
+                  </Text>
+                </View>
+                <View
+                  style={
+                    {
+                      "backgroundColor": "#F9F9F9",
+                      "borderBottomLeftRadius": 4,
+                      "borderBottomRightRadius": 4,
+                      "borderTopLeftRadius": 4,
+                      "borderTopRightRadius": 4,
+                      "bottom": "5%",
+                      "flexDirection": "column",
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": "5%",
+                    }
+                  }
+                />
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "gap": 8,
+                  "minHeight": 20,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                  }
+                }
+                testID="text-placeholder"
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <View
+                    accessibilityElementsHidden={true}
+                    importantForAccessibility="no-hide-descendants"
+                  >
+                    <Text
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.4}
+                      numberOfLines={1}
+                      style={
+                        {
+                          "color": "transparent",
+                          "fontFamily": "Basel-Book",
+                          "fontSize": 17,
+                          "lineHeight": 24,
+                          "opacity": 0,
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      1,000 TFN
+                    </Text>
+                  </View>
+                  <View
+                    style={
+                      {
+                        "backgroundColor": "#F9F9F9",
+                        "borderBottomLeftRadius": 4,
+                        "borderBottomRightRadius": 4,
+                        "borderTopLeftRadius": 4,
+                        "borderTopRightRadius": 4,
+                        "bottom": "5%",
+                        "flexDirection": "column",
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": "5%",
+                      }
+                    }
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`SearchPopularTokens renders without error 2`] = `
+<RCTScrollView
+  data={
+    [
+      {
+        "address": null,
+        "chainId": 1,
+        "logoUrl": "https://loremflickr.com/640/480",
+        "name": "Ethereum",
+        "safetyLevel": "VERIFIED",
+        "symbol": "ETH",
+        "type": 1,
+      },
+      {
+        "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        "chainId": 1,
+        "logoUrl": "https://loremflickr.com/640/480",
+        "name": "USD Coin",
+        "safetyLevel": "VERIFIED",
+        "symbol": "USDC",
+        "type": 1,
+      },
+    ]
+  }
+  getItem={[Function]}
+  getItemCount={[Function]}
+  keyExtractor={[Function]}
+  onContentSizeChange={[Function]}
+  onLayout={[Function]}
+  onMomentumScrollBegin={[Function]}
+  onMomentumScrollEnd={[Function]}
+  onScroll={[Function]}
+  onScrollBeginDrag={[Function]}
+  onScrollEndDrag={[Function]}
+  removeClippedSubviews={false}
+  renderItem={[Function]}
+  scrollEventThrottle={50}
+  stickyHeaderIndices={[]}
+  viewabilityConfigCallbackPairs={[]}
+>
+  <View>
+    <View
+      onFocusCapture={[Function]}
+      onLayout={[Function]}
+      style={null}
+    >
+      <View
+        actions={
+          [
+            {
+              "onPress": [Function],
+              "systemIcon": "heart.fill",
+              "title": "Remove favorite",
+            },
+            {
+              "onPress": [Function],
+              "systemIcon": "arrow.2.squarepath",
+              "title": "Swap",
+            },
+            {
+              "onPress": [Function],
+              "systemIcon": "qrcode",
+              "title": "Receive",
+            },
+            {
+              "onPress": [Function],
+              "systemIcon": "square.and.arrow.up",
+              "title": "Share",
+            },
+          ]
+        }
+        onPress={[Function]}
+      >
+        <View
+          cancelable={true}
+          disabled={false}
+          focusable={true}
+          hitSlop={[Function]}
+          minPressDuration={0}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onLongPress={[Function]}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
+          onPress={[Function]}
+          onPressIn={[Function]}
+          onPressOut={[Function]}
+          style={
+            {
+              "flexDirection": "column",
+              "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+          testID="search-token-item"
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 12,
+                "paddingBottom": 12,
+                "paddingLeft": 8,
+                "paddingRight": 8,
+                "paddingTop": 12,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "column",
+                  "height": 40,
+                  "justifyContent": "center",
+                  "width": 40,
+                }
+              }
+            >
+              <Image
+                source={
+                  {
+                    "uri": "https://loremflickr.com/640/480",
+                  }
+                }
+                style={
+                  [
+                    {
+                      "resizeMode": "contain",
+                    },
+                    {
+                      "backgroundColor": "#2222220D",
+                      "borderColor": "#2222220D",
+                      "borderRadius": 20,
+                      "borderWidth": 0.5,
+                      "height": 40,
+                      "width": 40,
+                    },
+                  ]
+                }
+              />
+            </View>
+            <View
+              style={
+                {
+                  "alignItems": "flex-start",
+                  "flexDirection": "column",
+                  "flexShrink": 1,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 8,
+                    "justifyContent": "center",
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "flexDirection": "column",
+                      "flexShrink": 1,
+                    }
+                  }
+                >
+                  <Text
+                    allowFontScaling={true}
+                    maxFontSizeMultiplier={1.4}
+                    numberOfLines={1}
+                    style={
+                      {
+                        "color": "#222222",
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 19,
+                        "lineHeight": 24,
+                      }
+                    }
+                    suppressHighlighting={true}
+                  >
+                    Ethereum
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 8,
+                    "justifyContent": "center",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={true}
+                  maxFontSizeMultiplier={1.4}
+                  numberOfLines={1}
+                  style={
+                    {
+                      "color": "#7D7D7D",
+                      "fontFamily": "Basel-Book",
+                      "fontSize": 17,
+                      "lineHeight": 24,
+                    }
+                  }
+                  suppressHighlighting={true}
+                >
+                  ETH
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      onFocusCapture={[Function]}
+      onLayout={[Function]}
+      style={null}
+    >
+      <View
+        actions={
+          [
+            {
+              "onPress": [Function],
+              "systemIcon": "heart",
+              "title": "Favorite token",
+            },
+            {
+              "onPress": [Function],
+              "systemIcon": "arrow.2.squarepath",
+              "title": "Swap",
+            },
+            {
+              "onPress": [Function],
+              "systemIcon": "qrcode",
+              "title": "Receive",
+            },
+            {
+              "onPress": [Function],
+              "systemIcon": "square.and.arrow.up",
+              "title": "Share",
+            },
+          ]
+        }
+        onPress={[Function]}
+      >
+        <View
+          cancelable={true}
+          disabled={false}
+          focusable={true}
+          hitSlop={[Function]}
+          minPressDuration={0}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onLongPress={[Function]}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
+          onPress={[Function]}
+          onPressIn={[Function]}
+          onPressOut={[Function]}
+          style={
+            {
+              "flexDirection": "column",
+              "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
+          }
+          testID="search-token-item"
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 12,
+                "paddingBottom": 12,
+                "paddingLeft": 8,
+                "paddingRight": 8,
+                "paddingTop": 12,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "column",
+                  "height": 40,
+                  "justifyContent": "center",
+                  "width": 40,
+                }
+              }
+            >
+              <Image
+                source={
+                  {
+                    "uri": "https://loremflickr.com/640/480",
+                  }
+                }
+                style={
+                  [
+                    {
+                      "resizeMode": "contain",
+                    },
+                    {
+                      "backgroundColor": "#2222220D",
+                      "borderColor": "#2222220D",
+                      "borderRadius": 20,
+                      "borderWidth": 0.5,
+                      "height": 40,
+                      "width": 40,
+                    },
+                  ]
+                }
+              />
+            </View>
+            <View
+              style={
+                {
+                  "alignItems": "flex-start",
+                  "flexDirection": "column",
+                  "flexShrink": 1,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 8,
+                    "justifyContent": "center",
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "flexDirection": "column",
+                      "flexShrink": 1,
+                    }
+                  }
+                >
+                  <Text
+                    allowFontScaling={true}
+                    maxFontSizeMultiplier={1.4}
+                    numberOfLines={1}
+                    style={
+                      {
+                        "color": "#222222",
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 19,
+                        "lineHeight": 24,
+                      }
+                    }
+                    suppressHighlighting={true}
+                  >
+                    USD Coin
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 8,
+                    "justifyContent": "center",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={true}
+                  maxFontSizeMultiplier={1.4}
+                  numberOfLines={1}
+                  style={
+                    {
+                      "color": "#7D7D7D",
+                      "fontFamily": "Basel-Book",
+                      "fontSize": 17,
+                      "lineHeight": 24,
+                    }
+                  }
+                  suppressHighlighting={true}
+                >
+                  USDC
+                </Text>
+                <View
+                  style={
+                    {
+                      "flexDirection": "column",
+                      "flexShrink": 1,
+                    }
+                  }
+                >
+                  <Text
+                    allowFontScaling={true}
+                    maxFontSizeMultiplier={1.4}
+                    numberOfLines={1}
+                    style={
+                      {
+                        "color": "#7D7D7D",
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 17,
+                        "lineHeight": 24,
+                      }
+                    }
+                    suppressHighlighting={true}
+                  >
+                    0xa0b8...eb48
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</RCTScrollView>
+`;

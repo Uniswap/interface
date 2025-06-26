@@ -26,7 +26,6 @@ export enum DynamicConfigs {
   BlockedNftCollections = 'blocked_nft_collections',
   ExternallyConnectableExtension = 'externally_connectable_extension',
   LPConfig = 'lp_config',
-  AllowedV4WethHookAddresses = 'allowed_v4_weth_hook_addresses',
 }
 
 // Config values go here for easy access
@@ -158,10 +157,6 @@ export enum LPConfigKey {
   V4SlippageOverride = 'v4SlippageOverride',
 }
 
-export enum AllowedV4WethHookAddressesConfigKey {
-  HookAddresses = 'hookAddresses',
-}
-
 export type DynamicConfigKeys = {
   // Shared
   [DynamicConfigs.Swap]: SwapConfigKey
@@ -183,7 +178,6 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.BlockedNftCollections]: BlockedNftCollectionsConfigKey
   [DynamicConfigs.ExternallyConnectableExtension]: ExternallyConnectableExtensionConfigKey
   [DynamicConfigs.LPConfig]: LPConfigKey
-  [DynamicConfigs.AllowedV4WethHookAddresses]: AllowedV4WethHookAddressesConfigKey
 }
 
 // This type must match the format in statsig dynamic config for uwulink

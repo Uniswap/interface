@@ -2,6 +2,7 @@ import { BigintIsh, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/
 import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
 import { assume0xAddress } from 'utils/wagmi'
@@ -49,7 +50,7 @@ export class PoolCache {
         tokenA,
         tokenB,
         fee,
-        chainId: chainId as number,
+        chainId: getChainInfo(chainId).sdkId,
       }),
     }
     this.addresses.unshift(address)

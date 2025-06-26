@@ -27,7 +27,7 @@ import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useGetCanSignPermits } from 'uniswap/src/features/transactions/hooks/useGetCanSignPermits'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { getPoolDetailsURL, getTokenDetailsURL } from 'uniswap/src/utils/linking'
+import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import noop from 'utilities/src/react/noop'
 import { showSwitchNetworkNotification } from 'utils/showSwitchNetworkNotification'
@@ -69,7 +69,7 @@ export function WebUniswapProvider({ children }: PropsWithChildren): JSX.Element
 
 // Abstracts web-specific transaction flow objects for usage in cross-platform flows in the `uniswap` package.
 function WebUniswapProviderInner({ children }: PropsWithChildren) {
-  const { connector } = useWagmiAccount()
+  const { account, connector } = useWagmiAccount()
   const signer = useEthersSigner()
   const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()
@@ -86,15 +86,6 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
         outputChainId: outputCurrencyId ? currencyIdToChain(outputCurrencyId) : undefined,
       })
       navigate(`/swap${queryParams}`, { replace: true })
-      closeSearchModal()
-    },
-    [navigate, closeSearchModal],
-  )
-
-  const navigateToPoolDetails = useCallback(
-    ({ poolId, chainId }: { poolId: Address; chainId: UniverseChainId }) => {
-      const url = getPoolDetailsURL(poolId, chainId)
-      navigate(url)
       closeSearchModal()
     },
     [navigate, closeSearchModal],
@@ -189,6 +180,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
 
   return (
     <UniswapProvider
+      account={account}
       signer={signer}
       connector={connector}
       useProviderHook={useWebProvider}
@@ -200,7 +192,6 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       navigateToTokenDetails={navigateToTokenDetails}
       navigateToExternalProfile={navigateToExternalProfile}
       navigateToNftCollection={navigateToNftCollection}
-      navigateToPoolDetails={navigateToPoolDetails}
       handleShareToken={handleShareToken}
       onConnectWallet={accountDrawer.open}
       getCanSignPermits={getCanSignPermits}

@@ -11,21 +11,18 @@ export function sendSearchOptionItemClickedAnalytics({
   item,
   section,
   rowIndex,
-  sectionIndex,
   searchFilters,
 }: {
   item: SearchModalOption
   section: OnchainItemSection<SearchModalOption>
   rowIndex: number
-  sectionIndex: number
   searchFilters: SearchFilterContext
 }): void {
   const searchContext: SearchContext = {
     ...searchFilters,
     category: section.sectionKey,
-    isHistory: section.sectionKey === OnchainItemSectionName.RecentSearches,
-    position: rowIndex, // rowIndex accounts for header items as well, so the first header in the list has index 0 and first item in the list has index 1
-    sectionPosition: sectionIndex + 1, // 1-indexed position of item in section
+    isHistory: section.sectionKey === OnchainItemSectionName.RecentSearches, // history item click
+    position: rowIndex,
     suggestionCount: section.data.length, // suggestionCount is # of suggestions in this SECTION, not total # of suggestions
   }
 

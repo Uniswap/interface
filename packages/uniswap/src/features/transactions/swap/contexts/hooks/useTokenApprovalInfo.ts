@@ -5,7 +5,11 @@ import { useCheckApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/us
 import { ApprovalRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { convertGasFeeToDisplayValue, useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
+import {
+  convertGasFeeToDisplayValue,
+  useActiveGasStrategy,
+  useShadowGasStrategies,
+} from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult, areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -60,7 +64,8 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
   const currencyOut = currencyOutAmount?.currency
   const tokenOutAddress = getTokenAddressForApi(currencyOut)
 
-  const gasStrategy = useActiveGasStrategy(chainId, 'general')
+  const activeGasStrategy = useActiveGasStrategy(chainId, 'general')
+  const shadowGasStrategies = useShadowGasStrategies(chainId, 'general')
 
   const approvalRequestArgs: ApprovalRequest | undefined = useMemo(() => {
     const tokenInChainId = toTradingApiSupportedChainId(chainId)
@@ -81,10 +86,10 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
       includeGasInfo: true,
       tokenOut: tokenOutAddress,
       tokenOutChainId,
-      gasStrategies: [gasStrategy],
+      gasStrategies: [activeGasStrategy, ...shadowGasStrategies],
     }
   }, [
-    gasStrategy,
+    activeGasStrategy,
     address,
     amount,
     chainId,
@@ -93,6 +98,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
     isBridge,
     tokenInAddress,
     tokenOutAddress,
+    shadowGasStrategies,
   ])
 
   const approvalWillBeBatchedWithSwap = useApprovalWillBeBatchedWithSwap(chainId, routing)
@@ -162,7 +168,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
   }, [address, approvalRequestArgs, approvalWillBeBatchedWithSwap, data, error, isWrap])
 
   return useMemo(() => {
-    const activeEstimate = data?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, gasStrategy))
+    const activeEstimate = data?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))
 
     const noApprovalNeeded = tokenApprovalInfo.action === ApprovalAction.None
     const noRevokeNeeded =
@@ -186,7 +192,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
       tokenApprovalInfo,
       approvalGasFeeResult: {
         value: approvalFee,
-        displayValue: convertGasFeeToDisplayValue(approvalFee, gasStrategy),
+        displayValue: convertGasFeeToDisplayValue(approvalFee, activeGasStrategy),
         isLoading: isGasLoading,
         error: approvalGasError,
         gasEstimates,
@@ -194,10 +200,10 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
       },
       revokeGasFeeResult: {
         value: revokeFee,
-        displayValue: convertGasFeeToDisplayValue(revokeFee, gasStrategy),
+        displayValue: convertGasFeeToDisplayValue(revokeFee, activeGasStrategy),
         isLoading: isGasLoading,
         error: approvalGasError,
       },
     }
-  }, [gasStrategy, data?.cancelGasFee, data?.gasEstimates, data?.gasFee, isLoading, tokenApprovalInfo])
+  }, [activeGasStrategy, data?.cancelGasFee, data?.gasEstimates, data?.gasFee, isLoading, tokenApprovalInfo])
 }

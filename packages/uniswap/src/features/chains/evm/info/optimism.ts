@@ -1,4 +1,5 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import { ETH_LOGO, OPTIMISM_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { DAI_OPTIMISM, USDC_OPTIMISM } from 'uniswap/src/constants/tokens'
@@ -22,10 +23,12 @@ import { optimism } from 'wagmi/chains'
 export const OPTIMISM_CHAIN_INFO = {
   ...optimism,
   id: UniverseChainId.Optimism,
+  sdkId: UniswapSDKChainId.OPTIMISM,
   assetRepoNetworkName: 'optimism',
   backendChain: {
     chain: BackendChainId.Optimism as GqlChainId,
     backendSupported: true,
+    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 6,
@@ -38,6 +41,9 @@ export const OPTIMISM_CHAIN_INFO = {
     url: 'https://optimistic.etherscan.io/',
     apiURL: 'https://api-optimistic.etherscan.io',
   },
+  helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
+  infoLink: 'https://app.uniswap.org/explore/tokens/optimism',
+  infuraPrefix: 'optimism-mainnet',
   interfaceName: 'optimism',
   label: 'OP Mainnet',
   logo: OPTIMISM_LOGO,
@@ -61,6 +67,8 @@ export const OPTIMISM_CHAIN_INFO = {
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_OPTIMISM, 10_000e6),
   stablecoins: [USDC_OPTIMISM, DAI_OPTIMISM],
   statusPage: 'https://optimism.io/status',
+  supportsInterfaceClientSideRouting: true,
+  supportsGasEstimates: true,
   supportsV4: true,
   urlParam: 'optimism',
   wrappedNativeCurrency: {

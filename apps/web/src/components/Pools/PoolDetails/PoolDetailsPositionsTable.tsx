@@ -8,11 +8,7 @@ export function PoolDetailsPositionsTable({ positions }: { positions?: PositionI
   return (
     <Flex gap="$gap24" width="100%">
       {positions?.map((position) => (
-        <Link
-          key={`${position.poolId}-${position.status}`}
-          style={{ textDecoration: 'none' }}
-          to={getPositionUrl(position)}
-        >
+        <Link key={position.poolId} style={{ textDecoration: 'none' }} to={getPositionUrl(position)}>
           <LiquidityPositionCard liquidityPosition={position} />
         </Link>
       ))}

@@ -1,8 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-import { TransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 /**
  * TODO: refactor parsing / Activity so that all Activity Types can have a detail sheet.

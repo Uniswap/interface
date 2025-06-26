@@ -46,10 +46,6 @@ export function CloudBackupProcessingAnimation({
 
   const account = activeAccount || onboardingContextAccount
 
-  // Compute backup status at component level to avoid stale closure - ensures fresh evaluation on each render
-  // when onboardingContextAccount updates with new backup state
-  const accountHasCloudBackup = hasBackup(BackupType.Cloud, account)
-
   if (!account) {
     throw Error('No account available for backup')
   }
@@ -60,14 +56,14 @@ export function CloudBackupProcessingAnimation({
 
   // Handle finished backing up to Cloud
   useEffect(() => {
-    if (accountHasCloudBackup) {
+    if (hasBackup(BackupType.Cloud, account)) {
       doneProcessing()
       // Show success state for 1s before navigating
       const timer = setTimeout(onBackupComplete, ONE_SECOND_MS)
       return () => clearTimeout(timer)
     }
     return undefined
-  }, [accountHasCloudBackup, onBackupComplete])
+  }, [account, onBackupComplete])
 
   // Handle backup to Cloud when screen appears
   const backup = useCallback(async () => {

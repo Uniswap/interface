@@ -18,7 +18,7 @@ export function LiquidityModalDetailRows({
   currency1Amount?: CurrencyAmount<Currency>
   networkCost?: CurrencyAmount<Currency>
 }) {
-  const { formatCurrencyAmount, convertFiatAmountFormatted } = useLocalizationContext()
+  const { formatCurrencyAmount } = useLocalizationContext()
   const currency0Info = useCurrencyInfo(currency0Amount?.currency)
   const currency1Info = useCurrencyInfo(currency1Amount?.currency)
 
@@ -72,7 +72,7 @@ export function LiquidityModalDetailRows({
               <Flex row gap="$gap4" alignItems="center">
                 <NetworkLogo chainId={currency0Amount.currency.chainId} size={iconSizes.icon16} shape="square" />
                 <Text variant="body3" color="$neutral1">
-                  {convertFiatAmountFormatted(networkCost?.toExact(), NumberType.FiatGasPrice)}
+                  {formatCurrencyAmount({ value: networkCost, type: NumberType.FiatGasPrice })}
                 </Text>
               </Flex>
             ),

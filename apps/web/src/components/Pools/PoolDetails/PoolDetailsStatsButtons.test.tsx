@@ -53,7 +53,6 @@ describe('PoolDetailsStatsButton', () => {
     navigateToReceive: () => {},
     handleShareToken: () => {},
     navigateToTokenDetails: () => {},
-    navigateToPoolDetails: () => {},
     navigateToExternalProfile: () => {},
     navigateToNftCollection: () => {},
     onSwapChainsChanged: () => {},

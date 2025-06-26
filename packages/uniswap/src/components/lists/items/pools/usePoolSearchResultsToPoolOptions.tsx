@@ -1,8 +1,5 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { useMemo } from 'react'
 import { OnchainItemListOptionType, PoolOption } from 'uniswap/src/components/lists/items/types'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import { PoolSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -11,18 +8,9 @@ export function usePoolSearchResultsToPoolOptions(searchResults: PoolSearchResul
   // combine all pool search results' tokens' currencyIds in an array of de-duped currencyIds
   // & then fetch currencyInfos for all
   const currencyIds: CurrencyId[] = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          searchResults.flatMap((result) => [
-            result.token0CurrencyId.toLowerCase(),
-            result.token1CurrencyId.toLowerCase(),
-          ]),
-        ),
-      ),
+    () => Array.from(new Set(searchResults.flatMap((result) => [result.token0CurrencyId, result.token1CurrencyId]))),
     [searchResults],
   )
-
   const currencyInfos = useCurrencyInfos(currencyIds)
 
   return useMemo(() => {
@@ -39,7 +27,7 @@ export function usePoolSearchResultsToPoolOptions(searchResults: PoolSearchResul
         const token0CurrencyInfo = currencyIdToCurrencyInfo[token0CurrencyId.toLowerCase()]
         const token1CurrencyInfo = currencyIdToCurrencyInfo[token1CurrencyId.toLowerCase()]
 
-        if (!poolId || !token0CurrencyInfo || !token1CurrencyInfo) {
+        if (!poolId || !feeTier || !token0CurrencyInfo || !token1CurrencyInfo) {
           return undefined
         }
 
@@ -48,8 +36,8 @@ export function usePoolSearchResultsToPoolOptions(searchResults: PoolSearchResul
           poolId,
           chainId,
           protocolVersion,
-          hookAddress: hookAddress && hookAddress !== ZERO_ADDRESS ? hookAddress : undefined,
-          feeTier: protocolVersion === ProtocolVersion.V2 ? V2_DEFAULT_FEE_TIER : feeTier,
+          hookAddress,
+          feeTier,
           token0CurrencyInfo,
           token1CurrencyInfo,
         }

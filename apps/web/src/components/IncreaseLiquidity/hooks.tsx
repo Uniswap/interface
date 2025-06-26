@@ -103,8 +103,7 @@ export function useDerivedIncreaseLiquidityInfo(
       ...depositInfo,
       deposit0Disabled: depositInfoProps.deposit0Disabled,
       deposit1Disabled: depositInfoProps.deposit1Disabled,
-      currencies: { TOKEN0: currency0, TOKEN1: currency1 },
     }),
-    [depositInfo, depositInfoProps.deposit0Disabled, depositInfoProps.deposit1Disabled, currency0, currency1],
+    [depositInfo, depositInfoProps.deposit0Disabled, depositInfoProps.deposit1Disabled],
   )
 }

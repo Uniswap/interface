@@ -11,7 +11,6 @@ import { apolloClient } from 'appGraphql/data/apollo/client'
 import { QueryClientPersistProvider } from 'components/PersistQueryClient'
 import Web3Provider from 'components/Web3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
-import { ExternalWalletProvider } from 'features/wallet/providers/ExternalWalletProvider'
 import { useAccount } from 'hooks/useAccount'
 import { useDeferredComponent } from 'hooks/useDeferredComponent'
 import { LanguageProvider } from 'i18n/LanguageProvider'
@@ -145,35 +144,28 @@ createRoot(container).render(
       <ReactRouterUrlProvider>
         <Provider store={store}>
           <QueryClientPersistProvider>
-            <Router
-              future={{
-                v7_relativeSplatPath: true,
-                v7_startTransition: true,
-              }}
-            >
+            <Router>
               <I18nextProvider i18n={i18n}>
                 <LanguageProvider>
                   <Web3Provider>
                     <StatsigProvider>
-                      <ExternalWalletProvider>
-                        <WebUniswapProvider>
-                          <GraphqlProviders>
-                            <LocalizationContextProvider>
-                              <BlockNumberProvider>
-                                <Updaters />
-                                <ThemeProvider>
-                                  <TamaguiProvider>
-                                    <PortalProvider>
-                                      <ThemedGlobalStyle />
-                                      <App />
-                                    </PortalProvider>
-                                  </TamaguiProvider>
-                                </ThemeProvider>
-                              </BlockNumberProvider>
-                            </LocalizationContextProvider>
-                          </GraphqlProviders>
-                        </WebUniswapProvider>
-                      </ExternalWalletProvider>
+                      <WebUniswapProvider>
+                        <GraphqlProviders>
+                          <LocalizationContextProvider>
+                            <BlockNumberProvider>
+                              <Updaters />
+                              <ThemeProvider>
+                                <TamaguiProvider>
+                                  <PortalProvider>
+                                    <ThemedGlobalStyle />
+                                    <App />
+                                  </PortalProvider>
+                                </TamaguiProvider>
+                              </ThemeProvider>
+                            </BlockNumberProvider>
+                          </LocalizationContextProvider>
+                        </GraphqlProviders>
+                      </WebUniswapProvider>
                     </StatsigProvider>
                   </Web3Provider>
                 </LanguageProvider>

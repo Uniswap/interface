@@ -43,9 +43,6 @@
     <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
 
-    <!-- Load zone-events.js with highest priority before any other JS resources -->
-    <script src="%PUBLIC_URL%/zone-events.js"></script>
-
     <!-- Include <link rel="preload"> for js assets so that they are loaded with high priority. -->
     <%= htmlWebpackPlugin.files.js.map((href) => `<link rel="preload" href="${href}" as="script" />`).join('\n    ') %>
    

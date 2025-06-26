@@ -25,7 +25,7 @@ export function DeviceAccessScreen(): JSX.Element {
         <SettingsItem
           Icon={Key}
           title={t('settings.setting.password.title')}
-          onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ChangePassword}`)}
+          onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ChangePassword}`)}
         />
       </ScrollView>
     </Flex>

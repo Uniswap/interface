@@ -4,6 +4,7 @@ import 'ui/jest-package-mocks'
 
 import 'uniswap/src/i18n' // Uses real translations for tests
 
+
 jest.mock('uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext', () => {
   return {
     useTransactionSettingsContext: () => ({
@@ -29,3 +30,5 @@ global.performance = require('perf_hooks').performance
 jest.mock('utilities/src/telemetry/trace/utils/calculateElapsedTimeWithPerformanceMarkMs', () => {
   return jest.requireActual('utilities/src/telemetry/trace/utils/calculateElapsedTimeWithPerformanceMarkMs.web.ts')
 })
+
+

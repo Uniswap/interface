@@ -74,7 +74,12 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
               <Text variant="subheading1">{TOKEN1?.symbol}</Text>
             </Flex>
             <Flex row gap={2} alignItems="center">
-              <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={hook} feeTier={fee} />
+              <LiquidityPositionInfoBadges
+                size="small"
+                versionLabel={versionLabel}
+                v4hook={hook}
+                feeTier={fee.feeAmount}
+              />
             </Flex>
           </Flex>
         </Flex>

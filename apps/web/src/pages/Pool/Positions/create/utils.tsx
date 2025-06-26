@@ -13,6 +13,7 @@ import {
 import { Pool as V4Pool, Position as V4Position, priceToClosestTick as priceToClosestV4Tick } from '@uniswap/v4-sdk'
 import { DepositInfo } from 'components/Liquidity/types'
 import { getProtocolItems } from 'components/Liquidity/utils'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { PoolCache } from 'hooks/usePools'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -21,7 +22,6 @@ import {
   CreateV2PositionInfo,
   CreateV3PositionInfo,
   CreateV4PositionInfo,
-  DYNAMIC_FEE_DATA,
   FeeData,
   PositionState,
   PriceDifference,
@@ -34,7 +34,6 @@ import {
 import { tryParsePrice, tryParseTick } from 'state/mint/v3/utils'
 import { PositionField } from 'types/position'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import type {
   CheckApprovalLPRequest,
@@ -1149,7 +1148,7 @@ export function generateCreateCalldataQueryParams({
         tickSpacing,
         token0: getTokenOrZeroAddress(sortedCurrencies.TOKEN0),
         token1: getTokenOrZeroAddress(sortedCurrencies.TOKEN1),
-        fee: positionState.fee.isDynamic ? DYNAMIC_FEE_DATA.feeAmount : positionState.fee.feeAmount,
+        fee: positionState.fee.feeAmount,
         hooks: positionState.hook,
       },
     },

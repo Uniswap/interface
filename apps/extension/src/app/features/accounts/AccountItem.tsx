@@ -115,7 +115,7 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
           e.preventDefault()
           e.stopPropagation()
 
-          navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`)
+          navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`)
         },
         Icon: Globe,
       },

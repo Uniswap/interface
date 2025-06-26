@@ -228,8 +228,6 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
   },
 })
 
-CustomButtonFrameWithoutCustomProps.displayName = 'CustomButtonFrameWithoutCustomProps'
-
 type CustomProps = {
   'primary-color'?: string
   onDisabledPress?: () => void

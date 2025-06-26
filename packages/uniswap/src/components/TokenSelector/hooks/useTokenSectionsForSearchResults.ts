@@ -12,8 +12,11 @@ import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
+import { useSearchTokensGql } from 'uniswap/src/features/dataApi/searchTokensGql'
+import { useSearchTokensRest } from 'uniswap/src/features/dataApi/searchTokensRest'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export function useTokenSectionsForSearchResults({
   address,
@@ -53,16 +56,42 @@ export function useTokenSectionsForSearchResults({
   } = useBridgingTokensOptions({ oppositeSelectedToken: input, walletAddress: address, chainFilter })
 
   // Only call search endpoint if isBalancesOnlySearch is false
+  const searchRevampEnabled = useFeatureFlag(FeatureFlags.SearchRevamp)
   const {
-    data: searchResultCurrencies,
-    error: searchTokensError,
-    refetch: refetchSearchTokens,
-    loading: searchTokensLoading,
-  } = useSearchTokens({
+    data: searchResultCurrenciesGql,
+    error: searchTokensErrorGql,
+    refetch: refetchSearchTokensGql,
+    loading: searchTokensLoadingGql,
+  } = useSearchTokensGql({
     searchQuery: searchFilter,
     chainFilter,
-    skip: isBalancesOnlySearch,
+    skip: isBalancesOnlySearch || searchRevampEnabled,
   })
+
+  const {
+    data: searchResultCurrenciesRest,
+    error: searchTokensErrorRest,
+    refetch: refetchSearchTokensRest,
+    loading: searchTokensLoadingRest,
+  } = useSearchTokensRest({
+    searchQuery: searchFilter,
+    chainFilter,
+    skip: isBalancesOnlySearch || !searchRevampEnabled,
+  })
+
+  const { searchResultCurrencies, searchTokensError, refetchSearchTokens, searchTokensLoading } = searchRevampEnabled
+    ? {
+        searchResultCurrencies: searchResultCurrenciesRest,
+        searchTokensError: searchTokensErrorRest,
+        refetchSearchTokens: refetchSearchTokensRest,
+        searchTokensLoading: searchTokensLoadingRest,
+      }
+    : {
+        searchResultCurrencies: searchResultCurrenciesGql,
+        searchTokensError: searchTokensErrorGql,
+        refetchSearchTokens: refetchSearchTokensGql,
+        searchTokensLoading: searchTokensLoadingGql,
+      }
 
   const [selectedNetworkResults, otherNetworksSearchResults] = useMemo((): [CurrencyInfo[], CurrencyInfo[]] => {
     if (!searchResultCurrencies) {

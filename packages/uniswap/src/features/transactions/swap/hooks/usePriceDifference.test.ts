@@ -3,7 +3,7 @@ import { USDC } from 'uniswap/src/constants/tokens'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { usePriceDifference } from 'uniswap/src/features/transactions/swap/hooks/usePriceDifference'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { createGasEstimate } from 'uniswap/src/test/fixtures/tradingApi'
+import { createGasFeeEstimates } from 'uniswap/src/test/fixtures/tradingApi'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
@@ -110,7 +110,7 @@ function mockSwapFormContext(inputAmount: string, outputAmount: string): void {
         trade: null,
         indicativeTrade: undefined,
         isIndicativeLoading: false,
-        gasEstimate: createGasEstimate(),
+        gasEstimates: createGasFeeEstimates(),
       },
       chainId: 1,
       focusOnCurrencyField: CurrencyField.INPUT,

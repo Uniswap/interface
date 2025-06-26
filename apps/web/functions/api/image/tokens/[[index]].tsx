@@ -8,7 +8,7 @@ import { getRGBColor } from '../../../utils/getRGBColor'
 import { getRequest } from '../../../utils/getRequest'
 import getToken from '../../../utils/getToken'
 
-export const onRequest: PagesFunction = async ({ params, request, env }) => {
+export const onRequest: PagesFunction = async ({ params, request }) => {
   try {
     const origin = new URL(request.url).origin
     const { index } = params
@@ -27,7 +27,7 @@ export const onRequest: PagesFunction = async ({ params, request, env }) => {
       return new Response('Token not found.', { status: 404 })
     }
 
-    const [fontData, palette] = await Promise.all([getFont(origin, env), getRGBColor(data.ogImage, true)])
+    const [fontData, palette] = await Promise.all([getFont(origin), getRGBColor(data.ogImage, true)])
 
     const networkLogo = getNetworkLogoUrl(networkName.toUpperCase(), origin)
 
@@ -66,12 +66,11 @@ export const onRequest: PagesFunction = async ({ params, request, env }) => {
               }}
             >
               {ogImage ? (
-                <img src={ogImage} width="144px" height="144px" style={{ borderRadius: '100%' }}>
+                <img src={ogImage} width="144px" style={{ borderRadius: '100%' }}>
                   {networkLogo != '' && (
                     <img
                       src={networkLogo}
                       width="48px"
-                      height="48px"
                       style={{
                         position: 'absolute',
                         right: '2px',
@@ -106,7 +105,6 @@ export const onRequest: PagesFunction = async ({ params, request, env }) => {
                     <img
                       src={networkLogo}
                       width="48px"
-                      height="48px"
                       style={{
                         position: 'absolute',
                         right: '2px',

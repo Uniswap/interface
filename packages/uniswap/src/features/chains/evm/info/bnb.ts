@@ -1,4 +1,5 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import { BNB_LOGO } from 'ui/src/assets'
 import { USDC_BNB } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -15,11 +16,12 @@ import { bsc } from 'wagmi/chains'
 
 export const BNB_CHAIN_INFO = {
   ...bsc,
-  id: UniverseChainId.Bnb,
+  sdkId: UniswapSDKChainId.BNB,
   assetRepoNetworkName: 'smartchain',
   backendChain: {
     chain: BackendChainId.Bnb as GqlChainId,
     backendSupported: true,
+    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 4,
@@ -32,6 +34,10 @@ export const BNB_CHAIN_INFO = {
     url: 'https://bscscan.com/',
     apiURL: 'https://api.bscscan.com',
   },
+  helpCenterUrl: undefined,
+  id: UniverseChainId.Bnb,
+  infoLink: 'https://app.uniswap.org/explore/tokens/bnb',
+  infuraPrefix: undefined,
   interfaceName: 'bnb',
   label: 'BNB Chain',
   logo: BNB_LOGO,
@@ -53,6 +59,8 @@ export const BNB_CHAIN_INFO = {
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_BNB, 100e18),
   stablecoins: [USDC_BNB],
   statusPage: undefined,
+  supportsInterfaceClientSideRouting: true,
+  supportsGasEstimates: true,
   supportsV4: true,
   urlParam: 'bnb',
   wrappedNativeCurrency: {

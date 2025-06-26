@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import { type Currency } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { usePoolsFromTokenAddress } from 'appGraphql/data/pools/usePoolsFromTokenAddress'
 import { PoolSortFields } from 'appGraphql/data/pools/useTopPools'
 import { OrderDirection } from 'appGraphql/data/util'
@@ -8,11 +8,17 @@ import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { useEffect, useMemo } from 'react'
 import { Flex } from 'ui/src'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const HIDDEN_COLUMNS = [PoolSortFields.VolOverTvl, PoolSortFields.RewardApr]
 
-export function TokenDetailsPoolsTable({ referenceCurrency }: { referenceCurrency: Currency }) {
-  const { chainId, wrapped: referenceToken, isNative } = referenceCurrency
+export function TokenDetailsPoolsTable({
+  chainId,
+  referenceToken,
+}: {
+  chainId: UniverseChainId
+  referenceToken: Token
+}) {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
   const sortState = useMemo(
@@ -22,8 +28,7 @@ export function TokenDetailsPoolsTable({ referenceCurrency }: { referenceCurrenc
   const { pools, loading, errorV2, errorV3, loadMore } = usePoolsFromTokenAddress({
     tokenAddress: referenceToken.address,
     sortState,
-    chainId: referenceCurrency.chainId,
-    isNative,
+    chainId,
   })
   const combinedError =
     errorV2 && errorV3

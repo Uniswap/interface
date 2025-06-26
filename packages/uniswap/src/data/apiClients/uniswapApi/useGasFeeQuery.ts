@@ -4,8 +4,8 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClients/hooks/useQueryWithImmediateGarbageCollection'
 import { UseQueryWithImmediateGarbageCollectionApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { GasFeeResultWithoutState, createFetchGasFee } from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
-import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
-import { getActiveGasStrategy } from 'uniswap/src/features/gas/utils'
+import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
+import { getActiveGasStrategy, getShadowGasStrategies } from 'uniswap/src/features/gas/utils'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
@@ -18,9 +18,10 @@ export function useGasFeeQuery({
   { tx: TransactionRequest; fallbackGasLimit?: number },
   GasFeeResultWithoutState
 > & { shouldUsePreviousValueDuringLoading?: boolean }): UseQueryResult<GasFeeResultWithoutState> {
-  const gasStrategy = useActiveGasStrategy(params?.tx.chainId, 'general')
+  const activeGasStrategy = useActiveGasStrategy(params?.tx.chainId, 'general')
+  const shadowGasStrategies = useShadowGasStrategies(params?.tx.chainId, 'general')
 
-  const fetchGasFee = useEvent(createFetchGasFee({ gasStrategy }))
+  const fetchGasFee = useEvent(createFetchGasFee({ activeGasStrategy, shadowGasStrategies }))
 
   const queryKey = [ReactQueryCacheKey.UniswapApi, uniswapUrls.gasServicePath, params]
 
@@ -39,7 +40,8 @@ export async function fetchGasFeeQuery(params: {
   isStatsigReady: boolean
 }): Promise<GasFeeResultWithoutState> {
   const { tx, smartContractDelegationAddress, isStatsigReady } = params
-  const gasStrategy = getActiveGasStrategy({ chainId: tx.chainId, type: 'general', isStatsigReady })
-  const fetchGasFee = createFetchGasFee({ gasStrategy, smartContractDelegationAddress })
+  const activeGasStrategy = getActiveGasStrategy({ chainId: tx.chainId, type: 'general', isStatsigReady })
+  const shadowGasStrategies = getShadowGasStrategies({ chainId: tx.chainId, type: 'general', isStatsigReady })
+  const fetchGasFee = createFetchGasFee({ activeGasStrategy, shadowGasStrategies, smartContractDelegationAddress })
   return fetchGasFee(params)
 }

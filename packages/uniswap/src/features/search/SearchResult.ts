@@ -4,8 +4,7 @@
  * For now are 1:1 with the types in new search's OnchainItemListOptions
  * TODO(WEB-6283): Should only really contain 'SearchResultType & address'. All other data is dynamic and should be re-fetched at calltime (currencyInfo, primaryENSName, ENSname, etc)
  */
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { FeeData } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeeData, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SafetyInfo } from 'uniswap/src/features/dataApi/types'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'

@@ -38,7 +38,7 @@
     "react-native-web": "0.19.13",
     "react-qr-code": "2.0.12",
     "react-redux": "8.0.5",
-    "react-router-dom": "6.30.1",
+    "react-router-dom": "6.10.0",
     "redux": "4.2.1",
     "redux-logger": "3.0.6",
     "redux-persist": "6.0.0",

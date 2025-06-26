@@ -5,7 +5,7 @@ import {
   Transfer,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import {
-  CollectFeesTransactionInfo,
+  ClaimTransactionInfo,
   CreatePairTransactionInfo,
   CreatePoolTransactionInfo,
   LiquidityDecreaseTransactionInfo,
@@ -25,7 +25,7 @@ export function parseRestLiquidityTransaction(
 ):
   | LiquidityIncreaseTransactionInfo
   | LiquidityDecreaseTransactionInfo
-  | CollectFeesTransactionInfo
+  | ClaimTransactionInfo
   | CreatePairTransactionInfo
   | CreatePoolTransactionInfo
   | UnknownTransactionInfo {
@@ -88,7 +88,7 @@ function getLiquidityTransactionType(
 ):
   | TransactionType.LiquidityIncrease
   | TransactionType.LiquidityDecrease
-  | TransactionType.CollectFees
+  | TransactionType.Claim
   | TransactionType.CreatePair
   | TransactionType.CreatePool
   | TransactionType.Unknown {
@@ -98,7 +98,7 @@ function getLiquidityTransactionType(
     case OnChainTransactionLabel.DECREASE_LIQUIDITY:
       return TransactionType.LiquidityDecrease
     case OnChainTransactionLabel.CLAIM:
-      return TransactionType.CollectFees
+      return TransactionType.Claim
     case OnChainTransactionLabel.CREATE_PAIR:
       return TransactionType.CreatePair
     case OnChainTransactionLabel.CREATE_POOL:

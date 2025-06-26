@@ -18,7 +18,6 @@ import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { closeKeyboardBeforeCallback } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
-import noop from 'utilities/src/react/noop'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
   NavigateToExternalProfileArgs,
@@ -66,7 +65,6 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
       navigateToSend={navigateToSend}
       navigateToSwapFlow={navigateToSwapFlow}
       navigateToTokenDetails={navigateToTokenDetails}
-      navigateToPoolDetails={noop} // no pool details screen on mobile
     >
       {children}
     </WalletNavigationProvider>

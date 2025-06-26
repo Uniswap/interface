@@ -21,6 +21,7 @@ import WalletPreviewCard from 'wallet/src/components/WalletPreviewCard/WalletPre
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useImportableAccounts } from 'wallet/src/features/onboarding/hooks/useImportableAccounts'
 import { useSelectAccounts } from 'wallet/src/features/onboarding/hooks/useSelectAccounts'
+import { useAnyAccountEligibleForDelegation } from 'wallet/src/features/smartWallet/hooks/useAnyAccountEligibleForDelegation'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.Element {
@@ -36,11 +37,15 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
 
   const { importableAccounts, isLoading, showError, refetch } = useImportableAccounts(generatedAddresses)
 
+  const { eligible: isAnyAccountEligibleForDelegation, loading: isDelegationChecksLoading } =
+    useAnyAccountEligibleForDelegation(importableAccounts)
+
   const { selectedAddresses, toggleAddressSelection } = useSelectAccounts(importableAccounts)
 
   const smartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWallet)
 
-  const enableSubmit = showError || (selectedAddresses.length > 0 && !isLoading)
+  const enableSubmit =
+    (showError || (selectedAddresses.length > 0 && !isLoading)) && !(isDelegationChecksLoading && smartWalletEnabled)
 
   const onSubmit = useEvent(async () => {
     if (!enableSubmit) {
@@ -62,8 +67,8 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
   useSubmitOnEnter(showError ? refetch : onSubmit)
 
   const belowFrameContent = useMemo(
-    () => (smartWalletEnabled ? <SmartWalletTooltip /> : undefined),
-    [smartWalletEnabled],
+    () => (smartWalletEnabled && isAnyAccountEligibleForDelegation ? <SmartWalletTooltip /> : undefined),
+    [smartWalletEnabled, isAnyAccountEligibleForDelegation],
   )
 
   return (
@@ -96,7 +101,7 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
               <Text color="$statusCritical" textAlign="center" variant="buttonLabel2">
                 {t('onboarding.selectWallets.error')}
               </Text>
-            ) : isLoading ? (
+            ) : isDelegationChecksLoading ? (
               <Flex>
                 <SelectWalletsSkeleton repeat={3} />
               </Flex>

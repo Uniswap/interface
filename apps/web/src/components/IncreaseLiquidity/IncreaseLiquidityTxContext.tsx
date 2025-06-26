@@ -4,10 +4,10 @@ import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/Increa
 import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
 import { useIncreasePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { getProtocolItems, hasLPFoTTransferError } from 'components/Liquidity/utils'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { getTokenOrZeroAddress } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useIncreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useIncreaseLpPositionCalldataQuery'
@@ -176,7 +176,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
         pool: {
           token0: token0.isNative ? ZERO_ADDRESS : token0.address,
           token1: token1.isNative ? ZERO_ADDRESS : token1.address,
-          fee: positionInfo.feeTier?.feeAmount,
+          fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
           tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
           hooks: positionInfo.v4hook,
         },

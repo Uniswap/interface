@@ -8,6 +8,7 @@ import ms from 'ms'
 import { Action } from 'redux'
 import { addTransaction, finalizeTransaction, updateTransactionInfo } from 'state/transactions/reducer'
 import {
+  ApproveTransactionInfo,
   BridgeTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -21,6 +22,7 @@ import { isPendingTx } from 'state/transactions/utils'
 import { InterfaceState } from 'state/webReducer'
 import { SagaGenerator, call, cancel, delay, fork, put, race, select, take } from 'typed-redux-saga'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
@@ -43,11 +45,7 @@ import {
 import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { BridgeTrade, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import {
-  ApproveTransactionInfo,
-  TransactionStatus,
-  TransactionType as UniswapTransactionType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { isSameAddress } from 'utilities/src/addresses'
@@ -114,7 +112,7 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   // Avoid sending prompting a transaction if the user already submitted an equivalent tx, e.g. by closing and reopening a transaction flow
   const duplicativeTx = yield* findDuplicativeTx({ info, account, chainId, allowDuplicativeTx })
   if (duplicativeTx) {
-    if (duplicativeTx.status === TransactionStatus.Success) {
+    if (duplicativeTx.status === TransactionStatus.Confirmed) {
       addTransactionBreadcrumb({ step, data: { duplicativeTx: true, hash: duplicativeTx.hash }, status: 'complete' })
       return duplicativeTx.hash
     } else {
@@ -137,7 +135,7 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   setCurrentStep({ step, accepted: true })
 
   // Add transaction to local state to start polling for status
-  yield* put(addTransaction({ from: account.address, nonce, info, hash, chainId }))
+  yield* put(addTransaction({ from: account.address, info, hash, nonce, chainId }))
 
   if (step.txRequest.data !== data && onModification) {
     yield* call(onModification, { hash, data, nonce })
@@ -251,7 +249,7 @@ export function* handleApprovalTransactionStep(params: HandleApprovalStepParams)
         updateTransactionInfo({
           chainId: step.txRequest.chainId,
           hash,
-          info: { ...info, approvalAmount: approvedAmount },
+          info: { ...info, amount: approvedAmount },
         }),
       )
 
@@ -266,10 +264,10 @@ function getApprovalTransactionInfo(
   approvalStep: TokenApprovalTransactionStep | TokenRevocationTransactionStep | Permit2TransactionStep,
 ): ApproveTransactionInfo {
   return {
-    type: UniswapTransactionType.Approve,
+    type: TransactionType.APPROVAL,
     tokenAddress: approvalStep.token.address,
     spender: approvalStep.spender,
-    approvalAmount: approvalStep.amount,
+    amount: approvalStep.amount,
   }
 }
 
@@ -357,7 +355,7 @@ function* waitForTransaction(hash: string, step: TransactionStep) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof finalizeTransaction>>(finalizeTransaction.type)
     if (payload.hash === hash) {
-      if (payload.status === TransactionStatus.Success) {
+      if (payload.status === TransactionStatus.Confirmed) {
         return
       } else {
         throw new TransactionStepFailedError({ message: `${step.type} failed on-chain`, step })
@@ -431,7 +429,7 @@ export function addTransactionBreadcrumb({
 }: {
   step: TransactionStep
   data?: {
-    [key: string]: string | number | boolean | undefined | object
+    [key: string]: string | number | boolean | undefined
   }
   status?: 'initiated' | 'complete' | 'in progress' | 'interrupted'
 }) {

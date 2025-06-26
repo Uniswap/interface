@@ -8,7 +8,7 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
-  CollectFeesTransactionInfo,
+  ClaimTransactionInfo,
   CreatePairTransactionInfo,
   CreatePoolTransactionInfo,
   LiquidityDecreaseTransactionInfo,
@@ -29,7 +29,7 @@ export function LiquiditySummaryItem({
     typeInfo:
       | LiquidityIncreaseTransactionInfo
       | LiquidityDecreaseTransactionInfo
-      | CollectFeesTransactionInfo
+      | ClaimTransactionInfo
       | CreatePairTransactionInfo
       | CreatePoolTransactionInfo
   }

@@ -56,8 +56,6 @@ const mapServerCurrencyToFiatCurrency: Record<Currency, FiatCurrency | undefined
   [Currency.Vnd]: FiatCurrency.VietnameseDong,
   [Currency.Eth]: undefined,
   [Currency.Matic]: undefined,
-  [Currency.Nzd]: undefined,
-  [Currency.Thb]: undefined,
 }
 export const mapFiatCurrencyToServerCurrency: Record<FiatCurrency, SupportedServerCurrency> = {
   [FiatCurrency.ArgentinePeso]: Currency.Ars,

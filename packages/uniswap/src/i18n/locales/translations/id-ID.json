@@ -1,5 +1,5 @@
 {
-  "account.authHeader.claimReward": "Klaim reward {{amount}}Disable smart wallet",
+  "account.authHeader.claimReward": "Klaim reward {{amount}}",
   "account.cloud.backup.subtitle": "Ada beberapa frasa pemulihan yang dicadangkan ke {{cloudProviderName}}.",
   "account.cloud.backup.title": "Pilih cadangan yang akan dipulihkan",
   "account.cloud.button.restore.android": "Pulihkan dari Google Drive",

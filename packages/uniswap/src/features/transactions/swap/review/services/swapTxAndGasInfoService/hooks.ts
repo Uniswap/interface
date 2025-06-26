@@ -4,7 +4,7 @@ import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapC
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
+import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
@@ -58,22 +58,25 @@ const EMPTY_SWAP_TX_AND_GAS_INFO: SwapTxAndGasInfo = {
 // TODO(swap arch): replace with swap config service
 function useSwapConfig(): {
   v4SwapEnabled: boolean
-  gasStrategy: GasStrategy
+  activeGasStrategy: GasStrategy
+  shadowGasStrategies: GasStrategy[]
   getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
   getSwapDelegationInfo?: (chainId: UniverseChainId | undefined) => SwapDelegationInfo
 } {
   const { chainId } = useSwapFormContext().derivedSwapInfo
-  const gasStrategy = useActiveGasStrategy(chainId, 'general')
+  const activeGasStrategy = useActiveGasStrategy(chainId, 'general')
+  const shadowGasStrategies = useShadowGasStrategies(chainId, 'general')
   const v4SwapEnabled = useV4SwapEnabled(chainId)
   const { getCanBatchTransactions, getSwapDelegationInfo } = useUniswapContext()
   return useMemo(
     () => ({
       v4SwapEnabled,
-      gasStrategy,
+      activeGasStrategy,
+      shadowGasStrategies,
       getCanBatchTransactions,
       getSwapDelegationInfo,
     }),
-    [v4SwapEnabled, gasStrategy, getCanBatchTransactions, getSwapDelegationInfo],
+    [v4SwapEnabled, activeGasStrategy, shadowGasStrategies, getCanBatchTransactions, getSwapDelegationInfo],
   )
 }
 

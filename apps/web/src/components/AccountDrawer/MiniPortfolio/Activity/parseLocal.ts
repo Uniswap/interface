@@ -21,14 +21,19 @@ import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
 import {
+  AddLiquidityV2PoolTransactionInfo,
+  AddLiquidityV3PoolTransactionInfo,
+  ApproveTransactionInfo,
   BridgeTransactionInfo,
   CollectFeesTransactionInfo,
+  CreateV3PoolTransactionInfo,
   DecreaseLiquidityTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   IncreaseLiquidityTransactionInfo,
   LpIncentivesClaimTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
+  RemoveLiquidityV3TransactionInfo,
   SendTransactionInfo,
   TransactionDetails,
   TransactionType,
@@ -36,15 +41,11 @@ import {
 } from 'state/transactions/types'
 import { isConfirmedTx } from 'state/transactions/utils'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import {
-  ApproveTransactionInfo,
-  TransactionStatus,
-  TransactionType as UniswapTransactionType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { isAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
@@ -212,34 +213,33 @@ async function parseApproval({
   const descriptor = currency?.symbol ?? currency?.name ?? i18n.t('common.unknown')
   return {
     title: getActivityTitle({
-      type: UniswapTransactionType.Approve,
+      type: TransactionType.APPROVAL,
       status,
-      alternate: BigNumber.from(approval.approvalAmount).eq(0), // use alternate if it's a revoke
+      alternate: BigNumber.from(approval.amount).eq(0), // use alternate if it's a revoke
     }),
     descriptor,
     currencies: [currency],
   }
 }
 
-async function parseCurrencyInfoForLP({
-  currencyInfo,
+type GenericLegacyLPInfo = Omit<
+  AddLiquidityV3PoolTransactionInfo | RemoveLiquidityV3TransactionInfo | AddLiquidityV2PoolTransactionInfo,
+  'type'
+>
+async function parseLegacyLP({
+  lpInfo,
   chainId,
   formatNumber,
 }: {
-  currencyInfo: {
-    baseCurrencyId: string
-    quoteCurrencyId: string
-    expectedAmountBaseRaw: string
-    expectedAmountQuoteRaw: string
-  }
+  lpInfo: GenericLegacyLPInfo
   chainId: UniverseChainId
   formatNumber: FormatNumberFunctionType
 }): Promise<Partial<Activity>> {
   const [baseCurrency, quoteCurrency] = await Promise.all([
-    getCurrency(currencyInfo.baseCurrencyId, chainId),
-    getCurrency(currencyInfo.quoteCurrencyId, chainId),
+    getCurrency(lpInfo.baseCurrencyId, chainId),
+    getCurrency(lpInfo.quoteCurrencyId, chainId),
   ])
-  const [baseRaw, quoteRaw] = [currencyInfo.expectedAmountBaseRaw, currencyInfo.expectedAmountQuoteRaw]
+  const [baseRaw, quoteRaw] = [lpInfo.expectedAmountBaseRaw, lpInfo.expectedAmountQuoteRaw]
   const descriptor = buildCurrencyDescriptor({
     currencyA: baseCurrency,
     amtA: baseRaw,
@@ -293,23 +293,18 @@ async function parseCollectFees({
     token0CurrencyAmountRaw: expectedAmountBaseRaw,
     token1CurrencyAmountRaw: expectedAmountQuoteRaw,
   } = collect
-  return parseCurrencyInfoForLP({
-    currencyInfo: {
-      baseCurrencyId,
-      quoteCurrencyId,
-      expectedAmountBaseRaw,
-      expectedAmountQuoteRaw,
-    },
+  return parseLegacyLP({
+    lpInfo: { baseCurrencyId, quoteCurrencyId, expectedAmountBaseRaw, expectedAmountQuoteRaw },
     chainId,
     formatNumber,
   })
 }
 
-async function parseMigrateV2ToV3({
+async function parseMigrateCreateV3({
   lp,
   chainId,
 }: {
-  lp: MigrateV2LiquidityToV3TransactionInfo
+  lp: MigrateV2LiquidityToV3TransactionInfo | CreateV3PoolTransactionInfo
   chainId: UniverseChainId
 }): Promise<Partial<Activity>> {
   const [baseCurrency, quoteCurrency] = await Promise.all([
@@ -386,11 +381,11 @@ export async function transactionToActivity({
     const defaultFields = {
       hash: details.hash,
       chainId,
-      nonce: details.nonce,
       title: getActivityTitle({ type: details.info.type, status: details.status }),
       status: details.status,
       timestamp: (isConfirmedTx(details) ? details.confirmedTime : details.addedTime) / 1000,
       from: details.from,
+      nonce: details.nonce,
       cancelled: details.cancelled,
     }
 
@@ -409,7 +404,7 @@ export async function transactionToActivity({
         outputChainId: info.outputChainId,
         formatNumber,
       })
-    } else if (info.type === UniswapTransactionType.Approve) {
+    } else if (info.type === TransactionType.APPROVAL) {
       additionalFields = await parseApproval({
         approval: info,
         chainId,
@@ -420,6 +415,16 @@ export async function transactionToActivity({
         wrap: info,
         chainId,
         status: details.status,
+        formatNumber,
+      })
+    } else if (
+      info.type === TransactionType.ADD_LIQUIDITY_V3_POOL ||
+      info.type === TransactionType.REMOVE_LIQUIDITY_V3 ||
+      info.type === TransactionType.ADD_LIQUIDITY_V2_POOL
+    ) {
+      additionalFields = await parseLegacyLP({
+        lpInfo: info,
+        chainId,
         formatNumber,
       })
     } else if (
@@ -439,8 +444,11 @@ export async function transactionToActivity({
         chainId,
         formatNumber,
       })
-    } else if (info.type === TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3) {
-      additionalFields = await parseMigrateV2ToV3({
+    } else if (
+      info.type === TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3 ||
+      info.type === TransactionType.CREATE_V3_POOL
+    ) {
+      additionalFields = await parseMigrateCreateV3({
         lp: info,
         chainId,
       })
@@ -467,7 +475,7 @@ export async function transactionToActivity({
 
     if (details.cancelled) {
       activity.title = CancelledTransactionTitleTable[details.info.type]
-      activity.status = TransactionStatus.Success
+      activity.status = TransactionStatus.Confirmed
     }
 
     return activity

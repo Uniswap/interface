@@ -26,7 +26,7 @@ describe('useDefaultInitialPrice', () => {
       error: null,
       isIndicativeLoading: false,
       indicativeTrade: undefined,
-      gasEstimate: undefined,
+      gasEstimates: undefined,
     })
 
     const currencies = {
@@ -55,7 +55,7 @@ describe('useDefaultInitialPrice', () => {
       error: new Error('test error'),
       indicativeTrade: undefined,
       isIndicativeLoading: false,
-      gasEstimate: undefined,
+      gasEstimates: undefined,
     })
 
     const currencies = {
@@ -75,7 +75,7 @@ describe('useDefaultInitialPrice', () => {
       error: null,
       indicativeTrade: undefined,
       isIndicativeLoading: false,
-      gasEstimate: undefined,
+      gasEstimates: undefined,
     })
 
     const currencies = {
@@ -98,7 +98,7 @@ describe('useDefaultInitialPrice', () => {
       error: null,
       indicativeTrade: undefined,
       isIndicativeLoading: false,
-      gasEstimate: undefined,
+      gasEstimates: undefined,
     })
 
     const currencies = {

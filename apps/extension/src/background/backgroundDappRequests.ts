@@ -283,6 +283,15 @@ async function handleSidebarRequest({
 
     await portChannel.sendMessage(message)
   } catch (error) {
+    // TODO (WALL-7202): Remove this once we handle getCapabilities requests in the background script
+    if (request.type === DappRequestType.GetCapabilities) {
+      await dappResponseMessageChannel.sendMessageToTab(senderTabInfo.id, {
+        type: DappResponseType.ErrorResponse,
+        error: serializeError(rpcErrors.methodNotSupported()),
+        requestId: request.requestId,
+      })
+      return
+    }
     await openSidePanel(senderTabInfo.id, windowId)
 
     windowIdToPendingRequestsMap.set(windowIdString, windowIdToPendingRequestsMap.get(windowIdString) ?? [])

@@ -1,4 +1,5 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import { ETHEREUM_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { DAI, USDC, USDC_SEPOLIA, USDT } from 'uniswap/src/constants/tokens'
@@ -27,10 +28,12 @@ const LOCAL_MAINNET_PLAYWRIGHT_RPC_URL = 'http://127.0.0.1:8545'
 export const MAINNET_CHAIN_INFO = {
   ...mainnet,
   id: UniverseChainId.Mainnet,
+  sdkId: UniswapSDKChainId.MAINNET,
   assetRepoNetworkName: 'ethereum',
   backendChain: {
     chain: BackendChainId.Ethereum as GqlChainId,
     backendSupported: true,
+    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 1,
@@ -43,6 +46,9 @@ export const MAINNET_CHAIN_INFO = {
     url: 'https://etherscan.io/',
     apiURL: 'https://api.etherscan.io',
   },
+  helpCenterUrl: undefined,
+  infoLink: 'https://app.uniswap.org/explore',
+  infuraPrefix: 'mainnet',
   interfaceName: 'mainnet',
   label: 'Ethereum',
   logo: ETHEREUM_LOGO,
@@ -79,6 +85,8 @@ export const MAINNET_CHAIN_INFO = {
   statusPage: undefined,
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
   stablecoins: [USDC, DAI, USDT],
+  supportsInterfaceClientSideRouting: true,
+  supportsGasEstimates: true,
   supportsV4: true,
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',
@@ -91,10 +99,12 @@ export const MAINNET_CHAIN_INFO = {
 export const SEPOLIA_CHAIN_INFO = {
   ...sepolia,
   id: UniverseChainId.Sepolia,
+  sdkId: UniswapSDKChainId.SEPOLIA,
   assetRepoNetworkName: undefined,
   backendChain: {
     chain: BackendChainId.EthereumSepolia as GqlChainId,
     backendSupported: true,
+    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 1,
@@ -107,6 +117,9 @@ export const SEPOLIA_CHAIN_INFO = {
     url: 'https://sepolia.etherscan.io/',
     apiURL: 'https://api-sepolia.etherscan.io',
   },
+  helpCenterUrl: undefined,
+  infoLink: 'https://app.uniswap.org/explore',
+  infuraPrefix: 'sepolia',
   interfaceName: 'sepolia',
   label: 'Sepolia',
   logo: ETHEREUM_LOGO,
@@ -142,6 +155,8 @@ export const SEPOLIA_CHAIN_INFO = {
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_SEPOLIA, 100e6),
   stablecoins: [USDC_SEPOLIA],
   statusPage: undefined,
+  supportsInterfaceClientSideRouting: true,
+  supportsGasEstimates: false,
   supportsV4: true,
   urlParam: 'ethereum_sepolia',
   wrappedNativeCurrency: {

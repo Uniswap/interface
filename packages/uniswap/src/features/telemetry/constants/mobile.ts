@@ -18,7 +18,6 @@ export enum MobileEventName {
   OnboardingCompleted = 'Onboarding Completed',
   PerformanceReport = 'Performance Report',
   RestoreSuccess = 'Restore Success',
-  SeedPhraseInputSubmitError = 'Seed Phrase Input Submit Error',
   ShareLinkOpened = 'Share Link Opened',
   TokenDetailsOtherChainButtonPressed = 'Token Details Other Chain Button Pressed',
   TokenDetailsContextMenuAction = 'Token Details Context Menu Action Selected',

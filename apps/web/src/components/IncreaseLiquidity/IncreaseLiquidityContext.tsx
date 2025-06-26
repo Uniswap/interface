@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import { useDerivedIncreaseLiquidityInfo } from 'components/IncreaseLiquidity/hooks'
 import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
 import { DepositInfo } from 'components/Liquidity/types'
@@ -25,7 +24,6 @@ const DEFAULT_INCREASE_LIQUIDITY_STATE = {
 // This increase-specific context needs to recalculate deposit0Disabled and deposit1Disabled,
 // which are derived from price range inputs in the regular create flow.
 export type IncreaseLiquidityDerivedInfo = DepositInfo & {
-  currencies?: { [key in PositionField]: Currency }
   deposit0Disabled?: boolean
   deposit1Disabled?: boolean
 }

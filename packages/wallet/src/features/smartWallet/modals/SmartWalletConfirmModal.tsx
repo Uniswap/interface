@@ -56,9 +56,9 @@ export function SmartWalletConfirmModal({
   const logoOverrideChainId = !multipleNetworks ? networkBalances[0]?.chainId : undefined
 
   return (
-    <Modal name={ModalName.SmartWalletConfirmModal} isModalOpen={isOpen} alignment="top" onClose={onClose}>
+    <Modal name={ModalName.SmartWalletConfirmModal} isModalOpen={isOpen} onClose={onClose}>
       <Flex px={isExtension ? '$none' : '$spacing12'} pt="$spacing12" gap="$spacing8">
-        <Flex alignItems={isExtension ? 'flex-start' : 'center'} pb="$gap24">
+        <Flex alignItems="center" pb="$gap24">
           <Flex
             backgroundColor="$surface3"
             borderRadius="$rounded12"
@@ -79,7 +79,7 @@ export function SmartWalletConfirmModal({
         </Flex>
 
         {chainIds.length > 0 && (
-          <Flex px={isMobileApp ? '$spacing24' : undefined} pb="$spacing16">
+          <Flex px="$spacing24" pb="$spacing16">
             <ExcludedNetworkBanner chainIds={chainIds} />
           </Flex>
         )}
@@ -102,14 +102,19 @@ export function SmartWalletConfirmModal({
           px={isMobileApp ? '$spacing12' : undefined}
         >
           {!inProgress && (
-            <Button size="medium" testID={TestID.Cancel} emphasis="secondary" onPress={onCancel}>
+            <Button
+              size={isMobileApp ? 'medium' : 'small'}
+              testID={TestID.Cancel}
+              emphasis="secondary"
+              onPress={onCancel}
+            >
               {t('common.button.cancel')}
             </Button>
           )}
           <Button
             variant="default"
             isDisabled={!confirmationEnabled}
-            size="medium"
+            size={isMobileApp ? 'medium' : 'small'}
             testID={TestID.Confirm}
             loading={inProgress}
             onPress={onConfirm}

@@ -1,4 +1,5 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import { MONAD_LOGO } from 'ui/src/assets'
 import { USDT_MONAD_TESTNET } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -15,14 +16,17 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 export const MONAD_CHAIN_INFO = {
   id: UniverseChainId.MonadTestnet,
   testnet: true,
+  sdkId: UniswapSDKChainId.MONAD_TESTNET,
   assetRepoNetworkName: undefined,
   backendChain: {
     chain: BackendChainId.MonadTestnet as GqlChainId,
     backendSupported: true,
+    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   bridge: undefined,
   docs: 'https://docs.monad.xyz/',
+  helpCenterUrl: undefined,
   label: 'Monad Testnet',
   logo: MONAD_LOGO,
   name: 'Monad Testnet',
@@ -36,6 +40,8 @@ export const MONAD_CHAIN_INFO = {
   networkLayer: NetworkLayer.L1,
   pendingTransactionsRetryOptions: undefined,
   statusPage: undefined,
+  supportsInterfaceClientSideRouting: true,
+  supportsGasEstimates: true,
   supportsV4: false,
   urlParam: 'monad_testnet',
   rpcUrls: {
@@ -62,6 +68,8 @@ export const MONAD_CHAIN_INFO = {
     name: 'Monad Explorer',
     url: 'https://testnet.monadexplorer.com/',
   },
+  infoLink: 'https://app.uniswap.org/explore',
+  infuraPrefix: undefined,
   interfaceName: 'monad',
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDT_MONAD_TESTNET, 10_000e6),
   stablecoins: [USDT_MONAD_TESTNET],

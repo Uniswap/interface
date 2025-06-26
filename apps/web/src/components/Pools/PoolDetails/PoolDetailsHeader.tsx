@@ -15,7 +15,6 @@ import Row from 'components/deprecated/Row'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import styled, { useTheme } from 'lib/styled-components'
 import { ReversedArrowsIcon } from 'nft/components/iconExports'
-import { FeeData } from 'pages/Pool/Positions/create/types'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
@@ -86,7 +85,7 @@ const PoolDetailsTitle = ({
   token0?: Token
   token1?: Token
   chainId?: UniverseChainId
-  feeTier?: FeeData
+  feeTier?: number
   protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
   hookAddress?: string
@@ -96,27 +95,26 @@ const PoolDetailsTitle = ({
   const graphQLChain = toGraphQLChain(chainId ?? defaultChainId)
   return (
     <Flex row gap="$spacing12" alignItems="center" width="max-content">
-      <Flex row>
-        <StyledLink
-          to={getTokenDetailsURL({
-            address: token0?.address,
-            chain: graphQLChain,
-          })}
-        >
-          <Text variant="heading1" fontSize={24} $md={{ variant: 'subheading1' }}>
-            {token0?.symbol} /{' '}
-          </Text>
-        </StyledLink>
-        <StyledLink
-          to={getTokenDetailsURL({
-            address: token1?.address,
-            chain: graphQLChain,
-          })}
-        >
-          <Text variant="heading1" fontSize={24} $md={{ variant: 'subheading1' }}>
+      <Flex>
+        <Text variant="heading1" fontSize={24} color="neutral1" $md={{ variant: 'subheading1', fontSize: 18 }}>
+          <StyledLink
+            to={getTokenDetailsURL({
+              address: token0?.address,
+              chain: graphQLChain,
+            })}
+          >
+            {token0?.symbol}
+          </StyledLink>
+          &nbsp;/&nbsp;
+          <StyledLink
+            to={getTokenDetailsURL({
+              address: token1?.address,
+              chain: graphQLChain,
+            })}
+          >
             {token1?.symbol}
-          </Text>
-        </StyledLink>
+          </StyledLink>
+        </Text>
       </Flex>
       <Flex row gap="$spacing2">
         <LiquidityPositionInfoBadges
@@ -269,7 +267,7 @@ interface PoolDetailsHeaderProps {
   poolAddress?: string
   token0?: Token
   token1?: Token
-  feeTier?: FeeData
+  feeTier?: number
   protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
   loading?: boolean

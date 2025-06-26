@@ -9,6 +9,7 @@ import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
+import { getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -33,7 +34,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
-  const { percent, positionInfo, currencies, currentTransactionStep, setCurrentTransactionStep } =
+  const { percent, positionInfo, unwrapNativeCurrency, currentTransactionStep, setCurrentTransactionStep } =
     useRemoveLiquidityModalContext()
   const [steps, setSteps] = useState<TransactionStep[]>([])
   const removeLiquidityTxContext = useRemoveLiquidityTxContext()
@@ -83,8 +84,14 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const currentPrice = usePositionCurrentPrice(positionInfo)
 
-  const currency0 = currencies?.TOKEN0 ?? positionInfo.currency0Amount.currency
-  const currency1 = currencies?.TOKEN1 ?? positionInfo.currency1Amount.currency
+  const currency0 = getCurrencyWithOptionalUnwrap({
+    currency: positionInfo.currency0Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency,
+  })
+  const currency1 = getCurrencyWithOptionalUnwrap({
+    currency: positionInfo.currency1Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency,
+  })
 
   const {
     unwrappedCurrency0AmountToRemove,
@@ -142,7 +149,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
         analytics: {
           ...getLPBaseAnalyticsProperties({
             trace,
-            fee: feeTier?.feeAmount,
+            fee: feeTier,
             tickSpacing,
             tickLower,
             tickUpper,
@@ -242,7 +249,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
                       {getSymbolDisplayText(newCurrency0Amount.currency.symbol)}
                     </Text>
                     <Text variant="body3" color="$neutral2">
-                      {`(${convertFiatAmountFormatted(newCurrency0AmountUSD?.toExact(), NumberType.FiatStandard)})`}
+                      {`(${formatCurrencyAmount({ value: newCurrency0AmountUSD, type: NumberType.FiatStandard })})`}
                     </Text>
                   </Flex>
                 ),
@@ -262,7 +269,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
                       {getSymbolDisplayText(newCurrency1Amount.currency.symbol)}
                     </Text>
                     <Text variant="body3" color="$neutral2">
-                      {`(${convertFiatAmountFormatted(newCurrency1AmountUSD?.toExact(), NumberType.FiatStandard)})`}
+                      {`(${formatCurrencyAmount({ value: newCurrency1AmountUSD, type: NumberType.FiatStandard })})`}
                     </Text>
                   </Flex>
                 ),
@@ -291,7 +298,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
                   <Flex row gap="$gap4" alignItems="center">
                     <NetworkLogo chainId={chainId} size={iconSizes.icon16} shape="square" />
                     <Text variant="body3">
-                      {convertFiatAmountFormatted(gasFeeEstimateUSD?.toExact(), NumberType.FiatGasPrice)}
+                      {formatCurrencyAmount({ value: gasFeeEstimateUSD, type: NumberType.FiatGasPrice })}
                     </Text>
                   </Flex>
                 ),

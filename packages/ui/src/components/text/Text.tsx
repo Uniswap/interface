@@ -119,25 +119,17 @@ export const TextFrame = styled(TamaguiText, {
   },
 })
 
-TextFrame.displayName = 'TextFrame'
-
 const Heading1 = styled(TextFrame, {
   tag: 'h1',
 })
-
-Heading1.displayName = 'Heading1'
 
 const Heading2 = styled(TextFrame, {
   tag: 'h2',
 })
 
-Heading2.displayName = 'Heading2'
-
 const Heading3 = styled(TextFrame, {
   tag: 'h3',
 })
-
-Heading3.displayName = 'Heading3'
 
 type TextFrameProps = GetProps<typeof TextFrame>
 

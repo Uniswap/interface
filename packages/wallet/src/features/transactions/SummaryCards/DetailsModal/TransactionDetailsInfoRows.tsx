@@ -166,7 +166,7 @@ function useTransactionDetailsInfoRows({
       break
     case TransactionType.LiquidityIncrease:
     case TransactionType.LiquidityDecrease:
-    case TransactionType.CollectFees:
+    case TransactionType.Claim:
     case TransactionType.CreatePair:
     case TransactionType.CreatePool:
     case TransactionType.Wrap:

@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxAndGasInfo } from 'components/RemoveLiquidity/hooks'
+import { getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { CheckApprovalLPResponse, DecreaseLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
@@ -28,7 +29,7 @@ const RemoveLiquidityTxContext = createContext<RemoveLiquidityTxInfo | undefined
 
 export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren): JSX.Element {
   const account = useAccountMeta()
-  const { positionInfo, percent, currencies } = useRemoveLiquidityModalContext()
+  const { positionInfo, percent, unwrapNativeCurrency } = useRemoveLiquidityModalContext()
 
   const removeLiquidityTxInfo = useRemoveLiquidityTxAndGasInfo({ account: account?.address })
   const { approvalLoading, decreaseCalldataLoading, decreaseCalldata, error, refetch } = removeLiquidityTxInfo
@@ -38,8 +39,14 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
     logContextUpdate('RemoveLiquidityTxContext', removeLiquidityTxInfo, datadogEnabled)
   }, [removeLiquidityTxInfo, datadogEnabled])
 
-  const currency0 = currencies?.TOKEN0
-  const currency1 = currencies?.TOKEN1
+  const currency0 = getCurrencyWithOptionalUnwrap({
+    currency: positionInfo?.currency0Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency,
+  })
+  const currency1 = getCurrencyWithOptionalUnwrap({
+    currency: positionInfo?.currency1Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency,
+  })
 
   const decreaseLiquidityTxContext = useMemo((): ValidatedDecreasePositionTxAndGasInfo | undefined => {
     if (!positionInfo || approvalLoading || decreaseCalldataLoading || !decreaseCalldata || !currency0 || !currency1) {

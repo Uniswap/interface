@@ -1,5 +1,6 @@
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export type TransactionLegacyFeeParams = {
   gasPrice: string
@@ -55,7 +56,7 @@ export type GasFeeResult = {
   isLoading: boolean
   error: FetchError | Error | null
   params?: TransactionLegacyFeeParams | TransactionEip1559FeeParams
-  gasEstimate?: GasEstimate
+  gasEstimates?: GasFeeEstimates
 }
 
 export type ValidatedGasFeeResult = GasFeeResult & { value: string; error: null }

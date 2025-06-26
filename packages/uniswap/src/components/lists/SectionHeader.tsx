@@ -83,7 +83,7 @@ function useSectionTitle(section: OnchainItemSectionName): string {
     case OnchainItemSectionName.Pools:
       return t('common.pools')
     case OnchainItemSectionName.TrendingPools:
-      return t('pool.top.volume')
+      return t('pool.top.tvl')
     case OnchainItemSectionName.Wallets:
       return t('explore.search.section.wallets')
     case OnchainItemSectionName.NFTCollections:

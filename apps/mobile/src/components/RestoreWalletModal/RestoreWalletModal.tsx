@@ -11,8 +11,7 @@ import { ArrowDownCircleFilledWithBorder, WalletFilled } from 'ui/src/components
 import { spacing } from 'ui/src/theme'
 import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -36,21 +35,19 @@ export function RestoreWalletModal({ route }: AppStackScreenProp<typeof ModalNam
   const { onClose } = useReactNavigationModal()
 
   const restoreType = route.params.restoreType
-  const { title, description, isDismissible, modalName } = useMemo(() => {
+  const { title, description, isDismissible } = useMemo(() => {
     switch (restoreType) {
       case WalletRestoreType.SeedPhrase:
         return {
           title: t('account.wallet.restore.seed_phrase.title'),
           description: t('account.wallet.restore.seed_phrase.description'),
           isDismissible: true,
-          modalName: ModalName.RestoreWalletSeedPhrase,
         }
       case WalletRestoreType.NewDevice:
         return {
           title: t('account.wallet.restore.new_device.title'),
           description: t('account.wallet.restore.new_device.description'),
           isDismissible: false,
-          modalName: ModalName.RestoreWallet,
         }
       default:
         return {}
@@ -68,7 +65,6 @@ export function RestoreWalletModal({ route }: AppStackScreenProp<typeof ModalNam
           params: {
             entryPoint: OnboardingEntryPoint.Sidebar,
             importType: ImportType.RestoreMnemonic,
-            restoreType,
           },
         })
         break
@@ -79,7 +75,6 @@ export function RestoreWalletModal({ route }: AppStackScreenProp<typeof ModalNam
           params: {
             entryPoint: OnboardingEntryPoint.Sidebar,
             importType: ImportType.RestoreMnemonic,
-            restoreType,
           },
         })
         break
@@ -92,7 +87,7 @@ export function RestoreWalletModal({ route }: AppStackScreenProp<typeof ModalNam
       hideHandlebar
       backgroundColor={colors.surface1.val}
       isDismissible={isDismissible}
-      name={modalName ?? ModalName.RestoreWallet}
+      name={ModalName.RestoreWallet}
       onClose={onClose}
     >
       <Flex centered gap="$spacing24" px="$spacing24" py="$spacing12" backgroundColor="$surface1">
@@ -132,19 +127,15 @@ export function RestoreWalletModal({ route }: AppStackScreenProp<typeof ModalNam
         <GenericHeader title={title} titleVariant="subheading1" subtitle={description} subtitleVariant="body3" />
         <Flex gap="$spacing8" width="100%">
           <Flex row>
-            <Trace logPress element={ElementName.Continue}>
-              <Button testID={TestID.Continue} variant="branded" emphasis="primary" size="medium" onPress={onRestore}>
-                {t('common.button.continue')}
-              </Button>
-            </Trace>
+            <Button testID={TestID.Continue} variant="branded" emphasis="primary" size="medium" onPress={onRestore}>
+              {t('common.button.continue')}
+            </Button>
           </Flex>
           {isDismissible && (
             <Flex row>
-              <Trace logPress element={ElementName.Cancel}>
-                <Button testID={TestID.Cancel} variant="default" emphasis="secondary" size="medium" onPress={onClose}>
-                  {t('common.button.notNow')}
-                </Button>
-              </Trace>
+              <Button testID={TestID.Cancel} variant="default" emphasis="secondary" size="medium" onPress={onClose}>
+                {t('common.button.notNow')}
+              </Button>
             </Flex>
           )}
         </Flex>

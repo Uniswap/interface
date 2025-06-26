@@ -111,7 +111,7 @@ export function SendReviewDetails({
     transferTxWithGasSettings: txRequest,
     onSubmit: onNext,
     currencyAmountUSD,
-    gasEstimates: gasFee.gasEstimate ? { activeEstimate: gasFee.gasEstimate } : undefined,
+    gasEstimates: gasFee.gasEstimates,
   })
 
   const transferNFTCallback = useSendNFTCallback({
@@ -122,7 +122,7 @@ export function SendReviewDetails({
     tokenId: nftIn?.tokenId,
     txRequest,
     onSubmit: onNext,
-    gasEstimates: gasFee.gasEstimate ? { activeEstimate: gasFee.gasEstimate } : undefined,
+    gasEstimates: gasFee.gasEstimates,
   })
 
   const submitTranaction = useCallback(() => {

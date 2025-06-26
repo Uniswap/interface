@@ -3,6 +3,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import {
   PoolSortFields,
   PoolTableSortState,
+  V2_BIPS,
   calculate1DVolOverTvl,
   calculateApr,
 } from 'appGraphql/data/pools/useTopPools'
@@ -12,7 +13,6 @@ import { useAtomValue } from 'jotai/utils'
 import { useContext, useMemo } from 'react'
 import { ExploreContext, giveExploreStatDefaultValue } from 'state/explore'
 import { PoolStat } from 'state/explore/types'
-import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 
 function useFilteredPools(pools?: PoolStat[]) {
   const filterString = useAtomValue(exploreSearchStringAtom)
@@ -83,14 +83,10 @@ function convertPoolStatsToPoolStat(poolStats: PoolStats): PoolStat {
     apr: calculateApr({
       volume24h: giveExploreStatDefaultValue(poolStats.volume1Day?.value),
       tvl: giveExploreStatDefaultValue(poolStats.totalLiquidity?.value),
-      feeTier: poolStats.feeTier ?? V2_DEFAULT_FEE_TIER,
+      feeTier: poolStats.feeTier ?? V2_BIPS,
     }),
     boostedApr: poolStats.boostedApr,
-    feeTier: {
-      feeAmount: poolStats.feeTier ?? V2_DEFAULT_FEE_TIER,
-      tickSpacing: DEFAULT_TICK_SPACING,
-      isDynamic: false, // TODO: add dynamic fee tier check when client-explore is updated
-    },
+    feeTier: poolStats.feeTier ?? V2_BIPS,
     volOverTvl: calculate1DVolOverTvl(poolStats.volume1Day?.value, poolStats.totalLiquidity?.value),
     hookAddress: poolStats.hook?.address,
   }

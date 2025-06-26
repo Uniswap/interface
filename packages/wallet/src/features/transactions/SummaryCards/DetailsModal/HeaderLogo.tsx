@@ -12,7 +12,7 @@ import {
 import {
   ApproveTransactionInfo,
   BridgeTransactionInfo,
-  CollectFeesTransactionInfo,
+  ClaimTransactionInfo,
   CreatePairTransactionInfo,
   CreatePoolTransactionInfo,
   LiquidityDecreaseTransactionInfo,
@@ -270,7 +270,7 @@ function UnknownHeaderLogo({
   | UnknownTransactionInfo
   | SendCallsTransactionInfo
   | Permit2ApproveTransactionInfo
-  | CollectFeesTransactionInfo
+  | ClaimTransactionInfo
   | CreatePairTransactionInfo
   | CreatePoolTransactionInfo
   | LiquidityIncreaseTransactionInfo

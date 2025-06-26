@@ -7,7 +7,6 @@ import { spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isExtension } from 'utilities/src/platform'
 import { InsufficientFundsNetworkRow, NetworkInfo } from 'wallet/src/features/smartWallet/InsufficientFundsNetworkRow'
 
 const maxHeightList = 300
@@ -65,53 +64,41 @@ export function SmartWalletInsufficientFundsOnNetworkModal({
   const renderItemSeparator = (): JSX.Element => <Separator />
 
   return (
-    <Modal
-      fullScreen={isExtension}
-      name={ModalName.SmartWalletInsufficientFundsOnNetworkModal}
-      isModalOpen={isOpen}
-      onClose={onClose}
-    >
-      <Flex
-        flex={isExtension ? 1 : 0}
-        px="$spacing24"
-        pt="$spacing24"
-        justifyContent={isExtension ? 'space-between' : 'unset'}
-      >
-        <Flex grow gap="$gap16">
-          <Flex centered>
-            <Flex
-              backgroundColor="$accent2"
-              borderRadius="$rounded12"
-              height="$spacing48"
-              width="$spacing48"
-              alignItems="center"
-              justifyContent="center"
-              mb="$spacing16"
-            >
-              <InsufficientGas size="$icon.24" />
-            </Flex>
-            <Text variant="subheading1" color="$neutral1" mb="$spacing8">
-              {showActiveDelegatedNetworks
-                ? sortedData.length > 1
-                  ? t('smartWallet.activeNetworks.title.plural', { amount: sortedData.length })
-                  : t('smartWallet.activeNetworks.title')
-                : sufficientFundsCount > 1
-                  ? t('smartWallet.insufficient.title.plural', { amount: sufficientFundsCount })
-                  : t('smartWallet.insufficient.title')}
-            </Text>
-            <Text textAlign="center" variant="body3" color="$neutral2">
-              {t('smartWallet.insufficient.description')}
-            </Text>
+    <Modal name={ModalName.SmartWalletInsufficientFundsOnNetworkModal} isModalOpen={isOpen} onClose={onClose}>
+      <Flex px="$spacing24" pt="$spacing24">
+        <Flex centered>
+          <Flex
+            backgroundColor="$accent2"
+            borderRadius="$rounded12"
+            height="$spacing48"
+            width="$spacing48"
+            alignItems="center"
+            justifyContent="center"
+            mb="$spacing16"
+          >
+            <InsufficientGas size="$icon.24" />
           </Flex>
-          <Flex maxHeight={maxHeightList} pb="$spacing16">
-            <FlatList
-              data={sortedData}
-              renderItem={renderItem}
-              keyExtractor={(item, index) => `${index}-${item.chainId}`}
-              showsHorizontalScrollIndicator={false}
-              ItemSeparatorComponent={renderItemSeparator}
-            />
-          </Flex>
+          <Text variant="subheading1" color="$neutral1" mb="$spacing8">
+            {showActiveDelegatedNetworks
+              ? sortedData.length > 1
+                ? t('smartWallet.activeNetworks.title.plural', { amount: sortedData.length })
+                : t('smartWallet.activeNetworks.title')
+              : sufficientFundsCount > 1
+                ? t('smartWallet.insufficient.title.plural', { amount: sufficientFundsCount })
+                : t('smartWallet.insufficient.title')}
+          </Text>
+          <Text textAlign="center" variant="body3" color="$neutral2">
+            {t('smartWallet.insufficient.description')}
+          </Text>
+        </Flex>
+        <Flex maxHeight={maxHeightList} pb="$spacing16">
+          <FlatList
+            data={sortedData}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => `${index}-${item.chainId}`}
+            showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={renderItemSeparator}
+          />
         </Flex>
 
         <Flex backgroundColor="$surface1" gap="$gap12" pb={insets.bottom + spacing.spacing12} alignSelf="stretch">
@@ -124,7 +111,13 @@ export function SmartWalletInsufficientFundsOnNetworkModal({
                 isDisabled={onDisableButton && isDisabled}
                 onPress={isDisabled ? onDisable : onConfirm}
               >
-                {t('smartWallet.InsufficientFunds.button.continue.text')}
+                {t(
+                  onDisableButton && isDisabled
+                    ? 'smartWallet.InsufficientFunds.button.disable.noFunds'
+                    : onDisableButton
+                      ? 'smartWallet.InsufficientFunds.button.disable.single.text'
+                      : 'smartWallet.InsufficientFunds.button.continue.text',
+                )}
               </Button>
             </Flex>
           )}

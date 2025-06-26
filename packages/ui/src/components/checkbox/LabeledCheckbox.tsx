@@ -55,13 +55,13 @@ export function LabeledCheckbox({
   return (
     <TouchableArea hoverable={!!hoverStyle} hoverStyle={hoverStyle} style={containerStyle} onPress={onPress}>
       <Flex row alignItems="center" gap={gap} px={px} py={py}>
-        {checkboxPosition === 'start' && <Checkbox checked={checked} size={size} variant={variant} />}
+        {checkboxPosition === 'start' && <Checkbox checked={checked} size={size} variant={variant} onPress={onPress} />}
         {text && (
           <Flex grow shrink>
             {textElement}
           </Flex>
         )}
-        {checkboxPosition === 'end' && <Checkbox checked={checked} size={size} variant={variant} />}
+        {checkboxPosition === 'end' && <Checkbox checked={checked} size={size} variant={variant} onPress={onPress} />}
       </Flex>
     </TouchableArea>
   )

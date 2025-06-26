@@ -136,14 +136,14 @@ export function SwapDetails({
         </Flex>
         {isBridgeTrade && <EstimatedTime visibleIfLong={false} timeMs={estimatedBridgingTime} />}
         {isBridgeTrade && <AcrossRoutingInfo />}
-        {isBridgeTrade === false && (
+        {!isBridgeTrade && (
           <MaxSlippageRow
             acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
             autoSlippageTolerance={autoSlippageTolerance}
             customSlippageTolerance={customSlippageTolerance}
           />
         )}
-        {isBridgeTrade === false && v4SwapEnabled && (
+        {!isBridgeTrade && v4SwapEnabled && (
           <RoutingInfo gasFee={gasFee} chainId={acceptedTrade.inputAmount.currency.chainId} />
         )}
         {!priceUxEnabled && <PriceImpactRow derivedSwapInfo={acceptedDerivedSwapInfo} />}

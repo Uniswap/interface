@@ -10,7 +10,7 @@ test.describe('Time-to-swap logging', () => {
     page,
     amplitude,
   }) => {
-    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+    await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.swap)
     await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
     // First swap in the session:

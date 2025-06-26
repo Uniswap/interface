@@ -19,20 +19,20 @@ import {
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { getSwapFee } from 'uniswap/src/features/transactions/swap/types/getSwapFee'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 
 type QuoteResponseWithAggregatedOutputs = ClassicQuoteResponse | DutchQuoteResponse | DutchV3QuoteResponse | PriorityQuoteResponse
 
 /**
  * Calculates the total output amount from a quote by summing all aggregated outputs.
- *
+ * 
  * @param quote - The quote response containing aggregated outputs, or undefined
  * @param outputCurrency - The currency type for the output amount
  * @returns CurrencyAmount representing the total output amount, or zero if no quote/outputs
- *
+ * 
  * @example
  * const quote = { quote: { aggregatedOutputs: [{ amount: '100' }, { amount: '200' }] } }
  * const amount = getQuoteOutputAmount(quote, USDC) // Returns 300 USDC
@@ -48,17 +48,17 @@ function getQuoteOutputAmount<T extends QuoteResponseWithAggregatedOutputs>(quot
 /**
  * Calculates the output amount that the recipient will receive from a quote.
  * Used to calculate the amount the recipient will receive after the swap fee is applied.
- *
+ * 
  * @param quote - The quote response containing aggregated outputs, or undefined
  * @param outputCurrency - The currency type for the output amount
  * @param recipient - The address of the recipient to find the output for
  * @returns CurrencyAmount representing the minimum amount the recipient will receive, or zero if not found
- *
+ * 
  * @example
  * // With a quote containing a recipient's output
  * const quote = { quote: { aggregatedOutputs: [{ recipient: '0x123', minAmount: '100' }, { recipient: '0x456', minAmount: '200' }] } }
  * const amount = getQuoteOutputAmountUserWillReceive(quote, USDC, '0x123') // Returns 100 USDC
- *
+ * 
  */
 function getQuoteOutputAmountUserWillReceive<T extends QuoteResponseWithAggregatedOutputs>({
   quote,
@@ -325,7 +325,7 @@ export interface TradeWithStatus<T extends Trade = Trade> {
   trade: T | null
   indicativeTrade: IndicativeTrade | undefined
   isIndicativeLoading: boolean
-  gasEstimate: GasEstimate | undefined
+  gasEstimates: GasFeeEstimates | undefined
 }
 
 export interface UseTradeArgs {

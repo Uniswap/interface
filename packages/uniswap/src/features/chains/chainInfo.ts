@@ -50,9 +50,11 @@ function getUniverseChainsSorted(): (typeof UNIVERSE_CHAIN_INFO)[UniverseChainId
 export const UNIVERSE_CHAINS_SORTED = getUniverseChainsSorted()
 
 export const GQL_MAINNET_CHAINS = Object.values(UNIVERSE_CHAIN_INFO)
-  .filter((chain) => !chain.testnet)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  .filter((chain) => !chain.testnet && !chain.backendChain.isSecondaryChain)
   .map((chain) => chain.backendChain.chain)
 
 export const GQL_TESTNET_CHAINS = Object.values(UNIVERSE_CHAIN_INFO)
-  .filter((chain) => chain.testnet)
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  .filter((chain) => chain.testnet && !chain.backendChain.isSecondaryChain)
   .map((chain) => chain.backendChain.chain)

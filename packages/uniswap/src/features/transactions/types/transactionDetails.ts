@@ -67,7 +67,7 @@ export type TransactionNetworkFee = {
 }
 
 export type GasFeeEstimates = {
-  activeEstimate?: GasEstimate // Temporary, this type will be deleted
+  activeEstimate: GasEstimate
   shadowEstimates?: GasEstimate[]
 }
 
@@ -230,21 +230,11 @@ export enum TransactionType {
   SendCalls = 'send-calls',
 
   // Liquidity
-  CollectFees = 'claim',
+  Claim = 'claim',
   CreatePair = 'create-pair',
   CreatePool = 'create-pool',
   LiquidityIncrease = 'liquidity-increase',
   LiquidityDecrease = 'liquidity-decrease',
-
-  // Liquidity Migration
-  MigrateLiquidityV2ToV3 = 'migrate-liquidity-v2-to-v3',
-  MigrateLiquidityV3ToV4 = 'migrate-liquidity-v3-to-v4',
-
-  // moved/converted from web's type
-  ClaimUni = 'claim-uni',
-  CreatePosition = 'create-position',
-  LPIncentivesClaimRewards = 'lp-incentives-claim-rewards',
-  UniswapXOrder = 'uniswapx-order',
 
   // Smart Wallet
   RemoveDelegation = 'remove-delegation',
@@ -461,7 +451,7 @@ export interface LiquidityTransactionInfoBase<T extends TransactionType> extends
 
 export type LiquidityIncreaseTransactionInfo = LiquidityTransactionInfoBase<TransactionType.LiquidityIncrease>
 export type LiquidityDecreaseTransactionInfo = LiquidityTransactionInfoBase<TransactionType.LiquidityDecrease>
-export type CollectFeesTransactionInfo = LiquidityTransactionInfoBase<TransactionType.CollectFees>
+export type ClaimTransactionInfo = LiquidityTransactionInfoBase<TransactionType.Claim>
 export type CreatePairTransactionInfo = LiquidityTransactionInfoBase<TransactionType.CreatePair>
 export type CreatePoolTransactionInfo = LiquidityTransactionInfoBase<TransactionType.CreatePool>
 
@@ -486,7 +476,7 @@ export type TransactionTypeInfo =
   | LocalOnRampTransactionInfo
   | LocalOffRampTransactionInfo
   | SendCallsTransactionInfo
-  | CollectFeesTransactionInfo
+  | ClaimTransactionInfo
   | CreatePairTransactionInfo
   | CreatePoolTransactionInfo
   | LiquidityIncreaseTransactionInfo

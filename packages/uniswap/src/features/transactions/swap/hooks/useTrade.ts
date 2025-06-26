@@ -3,8 +3,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { useTradingApiQuoteQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiQuoteQuery'
 import { TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
-import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
+import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
+import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 import { useIndicativeTrade } from 'uniswap/src/features/transactions/swap/hooks/useIndicativeTrade'
 import { TradeWithStatus, UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -17,6 +17,7 @@ import {
   useQuoteSlippageParams,
   validateTrade,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
@@ -63,7 +64,8 @@ export function useTrade({
   const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
   const tokenInAddress = getTokenAddressForApi(currencyIn)
   const tokenOutAddress = getTokenAddressForApi(currencyOut)
-  const gasStrategy = useActiveGasStrategy(tokenInChainId, 'swap')
+  const activeGasStrategy = useActiveGasStrategy(tokenInChainId, 'swap')
+  const shadowGasStrategies = useShadowGasStrategies(tokenInChainId, 'swap')
 
   const routingParams = useQuoteRoutingParams({
     selectedProtocols,
@@ -101,7 +103,7 @@ export function useTrade({
     return {
       amount: amount.quotient.toString(),
       generatePermitAsTransaction,
-      gasStrategies: [gasStrategy],
+      gasStrategies: [activeGasStrategy, ...shadowGasStrategies],
       isUSDQuote,
       swapper: activeAccountAddress ?? UNCONNECTED_ADDRESS,
       tokenIn: tokenInAddress,
@@ -115,12 +117,13 @@ export function useTrade({
     }
   }, [
     activeAccountAddress,
-    gasStrategy,
+    activeGasStrategy,
     amount,
     generatePermitAsTransaction,
     isUSDQuote,
     requestTradeType,
     routingParams,
+    shadowGasStrategies,
     skipQuery,
     slippageParams,
     tokenInAddress,
@@ -211,10 +214,18 @@ export function useTrade({
       })
     }
 
-    let gasEstimate: GasEstimate | undefined
+    let gasEstimates: GasFeeEstimates | undefined
     if (data?.quote && 'gasEstimates' in data.quote && data.quote.gasEstimates) {
       // Only classic quotes include gasEstimates
-      gasEstimate = data.quote.gasEstimates[0]
+      const activeGasEstimate = data.quote.gasEstimates.find((e) =>
+        areEqualGasStrategies(e.strategy, activeGasStrategy),
+      )
+      gasEstimates = activeGasEstimate
+        ? {
+            activeEstimate: activeGasEstimate,
+            shadowEstimates: data.quote.gasEstimates.filter((e) => e !== activeGasEstimate),
+          }
+        : undefined
     }
 
     if (!data?.quote || !currencyIn || !currencyOut) {
@@ -225,7 +236,7 @@ export function useTrade({
         indicativeTrade: isLoading ? indicative.trade : undefined,
         isIndicativeLoading: indicative.isLoading,
         error: errorRef.current,
-        gasEstimate,
+        gasEstimates,
       }
     }
 
@@ -256,7 +267,7 @@ export function useTrade({
         indicativeTrade: undefined, // We don't want to show the indicative trade if there is no completable trade
         isIndicativeLoading: false,
         error: new Error('Unable to validate trade'),
-        gasEstimate,
+        gasEstimates,
       }
     }
 
@@ -267,9 +278,10 @@ export function useTrade({
       indicativeTrade: indicative.trade,
       isIndicativeLoading: indicative.isLoading,
       error,
-      gasEstimate,
+      gasEstimates,
     }
   }, [
+    activeGasStrategy,
     amount,
     currencyIn,
     currencyOut,

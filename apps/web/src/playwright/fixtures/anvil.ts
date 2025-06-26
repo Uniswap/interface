@@ -1,14 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { test as base } from '@playwright/test'
-import { MaxUint160, MaxUint256, permit2Address } from '@uniswap/permit2-sdk'
 import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { anvilClient, setErc20BalanceWithMultipleSlots } from 'playwright/anvil/utils'
 import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
-import PERMIT2_ABI from 'uniswap/src/abis/permit2'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { assume0xAddress } from 'utils/wagmi'
 import { Address, erc20Abi, publicActions, walletActions } from 'viem'
 
 class WalletError extends Error {
@@ -49,65 +46,6 @@ const anvil = anvilClient
         abi: erc20Abi,
         functionName: 'balanceOf',
         args: [owner ?? TEST_WALLET_ADDRESS],
-      })
-    },
-    async getErc20Allowance({ address, spender, owner }: { address: Address; spender: Address; owner?: Address }) {
-      return await client.readContract({
-        address,
-        abi: erc20Abi,
-        functionName: 'allowance',
-        args: [owner ?? TEST_WALLET_ADDRESS, spender],
-      })
-    },
-    async setErc20Allowance({
-      address,
-      spender,
-      owner,
-      amount = MaxUint256.toBigInt(),
-    }: {
-      address: Address
-      spender: Address
-      owner?: Address
-      amount?: bigint
-    }) {
-      await client.writeContract({
-        address,
-        abi: erc20Abi,
-        functionName: 'approve',
-        args: [spender, amount],
-        account: owner ?? TEST_WALLET_ADDRESS,
-      })
-    },
-    async getPermit2Allowance({ owner, token, spender }: { owner?: Address; token: Address; spender: Address }) {
-      const data = await client.readContract({
-        address: assume0xAddress(permit2Address(UniverseChainId.Mainnet)),
-        abi: PERMIT2_ABI,
-        functionName: 'allowance',
-        args: [owner ?? TEST_WALLET_ADDRESS, token, spender],
-      })
-
-      const [amount, expiration, nonce] = data
-      return { amount, expiration, nonce }
-    },
-    async setPermit2Allowance({
-      owner,
-      token,
-      spender,
-      amount = MaxUint160.toBigInt(), // MaxUint160
-      expiration = Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60, // 30 days from now
-    }: {
-      owner?: Address
-      token: Address
-      spender: Address
-      amount?: bigint
-      expiration?: number
-    }) {
-      await client.writeContract({
-        address: assume0xAddress(permit2Address(UniverseChainId.Mainnet)),
-        abi: PERMIT2_ABI,
-        functionName: 'approve',
-        args: [token, spender, amount, expiration],
-        account: owner ?? TEST_WALLET_ADDRESS,
       })
     },
     async setTransactionRejection() {

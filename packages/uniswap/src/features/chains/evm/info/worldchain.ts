@@ -1,4 +1,5 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import { ETH_LOGO, WORLD_CHAIN_LOGO } from 'ui/src/assets'
 import { USDC_WORLD_CHAIN } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -16,10 +17,12 @@ export const WORLD_CHAIN_INFO = {
   // ...worldChain,
   name: 'World Chain',
   id: UniverseChainId.WorldChain,
+  sdkId: UniswapSDKChainId.WORLDCHAIN,
   assetRepoNetworkName: 'worldcoin',
   backendChain: {
     chain: BackendChainId.Worldchain as GqlChainId,
     backendSupported: true,
+    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 1, // TODO: verify
@@ -31,6 +34,9 @@ export const WORLD_CHAIN_INFO = {
     name: 'World Chain Explorer',
     url: 'https://worldchain-mainnet.explorer.alchemy.com/',
   },
+  helpCenterUrl: undefined,
+  infoLink: 'https://app.uniswap.org/explore/tokens/ethereum/0x163f8c2467924be0ae7b5347228cabf260318753',
+  infuraPrefix: undefined,
   interfaceName: 'worldchain',
   label: 'World Chain',
   logo: WORLD_CHAIN_LOGO,
@@ -56,6 +62,8 @@ export const WORLD_CHAIN_INFO = {
   statusPage: undefined,
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_WORLD_CHAIN, 10_000e6),
   stablecoins: [USDC_WORLD_CHAIN],
+  supportsInterfaceClientSideRouting: false,
+  supportsGasEstimates: false,
   supportsV4: true,
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',

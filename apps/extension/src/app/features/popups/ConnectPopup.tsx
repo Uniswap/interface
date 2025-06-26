@@ -68,7 +68,7 @@ export function ConnectPopupContent({
   }
 
   const openManageConnections = (): void => {
-    navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`)
+    navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`)
   }
 
   const fallbackIcon = <DappIconPlaceholder iconSize={iconSizes.icon40} name={dappUrl} />

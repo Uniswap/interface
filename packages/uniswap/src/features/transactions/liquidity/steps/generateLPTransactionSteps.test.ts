@@ -2,7 +2,6 @@ import { USDC, USDT } from 'uniswap/src/constants/tokens'
 
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 
-import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { IndependentToken, ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { generateLPTransactionSteps } from 'uniswap/src/features/transactions/liquidity/steps/generateLPTransactionSteps'
 import {
@@ -53,7 +52,7 @@ describe('Liquidity', () => {
           token0: USDC.address,
           token1: USDT.address,
           fee: 3000,
-          tickSpacing: DEFAULT_TICK_SPACING,
+          tickSpacing: 60,
         },
       },
     },

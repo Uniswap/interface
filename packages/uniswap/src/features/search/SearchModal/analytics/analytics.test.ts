@@ -72,7 +72,7 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
 
     const mockSection: OnchainItemSection<TokenOption> = {
       sectionKey: OnchainItemSectionName.TrendingTokens,
-      data: [MOCK_TOKEN1, MOCK_TOKEN1, MOCK_TOKEN2],
+      data: [MOCK_TOKEN1, MOCK_TOKEN2],
     }
     const mockSearchFilters: SearchFilterContext = {
       query: 'test',
@@ -83,17 +83,15 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
     sendSearchOptionItemClickedAnalytics({
       item: MOCK_TOKEN2,
       section: mockSection,
-      rowIndex: 3,
-      sectionIndex: 2,
+      rowIndex: 1,
       searchFilters: mockSearchFilters,
     })
 
     expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(MobileEventName.ExploreSearchResultClicked, {
       category: OnchainItemSectionName.TrendingTokens,
       isHistory: false,
-      position: 3,
-      sectionPosition: 3,
-      suggestionCount: 3,
+      position: 1,
+      suggestionCount: 2,
       query: 'test',
       name: 'Test Token 2',
       chain: 130,
@@ -120,16 +118,14 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
     sendSearchOptionItemClickedAnalytics({
       item: MOCK_TOKEN1,
       section: mockSection,
-      rowIndex: 1,
-      sectionIndex: 0,
+      rowIndex: 0,
       searchFilters: mockSearchFilters,
     })
 
     expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.NavbarResultSelected, {
       category: OnchainItemSectionName.Tokens,
       isHistory: false,
-      position: 1,
-      sectionPosition: 1,
+      position: 0,
       suggestionCount: 2,
       query: 'test',
       chainId: 1,
@@ -163,16 +159,14 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
     sendSearchOptionItemClickedAnalytics({
       item: mockWallet,
       section: mockSection,
-      rowIndex: 1,
-      sectionIndex: 0,
+      rowIndex: 0,
       searchFilters: mockSearchFilters,
     })
 
     expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(MobileEventName.ExploreSearchResultClicked, {
       category: OnchainItemSectionName.Wallets,
       isHistory: false,
-      position: 1,
-      sectionPosition: 1,
+      position: 0,
       suggestionCount: 1,
       query: 'test',
       address: '0x456',
@@ -199,16 +193,14 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
     sendSearchOptionItemClickedAnalytics({
       item: MOCK_NFT,
       section: mockSection,
-      rowIndex: 1,
-      sectionIndex: 0,
+      rowIndex: 0,
       searchFilters: mockSearchFilters,
     })
 
     expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(MobileEventName.ExploreSearchResultClicked, {
       category: OnchainItemSectionName.NFTCollections,
       isHistory: false,
-      position: 1,
-      sectionPosition: 1,
+      position: 0,
       suggestionCount: 1,
       query: 'test',
       name: 'Test Collection',

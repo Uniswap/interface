@@ -255,7 +255,7 @@ export function PoolDetailsTransactionsTable({
                 type: ExplorerDataType.ADDRESS,
               })}
             >
-              <TableText>{shortenAddress(makerAddress.getValue?.(), 4, 4)}</TableText>
+              <TableText>{shortenAddress(makerAddress.getValue?.(), 0)}</TableText>
             </StyledExternalLink>
           </Cell>
         ),

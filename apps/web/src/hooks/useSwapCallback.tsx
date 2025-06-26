@@ -19,9 +19,9 @@ import {
   ExactOutputSwapTransactionInfo,
   TransactionType,
 } from 'state/transactions/types'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'utils/currencyId'
 
 export type SwapResult = Awaited<ReturnType<ReturnType<typeof useSwapCallback>>>

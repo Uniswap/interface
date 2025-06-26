@@ -51,7 +51,6 @@ export default defineConfig({
       'utilities/src': path.resolve(__dirname, '../../packages/utilities/src'),
       'uniswap/src': path.resolve(__dirname, '../../packages/uniswap/src'),
 
-      features: path.resolve(__dirname, 'src/features'),
       components: path.resolve(__dirname, 'src/components'),
       constants: path.resolve(__dirname, 'src/constants'),
       graphql: path.resolve(__dirname, 'src/graphql'),

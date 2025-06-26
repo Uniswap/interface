@@ -54,8 +54,6 @@ const AnimatedItem = styled(Flex, {
   },
 } as const)
 
-AnimatedItem.displayName = 'AnimatedItem'
-
 export function TransitionItem({
   animationType = 'fade',
   childKey,

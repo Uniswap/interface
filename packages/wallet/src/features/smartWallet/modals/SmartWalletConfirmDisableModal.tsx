@@ -10,7 +10,6 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtension } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { setHasDismissedSmartWalletHomeScreenNudge } from 'wallet/src/features/behaviorHistory/slice'
@@ -155,7 +154,6 @@ export const SmartWalletConfirmDisableModal = ({
         modalName={ModalName.ConfirmDisableSmartWalletScreen}
         severity={WarningSeverity.Low}
         title={t('smartWallet.confirmDisableSmartWallet.title')}
-        fullScreen={isExtension}
         onClose={onClose}
         onAcknowledge={handleContinue}
       />

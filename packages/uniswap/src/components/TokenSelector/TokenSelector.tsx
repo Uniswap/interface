@@ -36,6 +36,7 @@ import {
   UniswapEventName,
 } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import useIsKeyboardOpen from 'uniswap/src/hooks/useIsKeyboardOpen'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getClipboard } from 'uniswap/src/utils/clipboard'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
@@ -104,6 +105,7 @@ export function TokenSelectorContent({
   const debouncedSearchFilter = useDebounce(searchFilter)
   const debouncedParsedSearchFilter = useDebounce(parsedSearchFilter)
   const scrollbarStyles = useScrollbarStyles()
+  const isKeyboardOpen = useIsKeyboardOpen()
   const { navigateToBuyOrReceiveWithEmptyWallet } = useUniswapContext()
 
   const media = useMedia()
@@ -225,6 +227,7 @@ export function TokenSelectorContent({
           debouncedParsedSearchFilter={debouncedParsedSearchFilter}
           debouncedSearchFilter={debouncedSearchFilter}
           isBalancesOnlySearch={variation === TokenSelectorVariation.BalancesOnly}
+          isKeyboardOpen={isKeyboardOpen}
           parsedChainFilter={parsedChainFilter}
           searchFilter={searchFilter}
           input={input}
@@ -239,6 +242,7 @@ export function TokenSelectorContent({
           <TokenSelectorSendList
             activeAccountAddress={activeAccountAddress}
             chainFilter={chainFilter}
+            isKeyboardOpen={isKeyboardOpen}
             onEmptyActionPress={onSendEmptyActionPress}
             onSelectCurrency={onSelectCurrencyCallback}
           />
@@ -249,6 +253,7 @@ export function TokenSelectorContent({
             oppositeSelectedToken={output}
             activeAccountAddress={activeAccountAddress}
             chainFilter={chainFilter}
+            isKeyboardOpen={isKeyboardOpen}
             onSelectCurrency={onSelectCurrencyCallback}
           />
         )
@@ -258,6 +263,7 @@ export function TokenSelectorContent({
             oppositeSelectedToken={input}
             activeAccountAddress={activeAccountAddress}
             chainFilter={chainFilter}
+            isKeyboardOpen={isKeyboardOpen}
             onSelectCurrency={onSelectCurrencyCallback}
           />
         )
@@ -274,6 +280,7 @@ export function TokenSelectorContent({
     onSelectCurrencyCallback,
     debouncedParsedSearchFilter,
     debouncedSearchFilter,
+    isKeyboardOpen,
     parsedChainFilter,
     input,
     onSendEmptyActionPress,

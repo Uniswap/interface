@@ -1,0 +1,63 @@
+query SearchPopularTokensWeb($chain: Chain!) {
+  topTokens(pageSize: 4, page: 1, chain: $chain, orderBy: POPULARITY) {
+    ...SimpleTokenDetails
+    market(currency: USD) {
+      id
+      price {
+        id
+        value
+        currency
+      }
+      pricePercentChange(duration: DAY) {
+        id
+        value
+      }
+      volume24H: volume(duration: DAY) {
+        id
+        value
+        currency
+      }
+    }
+  }
+}
+
+query SearchTokensWeb($searchQuery: String!, $chains: [Chain!], $tokenSearchV2Enabled: Boolean) {
+  searchTokens(searchQuery: $searchQuery, chains: $chains, tokenSearchV2Enabled: $tokenSearchV2Enabled) {
+    ...SimpleTokenDetails
+    id
+    decimals
+    name
+    chain
+    standard
+    address
+    symbol
+    market(currency: USD) {
+      id
+      price {
+        id
+        value
+        currency
+      }
+      pricePercentChange(duration: DAY) {
+        id
+        value
+      }
+      volume24H: volume(duration: DAY) {
+        id
+        value
+        currency
+      }
+    }
+    project {
+      id
+      name
+      logo {
+        id
+        url
+      }
+      safetyLevel
+      logoUrl
+      isSpam
+    }
+  }
+}

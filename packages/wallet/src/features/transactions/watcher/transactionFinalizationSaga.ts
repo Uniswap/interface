@@ -312,11 +312,6 @@ function maybeLogGasEstimateAccuracy(transaction: TransactionDetails): void {
     currentTimeMs > transaction.options.timeoutTimestampMs
 
   for (const estimate of [gasEstimates.activeEstimate, ...(gasEstimates.shadowEstimates || [])]) {
-    if (!estimate) {
-      // Temporary
-      continue
-    }
-
     const gasUseDiff = getDiff(estimate.gasLimit, transaction.receipt?.gasUsed)
     const gasPriceDiff = getDiff(getGasPrice(estimate), transaction.receipt?.effectiveGasPrice)
     const localGasStrategy = findLocalGasStrategy(

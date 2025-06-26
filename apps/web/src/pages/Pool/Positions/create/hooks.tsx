@@ -4,7 +4,8 @@ import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { DepositInfo, DepositState } from 'components/Liquidity/types'
-import { getPoolFromRest, isDynamicFeeTier } from 'components/Liquidity/utils'
+import { getPoolFromRest } from 'components/Liquidity/utils'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { checkIsNative, useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
@@ -47,7 +48,6 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { parseCurrencyFromURLParameter } from 'state/swap/hooks'
 import { PositionField } from 'types/position'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
@@ -550,7 +550,7 @@ function getParsedHookAddrParam(params: ParsedQs): string | undefined {
   if (!hookAddr || typeof hookAddr !== 'string') {
     return undefined
   }
-  const validAddress = getValidAddress({ address: hookAddr, withChecksum: true })
+  const validAddress = getValidAddress({ address: hookAddr })
   return validAddress || undefined
 }
 
@@ -569,15 +569,7 @@ function getParsedFeeTierParam(params: ParsedQs): FeeData | undefined {
     return DEFAULT_FEE_DATA
   }
 
-  return {
-    feeAmount: feeTierNumber,
-    tickSpacing,
-    isDynamic: isDynamicFeeTier({
-      feeAmount: feeTierNumber,
-      tickSpacing,
-      isDynamic: false,
-    }),
-  }
+  return { feeAmount: feeTierNumber, tickSpacing }
 }
 
 // Prefill currency inputs from URL search params ?currencyA=ETH&currencyB=0x123...&chain=base&feeTier=10000&hook=0x123...

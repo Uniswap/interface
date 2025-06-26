@@ -9,26 +9,6 @@ import { getLocale } from 'uniswap/src/features/language/hooks'
 import { getDeviceLocales } from 'utilities/src/device/locales'
 import { logger } from 'utilities/src/logger/logger'
 
-// Mapping for locales that don't match their file names
-const LOCALE_TO_FILE_NAME: Record<string, string> = {
-  'zh-Hans': 'zh-CN',
-  'zh-Hant': 'zh-TW',
-}
-
-/**
- * Returns the translation file name or statsig translation key for a given locale.
- *
- * @param locale - The locale to get the translation file name for.
- * @returns The translation file name.
- */
-export function getLocaleTranslationKey(locale: string): string {
-  if (locale === 'es' || locale.startsWith('es-')) {
-    // All Spanish variants map to es-ES.json
-    return 'es-ES'
-  }
-  return LOCALE_TO_FILE_NAME[locale] || locale
-}
-
 /**
  * Determines the device locale for Mobile and Chrome Extension.
  */

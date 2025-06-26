@@ -42,28 +42,19 @@ export function SmartWalletAdvancedSettingsModal({
 
   return (
     <Modal name={ModalName.SmartWalletAdvancedSettingsModal} isModalOpen={isOpen} onClose={onClose}>
-      <Flex
-        animation="fast"
-        gap="$gap8"
-        pt="$spacing4"
-        px={isMobileApp ? '$spacing16' : undefined}
-        mb={isMobileApp ? '$spacing36' : undefined}
-        width="100%"
-      >
-        <Text textAlign="center" color="$neutral1" variant={isMobileApp ? 'subheading1' : 'subheading2'}>
+      <Flex animation="fast" gap="$gap8" p="$spacing4" mb={isMobileApp ? '$spacing36' : undefined} width="100%">
+        <Text textAlign="center" color="$neutral1" variant="subheading1">
           {t('settings.setting.advancedSettings')}
         </Text>
         <AdvancedSettingsOptions
           active={isTestnetEnabled}
-          icon={<Wrench {...iconProps} size="$icon.24" />}
+          icon={<Wrench {...iconProps} />}
           title={t('settings.setting.wallet.testnetMode.title')}
-          isHoverable={false}
           onCheckedChange={onTestnetModeToggled}
         />
         <AdvancedSettingsOptions
-          icon={<SmartWallet {...iconProps} size="$icon.24" />}
+          icon={<SmartWallet {...iconProps} />}
           title={t('settings.setting.smartWallet.action.smartWallet')}
-          isHoverable={true}
           onPress={toggleSmartWalletMode}
         />
         <Flex />
@@ -78,7 +69,6 @@ interface AdvancedSettingsOptionsProps {
   title: string
   onCheckedChange?: (isChecked: boolean) => void
   onPress?: () => void
-  isHoverable: boolean
 }
 
 function AdvancedSettingsOptions({
@@ -87,21 +77,19 @@ function AdvancedSettingsOptions({
   title,
   onCheckedChange,
   onPress,
-  isHoverable,
 }: AdvancedSettingsOptionsProps): JSX.Element {
   const colors = useSporeColors()
 
   return (
     <TouchableArea
-      hoverable={isHoverable}
       alignItems="center"
       borderRadius="$rounded12"
       flexDirection="row"
       flexGrow={1}
       gap="$spacing12"
-      hoverStyle={{ backgroundColor: isHoverable ? '$surface2' : 'transparent' }}
+      hoverStyle={{ backgroundColor: '$surface2' }}
       justifyContent="space-between"
-      px={isMobileApp ? '$spacing12' : '$padding6'}
+      px="$spacing12"
       py="$spacing8"
       onPress={onPress}
     >

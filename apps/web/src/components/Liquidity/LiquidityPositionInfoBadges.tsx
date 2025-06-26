@@ -1,11 +1,11 @@
-import { isDynamicFeeTier } from 'components/Liquidity/utils'
-import { FeeData } from 'pages/Pool/Positions/create/types'
+import { FeeAmount } from '@uniswap/v3-sdk'
+import { isDynamicFeeTierAmount } from 'components/Liquidity/utils'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components/CopyHelper'
 import { styled, Text } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 
 const PositionInfoBadge = styled(Text, {
@@ -62,7 +62,7 @@ export function LiquidityPositionInfoBadges({
 }: {
   versionLabel?: string
   v4hook?: string
-  feeTier?: FeeData
+  feeTier?: string | FeeAmount
   size: 'small' | 'default'
 }): JSX.Element {
   const { t } = useTranslation()
@@ -73,10 +73,10 @@ export function LiquidityPositionInfoBadges({
       v4hook && v4hook !== ZERO_ADDRESS
         ? { label: v4hook, copyable: true, icon: <DocumentList color="$neutral2" size={16} /> }
         : undefined,
-      feeTier
-        ? isDynamicFeeTier(feeTier)
+      feeTier !== undefined && feeTier !== '' && (typeof feeTier === 'number' || !isNaN(Number(feeTier)))
+        ? isDynamicFeeTierAmount(feeTier)
           ? { label: t('common.dynamic') }
-          : { label: `${feeTier.feeAmount / 10000}%` }
+          : { label: `${Number(feeTier) / 10000}%` }
         : undefined,
     ].filter(Boolean) as BadgeData[]
   }, [versionLabel, v4hook, feeTier, t])

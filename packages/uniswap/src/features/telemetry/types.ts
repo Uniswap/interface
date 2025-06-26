@@ -312,11 +312,10 @@ export type SwapPriceImpactActionProperties = {
   response: SwapPriceImpactUserResponse
 }
 
-type InterfaceSearchResultSelectionProperties = {
+export type InterfaceSearchResultSelectionProperties = {
   suggestion_type: NavBarSearchTypes
   query_text: string
   position?: number
-  sectionPosition?: number
   selected_search_result_name?: string
   selected_search_result_address?: string
   total_suggestions?: number
@@ -734,9 +733,7 @@ export type UniverseEventProperties = {
     import_type?: string
     screen: OnboardingScreens
     is_restoring_mnemonic: boolean
-    restore_type?: string
   }
-  [MobileEventName.SeedPhraseInputSubmitError]: undefined
   [MobileEventName.ShareLinkOpened]: {
     entity: ShareableEntity
     url: string

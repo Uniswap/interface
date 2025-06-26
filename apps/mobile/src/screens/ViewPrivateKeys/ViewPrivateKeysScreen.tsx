@@ -91,22 +91,18 @@ export function ViewPrivateKeysScreen({ navigation, route }: Props): JSX.Element
           <BulletRow Icon={Laptop} description={t('privateKeys.export.modal.speedbump.bullet3')} />
         </Flex>
         <Flex row py="$spacing24" gap="$gap8">
-          <Trace logPress element={ElementName.Cancel}>
-            <Button variant="default" emphasis="secondary" size="medium" onPress={navigation.goBack}>
-              {t('common.button.close')}
-            </Button>
-          </Trace>
-          <Trace logPress element={ElementName.Continue}>
-            <Button
-              variant="branded"
-              emphasis="primary"
-              size="medium"
-              testID={TestID.Continue}
-              onPress={onBiometricContinue}
-            >
-              {t('common.button.continue')}
-            </Button>
-          </Trace>
+          <Button variant="default" emphasis="secondary" size="medium" onPress={navigation.goBack}>
+            {t('common.button.close')}
+          </Button>
+          <Button
+            variant="branded"
+            emphasis="primary"
+            size="medium"
+            testID={TestID.Continue}
+            onPress={onBiometricContinue}
+          >
+            {t('common.button.continue')}
+          </Button>
         </Flex>
       </Flex>
     )

@@ -15,6 +15,7 @@ import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
 import { LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useSrcColor } from 'hooks/useColor'
 import { useLpIncentivesFormattedEarnings } from 'hooks/useLpIncentivesFormattedEarnings'
@@ -49,7 +50,7 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { breakpoints } from 'ui/src/theme/breakpoints'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { PollingInterval, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -288,7 +289,7 @@ function PositionPage() {
         pool_address: positionInfo.poolId,
         label: [currency0Amount.currency.symbol, currency1Amount.currency.symbol].join('/'),
         type: positionInfo.version,
-        fee_tier: positionInfo.feeTier?.feeAmount,
+        fee_tier: typeof positionInfo.feeTier === 'string' ? parseInt(positionInfo.feeTier) : positionInfo.feeTier,
         baseCurrencyId: currencyIdToAddress(currencyId(currency0Amount.currency)),
         quoteCurrencyId: currencyIdToAddress(currencyId(currency1Amount.currency)),
       }}
@@ -437,7 +438,7 @@ function PositionPage() {
                   poolAddressOrId={positionInfo.poolId}
                   chainId={positionInfo.chainId}
                   tickSpacing={positionInfo.tickSpacing}
-                  feeTier={positionInfo.feeTier?.feeAmount}
+                  feeTier={positionInfo.feeTier}
                   hook={positionInfo.v4hook}
                   positionStatus={status}
                   priceOrdering={

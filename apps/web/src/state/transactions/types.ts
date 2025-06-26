@@ -1,24 +1,38 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { TradeType } from '@uniswap/sdk-core'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
-import {
-  ApproveTransactionInfo,
-  TransactionOriginType,
-  TransactionStatus,
-  TransactionType as UniswapTransactionType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
-
-export type BaseTransactionType = TransactionType | UniswapTransactionType.Approve
 
 export enum TransactionType {
+  APPROVAL = 0,
   SWAP = 1,
+  DEPOSIT_LIQUIDITY_STAKING = 2,
+  WITHDRAW_LIQUIDITY_STAKING = 3,
   CLAIM = 4,
+  VOTE = 5,
+  DELEGATE = 6,
   WRAP = 7,
+  CREATE_V3_POOL = 8,
+  ADD_LIQUIDITY_V3_POOL = 9,
+  ADD_LIQUIDITY_V2_POOL = 10,
   MIGRATE_LIQUIDITY_V2_TO_V3 = 11,
   COLLECT_FEES = 12,
+  REMOVE_LIQUIDITY_V3 = 13,
+  SUBMIT_PROPOSAL = 14,
+  QUEUE = 15,
+  EXECUTE = 16,
+  BUY = 17,
   SEND = 18,
+  RECEIVE = 19,
+  MINT = 20,
+  BURN = 21,
+  BORROW = 22,
+  REPAY = 23,
+  DEPLOY = 24,
+  CANCEL = 25,
+  LIMIT = 26,
   INCREASE_LIQUIDITY = 27,
   DECREASE_LIQUIDITY = 28,
   BRIDGE = 29,
@@ -28,7 +42,14 @@ export enum TransactionType {
   PERMIT = 33,
 }
 interface BaseTransactionInfo {
-  type: BaseTransactionType
+  type: TransactionType
+}
+
+export interface ApproveTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.APPROVAL
+  tokenAddress: string
+  spender: string
+  amount: string
 }
 
 export interface PermitTransactionInfo extends BaseTransactionInfo {
@@ -71,6 +92,19 @@ export interface ExactOutputSwapTransactionInfo extends BaseSwapTransactionInfo 
   expectedInputCurrencyAmountRaw: string
   maximumInputCurrencyAmountRaw: string
 }
+
+interface DepositLiquidityStakingTransactionInfo {
+  type: TransactionType.DEPOSIT_LIQUIDITY_STAKING
+  token0Address: string
+  token1Address: string
+}
+
+interface WithdrawLiquidityStakingTransactionInfo {
+  type: TransactionType.WITHDRAW_LIQUIDITY_STAKING
+  token0Address: string
+  token1Address: string
+}
+
 export interface WrapTransactionInfo {
   type: TransactionType.WRAP
   unwrapped: boolean
@@ -82,6 +116,12 @@ interface ClaimTransactionInfo {
   type: TransactionType.CLAIM
   recipient: string
   uniAmountRaw?: string
+}
+
+export interface CreateV3PoolTransactionInfo {
+  type: TransactionType.CREATE_V3_POOL
+  baseCurrencyId: string
+  quoteCurrencyId: string
 }
 
 export interface IncreaseLiquidityTransactionInfo {
@@ -124,11 +164,41 @@ export interface MigrateV3LiquidityToV4TransactionInfo {
   token1CurrencyAmountRaw: string
 }
 
+export interface AddLiquidityV3PoolTransactionInfo {
+  type: TransactionType.ADD_LIQUIDITY_V3_POOL
+  createPool: boolean
+  baseCurrencyId: string
+  quoteCurrencyId: string
+  feeAmount: number
+  expectedAmountBaseRaw: string
+  expectedAmountQuoteRaw: string
+}
+
+export interface AddLiquidityV2PoolTransactionInfo {
+  type: TransactionType.ADD_LIQUIDITY_V2_POOL
+  baseCurrencyId: string
+  quoteCurrencyId: string
+  expectedAmountBaseRaw: string
+  expectedAmountQuoteRaw: string
+}
+
 export interface MigrateV2LiquidityToV3TransactionInfo {
   type: TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3
   baseCurrencyId: string
   quoteCurrencyId: string
   isFork: boolean
+}
+
+export interface RemoveLiquidityV3TransactionInfo {
+  type: TransactionType.REMOVE_LIQUIDITY_V3
+  baseCurrencyId: string
+  quoteCurrencyId: string
+  expectedAmountBaseRaw: string
+  expectedAmountQuoteRaw: string
+}
+
+interface SubmitProposalTransactionInfo {
+  type: TransactionType.SUBMIT_PROPOSAL
 }
 
 export interface SendTransactionInfo {
@@ -144,9 +214,16 @@ export type TransactionInfo =
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
   | ClaimTransactionInfo
+  | DepositLiquidityStakingTransactionInfo
+  | WithdrawLiquidityStakingTransactionInfo
   | WrapTransactionInfo
+  | CreateV3PoolTransactionInfo
+  | AddLiquidityV3PoolTransactionInfo
+  | AddLiquidityV2PoolTransactionInfo
   | MigrateV2LiquidityToV3TransactionInfo
   | CollectFeesTransactionInfo
+  | RemoveLiquidityV3TransactionInfo
+  | SubmitProposalTransactionInfo
   | SendTransactionInfo
   | IncreaseLiquidityTransactionInfo
   | DecreaseLiquidityTransactionInfo
@@ -156,18 +233,13 @@ export type TransactionInfo =
   | LpIncentivesClaimTransactionInfo
 
 interface BaseTransactionDetails {
-  id: string
-  chainId: UniverseChainId
-  hash: string
-  nonce?: number
-
-  from: Address
   status: TransactionStatus
+  hash: string
   batchInfo?: { connectorId?: string; batchId: string; chainId: UniverseChainId }
   addedTime: number
-
-  transactionOriginType: TransactionOriginType
+  from: string
   info: TransactionInfo
+  nonce?: number
   cancelled?: true
 }
 
@@ -178,7 +250,7 @@ export interface PendingTransactionDetails extends BaseTransactionDetails {
 }
 
 export interface ConfirmedTransactionDetails extends BaseTransactionDetails {
-  status: TransactionStatus.Success | TransactionStatus.Failed
+  status: TransactionStatus.Confirmed | TransactionStatus.Failed
   confirmedTime: number
 }
 
