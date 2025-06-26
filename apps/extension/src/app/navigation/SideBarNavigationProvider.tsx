@@ -3,14 +3,21 @@ import { createSearchParams, useNavigate } from 'react-router-dom'
 import { navigateToInterfaceFiatOnRamp } from 'src/app/features/for/utils'
 import { AppRoutes, HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { SidebarLocationState, focusOrCreateTokensExploreTab } from 'src/app/navigation/utils'
+import {
+  SidebarLocationState,
+  focusOrCreateTokensExploreTab,
+  focusOrCreateUniswapInterfaceTab,
+} from 'src/app/navigation/utils'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
-import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
+import { ExplorerDataType, getExplorerLink, getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
+import { escapeRegExp } from 'utilities/src/primitives/string'
 import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboard'
 import {
   NavigateToFiatOnRampArgs,
@@ -43,6 +50,7 @@ export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.
   const navigateToExternalProfile = useCallback(() => {
     // no-op until we have an external profile screen on extension
   }, [])
+  const navigateToPoolDetails = useNavigateToPoolDetails()
 
   return (
     <WalletNavigationProvider
@@ -55,6 +63,7 @@ export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       navigateToNftCollection={navigateToNftCollection}
       navigateToNftDetails={navigateToNftDetails}
+      navigateToPoolDetails={navigateToPoolDetails}
       navigateToReceive={navigateToReceive}
       navigateToSend={navigateToSend}
       navigateToSwapFlow={navigateToSwapFlow}
@@ -172,6 +181,17 @@ function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
 function useNavigateToTokenDetails(): (currencyId: string) => void {
   return useCallback(async (currencyId: string): Promise<void> => {
     await focusOrCreateTokensExploreTab({ currencyId })
+  }, [])
+}
+
+function useNavigateToPoolDetails(): (args: { poolId: Address; chainId: UniverseChainId }) => void {
+  return useCallback(async ({ poolId, chainId }: { poolId: Address; chainId: UniverseChainId }): Promise<void> => {
+    await focusOrCreateUniswapInterfaceTab({
+      url: getPoolDetailsURL(poolId, chainId),
+      // We want to reuse the active tab only if it's already in any other PDP.
+      // eslint-disable-next-line security/detect-non-literal-regexp
+      reuseActiveTabIfItMatches: new RegExp(`^${escapeRegExp(uniswapUrls.webInterfacePoolsUrl)}`),
+    })
   }, [])
 }
 

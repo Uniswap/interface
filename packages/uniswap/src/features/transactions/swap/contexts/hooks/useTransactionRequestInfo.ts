@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
-import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
+import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
@@ -31,8 +31,7 @@ export function useSwapTransactionRequestInfo({
   tokenApprovalInfo: TokenApprovalInfo | undefined
 }): TransactionRequestInfo {
   const trace = useTrace()
-  const activeGasStrategy = useActiveGasStrategy(derivedSwapInfo.chainId, 'general')
-  const shadowGasStrategies = useShadowGasStrategies(derivedSwapInfo.chainId, 'general')
+  const gasStrategy = useActiveGasStrategy(derivedSwapInfo.chainId, 'general')
   const transactionSettings = useTransactionSettingsContext()
 
   const permitData = derivedSwapInfo.trade.trade?.quote.permitData
@@ -45,10 +44,7 @@ export function useSwapTransactionRequestInfo({
   const swapDelegationInfo = useUniswapContextSelector((ctx) => ctx.getSwapDelegationInfo?.(derivedSwapInfo.chainId))
   const overrideSimulation = !!swapDelegationInfo?.delegationAddress
 
-  const prepareSwapRequestParams = useMemo(
-    () => createPrepareSwapRequestParams({ activeGasStrategy, shadowGasStrategies }),
-    [activeGasStrategy, shadowGasStrategies],
-  )
+  const prepareSwapRequestParams = useMemo(() => createPrepareSwapRequestParams({ gasStrategy }), [gasStrategy])
 
   const swapRequestParams = useMemo(() => {
     if (!swapQuoteResponse) {
@@ -110,7 +106,7 @@ export function useSwapTransactionRequestInfo({
     },
   )
 
-  const processSwapResponse = useMemo(() => createProcessSwapResponse({ activeGasStrategy }), [activeGasStrategy])
+  const processSwapResponse = useMemo(() => createProcessSwapResponse({ gasStrategy }), [gasStrategy])
 
   const result = useMemo(
     () =>

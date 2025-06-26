@@ -19,6 +19,7 @@ import { UnitagConfirmationScreen } from 'src/app/features/unitags/UnitagConfirm
 import { UnitagCreateUsernameScreen } from 'src/app/features/unitags/UnitagCreateUsernameScreen'
 import { UnitagIntroScreen } from 'src/app/features/unitags/UnitagIntroScreen'
 import { UnitagClaimRoutes } from 'src/app/navigation/constants'
+import { ROUTER_FUTURE_FLAGS, ROUTER_PROVIDER_FUTURE_FLAGS } from 'src/app/navigation/routerConfig'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { Flex } from 'ui/src'
@@ -27,31 +28,36 @@ import { usePrevious } from 'utilities/src/react/hooks'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
 import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
-const router = createHashRouter([
+const router = createHashRouter(
+  [
+    {
+      path: '',
+      element: <UnitagAppInner />,
+      children: [
+        {
+          path: UnitagClaimRoutes.ClaimIntro,
+          element: <UnitagClaimFlow />,
+          errorElement: <ErrorElement />,
+        },
+        {
+          path: UnitagClaimRoutes.EditProfile,
+          element: <UnitagEditProfileFlow />,
+          errorElement: <ErrorElement />,
+        },
+      ],
+    },
+  ],
   {
-    path: '',
-    element: <UnitagAppInner />,
-    children: [
-      {
-        path: UnitagClaimRoutes.ClaimIntro,
-        element: <UnitagClaimFlow />,
-        errorElement: <ErrorElement />,
-      },
-      {
-        path: UnitagClaimRoutes.EditProfile,
-        element: <UnitagEditProfileFlow />,
-        errorElement: <ErrorElement />,
-      },
-    ],
+    future: ROUTER_FUTURE_FLAGS,
   },
-])
+)
 
 /**
  * Note: we are using a pattern here to avoid circular dependencies, because
  * this is the root of the app and it imports all sub-pages, we need to push the
  * router/router state to a different file so it can be imported by those pages
  */
-router.subscribe((state) => {
+router.subscribe((state: any) => {
   setRouterState(state)
 })
 
@@ -75,7 +81,7 @@ function UnitagAppInner(): JSX.Element {
       // needed to reload on address param change for hash router
       router
         .navigate(0)
-        .catch((e) => logger.error(e, { tags: { file: 'UnitagClaimApp.tsx', function: 'UnitagClaimAppInner' } }))
+        .catch((e: any) => logger.error(e, { tags: { file: 'UnitagClaimApp.tsx', function: 'UnitagClaimAppInner' } }))
     }
   }, [address, prevAddress])
 
@@ -138,7 +144,7 @@ export default function UnitagClaimApp(): JSX.Element {
 
   return (
     <BaseAppContainer appName={DatadogAppNameTag.UnitagClaim}>
-      <RouterProvider router={router} />
+      <RouterProvider router={router} future={ROUTER_PROVIDER_FUTURE_FLAGS} />
     </BaseAppContainer>
   )
 }

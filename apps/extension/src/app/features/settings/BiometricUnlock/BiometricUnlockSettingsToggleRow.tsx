@@ -27,11 +27,17 @@ export function BiometricUnlockSettingsToggleRow(): JSX.Element | null {
   const { mutate: setupBiometricUnlock } = useBiometricUnlockSetupMutation()
   const { mutate: disableBiometricUnlock } = useBiometricUnlockDisableMutation()
 
-  const handleToggleChange = useEvent(() => {
+  const onPasswordModalNext = useEvent((password?: string): void => {
+    hidePasswordModal()
+
+    if (!password) {
+      return
+    }
+
     if (hasBiometricUnlockCredential) {
       disableBiometricUnlock()
     } else {
-      showPasswordModal()
+      setupBiometricUnlock(password)
     }
   })
 
@@ -45,18 +51,13 @@ export function BiometricUnlockSettingsToggleRow(): JSX.Element | null {
         Icon={biometricCapabilities?.icon ?? Fingerprint}
         title={biometricCapabilities?.name ?? t('common.biometrics.generic')}
         checked={hasBiometricUnlockCredential}
-        onCheckedChange={handleToggleChange}
+        onCheckedChange={showPasswordModal}
       />
 
       {isPasswordModalOpen && (
         <EnterPasswordModal
           isOpen={true}
-          onNext={(password): void => {
-            hidePasswordModal()
-            if (password) {
-              setupBiometricUnlock(password)
-            }
-          }}
+          onNext={onPasswordModalNext}
           onClose={hidePasswordModal}
           shouldReturnPassword
         />

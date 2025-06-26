@@ -13,13 +13,12 @@ import { SignatureType } from 'state/signatures/types'
 import { ThemedText } from 'theme/components'
 import { EllipsisStyle } from 'theme/components/styles'
 import { BridgeIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
-import {
-  TransactionStatus,
-  TransactionType,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
+import { logger } from 'utilities/src/logger/logger'
 import { isHash } from 'viem'
 
 const ActivityRowDescriptor = styled(ThemedText.BodySmall)`
@@ -39,7 +38,11 @@ const StyledTimestamp = styled(ThemedText.BodySmall)`
     'ss02' on;
 `
 
-function StatusIndicator({ activity: { status, timestamp, offchainOrderDetails } }: { activity: Activity }) {
+function StatusIndicator({
+  activity: { status, timestamp, offchainOrderDetails },
+}: {
+  activity: Activity
+}): JSX.Element | null {
   const timeSince = useTimeSince(timestamp)
 
   switch (status) {
@@ -48,10 +51,19 @@ function StatusIndicator({ activity: { status, timestamp, offchainOrderDetails }
         return null
       }
       return <LoaderV2 />
-    case TransactionStatus.Confirmed:
+    case TransactionStatus.Success:
       return <StyledTimestamp>{timeSince}</StyledTimestamp>
     case TransactionStatus.Failed:
       return <AlertTriangleFilled />
+    default:
+      logger.error(new Error(`Unhandled web transaction status`), {
+        tags: {
+          file: 'ActivityRow.tsx',
+          function: 'StatusIndicator',
+        },
+        extra: { status },
+      })
+      return null
   }
 }
 

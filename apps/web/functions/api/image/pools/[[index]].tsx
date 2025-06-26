@@ -94,7 +94,7 @@ function PoolImage({
   )
 }
 
-export const onRequest: PagesFunction = async ({ params, request }) => {
+export const onRequest: PagesFunction = async ({ params, request, env }) => {
   try {
     const origin = new URL(request.url).origin
     const { index } = params
@@ -112,7 +112,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       return new Response('Pool not found.', { status: 404 })
     }
 
-    const [fontData] = await Promise.all([getFont(origin)])
+    const [fontData] = await Promise.all([getFont(origin, env)])
     const networkLogo = getNetworkLogoUrl(networkName.toUpperCase(), origin)
 
     return new ImageResponse(
@@ -156,6 +156,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                   <img
                     src={networkLogo}
                     width="48px"
+                    height="48px"
                     style={{
                       position: 'absolute',
                       right: '2px',

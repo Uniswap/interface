@@ -126,7 +126,7 @@ export function SettingsScreen(): JSX.Element {
   const handleAdvancedModalClose = useCallback(() => setIsAdvancedModalOpen(false), [])
 
   const handleSmartWalletPress = useCallback(() => {
-    navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.SmartWallet}`)
+    navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.SmartWallet}`)
     setIsAdvancedModalOpen(false)
   }, [navigateTo])
 
@@ -192,7 +192,7 @@ export function SettingsScreen(): JSX.Element {
                 <SettingsItem
                   Icon={Settings}
                   title="Developer Settings"
-                  onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.DevMenu}`)}
+                  onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.DevMenu}`)}
                 />
               )}
             </>
@@ -285,19 +285,19 @@ export function SettingsScreen(): JSX.Element {
                 <SettingsItem
                   Icon={Lock}
                   title={deviceAccessScreenTitle}
-                  onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.DeviceAccess}`)}
+                  onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.DeviceAccess}`)}
                 />
               ) : (
                 <SettingsItem
                   Icon={Key}
                   title={t('settings.setting.password.title')}
-                  onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ChangePassword}`)}
+                  onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ChangePassword}`)}
                 />
               )}
               <SettingsItem
                 Icon={FileListLock}
                 title={t('settings.setting.recoveryPhrase.title')}
-                onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ViewRecoveryPhrase}`)}
+                onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ViewRecoveryPhrase}`)}
               />
               <>
                 {hasPasskeyBackup && (

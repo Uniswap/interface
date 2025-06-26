@@ -32,7 +32,7 @@ export function RemoveRecoveryPhraseWallets(): JSX.Element {
         title={t('setting.recoveryPhrase.remove.initial.title')}
         onNextPressed={(): void => {
           navigateTo(
-            `${AppRoutes.Settings}/${SettingsRoutes.RemoveRecoveryPhrase}/${RemoveRecoveryPhraseRoutes.Verify}`,
+            `/${AppRoutes.Settings}/${SettingsRoutes.RemoveRecoveryPhrase}/${RemoveRecoveryPhraseRoutes.Verify}`,
           )
         }}
       >

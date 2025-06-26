@@ -22,6 +22,7 @@ export const DynamicFeeTierSpeedbump = () => {
       fee: {
         feeAmount: dynamicFeeTierSpeedbumpData.wishFeeData.feeAmount,
         tickSpacing: dynamicFeeTierSpeedbumpData.wishFeeData.tickSpacing,
+        isDynamic: dynamicFeeTierSpeedbumpData.wishFeeData.isDynamic,
       },
     }))
 

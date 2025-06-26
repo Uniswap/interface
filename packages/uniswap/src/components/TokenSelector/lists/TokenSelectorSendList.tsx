@@ -64,7 +64,6 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress?: () => void }):
 function _TokenSelectorSendList({
   activeAccountAddress,
   chainFilter,
-  isKeyboardOpen,
   onSelectCurrency,
   onEmptyActionPress,
 }: TokenSectionsHookProps & {
@@ -88,7 +87,6 @@ function _TokenSelectorSendList({
       chainFilter={chainFilter}
       emptyElement={emptyElement}
       hasError={Boolean(error)}
-      isKeyboardOpen={isKeyboardOpen}
       loading={loading}
       refetch={refetch}
       sections={sections}

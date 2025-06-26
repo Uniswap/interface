@@ -11,7 +11,7 @@ import { ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade
 
 export function createClassicSwapTxAndGasInfoService(ctx: {
   instructionService: EVMSwapInstructionsService
-  activeGasStrategy: GasStrategy
+  gasStrategy: GasStrategy
   transactionSettings: TransactionSettingsContextState
 }): SwapTxAndGasInfoService<ClassicTrade> {
   const getEVMSwapTransactionRequestInfo = createGetEVMSwapTransactionRequestInfo(ctx)

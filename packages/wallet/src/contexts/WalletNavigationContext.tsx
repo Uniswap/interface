@@ -119,6 +119,11 @@ export type NavigateToExternalProfileArgs = {
   address: Address
 }
 
+export type NavigateToPoolDetailsArgs = {
+  poolId: Address
+  chainId: UniverseChainId
+}
+
 export type ShareTokenArgs = {
   currencyId: string
 }
@@ -137,6 +142,7 @@ export type WalletNavigationContextState = {
   navigateToFiatOnRamp: (args: NavigateToFiatOnRampArgs) => void
   navigateToNftDetails: (args: NavigateToNftItemArgs) => void
   navigateToNftCollection: (args: NavigateToNftCollectionArgs) => void
+  navigateToPoolDetails: (args: NavigateToPoolDetailsArgs) => void
   navigateToSwapFlow: (args: NavigateToSwapFlowArgs) => void
   navigateToTokenDetails: (currencyId: string) => void
   navigateToReceive: () => void

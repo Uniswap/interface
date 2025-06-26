@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { BASE_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { USDC_BASE } from 'uniswap/src/constants/tokens'
@@ -27,11 +26,9 @@ const LOCAL_BASE_PLAYWRIGHT_RPC_URL = 'http://127.0.0.1:8546'
 export const BASE_CHAIN_INFO = {
   ...base,
   id: UniverseChainId.Base,
-  sdkId: UniswapSDKChainId.BASE,
   backendChain: {
     chain: BackendChainId.Base as GqlChainId,
     backendSupported: true,
-    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 6,
@@ -44,8 +41,6 @@ export const BASE_CHAIN_INFO = {
     url: 'https://basescan.org/',
     apiURL: 'https://api.basescan.org',
   },
-  helpCenterUrl: undefined,
-  infoLink: 'https://app.uniswap.org/explore/tokens/base',
   interfaceName: 'base',
   label: 'Base',
   logo: BASE_LOGO,
@@ -60,8 +55,6 @@ export const BASE_CHAIN_INFO = {
   networkLayer: NetworkLayer.L2,
   pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
   statusPage: 'https://status.base.org/',
-  supportsInterfaceClientSideRouting: true,
-  supportsGasEstimates: true,
   supportsV4: true,
   urlParam: 'base',
   rpcUrls: isPlaywrightEnv()
@@ -75,7 +68,6 @@ export const BASE_CHAIN_INFO = {
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_BASE, 10_000e6),
   assetRepoNetworkName: 'base',
   stablecoins: [USDC_BASE],
-  infuraPrefix: 'base-mainnet',
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',
     symbol: 'WETH',

@@ -1,12 +1,13 @@
 import 'test-utils/tokens/mocks'
 
 import { ApolloError } from '@apollo/client'
-import { Percent, Token } from '@uniswap/sdk-core'
+import { Percent, Token, type Currency } from '@uniswap/sdk-core'
 import { usePoolsFromTokenAddress } from 'appGraphql/data/pools/usePoolsFromTokenAddress'
 import { TokenDetailsPoolsTable } from 'components/Tokens/TokenDetails/tables/TokenDetailsPoolsTable'
 import { mocked } from 'test-utils/mocked'
 import { validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
+import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -23,6 +24,13 @@ vi.mock('react-router-dom', async () => {
 })
 
 const mockToken = new Token(UniverseChainId.Mainnet, validBEPoolToken0.id, 18)
+const mockCurrency = {
+  isToken: false,
+  isNative: true,
+  chainId: UniverseChainId.Mainnet,
+  decimals: 18,
+  wrapped: mockToken,
+} as Currency
 
 describe('TDPPoolTable', () => {
   it('renders loading state', () => {
@@ -35,9 +43,7 @@ describe('TDPPoolTable', () => {
       loadMore: vi.fn(),
     })
 
-    const { asFragment } = render(
-      <TokenDetailsPoolsTable chainId={UniverseChainId.Mainnet} referenceToken={mockToken} />,
-    )
+    const { asFragment } = render(<TokenDetailsPoolsTable referenceCurrency={mockCurrency} />)
     expect(screen.getAllByTestId('cell-loading-bubble')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })
@@ -52,9 +58,7 @@ describe('TDPPoolTable', () => {
       loadMore: vi.fn(),
     })
 
-    const { asFragment } = render(
-      <TokenDetailsPoolsTable chainId={UniverseChainId.Mainnet} referenceToken={mockToken} />,
-    )
+    const { asFragment } = render(<TokenDetailsPoolsTable referenceCurrency={mockCurrency} />)
     expect(screen.getByTestId('table-error-modal')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })
@@ -64,7 +68,11 @@ describe('TDPPoolTable', () => {
       {
         token0: validBEPoolToken0,
         token1: validBEPoolToken1,
-        feeTier: 10000,
+        feeTier: {
+          feeAmount: 10000,
+          tickSpacing: DEFAULT_TICK_SPACING,
+          isDynamic: false,
+        },
         hash: '0x123',
         txCount: 200,
         tvl: 300,
@@ -84,9 +92,7 @@ describe('TDPPoolTable', () => {
       loadMore: vi.fn(),
     })
 
-    const { asFragment } = render(
-      <TokenDetailsPoolsTable chainId={UniverseChainId.Mainnet} referenceToken={mockToken} />,
-    )
+    const { asFragment } = render(<TokenDetailsPoolsTable referenceCurrency={mockCurrency} />)
     expect(screen.getByTestId(`tdp-pools-table-${validBEPoolToken0.id}`)).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })

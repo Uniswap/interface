@@ -2,8 +2,8 @@ import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activ
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
 import { mocked } from 'test-utils/mocked'
 import { act, fireEvent, render, screen } from 'test-utils/render'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 vi.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', async () => {
   const actual = await vi.importActual('components/AccountDrawer/MiniPortfolio/Activity/hooks')

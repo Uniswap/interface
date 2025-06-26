@@ -10,9 +10,9 @@ import { useMultichainTransactions, useTransactionRemover } from 'state/transact
 import { checkedTransaction } from 'state/transactions/reducer'
 import { PendingTransactionDetails } from 'state/transactions/types'
 import { isPendingTx } from 'state/transactions/utils'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RetryOptions, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionReceipt } from 'viem'
 import { usePublicClient } from 'wagmi'
 
@@ -129,7 +129,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
               chainId: account.chainId,
               original: tx,
               update: {
-                status: status === 'success' ? TransactionStatus.Confirmed : TransactionStatus.Failed,
+                status: status === 'success' ? TransactionStatus.Success : TransactionStatus.Failed,
                 info: tx.info,
               },
             })

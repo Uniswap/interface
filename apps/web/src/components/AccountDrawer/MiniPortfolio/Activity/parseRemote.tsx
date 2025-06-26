@@ -11,6 +11,7 @@ import { gqlToCurrency, supportedChainIdFromGQLChain } from 'appGraphql/data/uti
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
+import { convertGQLTransactionStatus } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import {
   LimitOrderTextTable,
   MOONPAY_SENDER_ADDRESSES,
@@ -699,7 +700,7 @@ function parseFiatOnRampTransaction(activity: TransactionActivity | FiatOnRampAc
           inputSymbol: onRampTransfer.sourceCurrency,
         }),
         suffixIconSrc: onRampTransfer.serviceProvider.logoDarkUrl,
-        status: activity.details.status,
+        status: convertGQLTransactionStatus(activity.details.status),
       }
     }
     case 'TransactionDetails': {
@@ -730,7 +731,7 @@ function parseFiatOnRampTransaction(activity: TransactionActivity | FiatOnRampAc
           inputSymbol: onRampTransfer.sourceCurrency,
         }),
         suffixIconSrc: onRampTransfer.serviceProvider.logoDarkUrl,
-        status: activity.details.status,
+        status: convertGQLTransactionStatus(activity.details.status),
       }
     }
     default: {
@@ -779,7 +780,7 @@ function parseFiatOffRampTransaction(activity: FiatOffRampActivity): Activity {
       outputSymbol: offRampTransfer.destinationCurrency,
     }),
     suffixIconSrc: offRampTransfer.serviceProvider.logoDarkUrl,
-    status: activity.details.status,
+    status: convertGQLTransactionStatus(activity.details.status),
   }
 }
 
@@ -845,7 +846,7 @@ function parseRemoteActivity(
     const defaultFields = {
       hash: assetActivity.details.hash,
       chainId: supportedChain,
-      status: assetActivity.details.status,
+      status: convertGQLTransactionStatus(assetActivity.details.status),
       timestamp: assetActivity.timestamp,
       logos: getLogoSrcs(changes),
       title: assetActivity.details.type,

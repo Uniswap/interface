@@ -7,7 +7,7 @@ import {
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { TokenWarningModalState } from 'src/app/modals/TokenWarningModalState'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
-import { RestoreWalletModalState } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
+import { RestoreWalletModalState, WalletRestoreType } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
 import { ConnectionsDappsListModalState } from 'src/components/Settings/ConnectionsDappModal/ConnectionsDappsListModalState'
 import { EditWalletSettingsModalState } from 'src/components/Settings/EditWalletModal/EditWalletSettingsModalState'
 import { ManageWalletsModalState } from 'src/components/Settings/ManageWalletsModalState'
@@ -113,6 +113,7 @@ export type SettingsStackParamList = {
 export type OnboardingStackBaseParams = {
   importType: ImportType
   entryPoint: OnboardingEntryPoint
+  restoreType?: WalletRestoreType
 }
 
 export type OnboardingStackParamList = {

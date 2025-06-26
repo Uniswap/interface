@@ -1,6 +1,7 @@
-import { V2_BIPS } from 'appGraphql/data/pools/useTopPools'
 import ms from 'ms'
+import { FeeData } from 'pages/Pool/Positions/create/types'
 import { useMemo } from 'react'
+import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import {
   ProtocolVersion,
   Token,
@@ -24,11 +25,10 @@ interface RewardsCampaign {
 export interface PoolData {
   // basic pool info
   idOrAddress: string
-  feeTier?: number
+  feeTier?: FeeData
   txCount?: number
   protocolVersion?: ProtocolVersion
   hookAddress?: string
-  tickSpacing?: number
 
   // token info
   token0: Token
@@ -123,7 +123,11 @@ export function usePoolData(
     const anyLoading = Boolean(loadingV4 || loadingV3 || loadingV2)
 
     const pool = dataV4?.v4Pool ?? dataV3?.v3Pool ?? dataV2?.v2Pair ?? undefined
-    const feeTier = dataV4?.v4Pool?.feeTier ?? dataV3?.v3Pool?.feeTier ?? V2_BIPS
+    const feeTier: FeeData = {
+      feeAmount: dataV4?.v4Pool?.feeTier ?? dataV3?.v3Pool?.feeTier ?? V2_DEFAULT_FEE_TIER,
+      tickSpacing: DEFAULT_TICK_SPACING,
+      isDynamic: dataV4?.v4Pool?.isDynamicFee ?? false,
+    }
     const poolId = dataV4?.v4Pool?.poolId ?? dataV3?.v3Pool?.address ?? dataV2?.v2Pair?.address ?? poolIdOrAddress
 
     return {

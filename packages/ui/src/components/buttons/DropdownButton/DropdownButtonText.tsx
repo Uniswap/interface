@@ -22,3 +22,5 @@ export const DropdownButtonText = styled(CustomButtonText, {
     },
   } as const,
 })
+
+DropdownButtonText.displayName = 'DropdownButtonText'

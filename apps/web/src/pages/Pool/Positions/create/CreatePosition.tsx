@@ -4,7 +4,7 @@ import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/Breadcrumb
 import { DropdownSelector } from 'components/DropdownSelector'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
-import { getProtocolVersionLabel, parseProtocolVersion } from 'components/Liquidity/utils'
+import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
 import {
   CreatePositionContextProvider,
@@ -40,6 +40,7 @@ import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { Button, Flex, Text, TouchableArea, styled, useMedia } from 'ui/src'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
+import { parseRestProtocolVersion } from 'uniswap/src/data/rest/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -406,8 +407,8 @@ export default function CreatePosition() {
   const { protocolVersion } = useParams<{
     protocolVersion: string
   }>()
-  const paramsProtocolVersion = parseProtocolVersion(protocolVersion)
   const isCreateLiquidityRefactorEnabled = useFeatureFlag(FeatureFlags.CreateLiquidityRefactor)
+  const paramsProtocolVersion = parseRestProtocolVersion(protocolVersion)
 
   const autoSlippageTolerance = useLPSlippageValue({
     version: paramsProtocolVersion,

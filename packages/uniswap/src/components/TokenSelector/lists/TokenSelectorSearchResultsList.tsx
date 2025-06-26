@@ -17,7 +17,6 @@ function _TokenSelectorSearchResultsList({
   debouncedSearchFilter,
   debouncedParsedSearchFilter,
   isBalancesOnlySearch,
-  isKeyboardOpen,
   input,
 }: {
   onSelectCurrency: OnSelectCurrency
@@ -28,7 +27,6 @@ function _TokenSelectorSearchResultsList({
   debouncedSearchFilter: string | null
   debouncedParsedSearchFilter: string | null
   isBalancesOnlySearch: boolean
-  isKeyboardOpen?: boolean
   input: TradeableAsset | undefined
 }): JSX.Element {
   const { t } = useTranslation()
@@ -65,7 +63,6 @@ function _TokenSelectorSearchResultsList({
       emptyElement={emptyElement}
       errorText={t('token.selector.search.error')}
       hasError={Boolean(error)}
-      isKeyboardOpen={isKeyboardOpen}
       loading={userIsTyping || loading}
       refetch={refetch}
       sections={sections}

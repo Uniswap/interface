@@ -229,6 +229,7 @@ describe('hooks', () => {
         navigateToFiatOnRamp: () => {},
         navigateToTokenDetails: () => {},
         navigateToExternalProfile: () => {},
+        navigateToPoolDetails: () => {},
         navigateToNftCollection: () => {},
         navigateToSendFlow: () => {},
         navigateToReceive: () => {},

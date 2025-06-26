@@ -146,18 +146,9 @@ export const createUniverseTransaction = ({
         chainId,
       )
       break
-    // Some of these transaction types are soon to be deprecated
-    // others (like APPROVAL) are just a native token spend
-    // which is already handled in the refetchGQLQueries saga.
-    case TransactionType.APPROVAL:
-    case TransactionType.DEPOSIT_LIQUIDITY_STAKING:
-    case TransactionType.WITHDRAW_LIQUIDITY_STAKING:
+    // Native token spend cases which are already handled in the refetchGQLQueries saga
+    case UniswapTransactionType.Approve:
     case TransactionType.CLAIM:
-    case TransactionType.CREATE_V3_POOL:
-    case TransactionType.ADD_LIQUIDITY_V3_POOL:
-    case TransactionType.REMOVE_LIQUIDITY_V3:
-    case TransactionType.ADD_LIQUIDITY_V2_POOL:
-    case TransactionType.SUBMIT_PROPOSAL:
     case TransactionType.LP_INCENTIVES_CLAIM_REWARDS:
     case TransactionType.PERMIT:
       return { ...baseTransaction, ...info } as UniswapTransactionDetails

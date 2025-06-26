@@ -53,15 +53,13 @@ describe('useSwapTxAndGasInfo', () => {
 
     const mockApprovalGasFeeResult: GasFeeResult = {
       value: '200000',
-      gasEstimates: {
-        activeEstimate: {
-          gasLimit: '100000',
-          gasFee: '220000',
-          maxFeePerGas: '300000',
-          maxPriorityFeePerGas: '400000',
-          type: FeeType.EIP1559,
-          strategy: DEFAULT_GAS_STRATEGY,
-        },
+      gasEstimate: {
+        gasLimit: '100000',
+        gasFee: '220000',
+        maxFeePerGas: '300000',
+        maxPriorityFeePerGas: '400000',
+        type: FeeType.EIP1559,
+        strategy: DEFAULT_GAS_STRATEGY,
       },
       isLoading: false,
       error: null,
@@ -69,15 +67,13 @@ describe('useSwapTxAndGasInfo', () => {
 
     const mockRevokeGasFeeResult: GasFeeResult = {
       value: '200000',
-      gasEstimates: {
-        activeEstimate: {
-          gasLimit: '100000',
-          gasFee: '220000',
-          maxFeePerGas: '300000',
-          maxPriorityFeePerGas: '400000',
-          type: FeeType.EIP1559,
-          strategy: DEFAULT_GAS_STRATEGY,
-        },
+      gasEstimate: {
+        gasLimit: '100000',
+        gasFee: '220000',
+        maxFeePerGas: '300000',
+        maxPriorityFeePerGas: '400000',
+        type: FeeType.EIP1559,
+        strategy: DEFAULT_GAS_STRATEGY,
       },
       isLoading: false,
       error: null,

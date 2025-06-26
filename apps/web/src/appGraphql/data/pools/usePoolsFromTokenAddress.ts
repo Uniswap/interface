@@ -1,18 +1,18 @@
 import {
   PoolTableSortState,
   TablePool,
-  V2_BIPS,
   calculate1DVolOverTvl,
   calculateApr,
   sortPools,
 } from 'appGraphql/data/pools/useTopPools'
 import { useCallback, useMemo, useRef } from 'react'
+import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import {
   useTopV2PairsQuery,
   useTopV3PoolsQuery,
   useTopV4PoolsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
@@ -22,13 +22,14 @@ export function usePoolsFromTokenAddress({
   tokenAddress,
   sortState,
   chainId,
+  isNative,
 }: {
   tokenAddress: string
   sortState: PoolTableSortState
-  chainId?: UniverseChainId
+  chainId: UniverseChainId
+  isNative?: boolean
 }) {
-  const { defaultChainId } = useEnabledChains()
-  const chain = toGraphQLChain(chainId ?? defaultChainId)
+  const chain = toGraphQLChain(chainId)
   const {
     loading: loadingV4,
     error: errorV4,
@@ -37,10 +38,11 @@ export function usePoolsFromTokenAddress({
   } = useTopV4PoolsQuery({
     variables: {
       first: DEFAULT_QUERY_SIZE,
-      tokenAddress,
+      tokenAddress: isNative ? DEFAULT_NATIVE_ADDRESS : tokenAddress,
       chain,
     },
   })
+
   const {
     loading: loadingV3,
     error: errorV3,
@@ -159,7 +161,13 @@ export function usePoolsFromTokenAddress({
             tvl: pool.totalLiquidity?.value,
             feeTier: pool.feeTier,
           }),
-          feeTier: pool.feeTier,
+          feeTier: pool.feeTier
+            ? {
+                feeAmount: pool.feeTier,
+                tickSpacing: DEFAULT_TICK_SPACING,
+                isDynamic: pool.isDynamicFee ?? false,
+              }
+            : undefined,
           protocolVersion: pool.protocolVersion,
           hookAddress: pool.hook?.address,
         } as TablePool
@@ -180,7 +188,13 @@ export function usePoolsFromTokenAddress({
             tvl: pool.totalLiquidity?.value,
             feeTier: pool.feeTier,
           }),
-          feeTier: pool.feeTier,
+          feeTier: pool.feeTier
+            ? {
+                feeAmount: pool.feeTier,
+                tickSpacing: DEFAULT_TICK_SPACING,
+                isDynamic: false,
+              }
+            : undefined,
           protocolVersion: pool.protocolVersion,
         } as TablePool
       }) ?? []
@@ -197,9 +211,13 @@ export function usePoolsFromTokenAddress({
           apr: calculateApr({
             volume24h: pool.volume24h?.value,
             tvl: pool.totalLiquidity?.value,
-            feeTier: V2_BIPS,
+            feeTier: V2_DEFAULT_FEE_TIER,
           }),
-          feeTier: V2_BIPS,
+          feeTier: {
+            feeAmount: V2_DEFAULT_FEE_TIER,
+            tickSpacing: DEFAULT_TICK_SPACING,
+            isDynamic: false,
+          },
           protocolVersion: pool.protocolVersion,
         } as TablePool
       }) ?? []

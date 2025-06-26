@@ -38,6 +38,7 @@ export function onRestoreComplete({
   sendAnalyticsEvent(MobileEventName.RestoreSuccess, {
     is_restoring_mnemonic: isRestoringMnemonic,
     import_type: params.importType,
+    restore_type: params.restoreType,
     screen,
   })
 }

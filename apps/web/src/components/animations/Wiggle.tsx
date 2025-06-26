@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState } from 'react'
+import { forwardRef, PropsWithChildren, useState } from 'react'
 import { Flex, FlexProps, useSporeColors } from 'ui/src'
 
 const wiggleKeyframe = `
@@ -18,27 +18,35 @@ const wiggleKeyframe = `
   }
 `
 
-export function Wiggle({ iconColor, children, ...props }: PropsWithChildren<FlexProps> & { iconColor?: string }) {
-  const [isHovering, setIsHovering] = useState(false)
-  const colors = useSporeColors()
+export const Wiggle = forwardRef<any, PropsWithChildren<FlexProps> & { iconColor?: string }>(
+  ({ iconColor, children, ...props }, ref) => {
+    const [isHovering, setIsHovering] = useState(false)
+    const colors = useSporeColors()
 
-  return (
-    <>
-      <style>{wiggleKeyframe}</style>
-      <Flex
-        onHoverIn={() => setIsHovering(true)}
-        onHoverOut={() => setIsHovering(false)}
-        {...props}
-        style={{
-          animation: isHovering ? 'wiggle 0.5s ease-in-out forwards' : 'none',
-          animationIterationCount: 1,
-          animationDirection: 'normal',
-          transition: 'fill 0.3s ease-in-out',
-          fill: isHovering ? iconColor || colors.neutral1.val : colors.neutral1.val,
-        }}
-      >
-        {children}
-      </Flex>
-    </>
-  )
-}
+    return (
+      <>
+        <style>{wiggleKeyframe}</style>
+        <Flex
+          ref={ref}
+          onHoverIn={() => setIsHovering(true)}
+          onHoverOut={() => setIsHovering(false)}
+          {...props}
+          style={{
+            animationName: isHovering ? 'wiggle' : 'none',
+            animationDuration: '0.5s',
+            animationTimingFunction: 'ease-in-out',
+            animationFillMode: 'forwards',
+            animationIterationCount: 1,
+            animationDirection: 'normal',
+            transition: 'fill 0.3s ease-in-out',
+            fill: isHovering ? iconColor || colors.neutral1.val : colors.neutral1.val,
+          }}
+        >
+          {children}
+        </Flex>
+      </>
+    )
+  },
+)
+
+Wiggle.displayName = 'Wiggle'

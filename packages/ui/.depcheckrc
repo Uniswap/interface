@@ -12,6 +12,4 @@ ignores: [
     # used in package.json
     'esbuild-register',
     'prettier',
-    # Dependencies that depcheck thinks are missing but are actually present or never used
-    '@types/cypress',
   ]

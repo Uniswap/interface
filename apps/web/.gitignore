@@ -30,6 +30,8 @@ bundlemeta.json
 # misc
 .DS_Store
 
+tsconfig.tsbuildinfo
+
 !.env
 
 .env.local
@@ -51,10 +53,6 @@ notes.txt
 .idea/
 
 package-lock.json
-
-cypress/downloads
-cypress/videos
-cypress/screenshots
 
 .vercel
 

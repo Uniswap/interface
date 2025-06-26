@@ -12,7 +12,6 @@ import {
   ONE_HUNDRED_PERCENT,
   ZERO_PERCENT,
 } from 'constants/misc'
-import { DefaultTheme } from 'lib/styled-components'
 
 const THIRTY_BIPS_FEE = new Percent(30, BIPS_BASE)
 const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(THIRTY_BIPS_FEE)
@@ -104,27 +103,6 @@ export function warningSeverity(priceImpact: Percent | undefined): WarningSeveri
     impact--
   }
   return 0
-}
-
-function getPriceImpactWarning(priceImpact: Percent): 'warning' | 'error' | undefined {
-  if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) {
-    return 'error'
-  }
-  if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) {
-    return 'warning'
-  }
-  return undefined
-}
-
-export function getPriceImpactColor(priceImpact: Percent): keyof DefaultTheme | undefined {
-  switch (getPriceImpactWarning(priceImpact)) {
-    case 'error':
-      return 'critical'
-    case 'warning':
-      return 'deprecated_accentWarning'
-    default:
-      return undefined
-  }
 }
 
 /**

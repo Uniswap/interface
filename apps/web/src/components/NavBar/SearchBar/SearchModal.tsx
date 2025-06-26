@@ -13,7 +13,8 @@ import { SearchModalResultsList } from 'uniswap/src/features/search/SearchModal/
 import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
 import { SearchTab, WEB_SEARCH_TABS } from 'uniswap/src/features/search/SearchModal/types'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
-import { InterfaceEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { Trace } from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, InterfaceEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -71,6 +72,9 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
       padding="$none"
       height="100vh"
       onClose={onClose}
+      analyticsProperties={{
+        search_tab: activeTab,
+      }}
     >
       <Flex grow style={scrollbarStyles}>
         <Flex
@@ -114,18 +118,21 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
         {poolSearchEnabled && (
           <Flex row px="$spacing20" pt="$spacing16" pb="$spacing8" gap="$spacing16">
             {WEB_SEARCH_TABS.map((tab) => (
-              <TouchableArea key={tab} onPress={() => setActiveTab(tab)}>
-                <Text color={activeTab === tab ? '$neutral1' : '$neutral2'} variant="buttonLabel2">
-                  {tab}
-                </Text>
-              </TouchableArea>
+              <Trace element={ElementName.SearchTab} logPress key={tab} properties={{ search_tab: tab }}>
+                <TouchableArea onPress={() => setActiveTab(tab)}>
+                  <Text color={activeTab === tab ? '$neutral1' : '$neutral2'} variant="buttonLabel2">
+                    {tab}
+                  </Text>
+                </TouchableArea>
+              </Trace>
             ))}
           </Flex>
         )}
         <Flex grow>
           {searchFilter && searchFilter.length > 0 ? (
             <SearchModalResultsList
-              chainFilter={chainFilter ?? parsedChainFilter}
+              chainFilter={chainFilter}
+              parsedChainFilter={parsedChainFilter}
               debouncedParsedSearchFilter={debouncedParsedSearchFilter}
               debouncedSearchFilter={debouncedSearchFilter}
               searchFilter={searchFilter}

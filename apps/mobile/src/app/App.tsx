@@ -87,7 +87,8 @@ import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
+import { NativeWalletProvider } from 'wallet/src/features/wallet/providers/NativeWalletProvider'
+import { SharedWalletProvider as SharedWalletReduxProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 enableFreeze(true)
 
@@ -152,14 +153,14 @@ function App(): JSX.Element | null {
           <StrictMode>
             <I18nextProvider i18n={i18n}>
               <SafeAreaProvider>
-                <SharedWalletProvider reduxStore={store}>
+                <SharedWalletReduxProvider reduxStore={store}>
                   <AnalyticsNavigationContextProvider
                     shouldLogScreen={shouldLogScreen}
                     useIsPartOfNavigationTree={useIsPartOfNavigationTree}
                   >
                     <AppOuter />
                   </AnalyticsNavigationContextProvider>
-                </SharedWalletProvider>
+                </SharedWalletReduxProvider>
               </SafeAreaProvider>
             </I18nextProvider>
           </StrictMode>
@@ -254,14 +255,16 @@ function AppOuter(): JSX.Element | null {
                   <DataUpdaters />
                   <NavigationContainer>
                     <MobileWalletNavigationProvider>
-                      <WalletUniswapProvider>
-                        <BottomSheetModalProvider>
-                          <AppModals />
-                          <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                            <AppInner />
-                          </PerformanceProfiler>
-                        </BottomSheetModalProvider>
-                      </WalletUniswapProvider>
+                      <NativeWalletProvider>
+                        <WalletUniswapProvider>
+                          <BottomSheetModalProvider>
+                            <AppModals />
+                            <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                              <AppInner />
+                            </PerformanceProfiler>
+                          </BottomSheetModalProvider>
+                        </WalletUniswapProvider>
+                      </NativeWalletProvider>
                       <NotificationToastWrapper />
                     </MobileWalletNavigationProvider>
                   </NavigationContainer>

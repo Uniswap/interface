@@ -14,7 +14,6 @@ import { VolumeChart } from 'components/Charts/VolumeChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
 import ErrorBoundary from 'components/ErrorBoundary'
-import { parseProtocolVersion } from 'components/Liquidity/utils'
 import { usePDPVolumeChartData } from 'components/Pools/PoolDetails/ChartSection/hooks'
 import { ChartActionsContainer, DEFAULT_PILL_TIME_SELECTOR_OPTIONS } from 'components/Tokens/TokenDetails/ChartSection'
 import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
@@ -28,13 +27,17 @@ import {
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { useAtomValue } from 'jotai/utils'
 import styled, { useTheme } from 'lib/styled-components'
+import { getTokenOrZeroAddress } from 'pages/Pool/Positions/create/utils'
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { EllipsisStyle } from 'theme/components/styles'
 import { textFadeIn } from 'theme/styles'
 import { Flex, SegmentedControl, useMedia } from 'ui/src'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
+import { parseRestProtocolVersion } from 'uniswap/src/data/rest/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -180,7 +183,7 @@ export default function ChartSection(props: ChartSectionProps) {
 
     const selectedChartProps = {
       ...props,
-      feeTier: Number(props.poolData.feeTier),
+      feeTier: Number(props.poolData.feeTier?.feeAmount),
       height: PDP_CHART_HEIGHT_PX,
       timePeriod,
       tokenA: currencyA,
@@ -188,8 +191,7 @@ export default function ChartSection(props: ChartSectionProps) {
       chainId: fromGraphQLChain(props.chain) ?? defaultChainId,
       poolId: props.poolData.idOrAddress,
       hooks: props.poolData.hookAddress,
-      version: parseProtocolVersion(props.poolData.protocolVersion) ?? RestProtocolVersion.V3,
-      tickSpacing: props.poolData.tickSpacing,
+      version: parseRestProtocolVersion(props.poolData.protocolVersion) ?? RestProtocolVersion.V3,
     }
 
     // TODO(WEB-3740): Integrate BE tick query, remove special casing for liquidity chart
@@ -290,11 +292,11 @@ function PriceChart({
   stale: boolean
 }) {
   const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
-  const [primaryToken, referenceToken] = isReversed ? [tokenB, tokenA] : [tokenA, tokenB]
+  const [baseCurrency, quoteCurrency] = isReversed ? [tokenB, tokenA] : [tokenA, tokenB]
 
   const params = useMemo(() => ({ data, stale, type: PriceChartType.LINE }), [data, stale])
 
-  const { price } = useUSDCPrice(referenceToken)
+  const { price } = useUSDCPrice(baseCurrency)
 
   const lastPrice = data[data.length - 1]
   return (
@@ -303,15 +305,15 @@ function PriceChart({
         const displayValue = crosshairData ?? lastPrice
         const currencyBAmountRaw = Math.floor(
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          (displayValue?.value ?? displayValue.close) * 10 ** referenceToken.decimals,
+          (displayValue?.value ?? displayValue.close) * 10 ** baseCurrency.decimals,
         )
         const priceDisplay = (
           <PriceDisplayContainer>
             <ChartPriceText>
-              {`1 ${referenceToken.symbol} = ${formatCurrencyAmount({
-                value: CurrencyAmount.fromRawAmount(referenceToken, currencyBAmountRaw),
+              {`1 ${baseCurrency.symbol} = ${formatCurrencyAmount({
+                value: CurrencyAmount.fromRawAmount(baseCurrency, currencyBAmountRaw),
               })} 
-            ${primaryToken.symbol}`}
+            ${quoteCurrency.symbol}`}
             </ChartPriceText>
             <ChartPriceText color="neutral2">
               {price ? '(' + convertFiatAmountFormatted(price.toSignificant(), NumberType.FiatTokenPrice) + ')' : ''}
@@ -347,7 +349,6 @@ function LiquidityChart({
   isReversed,
   chainId,
   version,
-  tickSpacing,
   hooks,
   poolId,
 }: {
@@ -357,7 +358,6 @@ function LiquidityChart({
   isReversed: boolean
   chainId: UniverseChainId
   version: RestProtocolVersion
-  tickSpacing?: number
   hooks?: string
   poolId?: string
 }) {
@@ -365,18 +365,35 @@ function LiquidityChart({
   const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t('common.tokenA')
   const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t('common.tokenB')
 
-  const { tickData, activeTick, loading } = useLiquidityBarData({
-    sdkCurrencies: {
+  const { data: poolData } = useGetPoolsByTokens(
+    {
+      fee: feeTier,
+      chainId,
+      protocolVersions: [version],
+      token0: getTokenOrZeroAddress(tokenA),
+      token1: getTokenOrZeroAddress(tokenB),
+      hooks: hooks ?? ZERO_ADDRESS,
+    },
+    true,
+  )
+
+  const sdkCurrencies = useMemo(
+    () => ({
       TOKEN0: tokenA,
       TOKEN1: tokenB,
-    },
+    }),
+    [tokenA, tokenB],
+  )
+
+  const { tickData, activeTick, loading } = useLiquidityBarData({
+    sdkCurrencies,
     feeTier,
     isReversed,
     chainId,
     version,
-    tickSpacing,
     hooks,
     poolId,
+    tickSpacing: poolData?.pools[0]?.tickSpacing,
   })
 
   const theme = useTheme()

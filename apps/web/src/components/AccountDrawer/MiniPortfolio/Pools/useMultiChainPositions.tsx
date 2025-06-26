@@ -19,7 +19,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PositionDetails } from 'types/position'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { UniswapV3PoolInterface } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
@@ -155,7 +154,7 @@ export default function useMultiChainPositions(account: string): UseMultiChainPo
             tokenA,
             tokenB,
             fee: details.fee,
-            chainId: getChainInfo(chainId).sdkId,
+            chainId: chainId as number,
           })
           poolAddressCache.set(details, chainId, poolAddress)
         }

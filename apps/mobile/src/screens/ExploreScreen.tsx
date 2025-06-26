@@ -2,7 +2,6 @@ import { useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TextInput } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { useAnimatedRef } from 'react-native-reanimated'
 import { ExploreSections } from 'src/components/explore/ExploreSections'
@@ -33,7 +32,6 @@ export function ExploreScreen(): JSX.Element {
   useScrollToTop(listRef)
 
   const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
-  const textInputRef = useRef<TextInput>(null)
   // TODO(WALL-5482): investigate list rendering performance/scrolling issue
   const canRenderList = useRenderNextFrame(!isSearchMode)
 
@@ -42,7 +40,6 @@ export function ExploreScreen(): JSX.Element {
 
   const onSearchChangeText = (newSearchFilter: string): void => {
     onChangeText(newSearchFilter)
-    textInputRef.current?.setNativeProps({ text: newSearchFilter })
   }
 
   const onSearchFocus = (): void => {
@@ -62,7 +59,6 @@ export function ExploreScreen(): JSX.Element {
       <HandleBar backgroundColor="none" />
       <Flex p="$spacing16">
         <SearchTextInput
-          ref={textInputRef}
           cancelBehaviorType={CancelBehaviorType.BackChevron}
           endAdornment={
             isSearchMode ? (
@@ -96,8 +92,8 @@ export function ExploreScreen(): JSX.Element {
         <ExploreScreenSearchResultsList
           searchQuery={searchFilter ?? ''}
           parsedSearchQuery={parsedSearchFilter}
-          chainFilter={chainFilter ?? parsedChainFilter}
-          textInputRef={textInputRef}
+          chainFilter={chainFilter}
+          parsedChainFilter={parsedChainFilter}
         />
       ) : (
         isSheetReady && canRenderList && <ExploreSections listRef={listRef} />

@@ -6,6 +6,8 @@ export type { TooltipProps } from 'tamagui'
 const ANIMATION_OFFSET = 4
 
 const StyledContent = styled(TamaguiTooltip.Content)
+StyledContent.displayName = 'StyledContent'
+
 const HigherOrderStyledContent = StyledContent.styleable<TooltipContentProps>((props, ref) => {
   const { animationDirection = 'top' } = props
 
@@ -35,6 +37,8 @@ const HigherOrderStyledContent = StyledContent.styleable<TooltipContentProps>((p
   return <StyledContent ref={ref} enterStyle={animationStyles} exitStyle={animationStyles} {...props} />
 })
 
+HigherOrderStyledContent.displayName = 'HigherOrderStyledContent'
+
 const Content = styled(HigherOrderStyledContent, {
   animation: 'simple',
   gap: '$spacing8',
@@ -59,6 +63,8 @@ const Content = styled(HigherOrderStyledContent, {
   },
 })
 
+Content.displayName = 'Content'
+
 const Arrow = styled(TamaguiTooltip.Arrow, {
   '$theme-dark': {
     borderWidth: 1,
@@ -72,6 +78,8 @@ const Arrow = styled(TamaguiTooltip.Arrow, {
   },
 })
 
+Arrow.displayName = 'Arrow'
+
 const TooltipRoot = styled(TamaguiTooltip, {
   offset: {
     mainAxis: 16,
@@ -79,6 +87,8 @@ const TooltipRoot = styled(TamaguiTooltip, {
   delay: { close: 500, open: 0 },
   restMs: 200,
 })
+
+TooltipRoot.displayName = 'TooltipRoot'
 
 export const Tooltip = withStaticProperties(TooltipRoot, {
   Trigger: TamaguiTooltip.Trigger,

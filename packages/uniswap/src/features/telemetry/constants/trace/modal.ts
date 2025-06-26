@@ -124,6 +124,7 @@ export const ModalName = {
   RemoveWallet: 'remove-wallet-modal',
   ResetCreatePositionsForm: 'reset-create-positions-form',
   RestoreWallet: 'restore-wallet-modal',
+  RestoreWalletSeedPhrase: 'restore-wallet-seed-phrase-modal',
   Scantastic: 'scantastic',
   SmartWalletActionRequiredModal: 'smart-wallet-action-required-modal',
   SmartWalletAdvancedSettingsModal: 'smart-wallet-advanced-settings-modal',

@@ -26,7 +26,8 @@
     "prettier-plugin-organize-imports": "3.2.4",
     "syncpack": "8.5.14",
     "turbo": "1.13.4",
-    "turbo-ignore": "1.11.3"
+    "turbo-ignore": "1.11.3",
+    "wrangler": "4.20.0"
   },
   "engines": {
     "node": "=22.13.1",
@@ -85,7 +86,6 @@
     "@vercel/og@0.5.8": "patch:@vercel/og@npm%3A0.5.8#./.yarn/patches/@vercel-og-npm-0.5.8-83a79f2744.patch",
     "@xmldom/xmldom": "0.7.7",
     "cheerio": "1.0.0-rc.12",
-    "cypress": "13.7.3",
     "detox@20.23.0": "patch:detox@npm%3A20.23.0#./.yarn/patches/detox-npm-20.23.0-6d61110e63.patch",
     "elliptic": "6.5.7",
     "eslint-plugin-ft-flow": "2.0.3",

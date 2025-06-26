@@ -10,10 +10,10 @@ import {
 } from 'state/transactions/types'
 import { isPendingTx } from 'state/transactions/utils'
 import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 
 const MIN_BRIDGE_WAIT_TIME = ms('2s')
@@ -41,7 +41,7 @@ function usePendingDepositedBridgeTransactions(): BridgeTransactionDetailsWithCh
 }
 
 const SWAP_STATUS_TO_FINALIZED_STATUS: Partial<Record<SwapStatus, ConfirmedTransactionDetails['status']>> = {
-  [SwapStatus.SUCCESS]: TransactionStatus.Confirmed,
+  [SwapStatus.SUCCESS]: TransactionStatus.Success,
   [SwapStatus.FAILED]: TransactionStatus.Failed,
   [SwapStatus.EXPIRED]: TransactionStatus.Failed,
 }

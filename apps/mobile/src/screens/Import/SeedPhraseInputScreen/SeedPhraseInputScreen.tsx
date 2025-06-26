@@ -18,7 +18,8 @@ import { Button, Flex, MobileDeviceHeight, Text, TouchableArea, useIsShortMobile
 import { PapersText, QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -77,6 +78,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
   )
 
   const handleSubmitError: NativeSeedPhraseInputProps['onSubmitError'] = useCallback(() => {
+    sendAnalyticsEvent(MobileEventName.SeedPhraseInputSubmitError)
     setIsSubmitEnabled(true)
   }, [setIsSubmitEnabled])
 

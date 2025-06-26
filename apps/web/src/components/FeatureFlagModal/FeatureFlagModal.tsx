@@ -222,7 +222,6 @@ export default function FeatureFlagModal() {
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Search">
-            <FeatureFlagOption flag={FeatureFlags.SearchRevamp} label="Enable search revamp" />
             <FeatureFlagOption
               flag={FeatureFlags.PoolSearch}
               label="Enable pool search (turn on search_revamp as well to see)"

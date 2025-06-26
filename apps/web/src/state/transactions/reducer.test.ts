@@ -9,9 +9,9 @@ import reducer, {
   initialState,
   LocalWebTransactionState,
 } from 'state/transactions/reducer'
-import { ConfirmedTransactionDetails, PendingTransactionDetails, TransactionType } from 'state/transactions/types'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ConfirmedTransactionDetails, PendingTransactionDetails } from 'state/transactions/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 describe('transaction reducer', () => {
   let store: Store<LocalWebTransactionState>
@@ -30,10 +30,10 @@ describe('transaction reducer', () => {
           from: 'abc',
           nonce: 1,
           info: {
-            type: TransactionType.APPROVAL,
+            type: TransactionType.Approve,
             tokenAddress: 'abc',
             spender: 'def',
-            amount: '10000',
+            approvalAmount: '10000',
           },
         }),
       )
@@ -46,10 +46,10 @@ describe('transaction reducer', () => {
       expect(tx.from).toEqual('abc')
       expect(tx.addedTime).toBeGreaterThanOrEqual(beforeTime)
       expect(tx.info).toEqual({
-        type: TransactionType.APPROVAL,
+        type: TransactionType.Approve,
         tokenAddress: 'abc',
         spender: 'def',
-        amount: '10000',
+        approvalAmount: '10000',
       })
     })
   })
@@ -72,10 +72,10 @@ describe('transaction reducer', () => {
           chainId: UniverseChainId.Mainnet,
           nonce: 2,
           info: {
-            type: TransactionType.APPROVAL,
+            type: TransactionType.Approve,
             spender: '0x0',
             tokenAddress: '0x0',
-            amount: '10000',
+            approvalAmount: '10000',
           },
           from: '0x0',
         }),
@@ -85,11 +85,11 @@ describe('transaction reducer', () => {
         finalizeTransaction({
           chainId: UniverseChainId.Mainnet,
           hash: '0x0',
-          status: TransactionStatus.Confirmed,
+          status: TransactionStatus.Success,
         }),
       )
       const tx = store.getState()[UniverseChainId.Mainnet]?.['0x0'] as ConfirmedTransactionDetails
-      expect(tx.status).toBe(TransactionStatus.Confirmed)
+      expect(tx.status).toBe(TransactionStatus.Success)
       expect(tx.confirmedTime).toBeGreaterThanOrEqual(beforeTime)
     })
   })
@@ -112,10 +112,10 @@ describe('transaction reducer', () => {
           chainId: UniverseChainId.Mainnet,
           nonce: 3,
           info: {
-            type: TransactionType.APPROVAL,
+            type: TransactionType.Approve,
             spender: '0x0',
             tokenAddress: '0x0',
-            amount: '10000',
+            approvalAmount: '10000',
           },
           from: '0x0',
         }),
@@ -137,10 +137,10 @@ describe('transaction reducer', () => {
           chainId: UniverseChainId.Mainnet,
           nonce: 4,
           info: {
-            type: TransactionType.APPROVAL,
+            type: TransactionType.Approve,
             spender: '0x0',
             tokenAddress: '0x0',
-            amount: '10000',
+            approvalAmount: '10000',
           },
           from: '0x0',
         }),
@@ -172,10 +172,10 @@ describe('transaction reducer', () => {
           hash: '0x0',
           nonce: 5,
           info: {
-            type: TransactionType.APPROVAL,
+            type: TransactionType.Approve,
             spender: 'abc',
             tokenAddress: 'def',
-            amount: '10000',
+            approvalAmount: '10000',
           },
           from: 'abc',
         }),
@@ -183,13 +183,13 @@ describe('transaction reducer', () => {
       store.dispatch(
         addTransaction({
           chainId: UniverseChainId.Optimism,
-          nonce: 6,
           hash: '0x1',
+          nonce: 6,
           info: {
-            type: TransactionType.APPROVAL,
+            type: TransactionType.Approve,
             spender: 'abc',
             tokenAddress: 'def',
-            amount: '10000',
+            approvalAmount: '10000',
           },
           from: 'abc',
         }),
@@ -214,10 +214,10 @@ describe('transaction reducer', () => {
           hash: '0x0',
           nonce: 7,
           info: {
-            type: TransactionType.APPROVAL,
+            type: TransactionType.Approve,
             spender: 'abc',
             tokenAddress: 'def',
-            amount: '10000',
+            approvalAmount: '10000',
           },
           from: 'abc',
         }),

@@ -111,6 +111,7 @@ function WalletItem({ wallet, onPress }: { wallet: WalletData; onPress: (wallet:
               color: '$neutral1',
             }}
             includeUnitagSuffix={false}
+            unitagIconSize="$icon.20"
           />
 
           <Text variant="body3" color="$neutral2">

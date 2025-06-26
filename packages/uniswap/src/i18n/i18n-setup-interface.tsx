@@ -3,6 +3,7 @@ import resourcesToBackend from 'i18next-resources-to-backend'
 import { initReactI18next } from 'react-i18next'
 import { Locale } from 'uniswap/src/features/language/constants'
 import enUsLocale from 'uniswap/src/i18n/locales/source/en-US.json'
+import { getLocaleTranslationKey } from 'uniswap/src/i18n/utils'
 import { logger } from 'utilities/src/logger/logger'
 
 let isSetup = false
@@ -28,20 +29,10 @@ export function setupi18n(): undefined {
           return enUsLocale
         }
 
-        const localeNameToFileNameOverrides: Record<string, string> = {
-          [Locale.ChineseSimplified]: 'zh-CN',
-          [Locale.ChineseTraditional]: 'zh-TW',
-          [Locale.SpanishLatam]: Locale.SpanishSpain,
-          [Locale.SpanishUnitedStates]: Locale.SpanishSpain,
-        }
-
-        if (Object.keys(localeNameToFileNameOverrides).includes(locale)) {
-          // eslint-disable-next-line no-unsanitized/method
-          return import(`./locales/translations/${localeNameToFileNameOverrides[locale]}.json`)
-        }
+        const fileName = getLocaleTranslationKey(locale)
 
         // eslint-disable-next-line no-unsanitized/method
-        return import(`./locales/translations/${locale}.json`)
+        return import(`./locales/translations/${fileName}.json`)
       }),
     )
     // eslint-disable-next-line max-params

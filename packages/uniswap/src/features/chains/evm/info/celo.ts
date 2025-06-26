@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { CELO_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { USDC_CELO } from 'uniswap/src/constants/tokens'
@@ -18,13 +17,11 @@ import { celo } from 'wagmi/chains'
 export const CELO_CHAIN_INFO = {
   ...celo,
   id: UniverseChainId.Celo,
-  sdkId: UniswapSDKChainId.CELO,
   assetRepoNetworkName: 'celo',
   backendChain: {
     chain: BackendChainId.Celo as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: '0x471EcE3750Da237f93B8E339c536989b8978a438',
-    isSecondaryChain: false,
   },
   blockPerMainnetEpochForChainId: 2,
   blockWaitMsBeforeWarning: 600000,
@@ -36,9 +33,6 @@ export const CELO_CHAIN_INFO = {
     url: 'https://celoscan.io/',
     apiURL: 'https://api.celoscan.io',
   },
-  helpCenterUrl: undefined,
-  infoLink: 'https://app.uniswap.org/explore/tokens/celo',
-  infuraPrefix: 'celo-mainnet',
   interfaceName: 'celo',
   label: 'Celo',
   logo: CELO_LOGO,
@@ -55,8 +49,6 @@ export const CELO_CHAIN_INFO = {
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_CELO, 10_000e18),
   stablecoins: [USDC_CELO],
   statusPage: undefined,
-  supportsInterfaceClientSideRouting: true,
-  supportsGasEstimates: true,
   supportsV4: false,
   urlParam: 'celo',
   rpcUrls: {

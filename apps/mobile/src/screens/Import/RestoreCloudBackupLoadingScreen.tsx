@@ -40,10 +40,8 @@ const ANDROID_E2E_WORKAROUND = config.isE2ETest && isAndroid
 export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const entryPoint = params.entryPoint
-  const importType = params.importType
 
-  const isRestoringMnemonic = importType === ImportType.RestoreMnemonic
+  const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
   // inits with null before fetchCloudStorageBackups starts fetching
   const [isLoading, setIsLoading] = useState<boolean | null>(null)
   const [isError, setIsError] = useState(false)
@@ -132,17 +130,15 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
     }
     if (backups.length === 1 && backups[0]) {
       navigation.replace(OnboardingScreens.RestoreCloudBackupPassword, {
-        importType,
-        entryPoint,
+        ...params,
         mnemonicId: backups[0].mnemonicId,
       })
     } else {
       navigation.replace(OnboardingScreens.RestoreCloudBackup, {
-        importType,
-        entryPoint,
+        ...params,
       })
     }
-  }, [backups, entryPoint, importType, isLoading, navigation])
+  }, [backups, isLoading, navigation, params])
 
   if (isError) {
     return (
@@ -162,9 +158,8 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
   if (isLoading === false && backups.length === 0) {
     if (isRestoringMnemonic) {
       navigation.replace(OnboardingScreens.SeedPhraseInput, {
+        ...params,
         showAsCloudBackupFallback: true,
-        importType,
-        entryPoint,
       })
     } else {
       return (

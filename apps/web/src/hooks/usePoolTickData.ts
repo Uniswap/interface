@@ -1,15 +1,15 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import { FeeAmount, Pool as V3Pool, tickToPrice as tickToPriceV3 } from '@uniswap/v3-sdk'
+import { FeeAmount, TICK_SPACINGS, Pool as V3Pool, tickToPrice as tickToPriceV3 } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
 import { TickData, Ticks } from 'appGraphql/data/AllV3TicksQuery'
-import { ZERO_ADDRESS } from 'constants/misc'
 import JSBI from 'jsbi'
 import ms from 'ms'
 import { getTokenOrZeroAddress, poolEnabledProtocolVersion } from 'pages/Pool/Positions/create/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { PositionField } from 'types/position'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import {
   useAllV3TicksQuery,
   useAllV4TicksQuery,
@@ -205,6 +205,8 @@ export function usePoolActiveLiquidity({
   )
 
   const pool = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined
+  const tickSpacingWithFallback =
+    tickSpacing ?? pool?.tickSpacing ?? (feeAmount ? TICK_SPACINGS[feeAmount as FeeAmount] : undefined)
 
   const liquidity = pool?.liquidity
   const sqrtPriceX96 = pool?.sqrtPriceX96
@@ -212,8 +214,13 @@ export function usePoolActiveLiquidity({
   const currentTick = pool?.tick
   // Find nearest valid tick for pool in case tick is not initialized.
   const activeTick = useMemo(
-    () => getActiveTick({ tickCurrent: currentTick, feeAmount, tickSpacing }),
-    [currentTick, feeAmount, tickSpacing],
+    () =>
+      getActiveTick({
+        tickCurrent: currentTick,
+        feeAmount,
+        tickSpacing: tickSpacingWithFallback,
+      }),
+    [currentTick, feeAmount, tickSpacingWithFallback],
   )
 
   const { isLoading, error, ticks } = useAllPoolTicks({
@@ -222,13 +229,14 @@ export function usePoolActiveLiquidity({
     precalculatedPoolId: poolId,
     chainId: chainId ?? defaultChainId,
     version,
-    tickSpacing,
+    tickSpacing: tickSpacingWithFallback,
     hooks,
   })
 
   return useMemo(() => {
     const token0 = sdkCurrencies.TOKEN0
     const token1 = sdkCurrencies.TOKEN1
+
     if (!token0 || !token1 || activeTick === undefined || !pool || !ticks || ticks.length === 0 || isLoading) {
       return {
         isLoading: isLoading || poolIsLoading,

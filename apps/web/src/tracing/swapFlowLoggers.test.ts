@@ -2,11 +2,10 @@ import { SignatureType } from 'state/signatures/types'
 import { TransactionType } from 'state/transactions/types'
 import { logSwapFinalized, logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
-import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 vi.mock('uniswap/src/features/telemetry/send', () => ({
   sendAnalyticsEvent: vi.fn(),
@@ -41,7 +40,7 @@ describe('swapFlowLoggers', () => {
       chainInId: mockChainId,
       chainOutId: mockChainId,
       analyticsContext: mockAnalyticsContext,
-      status: TransactionStatus.Confirmed,
+      status: TransactionStatus.Success,
       type: TransactionType.SWAP,
     })
 
