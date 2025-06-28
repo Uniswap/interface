@@ -9,7 +9,6 @@ import {
   Bytes,
   BigInt,
   BigDecimal,
-  Int8,
 } from "@graphprotocol/graph-ts";
 
 export class Factory extends Entity {
