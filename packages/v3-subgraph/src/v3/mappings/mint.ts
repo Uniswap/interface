@@ -1,4 +1,4 @@
-import { BigInt } from '@graphprotocol/graph-ts'
+import { Address, BigInt } from '@graphprotocol/graph-ts'
 
 import { Bundle, Factory, Mint, Pool, Tick, Token } from '../../../generated/schema'
 import { Mint as MintEvent } from '../../../generated/templates/Pool/Pool'
@@ -15,6 +15,32 @@ import {
 } from './intervalUpdates'
 import { createTick } from './tick'
 import { loadTransaction } from './utils'
+import {
+  MintCall,
+  NonfungiblePositionManager
+} from '../../../generated/NonfungiblePositionManager/NonfungiblePositionManager'
+import { Factory as V3Factory } from '../../../generated/NonfungiblePositionManager/Factory'
+
+export function handleMintCall(call: MintCall): void {
+  const poolAddress = V3Factory.bind(FACTORY_ADDRESS).try_getPool(
+    call.inputs.params.token0,
+    call.inputs.params.token1,
+    call.inputs.params.fee
+  )
+
+  const pool = Pool.load(poolAddress.value)
+
+  const position = getOrCreatePosition(
+    call.transaction.from,
+    pool,
+    BigInt.fromI32(call.inputs.params.tickLower),
+    BigInt.fromI32(call.inputs.params.tickUpper),
+    call,
+    call.outputs.tokenId
+  )
+
+  position.save()
+}
 
 export function handleMint(event: MintEvent): void {
   const factoryAddress = FACTORY_ADDRESS
@@ -122,7 +148,8 @@ export function handleMint(event: MintEvent): void {
       pool,
       BigInt.fromI32(event.params.tickLower),
       BigInt.fromI32(event.params.tickUpper),
-      event
+      event,
+      null
     )
     updatePositionWithMint(position, event.params.amount, amount0, amount1)
     position.save()

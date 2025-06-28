@@ -27,6 +27,9 @@ class PositionAmounts {
   amount1: BigDecimal
 }
 
+type EventOrcall = ethereum.Event
+type TokenId = BigInt | null
+
 /**
  * Gets or creates a position entity
  * @param owner The owner of the position
@@ -41,7 +44,8 @@ export function getOrCreatePosition(
   pool: Pool,
   tickLower: BigInt,
   tickUpper: BigInt,
-  event: ethereum.Event
+  event: EventOrcall,
+  tokenId: TokenId
 ): Position {
   const positionId =
     owner.toHexString() + '-' + pool.id.toHexString() + '-' + tickLower.toString() + '-' + tickUpper.toString()
@@ -66,6 +70,7 @@ export function getOrCreatePosition(
     position.createdAtTimestamp = event.block.timestamp
     position.createdAtBlockNumber = event.block.number
     position.closed = false
+    position.tokenId = tokenId
   }
 
   position.updatedAtTimestamp = event.block.timestamp
@@ -270,6 +275,7 @@ export function createPositionSnapshot(position: Position, event: ethereum.Event
   snapshot.collectedFeesToken0 = position.collectedFeesToken0
   snapshot.collectedFeesToken1 = position.collectedFeesToken1
   snapshot.transaction = event.transaction.hash.toHexString()
+  snapshot.tokenId = position.tokenId
 
   snapshot.save()
 
