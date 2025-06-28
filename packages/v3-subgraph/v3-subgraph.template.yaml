@@ -25,8 +25,8 @@ dataSources:
         - name: NonfungiblePositionManager
           file: ./abis/nonfungiblePositionManager.json
       callHandlers:
-        function: mint((address,address,uint24,int24,int24,uint256,uint256,uint256,uint256,address,uint256))
-        handler: handleMintCall
+        - function: mint((address,address,uint24,int24,int24,uint256,uint256,uint256,uint256,address,uint256))
+          handler: handleMintCall
   - kind: ethereum/contract
     name: Factory
     network: smartbch
