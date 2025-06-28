@@ -272,6 +272,7 @@ export function createPositionSnapshot(position: Position, event: ethereum.Event
   snapshot.collectedFeesToken0 = position.collectedFeesToken0
   snapshot.collectedFeesToken1 = position.collectedFeesToken1
   snapshot.transaction = event.transaction.hash.toHexString()
+  snapshot.tokenId = position.tokenId
 
   snapshot.save()
 
