@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react'
 import path from 'path'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -39,7 +40,7 @@ export default defineConfig({
   esbuild: {
     sourcemap: false,
   },
-  plugins: [react()],
+  plugins: [react(), nodePolyfills({ protocolImports: true })],
   optimizeDeps: {
     include: ['ui/src', 'utilities/src', 'uniswap/src'],
     exclude: ['d3-array'],
@@ -76,6 +77,14 @@ export default defineConfig({
       'd3-array': path.resolve(__dirname, '../../node_modules/d3-array/dist/d3-array.min.js'),
       'react-native': 'react-native-web',
       'react-native-gesture-handler': require.resolve('react-native-gesture-handler'),
+
+      http: 'stream-http',
+      https: 'https-browserify',
+      stream: 'stream-browserify',
+      zlib: 'browserify-zlib',
+      buffer: 'buffer',
+      process: 'process/browser',
+      path: 'path-browserify',
     },
   },
 })

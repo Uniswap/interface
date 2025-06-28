@@ -1,11 +1,13 @@
 import { Currency, Token } from '@uniswap/sdk-core'
+import { SwapWidget } from '@uniswap/widgets'
+import '@uniswap/widgets/fonts.css'
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { SwapBottomCard } from 'components/SwapBottomCard'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import TokenBalancesCard from 'components/TokenBalancesCard'
 import ChartSection, { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
 import { PageWrapper } from 'components/swap/styled'
+import { ethers } from 'ethers'
 import { useAccount } from 'hooks/useAccount'
 import { useDeferredComponent } from 'hooks/useDeferredComponent'
 import { PageType, useIsPage } from 'hooks/useIsPage'
@@ -45,8 +47,6 @@ import {
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
-import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow/SwapFlow'
-import { SwapDependenciesContextProvider } from 'uniswap/src/features/transactions/swap/contexts/SwapDependenciesContextProvider'
 import { SwapFormContextProvider, SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/contexts/selectors'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
@@ -54,7 +54,6 @@ import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/as
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { isMobileWeb } from 'utilities/src/platform'
-import noop from 'utilities/src/react/noop'
 import { isIFramed } from 'utils/isIFramed'
 import './newSwapStyle.css'
 
@@ -435,6 +434,12 @@ function UniversalSwapFlow({
     }
   }
 
+  const provider = new ethers.providers.JsonRpcProvider('https://mainnet.infura.io/v3/9e5dc0a1ce85450bbe01670918915271')
+
+  const jsonRpcUrlMap = {
+    1: ['https://mainnet.infura.io/v3/9e5dc0a1ce85450bbe01670918915271'],
+  }
+
   useEffect(() => {
     setChartData(selected.address)
   }, [selected])
@@ -481,28 +486,37 @@ function UniversalSwapFlow({
               </Flex>
             )}
             {currentTab === SwapTab.Swap && (
-              <Flex gap="$spacing16" flexDirection="row">
-                {/* Chart placeholder (white box) */}
+              // <Flex gap="$spacing16" flexDirection="row">
+              //   {/* Chart placeholder (white box) */}
 
-                {/* Swap Form */}
-                <Flex flex={1}>
-                  <SwapDependenciesContextProvider swapCallback={swapCallback} wrapCallback={wrapCallback}>
-                    <SwapFlow
-                      settings={swapSettings}
-                      hideHeader={hideHeader}
-                      hideFooter={hideFooter}
-                      onClose={noop}
-                      swapRedirectCallback={swapRedirectCallback}
-                      onCurrencyChange={onCurrencyChange}
-                      prefilledState={prefilledState}
-                      tokenColor={tokenColor}
-                      onSubmitSwap={resetDisableOneClickSwap}
-                      passkeyAuthStatus={passkeyAuthStatus}
-                    />
-                  </SwapDependenciesContextProvider>
-                </Flex>
-                <SwapBottomCard />
-              </Flex>
+              //   {/* Swap Form */}
+              //   <Flex flex={1}>
+              //     <SwapDependenciesContextProvider swapCallback={swapCallback} wrapCallback={wrapCallback}>
+              //       <SwapFlow
+              //         settings={swapSettings}
+              //         hideHeader={hideHeader}
+              //         hideFooter={hideFooter}
+              //         onClose={noop}
+              //         swapRedirectCallback={swapRedirectCallback}
+              //         onCurrencyChange={onCurrencyChange}
+              //         prefilledState={prefilledState}
+              //         tokenColor={tokenColor}
+              //         onSubmitSwap={resetDisableOneClickSwap}
+              //         passkeyAuthStatus={passkeyAuthStatus}
+              //       />
+              //     </SwapDependenciesContextProvider>
+              //   </Flex>
+              //   <SwapBottomCard />
+              // </Flex>
+
+              <div style={{ width: 400 }}>
+                <SwapWidget
+                  provider={provider}
+                  jsonRpcUrlMap={jsonRpcUrlMap}
+                  defaultInputTokenAddress="NATIVE" // ETH
+                  defaultOutputTokenAddress="NATIVE" // USDC
+                />
+              </div>
             )}
             {currentTab === SwapTab.Limit && LimitFormWrapper && (
               <LimitFormWrapper onCurrencyChange={onCurrencyChange} />

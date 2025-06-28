@@ -216,6 +216,7 @@
     "@uniswap/v3-periphery": "1.4.4",
     "@uniswap/v3-sdk": "3.25.2",
     "@uniswap/v4-sdk": "1.21.2",
+    "@uniswap/widgets": "2.59.0",
     "@visx/group": "2.17.0",
     "@visx/responsive": "3.12.0",
     "@visx/shape": "2.18.0",

@@ -6,6 +6,7 @@ const path = require('path')
 const { IgnorePlugin, ProvidePlugin, DefinePlugin } = require('webpack')
 const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -104,6 +105,7 @@ module.exports = {
         }`,
         maxRetries: 3,
       }),
+       new NodePolyfillPlugin() 
     ],
     configure: (webpackConfig) => {
       // Copy Rive WASM file to public directory
@@ -175,7 +177,7 @@ module.exports = {
       webpackConfig.resolve = Object.assign(webpackConfig.resolve, {
         alias: {
           ...webpackConfig.resolve.alias,
-          '@web3-react/core': path.resolve(__dirname, 'src/connection/web3reactShim.ts'),
+          // '@web3-react/core': path.resolve(__dirname, 'src/connection/web3reactShim.ts'),
           crypto: require.resolve('expo-crypto'),
           'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
           'react-native$': 'react-native-web',
@@ -334,6 +336,18 @@ module.exports = {
         test: /\.stories\.[tj]sx?$|\.mdx$/,
         use: 'ignore-loader',
       })
+
+      webpackConfig.resolve.fallback = {
+        ...(webpackConfig.resolve.fallback || {}),
+        http:  require.resolve('stream-http'),
+        https: require.resolve('https-browserify'),
+        stream: require.resolve('stream-browserify'),
+        zlib:  require.resolve('browserify-zlib'),
+        buffer: require.resolve('buffer/'),
+        process: require.resolve('process/browser'),
+        path: require.resolve('path-browserify'),
+        fs: false
+      }
 
       return webpackConfig
     },
