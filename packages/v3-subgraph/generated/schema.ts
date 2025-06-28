@@ -9,7 +9,6 @@ import {
   Bytes,
   BigInt,
   BigDecimal,
-  Int8,
 } from "@graphprotocol/graph-ts";
 
 export class Factory extends Entity {
@@ -1142,23 +1141,6 @@ export class Position extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get tokenId(): BigInt | null {
-    let value = this.get("tokenId");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set tokenId(value: BigInt | null) {
-    if (!value) {
-      this.unset("tokenId");
-    } else {
-      this.set("tokenId", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
   get owner(): Bytes {
     let value = this.get("owner");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1448,23 +1430,6 @@ export class PositionSnapshot extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
-  }
-
-  get tokenId(): BigInt | null {
-    let value = this.get("tokenId");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set tokenId(value: BigInt | null) {
-    if (!value) {
-      this.unset("tokenId");
-    } else {
-      this.set("tokenId", Value.fromBigInt(<BigInt>value));
-    }
   }
 
   get owner(): Bytes {

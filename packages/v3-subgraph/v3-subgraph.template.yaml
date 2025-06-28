@@ -8,26 +8,6 @@ features:
   - grafting
 dataSources:
   - kind: ethereum/contract
-    name: NonfungiblePositionManager
-    network: smartbch
-    source:
-      abi: NonfungiblePositionManager
-      address: '0x8800d8e9c028e5c9e445D9bA9BD430eeCa992613'
-      startBlock: 19738805
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      file: ./src/v3/mappings/mint.ts
-      entities:
-        - Position
-      abis:
-        - name: NonfungiblePositionManager
-          file: ./abis/nonfungiblePositionManager.json
-      callHandlers:
-        function: mint((address,address,uint24,int24,int24,uint256,uint256,uint256,uint256,address,uint256))
-        handler: handleMintCall
-  - kind: ethereum/contract
     name: Factory
     network: smartbch
     source:

@@ -1,4 +1,6 @@
-
+scalar BigInt
+scalar BigDecimal
+scalar Bytes
 
 type Factory @entity(immutable: false) {
   # factory address
@@ -169,8 +171,6 @@ type Tick @entity(immutable: false) {
 type Position @entity(immutable: false) {
   # Format: <owner address>-<pool address>-<lower tick>-<upper tick>
   id: ID!
-  # Sequential position number
-  tokenId: BigInt
   # Owner of the position
   owner: Bytes!
   # Pool the position is in
@@ -215,8 +215,6 @@ type Position @entity(immutable: false) {
 type PositionSnapshot @entity(immutable: false) {
   # Format: <position id>-<block number>
   id: ID!
-  # Sequential position number
-  tokenId: BigInt
   # Owner of the position
   owner: Bytes!
   # Pool the position is in

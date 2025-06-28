@@ -4,8 +4,9 @@ import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/Breadcrumb
 import { LiquidityPositionAmountsTile } from 'components/Liquidity/LiquidityPositionAmountsTile'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { LiquidityPositionPriceRangeTile } from 'components/Liquidity/LiquidityPositionPriceRangeTile'
+import { PositionNFT } from 'components/Liquidity/PositionNFT'
 import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
-import { LoadingRows } from 'components/Loader/styled'
+import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { apolloSubgraphClient } from 'graphql/data/apollo/client'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
@@ -248,7 +249,21 @@ export function LegacyPositionPage() {
           </Flex>
         </Flex>
         <Flex row $lg={{ row: false }} width="100%" gap="$gap16">
-          <Flex gap="$gap12" flexBasis="50%">
+          <Flex
+            grow
+            backgroundColor="$surface2"
+            borderRadius="$rounded12"
+            justifyContent="center"
+            alignItems="center"
+            flexBasis="50%"
+          >
+            {'result' in metadata ? (
+              <PositionNFT image={metadata.result.image} height={400} />
+            ) : (
+              <LoadingFullscreen style={{ borderRadius: 12, backgroundColor: 'transparent' }} />
+            )}
+          </Flex>
+          <Flex grow gap="$gap12" flexBasis="50%">
             <Flex borderRadius="$rounded16" backgroundColor="$surface2" p="$padding12" gap="$gap16">
               <Flex gap="$gap8">
                 <Text variant="subheading1">
