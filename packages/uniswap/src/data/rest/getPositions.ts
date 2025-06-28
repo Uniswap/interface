@@ -1,32 +1,41 @@
 import { PartialMessage } from '@bufbuild/protobuf'
 import { ConnectError } from '@connectrpc/connect'
-import { createQueryOptions, useInfiniteQuery } from '@connectrpc/connect-query'
-import { UseQueryResult, keepPreviousData, useQueries } from '@tanstack/react-query'
+import { createQueryOptions, useInfiniteQuery, useQuery } from '@connectrpc/connect-query'
+import {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  UseQueryResult,
+  keepPreviousData,
+  useQueries,
+} from '@tanstack/react-query'
 import { getPosition, listPositions } from '@uniswap/client-pools/dist/pools/v1/api-PoolsService_connectquery'
-import { GetPositionResponse, ListPositionsRequest } from '@uniswap/client-pools/dist/pools/v1/api_pb'
+import {
+  GetPositionResponse,
+  ListPositionsRequest,
+  ListPositionsResponse,
+} from '@uniswap/client-pools/dist/pools/v1/api_pb'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Pair } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
 import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
 import { SerializedToken } from 'uniswap/src/features/tokens/slice/types'
 import { deserializeToken } from 'uniswap/src/utils/currency'
-import useTradingApiReplica, {
-  TradingApiReplicaRequests,
-  TradingReplicaResult,
-} from '../apiClients/tradingApi/useTradingApiReplica'
 
-export function useGetPositionsQuery(input?: PartialMessage<ListPositionsRequest>, disabled?: boolean) {
-  return useTradingApiReplica({
-    request: TradingApiReplicaRequests.LIST_POSITIONS,
-    params: input,
+export function useGetPositionsQuery(
+  input?: PartialMessage<ListPositionsRequest>,
+  disabled?: boolean,
+): UseQueryResult<ListPositionsResponse, ConnectError> {
+  return useQuery(listPositions, input, {
+    transport: uniswapGetTransport,
+    enabled: !!input && !disabled,
+    placeholderData: keepPreviousData,
   })
 }
 
 export function useGetPositionsInfiniteQuery(
   input: PartialMessage<ListPositionsRequest> & { pageToken: string },
   disabled?: boolean,
-): TradingReplicaResult {
-  //return useTradingApiReplica({ request: CommonApiRequests.LIST_POSITIONS, params: input }) as TradingReplicaResult<ListPositionsResponse>
+): UseInfiniteQueryResult<InfiniteData<ListPositionsResponse>, ConnectError> {
   return useInfiniteQuery(listPositions, input, {
     transport: uniswapGetTransport,
     enabled: !!input && !disabled,

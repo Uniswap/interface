@@ -16,7 +16,7 @@ import {
   IndependentToken,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
+import { useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   IncreasePositionTxAndGasInfo,
@@ -195,6 +195,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     enabled: isQueryEnabled,
   })
 
+  console.log({ increaseCalldata })
+
   useEffect(() => {
     setHasIncreaseErrorResponse(!!calldataError)
   }, [calldataError, increaseCalldataQueryParams])
@@ -218,11 +220,9 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     isQueryEnabled && Boolean(calldataError),
   )
 
-  const { value: calculatedGasFee } = useTransactionGasFee(increase, !!actualGasFee)
-  const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
-    increaseCalldata?.increase?.chainId,
-    actualGasFee || calculatedGasFee,
-  )
+  // const { value: calculatedGasFee } = useTransactionGasFee(increase, !!actualGasFee)
+  const increaseGasFeeUsd =
+    0 ?? useUSDCurrencyAmountOfGasFee(increaseCalldata?.increase?.chainId, actualGasFee || calculatedGasFee)
 
   const increaseLiquidityTxContext = useMemo((): IncreasePositionTxAndGasInfo | undefined => {
     if (

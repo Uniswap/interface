@@ -82,7 +82,7 @@ export function LegacyPositionPage() {
 
   const position = data?.position
   const positionInfo = position == null ? undefined : fromPositionToPositionInfo(position)
-  const metadata = usePositionTokenURI(tokenId, chainInfo?.id, positionInfo?.version)
+  const metadata = usePositionTokenURI(position?.tokenId, chainInfo?.id, positionInfo?.version)
   usePendingLPTransactionsChangeListener(refetch)
 
   const dispatch = useAppDispatch()

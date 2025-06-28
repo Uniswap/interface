@@ -101,7 +101,6 @@
     "typescript": "5.3.3",
     "viem": "2.22.9",
     "xml2js": "0.5.0",
-    "yaml": "2.2.2",
     "webpack": "5.90.0",
     "@gorhom/bottom-sheet@4.6.4": "patch:@gorhom/bottom-sheet@npm%3A4.6.4#./.yarn/patches/@gorhom-bottom-sheet-npm-4.6.4-5b2c27bb1f.patch",
     "react-native-tab-view@3.5.2": "patch:react-native-tab-view@npm%3A3.5.2#./.yarn/patches/react-native-tab-view-npm-3.5.2-fb6cb6fe6f.patch",

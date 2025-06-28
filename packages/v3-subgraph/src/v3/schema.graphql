@@ -1,6 +1,3 @@
-scalar BigInt
-scalar BigDecimal
-scalar Bytes
 
 type Factory @entity(immutable: false) {
   # factory address

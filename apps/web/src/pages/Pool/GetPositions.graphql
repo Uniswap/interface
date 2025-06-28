@@ -30,6 +30,7 @@ query GetPositions($skip: Int, $first: Int, $where: Position_filter) {
     where: $where
   ) {
     id
+    tokenId
     owner
     tickLower
     tickUpper

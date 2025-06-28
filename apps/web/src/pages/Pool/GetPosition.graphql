@@ -1,6 +1,7 @@
 query GetPosition($id: ID!) {
   position(id: $id) {
     id
+    tokenId
     owner
     tickLower
     tickUpper

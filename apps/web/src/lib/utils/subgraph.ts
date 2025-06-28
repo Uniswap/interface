@@ -1,5 +1,6 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Pool } from '@uniswap/v3-sdk'
 import { PositionInfo } from 'components/Liquidity/types'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
@@ -78,11 +79,21 @@ export const fromPositionToPositionInfo = (position: GetPositionsQuery['position
     currency0Amount,
     currency1Amount,
     poolId: position.pool.id,
+    pool: new Pool(
+      token0,
+      token1,
+      parseInt(position.pool.feeTier),
+      position.pool.sqrtPrice,
+      position.pool.liquidity,
+      parseInt(position.pool.tick),
+    ),
     version: ProtocolVersion.V3,
+    tickLower: position.tickLower,
+    tickUpper: position.tickUpper,
     status,
     apr: calculatePositionAPR(position), // Calculate separately if needed
     v4hook: undefined,
-    tokenId: position.id,
+    tokenId: position.tokenId,
   }
 }
 

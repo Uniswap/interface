@@ -404,6 +404,8 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
     return dependentToken && CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
   }, [state, protocolVersion, independentAmount, otherAmount, dependentToken, exactField, token0, token1])
 
+  console.log({ dependentAmount })
+
   const independentTokenUSDValue = useUSDCValue(independentAmount) || undefined
   const dependentTokenUSDValue = useUSDCValue(dependentAmount) || undefined
 

@@ -584,6 +584,7 @@ type Factory {
   totalValueLockedETH: BigDecimal!
   totalValueLockedUSDUntracked: BigDecimal!
   totalValueLockedETHUntracked: BigDecimal!
+  positionCount: BigInt!
   owner: ID!
 }
 
@@ -684,6 +685,14 @@ input Factory_filter {
   totalValueLockedETHUntracked_lte: BigDecimal
   totalValueLockedETHUntracked_in: [BigDecimal!]
   totalValueLockedETHUntracked_not_in: [BigDecimal!]
+  positionCount: BigInt
+  positionCount_not: BigInt
+  positionCount_gt: BigInt
+  positionCount_lt: BigInt
+  positionCount_gte: BigInt
+  positionCount_lte: BigInt
+  positionCount_in: [BigInt!]
+  positionCount_not_in: [BigInt!]
   owner: ID
   owner_not: ID
   owner_gt: ID
@@ -712,6 +721,7 @@ enum Factory_orderBy {
   totalValueLockedETH
   totalValueLockedUSDUntracked
   totalValueLockedETHUntracked
+  positionCount
   owner
 }
 
@@ -2042,6 +2052,7 @@ enum PoolHourData_orderBy {
 
 type Position {
   id: ID!
+  tokenId: BigInt!
   owner: Bytes!
   pool: Pool!
   token0: Token!
@@ -2072,6 +2083,14 @@ input Position_filter {
   id_lte: ID
   id_in: [ID!]
   id_not_in: [ID!]
+  tokenId: BigInt
+  tokenId_not: BigInt
+  tokenId_gt: BigInt
+  tokenId_lt: BigInt
+  tokenId_gte: BigInt
+  tokenId_lte: BigInt
+  tokenId_in: [BigInt!]
+  tokenId_not_in: [BigInt!]
   owner: Bytes
   owner_not: Bytes
   owner_gt: Bytes
@@ -2283,6 +2302,7 @@ input Position_filter {
 
 enum Position_orderBy {
   id
+  tokenId
   owner
   pool
   pool__id
@@ -2366,6 +2386,7 @@ enum Position_orderBy {
 
 type PositionSnapshot {
   id: ID!
+  tokenId: BigInt!
   owner: Bytes!
   pool: Pool!
   position: Position!
@@ -2390,6 +2411,14 @@ input PositionSnapshot_filter {
   id_lte: ID
   id_in: [ID!]
   id_not_in: [ID!]
+  tokenId: BigInt
+  tokenId_not: BigInt
+  tokenId_gt: BigInt
+  tokenId_lt: BigInt
+  tokenId_gte: BigInt
+  tokenId_lte: BigInt
+  tokenId_in: [BigInt!]
+  tokenId_not_in: [BigInt!]
   owner: Bytes
   owner_not: Bytes
   owner_gt: Bytes
@@ -2544,6 +2573,7 @@ input PositionSnapshot_filter {
 
 enum PositionSnapshot_orderBy {
   id
+  tokenId
   owner
   pool
   pool__id
@@ -2573,6 +2603,7 @@ enum PositionSnapshot_orderBy {
   pool__liquidityProviderCount
   position
   position__id
+  position__tokenId
   position__owner
   position__tickLower
   position__tickUpper

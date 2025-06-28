@@ -36,6 +36,8 @@ export function IncreaseLiquidityForm() {
     deposit1Disabled,
     error,
   } = derivedIncreaseLiquidityInfo
+
+  console.log({ derivedIncreaseLiquidityInfo })
   const { position, exactField } = increaseLiquidityState
 
   const {
@@ -90,6 +92,13 @@ export function IncreaseLiquidityForm() {
     formattedAmounts,
     deposit0Disabled: deposit0Disabled || false,
     deposit1Disabled: deposit1Disabled || false,
+  })
+
+  console.log({
+    updatedFormattedAmounts,
+    updatedUSDAmounts,
+    currency0Amount,
+    currency1Amount,
   })
 
   const handleUserInput = (field: PositionField, newValue: string) => {

@@ -540,6 +540,7 @@ export type Factory = {
   id: Scalars['ID'];
   owner: Scalars['ID'];
   poolCount: Scalars['BigInt'];
+  positionCount: Scalars['BigInt'];
   totalFeesETH: Scalars['BigDecimal'];
   totalFeesUSD: Scalars['BigDecimal'];
   totalValueLockedETH: Scalars['BigDecimal'];
@@ -581,6 +582,14 @@ export type Factory_Filter = {
   poolCount_lte?: InputMaybe<Scalars['BigInt']>;
   poolCount_not?: InputMaybe<Scalars['BigInt']>;
   poolCount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  positionCount?: InputMaybe<Scalars['BigInt']>;
+  positionCount_gt?: InputMaybe<Scalars['BigInt']>;
+  positionCount_gte?: InputMaybe<Scalars['BigInt']>;
+  positionCount_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  positionCount_lt?: InputMaybe<Scalars['BigInt']>;
+  positionCount_lte?: InputMaybe<Scalars['BigInt']>;
+  positionCount_not?: InputMaybe<Scalars['BigInt']>;
+  positionCount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   totalFeesETH?: InputMaybe<Scalars['BigDecimal']>;
   totalFeesETH_gt?: InputMaybe<Scalars['BigDecimal']>;
   totalFeesETH_gte?: InputMaybe<Scalars['BigDecimal']>;
@@ -667,6 +676,7 @@ export enum Factory_OrderBy {
   Id = 'id',
   Owner = 'owner',
   PoolCount = 'poolCount',
+  PositionCount = 'positionCount',
   TotalFeesEth = 'totalFeesETH',
   TotalFeesUsd = 'totalFeesUSD',
   TotalValueLockedEth = 'totalValueLockedETH',
@@ -2078,6 +2088,7 @@ export type Position = {
   tickUpper: Scalars['BigInt'];
   token0: Token;
   token1: Token;
+  tokenId: Scalars['BigInt'];
   transaction: Transaction;
   updatedAtBlockNumber: Scalars['BigInt'];
   updatedAtTimestamp: Scalars['BigInt'];
@@ -2098,6 +2109,7 @@ export type PositionSnapshot = {
   pool: Pool;
   position: Position;
   timestamp: Scalars['BigInt'];
+  tokenId: Scalars['BigInt'];
   transaction: Transaction;
   withdrawnToken0: Scalars['BigDecimal'];
   withdrawnToken1: Scalars['BigDecimal'];
@@ -2224,6 +2236,14 @@ export type PositionSnapshot_Filter = {
   timestamp_lte?: InputMaybe<Scalars['BigInt']>;
   timestamp_not?: InputMaybe<Scalars['BigInt']>;
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  tokenId?: InputMaybe<Scalars['BigInt']>;
+  tokenId_gt?: InputMaybe<Scalars['BigInt']>;
+  tokenId_gte?: InputMaybe<Scalars['BigInt']>;
+  tokenId_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  tokenId_lt?: InputMaybe<Scalars['BigInt']>;
+  tokenId_lte?: InputMaybe<Scalars['BigInt']>;
+  tokenId_not?: InputMaybe<Scalars['BigInt']>;
+  tokenId_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   transaction?: InputMaybe<Scalars['String']>;
   transaction_?: InputMaybe<Transaction_Filter>;
   transaction_contains?: InputMaybe<Scalars['String']>;
@@ -2311,11 +2331,13 @@ export enum PositionSnapshot_OrderBy {
   PositionOwner = 'position__owner',
   PositionTickLower = 'position__tickLower',
   PositionTickUpper = 'position__tickUpper',
+  PositionTokenId = 'position__tokenId',
   PositionUpdatedAtBlockNumber = 'position__updatedAtBlockNumber',
   PositionUpdatedAtTimestamp = 'position__updatedAtTimestamp',
   PositionWithdrawnToken0 = 'position__withdrawnToken0',
   PositionWithdrawnToken1 = 'position__withdrawnToken1',
   Timestamp = 'timestamp',
+  TokenId = 'tokenId',
   Transaction = 'transaction',
   TransactionBlockNumber = 'transaction__blockNumber',
   TransactionGasPrice = 'transaction__gasPrice',
@@ -2488,6 +2510,14 @@ export type Position_Filter = {
   token1_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   token1_starts_with?: InputMaybe<Scalars['String']>;
   token1_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  tokenId?: InputMaybe<Scalars['BigInt']>;
+  tokenId_gt?: InputMaybe<Scalars['BigInt']>;
+  tokenId_gte?: InputMaybe<Scalars['BigInt']>;
+  tokenId_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  tokenId_lt?: InputMaybe<Scalars['BigInt']>;
+  tokenId_lte?: InputMaybe<Scalars['BigInt']>;
+  tokenId_not?: InputMaybe<Scalars['BigInt']>;
+  tokenId_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   transaction?: InputMaybe<Scalars['String']>;
   transaction_?: InputMaybe<Transaction_Filter>;
   transaction_contains?: InputMaybe<Scalars['String']>;
@@ -2614,6 +2644,7 @@ export enum Position_OrderBy {
   Token1UntrackedVolumeUsd = 'token1__untrackedVolumeUSD',
   Token1Volume = 'token1__volume',
   Token1VolumeUsd = 'token1__volumeUSD',
+  TokenId = 'tokenId',
   Transaction = 'transaction',
   TransactionBlockNumber = 'transaction__blockNumber',
   TransactionGasPrice = 'transaction__gasPrice',
@@ -4275,7 +4306,7 @@ export type GetPositionQueryVariables = Exact<{
 }>;
 
 
-export type GetPositionQuery = { __typename?: 'Query', position?: { __typename?: 'Position', id: string, owner: any, tickLower: any, tickUpper: any, liquidity: any, depositedToken0: any, depositedToken1: any, withdrawnToken0: any, withdrawnToken1: any, collectedFeesToken0: any, collectedFeesToken1: any, closed: boolean, pool: { __typename?: 'Pool', id: any, feeTier: any, sqrtPrice: any, liquidity: any, tick?: any | undefined, token0Price: any, token1Price: any, volumeUSD: any, feesUSD: any, totalValueLockedUSD: any, token0: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string }, token1: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string } } } | undefined };
+export type GetPositionQuery = { __typename?: 'Query', position?: { __typename?: 'Position', id: string, tokenId: any, owner: any, tickLower: any, tickUpper: any, liquidity: any, depositedToken0: any, depositedToken1: any, withdrawnToken0: any, withdrawnToken1: any, collectedFeesToken0: any, collectedFeesToken1: any, closed: boolean, pool: { __typename?: 'Pool', id: any, feeTier: any, sqrtPrice: any, liquidity: any, tick?: any | undefined, token0Price: any, token1Price: any, volumeUSD: any, feesUSD: any, totalValueLockedUSD: any, token0: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string }, token1: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string } } } | undefined };
 
 export type PoolFragment = { __typename?: 'Pool', id: any, feeTier: any, sqrtPrice: any, liquidity: any, tick?: any | undefined, token0Price: any, token1Price: any, volumeUSD: any, feesUSD: any, totalValueLockedUSD: any, token0: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string }, token1: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string } };
 
@@ -4286,7 +4317,7 @@ export type GetPositionsQueryVariables = Exact<{
 }>;
 
 
-export type GetPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, owner: any, tickLower: any, tickUpper: any, liquidity: any, depositedToken0: any, depositedToken1: any, withdrawnToken0: any, withdrawnToken1: any, collectedFeesToken0: any, collectedFeesToken1: any, closed: boolean, pool: { __typename?: 'Pool', id: any, feeTier: any, sqrtPrice: any, liquidity: any, tick?: any | undefined, token0Price: any, token1Price: any, volumeUSD: any, feesUSD: any, totalValueLockedUSD: any, token0: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string }, token1: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string } } }> };
+export type GetPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, tokenId: any, owner: any, tickLower: any, tickUpper: any, liquidity: any, depositedToken0: any, depositedToken1: any, withdrawnToken0: any, withdrawnToken1: any, collectedFeesToken0: any, collectedFeesToken1: any, closed: boolean, pool: { __typename?: 'Pool', id: any, feeTier: any, sqrtPrice: any, liquidity: any, tick?: any | undefined, token0Price: any, token1Price: any, volumeUSD: any, feesUSD: any, totalValueLockedUSD: any, token0: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string }, token1: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string } } }> };
 
 export const PoolFragmentDoc = gql`
     fragment Pool on Pool {
@@ -4318,6 +4349,7 @@ export const GetPositionDocument = gql`
     query GetPosition($id: ID!) {
   position(id: $id) {
     id
+    tokenId
     owner
     tickLower
     tickUpper
@@ -4367,6 +4399,7 @@ export const GetPositionsDocument = gql`
     query GetPositions($skip: Int, $first: Int, $where: Position_filter) {
   positions(skip: $skip, first: $first, where: $where) {
     id
+    tokenId
     owner
     tickLower
     tickUpper
@@ -4684,6 +4717,7 @@ export type FactoryResolvers<ContextType = any, ParentType extends ResolversPare
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   owner?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   poolCount?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
+  positionCount?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   totalFeesETH?: Resolver<ResolversTypes['BigDecimal'], ParentType, ContextType>;
   totalFeesUSD?: Resolver<ResolversTypes['BigDecimal'], ParentType, ContextType>;
   totalValueLockedETH?: Resolver<ResolversTypes['BigDecimal'], ParentType, ContextType>;
@@ -4835,6 +4869,7 @@ export type PositionResolvers<ContextType = any, ParentType extends ResolversPar
   tickUpper?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   token0?: Resolver<ResolversTypes['Token'], ParentType, ContextType>;
   token1?: Resolver<ResolversTypes['Token'], ParentType, ContextType>;
+  tokenId?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   transaction?: Resolver<ResolversTypes['Transaction'], ParentType, ContextType>;
   updatedAtBlockNumber?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   updatedAtTimestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
@@ -4855,6 +4890,7 @@ export type PositionSnapshotResolvers<ContextType = any, ParentType extends Reso
   pool?: Resolver<ResolversTypes['Pool'], ParentType, ContextType>;
   position?: Resolver<ResolversTypes['Position'], ParentType, ContextType>;
   timestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
+  tokenId?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   transaction?: Resolver<ResolversTypes['Transaction'], ParentType, ContextType>;
   withdrawnToken0?: Resolver<ResolversTypes['BigDecimal'], ParentType, ContextType>;
   withdrawnToken1?: Resolver<ResolversTypes['BigDecimal'], ParentType, ContextType>;
