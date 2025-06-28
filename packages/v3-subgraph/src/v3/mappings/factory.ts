@@ -35,6 +35,7 @@ export function handlePoolCreated(event: PoolCreated): void {
     factory.totalValueLockedETHUntracked = ZERO_BD
     factory.txCount = ZERO_BI
     factory.owner = ADDRESS_ZERO
+    factory.positionCount = ZERO_BI
 
     // create new bundle for tracking eth price
     const bundle = new Bundle('1')

@@ -27,7 +27,8 @@ type Factory @entity(immutable: false) {
   totalValueLockedUSDUntracked: BigDecimal!
   # TVL derived in ETH untracked
   totalValueLockedETHUntracked: BigDecimal!
-
+  # Position count
+  positionCount: BigInt!
   # current owner of the factory
   owner: ID!
 }
@@ -171,6 +172,7 @@ type Tick @entity(immutable: false) {
 type Position @entity(immutable: false) {
   # Format: <owner address>-<pool address>-<lower tick>-<upper tick>
   id: ID!
+  tokenId: BigInt!
   # Owner of the position
   owner: Bytes!
   # Pool the position is in
@@ -215,6 +217,7 @@ type Position @entity(immutable: false) {
 type PositionSnapshot @entity(immutable: false) {
   # Format: <position id>-<block number>
   id: ID!
+  tokenId: BigInt!
   # Owner of the position
   owner: Bytes!
   # Pool the position is in

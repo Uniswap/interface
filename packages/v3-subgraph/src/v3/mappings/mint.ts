@@ -40,6 +40,9 @@ export function handleMint(event: MintEvent): void {
     // update globals
     factory.txCount = factory.txCount.plus(ONE_BI)
 
+    // update position count
+    factory.positionCount = factory.positionCount.plus(ONE_BI)
+
     // update token0 data
     token0.txCount = token0.txCount.plus(ONE_BI)
     token0.totalValueLocked = token0.totalValueLocked.plus(amount0)
@@ -122,7 +125,8 @@ export function handleMint(event: MintEvent): void {
       pool,
       BigInt.fromI32(event.params.tickLower),
       BigInt.fromI32(event.params.tickUpper),
-      event
+      event,
+      factory.positionCount
     )
     updatePositionWithMint(position, event.params.amount, amount0, amount1)
     position.save()

@@ -41,7 +41,8 @@ export function getOrCreatePosition(
   pool: Pool,
   tickLower: BigInt,
   tickUpper: BigInt,
-  event: ethereum.Event
+  event: ethereum.Event,
+  tokenId: BigInt
 ): Position {
   const positionId =
     owner.toHexString() + '-' + pool.id.toHexString() + '-' + tickLower.toString() + '-' + tickUpper.toString()
@@ -66,6 +67,7 @@ export function getOrCreatePosition(
     position.createdAtTimestamp = event.block.timestamp
     position.createdAtBlockNumber = event.block.number
     position.closed = false
+    position.tokenId = tokenId
   }
 
   position.updatedAtTimestamp = event.block.timestamp
