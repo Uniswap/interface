@@ -1171,6 +1171,14 @@
       "name": "GOLD1",
       "symbol": "GOLD1",
       "decimals": 18
+    },
+{
+      "chainId": 1,
+      "address": "0xb27397E5a34AA514542498F7b236C7592612ffc7",
+      "name": "SaintK7",
+      "symbol": "STK7",
+      "decimals": 18,
+      "logoURI": "https://saintk7.com/logo.png"
     }
   ]
 }
