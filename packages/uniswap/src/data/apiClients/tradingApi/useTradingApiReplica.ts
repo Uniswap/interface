@@ -2055,28 +2055,7 @@ const increaseLpPosition = async (params: IncreaseLPPositionRequest): Promise<In
   // Get current position data from the Position Manager contract
   const currentPosition = await client.readContract({
     address: CHAIN_TO_ADDRESSES_MAP[10000].nonfungiblePositionManagerAddress as `0x${string}`,
-    abi: [
-      {
-        name: 'positions',
-        type: 'function',
-        stateMutability: 'view',
-        inputs: [{ type: 'uint256', name: 'tokenId' }],
-        outputs: [
-          { type: 'uint96', name: 'nonce' },
-          { type: 'address', name: 'operator' },
-          { type: 'address', name: 'token0' },
-          { type: 'address', name: 'token1' },
-          { type: 'uint24', name: 'fee' },
-          { type: 'int24', name: 'tickLower' },
-          { type: 'int24', name: 'tickUpper' },
-          { type: 'uint128', name: 'liquidity' },
-          { type: 'uint256', name: 'feeGrowthInside0LastX128' },
-          { type: 'uint256', name: 'feeGrowthInside1LastX128' },
-          { type: 'uint128', name: 'tokensOwed0' },
-          { type: 'uint128', name: 'tokensOwed1' },
-        ],
-      },
-    ],
+    abi: POSITION_MANAGER_ABI,
     functionName: 'positions',
     args: [params.tokenId as unknown as string],
   })
