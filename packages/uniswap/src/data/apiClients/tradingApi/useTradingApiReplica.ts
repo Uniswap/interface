@@ -16,8 +16,12 @@ import { publicActionsL1 } from 'viem/zksync'
 import {
   CheckApprovalLPRequest,
   CheckApprovalLPResponse,
+  ClaimLPFeesRequest,
+  ClaimLPFeesResponse,
   CreateLPPositionRequest,
   CreateLPPositionResponse,
+  DecreaseLPPositionRequest,
+  DecreaseLPPositionResponse,
   IncreaseLPPositionRequest,
   IncreaseLPPositionResponse,
   IndependentToken,
@@ -47,6 +51,8 @@ export enum TradingApiReplicaRequests {
   CHECK_LP_APPROVAL,
   LIST_POSITIONS,
   INCREASE_LP_POSITION,
+  DECREASE_LP_POSITION,
+  CLAIM_LP_FEES,
 }
 
 enum ActionType {
@@ -59,7 +65,13 @@ export interface ListPositionsResponse {
   positions: PositionReplica[]
 }
 
-type Response = CreateLPPositionResponse | CheckApprovalLPResponse | ListPositionsResponse
+type Response =
+  | CreateLPPositionResponse
+  | CheckApprovalLPResponse
+  | ListPositionsResponse
+  | IncreaseLPPositionResponse
+  | DecreaseLPPositionResponse
+  | ClaimLPFeesResponse
 
 interface InitAction {
   type: ActionType.INIT
@@ -97,9 +109,19 @@ interface IncreaseLpPositionParams {
   params?: IncreaseLPPositionRequest
 }
 
+interface DecreaseLpPositionParams {
+  request: TradingApiReplicaRequests.DECREASE_LP_POSITION
+  params?: DecreaseLPPositionRequest
+}
+
 interface CheckApprovalLPParams {
   request: TradingApiReplicaRequests.CHECK_LP_APPROVAL
   params?: CreateLPPositionRequest
+}
+
+interface ClaimLpFeesParams {
+  request: TradingApiReplicaRequests.CLAIM_LP_FEES
+  params?: ClaimLPFeesRequest
 }
 
 interface ListPositionsParams {
@@ -107,7 +129,14 @@ interface ListPositionsParams {
   params?: PartialMessage<ListPositionsRequest>
 }
 
-type Params = (CreateLpPositionParams | CheckApprovalLPParams | ListPositionsParams | IncreaseLpPositionParams) & {
+type Params = (
+  | CreateLpPositionParams
+  | CheckApprovalLPParams
+  | ListPositionsParams
+  | IncreaseLpPositionParams
+  | DecreaseLpPositionParams
+  | ClaimLpFeesParams
+) & {
   skip?: boolean
 }
 
@@ -2225,6 +2254,156 @@ const increaseLpPosition = async (params: IncreaseLPPositionRequest): Promise<In
   }
 }
 
+const decreaseLpPosition = async (params: DecreaseLPPositionRequest): Promise<DecreaseLPPositionResponse> => {
+  console.log({ params })
+  if (params.tokenId == null) {
+    throw new Error('tokenId must be defined')
+  }
+
+  // Get current position data from the Position Manager contract
+  const currentPosition = await client.readContract({
+    address: CHAIN_TO_ADDRESSES_MAP[10000].nonfungiblePositionManagerAddress as `0x${string}`,
+    abi: POSITION_MANAGER_ABI,
+    functionName: 'positions',
+    args: [params.tokenId as unknown as string],
+  })
+
+  // Extract position data
+  const [nonce, operator, token0Address, token1Address, fee, tickLower, tickUpper, currentLiquidity] = currentPosition
+
+  // Validate that position has liquidity
+  if (BigInt(currentLiquidity) === BigInt(0)) {
+    throw new Error('Position has no liquidity to decrease')
+  }
+
+  // Get token decimals
+  const [token0Decimals, token1Decimals] = await Promise.all([
+    client.readContract({
+      address: token0Address as `0x${string}`,
+      abi: [{ name: 'decimals', type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint8' }] }],
+      functionName: 'decimals',
+    }),
+    client.readContract({
+      address: token1Address as `0x${string}`,
+      abi: [{ name: 'decimals', type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint8' }] }],
+      functionName: 'decimals',
+    }),
+  ])
+
+  // Create token instances
+  const token0 = new Token(UniverseChainId.SmartBCH, token0Address, token0Decimals)
+  const token1 = new Token(UniverseChainId.SmartBCH, token1Address, token1Decimals)
+
+  // Get pool address
+  const poolAddress = await client.readContract({
+    address: CHAIN_TO_ADDRESSES_MAP[10000].v3CoreFactoryAddress as `0x${string}`,
+    abi: IUniswapV3FactoryABI.abi,
+    functionName: 'getPool',
+    args: [token0Address, token1Address, fee],
+  })
+
+  if (poolAddress === '0x0000000000000000000000000000000000000000') {
+    throw new Error('Pool does not exist')
+  }
+
+  // Get current pool state
+  const [liquidity, slot0] = await Promise.all([
+    client.readContract({
+      address: poolAddress as `0x${string}`,
+      abi: IUniswapV3PoolABI.abi,
+      functionName: 'liquidity',
+    }) as Promise<BigInt>,
+    client.readContract({
+      address: poolAddress as `0x${string}`,
+      abi: IUniswapV3PoolABI.abi,
+      functionName: 'slot0',
+    }) as Promise<[number, number, number, number, number, number, boolean]>,
+  ])
+
+  // Create pool instance
+  const configuredPool = new Pool(token0, token1, fee as FeeAmount, slot0[0].toString(), liquidity.toString(), slot0[1])
+
+  // Create current position instance
+  const currentPositionSDK = new SDKPosition({
+    pool: configuredPool,
+    liquidity: currentLiquidity.toString(),
+    tickLower: tickLower,
+    tickUpper: tickUpper,
+  })
+
+  // Calculate liquidity to remove
+  let liquidityToRemove: BigInt
+
+  if (params.liquidityPercentageToDecrease != null) {
+    // Remove percentage of current liquidity
+    if (params.liquidityPercentageToDecrease < 0 || params.liquidityPercentageToDecrease > 100) {
+      throw new Error('Liquidity percentage must be between 0 and 100')
+    }
+    liquidityToRemove = (currentLiquidity * BigInt(Math.floor(params.liquidityPercentageToDecrease * 100))) / 10000n
+  } else if (params.positionLiquidity != null) {
+    // Remove specific amount of liquidity
+    liquidityToRemove = BigInt(params.positionLiquidity)
+    if (liquidityToRemove > currentLiquidity) {
+      throw new Error('Cannot remove more liquidity than available in position')
+    }
+  } else {
+    throw new Error('Either liquidityPercentage or liquidityAmount must be specified')
+  }
+
+  if (liquidityToRemove.valueOf() <= BigInt(0)) {
+    throw new Error('Liquidity to remove must be greater than 0')
+  }
+
+  if (params.walletAddress == null) {
+    throw new Error('Wallet address must be defined')
+  }
+
+  // Calculate expected token amounts from liquidity removal
+  const positionToRemove = new SDKPosition({
+    pool: configuredPool,
+    liquidity: liquidityToRemove.toString(),
+    tickLower: tickLower,
+    tickUpper: tickUpper,
+  })
+
+  // Prepare decrease liquidity options
+  const decreaseLiquidityOptions = {
+    tokenId: params.tokenId,
+    liquidityPercentage: new Percent(liquidityToRemove.toString(), currentLiquidity.toString()),
+    slippageTolerance: new Percent(params.slippageTolerance ?? 50, 10_000),
+    deadline: params.deadline ?? Math.floor(Date.now() / 1000) + 60 * 20,
+    collectOptions:
+      params.collectTokens !== false
+        ? {
+            expectedCurrencyOwed0: positionToRemove.amount0,
+            expectedCurrencyOwed1: positionToRemove.amount1,
+            recipient: params.walletAddress,
+          }
+        : undefined,
+  }
+
+  // Get calldata for decreasing liquidity using SDK
+  const { calldata, value } = NonfungiblePositionManager.removeCallParameters(
+    currentPositionSDK,
+    decreaseLiquidityOptions,
+  )
+
+  const response: DecreaseLPPositionResponse = {
+    decrease: await client.prepareTransactionRequest({
+      data: calldata,
+      to: CHAIN_TO_ADDRESSES_MAP[10000].nonfungiblePositionManagerAddress,
+      value: value,
+      from: params.walletAddress,
+      gas: 500000,
+    }),
+    expectedAmount0: positionToRemove.amount0.quotient.toString(),
+    expectedAmount1: positionToRemove.amount1.quotient.toString(),
+    liquidityRemoved: liquidityToRemove.toString(),
+  }
+
+  return response
+}
+
 const checkLpApproval = async (params: CheckApprovalLPRequest): Promise<CheckApprovalLPResponse> => {
   const response: CheckApprovalLPResponse = {
     requestId: 'whatever', // Generate a request ID if not provided
@@ -2300,6 +2479,248 @@ const checkLpApproval = async (params: CheckApprovalLPRequest): Promise<CheckApp
   return response
 }
 
+const claimLpFees = async (params: ClaimLPFeesRequest): Promise<ClaimLPFeesResponse> => {
+  if (params.tokenId == null) {
+    throw new Error('tokenId must be defined')
+  }
+
+  if (params.walletAddress == null) {
+    throw new Error('Wallet address must be defined')
+  }
+
+  // Get current position data from the Position Manager contract
+  const currentPosition = await client.readContract({
+    address: CHAIN_TO_ADDRESSES_MAP[10000].nonfungiblePositionManagerAddress as `0x${string}`,
+    abi: POSITION_MANAGER_ABI,
+    functionName: 'positions',
+    args: [params.tokenId as unknown as string],
+  })
+
+  // Extract position data
+  const [
+    nonce,
+    operator,
+    token0Address,
+    token1Address,
+    fee,
+    tickLower,
+    tickUpper,
+    currentLiquidity,
+    feeGrowthInside0LastX128,
+    feeGrowthInside1LastX128,
+    tokensOwed0,
+    tokensOwed1,
+  ] = currentPosition
+
+  // Validate that there are fees to collect
+  if (tokensOwed0 === 0n && tokensOwed1 === 0n) {
+    throw new Error('No fees available to collect')
+  }
+
+  // Optional validation against expected amounts
+  if (params.expectedTokenOwed0RawAmount != null && tokensOwed0.toString() !== params.expectedTokenOwed0RawAmount) {
+    console.warn(
+      `Token0 fees mismatch. Expected: ${params.expectedTokenOwed0RawAmount}, Actual: ${tokensOwed0.toString()}`,
+    )
+  }
+
+  if (params.expectedTokenOwed1RawAmount != null && tokensOwed1.toString() !== params.expectedTokenOwed1RawAmount) {
+    console.warn(
+      `Token1 fees mismatch. Expected: ${params.expectedTokenOwed1RawAmount}, Actual: ${tokensOwed1.toString()}`,
+    )
+  }
+
+  // Prepare collect parameters
+  const collectParams = {
+    tokenId: params.tokenId,
+    recipient: params.walletAddress,
+    amount0Max: tokensOwed0, // Collect all available fees for token0
+    amount1Max: tokensOwed1, // Collect all available fees for token1
+  }
+
+  let calldata: `0x${string}`
+  let value: bigint = 0n
+
+  if (params.collectAsWETH) {
+    // Use collectAsWETH if one of the tokens is WETH and user wants to collect as WETH
+    // First check if either token is WETH
+    const WETH_ADDRESS = chainInfo.wrappedNativeCurrency.address as `0x${string}`
+    const isToken0WETH = token0Address.toLowerCase() === WETH_ADDRESS.toLowerCase()
+    const isToken1WETH = token1Address.toLowerCase() === WETH_ADDRESS.toLowerCase()
+
+    if (isToken0WETH || isToken1WETH) {
+      // Use multicall to collect and unwrap WETH
+      const collectCalldata = encodeFunctionData({
+        abi: [
+          {
+            name: 'collect',
+            type: 'function',
+            inputs: [
+              {
+                name: 'params',
+                type: 'tuple',
+                components: [
+                  { name: 'tokenId', type: 'uint256' },
+                  { name: 'recipient', type: 'address' },
+                  { name: 'amount0Max', type: 'uint128' },
+                  { name: 'amount1Max', type: 'uint128' },
+                ],
+              },
+            ],
+            outputs: [
+              { name: 'amount0', type: 'uint256' },
+              { name: 'amount1', type: 'uint256' },
+            ],
+          },
+        ],
+        functionName: 'collect',
+        args: [collectParams],
+      })
+
+      const unwrapCalldata = encodeFunctionData({
+        abi: [
+          {
+            name: 'unwrapWETH9',
+            type: 'function',
+            inputs: [
+              { name: 'amountMinimum', type: 'uint256' },
+              { name: 'recipient', type: 'address' },
+            ],
+            outputs: [],
+          },
+        ],
+        functionName: 'unwrapWETH9',
+        args: [isToken0WETH ? tokensOwed0 : tokensOwed1, params.walletAddress],
+      })
+
+      calldata = encodeFunctionData({
+        abi: [
+          {
+            name: 'multicall',
+            type: 'function',
+            inputs: [{ name: 'data', type: 'bytes[]' }],
+            outputs: [{ name: 'results', type: 'bytes[]' }],
+          },
+        ],
+        functionName: 'multicall',
+        args: [[collectCalldata, unwrapCalldata]],
+      })
+    } else {
+      // Neither token is WETH, fallback to regular collect
+      calldata = encodeFunctionData({
+        abi: [
+          {
+            name: 'collect',
+            type: 'function',
+            inputs: [
+              {
+                name: 'params',
+                type: 'tuple',
+                components: [
+                  { name: 'tokenId', type: 'uint256' },
+                  { name: 'recipient', type: 'address' },
+                  { name: 'amount0Max', type: 'uint128' },
+                  { name: 'amount1Max', type: 'uint128' },
+                ],
+              },
+            ],
+            outputs: [
+              { name: 'amount0', type: 'uint256' },
+              { name: 'amount1', type: 'uint256' },
+            ],
+          },
+        ],
+        functionName: 'collect',
+        args: [collectParams],
+      })
+    }
+  } else {
+    // Standard collect function
+    calldata = encodeFunctionData({
+      abi: [
+        {
+          name: 'collect',
+          type: 'function',
+          inputs: [
+            {
+              name: 'params',
+              type: 'tuple',
+              components: [
+                { name: 'tokenId', type: 'uint256' },
+                { name: 'recipient', type: 'address' },
+                { name: 'amount0Max', type: 'uint128' },
+                { name: 'amount1Max', type: 'uint128' },
+              ],
+            },
+          ],
+          outputs: [
+            { name: 'amount0', type: 'uint256' },
+            { name: 'amount1', type: 'uint256' },
+          ],
+        },
+      ],
+      functionName: 'collect',
+      args: [collectParams],
+    })
+  }
+
+  // Prepare the transaction request
+  const transactionRequest = await client.prepareTransactionRequest({
+    data: calldata,
+    to: CHAIN_TO_ADDRESSES_MAP[10000].nonfungiblePositionManagerAddress,
+    value: value,
+    from: params.walletAddress,
+    gas: 200000, // Collecting fees typically requires less gas than position management
+  })
+
+  let gasFee: string | undefined
+
+  // Simulate transaction if requested
+  if (params.simulateTransaction) {
+    try {
+      const simulationResult = await client.simulateContract({
+        address: CHAIN_TO_ADDRESSES_MAP[10000].nonfungiblePositionManagerAddress as `0x${string}`,
+        abi: [
+          {
+            name: 'collect',
+            type: 'function',
+            inputs: [
+              {
+                name: 'params',
+                type: 'tuple',
+                components: [
+                  { name: 'tokenId', type: 'uint256' },
+                  { name: 'recipient', type: 'address' },
+                  { name: 'amount0Max', type: 'uint128' },
+                  { name: 'amount1Max', type: 'uint128' },
+                ],
+              },
+            ],
+            outputs: [
+              { name: 'amount0', type: 'uint256' },
+              { name: 'amount1', type: 'uint256' },
+            ],
+          },
+        ],
+        functionName: 'collect',
+        args: [collectParams],
+        account: params.walletAddress,
+      })
+
+      // Calculate gas fee estimate
+      const gasPrice = await client.getGasPrice()
+      gasFee = (BigInt(transactionRequest.gas!) * gasPrice).toString()
+    } catch (error) {
+      console.warn('Transaction simulation failed:', error)
+    }
+  }
+
+  return {
+    claim: transactionRequest,
+    gasFee,
+  }
+}
+
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case ActionType.RESULT:
@@ -2327,71 +2748,44 @@ const reducer = (state: State, action: Action): State => {
 }
 
 const useTradingApiReplica = (params: Params) => {
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, { ...initialState, isLoading: params.skip !== true })
   useEffect(() => {
     ;(async () => {
       if (params.params == null || params.skip === true) return
       dispatch({
         type: ActionType.INIT,
       })
-      switch (params.request) {
-        case TradingApiReplicaRequests.LIST_POSITIONS:
-          try {
-            dispatch({
-              type: ActionType.RESULT,
-              value: await listPositions(params.params),
-            })
-          } catch (e: unknown) {
-            dispatch({
-              type: ActionType.ERROR,
-              value: e,
-            })
-          }
-          break
-        case TradingApiReplicaRequests.CHECK_LP_APPROVAL:
-          try {
-            dispatch({
-              type: ActionType.RESULT,
-              value: await checkLpApproval(params.params),
-            })
-          } catch (e: unknown) {
-            console.error(e)
-            dispatch({
-              type: ActionType.ERROR,
-              value: e,
-            })
-          }
-          break
-        case TradingApiReplicaRequests.CREATE_LP_POSITION:
-          try {
-            const result = await createLpPosition(params.params)
-            dispatch({
-              type: ActionType.RESULT,
-              value: result,
-            })
-          } catch (e) {
-            console.error(e)
-            dispatch({
-              type: ActionType.ERROR,
-              value: e,
-            })
-          }
-          break
-        case TradingApiReplicaRequests.INCREASE_LP_POSITION:
-          try {
-            const result = await increaseLpPosition(params.params)
-            dispatch({
-              type: ActionType.RESULT,
-              value: result,
-            })
-          } catch (e) {
-            console.error(e)
-            dispatch({
-              type: ActionType.ERROR,
-              value: e,
-            })
-          }
-          break
+      try {
+        let value: Response
+        switch (params.request) {
+          case TradingApiReplicaRequests.LIST_POSITIONS:
+            value = await listPositions(params.params)
+            break
+          case TradingApiReplicaRequests.CHECK_LP_APPROVAL:
+            value = await checkLpApproval(params.params)
+            break
+          case TradingApiReplicaRequests.CLAIM_LP_FEES:
+            value = await claimLpFees(params.params)
+            break
+          case TradingApiReplicaRequests.CREATE_LP_POSITION:
+            value = await createLpPosition(params.params)
+            break
+          case TradingApiReplicaRequests.INCREASE_LP_POSITION:
+            value = await increaseLpPosition(params.params)
+            break
+          case TradingApiReplicaRequests.DECREASE_LP_POSITION:
+            value = await decreaseLpPosition(params.params)
+            break
+        }
+        dispatch({
+          type: ActionType.RESULT,
+          value,
+        })
+      } catch (e: unknown) {
+        dispatch({
+          type: ActionType.ERROR,
+          value: e,
+        })
       }
     })()
   }, [params.request, params.skip, JSON.stringify(params.params)])

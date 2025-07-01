@@ -87,6 +87,8 @@ export const fromPositionToPositionInfo = (position: GetPositionsQuery['position
       position.pool.liquidity,
       parseInt(position.pool.tick),
     ),
+    token0UncollectedFees: '0',
+    token1UncollectedFees: '0',
     version: ProtocolVersion.V3,
     tickLower: position.tickLower,
     tickUpper: position.tickUpper,
@@ -94,6 +96,7 @@ export const fromPositionToPositionInfo = (position: GetPositionsQuery['position
     apr: calculatePositionAPR(position), // Calculate separately if needed
     v4hook: undefined,
     tokenId: position.tokenId,
+    id: position.id,
   }
 }
 

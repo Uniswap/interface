@@ -70,6 +70,7 @@ type V2PairInfo = BasePositionInfo & {
 export type V3PositionInfo = BasePositionInfo & {
   version: ProtocolVersion.V3
   tokenId: string
+  id: string
   pool?: V3Pool
   feeTier?: FeeAmount
   position?: V3Position
