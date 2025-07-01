@@ -1,43 +1,6 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Cognito User Pools token.
-"""
-directive @aws_cognito_user_pools(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
-
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
-) on FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
 """
 Tells the service which subscriptions will be published to when this mutation is
 called. This directive is deprecated use @aws_susbscribe directive instead.
@@ -50,6 +13,43 @@ directive @aws_publish(
 ) on FIELD_DEFINITION
 
 """
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Cognito User Pools token.
+"""
+directive @aws_cognito_user_pools(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on FIELD_DEFINITION
+
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
+
+"""
 Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
 directive @aws_lambda on OBJECT | FIELD_DEFINITION
@@ -58,13 +58,12 @@ directive @aws_lambda on OBJECT | FIELD_DEFINITION
   Types, unions, and inputs (alphabetized):
  These are colocated to highlight the relationship between some types and their inputs.
 """
-union ActivityDetails = TransactionDetails | SwapOrderDetails | OnRampTransactionDetails | OffRampTransactionDetails
+union ActivityDetails = TransactionDetails | SwapOrderDetails | OnRampTransactionDetails
 
 input ActivityDetailsInput {
   transactionDetails: TransactionDetailsInput
   swapOrderDetails: SwapOrderDetailsInput
   onRampTransactionDetails: OnRampTransactionDetailsInput
-  offRampTransactionDetails: OffRampTransactionDetailsInput
 }
 
 """
@@ -94,7 +93,6 @@ enum ActivityType {
   UNSTAKE
   SWAP_ORDER
   ON_RAMP
-  OFF_RAMP
 }
 
 type Amount implements IAmount {
@@ -152,7 +150,7 @@ enum AssetActivitySwitch {
   LEGACY
 }
 
-union AssetChange = TokenTransfer | NftTransfer | OnRampTransfer | TokenApproval | NftApproval | NftApproveForAll | OffRampTransfer
+union AssetChange = TokenTransfer | NftTransfer | OnRampTransfer | TokenApproval | NftApproval | NftApproveForAll
 
 input AssetChangeInput {
   tokenTransfer: TokenTransferInput
@@ -161,7 +159,6 @@ input AssetChangeInput {
   nftApproval: NftApprovalInput
   nftApproveForAll: NftApproveForAllInput
   onRampTransfer: OnRampTransferInput
-  offRampTransfer: OffRampTransferInput
 }
 
 """
@@ -203,7 +200,6 @@ enum Chain {
   MONAD_TESTNET
   ARBITRUM_SEPOLIA
   BASE_SEPOLIA
-  SOLANA
   UNKNOWN_CHAIN
 }
 
@@ -217,12 +213,10 @@ input ContractInput {
 }
 
 enum Currency {
-  ARS
   AUD
   BRL
   CAD
   CNY
-  COP
   ETH
   EUR
   GBP
@@ -232,9 +226,7 @@ enum Currency {
   JPY
   KRW
   MATIC
-  MXN
   NGN
-  NZD
   PKR
   RUB
   SGD
@@ -469,7 +461,6 @@ type NftAsset {
   creator: NftProfile
   mediaType: MediaType
   isSpam: Boolean
-  protectionInfo: ProtectionInfo
   chain: Chain
 }
 
@@ -803,66 +794,6 @@ input NftTransferInput {
   direction: TransactionDirection!
 }
 
-type OffRampServiceProvider {
-  id: ID!
-  serviceProvider: String!
-  name: String!
-  url: String!
-  logoLightUrl: String!
-  logoDarkUrl: String!
-  supportUrl: String
-}
-
-input OffRampServiceProviderInput {
-  serviceProvider: String!
-  name: String!
-  url: String!
-  logoLightUrl: String!
-  logoDarkUrl: String!
-  supportUrl: String
-}
-
-type OffRampTransactionDetails {
-  id: ID!
-  status: TransactionStatus!
-  senderAddress: String!
-  offRampTransfer: OffRampTransfer!
-}
-
-input OffRampTransactionDetailsInput {
-  status: TransactionStatus!
-  senderAddress: String!
-  offRampTransfer: OffRampTransferInput!
-}
-
-type OffRampTransfer {
-  id: ID!
-  token: Token!
-  tokenStandard: TokenStandard!
-  amount: Float!
-  destinationCurrency: String
-  destinationAmount: Float!
-  serviceProvider: OffRampServiceProvider!
-  transactionReferenceId: String!
-  externalSessionId: String!
-  networkFee: Float
-  transactionFee: Float
-  totalFee: Float
-}
-
-input OffRampTransferInput {
-  token: TokenAssetInput!
-  tokenStandard: TokenStandard!
-  amount: Float!
-  destinationCurrency: String
-  destinationAmount: Float!
-  serviceProvider: OffRampServiceProviderInput!
-  transactionReferenceId: String!
-  networkFee: Float
-  transactionFee: Float
-  totalFee: Float
-}
-
 type OnRampServiceProvider {
   id: ID!
   serviceProvider: String!
@@ -1041,7 +972,6 @@ enum ProtectionAttackType {
   UNSTABLE_TOKEN_PRICE
   RUGPULL
   HIGH_FEES
-  HONEYPOT
 }
 
 type ProtectionInfo {
@@ -1101,7 +1031,7 @@ type Query {
   """
   token(chain: Chain!, address: String): Token
   tokenProjects(contracts: [ContractInput!]!): [TokenProject]
-  searchTokens(searchQuery: String!, chains: [Chain!], tokenSearchV2Enabled: Boolean): [Token]
+  searchTokens(searchQuery: String!, chains: [Chain!]): [Token]
   portfolios(ownerAddresses: [String!]!, chains: [Chain!], lookupTokens: [ContractInput!], fungibleIds: [String!], valueModifiers: [PortfolioValueModifier!]): [Portfolio]
   topTokens(chain: Chain, page: Int, pageSize: Int, orderBy: TokenSortableField): [Token]
   topCollections(chains: [Chain!], orderBy: CollectionSortableField, duration: HistoryDuration, after: String, first: Int, cursor: String, limit: Int): NftCollectionConnection
@@ -1112,15 +1042,6 @@ type Query {
   nftActivity(chain: Chain, filter: NftActivityFilterInput, after: String, first: Int): NftActivityConnection
   nftCollectionBalances(chain: Chain, ownerAddress: String!, after: String, first: Int, before: String, last: Int): NftCollectionBalanceConnection
   transactionNotification(chain: Chain!, address: String!, transactionHash: String!, isBridging: Boolean): TransactionNotification
-}
-
-type RewardsCampaign {
-  id: ID!
-  boostedApr: Float!
-  startTimestamp: Int
-  endTimestamp: Int
-  totalRewardAllocation: String
-  distributedRewards: String
 }
 
 enum SafetyLevel {
@@ -1225,7 +1146,6 @@ type Token implements IContract {
   v4Transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
   v3Transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
   v2Transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
-  source: TokenSource
 }
 
 type TokenAmount {
@@ -1341,14 +1261,9 @@ enum TokenSortableField {
   POPULARITY
 }
 
-enum TokenSource {
-  TOKEN_FACTORY
-}
-
 enum TokenStandard {
   NATIVE
   ERC20
-  SPL
 }
 
 input TokenTradeInput {
@@ -1478,7 +1393,6 @@ enum TransactionType {
   UNSTAKE
   WITHDRAW
   ON_RAMP
-  OFF_RAMP
 }
 
 type V2Pair implements IPool {
@@ -1543,7 +1457,6 @@ type V4Pool {
   token1Supply: Float
   txCount: Int
   feeTier: Float
-  isDynamicFee: Boolean
   hook: V4PoolHook
   totalLiquidityPercentChange24h: Amount
   cumulativeVolume(duration: HistoryDuration!): Amount
@@ -1551,7 +1464,6 @@ type V4Pool {
   priceHistory(duration: HistoryDuration!): [TimestampedPoolPrice]
   transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
   ticks(skip: Int, first: Int): [V4PoolTick]
-  rewardsCampaign: RewardsCampaign
 }
 
 type V4PoolHook {
