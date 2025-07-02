@@ -206,6 +206,7 @@ export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteRes
               },
             ],
           ],
+          swapper: params.swapper,
           routeString: `${params.tokenIn} -> ${params.tokenOut}`,
           tradeType: TradeType.EXACT_INPUT,
           priceImpact: '0', // Would need to calculate based on pool reserves
@@ -323,6 +324,7 @@ export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteRes
               },
             ],
           ],
+          swapper: params.swapper,
           routeString: `${params.tokenIn} -> ${params.tokenOut}`,
           tradeType: TradeType.EXACT_OUTPUT,
           priceImpact: '0',
