@@ -14,6 +14,7 @@ import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
+import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
@@ -29,6 +30,7 @@ import {
   useSwapProtectionSetting,
   useViewOnlyAccounts,
 } from 'wallet/src/features/wallet/hooks'
+import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
 /** Component that tracks UserProperties during the lifetime of the app */
 export function TraceUserProperties(): null {
@@ -45,6 +47,7 @@ export function TraceUserProperties(): null {
   const hideSpamTokens = useHideSpamTokensSetting()
   const hideSmallBalances = useHideSmallBalancesSetting()
   const { isTestnetModeEnabled } = useEnabledChains()
+  const finishedOnboarding = useSelector(selectFinishedOnboarding)
 
   const signerAccountAddresses = useMemo(() => signerAccounts.map((account) => account.address), [signerAccounts])
   const { totalBalance: signerAccountsTotalBalance } = useAccountBalances({
@@ -59,11 +62,6 @@ export function TraceUserProperties(): null {
 
   useEffect(() => {
     setUserProperty(MobileUserPropertyName.AppVersion, getFullAppVersion())
-    Keyring.getMnemonicIds() // Temporary to prepare for fix, should be removed in 1.28
-      .then((mnemonicIds) => {
-        setUserProperty(MobileUserPropertyName.MnemonicCount, mnemonicIds.length)
-      })
-      .catch(() => {})
     if (isAndroid) {
       NativeModules.AndroidDeviceModule.getPerformanceClass().then((perfClass: number) => {
         setUserProperty(MobileUserPropertyName.AndroidPerfClass, perfClass)
@@ -73,6 +71,20 @@ export function TraceUserProperties(): null {
       analytics.flushEvents()
     }
   }, [allowAnalytics])
+
+  useEffect(() => {
+    const fetchKeyringData = async (): Promise<void> => {
+      const mnemonicIds = await Keyring.getMnemonicIds()
+      setUserProperty(MobileUserPropertyName.MnemonicCount, mnemonicIds.length)
+      const privateKeyAddresses = await Keyring.getAddressesForStoredPrivateKeys()
+      setUserProperty(MobileUserPropertyName.PrivateKeyCount, privateKeyAddresses.length)
+    }
+    fetchKeyringData().catch((error) => {
+      logger.error(error, {
+        tags: { file: 'TraceUserProperties.tsx', function: 'fetchKeyringData' },
+      })
+    })
+  }, [finishedOnboarding])
 
   // Set user properties for datadog
 

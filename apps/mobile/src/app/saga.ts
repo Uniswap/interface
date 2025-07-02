@@ -8,7 +8,6 @@ import { biometricsSaga } from 'src/features/biometrics/biometricsSaga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseDataSaga'
 import { lockScreenSaga } from 'src/features/lockScreen/lockScreenSaga'
-import { modalWatcher } from 'src/features/modals/saga'
 import { pushNotificationsWatcherSaga } from 'src/features/notifications/saga'
 import { splashScreenSaga } from 'src/features/splashScreen/splashScreenSaga'
 import { telemetrySaga } from 'src/features/telemetry/saga'
@@ -30,7 +29,6 @@ const sagas = [
   cloudBackupsManagerSaga,
   deepLinkWatcher,
   firebaseDataWatcher,
-  modalWatcher,
   pushNotificationsWatcherSaga,
   restoreMnemonicCompleteWatcher,
   signWcRequestSaga,

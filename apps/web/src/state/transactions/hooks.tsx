@@ -15,6 +15,7 @@ import {
 } from 'state/transactions/types'
 import { isConfirmedTx, isPendingTx } from 'state/transactions/utils'
 import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { TransactionType as UniswapTransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { usePrevious } from 'utilities/src/react/hooks'
 
@@ -38,7 +39,7 @@ export function useTransactionAdder(): (
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      const chainId = ('chainId' in info && info.chainId) || account.chainId
+      const chainId: UniverseChainId = toSupportedChainId(response.chainId) || account.chainId
       dispatch(addTransaction({ hash, from: account.address, info, chainId, nonce, deadline }))
     },
     [account.address, account.chainId, account.status, dispatch],
@@ -189,11 +190,12 @@ function usePendingLPTransactions(): PendingTransactionDetails[] {
           isPendingTx(tx) &&
           (
             [
-              TransactionType.INCREASE_LIQUIDITY,
-              TransactionType.DECREASE_LIQUIDITY,
-              TransactionType.CREATE_POSITION,
+              UniswapTransactionType.LiquidityIncrease,
+              UniswapTransactionType.LiquidityDecrease,
+              UniswapTransactionType.CreatePool,
+              UniswapTransactionType.CreatePair,
               TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4,
-              TransactionType.COLLECT_FEES,
+              UniswapTransactionType.CollectFees,
             ] as BaseTransactionType[]
           ).includes(tx.info.type),
       ),

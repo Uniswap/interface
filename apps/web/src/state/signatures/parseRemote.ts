@@ -4,11 +4,11 @@ import { parseUnits } from 'ethers/lib/utils'
 import store from 'state'
 import { addSignature } from 'state/signatures/reducer'
 import { OrderActivity, SignatureDetails, SignatureType } from 'state/signatures/types'
-import { TransactionType as LocalTransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { SwapOrderStatus, SwapOrderType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { currencyId } from 'utils/currencyId'
 
 const SIGNATURE_TYPE_MAP: { [key in SwapOrderType]: SignatureType } = {
   [SwapOrderType.Limit]: SignatureType.SIGN_LIMIT,
@@ -52,6 +52,13 @@ export function parseRemote({ chain, details, timestamp }: OrderActivity): Signa
     throw new Error('Invalid activity received from GQL')
   }
 
+  const inputCurrencyId = currencyId(gqlToCurrency(details.inputToken))
+  const outputCurrencyId = currencyId(gqlToCurrency(details.outputToken))
+
+  if (!inputCurrencyId || !outputCurrencyId) {
+    throw new Error('Invalid activity received from GQL')
+  }
+
   const signature: SignatureDetails = {
     id: details.id,
     type: SIGNATURE_TYPE_MAP[details.swapOrderType],
@@ -73,11 +80,11 @@ export function parseRemote({ chain, details, timestamp }: OrderActivity): Signa
 
     swapInfo: {
       isUniswapXOrder: true,
-      type: LocalTransactionType.SWAP,
+      type: TransactionType.Swap,
       // This doesn't affect the display, but we don't know this value from the remote activity.
       tradeType: TradeType.EXACT_INPUT,
-      inputCurrencyId: currencyId(gqlToCurrency(details.inputToken)),
-      outputCurrencyId: currencyId(gqlToCurrency(details.outputToken)),
+      inputCurrencyId,
+      outputCurrencyId,
       inputCurrencyAmountRaw: inputTokenQuantity,
       expectedOutputCurrencyAmountRaw: outputTokenQuantity,
       minimumOutputCurrencyAmountRaw: outputTokenQuantity,

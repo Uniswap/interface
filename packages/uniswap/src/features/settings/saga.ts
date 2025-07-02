@@ -1,19 +1,13 @@
 import { call, select } from 'typed-redux-saga'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { filterChainIdsByFeatureFlag, getEnabledChains } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { getFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
+import { getEnabledChains } from 'uniswap/src/features/chains/utils'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 
 export function* getEnabledChainIdsSaga() {
   const isTestnetModeEnabled = yield* select(selectIsTestnetModeEnabled)
 
-  const soneiumEnabled = getFeatureFlag(FeatureFlags.Soneium)
-
-  const featureFlaggedChainIds = filterChainIdsByFeatureFlag({
-    [UniverseChainId.Soneium]: soneiumEnabled,
-  })
+  const featureFlaggedChainIds = yield* call(getFeatureFlaggedChainIds)
 
   return yield* call(getEnabledChains, {
     isTestnetModeEnabled,

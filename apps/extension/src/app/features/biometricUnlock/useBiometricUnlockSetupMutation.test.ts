@@ -118,6 +118,7 @@ describe('useBiometricUnlockSetupMutation', () => {
             { type: 'public-key', alg: -8 },
           ]),
         }),
+        signal: expect.any(AbortSignal),
       })
 
       // Verify the stored secret payload has all required properties

@@ -73,7 +73,7 @@ function DisconnectedWalletView() {
         </Flex>
       </Flex>
       <Flex gap="$gap20" mb="$spacing24">
-        <Flex row gap="$gap12">
+        <Flex row gap="$gap12" $sm={{ flexDirection: 'column' }}>
           <LearnMoreTile
             width="100%"
             img={PROVIDE_LIQUIDITY}

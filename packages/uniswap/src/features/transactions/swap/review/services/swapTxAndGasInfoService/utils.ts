@@ -1,64 +1,62 @@
 /* eslint-disable max-lines */
-import { providers } from 'ethers/lib/ethers'
+import type { providers } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
-import {
+import type {
   BridgeQuoteResponse,
   ClassicQuoteResponse,
   DiscriminatedQuoteResponse,
   WrapQuoteResponse,
 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
-import {
+import type {
   BridgeQuote,
   ClassicQuote,
   CreateSwapRequest,
   NullablePermit,
   QuoteResponse,
-  Routing,
-  TransactionFailureReason,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { Routing, TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__/index'
+import type { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { convertGasFeeToDisplayValue, useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
-import { GasFeeResult, areEqualGasStrategies } from 'uniswap/src/features/gas/types'
+import type { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import type { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'uniswap/src/features/transactions/swap/analytics'
-import { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/contexts/hooks/useTokenApprovalInfo'
+import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import { UNKNOWN_SIM_ERROR } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
-import { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
-import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import {
+import type { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
+import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import type {
   BaseSwapTxAndGasInfo,
   BridgeSwapTxAndGasInfo,
   ClassicSwapTxAndGasInfo,
-  PermitMethod,
   SwapGasFeeEstimation,
   WrapSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import {
-  ApprovalAction,
+import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import type {
   BridgeTrade,
   ClassicTrade,
   TokenApprovalInfo,
   UnwrapTrade,
   WrapTrade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
+import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
 import { mergeGasFeeResults } from 'uniswap/src/features/transactions/swap/utils/gas'
 import { isBridge, isClassic, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
+import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import {
-  ValidatedTransactionRequest,
   validatePermit,
   validateTransactionRequest,
   validateTransactionRequests,
 } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { SWAP_GAS_URGENCY_OVERRIDE, isClassicQuote } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
-import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
-import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
+import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 export interface TransactionRequestInfo {
   txRequests: providers.TransactionRequest[] | undefined
@@ -83,10 +81,7 @@ export function processWrapResponse({
   const wrapTxRequestWithGasFee = { ...wrapTxRequest, ...gasParams }
 
   const gasEstimate: SwapGasFeeEstimation = {
-    wrapEstimates: {
-      activeEstimate: gasFeeResult.gasEstimate,
-      shadowEstimates: [],
-    },
+    wrapEstimate: gasFeeResult.gasEstimate,
   }
 
   return {
@@ -235,15 +230,8 @@ export function createProcessSwapResponse({ gasStrategy }: { gasStrategy: GasStr
       error: gasEstimateError,
     }
 
-    const activeGasEstimate = response?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, gasStrategy))
-    const swapGasEstimate: GasFeeEstimates | undefined = activeGasEstimate
-      ? {
-          activeEstimate: activeGasEstimate,
-          shadowEstimates: response?.gasEstimates?.filter((e) => e !== activeGasEstimate),
-        }
-      : undefined
-    const gasEstimate = {
-      swapEstimates: swapGasEstimate,
+    const gasEstimate: SwapGasFeeEstimation = {
+      swapEstimate: response?.gasEstimate,
     }
 
     return {
@@ -331,7 +319,7 @@ export function createGasFields({
   approvalTxInfo: ApprovalTxInfo
   permitTxInfo?: {
     gasFeeResult: GasFeeResult
-    gasEstimate?: SwapGasFeeEstimation
+    gasEstimate?: GasEstimate
   }
 }): Pick<BaseSwapTxAndGasInfo, 'gasFee' | 'gasFeeEstimation'> {
   const { approvalGasFeeResult, revokeGasFeeResult } = approvalTxInfo
@@ -345,10 +333,7 @@ export function createGasFields({
 
   const gasFeeEstimation: SwapGasFeeEstimation = {
     ...swapTxInfo.gasEstimate,
-    approvalEstimates: {
-      activeEstimate: approvalGasFeeResult.gasEstimate,
-      shadowEstimates: [],
-    },
+    approvalEstimate: approvalGasFeeResult.gasEstimate,
   }
 
   return {
@@ -410,8 +395,9 @@ export function getClassicSwapTxAndGasInfo({
 type PermitTxInfo = {
   permitTxRequest: ValidatedTransactionRequest | undefined
   gasFeeResult: GasFeeResult
-  gasEstimates?: GasFeeEstimates
+  gasEstimate?: GasEstimate
 }
+
 const EMPTY_PERMIT_TX_INFO: PermitTxInfo = {
   permitTxRequest: undefined,
   gasFeeResult: {

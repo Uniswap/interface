@@ -1,15 +1,17 @@
-import { PropsWithChildren, ReactNode, useContext } from 'react'
+import type { PropsWithChildren, ReactNode } from 'react'
 import type { ColorValue } from 'react-native'
-import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import type { ButtonProps } from 'ui/src/components/buttons/Button/types'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { SwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import type { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
+import { useOptionalSwapFormStoreBase } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isMobileApp, isWeb } from 'utilities/src/platform'
 
@@ -33,7 +35,7 @@ type WarningModalContentProps = {
   backgroundIconColor?: ColorValue | false
   maxWidth?: number
   analyticsProperties?: Record<string, unknown>
-  fullScreen?: boolean
+  buttonSize?: ButtonProps['size']
 }
 
 export type WarningModalProps = {
@@ -101,53 +103,41 @@ export function WarningModalContent({
   hideHandlebar = false,
   backgroundIconColor,
   analyticsProperties,
-  fullScreen,
+  buttonSize: passedButtonSize,
 }: PropsWithChildren<WarningModalContentProps>): JSX.Element {
   const { headerText: alertHeaderTextColor } = getAlertColor(severity)
 
-  const buttonSize = isMobileApp ? 'medium' : fullScreen ? 'medium' : 'small'
+  const defaultButtonSize = isMobileApp ? 'medium' : 'small'
+  const buttonSize = passedButtonSize ?? defaultButtonSize
 
   return (
     <Flex
       centered
-      flex={fullScreen ? 1 : 0}
       gap="$spacing12"
       maxWidth={maxWidth}
       pb={isWeb ? '$none' : '$spacing12'}
       pt={hideHandlebar ? '$spacing24' : '$spacing12'}
       px={isWeb ? '$none' : '$spacing24'}
-      justifyContent={fullScreen ? 'space-between' : 'unset'}
     >
-      <Flex>
-        {fullScreen && (
-          <TouchableArea alignItems="flex-start" pb="$spacing12" onPress={onReject ?? onClose}>
-            <BackArrow color="$neutral2" size="$icon.24" />
-          </TouchableArea>
-        )}
-        <Flex centered gap="$spacing12">
-          <WarningModalIcon
-            hideIcon={hideIcon}
-            icon={icon}
-            backgroundIconColor={backgroundIconColor}
-            alertHeaderTextColor={alertHeaderTextColor}
-          />
-
-          {title && (
-            <Text textAlign="center" variant={isWeb ? 'subheading2' : 'body1'}>
-              {title}
-            </Text>
-          )}
-          {titleComponent}
-          {caption && (
-            <Text color="$neutral2" textAlign="center" variant="body3">
-              {caption}
-            </Text>
-          )}
-          {captionComponent}
-          {children}
-        </Flex>
-      </Flex>
-
+      <WarningModalIcon
+        hideIcon={hideIcon}
+        icon={icon}
+        backgroundIconColor={backgroundIconColor}
+        alertHeaderTextColor={alertHeaderTextColor}
+      />
+      {title && (
+        <Text textAlign="center" variant={isWeb ? 'subheading2' : 'body1'}>
+          {title}
+        </Text>
+      )}
+      {titleComponent}
+      {caption && (
+        <Text color="$neutral2" textAlign="center" variant="body3">
+          {caption}
+        </Text>
+      )}
+      {captionComponent}
+      {children}
       {(rejectText || acknowledgeText) && (
         <Flex row alignSelf="stretch" gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'}>
           {rejectText && (
@@ -171,10 +161,10 @@ export function WarningModalContent({
 }
 
 export function WarningModal(props: PropsWithChildren<WarningModalProps>): JSX.Element {
-  const { hideHandlebar, isDismissible = true, isOpen, maxWidth, modalName, onClose, zIndex, fullScreen } = props
+  const { hideHandlebar, isDismissible = true, isOpen, maxWidth, modalName, onClose, zIndex } = props
   const colors = useSporeColors()
 
-  const swapFormContext = useContext(SwapFormContext)
+  const maybeSwapFormStore = useOptionalSwapFormStoreBase()
 
   return (
     <Modal
@@ -185,13 +175,13 @@ export function WarningModal(props: PropsWithChildren<WarningModalProps>): JSX.E
       maxWidth={maxWidth}
       name={modalName}
       zIndex={zIndex}
-      fullScreen={fullScreen}
       onClose={onClose}
     >
-      {swapFormContext ? (
-        <SwapFormContext.Provider value={swapFormContext}>
+      {/* TODO: WALL-7198 */}
+      {maybeSwapFormStore ? (
+        <SwapFormStoreContext.Provider value={maybeSwapFormStore}>
           <WarningModalContent {...props} />
-        </SwapFormContext.Provider>
+        </SwapFormStoreContext.Provider>
       ) : (
         <WarningModalContent {...props} />
       )}

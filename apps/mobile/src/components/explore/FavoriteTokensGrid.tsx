@@ -55,12 +55,24 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
     await hapticFeedback.light()
   }, [hapticFeedback])
 
+  const hasMoreTokens = favoriteCurrencyIds.length > DEFAULT_TOKENS_TO_DISPLAY
+  const visibleTokens =
+    showAll || !hasMoreTokens ? favoriteCurrencyIds : favoriteCurrencyIds.slice(0, DEFAULT_TOKENS_TO_DISPLAY)
+
+  const GRID_GAP = getTokenValue('$spacing8')
+
   const handleDragEnd = useCallback<SortableGridDragEndCallback<string>>(
     async ({ data }) => {
       await hapticFeedback.light()
-      dispatch(setFavoriteTokens({ currencyIds: data }))
+      if (showAll || !hasMoreTokens) {
+        dispatch(setFavoriteTokens({ currencyIds: data }))
+      } else {
+        // merge reordered visible tokens with hidden ones
+        const hiddenTokens = favoriteCurrencyIds.slice(DEFAULT_TOKENS_TO_DISPLAY)
+        dispatch(setFavoriteTokens({ currencyIds: [...data, ...hiddenTokens] }))
+      }
     },
-    [hapticFeedback, dispatch],
+    [hapticFeedback, dispatch, showAll, favoriteCurrencyIds, hasMoreTokens],
   )
 
   const renderItem = useCallback<SortableGridRenderItem<string>>(
@@ -76,12 +88,6 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
     },
     [isEditing, showLoading],
   )
-
-  const hasMoreTokens = favoriteCurrencyIds.length > DEFAULT_TOKENS_TO_DISPLAY
-  const visibleTokens =
-    showAll || !hasMoreTokens ? favoriteCurrencyIds : favoriteCurrencyIds.slice(0, DEFAULT_TOKENS_TO_DISPLAY)
-
-  const GRID_GAP = getTokenValue('$spacing8')
 
   return (
     <Sortable.Layer>

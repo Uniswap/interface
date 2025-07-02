@@ -20,7 +20,10 @@ import { TransactionType } from 'state/transactions/types'
 import { logSwapFinalized, logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionStatus,
+  TransactionType as UniswapTransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function ActivityStateUpdater() {
@@ -74,7 +77,7 @@ function useOnActivityUpdate(): OnActivityUpdate {
 
         const batchId = original.batchInfo?.batchId
 
-        if (original.info.type === TransactionType.SWAP) {
+        if (original.info.type === UniswapTransactionType.Swap) {
           logSwapFinalized({
             hash,
             batchId,

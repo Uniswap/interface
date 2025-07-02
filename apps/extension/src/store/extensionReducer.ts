@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import { PersistState } from 'redux-persist'
 import { dappRequestReducer } from 'src/app/features/dappRequests/slice'
 import { alertsReducer } from 'src/app/features/onboarding/alerts/slice'
 import { popupsReducer } from 'src/app/features/popups/slice'
@@ -24,4 +25,4 @@ export const extensionPersistedStateList: Array<keyof typeof extensionReducers> 
   'alerts',
 ]
 
-export type ExtensionState = ReturnType<typeof extensionReducer>
+export type ExtensionState = ReturnType<typeof extensionReducer> & { _persist?: PersistState }

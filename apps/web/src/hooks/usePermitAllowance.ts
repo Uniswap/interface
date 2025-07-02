@@ -5,8 +5,8 @@ import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useTriggerOnTransactionType } from 'hooks/useTriggerOnTransactionType'
 import ms from 'ms'
 import { useCallback, useMemo, useRef } from 'react'
-import { TransactionType } from 'state/transactions/types'
 import { PERMIT2_ABI } from 'uniswap/src/abis/permit2'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UserRejectedRequestError, toReadableError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -31,7 +31,7 @@ export function usePermitAllowance({ token, owner, spender }: { token?: Token; o
     query: { enabled: queryEnabled },
   })
   // Permit allowance is updated on chain when a swap is confirmed including a permit signature; we refetch permit allowance when a swap is confirmed
-  useTriggerOnTransactionType(TransactionType.SWAP, refetchAllowance)
+  useTriggerOnTransactionType(TransactionType.Swap, refetchAllowance)
 
   return useMemo(() => {
     if (!data) {

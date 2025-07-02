@@ -1285,7 +1285,7 @@ describe('getV4PriceRangeInfo', () => {
           tickSpaceLimits,
           invalidPrice: false,
           invalidRange: false,
-          outOfRange: true,
+          outOfRange: false,
           deposit0Disabled: false,
           deposit1Disabled: false,
           mockPool,

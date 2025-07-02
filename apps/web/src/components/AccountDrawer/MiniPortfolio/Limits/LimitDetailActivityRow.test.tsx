@@ -8,7 +8,8 @@ import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 
 vi.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', async () => {
   const actual = await vi.importActual('components/AccountDrawer/MiniPortfolio/formatTimestamp')
@@ -24,10 +25,10 @@ const mockOrderDetails: UniswapXOrderDetails = {
   status: UniswapXOrderStatus.OPEN,
   swapInfo: {
     isUniswapXOrder: true,
-    type: 1,
+    type: TransactionType.Swap,
     tradeType: 0,
-    inputCurrencyId: DAI.address,
-    outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
+    inputCurrencyId: currencyId(DAI),
+    outputCurrencyId: currencyId(WETH9[UniverseChainId.Mainnet]),
     inputCurrencyAmountRaw: '252074033564766400000',
     expectedOutputCurrencyAmountRaw: '106841079134757921',
     minimumOutputCurrencyAmountRaw: '106841079134757921',

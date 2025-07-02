@@ -1,9 +1,9 @@
-import { memo } from 'react'
 import { Flex, useIsShortMobileDevice } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/components/SwapArrowButton'
+import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const SWAP_DIRECTION_BUTTON_SIZE = {
@@ -21,13 +21,10 @@ const SWAP_DIRECTION_BUTTON_SIZE = {
   },
 } as const
 
-export const SwitchCurrenciesButton = memo(function _SwitchCurrenciesButton({
-  onSwitchCurrencies,
-}: {
-  onSwitchCurrencies: () => void
-}): JSX.Element {
+export function SwitchCurrenciesButton(): JSX.Element {
   const isShortMobileDevice = useIsShortMobileDevice()
   const smallOrRegular = isShortMobileDevice ? 'small' : 'regular'
+  const onSwitchCurrencies = useSwapFormScreenStore((state) => state.onSwitchCurrencies)
 
   return (
     <Flex zIndex="$mask">
@@ -63,4 +60,4 @@ export const SwitchCurrenciesButton = memo(function _SwitchCurrenciesButton({
       </Flex>
     </Flex>
   )
-})
+}

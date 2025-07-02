@@ -10,7 +10,7 @@ import { SendTransactionInfo, TransactionType } from 'state/transactions/types'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { currencyId } from 'utils/currencyId'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { UserRejectedRequestError, toReadableError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 

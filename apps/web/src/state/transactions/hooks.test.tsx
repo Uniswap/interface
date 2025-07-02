@@ -10,7 +10,7 @@ import {
   useTransactionRemover,
 } from 'state/transactions/hooks'
 import { clearAllTransactions, finalizeTransaction } from 'state/transactions/reducer'
-import { TransactionInfo, TransactionType } from 'state/transactions/types'
+import { TransactionInfo } from 'state/transactions/types'
 import { mocked } from 'test-utils/mocked'
 import { act, renderHook } from 'test-utils/render'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
@@ -129,7 +129,7 @@ describe('Transactions hooks', () => {
 
     it('returns false when there is a pending transaction but it is not an approval', () => {
       addPendingTransaction({
-        type: TransactionType.CLAIM,
+        type: UniswapTransactionType.ClaimUni,
         recipient: '0x123',
       })
       const { result } = renderHook(() => useHasPendingApproval(USDC_MAINNET, PERMIT2_ADDRESS_MAINNET))
@@ -170,7 +170,7 @@ describe('Transactions hooks', () => {
 
     it('returns false when there is a pending transaction but it is not a revocation', () => {
       addPendingTransaction({
-        type: TransactionType.CLAIM,
+        type: UniswapTransactionType.ClaimUni,
         recipient: '0x123',
       })
       const { result } = renderHook(() => useHasPendingRevocation(USDC_MAINNET, PERMIT2_ADDRESS_MAINNET))

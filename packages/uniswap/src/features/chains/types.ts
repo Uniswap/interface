@@ -79,6 +79,7 @@ export enum NetworkLayer {
 export interface RetryOptions {
   n: number
   minWait: number
+  medWait: number
   maxWait: number
 }
 

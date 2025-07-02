@@ -11,8 +11,10 @@ import { LIMIT_ORDER_TRADE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 
 vi.mock('state/transactions/hooks', async () => {
   const actual = await vi.importActual('state/transactions/hooks')
@@ -71,10 +73,10 @@ const filledOrderDetails: UniswapXOrderDetails = {
   status: UniswapXOrderStatus.FILLED,
   swapInfo: {
     isUniswapXOrder: true,
-    type: 1,
+    type: TransactionType.Swap,
     tradeType: 0,
-    inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
-    outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
+    inputCurrencyId: currencyId(DAI),
+    outputCurrencyId: currencyId(WETH9[UniverseChainId.Mainnet]),
     inputCurrencyAmountRaw: '252074033564766400000',
     expectedOutputCurrencyAmountRaw: '106841079134757921',
     minimumOutputCurrencyAmountRaw: '106841079134757921',

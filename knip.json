@@ -1,5 +1,4 @@
 {
-  "cypress": false,
   "ignore": [
     "**/*.native.ts",
     "**/*.web.ts",

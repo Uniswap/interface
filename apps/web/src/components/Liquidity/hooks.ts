@@ -6,6 +6,7 @@ import {
   MAX_FEE_TIER_DECIMALS,
   calculateInvertedValues,
   getDefaultFeeTiersForChainWithDynamicFeeTier,
+  getFeeTierKey,
   mergeFeeTiers,
 } from 'components/Liquidity/utils'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -37,7 +38,7 @@ export function useAllFeeTierPoolData({
   sdkCurrencies: { TOKEN0: Maybe<Currency>; TOKEN1: Maybe<Currency> }
   hook: string
   withDynamicFeeTier?: boolean
-}): { feeTierData: Record<number, FeeTierData>; hasExistingFeeTiers: boolean } {
+}): { feeTierData: Record<string, FeeTierData>; hasExistingFeeTiers: boolean } {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
 
@@ -58,20 +59,20 @@ export function useAllFeeTierPoolData({
       BigNumber.from(0),
     )
 
-    const feeTierData: Record<number, FeeTierData> = {}
+    const feeTierData: Record<string, FeeTierData> = {}
     if (poolData && liquiditySum && sdkCurrencies.TOKEN0 && sdkCurrencies.TOKEN1) {
       for (const pool of poolData.pools) {
-        const feeTier = pool.fee
+        const key = getFeeTierKey(pool.fee, pool.isDynamicFee)
         const totalLiquidityUsdTruncated = Number(pool.totalLiquidityUsd.split('.')[0] ?? '0')
         const percentage = liquiditySum.isZero()
           ? new Percent(0, 100)
           : new Percent(totalLiquidityUsdTruncated, liquiditySum.toString())
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (feeTierData[feeTier]) {
-          feeTierData[feeTier].totalLiquidityUsd += totalLiquidityUsdTruncated
-          feeTierData[feeTier].percentage = feeTierData[feeTier].percentage.add(percentage)
+        if (feeTierData[key]) {
+          feeTierData[key].totalLiquidityUsd += totalLiquidityUsdTruncated
+          feeTierData[key].percentage = feeTierData[key].percentage.add(percentage)
         } else {
-          feeTierData[feeTier] = {
+          feeTierData[key] = {
             id: pool.poolId,
             fee: {
               isDynamic: pool.isDynamicFee,
@@ -94,7 +95,7 @@ export function useAllFeeTierPoolData({
     return {
       feeTierData: mergeFeeTiers({
         feeTiers: feeTierData,
-        feeData: Object.values(
+        defaultFeeData: Object.values(
           getDefaultFeeTiersForChainWithDynamicFeeTier({
             chainId,
             dynamicFeeTierEnabled: withDynamicFeeTier,

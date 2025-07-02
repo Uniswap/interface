@@ -3,24 +3,22 @@ import { Flex } from 'ui/src'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { WalletRestoreButton } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/WalletRestoreButton'
-import { getCurrencyInputFocusedStyle } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/utils/getCurrencyInputFocusedStyle'
-import { useSwapFormScreenState } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContext'
+import { useCurrencyInputFocusedStyle } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useCurrencyInputFocusedStyle'
+import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { usePriceDifference } from 'uniswap/src/features/transactions/swap/hooks/usePriceDifference'
+import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isInterface } from 'utilities/src/platform'
 
 export function SwapFormCurrencyOutputPanel(): JSX.Element {
   const { t } = useTranslation()
-  const { derivedSwapInfo } = useSwapFormContext()
+
+  const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
   const { priceDifferencePercentage } = usePriceDifference(derivedSwapInfo)
 
   const {
-    // References
     outputRef,
-
-    // State values
     focusOnCurrencyField,
     currencies,
     currencyAmounts,
@@ -36,11 +34,7 @@ export function SwapFormCurrencyOutputPanel(): JSX.Element {
     tokenColor,
     walletNeedsRestore,
     isBridge,
-
-    // Trade-related values
     trade,
-
-    // Event handlers
     onSetPresetValue,
     onToggleIsFiatMode,
     onFocusOutput,
@@ -48,9 +42,34 @@ export function SwapFormCurrencyOutputPanel(): JSX.Element {
     onSetExactAmountOutput,
     onShowTokenSelectorOutput,
     showTemporaryFoTWarning,
-  } = useSwapFormScreenState()
+  } = useSwapFormScreenStore((s) => ({
+    outputRef: s.outputRef,
+    focusOnCurrencyField: s.focusOnCurrencyField,
+    currencies: s.currencies,
+    currencyAmounts: s.currencyAmounts,
+    currencyBalances: s.currencyBalances,
+    selectingCurrencyField: s.selectingCurrencyField,
+    isFiatMode: s.isFiatMode,
+    exactFieldIsOutput: s.exactFieldIsOutput,
+    exactOutputDisabled: s.exactOutputDisabled,
+    resetSelection: s.resetSelection,
+    currencyAmountsUSDValue: s.currencyAmountsUSDValue,
+    exactValue: s.exactValue,
+    formattedDerivedValue: s.formattedDerivedValue,
+    tokenColor: s.tokenColor,
+    walletNeedsRestore: s.walletNeedsRestore,
+    isBridge: s.isBridge,
+    trade: s.trade,
+    onSetPresetValue: s.onSetPresetValue,
+    onToggleIsFiatMode: s.onToggleIsFiatMode,
+    onFocusOutput: s.onFocusOutput,
+    onOutputSelectionChange: s.onOutputSelectionChange,
+    onSetExactAmountOutput: s.onSetExactAmountOutput,
+    onShowTokenSelectorOutput: s.onShowTokenSelectorOutput,
+    showTemporaryFoTWarning: s.showTemporaryFoTWarning,
+  }))
 
-  const focusedStyles = getCurrencyInputFocusedStyle(focusOnCurrencyField === CurrencyField.OUTPUT)
+  const focusedStyles = useCurrencyInputFocusedStyle(focusOnCurrencyField === CurrencyField.OUTPUT)
 
   return (
     <Trace section={SectionName.CurrencyOutputPanel}>

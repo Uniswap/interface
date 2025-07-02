@@ -8,6 +8,7 @@ export enum Experiments {
   PriceUxUpdate = 'price_ux_update',
   PrivateRpc = 'private_rpc',
   NativeTokenPercentageBuffer = 'lp_native_buffer',
+  SwapConfirmation = 'swap-confirmation',
 }
 
 export enum Layers {
@@ -45,11 +46,16 @@ export enum NativeTokenPercentageBufferProperties {
   BufferSize = 'bufferSize',
 }
 
+export enum SwapConfirmationProperties {
+  WaitTimes = 'wait_times',
+}
+
 export type ExperimentProperties = {
   [Experiments.SwapPresets]: SwapPresetsProperties
   [Experiments.PriceUxUpdate]: PriceUxUpdateProperties
   [Experiments.PrivateRpc]: PrivateRpcProperties
   [Experiments.NativeTokenPercentageBuffer]: NativeTokenPercentageBufferProperties
+  [Experiments.SwapConfirmation]: SwapConfirmationProperties
 }
 
 // will be a spread of all experiment properties in that layer

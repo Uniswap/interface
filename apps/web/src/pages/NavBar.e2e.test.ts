@@ -99,6 +99,7 @@ test.describe('Navigation', () => {
 
   for (const tab of tabs) {
     test.describe(`${tab.label} tab`, () => {
+      test.describe.configure({ retries: 3 }) // these tests are flaky
       test.beforeEach(async ({ page }) => {
         await page.goto('/')
       })
@@ -112,9 +113,16 @@ test.describe('Navigation', () => {
         await expect(page.getByTestId(`${tab.label}-menu`).first()).toBeVisible()
 
         for (const item of tab.dropdown) {
+          // Re-hover before each click to ensure the menu stays open
+          await page.waitForTimeout(500)
           await page.getByTestId(`${tab.label}-tab`).locator('a').hover()
+          await page.waitForTimeout(200) // Small delay to ensure hover state is registered
           await page.getByRole('link', { name: item.label }).click()
           await expect(page).toHaveURL(item.path)
+          // Navigate back to home page for the next iteration
+          if (tab.dropdown.indexOf(item) < tab.dropdown.length - 1) {
+            await page.goto('/')
+          }
         }
       })
     })

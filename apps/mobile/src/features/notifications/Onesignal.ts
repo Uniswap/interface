@@ -19,8 +19,8 @@ export const initOneSignal = (): void => {
 
   OneSignal.Notifications.addEventListener('foregroundWillDisplay', (event) => {
     const notification = event.getNotification()
-    const additionalData = notification.additionalData as { notification_type?: string }
-    const notificationType = additionalData.notification_type
+    const additionalData = notification.additionalData as { notification_type?: string } | undefined
+    const notificationType = additionalData?.notification_type
 
     let enabled = false
     // Some special notif filtering logic is needed for iOS

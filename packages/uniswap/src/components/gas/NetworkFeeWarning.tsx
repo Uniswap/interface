@@ -179,7 +179,7 @@ function NetworkFeeText({
   if (includesDelegation) {
     return (
       <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant="body3">
-        {t('swap.warning.networkFee.message')}
+        {t('swap.warning.networkFee.delegation.message')}
       </Text>
     )
   }

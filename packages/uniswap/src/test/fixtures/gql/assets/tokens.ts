@@ -1,5 +1,14 @@
 import { Token as SDKToken } from '@uniswap/sdk-core'
 import {
+  DAI,
+  USDC,
+  USDC_ARBITRUM,
+  USDC_BASE,
+  USDC_OPTIMISM,
+  USDC_POLYGON,
+  WRAPPED_NATIVE_CURRENCY,
+} from 'uniswap/src/constants/tokens'
+import {
   Currency,
   HistoryDuration,
   PriceSource,
@@ -14,20 +23,12 @@ import {
   TokenProjectMarket,
   TokenStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { amounts } from 'uniswap/src/test/fixtures/gql/amounts'
 import { get24hPriceChange, getLatestPrice, priceHistory } from 'uniswap/src/test/fixtures/gql/history'
 import { GQL_CHAINS, image } from 'uniswap/src/test/fixtures/gql/misc'
-import {
-  DAI,
-  ETH,
-  USDBC_BASE,
-  USDC,
-  USDC_ARBITRUM,
-  USDC_OPTIMISM,
-  USDC_POLYGON,
-  WETH,
-} from 'uniswap/src/test/fixtures/lib'
+import { ETH } from 'uniswap/src/test/fixtures/lib'
 import { MAX_FIXTURE_TIMESTAMP, faker } from 'uniswap/src/test/shared'
 import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
 
@@ -160,7 +161,7 @@ export const usdcTokenProject = createFixture<TokenProject, TokenProjectOptions>
       token({ sdkToken: USDC, market: tokenMarket() }),
       token({ sdkToken: USDC_POLYGON }),
       token({ sdkToken: USDC_ARBITRUM }),
-      token({ sdkToken: USDBC_BASE, market: tokenMarket() }),
+      token({ sdkToken: USDC_BASE, market: tokenMarket() }),
       token({ sdkToken: USDC_OPTIMISM }),
     ],
     safetyLevel,
@@ -178,7 +179,9 @@ const ethProject = tokenProject({
 })
 
 export const ethToken = createFixture<Token>()(() => token({ sdkToken: ETH, project: ethProject }))
-export const wethToken = createFixture<Token>()(() => token({ sdkToken: WETH, project: ethProject }))
+export const wethToken = createFixture<Token>()(() =>
+  token({ sdkToken: WRAPPED_NATIVE_CURRENCY[UniverseChainId.Mainnet], project: ethProject }),
+)
 
 const daiProject = tokenProject({
   name: 'Dai Stablecoin',
@@ -195,5 +198,5 @@ const usdcProject = tokenProject({
 })
 
 export const usdcToken = createFixture<Token>()(() => token({ sdkToken: USDC, project: usdcProject }))
-export const usdcBaseToken = createFixture<Token>()(() => token({ sdkToken: USDBC_BASE, project: usdcProject }))
+export const usdcBaseToken = createFixture<Token>()(() => token({ sdkToken: USDC_BASE, project: usdcProject }))
 export const usdcArbitrumToken = createFixture<Token>()(() => token({ sdkToken: USDC_ARBITRUM, project: usdcProject }))

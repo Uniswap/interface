@@ -1,15 +1,13 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import type { Currency } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxAndGasInfo } from 'components/RemoveLiquidity/hooks'
-import { PropsWithChildren, createContext, useContext, useEffect, useMemo } from 'react'
+import type { PropsWithChildren } from 'react'
+import { createContext, useContext, useEffect, useMemo } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { CheckApprovalLPResponse, DecreaseLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import {
-  LiquidityTransactionType,
-  ValidatedDecreasePositionTxAndGasInfo,
-} from 'uniswap/src/features/transactions/liquidity/types'
+import type { CheckApprovalLPResponse, DecreaseLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
+import type { ValidatedDecreasePositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
+import { LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
 
@@ -32,11 +30,10 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
 
   const removeLiquidityTxInfo = useRemoveLiquidityTxAndGasInfo({ account: account?.address })
   const { approvalLoading, decreaseCalldataLoading, decreaseCalldata, error, refetch } = removeLiquidityTxInfo
-  const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
 
   useEffect(() => {
-    logContextUpdate('RemoveLiquidityTxContext', removeLiquidityTxInfo, datadogEnabled)
-  }, [removeLiquidityTxInfo, datadogEnabled])
+    logContextUpdate('RemoveLiquidityTxContext', removeLiquidityTxInfo)
+  }, [removeLiquidityTxInfo])
 
   const currency0 = currencies?.TOKEN0
   const currency1 = currencies?.TOKEN1

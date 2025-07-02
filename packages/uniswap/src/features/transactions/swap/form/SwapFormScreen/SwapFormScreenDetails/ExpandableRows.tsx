@@ -7,22 +7,31 @@ import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/component
 import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/PriceImpactRow'
 import { RoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/components/SwapRateRatio'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { useFeeOnTransferAmounts } from 'uniswap/src/features/transactions/swap/hooks/useFeeOnTransferAmount'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
+import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Element | null {
   const { t } = useTranslation()
-  const swapTxContext = useSwapTxContext()
+  const { gasFee, gasFeeBreakdown } = useSwapTxStore((s) => {
+    if (isUniswapX(s)) {
+      return {
+        gasFee: s.gasFee,
+        gasFeeBreakdown: s.gasFeeBreakdown,
+      }
+    }
 
-  const { gasFee } = swapTxContext
-  const uniswapXGasBreakdown = isUniswapX(swapTxContext) ? swapTxContext.gasFeeBreakdown : undefined
+    return {
+      gasFee: s.gasFee,
+      gasFeeBreakdown: undefined,
+    }
+  })
 
-  const { derivedSwapInfo } = useSwapFormContext()
+  const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
 
   const { priceImpactWarning } = useParsedSwapWarnings()
   const showPriceImpactWarning = Boolean(priceImpactWarning)
@@ -53,7 +62,7 @@ export function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Elemen
           showSeparatorToggle={false}
           outputCurrency={trade.trade.outputAmount.currency}
           transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
-          uniswapXGasBreakdown={uniswapXGasBreakdown}
+          uniswapXGasBreakdown={gasFeeBreakdown}
           RoutingInfo={isBridge ? <AcrossRoutingInfo /> : <RoutingInfo gasFee={gasFee} chainId={chainId} />}
           RateInfo={
             showPriceImpactWarning ? (

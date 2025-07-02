@@ -1,9 +1,12 @@
 import { memo, useEffect, useState } from 'react'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { SwapDetails } from 'uniswap/src/features/transactions/swap/review/SwapDetails/SwapDetails'
-import { useSwapReviewCallbacks } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewCallbacksContext'
-import { useSwapReviewTransactionState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewTransactionContext'
-import { useSwapWarningState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewWarningStateContext'
+import { useSwapReviewCallbacksStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/useSwapReviewCallbacksStore'
+import { useSwapReviewTransactionStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewTransactionStore/useSwapReviewTransactionStore'
+import {
+  useSwapReviewWarningStateActions,
+  useSwapReviewWarningStore,
+} from 'uniswap/src/features/transactions/swap/review/stores/swapReviewWarningStore/useSwapReviewWarningStore'
 
 export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.Element | null {
   const {
@@ -17,9 +20,24 @@ export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.
     reviewScreenWarning,
     txSimulationErrors,
     swapTxContext,
-  } = useSwapReviewTransactionState()
-  const { tokenWarningChecked, setTokenWarningChecked } = useSwapWarningState()
-  const { onAcceptTrade, onShowWarning } = useSwapReviewCallbacks()
+  } = useSwapReviewTransactionStore((s) => ({
+    acceptedDerivedSwapInfo: s.acceptedDerivedSwapInfo,
+    derivedSwapInfo: s.derivedSwapInfo,
+    feeOnTransferProps: s.feeOnTransferProps,
+    tokenWarningProps: s.tokenWarningProps,
+    gasFee: s.gasFee,
+    newTradeRequiresAcceptance: s.newTradeRequiresAcceptance,
+    uniswapXGasBreakdown: s.uniswapXGasBreakdown,
+    reviewScreenWarning: s.reviewScreenWarning,
+    txSimulationErrors: s.txSimulationErrors,
+    swapTxContext: s.swapTxContext,
+  }))
+  const tokenWarningChecked = useSwapReviewWarningStore((s) => s.tokenWarningChecked)
+  const { setTokenWarningChecked } = useSwapReviewWarningStateActions()
+  const { onAcceptTrade, onShowWarning } = useSwapReviewCallbacksStore((s) => ({
+    onAcceptTrade: s.onAcceptTrade,
+    onShowWarning: s.onShowWarning,
+  }))
   const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
 
   const [stableIncludesDelegation, setStableIncludesDelegation] = useState<boolean | undefined>(
@@ -32,7 +50,7 @@ export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.
     }
   }, [swapTxContext.includesDelegation])
 
-  if (!derivedSwapInfo || !acceptedDerivedSwapInfo) {
+  if (!acceptedDerivedSwapInfo) {
     return null
   }
 

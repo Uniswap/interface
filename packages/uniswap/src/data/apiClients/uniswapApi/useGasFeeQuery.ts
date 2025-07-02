@@ -4,9 +4,8 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClients/hooks/useQueryWithImmediateGarbageCollection'
 import { UseQueryWithImmediateGarbageCollectionApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { GasFeeResultWithoutState, createFetchGasFee } from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
-import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import { getActiveGasStrategy } from 'uniswap/src/features/gas/utils'
-import { useEvent } from 'utilities/src/react/hooks'
+import { useStatsigClientStatus } from 'uniswap/src/features/gating/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export function useGasFeeQuery({
@@ -15,18 +14,17 @@ export function useGasFeeQuery({
   shouldUsePreviousValueDuringLoading,
   ...rest
 }: UseQueryWithImmediateGarbageCollectionApiHelperHookArgs<
-  { tx: TransactionRequest; fallbackGasLimit?: number },
+  { tx: TransactionRequest; fallbackGasLimit?: number; smartContractDelegationAddress?: Address },
   GasFeeResultWithoutState
 > & { shouldUsePreviousValueDuringLoading?: boolean }): UseQueryResult<GasFeeResultWithoutState> {
-  const gasStrategy = useActiveGasStrategy(params?.tx.chainId, 'general')
-
-  const fetchGasFee = useEvent(createFetchGasFee({ gasStrategy }))
-
+  const { isStatsigReady } = useStatsigClientStatus()
   const queryKey = [ReactQueryCacheKey.UniswapApi, uniswapUrls.gasServicePath, params]
 
   return useQueryWithImmediateGarbageCollection<GasFeeResultWithoutState>({
     queryKey,
-    queryFn: params ? (): Promise<GasFeeResultWithoutState> => fetchGasFee(params) : skipToken,
+    queryFn: params
+      ? (): Promise<GasFeeResultWithoutState> => fetchGasFeeQuery({ ...params, isStatsigReady })
+      : skipToken,
     ...(shouldUsePreviousValueDuringLoading && { placeholderData: keepPreviousData }),
     ...rest,
   })

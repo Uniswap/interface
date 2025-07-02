@@ -3,6 +3,7 @@ import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
+import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappRequestType, EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
 import { useGasFeeFormattedDisplayAmounts } from 'uniswap/src/features/gas/hooks'
@@ -16,8 +17,7 @@ interface NetworkFeeFooterProps {
   gasFee: GasFeeResult | undefined
   isUniswapX?: boolean
   requestMethod?: string
-  logoOverrideChainId?: UniverseChainId
-  showAllNetworks?: boolean
+  showSmartWalletActivation?: boolean
 }
 
 // Since EthSignMethod is a TypeScript type that doesn't exist at runtime,
@@ -42,8 +42,7 @@ export function NetworkFeeFooter({
   gasFee,
   isUniswapX,
   requestMethod,
-  logoOverrideChainId,
-  showAllNetworks,
+  showSmartWalletActivation,
 }: NetworkFeeFooterProps): JSX.Element | null {
   const { t } = useTranslation()
   const variant = isMobileApp ? 'body3' : 'body4'
@@ -60,17 +59,26 @@ export function NetworkFeeFooter({
 
   return (
     <Flex px="$spacing8">
-      <ContentRow label={t('transaction.networkCost.label')} variant={variant}>
+      <ContentRow
+        label={
+          <Flex>
+            <Flex row gap="$spacing4">
+              <Text color="$neutral1" variant={variant}>
+                {t('transaction.networkCost.label')}
+              </Text>
+              <NetworkFeeWarning includesDelegation={showSmartWalletActivation} chainId={chainId} />
+            </Flex>
+            {showSmartWalletActivation && (
+              <Text color="$neutral3" variant="body4">
+                {t('transaction.networkCost.includesSmartWalletActivation')}
+              </Text>
+            )}
+          </Flex>
+        }
+        variant={variant}
+      >
         <Flex centered row gap="$spacing4">
-          {showNetworkLogo &&
-            (showAllNetworks ? (
-              <NetworkLogo chainId={null} size={iconSizes.icon16} />
-            ) : logoOverrideChainId ? (
-              <NetworkLogo chainId={logoOverrideChainId} size={iconSizes.icon16} />
-            ) : (
-              <NetworkLogo chainId={chainId} size={iconSizes.icon16} />
-            ))}
-
+          {showNetworkLogo && <NetworkLogo chainId={chainId} size={iconSizes.icon16} />}
           {isUniswapX ? (
             <UniswapXFee gasFee={gasFeeFormatted} />
           ) : (

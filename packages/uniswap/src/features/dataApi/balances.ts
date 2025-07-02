@@ -475,7 +475,10 @@ export function useTokenBalancesGroupedByVisibility({
   hiddenTokens: PortfolioBalance[] | undefined
 } {
   const { isTestnetModeEnabled } = useEnabledChains()
-  const currencyIdArray = balancesById ? Object.keys(balancesById) : []
+  const currencyIdArray = useMemo(() => {
+    return balancesById ? Object.keys(balancesById) : []
+  }, [balancesById])
+
   const currencyIdToTokenVisibility = useCurrencyIdToVisibility(currencyIdArray)
 
   return useMemo(() => {

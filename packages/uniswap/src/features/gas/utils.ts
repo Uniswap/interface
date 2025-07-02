@@ -113,6 +113,10 @@ function isValidGasStrategies(value: unknown): value is GasStrategies {
   )
 }
 
+function getIsStatsigReady(): boolean {
+  return getStatsigClient().loadingStatus === 'Ready'
+}
+
 export function getActiveGasStrategy({
   chainId,
   type,
@@ -120,9 +124,9 @@ export function getActiveGasStrategy({
 }: {
   chainId: number | undefined
   type: GasStrategyType
-  isStatsigReady: boolean
+  isStatsigReady?: boolean
 }): GasStrategy {
-  if (!isStatsigReady) {
+  if (isStatsigReady === false || !getIsStatsigReady()) {
     return DEFAULT_GAS_STRATEGY
   }
   const config = getStatsigClient().getDynamicConfig(DynamicConfigs.GasStrategies)

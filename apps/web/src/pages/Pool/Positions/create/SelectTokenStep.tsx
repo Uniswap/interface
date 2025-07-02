@@ -5,7 +5,12 @@ import CreatingPoolInfo from 'components/CreatingPoolInfo/CreatingPoolInfo'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { HookModal } from 'components/Liquidity/HookModal'
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
-import { getDefaultFeeTiersWithData, hasLPFoTTransferError, isDynamicFeeTier } from 'components/Liquidity/utils'
+import {
+  getDefaultFeeTiersWithData,
+  getFeeTierKey,
+  hasLPFoTTransferError,
+  isDynamicFeeTier,
+} from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import { SwitchNetworkAction } from 'components/Popups/types'
@@ -272,10 +277,9 @@ export function SelectTokensStep({
     hook: hook ?? ZERO_ADDRESS,
   })
 
-  const feeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion, t })
   const feeTierHasLpRewards = useMemo(
-    () => feeTiers.some((tier) => tier.boostedApr && tier.boostedApr > 0) && isLpIncentivesEnabled,
-    [feeTiers, isLpIncentivesEnabled],
+    () => Object.values(feeTierData).some((tier) => tier.boostedApr && tier.boostedApr > 0) && isLpIncentivesEnabled,
+    [feeTierData, isLpIncentivesEnabled],
   )
 
   const [defaultFeeTierSelected, setDefaultFeeTierSelected] = useState(false)
@@ -385,9 +389,13 @@ export function SelectTokensStep({
     // This component makes 2 API calls to ListPools -- one for current selected fee tier, and one to get all pools for all fee tiers
     // to ensure the current selected fee tier rewards APR matches the same fee tier in the fee tier selector,
     // grab the rewards tier from the fee tier directly
-    const matchingFeeTier = feeTiers.find((tier) => tier.value.feeAmount === fee.feeAmount)
+    const matchingFeeTier = Object.values(feeTierData).find(
+      (tier) => getFeeTierKey(tier.fee.feeAmount, tier.fee.isDynamic) === getFeeTierKey(fee.feeAmount, fee.isDynamic),
+    )
     return matchingFeeTier?.boostedApr && matchingFeeTier.boostedApr > 0 ? matchingFeeTier.boostedApr : undefined
-  }, [isLpIncentivesEnabled, protocolVersion, feeTiers, fee.feeAmount])
+  }, [isLpIncentivesEnabled, protocolVersion, feeTierData, fee.feeAmount, fee.isDynamic])
+
+  const defaultFeeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion, t })
 
   return (
     <>
@@ -477,7 +485,9 @@ export function SelectTokensStep({
                             />
                           )}
                         </Text>
-                        {fee.feeAmount === mostUsedFeeTier?.fee.feeAmount ? (
+                        {getFeeTierKey(fee.feeAmount, fee.isDynamic) ===
+                        (mostUsedFeeTier &&
+                          getFeeTierKey(mostUsedFeeTier.fee.feeAmount, mostUsedFeeTier.fee.isDynamic)) ? (
                           <MouseoverTooltip text={t('fee.tier.recommended.description')}>
                             <Flex
                               justifyContent="center"
@@ -492,7 +502,11 @@ export function SelectTokensStep({
                               </Text>
                             </Flex>
                           </MouseoverTooltip>
-                        ) : feeTiers.find((tier) => tier.value.feeAmount === fee.feeAmount) ? null : (
+                        ) : defaultFeeTiers.find(
+                            (tier) =>
+                              getFeeTierKey(tier.value.feeAmount, tier.value.isDynamic) ===
+                              getFeeTierKey(fee.feeAmount, fee.isDynamic),
+                          ) ? null : (
                           <Flex justifyContent="center" borderRadius="$rounded6" backgroundColor="$surface3" px={7}>
                             <Text variant="buttonLabel4">
                               <Trans i18nKey="fee.tier.new" />
@@ -581,11 +595,14 @@ export function SelectTokensStep({
                       }}
                       gap={10}
                     >
-                      {feeTiers.map((feeTier) => (
+                      {defaultFeeTiers.map((feeTier) => (
                         <FeeTier
                           key={feeTier.value.feeAmount}
                           feeTier={feeTier}
-                          selected={feeTier.value.feeAmount === fee.feeAmount}
+                          selected={
+                            getFeeTierKey(feeTier.value.feeAmount, feeTier.value.isDynamic) ===
+                            getFeeTierKey(fee.feeAmount, fee.isDynamic)
+                          }
                           onSelect={handleFeeTierSelect}
                           isLpIncentivesEnabled={isLpIncentivesEnabled}
                         />

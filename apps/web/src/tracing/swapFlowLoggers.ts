@@ -6,13 +6,17 @@ import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapRouting } from 'uniswap/src/features/telemetry/types'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
-import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType as UniswapTransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
-type OnChainSwapTransactionType = TransactionType.SWAP | TransactionType.BRIDGE
+type OnChainSwapTransactionType = UniswapTransactionType.Swap | TransactionType.BRIDGE
 const TRANSACTION_TYPE_TO_SWAP_ROUTING: Record<OnChainSwapTransactionType, SwapRouting> = {
-  [TransactionType.SWAP]: 'classic',
+  [UniswapTransactionType.Swap]: 'classic',
   [TransactionType.BRIDGE]: 'bridge',
 }
 
@@ -57,7 +61,7 @@ export function logSwapFinalized({
   })
 
   // log failed swaps to datadog
-  if (status === TransactionStatus.Failed && type === TransactionType.SWAP) {
+  if (status === TransactionStatus.Failed && type === UniswapTransactionType.Swap) {
     logger.warn('swapFlowLoggers', 'logSwapFinalized', 'Onchain Swap Failure', {
       hash,
       chainLabel: getChainLabel(chainInId),

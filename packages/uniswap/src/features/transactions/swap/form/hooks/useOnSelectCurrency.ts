@@ -1,13 +1,16 @@
-import { QueryClient, useQueryClient } from '@tanstack/react-query'
-import { Currency } from '@uniswap/sdk-core'
-import { useCallback, useMemo } from 'react'
+import type { QueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
+import type { Currency } from '@uniswap/sdk-core'
+import { useMemo } from 'react'
 import { getSwappableTokensQueryData } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
-import { ChainId, GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
-import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
+import type { ChainId, GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
+import type { TradeableAsset } from 'uniswap/src/entities/assets'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { SwapFormState, useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { getShouldResetExactAmountToken } from 'uniswap/src/features/transactions/swap/form/utils'
+import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
+import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
 import {
   getTokenAddressFromChainForTradingApi,
@@ -16,6 +19,7 @@ import {
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { areCurrencyIdsEqual, currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useValueAsRef } from 'utilities/src/react/useValueAsRef'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -35,12 +39,15 @@ export function useOnSelectCurrency({
   isPreselectedAsset: boolean
 }) => void {
   const { onCurrencyChange } = useTransactionModalContext()
-  const swapContext = useSwapFormContext()
+  const { output, input, exactCurrencyField, filteredChainIds, updateSwapForm } = useSwapFormStore((s) => ({
+    output: s.output,
+    input: s.input,
+    exactCurrencyField: s.exactCurrencyField,
+    filteredChainIds: s.filteredChainIds,
+    updateSwapForm: s.updateSwapForm,
+  }))
 
   const traceRef = useValueAsRef(useTrace())
-  const swapContextRef = useValueAsRef(swapContext)
-
-  const { updateSwapForm, output, input } = swapContext
 
   const inputCurrencyIds = useMemo(() => (input ? [currencyId(input)] : []), [input])
   const inputTokenProjects = useTokenProjects(inputCurrencyIds)
@@ -49,7 +56,7 @@ export function useOnSelectCurrency({
 
   const queryClient = useQueryClient()
 
-  return useCallback(
+  return useEvent(
     // eslint-disable-next-line complexity
     ({
       currency,
@@ -62,8 +69,6 @@ export function useOnSelectCurrency({
       forceIsBridgePair: boolean
       isPreselectedAsset: boolean
     }) => {
-      const swapCtx = swapContextRef.current
-
       const tradeableAsset: TradeableAsset = {
         address: currencyAddress(currency),
         chainId: currency.chainId,
@@ -77,7 +82,7 @@ export function useOnSelectCurrency({
       }
 
       const otherField = field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
-      const otherFieldTradeableAsset = field === CurrencyField.INPUT ? swapCtx.output : swapCtx.input
+      const otherFieldTradeableAsset = field === CurrencyField.INPUT ? output : input
 
       const otherFieldTokenProjects = otherField === CurrencyField.INPUT ? inputTokenProjects : outputTokenProjects
 
@@ -94,10 +99,10 @@ export function useOnSelectCurrency({
 
       // swap order if tokens are the same
       if (otherFieldTradeableAsset && areCurrencyIdsEqual(currencyId(currency), currencyId(otherFieldTradeableAsset))) {
-        const previouslySelectedTradableAsset = field === CurrencyField.INPUT ? swapCtx.input : swapCtx.output
+        const previouslySelectedTradableAsset = field === CurrencyField.INPUT ? input : output
         // Given that we're swapping the order of tokens, we should also swap the `exactCurrencyField` and update the `focusOnCurrencyField` to make sure the correct input field is focused.
         newState.exactCurrencyField =
-          swapCtx.exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+          exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
         newState.focusOnCurrencyField = newState.exactCurrencyField
         newState[otherField] = previouslySelectedTradableAsset
       } else if (otherFieldTradeableAsset && currency.chainId !== otherFieldTradeableAsset.chainId && !isBridgePair) {
@@ -121,15 +126,17 @@ export function useOnSelectCurrency({
       }
 
       if (!isBridgePair) {
-        swapCtx.filteredChainIds[CurrencyField.INPUT] = currency.chainId
-        swapCtx.filteredChainIds[CurrencyField.OUTPUT] = currency.chainId
+        const newFilteredChainIds = { ...(filteredChainIds ?? {}) }
 
-        newState.filteredChainIds = swapCtx.filteredChainIds
+        newFilteredChainIds[CurrencyField.INPUT] = currency.chainId
+        newFilteredChainIds[CurrencyField.OUTPUT] = currency.chainId
+
+        newState.filteredChainIds = newFilteredChainIds
       }
 
       newState[field] = tradeableAsset
 
-      if (getShouldResetExactAmountToken(swapCtx, newState)) {
+      if (getShouldResetExactAmountToken({ input, output, exactCurrencyField }, newState)) {
         newState.exactAmountToken = ''
         newState.exactAmountFiat = ''
       }
@@ -150,19 +157,6 @@ export function useOnSelectCurrency({
       maybeLogFirstSwapAction(traceRef.current)
       onCurrencyChange?.(currencyState, isBridgePair)
     },
-    // We want to be very careful about how often this function is re-created because it causes the entire token selector list to re-render.
-    // This is why we use `swapContextRef` so that we can access the latest swap context without causing a re-render.
-    // Do not add new dependencies to this function unless you are sure this won't degrade perf.
-    [
-      swapContextRef,
-      inputTokenProjects,
-      outputTokenProjects,
-      queryClient,
-      onSelect,
-      updateSwapForm,
-      traceRef,
-      onCurrencyChange,
-    ],
   )
 }
 

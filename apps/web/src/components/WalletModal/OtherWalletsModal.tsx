@@ -1,8 +1,8 @@
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
-import { Option } from 'components/WalletModal/Option'
 import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
+import { EVMOption } from 'components/WalletModal/WalletConnectorOption'
 import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useAtom } from 'jotai'
@@ -56,13 +56,13 @@ export function OtherWalletsModal() {
             {/* If uniswap mobile was the last used connector it will be show on the primary window */}
             {recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID && (
               <>
-                <Option connectorId={CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID} />
+                <EVMOption connectorId={CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID} />
                 {connectors.length > 0 && <Separator />}
               </>
             )}
             {connectors.map((c, index) => (
               <React.Fragment key={c.uid + index}>
-                <Option connectorId={c.id} detected={c.isInjected} />
+                <EVMOption connectorId={c.id} detected={c.isInjected} />
                 {index < connectors.length - 1 && <Separator />}
               </React.Fragment>
             ))}

@@ -17,7 +17,8 @@ import { useDeferredComponent } from 'hooks/useDeferredComponent'
 import { LanguageProvider } from 'i18n/LanguageProvider'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import App from 'pages/App'
-import { PropsWithChildren, StrictMode, useEffect, useMemo } from 'react'
+import type { PropsWithChildren } from 'react'
+import { StrictMode, useEffect, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
 import { I18nextProvider } from 'react-i18next'
@@ -29,9 +30,7 @@ import { ThemeProvider, ThemedGlobalStyle } from 'theme'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
+import type { StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import i18n from 'uniswap/src/i18n'
 import { initializeDatadog } from 'uniswap/src/utils/datadog'
@@ -122,8 +121,7 @@ function StatsigProvider({ children }: PropsWithChildren) {
   }, [account])
 
   const onStatsigInit = () => {
-    const isDatadogEnabled = getFeatureFlag(FeatureFlags.Datadog)
-    if (isDatadogEnabled && !isDevEnv()) {
+    if (!isDevEnv()) {
       initializeDatadog('web').catch(() => undefined)
     }
   }

@@ -1,9 +1,14 @@
 /**
  * zone-events.ts  – TEMP shim for Tamagui scroll-lock bug
  *   → Must run **before** `@tamagui/polyfill-dev` is imported.
- *
- * Adapted from Zone.js (MIT); only the add/removeEventListener patch is kept.
  */
+
+// Browsers that default key events (`touchmove`, `wheel`) to passive:true
+// and therefore emit the Chrome “Unable to preventDefault …” intervention.
+const IS_BLINK_MOBILE =
+  /\b(?:Chrome|CriOS|SamsungBrowser|Opera)\/\d+/i.test(navigator.userAgent) &&
+  /Android|Linux;.*Mobile/i.test(navigator.userAgent)
+
 ;(() => {
   const nativeAdd = EventTarget.prototype.addEventListener
   const nativeRm = EventTarget.prototype.removeEventListener
@@ -12,7 +17,7 @@
     if (opts == null) {
       return false
     }
-    if (typeof opts === 'boolean') {
+    if (typeof opts === 'boolean' || IS_BLINK_MOBILE) {
       return opts
     }
     return !!opts.capture

@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { logger } from 'utilities/src/logger/logger'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -13,6 +14,7 @@ export function useLogMissingMnemonic(): void {
   useEffect(() => {
     const logMissingMnemonic = async (): Promise<void> => {
       if (!mnemonicId) {
+        setUserProperty(MobileUserPropertyName.HasMatchingMnemonicAndPrivateKey, 'none')
         return
       }
 
@@ -20,6 +22,7 @@ export function useLogMissingMnemonic(): void {
 
       if (keyringMnemonicIds.find((id) => id === mnemonicId)) {
         // Ignore if mnemonic is in the keyring.
+        setUserProperty(MobileUserPropertyName.HasMatchingMnemonicAndPrivateKey, 'true')
         return
       }
 
@@ -27,6 +30,7 @@ export function useLogMissingMnemonic(): void {
 
       const accountsSortedByTime = signerMnemonicAccounts.sort((a, b) => a.timeImportedMs - b.timeImportedMs)
 
+      setUserProperty(MobileUserPropertyName.HasMatchingMnemonicAndPrivateKey, 'false')
       sendAnalyticsEvent(WalletEventName.KeyringMissingMnemonic, {
         mnemonicId,
         timeImportedMsFirst: accountsSortedByTime[0]?.timeImportedMs,

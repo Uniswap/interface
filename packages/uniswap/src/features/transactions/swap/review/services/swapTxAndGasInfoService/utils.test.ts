@@ -60,10 +60,7 @@ describe('processWrapResponse', () => {
       maxFeePerGas: '100000000000',
       maxPriorityFeePerGas: '1000000000',
     })
-    expect(result.gasEstimate.wrapEstimates).toEqual({
-      activeEstimate: gasFeeResult.gasEstimate,
-      shadowEstimates: [],
-    })
+    expect(result.gasEstimate.wrapEstimate).toBe(gasFeeResult.gasEstimate)
     expect(result.swapRequestArgs).toBeUndefined()
   })
 })
@@ -364,16 +361,14 @@ describe('createProcessSwapResponse', () => {
           chainId: 1,
         },
       ],
-      gasEstimates: [
-        {
-          strategy: DEFAULT_GAS_STRATEGY,
-          gasLimit: '21000',
-          maxFeePerGas: '100000000000',
-          maxPriorityFeePerGas: '1000000000',
-          type: FeeType.EIP1559,
-          gasFee: '1000',
-        },
-      ],
+      gasEstimate: {
+        strategy: DEFAULT_GAS_STRATEGY,
+        gasLimit: '21000',
+        maxFeePerGas: '100000000000',
+        maxPriorityFeePerGas: '1000000000',
+        type: FeeType.EIP1559,
+        gasFee: '1000',
+      },
     } as const satisfies SwapData
 
     // When
@@ -398,11 +393,7 @@ describe('createProcessSwapResponse', () => {
       txRequests: response.transactions,
       permitData: { fakePermitField: 'hi' },
       gasEstimate: {
-        swapEstimates: {
-          activeEstimate: response.gasEstimates[0],
-          shadowEstimates: [],
-        },
-        wrapEstimates: undefined,
+        swapEstimate: response.gasEstimate,
       },
       swapRequestArgs: { quote: swapQuote },
     })

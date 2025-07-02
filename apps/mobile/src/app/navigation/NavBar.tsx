@@ -15,7 +15,6 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { pulseAnimation } from 'src/components/buttons/utils'
-import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, FlexProps, LinearGradient, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Search } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -25,7 +24,7 @@ import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/contexts/selectors'
+import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -124,9 +123,9 @@ type SwapTabBarButtonProps = {
 
 const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96, onSwapLayout }: SwapTabBarButtonProps) {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
   const { defaultChainId } = useEnabledChains()
   const { hapticFeedback } = useHapticFeedback()
+  const { navigate } = useAppStackNavigation()
 
   const isDarkMode = useIsDarkMode()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
@@ -137,19 +136,17 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96, onSwapLayout }: Swa
   )
 
   const onPress = useCallback(async () => {
-    dispatch(
-      openModal({
-        name: ModalName.Swap,
-        initialState: prepareSwapFormState({
-          inputCurrencyId,
-          defaultChainId,
-          filteredChainIdsOverride: persistedFilteredChainIds,
-        }),
+    navigate(
+      ModalName.Swap,
+      prepareSwapFormState({
+        inputCurrencyId,
+        defaultChainId,
+        filteredChainIdsOverride: persistedFilteredChainIds,
       }),
     )
 
     await hapticFeedback.light()
-  }, [dispatch, inputCurrencyId, defaultChainId, hapticFeedback, persistedFilteredChainIds])
+  }, [inputCurrencyId, defaultChainId, hapticFeedback, persistedFilteredChainIds, navigate])
 
   const scale = useSharedValue(1)
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])

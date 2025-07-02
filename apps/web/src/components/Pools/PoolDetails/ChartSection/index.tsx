@@ -32,8 +32,7 @@ import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { EllipsisStyle } from 'theme/components/styles'
-import { textFadeIn } from 'theme/styles'
-import { Flex, SegmentedControl, useMedia } from 'ui/src'
+import { Flex, SegmentedControl, Text, useMedia } from 'ui/src'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
@@ -333,15 +332,6 @@ function PriceChart({
   )
 }
 
-const FadeInHeading = styled(ThemedText.H1Medium)`
-  ${textFadeIn};
-  margin: 0;
-  line-height: 32px;
-`
-const FadeInSubheader = styled(ThemedText.SubHeader)`
-  ${textFadeIn}
-`
-
 function LiquidityChart({
   tokenA,
   tokenB,
@@ -438,15 +428,25 @@ function LiquidityChart({
       {(crosshair) => {
         const displayPoint = crosshair ?? tickData?.activeRangeData
         const display = (
-          <>
-            <FadeInHeading>{`1 ${tokenADescriptor} = ${displayPoint?.price0} ${tokenBDescriptor}`}</FadeInHeading>
-            <FadeInHeading>{`1 ${tokenBDescriptor} = ${displayPoint?.price1} ${tokenADescriptor}`}</FadeInHeading>
+          <Flex gap="$spacing8" $md={{ gap: '$spacing4' }}>
+            <Text variant="heading3" animation="125ms" enterStyle={{ opacity: 0 }}>
+              {`1 ${tokenADescriptor} = ${displayPoint?.price0} ${tokenBDescriptor}`}
+            </Text>
+            <Text variant="heading3" animation="125ms" enterStyle={{ opacity: 0 }}>
+              {`1 ${tokenBDescriptor} = ${displayPoint?.price1} ${tokenADescriptor}`}
+            </Text>
             {displayPoint && displayPoint.tick === activeTick && (
-              <FadeInSubheader color="neutral2" paddingTop="4px">
+              <Text
+                variant="subheading2"
+                color="$neutral2"
+                animation="125ms"
+                enterStyle={{ opacity: 0 }}
+                $md={{ variant: 'body3' }}
+              >
                 <Trans i18nKey="pool.activeRange" />
-              </FadeInSubheader>
+              </Text>
             )}
-          </>
+          </Flex>
         )
         return <ChartHeader value={display} />
       }}

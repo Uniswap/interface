@@ -6,6 +6,7 @@ import type { SenderTabInfo } from 'src/app/features/dappRequests/shared'
 import {
   ChangeChainRequest,
   DappRequest,
+  GetCapabilitiesRequest,
   RevokePermissionsRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
@@ -22,15 +23,19 @@ import {
   DappRequestMessage,
 } from 'src/background/messagePassing/types/requests'
 import { openSidePanel } from 'src/background/utils/chromeSidePanelUtils'
-import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { checkAreMigrationsPending, readReduxStateFromStorage } from 'src/background/utils/persistedStateUtils'
+import { getFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
+import { getEnabledChains, hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType, EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WindowEthereumRequestProperties } from 'uniswap/src/features/telemetry/types'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
+import { getCapabilitiesCore } from 'wallet/src/features/batchedTransactions/utils'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
+import { selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
 
 const INACTIVITY_ALARM_NAME = 'inactivity'
 // TODO(EXT-546): add a setting to turn off the auto-lock setting
@@ -110,7 +115,7 @@ export function initMessageBridge(): void {
 
     const isSidebarActive = Boolean(windowIdToSidebarPortMap.get(sender.tab.windowId.toString()))
     if (!isSidebarActive) {
-      const handled = handleSilentBackgroundRequest(message, senderTabInfo)
+      const handled = await handleSilentBackgroundRequest(message, senderTabInfo)
       if (handled) {
         return
       }
@@ -171,16 +176,27 @@ export function initMessageBridge(): void {
 
 /**
  * Dapp requests that should be silently handled by the background worker as a proxy if the sidebar is not open
- * Avoids async to trigger open side panel as quickly as possible
  * @returns true if the request was handled, false otherwise
  */
-function handleSilentBackgroundRequest(request: DappRequest, senderTabInfo: SenderTabInfo): boolean {
+async function handleSilentBackgroundRequest(request: DappRequest, senderTabInfo: SenderTabInfo): Promise<boolean> {
   const dappUrl = extractBaseUrl(senderTabInfo.url)
 
   if (!dappUrl) {
     return false
   }
 
+  // Check for pending migrations before attempting silent handling
+  const migrationsPending = await checkAreMigrationsPending()
+  if (migrationsPending) {
+    logger.debug(
+      'backgroundDappRequests',
+      'handleSilentBackgroundRequest',
+      'Migrations pending, skipping silent handling',
+    )
+    return false
+  }
+
+  // Only proceed with silent handling if no migrations are pending
   switch (request.type) {
     case DappRequestType.ChangeChain:
       handleChainChange({
@@ -193,6 +209,12 @@ function handleSilentBackgroundRequest(request: DappRequest, senderTabInfo: Send
       handleRevokePermissions({
         request,
         dappUrl,
+        tabId: senderTabInfo.id,
+      }).catch(() => {})
+      return true
+    case DappRequestType.GetCapabilities:
+      handleGetCapabilities({
+        request,
         tabId: senderTabInfo.id,
       }).catch(() => {})
       return true
@@ -247,6 +269,47 @@ async function handleRevokePermissions({
     await dappResponseMessageChannel.sendMessageToTab(tabId, {
       type: DappResponseType.ErrorResponse,
       error: serializeError(rpcErrors.methodNotFound()),
+      requestId: request.requestId,
+    })
+  }
+}
+
+async function handleGetCapabilities({
+  request,
+  tabId,
+}: {
+  request: GetCapabilitiesRequest
+  tabId: number
+}): Promise<void> {
+  try {
+    // Get enabled chains using the same logic as the saga
+    const reduxState = await readReduxStateFromStorage()
+    const hasSmartWalletConsent = reduxState ? selectHasSmartWalletConsent(reduxState, request.address) : false
+    const isTestnetModeEnabled = reduxState ? reduxState.userSettings.isTestnetModeEnabled ?? false : false
+    const featureFlaggedChainIds = await getFeatureFlaggedChainIds()
+    const { chains: enabledChains } = getEnabledChains({
+      isTestnetModeEnabled,
+      featureFlaggedChainIds,
+    })
+
+    const chainIds = request.chainIds?.map(hexadecimalStringToInt) ?? enabledChains.map((chain) => chain.valueOf())
+    const response = await getCapabilitiesCore({
+      request,
+      chainIds,
+      hasSmartWalletConsent,
+    })
+
+    await dappResponseMessageChannel.sendMessageToTab(tabId, response)
+  } catch (error) {
+    logger.error(error, {
+      tags: { file: 'backgroundDappRequests.ts', function: 'handleGetCapabilities' },
+      extra: { request },
+    })
+
+    // Send error response on failure
+    await dappResponseMessageChannel.sendMessageToTab(tabId, {
+      type: DappResponseType.ErrorResponse,
+      error: serializeError(rpcErrors.internal()),
       requestId: request.requestId,
     })
   }

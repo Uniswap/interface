@@ -38,6 +38,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -106,11 +107,11 @@ export function useOrderAmounts(order?: UniswapXOrderDetails):
     }
   | undefined {
   const inputCurrency = useCurrency({
-    address: order?.swapInfo.inputCurrencyId || 'ETH',
+    address: order ? currencyIdToAddress(order.swapInfo.inputCurrencyId) : undefined,
     chainId: order?.chainId,
   })
   const outputCurrency = useCurrency({
-    address: order?.swapInfo.outputCurrencyId || 'ETH',
+    address: order ? currencyIdToAddress(order.swapInfo.outputCurrencyId) : undefined,
     chainId: order?.chainId,
   })
 

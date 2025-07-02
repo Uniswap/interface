@@ -4,12 +4,13 @@ import { DdRum, RumActionType } from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import { MMKVWrapper } from 'apollo3-cache-persist'
-import { default as React, StrictMode, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { default as React, StrictMode, useCallback, useEffect, useMemo, useRef } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
 import DeviceInfo, { getUniqueIdSync } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { MMKV } from 'react-native-mmkv'
 import { OneSignal } from 'react-native-onesignal'
 import { configureReanimatedLogger } from 'react-native-reanimated'
@@ -44,7 +45,7 @@ import {
   setFavoritesUserDefaults,
   setI18NUserDefaults,
 } from 'src/features/widgets/widgets'
-import { loadLocaleData } from 'src/polyfills/intl-delayed'
+import { initDynamicIntlPolyfills } from 'src/polyfills/intl-delayed'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
@@ -76,7 +77,6 @@ import { logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-import { getReduxPersistor } from 'wallet/src/state/persistor'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
@@ -89,6 +89,7 @@ import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { NativeWalletProvider } from 'wallet/src/features/wallet/providers/NativeWalletProvider'
 import { SharedWalletProvider as SharedWalletReduxProvider } from 'wallet/src/providers/SharedWalletProvider'
+import { getReduxPersistor } from 'wallet/src/state/persistor'
 
 enableFreeze(true)
 
@@ -108,6 +109,8 @@ if (__DEV__ && !isTestEnv()) {
 if (config.isE2ETest) {
   LogBox.ignoreAllLogs()
 }
+
+initDynamicIntlPolyfills()
 
 initOneSignal()
 initAppsFlyer()
@@ -153,14 +156,16 @@ function App(): JSX.Element | null {
           <StrictMode>
             <I18nextProvider i18n={i18n}>
               <SafeAreaProvider>
-                <SharedWalletReduxProvider reduxStore={store}>
-                  <AnalyticsNavigationContextProvider
-                    shouldLogScreen={shouldLogScreen}
-                    useIsPartOfNavigationTree={useIsPartOfNavigationTree}
-                  >
-                    <AppOuter />
-                  </AnalyticsNavigationContextProvider>
-                </SharedWalletReduxProvider>
+                <KeyboardProvider>
+                  <SharedWalletReduxProvider reduxStore={store}>
+                    <AnalyticsNavigationContextProvider
+                      shouldLogScreen={shouldLogScreen}
+                      useIsPartOfNavigationTree={useIsPartOfNavigationTree}
+                    >
+                      <AppOuter />
+                    </AnalyticsNavigationContextProvider>
+                  </SharedWalletReduxProvider>
+                </KeyboardProvider>
               </SafeAreaProvider>
             </I18nextProvider>
           </StrictMode>
@@ -182,12 +187,6 @@ function AppOuter(): JSX.Element | null {
     reduxStore: store,
   })
   const jsBundleLoadedRef = useRef(false)
-
-  const { locale } = useCurrentLanguageInfo()
-  useLayoutEffect(() => {
-    // Dynamically load polyfills so that we save on bundle size and improve app startup time
-    loadLocaleData(locale)
-  }, [locale])
 
   /**
    * Function called by the @shopify/react-native-performance PerformanceProfiler that returns a

@@ -40,8 +40,8 @@ export function areEqualGasStrategies(a?: GasStrategy, b?: GasStrategy): boolean
   return requiredFieldsEqual && optionalFieldsMatch
 }
 
-export function getGasPrice(estimate: GasEstimate): string {
-  return 'gasPrice' in estimate ? estimate.gasPrice : estimate.maxFeePerGas
+export function getGasPrice(estimate?: GasEstimate): string | undefined {
+  return estimate && 'gasPrice' in estimate ? estimate.gasPrice : estimate?.maxFeePerGas ?? undefined
 }
 
 // GasFeeResponse is the type that comes directly from the Gas Service API

@@ -1,6 +1,7 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { DAI } from 'uniswap/src/constants/tokens'
 import { applyNativeTokenPercentageBuffer, hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
-import { DAI, MAINNET_CURRENCY } from 'uniswap/src/test/fixtures'
+import { MAINNET_CURRENCY } from 'uniswap/src/test/fixtures'
 
 const ZERO_ETH = CurrencyAmount.fromRawAmount(MAINNET_CURRENCY, 0)
 const ONE_ETH = CurrencyAmount.fromRawAmount(MAINNET_CURRENCY, 1e18)

@@ -1,10 +1,10 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Pool, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { DepositInfo, DepositState } from 'components/Liquidity/types'
-import { getPoolFromRest, isDynamicFeeTier } from 'components/Liquidity/utils'
+import { getFeeTierKey, getPoolFromRest, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { checkIsNative, useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
@@ -61,6 +61,13 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { getParsedChainId } from 'utils/chainParams'
 
+function filterPoolByFeeTier(pool: Pool, feeTier: FeeData): Pool | undefined {
+  if (getFeeTierKey(feeTier.feeAmount, feeTier.isDynamic) === getFeeTierKey(pool.fee, pool.isDynamicFee)) {
+    return pool
+  }
+  return undefined
+}
+
 /**
  * @param state user-defined state for a position being created or migrated
  * @returns derived position information such as existing Pools
@@ -95,7 +102,8 @@ export function useDerivedPositionInfo(
     poolsQueryEnabled,
   )
 
-  const pool = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined
+  const pool =
+    poolData?.pools && poolData.pools.length > 0 ? filterPoolByFeeTier(poolData.pools[0], state.fee) : undefined
 
   const pairResult = useV2Pair(sortedCurrencies.TOKEN0?.wrapped, sortedCurrencies.TOKEN1?.wrapped)
   const pairIsLoading = pairResult[0] === PairState.LOADING
@@ -141,8 +149,8 @@ export function useDerivedPositionInfo(
       return v3PoolResult[0] === PoolState.NOT_EXISTS
     }
 
-    return poolData?.pools && poolData.pools.length === 0
-  }, [protocolVersion, poolData?.pools, pairResult, v3PoolResult])
+    return !pool
+  }, [protocolVersion, pairResult, v3PoolResult, pool])
 
   const { price: defaultInitialPrice, isLoading: isDefaultInitialPriceLoading } = useDefaultInitialPrice({
     currencies: {

@@ -51,9 +51,7 @@ export function useSmartWalletDelegationStatus({
   )
 
   useEffect(() => {
-    if (activeAccount?.type !== AccountType.SignerMnemonic || hasSmartWalletConsent) {
-      setStatus(SmartWalletDelegationAction.None)
-      setLoading(false)
+    if (!activeAccount) {
       return
     }
 
@@ -76,6 +74,12 @@ export function useSmartWalletDelegationStatus({
       }
     }
 
+    if (activeAccount.type !== AccountType.SignerMnemonic || hasSmartWalletConsent) {
+      setStatus(SmartWalletDelegationAction.None)
+      setLoading(false)
+      return
+    }
+
     if (isDelegatedOnlyToUniswapSmartContract) {
       setStatus(SmartWalletDelegationAction.None)
       setLoading(false)
@@ -85,14 +89,13 @@ export function useSmartWalletDelegationStatus({
     setStatus(SmartWalletDelegationAction.PromptUpgrade)
     setLoading(false)
   }, [
-    activeAccount?.address,
-    activeAccount?.type,
     enabledChains,
     hasDismissedSmartWalletHomeScreenNudge,
     hasSmartWalletConsent,
     isSmartWalletUpgradeModal,
     signerMnemonicAccounts,
     getDelegationDetails,
+    activeAccount,
   ])
 
   if (!activeAccount) {

@@ -1,25 +1,22 @@
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
-import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { getCurrencyInputFocusedStyle } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/utils/getCurrencyInputFocusedStyle'
-import { useSwapFormScreenState } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContext'
+import { useCurrencyInputFocusedStyle } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useCurrencyInputFocusedStyle'
+import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { usePriceDifference } from 'uniswap/src/features/transactions/swap/hooks/usePriceDifference'
+import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isInterface } from 'utilities/src/platform'
 
 export function SwapFormCurrencyInputPanel(): JSX.Element {
   const { t } = useTranslation()
-  const { derivedSwapInfo } = useSwapFormContext()
+  const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
   const { priceDifferencePercentage } = usePriceDifference(derivedSwapInfo)
 
   const {
-    // References
     inputRef,
-
-    // State values
     focusOnCurrencyField,
     currencies,
     currencyAmounts,
@@ -32,20 +29,37 @@ export function SwapFormCurrencyInputPanel(): JSX.Element {
     exactValue,
     formattedDerivedValue,
     tokenColor,
-
-    // Trade-related values
     trade,
-
-    // Event handlers
     onFocusInput,
     onInputSelectionChange,
     onSetExactAmountInput,
     onSetPresetValue,
     onShowTokenSelectorInput,
     onToggleIsFiatMode,
-  } = useSwapFormScreenState()
+  } = useSwapFormScreenStore((s) => ({
+    inputRef: s.inputRef,
+    focusOnCurrencyField: s.focusOnCurrencyField,
+    currencies: s.currencies,
+    currencyAmounts: s.currencyAmounts,
+    currencyBalances: s.currencyBalances,
+    selectingCurrencyField: s.selectingCurrencyField,
+    isFiatMode: s.isFiatMode,
+    exactFieldIsInput: s.exactFieldIsInput,
+    resetSelection: s.resetSelection,
+    currencyAmountsUSDValue: s.currencyAmountsUSDValue,
+    exactValue: s.exactValue,
+    formattedDerivedValue: s.formattedDerivedValue,
+    tokenColor: s.tokenColor,
+    trade: s.trade,
+    onFocusInput: s.onFocusInput,
+    onInputSelectionChange: s.onInputSelectionChange,
+    onSetExactAmountInput: s.onSetExactAmountInput,
+    onSetPresetValue: s.onSetPresetValue,
+    onShowTokenSelectorInput: s.onShowTokenSelectorInput,
+    onToggleIsFiatMode: s.onToggleIsFiatMode,
+  }))
 
-  const focusedStyles = getCurrencyInputFocusedStyle(focusOnCurrencyField === CurrencyField.INPUT)
+  const focusedStyles = useCurrencyInputFocusedStyle(focusOnCurrencyField === CurrencyField.INPUT)
 
   return (
     <Trace section={SectionName.CurrencyInputPanel}>

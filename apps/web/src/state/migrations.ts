@@ -1,6 +1,7 @@
 import localForage from 'localforage'
-import { createMigrate, MigrationManifest, PersistedState, PersistMigrate } from 'redux-persist'
-import { MigrationConfig } from 'redux-persist/es/createMigrate'
+import type { MigrationManifest, PersistedState, PersistMigrate } from 'redux-persist'
+import { createMigrate } from 'redux-persist'
+import type { MigrationConfig } from 'redux-persist/es/createMigrate'
 import { migration0 } from 'state/migrations/0'
 import { migration1 } from 'state/migrations/1'
 import { migration10 } from 'state/migrations/10'
@@ -28,6 +29,7 @@ import { migration7 } from 'state/migrations/7'
 import { migration8 } from 'state/migrations/8'
 import { migration9 } from 'state/migrations/9'
 import { createLocalTransactionClearingMigration } from 'state/migrations/clearLocalTransactions'
+import { createLocalTransactionAndSignatureClearingMigration } from 'state/migrations/clearLocalTransactionsAndSignatures'
 import { legacyLocalStorageMigration } from 'state/migrations/legacy'
 
 /**
@@ -70,9 +72,20 @@ export const migrations: MigrationManifest = {
   27: createLocalTransactionClearingMigration(27),
   28: createLocalTransactionClearingMigration(28),
   29: createLocalTransactionClearingMigration(29),
+  30: createLocalTransactionAndSignatureClearingMigration(30),
+  31: createLocalTransactionAndSignatureClearingMigration(31),
+  32: createLocalTransactionClearingMigration(32),
+  33: createLocalTransactionClearingMigration(33),
+  34: createLocalTransactionClearingMigration(34),
+  35: createLocalTransactionClearingMigration(35),
+  36: createLocalTransactionClearingMigration(36),
+  37: createLocalTransactionClearingMigration(37),
+  38: createLocalTransactionClearingMigration(38),
+  39: createLocalTransactionClearingMigration(39),
+  40: createLocalTransactionClearingMigration(40),
 } as const
 
-export const PERSIST_VERSION = 29
+export const PERSIST_VERSION = 40
 
 export const INDEXED_DB_REDUX_TABLE_NAME = 'redux'
 

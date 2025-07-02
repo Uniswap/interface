@@ -7,9 +7,9 @@ import { useContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { TransactionType } from 'state/transactions/types'
 import { UNI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -223,7 +223,7 @@ export function useClaimCallback(address: string | null | undefined): {
         .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
-            type: TransactionType.CLAIM,
+            type: TransactionType.ClaimUni,
             recipient: address,
             uniAmountRaw: unclaimedAmount?.quotient.toString(),
           })

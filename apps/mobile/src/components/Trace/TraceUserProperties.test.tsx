@@ -31,6 +31,7 @@ jest.mock('wallet/src/features/wallet/Keyring/Keyring', () => {
   return {
     Keyring: {
       getMnemonicIds: (): Promise<string[]> => Promise.resolve([]),
+      getAddressesForStoredPrivateKeys: (): Promise<string[]> => Promise.resolve([]),
     },
   }
 })
@@ -149,7 +150,7 @@ describe('TraceUserProperties', () => {
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.Language, 'English', undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.Currency, 'USD', undefined)
 
-    expect(mocked).toHaveBeenCalledTimes(21)
+    expect(mocked).toHaveBeenCalledTimes(22)
   })
 
   it('sets user properties without active account', async () => {
@@ -189,6 +190,6 @@ describe('TraceUserProperties', () => {
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.AppOpenAuthMethod, AuthMethod.None, undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.TransactionAuthMethod, AuthMethod.None, undefined)
 
-    expect(mocked).toHaveBeenCalledTimes(14)
+    expect(mocked).toHaveBeenCalledTimes(15)
   })
 })

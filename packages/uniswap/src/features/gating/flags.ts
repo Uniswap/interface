@@ -10,7 +10,6 @@ export enum FeatureFlags {
   // Shared
   ArbitrumDutchV3,
   BlockaidFotLogging,
-  Datadog,
   DisableSwap7702,
   GqlToRestBalances,
   GqlToRestTransactions,
@@ -78,7 +77,6 @@ export enum FeatureFlags {
 export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.ArbitrumDutchV3, 'uniswapx_dutchv3_orders_arbitrum'],
   [FeatureFlags.BlockaidFotLogging, 'blockaid_fot_logging'],
-  [FeatureFlags.Datadog, 'datadog'],
   [FeatureFlags.DisableSwap7702, 'disable-swap-7702'],
   [FeatureFlags.EmbeddedWallet, 'embedded_wallet'],
   [FeatureFlags.EnablePermitMismatchUX, 'enable_permit2_mismatch_ux'],

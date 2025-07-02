@@ -1,10 +1,8 @@
 import { useMemo } from 'react'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 
 export const useIsTokenSelectionInvalid = (): boolean => {
-  const {
-    derivedSwapInfo: { currencies },
-  } = useSwapFormContext()
+  const currencies = useSwapFormStoreDerivedSwapInfo((s) => s.currencies)
 
   return useMemo(() => {
     return Object.values(currencies).some((currency) => !currency)

@@ -49,15 +49,17 @@ import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function TokenDetailsScreen({ route, navigation }: AppStackScreenProp<MobileScreens.TokenDetails>): JSX.Element {
   const { currencyId } = route.params
+  const normalizedCurrencyId = normalizeAddress(currencyId, AddressStringFormat.Lowercase)
 
   return (
-    <TokenDetailsContextProvider currencyId={currencyId} navigation={navigation}>
+    <TokenDetailsContextProvider currencyId={normalizedCurrencyId} navigation={navigation}>
       <TokenDetailsWrapper />
     </TokenDetailsContextProvider>
   )
@@ -313,12 +315,25 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     [fiatOnRampCurrency, hasTokenBalance, onPressBuyFiatOnRamp, t, onPressSend, navigateToReceive],
   )
 
-  return !isScreenNavigationReady ||
-    tokenColorLoading ||
-    isNativeCurrencyBalanceLoading ||
-    isNativeFiatOnRampCurrencyLoading ||
-    isFiatOnRampCurrencyLoading ||
-    isBridgingTokenLoading ? null : (
+  const hideActionButtons = useMemo(() => {
+    return (
+      !isScreenNavigationReady ||
+      tokenColorLoading ||
+      isNativeCurrencyBalanceLoading ||
+      isNativeFiatOnRampCurrencyLoading ||
+      isFiatOnRampCurrencyLoading ||
+      isBridgingTokenLoading
+    )
+  }, [
+    isScreenNavigationReady,
+    tokenColorLoading,
+    isNativeCurrencyBalanceLoading,
+    isNativeFiatOnRampCurrencyLoading,
+    isFiatOnRampCurrencyLoading,
+    isBridgingTokenLoading,
+  ])
+
+  return hideActionButtons ? null : (
     <AnimatedFlex backgroundColor="$surface1" entering={FadeInDown} style={{ marginBottom: insets.bottom }}>
       <TokenDetailsActionButtons
         ctaButton={getCTAVariant}

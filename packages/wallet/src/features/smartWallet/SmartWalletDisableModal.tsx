@@ -14,7 +14,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isMobileApp, isWeb } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
-import { ActiveNetworkExpando } from 'wallet/src/features/smartWallet/ActiveNetworkExpando'
+import { ActiveNetworkExpando } from 'wallet/src/features/smartWallet/ActiveNetworkExpando/ActiveNetworkExpando'
 import { useEnabledActiveNetworkDelegations } from 'wallet/src/features/smartWallet/hooks/useEnabledActiveNetworkDelegations'
 import { useTranslateSmartWalletStatus } from 'wallet/src/features/smartWallet/hooks/useTranslateSmartWalletStatus'
 import { WalletData } from 'wallet/src/features/smartWallet/types'
@@ -109,7 +109,7 @@ export function SmartWalletDisableModal({
                 placement: 'top',
               }}
             >
-              <Text variant="body4" color="$neutral2" marginEnd="$spacing1">
+              <Text variant="body3" color="$neutral2" marginEnd="$spacing1">
                 {t('common.activeNetworks')}
               </Text>
             </WarningInfo>
@@ -137,8 +137,8 @@ export function SmartWalletDisableModal({
 
         <ActiveNetworkExpando isOpen={isActiveNetworksExpanded} activeDelegations={activeDelegations} />
 
-        <Flex row justifyContent="space-between">
-          <Text variant="body4" color="$neutral2">
+        <Flex row justifyContent="space-between" mb="$spacing8">
+          <Text variant="body3" color="$neutral2">
             {t('common.wallet.label')}
           </Text>
           <Flex row alignItems="center" gap="$spacing4">

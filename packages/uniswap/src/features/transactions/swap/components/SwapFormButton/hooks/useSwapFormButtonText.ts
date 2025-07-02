@@ -8,18 +8,20 @@ import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/compone
 import { useIsAmountSelectionInvalid } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsAmountSelectionInvalid'
 import { useIsTokenSelectionInvalid } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTokenSelectionInvalid'
 import { useIsTradeIndicative } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTradeIndicative'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { getActionText } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/SubmitSwapButton'
+import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export const useSwapFormButtonText = (): string => {
   const { isInterfaceWrap } = useInterfaceWrap()
   const { t } = useTranslation()
   const { swapRedirectCallback } = useTransactionModalContext()
-  const {
-    derivedSwapInfo: { currencies, wrapType, chainId },
-  } = useSwapFormContext()
+  const { currencies, wrapType, chainId } = useSwapFormStoreDerivedSwapInfo((s) => ({
+    currencies: s.currencies,
+    wrapType: s.wrapType,
+    chainId: s.chainId,
+  }))
   const isTokenSelectionInvalid = useIsTokenSelectionInvalid()
   const isAmountSelectionInvalid = useIsAmountSelectionInvalid()
 

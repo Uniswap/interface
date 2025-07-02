@@ -91,7 +91,6 @@ export function GatingOverrides(): JSX.Element {
 
   return (
     <>
-      <Text variant="heading3">Gating</Text>
       <Flex flexDirection="column">
         <Accordion.Item value="feature-flags">
           <AccordionHeader title="⛳️ Feature Flags" />

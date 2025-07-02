@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { selectHasDismissedBridgingWarning } from 'uniswap/src/features/behaviorHistory/selectors'
-import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 
 export function useNeedsBridgingWarning(derivedSwapInfo: DerivedSwapInfo): boolean {

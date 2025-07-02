@@ -1,27 +1,16 @@
-import { TradeType } from '@uniswap/sdk-core'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Currency } from '@uniswap/sdk-core'
+import { useEffect, useMemo, useRef } from 'react'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
-import { useTradingApiQuoteQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiQuoteQuery'
-import { TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
-import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
-import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import { QuoteWithTradeAndGasEstimate } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiQuoteQuery'
 import { useIndicativeTrade } from 'uniswap/src/features/transactions/swap/hooks/useIndicativeTrade'
+import { GetQuoteRequestResult } from 'uniswap/src/features/transactions/swap/hooks/useTrade/createGetQuoteRequestArgs'
+import { determineSwapCurrenciesAndStaticArgs } from 'uniswap/src/features/transactions/swap/hooks/useTrade/determineSwapCurrenciesAndStaticArgs'
+import { useIndicativeTradeQuery } from 'uniswap/src/features/transactions/swap/hooks/useTrade/useIndicativeTradeQuery'
+import { useQuoteRequestArgs } from 'uniswap/src/features/transactions/swap/hooks/useTrade/useQuoteRequestArgs'
+import { useTradeQuery } from 'uniswap/src/features/transactions/swap/hooks/useTrade/useTradeQuery'
 import { TradeWithStatus, UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
-import {
-  SWAP_GAS_URGENCY_OVERRIDE,
-  getTokenAddressForApi,
-  toTradingApiSupportedChainId,
-  transformTradingApiResponseToTrade,
-  useQuoteRoutingParams,
-  useQuoteSlippageParams,
-  validateTrade,
-} from 'uniswap/src/features/transactions/swap/utils/tradingApi'
-import { CurrencyField } from 'uniswap/src/types/currency'
-import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
-import { ONE_SECOND_MS, inXMinutesUnix } from 'utilities/src/time/time'
 
 // error strings hardcoded in @uniswap/unified-routing-api
 // https://github.com/Uniswap/unified-routing-api/blob/020ea371a00d4cc25ce9f9906479b00a43c65f2c/lib/util/errors.ts#L4
@@ -29,259 +18,126 @@ export const SWAP_QUOTE_ERROR = 'QUOTE_ERROR'
 
 export const API_RATE_LIMIT_ERROR = 'TOO_MANY_REQUESTS'
 
-// The TradingAPI requires an address for the swapper field; we supply a placeholder address if no account is connected.
-// Note: This address was randomly generated.
-const UNCONNECTED_ADDRESS = '0xAAAA44272dc658575Ba38f43C438447dDED45358'
+export function useTrade(params: UseTradeArgs): TradeWithStatus {
+  const quoteRequestArgs = useQuoteRequestArgs(params)
+  const response = useTradeQuery({ ...params, quoteRequestArgs })
+  const { error, data, isLoading: queryIsLoading, isFetching } = response
+  const isLoading = (params.amountSpecified && params.isDebouncing) || queryIsLoading
+  const indicative = useIndicativeTradeQuery({ ...params, quoteRequestArgs })
+  const { currencyIn, currencyOut } = determineSwapCurrenciesAndStaticArgs(params)
 
-const DEFAULT_SWAP_VALIDITY_TIME_MINS = 30
-
-export function useTrade({
-  account,
-  amountSpecified: amount,
-  otherCurrency,
-  tradeType,
-  pollInterval,
-  customSlippageTolerance,
-  isUSDQuote,
-  skip,
-  selectedProtocols,
-  isDebouncing,
-  generatePermitAsTransaction,
-  isV4HookPoolsEnabled,
-}: UseTradeArgs): TradeWithStatus {
-  const activeAccountAddress = account?.address
-
-  /***** Format request arguments ******/
-
-  const currencyIn = tradeType === TradeType.EXACT_INPUT ? amount?.currency : otherCurrency
-  const currencyOut = tradeType === TradeType.EXACT_OUTPUT ? amount?.currency : otherCurrency
-  const currencyInEqualsCurrencyOut =
-    currencyIn && currencyOut && areCurrencyIdsEqual(currencyId(currencyIn), currencyId(currencyOut))
-
-  const tokenInChainId = toTradingApiSupportedChainId(currencyIn?.chainId)
-
-  const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
-  const tokenInAddress = getTokenAddressForApi(currencyIn)
-  const tokenOutAddress = getTokenAddressForApi(currencyOut)
-  const gasStrategy = useActiveGasStrategy(tokenInChainId, 'swap')
-
-  const routingParams = useQuoteRoutingParams({
-    selectedProtocols,
-    tokenInChainId: currencyIn?.chainId,
-    tokenOutChainId: currencyOut?.chainId,
-    isUSDQuote,
-    isV4HookPoolsEnabled,
-  })
-  const slippageParams = useQuoteSlippageParams({
-    customSlippageTolerance,
-    tokenInChainId: currencyIn?.chainId,
-    tokenOutChainId: currencyOut?.chainId,
-    isUSDQuote,
-  })
-
-  const requestTradeType =
-    tradeType === TradeType.EXACT_INPUT ? TradingApiTradeType.EXACT_INPUT : TradingApiTradeType.EXACT_OUTPUT
-
-  const isZeroAmount = amount?.quotient.toString() === '0'
-
-  const skipQuery =
-    skip ||
-    !tokenInAddress ||
-    !tokenOutAddress ||
-    !tokenInChainId ||
-    !tokenOutChainId ||
-    !amount ||
-    isZeroAmount ||
-    currencyInEqualsCurrencyOut
-
-  const quoteRequestArgs = useMemo((): Parameters<typeof useTradingApiQuoteQuery>[0]['params'] | undefined => {
-    if (skipQuery) {
-      return undefined
-    }
-    return {
-      amount: amount.quotient.toString(),
-      generatePermitAsTransaction,
-      gasStrategies: [gasStrategy],
-      isUSDQuote,
-      swapper: activeAccountAddress ?? UNCONNECTED_ADDRESS,
-      tokenIn: tokenInAddress,
-      tokenInChainId,
-      tokenOut: tokenOutAddress,
-      tokenOutChainId,
-      type: requestTradeType,
-      urgency: SWAP_GAS_URGENCY_OVERRIDE,
-      ...routingParams,
-      ...slippageParams,
-    }
-  }, [
-    activeAccountAddress,
-    gasStrategy,
-    amount,
-    generatePermitAsTransaction,
-    isUSDQuote,
-    requestTradeType,
-    routingParams,
-    skipQuery,
-    slippageParams,
-    tokenInAddress,
-    tokenInChainId,
-    tokenOutAddress,
-    tokenOutChainId,
-  ])
-
-  /***** Fetch quote from trading API  ******/
-
-  const pollingIntervalForChain = usePollingIntervalByChain(currencyIn?.chainId)
-  const internalPollInterval = pollInterval ?? pollingIntervalForChain
-
-  const response = useTradingApiQuoteQuery({
-    params: quoteRequestArgs,
-    refetchInterval: internalPollInterval,
-    // We set the `gcTime` to 15 seconds longer than the refetch interval so that there's more than enough time for a refetch to complete before we clear the stale data.
-    // If the user loses internet connection (or leaves the app and comes back) for longer than this,
-    // then we clear stale data and show a big loading spinner in the swap review screen.
-    immediateGcTime: internalPollInterval + ONE_SECOND_MS * 15,
-    // We want to retry once, rather than the default, in order to populate response.error / Error UI sooner.
-    // The query will still poll after failed retries, due to staleness.
-    retry: 1,
-  })
-
-  const { error, data, isLoading: queryIsLoading, isFetching, errorUpdatedAt, dataUpdatedAt, fetchStatus } = response
-
-  // Measure and report quote latency
-  const [lastReqStart, setLastReqStart] = useState<number | undefined>()
-  useEffect(() => {
-    // Don't log USD quotes
-    if (isUSDQuote) {
-      return
-    }
-
-    // record start of fetching
-    if (fetchStatus === 'fetching' && lastReqStart === undefined) {
-      setLastReqStart(Date.now())
-    }
-
-    // log end of fetching
-    if (fetchStatus === 'idle' && lastReqStart) {
-      logger.info('useTrade', 'useTrade', 'Quote Latency', {
-        quoteLatency: Date.now() - lastReqStart,
-        chainIdIn: tokenInChainId,
-        chainIdOut: tokenOutChainId,
-        isBridging: currencyInEqualsCurrencyOut,
-      })
-      setLastReqStart(undefined)
-    }
-  }, [fetchStatus, lastReqStart, isUSDQuote, tokenInChainId, tokenOutChainId, currencyInEqualsCurrencyOut])
-
-  const errorRef = useRef<Error | null>(error)
-
-  // We want to keep the error while react-query is refetching, so that the error message doesn't go in and out while it's polling.
-  if (errorUpdatedAt > dataUpdatedAt) {
-    // If there's a new error, save the new one. If there's no error (we're re-fetching), keep the old one.
-    errorRef.current = error ?? errorRef.current
-  } else {
-    errorRef.current = error
-  }
-
-  const isLoading = (amount && isDebouncing) || queryIsLoading
-
-  const indicative = useIndicativeTrade({
-    quoteRequestArgs,
-    currencyIn,
-    currencyOut,
-    skip: isUSDQuote,
-  })
-
-  /***** Format `trade` type, add errors if needed.  ******/
+  useErrorSideEffectsEffect({ error, data, quoteRequestArgs, isUSDQuote: params.isUSDQuote })
 
   return useMemo(() => {
-    // Error logging
-    // We use DataDog to catch network errors on Mobile
-    if (error && (!isMobileApp || !(error instanceof FetchError)) && !isUSDQuote) {
-      logger.error(error, { tags: { file: 'useTrade', function: 'quote' }, extra: { ...quoteRequestArgs } })
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (data && !data.quote) {
-      logger.error(new Error('Unexpected empty Trading API response'), {
-        tags: { file: 'useTrade', function: 'quote' },
-        extra: {
-          quoteRequestArgs,
-        },
-      })
-    }
-
-    let gasEstimate: GasEstimate | undefined
-    if (data?.quote && 'gasEstimates' in data.quote && data.quote.gasEstimates) {
-      // Only classic quotes include gasEstimates
-      gasEstimate = data.quote.gasEstimates[0]
-    }
-
-    if (!data?.quote || !currencyIn || !currencyOut) {
-      return {
-        isLoading,
-        isFetching,
-        trade: null,
-        indicativeTrade: isLoading ? indicative.trade : undefined,
-        isIndicativeLoading: indicative.isLoading,
-        error: errorRef.current,
-        gasEstimate,
-      }
-    }
-
-    const formattedTrade = transformTradingApiResponseToTrade({
-      currencyIn,
-      currencyOut,
-      tradeType,
-      deadline: inXMinutesUnix(DEFAULT_SWAP_VALIDITY_TIME_MINS), // TODO(MOB-3050): set deadline as `quoteRequestArgs.deadline`
+    return parseTradeResult({
       data,
-    })
-
-    const exactCurrencyField = tradeType === TradeType.EXACT_INPUT ? CurrencyField.INPUT : CurrencyField.OUTPUT
-
-    const trade = validateTrade({
-      trade: formattedTrade,
       currencyIn,
       currencyOut,
-      exactAmount: amount,
-      exactCurrencyField,
-    })
-
-    // If `transformTradingApiResponseToTrade` returns a `null` trade, it means we have a non-null quote, but no routes.
-    if (trade === null) {
-      return {
-        isLoading,
-        isFetching,
-        trade: null,
-        indicativeTrade: undefined, // We don't want to show the indicative trade if there is no completable trade
-        isIndicativeLoading: false,
-        error: new Error('Unable to validate trade'),
-        gasEstimate,
-      }
-    }
-
-    return {
-      isLoading: isDebouncing || isLoading,
+      isLoading,
       isFetching,
-      trade,
-      indicativeTrade: indicative.trade,
+      indicative,
+      error,
+      isDebouncing: params.isDebouncing,
+    })
+  }, [currencyIn, currencyOut, data, error, indicative, isFetching, isLoading, params.isDebouncing])
+}
+
+function useErrorSideEffectsEffect(input: {
+  error: Error | null
+  data?: QuoteWithTradeAndGasEstimate
+  quoteRequestArgs?: GetQuoteRequestResult
+  isUSDQuote?: boolean
+}): void {
+  const { error, data, quoteRequestArgs, isUSDQuote } = input
+  // Use refs to track previous state
+  const prevErrorRef = useRef(error)
+  const prevDataRef = useRef(data)
+
+  useEffect(() => {
+    // Only handle error side effects if error or data changed
+    if (prevErrorRef.current !== error || prevDataRef.current !== data) {
+      handleErrorSideEffects({
+        error,
+        data,
+        quoteRequestArgs,
+        isUSDQuote,
+      })
+
+      // Update refs
+      prevErrorRef.current = error
+      prevDataRef.current = data
+    }
+  }, [error, data, quoteRequestArgs, isUSDQuote])
+}
+
+function handleErrorSideEffects(input: {
+  error: Error | null
+  data?: QuoteWithTradeAndGasEstimate
+  quoteRequestArgs?: GetQuoteRequestResult
+  isUSDQuote?: boolean
+}): void {
+  const { error, data, quoteRequestArgs, isUSDQuote } = input
+  // Error logging
+  // We use DataDog to catch network errors on Mobile
+  if (error && (!isMobileApp || !(error instanceof FetchError)) && !isUSDQuote) {
+    logger.error(error, { tags: { file: 'useTrade', function: 'quote' }, extra: { ...quoteRequestArgs } })
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (data && !data.quote) {
+    logger.error(new Error('Unexpected empty Trading API response'), {
+      tags: { file: 'useTrade', function: 'quote' },
+      extra: {
+        quoteRequestArgs,
+      },
+    })
+  }
+}
+
+function parseTradeResult(input: {
+  data?: QuoteWithTradeAndGasEstimate
+  currencyIn?: Currency
+  currencyOut?: Currency
+  isLoading: boolean
+  isFetching: boolean
+  indicative: ReturnType<typeof useIndicativeTrade>
+  error: Error | null
+  isDebouncing?: boolean
+}): TradeWithStatus {
+  const { data, currencyIn, currencyOut, isLoading, isFetching, indicative, error, isDebouncing } = input
+  if (!data?.trade || !currencyIn || !currencyOut) {
+    return {
+      isLoading: Boolean(isLoading || isDebouncing),
+      isFetching,
+      trade: null,
+      indicativeTrade: isLoading ? indicative.trade : undefined,
       isIndicativeLoading: indicative.isLoading,
       error,
-      gasEstimate,
+      gasEstimate: data?.gasEstimate,
     }
-  }, [
-    amount,
-    currencyIn,
-    currencyOut,
-    data,
-    error,
-    isDebouncing,
+  }
+
+  // If `transformTradingApiResponseToTrade` returns a `null` trade, it means we have a non-null quote, but no routes.
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (data.trade === null) {
+    return {
+      isLoading,
+      isFetching,
+      trade: null,
+      indicativeTrade: undefined, // We don't want to show the indicative trade if there is no completable trade
+      isIndicativeLoading: false,
+      error: new Error('Unable to validate trade'),
+      gasEstimate: data.gasEstimate,
+    }
+  }
+
+  return {
+    isLoading: isDebouncing || isLoading,
     isFetching,
-    isLoading,
-    isUSDQuote,
-    indicative.trade,
-    indicative.isLoading,
-    quoteRequestArgs,
-    tradeType,
-  ])
+    trade: data.trade,
+    indicativeTrade: indicative.trade,
+    isIndicativeLoading: indicative.isLoading,
+    error,
+    gasEstimate: data.gasEstimate,
+  }
 }

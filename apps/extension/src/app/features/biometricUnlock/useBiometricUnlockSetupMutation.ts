@@ -4,6 +4,7 @@ import {
   BiometricUnlockStorageData,
 } from 'src/app/features/biometricUnlock/BiometricUnlockStorage'
 import { biometricUnlockCredentialQuery } from 'src/app/features/biometricUnlock/biometricUnlockCredentialQuery'
+import { startNavigatorCredentialRequest } from 'src/app/features/biometricUnlock/useNavigatorCredentialAbortSignal'
 import { assertPublicKeyCredential } from 'src/app/features/biometricUnlock/utils/assertPublicKeyCredential'
 import { isUserVerifyingPlatformAuthenticatorAvailable } from 'src/app/utils/device/builtInBiometricCapabilitiesQuery'
 import { logger } from 'utilities/src/logger/logger'
@@ -23,8 +24,13 @@ export function useBiometricUnlockSetupMutation(options?: {
 
   return useMutation({
     mutationFn: async (password: string) => {
+      const { abortSignal } = startNavigatorCredentialRequest('New biometric setup request initiated')
+
       await assertIsUserVerifyingPlatformAuthenticatorAvailable()
-      const biometricStorageData = await createCredentialAndEncryptPassword({ password })
+      const biometricStorageData = await createCredentialAndEncryptPassword({
+        password,
+        abortSignal,
+      })
       await BiometricUnlockStorage.set(biometricStorageData)
     },
     retry: false,
@@ -47,8 +53,10 @@ export function useBiometricUnlockSetupMutation(options?: {
 
 async function createCredentialAndEncryptPassword({
   password,
+  abortSignal,
 }: {
   password: string
+  abortSignal: AbortSignal
 }): Promise<BiometricUnlockStorageData> {
   // Encrypt the password using the same approach we use in `Keyring`
   const secretPayload = await createEmptySecretPayload()
@@ -61,7 +69,10 @@ async function createCredentialAndEncryptPassword({
 
   const rawKey = await window.crypto.subtle.exportKey('raw', encryptionKey)
 
-  const { credentialId } = await createCredential({ encryptionKey: rawKey })
+  const { credentialId } = await createCredential({
+    encryptionKey: rawKey,
+    abortSignal,
+  })
 
   const secretPayloadWithCiphertext = await addEncryptedCiphertextToSecretPayload({
     secretPayload,
@@ -102,7 +113,13 @@ const CREDENTIAL_ALGORITHMS: PublicKeyCredentialParameters[] = [
   },
 ]
 
-async function createCredential({ encryptionKey }: { encryptionKey: ArrayBuffer }): Promise<{ credentialId: string }> {
+async function createCredential({
+  encryptionKey,
+  abortSignal,
+}: {
+  encryptionKey: ArrayBuffer
+  abortSignal: AbortSignal
+}): Promise<{ credentialId: string }> {
   // Create WebAuthn credential with platform authenticator (Touch ID, Windows Hello, etc.) forced
   const credential = await navigator.credentials.create({
     publicKey: {
@@ -127,6 +144,7 @@ async function createCredential({ encryptionKey }: { encryptionKey: ArrayBuffer 
       pubKeyCredParams: CREDENTIAL_ALGORITHMS,
       timeout: 15 * ONE_SECOND_MS,
     },
+    signal: abortSignal,
   })
 
   const publicKeyCredential = assertPublicKeyCredential(credential)

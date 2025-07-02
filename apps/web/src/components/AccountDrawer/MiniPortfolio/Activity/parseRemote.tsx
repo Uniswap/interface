@@ -23,12 +23,12 @@ import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { parseRemote as parseRemoteSignature } from 'state/signatures/parseRemote'
 import { OrderActivity, SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
-import { TransactionType as LocalTransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { Flex, Text, styled } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   AssetActivityPartsFragment,
@@ -47,8 +47,11 @@ import {
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { TransactionType as UniswapTransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
@@ -261,10 +264,10 @@ function getTransactedValue(transactedValue: TokenTransferPartsFragment['transac
 type SwapAmounts = {
   inputAmount: string
   inputAmountRaw: string
-  inputCurrencyId: string
+  inputCurrencyAddress: string
   outputAmount: string
   outputAmountRaw: string
-  outputCurrencyId: string
+  outputCurrencyAddress: string
   sent: TokenTransferPartsFragment
   received: TokenTransferPartsFragment
 }
@@ -281,12 +284,23 @@ export function parseSwapAmounts(
     (t) => t.direction === 'IN' && t.asset.id === sent?.asset.id && t.asset.standard === NATIVE_CHAIN_ID,
   )
   const received = changes.TokenTransfer.find((t) => t.direction === 'IN' && t !== refund)
+
   if (!sent || !received) {
     return undefined
   }
-  const inputCurrencyId = sent.asset.standard === NATIVE_CHAIN_ID ? 'ETH' : sent.asset.address
-  const outputCurrencyId = received.asset.standard === NATIVE_CHAIN_ID ? 'ETH' : received.asset.address
-  if (!inputCurrencyId || !outputCurrencyId) {
+
+  const sentChainId = fromGraphQLChain(sent.asset.chain)
+  const receivedChainId = fromGraphQLChain(received.asset.chain)
+
+  if (!sentChainId || !receivedChainId) {
+    return undefined
+  }
+
+  const inputCurrencyAddress =
+    sent.asset.standard === NATIVE_CHAIN_ID ? getNativeAddress(sentChainId) : sent.asset.address
+  const outputCurrencyAddress =
+    received.asset.standard === NATIVE_CHAIN_ID ? getNativeAddress(receivedChainId) : received.asset.address
+  if (!inputCurrencyAddress || !outputCurrencyAddress) {
     return undefined
   }
 
@@ -307,8 +321,8 @@ export function parseSwapAmounts(
     received,
     inputAmount,
     outputAmount,
-    inputCurrencyId,
-    outputCurrencyId,
+    inputCurrencyAddress,
+    outputCurrencyAddress,
     inputAmountRaw,
     outputAmountRaw,
   }
@@ -434,7 +448,7 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
     return undefined
   }
 
-  const { inputCurrencyId, outputCurrencyId, inputAmountRaw, outputAmountRaw } = swapAmounts
+  const { inputCurrencyAddress, outputCurrencyAddress, inputAmountRaw, outputAmountRaw } = swapAmounts
 
   return {
     orderHash: activity.details.hash,
@@ -446,10 +460,10 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
     addedTime: activity.timestamp,
     swapInfo: {
       isUniswapXOrder: true,
-      type: LocalTransactionType.SWAP,
+      type: UniswapTransactionType.Swap,
       tradeType: TradeType.EXACT_INPUT,
-      inputCurrencyId,
-      outputCurrencyId,
+      inputCurrencyId: buildCurrencyId(chainId, inputCurrencyAddress),
+      outputCurrencyId: buildCurrencyId(chainId, outputCurrencyAddress),
       inputCurrencyAmountRaw: inputAmountRaw,
       expectedOutputCurrencyAmountRaw: outputAmountRaw,
       minimumOutputCurrencyAmountRaw: outputAmountRaw,

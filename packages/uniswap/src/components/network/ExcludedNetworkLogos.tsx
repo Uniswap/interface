@@ -5,7 +5,7 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
-const BANNER_SIZE = iconSizes.icon40
+const BANNER_SIZE = iconSizes.icon32
 const LOGO_SIZES = {
   single: iconSizes.icon24,
   singleInner: iconSizes.icon20,

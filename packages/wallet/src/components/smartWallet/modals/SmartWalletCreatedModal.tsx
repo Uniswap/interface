@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, useSporeColors } from 'ui/src'
+import { useSporeColors } from 'ui/src'
 import { SmartWallet } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { SmartWalletModal } from 'wallet/src/features/smartWallet/modals/SmartWalletModal'
+import { SmartWalletModal } from 'wallet/src/components/smartWallet/modals/SmartWalletModal'
 
 interface SmartWalletCreatedModalProps {
   isOpen: boolean
@@ -16,19 +16,8 @@ export function SmartWalletCreatedModal({ isOpen, onClose }: SmartWalletCreatedM
   return (
     <SmartWalletModal
       isOpen={isOpen}
-      icon={
-        <Flex
-          backgroundColor="$accent2"
-          borderRadius="$rounded12"
-          height="$spacing48"
-          width="$spacing48"
-          alignItems="center"
-          justifyContent="center"
-          mb="$spacing4"
-        >
-          <SmartWallet color={colors.accent1.val} size="$icon.24" />
-        </Flex>
-      }
+      icon={<SmartWallet color={colors.accent1.val} size="$icon.24" />}
+      iconBackgroundColor="$accent2"
       title={t('smartWallets.createdModal.title')}
       subtext={t('smartWallets.createdModal.description')}
       primaryButtonText={t('common.done')}

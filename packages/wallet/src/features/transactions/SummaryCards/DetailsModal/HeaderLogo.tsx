@@ -1,4 +1,4 @@
-import { Flex, useSporeColors } from 'ui/src'
+import { useSporeColors } from 'ui/src'
 import { ContractInteraction } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { BridgeIcon, SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
@@ -12,11 +12,13 @@ import {
 import {
   ApproveTransactionInfo,
   BridgeTransactionInfo,
+  ClaimUniTransactionInfo,
   CollectFeesTransactionInfo,
   CreatePairTransactionInfo,
   CreatePoolTransactionInfo,
   LiquidityDecreaseTransactionInfo,
   LiquidityIncreaseTransactionInfo,
+  MigrateV2LiquidityToV3TransactionInfo,
   NFTApproveTransactionInfo,
   NFTMintTransactionInfo,
   NFTTradeTransactionInfo,
@@ -29,33 +31,14 @@ import {
   SendCallsTransactionInfo,
   SendTokenTransactionInfo,
   TransactionDetails,
+  TransactionType,
   UnknownTransactionInfo,
   WCConfirmInfo,
   WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { DappLogoWithWCBadge, LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import {
-  SwapTypeTransactionInfo,
-  isApproveTransactionInfo,
-  isBridgeTransactionInfo,
-  isLocalOffRampTransactionInfo,
-  isLocalOnRampTransactionInfo,
-  isNFTApproveTransactionInfo,
-  isNFTMintTransactionInfo,
-  isNFTTradeTransactionInfo,
-  isOffRampSaleTransactionInfo,
-  isOnRampPurchaseTransactionInfo,
-  isOnRampTransferTransactionInfo,
-  isPermit2ApproveTransactionInfo,
-  isReceiveTokenTransactionInfo,
-  isRemoveDelegationTransactionInfo,
-  isSendCallsTransactionInfo,
-  isSendTokenTransactionInfo,
-  isSwapTransactionInfo,
-  isWCConfirmTransactionInfo,
-  isWrapTransactionInfo,
-} from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
+import { SwapTypeTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 
 const TXN_DETAILS_ICON_SIZE = iconSizes.icon40
 
@@ -91,50 +74,51 @@ const getLogoWithTxStatus = ({
   />
 )
 
+// eslint-disable-next-line complexity
 export function HeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element | null {
   const { typeInfo } = transactionDetails
 
-  const getHeaderLogoComponent = (): JSX.Element | null => {
-    if (isApproveTransactionInfo(typeInfo)) {
+  switch (typeInfo.type) {
+    case TransactionType.Approve:
       return <ApproveHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isNFTApproveTransactionInfo(typeInfo)) {
+    case TransactionType.NFTApprove:
+    case TransactionType.NFTMint:
+    case TransactionType.NFTTrade:
       return <NFTHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isNFTMintTransactionInfo(typeInfo)) {
-      return <NFTHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isNFTTradeTransactionInfo(typeInfo)) {
-      return <NFTHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isReceiveTokenTransactionInfo(typeInfo)) {
+    case TransactionType.Receive:
+    case TransactionType.Send:
       return <TokenTransferHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isSendTokenTransactionInfo(typeInfo)) {
-      return <TokenTransferHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isSwapTransactionInfo(typeInfo)) {
+    case TransactionType.Swap:
       return <SwapHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isBridgeTransactionInfo(typeInfo)) {
+    case TransactionType.Bridge:
       return <BridgeHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isWCConfirmTransactionInfo(typeInfo)) {
+    case TransactionType.WCConfirm:
       return <WCConfirmHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isWrapTransactionInfo(typeInfo)) {
+    case TransactionType.Wrap:
       return <WrapHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isOnRampPurchaseTransactionInfo(typeInfo) || isOnRampTransferTransactionInfo(typeInfo)) {
+    case TransactionType.OnRampPurchase:
+    case TransactionType.OnRampTransfer:
       return <OnRampHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isOffRampSaleTransactionInfo(typeInfo)) {
+    case TransactionType.OffRampSale:
       return <OffRampHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isLocalOnRampTransactionInfo(typeInfo) || isLocalOffRampTransactionInfo(typeInfo)) {
-      return null // Local FOR transactions are never visible
-    } else if (isSendCallsTransactionInfo(typeInfo)) {
+    // Local FOR transactions are never visible
+    case TransactionType.LocalOnRamp:
+    case TransactionType.LocalOffRamp:
+      return null
+    // TODO: Add Permit2ApproveHeaderLogo
+    // TODO WALL-7056: Implement Remove Delegation Header Logo
+    case TransactionType.SendCalls:
+    case TransactionType.Permit2Approve:
+    case TransactionType.RemoveDelegation:
       return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isPermit2ApproveTransactionInfo(typeInfo)) {
-      // TODO: Add Permit2ApproveHeaderLogo
+    // Cases of web only transactions
+    // TODO(WALL-7197) handle these cases
+    case TransactionType.ClaimUni:
+    case TransactionType.MigrateLiquidityV2ToV3:
       return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isRemoveDelegationTransactionInfo(typeInfo)) {
-      // TODO WALL-7056: Implement Remove Delegation Header Logo
+    default:
       return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else {
-      return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    }
   }
-
-  return <Flex>{getHeaderLogoComponent()}</Flex>
 }
 
 interface SpecificHeaderLogoProps<T> extends HeaderLogoProps {
@@ -276,10 +260,12 @@ function UnknownHeaderLogo({
   | LiquidityIncreaseTransactionInfo
   | LiquidityDecreaseTransactionInfo
   | RemoveDelegationTransactionInfo
+  | ClaimUniTransactionInfo
+  | MigrateV2LiquidityToV3TransactionInfo
 >): JSX.Element {
   const colors = useSporeColors()
   // Check if dappInfo exists since it may not exist on all transaction types
-  return typeInfo.dappInfo?.icon ? (
+  return 'dappInfo' in typeInfo && typeInfo.dappInfo?.icon ? (
     <DappLogoWithWCBadge
       circular
       hideWCBadge

@@ -9,8 +9,6 @@ import { Action } from 'redux'
 import { addTransaction, finalizeTransaction, updateTransactionInfo } from 'state/transactions/reducer'
 import {
   BridgeTransactionInfo,
-  ExactInputSwapTransactionInfo,
-  ExactOutputSwapTransactionInfo,
   PermitTransactionInfo,
   TransactionDetails,
   TransactionInfo,
@@ -45,15 +43,17 @@ import { BridgeTrade, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/t
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   ApproveTransactionInfo,
+  ExactInputSwapTransactionInfo,
+  ExactOutputSwapTransactionInfo,
   TransactionStatus,
   TransactionType as UniswapTransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { isSameAddress } from 'utilities/src/addresses'
 import { percentFromFloat } from 'utilities/src/format/percent'
 import noop from 'utilities/src/react/noop'
-import { currencyId } from 'utils/currencyId'
 import { signTypedData } from 'utils/signing'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { Transaction } from 'viem'
@@ -404,7 +404,7 @@ export function getSwapTransactionInfo(
   const slippage = percentFromFloat(trade.slippageTolerance)
 
   return {
-    type: TransactionType.SWAP,
+    type: UniswapTransactionType.Swap,
     inputCurrencyId: currencyId(trade.inputAmount.currency),
     outputCurrencyId: currencyId(trade.outputAmount.currency),
     isUniswapXOrder: isUniswapX(trade),
