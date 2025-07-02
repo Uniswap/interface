@@ -24,7 +24,6 @@ export function useTradingApiQuoteQuery({
   return useTradingApiReplica({
     request: TradingApiReplicaRequests.QUOTE,
     params,
-    skip: !rest.enabled,
   })
 
   return useQueryWithImmediateGarbageCollection<DiscriminatedQuoteResponse>({

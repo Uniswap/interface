@@ -14,7 +14,6 @@ import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4Sw
 import {
   SWAP_GAS_URGENCY_OVERRIDE,
   getTokenAddressForApi,
-  toTradingApiSupportedChainId,
   transformTradingApiResponseToTrade,
   useQuoteRoutingParams,
   useQuoteSlippageParams,
@@ -60,10 +59,10 @@ export function useTrade({
   const currencyInEqualsCurrencyOut =
     currencyIn && currencyOut && areCurrencyIdsEqual(currencyId(currencyIn), currencyId(currencyOut))
 
-  const tokenInChainId = toTradingApiSupportedChainId(currencyIn?.chainId)
+  const tokenInChainId = currencyIn?.chainId
   const v4SwapEnabled = useV4SwapEnabled(tokenInChainId)
 
-  const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
+  const tokenOutChainId = currencyOut?.chainId
   const tokenInAddress = getTokenAddressForApi(currencyIn)
   const tokenOutAddress = getTokenAddressForApi(currencyOut)
   const activeGasStrategy = useActiveGasStrategy(tokenInChainId, 'swap')

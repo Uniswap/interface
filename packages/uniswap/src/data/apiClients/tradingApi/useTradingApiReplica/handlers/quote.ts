@@ -1,10 +1,35 @@
 import { CHAIN_TO_ADDRESSES_MAP } from '@uniswap/sdk-core'
+import IUniswapV3FactoryABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Factory.sol/IUniswapV3Factory.json'
+import IUniswapV3PoolABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json'
 import { QuoteRequest, Routing, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { encodeFunctionData } from 'viem'
 
 import { DiscriminatedQuoteResponse } from '../../TradingApiClient'
-import { QUOTER_V2_ABI } from '../abi'
+import { ERC20_ABI, QUOTER_V2_ABI } from '../abi'
 import { client } from '../client'
+
+async function getPoolState(poolAddress: string) {
+  const [slot0, liquidity] = await Promise.all([
+    client.readContract({
+      address: poolAddress as `0x${string}`,
+      abi: IUniswapV3PoolABI.abi,
+      functionName: 'slot0',
+    }) as Promise<[bigint, number, number, number, number, number, boolean]>,
+    client.readContract({
+      address: poolAddress as `0x${string}`,
+      abi: IUniswapV3PoolABI.abi,
+      functionName: 'liquidity',
+    }) as Promise<bigint>,
+  ])
+
+  const [sqrtPriceX96, tick] = slot0
+
+  return {
+    sqrtPriceX96: sqrtPriceX96.toString(),
+    tick: tick.toString(),
+    liquidity: liquidity.toString(),
+  }
+}
 
 export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteResponse> => {
   // Validate required parameters
@@ -37,6 +62,39 @@ export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteRes
   // Set slippage tolerance (default 0.5%)
   const slippageTolerance = params.slippageTolerance ?? params.autoSlippage?.maxSlippage ?? 0.5
 
+  const tokenInSymbol = (await client.readContract({
+    address: params.tokenIn as `0x${string}`,
+    abi: ERC20_ABI,
+    functionName: 'symbol',
+  })) as string
+
+  const tokenInDecimals = (await client.readContract({
+    address: params.tokenIn as `0x${string}`,
+    abi: ERC20_ABI,
+    functionName: 'decimals',
+  })) as string
+
+  const tokenOutDecimals = (await client.readContract({
+    address: params.tokenOut as `0x${string}`,
+    abi: ERC20_ABI,
+    functionName: 'decimals',
+  })) as string
+
+  const tokenOutSymbol = (await client.readContract({
+    address: params.tokenOut as `0x${string}`,
+    abi: ERC20_ABI,
+    functionName: 'symbol',
+  })) as string
+
+  const poolAddress = await client.readContract({
+    address: CHAIN_TO_ADDRESSES_MAP[10000].v3CoreFactoryAddress as `0x${string}`,
+    abi: IUniswapV3FactoryABI.abi,
+    functionName: 'getPool',
+    args: [params.tokenIn as `0x${string}`, params.tokenOut as `0x${string}`, '3000'],
+  })
+
+  const poolState = await getPoolState(poolAddress)
+
   try {
     let quoteResult: any
 
@@ -51,8 +109,8 @@ export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteRes
             tokenIn: params.tokenIn as `0x${string}`,
             tokenOut: params.tokenOut as `0x${string}`,
             fee,
-            amountIn: amountBigInt,
-            sqrtPriceLimitX96: 0n, // No price limit
+            amountIn: params.amount,
+            sqrtPriceLimitX96: '0', // No price limit
           },
         ],
       })) as [bigint, bigint, bigint, bigint]
@@ -126,23 +184,23 @@ export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteRes
             [
               {
                 type: 'v3-pool',
-                address: '', // Would need to compute pool address
+                address: poolAddress,
                 tokenIn: {
                   chainId: chainId,
-                  decimals: 18, // Would need to fetch from token contract
+                  decimals: tokenInDecimals,
                   address: params.tokenIn,
-                  symbol: '', // Would need to fetch from token contract
+                  symbol: tokenInSymbol, // Would need to fetch from token contract
                 },
                 tokenOut: {
                   chainId: chainId,
-                  decimals: 18, // Would need to fetch from token contract
+                  decimals: tokenOutDecimals,
                   address: params.tokenOut,
-                  symbol: '', // Would need to fetch from token contract
+                  symbol: tokenOutSymbol, // Would need to fetch from token contract
                 },
                 fee: fee.toString(),
-                liquidity: '0',
-                sqrtRatioX96: sqrtPriceX96After.toString(),
-                tickCurrent: '0',
+                liquidity: poolState.liquidity,
+                sqrtRatioX96: poolState.sqrtPriceX96,
+                tickCurrent: poolState.tick,
                 amountIn: params.amount,
                 amountOut: amountOut.toString(),
               },
@@ -243,23 +301,23 @@ export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteRes
             [
               {
                 type: 'v3-pool',
-                address: '',
+                address: poolAddress,
                 tokenIn: {
                   chainId: chainId,
-                  decimals: 18,
+                  decimals: tokenInDecimals,
                   address: params.tokenIn,
-                  symbol: '',
+                  symbol: tokenInSymbol,
                 },
                 tokenOut: {
                   chainId: chainId,
-                  decimals: 18,
+                  decimals: tokenOutDecimals,
                   address: params.tokenOut,
-                  symbol: '',
+                  symbol: tokenOutSymbol,
                 },
                 fee: fee.toString(),
-                liquidity: '0',
-                sqrtRatioX96: sqrtPriceX96After.toString(),
-                tickCurrent: '0',
+                liquidity: poolState.liquidity,
+                sqrtRatioX96: poolState.sqrtPriceX96,
+                tickCurrent: poolState.tick,
                 amountIn: amountIn.toString(),
                 amountOut: params.amount,
               },
