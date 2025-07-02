@@ -10,6 +10,7 @@ import {
 import { UseQueryWithImmediateGarbageCollectionApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { QuoteRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
+import useTradingApiReplica, { TradingApiReplicaRequests } from './useTradingApiReplica'
 
 export function useTradingApiQuoteQuery({
   params,
@@ -19,6 +20,12 @@ export function useTradingApiQuoteQuery({
   DiscriminatedQuoteResponse
 >): UseQueryResult<DiscriminatedQuoteResponse> {
   const queryKey = [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.quote, params]
+
+  return useTradingApiReplica({
+    request: TradingApiReplicaRequests.QUOTE,
+    params,
+    skip: !rest.enabled,
+  })
 
   return useQueryWithImmediateGarbageCollection<DiscriminatedQuoteResponse>({
     queryKey,

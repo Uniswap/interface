@@ -3,10 +3,6 @@ import { UseQueryResult } from '@tanstack/react-query'
 import { ListPositionsRequest } from '@uniswap/client-pools/dist/pools/v1/api_pb'
 import { useEffect, useReducer } from 'react'
 
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { createPublicClient, defineTransaction, defineTransactionRequest, http } from 'viem'
-import { publicActionsL1 } from 'viem/zksync'
 import {
   CheckApprovalLPResponse,
   ClaimLPFeesRequest,
@@ -17,6 +13,7 @@ import {
   DecreaseLPPositionResponse,
   IncreaseLPPositionRequest,
   IncreaseLPPositionResponse,
+  QuoteRequest,
 } from '../../../tradingApi/__generated__'
 
 import { checkLpApproval } from './handlers/checkLpApproval'
@@ -24,25 +21,7 @@ import { claimLpFees } from './handlers/claimLpFees'
 import { createLpPosition } from './handlers/createLpPosition'
 import { decreaseLpPosition } from './handlers/decreaseLpPosition'
 import { increaseLpPosition } from './handlers/increaseLpPosition'
-
-const chainInfo = getChainInfo(UniverseChainId.SmartBCH)
-
-const client = createPublicClient({
-  chain: {
-    ...chainInfo,
-    formatters: {
-      transaction: defineTransaction({
-        exclude: ['type'],
-        format: () => {},
-      }),
-      transactionRequest: defineTransactionRequest({
-        exclude: ['type'],
-        format: () => {},
-      }),
-    },
-  },
-  transport: http(),
-}).extend(publicActionsL1())
+import { quote } from './handlers/quote'
 
 export enum TradingApiReplicaRequests {
   CREATE_LP_POSITION,
@@ -51,6 +30,7 @@ export enum TradingApiReplicaRequests {
   INCREASE_LP_POSITION,
   DECREASE_LP_POSITION,
   CLAIM_LP_FEES,
+  QUOTE,
 }
 
 enum ActionType {
@@ -122,6 +102,11 @@ interface ListPositionsParams {
   params?: PartialMessage<ListPositionsRequest>
 }
 
+interface QuoteParams {
+  request: TradingApiReplicaRequests.QUOTE
+  params?: QuoteRequest
+}
+
 type Params = (
   | CreateLpPositionParams
   | CheckApprovalLPParams
@@ -129,24 +114,10 @@ type Params = (
   | IncreaseLpPositionParams
   | DecreaseLpPositionParams
   | ClaimLpFeesParams
+  | QuoteParams
 ) & {
   skip?: boolean
 }
-
-type PositionContractResponse = [
-  BigInt,
-  string,
-  string,
-  string,
-  number,
-  number,
-  number,
-  BigInt,
-  BigInt,
-  BigInt,
-  BigInt,
-  BigInt,
-]
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -183,7 +154,7 @@ const useTradingApiReplica = (params: Params) => {
         type: ActionType.INIT,
       })
       try {
-        let value: Response
+        let value: Response = {}
         switch (params.request) {
           case TradingApiReplicaRequests.CHECK_LP_APPROVAL:
             value = await checkLpApproval(params.params)
@@ -200,6 +171,9 @@ const useTradingApiReplica = (params: Params) => {
           case TradingApiReplicaRequests.DECREASE_LP_POSITION:
             value = await decreaseLpPosition(params.params)
             break
+          case TradingApiReplicaRequests.QUOTE:
+            value = await quote(params.params)
+            break
         }
         dispatch({
           type: ActionType.RESULT,
@@ -208,7 +182,7 @@ const useTradingApiReplica = (params: Params) => {
       } catch (e: unknown) {
         dispatch({
           type: ActionType.ERROR,
-          value: e,
+          value: e as Error | null,
         })
       }
     })()
