@@ -1,6 +1,7 @@
 import { PlainMessage } from '@bufbuild/protobuf'
 import { Platform, PlatformAddress, WalletAccount } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { ProtectionInfo as ProtectionInfoProtobuf } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import {
   ProtectionAttackType,
   ProtectionInfo,
@@ -73,6 +74,19 @@ export function parseProtectionInfo(protectionInfo?: ProtectionInfoProtobuf): Pr
   }
 
   return { attackTypes, result: protectionResult }
+}
+
+export function parseRestProtocolVersion(version: string | undefined): ProtocolVersion | undefined {
+  switch (version?.toLowerCase()) {
+    case 'v2':
+      return ProtocolVersion.V2
+    case 'v3':
+      return ProtocolVersion.V3
+    case 'v4':
+      return ProtocolVersion.V4
+    default:
+      return undefined
+  }
 }
 
 /**

@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { providerErrors, serializeError } from '@metamask/rpc-errors'
 import { dappStore } from 'src/app/features/dapp/store'
@@ -211,7 +210,7 @@ addWindowMessageListener<WindowEthereumRequest>({
 
 externalDappMessageChannel.addMessageListener(ExtensionToDappRequestType.SwitchChain, (message) => {
   setChainIdAndMaybeEmit(message.chainId)
-  setProvider(new JsonRpcProvider(message.providerUrl, BigNumber.from(message.chainId).toString()))
+  setProvider(new JsonRpcProvider(message.providerUrl, parseInt(message.chainId)))
 })
 
 externalDappMessageChannel.addMessageListener(ExtensionToDappRequestType.UpdateConnections, (message) => {

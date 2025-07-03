@@ -5,7 +5,7 @@ import {
   Transfer,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import {
-  ClaimTransactionInfo,
+  CollectFeesTransactionInfo,
   CreatePairTransactionInfo,
   CreatePoolTransactionInfo,
   LiquidityDecreaseTransactionInfo,
@@ -25,7 +25,7 @@ export function parseRestLiquidityTransaction(
 ):
   | LiquidityIncreaseTransactionInfo
   | LiquidityDecreaseTransactionInfo
-  | ClaimTransactionInfo
+  | CollectFeesTransactionInfo
   | CreatePairTransactionInfo
   | CreatePoolTransactionInfo
   | UnknownTransactionInfo {
@@ -46,23 +46,23 @@ export function parseRestLiquidityTransaction(
       break
   }
 
-  let inputCurrencyId: string | undefined
-  let outputCurrencyId: string | undefined
-  let inputCurrencyAmountRaw: string | undefined
-  let outputCurrencyAmountRaw: string | undefined
+  let currency0Id: string | undefined
+  let currency1Id: string | undefined
+  let currency0AmountRaw: string | undefined
+  let currency1AmountRaw: string | undefined
 
   const relevantTransfers = transfers.filter((transfer) => transfer.direction === direction)
 
-  const inputCurrency = extractCurrencyFromTransfer(relevantTransfers[0], chainId)
-  if (inputCurrency) {
-    inputCurrencyId = inputCurrency.currencyId
-    inputCurrencyAmountRaw = inputCurrency.amountRaw
+  const currency0 = extractCurrencyFromTransfer(relevantTransfers[0], chainId)
+  if (currency0) {
+    currency0Id = currency0.currencyId
+    currency0AmountRaw = currency0.amountRaw
   }
 
-  const outputCurrency = extractCurrencyFromTransfer(relevantTransfers[1], chainId)
-  if (outputCurrency) {
-    outputCurrencyId = outputCurrency.currencyId
-    outputCurrencyAmountRaw = outputCurrency.amountRaw
+  const currency1 = extractCurrencyFromTransfer(relevantTransfers[1], chainId)
+  if (currency1) {
+    currency1Id = currency1.currencyId
+    currency1AmountRaw = currency1.amountRaw
   }
 
   const dappInfo = transaction.protocol?.name
@@ -72,14 +72,33 @@ export function parseRestLiquidityTransaction(
       }
     : undefined
 
-  return {
-    type: getLiquidityTransactionType(label),
-    inputCurrencyId,
-    outputCurrencyId,
-    inputCurrencyAmountRaw,
-    outputCurrencyAmountRaw,
-    isSpam: false,
-    dappInfo,
+  if (label === OnChainTransactionLabel.CLAIM && currency0Id && currency0AmountRaw) {
+    // handle claim liquidity transaction
+    return {
+      type: TransactionType.CollectFees,
+      currency0Id,
+      currency0AmountRaw,
+      isSpam: false,
+      dappInfo,
+    }
+  } else if (currency0Id && currency1Id && currency0AmountRaw && currency1AmountRaw) {
+    // return a liquidity transaction if all fields are defined
+    return {
+      type: getLiquidityTransactionType(label),
+      isSpam: false,
+      dappInfo,
+      currency0Id,
+      currency1Id,
+      currency0AmountRaw,
+      currency1AmountRaw,
+    }
+  } else {
+    // return unknown transaction info if all liquidity fields are not defined
+    return {
+      type: TransactionType.Unknown,
+      isSpam: false,
+      dappInfo,
+    }
   }
 }
 
@@ -88,7 +107,7 @@ function getLiquidityTransactionType(
 ):
   | TransactionType.LiquidityIncrease
   | TransactionType.LiquidityDecrease
-  | TransactionType.Claim
+  | TransactionType.CollectFees
   | TransactionType.CreatePair
   | TransactionType.CreatePool
   | TransactionType.Unknown {
@@ -98,7 +117,7 @@ function getLiquidityTransactionType(
     case OnChainTransactionLabel.DECREASE_LIQUIDITY:
       return TransactionType.LiquidityDecrease
     case OnChainTransactionLabel.CLAIM:
-      return TransactionType.Claim
+      return TransactionType.CollectFees
     case OnChainTransactionLabel.CREATE_PAIR:
       return TransactionType.CreatePair
     case OnChainTransactionLabel.CREATE_POOL:

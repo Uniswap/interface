@@ -17,7 +17,7 @@ export function HomeIntroCardStack(): JSX.Element | null {
   }, [activeAccount.address])
 
   const navigateToBackupFlow = useCallback((): void => {
-    navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.BackupRecoveryPhrase}`)
+    navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.BackupRecoveryPhrase}`)
   }, [navigateTo])
 
   const { cards } = useSharedIntroCards({

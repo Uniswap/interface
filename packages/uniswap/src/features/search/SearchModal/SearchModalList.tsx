@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from 'react'
-import { Flex, TouchableArea } from 'ui/src'
+import { Flex, TouchableArea, styled } from 'ui/src'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { iconSizes } from 'ui/src/theme'
 import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hooks/useAddToSearchHistory'
@@ -8,6 +8,10 @@ import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainIte
 import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
 import { NFTCollectionOptionItem } from 'uniswap/src/components/lists/items/nfts/NFTCollectionOptionItem'
 import { PoolOptionItem } from 'uniswap/src/components/lists/items/pools/PoolOptionItem'
+import {
+  PoolContextMenuAction,
+  PoolOptionItemContextMenu,
+} from 'uniswap/src/components/lists/items/pools/PoolOptionItemContextMenu'
 import { TokenContextMenuVariant, TokenOptionItem } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
 import {
   TokenContextMenuAction,
@@ -25,6 +29,14 @@ import { isHoverable, isWeb } from 'utilities/src/platform'
 import { usePrevious } from 'utilities/src/react/hooks'
 import noop from 'utilities/src/react/noop'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
+
+const OptionItemMoreButton = styled(TouchableArea, {
+  borderWidth: 1,
+  borderRadius: '$rounded12',
+  hoverStyle: {
+    borderColor: '$surface3Hovered',
+  },
+})
 
 export interface SearchModalListProps {
   sections?: OnchainItemSection<SearchModalOption>[]
@@ -47,7 +59,8 @@ export const SearchModalList = memo(function _SearchModalList({
   onSelect,
   searchFilters,
 }: SearchModalListProps): JSX.Element {
-  const { navigateToTokenDetails, navigateToExternalProfile, navigateToNftCollection } = useUniswapContext()
+  const { navigateToTokenDetails, navigateToExternalProfile, navigateToNftCollection, navigateToPoolDetails } =
+    useUniswapContext()
   const { registerSearchItem } = useAddToSearchHistory()
 
   const { value: isContextMenuOpen, setFalse: closeContextMenu, toggle: toggleContextMenu } = useBooleanState(false)
@@ -63,7 +76,7 @@ export const SearchModalList = memo(function _SearchModalList({
   }, [previousFocusedRowIndex, focusedRowIndex, closeContextMenu])
 
   // eslint-disable-next-line consistent-return
-  const renderItem = ({ item, section, rowIndex }: ItemRowInfo<SearchModalOption>): JSX.Element => {
+  const renderItem = ({ item, section, rowIndex, index }: ItemRowInfo<SearchModalOption>): JSX.Element => {
     switch (item.type) {
       case OnchainItemListOptionType.Pool:
         return (
@@ -80,14 +93,41 @@ export const SearchModalList = memo(function _SearchModalList({
               setFocusedRowIndex,
               focusedRowIndex,
             }}
+            rightElement={
+              isHoverable && rowIndex === focusedRowIndex ? (
+                <OptionItemMoreButton
+                  onPress={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    toggleContextMenu()
+                  }}
+                >
+                  <PoolOptionItemContextMenu
+                    actions={[PoolContextMenuAction.CopyAddress, PoolContextMenuAction.Share]}
+                    isOpen={previousFocusedRowIndex === focusedRowIndex && isContextMenuOpen}
+                    openMenu={noop}
+                    closeMenu={noop}
+                    poolId={item.poolId}
+                    chainId={item.chainId}
+                    protocolVersion={item.protocolVersion}
+                    triggerMode={ContextMenuTriggerMode.Primary}
+                  >
+                    <Flex p="$spacing6">
+                      <MoreHorizontal size={iconSizes.icon16} color="$neutral2" />
+                    </Flex>
+                  </PoolOptionItemContextMenu>
+                </OptionItemMoreButton>
+              ) : undefined
+            }
             onPress={() => {
               registerSearchItem(item)
 
-              // TODO: navigate to pool details
+              navigateToPoolDetails({ poolId: item.poolId, chainId: item.chainId })
 
               sendSearchOptionItemClickedAnalytics({
                 item,
                 section,
+                sectionIndex: index,
                 rowIndex,
                 searchFilters,
               })
@@ -109,12 +149,7 @@ export const SearchModalList = memo(function _SearchModalList({
             }}
             rightElement={
               isHoverable && rowIndex === focusedRowIndex ? (
-                <TouchableArea
-                  borderWidth={1}
-                  hoverStyle={{
-                    borderColor: '$surface3Hovered',
-                  }}
-                  borderRadius="$rounded12"
+                <OptionItemMoreButton
                   onPress={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
@@ -140,7 +175,7 @@ export const SearchModalList = memo(function _SearchModalList({
                       <MoreHorizontal size={iconSizes.icon16} color="$neutral2" />
                     </Flex>
                   </TokenOptionItemContextMenu>
-                </TouchableArea>
+                </OptionItemMoreButton>
               ) : undefined
             }
             onPress={() => {
@@ -151,6 +186,7 @@ export const SearchModalList = memo(function _SearchModalList({
               sendSearchOptionItemClickedAnalytics({
                 item,
                 section,
+                sectionIndex: index,
                 rowIndex,
                 searchFilters,
               })
@@ -171,6 +207,7 @@ export const SearchModalList = memo(function _SearchModalList({
               sendSearchOptionItemClickedAnalytics({
                 item,
                 section,
+                sectionIndex: index,
                 rowIndex,
                 searchFilters,
               })
@@ -191,6 +228,7 @@ export const SearchModalList = memo(function _SearchModalList({
               sendSearchOptionItemClickedAnalytics({
                 item,
                 section,
+                sectionIndex: index,
                 rowIndex,
                 searchFilters,
               })
@@ -211,6 +249,7 @@ export const SearchModalList = memo(function _SearchModalList({
               sendSearchOptionItemClickedAnalytics({
                 item,
                 section,
+                sectionIndex: index,
                 rowIndex,
                 searchFilters,
               })
@@ -233,6 +272,7 @@ export const SearchModalList = memo(function _SearchModalList({
               sendSearchOptionItemClickedAnalytics({
                 item,
                 section,
+                sectionIndex: index,
                 rowIndex,
                 searchFilters,
               })

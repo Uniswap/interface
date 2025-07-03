@@ -2,14 +2,22 @@ import { NativeSyntheticEvent, Share } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import configureMockStore from 'redux-mock-store'
 import { thunk } from 'redux-thunk'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { renderHookWithProviders } from 'src/test/render'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { FavoritesState } from 'uniswap/src/features/favorites/slice'
-import { SectionName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { cleanup } from 'wallet/src/test/test-utils'
+
+jest.mock('src/app/navigation/rootNavigation', () => ({
+  navigate: jest.fn(),
+}))
+
+const mockNavigate = navigate as jest.MockedFunction<typeof navigate>
 
 const tokenId = SAMPLE_SEED_ADDRESS_1
 const currencyId = `1-${tokenId}`
@@ -28,6 +36,10 @@ describe(useExploreTokenContextMenu, () => {
     chainId: 1,
     analyticsSection: SectionName.CurrencyInputPanel,
   }
+
+  beforeEach(() => {
+    mockNavigate.mockClear()
+  })
 
   describe('editing favorite tokens', () => {
     it('renders proper context menu items when onEditFavorites is not provided', async () => {
@@ -180,7 +192,7 @@ describe(useExploreTokenContextMenu, () => {
     })
   })
 
-  it('dispatches swap redux action when swap is pressed', async () => {
+  it('calls navigate with correct parameters when swap is pressed', async () => {
     const store = mockStore({
       favorites: { tokens: [] },
       selectedAppearanceSettings: { theme: 'system' },
@@ -196,21 +208,14 @@ describe(useExploreTokenContextMenu, () => {
       nativeEvent: { index: swapActionIndex },
     } as NativeSyntheticEvent<ContextMenuOnPressNativeEvent>)
 
-    const dispatchedActions = store.getActions()
-    expect(dispatchedActions).toContainEqual({
-      type: 'modals/openModal',
-      payload: {
-        name: 'swap-modal',
-        initialState: {
-          exactAmountToken: '',
-          exactCurrencyField: 'input',
-          [CurrencyField.INPUT]: null,
-          [CurrencyField.OUTPUT]: {
-            chainId: 1,
-            address: tokenId,
-            type: 'currency',
-          },
-        },
+    expect(mockNavigate).toHaveBeenCalledWith(ModalName.Swap, {
+      exactAmountToken: '',
+      exactCurrencyField: CurrencyField.INPUT,
+      [CurrencyField.INPUT]: null,
+      [CurrencyField.OUTPUT]: {
+        chainId: 1,
+        address: tokenId,
+        type: AssetType.Currency,
       },
     })
     cleanup()

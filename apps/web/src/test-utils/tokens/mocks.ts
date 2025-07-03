@@ -5,7 +5,7 @@ vi.mock('hooks/Tokens')
 vi.mock('components/AccountDrawer/MiniPortfolio/Activity/getCurrency')
 
 import { Currency, WETH9 } from '@uniswap/sdk-core'
-import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
+import { getCurrencyFromCurrencyId } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import { useCurrency, useCurrencyInfo } from 'hooks/Tokens'
 import {
   DAI_ARBITRUM_INFO,
@@ -27,50 +27,57 @@ import { mocked } from 'test-utils/mocked'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { isSameAddress } from 'utilities/src/addresses'
 
 beforeEach(() => {
   // Global mocks for token lookups. To override in a test, use `mocked().mockImplementation(...)`.
-  mocked(getCurrency).mockImplementation(async (currencyId: string, chainId: UniverseChainId) => {
-    if (currencyId.toLowerCase() === 'eth') {
+  mocked(getCurrencyFromCurrencyId).mockImplementation(async (currencyId: string) => {
+    const chainId = currencyIdToChain(currencyId)
+    const address = currencyIdToAddress(currencyId)
+    if (!chainId) {
+      return undefined
+    }
+
+    if (chainId === UniverseChainId.Mainnet && isNativeCurrencyAddress(chainId, address)) {
       return NATIVE_INFO.currency
     }
-    if (isSameAddress(currencyId, DAI.address)) {
+    if (isSameAddress(address, DAI.address)) {
       return DAI_INFO.currency
     }
-    if (isSameAddress(currencyId, USDC_MAINNET.address)) {
+    if (isSameAddress(address, USDC_MAINNET.address)) {
       return USDC_INFO.currency
     }
-    if (isSameAddress(currencyId, WETH9[UniverseChainId.Mainnet].address)) {
+    if (isSameAddress(address, WETH9[UniverseChainId.Mainnet].address)) {
       return WETH_INFO.currency
     }
-    if (isSameAddress(currencyId, USDT.address)) {
+    if (isSameAddress(address, USDT.address)) {
       return USDT_INFO.currency
     }
-    if (isSameAddress(currencyId, WBTC.address)) {
+    if (isSameAddress(address, WBTC.address)) {
       return WBTC_INFO.currency
     }
-    if (isSameAddress(currencyId, DAI_ARBITRUM_ONE.address)) {
+    if (isSameAddress(address, DAI_ARBITRUM_ONE.address)) {
       return DAI_ARBITRUM_INFO.currency
     }
-    if (isSameAddress(currencyId, USDC_ARBITRUM.address)) {
+    if (isSameAddress(address, USDC_ARBITRUM.address)) {
       return USDC_ARBITRUM_INFO.currency
     }
-    if (isSameAddress(currencyId, TEST_TOKEN_1.address)) {
+    if (isSameAddress(address, TEST_TOKEN_1.address)) {
       return TEST_TOKEN_1_INFO.currency
     }
-    if (isSameAddress(currencyId, TEST_TOKEN_2.address)) {
+    if (isSameAddress(address, TEST_TOKEN_2.address)) {
       return TEST_TOKEN_2_INFO.currency
     }
-    if (isSameAddress(currencyId, TEST_TOKEN_3.address)) {
+    if (isSameAddress(address, TEST_TOKEN_3.address)) {
       return TEST_TOKEN_3_INFO.currency
     }
     return COMMON_BASES[chainId].find((base) =>
-      base.currency.isNative ? base.currency.symbol === 'ETH' : base.currency.address === currencyId,
+      base.currency.isNative ? base.currency.symbol === 'ETH' : base.currency.address === address,
     )?.currency
   })
   mocked(useCurrency).mockImplementation(({ address, chainId }: { address?: string; chainId?: UniverseChainId }) => {
-    if (address?.toLowerCase() === 'eth') {
+    if (isNativeCurrencyAddress(UniverseChainId.Mainnet, address)) {
       return NATIVE_INFO.currency
     }
     if (isSameAddress(address, DAI.address)) {

@@ -15,13 +15,15 @@ import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-s
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
 import { defaultFeeTiers } from 'components/Liquidity/constants'
 import { FeeTierData, PositionInfo } from 'components/Liquidity/types'
-import { BIPS_BASE, ZERO_ADDRESS } from 'constants/misc'
+import { BIPS_BASE } from 'constants/misc'
 import { DYNAMIC_FEE_DATA, DynamicFeeData, FeeData } from 'pages/Pool/Positions/create/types'
 import { GeneratedIcon } from 'ui/src'
 import { Flag } from 'ui/src/components/icons/Flag'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { SwapCoin } from 'ui/src/components/icons/SwapCoin'
 import { AppTFunction } from 'ui/src/i18n/types'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -88,19 +90,6 @@ export function getProtocolStatusLabel(status: PositionStatus, t: AppTFunction):
   return undefined
 }
 
-export function parseProtocolVersion(version: string | undefined): ProtocolVersion | undefined {
-  switch (version?.toLowerCase()) {
-    case 'v2':
-      return ProtocolVersion.V2
-    case 'v3':
-      return ProtocolVersion.V3
-    case 'v4':
-      return ProtocolVersion.V4
-    default:
-      return undefined
-  }
-}
-
 export function getPositionUrl(position: PositionInfo): string {
   const chainUrlParam = getChainUrlParam(position.chainId)
   if (position.version === ProtocolVersion.V2) {
@@ -111,10 +100,12 @@ export function getPositionUrl(position: PositionInfo): string {
   return `/positions/v4/${chainUrlParam}/${position.tokenId}`
 }
 
-function parseV3FeeTier(feeTier: string | undefined): FeeAmount | undefined {
+function parseV3FeeTier(feeTier: string | undefined): FeeData | undefined {
   const parsedFee = parseInt(feeTier || '')
 
-  return parsedFee in FeeAmount ? parsedFee : undefined
+  return parsedFee in FeeAmount
+    ? { feeAmount: parsedFee, tickSpacing: DEFAULT_TICK_SPACING, isDynamic: false }
+    : undefined
 }
 
 export function getPoolFromRest({
@@ -190,7 +181,7 @@ export function getPoolFromRest({
         return new V3Pool(
           token0 as Token,
           token1 as Token,
-          feeTier,
+          feeTier.feeAmount,
           pool.currentPrice,
           pool.currentLiquidity,
           parseInt(pool.currentTick),
@@ -359,7 +350,11 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       const fee1Amount = CurrencyAmount.fromRawAmount(token1, v4Position.token1UncollectedFees)
       return {
         status: position.status,
-        feeTier: v4Position.feeTier,
+        feeTier: {
+          feeAmount: v4Position.isDynamicFee ? DYNAMIC_FEE_DATA.feeAmount : Number(v4Position.feeTier),
+          tickSpacing: Number(v4Position.tickSpacing),
+          isDynamic: v4Position.isDynamicFee,
+        },
         version: ProtocolVersion.V4,
         position: sdkPosition,
         chainId: token0.chainId,
@@ -529,20 +524,31 @@ export function getFlagWarning(flag: HookFlag, t: AppTFunction): FlagWarning | u
   }
 }
 
+export function getFeeTierKey(feeTier: number, isDynamicFee: boolean): string {
+  return feeTier + (isDynamicFee ? '-dynamic' : '')
+}
+
 export function mergeFeeTiers({
   feeTiers,
-  feeData,
+  defaultFeeData,
   formatPercent,
   formattedDynamicFeeTier,
 }: {
-  feeTiers: Record<number, FeeTierData>
-  feeData: FeeData[]
+  feeTiers: Record<string, FeeTierData>
+  defaultFeeData: FeeData[]
   formatPercent: (percent: string | number | undefined, maxDecimals?: 2 | 3 | 4) => string
   formattedDynamicFeeTier: string
-}): Record<number, FeeTierData> {
-  const result: Record<number, FeeTierData> = {}
-  for (const feeTier of feeData) {
-    result[feeTier.feeAmount] = {
+}): Record<string, FeeTierData> {
+  const result: Record<string, FeeTierData> = {}
+  const hasDynamicFeeTier = Object.values(feeTiers).some((feeTier) => isDynamicFeeTier(feeTier.fee))
+
+  for (const feeTier of defaultFeeData) {
+    if (hasDynamicFeeTier && isDynamicFeeTier(feeTier)) {
+      continue
+    }
+
+    const key = getFeeTierKey(feeTier.feeAmount, isDynamicFeeTier(feeTier))
+    result[key] = {
       fee: feeTier,
       formattedFee: isDynamicFeeTier(feeTier)
         ? formattedDynamicFeeTier
@@ -560,7 +566,7 @@ export function mergeFeeTiers({
 function getDefaultFeeTiersForChain(
   chainId: UniverseChainId | undefined,
   protocolVersion: ProtocolVersion,
-): Record<FeeAmount, { feeAmount: FeeAmount; tickSpacing: number }> {
+): Record<FeeAmount, { isDynamic: boolean; feeAmount: FeeAmount; tickSpacing: number }> {
   const feeData = Object.values(defaultFeeTiers)
     .filter((feeTier) => {
       // Only filter by chain support if we're on V3
@@ -576,7 +582,7 @@ function getDefaultFeeTiersForChain(
       acc[fee.feeAmount] = fee
       return acc
     },
-    {} as Record<FeeAmount, { feeAmount: FeeAmount; tickSpacing: number }>,
+    {} as Record<FeeAmount, { isDynamic: boolean; feeAmount: FeeAmount; tickSpacing: number }>,
   )
 }
 
@@ -676,22 +682,7 @@ export function getDefaultFeeTiersWithData({
 }
 
 export function isDynamicFeeTier(feeData: FeeData): feeData is DynamicFeeData {
-  return feeData.feeAmount === DYNAMIC_FEE_DATA.feeAmount
-}
-
-export function isDynamicFeeTierAmount(
-  feeAmount: string | number | undefined,
-): feeAmount is DynamicFeeData['feeAmount'] {
-  if (!feeAmount) {
-    return false
-  }
-
-  const feeAmountNumber = Number(feeAmount)
-  if (isNaN(feeAmountNumber)) {
-    return false
-  }
-
-  return feeAmountNumber === DYNAMIC_FEE_DATA.feeAmount
+  return feeData.isDynamic || feeData.feeAmount === DYNAMIC_FEE_DATA.feeAmount
 }
 
 export function formatTokenAmount(amount: string, decimals: number): string {

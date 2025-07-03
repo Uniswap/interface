@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useTokenBalance } from 'state/connection/hooks'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
-import { currencyId } from 'utils/currencyId'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 interface PositionCardProps {

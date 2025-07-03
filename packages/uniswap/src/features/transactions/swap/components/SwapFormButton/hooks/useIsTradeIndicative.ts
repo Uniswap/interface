@@ -1,5 +1,4 @@
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-
+import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import type { TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
 
 const getIsIndicative = (trade: TradeWithStatus): boolean => {
@@ -7,9 +6,7 @@ const getIsIndicative = (trade: TradeWithStatus): boolean => {
 }
 
 export const useIsTradeIndicative = (): boolean => {
-  const {
-    derivedSwapInfo: { trade },
-  } = useSwapFormContext()
+  const trade = useSwapFormStoreDerivedSwapInfo((s) => s.trade)
 
   return getIsIndicative(trade)
 }

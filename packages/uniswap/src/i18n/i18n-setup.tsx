@@ -83,7 +83,7 @@ i18n
     missingInterpolationHandler: (text) => {
       logger.error(new MissingI18nInterpolationError(`Missing i18n interpolation value: ${text}`), {
         tags: {
-          file: 'i18n.ts',
+          file: 'i18n-setup.tsx',
           function: 'init',
         },
       })
@@ -96,7 +96,7 @@ i18n
 i18n.on('missingKey', (_lngs, _ns, key, _res) => {
   logger.error(new Error(`Missing i18n string key ${key} for language ${i18n.language}`), {
     tags: {
-      file: 'i18n.ts',
+      file: 'i18n-setup.tsx',
       function: 'onMissingKey',
     },
   })

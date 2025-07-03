@@ -1,11 +1,10 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Pool, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { DepositInfo, DepositState } from 'components/Liquidity/types'
-import { getPoolFromRest } from 'components/Liquidity/utils'
-import { ZERO_ADDRESS } from 'constants/misc'
+import { getFeeTierKey, getPoolFromRest, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { checkIsNative, useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
@@ -48,6 +47,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { parseCurrencyFromURLParameter } from 'state/swap/hooks'
 import { PositionField } from 'types/position'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
@@ -60,6 +60,13 @@ import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPri
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { getParsedChainId } from 'utils/chainParams'
+
+function filterPoolByFeeTier(pool: Pool, feeTier: FeeData): Pool | undefined {
+  if (getFeeTierKey(feeTier.feeAmount, feeTier.isDynamic) === getFeeTierKey(pool.fee, pool.isDynamicFee)) {
+    return pool
+  }
+  return undefined
+}
 
 /**
  * @param state user-defined state for a position being created or migrated
@@ -95,7 +102,8 @@ export function useDerivedPositionInfo(
     poolsQueryEnabled,
   )
 
-  const pool = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined
+  const pool =
+    poolData?.pools && poolData.pools.length > 0 ? filterPoolByFeeTier(poolData.pools[0], state.fee) : undefined
 
   const pairResult = useV2Pair(sortedCurrencies.TOKEN0?.wrapped, sortedCurrencies.TOKEN1?.wrapped)
   const pairIsLoading = pairResult[0] === PairState.LOADING
@@ -141,8 +149,8 @@ export function useDerivedPositionInfo(
       return v3PoolResult[0] === PoolState.NOT_EXISTS
     }
 
-    return poolData?.pools && poolData.pools.length === 0
-  }, [protocolVersion, poolData?.pools, pairResult, v3PoolResult])
+    return !pool
+  }, [protocolVersion, pairResult, v3PoolResult, pool])
 
   const { price: defaultInitialPrice, isLoading: isDefaultInitialPriceLoading } = useDefaultInitialPrice({
     currencies: {
@@ -550,7 +558,7 @@ function getParsedHookAddrParam(params: ParsedQs): string | undefined {
   if (!hookAddr || typeof hookAddr !== 'string') {
     return undefined
   }
-  const validAddress = getValidAddress({ address: hookAddr })
+  const validAddress = getValidAddress({ address: hookAddr, withChecksum: true })
   return validAddress || undefined
 }
 
@@ -569,7 +577,15 @@ function getParsedFeeTierParam(params: ParsedQs): FeeData | undefined {
     return DEFAULT_FEE_DATA
   }
 
-  return { feeAmount: feeTierNumber, tickSpacing }
+  return {
+    feeAmount: feeTierNumber,
+    tickSpacing,
+    isDynamic: isDynamicFeeTier({
+      feeAmount: feeTierNumber,
+      tickSpacing,
+      isDynamic: false,
+    }),
+  }
 }
 
 // Prefill currency inputs from URL search params ?currencyA=ETH&currencyB=0x123...&chain=base&feeTier=10000&hook=0x123...

@@ -80,7 +80,6 @@ export default function Navbar() {
   const areTabsVisible = useTabsVisible()
   const collapseSearchBar = media.xl
   const account = useAccount()
-  const NAV_SEARCH_MAX_HEIGHT = 'calc(100vh - 30px)'
 
   const hideChainSelector = useShouldHideChainSelector()
 
@@ -95,10 +94,10 @@ export default function Navbar() {
           {areTabsVisible && <Tabs />}
         </Left>
 
-        {!collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
+        {!collapseSearchBar && <SearchBar />}
 
         <Right>
-          {collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
+          {collapseSearchBar && <SearchBar />}
           {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
           {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
           {!hideChainSelector && <ChainSelector />}

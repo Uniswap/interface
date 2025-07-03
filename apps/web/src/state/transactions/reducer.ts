@@ -6,8 +6,8 @@ import {
   TransactionInfo,
   TransactionType,
 } from 'state/transactions/types'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 // TODO(WEB-2053): update this to be a map of account -> chainId -> txHash -> TransactionDetails
 // to simplify usage, once we're able to invalidate localstorage
@@ -27,13 +27,21 @@ const localTransactionSlice = createSlice({
       transactions,
       {
         payload: { chainId, hash, ...details },
-      }: { payload: { chainId: UniverseChainId } & Omit<PendingTransactionDetails, 'status' | 'addedTime'> },
+      }: {
+        payload: { chainId: UniverseChainId } & Omit<
+          PendingTransactionDetails,
+          'status' | 'addedTime' | 'id' | 'transactionOriginType'
+        >
+      },
     ) {
       if (transactions[chainId]?.[hash]) {
         throw Error('Attempted to add existing transaction.')
       }
       const txs = transactions[chainId] ?? {}
       txs[hash] = {
+        id: hash,
+        chainId,
+        transactionOriginType: TransactionOriginType.Internal,
         status: TransactionStatus.Pending,
         hash,
         addedTime: Date.now(),
@@ -79,7 +87,7 @@ const localTransactionSlice = createSlice({
         payload: {
           chainId: UniverseChainId
           hash: string
-          status: TransactionStatus
+          status: TransactionStatus.Success | TransactionStatus.Failed | TransactionStatus.Pending
           info?: TransactionInfo
         }
       },

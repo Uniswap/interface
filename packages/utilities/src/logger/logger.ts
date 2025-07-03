@@ -202,3 +202,43 @@ function formatMessage({
     return [`${timeString}::${fileName}#${functionName}`, message]
   }
 }
+
+/**
+ * Factory function for creating a logger bound to a specific function and file
+ *
+ * @param fileName Name of file where logging from
+ * @param functionName Name of function where logging from
+ * @param logPrefix Optional prefix to add to log messages
+ * @returns Logger instance with debug, warn, and error methods
+ */
+export function createLogger(
+  fileName: string,
+  functionName: string,
+  logPrefix?: string,
+): {
+  debug: (message: string, extra?: unknown) => void
+  warn: (message: string, extra?: unknown) => void
+  error: (error: unknown, extra?: Record<string, unknown>) => void
+} {
+  return {
+    debug: (message: string, extra?: unknown): void => {
+      const prefixedMessage = logPrefix && !message.startsWith(logPrefix) ? `${logPrefix} ${message}` : message
+      logger.debug(fileName, functionName, prefixedMessage, extra)
+    },
+    warn: (message: string, extra?: unknown): void => {
+      const prefixedMessage = logPrefix && !message.startsWith(logPrefix) ? `${logPrefix} ${message}` : message
+      logger.warn(fileName, functionName, prefixedMessage, extra)
+    },
+    error: (error: unknown, extra?: Record<string, unknown>): void => {
+      logger.error(error as Error, {
+        tags: {
+          file: fileName,
+          function: functionName,
+        },
+        extra: {
+          ...extra,
+        },
+      })
+    },
+  }
+}

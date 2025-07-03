@@ -1,6 +1,5 @@
 import 'test-utils/tokens/mocks'
 
-import { Percent } from '@uniswap/sdk-core'
 import SwapLineItem, { SwapLineItemType } from 'components/swap/SwapLineItem'
 import { InterfaceTrade } from 'state/routing/types'
 import {
@@ -84,7 +83,6 @@ describe('SwapLineItem.tsx', () => {
         trade={LIMIT_ORDER_TRADE}
         type={SwapLineItemType.EXPIRY}
         syncing={false}
-        allowedSlippage={new Percent(0)}
       />,
     )
     // TODO: mock Date Time so we can use a snapshot test here

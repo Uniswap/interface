@@ -9,7 +9,6 @@ import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { SubmittableTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { ThemedText } from 'theme/components'
-import { chainSupportsGasEstimates } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -27,7 +26,7 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Submitt
   const { chainId } = useMultichainContext()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
-  if (!trade || !chainId || !chainSupportsGasEstimates(chainId)) {
+  if (!trade || !chainId) {
     return null
   }
 

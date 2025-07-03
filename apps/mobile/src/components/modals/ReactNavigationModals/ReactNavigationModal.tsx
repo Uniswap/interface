@@ -10,11 +10,9 @@ import { HiddenTokenInfoModal } from 'uniswap/src/features/transactions/modals/H
 import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
 import { PermissionsModal } from 'wallet/src/components/settings/permissions/PermissionsModal'
 import { PortfolioBalanceModal } from 'wallet/src/components/settings/portfolioBalance/PortfolioBalanceModal'
-import { SmartWalletCreatedModal } from 'wallet/src/components/smartWallet/modals/SmartWalletCreatedModal'
+import { SmartWalletAdvancedSettingsModal } from 'wallet/src/components/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { SmartWalletEnabledModal } from 'wallet/src/components/smartWallet/modals/SmartWalletEnabledModal'
 import { SmartWalletNudge } from 'wallet/src/components/smartWallet/modals/SmartWalletNudge'
-import { SmartWalletAdvancedSettingsModal } from 'wallet/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
-import { SmartWalletInsufficientFundsOnNetworkModal } from 'wallet/src/features/smartWallet/modals/SmartWalletInsufficientFundsOnNetworkModal'
 
 // Define names of shared modals we're explicitly supporting on mobile
 type ValidModalNames = keyof Pick<
@@ -24,9 +22,7 @@ type ValidModalNames = keyof Pick<
   | typeof ModalName.PasskeyManagement
   | typeof ModalName.PasskeysHelp
   | typeof ModalName.SmartWalletAdvancedSettingsModal
-  | typeof ModalName.SmartWalletCreatedModal
   | typeof ModalName.SmartWalletEnabledModal
-  | typeof ModalName.SmartWalletInsufficientFundsOnNetworkModal
   | typeof ModalName.SmartWalletNudge
   | typeof ModalName.PermissionsModal
   | typeof ModalName.PortfolioBalanceModal
@@ -40,9 +36,7 @@ type ModalNameWithComponentProps = {
   [ModalName.PasskeysHelp]: GetProps<typeof PasskeysHelpModal>
   [ModalName.SmartWalletNudge]: GetProps<typeof SmartWalletNudge>
   [ModalName.SmartWalletAdvancedSettingsModal]: GetProps<typeof SmartWalletAdvancedSettingsModal>
-  [ModalName.SmartWalletCreatedModal]: GetProps<typeof SmartWalletCreatedModal>
   [ModalName.SmartWalletEnabledModal]: GetProps<typeof SmartWalletEnabledModal>
-  [ModalName.SmartWalletInsufficientFundsOnNetworkModal]: GetProps<typeof SmartWalletInsufficientFundsOnNetworkModal>
   [ModalName.PermissionsModal]: GetProps<typeof PermissionsModal>
   [ModalName.PortfolioBalanceModal]: GetProps<typeof PortfolioBalanceModal>
   [ModalName.LanguageSelector]: GetProps<typeof SettingsLanguageModal>

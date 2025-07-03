@@ -9,6 +9,7 @@ import { pushNotification, resetNotifications } from 'uniswap/src/features/notif
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { isProdEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { restartApp } from 'wallet/src/components/ErrorBoundary/restartApp'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
@@ -137,7 +138,7 @@ function ErrorScreen({ error }: { error: Error }): JSX.Element {
             <Text variant="subheading1">{t('errors.crash.title')}</Text>
             <Text variant="body2">{t('errors.crash.message')}</Text>
           </Flex>
-          {error.message && __DEV__ && <Text variant="body2">{error.message}</Text>}
+          {error.message && !isProdEnv() && <Text variant="body2">{error.message}</Text>}
         </Flex>
         <Flex row alignSelf="stretch">
           <Button emphasis="primary" variant="branded" onPress={restartApp}>

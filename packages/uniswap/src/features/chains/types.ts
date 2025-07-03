@@ -79,6 +79,7 @@ export enum NetworkLayer {
 export interface RetryOptions {
   n: number
   minWait: number
+  medWait: number
   maxWait: number
 }
 
@@ -91,10 +92,6 @@ export interface BackendChain {
    */
   backendSupported: boolean
   /**
-   * Set to true if the chain does not have a specific GQLChain. Eg: Optimism-Goerli.
-   */
-  isSecondaryChain: boolean
-  /**
    * Used for spot token prices
    */
   nativeTokenBackendAddress: string | undefined
@@ -103,7 +100,6 @@ export interface BackendChain {
 type ChainRPCUrls = { http: string[] }
 export interface UniverseChainInfo extends WagmiChain {
   readonly id: UniverseChainId
-  readonly sdkId: UniswapSDKChainId
   readonly assetRepoNetworkName: string | undefined // Name used to index the network on this repo: https://github.com/Uniswap/assets/
   readonly backendChain: BackendChain
   readonly blockPerMainnetEpochForChainId: number
@@ -124,9 +120,6 @@ export interface UniverseChainInfo extends WagmiChain {
     [RPCType.Interface]: ChainRPCUrls
     [RPCType.Fallback]?: ChainRPCUrls
   }
-  readonly helpCenterUrl: string | undefined
-  readonly infoLink: string
-  readonly infuraPrefix: string | undefined
   readonly interfaceName: string
   readonly label: string
   readonly logo: ImageSourcePropType
@@ -143,8 +136,6 @@ export interface UniverseChainInfo extends WagmiChain {
   readonly spotPriceStablecoinAmount: CurrencyAmount<Token>
   readonly stablecoins: Token[]
   readonly statusPage?: string
-  readonly supportsInterfaceClientSideRouting: boolean
-  readonly supportsGasEstimates: boolean
   readonly supportsV4: boolean
   readonly urlParam: string
   readonly wrappedNativeCurrency: {

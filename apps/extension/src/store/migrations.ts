@@ -22,6 +22,7 @@ import {
   deleteExtensionOnboardingState,
   deleteHoldToSwapBehaviorHistory,
   deleteWelcomeWalletCardBehaviorHistory,
+  migrateLiquidityTransactionInfo,
   moveCurrencySetting,
   moveDismissedTokenWarnings,
   moveHapticsToUserSettings,
@@ -61,6 +62,7 @@ export const migrations = {
   23: migrateUnknownBackupAccountsToMaybeManualBackup,
   24: moveHapticsToUserSettings,
   25: removeThaiBahtFromFiatCurrency,
+  26: migrateLiquidityTransactionInfo,
 }
 
-export const EXTENSION_STATE_VERSION = 25
+export const EXTENSION_STATE_VERSION = 26

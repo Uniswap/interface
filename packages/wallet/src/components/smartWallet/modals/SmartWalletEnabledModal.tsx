@@ -3,7 +3,7 @@ import { Flex, Text } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { zIndexes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { SmartWalletModal } from 'wallet/src/features/smartWallet/modals/SmartWalletModal'
+import { SmartWalletModal } from 'wallet/src/components/smartWallet/modals/SmartWalletModal'
 
 interface SmartWalletEnabledModalProps {
   isOpen: boolean
@@ -23,19 +23,8 @@ export function SmartWalletEnabledModal({
     <SmartWalletModal
       isDismissible
       isOpen={isOpen}
-      icon={
-        <Flex
-          backgroundColor="$statusSuccess2"
-          borderRadius="$rounded12"
-          height="$spacing48"
-          width="$spacing48"
-          alignItems="center"
-          justifyContent="center"
-          mb="$spacing4"
-        >
-          <CheckCircleFilled color="$statusSuccess" size="$icon.24" />
-        </Flex>
-      }
+      icon={<CheckCircleFilled color="$statusSuccess" size="$icon.24" />}
+      iconBackgroundColor="$statusSuccess2"
       title={t('smartWallets.enabledModal.title')}
       subtext={
         <Flex gap="$gap8">

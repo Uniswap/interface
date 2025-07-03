@@ -30,7 +30,12 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
     <HelmetProvider>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
+          <BrowserRouter
+            future={{
+              v7_relativeSplatPath: true,
+              v7_startTransition: true,
+            }}
+          >
             <TestWeb3Provider>
               <MockedProvider showWarnings={false}>
                 <AssetActivityProvider>

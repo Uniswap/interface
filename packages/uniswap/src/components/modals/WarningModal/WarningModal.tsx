@@ -1,14 +1,17 @@
-import { PropsWithChildren, ReactNode, useContext } from 'react'
+import type { PropsWithChildren, ReactNode } from 'react'
 import type { ColorValue } from 'react-native'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import type { ButtonProps } from 'ui/src/components/buttons/Button/types'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { SwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import type { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
+import { useOptionalSwapFormStoreBase } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isMobileApp, isWeb } from 'utilities/src/platform'
 
@@ -32,6 +35,7 @@ type WarningModalContentProps = {
   backgroundIconColor?: ColorValue | false
   maxWidth?: number
   analyticsProperties?: Record<string, unknown>
+  buttonSize?: ButtonProps['size']
 }
 
 export type WarningModalProps = {
@@ -39,6 +43,46 @@ export type WarningModalProps = {
   isDismissible?: boolean
   zIndex?: number
 } & WarningModalContentProps
+
+function WarningModalIcon({
+  hideIcon,
+  icon,
+  backgroundIconColor,
+  alertHeaderTextColor,
+}: {
+  hideIcon?: boolean
+  icon?: ReactNode
+  backgroundIconColor?: ColorValue | false
+  alertHeaderTextColor: string
+}): JSX.Element | null {
+  const colors = useSporeColors()
+
+  if (hideIcon) {
+    return null
+  }
+
+  return (
+    <Flex
+      centered
+      alignItems="center"
+      height="$spacing48"
+      width="$spacing48"
+      borderRadius="$rounded12"
+      mb="$spacing8"
+      p={backgroundIconColor === false ? '$none' : '$spacing12'}
+      style={
+        backgroundIconColor === false
+          ? undefined
+          : {
+              backgroundColor:
+                backgroundIconColor ?? opacify(12, colors[alertHeaderTextColor as keyof typeof colors].val),
+            }
+      }
+    >
+      {icon ?? <AlertTriangleFilled color={alertHeaderTextColor} size="$icon.24" />}
+    </Flex>
+  )
+}
 
 export function WarningModalContent({
   onClose,
@@ -59,11 +103,12 @@ export function WarningModalContent({
   hideHandlebar = false,
   backgroundIconColor,
   analyticsProperties,
+  buttonSize: passedButtonSize,
 }: PropsWithChildren<WarningModalContentProps>): JSX.Element {
-  const colors = useSporeColors()
   const { headerText: alertHeaderTextColor } = getAlertColor(severity)
 
-  const buttonSize = isMobileApp ? 'medium' : 'small'
+  const defaultButtonSize = isMobileApp ? 'medium' : 'small'
+  const buttonSize = passedButtonSize ?? defaultButtonSize
 
   return (
     <Flex
@@ -74,24 +119,12 @@ export function WarningModalContent({
       pt={hideHandlebar ? '$spacing24' : '$spacing12'}
       px={isWeb ? '$none' : '$spacing24'}
     >
-      {!hideIcon && (
-        <Flex
-          centered
-          borderRadius="$rounded12"
-          mb="$spacing8"
-          p={backgroundIconColor === false ? '$none' : '$spacing12'}
-          style={
-            backgroundIconColor === false
-              ? undefined
-              : {
-                  backgroundColor:
-                    backgroundIconColor ?? opacify(12, colors[alertHeaderTextColor as keyof typeof colors].val),
-                }
-          }
-        >
-          {icon ?? <AlertTriangleFilled color={alertHeaderTextColor} size="$icon.24" />}
-        </Flex>
-      )}
+      <WarningModalIcon
+        hideIcon={hideIcon}
+        icon={icon}
+        backgroundIconColor={backgroundIconColor}
+        alertHeaderTextColor={alertHeaderTextColor}
+      />
       {title && (
         <Text textAlign="center" variant={isWeb ? 'subheading2' : 'body1'}>
           {title}
@@ -131,7 +164,7 @@ export function WarningModal(props: PropsWithChildren<WarningModalProps>): JSX.E
   const { hideHandlebar, isDismissible = true, isOpen, maxWidth, modalName, onClose, zIndex } = props
   const colors = useSporeColors()
 
-  const swapFormContext = useContext(SwapFormContext)
+  const maybeSwapFormStore = useOptionalSwapFormStoreBase()
 
   return (
     <Modal
@@ -144,11 +177,11 @@ export function WarningModal(props: PropsWithChildren<WarningModalProps>): JSX.E
       zIndex={zIndex}
       onClose={onClose}
     >
-      {swapFormContext ? (
-        // When we render this modal inside the swap flow, we want to forward the context so that it's available inside the modal's Portal.
-        <SwapFormContext.Provider value={swapFormContext}>
+      {/* TODO: WALL-7198 */}
+      {maybeSwapFormStore ? (
+        <SwapFormStoreContext.Provider value={maybeSwapFormStore}>
           <WarningModalContent {...props} />
-        </SwapFormContext.Provider>
+        </SwapFormStoreContext.Provider>
       ) : (
         <WarningModalContent {...props} />
       )}

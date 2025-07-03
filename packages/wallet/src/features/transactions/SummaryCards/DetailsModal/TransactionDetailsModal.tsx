@@ -29,20 +29,10 @@ import { TransactionDetailsInfoRows } from 'wallet/src/features/transactions/Sum
 import { TransferTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransferTransactionDetails'
 import { WrapTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/WrapTransactionDetails'
 import {
-  isApproveTransactionInfo,
-  isBridgeTransactionInfo,
-  isNFTApproveTransactionInfo,
-  isNFTMintTransactionInfo,
-  isNFTTradeTransactionInfo,
   isOffRampSaleTransactionInfo,
-  isOnRampPurchaseTransactionInfo,
-  isOnRampTransferTransactionInfo,
   isReceiveTokenTransactionInfo,
   isSendTokenTransactionInfo,
-  isSwapTransactionInfo,
   isUnknownTransactionInfo,
-  isWCConfirmTransactionInfo,
-  isWrapTransactionInfo,
 } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 import { useTransactionActions } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActions'
 import { getTransactionSummaryTitle } from 'wallet/src/features/transactions/SummaryCards/utils'
@@ -72,7 +62,9 @@ export function TransactionDetailsHeader({
   return (
     <Flex centered row justifyContent="space-between">
       <Flex centered row gap="$spacing12" flexShrink={1}>
-        <HeaderLogo transactionDetails={transactionDetails} />
+        <Flex>
+          <HeaderLogo transactionDetails={transactionDetails} />
+        </Flex>
         <Flex flexDirection="column" flexShrink={1}>
           <Flex centered row gap="$spacing4" justifyContent="flex-start">
             {(transactionDetails.routing === Routing.DUTCH_V2 ||
@@ -111,32 +103,39 @@ export function TransactionDetailsContent({
   const { typeInfo } = transactionDetails
 
   const getContentComponent = (): JSX.Element | null => {
-    if (isApproveTransactionInfo(typeInfo)) {
-      return <ApproveTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-    } else if (isNFTApproveTransactionInfo(typeInfo)) {
-      return <NftTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-    } else if (isNFTMintTransactionInfo(typeInfo)) {
-      return <NftTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-    } else if (isNFTTradeTransactionInfo(typeInfo)) {
-      return <NftTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-    } else if (isReceiveTokenTransactionInfo(typeInfo) || isSendTokenTransactionInfo(typeInfo)) {
-      return (
-        <TransferTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-      )
-    } else if (isBridgeTransactionInfo(typeInfo)) {
-      return <BridgeTransactionDetails typeInfo={typeInfo} onClose={onClose} />
-    } else if (isSwapTransactionInfo(typeInfo)) {
-      return <SwapTransactionDetails typeInfo={typeInfo} onClose={onClose} />
-    } else if (isWCConfirmTransactionInfo(typeInfo)) {
-      return <></>
-    } else if (isWrapTransactionInfo(typeInfo)) {
-      return <WrapTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-    } else if (isOnRampPurchaseTransactionInfo(typeInfo) || isOnRampTransferTransactionInfo(typeInfo)) {
-      return <OnRampTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-    } else if (isOffRampSaleTransactionInfo(typeInfo)) {
-      return <OffRampTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-    } else {
-      return null
+    switch (typeInfo.type) {
+      case TransactionType.Approve:
+        return (
+          <ApproveTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
+        )
+      case TransactionType.NFTApprove:
+      case TransactionType.NFTMint:
+      case TransactionType.NFTTrade:
+        return <NftTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
+      case TransactionType.Receive:
+      case TransactionType.Send:
+        return (
+          <TransferTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
+        )
+      case TransactionType.Bridge:
+        return <BridgeTransactionDetails typeInfo={typeInfo} onClose={onClose} />
+      case TransactionType.Swap:
+        return <SwapTransactionDetails typeInfo={typeInfo} onClose={onClose} />
+      case TransactionType.WCConfirm:
+        return <></>
+      case TransactionType.Wrap:
+        return <WrapTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
+      case TransactionType.OnRampPurchase:
+      case TransactionType.OnRampTransfer:
+        return (
+          <OnRampTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
+        )
+      case TransactionType.OffRampSale:
+        return (
+          <OffRampTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
+        )
+      default:
+        return null
     }
   }
 
@@ -153,9 +152,7 @@ const isNFTActivity = (typeInfo: TransactionTypeInfo): boolean => {
     typeInfo.assetType !== AssetType.Currency
   const isNft =
     isTransferNft ||
-    isNFTApproveTransactionInfo(typeInfo) ||
-    isNFTMintTransactionInfo(typeInfo) ||
-    isNFTTradeTransactionInfo(typeInfo)
+    [TransactionType.NFTApprove, TransactionType.NFTMint, TransactionType.NFTTrade].includes(typeInfo.type)
   return isNft
 }
 

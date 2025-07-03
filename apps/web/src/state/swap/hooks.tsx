@@ -13,7 +13,7 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/contexts/selectors'
+import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isAddress } from 'utilities/src/addresses'
 import { getParsedChainId } from 'utils/chainParams'
@@ -185,18 +185,20 @@ export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCu
   const chainId = getParsedChainId(parsedQs)
   const outputChainId = getParsedChainId(parsedQs, CurrencyField.OUTPUT)
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const inputCurrencyId = parseCurrencyFromURLParameter(parsedQs.inputCurrency ?? parsedQs.inputcurrency)
+  const parsedInputCurrencyAddress = parseCurrencyFromURLParameter(parsedQs.inputCurrency ?? parsedQs.inputcurrency)
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const parsedOutputCurrencyId = parseCurrencyFromURLParameter(parsedQs.outputCurrency ?? parsedQs.outputcurrency)
-  const outputCurrencyId =
-    parsedOutputCurrencyId === inputCurrencyId && outputChainId === chainId ? undefined : parsedOutputCurrencyId
-  const hasCurrencyInput = inputCurrencyId || outputCurrencyId
+  const parsedOutputCurrencyAddress = parseCurrencyFromURLParameter(parsedQs.outputCurrency ?? parsedQs.outputcurrency)
+  const outputCurrencyAddress =
+    parsedOutputCurrencyAddress === parsedInputCurrencyAddress && outputChainId === chainId
+      ? undefined
+      : parsedOutputCurrencyAddress
+  const hasCurrencyInput = parsedInputCurrencyAddress || outputCurrencyAddress
   const value = hasCurrencyInput ? parseFromURLParameter(parsedQs.value) : undefined
   const field = value ? parseFromURLParameter(parsedQs.field) : undefined
 
   return {
-    inputCurrencyId,
-    outputCurrencyId,
+    inputCurrencyAddress: parsedInputCurrencyAddress,
+    outputCurrencyAddress,
     value,
     field,
     chainId,
@@ -233,13 +235,13 @@ export function useInitialCurrencyState(): {
   const isSupportedChainCompatible = isTestnetModeEnabled === !!supportedChainInfo.testnet
 
   const hasCurrencyQueryParams =
-    parsedCurrencyState.inputCurrencyId || parsedCurrencyState.outputCurrencyId || parsedCurrencyState.chainId
+    parsedCurrencyState.inputCurrencyAddress || parsedCurrencyState.outputCurrencyAddress || parsedCurrencyState.chainId
 
   useEffect(() => {
-    if (parsedCurrencyState.inputCurrencyId || parsedCurrencyState.outputCurrencyId) {
+    if (parsedCurrencyState.inputCurrencyAddress || parsedCurrencyState.outputCurrencyAddress) {
       setIsUserSelectedToken(true)
     }
-  }, [parsedCurrencyState.inputCurrencyId, parsedCurrencyState.outputCurrencyId, setIsUserSelectedToken])
+  }, [parsedCurrencyState.inputCurrencyAddress, parsedCurrencyState.outputCurrencyAddress, setIsUserSelectedToken])
 
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
     // Default to native if no query params or chain is not compatible with testnet or mainnet mode
@@ -251,15 +253,15 @@ export function useInitialCurrencyState(): {
       }
     }
     // Handle query params or disconnected state
-    if (parsedCurrencyState.inputCurrencyId) {
+    if (parsedCurrencyState.inputCurrencyAddress) {
       return {
-        initialInputCurrencyAddress: parsedCurrencyState.inputCurrencyId,
+        initialInputCurrencyAddress: parsedCurrencyState.inputCurrencyAddress,
         initialChainId: supportedChainId,
       }
     }
     // return ETH or parsedCurrencyState
     return {
-      initialInputCurrencyAddress: parsedCurrencyState.outputCurrencyId ? undefined : 'ETH',
+      initialInputCurrencyAddress: parsedCurrencyState.outputCurrencyAddress ? undefined : 'ETH',
       initialChainId: supportedChainId,
     }
     // We do not want to rerender on a change to persistedFilteredChainIds
@@ -267,8 +269,8 @@ export function useInitialCurrencyState(): {
   }, [
     hasCurrencyQueryParams,
     isSupportedChainCompatible,
-    parsedCurrencyState.inputCurrencyId,
-    parsedCurrencyState.outputCurrencyId,
+    parsedCurrencyState.inputCurrencyAddress,
+    parsedCurrencyState.outputCurrencyAddress,
     supportedChainId,
     defaultChainId,
   ])
@@ -278,10 +280,10 @@ export function useInitialCurrencyState(): {
   const initialOutputCurrencyAddress = useMemo(
     () =>
       // clear output if identical unless there's a supported outputChainId which means we're bridging
-      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyId && !outputChainIsSupported
+      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyAddress && !outputChainIsSupported
         ? undefined
-        : parsedCurrencyState.outputCurrencyId,
-    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyId, outputChainIsSupported],
+        : parsedCurrencyState.outputCurrencyAddress,
+    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyAddress, outputChainIsSupported],
   )
 
   const initialInputCurrency = useCurrency({ address: initialInputCurrencyAddress, chainId: initialChainId })

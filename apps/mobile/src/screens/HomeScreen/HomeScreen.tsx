@@ -43,7 +43,7 @@ import { useHomeScreenState } from 'src/screens/HomeScreen/useHomeScreenState'
 import { useHomeScreenTracking } from 'src/screens/HomeScreen/useHomeScreenTracking'
 import { useHomeScrollRefs } from 'src/screens/HomeScreen/useHomeScrollRefs'
 import { useOpenBackupReminderModal } from 'src/utils/useOpenBackupReminderModal'
-import { Flex, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
+import { Flex, Image, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import { SMART_WALLET_UPGRADE_FALLBACK, SMART_WALLET_UPGRADE_VIDEO } from 'ui/src/assets'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -59,6 +59,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
+import { SmartWalletCreatedModal } from 'wallet/src/components/smartWallet/modals/SmartWalletCreatedModal'
 import { SmartWalletUpgradeModals } from 'wallet/src/components/smartWallet/modals/SmartWalletUpgradeModal'
 import { useOpenSmartWalletNudgeOnCompletedSwap } from 'wallet/src/components/smartWallet/smartAccounts/hook'
 import { selectHasSeenCreatedSmartWalletModal } from 'wallet/src/features/behaviorHistory/selectors'
@@ -292,7 +293,11 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   const MemoizedVideo = useMemo(() => {
     if (hasVideoError) {
-      return undefined
+      return (
+        <Flex width="100%" borderRadius="$rounded12" overflow="hidden">
+          <Image height={200} source={SMART_WALLET_UPGRADE_FALLBACK} maxWidth="100%" />
+        </Flex>
+      )
     }
 
     return (
@@ -537,6 +542,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   )
 
   const hasSeenCreatedSmartWalletModal = useSelector(selectHasSeenCreatedSmartWalletModal)
+  const [shouldShowCreatedModal, setShouldShowCreatedModal] = useState(false)
 
   // Setup listener for account creation events to show the SmartWalletCreatedModal
   useAccountCountChanged(
@@ -544,10 +550,16 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       if (hasSeenCreatedSmartWalletModal) {
         return
       }
-      navigate(ModalName.SmartWalletCreatedModal)
-      dispatch(setHasSeenSmartWalletCreatedWalletModal())
+      setShouldShowCreatedModal(true)
     }),
   )
+
+  const shouldOpenSmartWalletCreatedModal =
+    isSmartWalletEnabled &&
+    isTabsDataLoaded &&
+    isLayoutReady &&
+    shouldShowCreatedModal &&
+    !hasSeenCreatedSmartWalletModal
 
   useOpenSmartWalletNudgeOnCompletedSwap(
     useEvent(() => {
@@ -614,6 +626,14 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
           onEnableSmartWallet={handleSmartWalletEnable}
         />
       )}
+
+      <SmartWalletCreatedModal
+        isOpen={shouldOpenSmartWalletCreatedModal}
+        onClose={() => {
+          setShouldShowCreatedModal(false)
+          dispatch(setHasSeenSmartWalletCreatedWalletModal())
+        }}
+      />
     </Screen>
   )
 }

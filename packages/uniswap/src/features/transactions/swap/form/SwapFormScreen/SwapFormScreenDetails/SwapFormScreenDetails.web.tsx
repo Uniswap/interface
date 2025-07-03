@@ -3,13 +3,17 @@ import { SwapFormButton } from 'uniswap/src/features/transactions/swap/component
 import { ExpandableRows } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/ExpandableRows'
 import { SwapFormScreenFooter } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/SwapFormScreenFooter'
 import { SwapFormWarningModals } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormWarningModals/SwapFormWarningModals'
-import { useSwapFormScreenState } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContext'
-import { SwapFormWarningStateProvider } from 'uniswap/src/features/transactions/swap/form/context/SwapFormWarningStateContextProvider'
+import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
+import { SwapFormWarningStoreContextProvider } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/SwapFormWarningStoreContextProvider'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 
 export function SwapFormScreenDetails(): JSX.Element {
   const isPriceUXEnabled = usePriceUXEnabled()
-  const { tokenColor, isBridge, showFooter } = useSwapFormScreenState()
+  const { tokenColor, isBridge, showFooter } = useSwapFormScreenStore((state) => ({
+    tokenColor: state.tokenColor,
+    isBridge: state.isBridge,
+    showFooter: state.showFooter,
+  }))
 
   return (
     <Accordion collapsible type="single" overflow="hidden">
@@ -22,10 +26,10 @@ export function SwapFormScreenDetails(): JSX.Element {
             `}</style>
         <Flex>
           <Flex>
-            <SwapFormWarningStateProvider>
+            <SwapFormWarningStoreContextProvider>
               <SwapFormButton tokenColor={tokenColor} />
               <SwapFormWarningModals />
-            </SwapFormWarningStateProvider>
+            </SwapFormWarningStoreContextProvider>
           </Flex>
           <SwapFormScreenFooter />
         </Flex>

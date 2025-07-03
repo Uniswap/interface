@@ -1,6 +1,7 @@
 import { PersistState } from 'redux-persist'
-import { TransactionDetails } from 'state/transactions/types'
+import { TransactionInfo } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 interface SerializableTransactionReceipt {
   to: string
@@ -21,6 +22,36 @@ export interface OldTransactionState {
       confirmedTime?: number
       deadline?: number
     }
+  }
+}
+
+interface BaseTransactionDetails {
+  status: TransactionStatus
+  hash: string
+  batchInfo?: { connectorId?: string; batchId: string; chainId: UniverseChainId }
+  addedTime: number
+  from: string
+  info: TransactionInfo
+  nonce?: number
+  cancelled?: true
+}
+
+interface PendingTransactionDetails extends BaseTransactionDetails {
+  status: TransactionStatus.Pending
+  lastCheckedBlockNumber?: number
+  deadline?: number
+}
+
+interface ConfirmedTransactionDetails extends BaseTransactionDetails {
+  status: TransactionStatus.Confirmed | TransactionStatus.Failed
+  confirmedTime: number
+}
+
+type TransactionDetails = PendingTransactionDetails | ConfirmedTransactionDetails
+
+export interface NewTransactionState {
+  [chainId: number]: {
+    [txHash: string]: TransactionDetails
   }
 }
 
@@ -49,7 +80,7 @@ export const migration12 = (state: PersistAppStateV12 | undefined) => {
           : TransactionStatus.Failed
         : TransactionStatus.Pending
 
-      ;(tx as TransactionDetails).status = status
+      ;(tx as unknown as { status: TransactionStatus }).status = status
 
       transactionsForChain[txHash] = tx
     }

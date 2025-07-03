@@ -28,6 +28,10 @@ import {
 } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
 import ms from 'ms'
 import { MockExpiredUniswapXOrder, MockFilledUniswapXOrder, MockOpenUniswapXOrder } from 'state/signatures/fixtures'
+import { DAI } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 
 const swapOrderTokenChanges = {
   TokenTransfer: [mockTokenTransferOutPartsFragment, mockTokenTransferInPartsFragment],
@@ -166,10 +170,10 @@ describe('parseRemote', () => {
       expect(result).toEqual({
         inputAmount: '100',
         inputAmountRaw: '100000000000000000000',
-        inputCurrencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+        inputCurrencyAddress: DAI.address,
         outputAmount: '100',
         outputAmountRaw: '100000000000000000000',
-        outputCurrencyId: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+        outputCurrencyAddress: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
         sent: mockTokenTransferOutPartsFragment,
         received: mockTokenTransferInPartsFragment,
       })
@@ -207,7 +211,7 @@ describe('parseRemote', () => {
         vi.fn().mockReturnValue('100'),
       )
       expect(result).toEqual({
-        chainId: 1,
+        chainId: UniverseChainId.Mainnet,
         status: 'filled',
         id: 'tx123',
         offerer: '0xSenderAddress',
@@ -215,13 +219,13 @@ describe('parseRemote', () => {
         swapInfo: {
           expectedOutputCurrencyAmountRaw: '100000000000000000000',
           inputCurrencyAmountRaw: '100000000000000000000',
-          inputCurrencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+          inputCurrencyId: currencyId(DAI),
           isUniswapXOrder: true,
           minimumOutputCurrencyAmountRaw: '100000000000000000000',
-          outputCurrencyId: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+          outputCurrencyId: buildCurrencyId(UniverseChainId.Mainnet, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'),
           settledOutputCurrencyAmountRaw: '100000000000000000000',
           tradeType: 0,
-          type: 1,
+          type: TransactionType.Swap,
         },
         txHash: '0xHashValue',
         addedTime: 10000,

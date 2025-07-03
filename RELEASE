@@ -1,5 +1,23 @@
-We are back with some new updates! Here’s the latest:
+IPFS hash of the deployment:
+- CIDv0: `QmVMmzyLJzZeEwCaC5HcAseaRJrdoXFo442sw692wG2Def`
+- CIDv1: `bafybeidijorazwioy33ekcfbv2zyvthhjtklisrk6aoyxl6evmoro4jpka`
 
-- Adaptive app icons that match your custom android themes
-- Performance Improvements
-- Various bug fixes and performance improvements
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
+
+IPFS gateways:
+- https://bafybeidijorazwioy33ekcfbv2zyvthhjtklisrk6aoyxl6evmoro4jpka.ipfs.dweb.link/
+- [ipfs://QmVMmzyLJzZeEwCaC5HcAseaRJrdoXFo442sw692wG2Def/](ipfs://QmVMmzyLJzZeEwCaC5HcAseaRJrdoXFo442sw692wG2Def/)
+
+## 5.102.0 (2025-07-03)
+
+
+### Features
+
+* **web:** Warn instead of error for known bug - prod (#21504) 534ada4
+
+

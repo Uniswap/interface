@@ -5,12 +5,12 @@ import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useEvent } from 'utilities/src/react/hooks'
 import { Connector } from 'wagmi'
 
 /** Stores objects/utils that exist on all platforms, abstracting away app-level specifics for each, in order to allow usage in cross-platform code. */
 interface UniswapContextValue {
-  account?: AccountMeta
   connector?: Connector
   navigateToBuyOrReceiveWithEmptyWallet?: () => void
   navigateToFiatOnRamp: (args: { prefilledCurrency?: FiatOnRampCurrency }) => void
@@ -20,6 +20,7 @@ interface UniswapContextValue {
   navigateToTokenDetails: (currencyId: string) => void
   navigateToExternalProfile: (args: { address: Address }) => void
   navigateToNftCollection: (args: { collectionAddress: Address; chainId: UniverseChainId }) => void
+  navigateToPoolDetails: (args: { poolId: Address; chainId: UniverseChainId }) => void
   handleShareToken: (args: { currencyId: string }) => void
   onSwapChainsChanged: (args: {
     chainId: UniverseChainId
@@ -48,7 +49,6 @@ export const UniswapContext = createContext<UniswapContextValue | null>(null)
 
 export function UniswapProvider({
   children,
-  account,
   connector,
   navigateToBuyOrReceiveWithEmptyWallet,
   navigateToFiatOnRamp,
@@ -58,6 +58,7 @@ export function UniswapProvider({
   navigateToTokenDetails,
   navigateToExternalProfile,
   navigateToNftCollection,
+  navigateToPoolDetails,
   handleShareToken,
   onSwapChainsChanged,
   signer,
@@ -77,7 +78,6 @@ export function UniswapProvider({
 
   const value: UniswapContextValue = useMemo(
     () => ({
-      account,
       connector,
       navigateToBuyOrReceiveWithEmptyWallet,
       navigateToFiatOnRamp,
@@ -87,6 +87,7 @@ export function UniswapProvider({
       navigateToTokenDetails,
       navigateToExternalProfile,
       navigateToNftCollection,
+      navigateToPoolDetails,
       handleShareToken,
       onSwapChainsChanged: ({
         chainId,
@@ -116,7 +117,6 @@ export function UniswapProvider({
       getSwapDelegationInfo,
     }),
     [
-      account,
       connector,
       navigateToBuyOrReceiveWithEmptyWallet,
       navigateToFiatOnRamp,
@@ -126,6 +126,7 @@ export function UniswapProvider({
       navigateToTokenDetails,
       navigateToExternalProfile,
       navigateToNftCollection,
+      navigateToPoolDetails,
       handleShareToken,
       signer,
       useProviderHook,
@@ -164,7 +165,17 @@ export function useUniswapContextSelector<T>(selector: (ctx: UniswapContextValue
 
 /** Cross-platform util for getting metadata for the active account/wallet, regardless of platform/environment. */
 export function useAccountMeta(): AccountMeta | undefined {
-  return useUniswapContext().account
+  const wallet = useWallet()
+  return useMemo(() => {
+    if (!wallet.evmAccount) {
+      return undefined
+    }
+
+    return {
+      address: wallet.evmAccount.address,
+      type: wallet.evmAccount.accountType,
+    }
+  }, [wallet])
 }
 
 /** Cross-platform util for getting connector for the active account/wallet, only applicable to web, other platforms are undefined. */

@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, UniswapXText } from 'ui/src'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
-import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
+import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 
 export function RouterLabel(): JSX.Element | null {
-  const { trade } = useSwapTxContext()
+  const trade = useSwapTxStore((s) => s.trade)
   const { t } = useTranslation()
 
   if (!trade) {

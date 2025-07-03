@@ -11,7 +11,7 @@ import {
 import { ETH_MAINNET, ETH_SEPOLIA } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { renderHook, waitFor } from 'test-utils/render'
-import { UNI, USDC_OPTIMISM, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { DAI, UNI, USDC_OPTIMISM, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { GQL_MAINNET_CHAINS, GQL_TESTNET_CHAINS } from 'uniswap/src/features/chains/chainInfo'
@@ -68,8 +68,8 @@ describe('hooks', () => {
           ),
         ),
       ).toEqual({
-        outputCurrencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-        inputCurrencyId: 'ETH',
+        outputCurrencyAddress: DAI.address,
+        inputCurrencyAddress: 'ETH',
       })
     })
 
@@ -82,8 +82,8 @@ describe('hooks', () => {
           ),
         ),
       ).toEqual({
-        outputCurrencyId: '0x6fd9d7AD17242c41f7131d257212c54A0e816691',
-        inputCurrencyId: 'ETH',
+        outputCurrencyAddress: '0x6fd9d7AD17242c41f7131d257212c54A0e816691',
+        inputCurrencyAddress: 'ETH',
         chainId: 10,
       })
     })
@@ -94,8 +94,8 @@ describe('hooks', () => {
           parse('?outputCurrency=invalid', { parseArrays: false, ignoreQueryPrefix: true }),
         ),
       ).toEqual({
-        inputCurrencyId: undefined,
-        outputCurrencyId: undefined,
+        inputCurrencyAddress: undefined,
+        outputCurrencyAddress: undefined,
       })
     })
 
@@ -105,8 +105,8 @@ describe('hooks', () => {
           parse('?outputCurrency=eth&value=20.5', { parseArrays: false, ignoreQueryPrefix: true }),
         ),
       ).toEqual({
-        outputCurrencyId: 'ETH',
-        inputCurrencyId: undefined,
+        outputCurrencyAddress: 'ETH',
+        inputCurrencyAddress: undefined,
         value: '20.5',
         field: undefined,
         chainId: undefined,
@@ -119,8 +119,8 @@ describe('hooks', () => {
           parse('?outputcurrency=eth&value=20.5', { parseArrays: false, ignoreQueryPrefix: true }),
         ),
       ).toEqual({
-        outputCurrencyId: 'ETH',
-        inputCurrencyId: undefined,
+        outputCurrencyAddress: 'ETH',
+        inputCurrencyAddress: undefined,
         value: '20.5',
         field: undefined,
         chainId: undefined,
@@ -229,6 +229,7 @@ describe('hooks', () => {
         navigateToFiatOnRamp: () => {},
         navigateToTokenDetails: () => {},
         navigateToExternalProfile: () => {},
+        navigateToPoolDetails: () => {},
         navigateToNftCollection: () => {},
         navigateToSendFlow: () => {},
         navigateToReceive: () => {},

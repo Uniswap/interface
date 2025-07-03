@@ -1,23 +1,24 @@
-import { TFunction } from 'i18next'
+import type { TFunction } from 'i18next'
 import isEqual from 'lodash/isEqual'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ParsedWarnings, Warning } from 'uniswap/src/components/modals/WarningModal/types'
+import type { ParsedWarnings, Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
-import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import {
   getNetworkWarning,
   useFormattedWarnings,
 } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { getBalanceWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getBalanceWarning'
 import { getFormIncompleteWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getFormIncompleteWarning'
 import { getPriceImpactWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getPriceImpactWarning'
 import { getSwapWarningFromError } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getSwapWarningFromError'
 import { getTokenBlockedWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getTokenBlockedWarning'
-import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
+import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { getPriceImpact } from 'uniswap/src/features/transactions/swap/utils/getPriceImpact'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
 import { useMemoCompare } from 'utilities/src/react/hooks'
@@ -92,8 +93,8 @@ function useSwapWarnings(derivedSwapInfo: DerivedSwapInfo): Warning[] {
 
 export function useParsedSwapWarnings(): ParsedWarnings {
   const account = useAccountMeta()
-  const { derivedSwapInfo } = useSwapFormContext()
-  const { gasFee } = useSwapTxContext()
+  const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
+  const gasFee = useSwapTxStore((s) => s.gasFee)
 
   const swapWarnings = useSwapWarnings(derivedSwapInfo)
 

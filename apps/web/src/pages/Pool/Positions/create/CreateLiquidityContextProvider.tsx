@@ -55,7 +55,11 @@ const DEFAULT_DEPOSIT_STATE: DepositState = {
   exactAmounts: {},
 }
 
-const DEFAULT_FEE_DATA = { feeAmount: FeeAmount.MEDIUM, tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM] }
+const DEFAULT_FEE_DATA = {
+  feeAmount: FeeAmount.MEDIUM,
+  tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM],
+  isDynamic: false,
+}
 
 const DEFAULT_POSITION_STATE: PositionState = {
   fee: DEFAULT_FEE_DATA,

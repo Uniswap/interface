@@ -561,7 +561,7 @@ describe(parseOnRampTransaction, () => {
   it('OnRampTransfer: parse transfer', () => {
     expect(parseOnRampTransaction(MOCK_ONRAMP_TRANSFER)).toEqual({
       type: TransactionType.OnRampTransfer,
-      destinationTokenAddress: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+      destinationTokenAddress: DAI.address,
       destinationTokenAmount: 1,
       destinationTokenSymbol: 'asset_symbol',
       id: 'transaction_reference_id',
@@ -581,7 +581,7 @@ describe(parseOnRampTransaction, () => {
   it('OnRampTransfer: parse purchase', () => {
     expect(parseOnRampTransaction(MOCK_ONRAMP_PURCHASE)).toEqual({
       type: TransactionType.OnRampPurchase,
-      destinationTokenAddress: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+      destinationTokenAddress: DAI.address,
       destinationTokenAmount: 1,
       destinationTokenSymbol: 'asset_symbol',
       sourceAmount: 1,

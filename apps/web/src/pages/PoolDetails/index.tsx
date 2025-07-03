@@ -115,7 +115,7 @@ export default function PoolDetailsPage() {
       calculateApr({
         volume24h: poolData?.volumeUSD24H,
         tvl: poolData?.tvlUSD,
-        feeTier: poolData?.feeTier,
+        feeTier: poolData?.feeTier?.feeAmount,
       }),
     [poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier],
   )
@@ -234,7 +234,7 @@ export default function PoolDetailsPage() {
                 chainId={chainInfo.id}
                 token0={token0}
                 token1={token1}
-                feeTier={poolData?.feeTier}
+                feeTier={poolData?.feeTier?.feeAmount}
                 hookAddress={poolData?.hookAddress}
                 protocolVersion={poolData?.protocolVersion}
                 loading={loading}

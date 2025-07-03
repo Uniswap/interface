@@ -1,17 +1,12 @@
 import { TokenQueryData } from 'appGraphql/data/Token'
 import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable'
-import { UNSUPPORTED_METADATA_CHAINS } from 'components/Tokens/constants'
 import { TokenSortMethod } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { ExternalLink } from 'theme/components/Links'
 import { textFadeIn } from 'theme/styles'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -78,14 +73,10 @@ function Stat({
 }
 
 type StatsSectionProps = {
-  chainId: UniverseChainId
-  address: string
   tokenQueryData: TokenQueryData
 }
 export default function StatsSection(props: StatsSectionProps) {
-  const { chainId, address, tokenQueryData } = props
-  const isSupportedChain = useIsSupportedChainId(chainId)
-  const { label, infoLink } = isSupportedChain ? getChainInfo(chainId) : { label: undefined, infoLink: undefined }
+  const { tokenQueryData } = props
 
   const tokenMarketInfo = tokenQueryData?.market
   const tokenProjectMarketInfo = tokenQueryData?.project?.markets?.[0] // aggregated market price from CoinGecko
@@ -136,27 +127,6 @@ export default function StatsSection(props: StatsSectionProps) {
       </StatsWrapper>
     )
   } else {
-    return UNSUPPORTED_METADATA_CHAINS.includes(chainId) ? (
-      <>
-        <Header>
-          <Trans i18nKey="common.stats" />
-        </Header>
-        <ThemedText.BodySecondary pt="12px">
-          <Trans
-            i18nKey="tdp.stats.unsupportedChainDescription"
-            values={{
-              chain: label,
-              infoLink: (
-                <ExternalLink color="currentColor" href={`${infoLink}tokens/${address}`}>
-                  info.uniswap.org
-                </ExternalLink>
-              ),
-            }}
-          />
-        </ThemedText.BodySecondary>
-      </>
-    ) : (
-      <NoData data-cy="token-details-no-stats-data">No stats available</NoData>
-    )
+    return <NoData data-cy="token-details-no-stats-data">No stats available</NoData>
   }
 }

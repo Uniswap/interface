@@ -27,13 +27,25 @@ export const selectHasViewedConnectionMigration = (state: WalletState): boolean 
 export const selectHasCopiedPrivateKeys = (state: WalletState): boolean =>
   state.behaviorHistory.hasCopiedPrivateKeys ?? false
 
-export const selectHasDismissedSmartWalletHomeScreenNudge = (state: WalletState, walletAddress: string): boolean =>
-  state.behaviorHistory.smartWalletNudge?.[walletAddress]?.hasDismissedHomeScreenNudge ?? false
+export const selectHasDismissedSmartWalletHomeScreenNudge = (state: WalletState, walletAddress: string): boolean => {
+  if (selectIsAllSmartWalletNudgesDisabled(state, walletAddress)) {
+    return true
+  }
+
+  return state.behaviorHistory.smartWalletNudge?.[walletAddress]?.hasDismissedHomeScreenNudge ?? false
+}
 
 // eslint-disable-next-line max-params
 export const selectHasShownEip5792Nudge = (state: WalletState, walletAddress: string, dappUrl: string): boolean => {
+  if (selectIsAllSmartWalletNudgesDisabled(state, walletAddress)) {
+    return true
+  }
+
   return state.behaviorHistory.smartWalletNudge?.[walletAddress]?.dappUrlToHasShownNudge?.[dappUrl] ?? false
 }
+
+export const selectIsAllSmartWalletNudgesDisabled = (state: WalletState, walletAddress: string): boolean =>
+  state.behaviorHistory.smartWalletNudge?.[walletAddress]?.isAllSmartWalletNudgesDisabled ?? false
 
 const MAX_NUDGES: number = 2
 const NUDGE_INTERVAL: number = ONE_DAY_MS * 14 // 2 weeks if you're bad at math
@@ -43,6 +55,10 @@ export const selectShouldShowPostSwapNudge = (state: WalletState, walletAddress:
 
   if (!smartWalletNudgeInfo) {
     return true
+  }
+
+  if (selectIsAllSmartWalletNudgesDisabled(state, walletAddress)) {
+    return false
   }
 
   const { lastPostSwapNudge, numPostSwapNudges } = smartWalletNudgeInfo

@@ -25,7 +25,6 @@ import {
   GetCallsStatusRequest,
   GetCallsStatusResponse,
   GetCapabilitiesRequest,
-  GetCapabilitiesResponse,
   ParsedCall,
   SendCallsRequest,
   SendCallsResponse,
@@ -44,8 +43,6 @@ import { navigate } from 'src/app/navigation/state'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import getCalldataInfoFromTransaction from 'src/background/utils/getCalldataInfoFromTransaction'
 import { call, put, select, take } from 'typed-redux-saga'
-import { checkWalletDelegation } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { WalletCheckDelegationResponseBody } from 'uniswap/src/data/tradingApi/__generated__'
 import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -58,12 +55,11 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { hexToNumber } from 'uniswap/src/utils/hex'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { getCallsStatusHelper } from 'wallet/src/features/batchedTransactions/eip5792Utils'
 import { addBatchedTransaction } from 'wallet/src/features/batchedTransactions/slice'
-import { generateBatchId, getCapabilitiesForDelegationStatus } from 'wallet/src/features/batchedTransactions/utils'
+import { generateBatchId, getCapabilitiesCore } from 'wallet/src/features/batchedTransactions/utils'
 import { Call } from 'wallet/src/features/dappRequests/types'
 import {
   ExecuteTransactionParams,
@@ -527,34 +523,15 @@ export function* handleUniswapOpenSidebarRequest(request: UniswapOpenSidebarRequ
  */
 export function* handleGetCapabilities(request: GetCapabilitiesRequest, senderTabInfo: SenderTabInfo) {
   const { chains: enabledChains } = yield* call(getEnabledChainIdsSaga)
-
-  const chainIds = request.chainIds?.map(hexToNumber) ?? enabledChains.map((chain) => chain.valueOf())
-
-  let delegationStatusResponse: WalletCheckDelegationResponseBody | undefined
-
-  try {
-    delegationStatusResponse = yield* call(checkWalletDelegation, {
-      walletAddresses: [request.address],
-      chainIds,
-    })
-  } catch (error) {
-    logger.error(error, {
-      tags: { file: 'dappRequestSaga', function: 'handleGetCapabilities' },
-      extra: { request },
-    })
-  }
-
   const hasSmartWalletConsent = yield* select(selectHasSmartWalletConsent, request.address)
-  const capabilities = getCapabilitiesForDelegationStatus(
-    delegationStatusResponse?.delegationDetails[request.address],
-    hasSmartWalletConsent,
-  )
+  const chainIds = request.chainIds?.map(hexadecimalStringToInt) ?? enabledChains.map((chain) => chain.valueOf())
 
-  const response: GetCapabilitiesResponse = {
-    type: DappResponseType.GetCapabilitiesResponse,
-    requestId: request.requestId,
-    response: capabilities,
-  }
+  const response = yield* call(getCapabilitiesCore, {
+    request,
+    chainIds,
+    hasSmartWalletConsent,
+  })
+
   yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, response)
 }
 

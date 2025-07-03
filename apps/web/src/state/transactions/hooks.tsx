@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { addTransaction, cancelTransaction, removeTransaction } from 'state/transactions/reducer'
 import {
+  BaseTransactionType,
   PendingTransactionDetails,
   TransactionDetails,
   TransactionInfo,
@@ -14,6 +15,8 @@ import {
 } from 'state/transactions/types'
 import { isConfirmedTx, isPendingTx } from 'state/transactions/utils'
 import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { TransactionType as UniswapTransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
@@ -36,7 +39,7 @@ export function useTransactionAdder(): (
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      const chainId = ('chainId' in info && info.chainId) || account.chainId
+      const chainId: UniverseChainId = toSupportedChainId(response.chainId) || account.chainId
       dispatch(addTransaction({ hash, from: account.address, info, chainId, nonce, deadline }))
     },
     [account.address, account.chainId, account.status, dispatch],
@@ -142,11 +145,11 @@ function usePendingApprovalAmount(token?: Token, spender?: string): BigNumber | 
     // eslint-disable-next-line guard-for-in
     for (const txHash in allTransactions) {
       const tx = allTransactions[txHash]
-      if (!tx || isConfirmedTx(tx) || tx.info.type !== TransactionType.APPROVAL) {
+      if (!tx || isConfirmedTx(tx) || tx.info.type !== UniswapTransactionType.Approve) {
         continue
       }
       if (tx.info.spender === spender && tx.info.tokenAddress === token.address && isTransactionRecent(tx)) {
-        return BigNumber.from(tx.info.amount)
+        return BigNumber.from(tx.info.approvalAmount)
       }
     }
     return undefined
@@ -185,13 +188,16 @@ function usePendingLPTransactions(): PendingTransactionDetails[] {
         (tx): tx is PendingTransactionDetails =>
           tx.from === account.address &&
           isPendingTx(tx) &&
-          [
-            TransactionType.INCREASE_LIQUIDITY,
-            TransactionType.DECREASE_LIQUIDITY,
-            TransactionType.CREATE_POSITION,
-            TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4,
-            TransactionType.COLLECT_FEES,
-          ].includes(tx.info.type),
+          (
+            [
+              UniswapTransactionType.LiquidityIncrease,
+              UniswapTransactionType.LiquidityDecrease,
+              UniswapTransactionType.CreatePool,
+              UniswapTransactionType.CreatePair,
+              TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4,
+              UniswapTransactionType.CollectFees,
+            ] as BaseTransactionType[]
+          ).includes(tx.info.type),
       ),
     [account.address, allTransactions],
   )

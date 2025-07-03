@@ -3,9 +3,9 @@ import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/
 import { Page, downloadAppModalPageAtom } from 'components/NavBar/DownloadApp/Modal'
 import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
 import { DownloadWalletRow } from 'components/WalletModal/DownloadWalletRow'
-import { AlternativeOption, Option } from 'components/WalletModal/Option'
 import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
 import { UniswapWalletOptions } from 'components/WalletModal/UniswapWalletOptions'
+import { AlternativeOption, EVMOption } from 'components/WalletModal/WalletConnectorOption'
 import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useModalState } from 'hooks/useModalState'
@@ -120,18 +120,21 @@ export default function WalletModal() {
             {(recentConnectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID || isMobileWeb) &&
               isEmbeddedWalletEnabled && (
                 <>
-                  <Option connectorId={CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID} />
+                  <EVMOption connectorId={CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID} />
                   <Separator />
                 </>
               )}
             {connectors.map((c, index) => (
               <>
-                <Option connectorId={c.id} key={c.uid} detected={c.isInjected} />
+                <EVMOption connectorId={c.id} key={c.uid} detected={c.isInjected} />
                 {index < connectors.length - 1 || isEmbeddedWalletEnabled ? <Separator /> : null}
               </>
             ))}
             {isEmbeddedWalletEnabled && !isMobileWeb && (
-              <Option connectorId={AlternativeOption.OTHER_WALLETS} onPress={() => setMenu(MenuState.OTHER_WALLETS)} />
+              <EVMOption
+                connectorId={AlternativeOption.OTHER_WALLETS}
+                onPress={() => setMenu(MenuState.OTHER_WALLETS)}
+              />
             )}
           </Flex>
         </Flex>

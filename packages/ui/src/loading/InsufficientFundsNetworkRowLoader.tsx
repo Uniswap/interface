@@ -16,8 +16,8 @@ export const InsufficientFundsNetworkRowLoader = ({ opacity }: { opacity: number
         <Flex
           backgroundColor="$neutral3"
           borderRadius="$rounded8"
-          height={iconSizes.icon28}
-          width={iconSizes.icon28}
+          height={iconSizes.icon24}
+          width={iconSizes.icon24}
           ml="$spacing6"
         />
         <Flex shrink alignItems="flex-start" ml="$spacing4">

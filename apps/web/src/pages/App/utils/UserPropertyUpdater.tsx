@@ -25,7 +25,9 @@ export function UserPropertyUpdater() {
     setUserProperty(InterfaceUserPropertyName.GitCommitHash, process.env.REACT_APP_GIT_COMMIT_HASH ?? 'unknown')
 
     // Service Worker analytics
-    const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker.controller)
+    // This null check is necessary to avoid a crash on mobile browsers like Safari.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker?.controller)
     const serviceWorkerProperty = isServiceWorkerInstalled ? 'installed' : 'uninstalled'
 
     let cache = 'unknown'

@@ -3,6 +3,7 @@ query TopV4Pools($chain: Chain!, $first: Int!, $cursor: Float, $tokenAddress: St
     id
     protocolVersion
     poolId
+    isDynamicFee
     hook {
       id
       address

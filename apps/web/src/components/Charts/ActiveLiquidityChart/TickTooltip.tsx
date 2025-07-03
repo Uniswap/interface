@@ -76,6 +76,10 @@ export function TickTooltipContent({
 
   const price0 = typeof hoveredTick.price0 === 'string' ? parseFloat(hoveredTick.price0) : hoveredTick.price0
   const showQuoteCurrency = showQuoteCurrencyFirst ? currentPrice >= price0 : currentPrice <= price0
+  const isCurrentTick = hoveredTick.tick === currentTick
+
+  const displayAmountQuoteUSD = isCurrentTick ? amountQuoteLockedUSD.divide(2) : amountQuoteLockedUSD
+  const displayAmountBaseUSD = isCurrentTick ? amountBaseLockedUSD.divide(2) : amountBaseLockedUSD
 
   return (
     <Flex
@@ -89,7 +93,7 @@ export function TickTooltipContent({
       pointerEvents="none"
       {...props}
     >
-      {(showQuoteCurrency || hoveredTick.tick === currentTick) && (
+      {(showQuoteCurrency || isCurrentTick) && (
         <Flex justifyContent="space-between" row alignItems="center" gap="$gap8">
           <Flex row gap="$gap4" alignItems="center">
             <DoubleCurrencyLogo currencies={[quoteCurrency]} size={iconSizes.icon16} />
@@ -97,14 +101,14 @@ export function TickTooltipContent({
           </Flex>
           <Flex row alignItems="center" gap="$gap4">
             <Text variant="body4">
-              {convertFiatAmountFormatted(amountQuoteLockedUSD.toExact(), NumberType.FiatTokenStats)}
+              {convertFiatAmountFormatted(displayAmountQuoteUSD.toExact(), NumberType.FiatTokenStats)}
             </Text>
             <Text variant="body4" color="$neutral2">
               {formatPercent(
-                hoveredTick.tick === currentTick
+                isCurrentTick
                   ? new Percent(
-                      amountQuoteLockedUSD.quotient,
-                      amountBaseLockedUSD.add(amountQuoteLockedUSD).quotient,
+                      displayAmountQuoteUSD.quotient,
+                      displayAmountBaseUSD.add(displayAmountQuoteUSD).quotient,
                     ).toSignificant()
                   : 100,
               )}
@@ -112,7 +116,7 @@ export function TickTooltipContent({
           </Flex>
         </Flex>
       )}
-      {(!showQuoteCurrency || hoveredTick.tick === currentTick) && (
+      {(!showQuoteCurrency || isCurrentTick) && (
         <Flex justifyContent="space-between" row alignItems="center" gap="$gap8">
           <Flex row gap="$gap4" alignItems="center">
             <DoubleCurrencyLogo currencies={[baseCurrency]} size={iconSizes.icon16} />
@@ -120,14 +124,14 @@ export function TickTooltipContent({
           </Flex>
           <Flex row alignItems="center" gap="$gap4">
             <Text variant="body4">
-              {convertFiatAmountFormatted(amountBaseLockedUSD.toExact(), NumberType.FiatTokenStats)}
+              {convertFiatAmountFormatted(displayAmountBaseUSD.toExact(), NumberType.FiatTokenStats)}
             </Text>
             <Text variant="body4" color="$neutral2">
               {formatPercent(
-                hoveredTick.tick === currentTick
+                isCurrentTick
                   ? new Percent(
-                      amountBaseLockedUSD.quotient,
-                      amountQuoteLockedUSD.add(amountBaseLockedUSD).quotient,
+                      displayAmountBaseUSD.quotient,
+                      displayAmountQuoteUSD.add(displayAmountBaseUSD).quotient,
                     ).toSignificant()
                   : 100,
               )}

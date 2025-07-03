@@ -140,7 +140,8 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   }, [chainId, gasFee.value])
 
   const inputError = useMemo(() => {
-    const insufficientBalance = parsedTokenAmount && inputCurrencyBalance?.lessThan(parsedTokenAmount)
+    const insufficientBalance =
+      parsedTokenAmount && (!inputCurrencyBalance || inputCurrencyBalance.lessThan(parsedTokenAmount))
     if (insufficientBalance) {
       return SendInputError.INSUFFICIENT_FUNDS
     }

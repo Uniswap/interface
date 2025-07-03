@@ -272,6 +272,8 @@ delete v24SchemaIntermediate.appearanceSettings.hapticsEnabled
 
 export const v24Schema = v24SchemaIntermediate
 
-const v25Schema = { ...v24Schema }
+export const v25Schema = { ...v24Schema }
 
-export const getSchema = (): typeof v25Schema => v25Schema
+const v26Schema = { ...v25Schema }
+
+export const getSchema = (): typeof v26Schema => v26Schema

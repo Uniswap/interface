@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { POLYGON_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { DAI_POLYGON, USDC_POLYGON } from 'uniswap/src/constants/tokens'
@@ -18,14 +17,12 @@ import { polygon } from 'wagmi/chains'
 export const POLYGON_CHAIN_INFO = {
   ...polygon,
   id: UniverseChainId.Polygon,
-  sdkId: UniswapSDKChainId.POLYGON,
   assetRepoNetworkName: 'polygon',
   blockPerMainnetEpochForChainId: 5,
   backendChain: {
     chain: BackendChainId.Polygon as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: '0x0000000000000000000000000000000000001010',
-    isSecondaryChain: false,
   },
   blockWaitMsBeforeWarning: 600000,
   bridge: 'https://portal.polygon.technology/bridge',
@@ -36,9 +33,6 @@ export const POLYGON_CHAIN_INFO = {
     url: 'https://polygonscan.com/',
     apiURL: 'https://api.polygonscan.com',
   },
-  helpCenterUrl: undefined,
-  infoLink: 'https://app.uniswap.org/explore/tokens/polygon',
-  infuraPrefix: 'polygon-mainnet',
   interfaceName: 'polygon',
   label: 'Polygon',
   logo: POLYGON_LOGO,
@@ -61,8 +55,6 @@ export const POLYGON_CHAIN_INFO = {
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
   stablecoins: [USDC_POLYGON, DAI_POLYGON],
   statusPage: undefined,
-  supportsInterfaceClientSideRouting: true,
-  supportsGasEstimates: true,
   supportsV4: true,
   urlParam: 'polygon',
   wrappedNativeCurrency: {

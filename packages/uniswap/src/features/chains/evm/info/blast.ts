@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { BLAST_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { USDB_BLAST } from 'uniswap/src/constants/tokens'
@@ -22,12 +21,10 @@ import { blast } from 'wagmi/chains'
 export const BLAST_CHAIN_INFO = {
   ...blast,
   id: UniverseChainId.Blast,
-  sdkId: UniswapSDKChainId.BLAST,
   assetRepoNetworkName: 'blast',
   backendChain: {
     chain: BackendChainId.Blast as GqlChainId,
     backendSupported: true,
-    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 1,
@@ -40,9 +37,6 @@ export const BLAST_CHAIN_INFO = {
     url: 'https://blastscan.io/',
     apiURL: 'https://api.blastscan.io',
   },
-  helpCenterUrl: undefined,
-  infoLink: 'https://app.uniswap.org/explore/tokens/blast',
-  infuraPrefix: 'blast-mainnet',
   interfaceName: 'blast',
   label: 'Blast',
   logo: BLAST_LOGO,
@@ -51,8 +45,6 @@ export const BLAST_CHAIN_INFO = {
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDB_BLAST, 10_000e18),
   stablecoins: [USDB_BLAST],
   statusPage: undefined,
-  supportsInterfaceClientSideRouting: false,
-  supportsGasEstimates: true,
   supportsV4: true,
   urlParam: 'blast',
   nativeCurrency: {

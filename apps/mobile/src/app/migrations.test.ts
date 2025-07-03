@@ -91,6 +91,7 @@ import {
   v86Schema,
   v87Schema,
   v88Schema,
+  v89Schema,
   v8Schema,
   v9Schema,
 } from 'src/app/schema'
@@ -134,6 +135,7 @@ import {
   testAddCreatedOnboardingRedesignAccount,
   testAddedHapticSetting,
   testDeleteWelcomeWalletCard,
+  testMigrateLiquidityTransactionInfoRename,
   testMovedCurrencySetting,
   testMovedLanguageSetting,
   testMovedTokenWarnings,
@@ -1720,5 +1722,9 @@ describe('Redux state migrations', () => {
 
     const v88Stub2 = { ...v88Schema, userSettings: { ...v88Schema.userSettings, currentCurrency: 'JPY' } }
     testRemoveTHBFromCurrency(migrations[89], v88Stub2)
+  })
+
+  it('migrates from v89 to v90', () => {
+    testMigrateLiquidityTransactionInfoRename(migrations[90], v89Schema)
   })
 })

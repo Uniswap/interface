@@ -1,5 +1,4 @@
 /* eslint-disable max-lines */
-import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { getPermissions } from 'src/app/features/dappRequests/permissions'
 import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
@@ -129,7 +128,7 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
       })?.source
 
       this.setChainIdAndMaybeEmit(message.chainId)
-      this.setProvider(new JsonRpcProvider(message.providerUrl, BigNumber.from(message.chainId).toString()))
+      this.setProvider(new JsonRpcProvider(message.providerUrl, parseInt(message.chainId)))
       source?.postMessage({
         requestId: message.requestId,
         result: message.chainId,
@@ -289,7 +288,7 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
   }): void {
     this.setConnectedAddressesAndMaybeEmit(connectedAddresses)
     this.setChainIdAndMaybeEmit(chainId)
-    this.setProvider(new JsonRpcProvider(providerUrl, BigNumber.from(chainId).toString()))
+    this.setProvider(new JsonRpcProvider(providerUrl, parseInt(chainId)))
   }
 
   // eslint-disable-next-line complexity

@@ -265,6 +265,8 @@ export enum NavBarSearchTypes {
   RecentSearch = 'recent',
   TokenSuggestion = 'token-suggestion',
   TokenTrending = 'token-trending',
+  PoolSuggestion = 'pool-suggestion',
+  PoolTrending = 'pool-trending',
 }
 
 export enum WalletConnectionResult {
@@ -312,14 +314,20 @@ export type SwapPriceImpactActionProperties = {
   response: SwapPriceImpactUserResponse
 }
 
-export type InterfaceSearchResultSelectionProperties = {
+type InterfaceSearchResultSelectionProperties = {
   suggestion_type: NavBarSearchTypes
   query_text: string
   position?: number
+  sectionPosition?: number
   selected_search_result_name?: string
   selected_search_result_address?: string
   total_suggestions?: number
   chainId?: UniverseChainId
+
+  // Pool specific properties
+  protocol_version?: string
+  fee_tier?: number
+  hook_address?: string
 } & ITraceContext
 
 type WrapProperties = {
@@ -564,6 +572,10 @@ export type UniverseEventProperties = {
   [InterfaceEventName.LimitPriceReversed]: undefined
   [InterfaceEventName.LimitExpirySelected]: {
     value: LimitsExpiry
+  }
+  [InterfaceEventName.SwapConfirmedOnClient]: {
+    swap_success: boolean
+    time: number
   }
   [InterfaceEventName.SwapTabClicked]: {
     tab: SwapTab

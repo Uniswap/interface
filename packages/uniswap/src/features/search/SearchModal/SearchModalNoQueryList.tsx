@@ -1,17 +1,20 @@
-import { memo, useCallback, useMemo } from 'react'
+import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
-import { Flex, Text, TouchableArea } from 'ui/src'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { useTrendingTokensCurrencyInfos } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensCurrencyInfos'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useNftSearchResultsToNftCollectionOptions } from 'uniswap/src/components/lists/items/nfts/useNftSearchResultsToNftCollectionOptions'
+import { usePoolStatsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolStatsToPoolOptions'
 import { SearchModalOption } from 'uniswap/src/components/lists/items/types'
 import { useFavoriteWalletOptions } from 'uniswap/src/components/lists/items/wallets/useFavoriteWalletOptions'
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { useSearchPopularNftCollectionsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
+import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRecentSearchesButton'
 import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import {
   NUMBER_OF_RESULTS_LONG,
@@ -19,24 +22,9 @@ import {
   NUMBER_OF_RESULTS_SHORT,
 } from 'uniswap/src/features/search/SearchModal/constants'
 import { useRecentlySearchedOptions } from 'uniswap/src/features/search/SearchModal/hooks/useRecentlySearchedOptions'
-import { getMockTrendingPoolsSection } from 'uniswap/src/features/search/SearchModal/mocks'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
-import { clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { isMobileApp, isWeb } from 'utilities/src/platform'
 import noop from 'utilities/src/react/noop'
-
-function ClearButton({ onPress }: { onPress: () => void }): JSX.Element {
-  const { t } = useTranslation()
-  return (
-    <Flex height="100%" justifyContent="center" alignItems="center">
-      <TouchableArea onPress={onPress}>
-        <Text color="$neutral2" variant="buttonLabel3">
-          {t('common.clear')}
-        </Text>
-      </TouchableArea>
-    </Flex>
-  )
-}
 
 function useSectionsForNoQuerySearch({
   chainFilter,
@@ -45,20 +33,16 @@ function useSectionsForNoQuerySearch({
   chainFilter: UniverseChainId | null
   activeTab: SearchTab
 }): GqlResult<OnchainItemSection<SearchModalOption>[]> {
-  const dispatch = useDispatch()
-
   const recentlySearchedOptions: SearchModalOption[] = useRecentlySearchedOptions({
     chainFilter,
     activeTab,
     numberOfRecentSearchResults: NUMBER_OF_RESULTS_SHORT,
   })
-  const onPressClearSearchHistory = useCallback((): void => {
-    dispatch(clearSearchHistory())
-  }, [dispatch])
+
   const recentSearchSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.RecentSearches,
     options: recentlySearchedOptions,
-    endElement: <ClearButton onPress={onPressClearSearchHistory} />,
+    endElement: <ClearRecentSearchesButton />,
   })
 
   const numberOfTrendingTokens =
@@ -80,6 +64,31 @@ function useSectionsForNoQuerySearch({
     options: trendingTokenOptions?.slice(0, numberOfTrendingTokens),
   })
 
+  // Load trending pools by 24H volume
+  const numberOfTrendingPools = activeTab === SearchTab.All ? NUMBER_OF_RESULTS_SHORT : NUMBER_OF_RESULTS_LONG
+  const poolQueryVariables = useMemo(
+    () => ({
+      input: { chainId: chainFilter ? chainFilter.toString() : ALL_NETWORKS_ARG },
+      enabled: isWeb && (activeTab === SearchTab.All || activeTab === SearchTab.Pools),
+      select: (data: ExploreStatsResponse): PoolStats[] | undefined =>
+        data.stats?.poolStats
+          .sort((a, b) => (b.volume1Day?.value ?? 0) - (a.volume1Day?.value ?? 0)) // Sort by 24h volume
+          .slice(0, numberOfTrendingPools),
+    }),
+    [activeTab, chainFilter, numberOfTrendingPools],
+  )
+  const {
+    data: topPools,
+    isLoading: topPoolsLoading,
+    error: topPoolsError,
+    refetch: refetchPools,
+  } = useExploreStatsQuery<PoolStats[] | undefined>(poolQueryVariables)
+  const trendingPoolOptions = usePoolStatsToPoolOptions(topPools)
+  const trendingPoolSection = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.TrendingPools,
+    options: trendingPoolOptions,
+  })
+
   // Load popular NFTs by top trading volume
   const skipPopularNftsQuery = isWeb || (activeTab !== SearchTab.NFTCollections && activeTab !== SearchTab.All)
   const {
@@ -99,6 +108,7 @@ function useSectionsForNoQuerySearch({
     options: favoriteWalletsOptions,
   })
 
+  // eslint-disable-next-line complexity
   return useMemo((): GqlResult<OnchainItemSection<SearchModalOption>[]> => {
     let sections: OnchainItemSection<SearchModalOption>[] = []
 
@@ -112,12 +122,12 @@ function useSectionsForNoQuerySearch({
           refetch: refetchTokens,
         }
       case SearchTab.Pools:
-        sections = [...(recentSearchSection ?? []), ...getMockTrendingPoolsSection(15)]
+        sections = [...(recentSearchSection ?? []), ...(trendingPoolSection ?? [])]
         return {
           data: sections,
-          loading: loadingTokens,
-          error: tokensError,
-          refetch: refetchTokens,
+          loading: topPoolsLoading || Boolean(topPools?.length && !trendingPoolOptions.length),
+          error: topPoolsError ?? undefined,
+          refetch: refetchPools,
         }
       case SearchTab.Wallets:
         return {
@@ -128,7 +138,7 @@ function useSectionsForNoQuerySearch({
         }
       case SearchTab.NFTCollections:
         return {
-          data: [...(recentSearchSection ?? []), ...(popularNftSection ?? [])], // add recent nft searches
+          data: [...(recentSearchSection ?? []), ...(popularNftSection ?? [])],
           loading: loadingPopularNfts,
           error: popularNftsError,
           refetch: noop,
@@ -136,13 +146,11 @@ function useSectionsForNoQuerySearch({
       default:
       case SearchTab.All:
         if (isWeb) {
-          sections = [
-            ...(recentSearchSection ?? []),
-            ...(trendingTokenSection ?? []),
-            ...getMockTrendingPoolsSection(3),
-          ]
+          sections = [...(recentSearchSection ?? []), ...(trendingTokenSection ?? []), ...(trendingPoolSection ?? [])]
+        } else {
+          sections = [...(recentSearchSection ?? []), ...(trendingTokenSection ?? []), ...(popularNftSection ?? [])]
         }
-        sections = [...(recentSearchSection ?? []), ...(trendingTokenSection ?? []), ...(popularNftSection ?? [])]
+
         return {
           data: sections,
           loading: loadingTokens,
@@ -152,14 +160,20 @@ function useSectionsForNoQuerySearch({
     }
   }, [
     activeTab,
+    topPools?.length,
+    trendingPoolOptions.length,
+    topPoolsError,
+    topPoolsLoading,
     favoriteWalletsSection,
     loadingPopularNfts,
     loadingTokens,
     popularNftSection,
     popularNftsError,
     recentSearchSection,
+    refetchPools,
     refetchTokens,
     tokensError,
+    trendingPoolSection,
     trendingTokenSection,
   ])
 }

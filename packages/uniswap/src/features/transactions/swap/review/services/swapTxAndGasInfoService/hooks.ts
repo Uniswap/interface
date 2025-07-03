@@ -1,45 +1,46 @@
-import { UseQueryResult, queryOptions, useQuery } from '@tanstack/react-query'
+import type { UseQueryResult } from '@tanstack/react-query'
+import { queryOptions, useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
-import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
+import type { GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import type { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import {
-  ApprovalTxInfo,
-  useTokenApprovalInfo,
-} from 'uniswap/src/features/transactions/swap/contexts/hooks/useTokenApprovalInfo'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
+import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
+import { useTokenApprovalInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import { createBridgeSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/bridge/bridgeSwapTxAndGasInfoService'
 import { createClassicSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/classic/classicSwapTxAndGasInfoService'
 import { FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import { createEVMSwapInstructionsService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapInstructionsService'
 import { usePresignPermit } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/hooks'
 import { createDecorateSwapTxInfoServiceWithEVMLogging } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/logging'
-import {
+import type {
   RoutingServicesMap,
   SwapTxAndGasInfoParameters,
   SwapTxAndGasInfoService,
-  createSwapTxAndGasInfoService,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
+import { createSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
 import { createUniswapXSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/uniswapx/uniswapXSwapTxAndGasInfoService'
 import { createWrapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/wrap/wrapTxAndGasInfoService'
-import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import {
+  useSwapFormStore,
+  useSwapFormStoreDerivedSwapInfo,
+} from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import type { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { WithOptional } from 'utilities/src/typescript/withOptional'
 
-type SwapQueryParams = WithOptional<SwapTxAndGasInfoParameters, 'trade'>
+type SwapQueryParams = Optional<SwapTxAndGasInfoParameters, 'trade'>
 
 const EMPTY_SWAP_TX_AND_GAS_INFO: SwapTxAndGasInfo = {
   routing: Routing.CLASSIC,
@@ -58,25 +59,22 @@ const EMPTY_SWAP_TX_AND_GAS_INFO: SwapTxAndGasInfo = {
 // TODO(swap arch): replace with swap config service
 function useSwapConfig(): {
   v4SwapEnabled: boolean
-  activeGasStrategy: GasStrategy
-  shadowGasStrategies: GasStrategy[]
+  gasStrategy: GasStrategy
   getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
   getSwapDelegationInfo?: (chainId: UniverseChainId | undefined) => SwapDelegationInfo
 } {
-  const { chainId } = useSwapFormContext().derivedSwapInfo
-  const activeGasStrategy = useActiveGasStrategy(chainId, 'general')
-  const shadowGasStrategies = useShadowGasStrategies(chainId, 'general')
+  const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
+  const gasStrategy = useActiveGasStrategy(chainId, 'general')
   const v4SwapEnabled = useV4SwapEnabled(chainId)
   const { getCanBatchTransactions, getSwapDelegationInfo } = useUniswapContext()
   return useMemo(
     () => ({
       v4SwapEnabled,
-      activeGasStrategy,
-      shadowGasStrategies,
+      gasStrategy,
       getCanBatchTransactions,
       getSwapDelegationInfo,
     }),
-    [v4SwapEnabled, activeGasStrategy, shadowGasStrategies, getCanBatchTransactions, getSwapDelegationInfo],
+    [v4SwapEnabled, gasStrategy, getCanBatchTransactions, getSwapDelegationInfo],
   )
 }
 
@@ -231,7 +229,7 @@ function useSwapParams(): {
   derivedSwapInfo: DerivedSwapInfo
   trade: Trade | undefined
 } {
-  const { derivedSwapInfo } = useSwapFormContext()
+  const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
 
   const account = useAccountMeta()
 

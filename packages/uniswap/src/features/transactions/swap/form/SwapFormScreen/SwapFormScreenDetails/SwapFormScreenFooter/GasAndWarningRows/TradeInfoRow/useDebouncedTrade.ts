@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import type { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 
 // TODO: WALLL-6294
 export function useDebouncedTrade(): Trade | IndicativeTrade | undefined {
-  const {
-    derivedSwapInfo: { trade },
-  } = useSwapFormContext()
+  const trade = useSwapFormStoreDerivedSwapInfo((s) => s.trade)
   const [debouncedTrade, setDebouncedTrade] = useState<Trade | IndicativeTrade>()
 
   useEffect(() => {

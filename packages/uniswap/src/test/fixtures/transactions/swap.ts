@@ -19,7 +19,7 @@ import {
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { benignSafetyInfo } from 'uniswap/src/test/fixtures'
-import { createGasFeeEstimates } from 'uniswap/src/test/fixtures/tradingApi'
+import { createGasEstimate } from 'uniswap/src/test/fixtures/tradingApi'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export const TWENTY_MINUTES_FROM_NOW = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from now
@@ -63,7 +63,7 @@ export const createMockTradeWithStatus = (
   isIndicativeLoading: false,
   isLoading: false,
   error: null,
-  gasEstimates: createGasFeeEstimates(),
+  gasEstimate: createGasEstimate(),
 })
 
 export function createMockDerivedSwapInfo({

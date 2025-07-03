@@ -8,8 +8,10 @@ import { assume0xAddress } from 'utils/wagmi'
 import { parseEther } from 'viem'
 
 test.describe('Wrap', () => {
+  test.describe.configure({ retries: 3 })
+
   test('should wrap ETH', async ({ page }) => {
-    await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.swap)
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
 
     await page.goto(`/swap`)
     await page.getByTestId(TestID.ChooseOutputToken).click()
@@ -24,7 +26,7 @@ test.describe('Wrap', () => {
   })
 
   test('should unwrap WETH', async ({ page, anvil }) => {
-    await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.swap)
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
 
     await anvil.setErc20Balance({
       address: assume0xAddress(WETH_ADDRESS(UniverseChainId.Mainnet)),

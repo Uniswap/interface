@@ -22,13 +22,7 @@ export const InsufficientFundsNetworkRow = memo(function _InsufficientFundsNetwo
   const { t } = useTranslation()
 
   return (
-    <Flex
-      backgroundColor="$surface1"
-      borderRadius="$rounded16"
-      flexDirection="row"
-      justifyContent="space-between"
-      py="$spacing8"
-    >
+    <Flex backgroundColor="$surface1" borderRadius="$rounded16" flexDirection="row" justifyContent="space-between">
       <Flex row shrink alignItems="center" gap="$spacing12" overflow="hidden">
         <NetworkLogoWarning hasSufficientFunds={networkInfo.hasSufficientFunds} chainId={networkInfo.chainId} />
         <Flex shrink alignItems="flex-start">

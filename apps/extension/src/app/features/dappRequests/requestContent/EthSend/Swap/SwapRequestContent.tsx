@@ -41,6 +41,7 @@ function getTransactionTypeInfo({
 interface SwapRequestContentProps {
   transactionGasFeeResult: GasFeeResult
   parsedCalldata: UniversalRouterCall
+  showSmartWalletActivation?: boolean
   onCancel: () => Promise<void>
   onConfirm: (transactionTypeInfo?: TransactionTypeInfo) => Promise<void>
 }
@@ -48,6 +49,7 @@ interface SwapRequestContentProps {
 export function SwapRequestContent({
   transactionGasFeeResult,
   parsedCalldata,
+  showSmartWalletActivation,
   onCancel,
   onConfirm,
 }: SwapRequestContentProps): JSX.Element {
@@ -97,6 +99,7 @@ export function SwapRequestContent({
       outputAmount={outputAmount}
       outputCurrencyInfo={currencyInfo1}
       transactionGasFeeResult={transactionGasFeeResult}
+      showSmartWalletActivation={showSmartWalletActivation}
       isWrap={false}
       isUnwrap={false}
       onCancel={onCancel}

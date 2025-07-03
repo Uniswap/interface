@@ -9,7 +9,7 @@ import {
   Routing,
   TransactionFailureReason,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { FeeType, GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/utils'
 import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
@@ -60,7 +60,7 @@ describe('processWrapResponse', () => {
       maxFeePerGas: '100000000000',
       maxPriorityFeePerGas: '1000000000',
     })
-    expect(result.gasEstimate.wrapEstimates).toBe(gasFeeResult.gasEstimates)
+    expect(result.gasEstimate.wrapEstimate).toBe(gasFeeResult.gasEstimate)
     expect(result.swapRequestArgs).toBeUndefined()
   })
 })
@@ -113,11 +113,9 @@ describe('processWrapResponse (smart contract unwrap fallback)', () => {
 describe('createPrepareSwapRequestParams', () => {
   it('should prepare swap request params for classic quote', () => {
     // Given
-    const activeGasStrategy = DEFAULT_GAS_STRATEGY
-    const shadowGasStrategies: GasStrategy[] = []
+    const gasStrategy = DEFAULT_GAS_STRATEGY
     const prepareParams = createPrepareSwapRequestParams({
-      activeGasStrategy,
-      shadowGasStrategies,
+      gasStrategy,
     })
 
     const swapQuoteResponse = {
@@ -342,8 +340,8 @@ describe('getShouldSkipSwapRequest', () => {
 })
 
 describe('createProcessSwapResponse', () => {
-  const activeGasStrategy = DEFAULT_GAS_STRATEGY
-  const processSwapResponse = createProcessSwapResponse({ activeGasStrategy })
+  const gasStrategy = DEFAULT_GAS_STRATEGY
+  const processSwapResponse = createProcessSwapResponse({ gasStrategy })
 
   it('should process successful swap response', () => {
     // Given
@@ -363,16 +361,14 @@ describe('createProcessSwapResponse', () => {
           chainId: 1,
         },
       ],
-      gasEstimates: [
-        {
-          strategy: DEFAULT_GAS_STRATEGY,
-          gasLimit: '21000',
-          maxFeePerGas: '100000000000',
-          maxPriorityFeePerGas: '1000000000',
-          type: FeeType.EIP1559,
-          gasFee: '1000',
-        },
-      ],
+      gasEstimate: {
+        strategy: DEFAULT_GAS_STRATEGY,
+        gasLimit: '21000',
+        maxFeePerGas: '100000000000',
+        maxPriorityFeePerGas: '1000000000',
+        type: FeeType.EIP1559,
+        gasFee: '1000',
+      },
     } as const satisfies SwapData
 
     // When
@@ -397,11 +393,7 @@ describe('createProcessSwapResponse', () => {
       txRequests: response.transactions,
       permitData: { fakePermitField: 'hi' },
       gasEstimate: {
-        swapEstimates: {
-          activeEstimate: response.gasEstimates[0],
-          shadowEstimates: [],
-        },
-        wrapEstimates: undefined,
+        swapEstimate: response.gasEstimate,
       },
       swapRequestArgs: { quote: swapQuote },
     })

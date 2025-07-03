@@ -1,11 +1,11 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
+import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import {
-  GasFeeEstimates,
   TransactionOptions,
   TransactionOriginType,
   TransactionType,
@@ -24,12 +24,12 @@ export type WrapParams = {
   account: AccountMeta
   inputCurrencyAmount: CurrencyAmount<Currency>
   skipPushNotification?: boolean
-  gasEstimates?: GasFeeEstimates
+  gasEstimate?: GasEstimate
 }
 
 export function* wrap(params: WrapParams) {
   try {
-    const { account, inputCurrencyAmount, txRequest, txId, skipPushNotification, swapTxId, gasEstimates } = params
+    const { account, inputCurrencyAmount, txRequest, txId, skipPushNotification, swapTxId, gasEstimate } = params
     let typeInfo: TransactionTypeInfo
 
     if (inputCurrencyAmount.currency.isNative) {
@@ -38,7 +38,7 @@ export function* wrap(params: WrapParams) {
         unwrapped: false,
         currencyAmountRaw: inputCurrencyAmount.quotient.toString(),
         swapTxId,
-        gasEstimates,
+        gasEstimate,
       }
     } else {
       typeInfo = {
@@ -46,7 +46,7 @@ export function* wrap(params: WrapParams) {
         unwrapped: true,
         currencyAmountRaw: inputCurrencyAmount.quotient.toString(),
         swapTxId,
-        gasEstimates,
+        gasEstimate,
       }
     }
 

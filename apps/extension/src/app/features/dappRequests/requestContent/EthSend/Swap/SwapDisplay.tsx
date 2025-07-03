@@ -20,6 +20,7 @@ export function SwapDisplay({
   outputCurrencyInfo,
   chainId,
   transactionGasFeeResult,
+  showSmartWalletActivation,
   onCancel,
   onConfirm,
   isUniswapX,
@@ -32,6 +33,7 @@ export function SwapDisplay({
   outputCurrencyInfo: Maybe<CurrencyInfo>
   chainId: UniverseChainId | null
   transactionGasFeeResult?: GasFeeResult
+  showSmartWalletActivation?: boolean
   onCancel?: () => Promise<void>
   onConfirm?: () => Promise<void>
   isUniswapX?: boolean
@@ -92,6 +94,7 @@ export function SwapDisplay({
       isUniswapX={isUniswapX}
       title={title}
       transactionGasFeeResult={transactionGasFeeResult}
+      showSmartWalletActivation={showSmartWalletActivation}
       onCancel={onCancel}
       onConfirm={onConfirm}
     >

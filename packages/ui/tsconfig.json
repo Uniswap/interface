@@ -12,7 +12,6 @@
     "types": [
       "chrome",
       "jest",
-      "cypress"
     ]
   }
 }

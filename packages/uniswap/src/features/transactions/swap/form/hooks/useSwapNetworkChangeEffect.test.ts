@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react-native'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useSwapNetworkChangeEffect } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapNetworkChangeEffect'
+import { useSwapNetworkChangeEffect } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/hooks/useSwapNetworkChangeEffect'
 
 jest.mock('uniswap/src/contexts/UniswapContext', () => ({
   useUniswapContext: jest.fn(),

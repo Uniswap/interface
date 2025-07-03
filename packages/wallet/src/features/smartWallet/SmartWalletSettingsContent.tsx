@@ -1,12 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Flex, ScrollView, Text, TouchableArea } from 'ui/src'
 import { CloudSlash, QuestionInCircleFilled, RoundExclamation } from 'ui/src/components/icons'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { iconSizes, zIndexes } from 'ui/src/theme'
+import { fonts, iconSizes, zIndexes } from 'ui/src/theme'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -14,18 +13,16 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { SmartWalletEducationalModal } from 'wallet/src/components/smartWallet/modals/SmartWalletEducationalModal'
-import { SmartWalletEnabledModal } from 'wallet/src/components/smartWallet/modals/SmartWalletEnabledModal'
-import { SmartWalletUnavailableModal } from 'wallet/src/components/smartWallet/modals/SmartWalletUnavailableModal'
-import { setHasDismissedSmartWalletHomeScreenNudge } from 'wallet/src/features/behaviorHistory/slice'
-import { SmartWalletDisableModal } from 'wallet/src/features/smartWallet/SmartWalletDisableModal'
+import { setIsAllSmartWalletNudgesDisabled } from 'wallet/src/features/behaviorHistory/slice'
+import {
+  SmartWalletModalsManager,
+  useSmartWalletModals,
+} from 'wallet/src/features/smartWallet/SmartWalletModalsManager'
 import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
-import { useNetworkBalances } from 'wallet/src/features/smartWallet/hooks/useNetworkBalances'
 import { useSmartWalletData } from 'wallet/src/features/smartWallet/hooks/useSmartWalletData'
 import { useTranslateSmartWalletStatus } from 'wallet/src/features/smartWallet/hooks/useTranslateSmartWalletStatus'
-import { SmartWalletActionRequiredModal } from 'wallet/src/features/smartWallet/modals/SmartWalletActionRequiredModal'
-import { SmartWalletConfirmDisableModal } from 'wallet/src/features/smartWallet/modals/SmartWalletConfirmDisableModal'
-import { WalletData, WalletStatus } from 'wallet/src/features/smartWallet/types'
-import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { SmartWalletModalState, WalletData, WalletStatus } from 'wallet/src/features/smartWallet/types'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
 
 function WalletItem({ wallet, onPress }: { wallet: WalletData; onPress: (wallet: WalletData) => void }): JSX.Element {
@@ -77,7 +74,14 @@ function WalletItem({ wallet, onPress }: { wallet: WalletData; onPress: (wallet:
       cursor={isInactive ? 'default' : 'pointer'}
       onPress={!isInactive ? onPressCallback : undefined}
     >
-      <Flex row alignItems="center" gap="$spacing12" opacity={isUnavailable || isInactive ? 0.5 : 1}>
+      <Flex
+        row
+        shrink
+        minWidth={0}
+        alignItems="center"
+        gap="$spacing12"
+        opacity={isUnavailable || isInactive ? 0.5 : 1}
+      >
         <Flex>
           {wallet.status === WalletStatus.ActionRequired && (
             <Flex bottom={-2} position="absolute" right={-3} zIndex={zIndexes.mask}>
@@ -103,14 +107,16 @@ function WalletItem({ wallet, onPress }: { wallet: WalletData; onPress: (wallet:
             <AccountIcon avatarUri={avatar} address={wallet.walletAddress} size={iconSizes.icon32} />
           </Flex>
         </Flex>
-        <Flex>
+        <Flex shrink minWidth={0}>
           <DisplayNameText
             displayName={displayName}
             textProps={{
+              // update unitag icon size if font size changes
               variant: 'subheading2',
               color: '$neutral1',
             }}
             includeUnitagSuffix={false}
+            unitagIconSize={fonts.subheading2.fontSize}
           />
 
           <Text variant="body3" color="$neutral2">
@@ -129,42 +135,9 @@ export function SmartWalletSettingsContent(): JSX.Element {
   const dispatch = useDispatch()
   const getTranslatedStatus = useTranslateSmartWalletStatus()
   const wallets = useSmartWalletData()
-  const activeAccount = useActiveAccountWithThrow()
   const { refreshDelegationData } = useWalletDelegationContext()
 
-  const [selectedWallet, setSelectedWallet] = useState<WalletData | undefined>(undefined)
-
-  const {
-    value: showDisableSmartWalletModal,
-    setTrue: setShowDisableSmartWalletModal,
-    setFalse: setHideDisableSmartWalletModal,
-  } = useBooleanState(false)
-  const {
-    value: showSmartWalletEnabledModal,
-    setTrue: setShowSmartWalletEnabledModal,
-    setFalse: setHideSmartWalletEnabledModal,
-  } = useBooleanState(false)
-
-  const {
-    value: showSmartWalletUnavailableModal,
-    setTrue: setShowSmartWalletUnavailableModal,
-    setFalse: setHideSmartWalletUnavailableModal,
-  } = useBooleanState(false)
-
-  const {
-    value: showConfirmDisableSmartWalletModal,
-    setTrue: setShowConfirmDisableSmartWalletModal,
-    setFalse: setHideConfirmDisableSmartWalletModal,
-  } = useBooleanState(false)
-
-  const {
-    value: showActionRequiredModal,
-    setTrue: setShowActionRequiredModal,
-    setFalse: setHideActionRequiredModal,
-  } = useBooleanState(false)
-
-  const networkBalances = useNetworkBalances(selectedWallet?.walletAddress)
-  const selectedWalletDisplayName = useDisplayName(selectedWallet?.walletAddress, { includeUnitagSuffix: true })
+  const { selectedWallet, modalState, setSelectedWallet, setModalState } = useSmartWalletModals()
 
   // Refresh delegation data when component mounts
   useEffect(() => {
@@ -175,60 +148,26 @@ export function SmartWalletSettingsContent(): JSX.Element {
     })
   }, [refreshDelegationData])
 
-  const handleDisableConfirm = useCallback(async () => {
-    if (!selectedWallet?.walletAddress || activeAccount.type !== AccountType.SignerMnemonic) {
-      return
-    }
-
-    const activeDelegations = selectedWallet.activeDelegationNetworkToAddress
-    if (Object.keys(activeDelegations).length === 0) {
-      // No active delegations
-      dispatch(
-        setSmartWalletConsent({
-          address: selectedWallet.walletAddress,
-          smartWalletConsent: false,
-        }),
-      )
-      // Prevent the nudge from showing again
-      dispatch(
-        setHasDismissedSmartWalletHomeScreenNudge({ walletAddress: selectedWallet.walletAddress, hasDismissed: true }),
-      )
-      setHideDisableSmartWalletModal()
-      setSelectedWallet(undefined)
-      return
-    }
-
-    setShowConfirmDisableSmartWalletModal()
-  }, [dispatch, selectedWallet, activeAccount, setShowConfirmDisableSmartWalletModal, setHideDisableSmartWalletModal])
-
-  const handleReactivateSmartWallet = useCallback(() => {
-    if (selectedWallet) {
-      dispatch(
-        setSmartWalletConsent({
-          address: selectedWallet.walletAddress,
-          smartWalletConsent: true,
-        }),
-      )
-    }
-  }, [dispatch, selectedWallet])
-
   const handleOnWalletPress = useEvent((wallet: WalletData) => {
     setSelectedWallet(wallet)
-    if (wallet.status === WalletStatus.Active) {
-      setShowDisableSmartWalletModal()
-    } else if (wallet.status === WalletStatus.ActionRequired) {
-      setShowActionRequiredModal()
-    } else if (wallet.status === WalletStatus.Unavailable) {
-      setShowSmartWalletUnavailableModal()
-    } else {
-      dispatch(
-        setSmartWalletConsent({
-          address: wallet.walletAddress,
-          smartWalletConsent: true,
-        }),
-      )
-      setShowSmartWalletEnabledModal()
+
+    const statusActionMap = {
+      [WalletStatus.Active]: () => setModalState(SmartWalletModalState.Disable),
+      [WalletStatus.ActionRequired]: () => setModalState(SmartWalletModalState.ActionRequired),
+      [WalletStatus.Unavailable]: () => setModalState(SmartWalletModalState.Unavailable),
+      [WalletStatus.Inactive]: (): void => {
+        dispatch(
+          setSmartWalletConsent({
+            address: wallet.walletAddress,
+            smartWalletConsent: true,
+          }),
+        )
+        setModalState(SmartWalletModalState.EnabledSuccess)
+        dispatch(setIsAllSmartWalletNudgesDisabled({ walletAddress: wallet.walletAddress, isDisabled: false }))
+      },
     }
+
+    statusActionMap[wallet.status]()
   })
 
   const renderWalletSection = useCallback(
@@ -252,8 +191,6 @@ export function SmartWalletSettingsContent(): JSX.Element {
     [wallets, getTranslatedStatus, handleOnWalletPress],
   )
 
-  const unavailableWalletDisplayName = selectedWalletDisplayName?.name || selectedWallet?.walletAddress
-
   return (
     <>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -265,50 +202,12 @@ export function SmartWalletSettingsContent(): JSX.Element {
         </Flex>
       </ScrollView>
 
-      <SmartWalletEnabledModal isOpen={showSmartWalletEnabledModal} onClose={setHideSmartWalletEnabledModal} />
-      {unavailableWalletDisplayName && (
-        <SmartWalletUnavailableModal
-          isOpen={showSmartWalletUnavailableModal}
-          displayName={unavailableWalletDisplayName}
-          onClose={setHideSmartWalletUnavailableModal}
-        />
-      )}
-      {selectedWallet && (
-        <>
-          <SmartWalletDisableModal
-            wallet={selectedWallet}
-            isOpen={showDisableSmartWalletModal}
-            onClose={() => {
-              setHideDisableSmartWalletModal()
-              setSelectedWallet(undefined)
-            }}
-            onConfirm={handleDisableConfirm}
-          />
-          <SmartWalletConfirmDisableModal
-            isOpen={showConfirmDisableSmartWalletModal}
-            networkBalances={networkBalances}
-            walletAddress={selectedWallet.walletAddress}
-            onClose={() => {
-              setHideConfirmDisableSmartWalletModal()
-              setHideDisableSmartWalletModal()
-              setSelectedWallet(undefined)
-            }}
-          />
-          <SmartWalletActionRequiredModal
-            isOpen={showActionRequiredModal}
-            networkBalances={networkBalances}
-            onClose={setHideActionRequiredModal}
-            onConfirm={() => {
-              setHideActionRequiredModal()
-              setShowConfirmDisableSmartWalletModal()
-            }}
-            onReactivate={() => {
-              setHideActionRequiredModal()
-              handleReactivateSmartWallet()
-            }}
-          />
-        </>
-      )}
+      <SmartWalletModalsManager
+        selectedWallet={selectedWallet}
+        modalState={modalState}
+        onModalStateChange={setModalState}
+        onWalletChange={setSelectedWallet}
+      />
     </>
   )
 }

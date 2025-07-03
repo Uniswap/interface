@@ -1,3 +1,4 @@
+import { ExploreStatsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { PoolSortFields } from 'appGraphql/data/pools/useTopPools'
 import { OrderDirection } from 'appGraphql/data/util'
 import { ExternalArrowLink } from 'pages/Pool/Positions/shared'
@@ -25,8 +26,8 @@ export function TopPools({ chainId }: { chainId: UniverseChainId | null }) {
     data: exploreStatsData,
     isLoading: exploreStatsLoading,
     error: exploreStatsError,
-  } = useExploreStatsQuery({
-    chainId: chainId ? chainId.toString() : ALL_NETWORKS_ARG,
+  } = useExploreStatsQuery<ExploreStatsResponse>({
+    input: { chainId: chainId ? chainId.toString() : ALL_NETWORKS_ARG },
   })
 
   const { topPools, topBoostedPools } = useTopPools({

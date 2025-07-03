@@ -10,7 +10,7 @@ import { findLocalGasStrategy } from 'uniswap/src/features/gas/utils'
 import { Experiments, PrivateRpcProperties } from 'uniswap/src/features/gating/experiments'
 import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
-import { refetchGQLQueries } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchGQLQueriesSaga'
+import { refetchQueries } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesSaga'
 import {
   DEFAULT_FLASHBOTS_ENABLED,
   FLASHBOTS_DEFAULT_REFUND_PERCENT,
@@ -53,7 +53,7 @@ export function* finalizeTransaction({
 
   // Refetch data when a local tx has confirmed
   const activeAddress = yield* select(selectActiveAccountAddress)
-  yield* refetchGQLQueries({
+  yield* refetchQueries({
     transaction,
     apolloClient,
     activeAddress,
@@ -274,11 +274,7 @@ export function logTransactionTimeout(transaction: TransactionDetails): void {
 }
 
 function maybeLogGasEstimateAccuracy(transaction: TransactionDetails): void {
-  const { gasEstimates } = transaction.typeInfo
-  if (!gasEstimates) {
-    return
-  }
-
+  const { gasEstimate } = transaction.typeInfo
   const currentTimeMs = Date.now()
   const transactionGasLimit = getOptionalTransactionProperty(transaction, (options) => options.request.gasLimit)
   const userSubmissionTimestampMs = getOptionalTransactionProperty(
@@ -311,42 +307,40 @@ function maybeLogGasEstimateAccuracy(transaction: TransactionDetails): void {
     !!transaction.options.timeoutTimestampMs &&
     currentTimeMs > transaction.options.timeoutTimestampMs
 
-  for (const estimate of [gasEstimates.activeEstimate, ...(gasEstimates.shadowEstimates || [])]) {
-    const gasUseDiff = getDiff(estimate.gasLimit, transaction.receipt?.gasUsed)
-    const gasPriceDiff = getDiff(getGasPrice(estimate), transaction.receipt?.effectiveGasPrice)
-    const localGasStrategy = findLocalGasStrategy(
-      estimate,
-      transaction.typeInfo.type === TransactionType.Swap ? 'swap' : 'general',
-    )
+  const gasUseDiff = getDiff(gasEstimate?.gasLimit, transaction.receipt?.gasUsed)
+  const gasPriceDiff = getDiff(getGasPrice(gasEstimate), transaction.receipt?.effectiveGasPrice)
+  const localGasStrategy = gasEstimate
+    ? findLocalGasStrategy(gasEstimate, transaction.typeInfo.type === TransactionType.Swap ? 'swap' : 'general')
+    : undefined
 
-    sendAnalyticsEvent(WalletEventName.GasEstimateAccuracy, {
-      tx_hash: transaction.hash,
-      transaction_type: transaction.typeInfo.type,
-      chain_id: transaction.chainId,
-      final_status: transaction.status,
-      time_to_confirmed_ms: getDiff(currentTimeMs, rpcSubmissionTimestampMs),
-      blocks_to_confirmed: getDiff(transaction.receipt?.blockNumber, blockSubmitted),
-      user_experienced_delay_ms: getDiff(currentTimeMs, userSubmissionTimestampMs),
-      send_to_confirmation_delay_ms: getDiff(transaction.receipt?.confirmedTime, rpcSubmissionTimestampMs),
-      rpc_submission_delay_ms: rpcSubmissionDelayMs,
-      sign_transaction_delay_ms: signTransactionDelayMs,
-      current_block_fetch_delay_ms: completionDelayMs,
-      gas_use_diff: gasUseDiff,
-      gas_use_diff_percentage: getPercentageError(gasUseDiff, estimate.gasLimit),
-      gas_used: transaction.receipt?.gasUsed,
-      gas_price_diff: gasPriceDiff,
-      gas_price_diff_percentage: getPercentageError(gasPriceDiff, getGasPrice(estimate)),
-      gas_price: transaction.receipt?.effectiveGasPrice,
-      max_priority_fee_per_gas: 'maxPriorityFeePerGas' in estimate ? estimate.maxPriorityFeePerGas : undefined,
-      out_of_gas,
-      private_rpc: isClassic(transaction) ? transaction.options.submitViaPrivateRpc ?? false : false,
-      is_shadow: estimate !== gasEstimates.activeEstimate,
-      name: localGasStrategy?.conditions.name,
-      display_limit_inflation_factor: localGasStrategy?.strategy.displayLimitInflationFactor,
-      timed_out,
-      app_backgrounded_while_pending,
-    })
-  }
+  sendAnalyticsEvent(WalletEventName.GasEstimateAccuracy, {
+    tx_hash: transaction.hash,
+    transaction_type: transaction.typeInfo.type,
+    chain_id: transaction.chainId,
+    final_status: transaction.status,
+    time_to_confirmed_ms: getDiff(currentTimeMs, rpcSubmissionTimestampMs),
+    blocks_to_confirmed: getDiff(transaction.receipt?.blockNumber, blockSubmitted),
+    user_experienced_delay_ms: getDiff(currentTimeMs, userSubmissionTimestampMs),
+    send_to_confirmation_delay_ms: getDiff(transaction.receipt?.confirmedTime, rpcSubmissionTimestampMs),
+    rpc_submission_delay_ms: rpcSubmissionDelayMs,
+    sign_transaction_delay_ms: signTransactionDelayMs,
+    current_block_fetch_delay_ms: completionDelayMs,
+    gas_use_diff: gasUseDiff,
+    gas_use_diff_percentage: getPercentageError(gasUseDiff, gasEstimate?.gasLimit),
+    gas_used: transaction.receipt?.gasUsed,
+    gas_price_diff: gasPriceDiff,
+    gas_price_diff_percentage: getPercentageError(gasPriceDiff, getGasPrice(gasEstimate)),
+    gas_price: transaction.receipt?.effectiveGasPrice,
+    max_priority_fee_per_gas:
+      gasEstimate && 'maxPriorityFeePerGas' in gasEstimate ? gasEstimate.maxPriorityFeePerGas : undefined,
+    out_of_gas,
+    private_rpc: isClassic(transaction) ? transaction.options.submitViaPrivateRpc ?? false : false,
+    is_shadow: false,
+    name: localGasStrategy?.conditions.name,
+    display_limit_inflation_factor: localGasStrategy?.strategy.displayLimitInflationFactor,
+    timed_out,
+    app_backgrounded_while_pending,
+  })
 }
 
 function logSwapSuccess(

@@ -193,3 +193,5 @@ export const TouchableAreaFrame = styled(YStack, {
     row: false,
   },
 })
+
+TouchableAreaFrame.displayName = 'TouchableAreaFrame'

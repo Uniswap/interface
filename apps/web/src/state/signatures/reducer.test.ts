@@ -8,8 +8,8 @@ import reducer, {
   updateSignature,
 } from 'state/signatures/reducer'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
-import { TransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 const account = '0xabc'
 
@@ -23,7 +23,7 @@ const signature: SignatureDetails = {
   orderHash: '0x0',
   offerer: account,
   swapInfo: {
-    type: TransactionType.SWAP,
+    type: TransactionType.Swap,
     tradeType: TradeType.EXACT_INPUT,
     inputCurrencyAmountRaw: '0',
     minimumOutputCurrencyAmountRaw: '0',

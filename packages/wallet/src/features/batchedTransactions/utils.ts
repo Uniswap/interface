@@ -1,8 +1,12 @@
-import { ChainDelegationMap } from 'uniswap/src/data/tradingApi/__generated__'
+import { checkWalletDelegation } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { ChainDelegationMap, WalletCheckDelegationResponseBody } from 'uniswap/src/data/tradingApi/__generated__'
 import { TransactionRequest } from 'uniswap/src/data/tradingApi/__generated__/models/TransactionRequest'
+import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
 import { numberToHex } from 'uniswap/src/utils/hex'
+import { logger } from 'utilities/src/logger/logger'
 import { Capability } from 'wallet/src/features/dappRequests/types'
+import { isFreshDelegation } from 'wallet/src/features/smartWallet/delegation/utils'
 
 /**
  * Generates a random batch ID in the format of 0x followed by 64 hex characters
@@ -61,9 +65,9 @@ export function getCapabilitiesForDelegationStatus(
       // If the wallet is delegated to Uniswap, it's supported, even if the delegation address is outdated
       if (delegationStatusForChain.isWalletDelegatedToUniswap) {
         status = 'supported'
+      } else if (isFreshDelegation(delegationStatusForChain)) {
+        status = 'ready'
       }
-
-      // TODO (WALL-6861): Bring back 'ready' status for fresh delegations once we have a way to bundle delegations on external transactions
     }
 
     capabilities[numberToHex(parseInt(chainId, 10))] = {
@@ -71,4 +75,47 @@ export function getCapabilitiesForDelegationStatus(
     }
   }
   return capabilities
+}
+
+/**
+ * Shared core logic for handling getCapabilities requests
+ * Used by both the background script and saga implementations
+ */
+export async function getCapabilitiesCore({
+  request,
+  chainIds,
+  hasSmartWalletConsent,
+}: {
+  request: { requestId: string; address: string; chainIds?: string[] }
+  chainIds: number[]
+  hasSmartWalletConsent: boolean
+}): Promise<{
+  type: DappResponseType.GetCapabilitiesResponse
+  requestId: string
+  response: Record<string, Capability>
+}> {
+  let delegationStatusResponse: WalletCheckDelegationResponseBody | undefined
+
+  try {
+    delegationStatusResponse = await checkWalletDelegation({
+      walletAddresses: [request.address],
+      chainIds,
+    })
+  } catch (error) {
+    logger.error(error, {
+      tags: { file: 'batchedTransactions/utils.ts', function: 'getCapabilitiesCore' },
+      extra: { request },
+    })
+  }
+
+  const capabilities = getCapabilitiesForDelegationStatus(
+    delegationStatusResponse?.delegationDetails[request.address],
+    hasSmartWalletConsent,
+  )
+
+  return {
+    type: DappResponseType.GetCapabilitiesResponse,
+    requestId: request.requestId,
+    response: capabilities,
+  }
 }

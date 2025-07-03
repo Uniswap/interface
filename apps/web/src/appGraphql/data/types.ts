@@ -10,8 +10,8 @@ import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyInfo, getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { isSameAddress } from 'utilities/src/addresses'
-import { currencyId } from 'utils/currencyId'
 
 // TODO(WEB-3839): replace all usage of Currency in the web app with CurrencyInfo
 

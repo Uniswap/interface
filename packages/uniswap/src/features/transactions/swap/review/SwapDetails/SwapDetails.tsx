@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
-import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
+import type { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import type { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
-import {
+import type {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
@@ -20,8 +20,8 @@ import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import { AcceptNewQuoteRow } from 'uniswap/src/features/transactions/swap/review/SwapDetails/AcceptNewQuoteRow'
 import { HeightAnimatorWrapper } from 'uniswap/src/features/transactions/swap/review/SwapDetails/HeightAnimatorWrapper'
-import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import type { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -136,14 +136,14 @@ export function SwapDetails({
         </Flex>
         {isBridgeTrade && <EstimatedTime visibleIfLong={false} timeMs={estimatedBridgingTime} />}
         {isBridgeTrade && <AcrossRoutingInfo />}
-        {!isBridgeTrade && (
+        {isBridgeTrade === false && (
           <MaxSlippageRow
             acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
             autoSlippageTolerance={autoSlippageTolerance}
             customSlippageTolerance={customSlippageTolerance}
           />
         )}
-        {!isBridgeTrade && v4SwapEnabled && (
+        {isBridgeTrade === false && v4SwapEnabled && (
           <RoutingInfo gasFee={gasFee} chainId={acceptedTrade.inputAmount.currency.chainId} />
         )}
         {!priceUxEnabled && <PriceImpactRow derivedSwapInfo={acceptedDerivedSwapInfo} />}

@@ -10,26 +10,6 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
   transition: opacity 250ms ease-in-out;
 }
 
-.c10 {
-  color: #4673fa;
-}
-
-.c0 {
-  color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c2 {
   display: inline-block;
   height: inherit;
@@ -85,6 +65,22 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
   margin: -xs;
 }
 
+.c0 {
+  color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c8 {
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c1 {
   cursor: help;
   color: rgba(19,19,19,0.63);
@@ -95,20 +91,8 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
   overflow-wrap: break-word;
 }
 
-.c11 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background: rgba(34,34,34,0.05);
-  border-radius: 8px;
-  color: rgba(19,19,19,0.63);
-  height: 20px;
-  padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+.c10 {
+  color: #4673fa;
 }
 
 @supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent) {
@@ -222,42 +206,6 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
           class="c0 c1 css-142zc9n"
           data-testid="swap-li-label"
         >
-          Max. slippage
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="c5 c9"
-              >
-                <div
-                  class="c8 c11 css-1lgneq0"
-                >
-                  Auto
-                </div>
-                 2%
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
           Fee 
         </div>
         <div
@@ -270,102 +218,6 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
               class="c0 c3 css-142zc9n"
             >
               0 DEF
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Receive at least
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              0.0000000000000009 DEF
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Order routing
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="_flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-auto _display-inline-flex"
-              >
-                <svg
-                  fill="none"
-                  height="14"
-                  viewBox="0 0 10 14"
-                  width="10"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <lineargradient
-                      gradientUnits="userSpaceOnUse"
-                      id="AutoRouterIconGradientfixed-uuid-value"
-                      x1="-10.1807"
-                      x2="10.6573"
-                      y1="-12.0006"
-                      y2="-11.6017"
-                    >
-                      <stop
-                        stop-color="#4673FA"
-                      />
-                      <stop
-                        offset="1"
-                        stop-color="#9646FA"
-                      />
-                    </lineargradient>
-                  </defs>
-                  <path
-                    d="M9.97131 6.19803C9.91798 6.07737 9.79866 6.00003 9.66666 6.00003H6.66666V1.00003C6.66666 0.862034 6.58201 0.738037 6.45267 0.688704C6.32267 0.638704 6.17799 0.674696 6.08532 0.776696L0.0853237 7.44336C-0.00267631 7.54136 -0.0253169 7.68137 0.0286831 7.80204C0.0820164 7.9227 0.20133 8.00003 0.33333 8.00003H3.33333V13C3.33333 13.138 3.41799 13.262 3.54732 13.3114C3.58665 13.326 3.62666 13.3334 3.66666 13.3334C3.75933 13.3334 3.85 13.2947 3.91467 13.2227L9.91467 6.55603C10.0027 6.4587 10.0246 6.31803 9.97131 6.19803Z"
-                    fill="url(#AutoRouterIconGradientfixed-uuid-value)"
-                  />
-                </svg>
-                <div
-                  class="c10"
-                >
-                  <div
-                    class="c0 css-142zc9n"
-                  >
-                    Uniswap X
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -388,26 +240,6 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
   transition: opacity 250ms ease-in-out;
 }
 
-.c10 {
-  color: #4673fa;
-}
-
-.c0 {
-  color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c2 {
   display: inline-block;
   height: inherit;
@@ -463,6 +295,22 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
   margin: -xs;
 }
 
+.c0 {
+  color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c8 {
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c1 {
   cursor: help;
   color: rgba(19,19,19,0.63);
@@ -473,20 +321,8 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
   overflow-wrap: break-word;
 }
 
-.c11 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background: rgba(34,34,34,0.05);
-  border-radius: 8px;
-  color: rgba(19,19,19,0.63);
-  height: 20px;
-  padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+.c10 {
+  color: #4673fa;
 }
 
 @supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent) {
@@ -600,42 +436,6 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
           class="c0 c1 css-142zc9n"
           data-testid="swap-li-label"
         >
-          Max. slippage
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="c5 c9"
-              >
-                <div
-                  class="c8 c11 css-1lgneq0"
-                >
-                  Auto
-                </div>
-                 2%
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
           Fee 
         </div>
         <div
@@ -648,102 +448,6 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
               class="c0 c3 css-142zc9n"
             >
               0 DEF
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Receive at least
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              0.0000000000000009 DEF
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Order routing
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="_flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-auto _display-inline-flex"
-              >
-                <svg
-                  fill="none"
-                  height="14"
-                  viewBox="0 0 10 14"
-                  width="10"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <lineargradient
-                      gradientUnits="userSpaceOnUse"
-                      id="AutoRouterIconGradientfixed-uuid-value"
-                      x1="-10.1807"
-                      x2="10.6573"
-                      y1="-12.0006"
-                      y2="-11.6017"
-                    >
-                      <stop
-                        stop-color="#4673FA"
-                      />
-                      <stop
-                        offset="1"
-                        stop-color="#9646FA"
-                      />
-                    </lineargradient>
-                  </defs>
-                  <path
-                    d="M9.97131 6.19803C9.91798 6.07737 9.79866 6.00003 9.66666 6.00003H6.66666V1.00003C6.66666 0.862034 6.58201 0.738037 6.45267 0.688704C6.32267 0.638704 6.17799 0.674696 6.08532 0.776696L0.0853237 7.44336C-0.00267631 7.54136 -0.0253169 7.68137 0.0286831 7.80204C0.0820164 7.9227 0.20133 8.00003 0.33333 8.00003H3.33333V13C3.33333 13.138 3.41799 13.262 3.54732 13.3114C3.58665 13.326 3.62666 13.3334 3.66666 13.3334C3.75933 13.3334 3.85 13.2947 3.91467 13.2227L9.91467 6.55603C10.0027 6.4587 10.0246 6.31803 9.97131 6.19803Z"
-                    fill="url(#AutoRouterIconGradientfixed-uuid-value)"
-                  />
-                </svg>
-                <div
-                  class="c10"
-                >
-                  <div
-                    class="c0 css-142zc9n"
-                  >
-                    Uniswap X
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -766,29 +470,6 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
   transition: opacity 250ms ease-in-out;
 }
 
-.c0 {
-  color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c9 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c12 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c2 {
   display: inline-block;
   height: inherit;
@@ -844,6 +525,22 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
   margin: -xs;
 }
 
+.c0 {
+  color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c9 {
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c1 {
   cursor: help;
   color: rgba(19,19,19,0.63);
@@ -861,22 +558,6 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
 
 .c8 > * {
   fill: rgba(19,19,19,0.35);
-}
-
-.c11 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background: rgba(34,34,34,0.05);
-  border-radius: 8px;
-  color: rgba(19,19,19,0.63);
-  height: 20px;
-  padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 <span
@@ -959,42 +640,6 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
           class="c0 c1 css-142zc9n"
           data-testid="swap-li-label"
         >
-          Max. slippage
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="c5 c10"
-              >
-                <div
-                  class="c9 c11 css-1lgneq0"
-                >
-                  Auto
-                </div>
-                 2%
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
           Fee 
         </div>
         <div
@@ -1007,64 +652,6 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
               class="c0 c3 css-142zc9n"
             >
               0 DEF
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Receive at least
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              0.00000000000000098 DEF
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Order routing
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="c12 css-142zc9n"
-              >
-                Uniswap Client
-              </div>
             </div>
           </div>
         </div>
@@ -1087,29 +674,6 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
   transition: opacity 250ms ease-in-out;
 }
 
-.c0 {
-  color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c9 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c12 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c2 {
   display: inline-block;
   height: inherit;
@@ -1165,6 +729,22 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
   margin: -xs;
 }
 
+.c0 {
+  color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c9 {
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c1 {
   cursor: help;
   color: rgba(19,19,19,0.63);
@@ -1182,22 +762,6 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
 
 .c8 > * {
   fill: rgba(19,19,19,0.35);
-}
-
-.c11 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background: rgba(34,34,34,0.05);
-  border-radius: 8px;
-  color: rgba(19,19,19,0.63);
-  height: 20px;
-  padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 <span
@@ -1280,42 +844,6 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
           class="c0 c1 css-142zc9n"
           data-testid="swap-li-label"
         >
-          Max. slippage
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="c5 c10"
-              >
-                <div
-                  class="c9 c11 css-1lgneq0"
-                >
-                  Auto
-                </div>
-                 2%
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
           Fee 
         </div>
         <div
@@ -1328,64 +856,6 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
               class="c0 c3 css-142zc9n"
             >
               0 DEF
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Receive at least
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              0.00000000000000098 DEF
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Order routing
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="c12 css-142zc9n"
-              >
-                Uniswap API
-              </div>
             </div>
           </div>
         </div>
@@ -1406,29 +876,6 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
   opacity: 1;
   -webkit-transition: opacity 250ms ease-in-out;
   transition: opacity 250ms ease-in-out;
-}
-
-.c0 {
-  color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c9 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c12 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c2 {
@@ -1486,6 +933,22 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
   margin: -xs;
 }
 
+.c0 {
+  color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c9 {
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c1 {
   cursor: help;
   color: rgba(19,19,19,0.63);
@@ -1503,22 +966,6 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
 
 .c8 > * {
   fill: rgba(19,19,19,0.35);
-}
-
-.c11 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background: rgba(34,34,34,0.05);
-  border-radius: 8px;
-  color: rgba(19,19,19,0.63);
-  height: 20px;
-  padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 <span
@@ -1601,42 +1048,6 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
           class="c0 c1 css-142zc9n"
           data-testid="swap-li-label"
         >
-          Max. slippage
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="c5 c10"
-              >
-                <div
-                  class="c9 c11 css-1lgneq0"
-                >
-                  Auto
-                </div>
-                 2%
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
           Fee 
         </div>
         <div
@@ -1649,91 +1060,6 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
               class="c0 c3 css-142zc9n"
             >
               0 GHI
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Pay at most
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              0.00000000000000102 ABC
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Receive at least
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              0.000000000000001 GHI
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Order routing
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="c12 css-142zc9n"
-              >
-                Uniswap Client
-              </div>
             </div>
           </div>
         </div>
@@ -1756,29 +1082,6 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
   transition: opacity 250ms ease-in-out;
 }
 
-.c0 {
-  color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c9 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c12 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c2 {
   display: inline-block;
   height: inherit;
@@ -1834,6 +1137,22 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
   margin: -xs;
 }
 
+.c0 {
+  color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c9 {
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c1 {
   cursor: help;
   color: rgba(19,19,19,0.63);
@@ -1851,22 +1170,6 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
 
 .c8 > * {
   fill: rgba(19,19,19,0.35);
-}
-
-.c11 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background: rgba(34,34,34,0.05);
-  border-radius: 8px;
-  color: rgba(19,19,19,0.63);
-  height: 20px;
-  padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 <span
@@ -1949,73 +1252,6 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
           class="c0 c1 css-142zc9n"
           data-testid="swap-li-label"
         >
-          DEF fee
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <span
-                class=""
-              >
-                3%
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Max. slippage
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="c5 c10"
-              >
-                <div
-                  class="c9 c11 css-1lgneq0"
-                >
-                  Auto
-                </div>
-                 2%
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
           Fee 
         </div>
         <div
@@ -2028,64 +1264,6 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
               class="c0 c3 css-142zc9n"
             >
               0 DEF
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Receive at least
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              0.00000000000000098 DEF
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Order routing
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="c12 css-142zc9n"
-              >
-                Uniswap API
-              </div>
             </div>
           </div>
         </div>
@@ -2108,29 +1286,6 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
   transition: opacity 250ms ease-in-out;
 }
 
-.c0 {
-  color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c9 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c12 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c2 {
   display: inline-block;
   height: inherit;
@@ -2186,6 +1341,22 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
   margin: -xs;
 }
 
+.c0 {
+  color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c9 {
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c1 {
   cursor: help;
   color: rgba(19,19,19,0.63);
@@ -2203,22 +1374,6 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
 
 .c8 > * {
   fill: rgba(19,19,19,0.35);
-}
-
-.c11 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background: rgba(34,34,34,0.05);
-  border-radius: 8px;
-  color: rgba(19,19,19,0.63);
-  height: 20px;
-  padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 <span
@@ -2301,73 +1456,6 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
           class="c0 c1 css-142zc9n"
           data-testid="swap-li-label"
         >
-          ABC fee
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <span
-                class=""
-              >
-                3%
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Max. slippage
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="c5 c10"
-              >
-                <div
-                  class="c9 c11 css-1lgneq0"
-                >
-                  Auto
-                </div>
-                 2%
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
           Fee 
         </div>
         <div
@@ -2380,64 +1468,6 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
               class="c0 c3 css-142zc9n"
             >
               0 DEF
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Receive at least
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              0.00000000000000098 DEF
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Order routing
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="c12 css-142zc9n"
-              >
-                Uniswap API
-              </div>
             </div>
           </div>
         </div>
@@ -2465,6 +1495,11 @@ exports[`SwapLineItem.tsx > preview exact in 1`] = `
   width: 50px;
 }
 
+.c2 {
+  display: inline-block;
+  height: inherit;
+}
+
 .c0 {
   color: #131313;
   -webkit-letter-spacing: -0.01em;
@@ -2473,49 +1508,12 @@ exports[`SwapLineItem.tsx > preview exact in 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c7 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c2 {
-  display: inline-block;
-  height: inherit;
-}
-
-.c5 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c6 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
 .c1 {
   cursor: help;
   color: rgba(19,19,19,0.63);
 }
 
-.c9 {
+.c5 {
   cursor: auto;
   color: rgba(19,19,19,0.63);
 }
@@ -2523,22 +1521,6 @@ exports[`SwapLineItem.tsx > preview exact in 1`] = `
 .c3 {
   text-align: right;
   overflow-wrap: break-word;
-}
-
-.c8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background: rgba(34,34,34,0.05);
-  border-radius: 8px;
-  color: rgba(19,19,19,0.63);
-  height: 20px;
-  padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 <span
@@ -2584,97 +1566,10 @@ exports[`SwapLineItem.tsx > preview exact in 1`] = `
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
       >
         <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Max. slippage
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              <div
-                class="c5 c6"
-              >
-                <div
-                  class="c7 c8 css-1lgneq0"
-                >
-                  Auto
-                </div>
-                 2%
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c9 css-142zc9n"
+          class="c0 c5 css-142zc9n"
           data-testid="swap-li-label"
         >
           Fee
-        </div>
-        <div
-          class="c0 c3 css-142zc9n"
-        >
-          <div
-            class="c4"
-            data-testid="loading-row"
-            height="15"
-            width="50"
-          />
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Receive at least
-        </div>
-        <div
-          class="c2"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <div
-              class="c0 c3 css-142zc9n"
-            >
-              0.00000000000000098 DEF
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c9 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Order routing
         </div>
         <div
           class="c0 c3 css-142zc9n"
@@ -2710,19 +1605,6 @@ exports[`SwapLineItem.tsx > syncing 1`] = `
   width: 50px;
 }
 
-.c3 {
-  -webkit-animation: fAQEyV 1.5s infinite;
-  animation: fAQEyV 1.5s infinite;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  background: linear-gradient( to left, #FFFFFF 25%, rgba(34,34,34,0.05) 50%, #FFFFFF 75% );
-  background-size: 400%;
-  will-change: background-position;
-  border-radius: 12px;
-  height: 15px;
-  width: 70px;
-}
-
 .c0 {
   color: #131313;
   -webkit-letter-spacing: -0.01em;
@@ -2733,11 +1615,6 @@ exports[`SwapLineItem.tsx > syncing 1`] = `
 
 .c1 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
-}
-
-.c4 {
-  cursor: auto;
   color: rgba(19,19,19,0.63);
 }
 
@@ -2775,67 +1652,7 @@ exports[`SwapLineItem.tsx > syncing 1`] = `
           class="c0 c1 css-142zc9n"
           data-testid="swap-li-label"
         >
-          Max. slippage
-        </div>
-        <div
-          class="c2"
-          data-testid="loading-row"
-          height="15"
-          width="50"
-        />
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
           Fee 
-        </div>
-        <div
-          class="c2"
-          data-testid="loading-row"
-          height="15"
-          width="50"
-        />
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c1 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Receive at least
-        </div>
-        <div
-          class="c3"
-          data-testid="loading-row"
-          height="15"
-          width="70"
-        />
-      </div>
-    </div>
-    <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
-    >
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-      >
-        <div
-          class="c0 c4 css-142zc9n"
-          data-testid="swap-li-label"
-        >
-          Order routing
         </div>
         <div
           class="c2"

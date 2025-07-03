@@ -4,18 +4,20 @@ import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSele
 import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useNftSearchResultsToNftCollectionOptions } from 'uniswap/src/components/lists/items/nfts/useNftSearchResultsToNftCollectionOptions'
+import { usePoolSearchResultsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolSearchResultsToPoolOptions'
 import { OnchainItemListOptionType, SearchModalOption, WalletOption } from 'uniswap/src/components/lists/items/types'
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { useCollectionSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useSearchTokensRest } from 'uniswap/src/features/dataApi/searchTokensRest'
+import { useSearchPools } from 'uniswap/src/features/dataApi/searchPools'
+import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import { NUMBER_OF_RESULTS_SHORT } from 'uniswap/src/features/search/SearchModal/constants'
 import { useWalletSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useWalletSearchResults'
-import { MOCK_POOL_OPTION_ITEM } from 'uniswap/src/features/search/SearchModal/mocks'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { isWeb } from 'utilities/src/platform'
 import noop from 'utilities/src/react/noop'
 
@@ -23,31 +25,46 @@ function useSectionsForSearchResults({
   chainFilter,
   searchFilter,
   activeTab,
+  shouldPrioritizePools,
 }: {
   chainFilter: UniverseChainId | null
   searchFilter: string | null
   activeTab: SearchTab
+  shouldPrioritizePools: boolean
 }): GqlResult<OnchainItemSection<SearchModalOption>[]> {
+  const skipPoolSearchQuery = !isWeb || !searchFilter || (activeTab !== SearchTab.Pools && activeTab !== SearchTab.All)
+  const {
+    data: searchResultPools,
+    error: searchPoolsError,
+    refetch: refetchSearchPools,
+    loading: searchPoolsLoading,
+  } = useSearchPools({
+    searchQuery: searchFilter,
+    chainFilter,
+    skip: skipPoolSearchQuery,
+  })
+  const poolSearchOptions = usePoolSearchResultsToPoolOptions(searchResultPools ?? [])
+  const poolSearchResultsSection = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.Pools,
+    options: poolSearchOptions,
+  })
+
   const {
     data: searchResultCurrencies,
     error: searchTokensError,
     refetch: refetchSearchTokens,
     loading: searchTokensLoading,
-  } = useSearchTokensRest({
+  } = useSearchTokens({
     searchQuery: searchFilter,
     chainFilter,
     skip: !searchFilter || (activeTab !== SearchTab.Tokens && activeTab !== SearchTab.All),
   })
-
   const tokenSearchResults = useCurrencyInfosToTokenOptions({ currencyInfos: searchResultCurrencies })
+  const isPoolAddressSearch =
+    searchFilter && getValidAddress({ address: searchFilter }) && searchResultPools?.length === 1
   const tokenSearchResultsSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.Tokens,
-    options: tokenSearchResults,
-  })
-
-  const poolSearchResultsSection = useOnchainItemListSection({
-    sectionKey: OnchainItemSectionName.Pools,
-    options: Array(isWeb ? 4 : 0).fill(MOCK_POOL_OPTION_ITEM),
+    options: isPoolAddressSearch ? [] : tokenSearchResults, // do not display tokens if pool address search (to avoid displaying V2 liquidity tokens in results)
   })
 
   const skipWalletSearchQuery = isWeb || (activeTab !== SearchTab.Wallets && activeTab !== SearchTab.All)
@@ -90,8 +107,9 @@ function useSectionsForSearchResults({
 
   const refetchAll = useCallback(async () => {
     refetchSearchTokens?.()
+    refetchSearchPools?.()
     await refetchSearchNftResults()
-  }, [refetchSearchNftResults, refetchSearchTokens])
+  }, [refetchSearchNftResults, refetchSearchPools, refetchSearchTokens])
 
   // eslint-disable-next-line complexity
   return useMemo((): GqlResult<OnchainItemSection<SearchModalOption>[]> => {
@@ -99,7 +117,9 @@ function useSectionsForSearchResults({
     switch (activeTab) {
       case SearchTab.All:
         if (isWeb) {
-          sections = [...(tokenSearchResultsSection ?? []), ...(poolSearchResultsSection ?? [])]
+          sections = shouldPrioritizePools
+            ? [...(poolSearchResultsSection ?? []), ...(tokenSearchResultsSection ?? [])]
+            : [...(tokenSearchResultsSection ?? []), ...(poolSearchResultsSection ?? [])]
         } else {
           sections = [
             ...(tokenSearchResultsSection ?? []),
@@ -123,9 +143,9 @@ function useSectionsForSearchResults({
       case SearchTab.Pools:
         return {
           data: poolSearchResultsSection ?? [],
-          loading: false,
-          error: undefined,
-          refetch: noop,
+          loading: searchPoolsLoading || (poolSearchOptions.length === 0 && searchResultPools?.length !== 0),
+          error: (!poolSearchResultsSection && searchPoolsError) || undefined,
+          refetch: refetchSearchPools,
         }
       case SearchTab.Wallets:
         return {
@@ -145,14 +165,20 @@ function useSectionsForSearchResults({
   }, [
     activeTab,
     nftCollectionSearchResultsSection,
+    poolSearchOptions.length,
     poolSearchResultsSection,
     refetchAll,
     refetchSearchNftResults,
+    refetchSearchPools,
     refetchSearchTokens,
     searchNftResultsError,
     searchNftResultsLoading,
+    searchPoolsError,
+    searchPoolsLoading,
+    searchResultPools?.length,
     searchTokensError,
     searchTokensLoading,
+    shouldPrioritizePools,
     tokenSearchResults,
     tokenSearchResultsSection,
     walletSearchResultsLoading,
@@ -162,6 +188,7 @@ function useSectionsForSearchResults({
 
 interface SearchModalResultsListProps {
   chainFilter: UniverseChainId | null
+  parsedChainFilter: UniverseChainId | null
   searchFilter: string
   debouncedSearchFilter: string | null
   debouncedParsedSearchFilter: string | null
@@ -171,6 +198,7 @@ interface SearchModalResultsListProps {
 
 function _SearchModalResultsList({
   chainFilter,
+  parsedChainFilter,
   searchFilter,
   debouncedSearchFilter,
   debouncedParsedSearchFilter,
@@ -185,9 +213,11 @@ function _SearchModalResultsList({
     error,
     refetch,
   } = useSectionsForSearchResults({
-    chainFilter,
+    // turn off parsed chainFilter for pools (to avoid "eth usdc" searches filtering by eth mainnet)
+    chainFilter: activeTab !== SearchTab.Pools ? chainFilter ?? parsedChainFilter : chainFilter,
     searchFilter: debouncedParsedSearchFilter ?? debouncedSearchFilter,
     activeTab,
+    shouldPrioritizePools: (debouncedParsedSearchFilter ?? debouncedSearchFilter)?.includes('/') ?? false,
   })
 
   const userIsTyping = Boolean(searchFilter && debouncedSearchFilter !== searchFilter)

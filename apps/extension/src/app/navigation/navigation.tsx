@@ -24,6 +24,7 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { QueuedOrderModal } from 'wallet/src/features/transactions/swap/modals/QueuedOrderModal'
+import { NativeWalletProvider } from 'wallet/src/features/wallet/providers/NativeWalletProvider'
 
 export function MainContent(): JSX.Element {
   const isOnboarded = useSelector(isOnboardedSelector)
@@ -131,12 +132,14 @@ export function WebNavigation(): JSX.Element {
 
   return (
     <SideBarNavigationProvider>
-      <WalletUniswapProvider>
-        <NotificationToastWrapper />
-        {shouldRestoreScroll && <ScrollRestoration />}
-        {childrenMemo}
-        {isLoggedIn && <ForceUpgradeModal />}
-      </WalletUniswapProvider>
+      <NativeWalletProvider>
+        <WalletUniswapProvider>
+          <NotificationToastWrapper />
+          {shouldRestoreScroll && <ScrollRestoration />}
+          {childrenMemo}
+          {isLoggedIn && <ForceUpgradeModal />}
+        </WalletUniswapProvider>
+      </NativeWalletProvider>
     </SideBarNavigationProvider>
   )
 }
