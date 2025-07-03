@@ -1,6 +1,6 @@
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionModal } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
-import type { TransactionModalProps } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalProps'
+import { TransactionModalProps } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalProps'
 
 import {
   TransactionSettingsContext,
@@ -8,12 +8,16 @@ import {
 } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { CurrentScreen } from 'uniswap/src/features/transactions/swap/SwapFlow/CurrentScreen'
-import { SwapDependenciesStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/SwapDependenciesStoreContext'
-import { useSwapDependenciesStoreBase } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
-import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
-import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
-import { useSwapFormStoreBase } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { SwapTxStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/SwapTxStoreContextProvider'
+import {
+  SwapDependenciesContext,
+  useSwapDependencies,
+} from 'uniswap/src/features/transactions/swap/contexts/SwapDependenciesContext'
+import {
+  SwapFormContext,
+  SwapFormState,
+  useSwapFormContext,
+} from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { SwapTxContextProvider } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 
 export interface SwapFlowProps extends Omit<TransactionModalProps, 'fullscreen' | 'modalName'> {
   prefilledState?: SwapFormState
@@ -25,23 +29,23 @@ export interface SwapFlowProps extends Omit<TransactionModalProps, 'fullscreen' 
 }
 
 export function SwapFlow({ settings, onSubmitSwap, tokenColor, ...transactionModalProps }: SwapFlowProps): JSX.Element {
+  const swapFormContext = useSwapFormContext()
   const transactionSettingsContext = useTransactionSettingsContext()
-  const swapDependenciesStore = useSwapDependenciesStoreBase()
-  const swapFormStore = useSwapFormStoreBase()
-
+  const swapDependenciesContext = useSwapDependencies()
   return (
     <TransactionModal modalName={ModalName.Swap} {...transactionModalProps}>
-      {/* Re-create the TransactionSettingsContextProvider, since rendering within a Portal causes its children to be in a separate component tree. */}
+      {/* Re-create the TransactionSettingsContextProvider, since native Modal causes its children to be in a separate component tree. */}
       <TransactionSettingsContext.Provider value={transactionSettingsContext}>
-        {/* Re-create the SwapFormStoreContextProvider, since rendering within a Portal causes its children to be in a separate component tree. */}
-        <SwapFormStoreContext.Provider value={swapFormStore}>
-          {/* Re-create the SwapTxStoreContextProvider, since rendering within a Portal causes its children to be in a separate component tree. */}
-          <SwapTxStoreContextProvider>
-            <SwapDependenciesStoreContext.Provider value={swapDependenciesStore}>
+        {/* Re-create the SwapFormContextProvider, since native Modal causes its children to be in a separate component tree. */}
+        <SwapFormContext.Provider value={swapFormContext}>
+          {/* Re-create the SwapTxContextProviderTradingApi, since native Modal causes its children to be in a separate component tree. */}
+          <SwapTxContextProvider>
+            {/* Re-create the SwapDependenciesContextProvider, since native Modal causes its children to be in a separate component tree. */}
+            <SwapDependenciesContext.Provider value={swapDependenciesContext}>
               <CurrentScreen settings={settings} tokenColor={tokenColor} onSubmitSwap={onSubmitSwap} />
-            </SwapDependenciesStoreContext.Provider>
-          </SwapTxStoreContextProvider>
-        </SwapFormStoreContext.Provider>
+            </SwapDependenciesContext.Provider>
+          </SwapTxContextProvider>
+        </SwapFormContext.Provider>
       </TransactionSettingsContext.Provider>
     </TransactionModal>
   )

@@ -19,14 +19,12 @@ export enum DynamicConfigs {
   DatadogSessionSampleRate = 'datadog_session_sample_rate',
   DatadogIgnoredErrors = 'datadog_ignored_errors',
   EmbeddedWalletConfig = 'embedded_wallet_config',
-  ExtensionBiometricUnlock = 'extension_biometric_unlock_config',
 
   // Web
   AstroChain = 'astro_chain',
   BlockedNftCollections = 'blocked_nft_collections',
   ExternallyConnectableExtension = 'externally_connectable_extension',
   LPConfig = 'lp_config',
-  AllowedV4WethHookAddresses = 'allowed_v4_weth_hook_addresses',
 }
 
 // Config values go here for easy access
@@ -84,12 +82,6 @@ export type ForceUpgradeTranslations = Record<SupportedLocale, ContentMessage>
 
 export enum EmbeddedWalletConfigKey {
   BaseUrl = 'baseUrl',
-}
-
-export enum ExtensionBiometricUnlockConfigKey {
-  EnableOnboardingEnrollment = 'enableOnboardingEnrollment',
-  EnableSettingsEnrollment = 'enableSettingsEnrollment',
-  EnableUnlocking = 'enableUnlocking',
 }
 
 export enum HomeScreenExploreTokensConfigKey {
@@ -158,10 +150,6 @@ export enum LPConfigKey {
   V4SlippageOverride = 'v4SlippageOverride',
 }
 
-export enum AllowedV4WethHookAddressesConfigKey {
-  HookAddresses = 'hookAddresses',
-}
-
 export type DynamicConfigKeys = {
   // Shared
   [DynamicConfigs.Swap]: SwapConfigKey
@@ -176,14 +164,12 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.DatadogIgnoredErrors]: DatadogIgnoredErrorsConfigKey
   [DynamicConfigs.DatadogSessionSampleRate]: DatadogSessionSampleRateKey
   [DynamicConfigs.EmbeddedWalletConfig]: EmbeddedWalletConfigKey
-  [DynamicConfigs.ExtensionBiometricUnlock]: ExtensionBiometricUnlockConfigKey
 
   // Web
   [DynamicConfigs.AstroChain]: AstroChainConfigKey
   [DynamicConfigs.BlockedNftCollections]: BlockedNftCollectionsConfigKey
   [DynamicConfigs.ExternallyConnectableExtension]: ExternallyConnectableExtensionConfigKey
   [DynamicConfigs.LPConfig]: LPConfigKey
-  [DynamicConfigs.AllowedV4WethHookAddresses]: AllowedV4WethHookAddressesConfigKey
 }
 
 // This type must match the format in statsig dynamic config for uwulink

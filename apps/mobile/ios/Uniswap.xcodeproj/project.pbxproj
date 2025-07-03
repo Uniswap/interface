@@ -41,6 +41,8 @@
 		074321F32A83E3CA00F8518D /* FavoriteTokenCardQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321982A83E3C900F8518D /* FavoriteTokenCardQuery.graphql.swift */; };
 		074321F42A83E3CA00F8518D /* NFTItemScreenQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321992A83E3C900F8518D /* NFTItemScreenQuery.graphql.swift */; };
 		074321F52A83E3CA00F8518D /* NftCollectionScreenQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0743219A2A83E3C900F8518D /* NftCollectionScreenQuery.graphql.swift */; };
+		074321F62A83E3CA00F8518D /* SearchTokensQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0743219B2A83E3C900F8518D /* SearchTokensQuery.graphql.swift */; };
+		074321F72A83E3CA00F8518D /* ExploreSearchQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0743219C2A83E3C900F8518D /* ExploreSearchQuery.graphql.swift */; };
 		074321F82A83E3CA00F8518D /* TokenProjectsQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0743219D2A83E3C900F8518D /* TokenProjectsQuery.graphql.swift */; };
 		074321F92A83E3CA00F8518D /* SelectWalletScreenQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0743219E2A83E3C900F8518D /* SelectWalletScreenQuery.graphql.swift */; };
 		074321FA2A83E3CA00F8518D /* PortfolioBalancesQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0743219F2A83E3C900F8518D /* PortfolioBalancesQuery.graphql.swift */; };
@@ -101,6 +103,7 @@
 		074322332A83E3CA00F8518D /* Token.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321DD2A83E3C900F8518D /* Token.graphql.swift */; };
 		074322342A83E3CA00F8518D /* SchemaConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321DE2A83E3C900F8518D /* SchemaConfiguration.swift */; };
 		074322352A83E3CA00F8518D /* NftBalancesFilterInput.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321E02A83E3C900F8518D /* NftBalancesFilterInput.graphql.swift */; };
+		074322362A83E3CA00F8518D /* NftCollectionsFilterInput.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321E12A83E3C900F8518D /* NftCollectionsFilterInput.graphql.swift */; };
 		074322372A83E3CA00F8518D /* ContractInput.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321E22A83E3C900F8518D /* ContractInput.graphql.swift */; };
 		074322382A83E3CA00F8518D /* NftActivityFilterInput.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321E32A83E3C900F8518D /* NftActivityFilterInput.graphql.swift */; };
 		074322392A83E3CA00F8518D /* NftAssetTraitInput.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321E42A83E3C900F8518D /* NftAssetTraitInput.graphql.swift */; };
@@ -228,6 +231,7 @@
 		8ED0562C2AA78E2C009BD5A2 /* ScrollFadeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED0562B2AA78E2C009BD5A2 /* ScrollFadeExtensions.swift */; };
 		8EE7C0582AFD7B2100E0D9CD /* DescriptionTranslations.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE7C0572AFD7B2100E0D9CD /* DescriptionTranslations.graphql.swift */; };
 		8FE0F30936E893297558F467 /* ProtectionResult.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0FC2D534CB82B151C7F9B7 /* ProtectionResult.graphql.swift */; };
+		9108F64BA2D114E58F2C8CF2 /* NftCollectionsFilterInput.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4790C2A43570CAC086B936E /* NftCollectionsFilterInput.graphql.swift */; };
 		9127D1362CC2D3D00096F134 /* TokenBalanceMainParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9127D1342CC2D3D00096F134 /* TokenBalanceMainParts.graphql.swift */; };
 		9127D1372CC2D3D00096F134 /* TokenBalanceQuantityParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9127D1352CC2D3D00096F134 /* TokenBalanceQuantityParts.graphql.swift */; };
 		9173CEBC2D03C6F30036DA28 /* TokenBalanceParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9173CEBB2D03C6F30036DA28 /* TokenBalanceParts.graphql.swift */; };
@@ -293,6 +297,7 @@
 		BA8FC9627A40644259D9E2F9 /* Pods_WidgetsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB29AC0C0907A833F23D2C30 /* Pods_WidgetsCore.framework */; };
 		BD1FF76A8E50EFEA0720CC04 /* NftAsset.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2932B486DD7070DF226A27B /* NftAsset.graphql.swift */; };
 		BD59A9C8414D6A4BFE9C9A2E /* NftActivity.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A24D364C0D262A14BB7182 /* NftActivity.graphql.swift */; };
+		C048D769A74B91172D8358D5 /* SearchTokensQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5342DEF1410E0E81E97F40 /* SearchTokensQuery.graphql.swift */; };
 		C1FC1F8B4A2725A195F66D60 /* PortfolioValueModifier.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41003491EF939043CF9D0F4E /* PortfolioValueModifier.graphql.swift */; };
 		C791C5505DBB3036B9D5066D /* SwapOrderType.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148617FD73F2CD7117960DBA /* SwapOrderType.graphql.swift */; };
 		C7ABAADA504107D152A52FD4 /* NftBalancesFilterInput.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BA2129FFE961C8549C8A30 /* NftBalancesFilterInput.graphql.swift */; };
@@ -309,6 +314,7 @@
 		D7926D4A878B2237137B300F /* Pods_WidgetsCoreTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 021E59CE7ECBD4FE0F3BFCFD /* Pods_WidgetsCoreTests.framework */; };
 		D7E3642851C618D369D26B82 /* TokenMarketParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC36D963A2A52D1E7CA77E4 /* TokenMarketParts.graphql.swift */; };
 		D81BAFFCC105668B88B607FC /* NftCollectionConnection.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DE390311705FF1EE65C0E6 /* NftCollectionConnection.graphql.swift */; };
+		D90E5966447E51DA9A7C70CA /* ExploreSearchQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84997376A0B436ECC0A996C5 /* ExploreSearchQuery.graphql.swift */; };
 		DC0641C5870F91D26C914F1D /* TokenPriceHistoryQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DFBD29C0BDFDB4464B8189C /* TokenPriceHistoryQuery.graphql.swift */; };
 		DE2F24512E7204C2CA255C50 /* Pods_Widgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8B7D36D2E14D9488F351EB /* Pods_Widgets.framework */; };
 		E091F379106E92D3181103CB /* IAmount.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AD8C2B1226EBE1524F2573 /* IAmount.graphql.swift */; };
@@ -2001,13 +2007,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Uniswap/Pods-Uniswap-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Uniswap/Pods-Uniswap-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2044,13 +2046,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Uniswap/Pods-Uniswap-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Uniswap/Pods-Uniswap-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2115,6 +2113,7 @@
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/NftsQuery.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/NftsTabQuery.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/PortfolioBalancesQuery.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/SearchTokensQuery.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/SelectWalletScreenQuery.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TokenDetailsScreenQuery.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Operations/Queries/TokenPriceHistoryQuery.graphql.swift",
@@ -2148,6 +2147,7 @@
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/NftAssetsFilterInput.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/NftBalanceAssetInput.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/NftBalancesFilterInput.graphql.swift",
+				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/NftCollectionsFilterInput.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/OnRampTransactionsAuth.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/InputObjects/PortfolioValueModifier.graphql.swift",
 				"$(SRCROOT)/WidgetsCore/MobileSchema/Schema/Interfaces/IAmount.graphql.swift",
@@ -2238,13 +2238,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2408,8 +2404,6 @@
 				"$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
 			);
 			name = "[CP-User] [RNFB] Core Configuration";
-			outputPaths = (
-			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#!/usr/bin/env bash\n#\n# Copyright (c) 2016-present Invertase Limited & Contributors\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this library except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#   http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\n\n##########################################################################\n##########################################################################\n#\n#  NOTE THAT IF YOU CHANGE THIS FILE YOU MUST RUN pod install AFTERWARDS\n#\n#  This file is installed as an Xcode build script in the project file\n#  by cocoapods, and you will not see your changes until you pod install\n#\n##########################################################################\n##########################################################################\n\nset -e\n\n_MAX_LOOKUPS=2;\n_SEARCH_RESULT=''\n_RN_ROOT_EXISTS=''\n_CURRENT_LOOKUPS=1\n_JSON_ROOT=\"'react-native'\"\n_JSON_FILE_NAME='firebase.json'\n_JSON_OUTPUT_BASE64='e30=' # { }\n_CURRENT_SEARCH_DIR=${PROJECT_DIR}\n_PLIST_BUDDY=/usr/libexec/PlistBuddy\n_TARGET_PLIST=\"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\"\n_DSYM_PLIST=\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"\n\n# plist arrays\n_PLIST_ENTRY_KEYS=()\n_PLIST_ENTRY_TYPES=()\n_PLIST_ENTRY_VALUES=()\n\nfunction setPlistValue {\n  echo \"info:      setting plist entry '$1' of type '$2' in file '$4'\"\n  ${_PLIST_BUDDY} -c \"Add :$1 $2 '$3'\" $4 || echo \"info:      '$1' already exists\"\n}\n\nfunction getFirebaseJsonKeyValue () {\n  if [[ ${_RN_ROOT_EXISTS} ]]; then\n    ruby -Ku -e \"require 'rubygems';require 'json'; output=JSON.parse('$1'); puts output[$_JSON_ROOT]['$2']\"\n  else\n    echo \"\"\n  fi;\n}\n\nfunction jsonBoolToYesNo () {\n  if [[ $1 == \"false\" ]]; then\n    echo \"NO\"\n  elif [[ $1 == \"true\" ]]; then\n    echo \"YES\"\n  else echo \"NO\"\n  fi\n}\n\necho \"info: -> RNFB build script started\"\necho \"info: 1) Locating ${_JSON_FILE_NAME} file:\"\n\nif [[ -z ${_CURRENT_SEARCH_DIR} ]]; then\n  _CURRENT_SEARCH_DIR=$(pwd)\nfi;\n\nwhile true; do\n  _CURRENT_SEARCH_DIR=$(dirname \"$_CURRENT_SEARCH_DIR\")\n  if [[ \"$_CURRENT_SEARCH_DIR\" == \"/\" ]] || [[ ${_CURRENT_LOOKUPS} -gt ${_MAX_LOOKUPS} ]]; then break; fi;\n  echo \"info:      ($_CURRENT_LOOKUPS of $_MAX_LOOKUPS) Searching in '$_CURRENT_SEARCH_DIR' for a ${_JSON_FILE_NAME} file.\"\n  _SEARCH_RESULT=$(find \"$_CURRENT_SEARCH_DIR\" -maxdepth 2 -name ${_JSON_FILE_NAME} -print | /usr/bin/head -n 1)\n  if [[ ${_SEARCH_RESULT} ]]; then\n    echo \"info:      ${_JSON_FILE_NAME} found at $_SEARCH_RESULT\"\n    break;\n  fi;\n  _CURRENT_LOOKUPS=$((_CURRENT_LOOKUPS+1))\ndone\n\nif [[ ${_SEARCH_RESULT} ]]; then\n  _JSON_OUTPUT_RAW=$(cat \"${_SEARCH_RESULT}\")\n  _RN_ROOT_EXISTS=$(ruby -Ku -e \"require 'rubygems';require 'json'; output=JSON.parse('$_JSON_OUTPUT_RAW'); puts output[$_JSON_ROOT]\" || echo '')\n\n  if [[ ${_RN_ROOT_EXISTS} ]]; then\n    if ! python3 --version >/dev/null 2>&1; then echo \"python3 not found, firebase.json file processing error.\" && exit 1; fi\n    _JSON_OUTPUT_BASE64=$(python3 -c 'import json,sys,base64;print(base64.b64encode(bytes(json.dumps(json.loads(open('\"'${_SEARCH_RESULT}'\"', '\"'rb'\"').read())['${_JSON_ROOT}']), '\"'utf-8'\"')).decode())' || echo \"e30=\")\n  fi\n\n  _PLIST_ENTRY_KEYS+=(\"firebase_json_raw\")\n  _PLIST_ENTRY_TYPES+=(\"string\")\n  _PLIST_ENTRY_VALUES+=(\"$_JSON_OUTPUT_BASE64\")\n\n  # config.app_data_collection_default_enabled\n  _APP_DATA_COLLECTION_ENABLED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"app_data_collection_default_enabled\")\n  if [[ $_APP_DATA_COLLECTION_ENABLED ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseDataCollectionDefaultEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_APP_DATA_COLLECTION_ENABLED\")\")\n  fi\n\n  # config.analytics_auto_collection_enabled\n  _ANALYTICS_AUTO_COLLECTION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_auto_collection_enabled\")\n  if [[ $_ANALYTICS_AUTO_COLLECTION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FIREBASE_ANALYTICS_COLLECTION_ENABLED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_AUTO_COLLECTION\")\")\n  fi\n\n  # config.analytics_collection_deactivated\n  _ANALYTICS_DEACTIVATED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_collection_deactivated\")\n  if [[ $_ANALYTICS_DEACTIVATED ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FIREBASE_ANALYTICS_COLLECTION_DEACTIVATED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_DEACTIVATED\")\")\n  fi\n\n  # config.analytics_idfv_collection_enabled\n  _ANALYTICS_IDFV_COLLECTION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_idfv_collection_enabled\")\n  if [[ $_ANALYTICS_IDFV_COLLECTION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_IDFV_COLLECTION_ENABLED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_IDFV_COLLECTION\")\")\n  fi\n\n  # config.analytics_default_allow_analytics_storage\n  _ANALYTICS_STORAGE=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_default_allow_analytics_storage\")\n  if [[ $_ANALYTICS_STORAGE ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_DEFAULT_ALLOW_ANALYTICS_STORAGE\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_STORAGE\")\")\n  fi\n\n  # config.analytics_default_allow_ad_storage\n  _ANALYTICS_AD_STORAGE=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_default_allow_ad_storage\")\n  if [[ $_ANALYTICS_AD_STORAGE ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_STORAGE\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_AD_STORAGE\")\")\n  fi\n\n  # config.analytics_default_allow_ad_user_data\n  _ANALYTICS_AD_USER_DATA=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_default_allow_ad_user_data\")\n  if [[ $_ANALYTICS_AD_USER_DATA ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_USER_DATA\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_AD_USER_DATA\")\")\n  fi\n\n  # config.analytics_default_allow_ad_personalization_signals\n  _ANALYTICS_PERSONALIZATION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_default_allow_ad_personalization_signals\")\n  if [[ $_ANALYTICS_PERSONALIZATION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_PERSONALIZATION_SIGNALS\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_PERSONALIZATION\")\")\n  fi\n\n  # config.analytics_registration_with_ad_network_enabled\n  _ANALYTICS_REGISTRATION_WITH_AD_NETWORK=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"google_analytics_registration_with_ad_network_enabled\")\n  if [[ $_ANALYTICS_REGISTRATION_WITH_AD_NETWORK ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_REGISTRATION_WITH_AD_NETWORK_ENABLED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_REGISTRATION_WITH_AD_NETWORK\")\")\n  fi\n\n  # config.google_analytics_automatic_screen_reporting_enabled\n  _ANALYTICS_AUTO_SCREEN_REPORTING=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"google_analytics_automatic_screen_reporting_enabled\")\n  if [[ $_ANALYTICS_AUTO_SCREEN_REPORTING ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseAutomaticScreenReportingEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_AUTO_SCREEN_REPORTING\")\")\n  fi\n\n  # config.perf_auto_collection_enabled\n  _PERF_AUTO_COLLECTION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"perf_auto_collection_enabled\")\n  if [[ $_PERF_AUTO_COLLECTION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"firebase_performance_collection_enabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_PERF_AUTO_COLLECTION\")\")\n  fi\n\n  # config.perf_collection_deactivated\n  _PERF_DEACTIVATED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"perf_collection_deactivated\")\n  if [[ $_PERF_DEACTIVATED ]]; then\n    _PLIST_ENTRY_KEYS+=(\"firebase_performance_collection_deactivated\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_PERF_DEACTIVATED\")\")\n  fi\n\n  # config.messaging_auto_init_enabled\n  _MESSAGING_AUTO_INIT=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"messaging_auto_init_enabled\")\n  if [[ $_MESSAGING_AUTO_INIT ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseMessagingAutoInitEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_MESSAGING_AUTO_INIT\")\")\n  fi\n\n  # config.in_app_messaging_auto_colllection_enabled\n  _FIAM_AUTO_INIT=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"in_app_messaging_auto_collection_enabled\")\n  if [[ $_FIAM_AUTO_INIT ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseInAppMessagingAutomaticDataCollectionEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_FIAM_AUTO_INIT\")\")\n  fi\n\n  # config.app_check_token_auto_refresh\n  _APP_CHECK_TOKEN_AUTO_REFRESH=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"app_check_token_auto_refresh\")\n  if [[ $_APP_CHECK_TOKEN_AUTO_REFRESH ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseAppCheckTokenAutoRefreshEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_APP_CHECK_TOKEN_AUTO_REFRESH\")\")\n  fi\n\n  # config.crashlytics_disable_auto_disabler - undocumented for now - mainly for debugging, document if becomes useful\n  _CRASHLYTICS_AUTO_DISABLE_ENABLED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"crashlytics_disable_auto_disabler\")\n  if [[ $_CRASHLYTICS_AUTO_DISABLE_ENABLED == \"true\" ]]; then\n    echo \"Disabled Crashlytics auto disabler.\" # do nothing\n  else\n    _PLIST_ENTRY_KEYS+=(\"FirebaseCrashlyticsCollectionEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"NO\")\n  fi\nelse\n  _PLIST_ENTRY_KEYS+=(\"firebase_json_raw\")\n  _PLIST_ENTRY_TYPES+=(\"string\")\n  _PLIST_ENTRY_VALUES+=(\"$_JSON_OUTPUT_BASE64\")\n  echo \"warning:   A firebase.json file was not found, whilst this file is optional it is recommended to include it to configure firebase services in React Native Firebase.\"\nfi;\n\necho \"info: 2) Injecting Info.plist entries: \"\n\n# Log out the keys we're adding\nfor i in \"${!_PLIST_ENTRY_KEYS[@]}\"; do\n  echo \"    ->  $i) ${_PLIST_ENTRY_KEYS[$i]}\" \"${_PLIST_ENTRY_TYPES[$i]}\" \"${_PLIST_ENTRY_VALUES[$i]}\"\ndone\n\nfor plist in \"${_TARGET_PLIST}\" \"${_DSYM_PLIST}\" ; do\n  if [[ -f \"${plist}\" ]]; then\n\n    # paths with spaces break the call to setPlistValue. temporarily modify\n    # the shell internal field separator variable (IFS), which normally\n    # includes spaces, to consist only of line breaks\n    oldifs=$IFS\n    IFS=\"\n\"\n\n    for i in \"${!_PLIST_ENTRY_KEYS[@]}\"; do\n      setPlistValue \"${_PLIST_ENTRY_KEYS[$i]}\" \"${_PLIST_ENTRY_TYPES[$i]}\" \"${_PLIST_ENTRY_VALUES[$i]}\" \"${plist}\"\n    done\n\n    # restore the original internal field separator value\n    IFS=$oldifs\n  else\n    echo \"warning:   A Info.plist build output file was not found (${plist})\"\n  fi\ndone\n\necho \"info: <- RNFB build script finished\"\n";
@@ -2440,13 +2434,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2555,6 +2545,7 @@
 				07F0C28F2A5F3E2E00D5353E /* Env.swift in Sources */,
 				074321F82A83E3CA00F8518D /* TokenProjectsQuery.graphql.swift in Sources */,
 				074322142A83E3CA00F8518D /* TimestampedAmount.graphql.swift in Sources */,
+				074322362A83E3CA00F8518D /* NftCollectionsFilterInput.graphql.swift in Sources */,
 				91D501732CDBEAE700B09B7F /* TokenBasicInfoParts.graphql.swift in Sources */,
 				0743223B2A83E3CA00F8518D /* NftAssetsFilterInput.graphql.swift in Sources */,
 				0DC6ADF02B1E2C100092909C /* PortfolioValueModifier.graphql.swift in Sources */,
@@ -2573,6 +2564,7 @@
 				07F136422A5763480067004F /* Network.swift in Sources */,
 				074322352A83E3CA00F8518D /* NftBalancesFilterInput.graphql.swift in Sources */,
 				074322132A83E3CA00F8518D /* NftCollection.graphql.swift in Sources */,
+				074321F72A83E3CA00F8518D /* ExploreSearchQuery.graphql.swift in Sources */,
 				074322052A83E3CA00F8518D /* Chain.graphql.swift in Sources */,
 				91D5017A2CDBEAE700B09B7F /* TokenFeeDataParts.graphql.swift in Sources */,
 				074322072A83E3CA00F8518D /* TransactionDirection.graphql.swift in Sources */,
@@ -2618,6 +2610,7 @@
 				A70E4DD72C260416002D6D86 /* SwapOrderType.graphql.swift in Sources */,
 				0DE251472C13B69D005F47F9 /* OnRampTransfer.graphql.swift in Sources */,
 				5EFB78362B1E585000E77EAC /* ConvertQuery.graphql.swift in Sources */,
+				074321F62A83E3CA00F8518D /* SearchTokensQuery.graphql.swift in Sources */,
 				0743223E2A83E3CA00F8518D /* IContract.graphql.swift in Sources */,
 				074321EE2A83E3CA00F8518D /* NftsTabQuery.graphql.swift in Sources */,
 				0743222B2A83E3CA00F8518D /* NftActivity.graphql.swift in Sources */,
@@ -2673,6 +2666,7 @@
 				2B12DFE797E2CBF314565D81 /* TokenProtectionInfoParts.graphql.swift in Sources */,
 				71CF37F19F1C138B57CC135C /* TopTokenParts.graphql.swift in Sources */,
 				93566FBDE94E1A2D8CC5AB62 /* ConvertQuery.graphql.swift in Sources */,
+				D90E5966447E51DA9A7C70CA /* ExploreSearchQuery.graphql.swift in Sources */,
 				63BDDE4499AC6B2375C9F795 /* FavoriteTokenCardQuery.graphql.swift in Sources */,
 				FD4E55146E046C7F5983A379 /* FeedTransactionListQuery.graphql.swift in Sources */,
 				F0D6A92BB4FCE19CDFA5BBE1 /* HomeScreenTokensQuery.graphql.swift in Sources */,
@@ -2682,6 +2676,7 @@
 				AC70FF8207ED26561B634E30 /* NftsQuery.graphql.swift in Sources */,
 				1C3559D557BC09C709104802 /* NftsTabQuery.graphql.swift in Sources */,
 				A104024A1861354EC1DD53C1 /* PortfolioBalancesQuery.graphql.swift in Sources */,
+				C048D769A74B91172D8358D5 /* SearchTokensQuery.graphql.swift in Sources */,
 				F772B09295DABC5E8895C1C5 /* SelectWalletScreenQuery.graphql.swift in Sources */,
 				9381B5EA5839DA17D07A45F0 /* TokenDetailsScreenQuery.graphql.swift in Sources */,
 				DC0641C5870F91D26C914F1D /* TokenPriceHistoryQuery.graphql.swift in Sources */,
@@ -2717,6 +2712,7 @@
 				D680C4844F2C5DACF5D0892E /* NftAssetsFilterInput.graphql.swift in Sources */,
 				AA3AE4E5C2AAC3F9460A3637 /* NftBalanceAssetInput.graphql.swift in Sources */,
 				C7ABAADA504107D152A52FD4 /* NftBalancesFilterInput.graphql.swift in Sources */,
+				9108F64BA2D114E58F2C8CF2 /* NftCollectionsFilterInput.graphql.swift in Sources */,
 				09E8C497051C37FE604FD40E /* OnRampTransactionsAuth.graphql.swift in Sources */,
 				C1FC1F8B4A2725A195F66D60 /* PortfolioValueModifier.graphql.swift in Sources */,
 				E091F379106E92D3181103CB /* IAmount.graphql.swift in Sources */,
@@ -3003,7 +2999,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3056,7 +3052,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -3109,7 +3105,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -3162,7 +3158,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -3200,7 +3196,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3236,7 +3232,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -3271,7 +3267,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -3306,7 +3302,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -3353,7 +3349,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3399,7 +3395,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.widgets;
@@ -3445,7 +3441,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.widgets;
@@ -3491,7 +3487,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.widgets;
@@ -3533,7 +3529,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3576,7 +3572,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.WidgetIntentExtension;
@@ -3619,7 +3615,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.WidgetIntentExtension;
@@ -3662,7 +3658,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.WidgetIntentExtension;
@@ -3698,7 +3694,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3736,7 +3732,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3938,7 +3934,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3983,7 +3979,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.OneSignalNotificationServiceExtension;
@@ -4094,7 +4090,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -4166,7 +4162,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.OneSignalNotificationServiceExtension;
@@ -4277,7 +4273,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -4349,7 +4345,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.55;
+				MARKETING_VERSION = 1.53.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.OneSignalNotificationServiceExtension;

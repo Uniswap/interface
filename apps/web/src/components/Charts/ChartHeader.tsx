@@ -124,7 +124,7 @@ export function ChartHeader({
       zIndex="$default"
       id="chart-header"
     >
-      <Flex position="absolute" gap="$gap4" pb={14} pointerEvents="none">
+      <Flex position="absolute" gap="$gap4" pb={14} pointerEvents="none" width="80%">
         <HeaderValueDisplay value={value} valueFormatterType={valueFormatterType} />
         <Flex row gap="$gap8" {...EllipsisTamaguiStyle}>
           {additionalFields}

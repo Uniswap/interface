@@ -1,4 +1,5 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import { ETH_LOGO, ZORA_LOGO } from 'ui/src/assets'
 import { USDC_ZORA } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -16,10 +17,12 @@ import { zora } from 'wagmi/chains'
 export const ZORA_CHAIN_INFO = {
   ...zora,
   id: UniverseChainId.Zora,
+  sdkId: UniswapSDKChainId.ZORA,
   assetRepoNetworkName: 'zora',
   backendChain: {
     chain: BackendChainId.Zora as GqlChainId,
     backendSupported: true,
+    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 1, // TODO: verify
@@ -31,6 +34,9 @@ export const ZORA_CHAIN_INFO = {
     name: 'Zora Explorer',
     url: 'https://explorer.zora.energy/',
   },
+  helpCenterUrl: undefined,
+  infoLink: 'https://app.uniswap.org/explore/tokens/zora',
+  infuraPrefix: undefined,
   interfaceName: 'zora',
   label: 'Zora Network',
   logo: ZORA_LOGO,
@@ -51,6 +57,8 @@ export const ZORA_CHAIN_INFO = {
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ZORA, 10_000e6),
   stablecoins: [USDC_ZORA],
   statusPage: undefined,
+  supportsInterfaceClientSideRouting: false,
+  supportsGasEstimates: true,
   supportsV4: true,
   urlParam: 'zora',
   wrappedNativeCurrency: {

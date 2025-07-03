@@ -19,13 +19,11 @@ import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { TransactionType, TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { BatchedRequestDetailsContent } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
 import { transformCallsToTransactionRequests } from 'wallet/src/features/batchedTransactions/utils'
-import { useLiveAccountDelegationDetails } from 'wallet/src/features/smartWallet/hooks/useLiveAccountDelegationDetails'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface SendCallsRequestContentProps {
   dappRequest: SendCallsRequest
   transactionGasFeeResult: GasFeeResult
-  showSmartWalletActivation?: boolean
   onConfirm: (transactionTypeInfo?: TransactionTypeInfo) => Promise<void>
   onCancel: () => Promise<void>
 }
@@ -33,7 +31,6 @@ interface SendCallsRequestContentProps {
 function SendCallsRequestContent({
   dappRequest,
   transactionGasFeeResult,
-  showSmartWalletActivation,
   onConfirm,
   onCancel,
 }: SendCallsRequestContentProps): JSX.Element {
@@ -52,7 +49,6 @@ function SendCallsRequestContent({
       onCancel={onCancel}
       onConfirm={() => onConfirm()}
       contentHorizontalPadding="$none"
-      showSmartWalletActivation={showSmartWalletActivation}
     >
       <BatchedRequestDetailsContent calls={dappRequest.calls} chainId={chainId} />
     </DappRequestContent>
@@ -62,11 +58,8 @@ function SendCallsRequestContent({
 export function SendCallsRequestHandler({ request }: { request: DappRequestStoreItemForSendCallsTxn }): JSX.Element {
   const { dappUrl, onConfirm, onCancel } = useDappRequestQueueContext()
   const chainId = useDappLastChainId(dappUrl)
-  const activeAccountAddress = useActiveAccountAddressWithThrow()
 
-  if (!chainId) {
-    throw new Error('Chain ID is required')
-  }
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
 
   const { dappRequest } = request
 
@@ -81,22 +74,19 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
   const { data: encoded7702data } = useWalletEncode7702Query({
     enabled: !!chainId,
     params: {
-      calls: transformCallsToTransactionRequests({
-        calls: dappRequest.calls,
-        chainId,
-        accountAddress: activeAccountAddress,
-      }),
+      calls: chainId
+        ? transformCallsToTransactionRequests({
+            calls: dappRequest.calls,
+            chainId,
+            accountAddress: activeAccountAddress,
+          })
+        : [],
       smartContractDelegationAddress: UNISWAP_DELEGATION_ADDRESS,
       // @ts-ignore - walletAddress is needed for the API but not in the type yet
       // TODO: remove this once the API is updated
       // https://linear.app/uniswap/issue/API-1050/add-missing-walletaddress-field-to-api-endpoint-types-json
       walletAddress: activeAccountAddress,
     },
-  })
-
-  const delegationData = useLiveAccountDelegationDetails({
-    address: activeAccountAddress,
-    chainId,
   })
 
   const encodedTransaction = encoded7702data?.encoded
@@ -114,26 +104,16 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
     tx: formattedTxnForGasQuery,
     skip: !formattedTxnForGasQuery.to,
     refetchInterval: PollingInterval.LightningMcQueen,
-    smartContractDelegationAddress: delegationData?.contractAddress,
   })
 
   const onConfirmRequest = useCallback(async () => {
-    // encodedTransaction doesn't include gas info
-    const txFormattedWithGasInfo = {
-      ...encodedTransaction,
-      gasLimit: transactionGasFeeResult.params?.gasLimit,
-      gasPrice:
-        transactionGasFeeResult.params && 'gasPrice' in transactionGasFeeResult.params
-          ? transactionGasFeeResult.params.gasPrice
-          : transactionGasFeeResult.params?.maxFeePerGas,
-    }
     const transactionTypeInfo: TransactionTypeInfo = {
       type: TransactionType.SendCalls,
-      encodedTransaction: txFormattedWithGasInfo,
+      encodedTransaction,
       encodedRequestId,
     }
     await onConfirm(request, transactionTypeInfo)
-  }, [encodedTransaction, encodedRequestId, onConfirm, request, transactionGasFeeResult])
+  }, [encodedTransaction, encodedRequestId, onConfirm, request])
 
   const onCancelRequest = useCallback(async () => {
     await onCancel(request)
@@ -143,7 +123,6 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
     <SwapRequestContent
       parsedCalldata={parsedSwapCalldata}
       transactionGasFeeResult={transactionGasFeeResult}
-      showSmartWalletActivation={delegationData?.needsDelegation}
       onCancel={onCancelRequest}
       onConfirm={onConfirmRequest}
     />
@@ -151,7 +130,6 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
     <SendCallsRequestContent
       dappRequest={dappRequest}
       transactionGasFeeResult={transactionGasFeeResult}
-      showSmartWalletActivation={delegationData?.needsDelegation}
       onCancel={onCancelRequest}
       onConfirm={onConfirmRequest}
     />

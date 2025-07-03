@@ -781,7 +781,7 @@ const MOCK_CREATE_POOL: OnChainTransaction = {
   },
 } as OnChainTransaction
 
-const MOCK_COLLECT_FEES: OnChainTransaction = {
+const MOCK_CLAIM: OnChainTransaction = {
   ...TRANSACTION_BASE,
   label: OnChainTransactionLabel.CLAIM,
   transfers: [
@@ -813,10 +813,10 @@ describe(parseRestLiquidityTransaction, () => {
   it('Liquidity: parse liquidity increase', () => {
     expect(parseRestLiquidityTransaction(MOCK_LIQUIDITY_INCREASE)).toEqual({
       type: TransactionType.LiquidityIncrease,
-      currency0Id: `1-${ERC20_ASSET_ADDRESS}`,
-      currency1Id: `1-${WRAPPED_NATIVE_ADDRESS}`,
-      currency0AmountRaw: '1000000000000000000',
-      currency1AmountRaw: '500000000000000000',
+      inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
+      outputCurrencyId: `1-${WRAPPED_NATIVE_ADDRESS}`,
+      inputCurrencyAmountRaw: '1000000000000000000',
+      outputCurrencyAmountRaw: '500000000000000000',
       isSpam: false,
       dappInfo: {
         name: 'Uniswap V3',
@@ -828,10 +828,10 @@ describe(parseRestLiquidityTransaction, () => {
   it('Liquidity: parse liquidity decrease', () => {
     expect(parseRestLiquidityTransaction(MOCK_LIQUIDITY_DECREASE)).toEqual({
       type: TransactionType.LiquidityDecrease,
-      currency0Id: `1-${ERC20_ASSET_ADDRESS}`,
-      currency1Id: `1-${WRAPPED_NATIVE_ADDRESS}`,
-      currency0AmountRaw: '800000000000000000',
-      currency1AmountRaw: '400000000000000000',
+      inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
+      outputCurrencyId: `1-${WRAPPED_NATIVE_ADDRESS}`,
+      inputCurrencyAmountRaw: '800000000000000000',
+      outputCurrencyAmountRaw: '400000000000000000',
       isSpam: false,
       dappInfo: {
         name: 'Uniswap V3',
@@ -843,10 +843,10 @@ describe(parseRestLiquidityTransaction, () => {
   it('Liquidity: parse create pool', () => {
     expect(parseRestLiquidityTransaction(MOCK_CREATE_POOL)).toEqual({
       type: TransactionType.CreatePool,
-      currency0Id: `1-${ERC20_ASSET_ADDRESS}`,
-      currency1Id: `1-${WRAPPED_NATIVE_ADDRESS}`,
-      currency0AmountRaw: '2000000000000000000',
-      currency1AmountRaw: '1000000000000000000',
+      inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
+      outputCurrencyId: `1-${WRAPPED_NATIVE_ADDRESS}`,
+      inputCurrencyAmountRaw: '2000000000000000000',
+      outputCurrencyAmountRaw: '1000000000000000000',
       isSpam: false,
       dappInfo: {
         name: 'Uniswap V3',
@@ -855,13 +855,13 @@ describe(parseRestLiquidityTransaction, () => {
     })
   })
 
-  it('Liquidity: parse collect fees', () => {
-    expect(parseRestLiquidityTransaction(MOCK_COLLECT_FEES)).toEqual({
-      type: TransactionType.CollectFees,
-      currency0Id: `1-${ERC20_ASSET_ADDRESS}`,
-      currency1Id: undefined,
-      currency0AmountRaw: '100000000000000000',
-      currency1AmountRaw: undefined,
+  it('Liquidity: parse claim', () => {
+    expect(parseRestLiquidityTransaction(MOCK_CLAIM)).toEqual({
+      type: TransactionType.Claim,
+      inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
+      outputCurrencyId: undefined,
+      inputCurrencyAmountRaw: '100000000000000000',
+      outputCurrencyAmountRaw: undefined,
       isSpam: false,
       dappInfo: {
         name: 'Uniswap',
@@ -917,8 +917,8 @@ describe(extractRestOnChainTransactionDetails, () => {
     expect(txn?.typeInfo.type).toEqual(TransactionType.CreatePool)
   })
   it('Claim', () => {
-    const txn = extractRestOnChainTransactionDetails(MOCK_COLLECT_FEES)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.CollectFees)
+    const txn = extractRestOnChainTransactionDetails(MOCK_CLAIM)
+    expect(txn?.typeInfo.type).toEqual(TransactionType.Claim)
   })
   it('Bridge', () => {
     const txn = extractRestOnChainTransactionDetails(MOCK_BRIDGE)

@@ -11,7 +11,7 @@ import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/de
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import i18n from 'uniswap/src/i18n'
 import { daiCurrencyInfo, ethCurrencyInfo } from 'uniswap/src/test/fixtures'
-import { createGasEstimate } from 'uniswap/src/test/fixtures/tradingApi'
+import { createGasFeeEstimates } from 'uniswap/src/test/fixtures/tradingApi'
 import { mockLocalizedFormatter } from 'uniswap/src/test/mocks'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
@@ -54,7 +54,7 @@ const swapState: DerivedSwapInfo = {
     trade: null,
     indicativeTrade: undefined,
     isIndicativeLoading: false,
-    gasEstimate: createGasEstimate(),
+    gasEstimates: createGasFeeEstimates(),
   },
 }
 
@@ -84,7 +84,7 @@ const insufficientBalanceState: DerivedSwapInfo = {
     trade: null,
     indicativeTrade: undefined,
     isIndicativeLoading: false,
-    gasEstimate: createGasEstimate(),
+    gasEstimates: createGasFeeEstimates(),
   },
 }
 
@@ -125,7 +125,7 @@ const tradeErrorState: DerivedSwapInfo = {
     trade: null,
     indicativeTrade: undefined,
     isIndicativeLoading: false,
-    gasEstimate: createGasEstimate(),
+    gasEstimates: createGasFeeEstimates(),
   },
 }
 const { formatPercent } = mockLocalizedFormatter(Locale.EnglishUnitedStates)

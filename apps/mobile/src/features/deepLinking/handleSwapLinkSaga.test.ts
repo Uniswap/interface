@@ -1,30 +1,11 @@
 import { URL } from 'react-native-url-polyfill'
 import { expectSaga } from 'redux-saga-test-plan'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
+import { openModal } from 'src/features/modals/modalSlice'
 import { DAI, UNI, USDC_UNICHAIN_SEPOLIA } from 'uniswap/src/constants/tokens'
-import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
-
-jest.mock('src/app/navigation/rootNavigation', () => ({
-  navigate: jest.fn(),
-}))
-
-jest.mock('uniswap/src/features/settings/saga', () => ({
-  *getEnabledChainIdsSaga(): Generator<
-    undefined,
-    { isTestnetModeEnabled: boolean; chains: never[]; defaultChainId: number }
-  > {
-    yield
-    return {
-      isTestnetModeEnabled: false,
-      chains: [],
-      defaultChainId: 1,
-    }
-  },
-}))
 
 const account = signerMnemonicAccount()
 
@@ -117,52 +98,16 @@ const invalidCurrencyFieldSwapUrl = formSwapUrl({
 })
 
 describe(handleSwapLink, () => {
-  const mockNavigate = navigate as jest.MockedFunction<typeof navigate>
-
-  beforeEach(() => {
-    mockNavigate.mockClear()
-  })
-
   describe('valid inputs', () => {
-    it('Navigates to the swap screen with all params if all inputs are valid; testnet mode aligned', async () => {
-      await expectSaga(handleSwapLink, swapUrl).silentRun()
-      expect(mockNavigate).toHaveBeenCalledWith(
-        ModalName.Swap,
-        expect.objectContaining({
-          input: {
-            address: DAI.address,
-            chainId: UniverseChainId.Mainnet,
-            type: AssetType.Currency,
-          },
-          output: {
-            address: UNI[UniverseChainId.Mainnet].address,
-            chainId: UniverseChainId.Mainnet,
-            type: AssetType.Currency,
-          },
-          exactCurrencyField: 'input',
-          exactAmountToken: '100',
-        }),
-      )
+    it('Navigates to the swap screen with all params if all inputs are valid; testnet mode aligned', () => {
+      return expectSaga(handleSwapLink, swapUrl)
+        .put(openModal({ name: ModalName.Swap }))
+        .silentRun()
     })
-    it('Navigates to the swap screen with all params if all inputs are valid; testnet mode not aligned', async () => {
-      await expectSaga(handleSwapLink, testnetSwapUrl).silentRun()
-      expect(mockNavigate).toHaveBeenCalledWith(
-        ModalName.Swap,
-        expect.objectContaining({
-          input: {
-            address: USDC_UNICHAIN_SEPOLIA.address,
-            chainId: UniverseChainId.Sepolia,
-            type: AssetType.Currency,
-          },
-          output: {
-            address: UNI[UniverseChainId.Sepolia].address,
-            chainId: UniverseChainId.Sepolia,
-            type: AssetType.Currency,
-          },
-          exactCurrencyField: 'input',
-          exactAmountToken: '100',
-        }),
-      )
+    it('Navigates to the swap screen with all params if all inputs are valid; testnet mode not aligned', () => {
+      return expectSaga(handleSwapLink, testnetSwapUrl)
+        .put(openModal({ name: ModalName.Swap }))
+        .silentRun()
     })
   })
 
@@ -171,29 +116,34 @@ describe(handleSwapLink, () => {
       jest.spyOn(console, 'error').mockImplementation(() => undefined)
     })
 
-    it('Navigates to an empty swap screen if outputCurrency is invalid', async () => {
-      await expectSaga(handleSwapLink, invalidOutputCurrencySwapUrl).silentRun()
-      expect(mockNavigate).toHaveBeenCalledWith(ModalName.Swap)
+    it('Navigates to an empty swap screen if outputCurrency is invalid', () => {
+      return expectSaga(handleSwapLink, invalidOutputCurrencySwapUrl)
+        .put(openModal({ name: ModalName.Swap }))
+        .silentRun()
     })
 
-    it('Navigates to an empty swap screen if inputToken is invalid', async () => {
-      await expectSaga(handleSwapLink, invalidInputTokenSwapURl).silentRun()
-      expect(mockNavigate).toHaveBeenCalledWith(ModalName.Swap)
+    it('Navigates to an empty swap screen if inputToken is invalid', () => {
+      return expectSaga(handleSwapLink, invalidInputTokenSwapURl)
+        .put(openModal({ name: ModalName.Swap }))
+        .silentRun()
     })
 
-    it('Navigates to an empty swap screen if the chain is not supported', async () => {
-      await expectSaga(handleSwapLink, invalidChainSwapUrl).silentRun()
-      expect(mockNavigate).toHaveBeenCalledWith(ModalName.Swap)
+    it('Navigates to an empty swap screen if the chain is not supported', () => {
+      return expectSaga(handleSwapLink, invalidChainSwapUrl)
+        .put(openModal({ name: ModalName.Swap }))
+        .silentRun()
     })
 
-    it('Navigates to an empty swap screen if the swap amount is invalid', async () => {
-      await expectSaga(handleSwapLink, invalidAmountSwapUrl).silentRun()
-      expect(mockNavigate).toHaveBeenCalledWith(ModalName.Swap)
+    it('Navigates to an empty swap screen if the swap amount is invalid', () => {
+      return expectSaga(handleSwapLink, invalidAmountSwapUrl)
+        .put(openModal({ name: ModalName.Swap }))
+        .silentRun()
     })
 
-    it('Navigates to an empty swap screen if currency field is invalid', async () => {
-      await expectSaga(handleSwapLink, invalidCurrencyFieldSwapUrl).silentRun()
-      expect(mockNavigate).toHaveBeenCalledWith(ModalName.Swap)
+    it('Navigates to an empty swap screen if currency field is invalid', () => {
+      return expectSaga(handleSwapLink, invalidCurrencyFieldSwapUrl)
+        .put(openModal({ name: ModalName.Swap }))
+        .silentRun()
     })
   })
 })

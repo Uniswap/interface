@@ -4,7 +4,7 @@ import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { isInterface } from 'utilities/src/platform'
 
@@ -12,15 +12,7 @@ export function useSwapOnPrevious(): {
   onPrev: () => void
 } {
   const dispatch = useDispatch()
-  const {
-    exactCurrencyField: ctxExactCurrencyField,
-    focusOnCurrencyField,
-    updateSwapForm,
-  } = useSwapFormStore((s) => ({
-    exactCurrencyField: s.exactCurrencyField,
-    focusOnCurrencyField: s.focusOnCurrencyField,
-    updateSwapForm: s.updateSwapForm,
-  }))
+  const { exactCurrencyField: ctxExactCurrencyField, focusOnCurrencyField, updateSwapForm } = useSwapFormContext()
   const { setScreen } = useTransactionModalContext()
 
   const onPrev = useCallback(() => {

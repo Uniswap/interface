@@ -1,4 +1,11 @@
-import { BridgeTransactionInfo, SendTransactionInfo, TransactionInfo, TransactionType } from 'state/transactions/types'
+import {
+  BridgeTransactionInfo,
+  SendTransactionInfo,
+  TransactionInfo,
+  TransactionType,
+  WrapTransactionInfo,
+} from 'state/transactions/types'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -8,48 +15,60 @@ import {
   TransactionDetails as UniswapTransactionDetails,
   TransactionType as UniswapTransactionType,
   WrapTransactionInfo as UniswapWrapTransactionInfo,
-  WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
-const createUniverseSwapTransaction = ({
-  inputCurrencyId,
-  outputCurrencyId,
-}: {
-  inputCurrencyId: string
-  outputCurrencyId: string
-}) => {
+const createUniverseSwapTransaction = (
+  info: {
+    inputCurrencyId: string
+    outputCurrencyId: string
+  },
+  chainId: UniverseChainId,
+) => {
+  const inputCurrencyId = info.inputCurrencyId === 'ETH' ? null : buildCurrencyId(chainId, info.inputCurrencyId)
+  const outputCurrencyId = info.outputCurrencyId === 'ETH' ? null : buildCurrencyId(chainId, info.outputCurrencyId)
+  const nativeCurrencyId = buildNativeCurrencyId(chainId)
+
   return {
     typeInfo: {
       type: UniswapTransactionType.Swap,
-      inputCurrencyId,
-      outputCurrencyId,
+      inputCurrencyId: inputCurrencyId ?? nativeCurrencyId,
+      outputCurrencyId: outputCurrencyId ?? nativeCurrencyId,
     },
   } as UniswapTransactionDetails
 }
 
 function createUniverseBridgeTransaction({
-  inputCurrencyId,
-  outputCurrencyId,
-  inputCurrencyAmountRaw,
-  outputCurrencyAmountRaw,
-}: BridgeTransactionInfo) {
+  info,
+  inputChainId,
+  outputChainId,
+}: {
+  info: BridgeTransactionInfo
+  inputChainId: UniverseChainId
+  outputChainId: UniverseChainId
+}) {
+  const inputCurrencyId = info.inputCurrencyId === 'ETH' ? null : buildCurrencyId(inputChainId, info.inputCurrencyId)
+  const outputCurrencyId =
+    info.outputCurrencyId === 'ETH' ? null : buildCurrencyId(outputChainId, info.outputCurrencyId)
+  const inputNativeCurrencyId = buildNativeCurrencyId(inputChainId)
+  const outputNativeCurrencyId = buildNativeCurrencyId(outputChainId)
+
   return {
     typeInfo: {
       type: UniswapTransactionType.Bridge,
-      inputCurrencyId,
-      outputCurrencyId,
-      inputCurrencyAmountRaw,
-      outputCurrencyAmountRaw,
+      inputCurrencyId: inputCurrencyId ?? inputNativeCurrencyId,
+      outputCurrencyId: outputCurrencyId ?? outputNativeCurrencyId,
+      inputCurrencyAmountRaw: info.inputCurrencyAmountRaw,
+      outputCurrencyAmountRaw: info.outputCurrencyAmountRaw,
     } satisfies UniswapBridgeTransactionInfo,
   } as UniswapTransactionDetails
 }
 
-const createUniverseSendTransaction = (info: SendTransactionInfo) => {
+const createUniverseSendTransaction = (info: SendTransactionInfo, chainId: UniverseChainId) => {
   return {
     typeInfo: {
       type: UniswapTransactionType.Send,
-      tokenAddress: currencyIdToAddress(info.currencyId),
+      tokenAddress: info.currencyId === 'ETH' ? getNativeAddress(chainId) : info.currencyId,
       assetType: AssetType.Currency,
       recipient: info.recipient,
     } satisfies UniswapSendTokenTransactionInfo,
@@ -89,42 +108,56 @@ export const createUniverseTransaction = ({
   let transaction: UniswapTransactionDetails | undefined
 
   switch (info.type) {
-    case UniswapTransactionType.Swap:
-      transaction = createUniverseSwapTransaction(info)
+    case TransactionType.SWAP:
+      transaction = createUniverseSwapTransaction(info, chainId)
       break
     case TransactionType.BRIDGE:
-      transaction = createUniverseBridgeTransaction(info)
+      transaction = createUniverseBridgeTransaction({
+        info,
+        inputChainId: info.inputChainId,
+        outputChainId: info.outputChainId,
+      })
       break
     case TransactionType.SEND:
-      transaction = createUniverseSendTransaction(info)
+      transaction = createUniverseSendTransaction(info, chainId)
       break
-    case UniswapTransactionType.Wrap:
+    case TransactionType.WRAP:
       transaction = createUniverseWrapTransaction(info)
       break
-    case UniswapTransactionType.CreatePool:
-    case UniswapTransactionType.CreatePair:
-    case UniswapTransactionType.LiquidityIncrease:
-    case UniswapTransactionType.LiquidityDecrease:
+    case TransactionType.CREATE_POSITION:
+    case TransactionType.INCREASE_LIQUIDITY:
+    case TransactionType.DECREASE_LIQUIDITY:
     case TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4:
-      transaction = createUniverseSwapTransaction({
-        inputCurrencyId: info.currency0Id,
-        outputCurrencyId: info.currency1Id,
-      })
+    case TransactionType.COLLECT_FEES:
+      transaction = createUniverseSwapTransaction(
+        {
+          inputCurrencyId: info.token0CurrencyId,
+          outputCurrencyId: info.token1CurrencyId,
+        },
+        chainId,
+      )
       break
-    case UniswapTransactionType.CollectFees:
-      transaction = {
-        typeInfo: info,
-      } as UniswapTransactionDetails satisfies UniswapTransactionDetails
+    case TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3:
+      transaction = createUniverseSwapTransaction(
+        {
+          inputCurrencyId: info.baseCurrencyId,
+          outputCurrencyId: info.quoteCurrencyId,
+        },
+        chainId,
+      )
       break
-    case UniswapTransactionType.MigrateLiquidityV2ToV3:
-      transaction = createUniverseSwapTransaction({
-        inputCurrencyId: info.baseCurrencyId,
-        outputCurrencyId: info.quoteCurrencyId,
-      })
-      break
-    // Native token spend cases which are already handled in the refetchGQLQueries saga
-    case UniswapTransactionType.Approve:
-    case UniswapTransactionType.ClaimUni:
+    // Some of these transaction types are soon to be deprecated
+    // others (like APPROVAL) are just a native token spend
+    // which is already handled in the refetchGQLQueries saga.
+    case TransactionType.APPROVAL:
+    case TransactionType.DEPOSIT_LIQUIDITY_STAKING:
+    case TransactionType.WITHDRAW_LIQUIDITY_STAKING:
+    case TransactionType.CLAIM:
+    case TransactionType.CREATE_V3_POOL:
+    case TransactionType.ADD_LIQUIDITY_V3_POOL:
+    case TransactionType.REMOVE_LIQUIDITY_V3:
+    case TransactionType.ADD_LIQUIDITY_V2_POOL:
+    case TransactionType.SUBMIT_PROPOSAL:
     case TransactionType.LP_INCENTIVES_CLAIM_REWARDS:
     case TransactionType.PERMIT:
       return { ...baseTransaction, ...info } as UniswapTransactionDetails

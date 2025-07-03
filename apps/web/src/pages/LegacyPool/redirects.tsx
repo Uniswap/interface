@@ -5,11 +5,11 @@ import { useV2Pair } from 'hooks/useV2Pairs'
 import { getCurrencyWithWrap } from 'pages/Pool/Positions/create/utils'
 import { Suspense, lazy } from 'react'
 import { Navigate, useParams, useSearchParams } from 'react-router-dom'
+import { parseCurrencyFromURLParameter } from 'state/swap/hooks'
 import { Loader } from 'ui/src/loading/Loader'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { searchParamToBackendName } from 'utils/chainParams'
+import { getChainIdFromChainUrlParam, searchParamToBackendName } from 'utils/chainParams'
 import { useAccount } from 'wagmi'
 
 const PoolFinder = lazy(() => import('pages/PoolFinder'))
@@ -37,10 +37,13 @@ export function RemoveLiquidityV2WithTokenRedirects() {
     currencyIdA: string
     currencyIdB: string
   }>()
+  const [searchParams] = useSearchParams()
+  const chainParam = searchParams.get('chain') ?? undefined
 
-  const chainId = currencyIdToChain(currencyIdA ?? '') ?? connectedChainId ?? defaultChainId
-  const currencyAddressA = currencyIdToAddress(currencyIdA ?? '')
-  const currencyAddressB = currencyIdToAddress(currencyIdB ?? '')
+  const currencyAddressA = parseCurrencyFromURLParameter(currencyIdA ?? '')
+  const currencyAddressB = parseCurrencyFromURLParameter(currencyIdB ?? '')
+
+  const chainId = getChainIdFromChainUrlParam(chainParam) ?? connectedChainId ?? defaultChainId
 
   const [currencyA, currencyB] = [
     useCurrency({ address: currencyAddressA, chainId }),

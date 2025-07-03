@@ -150,7 +150,6 @@ export const ModalName = {
   SmartWalletInfoModal: 'smart-wallet-info-modal',
   SmartWalletUpgradeModal: 'smart-wallet-upgrade-modal',
   SmartWalletUnavailableModal: 'smart-wallet-unavailable-modal',
-  SmartWalletWarningModal: 'smart-wallet-warning-modal',
   StorageWarning: 'storage-warning-modal',
   Swap: 'swap-modal',
   SwapError: 'swap-error-modal',

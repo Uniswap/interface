@@ -1,9 +1,11 @@
-import type { ReactNode } from 'react'
-import { memo } from 'react'
+import { ReactNode, memo } from 'react'
 import { Flex } from 'ui/src'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { useSwapDependencies } from 'uniswap/src/features/transactions/swap/contexts/SwapDependenciesContext'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { SwapErrorScreen } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapErrorScreen'
 import { SwapReviewFooter } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/SwapReviewFooter'
 import { SwapReviewLoadingView } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewLoadingView'
@@ -11,25 +13,19 @@ import { SwapReviewSwapDetails } from 'uniswap/src/features/transactions/swap/re
 import { SwapReviewWarningModal } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewWarningModal'
 import { SwapReviewWrapTransactionDetails } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewWrapTransactionDetails'
 import { TransactionAmountsReview } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/TransactionAmountsReview'
-import { useAcceptedTrade } from 'uniswap/src/features/transactions/swap/review/hooks/useAcceptedTrade'
-import { useSwapOnPrevious } from 'uniswap/src/features/transactions/swap/review/hooks/useSwapOnPrevious'
-import { SwapReviewCallbacksContextProvider } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/SwapReviewCallbacksStoreContextProvider'
-import { SwapReviewStoreContextProvider } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/SwapReviewStoreContextProvider'
-import {
-  useShowInterfaceReviewSteps,
-  useSwapReviewStore,
-} from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/useSwapReviewStore'
-import { SwapReviewTransactionStoreContextProvider } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewTransactionStore/SwapReviewTransactionStoreContextProvider'
+import { SwapReviewCallbacksContextProvider } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewCallbacksContextProvider'
+import { useSwapReviewState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewStateContext'
+import { SwapReviewStateContextProvider } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewStateContextProvider'
 import {
   useIsSwapMissingParams,
   useIsSwapReviewLoading,
   useSwapReviewError,
-  useSwapReviewTransactionStore,
-} from 'uniswap/src/features/transactions/swap/review/stores/swapReviewTransactionStore/useSwapReviewTransactionStore'
-import { SwapReviewWarningStoreContextProvider } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewWarningStore/SwapReviewWarningStoreContextProvider'
-import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
-import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
+  useSwapReviewTransactionState,
+} from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewTransactionContext'
+import { SwapReviewTransactionContextProvider } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewTransactionContextProvider'
+import { SwapReviewWarningStateContextProvider } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewWarningStateContextProvider'
+import { useAcceptedTrade } from 'uniswap/src/features/transactions/swap/review/hooks/useAcceptedTrade'
+import { useSwapOnPrevious } from 'uniswap/src/features/transactions/swap/review/hooks/useSwapOnPrevious'
 import { logger } from 'utilities/src/logger/logger'
 import { isWeb } from 'utilities/src/platform'
 
@@ -38,26 +34,27 @@ interface SwapReviewScreenProps {
   onSubmitSwap?: () => Promise<void> | void
 }
 
-export function SwapReviewScreen({ hideContent, onSubmitSwap }: SwapReviewScreenProps): JSX.Element {
+export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | null {
+  const { hideContent, onSubmitSwap } = props
   return <SwapReviewScreenProviders hideContent={hideContent} onSubmitSwap={onSubmitSwap} />
 }
 
-export function SwapReviewScreenProviders({ hideContent, onSubmitSwap }: SwapReviewScreenProps): JSX.Element {
+export function SwapReviewScreenProviders(
+  props: Omit<SwapReviewScreenProps, 'swapCallback' | 'wrapCallback'>,
+): JSX.Element | null {
+  const { hideContent, onSubmitSwap } = props
   const { onClose, authTrigger, setScreen } = useTransactionModalContext()
-  const isSubmitting = useSwapFormStore((s) => s.isSubmitting)
-  const { derivedSwapInfo, getExecuteSwapService } = useSwapDependenciesStore((s) => ({
-    derivedSwapInfo: s.derivedSwapInfo,
-    getExecuteSwapService: s.getExecuteSwapService,
-  }))
-  const swapTxContext = useSwapTxStore((s) => s)
+  const { isSubmitting } = useSwapFormContext()
+  const { derivedSwapInfo, getExecuteSwapService } = useSwapDependencies()
+  const swapTxContext = useSwapTxContext()
   const { onAcceptTrade, acceptedDerivedSwapInfo, newTradeRequiresAcceptance } = useAcceptedTrade({
     derivedSwapInfo,
     isSubmitting,
   })
 
   return (
-    <SwapReviewStoreContextProvider hideContent={hideContent}>
-      <SwapReviewWarningStoreContextProvider>
+    <SwapReviewStateContextProvider hideContent={hideContent}>
+      <SwapReviewWarningStateContextProvider>
         <SwapReviewCallbacksContextProvider
           setScreen={setScreen}
           authTrigger={authTrigger}
@@ -66,35 +63,23 @@ export function SwapReviewScreenProviders({ hideContent, onSubmitSwap }: SwapRev
           onClose={onClose}
           onAcceptTrade={onAcceptTrade}
         >
-          <SwapReviewTransactionStoreContextProvider
+          <SwapReviewTransactionContextProvider
             derivedSwapInfo={derivedSwapInfo}
             swapTxContext={swapTxContext}
             acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
             newTradeRequiresAcceptance={newTradeRequiresAcceptance}
           >
             <SwapReviewContent />
-          </SwapReviewTransactionStoreContextProvider>
+          </SwapReviewTransactionContextProvider>
         </SwapReviewCallbacksContextProvider>
-      </SwapReviewWarningStoreContextProvider>
-    </SwapReviewStoreContextProvider>
+      </SwapReviewWarningStateContextProvider>
+    </SwapReviewStateContextProvider>
   )
 }
 
 function SwapReviewContent(): JSX.Element | null {
-  const { acceptedDerivedSwapInfo, isWrap, newTradeRequiresAcceptance } = useSwapReviewTransactionStore((s) => ({
-    acceptedDerivedSwapInfo: s.acceptedDerivedSwapInfo,
-    isWrap: s.isWrap,
-    newTradeRequiresAcceptance: s.newTradeRequiresAcceptance,
-  }))
-
-  const { steps, currentStep, hideContent } = useSwapReviewStore((s) => ({
-    steps: s.steps,
-    currentStep: s.currentStep,
-    hideContent: s.hideContent,
-  }))
-
-  const showInterfaceReviewSteps = useShowInterfaceReviewSteps()
-
+  const { acceptedDerivedSwapInfo, isWrap, newTradeRequiresAcceptance } = useSwapReviewTransactionState()
+  const { hideContent, showInterfaceReviewSteps, steps, currentStep } = useSwapReviewState()
   const { onPrev } = useSwapOnPrevious()
 
   const isLoading = useIsSwapReviewLoading()
@@ -159,7 +144,7 @@ const SwapReviewContentWrapper = memo(function SwapReviewContentWrapper({
   children,
 }: {
   children: ReactNode
-}): JSX.Element {
+}): JSX.Element | null {
   const { bottomSheetViewStyles } = useTransactionModalContext()
   return (
     <TransactionModalInnerContainer bottomSheetViewStyles={bottomSheetViewStyles} fullscreen={false}>

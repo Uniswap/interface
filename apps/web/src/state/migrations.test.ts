@@ -92,8 +92,9 @@ describe('redux migrations', () => {
         test: 'user',
         userRouterPreference: RouterPreference.X,
       },
-      // this is cleared in a future migration
-      signatures: {},
+      signatures: {
+        test: 'signatures',
+      },
     })
   })
 

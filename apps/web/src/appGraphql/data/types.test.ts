@@ -11,7 +11,6 @@ import {
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { removeSafetyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
-import { currencyId } from 'uniswap/src/utils/currencyId'
 
 const MAINNET_NATIVE_GQL_TOKEN = {
   __typename: 'Token',
@@ -40,7 +39,7 @@ const MAINNET_NATIVE_GQL_TOKEN = {
 
 const MAINNET_NATIVE_CURRENCY_INFO = {
   currency: nativeOnChain(UniverseChainId.Mainnet),
-  currencyId: currencyId(nativeOnChain(UniverseChainId.Mainnet)),
+  currencyId: 'ETH',
   isSpam: false,
   logoUrl: 'eth_url',
   safetyInfo: {
@@ -154,7 +153,7 @@ describe('gqlTokenToCurrencyInfo', () => {
     })
     expect(removeSafetyInfo(result)).toEqual({
       currency: DAI,
-      currencyId: currencyId(DAI),
+      currencyId: DAI.address,
       isSpam: false,
       logoUrl: 'dai_url',
     })
@@ -173,7 +172,7 @@ describe('gqlTokenToCurrencyInfo', () => {
         name: undefined, // default since it's missing
         symbol: undefined, // default since it's missing
       },
-      currencyId: currencyId(USDC_MAINNET),
+      currencyId: USDC_MAINNET.address,
       isSpam: false,
       logoUrl: undefined,
     })

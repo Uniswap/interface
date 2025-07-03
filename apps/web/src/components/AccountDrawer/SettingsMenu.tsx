@@ -14,7 +14,6 @@ import { Flex, Text } from 'ui/src'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const Container = styled(Column)`
   height: 100%;
@@ -88,7 +87,7 @@ export default function SettingsMenu({
             title={t('common.language')}
             currentState={languageInfo.displayName}
             onClick={openLanguageSettings}
-            testId={TestID.LanguageSettingsButton}
+            testId="language-settings-button"
           />
           <SettingsButton
             title={t('settings.setting.smallBalances.title')}

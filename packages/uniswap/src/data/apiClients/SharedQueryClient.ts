@@ -1,6 +1,5 @@
 import { QueryClient } from '@tanstack/react-query'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
-import { hashKey } from 'utilities/src/reactQuery/hashKey'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export const SharedQueryClient = new QueryClient({
@@ -19,7 +18,6 @@ export const SharedQueryClient = new QueryClient({
 
         return false
       },
-      queryKeyHashFn: hashKey,
     },
   },
 })

@@ -119,7 +119,7 @@ export async function fetchOnChainBalances({
   return onchainBalancesByCurrencyId
 }
 
-export type DenominatedValue = { value: number; currency: string }
+type DenominatedValue = { value: number; currency: string }
 
 async function getDenominatedValue({
   accountAddress,
@@ -245,7 +245,7 @@ function getInferredCachedDenominatedValue({
   return undefined
 }
 
-export async function fetchIndicativeQuote(params: QuoteRequest): Promise<QuoteResponse | undefined> {
+async function fetchIndicativeQuote(params: QuoteRequest): Promise<QuoteResponse | undefined> {
   try {
     return await fetchTradingApiIndicativeQuoteIgnoring404({ params })
   } catch (error) {

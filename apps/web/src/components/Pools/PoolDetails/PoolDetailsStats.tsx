@@ -13,10 +13,10 @@ import styled, { css, useTheme } from 'lib/styled-components'
 import { ReactNode, useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { Text as RebassText } from 'rebass'
+import { Text } from 'rebass'
 import { ThemedText } from 'theme/components'
 import { ClickableStyle } from 'theme/components/styles'
-import { Flex, Text, useMedia } from 'ui/src'
+import { Flex, useMedia } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -26,7 +26,7 @@ import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
-const HeaderText = styled(RebassText)`
+const HeaderText = styled(Text)`
   font-weight: 485;
   font-size: 24px;
   line-height: 36px;
@@ -142,12 +142,10 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
     <PoolBalanceTokenNamesContainer>
       <Flex row alignItems="center" gap="$spacing4">
         {!isLargeScreen && <CurrencyLogo currency={currency} size={20} />}
-        <Text variant="heading3" fontSize={20}>
-          {formatNumberOrString({
-            value: token.tvl,
-            type: NumberType.TokenQuantityStats,
-          })}
-        </Text>
+        {formatNumberOrString({
+          value: token.tvl,
+          type: NumberType.TokenQuantityStats,
+        })}
         <StyledLink
           to={getTokenDetailsURL({
             address: unwrappedToken.address,
@@ -258,7 +256,7 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
       {poolData.volumeUSD24H !== undefined && poolData.feeTier !== undefined && (
         <StatItem
           title={<Trans i18nKey="stats.24fees" />}
-          value={poolData.volumeUSD24H * (poolData.feeTier.feeAmount / 1000000)}
+          value={poolData.volumeUSD24H * (poolData.feeTier / 1000000)}
         />
       )}
     </StatsWrapper>
@@ -277,7 +275,7 @@ const StatsTextContainer = styled(Row)`
   }
 `
 
-const StatItemText = styled(RebassText)`
+const StatItemText = styled(Text)`
   color: ${({ theme }) => theme.neutral1};
   font-size: 36px;
   font-weight: 485;

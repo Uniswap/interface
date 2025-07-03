@@ -33,7 +33,7 @@ export function StorageWarningModal({ isOnboarding }: StorageWarningModalProps):
           ? undefined
           : (): void => {
               onStorageWarningClose()
-              navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ViewRecoveryPhrase}`)
+              navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ViewRecoveryPhrase}`)
             }
       }
     />

@@ -1,6 +1,5 @@
-import type { TFunction } from 'i18next'
-import type { ReactNode } from 'react'
-import { useCallback, useState } from 'react'
+import { TFunction } from 'i18next'
+import { ReactNode, useCallback, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Switch, Text, TouchableArea, UniswapXText, useSporeColors, type FlexProps } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -27,10 +26,12 @@ import { useSwapFormSettingsContext } from 'uniswap/src/features/transactions/sw
 import { UniswapXInfo } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/UniswapXInfo'
 import { V4HooksInfo } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/V4HooksInfo'
 import { isDefaultTradeRouteOptions } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/isDefaultTradeRouteOptions'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
-import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { DEFAULT_PROTOCOL_OPTIONS } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import {
+  DEFAULT_PROTOCOL_OPTIONS,
+  FrontendSupportedProtocol,
+} from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { openUri } from 'uniswap/src/utils/linking'
 import { isExtension, isInterface, isWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -49,7 +50,7 @@ export function TradeRoutingPreferenceScreen(): JSX.Element {
   )
   const uniswapXEnabledFlag = useFeatureFlag(FeatureFlags.UniswapX)
 
-  const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
+  const { chainId } = useSwapFormContext().derivedSwapInfo
   const isUniswapXSupported = getIsUniswapXSupported?.(chainId)
   const uniswapXEnabled = uniswapXEnabledFlag && chainId !== UniverseChainId.MonadTestnet
   const v4SwapEnabled = useV4SwapEnabled(chainId)

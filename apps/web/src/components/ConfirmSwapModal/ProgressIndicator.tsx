@@ -22,7 +22,7 @@ import { UniswapXOrderStatus } from 'types/uniswapx'
 import { Flex } from 'ui/src'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SignatureExpiredError } from 'utils/errors'
 
 const DividerContainer = styled(Column)`
@@ -81,7 +81,8 @@ export default function ProgressIndicator({
   const swapStatus = useSwapTransactionStatus(swapResult)
   const uniswapXOrder = useOrder(isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : '')
 
-  const swapConfirmed = swapStatus === TransactionStatus.Success || uniswapXOrder?.status === UniswapXOrderStatus.FILLED
+  const swapConfirmed =
+    swapStatus === TransactionStatus.Confirmed || uniswapXOrder?.status === UniswapXOrderStatus.FILLED
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
 
   const swapPending = swapResult !== undefined && !swapConfirmed

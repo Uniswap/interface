@@ -1,15 +1,18 @@
+import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PADDING_STRENGTH_INDICATOR, PasswordInput } from 'src/app/components/PasswordInput'
-import { useShouldShowBiometricUnlockEnrollment } from 'src/app/features/biometricUnlock/useShouldShowBiometricUnlockEnrollment'
 import { BiometricUnlockSetUp } from 'src/app/features/onboarding/BiometricUnlockSetUp'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
+import { builtInBiometricCapabilitiesQuery } from 'src/app/utils/device/builtInBiometricCapabilitiesQuery'
 import { Flex, Square, Text } from 'ui/src'
 import { Lock } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -25,14 +28,17 @@ export function Password({
   onComplete: (password: string) => Promise<void>
   onBack?: () => void
 }): JSX.Element {
+  const { t } = useTranslation()
   const { resetOnboardingContextData } = useOnboardingContext()
 
   const [password, setPassword] = useState<null | string>(null)
 
-  const shouldShowBiometricUnlockEnrollment = useShouldShowBiometricUnlockEnrollment({ flow: 'onboarding' })
+  const isBiometricUnlockEnabled = useFeatureFlag(FeatureFlags.ExtensionBiometricUnlock)
+  const { data: biometricCapabilities } = useQuery(builtInBiometricCapabilitiesQuery({ t }))
+  const shouldShowBiometricUnlockSetUp = isBiometricUnlockEnabled && biometricCapabilities?.hasBuiltInBiometricSensor
 
   const onPasswordNext = useEvent(async (password: string) => {
-    if (shouldShowBiometricUnlockEnrollment) {
+    if (shouldShowBiometricUnlockSetUp) {
       setPassword(password)
     } else {
       await onComplete(password)

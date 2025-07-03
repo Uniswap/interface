@@ -5,7 +5,6 @@ ignores: [
     '@uniswap/eslint-config',
     'i18next',
     'moti',
-    'wrangler',
     # Dependencies that depcheck thinks are missing but are actually present or never used
     '@yarnpkg/core',
     '@yarnpkg/cli',

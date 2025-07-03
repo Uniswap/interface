@@ -222,7 +222,7 @@ function TDPAnalytics({ children }: PropsWithChildren) {
 }
 
 export default function TokenDetails() {
-  const { tokenQuery, currencyChain, multiChainMap } = useTDPContext()
+  const { address, currency, tokenQuery, currencyChain, multiChainMap } = useTDPContext()
   const tokenQueryData = tokenQuery.data?.token
   const pageChainBalance = multiChainMap[currencyChain]?.balance
   const media = useMedia()
@@ -242,7 +242,7 @@ export default function TokenDetails() {
               <PageChainBalanceSummary pageChainBalance={pageChainBalance} alignLeft />
             </Flex>
           )}
-          <StatsSection tokenQueryData={tokenQueryData} />
+          <StatsSection chainId={currency.chainId} address={address} tokenQueryData={tokenQueryData} />
           <DividerLine />
           <ActivitySection />
         </LeftPanel>

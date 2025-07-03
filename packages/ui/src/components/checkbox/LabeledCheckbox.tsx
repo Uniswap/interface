@@ -1,13 +1,11 @@
 import { useMemo } from 'react'
-import type { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native'
-import type { ColorTokens, SpaceTokens } from 'tamagui'
-import type { CheckboxSizeTokens } from 'ui/src/components/checkbox/Checkbox'
-import { Checkbox } from 'ui/src/components/checkbox/Checkbox'
-import type { FlexProps } from 'ui/src/components/layout'
-import { Flex } from 'ui/src/components/layout'
+import { StyleProp, ViewStyle } from 'react-native'
+import { ColorTokens, SpaceTokens } from 'tamagui'
+import { Checkbox, CheckboxSizeTokens } from 'ui/src/components/checkbox/Checkbox'
+import { Flex, FlexProps } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text'
 import { TouchableArea } from 'ui/src/components/touchable'
-import type { SporeComponentVariant } from 'ui/src/components/types'
+import { SporeComponentVariant } from 'ui/src/components/types'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type LabeledCheckboxProps = {
@@ -38,9 +36,7 @@ export function LabeledCheckbox({
   containerStyle,
   onCheckPressed,
 }: LabeledCheckboxProps): JSX.Element {
-  const onPress = useEvent((e: GestureResponderEvent): void => {
-    e.preventDefault()
-    e.stopPropagation()
+  const onPress = useEvent((): void => {
     onCheckPressed?.(checked)
   })
 

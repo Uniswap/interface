@@ -116,8 +116,6 @@ const Overlay = styled(Dialog.Overlay, {
   exitStyle: { opacity: 0 },
 })
 
-Overlay.displayName = 'Overlay'
-
 type ModalProps = GetProps<typeof View> &
   PropsWithChildren<{
     isOpen: boolean

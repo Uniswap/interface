@@ -5,6 +5,7 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Route as V4Route } from '@uniswap/v4-sdk'
+import { useMemo } from 'react'
 import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
   AutoSlippage,
@@ -30,7 +31,7 @@ import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getDynamicConfigValue, useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import {
@@ -465,38 +466,17 @@ type UseQuoteRoutingParamsArgs = {
   isV4HookPoolsEnabled?: boolean
 }
 
-export type QuoteRoutingParamsResult = Pick<QuoteRequest, 'routingPreference' | 'protocols' | 'hooksOptions'>
-
 export function useQuoteRoutingParams({
   selectedProtocols,
   tokenInChainId,
   tokenOutChainId,
   isUSDQuote,
   isV4HookPoolsEnabled = true,
-}: UseQuoteRoutingParamsArgs): QuoteRoutingParamsResult {
+}: UseQuoteRoutingParamsArgs): Pick<QuoteRequest, 'routingPreference' | 'protocols' | 'hooksOptions'> {
   const protocols = useProtocolsForChain(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, tokenInChainId)
   const v4HooksToggleFFEnabled = useFeatureFlag(FeatureFlags.SwapSettingsV4HooksToggle)
 
-  const getQuoteRoutingParams = createGetQuoteRoutingParams({
-    getProtocols: () => protocols,
-    getIsV4HookPoolsEnabled: () => isV4HookPoolsEnabled,
-    getIsV4HooksToggleFFEnabled: () => v4HooksToggleFFEnabled,
-  })
-
-  return getQuoteRoutingParams({ isUSDQuote, tokenInChainId, tokenOutChainId })
-}
-
-export type GetQuoteRoutingParams = (
-  input: Omit<UseQuoteRoutingParamsArgs, 'selectedProtocols' | 'isV4HookPoolsEnabled'>,
-) => QuoteRoutingParamsResult
-
-export function createGetQuoteRoutingParams(ctx: {
-  getProtocols: () => ReturnType<typeof useProtocolsForChain>
-  getIsV4HookPoolsEnabled: () => boolean
-  getIsV4HooksToggleFFEnabled: () => boolean
-}): GetQuoteRoutingParams {
-  return (input) => {
-    const { isUSDQuote, tokenInChainId, tokenOutChainId } = input
+  return useMemo(() => {
     // for USD quotes, we avoid routing through UniswapX
     // hooksOptions should not be sent for USD quotes
     if (isUSDQuote) {
@@ -510,16 +490,11 @@ export function createGetQuoteRoutingParams(ctx: {
       return { routingPreference: RoutingPreference.BEST_PRICE }
     }
 
-    const v4HooksToggleFFEnabled = ctx.getIsV4HooksToggleFFEnabled()
-    const protocols = ctx.getProtocols()
-
     if (!v4HooksToggleFFEnabled) {
       return { protocols }
     } else {
       let finalProtocols = [...protocols]
       let hooksOptions: HooksOptions
-
-      const isV4HookPoolsEnabled = ctx.getIsV4HookPoolsEnabled()
 
       if (isV4HookPoolsEnabled) {
         if (!protocols.includes(ProtocolItems.V4)) {
@@ -534,7 +509,7 @@ export function createGetQuoteRoutingParams(ctx: {
 
       return { protocols: finalProtocols, hooksOptions }
     }
-  }
+  }, [isUSDQuote, tokenInChainId, tokenOutChainId, protocols, isV4HookPoolsEnabled, v4HooksToggleFFEnabled])
 }
 
 type UseQuoteSlippageParamsArgs = {
@@ -547,49 +522,19 @@ type UseQuoteSlippageParamsArgs = {
 // Used if dynamic config value fails to resolve
 const DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE = 2.5
 
-export function getMinAutoSlippageToleranceL2(): number {
-  return getDynamicConfigValue({
-    config: DynamicConfigs.Swap,
-    key: SwapConfigKey.MinAutoSlippageToleranceL2,
-    defaultValue: DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE,
-  })
-}
-
-export type QuoteSlippageParamsResult = Pick<QuoteRequest, 'autoSlippage' | 'slippageTolerance'> | undefined
-
 export function useQuoteSlippageParams({
   customSlippageTolerance,
   tokenInChainId,
   tokenOutChainId,
   isUSDQuote,
-}: UseQuoteSlippageParamsArgs): QuoteSlippageParamsResult {
+}: UseQuoteSlippageParamsArgs): Pick<QuoteRequest, 'autoSlippage' | 'slippageTolerance'> | undefined {
   const minAutoSlippageToleranceL2 = useDynamicConfigValue({
     config: DynamicConfigs.Swap,
     key: SwapConfigKey.MinAutoSlippageToleranceL2,
     defaultValue: DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE,
   })
 
-  const getQuoteSlippageParams = createGetQuoteSlippageParams({
-    getMinAutoSlippageToleranceL2: () => minAutoSlippageToleranceL2,
-    getIsL2ChainId: (chainId) => isL2ChainId(chainId),
-    getCustomSlippageTolerance: () => customSlippageTolerance,
-  })
-
-  return getQuoteSlippageParams({ tokenInChainId, tokenOutChainId, isUSDQuote })
-}
-
-export type GetQuoteSlippageParams = (
-  input: Omit<UseQuoteSlippageParamsArgs, 'customSlippageTolerance'>,
-) => QuoteSlippageParamsResult
-
-export function createGetQuoteSlippageParams(ctx: {
-  getMinAutoSlippageToleranceL2: () => number
-  getIsL2ChainId: (chainId?: UniverseChainId) => boolean
-  getCustomSlippageTolerance: () => number | undefined
-}): GetQuoteSlippageParams {
-  return (input) => {
-    const { tokenInChainId, tokenOutChainId, isUSDQuote } = input
-    const customSlippageTolerance = ctx.getCustomSlippageTolerance()
+  return useMemo(() => {
     if (customSlippageTolerance) {
       return { slippageTolerance: customSlippageTolerance }
     }
@@ -600,13 +545,13 @@ export function createGetQuoteSlippageParams(ctx: {
     }
 
     // L2 chains should use the minimum slippage tolerance defined in the dynamic config
-    if (ctx.getIsL2ChainId(tokenInChainId)) {
-      return { slippageTolerance: ctx.getMinAutoSlippageToleranceL2() }
+    if (isL2ChainId(tokenInChainId)) {
+      return { slippageTolerance: minAutoSlippageToleranceL2 }
     }
 
     // Otherwise, use an auto slippage tolerance calculated on the backend
     return { autoSlippage: AutoSlippage.DEFAULT }
-  }
+  }, [customSlippageTolerance, isUSDQuote, minAutoSlippageToleranceL2, tokenInChainId, tokenOutChainId])
 }
 
 export function tradingApiToUniverseChainId(chainId?: TradingApiChainId): UniverseChainId | undefined {

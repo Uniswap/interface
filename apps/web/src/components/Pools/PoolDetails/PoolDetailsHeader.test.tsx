@@ -7,7 +7,6 @@ import { PoolDetailsBreadcrumb, PoolDetailsHeader } from 'components/Pools/PoolD
 import store from 'state'
 import { usdcWethPoolAddress, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
-import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 
 vi.mock('nft/components/iconExports', () => ({
@@ -56,7 +55,7 @@ describe('PoolDetailsHeader', () => {
     onChartTypeChange: vi.fn(),
     priceChartType: PriceChartType.LINE,
     onPriceChartTypeChange: vi.fn(),
-    feeTier: { feeAmount: 500, tickSpacing: DEFAULT_TICK_SPACING, isDynamic: false },
+    feeTier: 500,
     toggleReversed: vi.fn(),
   }
 
@@ -88,7 +87,7 @@ describe('PoolDetailsHeader', () => {
     const wethLink = document.querySelector(
       'a[href="/explore/tokens/ethereum/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"]',
     )
-    expect(usdcLink?.textContent).toBe('USDC / ')
+    expect(usdcLink?.textContent).toBe('USDC')
     expect(wethLink?.textContent).toBe('WETH')
     expect(screen.getByText('0.05%')).toBeInTheDocument()
   })

@@ -3,10 +3,10 @@ import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { TransactionDetailsTooltip as Tooltip } from 'uniswap/src/components/TransactionDetailsTooltip'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import type { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
+import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -21,9 +21,10 @@ export function YouReceiveDetailsTooltip({
   feeOnTransferProps?: FeeOnTransferFeeGroupProps
 }): JSX.Element {
   const { t } = useTranslation()
-  const isUniswapXContext = useSwapTxStore((s) => isUniswapX({ routing: s.routing }))
+  const swapTxContext = useSwapTxContext()
+  const isUniswapXContext = isUniswapX(swapTxContext)
   const { formatPercent } = useLocalizationContext()
-  const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
+  const { derivedSwapInfo } = useSwapFormContext()
   const swapFee = derivedSwapInfo.trade.trade?.swapFee
   const swapFeeUsd = getSwapFeeUsdFromDerivedSwapInfo(derivedSwapInfo)
   const formatter = useLocalizationContext()

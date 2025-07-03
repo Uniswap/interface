@@ -31,8 +31,6 @@ const IconFrame = styled(Stack, {
   },
 })
 
-IconFrame.displayName = 'IconFrame'
-
 export type GeneratedIconProps = IconProps & { hoverColor?: IconProps['color'] }
 export type GeneratedIcon = React.ForwardRefExoticComponent<GeneratedIconProps & React.RefAttributes<Svg>>
 

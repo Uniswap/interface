@@ -55,6 +55,4 @@ export enum ReactQueryCacheKey {
 export const DISABLE_CACHE_PERSISTENCE_TO_DISK: ReactQueryCacheKey[] = [
   // This query returns a non-serializable react component (the biometric icon).
   ReactQueryCacheKey.ExtensionBuiltInBiometricCapabilities,
-  // This ensures when a user switches mobile devices that the unique id will be reset
-  ReactQueryCacheKey.UniqueId,
 ] as const

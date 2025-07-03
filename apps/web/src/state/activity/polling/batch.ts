@@ -5,7 +5,7 @@ import { useEffect, useMemo } from 'react'
 import { OnActivityUpdate } from 'state/activity/types'
 import { usePendingTransactions } from 'state/transactions/hooks'
 import { PendingTransactionDetails } from 'state/transactions/types'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -40,7 +40,7 @@ const FAILURE_COUNT_MAP: Record<string, number> = {}
 
 function finalizeBatch(params: {
   hash?: string
-  status: TransactionStatus.Failed | TransactionStatus.Success
+  status: TransactionStatus.Failed | TransactionStatus.Confirmed
   transaction: PendingBatchDetails
   onActivityUpdate: OnActivityUpdate
 }) {
@@ -80,7 +80,7 @@ function handleFallbackParsingForCoinbase(params: {
   }
 
   const hash = receipt.transactionHash
-  const updatedStatus = receipt.status === 1 ? TransactionStatus.Success : TransactionStatus.Failed
+  const updatedStatus = receipt.status === 1 ? TransactionStatus.Confirmed : TransactionStatus.Failed
 
   finalizeBatch({ transaction, onActivityUpdate, hash, status: updatedStatus })
 }
@@ -110,7 +110,7 @@ export function usePollPendingBatchTransactions(onActivityUpdate: OnActivityUpda
 
           const hash = receipt.transactionHash
 
-          const updatedStatus = receipt.status === '0x1' ? TransactionStatus.Success : TransactionStatus.Failed
+          const updatedStatus = receipt.status === '0x1' ? TransactionStatus.Confirmed : TransactionStatus.Failed
           finalizeBatch({ transaction, onActivityUpdate, hash, status: updatedStatus })
         }
         if (result.status >= 400) {

@@ -296,7 +296,53 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
 
 exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
 <DocumentFragment>
-  .c1 {
+  .c3 {
+  color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c4 {
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  width: 320px;
+  padding: 12px;
+  gap: 12px;
+  background-color: rgba(0,0,0,0.04);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border: 1px rgba(34,34,34,0.05) solid;
+  border-radius: 20px;
+}
+
+.c1 {
   position: relative;
 }
 
@@ -4027,7 +4073,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
             </div>
           </div>
           <div
-            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-flex-start _justifyContent-flex-start _position-absolute _top-5037 _left-5037 _transform-translate-51285172859 _width-320px _pt-t-space-pad1331704929 _pr-t-space-pad1331704929 _pb-t-space-pad1331704929 _pl-t-space-pad1331704929 _gap-t-space-gap1569 _backgroundColor-surface5 _backdropFilter-blur24px1281 _boxShadow-04px6pxrgba217844814 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+            class="c2"
             data-testid="table-error-modal"
           >
             <div
@@ -4062,20 +4108,18 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
               </svg>
             </div>
             <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _maxWidth-200px"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
             >
-              <span
-                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
-                data-disable-theme="true"
+              <div
+                class="c3 css-n8z49y"
               >
                 Error loading data
-              </span>
-              <span
-                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
-                data-disable-theme="true"
+              </div>
+              <div
+                class="c4 css-142zc9n"
               >
                 Data is unavailable at the moment; we’re working on a fix
-              </span>
+              </div>
             </div>
           </div>
         </div>

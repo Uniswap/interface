@@ -22,7 +22,6 @@ import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { PasskeyManagementModalState } from 'uniswap/src/features/passkey/PasskeyManagementModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestnetModeModalState } from 'uniswap/src/features/testnets/TestnetModeModal'
-import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import {
   FiatOnRampScreens,
@@ -31,10 +30,13 @@ import {
   SharedUnitagScreenParams,
   UnitagStackParamList,
 } from 'uniswap/src/types/screens/mobile'
-import { SmartWalletAdvancedSettingsModalState } from 'wallet/src/components/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { SmartWalletEnabledModalState } from 'wallet/src/components/smartWallet/modals/SmartWalletEnabledModal'
 import { SmartWalletNudgeState } from 'wallet/src/components/smartWallet/modals/SmartWalletNudge'
 import { NFTItem } from 'wallet/src/features/nfts/types'
+import { SmartWalletActionRequiredModalState } from 'wallet/src/features/smartWallet/modals/SmartWalletActionRequiredModal'
+import { SmartWalletAdvancedSettingsModalState } from 'wallet/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
+import { SmartWalletConfirmModalState } from 'wallet/src/features/smartWallet/modals/SmartWalletConfirmModal'
+import { SmartWalletInsufficientFundsOnNetworkModalState } from 'wallet/src/features/smartWallet/modals/SmartWalletInsufficientFundsOnNetworkModal'
 
 type NFTItemScreenParams = {
   owner?: Address
@@ -167,14 +169,13 @@ export type AppStackParamList = {
   [MobileScreens.ViewPrivateKeys]?: ViewPrivateKeysScreenState
   [MobileScreens.WebView]: { headerTitle: string; uriLink: string }
   [MobileScreens.Storybook]: undefined
-  [ModalName.Swap]: TransactionState | undefined
   [ModalName.Explore]: ExploreModalState | undefined
   [ModalName.NotificationsOSSettings]: undefined
   [ModalName.FundWallet]: undefined
   [ModalName.KoreaCexTransferInfoModal]: undefined
   [ModalName.ExchangeTransferModal]: { initialState: { serviceProvider: FORServiceProvider } }
   [ModalName.Experiments]: undefined
-  [ModalName.TestnetSwitchModal]: TestnetSwitchModalState
+  [ModalName.TestnetSwitchModal]: { initialState: TestnetSwitchModalState }
   [ModalName.TokenWarning]: { initialState?: TokenWarningModalState }
   [ModalName.ViewOnlyExplainer]: undefined
   [ModalName.UnitagsIntro]: UnitagsIntroModalState
@@ -200,12 +201,16 @@ export type AppStackParamList = {
   [ModalName.SmartWalletEnabledModal]: SmartWalletEnabledModalState
   [ModalName.SmartWalletAdvancedSettingsModal]: SmartWalletAdvancedSettingsModalState
   [ModalName.PrivateKeySpeedBumpModal]: undefined
+  [ModalName.SmartWalletConfirmModal]: SmartWalletConfirmModalState
+  [ModalName.SmartWalletActionRequiredModal]: SmartWalletActionRequiredModalState
+  [ModalName.SmartWalletInsufficientFundsOnNetworkModal]: SmartWalletInsufficientFundsOnNetworkModalState
   [ModalName.SmartWalletNudge]: SmartWalletNudgeState
   [ModalName.SettingsAppearance]: undefined
   [ModalName.PermissionsModal]: undefined
   [ModalName.PortfolioBalanceModal]: undefined
   [ModalName.LanguageSelector]: undefined
   [ModalName.SmartWalletInfoModal]: undefined
+  [ModalName.SmartWalletCreatedModal]: undefined
   [ModalName.ConfirmDisableSmartWalletScreen]: undefined
 }
 

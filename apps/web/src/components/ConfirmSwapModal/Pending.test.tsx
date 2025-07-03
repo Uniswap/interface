@@ -11,10 +11,8 @@ import { LIMIT_ORDER_TRADE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { DAI } from 'uniswap/src/constants/tokens'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { currencyId } from 'uniswap/src/utils/currencyId'
 
 vi.mock('state/transactions/hooks', async () => {
   const actual = await vi.importActual('state/transactions/hooks')
@@ -73,10 +71,10 @@ const filledOrderDetails: UniswapXOrderDetails = {
   status: UniswapXOrderStatus.FILLED,
   swapInfo: {
     isUniswapXOrder: true,
-    type: TransactionType.Swap,
+    type: 1,
     tradeType: 0,
-    inputCurrencyId: currencyId(DAI),
-    outputCurrencyId: currencyId(WETH9[UniverseChainId.Mainnet]),
+    inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
+    outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
     inputCurrencyAmountRaw: '252074033564766400000',
     expectedOutputCurrencyAmountRaw: '106841079134757921',
     minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -94,7 +92,7 @@ const filledOrderDetails: UniswapXOrderDetails = {
 describe('Pending - classic trade titles', () => {
   it.each([
     [false, false, undefined, TEST_TRADE_EXACT_INPUT, classicSwapResult, TransactionStatus.Pending, 'Swap submitted'],
-    [false, false, undefined, TEST_TRADE_EXACT_INPUT, classicSwapResult, TransactionStatus.Success, 'Swap success!'],
+    [false, false, undefined, TEST_TRADE_EXACT_INPUT, classicSwapResult, TransactionStatus.Confirmed, 'Swap success!'],
     [false, false, undefined, TEST_TRADE_EXACT_INPUT, undefined, undefined, 'Confirm swap'],
   ])(
     'renders classic trade correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p',

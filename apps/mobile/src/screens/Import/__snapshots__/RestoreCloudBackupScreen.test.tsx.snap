@@ -19,16 +19,20 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
   }
 >
   <View
-    behavior="padding"
-    enabled={true}
+    onLayout={[Function]}
     style={
       [
+        [
+          {
+            "flex": 1,
+            "justifyContent": "flex-end",
+          },
+          {
+            "marginBottom": 0,
+          },
+        ],
         {
-          "flex": 1,
-          "justifyContent": "flex-end",
-        },
-        {
-          "marginBottom": 0,
+          "paddingBottom": 0,
         },
       ]
     }

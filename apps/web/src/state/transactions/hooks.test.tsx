@@ -10,17 +10,12 @@ import {
   useTransactionRemover,
 } from 'state/transactions/hooks'
 import { clearAllTransactions, finalizeTransaction } from 'state/transactions/reducer'
-import { TransactionInfo } from 'state/transactions/types'
+import { ApproveTransactionInfo, TransactionInfo, TransactionType } from 'state/transactions/types'
 import { mocked } from 'test-utils/mocked'
 import { act, renderHook } from 'test-utils/render'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import {
-  ApproveTransactionInfo,
-  TransactionOriginType,
-  TransactionStatus,
-  TransactionType as UniswapTransactionType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
 
 const PERMIT2_ADDRESS_MAINNET = permit2Address(UniverseChainId.Mainnet)
 
@@ -40,15 +35,15 @@ const pendingTransactionResponse = {
 }
 
 const mockApprovalTransactionInfo: ApproveTransactionInfo = {
-  type: UniswapTransactionType.Approve,
+  type: TransactionType.APPROVAL,
   tokenAddress: USDC_MAINNET.address,
   spender: PERMIT2_ADDRESS_MAINNET,
-  approvalAmount: '10000',
+  amount: '10000',
 }
 
 const mockRevocationTransactionInfo: TransactionInfo = {
   ...mockApprovalTransactionInfo,
-  approvalAmount: '0',
+  amount: '0',
 }
 
 vi.mock('hooks/useAccount')
@@ -86,7 +81,7 @@ describe('Transactions hooks', () => {
         finalizeTransaction({
           chainId: UniverseChainId.Mainnet,
           hash: pendingTransactionResponse.hash,
-          status: TransactionStatus.Success,
+          status: TransactionStatus.Confirmed,
         }),
       )
     })
@@ -95,16 +90,13 @@ describe('Transactions hooks', () => {
   it('useTransactionAdder adds a transaction', () => {
     addPendingTransaction(mockApprovalTransactionInfo)
     expect(store.getState().localWebTransactions[UniverseChainId.Mainnet][pendingTransactionResponse.hash]).toEqual({
-      id: pendingTransactionResponse.hash,
       hash: pendingTransactionResponse.hash,
-      chainId: pendingTransactionResponse.chainId,
-      nonce: pendingTransactionResponse.nonce,
       info: mockApprovalTransactionInfo,
       from: pendingTransactionResponse.from,
       addedTime: Date.now(),
+      nonce: pendingTransactionResponse.nonce,
       deadline: undefined,
       status: TransactionStatus.Pending,
-      transactionOriginType: TransactionOriginType.Internal,
     })
   })
 
@@ -129,8 +121,7 @@ describe('Transactions hooks', () => {
 
     it('returns false when there is a pending transaction but it is not an approval', () => {
       addPendingTransaction({
-        type: UniswapTransactionType.ClaimUni,
-        recipient: '0x123',
+        type: TransactionType.SUBMIT_PROPOSAL,
       })
       const { result } = renderHook(() => useHasPendingApproval(USDC_MAINNET, PERMIT2_ADDRESS_MAINNET))
       expect(result.current).toBe(false)
@@ -170,8 +161,7 @@ describe('Transactions hooks', () => {
 
     it('returns false when there is a pending transaction but it is not a revocation', () => {
       addPendingTransaction({
-        type: UniswapTransactionType.ClaimUni,
-        recipient: '0x123',
+        type: TransactionType.SUBMIT_PROPOSAL,
       })
       const { result } = renderHook(() => useHasPendingRevocation(USDC_MAINNET, PERMIT2_ADDRESS_MAINNET))
       expect(result.current).toBe(false)

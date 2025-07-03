@@ -1,20 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
-import {
-  MAX_FEE_TIER_DECIMALS,
-  calculateTickSpacingFromFeeAmount,
-  getFeeTierKey,
-  isDynamicFeeTier,
-} from 'components/Liquidity/utils'
+import { MAX_FEE_TIER_DECIMALS, calculateTickSpacingFromFeeAmount, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import { StyledPercentInput } from 'components/PercentInput'
+import { ZERO_ADDRESS } from 'constants/misc'
 import ms from 'ms'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { NumericalInputMimic, NumericalInputSymbolContainer } from 'pages/Swap/common/shared'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import styled from 'styled-components'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
@@ -295,7 +290,6 @@ export function FeeTierSearchModal() {
                   setPositionState((prevState) => ({
                     ...prevState,
                     fee: {
-                      isDynamic: false,
                       feeAmount: feeHundredthsOfBips,
                       tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips),
                     },
@@ -396,7 +390,6 @@ export function FeeTierSearchModal() {
                         setPositionState((prevState) => ({
                           ...prevState,
                           fee: {
-                            isDynamic: pool.fee.isDynamic,
                             feeAmount: pool.fee.feeAmount,
                             tickSpacing: pool.fee.tickSpacing,
                           },
@@ -432,8 +425,7 @@ export function FeeTierSearchModal() {
                         </Text>
                       </Flex>
                     </Flex>
-                    {getFeeTierKey(pool.fee.feeAmount, pool.fee.isDynamic) ===
-                      getFeeTierKey(selectedFee.feeAmount, selectedFee.isDynamic) && (
+                    {pool.fee.feeAmount === selectedFee.feeAmount && (
                       <CheckCircleFilled size="$icon.24" color="$accent3" />
                     )}
                   </Flex>

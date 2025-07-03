@@ -6,7 +6,6 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
@@ -674,76 +673,4 @@ export function testMoveHapticsToUserSettings(migration: (state: any) => any, pr
   const result = migration(prevSchema)
   expect(result.appearanceSettings.hapticsEnabled).toBeUndefined()
   expect(result.userSettings.hapticsEnabled).toBe(prevSchema.appearanceSettings.hapticsEnabled)
-}
-
-function makeOldLiquidityTransaction(t: TransactionType): Record<string, any> {
-  return {
-    typeInfo: {
-      type: t,
-      inputCurrencyId: 'currency0Id',
-      inputCurrencyAmountRaw: '0',
-      outputCurrencyId: 'currency1Id',
-      outputCurrencyAmountRaw: '1',
-    },
-  }
-}
-
-export function testMigrateLiquidityTransactionInfoRename(migration: (state: any) => any, prevSchema: any): void {
-  const prevSchemaWithTransactions = {
-    ...prevSchema,
-    transactions: {
-      testAddress: {
-        testChainId: {
-          id1: makeOldLiquidityTransaction(TransactionType.LiquidityIncrease),
-          id2: makeOldLiquidityTransaction(TransactionType.LiquidityDecrease),
-          id3: makeOldLiquidityTransaction(TransactionType.CollectFees),
-          id4: makeOldLiquidityTransaction(TransactionType.CreatePool),
-          id5: makeOldLiquidityTransaction(TransactionType.CreatePair),
-          id6: {
-            typeInfo: {
-              type: TransactionType.Approve,
-            },
-          },
-          id7: {
-            typeInfo: {
-              type: TransactionType.Swap,
-            },
-          },
-        },
-      },
-    },
-  }
-
-  const result = migration(prevSchemaWithTransactions)
-
-  // ensure all liquidity transactions are migrated
-  for (const id of ['id1', 'id2', 'id3', 'id4', 'id5']) {
-    // type should not change
-    expect(result.transactions.testAddress.testChainId[id].typeInfo.type).toEqual(
-      prevSchemaWithTransactions.transactions.testAddress.testChainId[id].typeInfo.type,
-    )
-
-    // fields should be properly renamed
-    expect(result.transactions.testAddress.testChainId[id].typeInfo.inputCurrencyId).toBeUndefined()
-    expect(result.transactions.testAddress.testChainId[id].typeInfo.inputCurrencyAmountRaw).toBeUndefined()
-    expect(result.transactions.testAddress.testChainId[id].typeInfo.outputCurrencyId).toBeUndefined()
-    expect(result.transactions.testAddress.testChainId[id].typeInfo.outputCurrencyAmountRaw).toBeUndefined()
-    expect(result.transactions.testAddress.testChainId[id].typeInfo.currency0Id).toEqual('currency0Id')
-    expect(result.transactions.testAddress.testChainId[id].typeInfo.currency0AmountRaw).toEqual('0')
-    expect(result.transactions.testAddress.testChainId[id].typeInfo.currency1Id).toEqual('currency1Id')
-    expect(result.transactions.testAddress.testChainId[id].typeInfo.currency1AmountRaw).toEqual('1')
-  }
-
-  // ensure non-liquidity transactions do not get modified
-  for (const id of ['id6', 'id7']) {
-    // type should not change
-    expect(result.transactions.testAddress.testChainId[id].typeInfo.type).toEqual(
-      prevSchemaWithTransactions.transactions.testAddress.testChainId[id].typeInfo.type,
-    )
-
-    expect(result.transactions.testAddress.testChainId[id].typeInfo.currency0Id).toEqual(undefined)
-    expect(result.transactions.testAddress.testChainId[id].typeInfo.currency0AmountRaw).toEqual(undefined)
-    expect(result.transactions.testAddress.testChainId[id].typeInfo.currency1Id).toEqual(undefined)
-    expect(result.transactions.testAddress.testChainId[id].typeInfo.currency1AmountRaw).toEqual(undefined)
-  }
 }

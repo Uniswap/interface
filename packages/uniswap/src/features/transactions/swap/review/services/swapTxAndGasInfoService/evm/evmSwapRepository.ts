@@ -15,7 +15,7 @@ export type SwapData = {
   requestId: string
   transactions: TransactionRequest[]
   gasFee?: string
-  gasEstimate?: GasEstimate
+  gasEstimates?: GasEstimate[]
   includesDelegation?: boolean
 }
 export interface EVMSwapRepository {
@@ -27,7 +27,7 @@ export function convertSwapResponseToSwapData(response: CreateSwapResponse): Swa
     requestId: response.requestId,
     transactions: [response.swap],
     gasFee: response.gasFee,
-    gasEstimate: response.gasEstimates?.[0],
+    gasEstimates: response.gasEstimates,
   }
 }
 

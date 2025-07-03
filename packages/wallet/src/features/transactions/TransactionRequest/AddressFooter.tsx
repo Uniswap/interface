@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, SpaceTokens, Text, Tooltip } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { isExtension, isMobileApp } from 'utilities/src/platform'
+import { isMobileApp } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 
@@ -17,7 +17,7 @@ export function AddressFooter({
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const variant = isMobileApp || isExtension ? 'body3' : 'body4'
+  const variant = isMobileApp ? 'body3' : 'body4'
 
   const currentAccountAddress = connectedAccountAddress || activeAccountAddress
 

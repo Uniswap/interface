@@ -60,12 +60,3 @@ apps/mobile/.maestro/scripts/testIds.js
 
 # RNEF
 .rnef/
-
-# claude
-claude.md
-claude.local.md
-CLAUDE.md
-CLAUDE.local.md
-
-# cursor
-.cursor/mcp.json

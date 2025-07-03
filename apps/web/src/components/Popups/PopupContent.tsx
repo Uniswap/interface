@@ -19,12 +19,12 @@ import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { BridgeIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import noop from 'utilities/src/react/noop'
@@ -58,7 +58,7 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: Univer
 
 type ActivityPopupContentProps = { activity: Activity; onClick?: () => void; onClose: () => void }
 function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupContentProps) {
-  const success = activity.status === TransactionStatus.Success && !activity.cancelled
+  const success = activity.status === TransactionStatus.Confirmed && !activity.cancelled
   const pending = activity.status === TransactionStatus.Pending
 
   const showPortfolioLogo = success || pending || !!activity.offchainOrderDetails

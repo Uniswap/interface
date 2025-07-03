@@ -5,6 +5,7 @@ import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
 import { getProtocolItems } from 'components/Liquidity/utils'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { useModalState } from 'hooks/useModalState'
 import useSelectChain from 'hooks/useSelectChain'
@@ -18,7 +19,7 @@ import { Passkey } from 'ui/src/components/icons/Passkey'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { PollingInterval, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
@@ -137,7 +138,7 @@ export function ClaimFeeModal() {
         pool: {
           token0: currency0.isNative ? ZERO_ADDRESS : currency0.address,
           token1: currency1.isNative ? ZERO_ADDRESS : currency1.address,
-          fee: positionInfo.feeTier?.feeAmount,
+          fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
           tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
           hooks: positionInfo.v4hook,
         },

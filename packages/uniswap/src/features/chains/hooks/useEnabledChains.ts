@@ -85,22 +85,6 @@ export function useEnabledChains(): EnabledChainsInfo {
   }, [defaultChainId, gqlChains, isTestnetModeEnabled, orderedChains])
 }
 
-// use in non hook contexts
-export function createGetEnabledChains(ctx: {
-  getIsTestnetModeEnabled: () => boolean
-  getConnector?: () => Connector | undefined
-  getFeatureFlaggedChainIds: () => UniverseChainId[]
-}): () => EnabledChainsInfo {
-  const { getIsTestnetModeEnabled, getConnector, getFeatureFlaggedChainIds } = ctx
-  return () =>
-    getEnabledChains({
-      isTestnetModeEnabled: getIsTestnetModeEnabled(),
-      // just fyi no connector on mobile
-      connectedWalletChainIds: getConnectorSupportedChains(getConnector?.()),
-      featureFlaggedChainIds: getFeatureFlaggedChainIds(),
-    })
-}
-
 // Note: can be used outside of Uniswap context
 export function useEnabledChainsWithConnector(connector?: Connector): {
   chains: UniverseChainId[]

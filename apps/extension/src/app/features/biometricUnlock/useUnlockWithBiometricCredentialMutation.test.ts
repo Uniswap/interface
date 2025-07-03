@@ -145,7 +145,6 @@ describe('useUnlockWithBiometricCredentialMutation', () => {
           userVerification: 'required',
           timeout: 15000, // 15 seconds
         },
-        signal: expect.any(AbortSignal),
       })
 
       // 3. Should dispatch unlock action with the decrypted password

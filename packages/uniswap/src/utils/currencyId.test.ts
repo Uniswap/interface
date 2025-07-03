@@ -20,6 +20,7 @@ import {
 import { INVALID_ADDRESS_TOO_SHORT, INVALID_CHAIN_ID, VALID_ADDRESS, VALID_CHAIN_ID } from 'utilities/src/test/fixtures'
 
 const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
+const DAI_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
 
 describe('currencyId', () => {
   it.each`
@@ -99,14 +100,14 @@ describe('currencyId', () => {
   )
 
   it.each([
-    [`1-${DAI.address}`, DAI.address],
+    [`1-${DAI_ADDRESS}`, DAI_ADDRESS],
     [`1-${getNativeAddress(UniverseChainId.Mainnet)}`, getNativeAddress(UniverseChainId.Mainnet)],
   ])('currencyIdToAddress returns correct address for _currencyId=%s = %s', (_currencyId, expectedAddress) => {
     expect(currencyIdToAddress(_currencyId)).toEqual(expectedAddress)
   })
 
   it.each([
-    [`1-${DAI.address}`, DAI.address.toLowerCase()],
+    [`1-${DAI_ADDRESS}`, DAI_ADDRESS.toLowerCase()],
     [`1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`, null],
     ['137-0x0000000000000000000000000000000000001010', '0x0000000000000000000000000000000000001010'],
     ['56-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', null],
@@ -115,7 +116,7 @@ describe('currencyId', () => {
   })
 
   it.each([
-    [`1-${DAI.address}`, UniverseChainId.Mainnet],
+    [`1-${DAI_ADDRESS}`, UniverseChainId.Mainnet],
     [`1-${getNativeAddress(UniverseChainId.Mainnet)}`, UniverseChainId.Mainnet],
     ['', null],
   ])('currencyIdToChain returns correct chain for currencyId=%s = %s', (_currencyId, expectedChain) => {

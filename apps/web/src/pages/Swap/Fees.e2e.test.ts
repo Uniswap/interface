@@ -21,7 +21,7 @@ test.describe('Fees', () => {
   })
 
   test('swaps ETH for USDC exact-in with swap fee', async ({ page, anvil }) => {
-    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+    await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.swap)
 
     await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
@@ -48,7 +48,7 @@ test.describe('Fees', () => {
   })
 
   test('displays UniswapX fee in UI', async ({ page }) => {
-    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+    await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.swap)
 
     await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${DAI.address}`)
 
@@ -66,8 +66,9 @@ test.describe('Fees', () => {
     await page.getByTestId(TestID.AmountInputOut).fill('1')
     // Verify fee UI
     await page.getByTestId(TestID.GasInfoRow).click()
-    // Pseudo check to verify that the swap label is visible and the fee is $0:
-    await expect(page.getByText(/Swap/)).toBeVisible()
-    await expect(page.getByText(/$0/)).toBeVisible()
+    // Verify there is no "fee" text:
+    const locator = page.locator('Fee')
+    await expect(locator).toHaveCount(0)
+    await expect(page.getByText('No network costs with UniswapX')).toBeVisible()
   })
 })

@@ -1,5 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { openModal } from 'src/features/modals/modalSlice'
+import { put } from 'typed-redux-saga'
 import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
 import { ALL_CHAIN_IDS, SUPPORTED_TESTNET_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
@@ -51,16 +53,20 @@ export function* handleSwapLink(url: URL) {
     const { isTestnetModeEnabled } = yield* getEnabledChainIdsSaga()
 
     // prefill modal irrespective of testnet mode alignment
-    navigate(ModalName.Swap, swapFormState)
+    yield* put(openModal({ name: ModalName.Swap, initialState: swapFormState }))
 
     // if testnet mode isn't aligned with assets, prompt testnet switch modal (closes prefilled swap modal if rejected)
     if (isTestnetModeEnabled !== isTestnetChains) {
-      navigate(ModalName.TestnetSwitchModal, { switchToMode: isTestnetChains ? 'testnet' : 'production' })
+      navigate(ModalName.TestnetSwitchModal, {
+        initialState: {
+          switchToMode: isTestnetChains ? 'testnet' : 'production',
+        },
+      })
       return
     }
   } catch (error) {
     logger.error(error, { tags: { file: 'handleSwapLinkSaga', function: 'handleSwapLink' } })
-    navigate(ModalName.Swap)
+    yield* put(openModal({ name: ModalName.Swap }))
   }
 }
 

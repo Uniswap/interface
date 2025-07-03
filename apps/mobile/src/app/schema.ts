@@ -696,10 +696,8 @@ const v88SchemaIntermediate = {
 delete v88SchemaIntermediate.appearanceSettings.hapticsEnabled
 export const v88Schema = v88SchemaIntermediate
 
-export const v89Schema = { ...v88Schema }
-
-const v90Schema = { ...v89Schema }
+const v89Schema = { ...v88Schema }
 
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v90Schema => v90Schema
+export const getSchema = (): typeof v89Schema => v89Schema

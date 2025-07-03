@@ -113,9 +113,7 @@ export const getFeatureFlaggedHeaders = (): Record<string, string> => {
   }
 }
 
-export type FetchQuote = (params: QuoteRequest) => Promise<DiscriminatedQuoteResponse>
-
-export async function fetchQuote(params: QuoteRequest): Promise<DiscriminatedQuoteResponse> {
+export async function fetchQuote({ ...params }: QuoteRequest): Promise<DiscriminatedQuoteResponse> {
   return await TradingApiClient.post<DiscriminatedQuoteResponse>(uniswapUrls.tradingApiPaths.quote, {
     body: JSON.stringify(params),
     headers: {

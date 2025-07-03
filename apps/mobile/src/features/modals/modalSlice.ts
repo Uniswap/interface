@@ -27,6 +27,8 @@ type WalletConnectModalParams = {
   initialState: ScannerModalState
 }
 
+type SwapModalParams = { name: typeof ModalName.Swap; initialState?: TransactionState }
+
 type SendModalParams = {
   name: typeof ModalName.Send
   initialState?: TransactionState & {
@@ -34,9 +36,13 @@ type SendModalParams = {
   }
 }
 
-type OpenModalParams = FiatOnRampAggregatorModalParams | SendModalParams | WalletConnectModalParams
+export type OpenModalParams =
+  | FiatOnRampAggregatorModalParams
+  | SendModalParams
+  | SwapModalParams
+  | WalletConnectModalParams
 
-type CloseModalParams = { name: keyof ModalsState }
+export type CloseModalParams = { name: keyof ModalsState }
 
 const createInitialModalState = (overrides?: Partial<ModalsState>): ModalsState => {
   const defaultState = Object.values(ModalName).reduce((state, key) => {

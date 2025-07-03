@@ -7,7 +7,7 @@ import { PoolSortFields, TablePool } from 'appGraphql/data/pools/useTopPools'
 import { OrderDirection, gqlToCurrency, supportedChainIdFromGQLChain, unwrapToken } from 'appGraphql/data/util'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentiveFeeStatTooltip'
-import { isDynamicFeeTier } from 'components/Liquidity/utils'
+import { isDynamicFeeTierAmount } from 'components/Liquidity/utils'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
@@ -26,7 +26,6 @@ import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { exploreProtocolVersionFilterAtom } from 'pages/Explore/ProtocolFilter'
-import { FeeData } from 'pages/Pool/Positions/create/types'
 import { ReactElement, memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
@@ -65,7 +64,7 @@ interface PoolTableValues {
   volOverTvl?: number
   link: string
   protocolVersion?: string
-  feeTier?: FeeData
+  feeTier?: number
   rewardApr?: number
   token0CurrencyId?: string
   token1CurrencyId?: string
@@ -377,7 +376,7 @@ export function PoolsTable({
           <Cell loading={showLoadingSkeleton}>
             <TableText>
               {feeTier.getValue?.()
-                ? `${isDynamicFeeTier(feeTier.getValue()!) ? t('common.dynamic') : (feeTier.getValue()!.feeAmount / BIPS_BASE).toFixed(2) + '%'}`
+                ? `${isDynamicFeeTierAmount(feeTier.getValue()!) ? t('common.dynamic') : (feeTier.getValue()! / BIPS_BASE).toFixed(2) + '%'}`
                 : '-'}
             </TableText>
           </Cell>

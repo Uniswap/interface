@@ -19,14 +19,3 @@ export interface WalletData {
   activeDelegationNetworkToAddress: Partial<Record<UniverseChainId, { delegationAddress: string }>>
   status: WalletStatus
 }
-
-export enum SmartWalletModalState {
-  None = 'none',
-  Disable = 'disable',
-  DisableWarning = 'disableWarning',
-  EnabledSuccess = 'enabledSuccess',
-  Unavailable = 'unavailable',
-  ActionRequired = 'actionRequired',
-  Confirm = 'confirm',
-  InsufficientFunds = 'insufficientFunds',
-}

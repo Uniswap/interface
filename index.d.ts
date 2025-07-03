@@ -21,8 +21,6 @@ declare type Require<T, K extends keyof T> = T & Required<Pick<T, K>>
 
 declare type RequireNonNullable<T, K extends keyof T> = T & { [P in K]-?: NonNullable<T[P]> }
 
-declare type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>
-
 // Utility type to create a range of numbers (inclusive of start but exclusive of end -- python style)
 declare type NumberRange<
   Start extends number,

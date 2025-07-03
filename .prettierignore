@@ -11,11 +11,11 @@ __mocks__
 *.html
 *.inc
 *.json
-*.jsonc
 *.md
 *.yml
 build
 craco.config.cjs
+cypress
 dist
 jest-setup.js
 jest.config.js

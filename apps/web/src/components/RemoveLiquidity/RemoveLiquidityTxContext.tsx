@@ -1,13 +1,16 @@
-import type { Currency } from '@uniswap/sdk-core'
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxAndGasInfo } from 'components/RemoveLiquidity/hooks'
-import type { PropsWithChildren } from 'react'
-import { createContext, useContext, useEffect, useMemo } from 'react'
+import { getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
+import { PropsWithChildren, createContext, useContext, useEffect, useMemo } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import type { CheckApprovalLPResponse, DecreaseLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
-import type { ValidatedDecreasePositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
-import { LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
+import { CheckApprovalLPResponse, DecreaseLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import {
+  LiquidityTransactionType,
+  ValidatedDecreasePositionTxAndGasInfo,
+} from 'uniswap/src/features/transactions/liquidity/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
 
@@ -26,17 +29,24 @@ const RemoveLiquidityTxContext = createContext<RemoveLiquidityTxInfo | undefined
 
 export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren): JSX.Element {
   const account = useAccountMeta()
-  const { positionInfo, percent, currencies } = useRemoveLiquidityModalContext()
+  const { positionInfo, percent, unwrapNativeCurrency } = useRemoveLiquidityModalContext()
 
   const removeLiquidityTxInfo = useRemoveLiquidityTxAndGasInfo({ account: account?.address })
   const { approvalLoading, decreaseCalldataLoading, decreaseCalldata, error, refetch } = removeLiquidityTxInfo
+  const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
 
   useEffect(() => {
-    logContextUpdate('RemoveLiquidityTxContext', removeLiquidityTxInfo)
-  }, [removeLiquidityTxInfo])
+    logContextUpdate('RemoveLiquidityTxContext', removeLiquidityTxInfo, datadogEnabled)
+  }, [removeLiquidityTxInfo, datadogEnabled])
 
-  const currency0 = currencies?.TOKEN0
-  const currency1 = currencies?.TOKEN1
+  const currency0 = getCurrencyWithOptionalUnwrap({
+    currency: positionInfo?.currency0Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency,
+  })
+  const currency1 = getCurrencyWithOptionalUnwrap({
+    currency: positionInfo?.currency1Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency,
+  })
 
   const decreaseLiquidityTxContext = useMemo((): ValidatedDecreasePositionTxAndGasInfo | undefined => {
     if (!positionInfo || approvalLoading || decreaseCalldataLoading || !decreaseCalldata || !currency0 || !currency1) {

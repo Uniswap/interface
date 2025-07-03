@@ -172,7 +172,7 @@ const expectedSendApprovalParams: ExecuteTransactionParams = {
     tokenAddress: mockApproveTxRequest.to,
     spender: permit2Address(mockApproveTxRequest.chainId),
     swapTxId: '1',
-    gasEstimate: undefined,
+    gasEstimates: undefined,
   },
   transactionOriginType: TransactionOriginType.Internal,
   analytics: {

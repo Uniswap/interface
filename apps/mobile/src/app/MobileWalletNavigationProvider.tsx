@@ -3,7 +3,6 @@ import { Share } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { exploreNavigationRef } from 'src/app/navigation/navigationRef'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -19,7 +18,6 @@ import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { closeKeyboardBeforeCallback } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
-import noop from 'utilities/src/react/noop'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
   NavigateToExternalProfileArgs,
@@ -67,7 +65,6 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
       navigateToSend={navigateToSend}
       navigateToSwapFlow={navigateToSwapFlow}
       navigateToTokenDetails={navigateToTokenDetails}
-      navigateToPoolDetails={noop} // no pool details screen on mobile
     >
       {children}
     </WalletNavigationProvider>
@@ -155,9 +152,9 @@ function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
 }
 
 function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
+  const dispatch = useDispatch()
   const { defaultChainId } = useEnabledChains()
   const { navigate } = useAppStackNavigation()
-  const { onClose } = useReactNavigationModal()
 
   return useCallback(
     (args: NavigateToSwapFlowArgs): void => {
@@ -166,8 +163,8 @@ function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
 
         // If no prefilled token, go directly to swap
         if (!isNavigateToSwapFlowArgsPartialState(args)) {
-          onClose()
-          navigate(ModalName.Swap, initialState)
+          dispatch(closeModal({ name: ModalName.Swap }))
+          dispatch(openModal({ name: ModalName.Swap, initialState }))
           return
         }
 
@@ -177,26 +174,25 @@ function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
           initialState: {
             currencyId,
             onAcknowledge: () => {
-              onClose()
-              navigate(ModalName.Swap, initialState)
+              dispatch(closeModal({ name: ModalName.Swap }))
+              dispatch(openModal({ name: ModalName.Swap, initialState }))
             },
           },
         })
       })
     },
-    [defaultChainId, navigate, onClose],
+    [dispatch, defaultChainId, navigate],
   )
 }
 
 function useNavigateToTokenDetails(): (currencyId: string) => void {
   const appNavigation = useAppStackNavigation()
-  const { onClose } = useReactNavigationModal()
   const dispatch = useDispatch()
 
   return useCallback(
     (currencyId: string): void => {
       closeKeyboardBeforeCallback(() => {
-        onClose()
+        dispatch(closeModal({ name: ModalName.Swap }))
         dispatch(closeAllModals())
         if (exploreNavigationRef.current && exploreNavigationRef.isFocused()) {
           exploreNavigationRef.navigate(MobileScreens.TokenDetails, { currencyId })
@@ -205,7 +201,7 @@ function useNavigateToTokenDetails(): (currencyId: string) => void {
         }
       })
     },
-    [appNavigation, dispatch, onClose],
+    [appNavigation, dispatch],
   )
 }
 

@@ -1,10 +1,10 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { V3PositionInfo } from 'components/Liquidity/types'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { getCurrencyForProtocol, getTokenOrZeroAddress } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useMigrateV3LpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useMigrateV3LpPositionCalldataQuery'
@@ -134,7 +134,7 @@ export function MigrateV3PositionTxContextProvider({
           token1: positionInfo.currency1Amount.currency.isNative
             ? ZERO_ADDRESS
             : positionInfo.currency1Amount.currency.address,
-          fee: positionInfo.feeTier?.feeAmount,
+          fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
           tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
         },
         tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,

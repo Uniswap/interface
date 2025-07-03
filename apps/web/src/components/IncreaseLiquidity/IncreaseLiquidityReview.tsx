@@ -142,7 +142,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
         analytics: {
           ...getLPBaseAnalyticsProperties({
             trace,
-            fee: feeTier?.feeAmount,
+            fee: feeTier,
             tickSpacing,
             tickLower,
             tickUpper,

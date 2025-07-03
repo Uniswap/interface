@@ -1,9 +1,7 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants/extension'
-import { SwapEventName } from 'uniswap/src/features/telemetry/constants/features'
-import { UniswapEventName } from 'uniswap/src/features/telemetry/constants/uniswap'
+import { ExtensionEventName, SwapEventName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import type { TestnetModeConfig } from 'utilities/src/telemetry/analytics/analytics'
+import { TestnetModeConfig } from 'utilities/src/telemetry/analytics/analytics'
 
 export enum WalletEventName {
   AppRating = 'App Rating',

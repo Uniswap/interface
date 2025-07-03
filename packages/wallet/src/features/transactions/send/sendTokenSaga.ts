@@ -117,14 +117,14 @@ function* validateSend(sendTokenParams: SendTokenParams) {
 }
 
 function getSendTypeInfo(params: SendTokenParams): SendTokenTransactionInfo {
-  const { type: assetType, toAddress, tokenAddress, currencyAmountUSD, gasEstimate } = params
+  const { type: assetType, toAddress, tokenAddress, currencyAmountUSD, gasEstimates } = params
   const typeInfo: SendTokenTransactionInfo = {
     assetType,
     recipient: toAddress,
     tokenAddress,
     type: TransactionType.Send,
     currencyAmountUSD,
-    gasEstimate,
+    gasEstimates,
   }
 
   if (assetType === AssetType.ERC721 || assetType === AssetType.ERC1155) {

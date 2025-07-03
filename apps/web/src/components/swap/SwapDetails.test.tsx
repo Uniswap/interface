@@ -1,3 +1,4 @@
+import { Percent } from '@uniswap/sdk-core'
 import { SwapDetails } from 'components/swap/SwapDetails'
 import { SlippageTooltipContent } from 'components/swap/SwapLineItem'
 import {
@@ -6,9 +7,49 @@ import {
   TEST_ALLOWED_SLIPPAGE,
   TEST_TRADE_EXACT_INPUT,
 } from 'test-utils/constants'
-import { render, screen, within } from 'test-utils/render'
+import { render, renderHook, screen, within } from 'test-utils/render'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 describe('SwapDetails.tsx', () => {
+  it('matches base snapshot, test trade exact input', () => {
+    const { formatCurrencyAmount } = renderHook(() => useLocalizationContext()).result.current
+    const { asFragment } = render(
+      <SwapDetails
+        isLoading={false}
+        trade={TEST_TRADE_EXACT_INPUT}
+        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
+        swapResult={undefined}
+        onConfirm={vi.fn()}
+        swapErrorMessage={undefined}
+        disabledConfirm={false}
+        priceImpact={new Percent(5, 100)}
+        fiatValueInput={{
+          data: undefined,
+          isLoading: false,
+        }}
+        fiatValueOutput={{
+          data: undefined,
+          isLoading: false,
+        }}
+        showAcceptChanges={false}
+        onAcceptChanges={vi.fn()}
+      />,
+    )
+    expect(asFragment()).toMatchSnapshot()
+
+    const tradeMinAmount = TEST_TRADE_EXACT_INPUT.minimumAmountOut(TEST_ALLOWED_SLIPPAGE)
+    const formattedAmount = formatCurrencyAmount({ value: tradeMinAmount, type: NumberType.SwapTradeAmount })
+
+    expect(
+      screen.getByText(
+        `If the price moves so that you will receive less than ${formattedAmount} ${tradeMinAmount.currency.symbol}, your transaction will revert.`,
+      ),
+    ).toBeInTheDocument()
+    expect(screen.getByText('The impact your trade has on the market price of this pool.')).toBeInTheDocument()
+    expect(screen.getByText('The maximum price movement before your transaction will revert.')).toBeInTheDocument()
+  })
+
   it('shows accept changes section when available', () => {
     const mockAcceptChanges = vi.fn()
     render(

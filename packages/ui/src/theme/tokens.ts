@@ -1,13 +1,13 @@
 // until the web app needs all of tamagui, avoid heavy imports there
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { createTokens, type ColorTokens } from '@tamagui/core'
-import type { DynamicColor } from 'ui/src/hooks/useSporeColors'
+import { ColorTokens, createTokens } from '@tamagui/core'
+import { DynamicColor } from 'ui/src/hooks/useSporeColors'
+import { gap, padding, spacing } from 'ui/src/theme'
 import { borderRadii } from 'ui/src/theme/borderRadii'
 import { colors as color } from 'ui/src/theme/color/colors'
 import { fonts } from 'ui/src/theme/fonts'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { imageSizes } from 'ui/src/theme/imageSizes'
-import { gap, padding, spacing } from 'ui/src/theme/spacing'
 import { themes } from 'ui/src/theme/themes'
 import { zIndexes } from 'ui/src/theme/zIndexes'
 

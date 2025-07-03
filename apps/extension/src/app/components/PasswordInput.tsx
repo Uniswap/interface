@@ -1,8 +1,9 @@
+import { useQuery } from '@tanstack/react-query'
 import { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput } from 'react-native'
 import { Input, InputProps } from 'src/app/components/Input'
-import { useShouldShowBiometricUnlock } from 'src/app/features/biometricUnlock/useShouldShowBiometricUnlock'
+import { biometricUnlockCredentialQuery } from 'src/app/features/biometricUnlock/biometricUnlockCredentialQuery'
 import { Flex, FlexProps, IconProps, Text, TouchableArea } from 'ui/src'
 import { Eye, EyeOff, Fingerprint } from 'ui/src/components/icons'
 import { PasswordStrength, getPasswordStrengthTextAndColor } from 'wallet/src/utils/password'
@@ -56,7 +57,8 @@ export const PasswordInputWithBiometrics = forwardRef<
   TextInput,
   PasswordInputProps & { onPressBiometricUnlock: () => void }
 >(function PasswordInputWithBiometrics({ onPressBiometricUnlock, ...passwordInputProps }, ref): JSX.Element {
-  const shouldShowBiometricUnlock = useShouldShowBiometricUnlock()
+  const { data: biometricUnlockCredential } = useQuery(biometricUnlockCredentialQuery())
+  const hasBiometricUnlockCredential = !!biometricUnlockCredential
 
   return (
     <Flex row alignItems="center">
@@ -64,14 +66,14 @@ export const PasswordInputWithBiometrics = forwardRef<
         <PasswordInput
           ref={ref}
           {...passwordInputProps}
-          {...(shouldShowBiometricUnlock && {
+          {...(hasBiometricUnlockCredential && {
             borderTopRightRadius: 0,
             borderBottomRightRadius: 0,
           })}
         />
       </Flex>
 
-      {shouldShowBiometricUnlock && (
+      {hasBiometricUnlockCredential && (
         <TouchableArea
           height="100%"
           justifyContent="center"

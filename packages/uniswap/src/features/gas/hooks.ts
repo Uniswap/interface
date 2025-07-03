@@ -11,7 +11,11 @@ import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSma
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FormattedUniswapXGasFeeInfo, GasFeeResult } from 'uniswap/src/features/gas/types'
-import { getActiveGasStrategy, hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
+import {
+  getActiveGasStrategy,
+  getShadowGasStrategies,
+  hasSufficientFundsIncludingGas,
+} from 'uniswap/src/features/gas/utils'
 import { GasStrategyType } from 'uniswap/src/features/gating/configs'
 import { useStatsigClientStatus } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -28,8 +32,6 @@ import { NumberType } from 'utilities/src/format/types'
 import { isWeb } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
-export { getActiveGasStrategy }
-
 export const SMART_WALLET_DELEGATION_GAS_FEE = 21500
 
 export type CancellationGasFeeDetails = {
@@ -41,6 +43,12 @@ export type CancellationGasFeeDetails = {
 export function useActiveGasStrategy(chainId: number | undefined, type: GasStrategyType): GasStrategy {
   const { isStatsigReady } = useStatsigClientStatus()
   return useMemo(() => getActiveGasStrategy({ chainId, type, isStatsigReady }), [isStatsigReady, chainId, type])
+}
+
+// Hook to use shadow GasStrategies for a specific chain.
+export function useShadowGasStrategies(chainId: number | undefined, type: GasStrategyType): GasStrategy[] {
+  const { isStatsigReady } = useStatsigClientStatus()
+  return useMemo(() => getShadowGasStrategies({ chainId, type, isStatsigReady }), [isStatsigReady, chainId, type])
 }
 
 /**
@@ -79,7 +87,6 @@ export function convertGasFeeToDisplayValue(
 
 export function useTransactionGasFee({
   tx,
-  smartContractDelegationAddress,
   skip,
   refetchInterval,
   fallbackGasLimit,
@@ -87,7 +94,6 @@ export function useTransactionGasFee({
   shouldUsePreviousValueDuringLoading,
 }: {
   tx: providers.TransactionRequest | undefined
-  smartContractDelegationAddress?: Address
   skip?: boolean
   refetchInterval?: PollingInterval
   fallbackGasLimit?: number
@@ -96,7 +102,7 @@ export function useTransactionGasFee({
   const pollingIntervalForChain = usePollingIntervalByChain(tx?.chainId)
 
   const { data, error, isLoading } = useGasFeeQuery({
-    params: skip || !tx ? undefined : { tx, fallbackGasLimit, smartContractDelegationAddress },
+    params: skip || !tx ? undefined : { tx, fallbackGasLimit },
     refetchInterval,
     staleTime: pollingIntervalForChain,
     immediateGcTime: pollingIntervalForChain + 15 * ONE_SECOND_MS,

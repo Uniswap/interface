@@ -19,11 +19,8 @@ import {
 import { TransactionType } from 'state/transactions/types'
 import { logSwapFinalized, logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
-import {
-  TransactionStatus,
-  TransactionType as UniswapTransactionType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function ActivityStateUpdater() {
@@ -67,7 +64,7 @@ function useOnActivityUpdate(): OnActivityUpdate {
         if (
           original.info.type === TransactionType.BRIDGE &&
           !original.info.depositConfirmed &&
-          update.status === TransactionStatus.Success
+          update.status === TransactionStatus.Confirmed
         ) {
           dispatch(confirmBridgeDeposit({ chainId, hash, ...update }))
           return
@@ -77,7 +74,7 @@ function useOnActivityUpdate(): OnActivityUpdate {
 
         const batchId = original.batchInfo?.batchId
 
-        if (original.info.type === UniswapTransactionType.Swap) {
+        if (original.info.type === TransactionType.SWAP) {
           logSwapFinalized({
             hash,
             batchId,

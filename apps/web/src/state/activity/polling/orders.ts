@@ -5,9 +5,9 @@ import { useEffect, useRef, useState } from 'react'
 import { OnActivityUpdate, OrderUpdate } from 'state/activity/types'
 import { isFinalizedOrder, usePendingOrders } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
+import { ExactInputSwapTransactionInfo } from 'state/transactions/types'
 import { OrderQueryResponse, UniswapXBackendOrder, UniswapXOrderStatus } from 'types/uniswapx'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
-import { ExactInputSwapTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 
 const STANDARD_POLLING_INITIAL_INTERVAL = ms(`2s`)

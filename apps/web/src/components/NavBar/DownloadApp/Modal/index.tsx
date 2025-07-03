@@ -45,7 +45,6 @@ export function GetTheAppModal() {
       name={ModalName.DownloadApp}
       isModalOpen={isOpen}
       maxWidth="fit-content"
-      mx="auto"
       onClose={close}
       padding={0}
     >

@@ -11,12 +11,9 @@ import {
 } from 'state/activity/polling/orders'
 import * as hooks from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
+import { TransactionType } from 'state/transactions/types'
 import { act, renderHook } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { DAI } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import type { Mock } from 'vitest'
 
 vi.mock('state/signatures/hooks', async () => {
@@ -48,16 +45,16 @@ const mockL1Order: UniswapXOrderDetails = {
   status: UniswapXOrderStatus.OPEN,
   id: '1',
   addedTime: 1686339087000, // from createdAt in openStatusResponse
-  chainId: UniverseChainId.Mainnet,
+  chainId: 1,
   offerer: '0x80becb808bfade4143183e58d18f2080e84e57a1',
   swapInfo: {
     isUniswapXOrder: true,
-    type: TransactionType.Swap,
+    type: TransactionType.SWAP,
     inputCurrencyAmountRaw: '100000000',
     expectedOutputCurrencyAmountRaw: '91371770080538616664',
     minimumOutputCurrencyAmountRaw: '90914911230135923580',
-    inputCurrencyId: buildCurrencyId(UniverseChainId.Mainnet, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'),
-    outputCurrencyId: currencyId(DAI),
+    inputCurrencyId: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    outputCurrencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
     tradeType: TradeType.EXACT_INPUT,
   },
 }

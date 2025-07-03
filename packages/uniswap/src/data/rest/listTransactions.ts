@@ -44,7 +44,7 @@ export const getListTransactionsQuery = <TSelectData = ListTransactionsResponse>
   const transformedInput = transformInput(input)
 
   return queryOptions({
-    queryKey: [ReactQueryCacheKey.ListTransactions, transformedInput],
+    queryKey: [ReactQueryCacheKey.ListTransactions, transformedInput] as const,
     queryFn: () =>
       transformedInput ? transactionsClient.listTransactions(transformedInput) : Promise.resolve(undefined),
     placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when refetching

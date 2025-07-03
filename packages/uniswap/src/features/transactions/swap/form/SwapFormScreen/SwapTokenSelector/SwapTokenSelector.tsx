@@ -1,12 +1,12 @@
 import type { BottomSheetView } from '@gorhom/bottom-sheet'
-import type { ComponentProps } from 'react'
+import { ComponentProps } from 'react'
 import { TokenSelectorModal, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useChainId } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapTokenSelector/hooks/useChainId'
 import { useHideTokenSelector } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapTokenSelector/hooks/useHideTokenSelector'
 import { useOnSelectCurrency } from 'uniswap/src/features/transactions/swap/form/hooks/useOnSelectCurrency'
-import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export function SwapTokenSelector({
@@ -16,11 +16,7 @@ export function SwapTokenSelector({
   isModalOpen: boolean
   focusHook?: ComponentProps<typeof BottomSheetView>['focusHook']
 }): JSX.Element | null {
-  const { selectingCurrencyField, input, output } = useSwapFormStore((s) => ({
-    selectingCurrencyField: s.selectingCurrencyField,
-    input: s.input,
-    output: s.output,
-  }))
+  const { selectingCurrencyField, input, output } = useSwapFormContext()
 
   const activeAccountAddress = useAccountMeta()?.address
   const chainId = useChainId()

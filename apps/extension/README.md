@@ -2,10 +2,6 @@
 
 ## Developer Quickstart
 
-### Environment variables
-
-Before running the extension, you need to get the environment variables from 1password in order to get full functionality. Run the command `yarn extension env:local:download` to copy them to your root folder.
-
 ### Running the extension locally
 
 To run the extension, run the following from the top level of the monorepo:
@@ -15,7 +11,11 @@ yarn
 yarn extension start
 ```
 
-Then, load the extension into Chrome:
+### Environment variables
+
+You need to get the environment variables from 1password in order to get full functionality. Run the command `yarn extension env:local:download` to copy them to your root folder.
+
+### Loading the extension into Chrome
 
 1. Go to **chrome://extensions**
 2. At the top right, turn on **Developer mode**

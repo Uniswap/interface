@@ -1,12 +1,11 @@
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
-import type { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import type { SwapTxStoreState } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/createSwapTxStore'
-import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import type { SwapCallback, SwapCallbackParams } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import type { WrapCallback, WrapCallbackParams } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
+import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { SwapCallback, SwapCallbackParams } from 'uniswap/src/features/transactions/swap/types/swapCallback'
+import { SwapTxAndGasInfo, isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { WrapCallback, WrapCallbackParams } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
@@ -40,7 +39,7 @@ export type GetExecuteSwapService = (ctx: {
 
 export function createExecuteSwapService(ctx: {
   getAccount?: () => ReturnType<typeof useAccountMeta>
-  getSwapTxContext?: () => SwapTxStoreState
+  getSwapTxContext?: () => ReturnType<typeof useSwapTxContext>
   getDerivedSwapInfo: () => DerivedSwapInfo
   getTxSettings: () => { customSlippageTolerance?: number }
   getIsFiatMode?: () => boolean
@@ -114,7 +113,7 @@ export function createExecuteSwapService(ctx: {
       wrapType: input.wrapType,
       // ctx
       account,
-      gasEstimate: swapTxContext.gasFeeEstimation.wrapEstimate,
+      gasEstimates: swapTxContext.gasFeeEstimation.wrapEstimates,
       onSuccess: ctx.onSuccess,
       onFailure: ctx.onFailure,
     })

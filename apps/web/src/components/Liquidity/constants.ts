@@ -4,7 +4,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 interface FeeDataWithChain {
   feeData: {
-    isDynamic: boolean
     feeAmount: FeeAmount
     tickSpacing: number
   }
@@ -12,30 +11,22 @@ interface FeeDataWithChain {
 }
 
 export const defaultFeeTiers: Record<FeeAmount, FeeDataWithChain> = {
-  [FeeAmount.LOWEST]: {
-    feeData: { feeAmount: FeeAmount.LOWEST, tickSpacing: TICK_SPACINGS[FeeAmount.LOWEST], isDynamic: false },
-  },
+  [FeeAmount.LOWEST]: { feeData: { feeAmount: FeeAmount.LOWEST, tickSpacing: TICK_SPACINGS[FeeAmount.LOWEST] } },
   [FeeAmount.LOW_200]: {
-    feeData: { feeAmount: FeeAmount.LOW_200, tickSpacing: TICK_SPACINGS[FeeAmount.LOW_200], isDynamic: false },
+    feeData: { feeAmount: FeeAmount.LOW_200, tickSpacing: TICK_SPACINGS[FeeAmount.LOW_200] },
     supportedChainIds: [UniverseChainId.Base],
   },
   [FeeAmount.LOW_300]: {
-    feeData: { feeAmount: FeeAmount.LOW_300, tickSpacing: TICK_SPACINGS[FeeAmount.LOW_300], isDynamic: false },
+    feeData: { feeAmount: FeeAmount.LOW_300, tickSpacing: TICK_SPACINGS[FeeAmount.LOW_300] },
     supportedChainIds: [UniverseChainId.Base],
   },
   [FeeAmount.LOW_400]: {
-    feeData: { feeAmount: FeeAmount.LOW_400, tickSpacing: TICK_SPACINGS[FeeAmount.LOW_400], isDynamic: false },
+    feeData: { feeAmount: FeeAmount.LOW_400, tickSpacing: TICK_SPACINGS[FeeAmount.LOW_400] },
     supportedChainIds: [UniverseChainId.Base],
   },
-  [FeeAmount.LOW]: {
-    feeData: { feeAmount: FeeAmount.LOW, tickSpacing: TICK_SPACINGS[FeeAmount.LOW], isDynamic: false },
-  },
-  [FeeAmount.MEDIUM]: {
-    feeData: { feeAmount: FeeAmount.MEDIUM, tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM], isDynamic: false },
-  },
-  [FeeAmount.HIGH]: {
-    feeData: { feeAmount: FeeAmount.HIGH, tickSpacing: TICK_SPACINGS[FeeAmount.HIGH], isDynamic: false },
-  },
+  [FeeAmount.LOW]: { feeData: { feeAmount: FeeAmount.LOW, tickSpacing: TICK_SPACINGS[FeeAmount.LOW] } },
+  [FeeAmount.MEDIUM]: { feeData: { feeAmount: FeeAmount.MEDIUM, tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM] } },
+  [FeeAmount.HIGH]: { feeData: { feeAmount: FeeAmount.HIGH, tickSpacing: TICK_SPACINGS[FeeAmount.HIGH] } },
 } as const
 
 export const lpStatusConfig = {

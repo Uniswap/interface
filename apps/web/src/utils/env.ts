@@ -13,7 +13,7 @@ export function isBrowserRouterEnabled(): boolean {
     if (
       isAppUniswapOrg(window.location) ||
       isAppUniswapStagingOrg(window.location) ||
-      isLocalhost(window.location) // playwright tests
+      isLocalhost(window.location) // cypress tests
     ) {
       return true
     }

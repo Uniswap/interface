@@ -56,7 +56,7 @@ export default defineConfig(({ mode }) => {
       __DEV__: !isProduction,
       'process.env.NODE_ENV': JSON.stringify(mode),
       'process.env.EXPO_OS': JSON.stringify('web'),
-      'process.env.REACT_APP_GIT_COMMIT_HASH': JSON.stringify(commitHash),
+      'process.env.GIT_COMMIT_HASH': JSON.stringify(commitHash),
       'process.env.REACT_APP_STAGING': JSON.stringify(mode === 'staging'),
       'process.env.REACT_APP_WEB_BUILD_TYPE': JSON.stringify('vite'),
       ...envDefines,
@@ -77,8 +77,6 @@ export default defineConfig(({ mode }) => {
         '@uniswap/permit2-sdk',
         'jsbi',
         'ethers',
-        'react',
-        'react-dom',
       ],
       alias: {
         ...overrides,

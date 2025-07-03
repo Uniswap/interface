@@ -1,9 +1,8 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -54,6 +53,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
     <Screen>
       <KeyboardAvoidingView
         behavior={isIOS ? 'padding' : undefined}
+        contentContainerStyle={styles.expand}
         // Disable the keyboard avoiding view when the modals are open, otherwise background elements will shift up when the user is editing their username
         enabled={!showDeleteUnitagModal && !showChangeUnitagModal}
         style={styles.base}
@@ -115,5 +115,8 @@ const styles = StyleSheet.create({
   base: {
     flex: 1,
     justifyContent: 'flex-end',
+  },
+  expand: {
+    flexGrow: 1,
   },
 })

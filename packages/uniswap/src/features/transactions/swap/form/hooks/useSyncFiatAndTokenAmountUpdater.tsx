@@ -2,10 +2,7 @@ import { useEffect } from 'react'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import {
-  useSwapFormStore,
-  useSwapFormStoreDerivedSwapInfo,
-} from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
 
 // Used for rounding in conversion math
@@ -20,18 +17,10 @@ const NUM_DECIMALS_DISPLAY_FIAT = 2
  * amount. This allows us to toggle between 2 modes, without losing the entered amount.
  */
 export function useSyncFiatAndTokenAmountUpdater({ skip = false }: { skip?: boolean }): void {
-  const { isFiatMode, updateSwapForm, exactAmountToken, exactAmountFiat, exactCurrencyField } = useSwapFormStore(
-    (s) => ({
-      isFiatMode: s.isFiatMode,
-      updateSwapForm: s.updateSwapForm,
-      exactAmountToken: s.exactAmountToken,
-      exactAmountFiat: s.exactAmountFiat,
-      exactCurrencyField: s.exactCurrencyField,
-    }),
-  )
+  const { isFiatMode, updateSwapForm, exactAmountToken, exactAmountFiat, derivedSwapInfo, exactCurrencyField } =
+    useSwapFormContext()
 
-  const currencies = useSwapFormStoreDerivedSwapInfo((s) => s.currencies)
-  const exactCurrency = currencies[exactCurrencyField]
+  const exactCurrency = derivedSwapInfo.currencies[exactCurrencyField]
 
   const { price: usdPriceOfCurrency } = useUSDCPrice(skip ? undefined : exactCurrency?.currency ?? undefined)
   const { convertFiatAmount } = useLocalizationContext()

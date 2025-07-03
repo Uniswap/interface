@@ -5,7 +5,6 @@ import { NativeSyntheticEvent } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { SharedValue, StyleProps, interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -69,12 +68,12 @@ export function useExploreTokenContextMenu({
         type: AssetType.Currency,
       },
     }
-    navigate(ModalName.Swap, swapFormState)
+    dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       element: ElementName.Swap,
       section: analyticsSection,
     })
-  }, [analyticsSection, chainId, currencyAddress])
+  }, [analyticsSection, chainId, currencyAddress, dispatch])
 
   const onPressToggleFavorite = useCallback(() => {
     toggleFavoriteToken()

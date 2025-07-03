@@ -1,13 +1,4 @@
-import {
-  skipToken,
-  useQuery,
-  useQueryClient,
-  type DefaultError,
-  type QueryClient,
-  type QueryKey,
-  type UseQueryOptions,
-  type UseQueryResult,
-} from '@tanstack/react-query'
+import { skipToken, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -19,30 +10,17 @@ import { logger } from 'utilities/src/logger/logger'
  * There are some endpoints (for example, swap quotes) where we want to be able to use a stale-while-revalidate approach (using `staleTime`)
  * for very short periods of time, while at the same time we want to make sure we never use stale data if it's older than the `gcTime`.
  */
-export function useQueryWithImmediateGarbageCollection<
-  TQueryFnData = unknown,
-  TError = DefaultError,
-  TData = TQueryFnData,
-  TQueryKey extends QueryKey = QueryKey,
->(
-  {
-    immediateGcTime,
-    ...queryArgs
-  }: Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>, 'gcTime'> & {
-    immediateGcTime?: number
-  },
-  customQueryClient?: QueryClient,
-): UseQueryResult<TData, TError> {
+export function useQueryWithImmediateGarbageCollection<T>(
+  { immediateGcTime, ...queryArgs }: Omit<Parameters<typeof useQuery<T>>[0], 'gcTime'> & { immediateGcTime?: number },
+  customQueryClient?: Parameters<typeof useQuery<T>>[1],
+): ReturnType<typeof useQuery<T>> {
   const defaultQueryClient = useQueryClient()
   const queryClient = customQueryClient ?? defaultQueryClient
 
   const { queryKey, queryFn } = queryArgs
   const skip = queryFn === skipToken
 
-  const result = useQuery<TQueryFnData, TError, TData, TQueryKey>(
-    { ...queryArgs, gcTime: immediateGcTime },
-    queryClient,
-  )
+  const result = useQuery<T>({ ...queryArgs, gcTime: immediateGcTime }, queryClient)
   const { dataUpdatedAt } = result
 
   useEffect(() => {

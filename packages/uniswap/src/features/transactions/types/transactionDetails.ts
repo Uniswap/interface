@@ -66,6 +66,11 @@ export type TransactionNetworkFee = {
   chainId: UniverseChainId
 }
 
+export type GasFeeEstimates = {
+  activeEstimate: GasEstimate
+  shadowEstimates?: GasEstimate[]
+}
+
 export interface UniswapXOrderDetails extends BaseTransactionDetails {
   routing: Routing.DUTCH_V3 | Routing.DUTCH_V2 | Routing.DUTCH_LIMIT | Routing.PRIORITY
 
@@ -225,21 +230,11 @@ export enum TransactionType {
   SendCalls = 'send-calls',
 
   // Liquidity
-  CollectFees = 'claim',
+  Claim = 'claim',
   CreatePair = 'create-pair',
   CreatePool = 'create-pool',
   LiquidityIncrease = 'liquidity-increase',
   LiquidityDecrease = 'liquidity-decrease',
-
-  // Liquidity Migration
-  MigrateLiquidityV2ToV3 = 'migrate-liquidity-v2-to-v3',
-  MigrateLiquidityV3ToV4 = 'migrate-liquidity-v3-to-v4',
-
-  // moved/converted from web's type
-  ClaimUni = 'claim-uni',
-  CreatePosition = 'create-position',
-  LPIncentivesClaimRewards = 'lp-incentives-claim-rewards',
-  UniswapXOrder = 'uniswapx-order',
 
   // Smart Wallet
   RemoveDelegation = 'remove-delegation',
@@ -250,7 +245,7 @@ export interface BaseTransactionInfo {
   transactedUSDValue?: number
   isSpam?: boolean
   externalDappInfo?: DappRequestInfo
-  gasEstimate?: GasEstimate
+  gasEstimates?: GasFeeEstimates
   includesDelegation?: boolean
   isSmartWalletTransaction?: boolean
 }
@@ -281,19 +276,12 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   tradeType?: TradeType
   inputCurrencyId: string
   outputCurrencyId: string
-
-  // only used by wallet
   slippageTolerance?: number
   quoteId?: string
   routeString?: string
   gasUseEstimate?: string
   protocol?: Protocol
   simulationFailureReasons?: TransactionFailureReason[]
-
-  /**
-   * @deprecated This is used on web only and will be deleted soon as part of WALL-7143
-   * */
-  isUniswapXOrder?: boolean
 }
 
 export interface BridgeTransactionInfo extends BaseTransactionInfo {
@@ -312,7 +300,6 @@ export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {
   inputCurrencyAmountRaw: string
   expectedOutputCurrencyAmountRaw: string
   minimumOutputCurrencyAmountRaw: string
-  settledOutputCurrencyAmountRaw?: string
 }
 
 export interface ExactOutputSwapTransactionInfo extends BaseSwapTransactionInfo {
@@ -429,12 +416,6 @@ export interface NFTApproveTransactionInfo extends BaseTransactionInfo {
   dappInfo?: DappInfoTransactionDetails
 }
 
-export interface ClaimUniTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.ClaimUni
-  recipient: string
-  uniAmountRaw?: string
-}
-
 export interface WCConfirmInfo extends BaseTransactionInfo {
   type: TransactionType.WCConfirm
   dappRequestInfo: DappRequestInfo
@@ -461,25 +442,18 @@ export interface SendCallsTransactionInfo extends BaseTransactionInfo {
 
 export interface LiquidityTransactionInfoBase<T extends TransactionType> extends BaseTransactionInfo {
   type: T
-  currency0Id: string
-  currency1Id: string
-  currency0AmountRaw: string
-  currency1AmountRaw: string
+  inputCurrencyId?: string
+  outputCurrencyId?: string
+  inputCurrencyAmountRaw?: string
+  outputCurrencyAmountRaw?: string
   dappInfo?: DappInfoTransactionDetails
 }
 
 export type LiquidityIncreaseTransactionInfo = LiquidityTransactionInfoBase<TransactionType.LiquidityIncrease>
 export type LiquidityDecreaseTransactionInfo = LiquidityTransactionInfoBase<TransactionType.LiquidityDecrease>
+export type ClaimTransactionInfo = LiquidityTransactionInfoBase<TransactionType.Claim>
 export type CreatePairTransactionInfo = LiquidityTransactionInfoBase<TransactionType.CreatePair>
 export type CreatePoolTransactionInfo = LiquidityTransactionInfoBase<TransactionType.CreatePool>
-export type CollectFeesTransactionInfo = Optional<LiquidityTransactionInfoBase<TransactionType.CollectFees>, 'currency1AmountRaw' | 'currency1Id'>
-
-export interface MigrateV2LiquidityToV3TransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.MigrateLiquidityV2ToV3
-  baseCurrencyId: string
-  quoteCurrencyId: string
-  isFork: boolean
-}
 
 export type TransactionTypeInfo =
   | ApproveTransactionInfo
@@ -502,14 +476,12 @@ export type TransactionTypeInfo =
   | LocalOnRampTransactionInfo
   | LocalOffRampTransactionInfo
   | SendCallsTransactionInfo
-  | CollectFeesTransactionInfo
+  | ClaimTransactionInfo
   | CreatePairTransactionInfo
   | CreatePoolTransactionInfo
   | LiquidityIncreaseTransactionInfo
   | LiquidityDecreaseTransactionInfo
   | RemoveDelegationTransactionInfo
-  | ClaimUniTransactionInfo
-  | MigrateV2LiquidityToV3TransactionInfo
 
   export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is ConfirmedSwapTransactionInfo {
   return Boolean(

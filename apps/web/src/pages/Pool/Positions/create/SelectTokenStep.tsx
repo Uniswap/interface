@@ -5,18 +5,13 @@ import CreatingPoolInfo from 'components/CreatingPoolInfo/CreatingPoolInfo'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { HookModal } from 'components/Liquidity/HookModal'
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
-import {
-  getDefaultFeeTiersWithData,
-  getFeeTierKey,
-  hasLPFoTTransferError,
-  isDynamicFeeTier,
-} from 'components/Liquidity/utils'
+import { getDefaultFeeTiersWithData, hasLPFoTTransferError, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import { SwitchNetworkAction } from 'components/Popups/types'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { BIPS_BASE } from 'constants/misc'
+import { BIPS_BASE, ZERO_ADDRESS } from 'constants/misc'
 import { SUPPORTED_V2POOL_CHAIN_IDS } from 'hooks/useNetworkSupportsV2'
 import { AddHook } from 'pages/Pool/Positions/create/AddHook'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
@@ -35,13 +30,11 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Search } from 'ui/src/components/icons/Search'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { AllowedV4WethHookAddressesConfigKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -51,6 +44,7 @@ import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
+
 interface WrappedNativeWarning {
   wrappedToken: Currency
   nativeToken: Currency
@@ -162,8 +156,6 @@ const FeeTier = ({
   )
 }
 
-const DEFAULT_ADDRESSES: string[] = [] // this has to be a const to prevent a rerender loop
-
 export function SelectTokensStep({
   currencyInputs,
   setCurrencyInputs,
@@ -181,13 +173,7 @@ export function SelectTokensStep({
   const { setSelectedChainId } = useMultichainContext()
   const trace = useTrace()
   const [hookModalOpen, setHookModalOpen] = useState(false)
-  const [showWrappedNativeWarning, setShowWrappedNativeWarning] = useState(false)
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
-  const allowedV4WethHookAddresses: string[] = useDynamicConfigValue({
-    config: DynamicConfigs.AllowedV4WethHookAddresses,
-    key: AllowedV4WethHookAddressesConfigKey.HookAddresses,
-    defaultValue: DEFAULT_ADDRESSES,
-  })
 
   const {
     positionState: { hook, userApprovedHook, fee, protocolVersion },
@@ -277,9 +263,10 @@ export function SelectTokensStep({
     hook: hook ?? ZERO_ADDRESS,
   })
 
+  const feeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion, t })
   const feeTierHasLpRewards = useMemo(
-    () => Object.values(feeTierData).some((tier) => tier.boostedApr && tier.boostedApr > 0) && isLpIncentivesEnabled,
-    [feeTierData, isLpIncentivesEnabled],
+    () => feeTiers.some((tier) => tier.boostedApr && tier.boostedApr > 0) && isLpIncentivesEnabled,
+    [feeTiers, isLpIncentivesEnabled],
   )
 
   const [defaultFeeTierSelected, setDefaultFeeTierSelected] = useState(false)
@@ -318,11 +305,6 @@ export function SelectTokensStep({
   }, [protocolVersion, chains])
 
   const handleOnContinue = () => {
-    if (wrappedNativeWarning) {
-      setShowWrappedNativeWarning(true)
-      return
-    }
-
     if (hook !== userApprovedHook) {
       setHookModalOpen(true)
     } else {
@@ -332,11 +314,6 @@ export function SelectTokensStep({
 
   const wrappedNativeWarning = useMemo((): WrappedNativeWarning | undefined => {
     if (protocolVersion !== ProtocolVersion.V4) {
-      setShowWrappedNativeWarning(false)
-      return undefined
-    }
-
-    if (hook && allowedV4WethHookAddresses.includes(hook)) {
       return undefined
     }
 
@@ -368,9 +345,8 @@ export function SelectTokensStep({
       }
     }
 
-    setShowWrappedNativeWarning(false)
     return undefined
-  }, [token0, token1, protocolVersion, hook, allowedV4WethHookAddresses])
+  }, [token0, token1, protocolVersion])
 
   const token0CurrencyInfo = useCurrencyInfo(currencyId(token0))
   const token1CurrencyInfo = useCurrencyInfo(currencyId(token1))
@@ -379,7 +355,7 @@ export function SelectTokensStep({
   const token1FoTError = hasLPFoTTransferError(token1CurrencyInfo, protocolVersion)
   const fotErrorToken = token0FoTError || token1FoTError
 
-  const hasError = isV4UnsupportedTokenSelected || Boolean(fotErrorToken)
+  const hasError = isV4UnsupportedTokenSelected || Boolean(wrappedNativeWarning) || Boolean(fotErrorToken)
 
   const lpIncentiveRewardApr = useMemo(() => {
     if (!isLpIncentivesEnabled || protocolVersion !== ProtocolVersion.V4) {
@@ -389,13 +365,9 @@ export function SelectTokensStep({
     // This component makes 2 API calls to ListPools -- one for current selected fee tier, and one to get all pools for all fee tiers
     // to ensure the current selected fee tier rewards APR matches the same fee tier in the fee tier selector,
     // grab the rewards tier from the fee tier directly
-    const matchingFeeTier = Object.values(feeTierData).find(
-      (tier) => getFeeTierKey(tier.fee.feeAmount, tier.fee.isDynamic) === getFeeTierKey(fee.feeAmount, fee.isDynamic),
-    )
+    const matchingFeeTier = feeTiers.find((tier) => tier.value.feeAmount === fee.feeAmount)
     return matchingFeeTier?.boostedApr && matchingFeeTier.boostedApr > 0 ? matchingFeeTier.boostedApr : undefined
-  }, [isLpIncentivesEnabled, protocolVersion, feeTierData, fee.feeAmount, fee.isDynamic])
-
-  const defaultFeeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion, t })
+  }, [isLpIncentivesEnabled, protocolVersion, feeTiers, fee.feeAmount])
 
   return (
     <>
@@ -446,7 +418,7 @@ export function SelectTokensStep({
               )}
               <SelectStepError
                 isV4UnsupportedTokenSelected={isV4UnsupportedTokenSelected}
-                wrappedNativeWarning={undefined}
+                wrappedNativeWarning={wrappedNativeWarning}
                 fotToken={fotErrorToken}
               />
               {!hasError && protocolVersion === ProtocolVersion.V4 && <AddHook />}
@@ -485,9 +457,7 @@ export function SelectTokensStep({
                             />
                           )}
                         </Text>
-                        {getFeeTierKey(fee.feeAmount, fee.isDynamic) ===
-                        (mostUsedFeeTier &&
-                          getFeeTierKey(mostUsedFeeTier.fee.feeAmount, mostUsedFeeTier.fee.isDynamic)) ? (
+                        {fee.feeAmount === mostUsedFeeTier?.fee.feeAmount ? (
                           <MouseoverTooltip text={t('fee.tier.recommended.description')}>
                             <Flex
                               justifyContent="center"
@@ -502,11 +472,7 @@ export function SelectTokensStep({
                               </Text>
                             </Flex>
                           </MouseoverTooltip>
-                        ) : defaultFeeTiers.find(
-                            (tier) =>
-                              getFeeTierKey(tier.value.feeAmount, tier.value.isDynamic) ===
-                              getFeeTierKey(fee.feeAmount, fee.isDynamic),
-                          ) ? null : (
+                        ) : feeTiers.find((tier) => tier.value.feeAmount === fee.feeAmount) ? null : (
                           <Flex justifyContent="center" borderRadius="$rounded6" backgroundColor="$surface3" px={7}>
                             <Text variant="buttonLabel4">
                               <Trans i18nKey="fee.tier.new" />
@@ -595,14 +561,11 @@ export function SelectTokensStep({
                       }}
                       gap={10}
                     >
-                      {defaultFeeTiers.map((feeTier) => (
+                      {feeTiers.map((feeTier) => (
                         <FeeTier
                           key={feeTier.value.feeAmount}
                           feeTier={feeTier}
-                          selected={
-                            getFeeTierKey(feeTier.value.feeAmount, feeTier.value.isDynamic) ===
-                            getFeeTierKey(fee.feeAmount, fee.isDynamic)
-                          }
+                          selected={feeTier.value.feeAmount === fee.feeAmount}
                           onSelect={handleFeeTierSelect}
                           isLpIncentivesEnabled={isLpIncentivesEnabled}
                         />
@@ -629,18 +592,11 @@ export function SelectTokensStep({
               key="SelectTokensStep-continue"
               onPress={handleOnContinue}
               loading={Boolean(!continueButtonEnabled && token0 && token1)}
-              isDisabled={!continueButtonEnabled || hasError || (showWrappedNativeWarning && !!wrappedNativeWarning)}
+              isDisabled={!continueButtonEnabled || hasError}
             >
               {t('common.button.continue')}
             </Button>
           </Flex>
-          {showWrappedNativeWarning && wrappedNativeWarning && (
-            <SelectStepError
-              isV4UnsupportedTokenSelected={false}
-              wrappedNativeWarning={wrappedNativeWarning}
-              fotToken={undefined}
-            />
-          )}
         </Container>
 
         <CurrencySearchModal

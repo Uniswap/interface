@@ -229,7 +229,7 @@ function MigrateV3Inner({
                           analytics: {
                             ...getLPBaseAnalyticsProperties({
                               trace,
-                              fee: positionInfo.feeTier?.feeAmount,
+                              fee: positionInfo.feeTier,
                               tickSpacing: positionInfo.tickSpacing,
                               tickLower: positionInfo.tickLower,
                               tickUpper: positionInfo.tickUpper,

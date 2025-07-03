@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react'
 import { SpaceTokens, getToken } from 'tamagui'
-import { Flex, Separator } from 'ui/src/components/layout'
+import { Flex } from 'ui/src/components/layout'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions/useDeviceDimensions'
 import { FlexLoader, FlexLoaderProps } from 'ui/src/loading/FlexLoader'
 import { InsufficientFundsNetworkRowLoader } from 'ui/src/loading/InsufficientFundsNetworkRowLoader'
@@ -90,14 +90,21 @@ function Token({
   )
 }
 
-function InsufficientFundsNetworkRow({ repeat = 1, contrast }: { repeat?: number; contrast?: boolean }): JSX.Element {
+function InsufficientFundsNetworkRow({
+  repeat = 1,
+  contrast,
+  gap = '$spacing4',
+}: {
+  repeat?: number
+  contrast?: boolean
+  gap?: SpaceTokens
+}): JSX.Element {
   return (
     <Skeleton contrast={contrast}>
-      <Flex grow>
+      <Flex grow gap={gap}>
         {Array.from({ length: repeat }, (_, i) => (
           <React.Fragment key={i}>
             <InsufficientFundsNetworkRowLoader opacity={(repeat - i) / repeat} />
-            {i < repeat - 1 && <Separator my="$spacing8" />}
           </React.Fragment>
         ))}
       </Flex>

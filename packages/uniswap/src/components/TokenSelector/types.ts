@@ -15,6 +15,7 @@ export type TokenSectionsHookProps = {
   activeAccountAddress?: string
   chainFilter: UniverseChainId | null
   oppositeSelectedToken?: TradeableAsset
+  isKeyboardOpen?: boolean
 }
 
 export type ConvertFiatAmountFormattedCallback = (

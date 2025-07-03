@@ -3,7 +3,7 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import { SmartWallet } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { SmartWalletModal } from 'wallet/src/components/smartWallet/modals/SmartWalletModal'
+import { SmartWalletModal } from 'wallet/src/features/smartWallet/modals/SmartWalletModal'
 
 interface SmartWalletEducationalModalProps {
   isOpen: boolean
@@ -17,8 +17,20 @@ export function SmartWalletEducationalModal({ isOpen, onClose }: SmartWalletEduc
   return (
     <SmartWalletModal
       isOpen={isOpen}
-      icon={<SmartWallet color={colors.accent1.val} size="$icon.24" />}
-      iconBackgroundColor="$accent2"
+      icon={
+        // TODO: remove this placeholder once design has settled on the icon
+        <Flex
+          backgroundColor="$accent2"
+          borderRadius="$rounded12"
+          height="$spacing48"
+          width="$spacing48"
+          alignItems="center"
+          justifyContent="center"
+          mb="$spacing4"
+        >
+          <SmartWallet color={colors.accent1.val} size="$icon.24" />
+        </Flex>
+      }
       title={t('smartWallets')}
       subtext={
         <Flex gap="$spacing8">

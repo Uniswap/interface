@@ -26,7 +26,6 @@ import {
   v22Schema,
   v23Schema,
   v24Schema,
-  v25Schema,
   v2Schema,
   v3Schema,
   v4Schema,
@@ -61,7 +60,6 @@ import {
   testAddCreatedOnboardingRedesignAccount,
   testAddedHapticSetting,
   testDeleteWelcomeWalletCard,
-  testMigrateLiquidityTransactionInfoRename,
   testMoveHapticsToUserSettings,
   testMoveTokenAndNFTVisibility,
   testMovedCurrencySetting,
@@ -337,9 +335,5 @@ describe('Redux state migrations', () => {
 
     const v24Stub2 = { ...v24Schema, userSettings: { ...v24Schema.userSettings, currentCurrency: 'JPY' } }
     testRemoveTHBFromCurrency(migrations[25], v24Stub2)
-  })
-
-  it('migrates from v25 to v26', () => {
-    testMigrateLiquidityTransactionInfoRename(migrations[26], v25Schema)
   })
 })

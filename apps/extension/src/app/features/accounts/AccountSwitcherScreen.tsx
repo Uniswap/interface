@@ -178,7 +178,7 @@ export function AccountSwitcherScreen(): JSX.Element {
 
       {
         label: t('account.wallet.menu.manageConnections'),
-        onPress: () => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`),
+        onPress: () => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`),
         Icon: Globe,
       },
       {

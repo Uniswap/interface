@@ -1,7 +1,7 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
 import { FeeData } from 'pages/Pool/Positions/create/types'
 import { Dispatch, ReactNode, SetStateAction } from 'react'
@@ -73,7 +73,7 @@ export type V3PositionInfo = BasePositionInfo & {
   version: ProtocolVersion.V3
   tokenId: string
   pool?: V3Pool
-  feeTier?: FeeData
+  feeTier?: FeeAmount
   position?: V3Position
   v4hook: undefined
   owner: string
@@ -84,7 +84,7 @@ type V4PositionInfo = BasePositionInfo & {
   tokenId: string
   pool?: V4Pool
   position?: V4Position
-  feeTier?: FeeData
+  feeTier?: string
   v4hook?: string
   owner: string
   totalApr?: number

@@ -70,8 +70,8 @@ export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
 })
 
 export interface SerializedCurrencyState {
-  inputCurrencyAddress?: string
-  outputCurrencyAddress?: string
+  inputCurrencyId?: string
+  outputCurrencyId?: string
   value?: string
   field?: string
   chainId?: number

@@ -6,7 +6,7 @@ import { VerticalDotLine } from 'ui/src/components/icons/VerticalDotLine'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionDetailsTooltip as Tooltip } from 'uniswap/src/components/TransactionDetailsTooltip'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isMobileApp } from 'utilities/src/platform'
 
@@ -62,8 +62,8 @@ export function MaxSlippageTooltip({
   currentSlippageTolerance: string
 }): JSX.Element | null {
   const { t } = useTranslation()
-  const currencies = useSwapFormStoreDerivedSwapInfo((s) => s.currencies)
-  const outputCurrencyInfo = currencies[CurrencyField.OUTPUT]
+  const { derivedSwapInfo } = useSwapFormContext()
+  const outputCurrencyInfo = derivedSwapInfo.currencies[CurrencyField.OUTPUT]
 
   if (isMobileApp) {
     return null

@@ -40,7 +40,7 @@ const MenuFlyout = styled(Flex, {
 
 function AutocompleteFlyout({ address, handleSelectAddress }: { address: string; handleSelectAddress: () => void }) {
   const { t } = useTranslation()
-  const validAddress = getValidAddress({ address, withChecksum: true })
+  const validAddress = getValidAddress({ address })
 
   return (
     <MenuFlyout>

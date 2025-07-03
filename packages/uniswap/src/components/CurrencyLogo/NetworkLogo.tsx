@@ -1,6 +1,6 @@
 import React from 'react'
 import type { ImageSourcePropType } from 'react-native'
-import { Flex, FlexProps, Image, Loader, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, Image, useSporeColors } from 'ui/src'
 import { ALL_NETWORKS_LOGO } from 'ui/src/assets'
 import { iconSizes, zIndexes } from 'ui/src/theme'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -15,7 +15,6 @@ type NetworkLogoProps = FlexProps & {
   shape?: 'circle' | 'square'
   borderWidth?: number
   borderRadius?: number
-  loading?: boolean
 }
 
 export function TransactionSummaryNetworkLogo({
@@ -31,7 +30,6 @@ function _NetworkLogo({
   size: sizeWithoutBorder = iconSizes.icon20,
   borderWidth = 0,
   borderRadius,
-  loading,
 }: NetworkLogoProps): JSX.Element | null {
   const size = sizeWithoutBorder + 2 * borderWidth
   const shapeBorderRadius = shape === 'circle' ? size / 2 : size * SQUIRCLE_BORDER_RADIUS_RATIO
@@ -43,10 +41,6 @@ function _NetworkLogo({
     borderRadius: borderRadius ?? shapeBorderRadius,
     borderWidth,
     borderColor: colors.surface1.val,
-  }
-
-  if (loading) {
-    return <Loader.Box height={size} width={size} borderRadius={borderRadius ?? shapeBorderRadius} />
   }
 
   if (chainId === null) {

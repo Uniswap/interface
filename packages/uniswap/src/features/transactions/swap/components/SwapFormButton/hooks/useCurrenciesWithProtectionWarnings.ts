@@ -1,6 +1,6 @@
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { usePrefilledNeedsTokenProtectionWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/usePrefilledNeedsTokenProtectionWarning'
-import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 
 type UseCurrenciesWithProtectionWarnings = () =>
   | {
@@ -13,10 +13,8 @@ type UseCurrenciesWithProtectionWarnings = () =>
     }
 
 export const useCurrenciesWithProtectionWarnings: UseCurrenciesWithProtectionWarnings = () => {
-  const { derivedSwapInfo, prefilledCurrencies } = useSwapFormStore((s) => ({
-    derivedSwapInfo: s.derivedSwapInfo,
-    prefilledCurrencies: s.prefilledCurrencies,
-  }))
+  const { derivedSwapInfo, prefilledCurrencies } = useSwapFormContext()
+
   const { currenciesWithProtectionWarnings } = usePrefilledNeedsTokenProtectionWarning(
     derivedSwapInfo,
     prefilledCurrencies,

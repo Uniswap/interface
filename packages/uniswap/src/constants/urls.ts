@@ -167,7 +167,6 @@ export const uniswapUrls = {
   // Web Interface Urls
   webInterfaceSwapUrl: `${UNISWAP_WEB_URL}/#/swap`,
   webInterfaceTokensUrl: `${UNISWAP_WEB_URL}/explore/tokens`,
-  webInterfacePoolsUrl: `${UNISWAP_WEB_URL}/explore/pools`,
   webInterfaceAddressUrl: `${UNISWAP_WEB_URL}/address`,
   webInterfaceNftItemUrl: `${UNISWAP_WEB_URL}/nfts/asset`,
   webInterfaceNftCollectionUrl: `${UNISWAP_WEB_URL}/nfts/collection`,

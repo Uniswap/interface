@@ -1,6 +1,7 @@
 import React from 'react'
 import { LazyModalRenderer } from 'src/app/modals/LazyModalRenderer'
 import { SendTokenModal } from 'src/app/modals/SendTokenModal'
+import { SwapModal } from 'src/app/modals/SwapModal'
 import { WalletConnectModals } from 'src/components/Requests/WalletConnectModals'
 import { ForceUpgradeModal } from 'src/components/forceUpgrade/ForceUpgradeModal'
 import { FiatOnRampAggregatorModal } from 'src/features/fiatOnRamp/FiatOnRampAggregatorModal'
@@ -28,6 +29,10 @@ export function AppModals(): JSX.Element {
       <ForceUpgradeModal />
 
       <LockScreenModal />
+
+      <LazyModalRenderer name={ModalName.Swap}>
+        <SwapModal />
+      </LazyModalRenderer>
 
       <LazyModalRenderer name={ModalName.Send}>
         <SendTokenModal />

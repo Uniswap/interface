@@ -14,14 +14,15 @@ import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useAddOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 import { useTransaction, useTransactionAdder } from 'state/transactions/hooks'
-import { TransactionInfo } from 'state/transactions/types'
+import {
+  ExactInputSwapTransactionInfo,
+  ExactOutputSwapTransactionInfo,
+  TransactionType,
+} from 'state/transactions/types'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import {
-  TransactionStatus,
-  TransactionType as UniswapTransactionType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
-import { currencyId } from 'uniswap/src/utils/currencyId'
+import { currencyId } from 'utils/currencyId'
 
 export type SwapResult = Awaited<ReturnType<ReturnType<typeof useSwapCallback>>>
 
@@ -95,8 +96,8 @@ export function useSwapCallback({
     }
     const result = await swapCallback()
 
-    const swapInfo: TransactionInfo = {
-      type: UniswapTransactionType.Swap,
+    const swapInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo = {
+      type: TransactionType.SWAP,
       inputCurrencyId: currencyId(trade.inputAmount.currency),
       outputCurrencyId: currencyId(trade.outputAmount.currency),
       isUniswapXOrder: result.type === TradeFillType.UniswapX || result.type === TradeFillType.UniswapXv2,

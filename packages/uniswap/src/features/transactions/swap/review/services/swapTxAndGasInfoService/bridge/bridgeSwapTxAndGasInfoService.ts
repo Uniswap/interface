@@ -8,7 +8,8 @@ import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 
 export function createBridgeSwapTxAndGasInfoService(ctx: {
   instructionService: EVMSwapInstructionsService
-  gasStrategy: GasStrategy
+  activeGasStrategy: GasStrategy
+  shadowGasStrategies: GasStrategy[]
   transactionSettings: TransactionSettingsContextState
   v4SwapEnabled: boolean
 }): SwapTxAndGasInfoService<BridgeTrade> {

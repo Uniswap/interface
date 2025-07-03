@@ -15,6 +15,8 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
@@ -35,15 +37,18 @@ const TokenOptionItem = memo(function _TokenOptionItem({
   index,
   showWarnings,
   showTokenAddress,
+  isKeyboardOpen,
 }: {
   tokenOption: TokenOption
   section: OnchainItemSection<TokenOption>
   index: number
   showWarnings: boolean
   showTokenAddress?: boolean
+  isKeyboardOpen?: boolean
   onSelectCurrency: OnSelectCurrency
 }): JSX.Element {
   const { currencyInfo } = tokenOption
+  const searchRevampEnabled = useFeatureFlag(FeatureFlags.SearchRevamp)
 
   const onPress = useCallback(
     () => onSelectCurrency(currencyInfo, section, index),
@@ -81,6 +86,15 @@ const TokenOptionItem = memo(function _TokenOptionItem({
     onPress()
   }, [onPress])
 
+  const legacyTokenOptionItemProps = {
+    balance: balanceText,
+    isKeyboardOpen,
+    quantity: tokenOption.quantity,
+    quantityFormatted: quantityText,
+    showWarnings,
+    tokenWarningDismissed,
+  }
+
   return (
     <BaseTokenOptionItem
       option={tokenOption}
@@ -112,6 +126,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
         modalSetIsOpen: setShowWarningModal,
       }}
       onPress={onPressTokenOption}
+      {...(!searchRevampEnabled && legacyTokenOptionItemProps)} // TODO: clean up legacy token selector variables
     />
   )
 })
@@ -135,6 +150,7 @@ function _TokenSelectorList({
   sections,
   chainFilter,
   showTokenWarnings,
+  isKeyboardOpen,
   refetch,
   loading,
   hasError,
@@ -176,6 +192,7 @@ function _TokenSelectorList({
     return (
       <TokenOptionItem
         index={index}
+        isKeyboardOpen={isKeyboardOpen}
         section={section as OnchainItemSection<TokenOption>}
         showTokenAddress={showTokenAddress}
         showWarnings={showTokenWarnings}

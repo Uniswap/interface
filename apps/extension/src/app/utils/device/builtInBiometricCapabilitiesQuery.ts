@@ -11,7 +11,6 @@ type BuiltInBiometricCapabilities = {
   name: string
   icon: GeneratedIcon
   hasBuiltInBiometricSensor: boolean
-  os: chrome.runtime.PlatformOs
 }
 
 export function builtInBiometricCapabilitiesQuery({ t }: { t: TFunction }) {
@@ -28,7 +27,6 @@ async function getBuiltInBiometricCapabilities({ t }: { t: TFunction }): Promise
     const { os } = await getChromeRuntimeWithThrow().getPlatformInfo()
 
     return {
-      os,
       hasBuiltInBiometricSensor: await isUserVerifyingPlatformAuthenticatorAvailable(),
       ...getPlatformAuthenticatorNameAndIcon({ os, t }),
     }

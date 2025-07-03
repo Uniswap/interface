@@ -1,9 +1,9 @@
 import { Routing, CreateSwapRequest } from "uniswap/src/data/tradingApi/__generated__/index"
-import { GasEstimate } from "uniswap/src/data/tradingApi/types"
 import { GasFeeResult, ValidatedGasFeeResult, validateGasFeeResult } from "uniswap/src/features/gas/types"
 import { BridgeTrade, ClassicTrade, UniswapXTrade, UnwrapTrade, WrapTrade } from "uniswap/src/features/transactions/swap/types/trade"
 import { isBridge, isClassic, isUniswapX, isWrap } from "uniswap/src/features/transactions/swap/utils/routing"
 import { ValidatedPermit, ValidatedTransactionRequest } from "uniswap/src/features/transactions/swap/utils/trade"
+import { GasFeeEstimates } from "uniswap/src/features/transactions/types/transactionDetails"
 import { isInterface } from "utilities/src/platform"
 
 export type SwapTxAndGasInfo = ClassicSwapTxAndGasInfo | UniswapXSwapTxAndGasInfo | BridgeSwapTxAndGasInfo | WrapSwapTxAndGasInfo
@@ -15,9 +15,9 @@ export function isValidSwapTxContext(swapTxContext: SwapTxAndGasInfo | unknown):
 }
 
 export type SwapGasFeeEstimation = {
-  swapEstimate?: GasEstimate
-  approvalEstimate?: GasEstimate
-  wrapEstimate?: GasEstimate
+  swapEstimates?: GasFeeEstimates
+  approvalEstimates?: GasFeeEstimates
+  wrapEstimates?: GasFeeEstimates
 }
 
 export type UniswapXGasBreakdown = {
@@ -63,6 +63,7 @@ export interface ClassicSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   */
   unsigned: boolean
   txRequests: PopulatedTransactionRequestArray | undefined
+  
 }
 
 export interface WrapSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {

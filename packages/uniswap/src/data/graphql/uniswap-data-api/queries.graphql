@@ -821,6 +821,70 @@ query TopTokens(
   }
 }
 
+query SearchTokens($searchQuery: String!, $chains: [Chain!]!, $tokenSearchV2Enabled: Boolean) {
+  searchTokens(searchQuery: $searchQuery, chains: $chains, tokenSearchV2Enabled: $tokenSearchV2Enabled) {
+    ...TokenParts
+  }
+}
+
+query ExploreSearch(
+  $searchQuery: String!
+  $nftCollectionsFilter: NftCollectionsFilterInput!
+  $chains: [Chain!]
+  $tokenSearchV2Enabled: Boolean
+) {
+  searchTokens(searchQuery: $searchQuery, chains: $chains, tokenSearchV2Enabled: $tokenSearchV2Enabled) {
+    chain
+    address
+    decimals
+    symbol
+    # Use 1D volume to determine which token to show when results include the same token on multiple chains
+    market {
+      volume(duration: DAY) {
+        value
+      }
+    }
+    name
+    project {
+      id
+      logoUrl
+      safetyLevel
+    }
+    protectionInfo {
+      result
+      attackTypes
+      blockaidFees {
+        buy
+        sell
+        transfer
+      }
+    }
+    feeData {
+      buyFeeBps
+      sellFeeBps
+    }
+  }
+  nftCollections(filter: $nftCollectionsFilter, first: 4) {
+    edges {
+      node {
+        id
+        name
+        collectionId
+        isVerified
+        nftContracts {
+          id
+          chain
+          address
+        }
+        image {
+          id
+          url
+        }
+      }
+    }
+  }
+}
+
 fragment TokenParts on Token {
   ...TokenBasicInfoParts
   ...TokenBasicProjectParts

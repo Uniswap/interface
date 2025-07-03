@@ -2,9 +2,9 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { sendTokenActions } from 'wallet/src/features/transactions/send/sendTokenSaga'
 import { SendTokenParams } from 'wallet/src/features/transactions/send/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
@@ -19,7 +19,7 @@ export function useSendERC20Callback({
   transferTxWithGasSettings,
   onSubmit,
   currencyAmountUSD,
-  gasEstimate,
+  gasEstimates,
 }: {
   txId?: string
   chainId?: UniverseChainId
@@ -29,7 +29,7 @@ export function useSendERC20Callback({
   transferTxWithGasSettings?: providers.TransactionRequest
   onSubmit?: () => void
   currencyAmountUSD?: Maybe<CurrencyAmount<Currency>> // for analytics
-  gasEstimate?: GasEstimate
+  gasEstimates?: GasFeeEstimates
 }): (() => void) | null {
   const account = useActiveAccount()
 
@@ -45,7 +45,7 @@ export function useSendERC20Callback({
             type: AssetType.Currency,
             txId,
             currencyAmountUSD,
-            gasEstimate,
+            gasEstimates,
           }
         : undefined,
     txRequest: transferTxWithGasSettings,
@@ -62,7 +62,7 @@ export function useSendNFTCallback({
   tokenId,
   txRequest,
   onSubmit,
-  gasEstimate,
+  gasEstimates,
 }: {
   txId?: string
   chainId?: UniverseChainId
@@ -71,7 +71,7 @@ export function useSendNFTCallback({
   tokenId?: string
   txRequest?: providers.TransactionRequest
   onSubmit?: () => void
-  gasEstimate?: GasEstimate
+  gasEstimates?: GasFeeEstimates
 }): (() => void) | null {
   const account = useActiveAccount()
 
@@ -86,7 +86,7 @@ export function useSendNFTCallback({
             tokenId,
             type: AssetType.ERC721,
             txId,
-            gasEstimate,
+            gasEstimates,
           }
         : undefined,
     txRequest,

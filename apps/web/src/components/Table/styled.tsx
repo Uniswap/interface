@@ -12,6 +12,7 @@ import { ArrowDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ClickableStyle, ClickableTamaguiStyle } from 'theme/components/styles'
+import { Z_INDEX } from 'theme/zIndex'
 import { Anchor, Flex, Text, TextProps, View, styled } from 'ui/src'
 import { breakpoints, zIndexes } from 'ui/src/theme'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -66,7 +67,6 @@ export const LoadingIndicatorContainer = styled(Flex, {
   alignItems: 'center',
   justifyContent: 'center',
   mt: -48,
-  zIndex: zIndexes.sticky,
   '$platform-web': {
     position: 'sticky',
   },
@@ -74,12 +74,13 @@ export const LoadingIndicatorContainer = styled(Flex, {
 
 export const LoadingIndicator = styled(Flex, {
   row: true,
-  backgroundColor: '$accent2Solid',
+  backgroundColor: '$accent2',
   borderRadius: '$rounded8',
   width: 'fit-content',
   p: '$padding8',
   gap: '$gap8',
   height: 34,
+  zIndex: Z_INDEX.under_dropdown,
 })
 
 const TableRow = styled(Flex, {

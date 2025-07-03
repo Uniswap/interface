@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-import { OpaqueColorValue } from 'react-native'
-import type { ColorTokens, GetThemeValueForKey } from 'tamagui'
+import type { ColorTokens } from 'tamagui'
 import { Switch as TamaguiSwitch } from 'tamagui'
 import { Check } from 'ui/src/components/icons'
 import type { FlexProps } from 'ui/src/components/layout'
@@ -26,7 +25,6 @@ export function Switch({
   disabled,
   variant,
   disabledStyle,
-  backgroundColor,
   ...rest
 }: SwitchProps): JSX.Element {
   const [checked, setChecked] = useState(checkedProp)
@@ -50,11 +48,7 @@ export function Switch({
 
   const isDisabledStyling = disabled && !checked
 
-  const frameBackgroundColor = ((): ColorTokens | OpaqueColorValue | GetThemeValueForKey<'backgroundColor'> => {
-    if (backgroundColor) {
-      return backgroundColor
-    }
-
+  const frameBackgroundColor = ((): ColorTokens => {
     if (isDisabledStyling) {
       return '$surface3'
     }

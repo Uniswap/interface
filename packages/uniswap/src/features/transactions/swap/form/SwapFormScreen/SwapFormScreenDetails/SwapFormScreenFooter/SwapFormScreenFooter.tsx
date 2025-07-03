@@ -1,7 +1,7 @@
 import { AnimatePresence, Flex, useIsShortMobileDevice } from 'ui/src'
+import { useSwapFormScreenState } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContext'
 import { FoTWarningRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/FoTWarningRow'
 import { GasAndWarningRows } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/GasAndWarningRows'
-import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { isWeb } from 'utilities/src/platform'
 
 /**
@@ -11,15 +11,7 @@ import { isWeb } from 'utilities/src/platform'
  */
 export function SwapFormScreenFooter(): JSX.Element | null {
   const isShortMobileDevice = useIsShortMobileDevice()
-  const { outputTokenHasBuyTax, showFooter, showWarning, exactAmountToken, currencies } = useSwapFormScreenStore(
-    (state) => ({
-      outputTokenHasBuyTax: state.outputTokenHasBuyTax,
-      showFooter: state.showFooter,
-      showWarning: state.showWarning,
-      exactAmountToken: state.exactAmountToken,
-      currencies: state.currencies,
-    }),
-  )
+  const { outputTokenHasBuyTax, showFooter, showWarning, exactAmountToken, currencies } = useSwapFormScreenState()
 
   if (!showFooter) {
     return null

@@ -1,3 +1,4 @@
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ErrorCallout } from 'components/ErrorCallout'
 import {
   IncreaseLiquidityStep,
@@ -8,7 +9,7 @@ import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
-import { canUnwrapCurrency } from 'pages/Pool/Positions/create/utils'
+import { canUnwrapCurrency, getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PositionField } from 'types/position'
@@ -33,7 +34,6 @@ export function IncreaseLiquidityForm() {
     currencyBalances,
     deposit0Disabled,
     deposit1Disabled,
-    currencies,
     error,
   } = derivedIncreaseLiquidityInfo
   const { position, exactField } = increaseLiquidityState
@@ -56,11 +56,33 @@ export function IncreaseLiquidityForm() {
   const canUnwrap0 = canUnwrapCurrency(initialCurrency0Amount.currency, position.version)
   const canUnwrap1 = canUnwrapCurrency(initialCurrency1Amount.currency, position.version)
 
+  const token0 = getCurrencyWithOptionalUnwrap({
+    currency: initialCurrency0Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency && canUnwrap0,
+  })
+  const token1 = getCurrencyWithOptionalUnwrap({
+    currency: initialCurrency1Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency && canUnwrap1,
+  })
   const nativeCurrency = nativeOnChain(position.chainId)
 
+  const currency0Amount = useMemo(() => {
+    if (unwrapNativeCurrency && canUnwrap0) {
+      return CurrencyAmount.fromRawAmount(token0, initialCurrency0Amount.quotient)
+    }
+    return initialCurrency0Amount
+  }, [unwrapNativeCurrency, canUnwrap0, token0, initialCurrency0Amount])
+
+  const currency1Amount = useMemo(() => {
+    if (unwrapNativeCurrency && canUnwrap1) {
+      return CurrencyAmount.fromRawAmount(token1, initialCurrency1Amount.quotient)
+    }
+    return initialCurrency1Amount
+  }, [unwrapNativeCurrency, canUnwrap1, token1, initialCurrency1Amount])
+
   const { updatedFormattedAmounts, updatedUSDAmounts } = useUpdatedAmountsFromDependentAmount({
-    token0: currencies?.TOKEN0,
-    token1: currencies?.TOKEN1,
+    token0,
+    token1,
     dependentAmount,
     exactField,
     currencyAmounts,
@@ -122,8 +144,8 @@ export function IncreaseLiquidityForm() {
       <Flex gap="$gap24">
         <LiquidityPositionInfo positionInfo={position} />
         <DepositInputForm
-          token0={currencies?.TOKEN0}
-          token1={currencies?.TOKEN1}
+          token0={token0}
+          token1={token1}
           formattedAmounts={updatedFormattedAmounts}
           currencyAmounts={currencyAmounts}
           currencyAmountsUSDValue={updatedUSDAmounts}
@@ -139,8 +161,8 @@ export function IncreaseLiquidityForm() {
         />
       </Flex>
       <LiquidityModalDetailRows
-        currency0Amount={initialCurrency0Amount}
-        currency1Amount={initialCurrency1Amount}
+        currency0Amount={currency0Amount}
+        currency1Amount={currency1Amount}
         networkCost={gasFeeEstimateUSD}
       />
       {fotErrorToken && (

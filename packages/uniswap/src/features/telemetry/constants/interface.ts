@@ -35,7 +35,6 @@ export enum InterfaceEventName {
   RiskChecked = 'Risk Checked',
   SendInitiated = 'Send Initiated',
   SendRecipientSelected = 'Send Recipient Selected',
-  SwapConfirmedOnClient = 'Swap Confirmed on Client',
   SwapTabClicked = 'Swap Tab Clicked',
   TokenImported = 'Token Imported',
   TokenSelected = 'Token Selected',

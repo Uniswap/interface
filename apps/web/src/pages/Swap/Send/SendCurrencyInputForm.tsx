@@ -232,7 +232,7 @@ export default function SendCurrencyInputForm({
     [maxInputAmount, setSendState],
   )
 
-  const adjustedWidth = displayValue && hiddenObserver.width ? hiddenObserver.width + 40 : undefined
+  const adjustedWidth = displayValue && hiddenObserver.width ? hiddenObserver.width + 10 : undefined
 
   return (
     <Wrapper disabled={disabled}>

@@ -27,7 +27,6 @@ export interface BehaviorHistoryState {
       dappUrlToHasShownNudge?: Record<string, boolean>
       lastPostSwapNudge?: number
       numPostSwapNudges?: number
-      isAllSmartWalletNudgesDisabled?: boolean
     }
   }
   hasSeenSmartWalletCreatedWalletModal?: boolean
@@ -36,7 +35,6 @@ export interface BehaviorHistoryState {
    * a restoration flow.
    */
   hasCopiedPrivateKeys?: boolean
-  isAllSmartWalletNudgesDisabled?: boolean
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
@@ -99,6 +97,7 @@ const slice = createSlice({
       }>,
     ) => {
       state.smartWalletNudge ??= {}
+
       state.smartWalletNudge[action.payload.walletAddress] = {
         ...state.smartWalletNudge[action.payload.walletAddress],
         dappUrlToHasShownNudge: {
@@ -133,16 +132,6 @@ const slice = createSlice({
     setHasCopiedPrivateKeys: (state, action: PayloadAction<boolean>) => {
       state.hasCopiedPrivateKeys = action.payload
     },
-    setIsAllSmartWalletNudgesDisabled: (
-      state,
-      action: PayloadAction<{ walletAddress: string; isDisabled: boolean }>,
-    ) => {
-      state.smartWalletNudge ??= {}
-      state.smartWalletNudge[action.payload.walletAddress] = {
-        ...state.smartWalletNudge[action.payload.walletAddress],
-        isAllSmartWalletNudgesDisabled: action.payload.isDisabled,
-      }
-    },
   },
 })
 
@@ -161,7 +150,6 @@ export const {
   setHasShown5792Nudge,
   setIncrementNumPostSwapNudge,
   setHasSeenSmartWalletCreatedWalletModal,
-  setIsAllSmartWalletNudgesDisabled,
 } = slice.actions
 
 export const behaviorHistoryReducer = slice.reducer

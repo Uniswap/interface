@@ -15,7 +15,6 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getTxFixtures } from 'uniswap/src/test/fixtures'
 import { noOpFunction } from 'utilities/src/test/utils'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { executeTransactionLegacy } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSagaLegacy'
 import { signAndSubmitTransaction } from 'wallet/src/features/transactions/executeTransaction/signAndSubmitTransaction'
@@ -170,7 +169,7 @@ describe(executeTransactionLegacy, () => {
             rpcSubmissionDelayMs: 500,
             signTransactionDelayMs: 500,
             currentBlockFetchDelayMs: 0,
-            timeoutTimestampMs: Date.now() + 10 * ONE_MINUTE_MS,
+            timeoutTimestampMs: undefined,
             privateRpcProvider: undefined,
             blockSubmitted: undefined,
           },

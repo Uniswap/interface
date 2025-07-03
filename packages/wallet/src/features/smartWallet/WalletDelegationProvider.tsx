@@ -142,10 +142,7 @@ export function WalletDelegationProvider({
       // Not in cache and not a signer account we're tracking
       const isTrackedAccount = accountAddresses.includes(address)
       if (!isTrackedAccount) {
-        logger.error(new Error('Account is not tracked in WalletDelegationProvider'), {
-          tags: { file: 'WalletDelegationProvider', function: 'getDelegationDetails' },
-        })
-        return undefined
+        throw new Error('Account is not tracked in WalletDelegationProvider')
       }
 
       // If still not in cache, refetch the query to update the cache

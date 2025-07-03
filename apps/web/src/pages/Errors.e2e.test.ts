@@ -7,7 +7,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 test.describe('Errors', () => {
   test('wallet rejection', async ({ page, anvil }) => {
-    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+    await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.swap)
 
     await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
@@ -28,15 +28,11 @@ test.describe('Errors', () => {
   })
 
   test.skip('transaction past deadline', async ({ page, anvil }) => {
-    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
-    await stubTradingApiEndpoint({
-      page,
-      endpoint: uniswapUrls.tradingApiPaths.quote,
-      modifyRequestData: (data) => ({
-        ...data,
-        protocols: ['V2', 'V3'],
-      }),
-    })
+    await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.swap)
+    await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.quote, (data) => ({
+      ...data,
+      protocols: ['V2', 'V3'],
+    }))
 
     await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
@@ -81,7 +77,7 @@ test.describe('Errors', () => {
   })
 
   test('slippage failure', async ({ page, anvil }) => {
-    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+    await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.swap)
 
     const originalEthBalance = await anvil.getBalance({ address: TEST_WALLET_ADDRESS })
 

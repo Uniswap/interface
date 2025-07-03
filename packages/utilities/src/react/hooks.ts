@@ -90,14 +90,8 @@ export function useOnClickOutside<T extends HTMLElement>({
  * @see {@link https://github.com/facebook/react/issues/14099}
  * @see {@link https://github.com/stutrek/use-callback-stable}
  */
-
-export function useEvent<T, S extends T>(callback: (param: S | T) => param is S): (param: S | T) => param is S
-export function useEvent<T, S extends T, A extends unknown[]>(
-  callback: (param: S | T, ...args: A) => param is S,
-): (param: S | T, ...args: A) => param is S
-export function useEvent<A extends unknown[], R>(callback: (...args: A) => R): (...args: A) => R
-export function useEvent<A extends unknown[], R>(callback: (...args: A) => R): (...args: A) => R {
+export function useEvent<T extends unknown[], U>(callback: (...args: T) => U): (...args: T) => U {
   const callbackRef = useRef(callback)
   callbackRef.current = callback
-  return useCallback((...args: A) => callbackRef.current(...args), [])
+  return useCallback((...args: T) => callbackRef.current(...args), [])
 }

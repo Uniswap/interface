@@ -1,14 +1,13 @@
-import type { ReactNode } from 'react'
-import { createContext, useCallback, useContext, useEffect, useMemo } from 'react'
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { selectTransactionSettings } from 'uniswap/src/features/transactions/components/settings/selectors'
-import type {
+import {
+  setTransactionSettings,
   TransactionSettingKey,
   TransactionSettingsState,
 } from 'uniswap/src/features/transactions/components/settings/slice'
-import { setTransactionSettings } from 'uniswap/src/features/transactions/components/settings/slice'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
 
 export type TransactionSettingsContextState = {
@@ -28,6 +27,7 @@ export function TransactionSettingsContextProvider({
 }): JSX.Element {
   const appDispatch = useDispatch()
   const transactionSettings = useSelector(selectTransactionSettings(settingKey))
+  const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
   const v4HooksToggleFFEnabled = useFeatureFlag(FeatureFlags.SwapSettingsV4HooksToggle)
 
   const updateTransactionSettings = useCallback(
@@ -38,8 +38,8 @@ export function TransactionSettingsContextProvider({
   )
 
   useEffect(() => {
-    logContextUpdate('TransactionSettingsContext', transactionSettings)
-  }, [transactionSettings])
+    logContextUpdate('TransactionSettingsContext', transactionSettings, datadogEnabled)
+  }, [transactionSettings, datadogEnabled])
 
   useEffect(() => {
     updateTransactionSettings({ autoSlippageTolerance })

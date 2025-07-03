@@ -2,8 +2,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { ApprovalState, useApproval } from 'lib/hooks/useApproval'
 import { useCallback } from 'react'
 import { useHasPendingApproval, useTransactionAdder } from 'state/transactions/hooks'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-
+import { TransactionType } from 'state/transactions/types'
 export { ApprovalState } from 'lib/hooks/useApproval'
 
 function useGetAndTrackApproval(getApproval: ReturnType<typeof useApproval>[1]) {
@@ -14,10 +13,10 @@ function useGetAndTrackApproval(getApproval: ReturnType<typeof useApproval>[1]) 
       if (pending) {
         const { response, tokenAddress, spenderAddress: spender, amount } = pending
         addTransaction(response, {
-          type: TransactionType.Approve,
+          type: TransactionType.APPROVAL,
           tokenAddress,
           spender,
-          approvalAmount: amount.quotient.toString(),
+          amount: amount.quotient.toString(),
         })
       }
     })

@@ -3,14 +3,12 @@ import { ChainLogo } from 'components/Logo/ChainLogo'
 import { useTheme } from 'lib/styled-components'
 import { ExploreTab } from 'pages/Explore/constants'
 import { useExploreParams } from 'pages/Explore/redirects'
-import type { Dispatch, SetStateAction } from 'react'
-import { memo, useCallback, useState } from 'react'
+import { Dispatch, SetStateAction, memo, useCallback, useState } from 'react'
 import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
-import type { FlexProps } from 'ui/src'
-import { ElementAfterText, Flex, ScrollView, styled, useMedia } from 'ui/src'
+import { ElementAfterText, Flex, FlexProps, ScrollView, styled, useMedia } from 'ui/src'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import Badge from 'uniswap/src/components/badge/Badge'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
@@ -19,8 +17,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { useNewChainIds } from 'uniswap/src/features/chains/hooks/useNewChainIds'
 import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
 import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import type { UniverseChainInfo } from 'uniswap/src/features/chains/types'
-import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ALL_CHAIN_IDS, UniverseChainId, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { isBackendSupportedChainId, isTestnetChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -104,11 +101,7 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
               .map(tableNetworkItemRenderer)}
             {/* Testnet backend supported chains */}
             {isTestnetModeEnabled
-              ? orderedChainIds
-                  .filter(isBackendSupportedChainId)
-                  .filter(isTestnetChain)
-                  .filter((c) => c !== UniverseChainId.MonadTestnet)
-                  .map(tableNetworkItemRenderer)
+              ? orderedChainIds.filter(isBackendSupportedChainId).filter(isTestnetChain).map(tableNetworkItemRenderer)
               : null}
             {/* Unsupported non-testnet backend supported chains */}
             {orderedChainIds

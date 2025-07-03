@@ -1,6 +1,8 @@
 import { Percent } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
 // TODO(WEB-1984): Convert the deadline to minutes and remove unecessary conversions from
 // seconds to minutes in the codebase.
 // 10 minutes, denominated in seconds

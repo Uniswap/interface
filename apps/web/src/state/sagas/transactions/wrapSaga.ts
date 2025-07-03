@@ -7,12 +7,12 @@ import useSelectChain from 'hooks/useSelectChain'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { HandleOnChainStepParams, handleOnChainStep } from 'state/sagas/transactions/utils'
+import { TransactionType, WrapTransactionInfo } from 'state/transactions/types'
 import { call } from 'typed-redux-saga'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { WrapTransactionStep } from 'uniswap/src/features/transactions/steps/wrap'
 import { WrapCallback, WrapCallbackParams } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
-import { TransactionType, WrapTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import noop from 'utilities/src/react/noop'
@@ -74,12 +74,12 @@ function* wrap(params: WrapParams) {
 function getWrapTransactionInfo(amount: CurrencyAmount<Currency>): WrapTransactionInfo {
   return amount.currency.isNative
     ? {
-        type: TransactionType.Wrap,
+        type: TransactionType.WRAP,
         unwrapped: false,
         currencyAmountRaw: amount.quotient.toString(),
       }
     : {
-        type: TransactionType.Wrap,
+        type: TransactionType.WRAP,
         unwrapped: true,
         currencyAmountRaw: amount.quotient.toString(),
       }

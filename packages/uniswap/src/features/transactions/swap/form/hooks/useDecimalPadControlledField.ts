@@ -1,4 +1,4 @@
-import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import type { CurrencyField } from 'uniswap/src/types/currency'
 
 /**
@@ -6,10 +6,7 @@ import type { CurrencyField } from 'uniswap/src/types/currency'
  * which can happen after the user hits `Max`.
  */
 export const useDecimalPadControlledField = (): CurrencyField => {
-  const { focusOnCurrencyField, exactCurrencyField } = useSwapFormStore((s) => ({
-    focusOnCurrencyField: s.focusOnCurrencyField,
-    exactCurrencyField: s.exactCurrencyField,
-  }))
+  const { focusOnCurrencyField, exactCurrencyField } = useSwapFormContext()
 
   return focusOnCurrencyField ?? exactCurrencyField
 }

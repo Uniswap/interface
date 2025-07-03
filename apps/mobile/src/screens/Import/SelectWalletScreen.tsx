@@ -1,14 +1,23 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { ComponentProps, useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ScrollView } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { Button, Flex, Loader, Text, TouchableArea, useLayoutAnimationOnChange } from 'ui/src'
+import {
+  Button,
+  Flex,
+  LinearGradient,
+  Loader,
+  Text,
+  TouchableArea,
+  useLayoutAnimationOnChange,
+  useSporeColors,
+} from 'ui/src'
 import { WalletFilled } from 'ui/src/components/icons'
-import { spacing } from 'ui/src/theme'
+import { opacify, spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -21,6 +30,7 @@ import WalletPreviewCard from 'wallet/src/components/WalletPreviewCard/WalletPre
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useImportableAccounts } from 'wallet/src/features/onboarding/hooks/useImportableAccounts'
 import { useSelectAccounts } from 'wallet/src/features/onboarding/hooks/useSelectAccounts'
+import { useAnyAccountEligibleForDelegation } from 'wallet/src/features/smartWallet/hooks/useAnyAccountEligibleForDelegation'
 
 const ANIMATION_DURATION = 300
 
@@ -30,6 +40,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
   const { t } = useTranslation()
   const { selectImportedAccounts, getImportedAccountsAddresses } = useOnboardingContext()
   const importedAddresses = getImportedAccountsAddresses()
+  const colors = useSporeColors()
 
   const {
     importableAccounts,
@@ -67,9 +78,13 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
 
   const highlightComponent = <CustomHighlightText />
 
-  const isContinueButtonDisabled = isLoading || !!showError || selectedAddresses.length === 0
+  const { eligible: isAnyAccountEligibleForDelegation, loading: isDelegationChecksLoading } =
+    useAnyAccountEligibleForDelegation(importableAccounts)
 
-  const showSmartWalletDisclaimer = smartWalletEnabled && !isContinueButtonDisabled
+  const isContinueButtonDisabled =
+    isLoading || !!showError || selectedAddresses.length === 0 || (isDelegationChecksLoading && smartWalletEnabled)
+
+  const showSmartWalletDisclaimer = smartWalletEnabled && !isContinueButtonDisabled && isAnyAccountEligibleForDelegation
 
   const opacityStyle = useAnimatedStyle(
     () => ({
@@ -93,44 +108,59 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
             title={t('account.wallet.select.error')}
             onRetry={refetchAccounts}
           />
-        ) : isLoading ? (
+        ) : isLoading || isDelegationChecksLoading ? (
           <Flex grow justifyContent="space-between" px="$spacing16">
             <Loader.Wallets repeat={5} />
           </Flex>
         ) : (
-          <ScrollView testID={TestID.SelectWalletScreenLoaded}>
-            <Flex height="$spacing12" />
-            <Flex gap="$gap12">
-              {importableAccounts?.map((account, i) => {
-                const { address, balance } = account
-                // prevents flickering and incorrect width calculation for long wallet names on Android
-                // it's not possible to deselect last wallet
-                if (selectedAddresses.length === 0) {
-                  return null
-                }
-                return (
-                  <Flex key={address} px="$spacing16">
-                    <WalletPreviewCard
-                      key={address}
-                      address={address}
-                      balance={balance}
-                      hideSelectionCircle={isOnlyOneAccount}
-                      name={ElementName.WalletCard}
-                      selected={selectedAddresses.includes(address)}
-                      testID={`${TestID.WalletCard}-${i + 1}`}
-                      onSelect={toggleAddressSelection}
-                    />
-                  </Flex>
-                )
-              })}
-            </Flex>
-          </ScrollView>
+          <Flex flexGrow={1} flexShrink={1}>
+            <LinearGradient
+              colors={[colors.surface1.val, opacify(0, colors.surface1.val)]}
+              end={{ x: 0, y: 1 }}
+              start={{ x: 0, y: 0 }}
+              style={ListSheet.topGradient}
+            />
+            <ScrollView testID={TestID.SelectWalletScreenLoaded}>
+              <Flex height="$spacing12" />
+              <Flex gap="$gap12">
+                {importableAccounts?.map((account, i) => {
+                  const { address, balance } = account
+                  // prevents flickering and incorrect width calculation for long wallet names on Android
+                  // it's not possible to deselect last wallet
+                  if (selectedAddresses.length === 0) {
+                    return null
+                  }
+                  return (
+                    <Flex key={address} px="$spacing16">
+                      <WalletPreviewCard
+                        key={address}
+                        address={address}
+                        balance={balance}
+                        hideSelectionCircle={isOnlyOneAccount}
+                        name={ElementName.WalletCard}
+                        selected={selectedAddresses.includes(address)}
+                        testID={`${TestID.WalletCard}-${i + 1}`}
+                        onSelect={toggleAddressSelection}
+                      />
+                    </Flex>
+                  )
+                })}
+              </Flex>
+            </ScrollView>
+            <LinearGradient
+              colors={[opacify(0, colors.surface1.val), colors.surface1.val]}
+              end={{ x: 0, y: 1 }}
+              start={{ x: 0, y: 0 }}
+              style={ListSheet.bottomGradient}
+            />
+          </Flex>
         )}
         <Animated.View
           style={[
             opacityStyle,
             {
               marginBottom: spacing.spacing16,
+              marginTop: spacing.spacing16,
               marginHorizontal: spacing.spacing24,
             },
           ]}
@@ -155,7 +185,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
         <Flex opacity={showError ? 0 : 1} px="$spacing16">
           <Flex row>
             <Button
-              isDisabled={isContinueButtonDisabled}
+              isDisabled={isLoading || !!showError || selectedAddresses.length === 0}
               variant="branded"
               size="large"
               testID={TestID.Continue}
@@ -169,6 +199,24 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     </>
   )
 }
+
+const ListSheet = StyleSheet.create({
+  bottomGradient: {
+    bottom: 0,
+    height: spacing.spacing16,
+    left: 0,
+    position: 'absolute',
+    width: '100%',
+  },
+  topGradient: {
+    height: spacing.spacing16,
+    left: 0,
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    zIndex: 1,
+  },
+})
 
 function CustomHighlightText(props: ComponentProps<typeof Text>): JSX.Element {
   return <Text variant="buttonLabel4" color="$neutral1" {...props} />

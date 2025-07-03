@@ -2,8 +2,9 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { getProtocolItems } from 'components/Liquidity/utils'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { RemoveLiquidityTxInfo } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
+import { ZERO_ADDRESS } from 'constants/misc'
 import JSBI from 'jsbi'
-import { getTokenOrZeroAddress } from 'pages/Pool/Positions/create/utils'
+import { getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useDecreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useDecreaseLpPositionCalldataQuery'
@@ -23,13 +24,20 @@ import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }): RemoveLiquidityTxInfo {
-  const { positionInfo, percent, percentInvalid, currencies, currentTransactionStep } = useRemoveLiquidityModalContext()
+  const { positionInfo, percent, percentInvalid, unwrapNativeCurrency, currentTransactionStep } =
+    useRemoveLiquidityModalContext()
   const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
 
   const [hasDecreaseErrorResponse, setHasDecreaseErrorResponse] = useState(false)
 
-  const currency0 = currencies?.TOKEN0
-  const currency1 = currencies?.TOKEN1
+  const currency0 = getCurrencyWithOptionalUnwrap({
+    currency: positionInfo?.currency0Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency && positionInfo?.version !== ProtocolVersion.V4,
+  })
+  const currency1 = getCurrencyWithOptionalUnwrap({
+    currency: positionInfo?.currency1Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency && positionInfo?.version !== ProtocolVersion.V4,
+  })
 
   const v2LpTokenApprovalQueryParams: CheckApprovalLPRequest | undefined = useMemo(() => {
     if (!positionInfo || !positionInfo.liquidityToken || percentInvalid || !positionInfo.liquidityAmount) {
@@ -106,9 +114,9 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
         tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,
         tickUpper: positionInfo.tickUpper ? Number(positionInfo.tickUpper) : undefined,
         pool: {
-          token0: getTokenOrZeroAddress(currency0),
-          token1: getTokenOrZeroAddress(currency1),
-          fee: positionInfo.feeTier?.feeAmount,
+          token0: currency0.isNative ? ZERO_ADDRESS : currency0.address,
+          token1: currency1.isNative ? ZERO_ADDRESS : currency1.address,
+          fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
           tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
           hooks: positionInfo.v4hook,
         },

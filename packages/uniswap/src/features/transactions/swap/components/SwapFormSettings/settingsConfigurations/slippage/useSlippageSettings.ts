@@ -10,7 +10,7 @@ import {
   SLIPPAGE_CRITICAL_TOLERANCE,
 } from 'uniswap/src/constants/transactions'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
-import { useOptionalSwapFormStoreBase } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useOptionalSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 
 const SLIPPAGE_INCREMENT = 0.1
 
@@ -34,20 +34,17 @@ export function useSlippageSettings(params?: { saveOnBlur?: boolean; isBridgeTra
   const { t } = useTranslation()
 
   // TODO: WEB-7258
-  // `swapFormStore` is possibly undefined, because `SlippageControl` can be used outside of `SwapFormStoreContextProvider`
-  const maybeSwapFormStore = useOptionalSwapFormStoreBase()
-
+  // swap context is possibly undefined, because SlippageControl can be used outside of SwapFormContext
+  const swapContext = useOptionalSwapFormContext()
   const tradeAutoSlippage = useMemo(() => {
-    if (!maybeSwapFormStore) {
+    if (!swapContext) {
       return undefined
+    } else {
+      const { derivedSwapInfo } = swapContext
+      const acceptedTrade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
+      return acceptedTrade?.slippageTolerance
     }
-
-    const { derivedSwapInfo } = maybeSwapFormStore.getState()
-
-    const acceptedTrade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
-
-    return acceptedTrade?.slippageTolerance
-  }, [maybeSwapFormStore])
+  }, [swapContext])
 
   const {
     customSlippageTolerance,

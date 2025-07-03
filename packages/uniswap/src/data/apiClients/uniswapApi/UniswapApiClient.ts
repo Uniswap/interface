@@ -9,6 +9,7 @@ import {
   GasFeeResult,
   TransactionEip1559FeeParams,
   TransactionLegacyFeeParams,
+  areEqualGasStrategies,
 } from 'uniswap/src/features/gas/types'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { isInterface } from 'utilities/src/platform'
@@ -32,14 +33,16 @@ type FetchGasFn = ({
 // TODO(WALL-6421): Remove this type once GasFeeResult shape is decoupled from state fields
 export type GasFeeResultWithoutState = Omit<GasFeeResult, 'isLoading' | 'error'>
 export function createFetchGasFee({
-  gasStrategy,
+  activeGasStrategy,
+  shadowGasStrategies,
   smartContractDelegationAddress,
 }: {
-  gasStrategy: GasStrategy
+  activeGasStrategy: GasStrategy
+  shadowGasStrategies: GasStrategy[]
   smartContractDelegationAddress?: Address
 }): FetchGasFn {
   const injectGasStrategies = (tx: TransactionRequest): TransactionRequest & { gasStrategies: GasStrategy[] } => {
-    return { ...tx, gasStrategies: [gasStrategy] }
+    return { ...tx, gasStrategies: [activeGasStrategy, ...shadowGasStrategies] }
   }
 
   const injectSmartContractDelegationAddress = (tx: TransactionRequest): TransactionRequest => ({
@@ -48,17 +51,20 @@ export function createFetchGasFee({
   })
 
   const processGasFeeResponse = (gasFeeResponse: GasFeeResponse): GasFeeResultWithoutState => {
-    const gasEstimate = gasFeeResponse.gasEstimates[0]
+    const activeEstimate = gasFeeResponse.gasEstimates.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))
 
-    if (!gasEstimate) {
+    if (!activeEstimate) {
       throw new Error('Could not get gas estimate')
     }
 
     return {
-      value: gasEstimate.gasFee,
-      displayValue: convertGasFeeToDisplayValue(gasEstimate.gasFee, gasStrategy),
-      params: extractGasFeeParams(gasEstimate),
-      gasEstimate,
+      value: activeEstimate.gasFee,
+      displayValue: convertGasFeeToDisplayValue(activeEstimate.gasFee, activeGasStrategy),
+      params: extractGasFeeParams(activeEstimate),
+      gasEstimates: {
+        activeEstimate,
+        shadowEstimates: gasFeeResponse.gasEstimates.filter((e) => e !== activeEstimate),
+      },
     }
   }
 

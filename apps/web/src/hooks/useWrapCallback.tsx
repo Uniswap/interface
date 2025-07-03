@@ -7,10 +7,10 @@ import { useMemo, useRef, useState } from 'react'
 import { useCurrencyBalance } from 'state/connection/hooks'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -109,9 +109,10 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
               }
               const txReceipt = await wethContract.deposit({ value: `0x${inputAmount.quotient.toString(16)}` })
               addTransaction(txReceipt, {
-                type: TransactionType.Wrap,
+                type: TransactionType.WRAP,
                 unwrapped: false,
                 currencyAmountRaw: inputAmount.quotient.toString(),
+                chainId,
               })
               sendAnalyticsEvent(InterfaceEventName.WrapTokenTxnSubmitted, {
                 ...eventProperties,
@@ -139,9 +140,10 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                 }
                 const txReceipt = await wethContract.withdraw(`0x${inputAmount.quotient.toString(16)}`)
                 addTransaction(txReceipt, {
-                  type: TransactionType.Wrap,
+                  type: TransactionType.WRAP,
                   unwrapped: true,
                   currencyAmountRaw: inputAmount.quotient.toString(),
+                  chainId,
                 })
                 sendAnalyticsEvent(InterfaceEventName.WrapTokenTxnSubmitted, {
                   ...eventProperties,

@@ -1,11 +1,10 @@
 import { Token } from '@uniswap/sdk-core'
 import { tryParsePrice } from 'state/mint/v3/utils'
-import { DAI } from 'uniswap/src/constants/tokens'
 
 describe('hooks', () => {
   describe('#tryParsePrice', () => {
     it('should return undefined if amount is not a number', () => {
-      const baseToken = DAI
+      const baseToken = new Token(1, '0x6b175474e89094c44da98b954eedeac495271d0f', 6)
       const quoteToken = new Token(1, '0x1b175474e89094c44da98b954eedeac495271d0f', 6)
 
       expect(tryParsePrice({ baseToken, quoteToken, value: undefined })).toBeUndefined()
@@ -16,7 +15,7 @@ describe('hooks', () => {
     })
 
     it('should return a price when decimals are the same', () => {
-      const baseToken = DAI
+      const baseToken = new Token(1, '0x6b175474e89094c44da98b954eedeac495271d0f', 6)
       const quoteToken = new Token(1, '0x1b175474e89094c44da98b954eedeac495271d0f', 6)
 
       expect(tryParsePrice({ baseToken, quoteToken, value: '20' })?.toSignificant(6)).toEqual('20')
@@ -42,7 +41,7 @@ describe('hooks', () => {
     })
 
     it('should return a price when decimals are different', () => {
-      const baseToken = DAI
+      const baseToken = new Token(1, '0x6b175474e89094c44da98b954eedeac495271d0f', 2)
       const quoteToken = new Token(1, '0x1b175474e89094c44da98b954eedeac495271d0f', 4)
 
       expect(tryParsePrice({ baseToken, quoteToken, value: '20' })?.toSignificant(6)).toEqual('20')
@@ -69,7 +68,7 @@ describe('hooks', () => {
 
     it('should parse very small prices', () => {
       const value = '5.063825133252633e-9'
-      const baseToken = DAI
+      const baseToken = new Token(1, '0x6b175474e89094c44da98b954eedeac495271d0f', 6)
       const quoteToken = new Token(1, '0x1b175474e89094c44da98b954eedeac495271d0f', 6)
       expect(tryParsePrice({ baseToken, quoteToken, value })?.toSignificant(6)).toEqual('0.00000000506383')
     })

@@ -13,6 +13,7 @@ jest.mock('uniswap/src/features/gas/hooks', () => ({
     priceInflationFactor: 1.5,
     percentileThresholdFor1559Fee: 75,
   }),
+  useShadowGasStrategies: jest.fn().mockReturnValue([]),
 }))
 
 // Use web unicon

@@ -1,4 +1,5 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import { ETH_LOGO, SONEIUM_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { USDC_SONEIUM } from 'uniswap/src/constants/tokens'
@@ -18,10 +19,12 @@ import { soneium } from 'wagmi/chains'
 export const SONEIUM_CHAIN_INFO = {
   ...soneium,
   id: UniverseChainId.Soneium,
+  sdkId: UniswapSDKChainId.SONEIUM,
   assetRepoNetworkName: 'soneium',
   backendChain: {
     chain: BackendChainId.Soneium as GqlChainId,
     backendSupported: true,
+    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 6,
@@ -34,6 +37,9 @@ export const SONEIUM_CHAIN_INFO = {
     url: 'https://soneium.blockscout.com/',
     apiURL: 'https://soneium.blockscout.com/api',
   },
+  helpCenterUrl: undefined,
+  infoLink: 'https://app.uniswap.org/explore/tokens/soneium',
+  infuraPrefix: undefined,
   interfaceName: 'soneium',
   label: 'Soneium',
   logo: SONEIUM_LOGO,
@@ -55,6 +61,8 @@ export const SONEIUM_CHAIN_INFO = {
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_SONEIUM, 10_000e6),
   stablecoins: [USDC_SONEIUM],
   statusPage: 'https://status.soneium.org/',
+  supportsInterfaceClientSideRouting: true,
+  supportsGasEstimates: true,
   supportsV4: true,
   urlParam: 'soneium',
   wrappedNativeCurrency: {

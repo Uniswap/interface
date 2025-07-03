@@ -101,7 +101,7 @@ export function generateActivityItemRenderer({
       case TransactionType.Wrap:
         SummaryItem = WrapSummaryItem
         break
-      case TransactionType.CollectFees:
+      case TransactionType.Claim:
       case TransactionType.CreatePair:
       case TransactionType.CreatePool:
       case TransactionType.LiquidityIncrease:
@@ -305,7 +305,7 @@ function getTransactionTypeVerbs(
         canceling: t('transaction.status.liquidityDecrease.canceling'),
         canceled: t('transaction.status.liquidityDecrease.canceled'),
       }
-    case TransactionType.CollectFees:
+    case TransactionType.Claim:
       return {
         success: t('transaction.status.claim.success'),
         pending: t('transaction.status.claim.pending'),

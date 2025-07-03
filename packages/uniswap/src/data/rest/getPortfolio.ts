@@ -57,22 +57,18 @@ type GetPortfolioQuery<TSelectData = GetPortfolioResponse> = QueryOptionsResult<
 
 export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
   input,
-  enabled = true,
+  enabled,
   refetchInterval,
   select,
 }: GetPortfolioInput<TSelectData>): GetPortfolioQuery<TSelectData> => {
   const transformedInput = transformInput(input)
 
-  // Changes in the modifier should not cause a refetch, so it's excluded from the queryKey
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { modifier: _modifier, ...inputWithoutModifier } = input ?? {}
-
   return queryOptions({
-    queryKey: [ReactQueryCacheKey.GetPortfolio, inputWithoutModifier],
+    queryKey: [ReactQueryCacheKey.GetPortfolio, transformedInput] as const,
     queryFn: () => (transformedInput ? portfolioClient.getPortfolio(transformedInput) : Promise.resolve(undefined)),
     placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when hiding/unhiding tokens
     refetchInterval,
-    enabled,
+    enabled: enabled ?? undefined,
     subscribed: !!enabled,
     select,
   })

@@ -6,7 +6,6 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { BasicTokenInfo, SerializedTokenMap } from 'uniswap/src/features/tokens/slice/types'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
@@ -398,64 +397,4 @@ export function moveHapticsToUserSettings(state: any): any {
   }
   delete newState.appearanceSettings.hapticsEnabled
   return newState
-}
-
-// Mobile: 90
-// Extension: 26
-export function migrateLiquidityTransactionInfo(state: any): any {
-  const oldTransactionState = state?.transactions
-  const newTransactionState: any = {}
-
-  const addresses = Object.keys(oldTransactionState ?? {})
-  for (const address of addresses) {
-    const chainIds = Object.keys(oldTransactionState[address] ?? {})
-    for (const chainId of chainIds) {
-      const transactions = oldTransactionState[address][chainId]
-      const txIds = Object.keys(transactions ?? {})
-
-      for (const txId of txIds) {
-        const txDetails = transactions[txId]
-
-        newTransactionState[address] ??= {}
-        newTransactionState[address][chainId] ??= {}
-
-        const isLiquidityTransactionBeingRenamed = [
-          TransactionType.LiquidityIncrease,
-          TransactionType.LiquidityDecrease,
-          TransactionType.CollectFees,
-          TransactionType.CreatePool,
-          TransactionType.CreatePair,
-        ].includes(txDetails?.typeInfo?.type)
-        // ignore if it's not a liquidity transaction
-        if (!isLiquidityTransactionBeingRenamed) {
-          newTransactionState[address][chainId][txId] = txDetails
-        } else {
-          // eslint-disable-next-line max-depth
-          try {
-            const { typeInfo, ...txRest } = txDetails
-            const {
-              inputCurrencyId,
-              inputCurrencyAmountRaw,
-              outputCurrencyId,
-              outputCurrencyAmountRaw,
-              ...typeInfoRest
-            } = typeInfo
-            newTransactionState[address][chainId][txId] = {
-              ...txRest,
-              typeInfo: {
-                currency0Id: inputCurrencyId,
-                currency0AmountRaw: inputCurrencyAmountRaw,
-                currency1Id: outputCurrencyId,
-                currency1AmountRaw: outputCurrencyAmountRaw,
-                ...typeInfoRest,
-              },
-            }
-          } catch (e) {
-            // if any error occurs, ignore but remove the transaction
-          }
-        }
-      }
-    }
-  }
-  return { ...state, transactions: newTransactionState }
 }

@@ -1,6 +1,6 @@
 import { useBottomSheetInternal } from '@gorhom/bottom-sheet'
 import { getSdkError } from '@walletconnect/utils'
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,17 +21,15 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons'
-import { AccountType } from 'uniswap/src/features/accounts/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { DappRequestType, WCEventType, WCRequestOutcome, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { formatDappURL } from 'utilities/src/format/urls'
-import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { LinkButton } from 'wallet/src/components/buttons/LinkButton'
-import { useActiveAccountWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 type Props = {
   pendingSession: WalletConnectPendingSession
@@ -42,17 +40,13 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
   const { t } = useTranslation()
 
   const dispatch = useDispatch()
-  const activeAccount = useActiveAccountWithThrow()
-  const activeAddress = activeAccount.address
-  const isViewOnly = activeAccount.type === AccountType.Readonly
-
+  const activeAddress = useActiveAccountAddressWithThrow()
   const didOpenFromDeepLink = useSelector(selectDidOpenFromDeepLink)
 
   const [confirmedWarning, setConfirmedWarning] = useState(false)
-  const [isConnecting, setIsConnecting] = useState(false)
 
   const isThreat = pendingSession.verifyStatus === WalletConnectVerifyStatus.Threat
-  const disableConfirm = (isThreat && !confirmedWarning) || isViewOnly || isConnecting
+  const confirmDisabled = isThreat && !confirmedWarning
 
   const signerAccounts = useSignerAccounts()
   const defaultSelectedAccountAddresses = useMemo(() => {
@@ -82,15 +76,8 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
     })
   }, [selectedAccountAddresses, activeAddress])
 
-  const onPressSettleConnection = useEvent(async (approved: boolean) => {
-    // Prevent multiple concurrent connection attempts
-    if (isConnecting) {
-      return
-    }
-
-    setIsConnecting(true)
-
-    try {
+  const onPressSettleConnection = useCallback(
+    async (approved: boolean) => {
       sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
         request_type: WCEventType.SessionPending,
         dapp_url: pendingSession.dappRequestInfo.url,
@@ -149,12 +136,9 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         await returnToPreviousApp()
         setDidOpenFromDeepLink(false)
       }
-    } catch (error) {
-      setIsConnecting(false)
-    } finally {
-      setIsConnecting(false)
-    }
-  })
+    },
+    [activeAddress, dispatch, onClose, pendingSession, didOpenFromDeepLink, orderedSelectedAccountAddresses],
+  )
 
   const dappName = pendingSession.dappRequestInfo.name || pendingSession.dappRequestInfo.url || ''
 
@@ -179,15 +163,13 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         confirmationButtonText={t('walletConnect.pending.button.connect')}
         name={ModalName.WCPendingConnection}
         scrollDownButtonText={t('walletConnect.pending.button.scrollDown')}
-        disableConfirm={disableConfirm}
-        confirmationLoading={isConnecting}
+        disableConfirm={confirmDisabled}
         onClose={onClose}
         onConfirm={(): Promise<void> => onPressSettleConnection(true)}
         onReject={(): Promise<void> => onPressSettleConnection(false)}
         {...isThreatProps}
       >
         <PendingConnectionModalContent
-          isViewOnly={isViewOnly}
           dappName={dappName}
           verifyStatus={pendingSession.verifyStatus}
           pendingSession={pendingSession}
@@ -209,7 +191,6 @@ type PendingConnectionModalContentProps = {
   dappName: string
   pendingSession: WalletConnectPendingSession
   verifyStatus: WalletConnectVerifyStatus
-  isViewOnly: boolean
   onConfirmWarning: (confirmed: boolean) => void
   confirmedWarning: boolean
 }
@@ -221,7 +202,6 @@ function PendingConnectionModalContent({
   dappName,
   pendingSession,
   verifyStatus,
-  isViewOnly,
   onConfirmWarning,
   confirmedWarning,
 }: PendingConnectionModalContentProps): JSX.Element {
@@ -268,30 +248,13 @@ function PendingConnectionModalContent({
         confirmedWarning={confirmedWarning}
         onConfirmWarning={onConfirmWarning}
       />
-      {!isViewOnly && (
-        <Flex pb="$spacing12" pt="$spacing16" px="$spacing8">
-          <AccountSelectPopover
-            selectedAccountAddresses={selectedAccountAddresses}
-            setSelectedAccountAddresses={setSelectedAccountAddresses}
-            allAccountAddresses={allAccountAddresses}
-          />
-        </Flex>
-      )}
-      {isViewOnly && (
-        <Flex
-          centered
-          row
-          backgroundColor="$surface2"
-          borderRadius="$rounded12"
-          minHeight={40}
-          p="$spacing8"
-          mt="$spacing16"
-        >
-          <Text color="$neutral2" variant="body2">
-            {t('home.warning.viewOnly')}
-          </Text>
-        </Flex>
-      )}
+      <Flex pb="$spacing12" pt="$spacing16" px="$spacing8">
+        <AccountSelectPopover
+          selectedAccountAddresses={selectedAccountAddresses}
+          setSelectedAccountAddresses={setSelectedAccountAddresses}
+          allAccountAddresses={allAccountAddresses}
+        />
+      </Flex>
       <Animated.View style={bottomSpacerStyle} />
     </>
   )

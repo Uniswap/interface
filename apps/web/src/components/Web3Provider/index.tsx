@@ -133,30 +133,26 @@ export function Web3ProviderUpdater() {
       }
 
       if (connector?.name === WalletType.WALLET_CONNECT) {
-        try {
-          connector
-            .getProvider()
-            .then((externalProvider) => {
-              const provider = externalProvider as ExternalProvider
-              // Lookup metadata from the wallet connect external provider
-              const meta = getWalletMeta(new EthersWeb3Provider(provider))
-              const name = meta?.name ?? walletName
-              const agent = meta?.agent ?? peerWalletAgent
+        connector
+          .getProvider()
+          .then((externalProvider) => {
+            const provider = externalProvider as ExternalProvider
+            // Lookup metadata from the wallet connect external provider
+            const meta = getWalletMeta(new EthersWeb3Provider(provider))
+            const name = meta?.name ?? walletName
+            const agent = meta?.agent ?? peerWalletAgent
 
-              setUserProperty(InterfaceUserPropertyName.WalletName, name)
-              setUserProperty(InterfaceUserPropertyName.PeerWalletAgent, agent ?? '')
-              sendAnalyticsEvent(InterfaceEventName.WalletConnected, {
-                ...walletConnectedProperties,
-                wallet_name: name,
-                peer_wallet_agent: agent,
-              })
+            setUserProperty(InterfaceUserPropertyName.WalletName, name)
+            setUserProperty(InterfaceUserPropertyName.PeerWalletAgent, agent ?? '')
+            sendAnalyticsEvent(InterfaceEventName.WalletConnected, {
+              ...walletConnectedProperties,
+              wallet_name: name,
+              peer_wallet_agent: agent,
             })
-            .catch((error) => {
-              logger.warn('Web3Provider', 'Updater', 'Failed to get wallet connect metadata', error)
-            })
-        } catch (error) {
-          logger.warn('Web3Provider', 'Updater', 'Failed to call getProvider on WC connector', error)
-        }
+          })
+          .catch((error) => {
+            logger.warn('Web3Provider', 'Updater', 'Failed to get wallet connect metadata', error)
+          })
       } else {
         setUserProperty(InterfaceUserPropertyName.WalletName, walletName)
         setUserProperty(InterfaceUserPropertyName.PeerWalletAgent, peerWalletAgent ?? '')

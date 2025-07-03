@@ -34,7 +34,7 @@ import { TimingState } from 'uniswap/src/features/timing/slice'
 import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { transactionSettingsReducer } from 'uniswap/src/features/transactions/components/settings/slice'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
-import { SwapSettingsState } from 'uniswap/src/features/transactions/swap/state/slice'
+import { SwapSettingsState } from 'uniswap/src/features/transactions/swap/contexts/slice'
 import { VisibilityState } from 'uniswap/src/features/visibility/slice'
 
 /**

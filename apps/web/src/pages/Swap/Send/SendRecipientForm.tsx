@@ -248,7 +248,6 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
   useOnClickOutside({
     node: inputWrapperNode,
     handler: isFocusing ? () => handleFocus(false) : undefined,
-    ignoredNodes: [popoverContentRef],
   })
 
   const showFlyout = isFocusing && (!!recipientData || !recipient)

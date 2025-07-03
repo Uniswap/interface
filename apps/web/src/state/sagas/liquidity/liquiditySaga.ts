@@ -9,7 +9,14 @@ import {
   handlePermitTransactionStep,
   handleSignatureStep,
 } from 'state/sagas/transactions/utils'
-import { BaseTransactionType, MigrateV3LiquidityToV4TransactionInfo, TransactionType } from 'state/transactions/types'
+import {
+  CollectFeesTransactionInfo,
+  CreatePositionTransactionInfo,
+  DecreaseLiquidityTransactionInfo,
+  IncreaseLiquidityTransactionInfo,
+  MigrateV3LiquidityToV4TransactionInfo,
+  TransactionType,
+} from 'state/transactions/types'
 import invariant from 'tiny-invariant'
 import { call } from 'typed-redux-saga'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
@@ -34,16 +41,9 @@ import {
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import {
-  CollectFeesTransactionInfo,
-  CreatePoolTransactionInfo,
-  LiquidityDecreaseTransactionInfo,
-  LiquidityIncreaseTransactionInfo,
-  TransactionType as UniswapTransactionType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
-import { currencyId } from 'uniswap/src/utils/currencyId'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
+import { currencyId } from 'utils/currencyId'
 
 type LiquidityParams = {
   selectChain: (chainId: number) => Promise<boolean>
@@ -250,27 +250,27 @@ export const liquiditySaga = createSaga(liquidity, 'liquiditySaga')
 function getLiquidityTransactionInfo(
   action: LiquidityAction,
 ):
-  | LiquidityIncreaseTransactionInfo
-  | LiquidityDecreaseTransactionInfo
+  | IncreaseLiquidityTransactionInfo
+  | DecreaseLiquidityTransactionInfo
   | MigrateV3LiquidityToV4TransactionInfo
-  | CreatePoolTransactionInfo
+  | CreatePositionTransactionInfo
   | CollectFeesTransactionInfo {
-  let type: BaseTransactionType
+  let type: TransactionType
   switch (action.type) {
     case LiquidityTransactionType.Create:
-      type = UniswapTransactionType.CreatePool
+      type = TransactionType.CREATE_POSITION
       break
     case LiquidityTransactionType.Increase:
-      type = UniswapTransactionType.LiquidityIncrease
+      type = TransactionType.INCREASE_LIQUIDITY
       break
     case LiquidityTransactionType.Decrease:
-      type = UniswapTransactionType.LiquidityDecrease
+      type = TransactionType.DECREASE_LIQUIDITY
       break
     case LiquidityTransactionType.Migrate:
       type = TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4
       break
     case LiquidityTransactionType.Collect:
-      type = UniswapTransactionType.CollectFees
+      type = TransactionType.COLLECT_FEES
   }
 
   const {
@@ -279,9 +279,9 @@ function getLiquidityTransactionInfo(
   } = action
   return {
     type,
-    currency0Id: currencyId(currency0),
-    currency1Id: currencyId(currency1),
-    currency0AmountRaw: quotient0.toString(),
-    currency1AmountRaw: quotient1.toString(),
+    token0CurrencyId: currencyId(currency0),
+    token1CurrencyId: currencyId(currency1),
+    token0CurrencyAmountRaw: quotient0.toString(),
+    token1CurrencyAmountRaw: quotient1.toString(),
   }
 }

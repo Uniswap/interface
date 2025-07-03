@@ -1,20 +1,20 @@
-import type { GasStrategy } from 'uniswap/src/data/tradingApi/types'
-import type { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
-import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
-import type { EVMSwapInstructionsService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapInstructionsService'
-import type { TransactionRequestInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
+import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/contexts/hooks/useTokenApprovalInfo'
+import { EVMSwapInstructionsService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapInstructionsService'
 import {
+  TransactionRequestInfo,
   createProcessSwapResponse,
   getSwapInputExceedsBalance,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
-import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import type {
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import {
+  ApprovalAction,
   BridgeTrade,
   ClassicTrade,
   UnwrapTrade,
   WrapTrade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
-import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
 import { tryCatch } from 'utilities/src/errors'
 
 type GetEVMSwapTransactionRequestInfoFn = (params: {
@@ -25,12 +25,12 @@ type GetEVMSwapTransactionRequestInfoFn = (params: {
 
 export function createGetEVMSwapTransactionRequestInfo(ctx: {
   instructionService: EVMSwapInstructionsService
-  gasStrategy: GasStrategy
+  activeGasStrategy: GasStrategy
   transactionSettings: TransactionSettingsContextState
 }): GetEVMSwapTransactionRequestInfoFn {
-  const { gasStrategy, transactionSettings, instructionService } = ctx
+  const { activeGasStrategy, transactionSettings, instructionService } = ctx
 
-  const processSwapResponse = createProcessSwapResponse({ gasStrategy })
+  const processSwapResponse = createProcessSwapResponse({ activeGasStrategy })
 
   const getEVMSwapTransactionRequestInfo: GetEVMSwapTransactionRequestInfoFn = async ({
     trade,

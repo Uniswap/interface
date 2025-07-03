@@ -57,7 +57,6 @@ interface DappRequestFooterProps {
   onConfirm?: (requestToCancel?: DappRequestStoreItem) => void
   showAllNetworks?: boolean
   showNetworkCost?: boolean
-  showSmartWalletActivation?: boolean
   transactionGasFeeResult?: GasFeeResult
   isUniswapX?: boolean
   disableConfirm?: boolean
@@ -102,7 +101,6 @@ export function DappRequestContent({
   onConfirm,
   showAllNetworks,
   showNetworkCost,
-  showSmartWalletActivation,
   transactionGasFeeResult,
   children,
   isUniswapX,
@@ -127,7 +125,6 @@ export function DappRequestContent({
         maybeCloseOnConfirm={maybeCloseOnConfirm}
         showAllNetworks={showAllNetworks}
         showNetworkCost={showNetworkCost}
-        showSmartWalletActivation={showSmartWalletActivation}
         transactionGasFeeResult={transactionGasFeeResult}
         disableConfirm={disableConfirm}
         onCancel={onCancel}
@@ -189,7 +186,6 @@ function DappRequestFooter({
   onCancel,
   onConfirm,
   showNetworkCost,
-  showSmartWalletActivation,
   transactionGasFeeResult,
   isUniswapX,
   disableConfirm,
@@ -286,7 +282,6 @@ function DappRequestFooter({
             isUniswapX={isUniswapX}
             showNetworkLogo={!!transactionGasFeeResult}
             requestMethod={request.dappRequest.type}
-            showSmartWalletActivation={showSmartWalletActivation}
           />
         )}
         <AddressFooter

@@ -56,7 +56,7 @@ describe('getPriceImpact', () => {
     trade,
     indicativeTrade: undefined,
     isIndicativeLoading: false,
-    gasEstimate: undefined,
+    gasEstimates: undefined,
   })
 
   const makeDerivedSwapInfo = (

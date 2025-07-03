@@ -87,7 +87,7 @@ export function* approveAndSwap(params: SwapParams) {
         tokenAddress: approveTxRequest.to,
         spender: permit2Address(chainId),
         swapTxId: txId,
-        gasEstimate: gasFeeEstimation.approvalEstimate,
+        gasEstimates: gasFeeEstimation.approvalEstimates,
       }
       const options: TransactionOptions = {
         request: { ...approveTxRequest, nonce },
@@ -147,7 +147,7 @@ export function* approveAndSwap(params: SwapParams) {
     const typeInfo = tradeToTransactionInfo({
       trade: swapTxContext.trade,
       transactedUSDValue,
-      gasEstimate: gasFeeEstimation.swapEstimate,
+      gasEstimates: gasFeeEstimation.swapEstimates,
     })
 
     // Swap Logic - UniswapX

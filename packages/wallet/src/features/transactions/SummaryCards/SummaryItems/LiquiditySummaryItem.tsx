@@ -8,7 +8,7 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
-  CollectFeesTransactionInfo,
+  ClaimTransactionInfo,
   CreatePairTransactionInfo,
   CreatePoolTransactionInfo,
   LiquidityDecreaseTransactionInfo,
@@ -29,7 +29,7 @@ export function LiquiditySummaryItem({
     typeInfo:
       | LiquidityIncreaseTransactionInfo
       | LiquidityDecreaseTransactionInfo
-      | CollectFeesTransactionInfo
+      | ClaimTransactionInfo
       | CreatePairTransactionInfo
       | CreatePoolTransactionInfo
   }
@@ -39,11 +39,11 @@ export function LiquiditySummaryItem({
   const formatter = useLocalizationContext()
   const colors = useSporeColors()
 
-  const currency0Info = useCurrencyInfo(typeInfo.currency0Id)
-  const currency1Info = useCurrencyInfo(typeInfo.currency1Id)
+  const inputCurrencyInfo = useCurrencyInfo(typeInfo.inputCurrencyId)
+  const outputCurrencyInfo = useCurrencyInfo(typeInfo.outputCurrencyId)
 
   const caption = useMemo(() => {
-    const formatCurrencyAmount = (currencyInfo: typeof currency0Info, amountRaw: string): string | null => {
+    const formatCurrencyAmount = (currencyInfo: typeof inputCurrencyInfo, amountRaw: string): string | null => {
       if (!currencyInfo) {
         return null
       }
@@ -53,8 +53,8 @@ export function LiquiditySummaryItem({
       return `${amount}${getSymbolDisplayText(currency.symbol)}`
     }
 
-    const inputFormatted = formatCurrencyAmount(currency0Info, typeInfo.currency0AmountRaw)
-    const outputFormatted = formatCurrencyAmount(currency1Info, typeInfo.currency1AmountRaw ?? '0')
+    const inputFormatted = formatCurrencyAmount(inputCurrencyInfo, typeInfo.inputCurrencyAmountRaw ?? '0')
+    const outputFormatted = formatCurrencyAmount(outputCurrencyInfo, typeInfo.outputCurrencyAmountRaw ?? '0')
 
     if (inputFormatted && outputFormatted) {
       return t('transaction.summary.liquidity', {
@@ -64,26 +64,26 @@ export function LiquiditySummaryItem({
     }
 
     return inputFormatted || outputFormatted || typeInfo.dappInfo?.name || ''
-  }, [typeInfo, currency0Info, currency1Info, formatter, t])
+  }, [typeInfo, inputCurrencyInfo, outputCurrencyInfo, formatter, t])
 
   const icon = useMemo(() => {
-    if (currency0Info && currency1Info) {
+    if (inputCurrencyInfo && outputCurrencyInfo) {
       return (
         <SplitLogo
           chainId={transaction.chainId}
-          inputCurrencyInfo={currency0Info}
-          outputCurrencyInfo={currency1Info}
+          inputCurrencyInfo={inputCurrencyInfo}
+          outputCurrencyInfo={outputCurrencyInfo}
           size={TXN_HISTORY_ICON_SIZE}
         />
       )
     }
 
-    if (currency1Info || currency0Info) {
+    if (outputCurrencyInfo || inputCurrencyInfo) {
       return (
         <LogoWithTxStatus
           assetType={AssetType.Currency}
           chainId={transaction.chainId}
-          currencyInfo={currency1Info || currency0Info}
+          currencyInfo={outputCurrencyInfo || inputCurrencyInfo}
           size={TXN_HISTORY_ICON_SIZE}
           txStatus={transaction.status}
           txType={typeInfo.type}
@@ -104,7 +104,7 @@ export function LiquiditySummaryItem({
     }
 
     return <ContractInteraction color="$neutral2" fill={colors.surface1.get()} size="$icon.40" />
-  }, [colors.surface1, currency0Info, currency1Info, transaction, typeInfo.type])
+  }, [colors.surface1, inputCurrencyInfo, outputCurrencyInfo, transaction, typeInfo.type])
 
   return <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} />
 }

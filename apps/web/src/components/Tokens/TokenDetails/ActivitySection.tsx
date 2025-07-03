@@ -21,7 +21,7 @@ enum ActivityTab {
   Pools = 1,
 }
 export function ActivitySection() {
-  const referenceCurrency = useTDPContext().currency
+  const { wrapped: referenceToken, chainId } = useTDPContext().currency
 
   const [activityInView, setActivityInView] = useState(ActivityTab.Txs)
 
@@ -41,10 +41,10 @@ export function ActivitySection() {
           <Trans i18nKey="common.pools" />
         </Tab>
       </Flex>
-      {activityInView === ActivityTab.Txs && (
-        <TransactionsTable chainId={referenceCurrency.chainId} referenceToken={referenceCurrency.wrapped} />
+      {activityInView === ActivityTab.Txs && <TransactionsTable chainId={chainId} referenceToken={referenceToken} />}
+      {activityInView === ActivityTab.Pools && (
+        <TokenDetailsPoolsTable chainId={chainId} referenceToken={referenceToken} />
       )}
-      {activityInView === ActivityTab.Pools && <TokenDetailsPoolsTable referenceCurrency={referenceCurrency} />}
     </Container>
   )
 }

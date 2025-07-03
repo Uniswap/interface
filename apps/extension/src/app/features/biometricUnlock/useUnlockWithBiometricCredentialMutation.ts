@@ -3,7 +3,6 @@ import {
   BiometricUnlockStorage,
   BiometricUnlockStorageData,
 } from 'src/app/features/biometricUnlock/BiometricUnlockStorage'
-import { startNavigatorCredentialRequest } from 'src/app/features/biometricUnlock/useNavigatorCredentialAbortSignal'
 import { assertAuthenticatorAssertionResponse } from 'src/app/features/biometricUnlock/utils/assertAuthenticatorAssertionResponse'
 import { assertPublicKeyCredential } from 'src/app/features/biometricUnlock/utils/assertPublicKeyCredential'
 import { useUnlockWithPassword } from 'src/app/features/lockScreen/useUnlockWithPassword'
@@ -22,8 +21,7 @@ export function useUnlockWithBiometricCredentialMutation(): UseMutationResult<vo
   const unlockWithPassword = useUnlockWithPassword()
 
   const unlockWithBiometric = useEvent(async (): Promise<void> => {
-    const { abortSignal } = startNavigatorCredentialRequest('New biometric unlock request initiated')
-    const password = await getPasswordFromBiometricCredential(abortSignal)
+    const password = await getPasswordFromBiometricCredential()
     unlockWithPassword({ password })
   })
 
@@ -50,8 +48,7 @@ export function useUnlockWithBiometricCredentialMutation(): UseMutationResult<vo
  */
 export async function reauthenticateWithBiometricCredential(): Promise<{ password: string | null }> {
   try {
-    const { abortSignal } = startNavigatorCredentialRequest('New biometric reauthentication request initiated')
-    const password = await getPasswordFromBiometricCredential(abortSignal)
+    const password = await getPasswordFromBiometricCredential()
     const success = await Keyring.checkPassword(password)
     return { password: success ? password : null }
   } catch (error) {
@@ -59,7 +56,7 @@ export async function reauthenticateWithBiometricCredential(): Promise<{ passwor
   }
 }
 
-async function getPasswordFromBiometricCredential(abortSignal: AbortSignal): Promise<string> {
+async function getPasswordFromBiometricCredential(): Promise<string> {
   const biometricUnlockCredential = await BiometricUnlockStorage.get()
 
   if (!biometricUnlockCredential) {
@@ -69,18 +66,12 @@ async function getPasswordFromBiometricCredential(abortSignal: AbortSignal): Pro
   const { credentialId } = biometricUnlockCredential
 
   // Authenticate with WebAuthn using the stored credential and decrypt password
-  const publicKeyCredential = await authenticateWithCredential({ credentialId, abortSignal })
+  const publicKeyCredential = await authenticateWithCredential({ credentialId })
   const password = await decryptPasswordFromCredential({ publicKeyCredential, biometricUnlockCredential })
   return password
 }
 
-async function authenticateWithCredential({
-  credentialId,
-  abortSignal,
-}: {
-  credentialId: string
-  abortSignal: AbortSignal
-}): Promise<PublicKeyCredential> {
+async function authenticateWithCredential({ credentialId }: { credentialId: string }): Promise<PublicKeyCredential> {
   // Convert stored credential ID back to binary format
   const credentialIdBuffer = Uint8Array.from(atob(credentialId), (c) => c.charCodeAt(0))
 
@@ -96,7 +87,6 @@ async function authenticateWithCredential({
       userVerification: 'required',
       timeout: 15 * ONE_SECOND_MS,
     },
-    signal: abortSignal,
   })
 
   const publicKeyCredential = assertPublicKeyCredential(credential)

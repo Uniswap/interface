@@ -1,17 +1,15 @@
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
-import {
-  useSwapFormStore,
-  useSwapFormStoreDerivedSwapInfo,
-} from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 
 const useIsReviewButtonDisabled = (): boolean => {
-  const isSubmitting = useSwapFormStore((s) => s.isSubmitting)
-  const isTradeMissing = useSwapFormStoreDerivedSwapInfo((s) => !s.trade.trade)
-
+  const {
+    derivedSwapInfo: { trade },
+    isSubmitting,
+  } = useSwapFormContext()
   const activeAccount = useAccountMeta()
   const { blockingWarning } = useParsedSwapWarnings()
   const { isBlocked: isBlockedAccount, isBlockedLoading: isBlockedAccountLoading } = useIsBlocked(
@@ -19,13 +17,15 @@ const useIsReviewButtonDisabled = (): boolean => {
   )
   const { walletNeedsRestore } = useTransactionModalContext()
 
+  const tradeMissing = !trade.trade
+
   return (
     !!blockingWarning ||
     isBlockedAccount ||
     isBlockedAccountLoading ||
     walletNeedsRestore ||
     isSubmitting ||
-    isTradeMissing
+    tradeMissing
   )
 }
 

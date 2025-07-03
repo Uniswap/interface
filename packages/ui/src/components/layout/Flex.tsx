@@ -70,6 +70,4 @@ export const Flex = styled(View, {
   } as const,
 })
 
-Flex.displayName = 'Flex'
-
 export type FlexProps = GetProps<typeof Flex>

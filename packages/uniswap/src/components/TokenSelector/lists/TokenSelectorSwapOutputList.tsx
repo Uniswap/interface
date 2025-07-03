@@ -14,7 +14,6 @@ import { GqlResult } from 'uniswap/src/data/types'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRecentSearchesButton'
 import { isMobileApp } from 'utilities/src/platform'
 
 // eslint-disable-next-line complexity
@@ -107,7 +106,6 @@ function useTokenSectionsForSwapOutput({
   const recentSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.RecentSearches,
     options: recentlySearchedTokenOptions,
-    endElement: <ClearRecentSearchesButton />,
   })
   const favoriteSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.FavoriteTokens,
@@ -172,6 +170,7 @@ function _TokenSelectorSwapOutputList({
   onSelectCurrency,
   activeAccountAddress,
   chainFilter,
+  isKeyboardOpen,
   oppositeSelectedToken: input,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
@@ -192,6 +191,7 @@ function _TokenSelectorSwapOutputList({
       showTokenAddress
       chainFilter={chainFilter}
       hasError={Boolean(error)}
+      isKeyboardOpen={isKeyboardOpen}
       loading={loading}
       refetch={refetch}
       sections={sections}

@@ -2806,27 +2806,6 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-keyboard-controller (1.17.5):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.10.14.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
   - react-native-mmkv (2.10.1):
     - MMKV (>= 1.2.13)
     - React-Core
@@ -3540,7 +3519,6 @@ DEPENDENCIES:
   - react-native-context-menu-view (from `../../../node_modules/react-native-context-menu-view`)
   - react-native-get-random-values (from `../../../node_modules/react-native-get-random-values`)
   - react-native-image-picker (from `../../../node_modules/react-native-image-picker`)
-  - react-native-keyboard-controller (from `../../../node_modules/react-native-keyboard-controller`)
   - react-native-mmkv (from `../../../node_modules/react-native-mmkv`)
   - "react-native-netinfo (from `../../../node_modules/@react-native-community/netinfo`)"
   - react-native-onesignal (from `../../../node_modules/react-native-onesignal`)
@@ -3770,8 +3748,6 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-get-random-values"
   react-native-image-picker:
     :path: "../../../node_modules/react-native-image-picker"
-  react-native-keyboard-controller:
-    :path: "../../../node_modules/react-native-keyboard-controller"
   react-native-mmkv:
     :path: "../../../node_modules/react-native-mmkv"
   react-native-netinfo:
@@ -3989,7 +3965,6 @@ SPEC CHECKSUMS:
   react-native-context-menu-view: dcec18eb8882e20596dbb75802e7d19cb87dac02
   react-native-get-random-values: 21325b2244dfa6b58878f51f9aa42821e7ba3d06
   react-native-image-picker: 73392d42509aefb3a9a504fee4b8be1452fa32cc
-  react-native-keyboard-controller: 00ebb235331aaf7bed469e9a9d777744b5266527
   react-native-mmkv: dea675cf9697ad35940f1687e98e133e1358ef9f
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-onesignal: 33ade92bd91578374c31c5a5a91f45f49c2d6614

@@ -35,7 +35,6 @@ import {
   deleteExtensionOnboardingState,
   deleteHoldToSwapBehaviorHistory,
   deleteWelcomeWalletCardBehaviorHistory,
-  migrateLiquidityTransactionInfo,
   moveCurrencySetting,
   moveDismissedTokenWarnings,
   moveHapticsToUserSettings,
@@ -1063,8 +1062,6 @@ export const migrations = {
   88: moveHapticsToUserSettings,
 
   89: removeThaiBahtFromFiatCurrency,
-
-  90: migrateLiquidityTransactionInfo,
 }
 
-export const MOBILE_STATE_VERSION = 90
+export const MOBILE_STATE_VERSION = 89

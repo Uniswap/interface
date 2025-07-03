@@ -22,10 +22,10 @@ import { FadePresence } from 'theme/components/FadePresence'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { ADAPTIVE_MODAL_ANIMATION_DURATION } from 'ui/src/components/modal/AdaptiveWebModal'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapPriceUpdateUserResponse } from 'uniswap/src/features/telemetry/types'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SignatureExpiredError, UniswapXv2HardQuoteError } from 'utils/errors'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
@@ -55,6 +55,7 @@ export function ConfirmSwapModal({
   fiatValueOutput,
   swapResult,
   swapError,
+  priceImpact,
   clearSwapState,
   onAcceptChanges,
   onConfirm,
@@ -71,6 +72,7 @@ export function ConfirmSwapModal({
   fiatValueOutput: { data?: number; isLoading: boolean }
   swapResult?: SwapResult
   swapError?: Error
+  priceImpact?: Percent
   clearSwapState: () => void
   onAcceptChanges?: () => void
   onConfirm: () => void
@@ -105,7 +107,8 @@ export function ConfirmSwapModal({
   const uniswapXOrder = useOrder(isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : '')
 
   // Has the transaction been confirmed onchain?
-  const swapConfirmed = swapStatus === TransactionStatus.Success || uniswapXOrder?.status === UniswapXOrderStatus.FILLED
+  const swapConfirmed =
+    swapStatus === TransactionStatus.Confirmed || uniswapXOrder?.status === UniswapXOrderStatus.FILLED
 
   // Has a limit order been submitted?
   const limitPlaced = isLimitTrade(trade) && uniswapXOrder?.status === UniswapXOrderStatus.OPEN
@@ -235,6 +238,7 @@ export function ConfirmSwapModal({
                   showAcceptChanges={Boolean(showAcceptChanges)}
                   onAcceptChanges={onAcceptChanges}
                   swapErrorMessage={swapFailed ? swapError?.message : undefined}
+                  priceImpact={priceImpact}
                 />
               </AutoColumn>
             </FadePresence>

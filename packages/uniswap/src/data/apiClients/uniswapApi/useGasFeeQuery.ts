@@ -4,8 +4,9 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClients/hooks/useQueryWithImmediateGarbageCollection'
 import { UseQueryWithImmediateGarbageCollectionApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { GasFeeResultWithoutState, createFetchGasFee } from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
-import { getActiveGasStrategy } from 'uniswap/src/features/gas/utils'
-import { useStatsigClientStatus } from 'uniswap/src/features/gating/hooks'
+import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
+import { getActiveGasStrategy, getShadowGasStrategies } from 'uniswap/src/features/gas/utils'
+import { useEvent } from 'utilities/src/react/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export function useGasFeeQuery({
@@ -14,17 +15,19 @@ export function useGasFeeQuery({
   shouldUsePreviousValueDuringLoading,
   ...rest
 }: UseQueryWithImmediateGarbageCollectionApiHelperHookArgs<
-  { tx: TransactionRequest; fallbackGasLimit?: number; smartContractDelegationAddress?: Address },
+  { tx: TransactionRequest; fallbackGasLimit?: number },
   GasFeeResultWithoutState
 > & { shouldUsePreviousValueDuringLoading?: boolean }): UseQueryResult<GasFeeResultWithoutState> {
-  const { isStatsigReady } = useStatsigClientStatus()
+  const activeGasStrategy = useActiveGasStrategy(params?.tx.chainId, 'general')
+  const shadowGasStrategies = useShadowGasStrategies(params?.tx.chainId, 'general')
+
+  const fetchGasFee = useEvent(createFetchGasFee({ activeGasStrategy, shadowGasStrategies }))
+
   const queryKey = [ReactQueryCacheKey.UniswapApi, uniswapUrls.gasServicePath, params]
 
   return useQueryWithImmediateGarbageCollection<GasFeeResultWithoutState>({
     queryKey,
-    queryFn: params
-      ? (): Promise<GasFeeResultWithoutState> => fetchGasFeeQuery({ ...params, isStatsigReady })
-      : skipToken,
+    queryFn: params ? (): Promise<GasFeeResultWithoutState> => fetchGasFee(params) : skipToken,
     ...(shouldUsePreviousValueDuringLoading && { placeholderData: keepPreviousData }),
     ...rest,
   })
@@ -37,7 +40,8 @@ export async function fetchGasFeeQuery(params: {
   isStatsigReady: boolean
 }): Promise<GasFeeResultWithoutState> {
   const { tx, smartContractDelegationAddress, isStatsigReady } = params
-  const gasStrategy = getActiveGasStrategy({ chainId: tx.chainId, type: 'general', isStatsigReady })
-  const fetchGasFee = createFetchGasFee({ gasStrategy, smartContractDelegationAddress })
+  const activeGasStrategy = getActiveGasStrategy({ chainId: tx.chainId, type: 'general', isStatsigReady })
+  const shadowGasStrategies = getShadowGasStrategies({ chainId: tx.chainId, type: 'general', isStatsigReady })
+  const fetchGasFee = createFetchGasFee({ activeGasStrategy, shadowGasStrategies, smartContractDelegationAddress })
   return fetchGasFee(params)
 }

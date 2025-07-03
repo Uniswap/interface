@@ -2,7 +2,6 @@ import providers from '@ethersproject/providers'
 import { ONE, Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { NullablePermit, Permit } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { PopulatedTransactionRequestArray } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -14,6 +13,7 @@ import {
   BridgeTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  GasFeeEstimates,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -23,11 +23,11 @@ import { NumberType } from 'utilities/src/format/types'
 export function tradeToTransactionInfo({
   trade,
   transactedUSDValue,
-  gasEstimate,
+  gasEstimates,
 }: {
   trade: Trade
   transactedUSDValue?: number
-  gasEstimate?: GasEstimate
+  gasEstimates?: GasFeeEstimates
 }): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo | BridgeTransactionInfo {
   const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance ?? 0)
   const { quote, slippageTolerance } = trade
@@ -48,7 +48,7 @@ export function tradeToTransactionInfo({
       quoteId,
       gasUseEstimate,
       transactedUSDValue,
-      gasEstimate,
+      gasEstimates,
     }
   }
 
@@ -63,7 +63,7 @@ export function tradeToTransactionInfo({
     protocol: getProtocolVersionFromTrade(trade),
     simulationFailureReasons: isClassic(trade) ? trade.quote.quote.txFailureReasons : undefined,
     transactedUSDValue,
-    gasEstimate,
+    gasEstimates,
   }
 
   return trade.tradeType === TradeType.EXACT_INPUT

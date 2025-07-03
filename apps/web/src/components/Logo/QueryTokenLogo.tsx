@@ -1,3 +1,5 @@
+import { GqlSearchToken } from 'appGraphql/data/SearchTokens'
+import { gqlToCurrency } from 'appGraphql/data/util'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { AssetLogoBaseProps } from 'components/Logo/AssetLogo'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -9,16 +11,22 @@ import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 
 export default function QueryTokenLogo(
   props: AssetLogoBaseProps & {
-    token?: TokenStat
+    token?: GqlSearchToken | TokenStat
   },
 ) {
   const chainId = getChainIdFromChainUrlParam(props.token?.chain.toLowerCase()) ?? UniverseChainId.Mainnet
   const isNative = props.token?.address === NATIVE_CHAIN_ID
+  const isTokenStat = !!props.token && 'volume' in props.token
 
   const nativeCurrency = useNativeCurrency(chainId)
-  const currency = isNative ? nativeCurrency : undefined
+  const currency = isNative ? nativeCurrency : props.token && !isTokenStat ? gqlToCurrency(props.token) : undefined
 
-  const currencies = useMemo(() => (!isNative ? undefined : [currency]), [currency, isNative])
+  const logoUrl = !!props.token && 'id' in props.token ? props.token.project?.logoUrl : props.token?.logo
 
-  return <PortfolioLogo currencies={currencies} chainId={chainId} images={[props.token?.logo]} {...props} />
+  const currencies = useMemo(
+    () => (isTokenStat && !isNative ? undefined : [currency]),
+    [currency, isNative, isTokenStat],
+  )
+
+  return <PortfolioLogo currencies={currencies} chainId={chainId} images={[logoUrl]} {...props} />
 }

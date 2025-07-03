@@ -1,4 +1,5 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import { ETHEREUM_LOGO, ETH_LOGO, UNICHAIN_LOGO, UNICHAIN_SEPOLIA_LOGO } from 'ui/src/assets'
 import { USDC_UNICHAIN, USDC_UNICHAIN_SEPOLIA } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -17,10 +18,12 @@ export const UNICHAIN_CHAIN_INFO = {
   // ...unichain, // TODO update once available from viem
   name: 'Unichain',
   id: UniverseChainId.Unichain,
+  sdkId: UniswapSDKChainId.UNICHAIN,
   assetRepoNetworkName: 'unichain',
   backendChain: {
     chain: BackendChainId.Unichain as GqlChainId,
     backendSupported: true,
+    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 6,
@@ -32,6 +35,9 @@ export const UNICHAIN_CHAIN_INFO = {
     name: 'Unichain Explorer',
     url: 'https://uniscan.xyz/',
   },
+  helpCenterUrl: undefined,
+  infoLink: 'https://app.uniswap.org/explore/tokens/unichain',
+  infuraPrefix: 'unichain',
   interfaceName: 'unichain',
   label: 'Unichain',
   logo: UNICHAIN_LOGO,
@@ -52,6 +58,8 @@ export const UNICHAIN_CHAIN_INFO = {
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_UNICHAIN, 10_000e6),
   stablecoins: [USDC_UNICHAIN],
   statusPage: undefined,
+  supportsInterfaceClientSideRouting: true,
+  supportsGasEstimates: true,
   supportsV4: true,
   urlParam: 'unichain',
   wrappedNativeCurrency: {
@@ -68,10 +76,12 @@ export const UNICHAIN_SEPOLIA_CHAIN_INFO = {
   name: 'Unichain Sepolia',
   testnet: true,
   id: UniverseChainId.UnichainSepolia,
+  sdkId: UniswapSDKChainId.UNICHAIN_SEPOLIA,
   assetRepoNetworkName: undefined,
   backendChain: {
     chain: BackendChainId.AstrochainSepolia as GqlChainId,
     backendSupported: true,
+    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 1,
@@ -83,6 +93,9 @@ export const UNICHAIN_SEPOLIA_CHAIN_INFO = {
     name: 'Unichain Sepolia Explorer',
     url: 'https://unichain-sepolia.blockscout.com/',
   },
+  helpCenterUrl: undefined,
+  infoLink: 'https://app.uniswap.org/explore', // need
+  infuraPrefix: 'astrochain-sepolia',
   interfaceName: 'astrochain',
   label: 'Unichain Sepolia',
   logo: UNICHAIN_SEPOLIA_LOGO,
@@ -109,6 +122,8 @@ export const UNICHAIN_SEPOLIA_CHAIN_INFO = {
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_UNICHAIN_SEPOLIA, 10_000e6),
   stablecoins: [USDC_UNICHAIN_SEPOLIA],
   statusPage: undefined,
+  supportsInterfaceClientSideRouting: true,
+  supportsGasEstimates: false,
   supportsV4: true,
   urlParam: 'unichain_sepolia',
   wrappedNativeCurrency: {

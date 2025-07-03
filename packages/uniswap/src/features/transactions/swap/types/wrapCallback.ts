@@ -1,7 +1,7 @@
 import { CurrencyAmount, Currency } from "@uniswap/sdk-core"
-import { GasEstimate } from "uniswap/src/data/tradingApi/types"
 import { AccountMeta } from "uniswap/src/features/accounts/types"
 import { ValidatedTransactionRequest } from "uniswap/src/features/transactions/swap/utils/trade"
+import { GasFeeEstimates } from "uniswap/src/features/transactions/types/transactionDetails"
 import { WrapType } from "uniswap/src/features/transactions/types/wrap"
 
 export type WrapCallbackParams = {
@@ -12,7 +12,7 @@ export type WrapCallbackParams = {
   onFailure: () => void
   txRequest: ValidatedTransactionRequest
   txId?: string
-  gasEstimate?: GasEstimate
+  gasEstimates?: GasFeeEstimates
 }
 
 export type WrapCallback = (params: WrapCallbackParams) => void

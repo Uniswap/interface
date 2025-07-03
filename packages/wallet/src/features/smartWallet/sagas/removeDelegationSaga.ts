@@ -1,5 +1,5 @@
 import { TransactionRequest, TransactionResponse } from '@ethersproject/providers'
-import { call } from 'typed-redux-saga'
+import { all, call } from 'typed-redux-saga'
 import { fetchGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/defaults'
@@ -81,31 +81,37 @@ function* removeDelegationForChain(params: RemoveDelegationForChainParams) {
 }
 
 export function* removeDelegation(params: RemoveDelegationParams) {
-  const { account, walletAddress, chainIds, onSuccess, onFailure } = params
+  const { account, walletAddress, chainIds, onSuccess } = params
 
-  let hasError = false
+  // Process each chain independently, handling errors gracefully
+  yield* all(
+    chainIds.map((chainId) =>
+      call(function* () {
+        try {
+          const transactionResponse = yield* call(removeDelegationForChain, {
+            chainId,
+            account,
+            walletAddress,
+          })
+          logger.debug(
+            'removeDelegationForChain',
+            'removeDelegationForChain',
+            'transactionResponse',
+            transactionResponse,
+          )
+        } catch (error) {
+          logger.error(error, {
+            tags: { file: 'removeDelegationSaga', function: 'removeDelegation' },
+            extra: { chainId, error },
+          })
+        }
+      }),
+    ),
+  )
 
-  for (const chainId of chainIds) {
-    try {
-      yield* call(removeDelegationForChain, {
-        chainId,
-        account,
-        walletAddress,
-      })
-    } catch (error) {
-      hasError = true
-      logger.error(error, {
-        tags: { file: 'removeDelegationSaga', function: 'removeDelegation' },
-        extra: { chainId, error },
-      })
-    }
-  }
-
-  if (hasError) {
-    onFailure(new Error('One or more delegation removal transactions failed'))
-  } else {
-    onSuccess()
-  }
+  // TODO(WALL-7070): handle transaction failures here
+  // for now we just call onSuccess for failure case too
+  onSuccess()
 }
 
 export const {

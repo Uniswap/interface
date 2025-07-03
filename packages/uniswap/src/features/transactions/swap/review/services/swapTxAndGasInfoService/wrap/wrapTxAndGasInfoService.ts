@@ -8,7 +8,8 @@ import { UnwrapTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/t
 
 export function createWrapTxAndGasInfoService(ctx: {
   instructionService: EVMSwapInstructionsService
-  gasStrategy: GasStrategy
+  activeGasStrategy: GasStrategy
+  shadowGasStrategies: GasStrategy[]
   transactionSettings: TransactionSettingsContextState
   v4SwapEnabled: boolean
 }): SwapTxAndGasInfoService<WrapTrade | UnwrapTrade> {

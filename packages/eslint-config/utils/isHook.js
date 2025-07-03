@@ -1,4 +1,4 @@
-function isHook(node) {
+export function isHook(node) {
   // Check function declarations
   if (node.type === 'FunctionDeclaration' && node.id?.name) {
     return node.id.name.startsWith('use')
@@ -26,5 +26,3 @@ function isHook(node) {
 
   return false
 }
-
-module.exports = { isHook }

@@ -9,8 +9,6 @@ import { render } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { currencyId } from 'uniswap/src/utils/currencyId'
 
 vi.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => ({
   formatTimestamp: vi.fn(),
@@ -30,16 +28,16 @@ describe('OrderContent', () => {
           orderHash: '0xad7a8f73f28fd0cc16459111899dd1632164ae139fcf5281a1bced56e1ff6564',
           offerer: '0xSenderAddress',
           id: 'tx123',
-          chainId: UniverseChainId.Mainnet,
+          chainId: 1,
           type: SignatureType.SIGN_UNISWAPX_ORDER,
           status: UniswapXOrderStatus.FILLED,
           addedTime: 1701715079,
           swapInfo: {
             isUniswapXOrder: true,
-            type: TransactionType.Swap,
+            type: 1,
             tradeType: 0,
-            inputCurrencyId: currencyId(DAI),
-            outputCurrencyId: currencyId(WETH9[UniverseChainId.Mainnet]),
+            inputCurrencyId: DAI.address,
+            outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -65,10 +63,10 @@ describe('OrderContent', () => {
           id: 'tx123',
           swapInfo: {
             isUniswapXOrder: true,
-            type: TransactionType.Swap,
+            type: 1,
             tradeType: 0,
-            inputCurrencyId: currencyId(DAI),
-            outputCurrencyId: currencyId(WETH9[UniverseChainId.Mainnet]),
+            inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
+            outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -86,7 +84,7 @@ describe('OrderContent', () => {
     const { container } = render(
       <OrderContent
         order={{
-          chainId: UniverseChainId.Mainnet,
+          chainId: 1,
           type: SignatureType.SIGN_LIMIT,
           status: UniswapXOrderStatus.OPEN,
           encodedOrder: '0xencodedOrder',
@@ -96,10 +94,10 @@ describe('OrderContent', () => {
           id: 'tx123',
           swapInfo: {
             isUniswapXOrder: true,
-            type: TransactionType.Swap,
+            type: 1,
             tradeType: 0,
-            inputCurrencyId: currencyId(DAI),
-            outputCurrencyId: currencyId(WETH9[UniverseChainId.Mainnet]),
+            inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
+            outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',

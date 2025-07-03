@@ -105,7 +105,7 @@ export const CurrentPageBreadcrumb = ({
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <PageTitleText>{currency ? tokenSymbolName : poolName}</PageTitleText>
+      <PageTitleText>{currency ? tokenSymbolName : poolName}</PageTitleText>{' '}
       {(!currency || !isNative) && (
         <TokenAddressHoverContainer
           data-testid="breadcrumb-token-address"

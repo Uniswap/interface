@@ -62,8 +62,6 @@ const OptionsSelector = styled(Tabs.List, {
   } as const,
 })
 
-OptionsSelector.displayName = 'OptionsSelector'
-
 const TabsRovingIndicator = styled(Flex, {
   animation: 'fast',
   backgroundColor: '$surface3',
@@ -91,8 +89,6 @@ const TabsRovingIndicator = styled(Flex, {
     },
   } as const,
 })
-
-TabsRovingIndicator.displayName = 'TabsRovingIndicator'
 
 const OptionButton = styled(Tabs.Tab, {
   unstyled: true,
@@ -151,8 +147,6 @@ const OptionButton = styled(Tabs.Tab, {
     },
   } as const,
 })
-
-OptionButton.displayName = 'OptionButton'
 
 export interface SegmentedControlOption<T extends string = string> {
   // String value to be selected/stored, used as default display value

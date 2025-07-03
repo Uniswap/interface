@@ -5,11 +5,7 @@ import { makeSelectAddressNotifications } from 'uniswap/src/features/notificatio
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
-import {
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
@@ -123,10 +119,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
     yield* put(
       pushNotification({
         type: AppNotificationType.WalletConnect,
-        event:
-          status === TransactionStatus.Failed
-            ? WalletConnectEvent.TransactionFailed
-            : WalletConnectEvent.TransactionConfirmed,
+        event: WalletConnectEvent.TransactionConfirmed,
         dappName: typeInfo.dappRequestInfo.name,
         imageUrl: typeInfo.dappRequestInfo.icon ?? null,
         chainId,

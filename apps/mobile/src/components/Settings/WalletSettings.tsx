@@ -69,6 +69,7 @@ export function WalletSettings(): JSX.Element {
           <ExpandoRow
             isExpanded={showAll}
             label={t('settings.section.wallet.hidden.row.title', { numHidden: allAccounts.length - 1 })}
+            mx="$spacing16"
             onPress={(): void => toggleViewAll()}
           />
 

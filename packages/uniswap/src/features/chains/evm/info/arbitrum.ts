@@ -1,4 +1,5 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import { ARBITRUM_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { DAI_ARBITRUM_ONE, USDC_ARBITRUM } from 'uniswap/src/constants/tokens'
@@ -22,10 +23,12 @@ import { arbitrum } from 'wagmi/chains'
 export const ARBITRUM_CHAIN_INFO = {
   ...arbitrum,
   id: UniverseChainId.ArbitrumOne,
+  sdkId: UniswapSDKChainId.ARBITRUM_ONE,
   assetRepoNetworkName: 'arbitrum',
   backendChain: {
     chain: BackendChainId.Arbitrum as GqlChainId,
     backendSupported: true,
+    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 46,
@@ -38,6 +41,9 @@ export const ARBITRUM_CHAIN_INFO = {
     url: 'https://arbiscan.io/',
     apiURL: 'https://api.arbiscan.io',
   },
+  helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
+  infoLink: 'https://app.uniswap.org/explore/tokens/arbitrum',
+  infuraPrefix: 'arbitrum-mainnet',
   interfaceName: 'arbitrum',
   label: 'Arbitrum',
   logo: ARBITRUM_LOGO,
@@ -54,6 +60,8 @@ export const ARBITRUM_CHAIN_INFO = {
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
   stablecoins: [USDC_ARBITRUM, DAI_ARBITRUM_ONE],
   statusPage: undefined,
+  supportsInterfaceClientSideRouting: true,
+  supportsGasEstimates: true,
   supportsV4: true,
   urlParam: 'arbitrum',
   rpcUrls: {

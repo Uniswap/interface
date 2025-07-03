@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { closeModal } from 'src/features/modals/modalSlice'
 import { Wrench } from 'ui/src/components/icons'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -15,7 +16,7 @@ export function TestnetSwitchModal({ route }: AppStackScreenProp<typeof ModalNam
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
-  const { switchToMode } = route.params
+  const switchToMode = route.params.initialState.switchToMode
 
   const onToggleTestnetMode = (): void => {
     onClose()
@@ -28,6 +29,7 @@ export function TestnetSwitchModal({ route }: AppStackScreenProp<typeof ModalNam
   }
 
   const onReject = (): void => {
+    dispatch(closeModal({ name: ModalName.Swap }))
     onClose()
   }
 

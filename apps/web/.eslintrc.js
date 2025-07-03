@@ -12,6 +12,9 @@ module.exports = {
     },
   },
   rules: {
+    // TODO: had to add this rule to avoid errors on monorepo migration that didnt happen in interface
+    'cypress/unsafe-to-chain-command': 'off',
+
     // let prettier do things:
     semi: 0,
     quotes: 0,
@@ -24,6 +27,7 @@ module.exports = {
     {
       files: [
         'src/index.tsx',
+        'cypress/utils/index.ts',
         'src/tracing/index.ts',
         'src/state/index.ts',
         'src/state/explore/index.tsx',

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { AdaptiveWebModal, WebModalWithBottomAttachment } from 'ui/src/components/modal/AdaptiveWebModal'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
-import type { ModalProps } from 'uniswap/src/components/modals/ModalProps'
+import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isExtension, isInterface } from 'utilities/src/platform'
 
@@ -26,7 +26,6 @@ export function Modal({
   paddingY,
   pt,
   pb,
-  mx = '$none',
   analyticsProperties,
   skipLogImpression,
   position,
@@ -70,8 +69,7 @@ export function Modal({
           backgroundColor={backgroundColor}
           height={height ?? (fullScreen ? '100%' : undefined)}
           isOpen={isModalOpen}
-          mx={mx}
-          my="$none"
+          m="$none"
           maxWidth={maxWidth}
           maxHeight={maxHeight}
           gap={gap}

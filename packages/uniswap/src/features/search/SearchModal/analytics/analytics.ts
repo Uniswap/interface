@@ -1,4 +1,3 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { OnchainItemListOptionType, SearchModalOption } from 'uniswap/src/components/lists/items/types'
 import { SearchContext, SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
@@ -6,29 +5,24 @@ import { SearchResultType, extractDomain } from 'uniswap/src/features/search/Sea
 import { InterfaceEventName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NavBarSearchTypes } from 'uniswap/src/features/telemetry/types'
-import { logger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
 
-// eslint-disable-next-line complexity
 export function sendSearchOptionItemClickedAnalytics({
   item,
   section,
   rowIndex,
-  sectionIndex,
   searchFilters,
 }: {
   item: SearchModalOption
   section: OnchainItemSection<SearchModalOption>
   rowIndex: number
-  sectionIndex: number
   searchFilters: SearchFilterContext
 }): void {
   const searchContext: SearchContext = {
     ...searchFilters,
     category: section.sectionKey,
-    isHistory: section.sectionKey === OnchainItemSectionName.RecentSearches,
-    position: rowIndex, // rowIndex accounts for header items as well, so the first header in the list has index 0 and first item in the list has index 1
-    sectionPosition: sectionIndex + 1, // 1-indexed position of item in section
+    isHistory: section.sectionKey === OnchainItemSectionName.RecentSearches, // history item click
+    position: rowIndex,
     suggestionCount: section.data.length, // suggestionCount is # of suggestions in this SECTION, not total # of suggestions
   }
 
@@ -58,25 +52,6 @@ export function sendSearchOptionItemClickedAnalytics({
           selected_search_result_address: currency.isNative ? 'NATIVE' : currency.address,
         })
       }
-      return
-    }
-    case OnchainItemListOptionType.Pool: {
-      sendAnalyticsEvent(InterfaceEventName.NavbarResultSelected, {
-        ...searchContext,
-        chainId: item.chainId,
-        suggestion_type: searchContext.isHistory
-          ? NavBarSearchTypes.RecentSearch
-          : searchContext.query && searchContext.query.length > 0
-            ? NavBarSearchTypes.PoolSuggestion
-            : NavBarSearchTypes.PoolTrending,
-        total_suggestions: searchContext.suggestionCount,
-        query_text: searchContext.query ?? '',
-        selected_search_result_name: `${item.token0CurrencyInfo.currency.symbol ?? 'UNK'} / ${item.token1CurrencyInfo.currency.symbol ?? 'UNK'}`,
-        selected_search_result_address: item.poolId,
-        protocol_version: ProtocolVersion[item.protocolVersion],
-        fee_tier: item.feeTier,
-        hook_address: item.hookAddress,
-      })
       return
     }
     case OnchainItemListOptionType.WalletByAddress:
@@ -114,9 +89,5 @@ export function sendSearchOptionItemClickedAnalytics({
         type: 'collection',
       })
       return
-    default:
-      logger.warn('SearchModal/analytics.ts', 'sendSearchOptionItemClickedAnalytics', 'Unhandled search option type', {
-        item,
-      })
   }
 }

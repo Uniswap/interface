@@ -1,4 +1,5 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import { ETH_LOGO, ZKSYNC_LOGO } from 'ui/src/assets'
 import { USDC_ZKSYNC } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -16,10 +17,12 @@ import { zksync } from 'wagmi/chains'
 export const ZKSYNC_CHAIN_INFO = {
   ...zksync,
   id: UniverseChainId.Zksync,
+  sdkId: UniswapSDKChainId.ZKSYNC,
   assetRepoNetworkName: 'zksync',
   backendChain: {
     chain: BackendChainId.Zksync as GqlChainId,
     backendSupported: true,
+    isSecondaryChain: false,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 12,
@@ -32,6 +35,9 @@ export const ZKSYNC_CHAIN_INFO = {
     url: 'https://explorer.zksync.io/',
     apiURL: 'https://block-explorer-api.mainnet.zksync.io',
   },
+  helpCenterUrl: undefined,
+  infoLink: 'https://app.uniswap.org/explore/tokens/zksync',
+  infuraPrefix: undefined,
   interfaceName: 'zksync',
   label: 'ZKsync',
   logo: ZKSYNC_LOGO,
@@ -53,6 +59,8 @@ export const ZKSYNC_CHAIN_INFO = {
   statusPage: undefined,
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ZKSYNC, 10_000e6),
   stablecoins: [USDC_ZKSYNC],
+  supportsInterfaceClientSideRouting: false,
+  supportsGasEstimates: false,
   supportsV4: false,
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',

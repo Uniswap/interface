@@ -1,4 +1,4 @@
-import type { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { SwapBottomCard } from 'components/SwapBottomCard'
@@ -19,14 +19,13 @@ import { useSwapCallback } from 'state/sagas/transactions/swapSaga'
 import { useWrapCallback } from 'state/sagas/transactions/wrapSaga'
 import { SwapAndLimitContextProvider } from 'state/swap/SwapContext'
 import { useInitialCurrencyState } from 'state/swap/hooks'
-import type { CurrencyState } from 'state/swap/types'
-import type { SegmentedControlOption } from 'ui/src'
-import { Flex, SegmentedControl, Text, Tooltip, styled } from 'ui/src'
-import type { AppTFunction } from 'ui/src/i18n/types'
+import { CurrencyState } from 'state/swap/types'
+import { Flex, SegmentedControl, SegmentedControlOption, Text, Tooltip, styled } from 'ui/src'
+import { AppTFunction } from 'ui/src/i18n/types'
 import { zIndexes } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useIsModeMismatch } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -34,18 +33,17 @@ import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useG
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfaceEventName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type {
+import {
   PasskeyAuthStatus,
   SwapRedirectFn,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
 import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow/SwapFlow'
+import { SwapDependenciesContextProvider } from 'uniswap/src/features/transactions/swap/contexts/SwapDependenciesContextProvider'
+import { SwapFormContextProvider, SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/contexts/selectors'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
-import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
-import { SwapDependenciesStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/SwapDependenciesStoreContextProvider'
-import { SwapFormStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContextProvider'
-import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
@@ -159,11 +157,7 @@ export function Swap({
           initialOutputCurrency={initialOutputCurrency}
         >
           <PrefetchBalancesWrapper>
-            <SwapFormStoreContextProvider
-              prefilledState={prefilledState}
-              hideSettings={hideHeader}
-              hideFooter={hideFooter}
-            >
+            <SwapFormContextProvider prefilledState={prefilledState} hideSettings={hideHeader} hideFooter={hideFooter}>
               <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
                 {isSharedSwapDisabled && <DisabledSwapOverlay />}
                 <UniversalSwapFlow
@@ -176,7 +170,7 @@ export function Swap({
                   tokenColor={tokenColor}
                 />
               </Flex>
-            </SwapFormStoreContextProvider>
+            </SwapFormContextProvider>
           </PrefetchBalancesWrapper>
         </SwapAndLimitContextProvider>
       </TransactionSettingsContextProvider>
@@ -312,7 +306,7 @@ function UniversalSwapFlow({
       )}
       {currentTab === SwapTab.Swap && (
         <Flex gap="$spacing16">
-          <SwapDependenciesStoreContextProvider swapCallback={swapCallback} wrapCallback={wrapCallback}>
+          <SwapDependenciesContextProvider swapCallback={swapCallback} wrapCallback={wrapCallback}>
             <SwapFlow
               settings={swapSettings}
               hideHeader={hideHeader}
@@ -325,7 +319,7 @@ function UniversalSwapFlow({
               onSubmitSwap={resetDisableOneClickSwap}
               passkeyAuthStatus={passkeyAuthStatus}
             />
-          </SwapDependenciesStoreContextProvider>
+          </SwapDependenciesContextProvider>
           <SwapBottomCard />
         </Flex>
       )}

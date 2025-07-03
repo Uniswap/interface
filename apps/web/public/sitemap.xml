@@ -9,7 +9,4 @@
   <sitemap>
     <loc>https://app.uniswap.org/pools-sitemap.xml</loc>
   </sitemap>  
-  <sitemap>
-    <loc>https://app.uniswap.org/nfts-sitemap.xml</loc>
-  </sitemap>  
 </sitemapindex>

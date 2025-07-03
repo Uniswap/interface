@@ -8,8 +8,8 @@ import { useEffect, useMemo } from 'react'
 import { usePendingOrders } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 /** Detects transactions from same account with the same nonce and different hash */
 function findCancelTx({

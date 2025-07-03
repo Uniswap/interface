@@ -299,7 +299,6 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
       mnemonicId,
       backups: [backupType],
       pushNotificationsEnabled: true,
-      smartWalletConsent: true,
     }))
 
     setImportedAccounts(accountsToImport)

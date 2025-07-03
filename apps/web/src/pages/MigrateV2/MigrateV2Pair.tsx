@@ -35,6 +35,7 @@ import { useAppDispatch } from 'state/hooks'
 import { Bound, resetMintState } from 'state/mint/v3/actions'
 import { useRangeHopCallbacks, useV3DerivedMintInfo, useV3MintActionHandlers } from 'state/mint/v3/hooks'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ExternalLink } from 'theme/components/Links'
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -49,14 +50,13 @@ import { InterfacePageName, LiquidityEventName } from 'uniswap/src/features/tele
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { LiquiditySource } from 'uniswap/src/features/telemetry/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { currencyId } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { assume0xAddress } from 'utils/wagmi'
 import { useReadContract, useReadContracts } from 'wagmi'
@@ -476,7 +476,7 @@ function V2PairMigration({
             })
 
             addTransaction(response, {
-              type: TransactionType.MigrateLiquidityV2ToV3,
+              type: TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3,
               baseCurrencyId: currencyId(currency0),
               quoteCurrencyId: currencyId(currency1),
               isFork: isNotUniswap,

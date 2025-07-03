@@ -40,7 +40,6 @@ const mockNavigationFunctions: WalletNavigationContextState = {
   navigateToSend: jest.fn(),
   handleShareNft: jest.fn(),
   handleShareToken: jest.fn(),
-  navigateToPoolDetails: jest.fn(),
 }
 
 /**

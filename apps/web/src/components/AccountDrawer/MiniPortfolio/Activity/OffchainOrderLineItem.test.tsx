@@ -8,8 +8,6 @@ import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { currencyId } from 'uniswap/src/utils/currencyId'
 
 describe('OffchainOrderLineItem', () => {
   it('should render type EXCHANGE_RATE', () => {
@@ -40,10 +38,10 @@ describe('OffchainOrderLineItem', () => {
           status: UniswapXOrderStatus.FILLED,
           swapInfo: {
             isUniswapXOrder: true,
-            type: TransactionType.Swap,
+            type: 1,
             tradeType: 0,
-            inputCurrencyId: currencyId(DAI),
-            outputCurrencyId: currencyId(WETH9[UniverseChainId.Mainnet]),
+            inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
+            outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -78,10 +76,10 @@ describe('OffchainOrderLineItem', () => {
           status: UniswapXOrderStatus.FILLED,
           swapInfo: {
             isUniswapXOrder: true,
-            type: TransactionType.Swap,
+            type: 1,
             tradeType: 0,
-            inputCurrencyId: currencyId(DAI),
-            outputCurrencyId: currencyId(WETH9[UniverseChainId.Mainnet]),
+            inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
+            outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',

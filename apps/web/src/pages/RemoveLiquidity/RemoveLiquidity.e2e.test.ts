@@ -8,7 +8,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { assume0xAddress } from 'utils/wagmi'
 
 test('should decrease liquidity of a position', async ({ page, anvil }) => {
-  await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.decreaseLp })
+  await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.decreaseLp)
   await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
   await page.route(`${uniswapUrls.apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`, async (route) => {
     await route.fulfill({ path: Mocks.Positions.get_position })

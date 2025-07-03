@@ -25,7 +25,6 @@ import {
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const DRAWER_SPECS = {
   WIDTH_XL: '390px',
@@ -211,13 +210,13 @@ function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
 
   if (media.md) {
     return (
-      <WebBottomSheet data-testid={TestID.AccountDrawer} isOpen={accountDrawer.isOpen} onClose={accountDrawer.close}>
+      <WebBottomSheet data-testid="account-drawer" isOpen={accountDrawer.isOpen} onClose={accountDrawer.close}>
         {children}
       </WebBottomSheet>
     )
   } else if (!isUniExtensionConnected && isAccountConnected) {
     return (
-      <Container data-testid={TestID.AccountDrawer}>
+      <Container data-testid="account-drawer">
         <AccountSideDrawer isOpen={accountDrawer.isOpen} onClose={accountDrawer.close}>
           {children}
         </AccountSideDrawer>
@@ -225,7 +224,7 @@ function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
     )
   } else {
     return (
-      <Container data-testid={TestID.AccountDrawer} isUniExtensionConnected>
+      <Container data-testid="account-drawer" isUniExtensionConnected>
         <AccountDropdown isOpen={accountDrawer.isOpen} onClose={accountDrawer.close}>
           {children}
         </AccountDropdown>

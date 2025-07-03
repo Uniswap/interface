@@ -32,7 +32,6 @@ export type ModalWithOverlayProps = PropsWithChildren<
     onReject: () => void
     onConfirm?: () => void
     disableConfirm?: boolean
-    confirmationLoading?: boolean
     contentContainerStyle?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>
     cancelButtonProps?: ButtonProps
     confirmationButtonProps?: ButtonProps
@@ -51,7 +50,6 @@ export function ModalWithOverlay({
   onReject,
   onConfirm,
   disableConfirm,
-  confirmationLoading,
   contentContainerStyle,
   cancelButtonProps,
   confirmationButtonProps,
@@ -141,7 +139,6 @@ export function ModalWithOverlay({
         cancelButtonText={cancelButtonText}
         confirmationButtonText={confirmationButtonText}
         confirmationEnabled={!disableConfirm && confirmationEnabled}
-        confirmationLoading={confirmationLoading}
         scrollDownButtonText={scrollDownButtonText}
         showScrollDownOverlay={showOverlay && !eip5792MethodsEnabled}
         cancelButtonProps={cancelButtonProps}
@@ -156,7 +153,6 @@ export function ModalWithOverlay({
 
 type ModalFooterProps = {
   confirmationEnabled: boolean
-  confirmationLoading?: boolean
   showScrollDownOverlay: boolean
   cancelButtonText?: string
   confirmationButtonText?: string
@@ -170,7 +166,6 @@ type ModalFooterProps = {
 
 function ModalFooter({
   confirmationEnabled,
-  confirmationLoading,
   showScrollDownOverlay,
   scrollDownButtonText,
   cancelButtonText,
@@ -217,7 +212,6 @@ function ModalFooter({
           <Button
             variant="branded"
             isDisabled={!confirmationEnabled}
-            loading={confirmationLoading}
             size="large"
             testID={TestID.Confirm}
             onPress={onConfirm}

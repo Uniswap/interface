@@ -1,11 +1,11 @@
-import { isDynamicFeeTier } from 'components/Liquidity/utils'
-import { FeeData } from 'pages/Pool/Positions/create/types'
+import { FeeAmount } from '@uniswap/v3-sdk'
+import { isDynamicFeeTierAmount } from 'components/Liquidity/utils'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components/CopyHelper'
-import { Flex, styled, Text, Tooltip } from 'ui/src'
+import { styled, Text } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 
 const PositionInfoBadge = styled(Text, {
@@ -50,7 +50,6 @@ function getPlacement(index: number, length: number): 'start' | 'middle' | 'end'
 
 interface BadgeData {
   label: string
-  tooltipContent?: string
   copyable?: boolean
   icon?: JSX.Element
 }
@@ -63,7 +62,7 @@ export function LiquidityPositionInfoBadges({
 }: {
   versionLabel?: string
   v4hook?: string
-  feeTier?: FeeData
+  feeTier?: string | FeeAmount
   size: 'small' | 'default'
 }): JSX.Element {
   const { t } = useTranslation()
@@ -72,29 +71,24 @@ export function LiquidityPositionInfoBadges({
     return [
       versionLabel ? { label: versionLabel } : undefined,
       v4hook && v4hook !== ZERO_ADDRESS
-        ? {
-            label: v4hook,
-            tooltipContent: t('liquidity.hooks.address.tooltip', { address: v4hook }),
-            copyable: true,
-            icon: <DocumentList color="$neutral2" size={16} />,
-          }
+        ? { label: v4hook, copyable: true, icon: <DocumentList color="$neutral2" size={16} /> }
         : undefined,
-      feeTier
-        ? isDynamicFeeTier(feeTier)
+      feeTier !== undefined && feeTier !== '' && (typeof feeTier === 'number' || !isNaN(Number(feeTier)))
+        ? isDynamicFeeTierAmount(feeTier)
           ? { label: t('common.dynamic') }
-          : { label: `${feeTier.feeAmount / 10000}%` }
+          : { label: `${Number(feeTier) / 10000}%` }
         : undefined,
     ].filter(Boolean) as BadgeData[]
   }, [versionLabel, v4hook, feeTier, t])
 
   return (
     <>
-      {badges.map(({ label, copyable, icon, tooltipContent }, index) => {
+      {badges.map(({ label, copyable, icon }, index) => {
         const displayLabel = isAddress(label) ? shortenAddress(label) : label
-        const key = label + index
-        const content = (
+        return (
           <PositionInfoBadge
             cursor={copyable ? 'pointer' : 'unset'}
+            key={label + index}
             placement={getPlacement(index, badges.length)}
             size={size}
           >
@@ -107,22 +101,6 @@ export function LiquidityPositionInfoBadges({
               displayLabel
             )}
           </PositionInfoBadge>
-        )
-
-        if (!tooltipContent) {
-          return <Flex key={key}>{content}</Flex>
-        }
-
-        return (
-          <Tooltip allowFlip stayInFrame placement="top" key={key}>
-            <Tooltip.Trigger>{content}</Tooltip.Trigger>
-            <Tooltip.Content maxWidth="fit-content">
-              <Tooltip.Arrow />
-              <Text variant="body4" color="$neutral2">
-                {tooltipContent}
-              </Text>
-            </Tooltip.Content>
-          </Tooltip>
         )
       })}
     </>

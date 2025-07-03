@@ -13,6 +13,7 @@ export interface ModalsState {
   [ModalName.Experiments]: AppModalState<undefined>
   [ModalName.FiatOnRampAggregator]: AppModalState<FiatOnRampModalState>
   [ModalName.QueuedOrderModal]: AppModalState<undefined>
-  [ModalName.Send]: AppModalState<TransactionState & { sendScreen?: TransactionScreen }>
+  [ModalName.Send]: AppModalState<TransactionState & { sendScreen: TransactionScreen }>
+  [ModalName.Swap]: AppModalState<TransactionState>
   [ModalName.WalletConnectScan]: AppModalState<ScannerModalState>
 }

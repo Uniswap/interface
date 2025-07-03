@@ -113,10 +113,6 @@ function isValidGasStrategies(value: unknown): value is GasStrategies {
   )
 }
 
-function getIsStatsigReady(): boolean {
-  return getStatsigClient().loadingStatus === 'Ready'
-}
-
 export function getActiveGasStrategy({
   chainId,
   type,
@@ -124,9 +120,9 @@ export function getActiveGasStrategy({
 }: {
   chainId: number | undefined
   type: GasStrategyType
-  isStatsigReady?: boolean
+  isStatsigReady: boolean
 }): GasStrategy {
-  if (isStatsigReady === false || !getIsStatsigReady()) {
+  if (!isStatsigReady) {
     return DEFAULT_GAS_STRATEGY
   }
   const config = getStatsigClient().getDynamicConfig(DynamicConfigs.GasStrategies)
@@ -135,4 +131,24 @@ export function getActiveGasStrategy({
     (s) => s.conditions.chainId === chainId && s.conditions.types === type && s.conditions.isActive,
   )
   return activeStrategy ? activeStrategy.strategy : DEFAULT_GAS_STRATEGY
+}
+
+export function getShadowGasStrategies({
+  chainId,
+  type,
+  isStatsigReady,
+}: {
+  chainId: number | undefined
+  type: GasStrategyType
+  isStatsigReady: boolean
+}): GasStrategy[] {
+  if (!isStatsigReady) {
+    return []
+  }
+  const config = getStatsigClient().getDynamicConfig('GasStrategies')
+  const gasStrategies = isValidGasStrategies(config.value) ? config.value : undefined
+  const shadowStrategies = gasStrategies?.strategies
+    .filter((s) => s.conditions.chainId === chainId && s.conditions.types === type && !s.conditions.isActive)
+    .map((s) => s.strategy)
+  return shadowStrategies ?? []
 }

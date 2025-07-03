@@ -8,8 +8,6 @@ import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { currencyId } from 'uniswap/src/utils/currencyId'
 
 const mockOrderDetails: UniswapXOrderDetails = {
   type: SignatureType.SIGN_UNISWAPX_ORDER,
@@ -17,10 +15,10 @@ const mockOrderDetails: UniswapXOrderDetails = {
   status: UniswapXOrderStatus.OPEN,
   swapInfo: {
     isUniswapXOrder: true,
-    type: TransactionType.Swap,
+    type: 1,
     tradeType: 0,
-    inputCurrencyId: currencyId(DAI),
-    outputCurrencyId: currencyId(WETH9[UniverseChainId.Mainnet]),
+    inputCurrencyId: DAI.address,
+    outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
     inputCurrencyAmountRaw: '252074033564766400000',
     expectedOutputCurrencyAmountRaw: '106841079134757921',
     minimumOutputCurrencyAmountRaw: '106841079134757921',

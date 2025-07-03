@@ -6,12 +6,9 @@ import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { Dispatch, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
-
 export type FeeData = {
-  isDynamic: boolean
   feeAmount: number
   tickSpacing: number
 }
@@ -23,9 +20,8 @@ export type DynamicFeeData = FeeData & {
 }
 
 export const DYNAMIC_FEE_DATA = {
-  isDynamic: true,
   feeAmount: DYNAMIC_FEE_AMOUNT,
-  tickSpacing: DEFAULT_TICK_SPACING,
+  tickSpacing: 60,
 } as const satisfies DynamicFeeData
 
 export enum PositionFlowStep {
@@ -47,11 +43,7 @@ export interface PositionState {
   }
 }
 
-export const DEFAULT_FEE_DATA = {
-  feeAmount: FeeAmount.MEDIUM,
-  tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM],
-  isDynamic: false,
-}
+export const DEFAULT_FEE_DATA = { feeAmount: FeeAmount.MEDIUM, tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM] }
 
 export const DEFAULT_POSITION_STATE: PositionState = {
   fee: DEFAULT_FEE_DATA,

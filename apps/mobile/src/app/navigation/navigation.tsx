@@ -13,7 +13,6 @@ import { ExploreModal } from 'src/app/modals/ExploreModal'
 import { KoreaCexTransferInfoModal } from 'src/app/modals/KoreaCexTransferInfoModal'
 import { NotificationsOSSettingsModal } from 'src/app/modals/NotificationsOSSettingsModal'
 import { SmartWalletInfoModal } from 'src/app/modals/SmartWalletInfoModal'
-import { SwapModal } from 'src/app/modals/SwapModal'
 import { TokenWarningModalWrapper } from 'src/app/modals/TokenWarningModalWrapper'
 import { ViewOnlyExplainerModal } from 'src/app/modals/ViewOnlyExplainerModal'
 import { renderHeaderBackButton, renderHeaderBackImage } from 'src/app/navigation/components'
@@ -47,7 +46,9 @@ import { PasskeyHelpModalScreen } from 'src/components/modals/ReactNavigationMod
 import { PasskeyManagementModalScreen } from 'src/components/modals/ReactNavigationModals/PasskeyManagementModalScreen'
 import { PermissionsSettingsScreen } from 'src/components/modals/ReactNavigationModals/PermissionsSettingsScreen'
 import { PortfolioBalanceSettingsScreen } from 'src/components/modals/ReactNavigationModals/PortfolioBalanceSettingsScreen'
+import { SmartWalletCreatedModalScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletCreatedModalScreen'
 import { SmartWalletEnabledModalScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletEnabledModalScreen'
+import { SmartWalletInsufficientFundsOnNetworkScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletInsufficientFundsOnNetworkScreen'
 import { SmartWalletNudgeScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletNudgeScreen'
 import { TestnetModeModalScreen } from 'src/components/modals/ReactNavigationModals/TestnetModeModalScreen'
 import { UnitagsIntroModal } from 'src/components/unitags/UnitagsIntroModal'
@@ -394,7 +395,6 @@ export function AppStackNavigator(): JSX.Element {
         <AppStack.Screen component={EducationScreen} name={MobileScreens.Education} />
       </AppStack.Group>
       <AppStack.Group screenOptions={navNativeStackOptions.presentationBottomSheet}>
-        <AppStack.Screen component={SwapModal} name={ModalName.Swap} />
         <AppStack.Screen component={ExploreModal} name={ModalName.Explore} />
         <AppStack.Screen component={NotificationsOSSettingsModal} name={ModalName.NotificationsOSSettings} />
         <AppStack.Screen component={FundWalletModal} name={ModalName.FundWallet} />
@@ -426,11 +426,16 @@ export function AppStackNavigator(): JSX.Element {
         <AppStack.Screen component={ConnectionsDappListModal} name={ModalName.ConnectionsDappListModal} />
         <AppStack.Screen component={PrivateKeySpeedBumpModal} name={ModalName.PrivateKeySpeedBumpModal} />
         <AppStack.Screen component={AdvancedSettingsModal} name={ModalName.SmartWalletAdvancedSettingsModal} />
+        <AppStack.Screen component={SmartWalletCreatedModalScreen} name={ModalName.SmartWalletCreatedModal} />
         <AppStack.Screen component={SmartWalletEnabledModalScreen} name={ModalName.SmartWalletEnabledModal} />
         <AppStack.Screen component={SettingsAppearanceModal} name={ModalName.SettingsAppearance} />
         <AppStack.Screen component={PermissionsSettingsScreen} name={ModalName.PermissionsModal} />
         <AppStack.Screen component={PortfolioBalanceSettingsScreen} name={ModalName.PortfolioBalanceModal} />
         <AppStack.Screen component={LanguageSettingsScreen} name={ModalName.LanguageSelector} />
+        <AppStack.Screen
+          component={SmartWalletInsufficientFundsOnNetworkScreen}
+          name={ModalName.SmartWalletInsufficientFundsOnNetworkModal}
+        />
         <AppStack.Screen component={SmartWalletNudgeScreen} name={ModalName.SmartWalletNudge} />
         {enabledInEnvOrDev &&
           ((): JSX.Element => {

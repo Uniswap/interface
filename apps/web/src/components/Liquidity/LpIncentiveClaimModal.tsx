@@ -60,7 +60,7 @@ export function LpIncentiveClaimModal({
     },
   })
 
-  const handleClaim = useEvent(({ skipAnalytics = false }: { skipAnalytics?: boolean } = {}) => {
+  const handleClaim = useEvent(({ skipAnalytics = false } = {}) => {
     if (!skipAnalytics) {
       sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsRetry)
     }

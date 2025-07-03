@@ -8,8 +8,8 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { SmartWalletIcon } from 'wallet/src/components/smartWallet/SmartWalletIcon'
-import { SmartWalletModal } from 'wallet/src/components/smartWallet/modals/SmartWalletModal'
 import { useCloseIfConsented } from 'wallet/src/components/smartWallet/modals/hooks/useCloseIfConsented'
+import { SmartWalletModal } from 'wallet/src/features/smartWallet/modals/SmartWalletModal'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 const IMAGE_SIZE: number = 48

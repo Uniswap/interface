@@ -45,15 +45,11 @@ export function useConnectorWithId(id: ConnectorID, options?: { shouldThrow: tru
 function getInjectedConnectors(connectors: readonly Connector[], isEmbeddedWalletEnabled?: boolean) {
   let isCoinbaseWalletBrowser = false
   const injectedConnectors = connectors.filter((c) => {
-    // Special-case: Ignore coinbase + binance eip6963-injected connectors; connections are handled via the SDK connector.
+    // Special-case: Ignore coinbase eip6963-injected connector; coinbase connection is handled via the SDK connector.
     if (c.id === CONNECTION_PROVIDER_IDS.COINBASE_RDNS) {
       if (isMobileWeb) {
         isCoinbaseWalletBrowser = true
       }
-      return false
-    }
-
-    if (c.id === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID) {
       return false
     }
 
@@ -126,14 +122,9 @@ export function useOrderedConnections(options?: { showSecondaryConnectors?: bool
       CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
       SHOULD_THROW,
     )
-    const binanceWalletConnector = getConnectorWithId(
-      connectors,
-      CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID,
-      SHOULD_THROW,
-    )
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!coinbaseSdkConnector || !walletConnectConnector || !binanceWalletConnector) {
+    if (!coinbaseSdkConnector || !walletConnectConnector) {
       throw new Error('Expected connector(s) missing from wagmi context.')
     }
 
@@ -159,7 +150,7 @@ export function useOrderedConnections(options?: { showSecondaryConnectors?: bool
       if (isMobileWeb && isEmbeddedWalletEnabled) {
         orderedConnectors.push(embeddedWalletConnector)
       }
-      const secondaryConnectors = [walletConnectConnector, coinbaseSdkConnector, binanceWalletConnector]
+      const secondaryConnectors = [walletConnectConnector, coinbaseSdkConnector]
       // Recent connector should have already been shown on the primary page unless on mobile
       orderedConnectors.push(...secondaryConnectors.filter((c) => c.id !== recentConnectorId || isMobileWeb))
     } else {
@@ -173,13 +164,10 @@ export function useOrderedConnections(options?: { showSecondaryConnectors?: bool
           orderedConnectors.push(coinbaseSdkConnector)
         } else if (recentConnectorId === CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID) {
           orderedConnectors.push(walletConnectConnector)
-        } else if (recentConnectorId === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID) {
-          orderedConnectors.push(binanceWalletConnector)
         }
       } else {
         orderedConnectors.push(walletConnectConnector)
         orderedConnectors.push(coinbaseSdkConnector)
-        orderedConnectors.push(binanceWalletConnector)
       }
     }
 

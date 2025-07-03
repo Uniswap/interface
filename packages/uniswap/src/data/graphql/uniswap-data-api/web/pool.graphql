@@ -61,7 +61,6 @@ query V4Pool($chain: Chain!, $poolId: String!) {
     id
     protocolVersion
     feeTier
-    isDynamicFee
     poolId
     hook {
       id

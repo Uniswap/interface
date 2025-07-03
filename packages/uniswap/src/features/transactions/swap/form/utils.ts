@@ -1,4 +1,4 @@
-import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
+import { SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export const getShouldResetExactAmountToken = (
