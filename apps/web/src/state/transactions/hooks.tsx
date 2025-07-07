@@ -148,7 +148,12 @@ function usePendingApprovalAmount(token?: Token, spender?: string): BigNumber | 
       if (!tx || isConfirmedTx(tx) || tx.info.type !== UniswapTransactionType.Approve) {
         continue
       }
-      if (tx.info.spender === spender && tx.info.tokenAddress === token.address && isTransactionRecent(tx)) {
+      if (
+        tx.info.spender === spender &&
+        tx.info.tokenAddress === token.address &&
+        isTransactionRecent(tx) &&
+        tx.info.approvalAmount !== undefined
+      ) {
         return BigNumber.from(tx.info.approvalAmount)
       }
     }

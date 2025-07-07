@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmVMmzyLJzZeEwCaC5HcAseaRJrdoXFo442sw692wG2Def`
-- CIDv1: `bafybeidijorazwioy33ekcfbv2zyvthhjtklisrk6aoyxl6evmoro4jpka`
+- CIDv0: `Qmch1Nqcq2aasebbmbJJsXFMa78HWeUSHHk3PmRwKjanek`
+- CIDv1: `bafybeigvhkndbrfme6cbhe4vnxrshzowhlb35tgmud4ntc7murhr5rnwne`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeidijorazwioy33ekcfbv2zyvthhjtklisrk6aoyxl6evmoro4jpka.ipfs.dweb.link/
-- [ipfs://QmVMmzyLJzZeEwCaC5HcAseaRJrdoXFo442sw692wG2Def/](ipfs://QmVMmzyLJzZeEwCaC5HcAseaRJrdoXFo442sw692wG2Def/)
+- https://bafybeigvhkndbrfme6cbhe4vnxrshzowhlb35tgmud4ntc7murhr5rnwne.ipfs.dweb.link/
+- [ipfs://Qmch1Nqcq2aasebbmbJJsXFMa78HWeUSHHk3PmRwKjanek/](ipfs://Qmch1Nqcq2aasebbmbJJsXFMa78HWeUSHHk3PmRwKjanek/)
 
-## 5.102.0 (2025-07-03)
+### 5.102.1 (2025-07-07)
 
 
-### Features
+### Bug Fixes
 
-* **web:** Warn instead of error for known bug - prod (#21504) 534ada4
+* **web:** Check for undefined approval amount - prod (#21531) 242239b
 
 
