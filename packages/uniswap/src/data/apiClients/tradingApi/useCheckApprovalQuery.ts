@@ -4,6 +4,7 @@ import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClie
 import { TRADING_API_CACHE_KEY, fetchCheckApproval } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryWithImmediateGarbageCollectionApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { ApprovalRequest, ApprovalResponse } from 'uniswap/src/data/tradingApi/__generated__'
+import useTradingApiReplica, { TradingApiReplicaRequests } from './useTradingApiReplica'
 
 export function useCheckApprovalQuery({
   params,
@@ -14,6 +15,10 @@ export function useCheckApprovalQuery({
 >): UseQueryResult<ApprovalResponse> {
   const queryKey = [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.approval, params]
 
+  return useTradingApiReplica({
+    request: TradingApiReplicaRequests.CHECK_APPROVAL,
+    params,
+  })
   return useQueryWithImmediateGarbageCollection<ApprovalResponse>({
     queryKey,
     queryFn: params ? async (): ReturnType<typeof fetchCheckApproval> => await fetchCheckApproval(params) : skipToken,

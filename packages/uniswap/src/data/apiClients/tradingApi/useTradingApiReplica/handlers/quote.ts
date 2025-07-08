@@ -32,6 +32,7 @@ async function getPoolState(poolAddress: string) {
 }
 
 export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteResponse> => {
+  console.log('quoteParams', params)
   // Validate required parameters
   if (!params.tokenIn || !params.tokenOut) {
     throw new Error('tokenIn and tokenOut must be defined')
@@ -119,7 +120,7 @@ export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteRes
 
       // Calculate minimum amount out with slippage
       const slippageMultiplier = BigInt(Math.floor((100 - slippageTolerance) * 100))
-      const amountOutMinimum = (amountOut * slippageMultiplier) / 10000n
+      const amountOutMinimum = (amountOut * slippageMultiplier) / BigInt(10000)
 
       // Prepare swap calldata
       const swapCalldata = encodeFunctionData({
@@ -136,7 +137,7 @@ export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteRes
                   { name: 'tokenOut', type: 'address' },
                   { name: 'fee', type: 'uint24' },
                   { name: 'recipient', type: 'address' },
-                  { name: 'deadline', type: 'uint256' },
+
                   { name: 'amountIn', type: 'uint256' },
                   { name: 'amountOutMinimum', type: 'uint256' },
                   { name: 'sqrtPriceLimitX96', type: 'uint160' },
@@ -153,10 +154,9 @@ export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteRes
             tokenOut: params.tokenOut,
             fee: fee,
             recipient: params.swapper,
-            deadline: BigInt(Math.floor(Date.now() / 1000) + 1200), // 20 minutes from now
-            amountIn: amountBigInt,
-            amountOutMinimum: amountOutMinimum,
-            sqrtPriceLimitX96: 0n,
+            amountIn: params.amount,
+            amountOutMinimum: amountOutMinimum.toString(),
+            sqrtPriceLimitX96: '0',
           },
         ],
       })
@@ -227,8 +227,8 @@ export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteRes
             tokenIn: params.tokenIn as `0x${string}`,
             tokenOut: params.tokenOut as `0x${string}`,
             fee: fee,
-            amountOut: amountBigInt,
-            sqrtPriceLimitX96: 0n,
+            amount: params.amount,
+            sqrtPriceLimitX96: '0',
           },
         ],
       })) as [bigint, bigint, bigint, bigint]
@@ -237,7 +237,7 @@ export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteRes
 
       // Calculate maximum amount in with slippage
       const slippageMultiplier = BigInt(Math.floor((100 + slippageTolerance) * 100))
-      const amountInMaximum = (amountIn * slippageMultiplier) / 10000n
+      const amountInMaximum = (amountIn * slippageMultiplier) / BigInt(10000)
 
       // Prepare swap calldata
       const swapCalldata = encodeFunctionData({
@@ -254,7 +254,7 @@ export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteRes
                   { name: 'tokenOut', type: 'address' },
                   { name: 'fee', type: 'uint24' },
                   { name: 'recipient', type: 'address' },
-                  { name: 'deadline', type: 'uint256' },
+
                   { name: 'amountOut', type: 'uint256' },
                   { name: 'amountInMaximum', type: 'uint256' },
                   { name: 'sqrtPriceLimitX96', type: 'uint160' },
@@ -271,10 +271,9 @@ export const quote = async (params: QuoteRequest): Promise<DiscriminatedQuoteRes
             tokenOut: params.tokenOut,
             fee: fee,
             recipient: params.swapper,
-            deadline: BigInt(Math.floor(Date.now() / 1000) + 1200),
-            amountOut: amountBigInt,
+            amountOut: params.amount,
             amountInMaximum: amountInMaximum,
-            sqrtPriceLimitX96: 0n,
+            sqrtPriceLimitX96: '0',
           },
         ],
       })

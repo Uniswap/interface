@@ -4,6 +4,7 @@ import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClie
 import { TRADING_API_CACHE_KEY, WithV4Flag, fetchSwap } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryWithImmediateGarbageCollectionApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { CreateSwapRequest, CreateSwapResponse } from 'uniswap/src/data/tradingApi/__generated__'
+import useTradingApiReplica, { TradingApiReplicaRequests } from './useTradingApiReplica'
 
 export function useTradingApiSwapQuery({
   params,
@@ -13,6 +14,11 @@ export function useTradingApiSwapQuery({
   CreateSwapResponse
 >): UseQueryResult<CreateSwapResponse> {
   const queryKey = [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.swap, params]
+
+  return useTradingApiReplica({
+    request: TradingApiReplicaRequests.SWAP,
+    params: params,
+  })
 
   return useQueryWithImmediateGarbageCollection<CreateSwapResponse>({
     queryKey,

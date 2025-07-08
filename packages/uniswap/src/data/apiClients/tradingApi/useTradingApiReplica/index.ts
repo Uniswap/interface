@@ -4,11 +4,14 @@ import { ListPositionsRequest } from '@uniswap/client-pools/dist/pools/v1/api_pb
 import { useEffect, useReducer } from 'react'
 
 import {
+  ApprovalRequest,
   CheckApprovalLPResponse,
   ClaimLPFeesRequest,
   ClaimLPFeesResponse,
   CreateLPPositionRequest,
   CreateLPPositionResponse,
+  CreateSwapRequest,
+  CreateSwapResponse,
   DecreaseLPPositionRequest,
   DecreaseLPPositionResponse,
   IncreaseLPPositionRequest,
@@ -16,21 +19,25 @@ import {
   QuoteRequest,
 } from '../../../tradingApi/__generated__'
 
+import { ApprovalResponse, checkApproval } from './handlers/checkApproval'
 import { checkLpApproval } from './handlers/checkLpApproval'
 import { claimLpFees } from './handlers/claimLpFees'
 import { createLpPosition } from './handlers/createLpPosition'
 import { decreaseLpPosition } from './handlers/decreaseLpPosition'
 import { increaseLpPosition } from './handlers/increaseLpPosition'
 import { quote } from './handlers/quote'
+import { swap } from './handlers/swap'
 
 export enum TradingApiReplicaRequests {
   CREATE_LP_POSITION,
   CHECK_LP_APPROVAL,
+  CHECK_APPROVAL,
   LIST_POSITIONS,
   INCREASE_LP_POSITION,
   DECREASE_LP_POSITION,
   CLAIM_LP_FEES,
   QUOTE,
+  SWAP,
 }
 
 enum ActionType {
@@ -45,6 +52,8 @@ type Response =
   | IncreaseLPPositionResponse
   | DecreaseLPPositionResponse
   | ClaimLPFeesResponse
+  | CreateSwapResponse
+  | ApprovalResponse
 
 interface InitAction {
   type: ActionType.INIT
@@ -92,6 +101,11 @@ interface CheckApprovalLPParams {
   params?: CreateLPPositionRequest
 }
 
+interface CheckApprovalParams {
+  request: TradingApiReplicaRequests.CHECK_APPROVAL
+  params?: ApprovalRequest
+}
+
 interface ClaimLpFeesParams {
   request: TradingApiReplicaRequests.CLAIM_LP_FEES
   params?: ClaimLPFeesRequest
@@ -107,6 +121,11 @@ interface QuoteParams {
   params?: QuoteRequest
 }
 
+interface SwapParams {
+  request: TradingApiReplicaRequests.SWAP
+  params?: CreateSwapRequest
+}
+
 type Params = (
   | CreateLpPositionParams
   | CheckApprovalLPParams
@@ -115,6 +134,8 @@ type Params = (
   | DecreaseLpPositionParams
   | ClaimLpFeesParams
   | QuoteParams
+  | SwapParams
+  | CheckApprovalParams
 ) & {
   skip?: boolean
 }
@@ -145,6 +166,15 @@ const reducer = (state: State, action: Action): State => {
   }
 }
 
+function serializeParams(params: any): string {
+  return JSON.stringify(params, (key, value) => {
+    if (typeof value === 'bigint') {
+      return value.toString()
+    }
+    return value
+  })
+}
+
 const useTradingApiReplica = (params: Params) => {
   const [state, dispatch] = useReducer(reducer, { ...initialState, isLoading: params.skip !== true })
   useEffect(() => {
@@ -156,6 +186,9 @@ const useTradingApiReplica = (params: Params) => {
       try {
         let value: Response = {}
         switch (params.request) {
+          case TradingApiReplicaRequests.CHECK_APPROVAL:
+            value = await checkApproval(params.params)
+            break
           case TradingApiReplicaRequests.CHECK_LP_APPROVAL:
             value = await checkLpApproval(params.params)
             break
@@ -174,6 +207,9 @@ const useTradingApiReplica = (params: Params) => {
           case TradingApiReplicaRequests.QUOTE:
             value = await quote(params.params)
             break
+          case TradingApiReplicaRequests.SWAP:
+            value = await swap(params.params)
+            break
         }
         dispatch({
           type: ActionType.RESULT,
@@ -186,7 +222,10 @@ const useTradingApiReplica = (params: Params) => {
         })
       }
     })()
-  }, [params.request, params.skip, JSON.stringify(params.params)])
+  }, [params.request, params.skip, serializeParams(params.params)])
+  if (params.request === TradingApiReplicaRequests.QUOTE) {
+    console.log('state', { params, state })
+  }
   return state
 }
 
