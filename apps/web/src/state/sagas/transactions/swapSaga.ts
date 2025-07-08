@@ -350,6 +350,19 @@ export function useSwapCallback(): SwapCallback {
         startChainId,
         v4Enabled: v4SwapEnabled,
       }
+      if (swapTxContext.approveTxRequest != null) {
+        delete swapTxContext.approveTxRequest.account
+        delete swapTxContext.approveTxRequest.type
+        swapTxContext.approveTxRequest.gasLimit = swapTxContext.approveTxRequest.gas
+        delete swapTxContext.approveTxRequest.gas
+      }
+      if (swapTxContext.txRequest != null) {
+        delete swapTxContext.txRequest.account
+        delete swapTxContext.txRequest.type
+        swapTxContext.txRequest.gasLimit = swapTxContext.txRequest.gas
+        delete swapTxContext.txRequest.gas
+      }
+
       appDispatch(swapSaga.actions.trigger(swapParams))
 
       const blockNumber = getClassicQuoteFromResponse(trade?.quote)?.blockNumber?.toString()
