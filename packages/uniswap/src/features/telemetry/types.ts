@@ -576,6 +576,8 @@ export type UniverseEventProperties = {
   [InterfaceEventName.SwapConfirmedOnClient]: {
     swap_success: boolean
     time: number
+    chainId?: number
+    txHash: string
   }
   [InterfaceEventName.SwapTabClicked]: {
     tab: SwapTab

@@ -144,6 +144,8 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
             sendAnalyticsEvent(InterfaceEventName.SwapConfirmedOnClient, {
               time: Date.now() - tx.addedTime,
               swap_success: receipt.status === 'success',
+              chainId: account.chainId,
+              txHash: tx.hash,
             })
 
             return receipt.status
@@ -193,6 +195,8 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
             sendAnalyticsEvent(InterfaceEventName.SwapConfirmedOnClient, {
               time: Date.now() - tx.addedTime,
               swap_success: finalizedStatus === 'success',
+              chainId: account.chainId,
+              txHash: tx.hash,
             })
 
             return finalizedStatus
