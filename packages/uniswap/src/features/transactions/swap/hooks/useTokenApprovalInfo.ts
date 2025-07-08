@@ -12,10 +12,7 @@ import {
 import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import {
-  getTokenAddressForApi,
-  toTradingApiSupportedChainId,
-} from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { getTokenAddressForApi } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
@@ -62,8 +59,8 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): TokenAppr
   const shadowGasStrategies = useShadowGasStrategies(chainId, 'general')
 
   const approvalRequestArgs: ApprovalRequest | undefined = useMemo(() => {
-    const tokenInChainId = toTradingApiSupportedChainId(chainId)
-    const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
+    const tokenInChainId = chainId
+    const tokenOutChainId = currencyOut?.chainId
 
     if (!address || !amount || !currencyIn || !tokenInAddress || !tokenInChainId) {
       return undefined
@@ -159,7 +156,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): TokenAppr
         }
 
         return {
-          action: ApprovalAction.Permit2Approve,
+          action: ApprovalAction.Approve,
           txRequest: data.approval,
           gasFee: data.gasFee,
           displayGasFee: convertGasFeeToDisplayValue(data.gasFee, activeGasStrategy),
