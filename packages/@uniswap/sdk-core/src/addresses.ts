@@ -87,7 +87,7 @@ const SMARTBCH_ADDRESSES: ChainAddresses = {
   v3MigratorAddress: '0x4ad2888a57fe8dA4c6F17D699E82582CE8956889',
   v3StakerAddress: '0x2bDeedf48FCe6858D70A06f14F5cD27094FBa97e',
   quoterAddress: '0x7eA9329Ab516e6D90b8a5710E9a2c30fbd5BDd72',
-  swapRouter02: '0xd32315FF93e0380b209Da0C1F458F1031D1a71b1',
+  swapRouter02Address: '0xd32315FF93e0380b209Da0C1F458F1031D1a71b1',
 }
 
 export const CHAIN_TO_ADDRESSES_MAP: Record<SupportedChainsType, ChainAddresses> = {
