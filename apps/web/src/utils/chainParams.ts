@@ -1,5 +1,5 @@
 import { ParsedQs } from 'qs'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { getChainInfo, UNIVERSE_CHAIN_INFO } from 'uniswap/src/features/chains/chainInfo'
 import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'

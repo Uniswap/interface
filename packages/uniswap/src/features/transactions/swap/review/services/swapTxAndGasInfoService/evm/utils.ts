@@ -1,5 +1,5 @@
 import type { GasStrategy } from 'uniswap/src/data/tradingApi/types'
-import type { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'
 import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import type { EVMSwapInstructionsService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapInstructionsService'
 import type { TransactionRequestInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
@@ -26,7 +26,7 @@ type GetEVMSwapTransactionRequestInfoFn = (params: {
 export function createGetEVMSwapTransactionRequestInfo(ctx: {
   instructionService: EVMSwapInstructionsService
   gasStrategy: GasStrategy
-  transactionSettings: TransactionSettingsContextState
+  transactionSettings: TransactionSettings
 }): GetEVMSwapTransactionRequestInfoFn {
   const { gasStrategy, transactionSettings, instructionService } = ctx
 

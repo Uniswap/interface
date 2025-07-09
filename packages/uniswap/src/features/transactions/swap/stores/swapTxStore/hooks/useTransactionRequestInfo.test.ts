@@ -5,6 +5,8 @@ import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSma
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import type { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { initialTransactionSettingsState } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/createTransactionSettingsStore'
+import { useAllTransactionSettings } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import type { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import { usePermit2SignatureWithData } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/hooks/usePermit2Signature'
@@ -17,6 +19,12 @@ jest.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery')
 jest.mock('uniswap/src/features/transactions/swap/stores/swapTxStore/hooks/usePermit2Signature')
 jest.mock('uniswap/src/features/gas/hooks')
 jest.mock('uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled')
+jest.mock(
+  'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore',
+  () => ({
+    useAllTransactionSettings: jest.fn(),
+  }),
+)
 jest.mock('uniswap/src/features/gating/hooks', () => {
   return {
     ...jest.requireActual('uniswap/src/features/gating/hooks'),
@@ -34,6 +42,7 @@ const mockUsePermit2SignatureWithData = usePermit2SignatureWithData as jest.Mock
 const mockUseTransactionGasFee = useTransactionGasFee as jest.Mock
 const mockUseV4SwapEnabled = useV4SwapEnabled as jest.Mock
 const mockUseIsSmartContractAddress = useIsSmartContractAddress as jest.Mock
+const mockUseAllTransactionSettings = useAllTransactionSettings as jest.Mock
 
 describe('useTransactionRequestInfo', () => {
   const mockWrapGasFee: GasFeeResult = {
@@ -89,6 +98,10 @@ describe('useTransactionRequestInfo', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockUseIsSmartContractAddress.mockReturnValue({ loading: false, isSmartContractAddress: false })
+    mockUseAllTransactionSettings.mockReturnValue({
+      ...initialTransactionSettingsState,
+      autoSlippageTolerance: undefined,
+    })
   })
 
   it('should include gas fee values from wrapGasFee in the returned wrap transactionRequest', () => {

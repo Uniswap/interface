@@ -261,7 +261,13 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           variant="subheading1"
         />
         <Flex row px="$spacing12">
-          <Button size="medium" testID={TestID.WalletSettings} emphasis="secondary" onPress={onManageWallet}>
+          <Button
+            lineHeightDisabled
+            size="medium"
+            testID={TestID.WalletSettings}
+            emphasis="secondary"
+            onPress={onManageWallet}
+          >
             {t('account.wallet.button.manage')}
           </Button>
         </Flex>
@@ -277,7 +283,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       <TouchableArea mt="$spacing16" testID={TestID.AccountSwitcherAddWallet} onPress={onPressAddWallet}>
         <Flex row alignItems="center" gap="$spacing8" ml="$spacing24">
           <PlusCircle />
-          <Text color="$neutral1" variant="buttonLabel2">
+          <Text numberOfLines={1} width="100%" color="$neutral1" variant="buttonLabel2">
             {t('account.wallet.button.add')}
           </Text>
         </Flex>

@@ -16,6 +16,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { useENS } from 'uniswap/src/features/ens/useENS'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -90,7 +91,13 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     nameOrAddress: normalizedValue,
     autocompleteDomain: !hasSuffixIncluded,
   })
-  const validAddress = getValidAddress({ address: normalizedValue, withChecksum: true, log: false })
+  // TODO(WALL-7065): Handle SVM address validation as well
+  const validAddress = getValidAddress({
+    address: normalizedValue,
+    platform: Platform.EVM,
+    withEVMChecksum: true,
+    log: false,
+  })
   const { isSmartContractAddress, loading: isLoading } = useIsSmartContractAddress(
     (validAddress || resolvedAddress) ?? undefined,
     defaultChainId,

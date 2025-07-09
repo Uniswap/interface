@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { MetaTagInjectorInput } from 'shared-cloud/metatags'
 import i18n from 'uniswap/src/i18n'
 

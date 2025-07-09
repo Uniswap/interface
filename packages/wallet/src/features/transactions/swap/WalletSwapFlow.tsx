@@ -1,5 +1,4 @@
-import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
+import { SwapTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/SwapTransactionSettingsStoreContextProvider'
 import { SwapFlow, type SwapFlowProps } from 'uniswap/src/features/transactions/swap/SwapFlow/SwapFlow'
 import { TradeRoutingPreference } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/TradeRoutingPreference'
 import { Slippage } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
@@ -20,7 +19,7 @@ export function WalletSwapFlow(props: WalletSwapFlowProps): JSX.Element {
   const wrapCallback = useWrapCallback()
 
   return (
-    <TransactionSettingsContextProvider settingKey={TransactionSettingKey.Swap}>
+    <SwapTransactionSettingsStoreContextProvider>
       <SwapFormStoreContextProvider
         prefilledState={props.prefilledState}
         hideSettings={props.hideHeader}
@@ -30,6 +29,6 @@ export function WalletSwapFlow(props: WalletSwapFlowProps): JSX.Element {
           <SwapFlow {...props} settings={SETTINGS} />
         </SwapDependenciesStoreContextProvider>
       </SwapFormStoreContextProvider>
-    </TransactionSettingsContextProvider>
+    </SwapTransactionSettingsStoreContextProvider>
   )
 }

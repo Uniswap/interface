@@ -5,10 +5,11 @@ import { WC_PARAMS } from 'components/Web3Provider/walletConnect'
 import { embeddedWallet } from 'connection/EmbeddedWalletConnector'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
-import { UNIVERSE_CHAINS_SORTED, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { ORDERED_EVM_CHAINS, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { isPlaywrightEnv, isTestEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
+import { getNonEmptyArrayOrThrow } from 'utilities/src/primitives/array'
 import { Chain, createClient } from 'viem'
 import { Config, createConfig, fallback, http } from 'wagmi'
 import { coinbaseWallet, mock, safe, walletConnect } from 'wagmi/connectors'
@@ -64,18 +65,16 @@ function createWagmiConnectors(params: {
     : baseConnectors
 }
 
-const CHAINS = [UNIVERSE_CHAINS_SORTED[0], ...UNIVERSE_CHAINS_SORTED] as const
-
 function createWagmiConfig(params: {
   /** The connector list to use. */
   connectors: any[]
   /** Optional custom `onFetchResponse` handler – defaults to `defaultOnFetchResponse`. */
   onFetchResponse?: (response: Response, chain: Chain, url: string) => void
-}): Config<typeof CHAINS> {
+}): Config<typeof ORDERED_EVM_CHAINS> {
   const { connectors, onFetchResponse = defaultOnFetchResponse } = params
 
   return createConfig({
-    chains: CHAINS,
+    chains: getNonEmptyArrayOrThrow(ORDERED_EVM_CHAINS),
     connectors,
     client({ chain }) {
       return createClient({

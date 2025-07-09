@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import { Provider, TransactionResponse } from '@ethersproject/providers'
 import { providerErrors, rpcErrors, serializeError } from '@metamask/rpc-errors'
-import { createSearchParams } from 'react-router-dom'
+import { createSearchParams } from 'react-router'
 import { changeChain } from 'src/app/features/dapp/changeChain'
 import { DappInfo, dappStore } from 'src/app/features/dapp/store'
 import { getActiveConnectedAccount } from 'src/app/features/dapp/utils'

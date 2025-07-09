@@ -1,7 +1,9 @@
 import { useCallback, useState } from 'react'
-
 import { DEFAULT_CUSTOM_DEADLINE, MAX_CUSTOM_DEADLINE } from 'uniswap/src/constants/transactions'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import {
+  useTransactionSettingsActions,
+  useTransactionSettingsStore,
+} from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 
 export function useDeadlineSettings(): {
   isEditingDeadline: boolean
@@ -12,7 +14,8 @@ export function useDeadlineSettings(): {
   onFocusDeadlineInput: () => void
   onBlurDeadlineInput: () => void
 } {
-  const { customDeadline, updateTransactionSettings } = useTransactionSettingsContext()
+  const { customDeadline } = useTransactionSettingsStore((s) => ({ customDeadline: s.customDeadline }))
+  const { setCustomDeadline } = useTransactionSettingsActions()
 
   const [isEditingDeadline, setIsEditingDeadline] = useState<boolean>(false)
   const [inputDeadline, setInputDeadline] = useState<string>(
@@ -46,7 +49,7 @@ export function useDeadlineSettings(): {
 
       if (isZero) {
         setInputDeadline('0')
-        updateTransactionSettings({ customDeadline: DEFAULT_CUSTOM_DEADLINE })
+        setCustomDeadline(DEFAULT_CUSTOM_DEADLINE)
         return
       }
 
@@ -57,14 +60,14 @@ export function useDeadlineSettings(): {
 
       if (overMaxDeadline) {
         setInputDeadline(MAX_CUSTOM_DEADLINE.toString())
-        updateTransactionSettings({ customDeadline: MAX_CUSTOM_DEADLINE })
+        setCustomDeadline(MAX_CUSTOM_DEADLINE)
         return
       }
 
       setInputDeadline(value)
-      updateTransactionSettings({ customDeadline: parsedValue })
+      setCustomDeadline(parsedValue)
     },
-    [updateTransactionSettings],
+    [setCustomDeadline],
   )
 
   const onFocusDeadlineInput = useCallback((): void => {
@@ -75,10 +78,10 @@ export function useDeadlineSettings(): {
     setIsEditingDeadline(false)
 
     if (isNaN(parsedInputDeadline)) {
-      updateTransactionSettings({ customDeadline: undefined })
+      setCustomDeadline(undefined)
       return
     }
-  }, [parsedInputDeadline, updateTransactionSettings])
+  }, [parsedInputDeadline, setCustomDeadline])
 
   return {
     isEditingDeadline,

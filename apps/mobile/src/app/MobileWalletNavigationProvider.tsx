@@ -1,7 +1,7 @@
 import { PropsWithChildren, useCallback } from 'react'
 import { Share } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { exploreNavigationRef } from 'src/app/navigation/navigationRef'
+import { exploreNavigationRef, navigationRef } from 'src/app/navigation/navigationRef'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
@@ -195,13 +195,22 @@ function useNavigateToTokenDetails(): (currencyId: string) => void {
 
   return useCallback(
     (currencyId: string): void => {
+      const isExploreNavigationActuallyFocused = Boolean(
+        navigationRef.getCurrentRoute()?.name === ModalName.Explore &&
+          exploreNavigationRef.current &&
+          exploreNavigationRef.isFocused(),
+      )
+
       closeKeyboardBeforeCallback(() => {
-        onClose()
         dispatch(closeAllModals())
-        if (exploreNavigationRef.current && exploreNavigationRef.isFocused()) {
+        if (isExploreNavigationActuallyFocused) {
           exploreNavigationRef.navigate(MobileScreens.TokenDetails, { currencyId })
         } else {
-          appNavigation.navigate(MobileScreens.TokenDetails, { currencyId })
+          onClose()
+          appNavigation.reset({
+            index: 1,
+            routes: [{ name: MobileScreens.Home }, { name: MobileScreens.TokenDetails, params: { currencyId } }],
+          })
         }
       })
     },

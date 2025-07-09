@@ -1,5 +1,5 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, Percent } from '@uniswap/sdk-core'
+import type { Currency, Percent } from '@uniswap/sdk-core'
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import CreatingPoolInfo from 'components/CreatingPoolInfo/CreatingPoolInfo'
 import { ErrorCallout } from 'components/ErrorCallout'
@@ -21,14 +21,17 @@ import { SUPPORTED_V2POOL_CHAIN_IDS } from 'hooks/useNetworkSupportsV2'
 import { AddHook } from 'pages/Pool/Positions/create/AddHook'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { AdvancedButton, Container } from 'pages/Pool/Positions/create/shared'
-import { DEFAULT_POSITION_STATE, FeeData } from 'pages/Pool/Positions/create/types'
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import type { FeeData } from 'pages/Pool/Positions/create/types'
+import { DEFAULT_POSITION_STATE } from 'pages/Pool/Positions/create/types'
+import type { Dispatch, SetStateAction } from 'react'
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Button, DropdownButton, DropdownButtonProps, Flex, FlexProps, HeightAnimator, Text, styled } from 'ui/src'
+import type { DropdownButtonProps, FlexProps } from 'ui/src'
+import { Button, DropdownButton, Flex, HeightAnimator, Text, styled } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -38,7 +41,7 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { AllowedV4WethHookAddressesConfigKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -70,9 +73,13 @@ export const CurrencySelector = ({
   const currency = currencyInfo?.currency
 
   return (
-    <DropdownButton emphasis={emphasis} onPress={onPress} elementPositioning="grouped" isExpanded={false}>
-      <Flex row gap="$spacing8" alignItems="center">
-        {currency && (
+    <DropdownButton
+      emphasis={emphasis}
+      onPress={onPress}
+      elementPositioning="grouped"
+      isExpanded={false}
+      icon={
+        currency ? (
           <TokenLogo
             size={iconSizes.icon24}
             chainId={currency.chainId}
@@ -80,11 +87,12 @@ export const CurrencySelector = ({
             symbol={currency.symbol}
             url={currencyInfo.logoUrl}
           />
-        )}
-        <Text variant="buttonLabel2" color={currency ? '$neutral1' : '$surface1'}>
-          {currency ? currency.symbol : t('fiatOnRamp.button.chooseToken')}
-        </Text>
-      </Flex>
+        ) : undefined
+      }
+    >
+      <DropdownButton.Text color={currency ? '$neutral1' : '$surface1'}>
+        {currency ? currency.symbol : t('fiatOnRamp.button.chooseToken')}
+      </DropdownButton.Text>
     </DropdownButton>
   )
 }
@@ -432,16 +440,20 @@ export function SelectTokensStep({
                 </Flex>
               ) : (
                 <Flex row gap="$gap16" $md={{ flexDirection: 'column' }}>
-                  <CurrencySelector
-                    emphasis={token0CurrencyInfo ? undefined : 'primary'}
-                    currencyInfo={token0CurrencyInfo}
-                    onPress={() => setCurrencySearchInputState('tokenA')}
-                  />
-                  <CurrencySelector
-                    emphasis={token1CurrencyInfo ? undefined : 'primary'}
-                    currencyInfo={token1CurrencyInfo}
-                    onPress={() => setCurrencySearchInputState('tokenB')}
-                  />
+                  <Flex row grow>
+                    <CurrencySelector
+                      emphasis={token0CurrencyInfo ? undefined : 'primary'}
+                      currencyInfo={token0CurrencyInfo}
+                      onPress={() => setCurrencySearchInputState('tokenA')}
+                    />
+                  </Flex>
+                  <Flex row grow>
+                    <CurrencySelector
+                      emphasis={token1CurrencyInfo ? undefined : 'primary'}
+                      currencyInfo={token1CurrencyInfo}
+                      onPress={() => setCurrencySearchInputState('tokenB')}
+                    />
+                  </Flex>
                 </Flex>
               )}
               <SelectStepError

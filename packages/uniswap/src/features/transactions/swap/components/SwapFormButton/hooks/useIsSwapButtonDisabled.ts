@@ -1,6 +1,7 @@
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useInterfaceWrap'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import {
   useSwapFormStore,
@@ -19,13 +20,17 @@ const useIsReviewButtonDisabled = (): boolean => {
   )
   const { walletNeedsRestore } = useTransactionModalContext()
 
+  const { isInterfaceWrap, onInterfaceWrap } = useInterfaceWrap()
+  const isWrapDisabled = isInterfaceWrap && !onInterfaceWrap
+
   return (
     !!blockingWarning ||
     isBlockedAccount ||
     isBlockedAccountLoading ||
     walletNeedsRestore ||
     isSubmitting ||
-    isTradeMissing
+    isTradeMissing ||
+    isWrapDisabled
   )
 }
 

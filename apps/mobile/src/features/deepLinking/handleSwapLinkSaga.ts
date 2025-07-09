@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
-import { ALL_CHAIN_IDS, SUPPORTED_TESTNET_CHAIN_IDS } from 'uniswap/src/features/chains/types'
+import { ALL_CHAIN_IDS, SUPPORTED_TESTNET_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
@@ -92,11 +92,11 @@ const parseAndValidateSwapParams = (url: URL) => {
     throw new Error('Invalid outputCurrencyId. Must be of format `<chainId>-<tokenAddress>`')
   }
 
-  if (!getValidAddress({ address: inputAddress, withChecksum: true })) {
+  if (!getValidAddress({ address: inputAddress, chainId: inputChain, withEVMChecksum: true })) {
     throw new Error('Invalid tokenAddress provided within inputCurrencyId')
   }
 
-  if (!getValidAddress({ address: outputAddress, withChecksum: true })) {
+  if (!getValidAddress({ address: outputAddress, chainId: outputChain, withEVMChecksum: true })) {
     throw new Error('Invalid tokenAddress provided within outputCurrencyId')
   }
 

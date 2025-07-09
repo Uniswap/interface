@@ -1,9 +1,4 @@
-import {
-  Nft,
-  OnChainTransaction,
-  SpamCode as RestSpamCode,
-  Token,
-} from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { Nft, OnChainTransaction, Token } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { SpamCode } from 'uniswap/src/data/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import {
@@ -19,6 +14,7 @@ import {
 import {
   deriveCurrencyAmountFromAssetResponse,
   getAddressFromAsset,
+  isRestTokenSpam,
   parseUSDValueFromAssetChange,
 } from 'wallet/src/features/transactions/history/utils'
 
@@ -132,7 +128,7 @@ export function parseRestSendTransaction(transaction: OnChainTransaction): SendT
 
   if (firstTransfer.asset.case === AssetCase.Token) {
     asset = firstTransfer.asset.value
-    isSpam = asset.metadata?.spamCode === RestSpamCode.SPAM
+    isSpam = isRestTokenSpam(asset.metadata?.spamCode)
   }
 
   const assetType = mapTokenTypeToAssetType(asset?.type)

@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -9,7 +10,8 @@ import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 export function useGatingUserPropertyUsernames(): void {
   const activeAccount = useActiveAccount()
-  const validatedAddress = getValidAddress({ address: activeAccount?.address })
+  // TODO(WALL-7065): Update to support Solana
+  const validatedAddress = getValidAddress({ address: activeAccount?.address, platform: Platform.EVM })
   const { data: ens } = useENSName(validatedAddress ?? undefined)
   const { unitag } = useUnitagByAddress(validatedAddress ?? undefined)
 

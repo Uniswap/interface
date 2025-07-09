@@ -9,7 +9,6 @@ import { userSettingsReducer } from 'uniswap/src/features/settings/slice'
 import { delegationReducer } from 'uniswap/src/features/smartWallet/delegation/slice'
 import { timingReducer } from 'uniswap/src/features/timing/slice'
 import { tokensReducer } from 'uniswap/src/features/tokens/slice/slice'
-import { transactionSettingsReducer } from 'uniswap/src/features/transactions/components/settings/slice'
 import { transactionReducer } from 'uniswap/src/features/transactions/slice'
 import { swapSettingsReducer } from 'uniswap/src/features/transactions/swap/state/slice'
 import { visibilityReducer } from 'uniswap/src/features/visibility/slice'
@@ -24,7 +23,6 @@ export const uniswapReducers = {
   timing: timingReducer,
   tokens: tokensReducer,
   transactions: transactionReducer,
-  transactionSettings: transactionSettingsReducer,
   uniswapBehaviorHistory: uniswapBehaviorHistoryReducer,
   userSettings: userSettingsReducer,
   visibility: visibilityReducer,

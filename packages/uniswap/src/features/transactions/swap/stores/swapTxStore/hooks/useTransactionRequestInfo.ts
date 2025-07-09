@@ -5,7 +5,7 @@ import type { NullablePermit } from 'uniswap/src/data/tradingApi/__generated__'
 import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { useAllTransactionSettings } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import { processUniswapXResponse } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/uniswapx/utils'
 import type { TransactionRequestInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
@@ -34,7 +34,7 @@ function useSwapTransactionRequestInfo({
 }): TransactionRequestInfo {
   const trace = useTrace()
   const gasStrategy = useActiveGasStrategy(derivedSwapInfo.chainId, 'general')
-  const transactionSettings = useTransactionSettingsContext()
+  const transactionSettings = useAllTransactionSettings()
 
   const permitData = derivedSwapInfo.trade.trade?.quote.permitData
   // On interface, we do not fetch signature until after swap is clicked, as it requires user interaction.

@@ -1,7 +1,7 @@
 import { usePoolData } from 'appGraphql/data/pools/usePoolData'
 import PoolDetails from 'pages/PoolDetails'
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import store from 'state'
 import { mocked } from 'test-utils/mocked'
 import { validParams, validPoolDataResponse } from 'test-utils/pools/fixtures'
@@ -11,8 +11,8 @@ import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 // eslint-disable-next-line import/no-unused-modules, jest/no-export
 export const mockNavigate = vi.fn()
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom')
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router')
   return {
     ...actual,
     default: actual,

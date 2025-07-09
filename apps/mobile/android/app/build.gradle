@@ -6,6 +6,7 @@ plugins {
   id 'com.google.gms.google-services'
   id 'maven-publish'
   id 'kotlin-android'
+  id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 def nodeModulesPath = "../../../../node_modules"

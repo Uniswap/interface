@@ -9,7 +9,7 @@ import {
   handlePermitTransactionStep,
   handleSignatureStep,
 } from 'state/sagas/transactions/utils'
-import { BaseTransactionType, MigrateV3LiquidityToV4TransactionInfo, TransactionType } from 'state/transactions/types'
+import { BaseTransactionType } from 'state/transactions/types'
 import invariant from 'tiny-invariant'
 import { call } from 'typed-redux-saga'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
@@ -39,6 +39,7 @@ import {
   CreatePoolTransactionInfo,
   LiquidityDecreaseTransactionInfo,
   LiquidityIncreaseTransactionInfo,
+  MigrateV3LiquidityToV4TransactionInfo,
   TransactionType as UniswapTransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -267,7 +268,7 @@ function getLiquidityTransactionInfo(
       type = UniswapTransactionType.LiquidityDecrease
       break
     case LiquidityTransactionType.Migrate:
-      type = TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4
+      type = UniswapTransactionType.MigrateLiquidityV3ToV4
       break
     case LiquidityTransactionType.Collect:
       type = UniswapTransactionType.CollectFees

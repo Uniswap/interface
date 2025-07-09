@@ -14,7 +14,7 @@ check "yarn" $localYarnVersion "3.2.3"
 # Check Xcode version
 localXcodeOutput="$(/usr/bin/xcodebuild -version)"
 localXcodeVersion=$(echo "$localXcodeOutput" | awk '/Xcode/ {print $2}')
-check "Xcode" $localXcodeVersion "16.3"
+check "Xcode" $localXcodeVersion "16.4"
 
 # Check node version
 localNodeVersion="$(node --version)"

@@ -65,8 +65,8 @@ function WarningModalIcon({
     <Flex
       centered
       alignItems="center"
-      height="$spacing48"
-      width="$spacing48"
+      minHeight="$spacing48"
+      minWidth="$spacing48"
       borderRadius="$rounded12"
       mb="$spacing8"
       p={backgroundIconColor === false ? '$none' : '$spacing12'}

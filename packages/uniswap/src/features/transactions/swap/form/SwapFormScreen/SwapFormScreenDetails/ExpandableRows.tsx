@@ -1,7 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { Accordion, Flex, Text } from 'ui/src'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import {
+  useTransactionSettingsAutoSlippageToleranceStore,
+  useTransactionSettingsStore,
+} from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/components/AcrossRoutingInfo'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/MaxSlippageRow'
 import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/PriceImpactRow'
@@ -36,7 +39,9 @@ export function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Elemen
   const { priceImpactWarning } = useParsedSwapWarnings()
   const showPriceImpactWarning = Boolean(priceImpactWarning)
 
-  const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
+  const customSlippageTolerance = useTransactionSettingsStore((s) => s.customSlippageTolerance)
+  const autoSlippageTolerance = useTransactionSettingsAutoSlippageToleranceStore((s) => s.autoSlippageTolerance)
+
   const { chainId, trade } = derivedSwapInfo
 
   const swapFeeUsd = getSwapFeeUsdFromDerivedSwapInfo(derivedSwapInfo)

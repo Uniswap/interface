@@ -42,7 +42,10 @@ const FilterRow = styled(Flex, {
 })
 
 interface FilterProps<T extends string> {
-  allFilters: T[]
+  allFilters: {
+    value: T
+    label: string
+  }[]
   activeFilter: T[]
   setFilters: (filter: T[]) => void
   isOpen: boolean
@@ -85,11 +88,11 @@ export function Filter<T extends string>({
             left={anchorRef.current.getBoundingClientRect().x}
           >
             {allFilters.map((filter) => (
-              <FilterRow key={filter} onPress={() => handleFilterOptionClick(filter)} cursor="pointer">
+              <FilterRow key={filter.value} onPress={() => handleFilterOptionClick(filter.value)} cursor="pointer">
                 <Text $short={{ variant: 'buttonLabel4' }} variant="subheading2">
-                  {filter}
+                  {filter.label}
                 </Text>
-                <Checkbox checked={activeFilter.includes(filter)} variant="branded" />
+                <Checkbox checked={activeFilter.includes(filter.value)} variant="branded" />
               </FilterRow>
             ))}
           </FilterDropdown>

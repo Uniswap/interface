@@ -1,18 +1,14 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeSyntheticEvent, Share } from 'react-native'
+import { NativeSyntheticEvent } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { TripleDot } from 'src/components/icons/TripleDot'
 import { NFTCollectionData } from 'src/features/nfts/collection/types'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { ColorTokens, Flex, TouchableArea } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { openUri } from 'uniswap/src/utils/linking'
-import { logger } from 'utilities/src/logger/logger'
-import { getNftCollectionUrl, getTwitterLink } from 'wallet/src/utils/linking'
+import { getTwitterLink } from 'wallet/src/utils/linking'
 
 type MenuOption = {
   title: string
@@ -24,12 +20,10 @@ const ICON_PADDING = spacing.spacing8
 
 export function NFTCollectionContextMenu({
   data,
-  collectionAddress,
   showButtonOutline = false,
   iconColor = '$neutral2',
 }: {
   data: NFTCollectionData
-  collectionAddress?: Maybe<string>
   showButtonOutline?: boolean
   iconColor?: ColorTokens
 }): Nullable<JSX.Element> {
@@ -37,7 +31,6 @@ export function NFTCollectionContextMenu({
 
   const twitterURL = data?.twitterName ? getTwitterLink(data.twitterName) : undefined
   const homepageUrl = data?.homepageUrl
-  const shareURL = getNftCollectionUrl(collectionAddress)
 
   const onSocialPress = async (): Promise<void> => {
     if (!twitterURL) {
@@ -53,23 +46,6 @@ export function NFTCollectionContextMenu({
     await openUri({ uri: homepageUrl })
   }
 
-  const onSharePress = useCallback(async () => {
-    if (!shareURL) {
-      return
-    }
-    try {
-      await Share.share({
-        message: shareURL,
-      })
-      sendAnalyticsEvent(WalletEventName.ShareButtonClicked, {
-        entity: ShareableEntity.NftCollection,
-        url: shareURL,
-      })
-    } catch (error) {
-      logger.error(error, { tags: { file: 'NFTCollectionContextMenu', function: 'onSharePress' } })
-    }
-  }, [shareURL])
-
   const menuActions: MenuOption[] = [
     twitterURL
       ? {
@@ -81,12 +57,6 @@ export function NFTCollectionContextMenu({
       ? {
           title: t('tokens.nfts.link.collection'),
           action: openExplorerLink,
-        }
-      : undefined,
-    shareURL
-      ? {
-          title: t('common.button.share'),
-          action: onSharePress,
         }
       : undefined,
   ].filter((option): option is MenuOption => !!option)

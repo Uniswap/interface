@@ -1,5 +1,8 @@
 import { memo, useEffect, useState } from 'react'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import {
+  useTransactionSettingsAutoSlippageToleranceStore,
+  useTransactionSettingsStore,
+} from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { SwapDetails } from 'uniswap/src/features/transactions/swap/review/SwapDetails/SwapDetails'
 import { useSwapReviewCallbacksStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/useSwapReviewCallbacksStore'
 import { useSwapReviewTransactionStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewTransactionStore/useSwapReviewTransactionStore'
@@ -38,7 +41,8 @@ export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.
     onAcceptTrade: s.onAcceptTrade,
     onShowWarning: s.onShowWarning,
   }))
-  const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
+  const customSlippageTolerance = useTransactionSettingsStore((s) => s.customSlippageTolerance)
+  const autoSlippageTolerance = useTransactionSettingsAutoSlippageToleranceStore((s) => s.autoSlippageTolerance)
 
   const [stableIncludesDelegation, setStableIncludesDelegation] = useState<boolean | undefined>(
     swapTxContext.includesDelegation,

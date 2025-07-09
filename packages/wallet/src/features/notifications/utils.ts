@@ -3,6 +3,7 @@ import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/u
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
 import { WalletConnectNotification } from 'uniswap/src/features/notifications/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
@@ -316,5 +317,7 @@ function formTransferTxTitle({
 }
 
 const getShortenedAddressOrEns = (addressOrENS: string): string => {
-  return getValidAddress({ address: addressOrENS }) ? shortenAddress(addressOrENS) : addressOrENS
+  // TODO(WALL-7065): Update to support Solana
+  const addressIsValid = Boolean(getValidAddress({ address: addressOrENS, platform: Platform.EVM }))
+  return addressIsValid ? shortenAddress(addressOrENS) : addressOrENS
 }

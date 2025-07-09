@@ -200,8 +200,8 @@ function AppOuter(): JSX.Element | null {
           loading_time: report.timeToBootJsMillis,
         })
         jsBundleLoadedRef.current = true
-      }
-      if (report.interactive) {
+        // Note that we are not checking report.interactive here because it's not consistently reported.
+        // Additionally, we are not tracking interactive the same way @shopify/react-native-performance does.
         await DdRum.addTiming(DDRumTiming.ScreenInteractive)
       }
     }

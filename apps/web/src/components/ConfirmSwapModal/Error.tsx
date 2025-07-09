@@ -35,7 +35,7 @@ function getErrorContent({ errorType, trade }: { errorType: PendingModalError; t
     case PendingModalError.TOKEN_APPROVAL_ERROR:
       return {
         title: <Trans i18nKey="error.tokenApproval" />,
-        message: <Trans i18nKey="error.access.expiry" />,
+        message: <Trans i18nKey="error.tokenApproval.message" />,
         supportArticleURL: uniswapUrls.helpArticleUrls.approvalsExplainer,
       }
     case PendingModalError.PERMIT_ERROR:

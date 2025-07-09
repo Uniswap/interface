@@ -8,7 +8,11 @@ import { DelegationCheckResult } from 'wallet/src/features/smartWallet/delegatio
  * @param chainId - The chain ID to check delegation on
  * @returns - Object containing delegation status and addresses
  */
-export async function getAccountDelegationDetails(address: Address, chainId: number): Promise<DelegationCheckResult> {
+export async function getAccountDelegationDetails(address: Address, chainId?: number): Promise<DelegationCheckResult> {
+  if (!chainId) {
+    return { needsDelegation: false }
+  }
+
   const delegationDetails = await checkWalletDelegation({
     walletAddresses: [address],
     chainIds: [chainId],

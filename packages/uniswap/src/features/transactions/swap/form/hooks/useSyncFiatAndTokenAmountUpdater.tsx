@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
+import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
@@ -49,7 +50,7 @@ export function useSyncFiatAndTokenAmountUpdater({ skip = false }: { skip?: bool
       const stablecoinAmount = getCurrencyAmount({
         value: usdAmount,
         valueType: ValueType.Exact,
-        currency: STABLECOIN_AMOUNT_OUT[chainId].currency,
+        currency: getPrimaryStablecoin(chainId),
       })
       const tokenAmount = stablecoinAmount ? usdPriceOfCurrency.invert().quote(stablecoinAmount) : undefined
       updateSwapForm({ exactAmountToken: tokenAmount?.toExact() })

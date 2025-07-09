@@ -9,7 +9,7 @@ import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import type { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { useAllTransactionSettings } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import { useTokenApprovalInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
@@ -82,7 +82,7 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
   const swapConfig = useSwapConfig()
   const presignPermit = usePresignPermit()
   const trace = useTrace()
-  const transactionSettings = useTransactionSettingsContext()
+  const transactionSettings = useAllTransactionSettings()
   const instructionService = useMemo(() => {
     return createEVMSwapInstructionsService({
       ...swapConfig,

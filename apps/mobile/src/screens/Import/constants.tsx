@@ -7,7 +7,14 @@ import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
 
-export interface ImportMethodOption<T extends OnboardingScreens = OnboardingScreens> {
+type ImportMethodScreens =
+  | OnboardingScreens.SeedPhraseInput
+  | OnboardingScreens.RestoreCloudBackupLoading
+  | OnboardingScreens.RestoreCloudBackup
+  | OnboardingScreens.PasskeyImport
+  | OnboardingScreens.WatchWallet
+
+export interface ImportMethodOption<T extends ImportMethodScreens = ImportMethodScreens> {
   title: (t: AppTFunction) => string
   blurb: (t: AppTFunction) => string
   icon: React.ReactNode

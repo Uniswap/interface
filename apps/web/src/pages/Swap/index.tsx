@@ -13,7 +13,7 @@ import { useWebSwapSettings } from 'pages/Swap/settings/useWebSwapSettings'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { useSwapCallback } from 'state/sagas/transactions/swapSaga'
 import { useWrapCallback } from 'state/sagas/transactions/wrapSaga'
@@ -38,8 +38,7 @@ import type {
   PasskeyAuthStatus,
   SwapRedirectFn,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
+import { SwapTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/SwapTransactionSettingsStoreContextProvider'
 import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow/SwapFlow'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
@@ -153,7 +152,7 @@ export function Swap({
 
   return (
     <MultichainContextProvider initialChainId={chainId}>
-      <TransactionSettingsContextProvider settingKey={TransactionSettingKey.Swap}>
+      <SwapTransactionSettingsStoreContextProvider>
         <SwapAndLimitContextProvider
           initialInputCurrency={initialInputCurrency}
           initialOutputCurrency={initialOutputCurrency}
@@ -179,7 +178,7 @@ export function Swap({
             </SwapFormStoreContextProvider>
           </PrefetchBalancesWrapper>
         </SwapAndLimitContextProvider>
-      </TransactionSettingsContextProvider>
+      </SwapTransactionSettingsStoreContextProvider>
     </MultichainContextProvider>
   )
 }

@@ -254,6 +254,7 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
               </h3>
               <a
                 class="c9"
+                data-discover="true"
                 href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
               >
                 USDC
@@ -293,6 +294,7 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
               </h3>
               <a
                 class="c9"
+                data-discover="true"
                 href="/explore/tokens/ethereum/NATIVE"
               >
                 ETH
@@ -662,6 +664,7 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
               </h3>
               <a
                 class="c9"
+                data-discover="true"
                 href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
               >
                 USDC
@@ -682,6 +685,7 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
               </h3>
               <a
                 class="c9"
+                data-discover="true"
                 href="/explore/tokens/ethereum/NATIVE"
               >
                 ETH

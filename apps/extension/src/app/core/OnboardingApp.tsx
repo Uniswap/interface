@@ -3,7 +3,7 @@ import 'src/app/Global.css'
 import 'symbol-observable' // Needed by `reduxed-chrome-storage` as polyfill, order matters
 
 import { useEffect } from 'react'
-import { RouteObject, RouterProvider, createHashRouter } from 'react-router-dom'
+import { RouteObject, RouterProvider, createHashRouter } from 'react-router'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
@@ -35,7 +35,6 @@ import { OTPInput } from 'src/app/features/onboarding/scan/OTPInput'
 import { ScanToOnboard } from 'src/app/features/onboarding/scan/ScanToOnboard'
 import { ScantasticContextProvider } from 'src/app/features/onboarding/scan/ScantasticContextProvider'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
-import { ROUTER_FUTURE_FLAGS, ROUTER_PROVIDER_FUTURE_FLAGS } from 'src/app/navigation/routerConfig'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
@@ -140,19 +139,14 @@ const allRoutes = [
   },
 ]
 
-const router = createHashRouter(
-  [
-    {
-      path: `/${TopLevelRoutes.Onboarding}`,
-      element: <OnboardingWrapper />,
-      errorElement: <ErrorElement />,
-      children: !supportsSidePanel ? [unsupportedRoute] : allRoutes,
-    },
-  ],
+const router = createHashRouter([
   {
-    future: ROUTER_FUTURE_FLAGS,
+    path: `/${TopLevelRoutes.Onboarding}`,
+    element: <OnboardingWrapper />,
+    errorElement: <ErrorElement />,
+    children: !supportsSidePanel ? [unsupportedRoute] : allRoutes,
   },
-)
+])
 
 function ScantasticFlow({ isResetting = false }: { isResetting?: boolean }): JSX.Element {
   return (
@@ -199,7 +193,7 @@ export default function OnboardingApp(): JSX.Element {
     <PersistGate persistor={getReduxPersistor()}>
       <BaseAppContainer appName={DatadogAppNameTag.Onboarding}>
         <PrimaryAppInstanceDebuggerLazy />
-        <RouterProvider router={router} future={ROUTER_PROVIDER_FUTURE_FLAGS} />
+        <RouterProvider router={router} />
       </BaseAppContainer>
     </PersistGate>
   )

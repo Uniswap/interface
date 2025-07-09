@@ -1,10 +1,13 @@
 /* eslint-disable max-lines */
 import { BigNumber } from '@ethersproject/bignumber'
 import { MixedRouteSDK } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import type { Currency, TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
-import { FeeAmount, Pool as V3Pool, Route as V3Route } from '@uniswap/v3-sdk'
+import type { FeeAmount } from '@uniswap/v3-sdk'
+import { Pool as V3Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Route as V4Route } from '@uniswap/v4-sdk'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
   AutoSlippage,
@@ -26,31 +29,26 @@ import {
   V4PoolInRoute,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
-import { isL2ChainId } from 'uniswap/src/features/chains/utils'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isL2ChainId, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getDynamicConfigValue, useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { getDynamicConfigValue, useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   BridgeTrade,
   ClassicTrade,
   PriorityOrderTrade,
-  Trade,
   UniswapXV2Trade,
   UniswapXV3Trade,
   UnwrapTrade,
   WrapTrade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
-import {
-  DEFAULT_PROTOCOL_OPTIONS,
-  FrontendSupportedProtocol,
-  useProtocolsForChain,
-} from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { CurrencyField } from 'uniswap/src/types/currency'
+import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import { DEFAULT_PROTOCOL_OPTIONS, useProtocolsForChain } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import type { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { currencyId } from 'uniswap/src/utils/currencyId'
+import { currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { isInterface } from 'utilities/src/platform'
 
@@ -177,9 +175,9 @@ function computeRoutes({
     throw new Error('Expected all token properties to be present')
   }
 
-  const parsedCurrencyIn = tokenInIsNative ? NativeCurrency.onChain(tokenIn.chainId) : parseTokenApi(tokenIn)
+  const parsedCurrencyIn = tokenInIsNative ? nativeOnChain(tokenIn.chainId) : parseTokenApi(tokenIn)
 
-  const parsedCurrencyOut = tokenOutIsNative ? NativeCurrency.onChain(tokenOut.chainId) : parseTokenApi(tokenOut)
+  const parsedCurrencyOut = tokenOutIsNative ? nativeOnChain(tokenOut.chainId) : parseTokenApi(tokenOut)
 
   try {
     return quote.route.map((route) => {
@@ -224,8 +222,8 @@ function computeRoutes({
     logger.error(e, {
       tags: { file: 'tradingApi.ts', function: 'computeRoutes' },
       extra: {
-        input: parsedCurrencyIn.address,
-        output: parsedCurrencyOut.address,
+        input: currencyAddress(parsedCurrencyIn),
+        output: currencyAddress(parsedCurrencyOut),
         inputChainId: parsedCurrencyIn.chainId,
         outputChainId: parsedCurrencyOut.chainId,
       },
@@ -274,8 +272,8 @@ function parseV4PoolApi({
   const outputIsNative = tokenOut.address === NATIVE_ADDRESS_FOR_TRADING_API
 
   // Unlike lower protocol versions, v4 routes can involve unwrapped native tokens.
-  const currencyIn = inputIsNative ? NativeCurrency.onChain(tokenIn.chainId) : parseTokenApi(tokenIn)
-  const currencyOut = outputIsNative ? NativeCurrency.onChain(tokenOut.chainId) : parseTokenApi(tokenOut)
+  const currencyIn = inputIsNative ? nativeOnChain(tokenIn.chainId) : parseTokenApi(tokenIn)
+  const currencyOut = outputIsNative ? nativeOnChain(tokenOut.chainId) : parseTokenApi(tokenOut)
 
   return new V4Pool(
     currencyIn,
@@ -475,12 +473,10 @@ export function useQuoteRoutingParams({
   isV4HookPoolsEnabled = true,
 }: UseQuoteRoutingParamsArgs): QuoteRoutingParamsResult {
   const protocols = useProtocolsForChain(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, tokenInChainId)
-  const v4HooksToggleFFEnabled = useFeatureFlag(FeatureFlags.SwapSettingsV4HooksToggle)
 
   const getQuoteRoutingParams = createGetQuoteRoutingParams({
     getProtocols: () => protocols,
     getIsV4HookPoolsEnabled: () => isV4HookPoolsEnabled,
-    getIsV4HooksToggleFFEnabled: () => v4HooksToggleFFEnabled,
   })
 
   return getQuoteRoutingParams({ isUSDQuote, tokenInChainId, tokenOutChainId })
@@ -493,7 +489,6 @@ export type GetQuoteRoutingParams = (
 export function createGetQuoteRoutingParams(ctx: {
   getProtocols: () => ReturnType<typeof useProtocolsForChain>
   getIsV4HookPoolsEnabled: () => boolean
-  getIsV4HooksToggleFFEnabled: () => boolean
 }): GetQuoteRoutingParams {
   return (input) => {
     const { isUSDQuote, tokenInChainId, tokenOutChainId } = input
@@ -510,30 +505,25 @@ export function createGetQuoteRoutingParams(ctx: {
       return { routingPreference: RoutingPreference.BEST_PRICE }
     }
 
-    const v4HooksToggleFFEnabled = ctx.getIsV4HooksToggleFFEnabled()
     const protocols = ctx.getProtocols()
 
-    if (!v4HooksToggleFFEnabled) {
-      return { protocols }
-    } else {
-      let finalProtocols = [...protocols]
-      let hooksOptions: HooksOptions
+    let finalProtocols = [...protocols]
+    let hooksOptions: HooksOptions
 
-      const isV4HookPoolsEnabled = ctx.getIsV4HookPoolsEnabled()
+    const isV4HookPoolsEnabled = ctx.getIsV4HookPoolsEnabled()
 
-      if (isV4HookPoolsEnabled) {
-        if (!protocols.includes(ProtocolItems.V4)) {
-          finalProtocols = [...protocols, ProtocolItems.V4] // we need to re-add v4 to protocols if v4 hooks is toggled on
-          hooksOptions = HooksOptions.V4_HOOKS_ONLY
-        } else {
-          hooksOptions = HooksOptions.V4_HOOKS_INCLUSIVE
-        }
+    if (isV4HookPoolsEnabled) {
+      if (!protocols.includes(ProtocolItems.V4)) {
+        finalProtocols = [...protocols, ProtocolItems.V4] // we need to re-add v4 to protocols if v4 hooks is toggled on
+        hooksOptions = HooksOptions.V4_HOOKS_ONLY
       } else {
-        hooksOptions = HooksOptions.V4_NO_HOOKS
+        hooksOptions = HooksOptions.V4_HOOKS_INCLUSIVE
       }
-
-      return { protocols: finalProtocols, hooksOptions }
+    } else {
+      hooksOptions = HooksOptions.V4_NO_HOOKS
     }
+
+    return { protocols: finalProtocols, hooksOptions }
   }
 }
 

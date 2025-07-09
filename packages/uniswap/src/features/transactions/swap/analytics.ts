@@ -1,23 +1,25 @@
 import { Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import type { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { useEffect } from 'react'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { Address, Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import type { Address } from 'uniswap/src/data/tradingApi/__generated__'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
-import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { SwapRouting, SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import type { SwapRouting, SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { getTokenProtectionWarning } from 'uniswap/src/features/tokens/safetyUtils'
-import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
-import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { ClassicTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'
+import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import type { ClassicTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { getSwapFeeUsd } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
@@ -28,7 +30,8 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
-import { ITraceContext, useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 type ProtocolVersion = 'V2' | 'V3' | 'V4' | 'unknown'
 
@@ -282,7 +285,7 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
   derivedSwapInfo,
   trace,
 }: {
-  transactionSettings: TransactionSettingsContextState
+  transactionSettings: TransactionSettings
   derivedSwapInfo: DerivedSwapInfo
   trace: ITraceContext
 }): SwapTradeBaseProperties {

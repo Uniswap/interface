@@ -1,4 +1,4 @@
-import { BaseTransactionType, TransactionType } from 'state/transactions/types'
+import type { BaseTransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import {
   TransactionStatus,
@@ -12,11 +12,11 @@ export const DEFAULT_NFT_QUERY_AMOUNT = 26
 
 type TransactionStatusWeb = TransactionStatus.Success | TransactionStatus.Failed | TransactionStatus.Pending
 
-const TransactionTitleTable: {
+const getTransactionTitleTable = (): {
   [key in BaseTransactionType]: {
     [state in TransactionStatusWeb]: string
   }
-} = {
+} => ({
   [UniswapTransactionType.Swap]: {
     [TransactionStatus.Pending]: i18n.t('common.swapping'),
     [TransactionStatus.Success]: i18n.t('common.swapped'),
@@ -32,7 +32,7 @@ const TransactionTitleTable: {
     [TransactionStatus.Success]: i18n.t('common.collected.fees'),
     [TransactionStatus.Failed]: i18n.t('common.collect.fees.failed'),
   },
-  [TransactionType.LP_INCENTIVES_CLAIM_REWARDS]: {
+  [UniswapTransactionType.LPIncentivesClaimRewards]: {
     [TransactionStatus.Pending]: i18n.t('pool.incentives.collectingRewards'),
     [TransactionStatus.Success]: i18n.t('pool.incentives.collectedRewards'),
     [TransactionStatus.Failed]: i18n.t('pool.incentives.collectFailedNoRetry'),
@@ -47,7 +47,7 @@ const TransactionTitleTable: {
     [TransactionStatus.Success]: i18n.t('common.claimed'),
     [TransactionStatus.Failed]: i18n.t('common.claim.failed'),
   },
-  [TransactionType.SEND]: {
+  [UniswapTransactionType.Send]: {
     [TransactionStatus.Pending]: i18n.t('common.sending'),
     [TransactionStatus.Success]: i18n.t('common.sent'),
     [TransactionStatus.Failed]: i18n.t('common.send.failed'),
@@ -77,42 +77,44 @@ const TransactionTitleTable: {
     [TransactionStatus.Success]: i18n.t('pool.createdPosition'),
     [TransactionStatus.Failed]: i18n.t('pool.createdPosition.failed'),
   },
-  [TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4]: {
+  [UniswapTransactionType.MigrateLiquidityV3ToV4]: {
     [TransactionStatus.Pending]: i18n.t('common.migrating.liquidity'),
     [TransactionStatus.Success]: i18n.t('common.migrated.liquidity'),
     [TransactionStatus.Failed]: i18n.t('common.migrate.liquidity.failed'),
   },
-  [TransactionType.BRIDGE]: {
+  [UniswapTransactionType.Bridge]: {
     [TransactionStatus.Pending]: i18n.t('common.swapping'),
     [TransactionStatus.Success]: i18n.t('common.swapped'),
     [TransactionStatus.Failed]: i18n.t('common.swap.failed'),
   },
-  [TransactionType.PERMIT]: {
+  [UniswapTransactionType.Permit2Approve]: {
     [TransactionStatus.Pending]: i18n.t('common.approving'),
     [TransactionStatus.Success]: i18n.t('common.permit.approved'),
     [TransactionStatus.Failed]: i18n.t('common.permit.failed'),
   },
-}
+})
 
-export const CancelledTransactionTitleTable: { [key in BaseTransactionType]: string } = {
+export const getCancelledTransactionTitleTable = (): { [key in BaseTransactionType]: string } => ({
   [UniswapTransactionType.Swap]: i18n.t('common.swap.cancelled'),
   [UniswapTransactionType.Wrap]: i18n.t('common.wrap.cancelled'),
   [UniswapTransactionType.CollectFees]: i18n.t('common.collect.fees.cancelled'),
   [UniswapTransactionType.Approve]: i18n.t('common.approval.cancelled'),
   [UniswapTransactionType.ClaimUni]: i18n.t('common.claim.cancelled'),
-  [TransactionType.LP_INCENTIVES_CLAIM_REWARDS]: i18n.t('pool.incentives.collectRewardsCancelled'),
-  [TransactionType.SEND]: i18n.t('common.send.cancelled'),
+  [UniswapTransactionType.LPIncentivesClaimRewards]: i18n.t('pool.incentives.collectRewardsCancelled'),
+  [UniswapTransactionType.Send]: i18n.t('common.send.cancelled'),
   [UniswapTransactionType.MigrateLiquidityV2ToV3]: i18n.t('common.migrate.liquidity.cancelled'),
   [UniswapTransactionType.LiquidityIncrease]: i18n.t('common.add.liquidity.cancelled'),
   [UniswapTransactionType.LiquidityDecrease]: i18n.t('common.remove.liquidity.cancelled'),
   [UniswapTransactionType.CreatePool]: i18n.t('pool.createdPosition.cancelled'),
   [UniswapTransactionType.CreatePair]: i18n.t('pool.createdPosition.cancelled'),
-  [TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4]: i18n.t('common.migrate.liquidity.cancelled'),
-  [TransactionType.BRIDGE]: i18n.t('common.swap.cancelled'),
-  [TransactionType.PERMIT]: i18n.t('common.permit.cancelled'),
-}
+  [UniswapTransactionType.MigrateLiquidityV3ToV4]: i18n.t('common.migrate.liquidity.cancelled'),
+  [UniswapTransactionType.Bridge]: i18n.t('common.swap.cancelled'),
+  [UniswapTransactionType.Permit2Approve]: i18n.t('common.permit.cancelled'),
+})
 
-const AlternateTransactionTitleTable: { [key in BaseTransactionType]?: { [state in TransactionStatusWeb]: string } } = {
+const getAlternateTransactionTitleTable = (): {
+  [key in BaseTransactionType]?: { [state in TransactionStatusWeb]: string }
+} => ({
   [UniswapTransactionType.Wrap]: {
     [TransactionStatus.Pending]: i18n.t('common.unwrapping'),
     [TransactionStatus.Success]: i18n.t('common.unwrapped'),
@@ -123,7 +125,7 @@ const AlternateTransactionTitleTable: { [key in BaseTransactionType]?: { [state 
     [TransactionStatus.Success]: i18n.t('common.revoked.approval'),
     [TransactionStatus.Failed]: i18n.t('common.revoke.approval.failed'),
   },
-}
+})
 
 export function getActivityTitle({
   type,
@@ -150,11 +152,14 @@ export function getActivityTitle({
   }
 
   if (alternate) {
+    const AlternateTransactionTitleTable = getAlternateTransactionTitleTable()
     const alternateTitle = AlternateTransactionTitleTable[type]
     if (alternateTitle !== undefined) {
       return alternateTitle[status]
     }
   }
+
+  const TransactionTitleTable = getTransactionTitleTable()
   return TransactionTitleTable[type][status]
 }
 
@@ -164,45 +169,49 @@ interface OrderTextTableEntry {
   getStatusMessage?: () => string
 }
 
-const SwapTitleTable = TransactionTitleTable[UniswapTransactionType.Swap]
-export const OrderTextTable: {
+export const getOrderTextTable = (): {
   [status in UniswapXOrderStatus]: OrderTextTableEntry
-} = {
-  [UniswapXOrderStatus.OPEN]: {
-    getTitle: () => SwapTitleTable[TransactionStatus.Pending],
-    status: TransactionStatus.Pending,
-  },
-  [UniswapXOrderStatus.FILLED]: {
-    getTitle: () => SwapTitleTable[TransactionStatus.Success],
-    status: TransactionStatus.Success,
-  },
-  [UniswapXOrderStatus.EXPIRED]: {
-    getTitle: () => i18n.t('common.swap.expired'),
-    getStatusMessage: () => i18n.t('common.your.swap.could.not.be.fulfilled'),
-    status: TransactionStatus.Failed,
-  },
-  [UniswapXOrderStatus.ERROR]: {
-    getTitle: () => SwapTitleTable[TransactionStatus.Failed],
-    status: TransactionStatus.Failed,
-  },
-  [UniswapXOrderStatus.INSUFFICIENT_FUNDS]: {
-    getTitle: () => i18n.t('common.insufficient.funds'),
-    getStatusMessage: () => i18n.t('common.your.account.had.insufficient.funds'),
-    status: TransactionStatus.Failed,
-  },
-  [UniswapXOrderStatus.PENDING_CANCELLATION]: {
-    getTitle: () => i18n.t('common.pending.cancellation'),
-    status: TransactionStatus.Pending,
-  },
-  [UniswapXOrderStatus.CANCELLED]: {
-    getTitle: () => i18n.t('common.swap.cancelled'),
-    status: TransactionStatus.Failed,
-  },
+} => {
+  const TransactionTitleTable = getTransactionTitleTable()
+  const SwapTitleTable = TransactionTitleTable[UniswapTransactionType.Swap]
+
+  return {
+    [UniswapXOrderStatus.OPEN]: {
+      getTitle: () => SwapTitleTable[TransactionStatus.Pending],
+      status: TransactionStatus.Pending,
+    },
+    [UniswapXOrderStatus.FILLED]: {
+      getTitle: () => SwapTitleTable[TransactionStatus.Success],
+      status: TransactionStatus.Success,
+    },
+    [UniswapXOrderStatus.EXPIRED]: {
+      getTitle: () => i18n.t('common.swap.expired'),
+      getStatusMessage: () => i18n.t('common.your.swap.could.not.be.fulfilled'),
+      status: TransactionStatus.Failed,
+    },
+    [UniswapXOrderStatus.ERROR]: {
+      getTitle: () => SwapTitleTable[TransactionStatus.Failed],
+      status: TransactionStatus.Failed,
+    },
+    [UniswapXOrderStatus.INSUFFICIENT_FUNDS]: {
+      getTitle: () => i18n.t('common.insufficient.funds'),
+      getStatusMessage: () => i18n.t('common.your.account.had.insufficient.funds'),
+      status: TransactionStatus.Failed,
+    },
+    [UniswapXOrderStatus.PENDING_CANCELLATION]: {
+      getTitle: () => i18n.t('common.pending.cancellation'),
+      status: TransactionStatus.Pending,
+    },
+    [UniswapXOrderStatus.CANCELLED]: {
+      getTitle: () => i18n.t('common.swap.cancelled'),
+      status: TransactionStatus.Failed,
+    },
+  }
 }
 
-export const LimitOrderTextTable: {
+export const getLimitOrderTextTable = (): {
   [status in UniswapXOrderStatus]: OrderTextTableEntry
-} = {
+} => ({
   [UniswapXOrderStatus.OPEN]: {
     getTitle: () => i18n.t('common.limit.opened'),
     status: TransactionStatus.Pending,
@@ -233,7 +242,7 @@ export const LimitOrderTextTable: {
     getTitle: () => i18n.t('common.limit.cancelled'),
     status: TransactionStatus.Failed,
   },
-}
+})
 
 // Non-exhaustive list of addresses Moonpay uses when sending purchased tokens
 export const MOONPAY_SENDER_ADDRESSES = [

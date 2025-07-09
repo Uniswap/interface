@@ -55,6 +55,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
 import { applyNativeTokenPercentageBuffer } from 'uniswap/src/features/gas/utils'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -558,7 +559,7 @@ function getParsedHookAddrParam(params: ParsedQs): string | undefined {
   if (!hookAddr || typeof hookAddr !== 'string') {
     return undefined
   }
-  const validAddress = getValidAddress({ address: hookAddr, withChecksum: true })
+  const validAddress = getValidAddress({ address: hookAddr, withEVMChecksum: true, platform: Platform.EVM })
   return validAddress || undefined
 }
 

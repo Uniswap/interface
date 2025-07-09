@@ -19,11 +19,13 @@ export function useReactNavigationModal(): {
 
   const preventCloseRef = useRef(false)
   const onClose = useCallback(() => {
-    if (preventCloseRef.current) {
+    if (preventCloseRef.current || !navigation.isFocused()) {
       return
     }
     preventCloseRef.current = true
-    navigation.goBack()
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    }
   }, [navigation])
 
   return {

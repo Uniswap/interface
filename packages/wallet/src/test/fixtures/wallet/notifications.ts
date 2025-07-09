@@ -1,5 +1,5 @@
 import { AssetType } from 'uniswap/src/entities/assets'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import {
   AppErrorNotification,
   AppNotificationBase,

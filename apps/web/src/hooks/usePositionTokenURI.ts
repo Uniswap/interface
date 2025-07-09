@@ -6,7 +6,7 @@ import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { Erc721 } from 'uniswap/src/abis/types/Erc721'
 import { NonfungiblePositionManager } from 'uniswap/src/abis/types/v3/NonfungiblePositionManager'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 type TokenId = number | JSBI | BigNumber
@@ -34,7 +34,7 @@ type UsePositionTokenURIResult =
 
 function useNFTPositionManagerContract(
   version: ProtocolVersion,
-  chainId?: UniverseChainId,
+  chainId?: EVMUniverseChainId,
 ): NonfungiblePositionManager | Erc721 | null {
   const v3Contract = useV3NFTPositionManagerContract(false, chainId)
   const v4Contract = useV4NFTPositionManagerContract(false, chainId)
@@ -47,7 +47,7 @@ export function usePositionTokenURI({
   version,
 }: {
   tokenId?: TokenId
-  chainId?: UniverseChainId
+  chainId?: EVMUniverseChainId
   version?: ProtocolVersion
 }): UsePositionTokenURIResult {
   const contract = useNFTPositionManagerContract(version ?? ProtocolVersion.V3, chainId)

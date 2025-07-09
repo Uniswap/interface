@@ -1,11 +1,10 @@
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionModal } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import type { TransactionModalProps } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalProps'
-
 import {
-  TransactionSettingsContext,
-  useTransactionSettingsContext,
-} from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+  TransactionSettingsStoreContext,
+  useGetTransactionSettingsContextValue,
+} from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/TransactionSettingsStoreContext'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { CurrentScreen } from 'uniswap/src/features/transactions/swap/SwapFlow/CurrentScreen'
 import { SwapDependenciesStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/SwapDependenciesStoreContext'
@@ -25,14 +24,14 @@ export interface SwapFlowProps extends Omit<TransactionModalProps, 'fullscreen' 
 }
 
 export function SwapFlow({ settings, onSubmitSwap, tokenColor, ...transactionModalProps }: SwapFlowProps): JSX.Element {
-  const transactionSettingsContext = useTransactionSettingsContext()
+  const transactionSettingsContext = useGetTransactionSettingsContextValue()
   const swapDependenciesStore = useSwapDependenciesStoreBase()
   const swapFormStore = useSwapFormStoreBase()
 
   return (
     <TransactionModal modalName={ModalName.Swap} {...transactionModalProps}>
       {/* Re-create the TransactionSettingsContextProvider, since rendering within a Portal causes its children to be in a separate component tree. */}
-      <TransactionSettingsContext.Provider value={transactionSettingsContext}>
+      <TransactionSettingsStoreContext.Provider value={transactionSettingsContext}>
         {/* Re-create the SwapFormStoreContextProvider, since rendering within a Portal causes its children to be in a separate component tree. */}
         <SwapFormStoreContext.Provider value={swapFormStore}>
           {/* Re-create the SwapTxStoreContextProvider, since rendering within a Portal causes its children to be in a separate component tree. */}
@@ -42,7 +41,7 @@ export function SwapFlow({ settings, onSubmitSwap, tokenColor, ...transactionMod
             </SwapDependenciesStoreContext.Provider>
           </SwapTxStoreContextProvider>
         </SwapFormStoreContext.Provider>
-      </TransactionSettingsContext.Provider>
+      </TransactionSettingsStoreContext.Provider>
     </TransactionModal>
   )
 }

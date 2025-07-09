@@ -2,12 +2,12 @@
 import { CurrencyAmount, Token, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import type { ImageSourcePropType } from 'react-native'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { NonEmptyArray } from 'utilities/src/primitives/array'
 import { Chain as WagmiChain } from 'wagmi/chains'
-
-export function isUniverseChainId(chainId?: number | UniverseChainId | null): chainId is UniverseChainId {
-  return !!chainId && ALL_CHAIN_IDS.includes(chainId as UniverseChainId)
-}
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { type UNIVERSE_CHAIN_INFO } from 'uniswap/src/features/chains/chainInfo'
 
 export enum UniverseChainId {
   Mainnet = UniswapSDKChainId.MAINNET,
@@ -27,33 +27,14 @@ export enum UniverseChainId {
   WorldChain = UniswapSDKChainId.WORLDCHAIN,
   Zksync = UniswapSDKChainId.ZKSYNC,
   Zora = UniswapSDKChainId.ZORA,
+  Solana = 501000101,
 }
 
-export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [
-  UniverseChainId.Mainnet,
-  UniverseChainId.Unichain,
-  UniverseChainId.Polygon,
-  UniverseChainId.ArbitrumOne,
-  UniverseChainId.Optimism,
-  UniverseChainId.Base,
-  UniverseChainId.Bnb,
-  UniverseChainId.Blast,
-  UniverseChainId.Avalanche,
-  UniverseChainId.Celo,
-  UniverseChainId.WorldChain,
-  UniverseChainId.Soneium,
-  UniverseChainId.Zora,
-  UniverseChainId.Zksync,
-]
-
-export const SUPPORTED_TESTNET_CHAIN_IDS: UniverseChainId[] = [
-  UniverseChainId.Sepolia,
-  UniverseChainId.UnichainSepolia,
-  UniverseChainId.MonadTestnet,
-]
-
-// This order is used as a fallback for chain ordering but will otherwise defer to useOrderedChainIds
-export const ALL_CHAIN_IDS: UniverseChainId[] = [...SUPPORTED_CHAIN_IDS, ...SUPPORTED_TESTNET_CHAIN_IDS]
+export type UniverseChainIdByPlatform<T extends Platform> = ((typeof UNIVERSE_CHAIN_INFO)[UniverseChainId] & {
+  platform: T
+})['id']
+export type EVMUniverseChainId = UniverseChainIdByPlatform<Platform.EVM>
+export type SVMUniverseChainId = UniverseChainIdByPlatform<Platform.SVM>
 
 export interface EnabledChainsInfo {
   chains: UniverseChainId[]
@@ -100,6 +81,7 @@ export interface BackendChain {
 type ChainRPCUrls = { http: string[] }
 export interface UniverseChainInfo extends WagmiChain {
   readonly id: UniverseChainId
+  readonly platform: Platform
   readonly assetRepoNetworkName: string | undefined // Name used to index the network on this repo: https://github.com/Uniswap/assets/
   readonly backendChain: BackendChain
   readonly blockPerMainnetEpochForChainId: number
@@ -133,8 +115,15 @@ export interface UniverseChainInfo extends WagmiChain {
   }
   readonly networkLayer: NetworkLayer
   readonly pendingTransactionsRetryOptions: RetryOptions | undefined
-  readonly spotPriceStablecoinAmount: CurrencyAmount<Token>
-  readonly stablecoins: Token[]
+  /** Override the default spot price stablecoin amount, e.g. for chains with low liquidity. */
+  readonly spotPriceStablecoinAmountOverride?: CurrencyAmount<Token>
+  readonly tokens: {
+    /** An array of stablecoins for this chain -- the first item in the array is treated as a 'default' stablecoin for this chain. */
+    stablecoins: NonEmptyArray<Token>
+    USDC?: Token
+    DAI?: Token
+    USDT?: Token
+  }
   readonly statusPage?: string
   readonly supportsV4: boolean
   readonly urlParam: string

@@ -7,7 +7,7 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
@@ -33,7 +33,11 @@ export function useDerivedSwapInfo({
     txId,
   } = state
 
-  const { customSlippageTolerance, selectedProtocols, isV4HookPoolsEnabled } = useTransactionSettingsContext()
+  const { customSlippageTolerance, selectedProtocols, isV4HookPoolsEnabled } = useTransactionSettingsStore((s) => ({
+    customSlippageTolerance: s.customSlippageTolerance,
+    selectedProtocols: s.selectedProtocols,
+    isV4HookPoolsEnabled: s.isV4HookPoolsEnabled,
+  }))
 
   const account = useAccountMeta()
   const { defaultChainId } = useEnabledChains()

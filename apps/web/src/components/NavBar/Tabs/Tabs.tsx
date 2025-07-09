@@ -1,7 +1,7 @@
 import { NavDropdown, NavDropdownTabWrapper } from 'components/NavBar/NavDropdown/index'
 import { TabsItem, TabsSection, useTabsContent } from 'components/NavBar/Tabs/TabsContent'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router'
 import { Flex, Popover, Text, styled } from 'ui/src'
 
 const TabText = styled(Text, {

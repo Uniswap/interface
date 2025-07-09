@@ -32,7 +32,11 @@ type GetListTransactionsQuery<TSelectData = ListTransactionsResponse> = QueryOpt
   ListTransactionsResponse | undefined,
   Error,
   TSelectData,
-  readonly [ReactQueryCacheKey.ListTransactions, PartialMessage<ListTransactionsRequest> | undefined]
+  readonly [
+    ReactQueryCacheKey.ListTransactions,
+    Address | undefined,
+    PartialMessage<ListTransactionsRequest> | undefined,
+  ]
 >
 
 export const getListTransactionsQuery = <TSelectData = ListTransactionsResponse>({
@@ -43,8 +47,11 @@ export const getListTransactionsQuery = <TSelectData = ListTransactionsResponse>
 }: GetListTransactionsInput<TSelectData>): GetListTransactionsQuery<TSelectData> => {
   const transformedInput = transformInput(input)
 
+  const { walletAccount, ...inputWithoutAddress } = transformedInput ?? {}
+  const address = walletAccount?.platformAddresses[0]?.address
+
   return queryOptions({
-    queryKey: [ReactQueryCacheKey.ListTransactions, transformedInput],
+    queryKey: [ReactQueryCacheKey.ListTransactions, address, inputWithoutAddress],
     queryFn: () =>
       transformedInput ? transactionsClient.listTransactions(transformedInput) : Promise.resolve(undefined),
     placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when refetching

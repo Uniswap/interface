@@ -71,7 +71,7 @@ export function WrapRequestContent({
     // Parse the amount from the data field (remove the function selector - first 10 characters including 0x)
     const data = dappRequest.transaction.data.toString()
     if (data.length > 10) {
-      amountValue = parseInt(data.slice(10), 16).toString()
+      amountValue = parseInt(data.slice(10, 74), 16).toString() // for withdraw(uint256), calldata is 36 bytes (4-byte selector + 32-byte argument). 1 byte = 2 hex characters, and data includes the 0x prefix, so select 64 characters starting from 10th character
     }
   } else {
     // For wrap, amount is in the value field

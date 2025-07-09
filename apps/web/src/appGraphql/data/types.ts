@@ -6,7 +6,8 @@ import {
   ProtectionResult,
   SafetyLevel,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyInfo, getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'

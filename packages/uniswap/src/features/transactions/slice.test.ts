@@ -142,7 +142,7 @@ describe('transaction reducer', () => {
       expect(store.getState()).toEqual({})
     })
 
-    it('updates a transaction that was previoulsy added', () => {
+    it('updates a transaction that was previously added', () => {
       const id = '19'
       const chainId = UniverseChainId.Polygon as UniverseChainId
       const transaction = {

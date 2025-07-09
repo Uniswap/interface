@@ -1,13 +1,16 @@
-import {
+import type {
   ConfirmedTransactionDetails,
   PendingTransactionDetails,
   TransactionDetails,
-  TransactionType,
 } from 'state/transactions/types'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionStatus,
+  TransactionType as UniswapTransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export function isPendingTx(tx: TransactionDetails, skipDepositedBridgeTxs = false): tx is PendingTransactionDetails {
-  const skipBridgeTx = skipDepositedBridgeTxs && tx.info.type === TransactionType.BRIDGE && tx.info.depositConfirmed
+  const skipBridgeTx =
+    skipDepositedBridgeTxs && tx.info.type === UniswapTransactionType.Bridge && tx.info.depositConfirmed
   return tx.status === TransactionStatus.Pending && !tx.cancelled && !skipBridgeTx
 }
 

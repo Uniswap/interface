@@ -11,10 +11,10 @@ import {
   PendingTransactionDetails,
   TransactionDetails,
   TransactionInfo,
-  TransactionType,
 } from 'state/transactions/types'
 import { isConfirmedTx, isPendingTx } from 'state/transactions/utils'
-import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { TransactionType as UniswapTransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { usePrevious } from 'utilities/src/react/hooks'
@@ -199,7 +199,7 @@ function usePendingLPTransactions(): PendingTransactionDetails[] {
               UniswapTransactionType.LiquidityDecrease,
               UniswapTransactionType.CreatePool,
               UniswapTransactionType.CreatePair,
-              TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4,
+              UniswapTransactionType.MigrateLiquidityV3ToV4,
               UniswapTransactionType.CollectFees,
             ] as BaseTransactionType[]
           ).includes(tx.info.type),

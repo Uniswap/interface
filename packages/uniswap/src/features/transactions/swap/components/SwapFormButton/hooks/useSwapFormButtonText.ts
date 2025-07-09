@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useInterfaceWrap'
 import { useIsAmountSelectionInvalid } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsAmountSelectionInvalid'
@@ -30,7 +30,7 @@ export const useSwapFormButtonText = (): string => {
 
   const isLogIn = isEmbeddedWalletEnabled
 
-  const nativeCurrency = NativeCurrency.onChain(chainId)
+  const nativeCurrency = nativeOnChain(chainId)
 
   const isIndicative = useIsTradeIndicative()
 
@@ -67,7 +67,7 @@ export const useSwapFormButtonText = (): string => {
   }
 
   if (insufficientGasFundsWarning) {
-    return t('common.insufficientTokenBalance.error.simple', { tokenSymbol: nativeCurrency.symbol })
+    return t('common.insufficientTokenBalance.error.simple', { tokenSymbol: nativeCurrency.symbol ?? '' })
   }
 
   if (isInterfaceWrap) {

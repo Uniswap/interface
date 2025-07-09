@@ -216,13 +216,6 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           handlerType="NativeViewGestureHandler"
           onGestureHandlerEvent={[Function]}
           onGestureHandlerStateChange={[Function]}
-          waitFor={
-            [
-              {
-                "current": null,
-              },
-            ]
-          }
         >
           <View>
             <View

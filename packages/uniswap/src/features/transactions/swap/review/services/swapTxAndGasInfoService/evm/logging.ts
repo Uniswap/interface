@@ -1,16 +1,16 @@
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
-import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
-import { SwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
+import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'
+import type { SwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
 import { createLogSwapRequestErrors } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
-import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
+import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 const swapFlowTxIdToRecentRequestIdMap = new Map<string, string>()
 
 /** Decorates a SwapTxAndGasInfoService with necessary logging for EVM swap flow requests. */
 export function createDecorateSwapTxInfoServiceWithEVMLogging(ctx: {
   trace: ITraceContext
-  transactionSettings: TransactionSettingsContextState
+  transactionSettings: TransactionSettings
 }): <T extends Trade>(service: SwapTxAndGasInfoService<T>) => SwapTxAndGasInfoService<T> {
   const { trace, transactionSettings } = ctx
   const logSwapRequestErrors = createLogSwapRequestErrors({ trace })

@@ -9,7 +9,7 @@ export function useLiveAccountDelegationDetails({
   chainId,
 }: {
   address: Address
-  chainId: number
+  chainId?: number
 }): DelegationCheckResult | undefined {
   const { data: delegationData } = useQuery({
     queryKey: [ReactQueryCacheKey.WalletDelegation, address, chainId],

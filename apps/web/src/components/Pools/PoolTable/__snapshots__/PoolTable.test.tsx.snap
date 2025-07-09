@@ -425,6 +425,7 @@ exports[`PoolTable > renders data filled state 1`] = `
           >
             <a
               class="c1"
+              data-discover="true"
               href="/explore/pools/ethereum/0x123"
             >
               <div
@@ -550,7 +551,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                       class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
                       data-disable-theme="true"
                     >
-                      1.00%
+                      1%
                     </span>
                   </div>
                 </div>

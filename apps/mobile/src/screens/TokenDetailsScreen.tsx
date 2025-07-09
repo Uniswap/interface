@@ -4,7 +4,7 @@ import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { AppStackScreenProp } from 'src/app/navigation/types'
+import type { AppStackScreenProp } from 'src/app/navigation/types'
 import { PriceExplorer } from 'src/components/PriceExplorer/PriceExplorer'
 import { ContractAddressExplainerModal } from 'src/components/TokenDetails/ContractAddressExplainerModal'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
@@ -23,13 +23,11 @@ import { Flex, Separator } from 'ui/src'
 import { ArrowDownCircle, ArrowUpCircle, Bank, SendRoundedAirplane } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
+import type { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
-import {
-  Chain,
-  useTokenDetailsScreenQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import type { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useTokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
@@ -47,10 +45,11 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { CurrencyField } from 'uniswap/src/types/currency'
+import type { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -91,7 +90,7 @@ const TokenDetailsQuery = memo(function _TokenDetailsQuery(): JSX.Element {
   const { currencyId, setError } = useTokenDetailsContext()
 
   const { error } = useTokenDetailsScreenQuery({
-    variables: { ...currencyIdToContractInput(currencyId) },
+    variables: currencyIdToContractInput(currencyId),
     pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
     returnPartialData: true,
@@ -179,16 +178,23 @@ const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
     copyAddressToClipboard,
   } = useTokenDetailsContext()
 
-  const onCloseTokenWarning = useCallback(() => {
+  const onCloseTokenWarning = useEvent(() => {
     closeTokenWarningModal()
-  }, [closeTokenWarningModal])
+  })
 
-  const onAcknowledgeTokenWarning = useCallback(() => {
+  const onAcknowledgeTokenWarning = useEvent(() => {
     closeTokenWarningModal()
     if (activeTransactionType !== undefined) {
       navigateToSwapFlow({ currencyField: activeTransactionType, currencyAddress: address, currencyChainId: chainId })
     }
-  }, [activeTransactionType, address, chainId, closeTokenWarningModal, navigateToSwapFlow])
+  })
+
+  const onAcknowledgeContractAddressExplainer = useEvent(async (markViewed: boolean) => {
+    closeContractAddressExplainerModal(markViewed)
+    if (markViewed) {
+      await copyAddressToClipboard(address)
+    }
+  })
 
   return (
     <>
@@ -203,14 +209,7 @@ const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
       )}
 
       {isContractAddressExplainerModalOpen && (
-        <ContractAddressExplainerModal
-          onAcknowledge={async (markViewed: boolean) => {
-            closeContractAddressExplainerModal(markViewed)
-            if (markViewed) {
-              await copyAddressToClipboard(address)
-            }
-          }}
-        />
+        <ContractAddressExplainerModal onAcknowledge={onAcknowledgeContractAddressExplainer} />
       )}
     </>
   )

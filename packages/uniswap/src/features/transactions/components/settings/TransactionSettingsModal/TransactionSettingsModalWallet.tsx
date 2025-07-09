@@ -4,9 +4,9 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionSettingsModalContent } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModalContent/TransactionSettingsModalContent'
 import type { TransactionSettingsModalProps } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/types'
 import {
-  TransactionSettingsContext,
-  useTransactionSettingsContext,
-} from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+  TransactionSettingsStoreContext,
+  useGetTransactionSettingsContextValue,
+} from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/TransactionSettingsStoreContext'
 import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
 import { useSwapFormStoreBase } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { isExtension } from 'utilities/src/platform'
@@ -17,7 +17,7 @@ export function TransactionSettingsModalWallet({
   onClose,
   isOpen,
 }: TransactionSettingsModalProps): JSX.Element {
-  const transactionSettingsContext = useTransactionSettingsContext()
+  const transactionSettingsContext = useGetTransactionSettingsContextValue()
   const colors = useSporeColors()
   const swapFormStore = useSwapFormStoreBase()
 
@@ -29,8 +29,8 @@ export function TransactionSettingsModalWallet({
       name={ModalName.SwapSettings}
       onClose={onClose}
     >
-      {/* Re-create the TransactionSettingsContextProvider, since Portal can cause its children to be in a separate component tree. */}
-      <TransactionSettingsContext.Provider value={transactionSettingsContext}>
+      {/* Re-create the TransactionSettingsStoreContext.Provider, since Portal can cause its children to be in a separate component tree. */}
+      <TransactionSettingsStoreContext.Provider value={transactionSettingsContext}>
         {/* Re-create a new SwapFormStoreContext.Provider, since Portal can cause its children to be in a separate component tree. */}
         <SwapFormStoreContext.Provider value={swapFormStore}>
           <TransactionSettingsModalContent
@@ -39,7 +39,7 @@ export function TransactionSettingsModalWallet({
             onClose={onClose}
           />
         </SwapFormStoreContext.Provider>
-      </TransactionSettingsContext.Provider>
+      </TransactionSettingsStoreContext.Provider>
     </Modal>
   )
 }

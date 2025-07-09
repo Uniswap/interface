@@ -13,7 +13,7 @@ import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import type { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/useSlippageSettings'
 import { AcrossRoutingInfoTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/AcrossRoutingTooltip'
 import {
@@ -304,7 +304,9 @@ export function YouReceiveDetails({
   const { formatPercent } = useLocalizationContext()
 
   const { currentSlippageTolerance } = useSlippageSettings()
-  const { customSlippageTolerance } = useTransactionSettingsContext()
+  const { customSlippageTolerance } = useTransactionSettingsStore((s) => ({
+    customSlippageTolerance: s.customSlippageTolerance,
+  }))
   const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
   const priceDifference = usePriceDifference(derivedSwapInfo)
   const { isBlocked } = useIsBlocked(account?.address)

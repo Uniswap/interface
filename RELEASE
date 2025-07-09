@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmSighTNwdbMwNVFqAKsFqh2CRmBQ6ZwqVF52RRwHa19gG`
-- CIDv1: `bafybeicbcpddgur5bzzdq2tlgvnf6t3l4fzi74tfuo5b2luhk2bku3f2su`
+- CIDv0: `QmR1FhjPj6guoB8B8Qq5g3H6MrcfPXPeM8GsTBQZprHsxQ`
+- CIDv1: `bafybeibhtmbqzvasqpaerlcxgwm5gxaomyjsrq3fxs5mg564vmtgcweqau`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,63 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeicbcpddgur5bzzdq2tlgvnf6t3l4fzi74tfuo5b2luhk2bku3f2su.ipfs.dweb.link/
-- [ipfs://QmSighTNwdbMwNVFqAKsFqh2CRmBQ6ZwqVF52RRwHa19gG/](ipfs://QmSighTNwdbMwNVFqAKsFqh2CRmBQ6ZwqVF52RRwHa19gG/)
+- https://bafybeibhtmbqzvasqpaerlcxgwm5gxaomyjsrq3fxs5mg564vmtgcweqau.ipfs.dweb.link/
+- [ipfs://QmR1FhjPj6guoB8B8Qq5g3H6MrcfPXPeM8GsTBQZprHsxQ/](ipfs://QmR1FhjPj6guoB8B8Qq5g3H6MrcfPXPeM8GsTBQZprHsxQ/)
 
-### 5.102.2 (2025-07-08)
+## 5.103.0 (2025-07-09)
+
+
+### Features
+
+* **web:** sol chain id (#20695) 8cff970
+* **web:** SolanaWalletProvider (#21164) 96864e0
+* **web:** WalletConnector Meta and Services (#21165) 300d887
 
 
 ### Bug Fixes
 
-* **web:** prod cherry pick swap confirmed events (#21566) 8975015
+* **web:** approval for v2 migrations (#21396) 813c1de
+* **web:** auto-checksum LP creation hook addresses (#21358) cfd5f31
+* **web:** Check for undefined approval amount - staging (#21530) e895410
+* **web:** fix bug with creating a new custom in range position for v3 (#21560) f763021
+* **web:** fix button layout on mweb new position screen (#21307) 790baf7
+* **web:** fix issue with custom range and creating a pool (#21402) ee04c77
+* **web:** fix merging of dynamic and regular fee tiers (#21395) 67cf972
+* **web:** force non x quotes for permit2 tests (#21425) 78b8841
+* **web:** i18n not working for transactions (#21447) ca940cc
+* **web:** language not translating (#21452) 7813f0c
+* **web:** mock png asset imports for playwright (#21415) 3f27389
+* **web:** overflow text when creating a new LP position in spanish (#21337) 3864dfc
+* **web:** prevent incrementing or decrementing past the tick limits (#21441) a775910
+* **web:** race condition reverting language change (#21292) 0ced7f1
+* **web:** revert scroll lock performance (#21039) (#21414) 1f687a6
+* **web:** reward apr not translated (#21450) c237f07
+* **web:** transactions table type translations (#21449) c728fb2
+* **web:** update decimals for fee tier display (#21365) 9ba591d
+* **web:** Warn instead of error for known bug (#21499) c3633e4
+
+
+### Continuous Integration
+
+* **web:** update sitemaps d1df877
+
+
+### Tests
+
+* **web:** a few flakey tests (#21427) 05d8da0
+* **web:** check if wrap is ready (#21426) 3b8aa86
+* **web:** for tests (#21466) 1e54b9e
+
+
+### Code Refactoring
+
+* **web:** align send transactiontype enum with uniswap transaction type (#21219) 01fa235
+* **web:** migrate Bridge enum val (#21061) 474657a
+* **web:** migrate PERMIT enum value to match Uniswap's transactionType (#21053) 59f7814
+* **web:** migrate SendTransactionInfo to SendTokenTransactionInfo Uniswap type (#21223) 99293a9
+* **web:** migrate v3tov4 enum value to uniswap enum (#21109) 01a3b2d
+* **web:** move v3tov4 info type to uniswap (#21110) cc29edc
+* **web:** update LP Incentives Claim Rewards enum to use Uniswap TransactionType enum (#21225) ce16f52
+* **web:** use uniswap BridgeTransactionInfo type (#21217) 6ba5fce
 
 

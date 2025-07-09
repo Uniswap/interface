@@ -1,9 +1,39 @@
-import { Text, styled } from 'tamagui'
+import { GetProps, Text, styled } from 'tamagui'
 import { variantEmphasisHash } from 'ui/src/components/buttons/Button/components/CustomButtonText/variantEmphasisHash'
 import { buttonStyledContext, lineHeights } from 'ui/src/components/buttons/Button/constants'
 import type { ButtonEmphasis, ButtonVariantProps } from 'ui/src/components/buttons/Button/types'
 import { getMaybeHexOrRGBColor } from 'ui/src/components/buttons/Button/utils/getMaybeHexOrRGBColor'
 import { getContrastPassingTextColor } from 'ui/src/utils/colors'
+
+function createSizeVariant({
+  fontSize,
+  fontWeight,
+  lineHeightValue,
+}: {
+  fontSize: string
+  fontWeight: string
+  lineHeightValue: string | number
+}) {
+  return (
+    size: NonNullable<ButtonVariantProps['size']>,
+    context: { props: Record<string, unknown> },
+  ): Record<string, unknown> => {
+    const baseStyles = {
+      fontSize,
+      fontWeight,
+    }
+
+    const lineHeightDisabled = context.props['line-height-disabled']
+    if (lineHeightDisabled === 'true') {
+      return baseStyles
+    }
+
+    return {
+      ...baseStyles,
+      lineHeight: lineHeightValue,
+    }
+  }
+}
 
 /**
  * This component is used to render the text/label within our `Button` component.
@@ -11,13 +41,14 @@ import { getContrastPassingTextColor } from 'ui/src/utils/colors'
  * @props custom-background-color - The background color of the `Button` this `CustomButtonText` is a child of. If passed, the text will use the contrast color of the background color for its hover state.
  * **NOTE:** this doesn't need to be passed explicitly if `CustomButtonText`, or `Button.Text`, is a child of a `Button` component has a `backgroundColor` prop passed to it..
  */
-export const CustomButtonText = styled(Text, {
+const CustomButtonTextStyled = styled(Text, {
   context: buttonStyledContext,
   tag: 'span',
   fontFamily: '$button',
   color: '$color',
   maxFontSizeMultiplier: 1.2,
   numberOfLines: 1,
+  textAlign: 'center',
   variants: {
     variant: {
       // @ts-expect-error we know variant will be ButtonVariant
@@ -61,33 +92,23 @@ export const CustomButtonText = styled(Text, {
     // these are taken from Figma and mapped to the values in fonts.ts > buttonFont
     // https://github.com/Uniswap/universe/blob/main/packages/ui/src/theme/fonts.ts
     size: {
-      xxsmall: {
-        fontSize: '$micro',
-        fontWeight: '$medium',
-        lineHeight: lineHeights.xxsmall,
-      },
-      xsmall: {
-        fontSize: '$micro',
-        fontWeight: '$medium',
-        lineHeight: lineHeights.xsmall,
-      },
-      small: {
-        fontSize: '$small',
-        fontWeight: '$medium',
-        lineHeight: lineHeights.small,
-      },
-      medium: {
-        fontSize: '$medium',
-        fontWeight: '$medium',
-        lineHeight: lineHeights.medium,
-      },
-      large: {
-        fontSize: '$large',
-        fontWeight: '$medium',
-        lineHeight: lineHeights.large,
-      },
+      xxsmall: createSizeVariant({ fontSize: '$micro', fontWeight: '$medium', lineHeightValue: lineHeights.xxsmall }),
+      xsmall: createSizeVariant({ fontSize: '$micro', fontWeight: '$medium', lineHeightValue: lineHeights.xsmall }),
+      small: createSizeVariant({ fontSize: '$small', fontWeight: '$medium', lineHeightValue: lineHeights.small }),
+      medium: createSizeVariant({ fontSize: '$medium', fontWeight: '$medium', lineHeightValue: lineHeights.medium }),
+      large: createSizeVariant({ fontSize: '$large', fontWeight: '$medium', lineHeightValue: lineHeights.large }),
     },
   } as const,
 })
+
+type CustomProps = {
+  'line-height-disabled'?: string
+}
+
+type CustomButtonTextWithExtraProps = typeof CustomButtonTextStyled & {
+  (props: CustomProps & GetProps<typeof CustomButtonTextStyled>): JSX.Element | null
+}
+
+export const CustomButtonText = CustomButtonTextStyled as CustomButtonTextWithExtraProps
 
 CustomButtonText.displayName = 'CustomButtonText'

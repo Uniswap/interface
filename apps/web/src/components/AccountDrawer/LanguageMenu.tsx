@@ -1,7 +1,7 @@
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { MenuColumn, MenuItem } from 'components/AccountDrawer/shared'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
-import { Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Language, WEB_SUPPORTED_LANGUAGES } from 'uniswap/src/features/language/constants'
 import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
@@ -44,8 +44,10 @@ export function LanguageMenuItems() {
 }
 
 export default function LanguageMenu({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation()
+
   return (
-    <SlideOutMenu title={<Trans i18nKey="common.language" />} onClose={onClose}>
+    <SlideOutMenu title={t('common.language')} onClose={onClose}>
       <MenuColumn>
         <LanguageMenuItems />
       </MenuColumn>

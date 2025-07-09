@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native'
+import { DefaultTheme, NavigationContainer, NavigationIndependentTree } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import { navNativeStackOptions } from 'src/app/navigation/navStackOptions'
@@ -20,40 +20,42 @@ export function ExploreStackNavigator(): JSX.Element {
   const colors = useSporeColors()
 
   return (
-    <NavigationContainer
-      ref={exploreNavigationRef}
-      independent
-      theme={{
-        dark: false,
-        colors: {
-          primary: 'transparent',
-          background: 'transparent',
-          card: 'transparent',
-          text: 'transparent',
-          border: 'transparent',
-          notification: 'transparent',
-        },
-      }}
-      onStateChange={stopTracking}
-      onReady={() => startTracking(exploreNavigationRef)}
-    >
-      <HorizontalEdgeGestureTarget />
-      <ExploreStack.Navigator
-        initialRouteName={MobileScreens.Explore}
-        screenOptions={navNativeStackOptions.independentBsm}
+    <NavigationIndependentTree>
+      <NavigationContainer
+        ref={exploreNavigationRef}
+        theme={{
+          ...DefaultTheme,
+          dark: false,
+          colors: {
+            primary: 'transparent',
+            background: 'transparent',
+            card: 'transparent',
+            text: 'transparent',
+            border: 'transparent',
+            notification: 'transparent',
+          },
+        }}
+        onStateChange={stopTracking}
+        onReady={() => startTracking(exploreNavigationRef)}
       >
-        <ExploreStack.Screen component={ExploreScreen} name={MobileScreens.Explore} />
-        <ExploreStack.Group screenOptions={{ contentStyle: { backgroundColor: colors.surface1.val } }}>
-          <ExploreStack.Screen name={MobileScreens.ExternalProfile}>
-            {(props): JSX.Element => <ExternalProfileScreen {...props} renderedInModal />}
-          </ExploreStack.Screen>
-          <ExploreStack.Screen name={MobileScreens.NFTCollection}>
-            {(props): JSX.Element => <NFTCollectionScreen {...props} renderedInModal />}
-          </ExploreStack.Screen>
-          <ExploreStack.Screen component={NFTItemScreen} name={MobileScreens.NFTItem} />
-          <ExploreStack.Screen component={TokenDetailsScreen} name={MobileScreens.TokenDetails} />
-        </ExploreStack.Group>
-      </ExploreStack.Navigator>
-    </NavigationContainer>
+        <HorizontalEdgeGestureTarget />
+        <ExploreStack.Navigator
+          initialRouteName={MobileScreens.Explore}
+          screenOptions={navNativeStackOptions.independentBsm}
+        >
+          <ExploreStack.Screen component={ExploreScreen} name={MobileScreens.Explore} />
+          <ExploreStack.Group screenOptions={{ contentStyle: { backgroundColor: colors.surface1.val } }}>
+            <ExploreStack.Screen name={MobileScreens.ExternalProfile}>
+              {(props): JSX.Element => <ExternalProfileScreen {...props} renderedInModal />}
+            </ExploreStack.Screen>
+            <ExploreStack.Screen name={MobileScreens.NFTCollection}>
+              {(props): JSX.Element => <NFTCollectionScreen {...props} renderedInModal />}
+            </ExploreStack.Screen>
+            <ExploreStack.Screen component={NFTItemScreen} name={MobileScreens.NFTItem} />
+            <ExploreStack.Screen component={TokenDetailsScreen} name={MobileScreens.TokenDetails} />
+          </ExploreStack.Group>
+        </ExploreStack.Navigator>
+      </NavigationContainer>
+    </NavigationIndependentTree>
   )
 }

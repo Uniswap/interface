@@ -60,7 +60,7 @@ function TokenBalanceListInner(): JSX.Element {
   }
 
   const onPressReceive = (): void => {
-    navigate(AppRoutes.Receive)
+    navigate(`/${AppRoutes.Receive}`)
   }
 
   const hasData = !!balancesById

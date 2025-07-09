@@ -1,26 +1,20 @@
 import { datadogRum } from '@datadog/browser-rum'
-import { TransactionResponse } from '@ethersproject/abstract-provider'
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import type { TransactionResponse } from '@ethersproject/abstract-provider'
+import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { clientToProvider } from 'hooks/useEthersProvider'
 import ms from 'ms'
-import { Action } from 'redux'
+import type { Action } from 'redux'
 import { addTransaction, finalizeTransaction, updateTransactionInfo } from 'state/transactions/reducer'
-import {
-  BridgeTransactionInfo,
-  PermitTransactionInfo,
-  TransactionDetails,
-  TransactionInfo,
-  TransactionType,
-  VitalTxFields,
-} from 'state/transactions/types'
+import type { TransactionDetails, TransactionInfo, VitalTxFields } from 'state/transactions/types'
 import { isPendingTx } from 'state/transactions/utils'
-import { InterfaceState } from 'state/webReducer'
-import { SagaGenerator, call, cancel, delay, fork, put, race, select, take } from 'typed-redux-saga'
+import type { InterfaceState } from 'state/webReducer'
+import type { SagaGenerator } from 'typed-redux-saga'
+import { call, cancel, delay, fork, put, race, select, take } from 'typed-redux-saga'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
-import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import type { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import {
   ApprovalEditedInWalletError,
@@ -29,22 +23,26 @@ import {
   TransactionStepFailedError,
   UnexpectedTransactionStateError,
 } from 'uniswap/src/features/transactions/errors'
-import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
-import { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
-import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
-import {
+import type { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
+import type { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
+import type { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
+import type {
   OnChainTransactionStep,
   SignatureTransactionStep,
   TransactionStep,
-  TransactionStepType,
 } from 'uniswap/src/features/transactions/steps/types'
-import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import { BridgeTrade, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
+import type { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
+import type { BridgeTrade, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import {
+import type {
   ApproveTransactionInfo,
+  BridgeTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  Permit2ApproveTransactionInfo,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
   TransactionStatus,
   TransactionType as UniswapTransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -56,7 +54,7 @@ import { percentFromFloat } from 'utilities/src/format/percent'
 import noop from 'utilities/src/react/noop'
 import { signTypedData } from 'utils/signing'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { Transaction } from 'viem'
+import type { Transaction } from 'viem'
 import { getConnectorClient, getTransaction } from 'wagmi/actions'
 
 export interface HandleSignatureStepParams<T extends SignatureTransactionStep = SignatureTransactionStep> {
@@ -273,9 +271,9 @@ function getApprovalTransactionInfo(
   }
 }
 
-function getPermitTransactionInfo(approvalStep: Permit2TransactionStep): PermitTransactionInfo {
+function getPermitTransactionInfo(approvalStep: Permit2TransactionStep): Permit2ApproveTransactionInfo {
   return {
-    type: TransactionType.PERMIT,
+    type: UniswapTransactionType.Permit2Approve,
     tokenAddress: approvalStep.token.address,
     spender: approvalStep.spender,
     amount: approvalStep.amount,
@@ -389,11 +387,9 @@ export function getSwapTransactionInfo(
 ): SwapInfo | BridgeTransactionInfo {
   if (trade.routing === Routing.BRIDGE) {
     return {
-      type: TransactionType.BRIDGE,
+      type: UniswapTransactionType.Bridge,
       inputCurrencyId: currencyId(trade.inputAmount.currency),
-      inputChainId: trade.inputAmount.currency.chainId,
       outputCurrencyId: currencyId(trade.outputAmount.currency),
-      outputChainId: trade.outputAmount.currency.chainId,
       inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
       outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
       quoteId: trade.quote.requestId,
@@ -431,7 +427,7 @@ export function addTransactionBreadcrumb({
 }: {
   step: TransactionStep
   data?: {
-    [key: string]: string | number | boolean | undefined | object
+    [key: string]: string | number | boolean | undefined | object | null
   }
   status?: 'initiated' | 'complete' | 'in progress' | 'interrupted'
 }) {

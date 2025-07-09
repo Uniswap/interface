@@ -1,4 +1,4 @@
-import { OnChainTransaction, SpamCode as RestSpamCode } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { OnChainTransaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { SpamCode } from 'uniswap/src/data/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import {
@@ -14,6 +14,7 @@ import {
 import {
   deriveCurrencyAmountFromAssetResponse,
   getAddressFromAsset,
+  isRestTokenSpam,
   parseUSDValueFromAssetChange,
 } from 'wallet/src/features/transactions/history/utils'
 
@@ -154,7 +155,7 @@ export function parseRestReceiveTransaction(transaction: OnChainTransaction): Re
       sender,
       currencyAmountRaw: firstTransfer.amount?.raw,
       transactedUSDValue: undefined,
-      isSpam: tokenAsset.metadata?.spamCode === RestSpamCode.SPAM,
+      isSpam: isRestTokenSpam(tokenAsset.metadata?.spamCode),
     }
   }
   return undefined

@@ -3,7 +3,7 @@ import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { StyledImage } from 'nft/components/card/media'
 import { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { ThemedText } from 'theme/components'
 import { breakpoints } from 'ui/src/theme'
 

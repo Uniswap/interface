@@ -1,5 +1,6 @@
 import { AssetType } from 'uniswap/src/entities/assets'
-import { SUPPORTED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ETH_CURRENCY_INFO, ethCurrencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
 import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'

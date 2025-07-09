@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import type { GetExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
 import { createExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
@@ -21,7 +21,7 @@ export function useCreateGetExecuteSwapService(ctx: UseSwapServiceParams): GetEx
   const { swapCallback, wrapCallback, derivedSwapInfo } = ctx
 
   const account = useAccountMeta()
-  const { customSlippageTolerance } = useTransactionSettingsContext()
+  const customSlippageTolerance = useTransactionSettingsStore((s) => s.customSlippageTolerance)
   const { isFiatMode, presetPercentage, preselectAsset } = useSwapFormStore((s) => ({
     isFiatMode: s.isFiatMode,
     presetPercentage: s.presetPercentage,

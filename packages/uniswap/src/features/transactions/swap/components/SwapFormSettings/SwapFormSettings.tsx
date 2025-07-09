@@ -1,27 +1,45 @@
-import { createContext, useContext } from 'react'
-import { ColorTokens, Flex, FlexProps, Popover } from 'ui/src'
-import { IconSizeTokens } from 'ui/src/theme'
+import { createContext, useContext, useEffect } from 'react'
+import type { ColorTokens, FlexProps } from 'ui/src'
+import { Flex, Popover } from 'ui/src'
+import type { IconSizeTokens } from 'ui/src/theme'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import {
+  useSetTransactionSettingsAutoSlippageTolerance,
+  useTransactionSettingsActions,
+  useTransactionSettingsStore,
+} from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { ViewOnlyModal } from 'uniswap/src/features/transactions/modals/ViewOnlyModal'
-
 import SlippageWarningModal from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SlippageWarningModal'
 import { SwapFormSettingsButton } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SwapFormSettingsButton'
 import { ViewOnlyButton } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/ViewOnlyButton'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/useSlippageSettings'
+import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isExtension, isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export function SwapFormSettings(props: SwapFormSettingsProps): JSX.Element {
+  const setAutoSlippageTolerance = useSetTransactionSettingsAutoSlippageTolerance()
+  const slippageTolerance = useSwapFormStoreDerivedSwapInfo(
+    (s) => s.trade.trade?.slippageTolerance ?? s.trade.indicativeTrade?.slippageTolerance,
+  )
+
+  useEffect(() => {
+    setAutoSlippageTolerance(slippageTolerance)
+  }, [slippageTolerance, setAutoSlippageTolerance])
+
+  return <TransactionSettings {...props} />
+}
+
+export function TransactionSettings(props: SwapFormSettingsProps): JSX.Element {
   return (
-    <SwapFormSettingsProvider>
+    <SwapFormSettingsModalProvider>
       <SwapFormSettingsInner {...props} />
-    </SwapFormSettingsProvider>
+    </SwapFormSettingsModalProvider>
   )
 }
 
@@ -47,8 +65,11 @@ function SwapFormSettingsInner({
   isBridgeTrade,
 }: SwapFormSettingsProps): JSX.Element {
   const account = useAccountMeta()
-  const { customSlippageTolerance, slippageWarningModalSeen, updateTransactionSettings } =
-    useTransactionSettingsContext()
+  const { customSlippageTolerance, slippageWarningModalSeen } = useTransactionSettingsStore((s) => ({
+    customSlippageTolerance: s.customSlippageTolerance,
+    slippageWarningModalSeen: s.slippageWarningModalSeen,
+  }))
+  const { setSlippageWarningModalSeen } = useTransactionSettingsActions()
   const { autoSlippageTolerance } = useSlippageSettings()
 
   const {
@@ -61,7 +82,7 @@ function SwapFormSettingsInner({
     handleHideViewOnlyModal,
     handleShowSlippageWarningModal,
     handleHideSlippageWarningModal,
-  } = useSwapFormSettingsContext()
+  } = useSwapFormSettingsModalContext()
 
   const onCloseSettingsModal = useEvent((): void => {
     const shouldShowSlippageWarning =
@@ -71,7 +92,7 @@ function SwapFormSettingsInner({
       // Delay showing the slippage warning modal to avoid conflict with popover dismissal for a smoother UX
       setTimeout(() => {
         handleShowSlippageWarningModal()
-        updateTransactionSettings({ slippageWarningModalSeen: true })
+        setSlippageWarningModalSeen(true)
       }, 80)
 
       // Leave swap settings modal open for mobile app (to layer modals), but close for web apps
@@ -152,7 +173,7 @@ function SwapFormSettingsInner({
   )
 }
 
-interface SwapFormSettingsContextType {
+interface SwapFormSettingsModalContextType {
   isTransactionSettingsModalVisible: boolean
   showViewOnlyModal: boolean
   showSlippageWarningModal: boolean
@@ -164,7 +185,7 @@ interface SwapFormSettingsContextType {
   handleHideSlippageWarningModal: () => void
 }
 
-const SwapFormSettingsContext = createContext<SwapFormSettingsContextType>({
+const SwapFormSettingsModalContext = createContext<SwapFormSettingsModalContextType>({
   isTransactionSettingsModalVisible: false,
   showViewOnlyModal: false,
   showSlippageWarningModal: false,
@@ -176,7 +197,7 @@ const SwapFormSettingsContext = createContext<SwapFormSettingsContextType>({
   handleHideSlippageWarningModal: () => {},
 })
 
-const SwapFormSettingsProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
+const SwapFormSettingsModalProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
   const {
     value: isTransactionSettingsModalVisible,
     setTrue: handleShowTransactionSettingsModal,
@@ -196,7 +217,7 @@ const SwapFormSettingsProvider = ({ children }: { children: React.ReactNode }): 
   } = useBooleanState(false)
 
   return (
-    <SwapFormSettingsContext.Provider
+    <SwapFormSettingsModalContext.Provider
       value={{
         isTransactionSettingsModalVisible,
         showViewOnlyModal,
@@ -210,15 +231,15 @@ const SwapFormSettingsProvider = ({ children }: { children: React.ReactNode }): 
       }}
     >
       {children}
-    </SwapFormSettingsContext.Provider>
+    </SwapFormSettingsModalContext.Provider>
   )
 }
 
-export const useSwapFormSettingsContext = (): SwapFormSettingsContextType => {
-  const context = useContext(SwapFormSettingsContext)
+export const useSwapFormSettingsModalContext = (): SwapFormSettingsModalContextType => {
+  const context = useContext(SwapFormSettingsModalContext)
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!context) {
-    throw new Error('useSwapFormSettingsContext must be used within a SwapFormSettingsProvider')
+    throw new Error('useSwapFormSettingsModalContext must be used within a SwapFormSettingsModalProvider')
   }
   return context
 }

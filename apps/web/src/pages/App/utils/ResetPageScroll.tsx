@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 
 export const ResetPageScrollEffect = memo(function ResetPageScrollEffect() {

@@ -14,7 +14,6 @@ import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/Wall
 import { useSmartWalletChains } from 'wallet/src/features/smartWallet/hooks/useSmartWalletChains'
 import { useSuccessfulSwapCompleted } from 'wallet/src/features/transactions/hooks'
 import { useActiveAccount, useHasSmartWalletConsent, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
-import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import { WalletState } from 'wallet/src/state/walletReducer'
 
 export enum SmartWalletDelegationAction {
@@ -36,12 +35,16 @@ export function useSmartWalletDelegationStatus({
   const [status, setStatus] = useState<SmartWalletDelegationAction>(SmartWalletDelegationAction.None)
   const [loading, setLoading] = useState<boolean>(true)
 
+  // Only applies to signer mnemonic accounts
   const activeAccountFromRedux = useActiveAccount()
-  const accounts = useSelector(selectAccounts)
-  const activeAccountFromOverride = overrideAddress ? accounts[overrideAddress] : undefined
-  const activeAccount = activeAccountFromOverride || activeAccountFromRedux
-
   const signerMnemonicAccounts = useSignerAccounts()
+  const activeAccountFromOverride = overrideAddress
+    ? signerMnemonicAccounts.find((account) => account.address === overrideAddress)
+    : undefined
+  const activeAccount =
+    activeAccountFromOverride ||
+    (activeAccountFromRedux?.type === AccountType.SignerMnemonic ? activeAccountFromRedux : undefined)
+
   const enabledChains = useSmartWalletChains()
   const hasSmartWalletConsent = useHasSmartWalletConsent()
   const { getDelegationDetails } = useWalletDelegationContext()
@@ -74,7 +77,7 @@ export function useSmartWalletDelegationStatus({
       }
     }
 
-    if (activeAccount.type !== AccountType.SignerMnemonic || hasSmartWalletConsent) {
+    if (hasSmartWalletConsent) {
       setStatus(SmartWalletDelegationAction.None)
       setLoading(false)
       return

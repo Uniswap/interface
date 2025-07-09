@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import type { Percent } from '@uniswap/sdk-core'
 import { Scrim } from 'components/AccountDrawer/Scrim'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import useDisableScrolling from 'hooks/useDisableScrolling'
@@ -37,7 +37,7 @@ const MenuFlyout = styled(Flex, {
 })
 
 // @deprecated
-// Should use <SwapFormSettings settings={[Slippage, Deadline]} ... /> from packages/uniswap/src/features/transactions/swap/form/SwapFormSettings
+// Should use <TransactionSettings settings={[Slippage, Deadline]} ... /> from packages/uniswap/src/features/transactions/swap/form/SwapFormSettings
 export default function MigrateV2SettingsTab({
   autoSlippage,
   chainId,

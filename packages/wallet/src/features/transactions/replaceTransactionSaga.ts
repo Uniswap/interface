@@ -39,7 +39,12 @@ export function* attemptReplaceTransaction({
     }
 
     const accounts = yield* select(selectAccounts)
-    const checksummedAddress = getValidAddress({ address: from, withChecksum: true, log: false })
+    const checksummedAddress = getValidAddress({
+      address: from,
+      chainId,
+      withEVMChecksum: true,
+      log: false,
+    })
     if (!checksummedAddress) {
       throw new Error(`Cannot replace transaction, address is invalid: ${checksummedAddress}`)
     }

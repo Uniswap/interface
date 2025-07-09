@@ -1,5 +1,5 @@
 import { PropsWithChildren, useCallback } from 'react'
-import { createSearchParams, useNavigate } from 'react-router-dom'
+import { createSearchParams, useNavigate } from 'react-router'
 import { navigateToInterfaceFiatOnRamp } from 'src/app/features/for/utils'
 import { AppRoutes, HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
@@ -123,7 +123,7 @@ function useNavigateToAccountActivityList(): () => void {
   const navigateFix = useNavigate()
 
   return useCallback(
-    (): void =>
+    (): void | Promise<void> =>
       navigateFix({
         pathname: AppRoutes.Home,
         search: createSearchParams({
@@ -139,7 +139,7 @@ function useNavigateToAccountTokenList(): () => void {
   const navigateFix = useNavigate()
 
   return useCallback(
-    (): void =>
+    (): void | Promise<void> =>
       navigateFix({
         pathname: AppRoutes.Home,
         search: createSearchParams({
@@ -151,7 +151,7 @@ function useNavigateToAccountTokenList(): () => void {
 }
 
 function useNavigateToReceive(): () => void {
-  return useCallback((): void => navigate(AppRoutes.Receive), [])
+  return useCallback((): void => navigate(`/${AppRoutes.Receive}`), [])
 }
 
 function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
@@ -160,7 +160,7 @@ function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
 
     const state: SidebarLocationState = args ? { initialTransactionState: initialState } : undefined
 
-    navigate(AppRoutes.Send, { state })
+    navigate(`/${AppRoutes.Send}`, { state })
   }, [])
 }
 
@@ -172,7 +172,7 @@ function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
 
       const state: SidebarLocationState = initialState ? { initialTransactionState: initialState } : undefined
 
-      navigate(AppRoutes.Swap, { state })
+      navigate(`/${AppRoutes.Swap}`, { state })
     },
     [defaultChainId],
   )
