@@ -22,12 +22,12 @@ export function UnknownSummaryItem({
       return transaction.typeInfo.dappInfo.name
     }
 
-    if (getValidAddress({ address: transaction.typeInfo.tokenAddress, chainId: transaction.chainId })) {
+    if (transaction.typeInfo.tokenAddress && getValidAddress({ address: transaction.typeInfo.tokenAddress })) {
       return shortenAddress(transaction.typeInfo.tokenAddress)
     }
 
     return ''
-  }, [transaction.typeInfo.tokenAddress, transaction.typeInfo.dappInfo?.name, transaction.chainId])
+  }, [transaction.typeInfo.tokenAddress, transaction.typeInfo.dappInfo?.name])
 
   const icon = useMemo(
     () =>

@@ -6,7 +6,6 @@ ignores: [
     'i18next',
     'moti',
     'wrangler',
-    'react-router',
     # Dependencies that depcheck thinks are missing but are actually present or never used
     '@yarnpkg/core',
     '@yarnpkg/cli',

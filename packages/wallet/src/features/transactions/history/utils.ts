@@ -3,7 +3,6 @@ import { SpamCode as RestSpamCode } from '@uniswap/client-data-api/dist/data/v1/
 import { Token } from '@uniswap/sdk-core'
 import dayjs from 'dayjs'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   Amount,
   Chain,
@@ -16,6 +15,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { FORMAT_DATE_MONTH, FORMAT_DATE_MONTH_YEAR, LocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -246,7 +246,7 @@ export function deriveCurrencyAmountFromAssetResponse({
 
   const currency =
     tokenStandard === TokenStandard.Native
-      ? nativeOnChain(chainId)
+      ? NativeCurrency.onChain(chainId)
       : address && decimals
         ? new Token(chainId, address, decimals)
         : undefined

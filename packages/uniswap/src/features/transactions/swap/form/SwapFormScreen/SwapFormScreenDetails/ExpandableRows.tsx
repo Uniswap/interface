@@ -1,47 +1,33 @@
 import { useTranslation } from 'react-i18next'
 import { Accordion, Flex, Text } from 'ui/src'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
-import {
-  useTransactionSettingsAutoSlippageToleranceStore,
-  useTransactionSettingsStore,
-} from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/components/AcrossRoutingInfo'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/MaxSlippageRow'
 import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/PriceImpactRow'
 import { RoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/components/SwapRateRatio'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { useFeeOnTransferAmounts } from 'uniswap/src/features/transactions/swap/hooks/useFeeOnTransferAmount'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
-import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Element | null {
   const { t } = useTranslation()
-  const { gasFee, gasFeeBreakdown } = useSwapTxStore((s) => {
-    if (isUniswapX(s)) {
-      return {
-        gasFee: s.gasFee,
-        gasFeeBreakdown: s.gasFeeBreakdown,
-      }
-    }
+  const swapTxContext = useSwapTxContext()
 
-    return {
-      gasFee: s.gasFee,
-      gasFeeBreakdown: undefined,
-    }
-  })
+  const { gasFee } = swapTxContext
+  const uniswapXGasBreakdown = isUniswapX(swapTxContext) ? swapTxContext.gasFeeBreakdown : undefined
 
-  const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
+  const { derivedSwapInfo } = useSwapFormContext()
 
   const { priceImpactWarning } = useParsedSwapWarnings()
   const showPriceImpactWarning = Boolean(priceImpactWarning)
 
-  const customSlippageTolerance = useTransactionSettingsStore((s) => s.customSlippageTolerance)
-  const autoSlippageTolerance = useTransactionSettingsAutoSlippageToleranceStore((s) => s.autoSlippageTolerance)
-
+  const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
   const { chainId, trade } = derivedSwapInfo
 
   const swapFeeUsd = getSwapFeeUsdFromDerivedSwapInfo(derivedSwapInfo)
@@ -67,7 +53,7 @@ export function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Elemen
           showSeparatorToggle={false}
           outputCurrency={trade.trade.outputAmount.currency}
           transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
-          uniswapXGasBreakdown={gasFeeBreakdown}
+          uniswapXGasBreakdown={uniswapXGasBreakdown}
           RoutingInfo={isBridge ? <AcrossRoutingInfo /> : <RoutingInfo gasFee={gasFee} chainId={chainId} />}
           RateInfo={
             showPriceImpactWarning ? (

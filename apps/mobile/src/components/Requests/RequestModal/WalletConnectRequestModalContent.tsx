@@ -12,9 +12,9 @@ import {
 import { Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { isPrimaryTypePermit } from 'uniswap/src/types/walletConnect'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -69,7 +69,7 @@ export function WalletConnectRequestModalContent({
 }: WalletConnectRequestModalContentProps): JSX.Element {
   const chainId = request.chainId
   const permitInfo = getPermitInfo(request)
-  const nativeCurrency = nativeOnChain(chainId)
+  const nativeCurrency = NativeCurrency.onChain(chainId)
 
   const { t } = useTranslation()
   const { animatedFooterHeight } = useBottomSheetInternal()
@@ -115,7 +115,7 @@ export function WalletConnectRequestModalContent({
           <Flex p="$spacing16">
             <Text color="$statusWarning" variant="body2">
               {t('walletConnect.request.error.insufficientFunds', {
-                currencySymbol: nativeCurrency.symbol ?? '',
+                currencySymbol: nativeCurrency.symbol,
               })}
             </Text>
           </Flex>

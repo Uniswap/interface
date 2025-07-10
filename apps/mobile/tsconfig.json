@@ -19,6 +19,6 @@
   ],
   "compilerOptions": {
     "baseUrl": "./",
-    "types": ["jest", "node"]
+    "types": ["jest"]
   }
 }

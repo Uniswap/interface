@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { Trans } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { Button } from 'ui/src'
 import { EmptyActivityIcon } from 'ui/src/components/icons/EmptyActivityIcon'
 import { EmptyNftsIcon } from 'ui/src/components/icons/EmptyNftsIcon'

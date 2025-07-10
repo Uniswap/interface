@@ -84,12 +84,7 @@ function* cancelOrder(order: UniswapXOrderDetails, cancelRequest: providers.Tran
 
   try {
     const accounts = yield* select(selectAccounts)
-    const checksummedAddress = getValidAddress({
-      address: order.from,
-      chainId,
-      withEVMChecksum: true,
-      log: false,
-    })
+    const checksummedAddress = getValidAddress({ address: order.from, withChecksum: true, log: false })
     if (!checksummedAddress) {
       throw new Error(`Cannot cancel order, address is invalid: ${checksummedAddress}`)
     }

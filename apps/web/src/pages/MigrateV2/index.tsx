@@ -16,7 +16,7 @@ import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBa
 import { BodyWrapper } from 'pages/App/AppBody'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { Trans } from 'react-i18next'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { StyledInternalLink } from 'theme/components/Links'

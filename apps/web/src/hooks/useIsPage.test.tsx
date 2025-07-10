@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react'
 import { MatchType, PageType, useIsPage } from 'hooks/useIsPage'
-import { BrowserRouter } from 'react-router'
+import { BrowserRouter } from 'react-router-dom'
 
 describe('useIsPage', () => {
   it.each([
@@ -13,7 +13,9 @@ describe('useIsPage', () => {
   ])('matches default behavior for %s based on path %s', (pageType, path) => {
     window.history.pushState({}, '', path)
     const { result } = renderHook(() => useIsPage(pageType), {
-      wrapper: ({ children }) => <BrowserRouter>{children}</BrowserRouter>,
+      wrapper: ({ children }) => (
+        <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>{children}</BrowserRouter>
+      ),
     })
     expect(result.current).toBe(true)
   })
@@ -26,7 +28,9 @@ describe('useIsPage', () => {
   ])('overrides default MatchType for %s when custom MatchType %s is provided', (pageType, path, matchType) => {
     window.history.pushState({}, '', path)
     const { result } = renderHook(() => useIsPage(pageType, matchType), {
-      wrapper: ({ children }) => <BrowserRouter>{children}</BrowserRouter>,
+      wrapper: ({ children }) => (
+        <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>{children}</BrowserRouter>
+      ),
     })
     expect(result.current).toBe(true)
   })
@@ -37,7 +41,9 @@ describe('useIsPage', () => {
   ])('does not match default behavior for %s with path %s', (pageType, path) => {
     window.history.pushState({}, '', path)
     const { result } = renderHook(() => useIsPage(pageType), {
-      wrapper: ({ children }) => <BrowserRouter>{children}</BrowserRouter>,
+      wrapper: ({ children }) => (
+        <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>{children}</BrowserRouter>
+      ),
     })
     expect(result.current).toBe(false)
   })

@@ -3,7 +3,6 @@ import { PopupType } from 'components/Popups/types'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useCallback } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { UserRejectedRequestError } from 'viem'
 
@@ -12,11 +11,6 @@ export default function useSelectChain() {
 
   return useCallback(
     async (targetChain: UniverseChainId) => {
-      if (isSVMChain(targetChain)) {
-        // Solana connections are single-chain & maintained separately from EVM connections
-        return true
-      }
-
       try {
         await switchChain(targetChain)
         return true

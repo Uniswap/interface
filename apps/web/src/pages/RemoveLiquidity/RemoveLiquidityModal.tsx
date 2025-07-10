@@ -14,7 +14,8 @@ import { useTranslation } from 'react-i18next'
 import { HeightAnimator } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
+import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
 
 function RemoveLiquidityModalInner() {
   const { closeModal } = useModalState(ModalName.RemoveLiquidity)
@@ -37,7 +38,10 @@ function RemoveLiquidityModalInner() {
   }
 
   return (
-    <LPTransactionSettingsStoreContextProvider autoSlippageTolerance={autoSlippageTolerance}>
+    <TransactionSettingsContextProvider
+      settingKey={TransactionSettingKey.LP}
+      autoSlippageTolerance={autoSlippageTolerance}
+    >
       <RemoveLiquidityTxContextProvider>
         <Modal name={ModalName.RemoveLiquidity} onClose={closeModal} isDismissible gap="$gap24" padding="$padding16">
           <LiquidityModalHeader
@@ -50,7 +54,7 @@ function RemoveLiquidityModalInner() {
           </HeightAnimator>
         </Modal>
       </RemoveLiquidityTxContextProvider>
-    </LPTransactionSettingsStoreContextProvider>
+    </TransactionSettingsContextProvider>
   )
 }
 

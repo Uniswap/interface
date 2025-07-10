@@ -1,9 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useEffect, useRef } from 'react'
-import { getPrimaryStablecoin, isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 
 const NUM_DECIMALS_USD = 2
 const NUM_DECIMALS_DISPLAY = 2
@@ -46,7 +46,7 @@ export function useUSDTokenUpdater({
       const stablecoinAmount = getCurrencyAmount({
         value: exactAmountUSD,
         valueType: ValueType.Exact,
-        currency: getPrimaryStablecoin(currency.chainId),
+        currency: STABLECOIN_AMOUNT_OUT[currency.chainId].currency,
       })
 
       const currencyAmount = stablecoinAmount ? price.invert().quote(stablecoinAmount) : undefined

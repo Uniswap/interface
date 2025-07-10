@@ -1,6 +1,6 @@
 import { ExploreTab } from 'pages/Explore/constants'
 import { Suspense, lazy } from 'react'
-import { Navigate, useLocation, useParams } from 'react-router'
+import { Navigate, useLocation, useParams } from 'react-router-dom'
 import { Loader } from 'ui/src/loading/Loader'
 
 const Explore = lazy(() => import('pages/Explore'))

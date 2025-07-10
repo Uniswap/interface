@@ -4,7 +4,7 @@ import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useCallback, useState } from 'react'
 import { CheckCircle, Copy } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import { Flex, Text, TextProps, styled, useMedia, useSporeColors } from 'ui/src'
 import { shortenAddress } from 'utilities/src/addresses'
 

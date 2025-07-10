@@ -1,5 +1,5 @@
 import { useAccount } from 'hooks/useAccount'
-import { Navigate, useParams } from 'react-router'
+import { Navigate, useParams } from 'react-router-dom'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { getChainUrlParam } from 'utils/chainParams'
 

@@ -2,7 +2,7 @@ import { getTokenDetailsURL } from 'appGraphql/data/util'
 import { approvedERC20, InteractiveToken } from 'pages/Landing/assets/approvedTokens'
 import { Ticker } from 'pages/Landing/components/TokenCloud/Ticker'
 import { useCallback } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { IconCloud, ItemPoint } from 'uniswap/src/components/IconCloud/IconCloud'
 import { shuffleArray } from 'uniswap/src/components/IconCloud/utils'
 

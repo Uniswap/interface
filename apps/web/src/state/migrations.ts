@@ -83,15 +83,9 @@ export const migrations: MigrationManifest = {
   38: createLocalTransactionClearingMigration(38),
   39: createLocalTransactionClearingMigration(39),
   40: createLocalTransactionClearingMigration(40),
-  41: createLocalTransactionClearingMigration(41),
-  42: createLocalTransactionClearingMigration(42),
-  43: createLocalTransactionClearingMigration(43),
-  44: createLocalTransactionClearingMigration(44),
-  45: createLocalTransactionClearingMigration(45),
-  46: createLocalTransactionClearingMigration(46),
 } as const
 
-export const PERSIST_VERSION = 46
+export const PERSIST_VERSION = 40
 
 export const INDEXED_DB_REDUX_TABLE_NAME = 'redux'
 

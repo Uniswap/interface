@@ -280,8 +280,6 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
         tags: { file: 'OnboardingContextProvider', function: 'generateAccountsAndImportAddresses' },
         extra: { invalidAddress },
       })
-      // Return early on invalid addresses to prevent undefined derivation indices
-      return undefined
     }
 
     const addresses = await Promise.all(
@@ -292,24 +290,17 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
       })
     })
 
-    const accountsToImport: SignerMnemonicAccount[] | undefined = addresses?.map((address, index) => {
-      const derivationIndex = indexesToImport[index]
-      if (derivationIndex === undefined) {
-        throw new Error('Invalid derivation index')
-      }
-
-      return {
-        type: AccountType.SignerMnemonic,
-        address,
-        name: t('onboarding.wallet.defaultName', { number: derivationIndex + 1 }),
-        timeImportedMs: dayjs().valueOf(),
-        derivationIndex,
-        mnemonicId,
-        backups: [backupType],
-        pushNotificationsEnabled: true,
-        smartWalletConsent: true,
-      }
-    })
+    const accountsToImport: SignerMnemonicAccount[] | undefined = addresses?.map((address, index) => ({
+      type: AccountType.SignerMnemonic,
+      address,
+      name: t('onboarding.wallet.defaultName', { number: index + 1 }),
+      timeImportedMs: dayjs().valueOf(),
+      derivationIndex: index,
+      mnemonicId,
+      backups: [backupType],
+      pushNotificationsEnabled: true,
+      smartWalletConsent: true,
+    }))
 
     setImportedAccounts(accountsToImport)
 

@@ -7,7 +7,6 @@ import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { uniqueAddressesOnly } from 'uniswap/src/features/address/utils'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { selectRecipientsByRecency } from 'uniswap/src/features/transactions/selectors'
 import { useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
@@ -56,32 +55,15 @@ function useValidatedSearchedAddress(
       return []
     }
 
-    // TODO(WALL-7065): Update to support Solana validation
     // Check for a valid unitag, ENS address, or literal address
     const unitagValidatedAddress = getValidAddress({
       address: unitag?.address?.address,
-      platform: Platform.EVM,
-      withEVMChecksum: true,
+      withChecksum: true,
       log: false,
     })
-    const dotEthValidatedAddress = getValidAddress({
-      address: dotEthAddress,
-      platform: Platform.EVM,
-      withEVMChecksum: true,
-      log: false,
-    })
-    const ensValidatedAddress = getValidAddress({
-      address: ensAddress,
-      platform: Platform.EVM,
-      withEVMChecksum: true,
-      log: false,
-    })
-    const literalValidatedAddress = getValidAddress({
-      address: searchTerm,
-      platform: Platform.EVM,
-      withEVMChecksum: true,
-      log: false,
-    })
+    const dotEthValidatedAddress = getValidAddress({ address: dotEthAddress, withChecksum: true, log: false })
+    const ensValidatedAddress = getValidAddress({ address: ensAddress, withChecksum: true, log: false })
+    const literalValidatedAddress = getValidAddress({ address: searchTerm, withChecksum: true, log: false })
 
     const recipients = []
 

@@ -1,13 +1,12 @@
 import { useModalState } from 'hooks/useModalState'
 import styledDep from 'lib/styled-components'
 import { useExternallyConnectableExtensionId } from 'pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
-import type { ChangeEvent, PropsWithChildren } from 'react'
-import { useCallback } from 'react'
+import { ChangeEvent, PropsWithChildren, useCallback } from 'react'
 import { Button, Flex, ModalCloseIcon, Text, styled } from 'ui/src'
 import { LayerRow } from 'uniswap/src/components/gating/Rows'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import type { DynamicConfigKeys } from 'uniswap/src/features/gating/configs'
 import {
+  DynamicConfigKeys,
   DynamicConfigs,
   ExternallyConnectableExtensionConfigKey,
   NetworkRequestsConfigKey,
@@ -168,9 +167,6 @@ export default function FeatureFlagModal() {
           <ModalCloseIcon onClose={closeModal} />
         </CenteredRow>
         <Flex maxHeight="600px" pb="$gap8" overflow="scroll" $md={{ maxHeight: 'unset' }}>
-          <FeatureFlagGroup name="Solana">
-            <FeatureFlagOption flag={FeatureFlags.Solana} label="Enable Solana UX" />
-          </FeatureFlagGroup>
           <FeatureFlagGroup name="Swap Refactor">
             <FeatureFlagOption
               flag={FeatureFlags.ServiceBasedSwapTransactionInfo}
@@ -188,6 +184,7 @@ export default function FeatureFlagModal() {
               flag={FeatureFlags.ForcePermitTransactions}
               label="Force Permit2 transaction instead of signatures, always"
             />
+            <FeatureFlagOption flag={FeatureFlags.SwapSettingsV4HooksToggle} label="Swap Settings V4 Hooks Toggle" />
             <FeatureFlagOption
               flag={FeatureFlags.ForceDisableWalletGetCapabilities}
               label="Force disable wallet get capabilities result"

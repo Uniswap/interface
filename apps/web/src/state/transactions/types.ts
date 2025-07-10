@@ -1,10 +1,9 @@
-import type { TransactionResponse } from '@ethersproject/abstract-provider'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
-import type {
+import { TransactionResponse } from '@ethersproject/abstract-provider'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
+import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import {
   ApproveTransactionInfo,
-  BridgeTransactionInfo,
   ClaimUniTransactionInfo,
   CollectFeesTransactionInfo,
   CreatePairTransactionInfo,
@@ -14,9 +13,6 @@ import type {
   LiquidityDecreaseTransactionInfo,
   LiquidityIncreaseTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
-  MigrateV3LiquidityToV4TransactionInfo,
-  Permit2ApproveTransactionInfo,
-  SendTokenTransactionInfo,
   TransactionOriginType,
   TransactionStatus,
   TransactionType as UniswapTransactionType,
@@ -24,6 +20,7 @@ import type {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export type BaseTransactionType =
+  | TransactionType
   | UniswapTransactionType.Approve
   | UniswapTransactionType.Swap
   | UniswapTransactionType.ClaimUni
@@ -34,22 +31,62 @@ export type BaseTransactionType =
   | UniswapTransactionType.LiquidityDecrease
   | UniswapTransactionType.CreatePool
   | UniswapTransactionType.CreatePair
-  | UniswapTransactionType.MigrateLiquidityV3ToV4
-  | UniswapTransactionType.Permit2Approve
-  | UniswapTransactionType.Bridge
-  | UniswapTransactionType.Send
-  | UniswapTransactionType.LPIncentivesClaimRewards
+
+export enum TransactionType {
+  SEND = 18,
+  BRIDGE = 29,
+  MIGRATE_LIQUIDITY_V3_TO_V4 = 31,
+  LP_INCENTIVES_CLAIM_REWARDS = 32,
+  PERMIT = 33,
+}
+interface BaseTransactionInfo {
+  type: BaseTransactionType
+}
+
+export interface PermitTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.PERMIT
+  tokenAddress: string
+  spender: string
+  amount: string
+}
+
+export interface BridgeTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.BRIDGE
+  inputCurrencyId: string
+  inputChainId: UniverseChainId
+  inputCurrencyAmountRaw: string
+  outputCurrencyId: string
+  outputChainId: UniverseChainId
+  outputCurrencyAmountRaw: string
+  quoteId?: string
+  depositConfirmed: boolean
+}
+
+export interface MigrateV3LiquidityToV4TransactionInfo {
+  type: TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4
+  currency0Id: string
+  currency1Id: string
+  currency0AmountRaw: string
+  currency1AmountRaw: string
+}
+
+export interface SendTransactionInfo {
+  type: TransactionType.SEND
+  currencyId: string
+  amount: string
+  recipient: string
+}
 
 export type TransactionInfo =
   | ApproveTransactionInfo
-  | Permit2ApproveTransactionInfo
+  | PermitTransactionInfo
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
   | ClaimUniTransactionInfo
   | WrapTransactionInfo
   | MigrateV2LiquidityToV3TransactionInfo
   | CollectFeesTransactionInfo
-  | SendTokenTransactionInfo
+  | SendTransactionInfo
   | LiquidityIncreaseTransactionInfo
   | LiquidityDecreaseTransactionInfo
   | BridgeTransactionInfo
@@ -90,7 +127,7 @@ export type TransactionDetails = PendingTransactionDetails | ConfirmedTransactio
 export type VitalTxFields = Pick<TransactionResponse, 'hash' | 'nonce' | 'data'>
 
 export interface LpIncentivesClaimTransactionInfo {
-  type: UniswapTransactionType.LPIncentivesClaimRewards
+  type: TransactionType.LP_INCENTIVES_CLAIM_REWARDS
   tokenAddress: string
 }
 

@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { Flex, Text, TouchableArea } from 'ui/src'
@@ -35,7 +35,6 @@ import { NFTTransfer } from 'wallet/src/components/nfts/NFTTransfer'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { GasFeeRow } from 'wallet/src/features/transactions/send/GasFeeRow'
 import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/send/hooks/useShowSendNetworkNotification'
-import { isAmountGreaterThanZero } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
 const TRANSFER_DIRECTION_BUTTON_SIZE = iconSizes.icon20
@@ -229,14 +228,6 @@ export function SendTokenForm(): JSX.Element {
     [isFiatInput, maxDecimals, updateSendForm],
   )
 
-  const fiatOrTokenGreaterThanZero = useMemo((): boolean => {
-    return isAmountGreaterThanZero({
-      exactAmountToken,
-      exactAmountFiat,
-      currency: currencyIn,
-    })
-  }, [exactAmountToken, exactAmountFiat, currencyIn])
-
   return (
     <>
       {transferWarning?.title && !isInsufficientGasFundsWarning && (
@@ -331,7 +322,7 @@ export function SendTokenForm(): JSX.Element {
               ) : null}
             </Flex>
             <Flex py="$spacing12">
-              {!transferWarning && currencyIn?.chainId && !isBlocked && fiatOrTokenGreaterThanZero && (
+              {!transferWarning && currencyIn?.chainId && !isBlocked && (
                 <GasFeeRow chainId={currencyIn.chainId} gasFee={gasFee} />
               )}
             </Flex>

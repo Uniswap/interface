@@ -1,13 +1,12 @@
-import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import type { PropsWithChildren, ReactNode } from 'react'
-import { useState } from 'react'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Flex } from 'ui/src'
 import { NetworkFee } from 'uniswap/src/components/gas/NetworkFee'
-import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
+import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExpectedFailureBanner } from 'uniswap/src/features/transactions/TransactionDetails/ExpectedFailureBanner'
@@ -17,7 +16,7 @@ import { SwapFee } from 'uniswap/src/features/transactions/TransactionDetails/Sw
 import { SwapReviewTokenWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/SwapReviewTokenWarningCard'
 import { TransactionWarning } from 'uniswap/src/features/transactions/TransactionDetails/TransactionWarning'
 import { UserReceiveAmount } from 'uniswap/src/features/transactions/TransactionDetails/UserReceiveAmount'
-import type {
+import {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
@@ -25,8 +24,8 @@ import { TransactionSettingsModal } from 'uniswap/src/features/transactions/comp
 import { EstimatedTime } from 'uniswap/src/features/transactions/swap/components/EstimatedTime'
 import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippageUpdate/SlippageUpdate'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
-import type { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import type { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
+import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isInterface } from 'utilities/src/platform'
 
 interface TransactionDetailsProps {

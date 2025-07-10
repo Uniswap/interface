@@ -10,8 +10,8 @@ import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 vi.mock('state/explore/topPools')
-vi.mock('react-router', async () => {
-  const actual = await vi.importActual('react-router')
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom')
   return {
     ...actual,
     default: actual,

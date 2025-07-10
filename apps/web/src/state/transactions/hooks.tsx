@@ -11,10 +11,10 @@ import {
   PendingTransactionDetails,
   TransactionDetails,
   TransactionInfo,
+  TransactionType,
 } from 'state/transactions/types'
 import { isConfirmedTx, isPendingTx } from 'state/transactions/utils'
-import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { TransactionType as UniswapTransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { usePrevious } from 'utilities/src/react/hooks'
@@ -148,12 +148,7 @@ function usePendingApprovalAmount(token?: Token, spender?: string): BigNumber | 
       if (!tx || isConfirmedTx(tx) || tx.info.type !== UniswapTransactionType.Approve) {
         continue
       }
-      if (
-        tx.info.spender === spender &&
-        tx.info.tokenAddress === token.address &&
-        isTransactionRecent(tx) &&
-        tx.info.approvalAmount !== undefined
-      ) {
+      if (tx.info.spender === spender && tx.info.tokenAddress === token.address && isTransactionRecent(tx)) {
         return BigNumber.from(tx.info.approvalAmount)
       }
     }
@@ -199,7 +194,7 @@ function usePendingLPTransactions(): PendingTransactionDetails[] {
               UniswapTransactionType.LiquidityDecrease,
               UniswapTransactionType.CreatePool,
               UniswapTransactionType.CreatePair,
-              UniswapTransactionType.MigrateLiquidityV3ToV4,
+              TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4,
               UniswapTransactionType.CollectFees,
             ] as BaseTransactionType[]
           ).includes(tx.info.type),

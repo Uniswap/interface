@@ -1,4 +1,3 @@
-import { encode } from 'html-entities'
 import { MetaTagInjectorInput } from 'shared-cloud/metatags'
 
 /**
@@ -16,7 +15,7 @@ export class MetaTagInjector implements HTMLRewriterElementContentHandlers {
   // eslint-disable-next-line max-params
   append(element: Element, attribute: string, content: string) {
     // without adding data-rh="true", react-helmet-async doesn't overwrite existing metatags
-    element.append(`<meta ${attribute} content="${encode(content)}" data-rh="true">`, { html: true })
+    element.append(`<meta ${attribute} content="${content}" data-rh="true">`, { html: true })
   }
 
   // eslint-disable-next-line max-params

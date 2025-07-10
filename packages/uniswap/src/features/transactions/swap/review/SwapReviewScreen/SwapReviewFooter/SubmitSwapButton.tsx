@@ -2,18 +2,15 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Button, Flex, useIsShortMobileDevice } from 'ui/src'
 import { Passkey } from 'ui/src/components/icons/Passkey'
-import type { AppTFunction } from 'ui/src/i18n/types'
-import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import type { PasskeyAuthStatus } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { AppTFunction } from 'ui/src/i18n/types'
+import { Warning, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import {
-  useSwapFormStore,
-  useSwapFormStoreDerivedSwapInfo,
-} from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
-import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+  PasskeyAuthStatus,
+  useTransactionModalContext,
+} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
+import { PermitMethod, SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -33,17 +30,14 @@ export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }:
   const { t } = useTranslation()
   const { renderBiometricsIcon, passkeyAuthStatus } = useTransactionModalContext()
 
-  const isSubmitting = useSwapFormStore((s) => s.isSubmitting)
+  const { isSubmitting, derivedSwapInfo } = useSwapFormContext()
   const {
     wrapType,
     trade: { trade, indicativeTrade },
-  } = useSwapFormStoreDerivedSwapInfo((s) => ({
-    wrapType: s.wrapType,
-    trade: s.trade,
-  }))
+  } = derivedSwapInfo
   const indicative = Boolean(!trade && indicativeTrade)
 
-  const swapTxContext = useSwapTxStore((s) => s)
+  const swapTxContext = useSwapTxContext()
   const actionText = getActionText({
     t,
     wrapType,
@@ -161,7 +155,6 @@ const getSwapAction = ({
   return SwapAction.Swap
 }
 
-// TODO: Refactor this to not need the entire `swapTxContext` from the store
 export const getActionText = ({
   t,
   wrapType,

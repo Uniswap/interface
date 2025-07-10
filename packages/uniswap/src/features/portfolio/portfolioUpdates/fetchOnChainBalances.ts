@@ -9,10 +9,11 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { QuoteRequest, QuoteResponse, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fromGraphQLChain, getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
 import { getOnChainBalancesFetch } from 'uniswap/src/features/portfolio/api'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { STABLECOIN_AMOUNT_OUT } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
@@ -172,7 +173,19 @@ async function getDenominatedValue({
 
   const tokenAddress = token.address ?? getNativeAddress(universeChainId)
 
-  const stablecoinCurrency = getPrimaryStablecoin(universeChainId)
+  const stablecoinCurrency = STABLECOIN_AMOUNT_OUT[universeChainId].currency
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!stablecoinCurrency) {
+    logger.error(new Error('[ITBU] No `stablecoinCurrency` found'), {
+      tags: {
+        file: 'fetchOnChainBalances.ts',
+        function: 'getDenominatedValue',
+      },
+      extra,
+    })
+    return undefined
+  }
 
   const indicativeQuote = await fetchIndicativeQuote({
     type: TradeType.EXACT_INPUT,

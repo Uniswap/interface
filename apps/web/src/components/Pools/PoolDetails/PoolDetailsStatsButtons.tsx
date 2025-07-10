@@ -14,7 +14,7 @@ import { Swap } from 'pages/Swap'
 import { ReactNode, useCallback, useReducer, useState } from 'react'
 import { Plus, X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Z_INDEX } from 'theme/zIndex'
 import { Button, Flex, Spacer, useIsTouchDevice, useMedia } from 'ui/src'
 import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
@@ -38,7 +38,13 @@ const PoolDetailsStatsButtonsRow = styled(Row)`
     position: fixed;
     bottom: 0px;
     left: 0;
-    padding: 16px;
+    margin: 8px;
+    width: calc(100% - 16px);
+    background: ${({ theme }) => theme.surface1};
+    padding: 12px 32px;
+    border: 1px solid ${({ theme }) => theme.surface3};
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
     & > :first-child {
       margin-right: auto;
     }
@@ -89,14 +95,12 @@ interface PoolButtonProps {
 }
 
 const PoolButton = ({ isOpen, icon, onPress, children, 'data-testid': dataTestId }: PoolButtonProps) => {
-  const media = useMedia()
-
   return (
     <Button
       onPress={onPress}
       icon={icon}
       variant={isOpen ? 'default' : 'branded'}
-      emphasis={media.xl ? 'primary' : 'secondary'}
+      emphasis="secondary"
       data-testid={dataTestId}
     >
       {children}
@@ -204,12 +208,7 @@ export function PoolDetailsStatsButtons({
   return (
     <Flex flexDirection="column" gap="$gap24">
       <PoolButtonsWrapper isMobile={isMobile}>
-        <Flex
-          row
-          justifyContent="center"
-          gap={isMobile || screenSizeLargerThanTablet ? '$spacing12' : '$spacing16'}
-          width="100%"
-        >
+        <Flex row justifyContent="center" gap={screenSizeLargerThanTablet ? '$spacing12' : '$spacing8'} width="100%">
           <PoolButton
             icon={swapModalOpen ? <X size="$icon.20" /> : <CoinConvert size="$icon.20" />}
             onPress={toggleSwapModalOpen}

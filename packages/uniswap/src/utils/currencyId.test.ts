@@ -1,7 +1,8 @@
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { DAI, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { DAI } from 'uniswap/src/constants/tokens'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import {
   NATIVE_ANALYTICS_ADDRESS_VALUE,
   areCurrencyIdsEqual,
@@ -18,7 +19,7 @@ import {
 } from 'uniswap/src/utils/currencyId'
 import { INVALID_ADDRESS_TOO_SHORT, INVALID_CHAIN_ID, VALID_ADDRESS, VALID_CHAIN_ID } from 'utilities/src/test/fixtures'
 
-const ETH = nativeOnChain(UniverseChainId.Mainnet)
+const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
 
 describe('currencyId', () => {
   it.each`

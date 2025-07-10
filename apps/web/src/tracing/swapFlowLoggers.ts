@@ -1,10 +1,10 @@
 import { SignatureType } from 'state/signatures/types'
-import type { ConfirmedTransactionDetails } from 'state/transactions/types'
+import { ConfirmedTransactionDetails, TransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { SwapRouting } from 'uniswap/src/features/telemetry/types'
+import { SwapRouting } from 'uniswap/src/features/telemetry/types'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
 import {
   TransactionOriginType,
@@ -12,12 +12,12 @@ import {
   TransactionType as UniswapTransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
-import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
+import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
-type OnChainSwapTransactionType = UniswapTransactionType.Swap | UniswapTransactionType.Bridge
+type OnChainSwapTransactionType = UniswapTransactionType.Swap | TransactionType.BRIDGE
 const TRANSACTION_TYPE_TO_SWAP_ROUTING: Record<OnChainSwapTransactionType, SwapRouting> = {
   [UniswapTransactionType.Swap]: 'classic',
-  [UniswapTransactionType.Bridge]: 'bridge',
+  [TransactionType.BRIDGE]: 'bridge',
 }
 
 export function logSwapFinalized({

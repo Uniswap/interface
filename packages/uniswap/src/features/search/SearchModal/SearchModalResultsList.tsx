@@ -12,7 +12,6 @@ import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSearchPools } from 'uniswap/src/features/dataApi/searchPools'
 import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import { NUMBER_OF_RESULTS_SHORT } from 'uniswap/src/features/search/SearchModal/constants'
 import { useWalletSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useWalletSearchResults'
@@ -62,9 +61,7 @@ function useSectionsForSearchResults({
   })
   const tokenSearchResults = useCurrencyInfosToTokenOptions({ currencyInfos: searchResultCurrencies })
   const isPoolAddressSearch =
-    searchFilter &&
-    getValidAddress({ address: searchFilter, platform: Platform.EVM }) &&
-    searchResultPools?.length === 1
+    searchFilter && getValidAddress({ address: searchFilter }) && searchResultPools?.length === 1
   const tokenSearchResultsSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.Tokens,
     options: isPoolAddressSearch ? [] : tokenSearchResults, // do not display tokens if pool address search (to avoid displaying V2 liquidity tokens in results)

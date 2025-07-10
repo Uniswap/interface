@@ -8,7 +8,6 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -51,8 +50,7 @@ const LeftRightText = ({ leftText, rightChild }: { leftText: string; rightChild:
 export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewAddressWarningModalProps): JSX.Element {
   const { t } = useTranslation()
 
-  // TODO(WALL-7065): Update to support Solana validation
-  const validated = getValidAddress({ address, platform: Platform.EVM })
+  const validated = getValidAddress({ address })
   const displayName = useDisplayName(address, { includeUnitagSuffix: true })
   const ensDisplayName = useENSName(validated ?? undefined)
   const { data: ensAvatar } = useENSAvatar(validated)

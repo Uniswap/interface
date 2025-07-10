@@ -11,7 +11,6 @@ import {
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/constants'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { ScantasticParams, ScantasticParamsSchema } from 'wallet/src/features/scantastic/types'
@@ -46,12 +45,7 @@ export async function getSupportedURI(
     return undefined
   }
 
-  const maybeAddress = getValidAddress({
-    address: uri,
-    platform: Platform.EVM,
-    withEVMChecksum: true,
-    log: false,
-  })
+  const maybeAddress = getValidAddress({ address: uri, withChecksum: true, log: false })
   if (maybeAddress) {
     return { type: URIType.Address, value: maybeAddress }
   }
@@ -129,7 +123,7 @@ function getMetamaskAddress(uri: string): Nullable<string> {
     return null
   }
 
-  return getValidAddress({ address: uriParts[1], platform: Platform.EVM, withEVMChecksum: true, log: false })
+  return getValidAddress({ address: uriParts[1], withChecksum: true, log: false })
 }
 
 // format is uniswap://scantastic?<params>

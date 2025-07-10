@@ -56,23 +56,3 @@ export function bubbleToTop<T>(arr: T[], predicate: (element: T) => boolean): T[
   }
   return result
 }
-
-/**
- * Utility type to represent a non-empty array (an array with at least one element; destructuring the first element yields a value typed as NonNullable).
- * Use `getNonEmptyArrayOrThrow` to construct a NonEmptyArray from a primitive array.
- */
-export type NonEmptyArray<T> = [T, ...T[]]
-
-/**
- * Returns a non-empty array or throws an error if the array is empty.
- * @param array - The array to check.
- * @returns A non-empty array.
- * @throws An error if the array is empty.
- */
-export function getNonEmptyArrayOrThrow<T>(array: T[]): NonEmptyArray<T> {
-  const [first, ...rest] = array
-  if (!first) {
-    throw new Error('Array is empty')
-  }
-  return [first, ...rest]
-}

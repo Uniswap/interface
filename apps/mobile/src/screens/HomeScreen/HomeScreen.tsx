@@ -48,12 +48,9 @@ import { SMART_WALLET_UPGRADE_FALLBACK, SMART_WALLET_UPGRADE_VIDEO } from 'ui/sr
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
-import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
-import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
-import { getListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlag, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -421,44 +418,14 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const onRefreshHomeData = useCallback(async () => {
     setRefreshing(true)
 
-    const isRestBalancesEnabled = getFeatureFlag(FeatureFlags.GqlToRestBalances)
-    const isRestTransactionsEnabled = getFeatureFlag(FeatureFlags.GqlToRestTransactions)
-    const activeAccountAddress = activeAccount.address
-
-    const restQueriesToInvalidate = []
-    const gqlQueriesToRefetch = [...NFTS_TAB_DATA_DEPENDENCIES]
-
-    if (isRestBalancesEnabled) {
-      restQueriesToInvalidate.push(
-        SharedQueryClient.invalidateQueries({
-          queryKey: getPortfolioQuery({ input: { evmAddress: activeAccountAddress } }).queryKey,
-        }),
-      )
-    } else {
-      gqlQueriesToRefetch.push(...TOKENS_TAB_DATA_DEPENDENCIES)
-    }
-
-    if (isRestTransactionsEnabled) {
-      restQueriesToInvalidate.push(
-        SharedQueryClient.invalidateQueries({
-          queryKey: getListTransactionsQuery({ input: { evmAddress: activeAccountAddress } }).queryKey,
-        }),
-      )
-    } else {
-      gqlQueriesToRefetch.push(...ACTIVITY_TAB_DATA_DEPENDENCIES)
-    }
-
-    await Promise.all([
-      ...restQueriesToInvalidate,
-      apolloClient.refetchQueries({
-        include: gqlQueriesToRefetch,
-      }),
-    ])
+    await apolloClient.refetchQueries({
+      include: [...TOKENS_TAB_DATA_DEPENDENCIES, ...NFTS_TAB_DATA_DEPENDENCIES, ...ACTIVITY_TAB_DATA_DEPENDENCIES],
+    })
 
     // Artificially delay 0.5 second to show the refresh animation
     const timeout = setTimeout(() => setRefreshing(false), 500)
     return () => clearTimeout(timeout)
-  }, [apolloClient, activeAccount.address])
+  }, [apolloClient])
 
   const renderTab = useCallback(
     ({
@@ -575,7 +542,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   )
 
   const hasSeenCreatedSmartWalletModal = useSelector(selectHasSeenCreatedSmartWalletModal)
-  const [shouldShowCreatedModal, setShouldShowCreatedModal] = useState(false)
+  const [shouldShowCreatedModal, setShouldShowCreatedModal] = useState(!hasSeenCreatedSmartWalletModal)
 
   // Setup listener for account creation events to show the SmartWalletCreatedModal
   useAccountCountChanged(

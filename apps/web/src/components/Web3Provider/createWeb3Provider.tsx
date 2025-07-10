@@ -1,7 +1,5 @@
-import { CoinbaseWalletAdapter } from '@solana/wallet-adapter-coinbase'
-import { WalletProvider as SolanaWalletProvider } from '@solana/wallet-adapter-react'
 import { ConnectionProvider } from 'hooks/useConnect'
-import React, { PropsWithChildren, ReactNode, useMemo } from 'react'
+import React, { ReactNode } from 'react'
 import { useWalletCapabilitiesStateEffect } from 'state/walletCapabilities/hooks/useWalletCapabilitiesStateEffect'
 import { WagmiProvider, type Register } from 'wagmi'
 
@@ -18,28 +16,15 @@ export function createWeb3Provider(params: {
   }
 
   const Provider = ({ children }: { children: ReactNode }) => (
-    <SolanaProvider>
-      <WagmiProvider config={wagmiConfig} reconnectOnMount={reconnectOnMount}>
-        <ConnectionProvider>
-          {includeCapabilitiesEffects && <WalletCapabilitiesEffects />}
-          {children}
-        </ConnectionProvider>
-      </WagmiProvider>
-    </SolanaProvider>
+    <WagmiProvider config={wagmiConfig} reconnectOnMount={reconnectOnMount}>
+      <ConnectionProvider>
+        {includeCapabilitiesEffects && <WalletCapabilitiesEffects />}
+        {children}
+      </ConnectionProvider>
+    </WagmiProvider>
   )
 
   Provider.displayName = 'Web3Provider'
 
   return Provider
-}
-
-function SolanaProvider({ children }: PropsWithChildren) {
-  // WalletProvider has most wallet adapters built in
-  const wallets = useMemo(() => [new CoinbaseWalletAdapter()], [])
-
-  return (
-    <SolanaWalletProvider wallets={wallets} autoConnect>
-      {children}
-    </SolanaWalletProvider>
-  )
 }

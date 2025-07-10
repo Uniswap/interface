@@ -1,18 +1,9 @@
-IPFS hash of the deployment:
-- CIDv0: `Qmaeh4NVwkRpuix9zou6KYZF8nXxPrjMZyKyqApeeJBYtQ`
-- CIDv1: `bafybeifw5nnks3pmgjd5anjc4lx25edidvwaf7qkwhwwpjw6xhhiisruqe`
+We are back with some new updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Smart Wallet Management: Enjoy granular management of your smart wallet. Enable upgrades to benefit from faster, lower-cost transactions, view your active delegations, and revoke your delegations, all from Advanced Settings.
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Other changes: 
 
-IPFS gateways:
-- https://bafybeifw5nnks3pmgjd5anjc4lx25edidvwaf7qkwhwwpjw6xhhiisruqe.ipfs.dweb.link/
-- [ipfs://Qmaeh4NVwkRpuix9zou6KYZF8nXxPrjMZyKyqApeeJBYtQ/](ipfs://Qmaeh4NVwkRpuix9zou6KYZF8nXxPrjMZyKyqApeeJBYtQ/)
-
-### 5.103.1 (2025-07-10)
-
-
+- Testnet Mode has now moved into Advanced Settings.
+- WalletConnect improvements
+- Various bug fixes and performance improvements

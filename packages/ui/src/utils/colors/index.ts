@@ -2,11 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
-import type { ThemeKeys } from 'ui/src/index'
-import { type ColorTokens } from 'ui/src/index'
-import { colorsDark, colorsLight } from 'ui/src/theme'
-import type { ColorStrategy, ExtractedColors } from 'ui/src/utils/colors/getExtractedColors'
-import { getExtractedColors } from 'ui/src/utils/colors/getExtractedColors'
+import { ThemeKeys, type ColorTokens } from 'ui/src/index'
+import { colorsLight } from 'ui/src/theme'
+import { ColorStrategy, ExtractedColors, getExtractedColors } from 'ui/src/utils/colors/getExtractedColors'
 import { isSVGUri } from 'utilities/src/format/urls'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { hex } from 'wcag-contrast'
@@ -180,16 +178,10 @@ export function useExtractedTokenColor({
     if (!colorsLoading) {
       setTokenColorLoading(false)
       if (colors !== undefined) {
-        const pickedColor = pickContrastPassingTokenColor({
-          extractedColors: colors,
-          backgroundHex: backgroundColor,
-          isDarkMode,
-        })
-
-        setTokenColor(pickedColor)
+        setTokenColor(pickContrastPassingTokenColor(colors, backgroundColor))
       }
     }
-  }, [backgroundColor, colors, colorsLoading, isDarkMode])
+  }, [backgroundColor, colors, colorsLoading])
 
   const specialCaseTokenColor = useMemo(() => {
     return getSpecialCaseTokenColor(imageUrl, isDarkMode)
@@ -201,7 +193,6 @@ export function useExtractedTokenColor({
 
   if (isSVGUri(imageUrl)) {
     // Fall back to a more neutral color for SVG's since they fail extraction but we can render them elsewhere
-
     return { tokenColor: sporeColors.neutral1.val, tokenColorLoading: false }
   }
 
@@ -292,7 +283,6 @@ function getLogolessColorIndex(tokenName: string, numOptions: number): number {
 function useLogolessColorScheme(tokenName: string): ColorScheme {
   return useMemo(() => {
     const index = getLogolessColorIndex(tokenName, Object.keys(LOGOLESS_COLORS).length)
-
     return logolessColorSchemes[LOGOLESS_COLORS[Object.keys(LOGOLESS_COLORS)[index] as keyof typeof LOGOLESS_COLORS]]
   }, [tokenName])
 }
@@ -384,15 +374,7 @@ export function isGrayColor(color: Maybe<string>): boolean {
  * color against
  * @returns a hex code that will pass a contrast check against the background
  */
-function pickContrastPassingTokenColor({
-  extractedColors,
-  backgroundHex,
-  isDarkMode,
-}: {
-  extractedColors: ExtractedColors
-  backgroundHex: string
-  isDarkMode: boolean
-}): string {
+function pickContrastPassingTokenColor(extractedColors: ExtractedColors, backgroundHex: string): string {
   const colorsInOrder = [
     extractedColors.base,
     extractedColors.detail,
@@ -416,13 +398,13 @@ function pickContrastPassingTokenColor({
     ) {
       // If the color passes contrast but is gray, use a stronger color instead
       if (isGrayColor(c)) {
-        return isDarkMode ? colorsDark.neutral1 : colorsLight.neutral1
+        return colorsLight.neutral1
       }
       return c
     }
   }
 
-  return isDarkMode ? colorsDark.accent1 : colorsLight.accent1
+  return colorsLight.accent1
 }
 
 export function getHoverCssFilter({

@@ -524,31 +524,26 @@ export function getFlagWarning(flag: HookFlag, t: AppTFunction): FlagWarning | u
   }
 }
 
-export function getFeeTierKey(feeTier: number, isDynamicFee: boolean): string {
-  return feeTier + (isDynamicFee ? '-dynamic' : '')
-}
-
 export function mergeFeeTiers({
   feeTiers,
-  defaultFeeData,
+  feeData,
   formatPercent,
   formattedDynamicFeeTier,
 }: {
-  feeTiers: Record<string, FeeTierData>
-  defaultFeeData: FeeData[]
+  feeTiers: Record<number, FeeTierData>
+  feeData: FeeData[]
   formatPercent: (percent: string | number | undefined, maxDecimals?: 2 | 3 | 4) => string
   formattedDynamicFeeTier: string
-}): Record<string, FeeTierData> {
-  const result: Record<string, FeeTierData> = {}
+}): Record<number, FeeTierData> {
+  const result: Record<number, FeeTierData> = {}
   const hasDynamicFeeTier = Object.values(feeTiers).some((feeTier) => isDynamicFeeTier(feeTier.fee))
 
-  for (const feeTier of defaultFeeData) {
+  for (const feeTier of feeData) {
     if (hasDynamicFeeTier && isDynamicFeeTier(feeTier)) {
       continue
     }
 
-    const key = getFeeTierKey(feeTier.feeAmount, isDynamicFeeTier(feeTier))
-    result[key] = {
+    result[feeTier.feeAmount] = {
       fee: feeTier,
       formattedFee: isDynamicFeeTier(feeTier)
         ? formattedDynamicFeeTier

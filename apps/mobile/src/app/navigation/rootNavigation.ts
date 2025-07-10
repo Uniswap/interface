@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NavigationAction, NavigationState } from '@react-navigation/core'
 import { navigationRef } from 'src/app/navigation/navigationRef'
 import { RootParamList } from 'src/app/navigation/types'
@@ -24,9 +23,9 @@ export function navigate<RouteName extends keyof RootParamList>(...args: RootNav
     return
   }
 
-  // Type assignment to `any` is a workaround until we figure out how to
+  // Type assignment to `never` is a workaround until we figure out how to
   // type `createNavigationContainerRef` in a way that's compatible
-  navigationRef.navigate(routeName as any, params as never)
+  navigationRef.navigate(routeName as never, params as never)
 }
 
 export function dispatchNavigationAction(

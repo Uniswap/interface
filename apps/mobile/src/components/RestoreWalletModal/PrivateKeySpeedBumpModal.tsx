@@ -20,10 +20,10 @@ export function PrivateKeySpeedBumpModal({
   navigation,
 }: AppStackScreenProp<typeof ModalName.PrivateKeySpeedBumpModal>): JSX.Element | null {
   const colors = useSporeColors()
-  const { onClose } = useReactNavigationModal()
+  const { onClose, preventCloseRef } = useReactNavigationModal()
 
   const onContinue = (): void => {
-    onClose()
+    preventCloseRef.current = true
     navigation.navigate(MobileScreens.ViewPrivateKeys)
   }
 

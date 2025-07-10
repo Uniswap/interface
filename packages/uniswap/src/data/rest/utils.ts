@@ -118,7 +118,7 @@ export type WithoutWalletAccount<T> = Omit<T, 'walletAccount'>
 /**
  * Helper function to transform input that includes evmAddress/svmAddress to use walletAccount instead
  */
-export function transformInput<T extends Record<string, unknown> & { walletAccount?: never }>(
+export function transformInput<T extends { walletAccount?: never }>(
   input: (T & { evmAddress?: string; svmAddress?: string }) | undefined,
 ):
   | (Omit<T, 'evmAddress' | 'svmAddress' | 'walletAccount'> & { walletAccount: PlainMessage<WalletAccount> })

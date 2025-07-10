@@ -1,5 +1,5 @@
 import { PropsWithChildren, useCallback } from 'react'
-import { createSearchParams, useNavigate } from 'react-router'
+import { createSearchParams, useNavigate } from 'react-router-dom'
 import { navigateToInterfaceFiatOnRamp } from 'src/app/features/for/utils'
 import { AppRoutes, HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
@@ -123,7 +123,7 @@ function useNavigateToAccountActivityList(): () => void {
   const navigateFix = useNavigate()
 
   return useCallback(
-    (): void | Promise<void> =>
+    (): void =>
       navigateFix({
         pathname: AppRoutes.Home,
         search: createSearchParams({
@@ -139,7 +139,7 @@ function useNavigateToAccountTokenList(): () => void {
   const navigateFix = useNavigate()
 
   return useCallback(
-    (): void | Promise<void> =>
+    (): void =>
       navigateFix({
         pathname: AppRoutes.Home,
         search: createSearchParams({

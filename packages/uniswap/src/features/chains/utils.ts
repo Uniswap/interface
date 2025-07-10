@@ -1,16 +1,16 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
-import { Token } from '@uniswap/sdk-core'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GQL_MAINNET_CHAINS, GQL_TESTNET_CHAINS, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import {
   ALL_CHAIN_IDS,
-  GQL_MAINNET_CHAINS,
-  GQL_TESTNET_CHAINS,
+  EnabledChainsInfo,
+  GqlChainId,
+  NetworkLayer,
   SUPPORTED_CHAIN_IDS,
   SUPPORTED_TESTNET_CHAIN_IDS,
-  getChainInfo,
-} from 'uniswap/src/features/chains/chainInfo'
-import { EnabledChainsInfo, GqlChainId, NetworkLayer, UniverseChainId } from 'uniswap/src/features/chains/types'
+  UniverseChainId,
+} from 'uniswap/src/features/chains/types'
 
 // Some code from the web app uses chainId types as numbers
 // This validates them as coerces into SupportedChainId
@@ -89,8 +89,6 @@ export function fromGraphQLChain(chain: Chain | string | undefined): UniverseCha
       return UniverseChainId.Sepolia
     case Chain.Unichain:
       return UniverseChainId.Unichain
-    case Chain.Solana:
-      return UniverseChainId.Solana
     case Chain.Soneium:
       return UniverseChainId.Soneium
     case Chain.AstrochainSepolia:
@@ -241,18 +239,4 @@ export function getEnabledChains({
     defaultChainId: UniverseChainId.Mainnet as UniverseChainId,
     isTestnetModeEnabled,
   }
-}
-
-/** Returns all stablecoins for a given chainId. */
-export function getStablecoinsForChain(chainId: UniverseChainId): Token[] {
-  return getChainInfo(chainId).tokens.stablecoins
-}
-
-/** Returns the primary stablecoin for a given chainId. */
-export function getPrimaryStablecoin(chainId: UniverseChainId): Token {
-  return getChainInfo(chainId).tokens.stablecoins[0]
-}
-
-export function isUniverseChainId(chainId?: number | UniverseChainId | null): chainId is UniverseChainId {
-  return !!chainId && ALL_CHAIN_IDS.includes(chainId as UniverseChainId)
 }

@@ -176,8 +176,8 @@ export function convertRestBalanceToPortfolioBalance(
     return undefined
   }
 
-  const id = currencyId(currency).toLowerCase()
-  const tokenBalanceId = `${chainId}-${tokenAddress.toLowerCase()}-${address}`
+  const id = currencyId(currency)
+  const tokenBalanceId = `${chainId}-${tokenAddress}-${address}`
   const { isSpam, spamCodeValue, mappedSafetyLevel } = getRestTokenSafetyInfo(metadata)
 
   const currencyInfo = buildCurrencyInfo({

@@ -7,7 +7,6 @@ import { useBiometricsIcon } from 'src/components/icons/useBiometricsIcon'
 import { SPLASH_SCREEN_IMAGE_SIZE, SplashScreen } from 'src/features/appLoading/SplashScreen'
 import { useBiometricsAlert } from 'src/features/biometrics/useBiometricsAlert'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
-import { useOsBiometricAuthEnabled } from 'src/features/biometrics/useOsBiometricAuthEnabled'
 import { useBiometricName, useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { useLockScreenState } from 'src/features/lockScreen/hooks/useLockScreenState'
 import { Button, Flex, TouchableArea, flexStyles, useIsDarkMode } from 'ui/src'
@@ -27,17 +26,14 @@ const fadeOut = FadeOut.duration(250)
 const useBiometricAuth = (): (() => Promise<void>) => {
   const { t } = useTranslation()
   const { trigger } = useBiometricPrompt()
-  const { touchId } = useDeviceSupportsBiometricAuth()
-  const biometricsMethod = useBiometricName(touchId)
+  const { touchId: isTouchIdDevice } = useDeviceSupportsBiometricAuth()
+  const biometricsMethod = useBiometricName(isTouchIdDevice)
   const { showBiometricsAlert } = useBiometricsAlert({ t })
-  const isBiometricsEnabled = useOsBiometricAuthEnabled()
 
   const onPress = useEvent(async (): Promise<void> => {
     await trigger({
       failureCallback: () => {
-        if (!isBiometricsEnabled) {
-          showBiometricsAlert(biometricsMethod)
-        }
+        showBiometricsAlert(biometricsMethod)
       },
     })
   })

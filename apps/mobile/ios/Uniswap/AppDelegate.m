@@ -5,7 +5,6 @@
 #import "Uniswap-Swift.h"
 
 #import <React/RCTBundleURLProvider.h>
-#import <ReactAppDependencyProvider/RCTAppDependencyProvider.h>
 #import <ReactNativePerformance/ReactNativePerformance.h>
 #import <RCTAppSetupUtils.h>
 #import <RNBootSplash.h>
@@ -57,7 +56,6 @@ static NSString *const hasLaunchedOnceKey = @"HasLaunchedOnce";
   }
   
   self.moduleName = @"Uniswap";
-  self.dependencyProvider = [RCTAppDependencyProvider new];
   self.initialProps = @{};
   
   [self.window makeKeyAndVisible];

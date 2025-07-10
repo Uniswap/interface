@@ -232,7 +232,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap52 _mb-20px _width-fit-content"
         >
           <a
-            data-discover="true"
             href="/explore/ethereum"
             style="text-decoration: none;"
           >
@@ -259,7 +258,6 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             </span>
           </a>
           <a
-            data-discover="true"
             href="/explore/tokens/ethereum"
             style="text-decoration: none;"
           >

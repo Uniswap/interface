@@ -1,14 +1,14 @@
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { getWrapType } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { wrappedNativeCurrency } from 'uniswap/src/utils/currency'
 
 describe(getWrapType, () => {
-  const eth = nativeOnChain(UniverseChainId.Mainnet)
+  const eth = NativeCurrency.onChain(UniverseChainId.Mainnet)
   const weth = wrappedNativeCurrency(UniverseChainId.Mainnet)
 
-  const arbEth = nativeOnChain(UniverseChainId.ArbitrumOne)
+  const arbEth = NativeCurrency.onChain(UniverseChainId.ArbitrumOne)
   const arbWeth = wrappedNativeCurrency(UniverseChainId.ArbitrumOne)
 
   it('handles undefined args', () => {

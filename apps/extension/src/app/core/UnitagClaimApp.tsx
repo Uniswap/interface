@@ -2,7 +2,7 @@ import '@tamagui/core/reset.css'
 import 'src/app/Global.css'
 
 import { PropsWithChildren, useEffect } from 'react'
-import { Outlet, RouterProvider, createHashRouter, useSearchParams } from 'react-router'
+import { Outlet, RouterProvider, createHashRouter, useSearchParams } from 'react-router-dom'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
 import { DatadogAppNameTag } from 'src/app/datadog'
@@ -19,6 +19,7 @@ import { UnitagConfirmationScreen } from 'src/app/features/unitags/UnitagConfirm
 import { UnitagCreateUsernameScreen } from 'src/app/features/unitags/UnitagCreateUsernameScreen'
 import { UnitagIntroScreen } from 'src/app/features/unitags/UnitagIntroScreen'
 import { UnitagClaimRoutes } from 'src/app/navigation/constants'
+import { ROUTER_FUTURE_FLAGS, ROUTER_PROVIDER_FUTURE_FLAGS } from 'src/app/navigation/routerConfig'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { Flex } from 'ui/src'
@@ -27,24 +28,29 @@ import { usePrevious } from 'utilities/src/react/hooks'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
 import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
-const router = createHashRouter([
+const router = createHashRouter(
+  [
+    {
+      path: '',
+      element: <UnitagAppInner />,
+      children: [
+        {
+          path: UnitagClaimRoutes.ClaimIntro,
+          element: <UnitagClaimFlow />,
+          errorElement: <ErrorElement />,
+        },
+        {
+          path: UnitagClaimRoutes.EditProfile,
+          element: <UnitagEditProfileFlow />,
+          errorElement: <ErrorElement />,
+        },
+      ],
+    },
+  ],
   {
-    path: '',
-    element: <UnitagAppInner />,
-    children: [
-      {
-        path: UnitagClaimRoutes.ClaimIntro,
-        element: <UnitagClaimFlow />,
-        errorElement: <ErrorElement />,
-      },
-      {
-        path: UnitagClaimRoutes.EditProfile,
-        element: <UnitagEditProfileFlow />,
-        errorElement: <ErrorElement />,
-      },
-    ],
+    future: ROUTER_FUTURE_FLAGS,
   },
-])
+)
 
 /**
  * Note: we are using a pattern here to avoid circular dependencies, because
@@ -138,7 +144,7 @@ export default function UnitagClaimApp(): JSX.Element {
 
   return (
     <BaseAppContainer appName={DatadogAppNameTag.UnitagClaim}>
-      <RouterProvider router={router} />
+      <RouterProvider router={router} future={ROUTER_PROVIDER_FUTURE_FLAGS} />
     </BaseAppContainer>
   )
 }

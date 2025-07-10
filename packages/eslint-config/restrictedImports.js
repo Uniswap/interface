@@ -153,8 +153,8 @@ const nativeRules = {
       message: "Use our internal `HapticFeedback` wrapper instead: `import { HapticFeedback } from 'packages/uniswap/src/features/settings/useHapticFeedback/types'`",
     },
     {
-      name: 'react-router',
-      message: 'Do not import react-router in native code. Use react-navigation instead.',
+      name: 'react-router-dom',
+      message: 'Do not import react-router-dom in native code. Use react-navigation instead.',
     },
   ],
   patterns: sharedRules.patterns,

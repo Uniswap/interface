@@ -11,7 +11,7 @@ import type { TransactionSettingConfig } from 'uniswap/src/features/transactions
 import { SwapFormButton } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButton'
 import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreen'
 import { SwapFormWarningModals } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormWarningModals/SwapFormWarningModals'
-import { SwapFormWarningStoreContextProvider } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/SwapFormWarningStoreContextProvider'
+import { SwapFormWarningStateProvider } from 'uniswap/src/features/transactions/swap/form/context/SwapFormWarningStateContextProvider'
 import { SwapReviewScreen } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewScreen'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTimeout } from 'utilities/src/time/timing'
@@ -32,10 +32,10 @@ export function CurrentScreen({
         <Trace logImpression section={SectionName.SwapForm}>
           <SwapFormScreenDelayedRender settings={settings} />
           <TransactionModalFooterContainer>
-            <SwapFormWarningStoreContextProvider>
+            <SwapFormWarningStateProvider>
               <SwapFormButton />
               <SwapFormWarningModals />
-            </SwapFormWarningStoreContextProvider>
+            </SwapFormWarningStateProvider>
           </TransactionModalFooterContainer>
         </Trace>
       )

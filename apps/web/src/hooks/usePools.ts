@@ -2,7 +2,7 @@ import { BigintIsh, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/
 import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
 import { assume0xAddress } from 'utils/wagmi'
 import { useReadContracts } from 'wagmi'
@@ -28,7 +28,7 @@ export class PoolCache {
     tokenA: Token
     tokenB: Token
     fee: FeeAmount
-    chainId: EVMUniverseChainId
+    chainId: UniverseChainId
   }): string {
     if (this.addresses.length > this.MAX_ENTRIES) {
       this.addresses = this.addresses.slice(0, this.MAX_ENTRIES / 2)
@@ -103,7 +103,7 @@ export enum PoolState {
 
 export function usePools(
   poolKeys: [Maybe<Currency>, Maybe<Currency>, FeeAmount | undefined][],
-  chainId: EVMUniverseChainId | undefined,
+  chainId: UniverseChainId | undefined,
 ): [PoolState, Pool | null][] {
   const poolTokens: ([Token, Token, FeeAmount] | undefined)[] = useMemo(() => {
     if (!chainId) {

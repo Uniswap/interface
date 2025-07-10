@@ -23,7 +23,7 @@ import {
 } from 'pages/Swap/common/shared'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useSearchParams } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Flex, Text, styled } from 'ui/src'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'

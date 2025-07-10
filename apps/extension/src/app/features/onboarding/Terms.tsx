@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { Trans } from 'react-i18next'
-import { Link, LinkProps } from 'react-router'
+import { Link, LinkProps } from 'react-router-dom'
 import { Text } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 

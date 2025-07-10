@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { createSlice } from '@reduxjs/toolkit'
-import type { PendingTransactionDetails, TransactionDetails, TransactionInfo } from 'state/transactions/types'
-
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
-  TransactionOriginType,
-  TransactionStatus,
-  TransactionType as UniswapTransactionType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+  PendingTransactionDetails,
+  TransactionDetails,
+  TransactionInfo,
+  TransactionType,
+} from 'state/transactions/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 // TODO(WEB-2053): update this to be a map of account -> chainId -> txHash -> TransactionDetails
 // to simplify usage, once we're able to invalidate localstorage
@@ -116,7 +116,7 @@ const localTransactionSlice = createSlice({
       },
     ) {
       const tx = transactions[chainId]?.[hash]
-      if (tx?.info.type !== UniswapTransactionType.Bridge) {
+      if (tx?.info.type !== TransactionType.BRIDGE) {
         return
       }
       tx.info.depositConfirmed = true

@@ -12,8 +12,8 @@ import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__gen
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 vi.mock('appGraphql/data/pools/usePoolsFromTokenAddress')
-vi.mock('react-router', async () => {
-  const actual = await vi.importActual('react-router')
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom')
   return {
     ...actual,
     default: actual,

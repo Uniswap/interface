@@ -52,10 +52,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
     })
   }
 
-  const handleOnPress = async (
-    nav: ImportMethodOption['nav'] | OnboardingScreens.WatchWallet,
-    importType: ImportType,
-  ): Promise<void> => {
+  const handleOnPress = async (nav: OnboardingScreens, importType: ImportType): Promise<void> => {
     if (isLoadingPasskey) {
       return
     }
@@ -65,9 +62,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
       return
     }
 
-    // We check against nav instead of importType to satisfy typescript
-    // This screen requires passkeyCredential as a param
-    if (nav === OnboardingScreens.PasskeyImport) {
+    if (importType === ImportType.Passkey) {
       setIsLoadingPasskey(true)
       let credential: string | undefined
       try {

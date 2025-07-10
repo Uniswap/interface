@@ -188,7 +188,7 @@ export function ManageWalletsModal({ route }: AppStackScreenProp<typeof ModalNam
               />
             </Flex>
             <Flex row pb="$padding20" pt="$padding12">
-              <Button lineHeightDisabled variant="critical" emphasis="secondary" onPress={onRemoveWallet}>
+              <Button variant="critical" emphasis="secondary" onPress={onRemoveWallet}>
                 {t('settings.setting.wallet.action.remove')}
               </Button>
             </Flex>

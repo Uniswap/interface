@@ -52,7 +52,7 @@ type GetPortfolioQuery<TSelectData = GetPortfolioResponse> = QueryOptionsResult<
   GetPortfolioResponse | undefined,
   Error,
   TSelectData,
-  readonly [ReactQueryCacheKey.GetPortfolio, Address | undefined, PartialMessage<GetPortfolioRequest> | undefined]
+  readonly [ReactQueryCacheKey.GetPortfolio, PartialMessage<GetPortfolioRequest> | undefined]
 >
 
 export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
@@ -65,11 +65,10 @@ export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
 
   // Changes in the modifier should not cause a refetch, so it's excluded from the queryKey
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { modifier: _modifier, walletAccount, ...inputWithoutModifierAndAddress } = transformedInput ?? {}
-  const address = walletAccount?.platformAddresses[0]?.address
+  const { modifier: _modifier, ...inputWithoutModifier } = input ?? {}
 
   return queryOptions({
-    queryKey: [ReactQueryCacheKey.GetPortfolio, address, inputWithoutModifierAndAddress],
+    queryKey: [ReactQueryCacheKey.GetPortfolio, inputWithoutModifier],
     queryFn: () => (transformedInput ? portfolioClient.getPortfolio(transformedInput) : Promise.resolve(undefined)),
     placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when hiding/unhiding tokens
     refetchInterval,
@@ -164,6 +163,6 @@ function _findBalanceFromCurrencyId(
       return isNativeCurrencyAddress(chainId, bal.token.address)
     }
 
-    return bal.token.address.toLowerCase() === tokenAddress.toLowerCase()
+    return bal.token.address === tokenAddress
   })
 }

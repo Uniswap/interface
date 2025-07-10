@@ -1,11 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
-import {
-  MAX_FEE_TIER_DECIMALS,
-  calculateTickSpacingFromFeeAmount,
-  getFeeTierKey,
-  isDynamicFeeTier,
-} from 'components/Liquidity/utils'
+import { MAX_FEE_TIER_DECIMALS, calculateTickSpacingFromFeeAmount, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import { StyledPercentInput } from 'components/PercentInput'
 import ms from 'ms'
@@ -432,8 +427,7 @@ export function FeeTierSearchModal() {
                         </Text>
                       </Flex>
                     </Flex>
-                    {getFeeTierKey(pool.fee.feeAmount, pool.fee.isDynamic) ===
-                      getFeeTierKey(selectedFee.feeAmount, selectedFee.isDynamic) && (
+                    {pool.fee.feeAmount === selectedFee.feeAmount && (
                       <CheckCircleFilled size="$icon.24" color="$accent3" />
                     )}
                   </Flex>

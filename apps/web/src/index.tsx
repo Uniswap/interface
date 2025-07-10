@@ -24,7 +24,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
 import { I18nextProvider } from 'react-i18next'
 import { configureReanimatedLogger } from 'react-native-reanimated'
 import { Provider } from 'react-redux'
-import { BrowserRouter, HashRouter, useLocation } from 'react-router'
+import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
 import store from 'state'
 import { ThemeProvider, ThemedGlobalStyle } from 'theme'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
@@ -143,7 +143,12 @@ createRoot(container).render(
       <ReactRouterUrlProvider>
         <Provider store={store}>
           <QueryClientPersistProvider>
-            <Router>
+            <Router
+              future={{
+                v7_relativeSplatPath: true,
+                v7_startTransition: true,
+              }}
+            >
               <I18nextProvider i18n={i18n}>
                 <LanguageProvider>
                   <Web3Provider>

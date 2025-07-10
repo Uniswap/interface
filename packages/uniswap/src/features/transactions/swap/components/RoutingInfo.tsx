@@ -1,5 +1,4 @@
-import type { PropsWithChildren } from 'react'
-import { useMemo } from 'react'
+import { PropsWithChildren, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, UniswapXText } from 'ui/src'
 import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
@@ -9,18 +8,18 @@ import RoutingDiagram from 'uniswap/src/components/RoutingDiagram/RoutingDiagram
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
-import type { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import {
   BestRouteTooltip,
   BestRouteUniswapXTooltip,
 } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/BestRouteTooltip'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
-import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import getRoutingDiagramEntries from 'uniswap/src/utils/getRoutingDiagramEntries'
 import { openUri } from 'uniswap/src/utils/linking'
@@ -36,7 +35,7 @@ export function RoutingInfo({
 }>): JSX.Element | null {
   const priceUxEnabled = usePriceUXEnabled()
   const { t } = useTranslation()
-  const trade = useSwapTxStore((s) => s.trade)
+  const { trade } = useSwapTxContext()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const { value: gasFeeUSD } = useUSDValueOfGasFee(chainId, gasFee.displayValue ?? undefined)
   const gasFeeFormatted =

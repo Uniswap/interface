@@ -11,7 +11,7 @@ import { useSendCallback } from 'hooks/useSendCallback'
 import { GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router'
+import { useSearchParams } from 'react-router-dom'
 import { useFiatOnRampTransactions } from 'state/fiatOnRampTransactions/hooks'
 import { updateFiatOnRampTransaction } from 'state/fiatOnRampTransactions/reducer'
 import { FiatOnRampTransactionStatus } from 'state/fiatOnRampTransactions/types'
@@ -33,8 +33,7 @@ import {
 } from 'uniswap/src/features/fiatOnRamp/types'
 import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { FiatOffRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -165,17 +164,6 @@ export const OffRampConfirmTransferModal = ({
   const gasFee = useTransactionGasFee(transferTransaction, GasSpeed.Normal)
   const { value: gasFeeUSD, isLoading: gasFeeUSDIsLoading } = useUSDValueOfGasFee(chainId, gasFee.value)
 
-  const analyticsProperties = useMemo(
-    () => ({
-      cryptoCurrency: offRampTransferDetails?.baseCurrencyCode ?? '',
-      currencyAmount: offRampTransferDetails?.baseCurrencyAmount ?? 0,
-      serviceProvider: offRampTransferDetails?.provider ?? '',
-      chainId: offRampTransferDetails?.chainId ?? '',
-      externalTransactionId: transaction?.externalSessionId ?? '',
-    }),
-    [offRampTransferDetails, transaction],
-  )
-
   useEffect(() => {
     if (!transaction?.original) {
       return
@@ -220,16 +208,11 @@ export const OffRampConfirmTransferModal = ({
         Infinity,
       )
 
-      sendAnalyticsEvent(FiatOffRampEventName.FiatOffRampFundsSent, analyticsProperties)
-
       onClose()
     },
   })
 
-  const handleSend = useCallback(() => {
-    sendAnalyticsEvent(FiatOffRampEventName.FiatOffRampWidgetCompleted, analyticsProperties)
-    _handleSend()
-  }, [_handleSend, analyticsProperties])
+  const handleSend = useCallback(() => _handleSend(), [_handleSend])
 
   if (offRampTransferDetailsLoading) {
     return null

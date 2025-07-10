@@ -1,7 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import type { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useCreatePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
-import type { DepositState } from 'components/Liquidity/types'
+import { DepositState } from 'components/Liquidity/types'
 import {
   CreatePositionContext,
   CreateTxContext,
@@ -20,17 +20,17 @@ import {
 } from 'pages/Pool/Positions/create/hooks'
 import {
   DEFAULT_POSITION_STATE,
+  DynamicFeeTierSpeedbumpData,
   PositionFlowStep,
-  type DynamicFeeTierSpeedbumpData,
-  type PositionState,
-  type PriceRangeState,
+  PositionState,
+  PriceRangeState,
 } from 'pages/Pool/Positions/create/types'
 import {
   generateAddLiquidityApprovalParams,
   generateCreateCalldataQueryParams,
   generateCreatePositionTxRequest,
 } from 'pages/Pool/Positions/create/utils'
-import { useCallback, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PositionField } from 'types/position'
 import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
@@ -39,9 +39,9 @@ import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
-import { TransactionStepType, type TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
@@ -167,10 +167,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   const { derivedPositionInfo, positionState, currentTransactionStep } = useCreatePositionContext()
   const { derivedDepositInfo, depositState } = useDepositContext()
   const { priceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
-  const { customDeadline, customSlippageTolerance } = useTransactionSettingsStore((s) => ({
-    customDeadline: s.customDeadline,
-    customSlippageTolerance: s.customSlippageTolerance,
-  }))
+  const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
 
   const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(derivedPositionInfo.chainId)
 

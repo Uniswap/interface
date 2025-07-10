@@ -1,5 +1,4 @@
 import { useENSAvatar } from 'uniswap/src/features/ens/api'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 
@@ -14,8 +13,7 @@ export function useAvatar(address: Maybe<string>): {
   avatar: Maybe<string>
   loading: boolean
 } {
-  // TODO(WEB-8012): Update to support Solana
-  const validated = getValidAddress({ address, platform: Platform.EVM })
+  const validated = getValidAddress({ address })
   const { data: ensAvatar, isLoading: ensLoading } = useENSAvatar(validated)
   const { unitag, loading: unitagLoading } = useUnitagByAddress(validated || undefined)
 

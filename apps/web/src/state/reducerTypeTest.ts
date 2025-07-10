@@ -32,8 +32,9 @@ import { UserSettingsState } from 'uniswap/src/features/settings/slice'
 import { DelegatedState } from 'uniswap/src/features/smartWallet/delegation/types'
 import { TimingState } from 'uniswap/src/features/timing/slice'
 import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
+import { transactionSettingsReducer } from 'uniswap/src/features/transactions/components/settings/slice'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
-import { SwapSettingsState } from 'uniswap/src/features/transactions/swap/state/slice'
+import { SwapSettingsState } from 'uniswap/src/features/transactions/swap/contexts/slice'
 import { VisibilityState } from 'uniswap/src/features/visibility/slice'
 
 /**
@@ -78,6 +79,7 @@ type ExpectedAppState = CombinedState<{
   readonly timing: TimingState
   readonly tokens: TokensState
   readonly transactions: TransactionsState
+  readonly transactionSettings: ReturnType<typeof transactionSettingsReducer>
   readonly userSettings: UserSettingsState
   readonly portfolio: PortfolioState
   readonly visibility: VisibilityState

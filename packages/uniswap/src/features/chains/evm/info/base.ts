@@ -1,5 +1,7 @@
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { BASE_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
+import { USDC_BASE } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
@@ -7,7 +9,6 @@ import {
   getPlaywrightRpcUrls,
   getQuicknodeEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
-import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
   GqlChainId,
   NetworkLayer,
@@ -15,25 +16,16 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { buildUSDC } from 'uniswap/src/features/tokens/stablecoin'
 import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { isInterface } from 'utilities/src/platform'
 import { base } from 'wagmi/chains'
-
-const tokens = buildChainTokens({
-  stables: {
-    USDC: buildUSDC('0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', UniverseChainId.Base),
-  },
-})
 
 const LOCAL_BASE_PLAYWRIGHT_RPC_URL = 'http://127.0.0.1:8546'
 
 export const BASE_CHAIN_INFO = {
   ...base,
   id: UniverseChainId.Base,
-  platform: Platform.EVM,
   backendChain: {
     chain: BackendChainId.Base as GqlChainId,
     backendSupported: true,
@@ -73,8 +65,9 @@ export const BASE_CHAIN_INFO = {
         [RPCType.Fallback]: { http: ['https://1rpc.io/base', 'https://base.meowrpc.com'] },
         [RPCType.Interface]: { http: [`https://base-mainnet.infura.io/v3/${config.infuraKey}`] },
       },
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_BASE, 10_000e6),
   assetRepoNetworkName: 'base',
-  tokens,
+  stablecoins: [USDC_BASE],
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',
     symbol: 'WETH',

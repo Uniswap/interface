@@ -27,7 +27,6 @@ exports[`TokenLinkCell > renders known token on a different chain 1`] = `
   >
     <a
       class="c0"
-      data-discover="true"
       href="/explore/tokens/polygon/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
     >
       <div
@@ -127,7 +126,6 @@ exports[`TokenLinkCell > renders known token on mainnet 1`] = `
   >
     <a
       class="c0"
-      data-discover="true"
       href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
     >
       <div
@@ -202,7 +200,6 @@ exports[`TokenLinkCell > renders unknown token 1`] = `
   >
     <a
       class="c0"
-      data-discover="true"
       href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
     >
       <div

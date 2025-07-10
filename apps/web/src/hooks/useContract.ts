@@ -18,7 +18,7 @@ import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/s
 import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getContract } from 'utilities/src/contracts/getContract'
@@ -150,7 +150,7 @@ export function useV3NFTPositionManagerContract(
  */
 export function useV4NFTPositionManagerContract(
   withSignerIfPossible?: boolean,
-  chainId?: EVMUniverseChainId,
+  chainId?: UniverseChainId,
 ): Erc721 | null {
   const account = useAccount()
   const chainIdToUse = chainId ?? account.chainId

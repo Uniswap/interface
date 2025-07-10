@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from 'react'
-import type { ParsedWarnings } from 'uniswap/src/components/modals/WarningModal/types'
-import type { AuthTrigger } from 'uniswap/src/features/auth/types'
+import { ParsedWarnings } from 'uniswap/src/components/modals/WarningModal/types'
+import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { TransactionScreen } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
-import type { GetExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
-import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
-import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
-import type { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
+import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
+import { GetExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
+import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { isInterface } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -87,7 +87,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
     updateSwapForm({ showPendingUI: true })
   }, [updateSwapForm])
 
-  const swapTxContext = useSwapTxStore((s) => s)
+  const swapTxContext = useSwapTxContext()
 
   const getSwapTxContext = useEvent(() => swapTxContext)
 

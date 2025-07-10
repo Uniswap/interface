@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
-import {
-  BETypeToTransactionType,
-  TransactionType,
-  getTransactionTypeTranslation,
-  useAllTransactions,
-} from 'appGraphql/data/useAllTransactions'
+import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'appGraphql/data/useAllTransactions'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
@@ -105,10 +100,7 @@ const RecentTransactions = memo(function RecentTransactions() {
           <HeaderCell justifyContent="flex-start">
             <FilterHeaderRow clickable={filterModalIsOpen} onPress={() => toggleFilterModal()} ref={filterAnchorRef}>
               <Filter
-                allFilters={Object.values(TransactionType).map((type) => ({
-                  value: type,
-                  label: getTransactionTypeTranslation(type),
-                }))}
+                allFilters={Object.values(TransactionType)}
                 activeFilter={filter}
                 setFilters={setFilters}
                 isOpen={filterModalIsOpen}

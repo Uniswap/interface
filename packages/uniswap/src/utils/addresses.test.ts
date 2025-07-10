@@ -1,66 +1,46 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures'
+import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 
-/* -------------------------------------------------------------------------- */
-/*                                  EVM FIXTURES                              */
-/* -------------------------------------------------------------------------- */
-const SAMPLE_SEED_ADDRESS_1_WITH_SPACE = `${SAMPLE_SEED_ADDRESS_1} `
+const SAMPLE_SEED_ADDRESS_1_WITH_SPACE = SAMPLE_SEED_ADDRESS_1 + ' '
 const ADDRESS_NO_PREFIX = '71C7656EC7ab88b098defB751B7401B5f6d8976F'
-const INVALID_EVM_WRONG_LENGTH = '0x71C7656EC7ab88b098defB751B7401B5f6d8'
-const INVALID_EVM_BAD_PREFIX = '1x71C7656EC7ab88b098defB751B7401B5f6d8976F'
-const INVALID_EVM_NON_HEX = '0x71C7656EC7ab88b098defB751B7401B5f6d8976G' // contains G
+const INSAMPLE_SEED_ADDRESS_1_WRONG_LENGTH = '0x71C7656EC7ab88b098defB751B7401B5f6d8'
+const INSAMPLE_SEED_ADDRESS_1_BAD_PREFIX = '1x71C7656EC7ab88b098defB751B7401B5f6d8976F'
+const INSAMPLE_SEED_ADDRESS_1_NON_HEX = '0x71C7656EC7ab88b098defB751B7401B5f6d8976G' // contains G
 
-/* -------------------------------------------------------------------------- */
-/*                                  SVM FIXTURES                              */
-/* -------------------------------------------------------------------------- */
-// 32-byte base58 strings (taken from Solana docs / dev-net)
-const VALID_SVM_ADDRESS_1 = '4Nd1mPraZmk6D7new6qR1pT7iEpXD6xzWxMnK46ZQPyW'
-const VALID_SVM_ADDRESS_2 = '9xQeWvG816bUx9EPm2ERmuAHzp3ERWcGy3gPx1bMu7p'
-
-const INVALID_SVM_SHORT = '4Nd1mPraZmk6D7new6qR1pT7' // < 32 bytes
-const INVALID_SVM_NON_BASE58 = 'O0O0O0O0O0O0O0O0O0O0O0O0O0O' // has 0/O chars
-
-/* -------------------------------------------------------------------------- */
-/*                          Common junk inputs for both                       */
-/* -------------------------------------------------------------------------- */
-const NON_STRING_INVALIDS = [null, undefined, {}, { meow: 'woof' }, true]
-
-/* -------------------------------------------------------------------------- */
-/*                                  TESTS                                     */
-/* -------------------------------------------------------------------------- */
-describe('getValidAddress – EVM', () => {
+describe(getValidAddress, () => {
   it.each`
-    input                               | expected                                  | checksum
-    ${SAMPLE_SEED_ADDRESS_1}            | ${SAMPLE_SEED_ADDRESS_1.toLowerCase()}    | ${false}
-    ${SAMPLE_SEED_ADDRESS_1_WITH_SPACE} | ${SAMPLE_SEED_ADDRESS_1.toLowerCase()}    | ${false}
-    ${SAMPLE_SEED_ADDRESS_1}            | ${SAMPLE_SEED_ADDRESS_1}                  | ${true}
-    ${ADDRESS_NO_PREFIX}                | ${`0x${ADDRESS_NO_PREFIX}`.toLowerCase()} | ${false}
-    ${INVALID_EVM_WRONG_LENGTH}         | ${null}                                   | ${false}
-    ${INVALID_EVM_BAD_PREFIX}           | ${null}                                   | ${false}
-    ${INVALID_EVM_NON_HEX}              | ${null}                                   | ${true}
-  `('returns $expected for $input (checksum=$checksum)', ({ input, expected, checksum }) => {
-    expect(getValidAddress({ address: input, platform: Platform.EVM, withEVMChecksum: checksum })).toEqual(expected)
-  })
-
-  it.each(NON_STRING_INVALIDS)('returns null for non-string input %p', (junk) => {
-    expect(getValidAddress({ address: junk as any, platform: Platform.EVM })).toBeNull()
+    input                                   | expected                                  | checksum | desc
+    ${SAMPLE_SEED_ADDRESS_1}                | ${SAMPLE_SEED_ADDRESS_1.toLowerCase()}    | ${false} | ${'a valid address expected as lowercase'}
+    ${SAMPLE_SEED_ADDRESS_1_WITH_SPACE}     | ${SAMPLE_SEED_ADDRESS_1.toLowerCase()}    | ${false} | ${'a valid address with trailing space'}
+    ${SAMPLE_SEED_ADDRESS_1}                | ${SAMPLE_SEED_ADDRESS_1}                  | ${true}  | ${'a valid address'}
+    ${ADDRESS_NO_PREFIX}                    | ${`0x${ADDRESS_NO_PREFIX}`.toLowerCase()} | ${false} | ${'a valid address without a prefix'}
+    ${INSAMPLE_SEED_ADDRESS_1_WRONG_LENGTH} | ${null}                                   | ${false} | ${'address of incorrect length'}
+    ${INSAMPLE_SEED_ADDRESS_1_BAD_PREFIX}   | ${null}                                   | ${false} | ${'address with bad prefix (not 0x)'}
+    ${INSAMPLE_SEED_ADDRESS_1_NON_HEX}      | ${null}                                   | ${true}  | ${'non hex address'}
+    ${null}                                 | ${null}                                   | ${false} | ${'null address'}
+    ${undefined}                            | ${null}                                   | ${false} | ${'undefined address'}
+    ${{}}                                   | ${null}                                   | ${false} | ${'handles unexpected object'}
+    ${{ meow: 'woof' }}                     | ${null}                                   | ${false} | ${'handles unexpected object'}
+    ${true}                                 | ${null}                                   | ${false} | ${'handles unexpected boolean'}
+  `('$desc for checksum=$checksum $input should return $expected', async ({ input, expected, checksum }) => {
+    expect(getValidAddress({ address: input, withChecksum: checksum })).toEqual(expected)
   })
 })
 
-describe('getValidAddress – SVM', () => {
+describe(areAddressesEqual, () => {
   it.each`
-    input                     | expected
-    ${VALID_SVM_ADDRESS_1}    | ${VALID_SVM_ADDRESS_1}
-    ${VALID_SVM_ADDRESS_2}    | ${VALID_SVM_ADDRESS_2}
-    ${INVALID_SVM_SHORT}      | ${null}
-    ${INVALID_SVM_NON_BASE58} | ${null}
-  `('returns $expected for $input', ({ input, expected }) => {
-    expect(getValidAddress({ address: input, platform: Platform.SVM })).toEqual(expected)
-  })
-
-  it.each(NON_STRING_INVALIDS)('returns null for non-string input %p', (junk) => {
-    expect(getValidAddress({ address: junk as any, platform: Platform.SVM })).toBeNull()
+    addressA                               | addressB                                | expected
+    ${SAMPLE_SEED_ADDRESS_1}               | ${SAMPLE_SEED_ADDRESS_1}                | ${true}
+    ${SAMPLE_SEED_ADDRESS_1.toUpperCase()} | ${SAMPLE_SEED_ADDRESS_1.toLowerCase()}  | ${true}
+    ${SAMPLE_SEED_ADDRESS_1.toLowerCase()} | ${SAMPLE_SEED_ADDRESS_1.toUpperCase()}  | ${true}
+    ${SAMPLE_SEED_ADDRESS_1_WITH_SPACE}    | ${SAMPLE_SEED_ADDRESS_1.toLowerCase()}  | ${true}
+    ${null}                                | ${null}                                 | ${false}
+    ${null}                                | ${undefined}                            | ${false}
+    ${undefined}                           | ${undefined}                            | ${false}
+    ${SAMPLE_SEED_ADDRESS_1}               | ${SAMPLE_SEED_ADDRESS_2}                | ${false}
+    ${SAMPLE_SEED_ADDRESS_1}               | ${INSAMPLE_SEED_ADDRESS_1_WRONG_LENGTH} | ${false}
+    ${INSAMPLE_SEED_ADDRESS_1_BAD_PREFIX}  | ${INSAMPLE_SEED_ADDRESS_1_BAD_PREFIX}   | ${false}
+  `(`areAddressesEqual should be $expected for $addressA <-> $addressB`, async ({ addressA, addressB, expected }) => {
+    expect(areAddressesEqual(addressA, addressB)).toEqual(expected)
   })
 })

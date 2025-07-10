@@ -1,11 +1,8 @@
 import { useMemo } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
-import {
-  useSwapFormStore,
-  useSwapFormStoreDerivedSwapInfo,
-} from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
+import { useSwapDependencies } from 'uniswap/src/features/transactions/swap/contexts/SwapDependenciesContext'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -17,32 +14,17 @@ export function useInterfaceWrap(): {
   onInterfaceWrap?: () => void
 } {
   // TODO(WALL-6391): remove direct usage and replace with SwapService
-  const wrapCallback = useSwapDependenciesStore((state) => state.wrapCallback)
+  const { wrapCallback } = useSwapDependencies()
   const account = useAccountMeta()
-  const updateSwapForm = useSwapFormStore((s) => s.updateSwapForm)
-  const { currencyAmounts, txId, wrapType } = useSwapFormStoreDerivedSwapInfo((s) => ({
-    currencyAmounts: s.currencyAmounts,
-    txId: s.txId,
-    wrapType: s.wrapType,
-  }))
-  const { txRequest, gasFeeEstimation } = useSwapTxStore((s) => {
-    if (isUniswapX(s)) {
-      return {
-        txRequest: undefined,
-        gasFeeEstimation: s.gasFeeEstimation,
-      }
-    }
+  const { derivedSwapInfo, updateSwapForm } = useSwapFormContext()
+  const swapTxContext = useSwapTxContext()
 
-    return {
-      txRequest: s.txRequests?.[0],
-      gasFeeEstimation: s.gasFeeEstimation,
-    }
-  })
-
+  const { currencyAmounts, txId, wrapType } = derivedSwapInfo
   const isInterfaceWrap = isInterface && wrapType !== WrapType.NotApplicable
 
   const onInterfaceWrap = useMemo(() => {
     const inputCurrencyAmount = currencyAmounts[CurrencyField.INPUT]
+    const txRequest = isUniswapX(swapTxContext) ? undefined : swapTxContext.txRequests?.[0]
     if (!txRequest || !isInterfaceWrap || !account || !inputCurrencyAmount) {
       return undefined
     }
@@ -61,20 +43,10 @@ export function useInterfaceWrap(): {
         txRequest,
         txId,
         wrapType,
-        gasEstimate: gasFeeEstimation.wrapEstimate,
+        gasEstimate: swapTxContext.gasFeeEstimation.wrapEstimate,
       })
     }
-  }, [
-    currencyAmounts,
-    txRequest,
-    isInterfaceWrap,
-    account,
-    updateSwapForm,
-    wrapCallback,
-    txId,
-    wrapType,
-    gasFeeEstimation.wrapEstimate,
-  ])
+  }, [account, currencyAmounts, isInterfaceWrap, swapTxContext, txId, updateSwapForm, wrapCallback, wrapType])
 
   return { isInterfaceWrap, onInterfaceWrap }
 }

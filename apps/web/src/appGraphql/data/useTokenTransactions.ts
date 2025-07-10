@@ -10,22 +10,10 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import i18n from 'uniswap/src/i18n'
 
 export enum TokenTransactionType {
   BUY = 'Buy',
   SELL = 'Sell',
-}
-
-export const getTokenTransactionTypeTranslation = (type: TokenTransactionType): string => {
-  switch (type) {
-    case TokenTransactionType.BUY:
-      return i18n.t('common.buy.label')
-    case TokenTransactionType.SELL:
-      return i18n.t('common.sell.label')
-    default:
-      return ''
-  }
 }
 
 const TokenTransactionDefaultQuerySize = 25

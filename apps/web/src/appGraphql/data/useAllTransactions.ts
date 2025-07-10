@@ -8,25 +8,11 @@ import {
   useV3TransactionsQuery,
   useV4TransactionsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import i18n from 'uniswap/src/i18n'
 
 export enum TransactionType {
   SWAP = 'Swap',
   ADD = 'Add',
   REMOVE = 'Remove',
-}
-
-export const getTransactionTypeTranslation = (type: TransactionType): string => {
-  switch (type) {
-    case TransactionType.SWAP:
-      return i18n.t('common.swap')
-    case TransactionType.ADD:
-      return i18n.t('common.add.label')
-    case TransactionType.REMOVE:
-      return i18n.t('common.remove.label')
-    default:
-      return ''
-  }
 }
 
 export const BETypeToTransactionType: { [key: string]: TransactionType } = {

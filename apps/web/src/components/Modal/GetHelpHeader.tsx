@@ -1,7 +1,7 @@
 import { EnvelopeHeartIcon } from 'components/Icons/EnvelopeHeart'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import { Flex, ModalCloseIcon, TouchableArea, useSporeColors } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { Text } from 'ui/src/components/text/Text'

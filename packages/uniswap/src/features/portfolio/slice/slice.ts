@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -25,8 +24,7 @@ const slice = createSlice({
     addTokensToBalanceOverride: (state, action: PayloadAction<{ ownerAddress: Address; currencyIds: string[] }>) => {
       const { ownerAddress, currencyIds } = action.payload
 
-      // TODO(WALL-7066): Update portfolio slice / usage to be platform agnostic or multi-platform (either remove getValidAddress checks or update to handle both EVM and SVM)
-      const accountId = getValidAddress({ address: ownerAddress, platform: Platform.EVM })
+      const accountId = getValidAddress({ address: ownerAddress })
 
       if (!accountId) {
         logger.error(new Error('Unexpected call to `addTokensToBalanceOverride` with an invalid address'), {
@@ -53,8 +51,7 @@ const slice = createSlice({
     ) => {
       const { ownerAddress, chainId, tokenAddress } = action.payload
 
-      // TODO(WALL-7066): Update portfolio slice / usage to be platform agnostic or multi-platform (either remove getValidAddress checks or update to handle both EVM and SVM)
-      const accountId = getValidAddress({ address: ownerAddress, platform: Platform.EVM })
+      const accountId = getValidAddress({ address: ownerAddress })
 
       if (!accountId) {
         logger.error(new Error('Unexpected call to `removeTokenFromBalanceOverride` with an invalid address'), {

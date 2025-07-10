@@ -23,7 +23,6 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
-import { useEvent } from 'utilities/src/react/hooks'
 
 function isHorizontalListTokenItem(data: TokenSelectorOption): data is TokenOption[] {
   return Array.isArray(data)
@@ -147,15 +146,21 @@ function _TokenSelectorList({
 
   usePerformanceLogger(DDRumManualTiming.TokenSelectorListRender, [chainFilter])
 
-  const handleExpand = useEvent((item: TokenSelectorOption) => {
-    setExpandedItems((prev) => [...prev, key(item)])
-  })
+  const handleExpand = useCallback(
+    (item: TokenSelectorOption) => {
+      setExpandedItems((prev) => [...prev, key(item)])
+    },
+    [setExpandedItems],
+  )
 
-  const isExpandedItem = useEvent((item: TokenOption[]) => {
-    return expandedItems.includes(key(item))
-  })
+  const isExpandedItem = useCallback(
+    (item: TokenOption[]) => {
+      return expandedItems.includes(key(item))
+    },
+    [expandedItems],
+  )
 
-  const renderItem = useEvent(({ item, section, index }: ItemRowInfo<TokenSelectorOption>): JSX.Element => {
+  const renderItem = ({ item, section, index }: ItemRowInfo<TokenSelectorOption>): JSX.Element => {
     if (isHorizontalListTokenItem(item)) {
       return (
         <HorizontalTokenList
@@ -178,7 +183,7 @@ function _TokenSelectorList({
         onSelectCurrency={onSelectCurrency}
       />
     )
-  })
+  }
 
   return (
     <SelectorBaseList
