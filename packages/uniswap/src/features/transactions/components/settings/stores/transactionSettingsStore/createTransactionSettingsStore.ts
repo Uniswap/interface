@@ -14,7 +14,7 @@ export const initialTransactionSettingsState: TransactionSettingsState = {
   customDeadline: undefined,
   selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
   slippageWarningModalSeen: false,
-  isV4HookPoolsEnabled: false,
+  isV4HookPoolsEnabled: true,
 }
 
 export type TransactionSettingsStoreState = TransactionSettingsState & {
