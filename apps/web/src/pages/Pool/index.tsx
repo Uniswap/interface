@@ -279,7 +279,11 @@ export default function Pool() {
                       style={{ textDecoration: 'none' }}
                       to={getPositionUrl(position)}
                     >
-                      <LiquidityPositionCard showVisibilityOption liquidityPosition={position} showMigrateButton />
+                      <LiquidityPositionCard
+                        showVisibilityOption
+                        liquidityPosition={position}
+                        showMigrateButton={false}
+                      />
                     </Link>
                   ))}
                   <HiddenPositions
