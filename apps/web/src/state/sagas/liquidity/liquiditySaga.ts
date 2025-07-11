@@ -2,6 +2,7 @@ import { LiquidityEventName } from '@uniswap/analytics-events'
 import { getLiquidityEventName } from 'components/Liquidity/analytics'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
+import { BigNumberish } from 'ethers'
 import {
   handleApprovalTransactionStep,
   handleOnChainStep,
@@ -156,20 +157,24 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
 
   let signature: string | undefined
   try {
-    for (let step of steps) {
-      delete step.txRequest.type
-      delete step.txRequest.account
-      step.txRequest.gasLimit = step.txRequest.gas
-      delete step.txRequest.gas
+    for (const step of steps) {
+      if ('txRequest' in step && step.txRequest != null) {
+        delete step.txRequest.type
+        if ('account' in step.txRequest) {
+          delete step.txRequest.account
+        }
+        if ('gas' in step.txRequest) {
+          step.txRequest.gasLimit = step.txRequest.gas as BigNumberish
+          delete step.txRequest.gas
+        }
+      }
       switch (step.type) {
         case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {
-          console.log({ account, step, setCurrentStep })
           yield* call(handleApprovalTransactionStep, { account, step, setCurrentStep })
           break
         }
         case TransactionStepType.Permit2Signature: {
-          console.log({ account, step, setCurrentStep })
           signature = yield* call(handleSignatureStep, { account, step, setCurrentStep })
           break
         }
@@ -179,7 +184,6 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
         case TransactionStepType.MigratePositionTransactionStep:
         case TransactionStepType.MigratePositionTransactionStepAsync:
         case TransactionStepType.CollectFeesTransactionStep:
-          console.log({ account, step, setCurrentStep })
           yield* call(handlePositionTransactionStep, { account, step, setCurrentStep, action, signature, analytics })
           break
         default: {

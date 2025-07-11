@@ -7,12 +7,16 @@ export const client = createPublicClient({
     ...chainInfo,
     formatters: {
       transaction: defineTransaction({
-        exclude: ['type'],
-        format: () => {},
+        exclude: ['type', 'gas'],
+        format: (args) => ({
+          gasLimit: args.gas,
+        }),
       }),
       transactionRequest: defineTransactionRequest({
-        exclude: ['type'],
-        format: () => {},
+        exclude: ['type', 'gas'],
+        format: (args) => ({
+          gasLimit: args.gas,
+        }),
       }),
     },
   },

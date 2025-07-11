@@ -82,19 +82,19 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     sdkId: 10000 as UniswapSDKChainId,
     rpcUrls: {
       [RPCType.Private]: {
-        http: ['https://smartbch.fountainhead.cash/mainnet'],
+        http: ['https://smartbch.greyh.at'],
       },
       [RPCType.Public]: {
-        http: ['https://smartbch.fountainhead.cash/mainnet'],
+        http: ['https://smartbch.greyh.at'],
       },
       [RPCType.Default]: {
-        http: ['https://smartbch.fountainhead.cash/mainnet'],
+        http: ['https://smartbch.greyh.at'],
       },
       [RPCType.Interface]: {
-        http: ['https://smartbch.fountainhead.cash/mainnet'],
+        http: ['https://smartbch.greyh.at'],
       },
       [RPCType.Fallback]: {
-        http: ['https://smartbch.fountainhead.cash/mainnet'],
+        http: ['https://smartbch.greyh.at'],
       },
     },
     assetRepoNetworkName: 'smartbch',
@@ -143,7 +143,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       name: 'Bitcoin Cash',
       symbol: 'WBCH',
       decimals: 18,
-      address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+      address: '0x3743eC0673453E5009310C727Ba4eaF7b3a1cc04',
     },
   },
   [UniverseChainId.Mainnet]: {

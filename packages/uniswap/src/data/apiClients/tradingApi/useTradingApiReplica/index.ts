@@ -19,6 +19,7 @@ import {
   QuoteRequest,
 } from '../../../tradingApi/__generated__'
 
+import { DiscriminatedQuoteResponse } from '../TradingApiClient'
 import { ApprovalResponse, checkApproval } from './handlers/checkApproval'
 import { checkLpApproval } from './handlers/checkLpApproval'
 import { claimLpFees } from './handlers/claimLpFees'
@@ -54,6 +55,7 @@ type Response =
   | ClaimLPFeesResponse
   | CreateSwapResponse
   | ApprovalResponse
+  | DiscriminatedQuoteResponse
 
 interface InitAction {
   type: ActionType.INIT
@@ -73,12 +75,14 @@ type Action = ResponseAction | ErrorAction | InitAction
 
 type State<T = Response> = Pick<UseQueryResult<T>, 'data' | 'error' | 'isLoading'>
 
-export type TradingReplicaResult<T> = Pick<UseQueryResult<T>, 'data' | 'error' | 'isLoading'>
+export type TradingAPIReplicaResult<T> = Pick<UseQueryResult<T>, 'data' | 'error' | 'isLoading'> & {
+  refetch: () => Promise<void>
+}
 
 const initialState: State = {
   data: undefined,
   error: null,
-  isLoading: true,
+  isLoading: false,
 }
 
 interface CreateLpPositionParams {
@@ -175,58 +179,60 @@ function serializeParams(params: any): string {
   })
 }
 
-const useTradingApiReplica = (params: Params) => {
-  const [state, dispatch] = useReducer(reducer, { ...initialState, isLoading: params.skip !== true })
+const useTradingApiReplica = <T>(params: Params) => {
+  const [state, dispatch] = useReducer(reducer, initialState)
+  const run = async (params: Params) => {
+    try {
+      if (params.params == null || params.skip === true) return
+      let value: Response = {}
+      switch (params.request) {
+        case TradingApiReplicaRequests.CHECK_APPROVAL:
+          value = await checkApproval(params.params)
+          break
+        case TradingApiReplicaRequests.CHECK_LP_APPROVAL:
+          value = await checkLpApproval(params.params)
+          break
+        case TradingApiReplicaRequests.CLAIM_LP_FEES:
+          value = await claimLpFees(params.params)
+          break
+        case TradingApiReplicaRequests.CREATE_LP_POSITION:
+          value = await createLpPosition(params.params)
+          break
+        case TradingApiReplicaRequests.INCREASE_LP_POSITION:
+          value = await increaseLpPosition(params.params)
+          break
+        case TradingApiReplicaRequests.DECREASE_LP_POSITION:
+          value = await decreaseLpPosition(params.params)
+          break
+        case TradingApiReplicaRequests.QUOTE:
+          value = await quote(params.params)
+          break
+        case TradingApiReplicaRequests.SWAP:
+          value = await swap(params.params)
+          break
+      }
+      dispatch({
+        type: ActionType.RESULT,
+        value,
+      })
+    } catch (e: unknown) {
+      dispatch({
+        type: ActionType.ERROR,
+        value: e as Error | null,
+      })
+    }
+  }
   useEffect(() => {
     ;(async () => {
       if (params.params == null || params.skip === true) return
       dispatch({
         type: ActionType.INIT,
       })
-      try {
-        let value: Response = {}
-        switch (params.request) {
-          case TradingApiReplicaRequests.CHECK_APPROVAL:
-            value = await checkApproval(params.params)
-            break
-          case TradingApiReplicaRequests.CHECK_LP_APPROVAL:
-            value = await checkLpApproval(params.params)
-            break
-          case TradingApiReplicaRequests.CLAIM_LP_FEES:
-            value = await claimLpFees(params.params)
-            break
-          case TradingApiReplicaRequests.CREATE_LP_POSITION:
-            value = await createLpPosition(params.params)
-            break
-          case TradingApiReplicaRequests.INCREASE_LP_POSITION:
-            value = await increaseLpPosition(params.params)
-            break
-          case TradingApiReplicaRequests.DECREASE_LP_POSITION:
-            value = await decreaseLpPosition(params.params)
-            break
-          case TradingApiReplicaRequests.QUOTE:
-            value = await quote(params.params)
-            break
-          case TradingApiReplicaRequests.SWAP:
-            value = await swap(params.params)
-            break
-        }
-        dispatch({
-          type: ActionType.RESULT,
-          value,
-        })
-      } catch (e: unknown) {
-        dispatch({
-          type: ActionType.ERROR,
-          value: e as Error | null,
-        })
-      }
+      await run(params)
     })()
   }, [params.request, params.skip, serializeParams(params.params)])
-  if (params.request === TradingApiReplicaRequests.QUOTE) {
-    console.log('state', { params, state })
-  }
-  return state
+  console.log('state', state)
+  return { ...state, refetch: async () => await run(params) } as TradingAPIReplicaResult<T>
 }
 
 export default useTradingApiReplica

@@ -3,7 +3,7 @@ import { TRADING_API_CACHE_KEY } from 'uniswap/src/data/apiClients/tradingApi/Tr
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { CreateLPPositionRequest, CreateLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
-import useTradingApiReplica, { TradingApiReplicaRequests, TradingReplicaResult } from './useTradingApiReplica'
+import useTradingApiReplica, { TradingAPIReplicaResult, TradingApiReplicaRequests } from './useTradingApiReplica'
 
 export function useCreateLpPositionCalldataQuery({
   params,
@@ -11,7 +11,7 @@ export function useCreateLpPositionCalldataQuery({
   ...rest
 }: UseQueryApiHelperHookArgs<CreateLPPositionRequest, CreateLPPositionResponse> & {
   deadlineInMinutes?: number
-}): TradingReplicaResult {
+}): TradingAPIReplicaResult<CreateLPPositionResponse> {
   const queryKey = [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.createLp, params]
   const deadline = getTradeSettingsDeadline(deadlineInMinutes)
   const paramsWithDeadline = { ...params, deadline }

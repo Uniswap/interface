@@ -1,10 +1,9 @@
-import { UseQueryResult } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TRADING_API_CACHE_KEY } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { IncreaseLPPositionRequest, IncreaseLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
-import useTradingApiReplica, { TradingApiReplicaRequests } from './useTradingApiReplica'
+import useTradingApiReplica, { TradingAPIReplicaResult, TradingApiReplicaRequests } from './useTradingApiReplica'
 
 export function useIncreaseLpPositionCalldataQuery({
   params,
@@ -12,7 +11,7 @@ export function useIncreaseLpPositionCalldataQuery({
   ...rest
 }: UseQueryApiHelperHookArgs<IncreaseLPPositionRequest, IncreaseLPPositionResponse> & {
   deadlineInMinutes?: number
-}): UseQueryResult<IncreaseLPPositionResponse> {
+}): TradingAPIReplicaResult<IncreaseLPPositionResponse> {
   const queryKey = [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.increaseLp, params]
 
   const deadline = getTradeSettingsDeadline(deadlineInMinutes)

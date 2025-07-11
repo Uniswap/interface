@@ -5,6 +5,7 @@ import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
 import { useIncreasePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { getProtocolItems, hasLPFoTTransferError } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
+import { useTransactionGasFee } from 'hooks/useTransactionGasFee'
 import { getCurrencyAddressForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
@@ -220,9 +221,11 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     isQueryEnabled && Boolean(calldataError),
   )
 
-  // const { value: calculatedGasFee } = useTransactionGasFee(increase, !!actualGasFee)
-  const increaseGasFeeUsd =
-    0 ?? useUSDCurrencyAmountOfGasFee(increaseCalldata?.increase?.chainId, actualGasFee || calculatedGasFee)
+  const { value: calculatedGasFee } = useTransactionGasFee(increase)
+  const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
+    increaseCalldata?.increase?.chainId,
+    actualGasFee || calculatedGasFee,
+  )
 
   const increaseLiquidityTxContext = useMemo((): IncreasePositionTxAndGasInfo | undefined => {
     if (

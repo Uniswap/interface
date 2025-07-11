@@ -16,14 +16,18 @@ import {
   tokenOptionDifference,
   useTokenOptionsSection,
 } from 'uniswap/src/components/TokenSelector/utils'
-import { TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
+import { TokenOption, TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
+
+import { apolloSubgraphClient } from 'graphql/data/apollo/client'
 import { GqlResult } from 'uniswap/src/data/types'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isMobileApp } from 'utilities/src/platform'
+import { useGetPoolsByTokenQuery } from 'v3-subgraph/generated/types-and-hooks'
 import { smartBCHTokenOptions } from './smartBCH'
 
 // eslint-disable-next-line complexity
@@ -183,6 +187,23 @@ function useTokenSectionsForSwapOutput({
   )
 }
 
+const chainInfo = getChainInfo(10000)
+
+const filterOutInput = (input: string, tokens: TokenOption[]) => {
+  return tokens.filter((t) => {
+    if (
+      input.toLowerCase() === chainInfo.nativeCurrency.address.toLowerCase() ||
+      input.toLowerCase() === chainInfo.wrappedNativeCurrency.address.toLowerCase()
+    ) {
+      return (
+        t.currencyInfo.address?.toLowerCase() !== chainInfo.nativeCurrency.address.toLowerCase() &&
+        t.currencyInfo.address?.toLowerCase() !== chainInfo.wrappedNativeCurrency.address.toLowerCase()
+      )
+    }
+    return t.currencyInfo.address !== input
+  })
+}
+
 function _TokenSelectorSwapOutputList({
   onSelectCurrency,
   activeAccountAddress,
@@ -195,23 +216,40 @@ function _TokenSelectorSwapOutputList({
   chainFilter: UniverseChainId | null
   tokenFilter?: string[]
 }): JSX.Element {
+  const {
+    data: poolData,
+    loading: isLoading,
+    error,
+  } = useGetPoolsByTokenQuery({
+    client: apolloSubgraphClient,
+    variables: {
+      tokenAddress:
+        input?.address.toLowerCase() === chainInfo.nativeCurrency.address.toLowerCase()
+          ? chainInfo.wrappedNativeCurrency.address
+          : input?.address ?? '',
+    },
+  })
   const data = useMemo(() => {
-    if (tokenFilter != null) {
-      return smartBCHTokenOptions.filter((t) => tokenFilter.includes(t.currencyInfo.currencyId))
+    const tokensWithPools = poolData?.pools.flatMap((p) => [p.token0.id, p.token1.id])?.map((s) => s.toLowerCase())
+    if (tokensWithPools?.includes(chainInfo.wrappedNativeCurrency.address.toLowerCase())) {
+      tokensWithPools.push(chainInfo.nativeCurrency.address.toLowerCase())
     }
-    return smartBCHTokenOptions
-  }, [tokenFilter])
+    const smartBCHTokenOptionsInPools = smartBCHTokenOptions.filter((t) =>
+      tokensWithPools?.includes(t.currencyInfo.address?.toLowerCase()),
+    )
+    return smartBCHTokenOptionsInPools
+  }, [tokenFilter, poolData, input?.address])
   return (
     <TokenSelectorList
       showTokenAddress
       chainFilter={chainFilter}
-      hasError={false}
+      hasError={error != null}
       isKeyboardOpen={isKeyboardOpen}
-      loading={false}
+      loading={isLoading}
       refetch={() => {}}
       sections={[
         {
-          data,
+          data: filterOutInput(input?.address ?? '', data),
           sectionKey: TokenOptionSection.SuggestedTokens,
         },
       ]}

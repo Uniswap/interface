@@ -75,6 +75,7 @@ import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimal
 import { NumberType } from 'utilities/src/format/types'
 import { isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { useGetAllPoolsQuery } from 'v3-subgraph/generated/types-and-hooks'
 
 const SWAP_DIRECTION_BUTTON_SIZE = {
   size: {
@@ -247,6 +248,8 @@ function SwapFormContent({
     },
     [decimalPadControlledField],
   )
+
+  console.log(useGetAllPoolsQuery())
 
   const moveCursorToEnd = useCallback(
     ({ targetInputRef }: { targetInputRef: MutableRefObject<string> }) => {

@@ -31,6 +31,8 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 import { useGetPositionsQuery } from 'v3-subgraph/generated/types-and-hooks'
 
@@ -228,108 +230,110 @@ export default function Pool() {
   const showingEmptyPositions = !isLoadingPositions && combinedPositions.length === 0
 
   return (
-    <Trace logImpression page={InterfacePageNameLocal.Positions}>
-      <Flex
-        row
-        $xl={{ flexDirection: 'column', gap: '$gap16' }}
-        width="100%"
-        maxWidth={1200}
-        gap={80}
-        py="$spacing24"
-        px="$spacing40"
-        $lg={{ px: '$spacing20' }}
-      >
-        <Flex grow shrink gap="$spacing24">
-          <PositionsHeader
-            showFilters={account.isConnected}
-            selectedChain={chainFilter}
-            selectedVersions={versionFilter}
-            selectedStatus={statusFilter}
-            onChainChange={(selectedChain) => {
-              setChainFilter(selectedChain ?? null)
-            }}
-            onVersionChange={(toggledVersion) => {
-              setVersionFilter((prevVersionFilter) => {
-                if (prevVersionFilter.includes(toggledVersion)) {
-                  return prevVersionFilter.filter((v) => v !== toggledVersion)
-                } else {
-                  return [...prevVersionFilter, toggledVersion]
-                }
-              })
-            }}
-            onStatusChange={(toggledStatus) => {
-              setStatusFilter((prevStatusFilter) => {
-                if (prevStatusFilter?.includes(toggledStatus)) {
-                  return prevStatusFilter.filter((s) => s !== toggledStatus)
-                } else {
-                  return [...prevStatusFilter, toggledStatus]
-                }
-              })
-            }}
-          />
-          {!isLoadingPositions ? (
-            combinedPositions.length > 0 ? (
-              <Flex gap="$gap16" mb="$spacing16" opacity={isPlaceholderData ? 0.6 : 1}>
-                {visiblePositions.map((position) => (
-                  <Link
-                    key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
-                    style={{ textDecoration: 'none' }}
-                    to={getPositionUrl(position)}
-                  >
-                    <LiquidityPositionCard showVisibilityOption liquidityPosition={position} showMigrateButton />
-                  </Link>
-                ))}
-                <HiddenPositions
-                  showHiddenPositions={showHiddenPositions}
-                  setShowHiddenPositions={setShowHiddenPositions}
-                  hiddenPositions={hiddenPositions}
-                />
-              </Flex>
+    <TransactionSettingsContextProvider settingKey={TransactionSettingKey.LP}>
+      <Trace logImpression page={InterfacePageNameLocal.Positions}>
+        <Flex
+          row
+          $xl={{ flexDirection: 'column', gap: '$gap16' }}
+          width="100%"
+          maxWidth={1200}
+          gap={80}
+          py="$spacing24"
+          px="$spacing40"
+          $lg={{ px: '$spacing20' }}
+        >
+          <Flex grow shrink gap="$spacing24">
+            <PositionsHeader
+              showFilters={account.isConnected}
+              selectedChain={chainFilter}
+              selectedVersions={versionFilter}
+              selectedStatus={statusFilter}
+              onChainChange={(selectedChain) => {
+                setChainFilter(selectedChain ?? null)
+              }}
+              onVersionChange={(toggledVersion) => {
+                setVersionFilter((prevVersionFilter) => {
+                  if (prevVersionFilter.includes(toggledVersion)) {
+                    return prevVersionFilter.filter((v) => v !== toggledVersion)
+                  } else {
+                    return [...prevVersionFilter, toggledVersion]
+                  }
+                })
+              }}
+              onStatusChange={(toggledStatus) => {
+                setStatusFilter((prevStatusFilter) => {
+                  if (prevStatusFilter?.includes(toggledStatus)) {
+                    return prevStatusFilter.filter((s) => s !== toggledStatus)
+                  } else {
+                    return [...prevStatusFilter, toggledStatus]
+                  }
+                })
+              }}
+            />
+            {!isLoadingPositions ? (
+              combinedPositions.length > 0 ? (
+                <Flex gap="$gap16" mb="$spacing16" opacity={isPlaceholderData ? 0.6 : 1}>
+                  {visiblePositions.map((position) => (
+                    <Link
+                      key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
+                      style={{ textDecoration: 'none' }}
+                      to={getPositionUrl(position)}
+                    >
+                      <LiquidityPositionCard showVisibilityOption liquidityPosition={position} showMigrateButton />
+                    </Link>
+                  ))}
+                  <HiddenPositions
+                    showHiddenPositions={showHiddenPositions}
+                    setShowHiddenPositions={setShowHiddenPositions}
+                    hiddenPositions={hiddenPositions}
+                  />
+                </Flex>
+              ) : (
+                <EmptyPositionsView chainId={chainFilter} isConnected={isConnected} />
+              )
             ) : (
-              <EmptyPositionsView chainId={chainFilter} isConnected={isConnected} />
-            )
-          ) : (
-            <Flex gap="$gap16">
-              {Array.from({ length: 5 }, (_, index) => (
-                <LiquidityPositionCardLoader key={index} />
-              ))}
-            </Flex>
-          )}
-          {hasNextPage && (
-            <Flex mx="auto">
-              <Button emphasis="tertiary" size="small" onPress={loadMorePositions} isDisabled={isFetching}>
-                {t('common.loadMore')}
-              </Button>
-            </Flex>
-          )}
-          {!statusFilter.includes(PositionStatus.CLOSED) && !closedCTADismissed && account.address && (
-            <Flex
-              borderWidth="$spacing1"
-              borderColor="$surface3"
-              borderRadius="$rounded12"
-              mb="$spacing24"
-              p="$padding12"
-              gap="$gap12"
-              row
-              centered
-            >
-              <Flex height="100%">
-                <InfoCircleFilled color="$neutral2" size="$icon.20" />
+              <Flex gap="$gap16">
+                {Array.from({ length: 5 }, (_, index) => (
+                  <LiquidityPositionCardLoader key={index} />
+                ))}
               </Flex>
-              <Flex grow flexBasis={0}>
-                <Text variant="body3" color="$neutral1">
-                  <Trans i18nKey="pool.closedCTA.title" />
-                </Text>
-                <Text variant="body3" color="$neutral2">
-                  <Trans i18nKey="pool.closedCTA.description" />
-                </Text>
+            )}
+            {hasNextPage && (
+              <Flex mx="auto">
+                <Button emphasis="tertiary" size="small" onPress={loadMorePositions} isDisabled={isFetching}>
+                  {t('common.loadMore')}
+                </Button>
               </Flex>
-              <CloseIconWithHover onClose={() => setClosedCTADismissed(true)} size="$icon.20" />
-            </Flex>
-          )}
+            )}
+            {!statusFilter.includes(PositionStatus.CLOSED) && !closedCTADismissed && account.address && (
+              <Flex
+                borderWidth="$spacing1"
+                borderColor="$surface3"
+                borderRadius="$rounded12"
+                mb="$spacing24"
+                p="$padding12"
+                gap="$gap12"
+                row
+                centered
+              >
+                <Flex height="100%">
+                  <InfoCircleFilled color="$neutral2" size="$icon.20" />
+                </Flex>
+                <Flex grow flexBasis={0}>
+                  <Text variant="body3" color="$neutral1">
+                    <Trans i18nKey="pool.closedCTA.title" />
+                  </Text>
+                  <Text variant="body3" color="$neutral2">
+                    <Trans i18nKey="pool.closedCTA.description" />
+                  </Text>
+                </Flex>
+                <CloseIconWithHover onClose={() => setClosedCTADismissed(true)} size="$icon.20" />
+              </Flex>
+            )}
+          </Flex>
         </Flex>
-      </Flex>
-    </Trace>
+      </Trace>
+    </TransactionSettingsContextProvider>
   )
 }
 

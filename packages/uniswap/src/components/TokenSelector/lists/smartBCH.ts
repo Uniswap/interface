@@ -293,6 +293,9 @@ export function toTokenOption(token: Token): TokenOption {
   return {
     currencyInfo: {
       currency: token,
+      address: token.address,
+      symbol: token.symbol,
+      name: token.name,
       currencyId: token.chainId + '-' + token.address, // Assuming the address is accessible on the Token object
       safetyInfo: undefined, // As per instruction, set to undefined
       spamCode: undefined, // As per instruction, set to undefined

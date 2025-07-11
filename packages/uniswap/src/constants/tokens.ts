@@ -719,7 +719,7 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
   [UniverseChainId.SmartBCH]: WBCH,
 }
 
-export function isCelo(chainId: number): chainId is UniverseChainId.Celo {
+export function isCelo(chainId: number) {
   return false
 }
 
@@ -732,7 +732,7 @@ function getCeloNativeCurrency(chainId: number): Token {
   }
 }
 
-export function isPolygon(chainId: number): chainId is UniverseChainId.Polygon {
+export function isPolygon(chainId: number) {
   return false
 }
 
@@ -760,7 +760,7 @@ class PolygonNativeCurrency extends NativeCurrency {
   }
 }
 
-export function isBsc(chainId: number): chainId is UniverseChainId.Bnb {
+export function isBsc(chainId: number) {
   return false
 }
 
@@ -786,7 +786,7 @@ class BscNativeCurrency extends NativeCurrency {
   }
 }
 
-export function isAvalanche(chainId: number): chainId is UniverseChainId.Avalanche {
+export function isAvalanche(chainId: number) {
   return false
 }
 
@@ -812,7 +812,7 @@ class AvaxNativeCurrency extends NativeCurrency {
   }
 }
 
-function isMonadTestnet(chainId: number): chainId is UniverseChainId.MonadTestnet {
+function isMonadTestnet(chainId: number) {
   return false
 }
 
@@ -849,7 +849,7 @@ class ExtendedEther extends NativeCurrency {
   }
 
   protected constructor(chainId: number) {
-    super(chainId, 18, 'WBCH', 'Wrapped Bitcoin Cash')
+    super(chainId, 18, 'BCH', 'Bitcoin Cash')
   }
 
   private static _cachedExtendedEther: { [chainId: number]: NativeCurrency } = {}

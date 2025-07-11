@@ -304,7 +304,7 @@ export function SwapFormButton({
           <Button
             variant={buttonVariant}
             emphasis={buttonEmphasis}
-            loading={!!indicative}
+            loading={trade.isLoading}
             isDisabled={disabled}
             backgroundColor={buttonBackgroundColor}
             size={isShortMobileDevice ? 'small' : 'large'}

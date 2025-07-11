@@ -17,7 +17,6 @@ export type ApprovalResponse = Omit<ApiApprovalResponse, 'approval' | 'cancel'> 
 }
 
 export const checkApproval = async (params: ApprovalRequest): Promise<ApprovalResponse> => {
-  console.log('checkApproval', params)
   const response: ApprovalResponse = {
     requestId: 'whatever',
     approval: null,

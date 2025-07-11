@@ -1,0 +1,22 @@
+query GetPoolsByToken($tokenAddress: String!) {
+	pools(where: {
+    or: [
+        { token0: $tokenAddress },
+        { token1: $tokenAddress }
+      ]
+  }) {
+    id
+    token0 {
+      id
+      symbol
+      name
+      decimals
+    }
+    token1 {
+      id
+      symbol
+      name
+      decimals
+    }
+  }
+}

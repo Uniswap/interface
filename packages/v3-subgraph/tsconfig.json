@@ -1,4 +1,5 @@
 {
+  "extends": "../../config/tsconfig/app.json",
   "compilerOptions": {
     "lib": [
       "es6",
