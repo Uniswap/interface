@@ -4319,6 +4319,13 @@ export type GetPositionsQueryVariables = Exact<{
 
 export type GetPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, tokenId: any, owner: any, tickLower: any, tickUpper: any, liquidity: any, depositedToken0: any, depositedToken1: any, withdrawnToken0: any, withdrawnToken1: any, collectedFeesToken0: any, collectedFeesToken1: any, closed: boolean, pool: { __typename?: 'Pool', id: any, feeTier: any, sqrtPrice: any, liquidity: any, tick?: any | undefined, token0Price: any, token1Price: any, volumeUSD: any, feesUSD: any, totalValueLockedUSD: any, token0: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string }, token1: { __typename?: 'Token', id: any, decimals: any, symbol: string, name: string } } }> };
 
+export type GetPoolQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetPoolQuery = { __typename?: 'Query', pool?: { __typename?: 'Pool', id: any, feeTier: any, txCount: any, totalValueLockedToken0: any, totalValueLockedToken1: any, totalValueLockedUSD: any, token0Price: any, token1Price: any, volumeUSD: any, token0: { __typename?: 'Token', id: any, symbol: string, name: string, decimals: any }, token1: { __typename?: 'Token', id: any, symbol: string, name: string, decimals: any } } | undefined };
+
 export type GetAllPoolsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -4459,6 +4466,61 @@ export function useGetPositionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetPositionsQueryHookResult = ReturnType<typeof useGetPositionsQuery>;
 export type GetPositionsLazyQueryHookResult = ReturnType<typeof useGetPositionsLazyQuery>;
 export type GetPositionsQueryResult = Apollo.QueryResult<GetPositionsQuery, GetPositionsQueryVariables>;
+export const GetPoolDocument = gql`
+    query GetPool($id: ID!) {
+  pool(id: $id) {
+    id
+    feeTier
+    txCount
+    token0 {
+      id
+      symbol
+      name
+      decimals
+    }
+    token1 {
+      id
+      symbol
+      name
+      decimals
+    }
+    totalValueLockedToken0
+    totalValueLockedToken1
+    totalValueLockedUSD
+    token0Price
+    token1Price
+    volumeUSD
+  }
+}
+    `;
+
+/**
+ * __useGetPoolQuery__
+ *
+ * To run a query within a React component, call `useGetPoolQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPoolQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPoolQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetPoolQuery(baseOptions: Apollo.QueryHookOptions<GetPoolQuery, GetPoolQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPoolQuery, GetPoolQueryVariables>(GetPoolDocument, options);
+      }
+export function useGetPoolLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPoolQuery, GetPoolQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPoolQuery, GetPoolQueryVariables>(GetPoolDocument, options);
+        }
+export type GetPoolQueryHookResult = ReturnType<typeof useGetPoolQuery>;
+export type GetPoolLazyQueryHookResult = ReturnType<typeof useGetPoolLazyQuery>;
+export type GetPoolQueryResult = Apollo.QueryResult<GetPoolQuery, GetPoolQueryVariables>;
 export const GetAllPoolsDocument = gql`
     query GetAllPools {
   pools {

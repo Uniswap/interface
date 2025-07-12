@@ -40,6 +40,8 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { isMobileWeb } from 'utilities/src/platform'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
@@ -66,9 +68,11 @@ export default function PositionPageWrapper() {
   const isNewPositionPageEnabled = useFeatureFlag(FeatureFlags.PositionPageV2)
 
   return (
-    <MultichainContextProvider initialChainId={chainId}>
-      {isNewPositionPageEnabled ? <PositionPage /> : <LegacyPositionPage />}
-    </MultichainContextProvider>
+    <TransactionSettingsContextProvider settingKey={TransactionSettingKey.LP}>
+      <MultichainContextProvider initialChainId={chainId}>
+        {isNewPositionPageEnabled ? <PositionPage /> : <LegacyPositionPage />}
+      </MultichainContextProvider>
+    </TransactionSettingsContextProvider>
   )
 }
 
@@ -233,255 +237,196 @@ function PositionPage() {
   const showV4UnsupportedTooltip = isV4UnsupportedChain(positionInfo.chainId)
 
   return (
-    <Trace
-      logImpression
-      page={InterfacePageNameLocal.PositionDetails}
-      properties={{
-        pool_address: positionInfo.poolId,
-        label: [currency0Amount.currency.symbol, currency1Amount.currency.symbol].join('/'),
-        type: positionInfo.version,
-        fee_tier: typeof positionInfo.feeTier === 'string' ? parseInt(positionInfo.feeTier) : positionInfo.feeTier,
-        baseCurrencyId: currencyIdToAddress(currencyId(currency0Amount.currency)),
-        quoteCurrencyId: currencyIdToAddress(currencyId(currency1Amount.currency)),
-      }}
-    >
-      <Helmet>
-        <title>
-          {t(`liquidityPool.positions.page.title`, {
-            quoteSymbol: currency1Amount.currency.symbol,
-            baseSymbol: currency0Amount.currency.symbol,
-          })}
-        </title>
-      </Helmet>
-      <BodyWrapper>
-        <Flex gap="$gap20">
-          <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-            <BreadcrumbNavLink style={{ gap: '8px' }} to="/positions">
-              <ArrowLeft size={14} /> <Trans i18nKey="pool.positions.title" />
-            </BreadcrumbNavLink>
-          </BreadcrumbNavContainer>
-          <Flex
-            row
-            $lg={{ row: false, alignItems: 'flex-start', gap: '$gap16' }}
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <LiquidityPositionInfo positionInfo={positionInfo} linkToPool />
-            {isOwner && (
-              <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
-                {positionInfo.version === ProtocolVersion.V3 &&
-                  status !== PositionStatus.CLOSED &&
-                  isV4DataEnabled &&
-                  isMigrateToV4Enabled && (
-                    <MouseoverTooltip
-                      text={t('pool.migrateLiquidityDisabledTooltip')}
-                      disabled={!showV4UnsupportedTooltip}
-                      style={media.sm ? { width: '100%', display: 'block' } : {}}
-                    >
-                      <Button
-                        size="small"
-                        emphasis="secondary"
-                        $sm={{ width: '100%' }}
-                        isDisabled={showV4UnsupportedTooltip}
-                        opacity={showV4UnsupportedTooltip ? 0.5 : 1}
-                        onPress={() => {
-                          navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
-                        }}
+    <TransactionSettingsContextProvider settingKey={TransactionSettingKey.LP}>
+      <Trace
+        logImpression
+        page={InterfacePageNameLocal.PositionDetails}
+        properties={{
+          pool_address: positionInfo.poolId,
+          label: [currency0Amount.currency.symbol, currency1Amount.currency.symbol].join('/'),
+          type: positionInfo.version,
+          fee_tier: typeof positionInfo.feeTier === 'string' ? parseInt(positionInfo.feeTier) : positionInfo.feeTier,
+          baseCurrencyId: currencyIdToAddress(currencyId(currency0Amount.currency)),
+          quoteCurrencyId: currencyIdToAddress(currencyId(currency1Amount.currency)),
+        }}
+      >
+        <Helmet>
+          <title>
+            {t(`liquidityPool.positions.page.title`, {
+              quoteSymbol: currency1Amount.currency.symbol,
+              baseSymbol: currency0Amount.currency.symbol,
+            })}
+          </title>
+        </Helmet>
+        <BodyWrapper>
+          <Flex gap="$gap20">
+            <BreadcrumbNavContainer aria-label="breadcrumb-nav">
+              <BreadcrumbNavLink style={{ gap: '8px' }} to="/positions">
+                <ArrowLeft size={14} /> <Trans i18nKey="pool.positions.title" />
+              </BreadcrumbNavLink>
+            </BreadcrumbNavContainer>
+            <Flex
+              row
+              $lg={{ row: false, alignItems: 'flex-start', gap: '$gap16' }}
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <LiquidityPositionInfo positionInfo={positionInfo} linkToPool />
+              {isOwner && (
+                <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
+                  {positionInfo.version === ProtocolVersion.V3 &&
+                    status !== PositionStatus.CLOSED &&
+                    isV4DataEnabled &&
+                    isMigrateToV4Enabled && (
+                      <MouseoverTooltip
+                        text={t('pool.migrateLiquidityDisabledTooltip')}
+                        disabled={!showV4UnsupportedTooltip}
+                        style={media.sm ? { width: '100%', display: 'block' } : {}}
                       >
-                        {t('pool.migrateToV4')}
-                      </Button>
-                    </MouseoverTooltip>
-                  )}
-                <Button
-                  size="small"
-                  emphasis="secondary"
-                  $sm={{ width: '100%' }}
-                  onPress={() => {
-                    dispatch(
-                      setOpenModal({
-                        name: ModalName.AddLiquidity,
-                        initialState: positionInfo,
-                      }),
-                    )
-                  }}
-                >
-                  {t('common.addLiquidity')}
-                </Button>
-                {status !== PositionStatus.CLOSED && (
+                        <Button
+                          size="small"
+                          emphasis="secondary"
+                          $sm={{ width: '100%' }}
+                          isDisabled={showV4UnsupportedTooltip}
+                          opacity={showV4UnsupportedTooltip ? 0.5 : 1}
+                          onPress={() => {
+                            navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
+                          }}
+                        >
+                          {t('pool.migrateToV4')}
+                        </Button>
+                      </MouseoverTooltip>
+                    )}
                   <Button
                     size="small"
+                    emphasis="secondary"
                     $sm={{ width: '100%' }}
                     onPress={() => {
                       dispatch(
                         setOpenModal({
-                          name: ModalName.RemoveLiquidity,
+                          name: ModalName.AddLiquidity,
                           initialState: positionInfo,
                         }),
                       )
                     }}
                   >
-                    {t('pool.removeLiquidity')}
+                    {t('common.addLiquidity')}
                   </Button>
-                )}
-                {hasFees && isOwner && (
-                  <Button
-                    size="small"
-                    maxWidth="fit-content"
-                    onPress={() => {
-                      if (hasFees) {
+                  {status !== PositionStatus.CLOSED && (
+                    <Button
+                      size="small"
+                      $sm={{ width: '100%' }}
+                      onPress={() => {
                         dispatch(
                           setOpenModal({
-                            name: ModalName.ClaimFee,
+                            name: ModalName.RemoveLiquidity,
                             initialState: positionInfo,
                           }),
                         )
-                      }
-                    }}
-                  >
-                    {t('pool.collectFees')}
-                  </Button>
-                )}
-              </Flex>
-            )}
-          </Flex>
-        </Flex>
-        <Flex row justifyContent="space-between" $lg={{ row: false, gap: '$gap24' }}>
-          <Flex gap="$gap12" width={chartWidth}>
-            <Flex row gap="$gap8" alignItems="center">
-              <BaseQuoteFiatAmount
-                price={priceInverted ? token1CurrentPrice : token0CurrentPrice}
-                base={priceInverted ? currency1Amount.currency : currency0Amount.currency}
-                quote={priceInverted ? currency0Amount.currency : currency1Amount.currency}
-                variant="heading3"
-              />
-              <TouchableArea
-                onPress={() => {
-                  setPriceInverted((prev) => !prev)
-                }}
-              >
-                <ExchangeHorizontal size="$icon.16" />
-              </TouchableArea>
-            </Flex>
-            <Flex
-              animation="fast"
-              height="auto"
-              width="100%"
-              $lg={{ width: '100%' }}
-              borderWidth={0}
-              borderColor="$surface3"
-              borderBottomRightRadius="$rounded20"
-              borderBottomWidth={mainView === 'chart' ? 1 : 0}
-              borderRightWidth={mainView === 'chart' ? 1 : 0}
-              pb="$padding12"
-            >
-              {mainView === 'chart' ? (
-                <LiquidityPositionRangeChart
-                  version={positionInfo.version}
-                  currency0={priceInverted ? currency1Amount.currency : currency0Amount.currency}
-                  currency1={priceInverted ? currency0Amount.currency : currency1Amount.currency}
-                  poolAddressOrId={positionInfo.poolId}
-                  chainId={positionInfo.chainId}
-                  tickSpacing={positionInfo.tickSpacing}
-                  feeTier={positionInfo.feeTier}
-                  hook={positionInfo.v4hook}
-                  positionStatus={status}
-                  priceOrdering={
-                    priceInverted
-                      ? {
-                          base: priceOrdering.quote,
-                          priceLower: priceOrdering.priceUpper?.invert(),
-                          priceUpper: priceOrdering.priceLower?.invert(),
+                      }}
+                    >
+                      {t('pool.removeLiquidity')}
+                    </Button>
+                  )}
+                  {hasFees && isOwner && (
+                    <Button
+                      size="small"
+                      maxWidth="fit-content"
+                      onPress={() => {
+                        if (hasFees) {
+                          dispatch(
+                            setOpenModal({
+                              name: ModalName.ClaimFee,
+                              initialState: positionInfo,
+                            }),
+                          )
                         }
-                      : priceOrdering
-                  }
-                  duration={selectedHistoryDuration}
-                  width={chartWidth}
-                  height={440}
-                  showXAxis
-                  showYAxis
-                  showLiquidityBars
-                  crosshairEnabled={false}
-                />
-              ) : (
-                <Flex
-                  width="100%"
-                  height="100%"
-                  justifyContent="center"
-                  alignItems="center"
-                  py="$spacing20"
-                  backgroundColor="$surface2"
-                  borderRadius="$rounded20"
-                >
-                  {'result' in metadata ? (
-                    <PositionNFT image={metadata.result.image} height={400} />
-                  ) : (
-                    <LoadingFullscreen style={{ borderRadius: 12, backgroundColor: 'transparent' }} />
+                      }}
+                    >
+                      {t('pool.collectFees')}
+                    </Button>
                   )}
                 </Flex>
               )}
             </Flex>
-            <Flex row alignItems="center" justifyContent="space-between" flexDirection="row-reverse" width="100%">
-              {isMobileWeb ? (
-                <DropdownSelector
-                  containerStyle={{ width: 'auto' }}
-                  menuLabel={
-                    <Flex
-                      borderRadius="$rounded16"
-                      backgroundColor="transparent"
-                      row
-                      centered
-                      p="$padding8"
-                      pl="$padding12"
-                      borderColor="$surface3"
-                      borderWidth="$spacing1"
-                      gap="$gap6"
-                      {...ClickableTamaguiStyle}
-                    >
-                      {mainViewOptions.find((p) => p.value === mainView)?.display}
-                      <RotatableChevron direction="down" height={16} width={16} color="$neutral2" />
-                    </Flex>
-                  }
-                  buttonStyle={{
-                    borderWidth: 0,
-                    p: 0,
-                  }}
-                  dropdownStyle={{
-                    width: 160,
-                  }}
-                  hideChevron
-                  isOpen={mainViewDropdownOpen}
-                  toggleOpen={() => {
-                    setMainViewDropdownOpen((prev) => !prev)
+          </Flex>
+          <Flex row justifyContent="space-between" $lg={{ row: false, gap: '$gap24' }}>
+            <Flex gap="$gap12" width={chartWidth}>
+              <Flex row gap="$gap8" alignItems="center">
+                <BaseQuoteFiatAmount
+                  price={priceInverted ? token1CurrentPrice : token0CurrentPrice}
+                  base={priceInverted ? currency1Amount.currency : currency0Amount.currency}
+                  quote={priceInverted ? currency0Amount.currency : currency1Amount.currency}
+                  variant="heading3"
+                />
+                <TouchableArea
+                  onPress={() => {
+                    setPriceInverted((prev) => !prev)
                   }}
                 >
-                  {mainViewOptions.map((p) => (
-                    <Flex
-                      key={p.value}
-                      width="100%"
-                      height={32}
-                      row
-                      alignItems="center"
-                      justifyContent="flex-start"
-                      p="$padding12"
-                      onPress={() => {
-                        setMainView(p.value)
-                      }}
-                    >
-                      {p.display}
-                    </Flex>
-                  ))}
-                </DropdownSelector>
-              ) : (
-                <SegmentedControl
-                  options={mainViewOptions}
-                  selectedOption={mainView}
-                  onSelectOption={(option: 'chart' | 'nft') => {
-                    setMainView(option)
-                  }}
-                />
-              )}
-              {mainView === 'chart' &&
-                (isMobileWeb ? (
+                  <ExchangeHorizontal size="$icon.16" />
+                </TouchableArea>
+              </Flex>
+              <Flex
+                animation="fast"
+                height="auto"
+                width="100%"
+                $lg={{ width: '100%' }}
+                borderWidth={0}
+                borderColor="$surface3"
+                borderBottomRightRadius="$rounded20"
+                borderBottomWidth={mainView === 'chart' ? 1 : 0}
+                borderRightWidth={mainView === 'chart' ? 1 : 0}
+                pb="$padding12"
+              >
+                {mainView === 'chart' ? (
+                  <LiquidityPositionRangeChart
+                    version={positionInfo.version}
+                    currency0={priceInverted ? currency1Amount.currency : currency0Amount.currency}
+                    currency1={priceInverted ? currency0Amount.currency : currency1Amount.currency}
+                    poolAddressOrId={positionInfo.poolId}
+                    chainId={positionInfo.chainId}
+                    tickSpacing={positionInfo.tickSpacing}
+                    feeTier={positionInfo.feeTier}
+                    hook={positionInfo.v4hook}
+                    positionStatus={status}
+                    priceOrdering={
+                      priceInverted
+                        ? {
+                            base: priceOrdering.quote,
+                            priceLower: priceOrdering.priceUpper?.invert(),
+                            priceUpper: priceOrdering.priceLower?.invert(),
+                          }
+                        : priceOrdering
+                    }
+                    duration={selectedHistoryDuration}
+                    width={chartWidth}
+                    height={440}
+                    showXAxis
+                    showYAxis
+                    showLiquidityBars
+                    crosshairEnabled={false}
+                  />
+                ) : (
+                  <Flex
+                    width="100%"
+                    height="100%"
+                    justifyContent="center"
+                    alignItems="center"
+                    py="$spacing20"
+                    backgroundColor="$surface2"
+                    borderRadius="$rounded20"
+                  >
+                    {'result' in metadata ? (
+                      <PositionNFT image={metadata.result.image} height={400} />
+                    ) : (
+                      <LoadingFullscreen style={{ borderRadius: 12, backgroundColor: 'transparent' }} />
+                    )}
+                  </Flex>
+                )}
+              </Flex>
+              <Flex row alignItems="center" justifyContent="space-between" flexDirection="row-reverse" width="100%">
+                {isMobileWeb ? (
                   <DropdownSelector
                     containerStyle={{ width: 'auto' }}
                     menuLabel={
@@ -497,7 +442,7 @@ function PositionPage() {
                         gap="$gap6"
                         {...ClickableTamaguiStyle}
                       >
-                        {timePeriodOptions.options.find((p) => p.value === timePeriodOptions.selected)?.display}
+                        {mainViewOptions.find((p) => p.value === mainView)?.display}
                         <RotatableChevron direction="down" height={16} width={16} color="$neutral2" />
                       </Flex>
                     }
@@ -509,12 +454,12 @@ function PositionPage() {
                       width: 160,
                     }}
                     hideChevron
-                    isOpen={timePeriodDropdownOpen}
+                    isOpen={mainViewDropdownOpen}
                     toggleOpen={() => {
-                      setTimePeriodDropdownOpen((prev) => !prev)
+                      setMainViewDropdownOpen((prev) => !prev)
                     }}
                   >
-                    {timePeriodOptions.options.map((p) => (
+                    {mainViewOptions.map((p) => (
                       <Flex
                         key={p.value}
                         width="100%"
@@ -524,118 +469,179 @@ function PositionPage() {
                         justifyContent="flex-start"
                         p="$padding12"
                         onPress={() => {
-                          setSelectedHistoryDuration(p.value)
+                          setMainView(p.value)
                         }}
                       >
-                        {p.verboseDisplay}
+                        {p.display}
                       </Flex>
                     ))}
                   </DropdownSelector>
                 ) : (
                   <SegmentedControl
-                    options={timePeriodOptions.options}
-                    selectedOption={timePeriodOptions.selected}
-                    onSelectOption={(option: HistoryDuration) => {
-                      setSelectedHistoryDuration(option)
+                    options={mainViewOptions}
+                    selectedOption={mainView}
+                    onSelectOption={(option: 'chart' | 'nft') => {
+                      setMainView(option)
                     }}
                   />
-                ))}
-            </Flex>
-          </Flex>
-          <Flex
-            p="$spacing20"
-            backgroundColor="$surface2"
-            width={380}
-            $lg={{ width: '100%' }}
-            borderRadius="$rounded16"
-            gap="$spacing24"
-            $platform-web={{
-              height: 'min-content',
-            }}
-          >
-            <Flex gap="$gap8">
-              <Text color="$neutral2" variant="body2">
-                <Trans i18nKey="pool.position" />
-              </Text>
-              {position.status === PositionStatus.CLOSED ? (
-                <Text variant="heading2" $lg={{ variant: 'heading3' }}>
-                  {formatCurrencyAmount({
-                    amount: CurrencyAmount.fromRawAmount(currency0Amount.currency, 0),
-                    type: NumberType.FiatTokenPrice,
-                  })}
-                </Text>
-              ) : (
-                <>
-                  <Text variant="heading2" $lg={{ variant: 'heading3' }}>
-                    {fiatValue0 && fiatValue1 ? (
-                      formatCurrencyAmount({
-                        amount: fiatValue0.add(fiatValue1),
-                        type: NumberType.FiatTokenPrice,
-                      })
-                    ) : (
-                      <MouseoverTooltip text={t('pool.positions.usdValueUnavailable.tooltip')} placement="right">
-                        <Flex alignItems="center" row gap="$gap8">
-                          <Text variant="body1" color="$neutral2">
-                            {t('pool.positions.usdValueUnavailable')}
-                          </Text>
-                          <InfoCircleFilled color="$neutral2" size="$icon.16" />
+                )}
+                {mainView === 'chart' &&
+                  (isMobileWeb ? (
+                    <DropdownSelector
+                      containerStyle={{ width: 'auto' }}
+                      menuLabel={
+                        <Flex
+                          borderRadius="$rounded16"
+                          backgroundColor="transparent"
+                          row
+                          centered
+                          p="$padding8"
+                          pl="$padding12"
+                          borderColor="$surface3"
+                          borderWidth="$spacing1"
+                          gap="$gap6"
+                          {...ClickableTamaguiStyle}
+                        >
+                          {timePeriodOptions.options.find((p) => p.value === timePeriodOptions.selected)?.display}
+                          <RotatableChevron direction="down" height={16} width={16} color="$neutral2" />
                         </Flex>
-                      </MouseoverTooltip>
-                    )}
-                  </Text>
-                  <LiquidityPositionAmountRows
-                    currency0Amount={currency0Amount}
-                    currency1Amount={currency1Amount}
-                    fiatValue0={fiatValue0}
-                    fiatValue1={fiatValue1}
-                  />
-                </>
-              )}
-            </Flex>
-            <Flex gap="$gap8">
-              <Text color="$neutral2" variant="body2">
-                <Trans i18nKey="common.fees" />
-              </Text>
-              {position.status === PositionStatus.CLOSED ? (
-                <Text variant="heading2" $lg={{ variant: 'heading3' }}>
-                  {formatCurrencyAmount({
-                    amount: CurrencyAmount.fromRawAmount(currency0Amount.currency, 0),
-                    type: NumberType.FiatTokenPrice,
-                  })}
-                </Text>
-              ) : (
-                <>
-                  <Text variant="heading2" mt="$spacing8" mb="$spacing16" $lg={{ variant: 'heading3' }}>
-                    {fiatFeeValue0 && fiatFeeValue1 ? (
-                      formatCurrencyAmount({
-                        amount: fiatFeeValue0.add(fiatFeeValue1),
-                        type: NumberType.FiatTokenPrice,
-                      })
-                    ) : (
-                      <MouseoverTooltip text={t('pool.positions.usdValueUnavailable.tooltip')} placement="right">
-                        <Flex alignItems="center" row gap="$gap8">
-                          <Text variant="body1" color="$neutral2">
-                            {t('pool.positions.usdValueUnavailable')}
-                          </Text>
-                          <InfoCircleFilled color="$neutral2" size="$icon.16" />
+                      }
+                      buttonStyle={{
+                        borderWidth: 0,
+                        p: 0,
+                      }}
+                      dropdownStyle={{
+                        width: 160,
+                      }}
+                      hideChevron
+                      isOpen={timePeriodDropdownOpen}
+                      toggleOpen={() => {
+                        setTimePeriodDropdownOpen((prev) => !prev)
+                      }}
+                    >
+                      {timePeriodOptions.options.map((p) => (
+                        <Flex
+                          key={p.value}
+                          width="100%"
+                          height={32}
+                          row
+                          alignItems="center"
+                          justifyContent="flex-start"
+                          p="$padding12"
+                          onPress={() => {
+                            setSelectedHistoryDuration(p.value)
+                          }}
+                        >
+                          {p.verboseDisplay}
                         </Flex>
-                      </MouseoverTooltip>
-                    )}
-                  </Text>
-                  {feeValue0 && feeValue1 && (
-                    <LiquidityPositionAmountRows
-                      currency0Amount={feeValue0}
-                      currency1Amount={feeValue1}
-                      fiatValue0={fiatFeeValue0}
-                      fiatValue1={fiatFeeValue1}
+                      ))}
+                    </DropdownSelector>
+                  ) : (
+                    <SegmentedControl
+                      options={timePeriodOptions.options}
+                      selectedOption={timePeriodOptions.selected}
+                      onSelectOption={(option: HistoryDuration) => {
+                        setSelectedHistoryDuration(option)
+                      }}
                     />
-                  )}
-                </>
-              )}
+                  ))}
+              </Flex>
+            </Flex>
+            <Flex
+              p="$spacing20"
+              backgroundColor="$surface2"
+              width={380}
+              $lg={{ width: '100%' }}
+              borderRadius="$rounded16"
+              gap="$spacing24"
+              $platform-web={{
+                height: 'min-content',
+              }}
+            >
+              <Flex gap="$gap8">
+                <Text color="$neutral2" variant="body2">
+                  <Trans i18nKey="pool.position" />
+                </Text>
+                {position.status === PositionStatus.CLOSED ? (
+                  <Text variant="heading2" $lg={{ variant: 'heading3' }}>
+                    {formatCurrencyAmount({
+                      amount: CurrencyAmount.fromRawAmount(currency0Amount.currency, 0),
+                      type: NumberType.FiatTokenPrice,
+                    })}
+                  </Text>
+                ) : (
+                  <>
+                    <Text variant="heading2" $lg={{ variant: 'heading3' }}>
+                      {fiatValue0 && fiatValue1 ? (
+                        formatCurrencyAmount({
+                          amount: fiatValue0.add(fiatValue1),
+                          type: NumberType.FiatTokenPrice,
+                        })
+                      ) : (
+                        <MouseoverTooltip text={t('pool.positions.usdValueUnavailable.tooltip')} placement="right">
+                          <Flex alignItems="center" row gap="$gap8">
+                            <Text variant="body1" color="$neutral2">
+                              {t('pool.positions.usdValueUnavailable')}
+                            </Text>
+                            <InfoCircleFilled color="$neutral2" size="$icon.16" />
+                          </Flex>
+                        </MouseoverTooltip>
+                      )}
+                    </Text>
+                    <LiquidityPositionAmountRows
+                      currency0Amount={currency0Amount}
+                      currency1Amount={currency1Amount}
+                      fiatValue0={fiatValue0}
+                      fiatValue1={fiatValue1}
+                    />
+                  </>
+                )}
+              </Flex>
+              <Flex gap="$gap8">
+                <Text color="$neutral2" variant="body2">
+                  <Trans i18nKey="common.fees" />
+                </Text>
+                {position.status === PositionStatus.CLOSED ? (
+                  <Text variant="heading2" $lg={{ variant: 'heading3' }}>
+                    {formatCurrencyAmount({
+                      amount: CurrencyAmount.fromRawAmount(currency0Amount.currency, 0),
+                      type: NumberType.FiatTokenPrice,
+                    })}
+                  </Text>
+                ) : (
+                  <>
+                    <Text variant="heading2" mt="$spacing8" mb="$spacing16" $lg={{ variant: 'heading3' }}>
+                      {fiatFeeValue0 && fiatFeeValue1 ? (
+                        formatCurrencyAmount({
+                          amount: fiatFeeValue0.add(fiatFeeValue1),
+                          type: NumberType.FiatTokenPrice,
+                        })
+                      ) : (
+                        <MouseoverTooltip text={t('pool.positions.usdValueUnavailable.tooltip')} placement="right">
+                          <Flex alignItems="center" row gap="$gap8">
+                            <Text variant="body1" color="$neutral2">
+                              {t('pool.positions.usdValueUnavailable')}
+                            </Text>
+                            <InfoCircleFilled color="$neutral2" size="$icon.16" />
+                          </Flex>
+                        </MouseoverTooltip>
+                      )}
+                    </Text>
+                    {feeValue0 && feeValue1 && (
+                      <LiquidityPositionAmountRows
+                        currency0Amount={feeValue0}
+                        currency1Amount={feeValue1}
+                        fiatValue0={fiatFeeValue0}
+                        fiatValue1={fiatFeeValue1}
+                      />
+                    )}
+                  </>
+                )}
+              </Flex>
             </Flex>
           </Flex>
-        </Flex>
-      </BodyWrapper>
-    </Trace>
+        </BodyWrapper>
+      </Trace>
+    </TransactionSettingsContextProvider>
   )
 }

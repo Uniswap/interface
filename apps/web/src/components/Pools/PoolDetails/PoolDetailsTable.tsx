@@ -1,16 +1,16 @@
 import { PositionInfo } from 'components/Liquidity/types'
-import { parseRestPosition } from 'components/Liquidity/utils'
 import { PoolDetailsPositionsTable } from 'components/Pools/PoolDetails/PoolDetailsPositionsTable'
 import { PoolDetailsTransactionsTable } from 'components/Pools/PoolDetails/PoolDetailsTransactionsTable'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import styled from 'lib/styled-components'
+import { fromPositionToPositionInfo } from 'lib/utils/subgraph'
 import { useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
+import { useGetPositionsQuery } from 'v3-subgraph/generated/types-and-hooks'
 
 enum PoolDetailsTableTabs {
   TRANSACTIONS = 'transactions',
@@ -36,11 +36,18 @@ export function PoolDetailsTableTab({
 }) {
   const [activeTable, setActiveTable] = useState<PoolDetailsTableTabs>(PoolDetailsTableTabs.TRANSACTIONS)
   const account = useAccount()
-  const { data } = useGetPositionsQuery({ address: account.address, poolId: poolAddress })
+  const { data } = useGetPositionsQuery({
+    variables: {
+      where: {
+        owner: account.address,
+        pool: poolAddress,
+      },
+    },
+  })
   const positions = useMemo(
     () =>
       data?.positions
-        .map((position) => parseRestPosition(position))
+        .map((position) => fromPositionToPositionInfo(position))
         .filter((position): position is PositionInfo => position !== undefined),
     [data?.positions],
   )

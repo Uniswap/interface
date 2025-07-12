@@ -230,6 +230,9 @@ function _TokenSelectorSwapOutputList({
     },
   })
   const data = useMemo(() => {
+    if (tokenFilter != null) {
+      return smartBCHTokenOptions.filter((t) => tokenFilter.includes(t.currencyInfo.currencyId))
+    }
     const tokensWithPools = poolData?.pools.flatMap((p) => [p.token0.id, p.token1.id])?.map((s) => s.toLowerCase())
     if (tokensWithPools?.includes(chainInfo.wrappedNativeCurrency.address.toLowerCase())) {
       tokensWithPools.push(chainInfo.nativeCurrency.address.toLowerCase())
