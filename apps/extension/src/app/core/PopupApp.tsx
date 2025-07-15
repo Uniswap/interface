@@ -3,11 +3,10 @@ import 'src/app/Global.css'
 
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { RouterProvider, createHashRouter } from 'react-router-dom'
+import { RouterProvider, createHashRouter } from 'react-router'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
 import { DatadogAppNameTag } from 'src/app/datadog'
-import { ROUTER_FUTURE_FLAGS, ROUTER_PROVIDER_FUTURE_FLAGS } from 'src/app/navigation/routerConfig'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { Button, Flex, Image, Text } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
@@ -18,18 +17,13 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
 
-const router = createHashRouter(
-  [
-    {
-      path: '',
-      element: <PopupContent />,
-      errorElement: <ErrorElement />,
-    },
-  ],
+const router = createHashRouter([
   {
-    future: ROUTER_FUTURE_FLAGS,
+    path: '',
+    element: <PopupContent />,
+    errorElement: <ErrorElement />,
   },
-)
+])
 
 function PopupContent(): JSX.Element {
   const { t } = useTranslation()
@@ -108,7 +102,7 @@ export default function PopupApp(): JSX.Element {
 
   return (
     <BaseAppContainer appName={DatadogAppNameTag.Popup}>
-      <RouterProvider router={router} future={ROUTER_PROVIDER_FUTURE_FLAGS} />
+      <RouterProvider router={router} />
     </BaseAppContainer>
   )
 }

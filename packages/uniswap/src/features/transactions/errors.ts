@@ -183,7 +183,7 @@ function getStepSpecificErrorContent(
       }
       return {
         title: t('error.tokenApproval'),
-        message: t('error.access.expiry'),
+        message: t('error.tokenApproval.message'),
         supportArticleURL: uniswapUrls.helpArticleUrls.approvalsExplainer,
       }
     case TransactionStepType.TokenRevocationTransaction:

@@ -12,8 +12,7 @@ import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getUSDCostPerGas, isClassicTrade } from 'state/routing/utils'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { isUniverseChainId } from 'uniswap/src/features/chains/types'
+import { getStablecoinsForChain, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -31,7 +30,7 @@ function isStablecoin(currency?: Currency): boolean {
   return (
     currency !== undefined &&
     isUniverseChainId(currency.chainId) &&
-    getChainInfo(currency.chainId).stablecoins.some((stablecoin) => stablecoin.equals(currency))
+    getStablecoinsForChain(currency.chainId).some((stablecoin) => stablecoin.equals(currency))
   )
 }
 

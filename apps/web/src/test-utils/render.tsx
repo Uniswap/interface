@@ -11,7 +11,7 @@ import { BlockNumberContext } from 'lib/hooks/useBlockNumber'
 import { PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { HelmetProvider } from 'react-helmet-async/lib/index'
 import { Provider } from 'react-redux'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router'
 import store from 'state'
 import { ThemeProvider } from 'theme'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
@@ -30,12 +30,7 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
     <HelmetProvider>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
-          <BrowserRouter
-            future={{
-              v7_relativeSplatPath: true,
-              v7_startTransition: true,
-            }}
-          >
+          <BrowserRouter>
             <TestWeb3Provider>
               <MockedProvider showWarnings={false}>
                 <AssetActivityProvider>

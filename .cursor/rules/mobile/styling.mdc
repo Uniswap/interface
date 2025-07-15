@@ -6,28 +6,7 @@ alwaysApply: false
 # Mobile Styling Conventions
 
 ## Component Styling
-- Use the `styled` function from `ui/src` for consistent styling
-- Prefer Tamagui styling over React Native StyleSheet when possible
-- Use StyleSheet.create for performance-critical styles or when Tamagui isn't suitable
-
-## StyleSheet Usage
-- Define styles outside of the component body to prevent recreation on renders
-- Use descriptive names for style objects
-- Group related styles together
-
-Example:
-```typescript
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: spacing.spacing16,
-  },
-  header: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-})
-```
+- Prefer Tamagui inline props over other methods
 
 ## Theme Usage
 - Use theme tokens from the UI package instead of hardcoded values
@@ -40,9 +19,11 @@ const styles = StyleSheet.create({
 - Minimize view hierarchy depth
 
 ## Platform Specific Code
-- Use `$platform-web` for platform-specific styling in Tamagui
-- Use `.ios.tsx` and `.android.tsx` extensions for platform-specific components
-- Use the `Platform.select` API for inline platform-specific code
+- Use `.<platform>.tsx` extensions for platform-specific components
+- The bundler will grab the appropriate file during the build and always fallback to `.tsx`
+- The `platform` variable must be one of the following: ios, android, macos, windows, web, native
+- Use the `Platform.select` API for inline platform-specific code. This method expects an object keyed by `platform`.
+- Also consider using our custom platform variables like `isMobileApp`, `isInterface`, etc. for more specific platform detection needs.
 
 ## Performance
 - Memoize complex style calculations

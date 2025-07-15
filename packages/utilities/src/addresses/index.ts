@@ -28,6 +28,7 @@ export function isSameAddress(a?: string, b?: string): boolean {
  */
 // eslint-disable-next-line max-params
 export function shortenAddress(address = '', chars = 4, charsEnd?: number): string {
+  // TODO(WEB-8012): Update to support Solana
   const parsed = isAddress(address)
   if (!parsed) {
     return ''

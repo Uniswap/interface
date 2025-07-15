@@ -1,7 +1,8 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ColorTokens, Flex, PlusMinusButton, PlusMinusButtonType, Text, TouchableArea, useSporeColors } from 'ui/src'
+import type { ColorTokens } from 'ui/src'
+import { Flex, PlusMinusButton, PlusMinusButtonType, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
@@ -11,8 +12,9 @@ import { MAX_CUSTOM_SLIPPAGE_TOLERANCE, SLIPPAGE_CRITICAL_TOLERANCE } from 'unis
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/useSlippageSettings'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { BridgeTrade, TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
+import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import type { TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
+import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -94,8 +96,7 @@ function WarningMessage({
 export function SlippageScreenNative(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const { derivedSwapInfo } = useSwapFormContext()
-  const { trade } = derivedSwapInfo.trade
+  const trade = useSwapFormStoreDerivedSwapInfo((s) => s.trade).trade
 
   const {
     isEditingSlippage,

@@ -38,6 +38,7 @@ export enum ElementName {
   ChainOptimism = 'chain-optimism',
   ChainPolygon = 'chain-polygon',
   ChainSepolia = 'chain-sepolia',
+  ChainSolana = 'chain-solana',
   ChainSoneium = 'chain-soneium',
   ChainUnichain = 'chain-unichain',
   ChainUnichainSepolia = 'chain-unichain-sepolia',

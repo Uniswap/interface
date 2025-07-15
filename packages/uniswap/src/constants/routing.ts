@@ -42,7 +42,6 @@ import {
   WETH_AVALANCHE,
   WETH_POLYGON,
   WRAPPED_NATIVE_CURRENCY,
-  isCelo,
   nativeOnChain,
 } from 'uniswap/src/constants/tokens'
 import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -201,10 +200,10 @@ function getTokenLogoURI(chainId: UniverseChainId, address: string): ImageSource
   const chainInfo = getChainInfo(chainId)
   const networkName = chainInfo.assetRepoNetworkName
 
-  if (isCelo(chainId) && isSameAddress(address, nativeOnChain(chainId).wrapped.address)) {
+  if (chainId === UniverseChainId.Celo && isSameAddress(address, nativeOnChain(chainId).wrapped.address)) {
     return CELO_LOGO as ImageSourcePropType
   }
-  if (isCelo(chainId) && isSameAddress(address, PORTAL_ETH_CELO.address)) {
+  if (chainId === UniverseChainId.Celo && isSameAddress(address, PORTAL_ETH_CELO.address)) {
     return ETH_LOGO as ImageSourcePropType
   }
 

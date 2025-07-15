@@ -19,20 +19,16 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
   }
 >
   <View
-    onLayout={[Function]}
+    behavior="padding"
+    enabled={true}
     style={
       [
-        [
-          {
-            "flex": 1,
-            "justifyContent": "flex-end",
-          },
-          {
-            "marginBottom": 0,
-          },
-        ],
         {
-          "paddingBottom": 0,
+          "flex": 1,
+          "justifyContent": "flex-end",
+        },
+        {
+          "marginBottom": 0,
         },
       ]
     }
@@ -220,13 +216,6 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           handlerType="NativeViewGestureHandler"
           onGestureHandlerEvent={[Function]}
           onGestureHandlerStateChange={[Function]}
-          waitFor={
-            [
-              {
-                "current": null,
-              },
-            ]
-          }
         >
           <View>
             <View

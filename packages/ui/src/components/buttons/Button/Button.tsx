@@ -20,6 +20,7 @@ const ButtonComponent = forwardRef<TamaguiElement, ButtonProps>(function Button(
     focusScaling = 'default',
     emphasis = 'primary',
     size = 'medium',
+    lineHeightDisabled = false,
     loading,
     iconPosition: propIconPosition = 'before',
     isDisabled: propDisabled,
@@ -79,7 +80,11 @@ const ButtonComponent = forwardRef<TamaguiElement, ButtonProps>(function Button(
         />
       ) : null}
 
-      {isStringOrTransTag ? <CustomButtonText>{children}</CustomButtonText> : children}
+      {isStringOrTransTag ? (
+        <CustomButtonText line-height-disabled={lineHeightDisabled.toString()}>{children}</CustomButtonText>
+      ) : (
+        children
+      )}
     </CustomButtonFrame>
   )
 })

@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode, useContext } from 'react'
+import type { PropsWithChildren, ReactNode } from 'react'
 import type { ColorValue } from 'react-native'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import type { ButtonProps } from 'ui/src/components/buttons/Button/types'
@@ -8,8 +8,10 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { SwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import type { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
+import { useOptionalSwapFormStoreBase } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isMobileApp, isWeb } from 'utilities/src/platform'
 
@@ -63,8 +65,8 @@ function WarningModalIcon({
     <Flex
       centered
       alignItems="center"
-      height="$spacing48"
-      width="$spacing48"
+      minHeight="$spacing48"
+      minWidth="$spacing48"
       borderRadius="$rounded12"
       mb="$spacing8"
       p={backgroundIconColor === false ? '$none' : '$spacing12'}
@@ -162,7 +164,7 @@ export function WarningModal(props: PropsWithChildren<WarningModalProps>): JSX.E
   const { hideHandlebar, isDismissible = true, isOpen, maxWidth, modalName, onClose, zIndex } = props
   const colors = useSporeColors()
 
-  const swapFormContext = useContext(SwapFormContext)
+  const maybeSwapFormStore = useOptionalSwapFormStoreBase()
 
   return (
     <Modal
@@ -175,11 +177,11 @@ export function WarningModal(props: PropsWithChildren<WarningModalProps>): JSX.E
       zIndex={zIndex}
       onClose={onClose}
     >
-      {swapFormContext ? (
-        // When we render this modal inside the swap flow, we want to forward the context so that it's available inside the modal's Portal.
-        <SwapFormContext.Provider value={swapFormContext}>
+      {/* TODO: WALL-7198 */}
+      {maybeSwapFormStore ? (
+        <SwapFormStoreContext.Provider value={maybeSwapFormStore}>
           <WarningModalContent {...props} />
-        </SwapFormContext.Provider>
+        </SwapFormStoreContext.Provider>
       ) : (
         <WarningModalContent {...props} />
       )}

@@ -7,13 +7,14 @@ import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import RoutingDiagram from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
 import { TransactionDetailsTooltip as Tooltip } from 'uniswap/src/components/TransactionDetailsTooltip'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
+import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import getRoutingDiagramEntries from 'uniswap/src/utils/getRoutingDiagramEntries'
 
 export function BestRouteTooltip(): JSX.Element | null {
   const { t } = useTranslation()
-  const { trade } = useSwapTxContext()
+  const trade = useSwapTxStore((s) => s.trade)
+
   const routes = useMemo(() => (trade && isClassic(trade) ? getRoutingDiagramEntries(trade) : []), [trade])
 
   if (!trade || !isClassic(trade)) {

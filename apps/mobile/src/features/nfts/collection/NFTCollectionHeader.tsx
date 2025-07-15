@@ -23,11 +23,9 @@ export const NFT_BANNER_HEIGHT = 102
 export function NFTCollectionHeader({
   loading = false,
   data,
-  collectionAddress,
 }: {
   loading: boolean
   data: Maybe<NFTCollectionData>
-  collectionAddress?: Maybe<string>
 }): ReactElement {
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -92,12 +90,7 @@ export function NFTCollectionHeader({
           <Flex backgroundColor="$scrim" borderRadius="$roundedFull" p="$spacing4">
             <BackButton color="$white" mr="$spacing1" size={iconSizes.icon24} />
           </Flex>
-          <NFTCollectionContextMenu
-            collectionAddress={collectionAddress}
-            data={data}
-            iconColor="$white"
-            showButtonOutline={true}
-          />
+          <NFTCollectionContextMenu data={data} iconColor="$white" showButtonOutline={true} />
         </Flex>
 
         {/* Profile image */}

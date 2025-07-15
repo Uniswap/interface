@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, NativeCurrency } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
@@ -61,10 +61,10 @@ function getNativeCurrencyTotalSpend({
   gasFee,
   nativeCurrency,
 }: {
-  value?: CurrencyAmount<NativeCurrency>
+  value?: CurrencyAmount<Currency>
   gasFee?: string
-  nativeCurrency?: NativeCurrency
-}): Maybe<CurrencyAmount<NativeCurrency>> {
+  nativeCurrency?: Currency
+}): Maybe<CurrencyAmount<Currency>> {
   if (!gasFee || !nativeCurrency) {
     return value
   }
@@ -79,9 +79,9 @@ function getNativeCurrencyTotalSpend({
 }
 
 export function hasSufficientFundsIncludingGas(params: {
-  transactionAmount?: CurrencyAmount<NativeCurrency>
+  transactionAmount?: CurrencyAmount<Currency>
   gasFee?: string
-  nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
+  nativeCurrencyBalance?: CurrencyAmount<Currency>
 }): boolean {
   const { transactionAmount, gasFee, nativeCurrencyBalance } = params
   const totalSpend = getNativeCurrencyTotalSpend({

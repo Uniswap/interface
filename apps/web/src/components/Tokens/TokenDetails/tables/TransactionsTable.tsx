@@ -2,7 +2,11 @@
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { Token } from '@uniswap/sdk-core'
-import { TokenTransactionType, useTokenTransactions } from 'appGraphql/data/useTokenTransactions'
+import {
+  TokenTransactionType,
+  getTokenTransactionTypeTranslation,
+  useTokenTransactions,
+} from 'appGraphql/data/useTokenTransactions'
 import { unwrapToken } from 'appGraphql/data/util'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
@@ -143,7 +147,10 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
               ref={filterAnchorRef}
             >
               <Filter
-                allFilters={Object.values(TokenTransactionType)}
+                allFilters={Object.values(TokenTransactionType).map((type) => ({
+                  value: type,
+                  label: getTokenTransactionTypeTranslation(type),
+                }))}
                 activeFilter={filter}
                 setFilters={setFilters}
                 isOpen={filterModalIsOpen}

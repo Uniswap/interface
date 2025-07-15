@@ -3,6 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table'
 import {
   PoolTableTransaction,
   PoolTableTransactionType,
+  getPoolTableTransactionTypeTranslation,
   usePoolTransactions,
 } from 'appGraphql/data/pools/usePoolTransactions'
 import { supportedChainIdFromGQLChain } from 'appGraphql/data/util'
@@ -158,7 +159,10 @@ export function PoolDetailsTransactionsTable({
             <Cell justifyContent="flex-start">
               <FilterHeaderRow clickable={filterModalIsOpen} onPress={() => toggleFilterModal()} ref={filterAnchorRef}>
                 <Filter
-                  allFilters={Object.values(PoolTableTransactionType)}
+                  allFilters={Object.values(PoolTableTransactionType).map((type) => ({
+                    value: type,
+                    label: getPoolTableTransactionTypeTranslation(type),
+                  }))}
                   activeFilter={filter}
                   setFilters={setFilters}
                   isOpen={filterModalIsOpen}

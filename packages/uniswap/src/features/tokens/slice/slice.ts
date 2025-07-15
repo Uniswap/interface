@@ -15,15 +15,12 @@ const slice = createSlice({
   initialState: initialTokensState,
   reducers: {
     dismissTokenWarning: (state, action: PayloadAction<{ token: SerializedToken | BasicTokenInfo }>) => {
-      const {
-        token: { chainId, address },
-      } = action.payload
       const { token } = action.payload
-      state.dismissedTokenWarnings[chainId] = state.dismissedTokenWarnings[chainId] || {}
-      const lowercasedAddress = getValidAddress({ address, withChecksum: false })
-      if (lowercasedAddress) {
+      state.dismissedTokenWarnings[token.chainId] = state.dismissedTokenWarnings[token.chainId] || {}
+      const normalizedAddress = getValidAddress(token)
+      if (normalizedAddress) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        state.dismissedTokenWarnings[chainId]![lowercasedAddress] = token
+        state.dismissedTokenWarnings[token.chainId]![normalizedAddress] = token
       }
     },
     resetDismissedWarnings: (state) => {

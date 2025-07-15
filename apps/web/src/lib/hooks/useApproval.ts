@@ -81,6 +81,7 @@ export function useApproval({
 
   const tokenContract = useTokenContract({
     tokenAddress: token?.address,
+    withSignerIfPossible: true,
     chainId: token?.chainId,
   })
 

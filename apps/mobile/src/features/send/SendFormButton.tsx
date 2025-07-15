@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { Button, Flex } from 'ui/src'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -82,7 +82,7 @@ export function SendFormButton({
     currencyInInfo,
   ])
 
-  const nativeCurrencySymbol = NativeCurrency.onChain(chainId).symbol
+  const nativeCurrencySymbol = nativeOnChain(chainId).symbol ?? ''
 
   const buttonText = insufficientGasFunds
     ? t('send.warning.insufficientFunds.title', {

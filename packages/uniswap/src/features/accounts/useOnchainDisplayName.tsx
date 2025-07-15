@@ -1,5 +1,6 @@
 import { DisplayName, DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useENSName } from 'uniswap/src/features/ens/api'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress, sanitizeAddressText } from 'uniswap/src/utils/addresses'
@@ -29,7 +30,8 @@ export function useOnchainDisplayName(address: Maybe<string>, options?: DisplayN
   const hookOptions = { ...defaultOptions, ...options }
   const { showShortenedEns, includeUnitagSuffix, overrideDisplayName } = hookOptions
 
-  const validated = getValidAddress({ address })
+  // TODO(WEB-8012): Update to support Solana
+  const validated = getValidAddress({ address, platform: Platform.EVM })
   const ens = useENSName(validated ?? undefined)
   const { unitag } = useUnitagByAddress(validated ?? undefined)
 

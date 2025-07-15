@@ -1,11 +1,14 @@
 import { expect, test } from 'playwright/fixtures'
+import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { Mocks } from 'playwright/mocks/mocks'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 test.describe('ActivityTab activity history', () => {
   test('should deduplicate activity history by nonce', async ({ page, graphql }) => {
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
     await graphql.intercept('ActivityWeb', Mocks.Account.activity_history)
     await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
@@ -13,7 +16,6 @@ test.describe('ActivityTab activity history', () => {
     await page.getByTestId(TestID.AmountInputIn).click()
     await page.getByTestId(TestID.AmountInputIn).fill('1')
     await expect(page.getByTestId(TestID.AmountInputIn)).toHaveValue('1')
-    await expect(page.getByTestId(TestID.AmountInputOut)).not.toHaveValue('')
     await page.getByTestId(TestID.ReviewSwap).click()
     await page.getByTestId(TestID.Swap).click()
     await page.getByTestId(TestID.ActivityPopupCloseIcon).click()

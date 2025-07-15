@@ -2,15 +2,15 @@ import { ApolloError } from '@apollo/client'
 import { PoolTableTransactionType, usePoolTransactions } from 'appGraphql/data/pools/usePoolTransactions'
 import { PoolDetailsTransactionsTable } from 'components/Pools/PoolDetails/PoolDetailsTransactionsTable'
 import { useAbbreviatedTimeString } from 'components/Table/utils'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { mocked } from 'test-utils/mocked'
 import { usdcWethPoolAddress, validParams } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
 
 vi.mock('appGraphql/data/pools/usePoolTransactions')
 vi.mock('components/Table/utils')
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom')
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router')
   return {
     ...actual,
     default: actual.default,

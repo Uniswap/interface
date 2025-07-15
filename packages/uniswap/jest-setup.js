@@ -4,11 +4,11 @@ import 'ui/jest-package-mocks'
 
 import 'uniswap/src/i18n' // Uses real translations for tests
 
-jest.mock('uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext', () => {
+jest.mock('uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore', () => {
   return {
-    useTransactionSettingsContext: () => ({
+    useTransactionSettingsStore: (selector) => selector({
       customDeadline: 20,
-      customSlippage: 0.5,
+      customSlippageTolerance: 0.5,
     })
   }
 })

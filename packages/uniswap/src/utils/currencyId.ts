@@ -37,9 +37,13 @@ export function buildCurrencyId(chainId: UniverseChainId, address: string): stri
 export function isCurrencyIdValid(_currencyId: CurrencyId): boolean {
   try {
     const [chainId, address] = _currencyId.split('-')
-    const validAddress = getValidAddress({ address })
     const validChainId = toSupportedChainId(chainId)
-    return !!validChainId && !!validAddress
+    if (!validChainId) {
+      return false
+    }
+    const validAddress = getValidAddress({ address, chainId: validChainId })
+
+    return !!validAddress
   } catch (error) {
     return false
   }
@@ -87,6 +91,7 @@ export const isNativeCurrencyAddress = (chainId: UniverseChainId, address: Maybe
     return true
   }
   const chainInfo = getChainInfo(chainId)
+  const { platform } = chainInfo
   // sometimes the native token symbol is returned as the native token address
   if (address === chainInfo.nativeCurrency.symbol) {
     return true
@@ -95,10 +100,13 @@ export const isNativeCurrencyAddress = (chainId: UniverseChainId, address: Maybe
   const nativeAddress = getNativeAddress(chainId)
   // allow both native address formats until all backend endpoints return the new one
   if (nativeAddress === DEFAULT_NATIVE_ADDRESS_LEGACY) {
-    return areAddressesEqual(address, nativeAddress) || areAddressesEqual(address, DEFAULT_NATIVE_ADDRESS)
+    return (
+      areAddressesEqual(address, nativeAddress, platform) ||
+      areAddressesEqual(address, DEFAULT_NATIVE_ADDRESS, platform)
+    )
   }
 
-  return areAddressesEqual(address, nativeAddress)
+  return areAddressesEqual(address, nativeAddress, platform)
 }
 
 // Currency ids are formatted as `chainId-tokenaddress`

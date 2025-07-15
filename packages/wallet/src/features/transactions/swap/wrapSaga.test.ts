@@ -1,9 +1,9 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { testSaga } from 'redux-saga-test-plan'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import {
   TransactionOriginType,
   TransactionType,
@@ -36,7 +36,7 @@ const params: WrapParams = {
   txId: '1',
   account,
   txRequest,
-  inputCurrencyAmount: CurrencyAmount.fromRawAmount(NativeCurrency.onChain(UniverseChainId.Mainnet), '200000'),
+  inputCurrencyAmount: CurrencyAmount.fromRawAmount(nativeOnChain(UniverseChainId.Mainnet), '200000'),
 }
 
 describe(wrap, () => {
@@ -60,10 +60,7 @@ describe(wrap, () => {
   it('successfully unwraps to native eth', () => {
     const unwrapParams: WrapParams = {
       ...params,
-      inputCurrencyAmount: CurrencyAmount.fromRawAmount(
-        NativeCurrency.onChain(UniverseChainId.Mainnet).wrapped,
-        '200000',
-      ),
+      inputCurrencyAmount: CurrencyAmount.fromRawAmount(nativeOnChain(UniverseChainId.Mainnet).wrapped, '200000'),
     }
     testSaga(wrap, unwrapParams)
       .next()

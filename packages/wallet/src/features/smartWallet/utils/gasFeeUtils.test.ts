@@ -1,5 +1,5 @@
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { GasFeeData, GroupedGasFee, groupGasFeesBySymbol } from 'wallet/src/features/smartWallet/utils/gasFeeUtils'
 
 describe('groupGasFeesBySymbol', () => {
@@ -11,7 +11,7 @@ describe('groupGasFeesBySymbol', () => {
         ETH: {
           totalFeeAmountInWei: '1000000000000000',
           chainIds: [UniverseChainId.Mainnet],
-          currency: NativeCurrency.onChain(UniverseChainId.Mainnet),
+          currency: nativeOnChain(UniverseChainId.Mainnet),
         },
       },
     },
@@ -25,7 +25,7 @@ describe('groupGasFeesBySymbol', () => {
         ETH: {
           totalFeeAmountInWei: '3000000000000000',
           chainIds: [UniverseChainId.Mainnet, UniverseChainId.ArbitrumOne],
-          currency: NativeCurrency.onChain(UniverseChainId.Mainnet),
+          currency: nativeOnChain(UniverseChainId.Mainnet),
         },
       },
     },
@@ -40,12 +40,12 @@ describe('groupGasFeesBySymbol', () => {
         ETH: {
           totalFeeAmountInWei: '2000000000000000',
           chainIds: [UniverseChainId.Mainnet, UniverseChainId.Optimism],
-          currency: NativeCurrency.onChain(UniverseChainId.Mainnet),
+          currency: nativeOnChain(UniverseChainId.Mainnet),
         },
         POL: {
           totalFeeAmountInWei: '1000000000000000',
           chainIds: [UniverseChainId.Polygon],
-          currency: NativeCurrency.onChain(UniverseChainId.Polygon),
+          currency: nativeOnChain(UniverseChainId.Polygon),
         },
       },
     },

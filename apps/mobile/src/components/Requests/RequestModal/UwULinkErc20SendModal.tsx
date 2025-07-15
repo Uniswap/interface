@@ -8,13 +8,13 @@ import { Flex, SpinningLoader, Text, useIsDarkMode } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { NetworkFee } from 'uniswap/src/components/gas/NetworkFee'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -99,7 +99,7 @@ function UwULinkErc20SendModalContent({
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const { chainId, isStablecoin } = request
-  const nativeCurrency = NativeCurrency.onChain(chainId)
+  const nativeCurrency = nativeOnChain(chainId)
 
   if (loading || !currencyInfo) {
     return (
@@ -153,7 +153,7 @@ function UwULinkErc20SendModalContent({
       {!hasSufficientGasFunds && (
         <Text color="$statusWarning" pt="$spacing8" textAlign="center" variant="body3">
           {t('walletConnect.request.error.insufficientFunds', {
-            currencySymbol: nativeCurrency.symbol,
+            currencySymbol: nativeCurrency.symbol ?? '',
           })}
         </Text>
       )}

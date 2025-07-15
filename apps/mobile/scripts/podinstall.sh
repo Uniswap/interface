@@ -2,7 +2,7 @@
 
 set -e
 
-REQUIRED_XCODE_VERSION="16.3"
+REQUIRED_XCODE_VERSION="16.4"
 UPDATE_REPOS=false
 
 while [[ $# -gt 0 ]]; do

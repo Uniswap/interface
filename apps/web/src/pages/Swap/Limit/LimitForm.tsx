@@ -37,9 +37,9 @@ import { Anchor, Button, Flex, styled as TamaguiStyled, Text, useIsShortMobileDe
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -220,7 +220,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   useEffect(() => {
     // If outputCurrency is undefined, we should default it to the chain's stablecoin or native currency
     if (!outputCurrency && isSupportedChain) {
-      const stablecoinCurrency = getChainInfo(chainId).spotPriceStablecoinAmount.currency
+      const stablecoinCurrency = getPrimaryStablecoin(chainId)
       onSelectCurrency(
         'outputCurrency',
         inputCurrency?.equals(stablecoinCurrency) ? nativeOnChain(chainId) : stablecoinCurrency,
@@ -235,7 +235,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         ? [inputCurrency, outputCurrency]
         : [outputCurrency, inputCurrency]
       if (nativeCurrency.wrapped.equals(nonNativeCurrency)) {
-        onSelectCurrency('outputCurrency', getChainInfo(chainId).spotPriceStablecoinAmount.currency)
+        onSelectCurrency('outputCurrency', getPrimaryStablecoin(chainId))
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

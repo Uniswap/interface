@@ -1,7 +1,8 @@
 import { CSSProperties } from 'react'
 
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 
 const getDefaultBorderRadius = (size: number) => size / 2 - 4
 

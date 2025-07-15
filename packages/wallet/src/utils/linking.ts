@@ -35,13 +35,6 @@ export function getExplorerName(chainId: UniverseChainId): string {
   return getChainInfo(chainId).explorer.name
 }
 
-export function getNftCollectionUrl(contractAddress: Maybe<string>): string | undefined {
-  if (!contractAddress) {
-    return undefined
-  }
-  return `${uniswapUrls.webInterfaceNftCollectionUrl}/${contractAddress}`
-}
-
 export function getNftUrl(contractAddress: string, tokenId: string): string {
   return `${uniswapUrls.webInterfaceNftItemUrl}/${contractAddress}/${tokenId}`
 }

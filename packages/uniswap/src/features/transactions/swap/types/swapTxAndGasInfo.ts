@@ -5,6 +5,7 @@ import { BridgeTrade, ClassicTrade, UniswapXTrade, UnwrapTrade, WrapTrade } from
 import { isBridge, isClassic, isUniswapX, isWrap } from "uniswap/src/features/transactions/swap/utils/routing"
 import { ValidatedPermit, ValidatedTransactionRequest } from "uniswap/src/features/transactions/swap/utils/trade"
 import { isInterface } from "utilities/src/platform"
+import { NonEmptyArray } from "utilities/src/primitives/array"
 
 export type SwapTxAndGasInfo = ClassicSwapTxAndGasInfo | UniswapXSwapTxAndGasInfo | BridgeSwapTxAndGasInfo | WrapSwapTxAndGasInfo
 export type ValidatedSwapTxContext = ValidatedClassicSwapTxAndGasInfo | ValidatedUniswapXSwapTxAndGasInfo | ValidatedBridgeSwapTxAndGasInfo | ValidatedWrapSwapTxAndGasInfo
@@ -51,7 +52,7 @@ export type PermitTypedData = {
   typedData: ValidatedPermit
 }
 
-export type PopulatedTransactionRequestArray = [ValidatedTransactionRequest, ...ValidatedTransactionRequest[]]
+export type PopulatedTransactionRequestArray = NonEmptyArray<ValidatedTransactionRequest>
 export interface ClassicSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   routing: Routing.CLASSIC
   trade?: ClassicTrade

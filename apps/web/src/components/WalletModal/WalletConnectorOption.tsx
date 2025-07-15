@@ -12,7 +12,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { persistHideMobileAppPromoBannerAtom } from 'state/application/atoms'
 import { ThemedText } from 'theme/components'
 import { Flex, Image, Text, useSporeColors } from 'ui/src'
-import { UNISWAP_LOGO } from 'ui/src/assets'
+import { BINANCE_WALLET_ICON, UNISWAP_LOGO } from 'ui/src/assets'
 import { Chevron } from 'ui/src/components/icons/Chevron'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { ScanQr } from 'ui/src/components/icons/ScanQr'
@@ -58,6 +58,10 @@ function UniswapMobileIcon({ iconSize }: { iconSize: number }) {
   )
 }
 
+function BinanceWalletIcon({ iconSize }: { iconSize: number }) {
+  return <Image height={iconSize} source={BINANCE_WALLET_ICON} width={iconSize} borderRadius="$rounded8" />
+}
+
 function OtherWalletsIcon() {
   return (
     <Flex p="$spacing6" backgroundColor="$accent2" borderRadius="$rounded8">
@@ -89,6 +93,8 @@ function getIcon({
     return <UniswapMobileIcon iconSize={iconSize} />
   } else if (connectorId === AlternativeOption.OTHER_WALLETS) {
     return <OtherWalletsIcon />
+  } else if (connectorId === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID) {
+    return <BinanceWalletIcon iconSize={iconSize} />
   } else {
     const icon = CONNECTOR_ICON_OVERRIDE_MAP[connectorId] ?? connector?.icon
     // TODO(WEB-7217): RN Web Image is not properly displaying base64 encoded images (Phantom logo) */

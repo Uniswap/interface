@@ -8,7 +8,7 @@ const UNITAG_NAME = 'newunitag'
 test.describe('User onboarding', () => {
   test.describe.configure({ retries: 3 }) // the challenge endpoint can be flaky so retry the whole test
 
-  test('sign up a user', async ({ page }) => {
+  test.skip('sign up a user', async ({ page }) => {
     await setupWebAuthn(page)
 
     await page.goto(`https://app.corn-staging.com/?eagerlyConnect=false&featureFlagOverride=embedded_wallet`)

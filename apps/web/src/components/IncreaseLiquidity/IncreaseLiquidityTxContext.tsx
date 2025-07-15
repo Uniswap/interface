@@ -1,31 +1,31 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
 import { useIncreasePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { getProtocolItems, hasLPFoTTransferError } from 'components/Liquidity/utils'
 import { getTokenOrZeroAddress } from 'pages/Pool/Positions/create/utils'
-import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState, type PropsWithChildren } from 'react'
 import { PositionField } from 'types/position'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useIncreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useIncreaseLpPositionCalldataQuery'
 import {
-  IncreaseLPPositionRequest,
   IndependentToken,
   type CheckApprovalLPRequest,
+  type IncreaseLPPositionRequest,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import {
-  IncreasePositionTxAndGasInfo,
   LiquidityTransactionType,
+  type IncreasePositionTxAndGasInfo,
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
@@ -50,7 +50,10 @@ const IncreaseLiquidityTxContext = createContext<IncreasePositionContextType | u
 export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildren): JSX.Element {
   const positionInfo = useModalLiquidityInitialState()
   const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep } = useIncreaseLiquidityContext()
-  const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
+  const { customDeadline, customSlippageTolerance } = useTransactionSettingsStore((s) => ({
+    customDeadline: s.customDeadline,
+    customSlippageTolerance: s.customSlippageTolerance,
+  }))
   const [hasIncreaseErrorResponse, setHasIncreaseErrorResponse] = useState(false)
 
   const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(positionInfo?.chainId)

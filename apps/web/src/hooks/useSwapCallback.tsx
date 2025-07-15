@@ -17,6 +17,7 @@ import { useTransaction, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionInfo } from 'state/transactions/types'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import {
   TransactionStatus,
   TransactionType as UniswapTransactionType,
@@ -87,6 +88,8 @@ export function useSwapCallback({
       throw new Error('wallet must be connected to swap')
     } else if (!swapChainId) {
       throw new Error('missing swap chainId')
+    } else if (!isEVMChain(swapChainId)) {
+      throw new Error('non EVM chain in legacy limits flow')
     } else if (!supportedConnectedChainId || supportedConnectedChainId !== swapChainId) {
       const correctChain = await selectChain(swapChainId)
       if (!correctChain) {

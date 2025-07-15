@@ -1,26 +1,26 @@
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
-import { OnActivityUpdate } from 'state/activity/types'
+import type { OnActivityUpdate } from 'state/activity/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
-import {
-  BridgeTransactionInfo,
-  ConfirmedTransactionDetails,
-  TransactionDetails,
-  TransactionType,
-} from 'state/transactions/types'
+import type { ConfirmedTransactionDetails, TransactionDetails } from 'state/transactions/types'
+
 import { isPendingTx } from 'state/transactions/utils'
 import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { BridgeTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionStatus,
+  TransactionType as UniswapTransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 
 const MIN_BRIDGE_WAIT_TIME = ms('2s')
 
 type BridgeTransactionDetails = TransactionDetails & { info: BridgeTransactionInfo }
 function isBridgeTransactionDetails(tx: TransactionDetails): tx is BridgeTransactionDetails {
-  return tx.info.type === TransactionType.BRIDGE
+  return tx.info.type === UniswapTransactionType.Bridge
 }
 
 type BridgeTransactionDetailsWithChainId = BridgeTransactionDetails & { chainId: UniverseChainId }

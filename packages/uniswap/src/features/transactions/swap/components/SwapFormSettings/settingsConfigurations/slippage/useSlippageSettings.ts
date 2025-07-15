@@ -9,8 +9,12 @@ import {
   MAX_CUSTOM_SLIPPAGE_TOLERANCE,
   SLIPPAGE_CRITICAL_TOLERANCE,
 } from 'uniswap/src/constants/transactions'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
-import { useOptionalSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import {
+  useTransactionSettingsActions,
+  useTransactionSettingsAutoSlippageToleranceStore,
+  useTransactionSettingsStore,
+} from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
+import { useOptionalSwapFormStoreBase } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 
 const SLIPPAGE_INCREMENT = 0.1
 
@@ -34,23 +38,26 @@ export function useSlippageSettings(params?: { saveOnBlur?: boolean; isBridgeTra
   const { t } = useTranslation()
 
   // TODO: WEB-7258
-  // swap context is possibly undefined, because SlippageControl can be used outside of SwapFormContext
-  const swapContext = useOptionalSwapFormContext()
-  const tradeAutoSlippage = useMemo(() => {
-    if (!swapContext) {
-      return undefined
-    } else {
-      const { derivedSwapInfo } = swapContext
-      const acceptedTrade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
-      return acceptedTrade?.slippageTolerance
-    }
-  }, [swapContext])
+  // `swapFormStore` is possibly undefined, because `SlippageControl` can be used outside of `SwapFormStoreContextProvider`
+  const maybeSwapFormStore = useOptionalSwapFormStoreBase()
 
-  const {
-    customSlippageTolerance,
-    autoSlippageTolerance: derivedAutoSlippageTolerance,
-    updateTransactionSettings,
-  } = useTransactionSettingsContext()
+  const tradeAutoSlippage = useMemo(() => {
+    if (!maybeSwapFormStore) {
+      return undefined
+    }
+
+    const { derivedSwapInfo } = maybeSwapFormStore.getState()
+
+    const acceptedTrade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
+
+    return acceptedTrade?.slippageTolerance
+  }, [maybeSwapFormStore])
+
+  const { customSlippageTolerance } = useTransactionSettingsStore((s) => ({
+    customSlippageTolerance: s.customSlippageTolerance,
+  }))
+  const { setCustomSlippageTolerance } = useTransactionSettingsActions()
+  const derivedAutoSlippageTolerance = useTransactionSettingsAutoSlippageToleranceStore((s) => s.autoSlippageTolerance)
 
   const [isEditingSlippage, setIsEditingSlippage] = useState<boolean>(false)
   const [autoSlippageEnabled, setAutoSlippageEnabled] = useState<boolean>(!customSlippageTolerance)
@@ -87,7 +94,7 @@ export function useSlippageSettings(params?: { saveOnBlur?: boolean; isBridgeTra
     setAutoSlippageEnabled(true)
     setInputWarning(undefined)
     setInputSlippageTolerance('')
-    updateTransactionSettings({ customSlippageTolerance: undefined })
+    setCustomSlippageTolerance(undefined)
   }
 
   const updateInputWarning = useCallback(
@@ -154,10 +161,10 @@ export function useSlippageSettings(params?: { saveOnBlur?: boolean; isBridgeTra
       setInputSlippageTolerance(value)
 
       if (!saveOnBlur && !isZero) {
-        updateTransactionSettings({ customSlippageTolerance: parsedValue })
+        setCustomSlippageTolerance(parsedValue)
       }
     },
-    [updateInputWarning, saveOnBlur, inputShakeX, updateTransactionSettings],
+    [updateInputWarning, saveOnBlur, inputShakeX, setCustomSlippageTolerance],
   )
 
   const onFocusSlippageInput = useCallback((): void => {
@@ -176,15 +183,15 @@ export function useSlippageSettings(params?: { saveOnBlur?: boolean; isBridgeTra
     // Set autoSlippageEnabled to true if input is invalid (ex. '' or '.')
     if (isNaN(parsedInputSlippageTolerance)) {
       setAutoSlippageEnabled(true)
-      updateTransactionSettings({ customSlippageTolerance: undefined })
+      setCustomSlippageTolerance(undefined)
       return
     }
 
     setInputSlippageTolerance(parsedInputSlippageTolerance.toFixed(2))
     if (saveOnBlur) {
-      updateTransactionSettings({ customSlippageTolerance: parsedInputSlippageTolerance })
+      setCustomSlippageTolerance(parsedInputSlippageTolerance)
     }
-  }, [parsedInputSlippageTolerance, updateTransactionSettings, saveOnBlur])
+  }, [parsedInputSlippageTolerance, setCustomSlippageTolerance, saveOnBlur])
 
   const onPressPlusMinusButton = useCallback(
     (type: PlusMinusButtonType): void => {
@@ -205,10 +212,10 @@ export function useSlippageSettings(params?: { saveOnBlur?: boolean; isBridgeTra
 
       setInputSlippageTolerance(constrainedNewSlippage.toFixed(2).toString())
       if (!isZero) {
-        updateTransactionSettings({ customSlippageTolerance: constrainedNewSlippage })
+        setCustomSlippageTolerance(constrainedNewSlippage)
       }
     },
-    [autoSlippageEnabled, currentSlippageToleranceNum, updateInputWarning, updateTransactionSettings],
+    [autoSlippageEnabled, currentSlippageToleranceNum, updateInputWarning, setCustomSlippageTolerance],
   )
 
   return {

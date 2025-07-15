@@ -13,9 +13,8 @@ import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { Currency, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import * as useSwapFormStoreModule from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import type { Mock } from 'vitest'
 
 vi.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
 
@@ -23,7 +22,7 @@ vi.mock('hooks/useAccount')
 
 vi.mock('uniswap/src/contexts/UniswapContext')
 
-vi.mock('uniswap/src/features/transactions/swap/contexts/SwapFormContext')
+vi.mock('uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext')
 
 vi.mock('pages/Swap', () => {
   return {
@@ -64,34 +63,34 @@ describe('PoolDetailsStatsButton', () => {
     useProviderHook: () => undefined,
   }
 
-  const useSwapFormContextMock = useSwapFormContext as Mock
-
   beforeEach(() => {
     vi.clearAllMocks()
 
     // Setup mocks
-    useSwapFormContextMock.mockReturnValue({
-      isFiatMode: false,
-      updateSwapForm: () => {},
-      exactAmountToken: '1',
-      exactAmountFiat: '10',
-      derivedSwapInfo: {
-        currencies: {
-          INPUT: {
-            currencyId: '0x',
-            currency: {} as Currency,
+    vi.spyOn(useSwapFormStoreModule, 'useSwapFormStore').mockImplementation((selector: any) =>
+      selector({
+        isFiatMode: false,
+        updateSwapForm: () => {},
+        exactAmountToken: '1',
+        exactAmountFiat: '10',
+        derivedSwapInfo: {
+          currencies: {
+            INPUT: {
+              currencyId: '0x',
+              currency: {} as Currency,
+            },
+          },
+          chainId: UniverseChainId.Mainnet,
+          trade: {
+            gasFee: {
+              value: '10',
+              loading: false,
+            },
           },
         },
-        chainId: UniverseChainId.Mainnet,
-        trade: {
-          gasFee: {
-            value: '10',
-            loading: false,
-          },
-        },
-      },
-      exactCurrencyField: 'INPUT',
-    })
+        exactCurrencyField: 'INPUT',
+      }),
+    )
 
     mocked(useAccount).mockReturnValue(USE_DISCONNECTED_ACCOUNT)
     mocked(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)

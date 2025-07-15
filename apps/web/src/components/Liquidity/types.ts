@@ -6,7 +6,7 @@ import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
 import { FeeData } from 'pages/Pool/Positions/create/types'
 import { Dispatch, ReactNode, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 
 export interface PriceOrdering {
   priceLower?: Price<Currency, Currency>
@@ -42,7 +42,7 @@ interface BasePositionInfo {
   version: ProtocolVersion
   currency0Amount: CurrencyAmount<Currency>
   currency1Amount: CurrencyAmount<Currency>
-  chainId: UniverseChainId
+  chainId: EVMUniverseChainId
   poolId: string // Refers to pool contract address for v2 & v3, and poolId for v4
   tokenId?: string
   tickLower?: string

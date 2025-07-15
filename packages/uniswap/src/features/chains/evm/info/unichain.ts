@@ -1,8 +1,7 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ETHEREUM_LOGO, ETH_LOGO, UNICHAIN_LOGO, UNICHAIN_SEPOLIA_LOGO } from 'ui/src/assets'
-import { USDC_UNICHAIN, USDC_UNICHAIN_SEPOLIA } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
+import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
   GqlChainId,
   NetworkLayer,
@@ -10,13 +9,22 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { buildUSDC } from 'uniswap/src/features/tokens/stablecoin'
 import { unichainSepolia } from 'wagmi/chains'
+
+const tokens = buildChainTokens({
+  stables: {
+    USDC: buildUSDC('0x078D782b760474a361dDA0AF3839290b0EF57AD6', UniverseChainId.Unichain),
+  },
+})
 
 export const UNICHAIN_CHAIN_INFO = {
   // ...unichain, // TODO update once available from viem
   name: 'Unichain',
   id: UniverseChainId.Unichain,
+  platform: Platform.EVM,
   assetRepoNetworkName: 'unichain',
   backendChain: {
     chain: BackendChainId.Unichain as GqlChainId,
@@ -49,8 +57,7 @@ export const UNICHAIN_CHAIN_INFO = {
     [RPCType.Default]: { http: ['https://mainnet.unichain.org'] },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
   },
-  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_UNICHAIN, 10_000e6),
-  stablecoins: [USDC_UNICHAIN],
+  tokens,
   statusPage: undefined,
   supportsV4: true,
   urlParam: 'unichain',
@@ -63,11 +70,18 @@ export const UNICHAIN_CHAIN_INFO = {
   testnet: false,
 } as const satisfies UniverseChainInfo
 
+const testnetTokens = buildChainTokens({
+  stables: {
+    USDC: buildUSDC('0x31d0220469e10c4E71834a79b1f276d740d3768F', UniverseChainId.UnichainSepolia),
+  },
+})
+
 export const UNICHAIN_SEPOLIA_CHAIN_INFO = {
   ...unichainSepolia,
   name: 'Unichain Sepolia',
   testnet: true,
   id: UniverseChainId.UnichainSepolia,
+  platform: Platform.EVM,
   assetRepoNetworkName: undefined,
   backendChain: {
     chain: BackendChainId.AstrochainSepolia as GqlChainId,
@@ -106,8 +120,7 @@ export const UNICHAIN_SEPOLIA_CHAIN_INFO = {
       http: [getQuicknodeEndpointUrl(UniverseChainId.UnichainSepolia)],
     },
   },
-  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_UNICHAIN_SEPOLIA, 10_000e6),
-  stablecoins: [USDC_UNICHAIN_SEPOLIA],
+  tokens: testnetTokens,
   statusPage: undefined,
   supportsV4: true,
   urlParam: 'unichain_sepolia',

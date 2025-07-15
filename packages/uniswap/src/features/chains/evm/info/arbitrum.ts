@@ -1,7 +1,5 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ARBITRUM_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
-import { DAI_ARBITRUM_ONE, USDC_ARBITRUM } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   DEFAULT_MS_BEFORE_WARNING,
@@ -9,6 +7,7 @@ import {
   DEFAULT_RETRY_OPTIONS,
   getQuicknodeEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
+import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
   GqlChainId,
   NetworkLayer,
@@ -16,12 +15,23 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { buildDAI, buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
 import { arbitrum } from 'wagmi/chains'
+
+const tokens = buildChainTokens({
+  stables: {
+    USDC: buildUSDC('0xaf88d065e77c8cC2239327C5EDb3A432268e5831', UniverseChainId.ArbitrumOne),
+    USDT: buildUSDT('0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9', UniverseChainId.ArbitrumOne),
+    DAI: buildDAI('0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', UniverseChainId.ArbitrumOne),
+  },
+})
 
 export const ARBITRUM_CHAIN_INFO = {
   ...arbitrum,
   id: UniverseChainId.ArbitrumOne,
+  platform: Platform.EVM,
   assetRepoNetworkName: 'arbitrum',
   backendChain: {
     chain: BackendChainId.Arbitrum as GqlChainId,
@@ -51,8 +61,7 @@ export const ARBITRUM_CHAIN_INFO = {
   },
   networkLayer: NetworkLayer.L2,
   pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
-  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
-  stablecoins: [USDC_ARBITRUM, DAI_ARBITRUM_ONE],
+  tokens,
   statusPage: undefined,
   supportsV4: true,
   urlParam: 'arbitrum',

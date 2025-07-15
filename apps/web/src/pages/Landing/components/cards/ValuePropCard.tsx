@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { Flex, FlexProps, Text } from 'ui/src'
 
 type ValuePropCardProps = FlexProps & {

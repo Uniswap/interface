@@ -1,21 +1,21 @@
 import { memo, useMemo } from 'react'
 import { Flex, IconButton, useIsShortMobileDevice } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
-import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
+import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { getShouldDisplayTokenWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/utils/getShouldDisplayTokenWarningCard'
 import { TransactionModalFooterContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { SubmitSwapButton } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/SubmitSwapButton'
-import { useSwapReviewCallbacks } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewCallbacksContext'
-import { useSwapReviewState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewStateContext'
-import { useSwapReviewTransactionState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewTransactionContext'
-import { useSwapWarningState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewWarningStateContext'
 import { useSwapOnPrevious } from 'uniswap/src/features/transactions/swap/review/hooks/useSwapOnPrevious'
+import { useSwapReviewCallbacksStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/useSwapReviewCallbacksStore'
+import { useShowInterfaceReviewSteps } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/useSwapReviewStore'
+import { useSwapReviewTransactionStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewTransactionStore/useSwapReviewTransactionStore'
+import { useSwapReviewWarningStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewWarningStore/useSwapReviewWarningStore'
+import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isWeb } from 'utilities/src/platform'
 
 export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | null {
-  const { showInterfaceReviewSteps } = useSwapReviewState()
+  const showInterfaceReviewSteps = useShowInterfaceReviewSteps()
   const { onPrev } = useSwapOnPrevious()
   const { disabled, showPendingUI, warning, onSubmit } = useSwapSubmitButton()
   const isShortMobileDevice = useIsShortMobileDevice()
@@ -47,32 +47,51 @@ function useSwapSubmitButton(): {
   warning: Warning | undefined
   onSubmit: () => Promise<void>
 } {
-  const context = useSwapReviewTransactionState()
-  const { tokenWarningChecked } = useSwapWarningState()
-  const { isSubmitting, showPendingUI } = useSwapFormContext()
-  const { onSwapButtonClick } = useSwapReviewCallbacks()
+  const {
+    tokenWarningProps,
+    feeOnTransferProps,
+    blockingWarning,
+    newTradeRequiresAcceptance,
+    reviewScreenWarning,
+    swapTxContext,
+    isWrap,
+  } = useSwapReviewTransactionStore((s) => ({
+    tokenWarningProps: s.tokenWarningProps,
+    feeOnTransferProps: s.feeOnTransferProps,
+    blockingWarning: s.blockingWarning,
+    newTradeRequiresAcceptance: s.newTradeRequiresAcceptance,
+    reviewScreenWarning: s.reviewScreenWarning,
+    swapTxContext: s.swapTxContext,
+    isWrap: s.isWrap,
+  }))
+
+  const tokenWarningChecked = useSwapReviewWarningStore((s) => s.tokenWarningChecked)
+  const { isSubmitting, showPendingUI } = useSwapFormStore((s) => ({
+    isSubmitting: s.isSubmitting,
+    showPendingUI: s.showPendingUI,
+  }))
+  const onSwapButtonClick = useSwapReviewCallbacksStore((s) => s.onSwapButtonClick)
   const { shouldDisplayTokenWarningCard } = getShouldDisplayTokenWarningCard({
-    tokenWarningProps: context.tokenWarningProps,
-    feeOnTransferProps: context.feeOnTransferProps,
+    tokenWarningProps,
+    feeOnTransferProps,
   })
 
-  // Calculate disabled state here instead of in the provider
   const submitButtonDisabled = useMemo(() => {
-    const validSwap = isValidSwapTxContext(context.swapTxContext)
+    const validSwap = isValidSwapTxContext(swapTxContext)
     const isTokenWarningBlocking = shouldDisplayTokenWarningCard && !tokenWarningChecked
 
     return (
-      (!validSwap && !context.isWrap) ||
-      !!context.blockingWarning ||
-      context.newTradeRequiresAcceptance ||
+      (!validSwap && !isWrap) ||
+      !!blockingWarning ||
+      newTradeRequiresAcceptance ||
       isSubmitting ||
       isTokenWarningBlocking
     )
   }, [
-    context.swapTxContext,
-    context.isWrap,
-    context.blockingWarning,
-    context.newTradeRequiresAcceptance,
+    swapTxContext,
+    isWrap,
+    blockingWarning,
+    newTradeRequiresAcceptance,
     isSubmitting,
     tokenWarningChecked,
     shouldDisplayTokenWarningCard,
@@ -82,6 +101,6 @@ function useSwapSubmitButton(): {
     disabled: submitButtonDisabled,
     showPendingUI,
     onSubmit: onSwapButtonClick,
-    warning: context.reviewScreenWarning?.warning,
+    warning: reviewScreenWarning?.warning,
   }
 }

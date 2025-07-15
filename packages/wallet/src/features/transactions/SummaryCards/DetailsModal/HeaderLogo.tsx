@@ -19,6 +19,7 @@ import {
   LiquidityDecreaseTransactionInfo,
   LiquidityIncreaseTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
+  MigrateV3LiquidityToV4TransactionInfo,
   NFTApproveTransactionInfo,
   NFTMintTransactionInfo,
   NFTTradeTransactionInfo,
@@ -114,7 +115,13 @@ export function HeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element
     // Cases of web only transactions
     // TODO(WALL-7197) handle these cases
     case TransactionType.ClaimUni:
+    case TransactionType.CreatePool:
+    case TransactionType.CreatePair:
+    case TransactionType.LiquidityIncrease:
+    case TransactionType.LiquidityDecrease:
+    case TransactionType.CollectFees:
     case TransactionType.MigrateLiquidityV2ToV3:
+    case TransactionType.MigrateLiquidityV3ToV4:
       return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     default:
       return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
@@ -262,6 +269,7 @@ function UnknownHeaderLogo({
   | RemoveDelegationTransactionInfo
   | ClaimUniTransactionInfo
   | MigrateV2LiquidityToV3TransactionInfo
+  | MigrateV3LiquidityToV4TransactionInfo
 >): JSX.Element {
   const colors = useSporeColors()
   // Check if dappInfo exists since it may not exist on all transaction types

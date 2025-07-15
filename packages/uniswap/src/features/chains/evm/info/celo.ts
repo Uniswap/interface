@@ -1,9 +1,8 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
 import { CELO_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
-import { USDC_CELO } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
+import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
   GqlChainId,
   NetworkLayer,
@@ -11,12 +10,21 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { buildUSDC } from 'uniswap/src/features/tokens/stablecoin'
 import { celo } from 'wagmi/chains'
+
+const tokens = buildChainTokens({
+  stables: {
+    USDC: buildUSDC('0xceba9300f2b948710d2653dd7b07f33a8b32118c', UniverseChainId.Celo),
+  },
+})
 
 export const CELO_CHAIN_INFO = {
   ...celo,
   id: UniverseChainId.Celo,
+  platform: Platform.EVM,
   assetRepoNetworkName: 'celo',
   backendChain: {
     chain: BackendChainId.Celo as GqlChainId,
@@ -46,8 +54,7 @@ export const CELO_CHAIN_INFO = {
   },
   networkLayer: NetworkLayer.L1,
   pendingTransactionsRetryOptions: undefined,
-  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_CELO, 10_000e18),
-  stablecoins: [USDC_CELO],
+  tokens,
   statusPage: undefined,
   supportsV4: false,
   urlParam: 'celo',

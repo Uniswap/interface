@@ -1,25 +1,27 @@
 import { useTranslation } from 'react-i18next'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useInterfaceWrap'
 import { useIsAmountSelectionInvalid } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsAmountSelectionInvalid'
 import { useIsTokenSelectionInvalid } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTokenSelectionInvalid'
 import { useIsTradeIndicative } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTradeIndicative'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { getActionText } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/SubmitSwapButton'
+import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export const useSwapFormButtonText = (): string => {
   const { isInterfaceWrap } = useInterfaceWrap()
   const { t } = useTranslation()
   const { swapRedirectCallback } = useTransactionModalContext()
-  const {
-    derivedSwapInfo: { currencies, wrapType, chainId },
-  } = useSwapFormContext()
+  const { currencies, wrapType, chainId } = useSwapFormStoreDerivedSwapInfo((s) => ({
+    currencies: s.currencies,
+    wrapType: s.wrapType,
+    chainId: s.chainId,
+  }))
   const isTokenSelectionInvalid = useIsTokenSelectionInvalid()
   const isAmountSelectionInvalid = useIsAmountSelectionInvalid()
 
@@ -28,7 +30,7 @@ export const useSwapFormButtonText = (): string => {
 
   const isLogIn = isEmbeddedWalletEnabled
 
-  const nativeCurrency = NativeCurrency.onChain(chainId)
+  const nativeCurrency = nativeOnChain(chainId)
 
   const isIndicative = useIsTradeIndicative()
 
@@ -65,7 +67,7 @@ export const useSwapFormButtonText = (): string => {
   }
 
   if (insufficientGasFundsWarning) {
-    return t('common.insufficientTokenBalance.error.simple', { tokenSymbol: nativeCurrency.symbol })
+    return t('common.insufficientTokenBalance.error.simple', { tokenSymbol: nativeCurrency.symbol ?? '' })
   }
 
   if (isInterfaceWrap) {

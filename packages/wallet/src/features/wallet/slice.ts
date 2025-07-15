@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RankingType } from 'uniswap/src/data/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -36,13 +37,14 @@ export const initialWalletState: WalletSliceState = {
   },
 }
 
+// TODO(WALL-7065): Update to support Solana
 const slice = createSlice({
   name: 'wallet',
   initialState: initialWalletState,
   reducers: {
     addAccount: (state, action: PayloadAction<Account>) => {
       const { address } = action.payload
-      const id = getValidAddress({ address, withChecksum: true })
+      const id = getValidAddress({ address, platform: Platform.EVM, withEVMChecksum: true })
       if (!id) {
         throw new Error(`Cannot add an account with an invalid address ${address}`)
       }
@@ -51,7 +53,11 @@ const slice = createSlice({
     addAccounts: (state, action: PayloadAction<Account[]>) => {
       const accounts = action.payload
       accounts.forEach((account) => {
-        const id = getValidAddress({ address: account.address, withChecksum: true })
+        const id = getValidAddress({
+          address: account.address,
+          platform: Platform.EVM,
+          withEVMChecksum: true,
+        })
         if (!id) {
           throw new Error(`Cannot add an account with an invalid address ${account.address}`)
         }
@@ -61,7 +67,7 @@ const slice = createSlice({
     removeAccounts: (state, action: PayloadAction<Address[]>) => {
       const addressesToRemove = action.payload
       addressesToRemove.forEach((address) => {
-        const id = getValidAddress({ address, withChecksum: true })
+        const id = getValidAddress({ address, platform: Platform.EVM, withEVMChecksum: true })
         if (!id) {
           throw new Error('Cannot remove an account with an invalid address')
         }
@@ -82,7 +88,7 @@ const slice = createSlice({
     },
     editAccount: (state, action: PayloadAction<{ address: Address; updatedAccount: Account }>) => {
       const { address, updatedAccount } = action.payload
-      const id = getValidAddress({ address, withChecksum: true })
+      const id = getValidAddress({ address, platform: Platform.EVM, withEVMChecksum: true })
       if (!id) {
         throw new Error('Cannot edit an account with an invalid address')
       }
@@ -93,7 +99,7 @@ const slice = createSlice({
     },
     setAccountAsActive: (state, action: PayloadAction<Address>) => {
       const address = action.payload
-      const id = getValidAddress({ address, withChecksum: true })
+      const id = getValidAddress({ address, platform: Platform.EVM, withEVMChecksum: true })
       if (!id) {
         throw new Error('Cannot activate an account with an invalid address')
       }
@@ -139,7 +145,7 @@ const slice = createSlice({
     restoreMnemonicComplete: (state) => state,
     setHasBalanceOrActivity: (state, action: PayloadAction<{ address: Address; hasBalanceOrActivity?: boolean }>) => {
       const { address, hasBalanceOrActivity } = action.payload
-      const id = getValidAddress({ address, withChecksum: true })
+      const id = getValidAddress({ address, platform: Platform.EVM, withEVMChecksum: true })
       if (!id) {
         logger.error('Unexpected call to `setHasBalanceOrActivity` with invalid `address`', {
           extra: { payload: action.payload },
@@ -154,7 +160,7 @@ const slice = createSlice({
     },
     setSmartWalletConsent: (state, action: PayloadAction<{ address: Address; smartWalletConsent: boolean }>) => {
       const { address, smartWalletConsent } = action.payload
-      const id = getValidAddress({ address, withChecksum: true })
+      const id = getValidAddress({ address, platform: Platform.EVM, withEVMChecksum: true })
       if (!id) {
         logger.error(new Error('Unexpected call to `setSmartWalletConsent` with invalid `address`'), {
           extra: { payload: action.payload },

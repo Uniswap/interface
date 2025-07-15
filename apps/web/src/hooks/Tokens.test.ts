@@ -3,10 +3,9 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { TEST_TOKEN_1 } from 'test-utils/constants'
 import { renderHook } from 'test-utils/render'
-import { DAI } from 'uniswap/src/constants/tokens'
+import { DAI, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { useCurrencyInfo as useUniswapCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 
 vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
@@ -65,7 +64,7 @@ describe('useCurrencyInfo', () => {
     })
 
     it('calls useUniswapCurrencyInfo with the correct arguments when Currency is provided', () => {
-      const currency = NativeCurrency.onChain(UniverseChainId.Mainnet)
+      const currency = nativeOnChain(UniverseChainId.Mainnet)
       renderHook(() => useCurrencyInfo(currency))
 
       expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(

@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer, NavigationIndependentTree } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { TransitionPresets, createStackNavigator } from '@react-navigation/stack'
 import React, { useEffect } from 'react'
@@ -196,27 +196,28 @@ function WrappedHomeScreen(props: AppStackScreenProp<MobileScreens.Home>): JSX.E
 
 export function FiatOnRampStackNavigator(): JSX.Element {
   return (
-    <NavigationContainer
-      ref={fiatOnRampNavigationRef}
-      independent
-      onReady={() => startTracking(fiatOnRampNavigationRef)}
-      onStateChange={stopTracking}
-    >
-      <HorizontalEdgeGestureTarget />
-      <FiatOnRampProvider>
-        <FiatOnRampStack.Navigator
-          initialRouteName={FiatOnRampScreens.AmountInput}
-          screenOptions={navNativeStackOptions.independentBsm}
-        >
-          <FiatOnRampStack.Screen component={FiatOnRampScreen} name={FiatOnRampScreens.AmountInput} />
-          <FiatOnRampStack.Screen
-            component={FiatOnRampServiceProvidersScreen}
-            name={FiatOnRampScreens.ServiceProviders}
-          />
-          <FiatOnRampStack.Screen component={FiatOnRampConnectingScreen} name={FiatOnRampScreens.Connecting} />
-        </FiatOnRampStack.Navigator>
-      </FiatOnRampProvider>
-    </NavigationContainer>
+    <NavigationIndependentTree>
+      <NavigationContainer
+        ref={fiatOnRampNavigationRef}
+        onReady={() => startTracking(fiatOnRampNavigationRef)}
+        onStateChange={stopTracking}
+      >
+        <HorizontalEdgeGestureTarget />
+        <FiatOnRampProvider>
+          <FiatOnRampStack.Navigator
+            initialRouteName={FiatOnRampScreens.AmountInput}
+            screenOptions={navNativeStackOptions.independentBsm}
+          >
+            <FiatOnRampStack.Screen component={FiatOnRampScreen} name={FiatOnRampScreens.AmountInput} />
+            <FiatOnRampStack.Screen
+              component={FiatOnRampServiceProvidersScreen}
+              name={FiatOnRampScreens.ServiceProviders}
+            />
+            <FiatOnRampStack.Screen component={FiatOnRampConnectingScreen} name={FiatOnRampScreens.Connecting} />
+          </FiatOnRampStack.Navigator>
+        </FiatOnRampProvider>
+      </NavigationContainer>
+    </NavigationIndependentTree>
   )
 }
 
@@ -316,7 +317,7 @@ function UnitagStackNavigator(): JSX.Element {
         screenOptions={{
           headerMode: 'float',
           headerTitle: '',
-          headerBackTitleVisible: false,
+          headerBackButtonDisplayMode: 'minimal',
           headerBackImage: renderHeaderBackImage,
           headerStatusBarHeight: insets.top + spacing.spacing8,
           headerTransparent: true,
@@ -390,6 +391,7 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Screen component={NFTCollectionScreen} name={MobileScreens.NFTCollection} />
       <AppStack.Screen component={WebViewScreen} name={MobileScreens.WebView} />
       <AppStack.Screen component={SettingsStackGroup} name={MobileScreens.SettingsStack} />
+      <AppStack.Screen component={ViewPrivateKeysScreen} name={MobileScreens.ViewPrivateKeys} />
       <AppStack.Group screenOptions={navNativeStackOptions.presentationModal}>
         <AppStack.Screen component={EducationScreen} name={MobileScreens.Education} />
       </AppStack.Group>

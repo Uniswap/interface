@@ -74,6 +74,7 @@ exports[`PoolDetailsHeader > renders breadcrumb text correctly 1`] = `
       class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap52 _mb-20px _width-fit-content"
     >
       <a
+        data-discover="true"
         href="/explore/ethereum"
         style="text-decoration: none;"
       >
@@ -100,6 +101,7 @@ exports[`PoolDetailsHeader > renders breadcrumb text correctly 1`] = `
         </span>
       </a>
       <a
+        data-discover="true"
         href="/explore/pools/ethereum"
         style="text-decoration: none;"
       >
@@ -348,6 +350,7 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
               >
                 <a
+                  data-discover="true"
                   href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
                   style="cursor: pointer; text-decoration: none; opacity: 1; transition: 100ms;"
                 >
@@ -359,6 +362,7 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                   </h1>
                 </a>
                 <a
+                  data-discover="true"
                   href="/explore/tokens/ethereum/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
                   style="cursor: pointer; text-decoration: none; opacity: 1; transition: 100ms;"
                 >

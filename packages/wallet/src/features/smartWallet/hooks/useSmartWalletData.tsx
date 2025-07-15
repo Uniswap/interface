@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { isUniverseChainId } from 'uniswap/src/features/chains/types'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import { WalletData, WalletStatus } from 'wallet/src/features/smartWallet/types'
 import { useSignerMnemonicAccountsSorted } from 'wallet/src/features/wallet/hooks'

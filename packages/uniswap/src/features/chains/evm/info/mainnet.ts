@@ -1,7 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ETHEREUM_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
-import { DAI, USDC, USDC_SEPOLIA, USDT } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   DEFAULT_MS_BEFORE_WARNING,
@@ -9,6 +8,7 @@ import {
   getPlaywrightRpcUrls,
   getQuicknodeEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
+import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
   GqlChainId,
   NetworkLayer,
@@ -16,17 +16,28 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { buildDAI, buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
 import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { isInterface } from 'utilities/src/platform'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { mainnet, sepolia } from 'wagmi/chains'
+
+const tokens = buildChainTokens({
+  stables: {
+    USDC: buildUSDC('0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', UniverseChainId.Mainnet),
+    USDT: buildUSDT('0xdAC17F958D2ee523a2206206994597C13D831ec7', UniverseChainId.Mainnet),
+    DAI: buildDAI('0x6B175474E89094C44Da98b954EedeAC495271d0F', UniverseChainId.Mainnet),
+  },
+})
 
 const LOCAL_MAINNET_PLAYWRIGHT_RPC_URL = 'http://127.0.0.1:8545'
 
 export const MAINNET_CHAIN_INFO = {
   ...mainnet,
   id: UniverseChainId.Mainnet,
+  platform: Platform.EVM,
   assetRepoNetworkName: 'ethereum',
   backendChain: {
     chain: BackendChainId.Ethereum as GqlChainId,
@@ -77,8 +88,8 @@ export const MAINNET_CHAIN_INFO = {
       },
   urlParam: 'ethereum',
   statusPage: undefined,
-  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
-  stablecoins: [USDC, DAI, USDT],
+  spotPriceStablecoinAmountOverride: CurrencyAmount.fromRawAmount(tokens.USDC, 100_000e6),
+  tokens,
   supportsV4: true,
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',
@@ -88,9 +99,16 @@ export const MAINNET_CHAIN_INFO = {
   },
 } as const satisfies UniverseChainInfo
 
+const testnetTokens = buildChainTokens({
+  stables: {
+    USDC: buildUSDC('0x1c7d4b196cb0c7b01d743fbc6116a902379c7238', UniverseChainId.Sepolia),
+  },
+})
+
 export const SEPOLIA_CHAIN_INFO = {
   ...sepolia,
   id: UniverseChainId.Sepolia,
+  platform: Platform.EVM,
   assetRepoNetworkName: undefined,
   backendChain: {
     chain: BackendChainId.EthereumSepolia as GqlChainId,
@@ -139,8 +157,8 @@ export const SEPOLIA_CHAIN_INFO = {
     },
     [RPCType.Interface]: { http: [`https://sepolia.infura.io/v3/${config.infuraKey}`] },
   },
-  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_SEPOLIA, 100e6),
-  stablecoins: [USDC_SEPOLIA],
+  spotPriceStablecoinAmountOverride: CurrencyAmount.fromRawAmount(testnetTokens.USDC, 100e6),
+  tokens: testnetTokens,
   statusPage: undefined,
   supportsV4: true,
   urlParam: 'ethereum_sepolia',

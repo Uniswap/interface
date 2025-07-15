@@ -10,6 +10,7 @@ import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
 import DeviceInfo, { getUniqueIdSync } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { MMKV } from 'react-native-mmkv'
 import { OneSignal } from 'react-native-onesignal'
 import { configureReanimatedLogger } from 'react-native-reanimated'
@@ -155,14 +156,16 @@ function App(): JSX.Element | null {
           <StrictMode>
             <I18nextProvider i18n={i18n}>
               <SafeAreaProvider>
-                <SharedWalletReduxProvider reduxStore={store}>
-                  <AnalyticsNavigationContextProvider
-                    shouldLogScreen={shouldLogScreen}
-                    useIsPartOfNavigationTree={useIsPartOfNavigationTree}
-                  >
-                    <AppOuter />
-                  </AnalyticsNavigationContextProvider>
-                </SharedWalletReduxProvider>
+                <KeyboardProvider>
+                  <SharedWalletReduxProvider reduxStore={store}>
+                    <AnalyticsNavigationContextProvider
+                      shouldLogScreen={shouldLogScreen}
+                      useIsPartOfNavigationTree={useIsPartOfNavigationTree}
+                    >
+                      <AppOuter />
+                    </AnalyticsNavigationContextProvider>
+                  </SharedWalletReduxProvider>
+                </KeyboardProvider>
               </SafeAreaProvider>
             </I18nextProvider>
           </StrictMode>
@@ -197,8 +200,8 @@ function AppOuter(): JSX.Element | null {
           loading_time: report.timeToBootJsMillis,
         })
         jsBundleLoadedRef.current = true
-      }
-      if (report.interactive) {
+        // Note that we are not checking report.interactive here because it's not consistently reported.
+        // Additionally, we are not tracking interactive the same way @shopify/react-native-performance does.
         await DdRum.addTiming(DDRumTiming.ScreenInteractive)
       }
     }
