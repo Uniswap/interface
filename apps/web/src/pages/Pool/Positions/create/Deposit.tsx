@@ -32,6 +32,7 @@ export const DepositStep = () => {
     },
   } = useDepositContext()
   const { txInfo, error: dataFetchingError, dependentAmount } = useCreateTxContext()
+  console.log('useCreateTxContext()', useCreateTxContext())
   const { deposit0Disabled, deposit1Disabled, priceDifference } = derivedPriceRangeInfo
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)

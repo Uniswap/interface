@@ -2,7 +2,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
 /* Types of list item options */
 export type TokenOption = {
-  currencyInfo: CurrencyInfo
+  currencyInfo: CurrencyInfo & { address?: string; symbol?: string; name?: string }
   quantity: number | null // float representation of balance, returned by data-api
   balanceUSD: Maybe<number>
   isUnsupported?: boolean

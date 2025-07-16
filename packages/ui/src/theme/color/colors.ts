@@ -162,6 +162,10 @@ export const networkColors = {
     light: '#3667F6',
     dark: '#3667F6',
   },
+  smartbch: {
+    light: '#08c18e',
+    dark: '#08c18e',
+  },
 }
 
 const sporeLight = {
@@ -337,7 +341,7 @@ export const colorsLight = {
   chain_11155111: networkColors.ethereum.light,
   chain_1301: networkColors.unichain.light,
   chain_10143: networkColors.monad.light,
-
+  chain_10000: networkColors.smartbch.light,
   pinkThemed: colors.pinkLight,
 }
 
@@ -420,7 +424,7 @@ export const colorsDark = {
   chain_324: networkColors.zksync.dark,
   chain_480: networkColors.worldchain.dark,
   chain_1868: networkColors.soneium.dark,
-
+  chain_10000: networkColors.smartbch.dark,
   // Testnets
   chain_11155111: networkColors.ethereum.dark,
   chain_1301: networkColors.unichain.dark,

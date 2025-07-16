@@ -25,22 +25,6 @@ export type ReportSpamRequest = {
 
 const SIMPLE_HASH_CHAIN_IDS: Record<UniverseChainId, string> = {
   [UniverseChainId.Mainnet]: 'ethereum',
-  [UniverseChainId.ArbitrumOne]: 'arbitrum',
-  [UniverseChainId.Avalanche]: 'avalanche',
-  [UniverseChainId.Base]: 'base',
-  [UniverseChainId.Blast]: 'blast',
-  [UniverseChainId.Bnb]: 'binance',
-  [UniverseChainId.Celo]: 'celo',
-  [UniverseChainId.MonadTestnet]: 'monad',
-  [UniverseChainId.Optimism]: 'optimism',
-  [UniverseChainId.Polygon]: 'matic',
-  [UniverseChainId.Soneium]: 'soneium',
-  [UniverseChainId.Unichain]: 'unichain',
-  [UniverseChainId.WorldChain]: 'worldchain',
-  [UniverseChainId.Zksync]: 'zksync',
-  [UniverseChainId.Zora]: 'zora',
-  [UniverseChainId.Sepolia]: 'sepolia',
-  [UniverseChainId.UnichainSepolia]: 'unichain-sepolia',
 }
 
 function getSimpleHashChainId(chainId: UniverseChainId | undefined): string {

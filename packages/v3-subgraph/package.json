@@ -1,0 +1,38 @@
+{
+  "name": "v3-subgraph",
+  "version": "1.0.0",
+  "repository": "https://github.com/graph-buildersdao/uniswap-v3-subgraph",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "build": "cross-env ts-node ./script/build",
+    "graphql:schema": "get-graphql-schema https://tango.quartzo.studio/subgraphs/name/smartbch > ./generated/schema.graphql",
+    "graphql:generate": "graphql-codegen --config codegen.ts",
+    "lint": "eslint . --ext .ts --fix"
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.64.1",
+    "@graphprotocol/graph-ts": "^0.38.1",
+    "@graphql-codegen/cli": "3.3.1",
+    "@graphql-codegen/client-preset": "3.0.1",
+    "@graphql-codegen/typescript": "3.0.4",
+    "@graphql-codegen/typescript-operations": "3.0.4",
+    "@graphql-codegen/typescript-react-apollo": "3.3.7",
+    "@graphql-codegen/typescript-resolvers": "3.2.1",
+    "@types/fs-extra": "^11.0.1",
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "@uniswap/eslint-config": "^1.2.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.3",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^6.1.0",
+    "fs-extra": "^11.1.0",
+    "get-graphql-schema": "2.1.2",
+    "mustache": "^3.1.0",
+    "prettier": "^1.18.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4",
+    "yargs": "17.7.2"
+  }
+}

@@ -5,7 +5,7 @@ import { embeddedWallet } from 'connection/EmbeddedWalletConnector'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
@@ -58,9 +58,10 @@ const connectors = isPlaywrightEnv()
   : baseConnectors
 
 export const wagmiConfig = createConfig({
-  chains: [getChainInfo(UniverseChainId.Mainnet), ...ALL_CHAIN_IDS.map(getChainInfo)],
+  chains: [getChainInfo(UniverseChainId.SmartBCH)],
   connectors,
   client({ chain }) {
+    console.log('chain', chain)
     return createClient({
       chain,
       batch: { multicall: true },

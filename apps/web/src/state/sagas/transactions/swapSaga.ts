@@ -3,6 +3,7 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { ZERO_PERCENT } from 'constants/misc'
+import { BigNumberish } from 'ethers'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
@@ -350,6 +351,31 @@ export function useSwapCallback(): SwapCallback {
         startChainId,
         v4Enabled: v4SwapEnabled,
       }
+      if (swapTxContext.approveTxRequest != null) {
+        if ('account' in swapTxContext.approveTxRequest) {
+          delete swapTxContext.approveTxRequest.account
+        }
+        if ('type' in swapTxContext.approveTxRequest) {
+          delete swapTxContext.approveTxRequest.type
+        }
+        if ('gas' in swapTxContext.approveTxRequest) {
+          swapTxContext.approveTxRequest.gasLimit = swapTxContext.approveTxRequest.gas as BigNumberish
+          delete swapTxContext.approveTxRequest.gas
+        }
+      }
+      if ('txRequest' in swapTxContext && swapTxContext.txRequest != null) {
+        if ('account' in swapTxContext.txRequest) {
+          delete swapTxContext.txRequest.account
+        }
+        if ('type' in swapTxContext.txRequest) {
+          delete swapTxContext.txRequest.type
+        }
+        if ('gas' in swapTxContext.txRequest) {
+          swapTxContext.txRequest.gasLimit = swapTxContext.txRequest.gas as BigNumberish
+          delete swapTxContext.txRequest.gas
+        }
+      }
+
       appDispatch(swapSaga.actions.trigger(swapParams))
 
       const blockNumber = getClassicQuoteFromResponse(trade?.quote)?.blockNumber?.toString()

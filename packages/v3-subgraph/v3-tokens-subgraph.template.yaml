@@ -1,0 +1,72 @@
+specVersion: 0.0.8
+description: Uniswap is a decentralized protocol for automated token exchange on Ethereum.
+repository: https://github.com/Uniswap/uniswap-v3-subgraph
+schema:
+  file: ./src/v3-tokens/schema.graphql
+features:
+  - nonFatalErrors
+  - fullTextSearch
+dataSources:
+  - kind: ethereum/contract
+    name: Factory
+    network: smartbch
+    source:
+      address: '0xC2136A0cF8453FEA06f95769BB851E44b9712070'
+      abi: Factory
+      startBlock: 19738780
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/v3-tokens/mappings/factory.ts
+      entities:
+        - Pool
+        - Token
+      abis:
+        - name: Factory
+          file: ./abis/factory.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+        - name: Pool
+          file: ./abis/pool.json
+      eventHandlers:
+        - event: PoolCreated(indexed address,indexed address,indexed uint24,int24,address)
+          handler: handlePoolCreated
+templates:
+  - kind: ethereum/contract
+    name: Pool
+    network: smartbch
+    source:
+      abi: Pool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/v3-tokens/mappings/core.ts
+      entities:
+        - Pool
+        - Token
+      abis:
+        - name: Pool
+          file: ./abis/pool.json
+        - name: NonfungiblePositionManager
+          file: ./abis/NonfungiblePositionManager.json
+        - name: Factory
+          file: ./abis/factory.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Initialize(uint160,int24)
+          handler: handleInitialize
+        - event: Swap(indexed address,indexed address,int256,int256,uint160,uint128,int24)
+          handler: handleSwap
+          receipt: true
+        - event: Mint(address,indexed address,indexed int24,indexed int24,uint128,uint256,uint256)
+          handler: handleMint
+          receipt: true
+        - event: Collect(indexed address,address,indexed int24,indexed int24,uint128,uint128)
+          handler: handleCollect

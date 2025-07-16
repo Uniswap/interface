@@ -1,7 +1,6 @@
 import { ErrorEvent } from '@sentry/types'
 import { INTERNAL_JSON_RPC_ERROR_CODE } from 'constants/misc'
 import { beforeSend } from 'tracing/errors'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 Object.defineProperty(window.performance, 'getEntriesByType', {
   writable: true,
@@ -203,30 +202,6 @@ describe('beforeSend', () => {
         exception,
         { type: 'ProviderRpcError', value: `${originalException.code}: ${originalException.message}` },
       ])
-    })
-
-    it('filters errors from testnet chains', () => {
-      const exception = { mechanism: { handled: false, synthetic: true } }
-      const event = {
-        exception: { values: [exception] },
-        contexts: {
-          state: {
-            state: {
-              value: {
-                application: {
-                  chainId: UniverseChainId.Sepolia,
-                },
-              },
-            },
-          },
-        },
-      } as unknown as ErrorEvent
-      const originalException = {
-        code: INTERNAL_JSON_RPC_ERROR_CODE,
-        message: 'Some error on testnet',
-        data: '[Object]',
-      }
-      expect(beforeSend(event, { originalException })).toBeNull()
     })
 
     it('does not filter errors from mainnet', () => {

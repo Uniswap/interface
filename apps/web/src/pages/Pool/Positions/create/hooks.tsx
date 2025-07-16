@@ -47,7 +47,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { parseCurrencyFromURLParameter } from 'state/swap/hooks'
 import { PositionField } from 'types/position'
-import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { WBCH, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -66,9 +66,8 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
   const { chainId } = useMultichainContext()
   const {
     currencyInputs: { TOKEN0: token0Input, TOKEN1: token1Input },
-    protocolVersion,
   } = state
-
+  const protocolVersion = ProtocolVersion.V3
   const TOKEN0 = token0Input
   const TOKEN1 = token1Input
 
@@ -122,6 +121,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
   const pair = pairsQueryEnabled ? pairResult[1] || undefined : undefined
 
   const v3PoolResult = usePool(sortedTokens?.[0], sortedTokens?.[1], state.fee.feeAmount)
+  console.log('v3PoolResult', v3PoolResult)
   const v3Pool = protocolVersion === ProtocolVersion.V3 ? v3PoolResult[1] ?? undefined : undefined
   const v3Price = v3Pool?.token0Price
 
@@ -404,6 +404,8 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
     return dependentToken && CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
   }, [state, protocolVersion, independentAmount, otherAmount, dependentToken, exactField, token0, token1])
 
+  console.log({ dependentAmount })
+
   const independentTokenUSDValue = useUSDCValue(independentAmount) || undefined
   const dependentTokenUSDValue = useUSDCValue(dependentAmount) || undefined
 
@@ -539,7 +541,7 @@ export function useInitialPoolInputs() {
 
   return useMemo(() => {
     return {
-      [PositionField.TOKEN0]: currencyA ?? currencyB ?? defaultInitialToken,
+      [PositionField.TOKEN0]: currencyA ?? currencyB ?? WBCH,
       [PositionField.TOKEN1]: currencyA && currencyB ? currencyB : undefined,
       hook: hookAddress,
     }

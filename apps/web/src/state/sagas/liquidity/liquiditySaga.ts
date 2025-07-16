@@ -2,6 +2,7 @@ import { LiquidityEventName } from '@uniswap/analytics-events'
 import { getLiquidityEventName } from 'components/Liquidity/analytics'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
+import { BigNumberish } from 'ethers'
 import {
   handleApprovalTransactionStep,
   handleOnChainStep,
@@ -155,9 +156,18 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
   } = params
 
   let signature: string | undefined
-
   try {
     for (const step of steps) {
+      if ('txRequest' in step && step.txRequest != null) {
+        delete step.txRequest.type
+        if ('account' in step.txRequest) {
+          delete step.txRequest.account
+        }
+        if ('gas' in step.txRequest) {
+          step.txRequest.gasLimit = step.txRequest.gas as BigNumberish
+          delete step.txRequest.gas
+        }
+      }
       switch (step.type) {
         case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {

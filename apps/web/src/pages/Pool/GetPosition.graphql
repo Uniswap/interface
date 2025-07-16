@@ -1,0 +1,20 @@
+query GetPosition($id: ID!) {
+  position(id: $id) {
+    id
+    tokenId
+    owner
+    tickLower
+    tickUpper
+    liquidity
+    depositedToken0
+    depositedToken1
+    withdrawnToken0
+    withdrawnToken1
+    collectedFeesToken0
+    collectedFeesToken1
+    closed
+    pool {
+      ...Pool
+    }
+  }
+}

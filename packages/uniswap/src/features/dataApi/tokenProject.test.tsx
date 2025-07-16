@@ -1,7 +1,7 @@
 import { waitFor } from '@testing-library/react-native'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/utils'
-import { SAMPLE_CURRENCY_ID_1, usdcTokenProject } from 'uniswap/src/test/fixtures'
+import { SAMPLE_CURRENCY_ID_1 } from 'uniswap/src/test/fixtures'
 import { renderHook } from 'uniswap/src/test/test-utils'
 import { queryResolvers } from 'uniswap/src/test/utils'
 
@@ -22,7 +22,7 @@ describe(useTokenProjects, () => {
 
   it('renders without error', async () => {
     const { resolvers, resolved } = queryResolvers({
-      tokenProjects: () => [usdcTokenProject()],
+      tokenProjects: () => [],
     })
     const { result } = renderHook(() => useTokenProjects([SAMPLE_CURRENCY_ID_1]), {
       resolvers,

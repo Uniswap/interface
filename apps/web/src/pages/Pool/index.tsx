@@ -1,42 +1,40 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import PROVIDE_LIQUIDITY from 'assets/images/provideLiquidity.png'
-import V4_HOOK from 'assets/images/v4Hooks.png'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool as PoolIcon } from 'components/Icons/Pool'
 import { LiquidityPositionCard, LiquidityPositionCardLoader } from 'components/Liquidity/LiquidityPositionCard'
 import { PositionInfo } from 'components/Liquidity/types'
-import { getPositionUrl, parseRestPosition } from 'components/Liquidity/utils'
-import { TopPoolTable, sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
+import { getPositionUrl } from 'components/Liquidity/utils'
+import { sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
+import { apolloSubgraphClient } from 'graphql/data/apollo/client'
 import { OrderDirection } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import { atom, useAtom } from 'jotai'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
+import { fromPositionToPositionInfo } from 'lib/utils/subgraph'
 import { PositionsHeader } from 'pages/Pool/Positions/PositionsHeader'
-import { TopPools } from 'pages/Pool/Positions/TopPools'
-import { ExternalArrowLink } from 'pages/Pool/Positions/shared'
 import { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTopPools } from 'state/explore/topPools'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { useRequestPositionsForSavedPairs } from 'state/user/hooks'
-import { ClickableTamaguiStyle } from 'theme/components'
 import { Anchor, Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
-import { useGetPositionsInfiniteQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
+import { useGetPositionsQuery } from 'v3-subgraph/generated/types-and-hooks'
 
 const PAGE_SIZE = 25
 
@@ -108,24 +106,11 @@ function EmptyPositionsView({ chainId, isConnected }: { chainId?: UniverseChainI
         </Flex>
         {isConnected && (
           <Flex centered row $md={{ width: '100%' }}>
-            <Button size="small" emphasis="secondary" onPress={() => navigate('/explore/pools')}>
-              {t('pools.explore')}
+            <Button size="small" emphasis="secondary" onPress={() => navigate('/create/v3')}>
+              {t('pool.newSpecificPosition', { symbol: 'v3' })}
             </Button>
           </Flex>
         )}
-      </Flex>
-      <Flex gap="$gap24">
-        <Text variant="subheading1">
-          <Trans i18nKey="pool.top.tvl" />
-        </Text>
-        <TopPoolTable
-          topPoolData={{ topPools, isLoading: exploreStatsLoading, isError: !!exploreStatsError }}
-          pageSize={10}
-          staticSize
-        />
-        <ExternalArrowLink href="/explore/pools" openInNewTab={false}>
-          {t('explore.more.pools')}
-        </ExternalArrowLink>
       </Flex>
     </Flex>
   )
@@ -186,53 +171,27 @@ export default function Pool() {
     }
   }, [isV4DataEnabled, setVersionFilter])
 
-  const { data, isPlaceholderData, refetch, isLoading, fetchNextPage, hasNextPage, isFetching } =
-    useGetPositionsInfiniteQuery(
-      {
-        address,
-        chainIds: chainFilter ? [chainFilter] : currentModeChains,
-        positionStatuses: statusFilter,
-        protocolVersions: versionFilter,
-        pageSize: PAGE_SIZE,
-        pageToken: '',
-        includeHidden: true,
-      },
-      !isConnected,
-    )
+  const isPlaceholderData = false
 
-  const loadedPositions = useMemo(() => {
-    return data?.pages.flatMap((positionsResponse) => positionsResponse.positions) || []
-  }, [data])
+  const {
+    data,
+    loading: isLoading,
+    refetch,
+  } = useGetPositionsQuery({
+    client: apolloSubgraphClient,
+    skip: !isConnected,
+    variables: {
+      where: {
+        owner: address,
+      },
+    },
+  })
 
   const savedPositions = useRequestPositionsForSavedPairs()
 
   const isLoadingPositions = !!account.address && (isLoading || !data)
 
-  const combinedPositions = useMemo(() => {
-    return [
-      ...loadedPositions,
-      ...(savedPositions
-        .filter((position) => {
-          const matchesChain = !chainFilter || position.data?.position?.chainId === chainFilter
-          const matchesStatus =
-            position.data?.position?.status && statusFilter.includes(position.data?.position?.status)
-          const matchesVersion =
-            position.data?.position?.protocolVersion && versionFilter.includes(position.data?.position?.protocolVersion)
-          return matchesChain && matchesStatus && matchesVersion
-        })
-        .map((p) => p.data?.position) ?? []),
-    ]
-      .map(parseRestPosition)
-      .filter((position): position is PositionInfo => !!position)
-      .reduce<PositionInfo[]>((unique, position) => {
-        const positionId = `${position.poolId}-${position.tokenId}-${position.chainId}`
-        const exists = unique.some((p) => `${p.poolId}-${p.tokenId}-${p.chainId}` === positionId)
-        if (!exists) {
-          unique.push(position)
-        }
-        return unique
-      }, [])
-  }, [loadedPositions, savedPositions, chainFilter, statusFilter, versionFilter])
+  const combinedPositions = (data?.positions ?? []).map(fromPositionToPositionInfo)
 
   const { visiblePositions, hiddenPositions } = useMemo(() => {
     const visiblePositions: PositionInfo[] = []
@@ -258,6 +217,10 @@ export default function Pool() {
 
   usePendingLPTransactionsChangeListener(refetch)
 
+  const hasNextPage = false
+  const isFetching = false
+  const fetchNextPage = () => {}
+
   const loadMorePositions = () => {
     if (hasNextPage && !isFetching) {
       fetchNextPage()
@@ -267,141 +230,114 @@ export default function Pool() {
   const showingEmptyPositions = !isLoadingPositions && combinedPositions.length === 0
 
   return (
-    <Trace logImpression page={InterfacePageNameLocal.Positions}>
-      <Flex
-        row
-        $xl={{ flexDirection: 'column', gap: '$gap16' }}
-        width="100%"
-        maxWidth={1200}
-        gap={80}
-        py="$spacing24"
-        px="$spacing40"
-        $lg={{ px: '$spacing20' }}
-      >
-        <Flex grow shrink gap="$spacing24">
-          <PositionsHeader
-            showFilters={account.isConnected}
-            selectedChain={chainFilter}
-            selectedVersions={versionFilter}
-            selectedStatus={statusFilter}
-            onChainChange={(selectedChain) => {
-              setChainFilter(selectedChain ?? null)
-            }}
-            onVersionChange={(toggledVersion) => {
-              setVersionFilter((prevVersionFilter) => {
-                if (prevVersionFilter.includes(toggledVersion)) {
-                  return prevVersionFilter.filter((v) => v !== toggledVersion)
-                } else {
-                  return [...prevVersionFilter, toggledVersion]
-                }
-              })
-            }}
-            onStatusChange={(toggledStatus) => {
-              setStatusFilter((prevStatusFilter) => {
-                if (prevStatusFilter?.includes(toggledStatus)) {
-                  return prevStatusFilter.filter((s) => s !== toggledStatus)
-                } else {
-                  return [...prevStatusFilter, toggledStatus]
-                }
-              })
-            }}
-          />
-          {!isLoadingPositions ? (
-            combinedPositions.length > 0 ? (
-              <Flex gap="$gap16" mb="$spacing16" opacity={isPlaceholderData ? 0.6 : 1}>
-                {visiblePositions.map((position) => (
-                  <Link
-                    key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
-                    style={{ textDecoration: 'none' }}
-                    to={getPositionUrl(position)}
-                  >
-                    <LiquidityPositionCard showVisibilityOption liquidityPosition={position} showMigrateButton />
-                  </Link>
-                ))}
-                <HiddenPositions
-                  showHiddenPositions={showHiddenPositions}
-                  setShowHiddenPositions={setShowHiddenPositions}
-                  hiddenPositions={hiddenPositions}
-                />
-              </Flex>
+    <TransactionSettingsContextProvider settingKey={TransactionSettingKey.LP}>
+      <Trace logImpression page={InterfacePageNameLocal.Positions}>
+        <Flex
+          row
+          $xl={{ flexDirection: 'column', gap: '$gap16' }}
+          width="100%"
+          maxWidth={1200}
+          gap={80}
+          py="$spacing24"
+          px="$spacing40"
+          $lg={{ px: '$spacing20' }}
+        >
+          <Flex grow shrink gap="$spacing24">
+            <PositionsHeader
+              showFilters={account.isConnected}
+              selectedChain={chainFilter}
+              selectedVersions={versionFilter}
+              selectedStatus={statusFilter}
+              onChainChange={(selectedChain) => {
+                setChainFilter(selectedChain ?? null)
+              }}
+              onVersionChange={(toggledVersion) => {
+                setVersionFilter((prevVersionFilter) => {
+                  if (prevVersionFilter.includes(toggledVersion)) {
+                    return prevVersionFilter.filter((v) => v !== toggledVersion)
+                  } else {
+                    return [...prevVersionFilter, toggledVersion]
+                  }
+                })
+              }}
+              onStatusChange={(toggledStatus) => {
+                setStatusFilter((prevStatusFilter) => {
+                  if (prevStatusFilter?.includes(toggledStatus)) {
+                    return prevStatusFilter.filter((s) => s !== toggledStatus)
+                  } else {
+                    return [...prevStatusFilter, toggledStatus]
+                  }
+                })
+              }}
+            />
+            {!isLoadingPositions ? (
+              combinedPositions.length > 0 ? (
+                <Flex gap="$gap16" mb="$spacing16" opacity={isPlaceholderData ? 0.6 : 1}>
+                  {visiblePositions.map((position) => (
+                    <Link
+                      key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
+                      style={{ textDecoration: 'none' }}
+                      to={getPositionUrl(position)}
+                    >
+                      <LiquidityPositionCard
+                        showVisibilityOption
+                        liquidityPosition={position}
+                        showMigrateButton={false}
+                      />
+                    </Link>
+                  ))}
+                  <HiddenPositions
+                    showHiddenPositions={showHiddenPositions}
+                    setShowHiddenPositions={setShowHiddenPositions}
+                    hiddenPositions={hiddenPositions}
+                  />
+                </Flex>
+              ) : (
+                <EmptyPositionsView chainId={chainFilter} isConnected={isConnected} />
+              )
             ) : (
-              <EmptyPositionsView chainId={chainFilter} isConnected={isConnected} />
-            )
-          ) : (
-            <Flex gap="$gap16">
-              {Array.from({ length: 5 }, (_, index) => (
-                <LiquidityPositionCardLoader key={index} />
-              ))}
-            </Flex>
-          )}
-          {hasNextPage && (
-            <Flex mx="auto">
-              <Button emphasis="tertiary" size="small" onPress={loadMorePositions} isDisabled={isFetching}>
-                {t('common.loadMore')}
-              </Button>
-            </Flex>
-          )}
-          {!statusFilter.includes(PositionStatus.CLOSED) && !closedCTADismissed && account.address && (
-            <Flex
-              borderWidth="$spacing1"
-              borderColor="$surface3"
-              borderRadius="$rounded12"
-              mb="$spacing24"
-              p="$padding12"
-              gap="$gap12"
-              row
-              centered
-            >
-              <Flex height="100%">
-                <InfoCircleFilled color="$neutral2" size="$icon.20" />
+              <Flex gap="$gap16">
+                {Array.from({ length: 5 }, (_, index) => (
+                  <LiquidityPositionCardLoader key={index} />
+                ))}
               </Flex>
-              <Flex grow flexBasis={0}>
-                <Text variant="body3" color="$neutral1">
-                  <Trans i18nKey="pool.closedCTA.title" />
-                </Text>
-                <Text variant="body3" color="$neutral2">
-                  <Trans i18nKey="pool.closedCTA.description" />
-                </Text>
+            )}
+            {hasNextPage && (
+              <Flex mx="auto">
+                <Button emphasis="tertiary" size="small" onPress={loadMorePositions} isDisabled={isFetching}>
+                  {t('common.loadMore')}
+                </Button>
               </Flex>
-              <CloseIconWithHover onClose={() => setClosedCTADismissed(true)} size="$icon.20" />
-            </Flex>
-          )}
-          <Flex row centered $sm={{ flexDirection: 'column', alignItems: 'flex-start' }} mb="$spacing24" gap="$gap4">
-            <Text variant="body3" color="$neutral2">
-              {t('pool.import.link.description')}
-            </Text>
-            <Anchor href="/pools/v2/find" textDecorationLine="none">
-              <Text variant="body3" color="$neutral1" {...ClickableTamaguiStyle}>
-                {t('pool.import.positions.v2')}
-              </Text>
-            </Anchor>
+            )}
+            {!statusFilter.includes(PositionStatus.CLOSED) && !closedCTADismissed && account.address && (
+              <Flex
+                borderWidth="$spacing1"
+                borderColor="$surface3"
+                borderRadius="$rounded12"
+                mb="$spacing24"
+                p="$padding12"
+                gap="$gap12"
+                row
+                centered
+              >
+                <Flex height="100%">
+                  <InfoCircleFilled color="$neutral2" size="$icon.20" />
+                </Flex>
+                <Flex grow flexBasis={0}>
+                  <Text variant="body3" color="$neutral1">
+                    <Trans i18nKey="pool.closedCTA.title" />
+                  </Text>
+                  <Text variant="body3" color="$neutral2">
+                    <Trans i18nKey="pool.closedCTA.description" />
+                  </Text>
+                </Flex>
+                <CloseIconWithHover onClose={() => setClosedCTADismissed(true)} size="$icon.20" />
+              </Flex>
+            )}
           </Flex>
         </Flex>
-        <Flex gap="$gap32" pt={64} $xl={{ pt: '$spacing12' }}>
-          {!media.xl && !showingEmptyPositions && !isLoading && <TopPools chainId={chainFilter} />}
-          <Flex gap="$gap20" mb="$spacing24">
-            <Text variant="subheading1">{t('liquidity.learnMoreLabel')}</Text>
-            <Flex gap="$gap12">
-              <LearnMoreTile
-                img={PROVIDE_LIQUIDITY}
-                text={t('liquidity.provideOnProtocols')}
-                link={uniswapUrls.helpArticleUrls.providingLiquidityInfo}
-              />
-              {isV4DataEnabled && (
-                <LearnMoreTile
-                  img={V4_HOOK}
-                  text={t('liquidity.hooks')}
-                  link={uniswapUrls.helpArticleUrls.v4HooksInfo}
-                />
-              )}
-            </Flex>
-            <ExternalArrowLink href={uniswapUrls.helpArticleUrls.positionsLearnMore}>
-              {t('common.button.learn')}
-            </ExternalArrowLink>
-          </Flex>
-        </Flex>
-      </Flex>
-    </Trace>
+      </Trace>
+    </TransactionSettingsContextProvider>
   )
 }
 

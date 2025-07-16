@@ -28,7 +28,7 @@ export function SwapBottomCard() {
   const isSwapPage = useIsPage(PageType.SWAP)
   const isSendPage = useIsPage(PageType.SEND)
 
-  const hideCard = !isSupportedChain || !(isSwapPage || isSendPage)
+  const hideCard = true || !isSupportedChain || !(isSwapPage || isSendPage)
 
   const card = useMemo(() => {
     if (hideCard) {
@@ -87,32 +87,11 @@ interface ChainTheme {
 
 const CHAIN_THEME_LIGHT: Record<UniverseChainId, ChainTheme> = {
   [UniverseChainId.Mainnet]: { bgColor: '#6B8AFF33', textColor: '#6B8AFF' },
-  [UniverseChainId.ArbitrumOne]: { bgColor: '#00A3FF33', textColor: '#00A3FF' },
-  [UniverseChainId.Avalanche]: { bgColor: '#E8414233', textColor: '#E84142' },
-  [UniverseChainId.Base]: { bgColor: '#0052FF33', textColor: '#0052FF' },
-  [UniverseChainId.Blast]: { bgColor: 'rgba(252, 252, 3, 0.16)', textColor: 'rgba(17, 20, 12, 1)' },
-  [UniverseChainId.Bnb]: { bgColor: '#EAB20033', textColor: '#EAB200' },
-  [UniverseChainId.Celo]: { bgColor: '#FCFF5233', textColor: '#FCFF52' },
-  [UniverseChainId.MonadTestnet]: { bgColor: '#200052', textColor: '#836EF9' },
-  [UniverseChainId.Optimism]: { bgColor: '#FF042033', textColor: '#FF0420' },
-  [UniverseChainId.Polygon]: { bgColor: '#9558FF33', textColor: '#9558FF' },
-  [UniverseChainId.Sepolia]: { bgColor: '#6B8AFF33', textColor: '#6B8AFF' },
-  [UniverseChainId.Soneium]: { bgColor: '#FFFFFF', textColor: '#000000' },
-  [UniverseChainId.Unichain]: { bgColor: '#F50DB433', textColor: '#F50DB4' },
-  [UniverseChainId.UnichainSepolia]: { bgColor: '#F50DB433', textColor: '#F50DB4' },
-  [UniverseChainId.WorldChain]: { bgColor: 'rgba(0, 0, 0, 0.12)', textColor: '#000000' },
-  [UniverseChainId.Zksync]: { bgColor: 'rgba(54, 103, 246, 0.12)', textColor: '#3667F6' },
-  [UniverseChainId.Zora]: { bgColor: 'rgba(0, 0, 0, 0.12)', textColor: '#000000' },
+  [UniverseChainId.SmartBCH]: { bgColor: '#74DD54', textColor: '#fff' },
 }
 
 const CHAIN_THEME_DARK: Record<UniverseChainId, ChainTheme> = {
   ...CHAIN_THEME_LIGHT,
-  [UniverseChainId.Blast]: { bgColor: 'rgba(252, 252, 3, 0.12)', textColor: 'rgba(252, 252, 3, 1) ' },
-  [UniverseChainId.Celo]: { bgColor: '#FCFF5299', textColor: '#655947' },
-  [UniverseChainId.Soneium]: { bgColor: '#000000', textColor: '#FFFFFF' },
-  [UniverseChainId.WorldChain]: { bgColor: 'rgba(255, 255, 255, 0.12)', textColor: '#FFFFFF' },
-  [UniverseChainId.Zksync]: { bgColor: 'rgba(97, 137, 255, 0.12)', textColor: '#6189FF' },
-  [UniverseChainId.Zora]: { bgColor: 'rgba(255, 255, 255, 0.12)', textColor: '#FFFFFF' },
 }
 
 function useChainTheme(chainId: UniverseChainId): ChainTheme {

@@ -2,7 +2,7 @@ import { MenuItem, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
 import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
 import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
 import deprecatedStyled from 'lib/styled-components'
-import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
+import { Github, Telegram, Twitter } from 'pages/Landing/components/Icons'
 import { Wiggle } from 'pages/Landing/components/animations'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -34,18 +34,18 @@ export function Socials({ iconSize }: { iconSize?: string }) {
   return (
     <Flex row gap="$spacing24" maxHeight={iconSize} alignItems="flex-start">
       <SocialIcon $hoverColor="#00C32B">
-        <Anchor href="https://github.com/Uniswap" target="_blank">
+        <Anchor href="https://github.com/tangoswap-cash" target="_blank">
           <Github size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
       <SocialIcon $hoverColor="#20BAFF">
-        <Anchor href="https://x.com/Uniswap" target="_blank">
+        <Anchor href="https://x.com/TangoSwapCash" target="_blank">
           <Twitter size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
-      <SocialIcon $hoverColor="#5F51FF">
-        <Anchor href="https://discord.com/invite/uniswap" target="_blank">
-          <Discord size={iconSize} fill="inherit" />
+      <SocialIcon $hoverColor="#20BAFF">
+        <Anchor href="https://t.me/tangoswapcash" target="_blank">
+          <Telegram size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
     </Flex>

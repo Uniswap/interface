@@ -1,0 +1,15 @@
+{
+  "extends": "../../../config/tsconfig/app.json",
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.json",
+    "src/**/*.mts"
+  ],
+  "compilerOptions": {
+    "types": [
+      "chrome",
+      "jest"
+    ]
+  }
+}

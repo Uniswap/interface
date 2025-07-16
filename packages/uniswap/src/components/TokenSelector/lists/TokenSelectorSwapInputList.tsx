@@ -1,4 +1,5 @@
-import { memo, useCallback, useMemo } from 'react'
+import { apolloSubgraphClient } from 'graphql/data/apollo/client'
+import { useCallback, useMemo } from 'react'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { useCommonTokensOptionsWithFallback } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptionsWithFallback'
 import { useFavoriteTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteTokensOptions'
@@ -18,11 +19,14 @@ import {
 } from 'uniswap/src/components/TokenSelector/utils'
 import { TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
 import { GqlResult } from 'uniswap/src/data/types'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isMobileApp } from 'utilities/src/platform'
+import { useGetAllPoolsQuery } from 'v3-subgraph/generated/types-and-hooks'
+import { smartBCHTokenOptions } from './smartBCH'
 
 function useTokenSectionsForSwapInput({
   activeAccountAddress,
@@ -143,33 +147,48 @@ function _TokenSelectorSwapInputList({
   onSelectCurrency,
   activeAccountAddress,
   chainFilter,
+  tokenFilter,
   isKeyboardOpen,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
+  tokenFilter?: string[]
 }): JSX.Element {
-  const {
-    data: sections,
-    loading,
-    error,
-    refetch,
-  } = useTokenSectionsForSwapInput({
-    activeAccountAddress,
-    chainFilter,
+  const { data: poolData, loading: isLoading } = useGetAllPoolsQuery({
+    client: apolloSubgraphClient,
   })
+  const chainInfo = getChainInfo(10000)
+  const data = useMemo(() => {
+    if (tokenFilter != null) {
+      return smartBCHTokenOptions.filter((t) => tokenFilter.includes(t.currencyInfo.currencyId))
+    }
+    const tokensWithPools = poolData?.pools.flatMap((p) => [p.token0.id, p.token1.id])?.map((s) => s.toLowerCase())
+    if (tokensWithPools?.includes(chainInfo.wrappedNativeCurrency.address.toLowerCase())) {
+      tokensWithPools.push(chainInfo.nativeCurrency.address.toLowerCase())
+    }
+    const smartBCHTokenOptionsInPools = smartBCHTokenOptions.filter((t) =>
+      tokensWithPools?.includes(t.currencyInfo.address?.toLowerCase()),
+    )
+    return smartBCHTokenOptionsInPools
+  }, [tokenFilter, poolData])
 
   return (
     <TokenSelectorList
       showTokenAddress
       chainFilter={chainFilter}
-      hasError={Boolean(error)}
+      hasError={false}
       isKeyboardOpen={isKeyboardOpen}
-      loading={loading}
-      refetch={refetch}
-      sections={sections}
+      loading={isLoading}
+      refetch={() => {}}
+      sections={[
+        {
+          data,
+          sectionKey: TokenOptionSection.SuggestedTokens,
+        },
+      ]}
       showTokenWarnings={true}
       onSelectCurrency={onSelectCurrency}
     />
   )
 }
 
-export const TokenSelectorSwapInputList = memo(_TokenSelectorSwapInputList)
+export const TokenSelectorSwapInputList = _TokenSelectorSwapInputList

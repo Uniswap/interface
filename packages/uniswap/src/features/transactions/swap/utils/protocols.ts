@@ -26,7 +26,7 @@ export function useProtocolsForChain(
     ArbitrumXV2SamplingProperties.RoutingType,
     'CLASSIC' | 'DUTCH_V2' | 'DUTCH_V3'
   >(Experiments.ArbitrumXV2Sampling, ArbitrumXV2SamplingProperties.RoutingType, 'CLASSIC')
-  const arbUniswapXAllowed = chainId === UniverseChainId.ArbitrumOne && xv2ArbitrumRoutingType !== 'CLASSIC'
+  const arbUniswapXAllowed = false
 
   const uniswapXAllowedForChain =
     (chainId && LAUNCHED_UNISWAPX_CHAINS.includes(chainId)) || priorityOrdersAllowed || arbUniswapXAllowed
@@ -66,7 +66,7 @@ export function useProtocolsForChain(
 }
 
 export function useUniswapXPriorityOrderFlag(chainId?: UniverseChainId): boolean {
-  const flagName = UNISWAP_PRIORITY_ORDERS_CHAIN_FLAG_MAP[chainId ?? UniverseChainId.Base]
+  const flagName = UNISWAP_PRIORITY_ORDERS_CHAIN_FLAG_MAP[chainId]
   const result = useFeatureFlag(flagName ?? FeatureFlags.UniswapXPriorityOrdersBase)
 
   if (!chainId) {
@@ -81,8 +81,4 @@ export function useUniswapXPriorityOrderFlag(chainId?: UniverseChainId): boolean
 }
 
 // These are primarily OP stack chains, since only Priority Orders can only operate on chains with Priority Gas Auctions (PGA)
-const UNISWAP_PRIORITY_ORDERS_CHAIN_FLAG_MAP: Partial<Record<UniverseChainId, FeatureFlags>> = {
-  [UniverseChainId.Base]: FeatureFlags.UniswapXPriorityOrdersBase,
-  [UniverseChainId.Optimism]: FeatureFlags.UniswapXPriorityOrdersOptimism,
-  [UniverseChainId.Unichain]: FeatureFlags.UniswapXPriorityOrdersUnichain,
-}
+const UNISWAP_PRIORITY_ORDERS_CHAIN_FLAG_MAP: Partial<Record<UniverseChainId, FeatureFlags>> = {}

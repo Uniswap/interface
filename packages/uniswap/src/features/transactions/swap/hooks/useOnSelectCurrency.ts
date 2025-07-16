@@ -41,7 +41,6 @@ export function useOnSelectCurrency({
     // eslint-disable-next-line complexity
     (currency: Currency, field: CurrencyField, forceIsBridgePair: boolean) => {
       const swapCtx = swapContextRef.current
-
       const tradeableAsset: TradeableAsset = {
         address: currencyAddress(currency),
         chainId: currency.chainId,
@@ -124,7 +123,6 @@ export function useOnSelectCurrency({
         inputCurrency: CurrencyField.INPUT === field ? currency : todoFixMeOtherCurrency?.currency,
         outputCurrency: CurrencyField.OUTPUT === field ? currency : todoFixMeOtherCurrency?.currency,
       }
-
       onSelect?.()
       updateSwapForm(newState)
       maybeLogFirstSwapAction(traceRef.current)

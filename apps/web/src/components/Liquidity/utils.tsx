@@ -101,7 +101,7 @@ export function getPositionUrl(position: PositionInfo): string {
   if (position.version === ProtocolVersion.V2) {
     return `/positions/v2/${chainInfo.urlParam}/${position.liquidityToken.address}`
   } else if (position.version === ProtocolVersion.V3) {
-    return `/positions/v3/${chainInfo.urlParam}/${position.tokenId}`
+    return `/positions/v3/${chainInfo.urlParam}/${position.id}`
   }
   return `/positions/v4/${chainInfo.urlParam}/${position.tokenId}`
 }

@@ -2,29 +2,12 @@ import { CurrencyAmount, Percent, Token, TradeType, WETH9 } from '@uniswap/sdk-c
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
-import { expiryToDeadlineSeconds } from 'state/limit/expiryToDeadlineSeconds'
-import {
-  ClassicTrade,
-  DutchOrderTrade,
-  LimitOrderTrade,
-  PreviewTrade,
-  QuoteMethod,
-  V2DutchOrderTrade,
-} from 'state/routing/types'
-import {
-  DAI,
-  DAI_ARBITRUM_ONE,
-  USDC_ARBITRUM,
-  USDC_MAINNET,
-  USDT,
-  WBTC,
-  nativeOnChain,
-} from 'uniswap/src/constants/tokens'
+import { ClassicTrade, DutchOrderTrade, PreviewTrade, QuoteMethod, V2DutchOrderTrade } from 'state/routing/types'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
 import { benignSafetyInfo } from 'uniswap/src/test/fixtures'
-import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { UseAccountReturnType } from 'wagmi'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
@@ -52,7 +35,6 @@ export const TEST_TOKEN_3_INFO: CurrencyInfo = {
   safetyInfo: benignSafetyInfo,
 }
 export const ETH_MAINNET = nativeOnChain(UniverseChainId.Mainnet)
-export const ETH_SEPOLIA = nativeOnChain(UniverseChainId.Sepolia)
 export const TEST_POOL_12 = new Pool(
   TEST_TOKEN_1,
   TEST_TOKEN_2,
@@ -265,16 +247,6 @@ export const PREVIEW_EXACT_IN_TRADE = new PreviewTrade({
   tradeType: TradeType.EXACT_INPUT,
 })
 
-export const LIMIT_ORDER_TRADE = new LimitOrderTrade({
-  amountIn: CurrencyAmount.fromRawAmount(DAI, 100),
-  amountOut: CurrencyAmount.fromRawAmount(USDC_MAINNET, 100),
-  tradeType: TradeType.EXACT_INPUT,
-  wrapInfo: { needsWrap: false },
-  approveInfo: { needsApprove: false },
-  swapper: '0xSwapperAddress',
-  deadlineBufferSecs: expiryToDeadlineSeconds(LimitsExpiry.Week),
-})
-
 export const NATIVE_INFO: CurrencyInfo = {
   currency: ETH_MAINNET,
   logoUrl: 'ethereum-logo.png',
@@ -287,54 +259,6 @@ export const WETH_INFO: CurrencyInfo = {
   logoUrl:
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
   currencyId: WETH9[UniverseChainId.Mainnet].address,
-  safetyInfo: benignSafetyInfo,
-}
-
-export const DAI_INFO: CurrencyInfo = {
-  currency: DAI,
-  logoUrl:
-    'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
-  currencyId: DAI.address,
-  safetyInfo: benignSafetyInfo,
-}
-
-export const USDC_INFO: CurrencyInfo = {
-  currency: USDC_MAINNET,
-  logoUrl:
-    'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
-  currencyId: USDC_MAINNET.address,
-  safetyInfo: benignSafetyInfo,
-}
-
-export const USDT_INFO: CurrencyInfo = {
-  currency: USDT,
-  logoUrl:
-    'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png',
-  currencyId: USDT.address,
-  safetyInfo: benignSafetyInfo,
-}
-
-export const WBTC_INFO: CurrencyInfo = {
-  currency: WBTC,
-  logoUrl:
-    'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png',
-  currencyId: WBTC.address,
-  safetyInfo: benignSafetyInfo,
-}
-
-export const DAI_ARBITRUM_INFO: CurrencyInfo = {
-  currency: DAI_ARBITRUM_ONE,
-  logoUrl:
-    'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1/logo.png',
-  currencyId: DAI_ARBITRUM_ONE.address,
-  safetyInfo: benignSafetyInfo,
-}
-
-export const USDC_ARBITRUM_INFO: CurrencyInfo = {
-  currency: USDC_ARBITRUM,
-  logoUrl:
-    'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xaf88d065e77c8cC2239327C5EDb3A432268e5831/logo.png',
-  currencyId: USDC_ARBITRUM.address,
   safetyInfo: benignSafetyInfo,
 }
 

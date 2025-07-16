@@ -5,6 +5,7 @@ import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
 import { useIncreasePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { getProtocolItems, hasLPFoTTransferError } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
+import { useTransactionGasFee } from 'hooks/useTransactionGasFee'
 import { getCurrencyAddressForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
@@ -16,7 +17,7 @@ import {
   IndependentToken,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
+import { useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   IncreasePositionTxAndGasInfo,
@@ -195,6 +196,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     enabled: isQueryEnabled,
   })
 
+  console.log({ increaseCalldata })
+
   useEffect(() => {
     setHasIncreaseErrorResponse(!!calldataError)
   }, [calldataError, increaseCalldataQueryParams])
@@ -218,7 +221,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     isQueryEnabled && Boolean(calldataError),
   )
 
-  const { value: calculatedGasFee } = useTransactionGasFee(increase, !!actualGasFee)
+  const { value: calculatedGasFee } = useTransactionGasFee(increase)
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
     increaseCalldata?.increase?.chainId,
     actualGasFee || calculatedGasFee,

@@ -1,7 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
-import { DropdownSelector } from 'components/DropdownSelector'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { getProtocolVersionLabel, parseProtocolVersion } from 'components/Liquidity/utils'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
@@ -191,7 +190,8 @@ const Toolbar = ({
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { positionState, setPositionState, setStep, reset: resetCreatePositionState } = useCreatePositionContext()
-  const { protocolVersion } = positionState
+  const protocolVersion = ProtocolVersion.V3
+
   const { setPriceRangeState } = usePriceRangeContext()
   const [versionDropdownOpen, setVersionDropdownOpen] = useState(false)
 
@@ -242,11 +242,11 @@ const Toolbar = ({
       if (versionUrl) {
         navigate(`/positions/create/${versionUrl}`)
       }
-
+      console.log('version', version)
       setPositionState((prevState) => ({
         ...DEFAULT_POSITION_STATE,
         currencyInputs: prevState.currencyInputs,
-        protocolVersion: version,
+        protocolVersion: 3,
       }))
       setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
       setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
@@ -282,21 +282,6 @@ const Toolbar = ({
 
       <ToolbarContainer>
         <ResetButton onClickReset={() => setShowResetModal(true)} isDisabled={isFormUnchanged} />
-        <DropdownSelector
-          containerStyle={{ width: 'auto' }}
-          buttonStyle={{ py: '$spacing8', px: '$spacing12' }}
-          dropdownStyle={{ width: 200, borderRadius: '$rounded16' }}
-          menuLabel={
-            <Text variant="buttonLabel3" lineHeight="16px">
-              {t('position.protocol', { protocol: getProtocolVersionLabel(protocolVersion) })}
-            </Text>
-          }
-          isOpen={versionDropdownOpen}
-          toggleOpen={() => setVersionDropdownOpen(!versionDropdownOpen)}
-          alignRight
-        >
-          {versionOptions}
-        </DropdownSelector>
         <Flex
           borderRadius="$rounded12"
           borderWidth="$spacing1"

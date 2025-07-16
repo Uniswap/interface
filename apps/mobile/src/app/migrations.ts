@@ -689,11 +689,7 @@ export const migrations = {
 
     newState.chains.byChainId = {
       '1': { isActive: true },
-      '10': { isActive: true },
-      '56': { isActive: true },
-      '137': { isActive: true },
-      '8453': { isActive: true },
-      '42161': { isActive: true },
+      '10000': { isActive: true },
     }
 
     return newState

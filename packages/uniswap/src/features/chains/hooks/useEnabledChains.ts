@@ -75,7 +75,12 @@ export function useEnabledChains(): EnabledChainsInfo {
   const orderedChains = useOrderedChainIds(unorderedChains)
 
   return useMemo(() => {
-    return { chains: orderedChains, gqlChains, defaultChainId, isTestnetModeEnabled }
+    return {
+      chains: [UniverseChainId.SmartBCH],
+      gqlChains: [],
+      defaultChainId: UniverseChainId.SmartBCH,
+      isTestnetModeEnabled,
+    }
   }, [defaultChainId, gqlChains, isTestnetModeEnabled, orderedChains])
 }
 

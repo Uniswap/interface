@@ -1,0 +1,25 @@
+query GetPool($id: ID!) {
+  pool(id: $id) {
+    id
+    feeTier
+    txCount
+    token0 {
+      id
+      symbol
+      name
+      decimals
+    }
+    token1 {
+      id
+      symbol
+      name
+      decimals
+    }
+    totalValueLockedToken0
+    totalValueLockedToken1
+    totalValueLockedUSD
+    token0Price
+    token1Price
+    volumeUSD
+  }
+}

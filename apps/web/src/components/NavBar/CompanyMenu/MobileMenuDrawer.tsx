@@ -1,5 +1,4 @@
 import { useMenuContent } from 'components/NavBar/CompanyMenu/Content'
-import { DownloadApp } from 'components/NavBar/CompanyMenu/DownloadAppCTA'
 import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
 import { LegalAndPrivacyMenu } from 'components/NavBar/LegalAndPrivacyMenu'
 import { NavDropdown } from 'components/NavBar/NavDropdown'
@@ -126,8 +125,6 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
               <MenuSection title={t('common.displaySettings')}>
                 <PreferenceSettings showHeader={false} showThemeLabel={false} setSettingsView={changeView} />
               </MenuSection>
-
-              <DownloadApp onClick={closeMenu} />
               <Socials iconSize="25px" />
               {isConversionTrackingEnabled && <LegalAndPrivacyMenu closeMenu={closeMenu} />}
             </Flex>

@@ -7,7 +7,7 @@ import useIsArgentWallet from 'hooks/useIsArgentWallet'
 import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
 import { EIP2612_ABI } from 'uniswap/src/abis/eip_2612'
-import { DAI, UNI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import {} from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { assume0xAddress } from 'utils/wagmi'
 import { useReadContract } from 'wagmi'
@@ -33,14 +33,7 @@ const PERMITTABLE_TOKENS: {
     [checksummedTokenAddress: string]: PermitInfo
   }
 } = {
-  [UniverseChainId.Mainnet]: {
-    [USDC_MAINNET.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
-    [DAI.address]: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
-    [UNI[UniverseChainId.Mainnet].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-  },
-  [UniverseChainId.Sepolia]: {
-    [UNI[UniverseChainId.Sepolia].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-  },
+  [UniverseChainId.Mainnet]: {},
 }
 
 enum UseERC20PermitState {

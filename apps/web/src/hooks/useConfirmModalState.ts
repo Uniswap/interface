@@ -1,7 +1,6 @@
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { ConfirmModalState } from 'components/ConfirmSwapModal'
 import { PendingModalError } from 'components/ConfirmSwapModal/Error'
-import { RESET_APPROVAL_TOKENS } from 'components/swap/constants'
 import { useAccount } from 'hooks/useAccount'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
@@ -64,7 +63,6 @@ export function useConfirmModalState({
     if (
       allowance.state === AllowanceState.REQUIRED &&
       allowance.needsSetupApproval &&
-      RESET_APPROVAL_TOKENS.some((token) => token.equals(allowance.token)) &&
       allowance.allowedAmount.greaterThan(0)
     ) {
       steps.push(ConfirmModalState.RESETTING_TOKEN_ALLOWANCE)

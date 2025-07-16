@@ -1,0 +1,17 @@
+{
+  "extends": "../../config/tsconfig/app.json",
+  "compilerOptions": {
+    "lib": [
+      "es6",
+      "dom"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.json",
+    "src/**/*.mts",
+    "generated/**/*.ts"
+  ],
+}

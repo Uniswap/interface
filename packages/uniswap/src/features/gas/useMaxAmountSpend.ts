@@ -57,10 +57,6 @@ export function useMaxAmountSpend({
 
 function useGetMinAmount(chainId?: UniverseChainId, txType?: TransactionType): JSBI | undefined {
   const MIN_ETH_FOR_GAS = useMinEthForGas(txType)
-  const MIN_POLYGON_FOR_GAS = useMinPolygonForGas(txType)
-  const MIN_AVALANCHE_FOR_GAS = useMinAvalancheForGas(txType)
-  const MIN_CELO_FOR_GAS = useMinCeloForGas(txType)
-  const MIN_MON_FOR_GAS = useMinMonForGas(txType)
   const MIN_L2_FOR_GAS = useMinGenericL2ForGas(txType)
 
   if (!chainId) {
@@ -70,27 +66,7 @@ function useGetMinAmount(chainId?: UniverseChainId, txType?: TransactionType): J
   switch (chainId) {
     case UniverseChainId.Mainnet:
       return MIN_ETH_FOR_GAS
-    case UniverseChainId.Sepolia:
-      return MIN_ETH_FOR_GAS
-    case UniverseChainId.Polygon:
-      return MIN_POLYGON_FOR_GAS
-    case UniverseChainId.Avalanche:
-      return MIN_AVALANCHE_FOR_GAS
-    case UniverseChainId.Celo:
-      return MIN_CELO_FOR_GAS
-    case UniverseChainId.MonadTestnet:
-      return MIN_MON_FOR_GAS
-    case UniverseChainId.ArbitrumOne:
-    case UniverseChainId.Optimism:
-    case UniverseChainId.Base:
-    case UniverseChainId.Bnb:
-    case UniverseChainId.Blast:
-    case UniverseChainId.WorldChain:
-    case UniverseChainId.Zora:
-    case UniverseChainId.Zksync:
-    case UniverseChainId.Unichain:
-    case UniverseChainId.UnichainSepolia:
-    case UniverseChainId.Soneium:
+    case UniverseChainId.SmartBCH:
       return MIN_L2_FOR_GAS
     default:
       logger.error(new Error('unhandled chain when getting min gas amount'), {

@@ -105,14 +105,14 @@ export type ValidatedUniswapXSwapTxAndGasInfo = Required<UniswapXSwapTxAndGasInf
 }
 
 function validateSwapTxContext(swapTxContext: SwapTxAndGasInfo | unknown): ValidatedSwapTxContext | undefined {
-  if (!isSwapTx(swapTxContext)) {
-    return undefined
-  }
+  // if (!isSwapTx(swapTxContext)) {
+  //   return undefined
+  // }
 
-  const gasFee = validateGasFeeResult(swapTxContext.gasFee)
-  if (!gasFee) {
-    return undefined
-  }
+  // const gasFee = validateGasFeeResult(swapTxContext.gasFee)
+  // if (!gasFee) {
+  //   return undefined
+  // }
 
   if (swapTxContext.trade) {
     if (isClassic(swapTxContext)) {
@@ -120,12 +120,12 @@ function validateSwapTxContext(swapTxContext: SwapTxAndGasInfo | unknown): Valid
 
       if (unsigned) {
         // SwapTxContext should only ever be unsigned / still require a signature on interface.
-        if (!isInterface || !permit) {
-          return undefined
-        }
-        return { ...swapTxContext, trade, gasFee, unsigned, txRequest: undefined, permit }
+        // if (!isInterface || !permit) {
+        //   return undefined
+        // }
+        return { ...swapTxContext, trade, gasFee: undefined, unsigned, txRequest: undefined, permit }
       } else if (txRequest) {
-        return { ...swapTxContext, trade, gasFee, unsigned, txRequest, permit: undefined, }
+        return { ...swapTxContext, trade, gasFee: undefined, unsigned, txRequest, permit: undefined, }
       }
 
     } else if (isBridge(swapTxContext)  && swapTxContext.txRequest) {
@@ -136,13 +136,13 @@ function validateSwapTxContext(swapTxContext: SwapTxAndGasInfo | unknown): Valid
         if (!isInterface || !permit) {
           return undefined
         }
-        return { ...swapTxContext, trade, gasFee, unsigned, txRequest: undefined, permit }
+        return { ...swapTxContext, trade, gasFee: undefined, unsigned, txRequest: undefined, permit }
       } else if (txRequest) {
-        return { ...swapTxContext, trade, gasFee, unsigned, txRequest, permit: undefined }
+        return { ...swapTxContext, trade, gasFee: undefined, unsigned, txRequest, permit: undefined }
       }
     } else if (isUniswapX(swapTxContext) && swapTxContext.permit) {
       const { trade, permit } = swapTxContext
-      return { ...swapTxContext, trade, gasFee, permit }
+      return { ...swapTxContext, trade, gasFee: undefined, permit }
     }
   }
   return undefined

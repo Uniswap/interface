@@ -59,15 +59,14 @@ export function CompanyMenu() {
       <Popover.Trigger data-testid="nav-company-menu">
         <Trigger>
           <UniIcon onClick={handleLogoClick} data-testid="nav-uniswap-logo">
-            <NavIcon />
+            <NavIcon color="#d0462d" />
             {isLargeScreen && (
-              <Text variant="subheading1" color="$accent1" userSelect="none">
-                Uniswap
+              <Text variant="subheading1" color="#d0462d" userSelect="none">
+                TangoSwap
               </Text>
             )}
           </UniIcon>
           {(media.md || isTouchDevice) && <Hamburger size={22} color="$neutral2" cursor="pointer" ml="16px" />}
-          {!media.md && !isTouchDevice && <ArrowDown $isActive={isOpen} width="12px" height="12px" />}
         </Trigger>
       </Popover.Trigger>
       {isMobileDrawer ? <MobileMenuDrawer isOpen={isOpen} closeMenu={closeMenu} /> : <MenuDropdown close={closeMenu} />}

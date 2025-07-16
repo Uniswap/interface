@@ -1,0 +1,49 @@
+fragment Pool on Pool {
+  id
+  token0 {
+    id
+    decimals
+    symbol
+    name
+  }
+  token1 {
+    id
+    decimals
+    symbol
+    name
+  }
+  feeTier
+  sqrtPrice
+  liquidity
+  tick
+  token0Price
+  token1Price
+  volumeUSD
+  feesUSD
+  totalValueLockedUSD
+}
+
+query GetPositions($skip: Int, $first: Int, $where: Position_filter) {
+  positions(
+    skip: $skip,
+    first: $first,
+    where: $where
+  ) {
+    id
+    tokenId
+    owner
+    tickLower
+    tickUpper
+    liquidity
+    depositedToken0
+    depositedToken1
+    withdrawnToken0
+    withdrawnToken1
+    collectedFeesToken0
+    collectedFeesToken1
+    closed
+    pool {
+      ...Pool
+    }
+  }
+}

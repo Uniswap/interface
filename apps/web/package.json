@@ -42,11 +42,6 @@
     "storybook:test": "test-storybook --excludeTags=\"no-tests\" --testTimeout 60000",
     "storybook:test:standalone": "concurrently -k -s first -n \"SB BUILD,SB TEST\" -c \"magenta,blue\" \"yarn storybook:build && http-server storybook-static --port 6006 --silent\" \"wait-on --timeout 600000 tcp:127.0.0.1:6006 && yarn storybook:test --maxWorkers=2\""
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "yarn.lock": [
       "yarn deduplicate"
@@ -302,6 +297,7 @@
     "use-resize-observer": "9.1.0",
     "utilities": "workspace:^",
     "uuid": "9.0.0",
+    "v3-subgraph": "workspace:^",
     "video-extensions": "1.2.0",
     "viem": "2.x",
     "wagmi": "2.9.3",

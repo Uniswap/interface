@@ -41,7 +41,7 @@ export function useCurrencyInfo(
         const copyCommonBase = { ...commonBase }
         // Related to TODO(WEB-5111)
         // Some common base images are broken so this'll ensure we read from uniswap images
-        if (data?.token?.project?.logoUrl) {
+        if (false) {
           copyCommonBase.logoUrl = data.token.project.logoUrl
         }
         copyCommonBase.currencyId = _currencyId

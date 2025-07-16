@@ -291,6 +291,5 @@ export const useSwapFormContext = (): SwapFormContextState => {
   if (swapContext === undefined) {
     throw new Error('`useSwapFormContext` must be used inside of `SwapFormContextProvider`')
   }
-
   return swapContext
 }

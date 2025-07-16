@@ -2,6 +2,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { useMemo, useRef } from 'react'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { useTradingApiQuoteQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiQuoteQuery'
+import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
 import { TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
 import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
@@ -14,7 +15,6 @@ import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4Sw
 import {
   SWAP_GAS_URGENCY_OVERRIDE,
   getTokenAddressForApi,
-  toTradingApiSupportedChainId,
   transformTradingApiResponseToTrade,
   useQuoteRoutingParams,
   useQuoteSlippageParams,
@@ -26,6 +26,7 @@ import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS, inXMinutesUnix } from 'utilities/src/time/time'
+import { useTransactionSettingsContext } from '../../settings/contexts/TransactionSettingsContext'
 
 // error strings hardcoded in @uniswap/unified-routing-api
 // https://github.com/Uniswap/unified-routing-api/blob/020ea371a00d4cc25ce9f9906479b00a43c65f2c/lib/util/errors.ts#L4
@@ -60,14 +61,18 @@ export function useTrade({
   const currencyInEqualsCurrencyOut =
     currencyIn && currencyOut && areCurrencyIdsEqual(currencyId(currencyIn), currencyId(currencyOut))
 
-  const tokenInChainId = toTradingApiSupportedChainId(currencyIn?.chainId)
+  const tokenInChainId = currencyIn?.chainId
   const v4SwapEnabled = useV4SwapEnabled(tokenInChainId)
 
-  const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
+  const tokenOutChainId = currencyOut?.chainId
   const tokenInAddress = getTokenAddressForApi(currencyIn)
   const tokenOutAddress = getTokenAddressForApi(currencyOut)
   const activeGasStrategy = useActiveGasStrategy(tokenInChainId, 'swap')
   const shadowGasStrategies = useShadowGasStrategies(tokenInChainId, 'swap')
+
+  const transactionSettings = useTransactionSettingsContext()
+
+  const deadline = getTradeSettingsDeadline(transactionSettings.customDeadline)
 
   const routingParams = useQuoteRoutingParams({
     selectedProtocols,
@@ -113,6 +118,7 @@ export function useTrade({
       type: requestTradeType,
       urgency: SWAP_GAS_URGENCY_OVERRIDE,
       v4Enabled: v4SwapEnabled,
+      deadline,
       ...routingParams,
       ...slippageParams,
     }
@@ -150,17 +156,11 @@ export function useTrade({
     retry: 1,
   })
 
-  const { error, data, isLoading: queryIsLoading, isFetching, errorUpdatedAt, dataUpdatedAt } = response
+  const { error, data, isLoading: queryIsLoading } = response
 
   const errorRef = useRef<Error | null>(error)
 
-  // We want to keep the error while react-query is refetching, so that the error message doesn't go in and out while it's polling.
-  if (errorUpdatedAt > dataUpdatedAt) {
-    // If there's a new error, save the new one. If there's no error (we're re-fetching), keep the old one.
-    errorRef.current = error ?? errorRef.current
-  } else {
-    errorRef.current = error
-  }
+  errorRef.current = error
 
   const isLoading = (amount && isDebouncing) || queryIsLoading
 
@@ -207,7 +207,7 @@ export function useTrade({
     if (!data?.quote || !currencyIn || !currencyOut) {
       return {
         isLoading,
-        isFetching,
+        isFetching: isLoading,
         trade: null,
         indicativeTrade: isLoading ? indicative.trade : undefined,
         isIndicativeLoading: indicative.isLoading,
@@ -238,7 +238,7 @@ export function useTrade({
     if (trade === null) {
       return {
         isLoading,
-        isFetching,
+        isFetching: isLoading,
         trade: null,
         indicativeTrade: undefined, // We don't want to show the indicative trade if there is no completable trade
         isIndicativeLoading: false,
@@ -249,7 +249,7 @@ export function useTrade({
 
     return {
       isLoading: isDebouncing || isLoading,
-      isFetching,
+      isFetching: isLoading,
       trade,
       indicativeTrade: indicative.trade,
       isIndicativeLoading: indicative.isLoading,
@@ -264,7 +264,6 @@ export function useTrade({
     data,
     error,
     isDebouncing,
-    isFetching,
     isLoading,
     isUSDQuote,
     indicative.trade,

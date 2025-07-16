@@ -16,6 +16,7 @@ interface CurrencySearchModalProps {
   showCurrencyAmount?: boolean
   currencyField?: CurrencyField
   chainIds?: UniverseChainId[]
+  tokenIds?: string[]
 }
 
 export default memo(function CurrencySearchModal({
@@ -24,6 +25,7 @@ export default memo(function CurrencySearchModal({
   onCurrencySelect,
   currencyField = CurrencyField.INPUT,
   chainIds,
+  tokenIds,
 }: CurrencySearchModalProps) {
   return (
     <Modal
@@ -41,6 +43,7 @@ export default memo(function CurrencySearchModal({
         onCurrencySelect={onCurrencySelect}
         onDismiss={onDismiss}
         chainIds={chainIds}
+        tokenIds={tokenIds}
       />
     </Modal>
   )

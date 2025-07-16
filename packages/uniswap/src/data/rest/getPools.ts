@@ -10,5 +10,11 @@ export function useGetPoolsByTokens(
   input?: PartialMessage<ListPoolsRequest>,
   enabled = true,
 ): UseQueryResult<ListPoolsResponse, ConnectError> {
-  return useQuery(listPools, input, { transport: uniswapGetTransport, enabled })
+  return {
+    ...useQuery(listPools, input, { transport: uniswapGetTransport, enabled }),
+    data: { pools: [] },
+    isLoading: false,
+    isLoadingError: false,
+    error: null,
+  }
 }

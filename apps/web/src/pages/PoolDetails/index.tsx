@@ -7,7 +7,8 @@ import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetail
 import { PoolDetailsTableTab } from 'components/Pools/PoolDetails/PoolDetailsTable'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { PoolData, usePoolData } from 'graphql/data/pools/usePoolData'
+import { apolloSubgraphClient } from 'graphql/data/apollo/client'
+import { PoolData } from 'graphql/data/pools/usePoolData'
 import { gqlToCurrency, unwrapToken } from 'graphql/data/util'
 import { useColor } from 'hooks/useColor'
 import styled, { useTheme } from 'lib/styled-components'
@@ -25,6 +26,7 @@ import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__gen
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
+import { useGetPoolQuery } from 'v3-subgraph/generated/types-and-hooks'
 
 const PageWrapper = styled(Row)`
   padding: 0 20px 52px;
@@ -112,7 +114,14 @@ export default function PoolDetailsPage() {
   const { poolAddress } = useParams<{ poolAddress: string }>()
   const urlChain = useChainIdFromUrlParam()
   const chainInfo = urlChain ? getChainInfo(urlChain) : undefined
-  const { data: poolData, loading } = usePoolData(poolAddress?.toLowerCase() ?? '', chainInfo?.id)
+
+  const { data, loading } = useGetPoolQuery({
+    client: apolloSubgraphClient,
+    variables: { id: poolAddress ?? '' },
+  })
+
+  const poolData = data?.pool
+
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const unwrappedTokens = getUnwrappedPoolToken(poolData, chainInfo?.id)
   const [token0, token1] = isReversed ? [unwrappedTokens?.[1], unwrappedTokens?.[0]] : unwrappedTokens
