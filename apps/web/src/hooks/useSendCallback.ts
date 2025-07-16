@@ -1,19 +1,16 @@
-import type { TransactionRequest } from '@ethersproject/abstract-provider'
-import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { TransactionRequest } from '@ethersproject/abstract-provider'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersProvider } from 'hooks/useEthersProvider'
 import { useSwitchChain } from 'hooks/useSwitchChain'
-import type { GasFeeResult } from 'hooks/useTransactionGasFee'
+import { GasFeeResult } from 'hooks/useTransactionGasFee'
 import { useCallback, useRef } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { AssetType } from 'uniswap/src/entities/assets'
+import { SendTransactionInfo, TransactionType } from 'state/transactions/types'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { SendTokenTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TransactionType as UniswapTransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { UserRejectedRequestError, toReadableError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
@@ -53,11 +50,6 @@ export function useSendCallback({
       throw new Error('missing chainId in transactionRequest')
     }
 
-    // TODO(WEB-7953): Implement Solana send
-    if (isSVMChain(supportedTransactionChainId)) {
-      throw new Error('Solana send is not supported')
-    }
-
     try {
       const response = await (async () => {
         try {
@@ -88,17 +80,16 @@ export function useSendCallback({
           }
         }
       })()
-      const sendInfo: SendTokenTransactionInfo = {
-        type: UniswapTransactionType.Send,
-        tokenAddress: currencyAddress(currencyAmount.currency),
-        assetType: AssetType.Currency,
-        currencyAmountRaw: currencyAmount.quotient.toString(),
+      const sendInfo: SendTransactionInfo = {
+        type: TransactionType.SEND,
+        currencyId: currencyId(currencyAmount.currency),
+        amount: currencyAmount.quotient.toString(),
         recipient,
       }
       addTransaction(response, sendInfo)
       sendAnalyticsEvent(InterfaceEventName.SendInitiated, {
-        currencyId: currencyId(currencyAmount.currency),
-        amount: sendInfo.currencyAmountRaw ?? '',
+        currencyId: sendInfo.currencyId,
+        amount: sendInfo.amount,
         recipient: sendInfo.recipient,
       })
     } catch (error) {

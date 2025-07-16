@@ -47,7 +47,7 @@ describe('PrivateKeySpeedBumpModal', () => {
     const continueButton = screen.getByTestId(TestID.Continue)
     fireEvent.press(continueButton)
 
-    expect(mockOnClose).toHaveBeenCalled()
+    expect(mockPreventCloseRef.current).toBe(true)
     expect(mockNavigation.navigate).toHaveBeenCalledWith(MobileScreens.ViewPrivateKeys)
   })
 })

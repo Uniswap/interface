@@ -1,65 +1,36 @@
 ---
-description: 
-globs: 
-alwaysApply: true
+description: Component Structure and Best Practices
+globs:
+alwaysApply: false
 ---
 # Component Structure and Best Practices
 
 ## Component Organization
 - Place state and hooks at the top of the component
 - Group related state variables together
+- Extract complex logic into custom hooks
 - Define handlers after state declarations
 - Place JSX return statement at the end of the component
 
-## Props
-- Use interface for component props
-- Place prop interface directly above component
-- Complex or shared types can be moved to a types.ts file
-- Use descriptive prop names
-- Provide default props where appropriate
-
-## Performance Optimizations
-- Memoize expensive calculations with useMemo
-- Memoize event handlers with useCallback or use our custom useEvent hook
-- Use React.memo for pure components that render often
-- Avoid anonymous functions in render
-
-## Component Size
-- Keep components focused on a single responsibility
-- Extract complex components into smaller, reusable pieces
-- Aim for less than 250 lines per component file
-- Extract prop interfaces and types to separate files if they become complex
-
 ## Component Structure Example
-
 ```typescript
-interface ExampleComponentProps {
-  prop1: string;
-  prop2: () => void;
-}
-
 export function ExampleComponent({ prop1, prop2 }: ExampleComponentProps): JSX.Element {
   // State declarations
   const [state1, setState1] = useState(false)
   const [state2, setState2] = useState<string>('')
 
-  // Queries and mutations
-  const { data, isPending } = useQuery(exampleQueries.getData(prop1))
-  const mutation = useMutation({
-    mutationFn: () => exampleService.submit(prop1),
-    onSuccess: prop2
-  })
+  // Custom hooks
+  const { data, loading } = useCustomHook()
 
   // Derived values
   const derivedValue = useMemo(() => {
-    return someCalculation(state1, data)
-  }, [state1, data])
+    return someCalculation(state1, prop1)
+  }, [state1, prop1])
 
   // Event handlers
   const handleClick = useCallback(() => {
     setState1(!state1)
-    mutation.mutate()
-  }, [state1, mutation])
+  }, [state1])
 
   // Side effects
   useEffect(() => {
@@ -67,7 +38,7 @@ export function ExampleComponent({ prop1, prop2 }: ExampleComponentProps): JSX.E
   }, [prop2])
 
   // Conditional rendering logic
-  if (isPending) {
+  if (loading) {
     return <LoadingSpinner />
   }
 
@@ -80,3 +51,21 @@ export function ExampleComponent({ prop1, prop2 }: ExampleComponentProps): JSX.E
   )
 }
 ```
+
+## Props
+- Use interface for component props
+- Place prop interface directly above component or in a types.ts file
+- Use descriptive prop names
+- Provide default props where appropriate
+
+## Performance Optimizations
+- Memoize expensive calculations with useMemo
+- Memoize event handlers with useCallback
+- Use React.memo for pure components that render often
+- Avoid anonymous functions in render
+
+## Component Size
+- Keep components focused on a single responsibility
+- Extract complex components into smaller, reusable pieces
+- Aim for less than 250 lines per component file
+- Extract prop interfaces and types to separate files if they become complex

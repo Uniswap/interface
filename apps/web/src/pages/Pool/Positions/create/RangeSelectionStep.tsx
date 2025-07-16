@@ -10,13 +10,12 @@ import { useTokenControlOptions } from 'pages/Pool/Positions/create/hooks/useTok
 import { CreatePositionInfo, PriceRangeState } from 'pages/Pool/Positions/create/types'
 import { getBaseAndQuoteCurrencies } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Minus, Plus } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useRangeHopCallbacks } from 'state/mint/v3/hooks'
 import { tryParsePrice } from 'state/mint/v3/utils'
 import { AnimatePresence, Button, Flex, SegmentedControl, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { Minus } from 'ui/src/components/icons/Minus'
-import { Plus } from 'ui/src/components/icons/Plus'
 import { fonts, zIndexes } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { numericInputRegex } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
@@ -303,8 +302,6 @@ function RangeInput({
   input,
   decrement,
   increment,
-  isIncrementDisabled,
-  isDecrementDisabled,
   showIncrementButtons = true,
   isInvalid = false,
 }: {
@@ -312,8 +309,6 @@ function RangeInput({
   input: RangeSelectionInput
   decrement: () => string
   increment: () => string
-  isIncrementDisabled?: boolean
-  isDecrementDisabled?: boolean
   showIncrementButtons?: boolean
   isInvalid?: boolean
 }) {
@@ -414,7 +409,6 @@ function RangeInput({
       {showIncrementButtons && (
         <Flex gap={10}>
           <TouchableArea
-            disabled={isIncrementDisabled}
             testID={`${TestID.RangeInputIncrement}-${input}`}
             alignItems="center"
             justifyContent="center"
@@ -425,10 +419,9 @@ function RangeInput({
             hoverable
             hoverStyle={{ backgroundColor: '$surface3Hovered' }}
           >
-            <Plus size="$icon.16" color="$neutral2" />
+            <Plus size={16} color={colors.neutral2.val} />
           </TouchableArea>
           <TouchableArea
-            disabled={isDecrementDisabled}
             testID={`${TestID.RangeInputDecrement}-${input}`}
             alignItems="center"
             justifyContent="center"
@@ -439,7 +432,7 @@ function RangeInput({
             hoverable
             hoverStyle={{ backgroundColor: '$surface3Hovered' }}
           >
-            <Minus size="$icon.16" color="$neutral2" />
+            <Minus size={16} color={colors.neutral2.val} />
           </TouchableArea>
         </Flex>
       )}
@@ -750,8 +743,6 @@ export const SelectPriceRangeStep = ({
               // TODO: [WEB-8003: `useRangeHopCallbacks` should look at priceInverted and then return the appropriate callback depending on that rather than doing that check here.](https://linear.app/uniswap/issue/WEB-8003/userangehopcallbacks-should-look-at-priceinverted-and-then-return-the)
               decrement={priceRangeState.priceInverted ? getIncrementUpper : getDecrementLower}
               increment={priceRangeState.priceInverted ? getDecrementUpper : getIncrementLower}
-              isIncrementDisabled={false}
-              isDecrementDisabled={ticksAtLimit[0]}
               value={rangeSelectionInputValues[0]}
               showIncrementButtons={showIncrementButtons}
               isInvalid={invalidRange}
@@ -760,8 +751,6 @@ export const SelectPriceRangeStep = ({
               input={RangeSelectionInput.MAX}
               decrement={priceRangeState.priceInverted ? getIncrementLower : getDecrementUpper}
               increment={priceRangeState.priceInverted ? getDecrementLower : getIncrementUpper}
-              isIncrementDisabled={ticksAtLimit[1]}
-              isDecrementDisabled={false}
               value={rangeSelectionInputValues[1]}
               showIncrementButtons={showIncrementButtons}
               isInvalid={invalidRange}

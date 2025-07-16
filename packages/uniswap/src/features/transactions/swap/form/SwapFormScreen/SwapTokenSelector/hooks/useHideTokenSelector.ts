@@ -1,15 +1,12 @@
+import { useCallback } from 'react'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { useEvent } from 'utilities/src/react/hooks'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 
 export const useHideTokenSelector = (): (() => void) => {
-  const { updateSwapForm, isSelectingCurrencyFieldPrefilled } = useSwapFormStore((s) => ({
-    updateSwapForm: s.updateSwapForm,
-    isSelectingCurrencyFieldPrefilled: s.isSelectingCurrencyFieldPrefilled,
-  }))
+  const { updateSwapForm, isSelectingCurrencyFieldPrefilled } = useSwapFormContext()
   const { setIsSwapTokenSelectorOpen } = useUniswapContext()
 
-  return useEvent(() => {
+  return useCallback(() => {
     updateSwapForm({
       selectingCurrencyField: undefined,
       isSelectingCurrencyFieldPrefilled: false,
@@ -17,5 +14,5 @@ export const useHideTokenSelector = (): (() => void) => {
       ...(isSelectingCurrencyFieldPrefilled ? { filteredChainIds: {} } : {}),
     })
     setIsSwapTokenSelectorOpen(false) // resets force flag for web on close as cleanup
-  })
+  }, [isSelectingCurrencyFieldPrefilled, setIsSwapTokenSelectorOpen, updateSwapForm])
 }

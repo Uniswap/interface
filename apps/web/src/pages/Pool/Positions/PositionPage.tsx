@@ -27,7 +27,7 @@ import { useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
@@ -54,12 +54,11 @@ import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__gen
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -86,20 +85,17 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
 export default function PositionPageWrapper() {
   const chainId = useChainIdFromUrlParam()
 
-  if (chainId && !isEVMChain(chainId)) {
-    return <Navigate to="/positions" replace />
-  }
-
   return (
     <MultichainContextProvider initialChainId={chainId}>
-      <PositionPage chainId={chainId} />
+      <PositionPage />
     </MultichainContextProvider>
   )
 }
 
-function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) {
+function PositionPage() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId: string }>()
   const tokenId = parseTokenId(tokenIdFromUrl)
+  const chainId = useChainIdFromUrlParam()
   const chainInfo = chainId ? getChainInfo(chainId) : undefined
   const account = useAccount()
   const supportedAccountChainId = useSupportedChainId(account.chainId)
@@ -120,7 +116,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
   })
   const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
-  const metadata = usePositionTokenURI({ tokenId, chainId, version: positionInfo?.version })
+  const metadata = usePositionTokenURI({ tokenId, chainId: chainInfo?.id, version: positionInfo?.version })
   usePendingLPTransactionsChangeListener(refetch)
 
   const dispatch = useAppDispatch()

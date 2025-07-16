@@ -506,7 +506,6 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
           testID="continue"
         >
           <Text
-            line-height-disabled="false"
             maxFontSizeMultiplier={1.2}
             numberOfLines={1}
             onBlur={[Function]}
@@ -523,7 +522,6 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
                 "fontSize": 17,
                 "fontWeight": "500",
                 "lineHeight": 21.849999999999998,
-                "textAlign": "center",
               }
             }
             suppressHighlighting={true}

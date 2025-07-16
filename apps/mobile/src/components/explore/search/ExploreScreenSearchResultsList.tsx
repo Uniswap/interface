@@ -1,6 +1,6 @@
 import { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
+import { KeyboardAvoidingView } from 'react-native'
 import { Flex, Text, TouchableArea, flexStyles } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SearchModalNoQueryList } from 'uniswap/src/features/search/SearchModal/SearchModalNoQueryList'

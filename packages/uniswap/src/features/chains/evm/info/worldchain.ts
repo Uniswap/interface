@@ -1,8 +1,8 @@
-import { Token } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ETH_LOGO, WORLD_CHAIN_LOGO } from 'ui/src/assets'
+import { USDC_WORLD_CHAIN } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
-import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
   GqlChainId,
   NetworkLayer,
@@ -10,27 +10,12 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-
-const tokens = buildChainTokens({
-  stables: {
-    // Worldchain USDC.e has non standard symbol and name
-    USDC: new Token(
-      UniverseChainId.WorldChain,
-      '0x79A02482A880bCE3F13e09Da970dC34db4CD24d1',
-      6,
-      'USDC.e',
-      'Bridged USDC',
-    ),
-  },
-})
 
 export const WORLD_CHAIN_INFO = {
   // ...worldChain,
   name: 'World Chain',
   id: UniverseChainId.WorldChain,
-  platform: Platform.EVM,
   assetRepoNetworkName: 'worldcoin',
   backendChain: {
     chain: BackendChainId.Worldchain as GqlChainId,
@@ -69,7 +54,8 @@ export const WORLD_CHAIN_INFO = {
   },
   urlParam: 'worldchain',
   statusPage: undefined,
-  tokens,
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_WORLD_CHAIN, 10_000e6),
+  stablecoins: [USDC_WORLD_CHAIN],
   supportsV4: true,
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',

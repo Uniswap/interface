@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react'
-import { useRouteError } from 'react-router'
+import { useRouteError } from 'react-router-dom'
 
 export function ErrorElement({ children }: PropsWithChildren<unknown>): JSX.Element {
   const error = useRouteError()

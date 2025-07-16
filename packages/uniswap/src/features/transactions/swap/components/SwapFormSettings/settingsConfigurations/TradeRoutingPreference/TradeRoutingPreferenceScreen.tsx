@@ -1,6 +1,5 @@
-import type { TFunction } from 'i18next'
-import type { ReactNode } from 'react'
-import { useCallback, useState } from 'react'
+import { TFunction } from 'i18next'
+import { ReactNode, useCallback, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Switch, Text, TouchableArea, UniswapXText, useSporeColors, type FlexProps } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -22,18 +21,17 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import {
-  useTransactionSettingsActions,
-  useTransactionSettingsStore,
-} from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { useSwapFormSettingsModalContext } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SwapFormSettings'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { useSwapFormSettingsContext } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SwapFormSettings'
 import { UniswapXInfo } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/UniswapXInfo'
 import { V4HooksInfo } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/V4HooksInfo'
 import { isDefaultTradeRouteOptions } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/isDefaultTradeRouteOptions'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
-import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { DEFAULT_PROTOCOL_OPTIONS } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import {
+  DEFAULT_PROTOCOL_OPTIONS,
+  FrontendSupportedProtocol,
+} from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { openUri } from 'uniswap/src/utils/linking'
 import { isExtension, isInterface, isWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -41,21 +39,18 @@ import { useEvent } from 'utilities/src/react/hooks'
 export function TradeRoutingPreferenceScreen(): JSX.Element {
   const { t } = useTranslation()
   const getIsUniswapXSupported = useUniswapContextSelector((state) => state.getIsUniswapXSupported)
-  const { selectedProtocols, isV4HookPoolsEnabled } = useTransactionSettingsStore((s) => ({
-    selectedProtocols: s.selectedProtocols,
-    isV4HookPoolsEnabled: s.isV4HookPoolsEnabled,
-  }))
-  const { setSelectedProtocols, setIsV4HookPoolsEnabled, toggleProtocol } = useTransactionSettingsActions()
-
+  const { selectedProtocols, isV4HookPoolsEnabled, updateTransactionSettings } = useTransactionSettingsContext()
+  const isV4HooksToggleFFEnabled = useFeatureFlag(FeatureFlags.SwapSettingsV4HooksToggle)
   const [isDefault, setIsDefault] = useState(
     isDefaultTradeRouteOptions({
       selectedProtocols,
       isV4HookPoolsEnabled,
+      isV4HooksToggleFFEnabled,
     }),
   )
   const uniswapXEnabledFlag = useFeatureFlag(FeatureFlags.UniswapX)
 
-  const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
+  const { chainId } = useSwapFormContext().derivedSwapInfo
   const isUniswapXSupported = getIsUniswapXSupported?.(chainId)
   const uniswapXEnabled = uniswapXEnabledFlag && chainId !== UniverseChainId.MonadTestnet
   const v4SwapEnabled = useV4SwapEnabled(chainId)
@@ -77,17 +72,27 @@ export function TradeRoutingPreferenceScreen(): JSX.Element {
   const onlyOneClassicProtocolSelected =
     (classicProtocolsCount === 1 && !isV4HookPoolsEnabled) || (classicProtocolsCount === 0 && isV4HookPoolsEnabled)
 
+  const toggleProtocol = useCallback(
+    (protocol: FrontendSupportedProtocol) => {
+      if (selectedProtocols.includes(protocol)) {
+        updateTransactionSettings({ selectedProtocols: selectedProtocols.filter((p) => p !== protocol) })
+      } else {
+        updateTransactionSettings({ selectedProtocols: [...selectedProtocols, protocol] })
+      }
+    },
+    [updateTransactionSettings, selectedProtocols],
+  )
+
   const toggleV4Hooks = useCallback(() => {
-    setIsV4HookPoolsEnabled(!isV4HookPoolsEnabled)
-  }, [setIsV4HookPoolsEnabled, isV4HookPoolsEnabled])
+    updateTransactionSettings({ isV4HookPoolsEnabled: !isV4HookPoolsEnabled })
+  }, [updateTransactionSettings, isV4HookPoolsEnabled])
 
   const toggleDefault = useCallback(() => {
     setIsDefault(!isDefault)
     if (!isDefault) {
-      setSelectedProtocols(DEFAULT_PROTOCOL_OPTIONS)
-      setIsV4HookPoolsEnabled(true)
+      updateTransactionSettings({ selectedProtocols: DEFAULT_PROTOCOL_OPTIONS, isV4HookPoolsEnabled: true })
     }
-  }, [setSelectedProtocols, setIsV4HookPoolsEnabled, isDefault])
+  }, [updateTransactionSettings, isDefault])
 
   const getProtocolTitle = createGetProtocolTitle({
     isUniswapXSupported,
@@ -138,14 +143,16 @@ export function TradeRoutingPreferenceScreen(): JSX.Element {
             description={!v4SwapEnabled ? restrictionDescription : undefined}
             onSelect={() => toggleProtocol(ProtocolItems.V4)}
           />
-          <OptionRow
-            active={isV4HookPoolsEnabled}
-            elementName={ElementName.SwapRoutingPreferenceV4Hooks}
-            title={<V4HooksInfo />}
-            cantDisable={onlyOneClassicProtocolSelected}
-            disabled={!v4SwapEnabled}
-            onSelect={toggleV4Hooks}
-          />
+          {isV4HooksToggleFFEnabled && (
+            <OptionRow
+              active={isV4HookPoolsEnabled}
+              elementName={ElementName.SwapRoutingPreferenceV4Hooks}
+              title={<V4HooksInfo />}
+              cantDisable={onlyOneClassicProtocolSelected}
+              disabled={!v4SwapEnabled}
+              onSelect={toggleV4Hooks}
+            />
+          )}
           <OptionRow
             active={selectedProtocols.includes(ProtocolItems.V3)}
             elementName={ElementName.SwapRoutingPreferenceV3}
@@ -392,7 +399,7 @@ const UniswapXNotSupportedDescription = (): JSX.Element => {
 function UniswapXInfoTooltipText(props?: { onPress?: () => void }): JSX.Element {
   const { t } = useTranslation()
   const handleOnPressUniswapXUnsupported = useUniswapContextSelector((state) => state.handleOnPressUniswapXUnsupported)
-  const { handleHideTransactionSettingsModal } = useSwapFormSettingsModalContext()
+  const { handleHideTransactionSettingsModal } = useSwapFormSettingsContext()
 
   const onPress = useEvent(() => {
     if (isExtension) {

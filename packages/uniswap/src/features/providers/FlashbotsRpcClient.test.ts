@@ -17,11 +17,6 @@ const mockChain: Chain = {
   name: 'Mock Chain',
 }
 
-// Mock the sleep function to avoid waiting in tests
-jest.mock('utilities/src/time/timing', () => ({
-  sleep: jest.fn().mockResolvedValue(undefined),
-}))
-
 describe('FlashbotsRpcClient', () => {
   let mockSigner: jest.Mocked<Signer>
   let signerInfo: SignerInfo
@@ -284,6 +279,11 @@ describe('waitForFlashbotsProtectReceipt', () => {
       seenInMempool: true,
     })
 
+    // Mock the sleep function to avoid waiting in tests
+    jest.mock('utilities/src/time/timing', () => ({
+      sleep: jest.fn().mockResolvedValue(undefined),
+    }))
+
     const receipt = await waitForFlashbotsProtectReceipt(transactionHash)
 
     expect(receipt.status).toBe('INCLUDED')
@@ -300,6 +300,11 @@ describe('waitForFlashbotsProtectReceipt', () => {
 
     // Mock an invalid response
     mockFetchResponse({ invalid: 'response' })
+
+    // Mock the sleep function to avoid waiting in tests
+    jest.mock('utilities/src/time/timing', () => ({
+      sleep: jest.fn().mockResolvedValue(undefined),
+    }))
 
     await expect(waitForFlashbotsProtectReceipt(transactionHash)).rejects.toThrow(
       'Invalid response structure from Flashbots API',

@@ -81,7 +81,7 @@ export const PortfolioActionButtons = memo(function _PortfolioActionButtons(): J
       screen: ExtensionScreens.Home,
       element: ElementName.Send,
     })
-    navigate(`/${AppRoutes.Send}`)
+    navigate(AppRoutes.Send)
   }
 
   const onSwapClick = (): void => {
@@ -89,7 +89,7 @@ export const PortfolioActionButtons = memo(function _PortfolioActionButtons(): J
       screen: ExtensionScreens.Home,
       element: ElementName.Swap,
     })
-    navigate(`/${AppRoutes.Swap}`)
+    navigate(AppRoutes.Swap)
   }
 
   const onReceiveClick = (): void => {
@@ -97,7 +97,7 @@ export const PortfolioActionButtons = memo(function _PortfolioActionButtons(): J
       screen: ExtensionScreens.Home,
       element: ElementName.Receive,
     })
-    navigate(`/${AppRoutes.Receive}`)
+    navigate(AppRoutes.Receive)
   }
 
   const [isTestnetWarningModalOpen, setIsTestnetWarningModalOpen] = useState(false)

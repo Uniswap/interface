@@ -1,8 +1,10 @@
 import { useMemo } from 'react'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
-import type { GetQuoteRequestArgsGetter } from 'uniswap/src/features/transactions/swap/hooks/useTrade/createGetQuoteRequestArgs'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import {
   createGetQuoteRequestArgs,
+  GetQuoteRequestArgsGetter,
   type GetQuoteRequestResult,
 } from 'uniswap/src/features/transactions/swap/hooks/useTrade/createGetQuoteRequestArgs'
 import {
@@ -55,6 +57,7 @@ function useGetQuoteRequestArgs(params: UseTradeArgs): GetQuoteRequestArgsGetter
     const getRoutingParams = createGetQuoteRoutingParams({
       getProtocols: () => protocols,
       getIsV4HookPoolsEnabled: () => params.isV4HookPoolsEnabled ?? true,
+      getIsV4HooksToggleFFEnabled: () => getFeatureFlag(FeatureFlags.SwapSettingsV4HooksToggle),
     })
 
     const getSlippageParams = createGetQuoteSlippageParams({

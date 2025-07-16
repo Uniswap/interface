@@ -7,9 +7,8 @@ import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { Button, Flex, useMedia } from 'ui/src'
-import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 
 type TabItem = {
   label: string
@@ -30,7 +29,7 @@ export function TDPActionTabs() {
 
   const toActionLink = useCallback(
     async (href: string) => {
-      if (account.chainId && account.chainId !== currencyChainId && isEVMChain(currencyChainId)) {
+      if (account.chainId && account.chainId !== currencyChainId) {
         await switchChain(currencyChainId)
       }
       navigate(href)

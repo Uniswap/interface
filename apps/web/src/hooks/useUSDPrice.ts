@@ -11,7 +11,7 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getPrimaryStablecoin, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 // ETH amounts used when calculating spot price for a given currency.
@@ -64,16 +64,6 @@ function useETHPrice(currency?: Currency): {
   }, [chainId, currency, isSupported, state, trade])
 }
 
-const DEFAULT_SPOT_PRICE_AMOUNT = 10_000
-function getSpotPriceAmount(chainId: UniverseChainId): CurrencyAmount<Token> {
-  const chainInfo = getChainInfo(chainId)
-  if (chainInfo.spotPriceStablecoinAmountOverride) {
-    return chainInfo.spotPriceStablecoinAmountOverride
-  }
-  const amount = DEFAULT_SPOT_PRICE_AMOUNT * Math.pow(10, getPrimaryStablecoin(chainId).decimals)
-  return CurrencyAmount.fromRawAmount(getPrimaryStablecoin(chainId), amount)
-}
-
 /**
  * Returns the price in USDC of the input currency
  * @param currency currency to compute the USDC price of
@@ -83,8 +73,7 @@ function useStablecoinPrice(currency?: Currency): {
   state: TradeState
 } {
   const chainId = useSupportedChainId(currency?.chainId)
-  const amountOut = useMemo(() => (chainId ? getSpotPriceAmount(chainId) : undefined), [chainId])
-
+  const amountOut = chainId ? getChainInfo(chainId).spotPriceStablecoinAmount : undefined
   const stablecoin = amountOut?.currency
   const { trade, state } = useRoutingAPITrade(
     false /* skip */,

@@ -10,15 +10,8 @@ import { useMultichainTransactions, useTransactionRemover } from 'state/transact
 import { checkedTransaction } from 'state/transactions/reducer'
 import { PendingTransactionDetails } from 'state/transactions/types'
 import { isPendingTx } from 'state/transactions/utils'
-import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__/models/SwapStatus'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RetryOptions, UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Experiments, SwapConfirmationProperties } from 'uniswap/src/features/gating/experiments'
-import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
-import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionReceipt } from 'viem'
 import { usePublicClient } from 'wagmi'
@@ -73,12 +66,6 @@ function usePendingTransactions(chainId?: UniverseChainId) {
   }, [chainId, multichainTransactions])
 }
 
-const SWAP_STATUS_TO_FINALIZED_STATUS: Partial<Record<SwapStatus, TransactionReceipt['status']>> = {
-  [SwapStatus.SUCCESS]: 'success',
-  [SwapStatus.FAILED]: 'reverted',
-  [SwapStatus.EXPIRED]: 'reverted',
-}
-
 export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
   const account = useAccount()
   const publicClient = usePublicClient()
@@ -90,31 +77,6 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
   const lastBlockNumber = useBlockNumber()
   const removeTransaction = useTransactionRemover()
   const dispatch = useAppDispatch()
-
-  const waitTime = useExperimentValue({
-    experiment: Experiments.SwapConfirmation,
-    param: SwapConfirmationProperties.WaitTimes,
-    defaultValue: {},
-    customTypeGuard: (x: unknown): x is Record<string, number> => {
-      if (typeof x !== 'object' || x === null) {
-        return false
-      }
-
-      return Object.values(x).every((value) => typeof value === 'number')
-    },
-  })
-
-  const tradingApiPollingEnabled =
-    waitTime['min'] &&
-    waitTime['min'] > 0 &&
-    waitTime['med'] &&
-    waitTime['med'] > 0 &&
-    waitTime['max'] &&
-    waitTime['max'] > 0
-
-  const pollingOnUnichainOrBase =
-    account.chainId === UniverseChainId.Base || account.chainId === UniverseChainId.Unichain
-  const useTradingApiForPolling = tradingApiPollingEnabled && pollingOnUnichainOrBase
 
   const getReceipt = useCallback(
     (tx: PendingTransactionDetails): { promise: Promise<TransactionReceipt['status']>; cancel: () => void } => {
@@ -140,73 +102,12 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
               }
               throw new RetryableError()
             }
-
-            sendAnalyticsEvent(InterfaceEventName.SwapConfirmedOnClient, {
-              time: Date.now() - tx.addedTime,
-              swap_success: receipt.status === 'success',
-              chainId: account.chainId,
-              txHash: tx.hash,
-            })
-
             return receipt.status
           }),
         retryOptions,
       )
     },
     [account.chainId, account.isConnected, blockTimestamp, publicClient, removeTransaction],
-  )
-
-  const getReceiptWithTradingApi = useCallback(
-    (tx: PendingTransactionDetails): { promise: Promise<TransactionReceipt['status']>; cancel: () => void } => {
-      const chainId = toTradingApiSupportedChainId(account.chainId)
-      if (!account.chainId || !chainId) {
-        throw new Error('No chainId')
-      }
-
-      const retryOptions: RetryOptions = {
-        n: 10,
-        minWait: waitTime['min'],
-        medWait: waitTime['med'],
-        maxWait: waitTime['max'],
-      }
-
-      return retry(() => {
-        return fetchSwaps({ txHashes: [tx.hash], chainId })
-          .then((res) => {
-            const status = res.swaps?.[0]?.status
-            const finalizedStatus = status ? SWAP_STATUS_TO_FINALIZED_STATUS[status] : undefined
-
-            if (!finalizedStatus) {
-              if (account.isConnected) {
-                // Remove transactions past their deadline or - if there is no deadline - older than 6 hours.
-                if (tx.deadline) {
-                  // Deadlines are expressed as seconds since epoch, as they are used on-chain.
-                  if (blockTimestamp && tx.deadline < Number(blockTimestamp)) {
-                    removeTransaction(tx.hash)
-                  }
-                } else if (tx.addedTime + ms(`6h`) < Date.now()) {
-                  removeTransaction(tx.hash)
-                }
-              }
-
-              throw new RetryableError()
-            }
-
-            sendAnalyticsEvent(InterfaceEventName.SwapConfirmedOnClient, {
-              time: Date.now() - tx.addedTime,
-              swap_success: finalizedStatus === 'success',
-              chainId: account.chainId,
-              txHash: tx.hash,
-            })
-
-            return finalizedStatus
-          })
-          .catch((_error) => {
-            throw new RetryableError()
-          })
-      }, retryOptions)
-    },
-    [account.chainId, blockTimestamp, removeTransaction, account.isConnected, waitTime],
   )
 
   useEffect(() => {
@@ -217,7 +118,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
     const cancels = pendingTransactions
       .filter((tx) => shouldCheck(lastBlockNumber, tx))
       .map((tx) => {
-        const { promise, cancel } = useTradingApiForPolling ? getReceiptWithTradingApi(tx) : getReceipt(tx)
+        const { promise, cancel } = getReceipt(tx)
         promise
           .then((status) => {
             if (!account.chainId) {
@@ -254,7 +155,5 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
     hasPending,
     dispatch,
     onActivityUpdate,
-    getReceiptWithTradingApi,
-    useTradingApiForPolling,
   ])
 }

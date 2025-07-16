@@ -26,7 +26,7 @@ export function EditUnitagProfileScreen({ enableBack = false }: { enableBack?: b
 
   useEffect(() => {
     if (!pending && !fetching && !unitag) {
-      navigate(`/${UnitagClaimRoutes.ClaimIntro}`)
+      navigate(UnitagClaimRoutes.ClaimIntro)
     }
   }, [unitag, pending, fetching])
 

@@ -8,11 +8,9 @@ import { WarningMessage } from 'uniswap/src/components/WarningMessage/WarningMes
 import { SLIPPAGE_CRITICAL_TOLERANCE, WARNING_DEADLINE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { TransactionSettingRow } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModalContent/TransactionSettingsRow'
 import type { TransactionSettingsModalProps } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/types'
-import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import {
-  TransactionSettingId,
-  type TransactionSettingConfig,
-} from 'uniswap/src/features/transactions/components/settings/types'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
+import { TransactionSettingId } from 'uniswap/src/features/transactions/components/settings/types'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/useSlippageSettings'
 import { isExtension, isInterfaceDesktop, isMobileApp, isMobileWeb, isWeb } from 'utilities/src/platform'
 
@@ -55,10 +53,7 @@ const TopLevelSettings = ({
   setSelectedSetting: React.Dispatch<React.SetStateAction<TransactionSettingConfig | undefined>>
 }): JSX.Element => {
   const { t } = useTranslation()
-  const { customDeadline, customSlippageTolerance } = useTransactionSettingsStore((s) => ({
-    customDeadline: s.customDeadline,
-    customSlippageTolerance: s.customSlippageTolerance,
-  }))
+  const { customSlippageTolerance, customDeadline } = useTransactionSettingsContext()
   const { autoSlippageTolerance } = useSlippageSettings()
 
   const rowWarningContent = useMemo(

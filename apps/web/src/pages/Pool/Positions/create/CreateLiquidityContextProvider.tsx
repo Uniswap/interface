@@ -1,8 +1,8 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { useCreatePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
-import type { DepositInfo, DepositState } from 'components/Liquidity/types'
+import { DepositInfo, DepositState } from 'components/Liquidity/types'
 // TODO: [WEB-7905: Remove added circular dependency to CreatePositionContext](https://linear.app/uniswap/issue/WEB-7905/remove-added-circular-dependency-to-createpositioncontext)
 import {
   getDepositInfoProps,
@@ -11,28 +11,19 @@ import {
   useDerivedPositionInfo,
 } from 'pages/Pool/Positions/create/hooks'
 import {
+  CreatePositionInfo,
+  DynamicFeeTierSpeedbumpData,
   PositionFlowStep,
-  type CreatePositionInfo,
-  type DynamicFeeTierSpeedbumpData,
-  type PositionState,
-  type PriceRangeInfo,
-  type PriceRangeState,
+  PositionState,
+  PriceRangeInfo,
+  PriceRangeState,
 } from 'pages/Pool/Positions/create/types'
 import {
   generateAddLiquidityApprovalParams,
   generateCreateCalldataQueryParams,
   generateCreatePositionTxRequest,
 } from 'pages/Pool/Positions/create/utils'
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from 'react'
+import { Dispatch, SetStateAction, createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { PositionField } from 'types/position'
 import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
@@ -43,10 +34,10 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import type { CreatePositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { CreatePositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
-import { TransactionStepType, type TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -216,10 +207,7 @@ export function CreateLiquidityContextProvider({
   }, [derivedPriceRangeInfo.deposit0Disabled, derivedPriceRangeInfo.deposit1Disabled])
 
   // Transaction logic (from CreateTxContextProvider)
-  const { customDeadline, customSlippageTolerance } = useTransactionSettingsStore((s) => ({
-    customDeadline: s.customDeadline,
-    customSlippageTolerance: s.customSlippageTolerance,
-  }))
+  const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
   const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(derivedPositionInfo.chainId)
 
   const hasError = Boolean(derivedDepositInfo.error)

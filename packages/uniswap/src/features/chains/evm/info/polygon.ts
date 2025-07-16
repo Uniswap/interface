@@ -1,8 +1,9 @@
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { POLYGON_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
+import { DAI_POLYGON, USDC_POLYGON } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
-import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
   GqlChainId,
   NetworkLayer,
@@ -10,23 +11,12 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { buildDAI, buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
 import { polygon } from 'wagmi/chains'
-
-const tokens = buildChainTokens({
-  stables: {
-    USDC: buildUSDC('0x3c499c542cef5e3811e1192ce70d8cc03d5c3359', UniverseChainId.Polygon),
-    USDT: buildUSDT('0xc2132d05d31c914a87c6611c10748aeb04b58e8f', UniverseChainId.Polygon),
-    DAI: buildDAI('0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063', UniverseChainId.Polygon),
-  },
-})
 
 export const POLYGON_CHAIN_INFO = {
   ...polygon,
   id: UniverseChainId.Polygon,
-  platform: Platform.EVM,
   assetRepoNetworkName: 'polygon',
   blockPerMainnetEpochForChainId: 5,
   backendChain: {
@@ -62,7 +52,8 @@ export const POLYGON_CHAIN_INFO = {
     [RPCType.Default]: { http: ['https://polygon-rpc.com/'] },
     [RPCType.Interface]: { http: [`https://polygon-mainnet.infura.io/v3/${config.infuraKey}`] },
   },
-  tokens,
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
+  stablecoins: [USDC_POLYGON, DAI_POLYGON],
   statusPage: undefined,
   supportsV4: true,
   urlParam: 'polygon',

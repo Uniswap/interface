@@ -1,21 +1,18 @@
 import { useMemo } from 'react'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import {
-  useSwapFormStore,
-  useSwapFormStoreDerivedSwapInfo,
-} from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 
 const useTraceProperties = (): {
   chainId: number
   tokenAmount: string | undefined
   fiatAmount: string | undefined
 } => {
-  const { exactAmountToken, exactAmountFiat } = useSwapFormStore((s) => ({
-    exactAmountToken: s.exactAmountToken,
-    exactAmountFiat: s.exactAmountFiat,
-  }))
-  const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
+  const {
+    exactAmountToken,
+    exactAmountFiat,
+    derivedSwapInfo: { chainId },
+  } = useSwapFormContext()
 
   return useMemo(
     () => ({

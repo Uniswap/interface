@@ -1,13 +1,13 @@
-import { Token } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { BLAST_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
+import { USDB_BLAST } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
   DEFAULT_RETRY_OPTIONS,
   getQuicknodeEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
-import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
   GqlChainId,
   NetworkLayer,
@@ -15,20 +15,12 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { blast } from 'wagmi/chains'
-
-const tokens = buildChainTokens({
-  stables: {
-    USDB: new Token(UniverseChainId.Blast, '0x4300000000000000000000000000000000000003', 18, 'USDB', 'USDB'),
-  },
-})
 
 export const BLAST_CHAIN_INFO = {
   ...blast,
   id: UniverseChainId.Blast,
-  platform: Platform.EVM,
   assetRepoNetworkName: 'blast',
   backendChain: {
     chain: BackendChainId.Blast as GqlChainId,
@@ -50,7 +42,8 @@ export const BLAST_CHAIN_INFO = {
   logo: BLAST_LOGO,
   networkLayer: NetworkLayer.L2,
   pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
-  tokens,
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDB_BLAST, 10_000e18),
+  stablecoins: [USDB_BLAST],
   statusPage: undefined,
   supportsV4: true,
   urlParam: 'blast',

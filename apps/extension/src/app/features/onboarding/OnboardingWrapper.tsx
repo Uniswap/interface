@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Outlet } from 'react-router'
+import { Outlet } from 'react-router-dom'
 import { DevMenuModal } from 'src/app/core/DevMenuModal'
 import { StorageWarningModal } from 'src/app/features/warnings/StorageWarningModal'
 import { ONBOARDING_BACKGROUND_DARK, ONBOARDING_BACKGROUND_LIGHT } from 'src/assets'

@@ -1,23 +1,22 @@
-import type { BottomSheetBackdropProps, BottomSheetHandleProps } from '@gorhom/bottom-sheet'
 import {
   BottomSheetModal as BaseModal,
   BottomSheetBackdrop,
+  BottomSheetBackdropProps,
+  BottomSheetHandleProps,
   BottomSheetView,
   // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   BottomSheetTextInput as GorhomBottomSheetTextInput,
 } from '@gorhom/bottom-sheet'
 import { BlurView } from 'expo-blur'
-import type { ComponentProps } from 'react'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { StyleProp, ViewStyle } from 'react-native'
-import { BackHandler, StyleSheet } from 'react-native'
+import React, { ComponentProps, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { BackHandler, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { Flex, useIsDarkMode, useMedia, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { borderRadii, spacing, zIndexes } from 'ui/src/theme'
 import { BottomSheetContextProvider } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
-import type { ModalProps } from 'uniswap/src/components/modals/ModalProps'
+import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { BSM_ANIMATION_CONFIGS, IS_SHEET_READY_DELAY } from 'uniswap/src/components/modals/modalConstants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -102,6 +101,7 @@ function BottomSheetModalContents({
   skipLogImpression,
   zIndex,
 }: ModalProps): JSX.Element {
+  const dimensions = useDeviceDimensions()
   const insets = useAppInsets()
   const media = useMedia()
   const keyboard = useKeyboardLayout()
@@ -238,21 +238,25 @@ function BottomSheetModalContents({
 
   const bottomSheetViewStyles: StyleProp<ViewStyle> = [{ backgroundColor: backgroundColorValue }]
 
+  const handleBarHeight = hideHandlebar ? 0 : spacing.spacing12 + spacing.spacing16 + spacing.spacing4
+  let fullContentHeight = dimensions.fullHeight - insets.top - handleBarHeight
+
   if (renderBehindTopInset) {
     bottomSheetViewStyles.push(bottomSheetStyle.behindInset)
     if (hideHandlebar) {
       bottomSheetViewStyles.push(animatedBorderRadius)
     }
+    fullContentHeight += insets.top
   } else if (hideHandlebar) {
     bottomSheetViewStyles.push(hiddenHandlebarStyle)
   }
   if (!renderBehindBottomInset) {
     bottomSheetViewStyles.push({ paddingBottom: insets.bottom })
   }
-  // When in fullScreen mode, set a fixed height to fill the available space
-  // (when not in fullScreen, we use dynamic sizing based on content)
+  // Add the calculated height only if the sheet is full screen
+  // (otherwise, rely on the dynamic sizing of the sheet)
   if (fullScreen) {
-    bottomSheetViewStyles.push({ height: '100%' })
+    bottomSheetViewStyles.push({ height: fullContentHeight })
   }
 
   return (

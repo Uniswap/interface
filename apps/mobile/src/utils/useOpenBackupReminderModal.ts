@@ -19,10 +19,10 @@ export function useOpenBackupReminderModal(activeAccount: Account): void {
 
   const isBackupReminderModalOpen = navigation
     .getState()
-    ?.routes.some((route) => route.name === ModalName.BackupReminder)
+    .routes.some((route) => route.name === ModalName.BackupReminder)
   const isBackupReminderWarningModalOpen = navigation
     .getState()
-    ?.routes.some((route) => route.name === ModalName.BackupReminderWarning)
+    .routes.some((route) => route.name === ModalName.BackupReminderWarning)
 
   const backupReminderLastSeenTs = useSelector(selectBackupReminderLastSeenTs)
   const externalBackups = hasExternalBackup(activeAccount)

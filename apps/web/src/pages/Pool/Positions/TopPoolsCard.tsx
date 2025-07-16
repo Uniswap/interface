@@ -3,7 +3,7 @@ import { LPIncentiveRewardsBadge } from 'components/Liquidity/LPIncentiveRewards
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { Trans } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { PoolStat } from 'state/explore/types'
 import { Flex, Text } from 'ui/src'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'

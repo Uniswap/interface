@@ -1,6 +1,7 @@
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains, useEnabledChainsWithConnector } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useEvent } from 'utilities/src/react/hooks'
+import { Connector } from 'wagmi'
 
 export function createGetSupportedChainId(ctx: { getChains: () => UniverseChainId[] }): {
   getSupportedChainId: (chainId?: number | UniverseChainId) => UniverseChainId | undefined
@@ -32,4 +33,12 @@ export function useIsSupportedChainIdCallback(): (chainId?: number | UniverseCha
   return useEvent((chainId?: number | UniverseChainId): chainId is UniverseChainId => {
     return createGetSupportedChainId({ getChains: () => chains }).isSupportedChainId(chainId)
   })
+}
+
+export function useSupportedChainIdWithConnector(
+  chainId?: number | UniverseChainId,
+  connector?: Connector,
+): UniverseChainId | undefined {
+  const { chains } = useEnabledChainsWithConnector(connector)
+  return createGetSupportedChainId({ getChains: () => chains }).getSupportedChainId(chainId)
 }

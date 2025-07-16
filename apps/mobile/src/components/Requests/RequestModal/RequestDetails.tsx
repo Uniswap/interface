@@ -13,7 +13,6 @@ import {
 import { Flex, Text } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -93,11 +92,7 @@ const getParsedObjectDisplay = ({
         const childValue = obj[objKey]
 
         // Special case for address strings
-        // TODO(WALL-7065): Handle SVM address validation as well
-        if (
-          typeof childValue === 'string' &&
-          getValidAddress({ address: childValue, platform: Platform.EVM, withEVMChecksum: true })
-        ) {
+        if (typeof childValue === 'string' && getValidAddress({ address: childValue, withChecksum: true })) {
           return (
             <KeyValueRow key={objKey} objKey={objKey}>
               <Flex>

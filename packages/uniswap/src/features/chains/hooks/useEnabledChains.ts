@@ -2,12 +2,10 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { useConnector } from 'uniswap/src/contexts/UniswapContext'
-import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
-import { EVMUniverseChainId, EnabledChainsInfo, GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ALL_CHAIN_IDS, EnabledChainsInfo, GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getEnabledChains, isTestnetChain } from 'uniswap/src/features/chains/utils'
-import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 import { WalletConnectConnector } from 'uniswap/src/features/web3/walletConnect'
@@ -85,11 +83,6 @@ export function useEnabledChains(): EnabledChainsInfo {
   return useMemo(() => {
     return { chains: orderedChains, gqlChains, defaultChainId, isTestnetModeEnabled }
   }, [defaultChainId, gqlChains, isTestnetModeEnabled, orderedChains])
-}
-
-export function useEnabledEVMChains(): { chains: EVMUniverseChainId[] } {
-  const { chains } = useEnabledChains()
-  return useMemo(() => ({ chains: chains.filter(isEVMChain) }), [chains])
 }
 
 // use in non hook contexts

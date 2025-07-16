@@ -16,11 +16,10 @@ import {
   PriceSource,
   TokenStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { GqlChainId, UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   fromGraphQLChain,
   isBackendSupportedChain,
-  isUniverseChainId,
   toGraphQLChain,
   toSupportedChainId,
 } from 'uniswap/src/features/chains/utils'

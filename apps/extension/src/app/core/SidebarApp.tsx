@@ -4,7 +4,7 @@ import 'src/app/Global.css'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { RouterProvider, createHashRouter } from 'react-router'
+import { RouterProvider, createHashRouter } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
@@ -29,6 +29,7 @@ import { SwapFlowScreen } from 'src/app/features/swap/SwapFlowScreen'
 import { useIsWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { MainContent, WebNavigation } from 'src/app/navigation/navigation'
+import { ROUTER_FUTURE_FLAGS, ROUTER_PROVIDER_FUTURE_FLAGS } from 'src/app/navigation/routerConfig'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import {
@@ -48,88 +49,93 @@ import { useInterval } from 'utilities/src/time/timing'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
 import { getReduxPersistor } from 'wallet/src/state/persistor'
 
-const router = createHashRouter([
+const router = createHashRouter(
+  [
+    {
+      path: '',
+      element: <SidebarWrapper />,
+      errorElement: <ErrorElement />,
+      children: [
+        {
+          path: '',
+          element: <MainContent />,
+        },
+        {
+          path: AppRoutes.AccountSwitcher,
+          element: <AccountSwitcherScreen />,
+        },
+        {
+          path: AppRoutes.Settings,
+          element: <SettingsScreenWrapper />,
+          children: [
+            {
+              path: '',
+              element: <SettingsScreen />,
+            },
+            {
+              path: SettingsRoutes.ChangePassword,
+              element: <SettingsChangePasswordScreen />,
+            },
+            {
+              path: SettingsRoutes.DeviceAccess,
+              element: <DeviceAccessScreen />,
+            },
+            isDevEnv()
+              ? {
+                  path: SettingsRoutes.DevMenu,
+                  element: <DevMenuScreen />,
+                }
+              : {},
+            {
+              path: SettingsRoutes.ViewRecoveryPhrase,
+              element: <ViewRecoveryPhraseScreen />,
+            },
+            {
+              path: SettingsRoutes.BackupRecoveryPhrase,
+              element: <BackupRecoveryPhraseScreen />,
+            },
+            {
+              path: SettingsRoutes.RemoveRecoveryPhrase,
+              children: [
+                {
+                  path: RemoveRecoveryPhraseRoutes.Wallets,
+                  element: <RemoveRecoveryPhraseWallets />,
+                },
+                {
+                  path: RemoveRecoveryPhraseRoutes.Verify,
+                  element: <RemoveRecoveryPhraseVerify />,
+                },
+              ],
+            },
+            {
+              path: SettingsRoutes.ManageConnections,
+              element: <SettingsManageConnectionsScreen />,
+            },
+            {
+              path: SettingsRoutes.SmartWallet,
+              element: <SmartWalletSettingsScreen />,
+            },
+          ],
+        },
+        {
+          path: AppRoutes.Send,
+          element: <SendFlow />,
+        },
+        {
+          path: AppRoutes.Swap,
+          element: <SwapFlowScreen />,
+        },
+        {
+          path: AppRoutes.Receive,
+          element: <ReceiveScreen />,
+        },
+      ],
+    },
+  ],
   {
-    path: '',
-    element: <SidebarWrapper />,
-    errorElement: <ErrorElement />,
-    children: [
-      {
-        path: '',
-        element: <MainContent />,
-      },
-      {
-        path: AppRoutes.AccountSwitcher,
-        element: <AccountSwitcherScreen />,
-      },
-      {
-        path: AppRoutes.Settings,
-        element: <SettingsScreenWrapper />,
-        children: [
-          {
-            path: '',
-            element: <SettingsScreen />,
-          },
-          {
-            path: SettingsRoutes.ChangePassword,
-            element: <SettingsChangePasswordScreen />,
-          },
-          {
-            path: SettingsRoutes.DeviceAccess,
-            element: <DeviceAccessScreen />,
-          },
-          isDevEnv()
-            ? {
-                path: SettingsRoutes.DevMenu,
-                element: <DevMenuScreen />,
-              }
-            : {},
-          {
-            path: SettingsRoutes.ViewRecoveryPhrase,
-            element: <ViewRecoveryPhraseScreen />,
-          },
-          {
-            path: SettingsRoutes.BackupRecoveryPhrase,
-            element: <BackupRecoveryPhraseScreen />,
-          },
-          {
-            path: SettingsRoutes.RemoveRecoveryPhrase,
-            children: [
-              {
-                path: RemoveRecoveryPhraseRoutes.Wallets,
-                element: <RemoveRecoveryPhraseWallets />,
-              },
-              {
-                path: RemoveRecoveryPhraseRoutes.Verify,
-                element: <RemoveRecoveryPhraseVerify />,
-              },
-            ],
-          },
-          {
-            path: SettingsRoutes.ManageConnections,
-            element: <SettingsManageConnectionsScreen />,
-          },
-          {
-            path: SettingsRoutes.SmartWallet,
-            element: <SmartWalletSettingsScreen />,
-          },
-        ],
-      },
-      {
-        path: AppRoutes.Send,
-        element: <SendFlow />,
-      },
-      {
-        path: AppRoutes.Swap,
-        element: <SwapFlowScreen />,
-      },
-      {
-        path: AppRoutes.Receive,
-        element: <ReceiveScreen />,
-      },
-    ],
+    future: ROUTER_FUTURE_FLAGS,
   },
-])
+)
 
 const PORT_PING_INTERVAL = 5 * ONE_SECOND_MS
 function useDappRequestPortListener(): void {
@@ -246,7 +252,7 @@ export default function SidebarApp(): JSX.Element {
       <BaseAppContainer appName={DatadogAppNameTag.Sidebar}>
         <DappContextProvider>
           <PrimaryAppInstanceDebuggerLazy />
-          <RouterProvider router={router} />
+          <RouterProvider router={router} future={ROUTER_PROVIDER_FUTURE_FLAGS} />
         </DappContextProvider>
       </BaseAppContainer>
     </PersistGate>

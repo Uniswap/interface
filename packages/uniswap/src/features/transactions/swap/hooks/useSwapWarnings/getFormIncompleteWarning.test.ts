@@ -1,13 +1,14 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { USDC, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { USDC } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { getFormIncompleteWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getFormIncompleteWarning'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-const ETH = nativeOnChain(UniverseChainId.Mainnet)
+const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
 
 const mockCurrencyInfo = (currency: Currency): CurrencyInfo => ({
   currency,

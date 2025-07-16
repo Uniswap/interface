@@ -1,7 +1,7 @@
 import { stringify } from 'qs'
 import { useMemo } from 'react'
-import type { To } from 'react-router'
-import { useLocation } from 'react-router'
+import type { To } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { Locale } from 'uniswap/src/features/language/constants'
 

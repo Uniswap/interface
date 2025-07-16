@@ -16,7 +16,7 @@ vi.mock('hooks/useSignInWithPasskey', () => ({
   useSignInWithPasskey: vi.fn(),
 }))
 
-vi.mock('react-router', () => ({
+vi.mock('react-router-dom', () => ({
   useNavigate: vi.fn(),
   useParams: vi.fn(),
 }))

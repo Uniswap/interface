@@ -1,8 +1,8 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { BNB_LOGO } from 'ui/src/assets'
+import { USDC_BNB } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
-import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
   GqlChainId,
   NetworkLayer,
@@ -10,23 +10,12 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { bsc } from 'wagmi/chains'
-
-const tokens = buildChainTokens({
-  stables: {
-    // USDC on BNB has non-default decimals
-    USDC: new Token(UniverseChainId.Bnb, '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', 18, 'USDC', 'USD Coin'),
-    // USDT on BNB has non-default decimals
-    USDT: new Token(UniverseChainId.Bnb, '0x55d398326f99059ff775485246999027b3197955', 18, 'USDT', 'Tether USD'),
-  },
-})
 
 export const BNB_CHAIN_INFO = {
   ...bsc,
   id: UniverseChainId.Bnb,
-  platform: Platform.EVM,
   assetRepoNetworkName: 'smartchain',
   backendChain: {
     chain: BackendChainId.Bnb as GqlChainId,
@@ -61,8 +50,8 @@ export const BNB_CHAIN_INFO = {
     [RPCType.Default]: { http: ['https://bsc-dataseed1.bnbchain.org'] },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Bnb)] },
   },
-  spotPriceStablecoinAmountOverride: CurrencyAmount.fromRawAmount(tokens.USDC, 100e18),
-  tokens,
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_BNB, 100e18),
+  stablecoins: [USDC_BNB],
   statusPage: undefined,
   supportsV4: true,
   urlParam: 'bnb',

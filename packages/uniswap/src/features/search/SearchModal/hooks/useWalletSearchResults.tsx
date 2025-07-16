@@ -4,7 +4,6 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { useENS } from 'uniswap/src/features/ens/useENS'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SearchResultType, WalletSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
@@ -21,10 +20,8 @@ export function useWalletSearchResults(
   exactUnitagMatch: boolean
 } {
   const { defaultChainId } = useEnabledChains()
-
-  // TODO(WALL-7065): Update to support SVM address search
   const validAddress: Address | undefined = useMemo(
-    () => getValidAddress({ address: query, platform: Platform.EVM, withEVMChecksum: true, log: false }) ?? undefined,
+    () => getValidAddress({ address: query, withChecksum: true, log: false }) ?? undefined,
     [query],
   )
 

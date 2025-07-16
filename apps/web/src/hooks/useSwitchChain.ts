@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { endSwitchingChain, startSwitchingChain } from 'state/wallets/reducer'
 import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSwitchChain as useSwitchChainWagmi } from 'wagmi'
 
 export function useSwitchChain() {
@@ -13,7 +13,7 @@ export function useSwitchChain() {
   const account = useAccount()
 
   return useCallback(
-    (chainId: EVMUniverseChainId) => {
+    (chainId: UniverseChainId) => {
       const isSupportedChain = isSupportedChainCallback(chainId)
       if (!isSupportedChain) {
         throw new Error(`Chain ${chainId} not supported for connector (${account.connector?.name})`)

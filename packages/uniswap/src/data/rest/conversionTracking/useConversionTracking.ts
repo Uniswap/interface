@@ -3,7 +3,7 @@ import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { parse } from 'qs'
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react'
-import { useLocation } from 'react-router'
+import { useLocation } from 'react-router-dom'
 import {
   CONVERSION_LEADS_EXPIRATION_MS,
   CONVERSION_LEADS_STORAGE_KEY,

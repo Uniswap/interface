@@ -1,17 +1,16 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { queryOptions, useQuery } from '@tanstack/react-query'
-import type { Currency } from '@uniswap/sdk-core'
-import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import StaticRouteIcon from 'assets/svg/static_route.svg'
 import { getCurrencyFromCurrencyId } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import { getBridgeDescriptor } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
-import type { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
+import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import {
+  CancelledTransactionTitleTable,
+  LimitOrderTextTable,
+  OrderTextTable,
   getActivityTitle,
-  getCancelledTransactionTitleTable,
-  getLimitOrderTextTable,
-  getOrderTextTable,
 } from 'components/AccountDrawer/MiniPortfolio/constants'
 import { FiatOnRampTransactionStatus } from 'state/fiatOnRampTransactions/types'
 import {
@@ -19,34 +18,35 @@ import {
   statusToTransactionInfoStatus,
 } from 'state/fiatOnRampTransactions/utils'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
-import type { SignatureDetails } from 'state/signatures/types'
-import { SignatureType } from 'state/signatures/types'
+import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
-import type { LpIncentivesClaimTransactionInfo, TransactionDetails } from 'state/transactions/types'
+import {
+  BridgeTransactionInfo,
+  LpIncentivesClaimTransactionInfo,
+  SendTransactionInfo,
+  TransactionDetails,
+  TransactionType,
+} from 'state/transactions/types'
 import { isConfirmedTx } from 'state/transactions/utils'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
+import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import type {
+import {
   ApproveTransactionInfo,
-  BridgeTransactionInfo,
   CollectFeesTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   LiquidityDecreaseTransactionInfo,
   LiquidityIncreaseTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
-  SendTokenTransactionInfo,
-  WrapTransactionInfo,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
-import {
   TransactionStatus,
   TransactionType as UniswapTransactionType,
+  WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
-import { buildCurrencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { isAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
@@ -131,12 +131,14 @@ async function parseSwap({
 
 async function parseBridge({
   bridge,
+  inputChainId,
+  outputChainId,
   formatNumber,
-  chainId,
 }: {
   bridge: BridgeTransactionInfo
+  inputChainId: UniverseChainId
+  outputChainId: UniverseChainId
   formatNumber: FormatNumberFunctionType
-  chainId: UniverseChainId
 }): Promise<Partial<Activity>> {
   const [tokenIn, tokenOut] = await Promise.all([
     getCurrencyFromCurrencyId(bridge.inputCurrencyId),
@@ -156,8 +158,8 @@ async function parseBridge({
     : i18n.t('common.unknown')
   return {
     descriptor: getBridgeDescriptor({ tokenIn, tokenOut, inputAmount, outputAmount }),
-    chainId: currencyIdToChain(bridge.inputCurrencyId) ?? chainId,
-    outputChainId: currencyIdToChain(bridge.outputCurrencyId) ?? chainId,
+    chainId: inputChainId,
+    outputChainId,
     currencies: [tokenIn, tokenOut],
     prefixIconSrc: undefined,
   }
@@ -305,21 +307,18 @@ async function parseMigrateV2ToV3({
 async function parseSend({
   send,
   formatNumber,
-  chainId,
 }: {
-  send: SendTokenTransactionInfo
+  send: SendTransactionInfo
   formatNumber: FormatNumberFunctionType
-  chainId: UniverseChainId
 }): Promise<Partial<Activity>> {
-  const { tokenAddress, currencyAmountRaw, recipient } = send
-  const currency = await getCurrencyFromCurrencyId(buildCurrencyId(chainId, tokenAddress))
-  const formattedAmount =
-    currency && currencyAmountRaw
-      ? formatNumber({
-          value: parseFloat(CurrencyAmount.fromRawAmount(currency, currencyAmountRaw).toSignificant()),
-          type: NumberType.TokenNonTx,
-        })
-      : i18n.t('common.unknown')
+  const { currencyId, amount, recipient } = send
+  const currency = await getCurrencyFromCurrencyId(currencyId)
+  const formattedAmount = currency
+    ? formatNumber({
+        value: parseFloat(CurrencyAmount.fromRawAmount(currency, amount).toSignificant()),
+        type: NumberType.TokenNonTx,
+      })
+    : i18n.t('common.unknown')
   const otherAccount = isAddress(recipient) || undefined
 
   return {
@@ -378,11 +377,12 @@ export async function transactionToActivity({
         swap: info,
         formatNumber,
       })
-    } else if (info.type === UniswapTransactionType.Bridge) {
+    } else if (info.type === TransactionType.BRIDGE) {
       additionalFields = await parseBridge({
         bridge: info,
+        inputChainId: chainId,
+        outputChainId: info.outputChainId,
         formatNumber,
-        chainId,
       })
     } else if (info.type === UniswapTransactionType.Approve) {
       additionalFields = await parseApproval({
@@ -402,7 +402,7 @@ export async function transactionToActivity({
       info.type === UniswapTransactionType.LiquidityDecrease ||
       info.type === UniswapTransactionType.CreatePool ||
       info.type === UniswapTransactionType.CreatePair ||
-      info.type === UniswapTransactionType.MigrateLiquidityV3ToV4
+      info.type === TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4
     ) {
       additionalFields = await parseLiquidity({
         lp: info,
@@ -415,18 +415,17 @@ export async function transactionToActivity({
       })
     } else if (info.type === UniswapTransactionType.MigrateLiquidityV2ToV3) {
       additionalFields = await parseMigrateV2ToV3(info)
-    } else if (info.type === UniswapTransactionType.Send) {
+    } else if (info.type === TransactionType.SEND) {
       additionalFields = await parseSend({
         send: info,
         formatNumber,
-        chainId,
       })
-    } else if (info.type === UniswapTransactionType.LPIncentivesClaimRewards) {
+    } else if (info.type === TransactionType.LP_INCENTIVES_CLAIM_REWARDS) {
       additionalFields = await parseLpIncentivesClaim({
         info,
         chainId,
       })
-    } else if (info.type === UniswapTransactionType.Permit2Approve) {
+    } else if (info.type === TransactionType.PERMIT) {
       additionalFields = {
         title: i18n.t('common.permit'),
         descriptor: i18n.t('notification.transaction.unknown.success.short'),
@@ -436,7 +435,6 @@ export async function transactionToActivity({
 
     const activity = { ...defaultFields, ...additionalFields }
 
-    const CancelledTransactionTitleTable = getCancelledTransactionTitleTable()
     if (details.cancelled) {
       activity.title = CancelledTransactionTitleTable[details.info.type]
       activity.status = TransactionStatus.Success
@@ -561,9 +559,6 @@ export async function signatureToActivity(
       if (isOnChainOrder(signature.status)) {
         return undefined
       }
-
-      const OrderTextTable = getOrderTextTable()
-      const LimitOrderTextTable = getLimitOrderTextTable()
 
       const orderTextTableEntry =
         signature.type === SignatureType.SIGN_LIMIT

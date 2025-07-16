@@ -10,7 +10,7 @@ import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprD
 import { TextLoader } from 'pages/Pool/Positions/shared'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Button, Circle, Flex, Text, useMedia } from 'ui/src'
 

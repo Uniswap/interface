@@ -10,7 +10,6 @@ import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
 import DeviceInfo, { getUniqueIdSync } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { MMKV } from 'react-native-mmkv'
 import { OneSignal } from 'react-native-onesignal'
 import { configureReanimatedLogger } from 'react-native-reanimated'
@@ -156,16 +155,14 @@ function App(): JSX.Element | null {
           <StrictMode>
             <I18nextProvider i18n={i18n}>
               <SafeAreaProvider>
-                <KeyboardProvider>
-                  <SharedWalletReduxProvider reduxStore={store}>
-                    <AnalyticsNavigationContextProvider
-                      shouldLogScreen={shouldLogScreen}
-                      useIsPartOfNavigationTree={useIsPartOfNavigationTree}
-                    >
-                      <AppOuter />
-                    </AnalyticsNavigationContextProvider>
-                  </SharedWalletReduxProvider>
-                </KeyboardProvider>
+                <SharedWalletReduxProvider reduxStore={store}>
+                  <AnalyticsNavigationContextProvider
+                    shouldLogScreen={shouldLogScreen}
+                    useIsPartOfNavigationTree={useIsPartOfNavigationTree}
+                  >
+                    <AppOuter />
+                  </AnalyticsNavigationContextProvider>
+                </SharedWalletReduxProvider>
               </SafeAreaProvider>
             </I18nextProvider>
           </StrictMode>

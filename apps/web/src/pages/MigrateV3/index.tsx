@@ -1,12 +1,12 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import type { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
-import type { PositionInfo } from 'components/Liquidity/types'
+import { PositionInfo } from 'components/Liquidity/types'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingRows } from 'components/Loader/styled'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
@@ -35,12 +35,11 @@ import { Container } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { getCurrencyForProtocol } from 'pages/Pool/Positions/create/utils'
 import { LoadingRow } from 'pages/Pool/Positions/shared'
-import type { Dispatch, SetStateAction } from 'react'
-import { useEffect, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useNavigate, useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router-dom'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
@@ -57,10 +56,11 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
+import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
-import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { isSameAddress } from 'utilities/src/addresses'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -369,7 +369,10 @@ export default function MigrateV3() {
       }}
     >
       <MultichainContextProvider initialChainId={chainId}>
-        <LPTransactionSettingsStoreContextProvider autoSlippageTolerance={autoSlippageTolerance}>
+        <TransactionSettingsContextProvider
+          settingKey={TransactionSettingKey.LP}
+          autoSlippageTolerance={autoSlippageTolerance}
+        >
           {isCreateLiquidityRefactorEnabled ? (
             <CreateLiquidityContextProvider
               initialState={{
@@ -409,7 +412,7 @@ export default function MigrateV3() {
               <SharedCreateModals />
             </CreatePositionContextProvider>
           )}
-        </LPTransactionSettingsStoreContextProvider>
+        </TransactionSettingsContextProvider>
       </MultichainContextProvider>
     </Trace>
   )

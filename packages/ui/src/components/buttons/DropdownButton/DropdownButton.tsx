@@ -1,6 +1,5 @@
 import { Fragment, cloneElement, forwardRef, useMemo } from 'react'
-import type { TamaguiElement } from 'tamagui'
-import { withStaticProperties } from 'tamagui'
+import { TamaguiElement, withStaticProperties } from 'tamagui'
 import { ThemedIcon } from 'ui/src/components/buttons/Button/components/ThemedIcon'
 import { useIsStringOrTransTag } from 'ui/src/components/buttons/Button/hooks/useIsStringOrTransTag'
 import { getIconPosition } from 'ui/src/components/buttons/Button/utils/getIconPosition'
@@ -8,8 +7,8 @@ import { getIsButtonDisabled } from 'ui/src/components/buttons/Button/utils/getI
 import { DropdownButtonFrame } from 'ui/src/components/buttons/DropdownButton/DropdownButtonFrame'
 import { DropdownButtonText } from 'ui/src/components/buttons/DropdownButton/DropdownButtonText'
 import { EXPANDED_COLOR, EXPANDED_HOVER_COLOR } from 'ui/src/components/buttons/DropdownButton/constants'
-import type { DropdownButtonProps } from 'ui/src/components/buttons/DropdownButton/types'
-import type { IconProps } from 'ui/src/components/factories/createIcon'
+import { DropdownButtonProps } from 'ui/src/components/buttons/DropdownButton/types'
+import { IconProps } from 'ui/src/components/factories/createIcon'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { Flex } from 'ui/src/components/layout/Flex'
 

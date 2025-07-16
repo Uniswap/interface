@@ -12,7 +12,7 @@ import { useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
@@ -23,7 +23,6 @@ import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -65,10 +64,6 @@ function RowLoader({ withIcon }: { withIcon?: boolean }) {
 
 export default function V2PositionPageWrapper() {
   const chainId = useChainIdFromUrlParam()
-
-  if (chainId && !isEVMChain(chainId)) {
-    return <Navigate to="/positions" replace />
-  }
 
   return (
     <MultichainContextProvider initialChainId={chainId}>

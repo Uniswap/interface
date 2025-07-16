@@ -1,15 +1,14 @@
 import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import type { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { AccountType } from 'uniswap/src/features/accounts/types'
+import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useInterfaceWrap'
-import { useSwapFormWarningStoreActions } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/useSwapFormWarningStore'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useSwapFormWarningState } from 'uniswap/src/features/transactions/swap/form/context/SwapFormWarningStateContext'
 import { useNeedsBridgingWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useNeedsBridgingWarning'
 import { useNeedsLowNativeBalanceWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useNeedsLowNativeBalanceWarning'
 import { usePrefilledNeedsTokenProtectionWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/usePrefilledNeedsTokenProtectionWarning'
 import { createPrepareSwap } from 'uniswap/src/features/transactions/swap/services/prepareSwapService'
-import type { WarningService } from 'uniswap/src/features/transactions/swap/services/warningService'
-import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { WarningService } from 'uniswap/src/features/transactions/swap/services/warningService'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -23,15 +22,9 @@ export function usePrepareSwap(ctx: { warningService: WarningService }): () => v
     handleShowBridgingWarningModal,
     handleShowMaxNativeTransferModal,
     handleShowViewOnlyModal,
-  } = useSwapFormWarningStoreActions()
+  } = useSwapFormWarningState()
   const { isInterfaceWrap, onInterfaceWrap } = useInterfaceWrap()
-  const { derivedSwapInfo, updateSwapForm, exactAmountToken, prefilledCurrencies, isMax } = useSwapFormStore((s) => ({
-    derivedSwapInfo: s.derivedSwapInfo,
-    updateSwapForm: s.updateSwapForm,
-    exactAmountToken: s.exactAmountToken,
-    prefilledCurrencies: s.prefilledCurrencies,
-    isMax: s.isMax,
-  }))
+  const { derivedSwapInfo, updateSwapForm, exactAmountToken, prefilledCurrencies, isMax } = useSwapFormContext()
   const { currencies, exactCurrencyField, chainId } = derivedSwapInfo
   const { swapRedirectCallback, setScreen } = useTransactionModalContext()
   const activeAccount = useAccountMeta()

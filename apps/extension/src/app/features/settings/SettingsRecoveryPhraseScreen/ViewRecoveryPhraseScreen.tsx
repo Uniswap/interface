@@ -121,7 +121,7 @@ export function ViewRecoveryPhraseScreen({
                   emphasis="secondary"
                   onPress={(): void =>
                     navigate(
-                      `/${AppRoutes.Settings}/${SettingsRoutes.RemoveRecoveryPhrase}/${RemoveRecoveryPhraseRoutes.Wallets}`,
+                      `${AppRoutes.Settings}/${SettingsRoutes.RemoveRecoveryPhrase}/${RemoveRecoveryPhraseRoutes.Wallets}`,
                       { replace: true },
                     )
                   }

@@ -21,7 +21,6 @@ export const useMenuContent = (): MenuSection[] => {
     {
       title: t('common.company'),
       items: [
-        { label: t('settings.section.about'), href: 'https://about.uniswap.org/' },
         { label: t('common.careers'), href: 'https://careers.uniswap.org/' },
         { label: t('common.blog'), href: 'https://blog.uniswap.org/' },
       ],

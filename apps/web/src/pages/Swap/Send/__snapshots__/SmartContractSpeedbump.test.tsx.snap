@@ -171,8 +171,7 @@ exports[`SmartContractSpeedBumpModal > should render correctly 1`] = `
                         dd-action-name="Cancel"
                       >
                         <span
-                          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-                          line-height-disabled="false"
+                          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
                         >
                           Cancel
                         </span>
@@ -182,8 +181,7 @@ exports[`SmartContractSpeedBumpModal > should render correctly 1`] = `
                         dd-action-name="Continue"
                       >
                         <span
-                          class="font_button _color-_groupitem-hover_accent1Hove112785 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-                          line-height-disabled="false"
+                          class="font_button _color-_groupitem-hover_accent1Hove112785 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
                         >
                           Continue
                         </span>

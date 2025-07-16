@@ -51,8 +51,7 @@ import {
   isClassicQuoteResponse,
 } from 'state/routing/types'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isAvalanche, isBsc, isPolygon, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { logger } from 'utilities/src/logger/logger'
 import { toSlippagePercent } from 'utils/slippage'
 
@@ -518,13 +517,13 @@ export function isExactInput(tradeType: TradeType): boolean {
 
 export function currencyAddressForSwapQuote(currency: Currency): string {
   if (currency.isNative) {
-    if (currency.chainId === UniverseChainId.Polygon) {
+    if (isPolygon(currency.chainId)) {
       return SwapRouterNativeAssets.MATIC
     }
-    if (currency.chainId === UniverseChainId.Bnb) {
+    if (isBsc(currency.chainId)) {
       return SwapRouterNativeAssets.BNB
     }
-    if (currency.chainId === UniverseChainId.Avalanche) {
+    if (isAvalanche(currency.chainId)) {
       return SwapRouterNativeAssets.AVAX
     }
     return SwapRouterNativeAssets.ETH

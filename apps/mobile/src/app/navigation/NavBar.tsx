@@ -24,7 +24,7 @@ import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
+import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/contexts/selectors'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'

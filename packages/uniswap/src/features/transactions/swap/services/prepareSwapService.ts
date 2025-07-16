@@ -1,14 +1,16 @@
-import type { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { TransactionScreen } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import type { WarningService } from 'uniswap/src/features/transactions/swap/services/warningService'
-import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
+import {
+  SwapRedirectFn,
+  TransactionScreen,
+} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { WarningService } from 'uniswap/src/features/transactions/swap/services/warningService'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
-import type { logger } from 'utilities/src/logger/logger'
+import { logger } from 'utilities/src/logger/logger'
 
 // this will be in swapService
 export function createPrepareSwap(

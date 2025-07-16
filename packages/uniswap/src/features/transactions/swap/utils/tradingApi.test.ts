@@ -1,8 +1,8 @@
 import { HooksOptions, ProtocolItems, RoutingPreference } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { useProtocolsForChain } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import { FrontendSupportedProtocol, useProtocolsForChain } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { useQuoteRoutingParams } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { renderHook } from 'uniswap/src/test/test-utils'
 
@@ -60,7 +60,62 @@ describe('useQuoteRoutingParams', () => {
     })
   })
 
-  describe('when V4 Hooks are enabled', () => {
+  describe('when SwapSettingsV4HooksToggle FF is OFF', () => {
+    beforeEach(() => {
+      mockUseFeatureFlag.mockImplementation((flag: FeatureFlags) => {
+        if (flag === FeatureFlags.SwapSettingsV4HooksToggle) {
+          return false
+        }
+        return false // Default mock value for other flags
+      })
+    })
+
+    it('should return the protocols returned by useProtocolsForChain', () => {
+      const selectedProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V2, ProtocolItems.V3]
+      mockUseProtocolsForChain.mockImplementation(() => selectedProtocols) // Mock specific return value
+
+      const { result } = renderHook(() =>
+        useQuoteRoutingParams({
+          selectedProtocols,
+          tokenInChainId,
+          tokenOutChainId,
+          isV4HookPoolsEnabled: true,
+        }),
+      )
+
+      expect(mockUseProtocolsForChain).toHaveBeenCalledWith(selectedProtocols, tokenInChainId)
+      expect(result.current).toEqual({
+        protocols: selectedProtocols,
+      })
+    })
+
+    it('should handle empty selectedProtocols', () => {
+      const selectedProtocols: FrontendSupportedProtocol[] = []
+      mockUseProtocolsForChain.mockImplementation(() => selectedProtocols)
+
+      const { result } = renderHook(() =>
+        useQuoteRoutingParams({
+          selectedProtocols,
+          tokenInChainId,
+          tokenOutChainId,
+          isV4HookPoolsEnabled: true,
+        }),
+      )
+
+      expect(mockUseProtocolsForChain).toHaveBeenCalledWith(selectedProtocols, tokenInChainId)
+      expect(result.current).toEqual({
+        protocols: selectedProtocols,
+      })
+    })
+  })
+
+  describe('when SwapSettingsV4HooksToggle FF is ON', () => {
+    beforeEach(() => {
+      mockUseFeatureFlag.mockImplementation((flag: FeatureFlags) => {
+        return flag === FeatureFlags.SwapSettingsV4HooksToggle
+      })
+    })
+
     describe('and isV4HookPoolsEnabled is true', () => {
       const isV4HookPoolsEnabled = true
 

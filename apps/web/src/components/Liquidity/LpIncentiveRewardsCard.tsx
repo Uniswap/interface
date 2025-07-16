@@ -9,7 +9,7 @@ import { useAtom } from 'jotai'
 import ms from 'ms'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import {
   Button,
   Flex,

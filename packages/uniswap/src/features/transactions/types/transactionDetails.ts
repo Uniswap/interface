@@ -268,9 +268,6 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
 export interface Permit2ApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Permit2Approve
   spender: string
-  // TODO(WEB-8090): add display for Permit2Approve in TransactionDetails and remove optionality from tokenAddress and amount
-  tokenAddress?: string // web only
-  amount?: string // web only
   dappInfo?: DappInfoTransactionDetails
 }
 
@@ -308,7 +305,6 @@ export interface BridgeTransactionInfo extends BaseTransactionInfo {
   quoteId?: string
   gasUseEstimate?: string
   routingDappInfo?: DappInfoTransactionDetails
-  depositConfirmed?: boolean // web only
 }
 
 export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {
@@ -476,7 +472,6 @@ export type LiquidityIncreaseTransactionInfo = LiquidityTransactionInfoBase<Tran
 export type LiquidityDecreaseTransactionInfo = LiquidityTransactionInfoBase<TransactionType.LiquidityDecrease>
 export type CreatePairTransactionInfo = LiquidityTransactionInfoBase<TransactionType.CreatePair>
 export type CreatePoolTransactionInfo = LiquidityTransactionInfoBase<TransactionType.CreatePool>
-export type MigrateV3LiquidityToV4TransactionInfo = LiquidityTransactionInfoBase<TransactionType.MigrateLiquidityV3ToV4>
 export type CollectFeesTransactionInfo = Optional<LiquidityTransactionInfoBase<TransactionType.CollectFees>, 'currency1AmountRaw' | 'currency1Id'>
 
 export interface MigrateV2LiquidityToV3TransactionInfo extends BaseTransactionInfo {
@@ -515,7 +510,6 @@ export type TransactionTypeInfo =
   | RemoveDelegationTransactionInfo
   | ClaimUniTransactionInfo
   | MigrateV2LiquidityToV3TransactionInfo
-  | MigrateV3LiquidityToV4TransactionInfo
 
   export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is ConfirmedSwapTransactionInfo {
   return Boolean(

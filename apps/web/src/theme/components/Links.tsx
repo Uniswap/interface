@@ -1,6 +1,6 @@
 import styled, { css } from 'lib/styled-components'
 import React, { HTMLProps, useCallback } from 'react'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import { ClickableStyle } from 'theme/components/styles'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -12,7 +12,7 @@ const LinkStyle = css`
   font-weight: 500;
 `
 
-// An internal link from the react-router library that is correctly styled
+// An internal link from the react-router-dom library that is correctly styled
 export const StyledInternalLink = styled(Link)`
   ${ClickableStyle}
   ${LinkStyle}

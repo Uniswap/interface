@@ -5,8 +5,8 @@ import { useCommonTokensOptionsWithFallback } from 'uniswap/src/components/Token
 
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import type { CurrencyField } from 'uniswap/src/types/currency'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { CurrencyField } from 'uniswap/src/types/currency'
 
 const createKey = (currency: CurrencyInfo['currency']): string =>
   currency.isNative ? `${currency.chainId}-native` : `${currency.chainId}-${currency.address}`
@@ -16,7 +16,9 @@ const useCommonTokensOptionsInfo = (): {
   numberOfCommonTokenOptions: number
 } => {
   const account = useAccountMeta()
-  const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
+  const {
+    derivedSwapInfo: { chainId },
+  } = useSwapFormContext()
 
   const { data: commonTokenOptions } = useCommonTokensOptionsWithFallback(account?.address, chainId)
 

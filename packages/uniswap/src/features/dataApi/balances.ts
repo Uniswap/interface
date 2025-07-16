@@ -3,7 +3,6 @@ import { NetworkStatus, QueryHookOptions, Reference, useApolloClient, WatchQuery
 import isEqual from 'lodash/isEqual'
 import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   ContractInput,
   IAmount,
@@ -35,6 +34,7 @@ import {
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -401,7 +401,7 @@ export function useHighestBalanceNativeCurrencyId(address: Address, chainId?: Un
 
   // If no highest balance is found, return native address for the given chainId or defaultChainId
   const targetChainId = chainId ?? defaultChainId
-  const nativeCurrency = nativeOnChain(targetChainId)
+  const nativeCurrency = NativeCurrency.onChain(targetChainId)
   return currencyId(nativeCurrency)
 }
 

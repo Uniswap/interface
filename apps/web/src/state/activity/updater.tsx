@@ -6,7 +6,7 @@ import { usePollPendingBatchTransactions } from 'state/activity/polling/batch'
 import { usePollPendingBridgeTransactions } from 'state/activity/polling/bridge'
 import { usePollPendingOrders } from 'state/activity/polling/orders'
 import { usePollPendingTransactions } from 'state/activity/polling/transactions'
-import type { ActivityUpdate, OnActivityUpdate } from 'state/activity/types'
+import { ActivityUpdate, OnActivityUpdate } from 'state/activity/types'
 import { useAppDispatch } from 'state/hooks'
 import { updateSignature } from 'state/signatures/reducer'
 import { SignatureType } from 'state/signatures/types'
@@ -16,6 +16,7 @@ import {
   confirmBridgeDeposit,
   finalizeTransaction,
 } from 'state/transactions/reducer'
+import { TransactionType } from 'state/transactions/types'
 import { logSwapFinalized, logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
@@ -23,7 +24,6 @@ import {
   TransactionStatus,
   TransactionType as UniswapTransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function ActivityStateUpdater() {
@@ -65,7 +65,7 @@ function useOnActivityUpdate(): OnActivityUpdate {
 
         // If a bridging deposit transaction is successful, we update `depositConfirmed`but keep activity pending until the cross-chain bridge transaction confirm in bridge.ts
         if (
-          original.info.type === UniswapTransactionType.Bridge &&
+          original.info.type === TransactionType.BRIDGE &&
           !original.info.depositConfirmed &&
           update.status === TransactionStatus.Success
         ) {
@@ -87,12 +87,12 @@ function useOnActivityUpdate(): OnActivityUpdate {
             status: update.status,
             type: original.info.type,
           })
-        } else if (original.info.type === UniswapTransactionType.Bridge) {
+        } else if (original.info.type === TransactionType.BRIDGE) {
           logSwapFinalized({
             hash,
             batchId,
-            chainInId: currencyIdToChain(original.info.inputCurrencyId) ?? chainId,
-            chainOutId: currencyIdToChain(original.info.outputCurrencyId) ?? chainId,
+            chainInId: original.info.inputChainId,
+            chainOutId: original.info.outputChainId,
             analyticsContext,
             status: update.status,
             type: original.info.type,

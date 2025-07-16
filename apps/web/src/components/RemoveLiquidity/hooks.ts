@@ -1,19 +1,22 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { getProtocolItems } from 'components/Liquidity/utils'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
-import type { RemoveLiquidityTxInfo } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
+import { RemoveLiquidityTxInfo } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import JSBI from 'jsbi'
 import { getTokenOrZeroAddress } from 'pages/Pool/Positions/create/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useDecreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useDecreaseLpPositionCalldataQuery'
-import type { CheckApprovalLPRequest, DecreaseLPPositionRequest } from 'uniswap/src/data/tradingApi/__generated__'
-import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
+import {
+  CheckApprovalLPRequest,
+  DecreaseLPPositionRequest,
+  ProtocolItems,
+} from 'uniswap/src/data/tradingApi/__generated__'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { logger } from 'utilities/src/logger/logger'
@@ -21,10 +24,7 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }): RemoveLiquidityTxInfo {
   const { positionInfo, percent, percentInvalid, currencies, currentTransactionStep } = useRemoveLiquidityModalContext()
-  const { customDeadline, customSlippageTolerance } = useTransactionSettingsStore((s) => ({
-    customDeadline: s.customDeadline,
-    customSlippageTolerance: s.customSlippageTolerance,
-  }))
+  const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
 
   const [hasDecreaseErrorResponse, setHasDecreaseErrorResponse] = useState(false)
 

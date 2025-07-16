@@ -1,13 +1,12 @@
 import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AppStackScreenProp } from 'src/app/navigation/types'
-import { navigateBackFromEditingWallet } from 'src/components/Settings/EditWalletModal/EditWalletNavigation'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { navigateBackFromEditingWallet } from 'src/components/Settings/EditWalletModal/EditWalletNavigation'
 import { Flex, Text } from 'ui/src'
 import { Ellipsis } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -76,6 +75,7 @@ export function EditProfileSettingsModal({
     <Modal fullScreen name={ModalName.EditProfileSettingsModal} onClose={onClose}>
       <KeyboardAvoidingView
         behavior={isIOS ? 'padding' : undefined}
+        contentContainerStyle={styles.expand}
         // Disable the keyboard avoiding view when the modals are open, otherwise background elements will shift up when the user is editing their username
         enabled={!showDeleteUnitagModal && !showChangeUnitagModal}
         style={styles.base}
@@ -139,5 +139,8 @@ const styles = StyleSheet.create({
   base: {
     flex: 1,
     justifyContent: 'flex-end',
+  },
+  expand: {
+    flexGrow: 1,
   },
 })

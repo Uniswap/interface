@@ -1,7 +1,6 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { testSaga } from 'redux-saga-test-plan'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { DutchOrderInfo, DutchQuoteV2, OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -9,6 +8,7 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { signTypedData } from 'uniswap/src/features/transactions/signing'
 import { addTransaction, finalizeTransaction, updateTransaction } from 'uniswap/src/features/transactions/slice'
 import {
@@ -41,7 +41,7 @@ const baseSubmitOrderParams = {
   typeInfo: {
     type: TransactionType.Swap,
     tradeType: TradeType.EXACT_INPUT,
-    inputCurrencyId: currencyId(nativeOnChain(UniverseChainId.Mainnet)),
+    inputCurrencyId: currencyId(NativeCurrency.onChain(UniverseChainId.Mainnet)),
     outputCurrencyId: '0xabc',
     inputCurrencyAmountRaw: '10000',
     expectedOutputCurrencyAmountRaw: '200000',

@@ -25,7 +25,7 @@ import { getPoolIdOrAddressFromCreatePositionInfo } from 'pages/Pool/Positions/c
 import { useCallback, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { Button, Flex, Separator, Text } from 'ui/src'
 import { Passkey } from 'ui/src/components/icons/Passkey'

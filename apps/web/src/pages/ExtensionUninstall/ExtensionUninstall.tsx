@@ -1,6 +1,6 @@
 import MobileAppLogo from 'assets/svg/uniswap_app_logo.svg'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { Flex, Image, Text, TouchableArea } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfaceEventName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'

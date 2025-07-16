@@ -5,6 +5,7 @@ import { Extrapolation, interpolate, useAnimatedStyle, useDerivedValue, useShare
 import { Flex, LinearGradient, useSporeColors, type ColorTokens, type LinearGradientProps } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { DEFAULT_BOTTOM_INSET } from 'ui/src/hooks/constants'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { borderRadii, opacify, spacing } from 'ui/src/theme'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -21,6 +22,13 @@ import { TransactionModalUpdateLogger } from 'uniswap/src/features/transactions/
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { isAndroid } from 'utilities/src/platform'
 
+const HANDLEBAR_HEIGHT = 32
+
+// Note: we explicitly set this to 'transparent', otherwise we get a really annoying
+// line as a visual artifact on mobile. For example, if a white background is rendered
+// on a white background, a grey line sometimes appears as the bottom sheet resizes.
+const backgroundColorValue = 'transparent'
+
 export function TransactionModal({
   children,
   modalName,
@@ -34,9 +42,14 @@ export function TransactionModal({
 }: TransactionModalProps): JSX.Element {
   const [screen, setScreen] = useState<TransactionScreen>(TransactionScreen.Form)
   const fullscreen = screen === TransactionScreen.Form
-  const colors = useSporeColors()
 
+  const colors = useSporeColors()
   const insets = useAppInsets()
+  const dimensions = useDeviceDimensions()
+
+  const handleBarHeight = fullscreen ? 0 : HANDLEBAR_HEIGHT
+
+  const fullContentHeight = dimensions.fullHeight - handleBarHeight
 
   const animatedPosition = useSharedValue(0)
 
@@ -53,16 +66,13 @@ export function TransactionModal({
   const bottomSheetViewStyles: StyleProp<ViewStyle> = useMemo(
     () => [
       {
-        // Note: we explicitly set this to 'transparent', otherwise we get a really annoying
-        // line as a visual artifact on mobile. For example, if a white background is rendered
-        // on a white background, a grey line sometimes appears as the bottom sheet resizes.
-        backgroundColor: 'transparent',
+        backgroundColor: backgroundColorValue,
         overflow: 'hidden',
-        height: fullscreen ? '100%' : undefined,
+        height: fullscreen ? fullContentHeight : undefined,
       },
       animatedBorderRadius,
     ],
-    [animatedBorderRadius, fullscreen],
+    [animatedBorderRadius, fullContentHeight, fullscreen],
   )
 
   return (

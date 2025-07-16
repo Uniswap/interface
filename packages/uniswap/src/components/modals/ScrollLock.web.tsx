@@ -11,10 +11,11 @@ let currentScrollY = 0
 
 export function initializeScrollWatcher(): void {
   if (isInitialized) {
-    logger.warn(
-      'ScrollLock.web.tsx',
-      'initializeScrollWatcher',
-      '`ScrollWatcher` already initialized. You should only call `initializeScrollWatcher` once.',
+    logger.error(
+      new Error('`ScrollWatcher` already initialized. You should only call `initializeScrollWatcher` once.'),
+      {
+        tags: { file: 'ScrollLock.tsx', function: 'initializeScrollWatcher' },
+      },
     )
     return
   }
@@ -24,11 +25,9 @@ export function initializeScrollWatcher(): void {
 
 export function updateScrollLock({ isModalOpen }: { isModalOpen: boolean }): void {
   if (!isInitialized) {
-    logger.warn(
-      'ScrollLock.web.tsx',
-      'updateScrollLock',
-      'Invalid call to `updateScrollLock` before calling `initializeScrollWatcher`',
-    )
+    logger.error(new Error('Invalid call to `updateScrollLock` before calling `initializeScrollWatcher`'), {
+      tags: { file: 'ScrollLock.tsx', function: 'updateScrollLock' },
+    })
     return
   }
 

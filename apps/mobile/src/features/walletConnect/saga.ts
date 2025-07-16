@@ -35,8 +35,7 @@ import {
   setHasPendingSessionError,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, fork, put, select, take } from 'typed-redux-saga'
-import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { isSelfCallWithData } from 'uniswap/src/features/dappRequests/utils'

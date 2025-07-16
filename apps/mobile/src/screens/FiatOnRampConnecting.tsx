@@ -125,6 +125,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
       return
     }
     async function navigateToWidget(widgetUrl: string): Promise<void> {
+      dispatch(closeModal({ name: ModalName.FiatOnRampAggregator }))
       if (serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && quotesSections?.[0]?.data[0]) {
         sendAnalyticsEvent(
           isOffRamp ? FiatOffRampEventName.FiatOffRampWidgetOpened : FiatOnRampEventName.FiatOnRampWidgetOpened,
@@ -142,14 +143,9 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
           },
         )
       }
-      dispatchAddTransaction({ isOffRamp })
-      dispatch(forceFetchFiatOnRampTransactions())
-      await openUri({ uri: widgetUrl, throwOnError: true })
-        .then(() => {
-          // Close the modal only after closing uri link
-          dispatch(closeModal({ name: ModalName.FiatOnRampAggregator }))
-        })
-        .catch(onError)
+      await dispatchAddTransaction({ isOffRamp })
+      await dispatch(forceFetchFiatOnRampTransactions())
+      openUri({ uri: widgetUrl, throwOnError: true }).catch(onError)
     }
 
     if (!isOffRamp && timeoutElapsed && !widgetLoading && widgetData) {

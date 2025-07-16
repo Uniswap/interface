@@ -1,7 +1,8 @@
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ETH_LOGO, ZKSYNC_LOGO } from 'ui/src/assets'
+import { USDC_ZKSYNC } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
-import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
   GqlChainId,
   NetworkLayer,
@@ -9,21 +10,12 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { buildUSDC } from 'uniswap/src/features/tokens/stablecoin'
 import { zksync } from 'wagmi/chains'
-
-const tokens = buildChainTokens({
-  stables: {
-    USDC: buildUSDC('0x1d17CBcF0D6D143135aE902365D2E5e2A16538D4', UniverseChainId.Zksync),
-  },
-})
 
 export const ZKSYNC_CHAIN_INFO = {
   ...zksync,
   id: UniverseChainId.Zksync,
-  platform: Platform.EVM,
   assetRepoNetworkName: 'zksync',
   backendChain: {
     chain: BackendChainId.Zksync as GqlChainId,
@@ -59,7 +51,8 @@ export const ZKSYNC_CHAIN_INFO = {
   },
   urlParam: 'zksync',
   statusPage: undefined,
-  tokens,
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ZKSYNC, 10_000e6),
+  stablecoins: [USDC_ZKSYNC],
   supportsV4: false,
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',

@@ -89,8 +89,7 @@ exports[`EmptyWalletContent.tsx > matches base snapshot 1`] = `
           data-testid="nft-explore-nfts-button"
         >
           <span
-            class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-            line-height-disabled="false"
+            class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
           >
             Explore tokens
           </span>
@@ -188,8 +187,7 @@ exports[`EmptyWalletContent.tsx > matches base snapshot 1`] = `
           data-testid="nft-explore-nfts-button"
         >
           <span
-            class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-            line-height-disabled="false"
+            class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
           >
             + New position
           </span>

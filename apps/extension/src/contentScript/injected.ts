@@ -39,7 +39,6 @@ import {
 import { logContentScriptError } from 'src/contentScript/utils'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -89,7 +88,7 @@ const setChainIdAndMaybeEmit = (newChainId: string): void => {
 const setConnectedAddressesAndMaybeEmit = (newConnectedAddresses: Address[]): void => {
   // Only emit if the addresses have changed, and it's not the first time
   const normalizedNewAddresses: Address[] = newConnectedAddresses
-    .map((address) => getValidAddress({ address, platform: Platform.EVM }))
+    .map((address) => getValidAddress({ address }))
     .filter((normalizedAddress): normalizedAddress is Address => normalizedAddress !== null)
 
   if (!connectedAddresses || !arraysAreEqual(connectedAddresses, normalizedNewAddresses)) {

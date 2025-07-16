@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { Button, Flex, IconButton, styled, Text } from 'ui/src'
 import { CoinStack } from 'ui/src/components/icons/CoinStack'
 import { X } from 'ui/src/components/icons/X'

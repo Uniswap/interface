@@ -77,7 +77,7 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
         class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
         data-disable-theme="true"
       >
-        A network or connection issue likely caused your approval to fail. Check your connection and try again.
+        This provides the Uniswap protocol access to your token for trading. For security, it expires after 30 days.
       </span>
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56 _justifyContent-center _alignItems-center"
@@ -136,8 +136,7 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
         dd-action-name="Try again"
       >
         <span
-          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-          line-height-disabled="false"
+          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
         >
           Try again
         </span>
@@ -286,8 +285,7 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
         dd-action-name="Try again"
       >
         <span
-          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-          line-height-disabled="false"
+          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
         >
           Try again
         </span>
@@ -436,8 +434,7 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
         dd-action-name="Try again"
       >
         <span
-          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-          line-height-disabled="false"
+          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
         >
           Try again
         </span>
@@ -586,8 +583,7 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
         dd-action-name="Try again"
       >
         <span
-          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-          line-height-disabled="false"
+          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
         >
           Try again
         </span>
@@ -772,8 +768,7 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p limit ord
         dd-action-name="Try again"
       >
         <span
-          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-          line-height-disabled="false"
+          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
         >
           Try again
         </span>
@@ -960,8 +955,7 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p limit ord
         dd-action-name="Try again"
       >
         <span
-          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-          line-height-disabled="false"
+          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
         >
           Try again
         </span>

@@ -74,7 +74,7 @@ exports[`parseRemote > parseRemoteActivities > should parse eth wrap 1`] = `
 {
   "chainId": 1,
   "currencies": [
-    NativeCurrencyImpl {
+    ExtendedEther {
       "chainId": 1,
       "decimals": 18,
       "isNative": true,

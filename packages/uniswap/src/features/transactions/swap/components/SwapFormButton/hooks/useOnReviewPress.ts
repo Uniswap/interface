@@ -1,4 +1,4 @@
-import { useSwapFormWarningStoreActions } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/useSwapFormWarningStore'
+import { useSwapFormWarningState } from 'uniswap/src/features/transactions/swap/form/context/SwapFormWarningStateContext'
 import { usePrepareSwap } from 'uniswap/src/features/transactions/swap/services/hooks/usePrepareSwap'
 import { useWarningService } from 'uniswap/src/features/transactions/swap/services/hooks/useWarningService'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -28,7 +28,7 @@ type UseOnReviewPress = () => {
  * (eg if you skip bridging warning, you should also skip token protection warning)
  */
 export const useOnReviewPress: UseOnReviewPress = () => {
-  const { handleHideTokenWarningModal, handleHideMaxNativeTransferModal } = useSwapFormWarningStoreActions()
+  const { handleHideTokenWarningModal, handleHideMaxNativeTransferModal } = useSwapFormWarningState()
 
   const warningService = useWarningService()
 

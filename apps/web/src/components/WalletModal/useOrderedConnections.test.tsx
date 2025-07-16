@@ -3,7 +3,6 @@ import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
 import {
-  BINANCE_WALLET_CONNECTOR,
   COINBASE_INJECTED_CONNECTOR,
   COINBASE_SDK_CONNECTOR,
   EMBEDDED_WALLET_CONNECTOR,
@@ -55,7 +54,6 @@ const DEFAULT_CONNECTORS = [
   COINBASE_SDK_CONNECTOR,
   METAMASK_INJECTED_CONNECTOR,
   EMBEDDED_WALLET_CONNECTOR,
-  BINANCE_WALLET_CONNECTOR,
 ]
 
 describe('useOrderedConnections', () => {
@@ -75,7 +73,6 @@ describe('useOrderedConnections', () => {
       { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS },
       { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID },
       { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID },
-      { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID },
     ]
 
     result.current.forEach((connector, index) => {
@@ -101,7 +98,6 @@ describe('useOrderedConnections', () => {
       { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID },
       { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS },
       { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID },
-      { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID },
     ]
 
     result.current.forEach((connector, index) => {
@@ -126,7 +122,6 @@ describe('useOrderedConnections', () => {
         COINBASE_SDK_CONNECTOR,
         COINBASE_INJECTED_CONNECTOR,
         EMBEDDED_WALLET_CONNECTOR,
-        BINANCE_WALLET_CONNECTOR,
       ],
     } as unknown as ReturnType<typeof useConnect>)
     const { result } = renderHook(() => useOrderedConnections())
@@ -144,7 +139,6 @@ describe('useOrderedConnections', () => {
       { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS },
       { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID },
       { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID },
-      { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID },
     ]
 
     result.current.forEach((connector, index) => {
@@ -162,7 +156,6 @@ describe('useOrderedConnections', () => {
         WALLET_CONNECT_CONNECTOR,
         COINBASE_SDK_CONNECTOR,
         EMBEDDED_WALLET_CONNECTOR,
-        BINANCE_WALLET_CONNECTOR,
       ],
     } as unknown as ReturnType<typeof useConnect>)
     const { result } = renderHook(() => useOrderedConnections())
@@ -170,7 +163,6 @@ describe('useOrderedConnections', () => {
       { id: CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_ID },
       { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID },
       { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID },
-      { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID },
     ]
     result.current.forEach((connector, index) => {
       expect(connector.id).toEqual(expectedConnectors[index].id)
@@ -182,13 +174,7 @@ describe('useOrderedConnections', () => {
     mockIsMobileWeb = true
     window.ethereum = true as any
     mocked(useConnect).mockReturnValue({
-      connectors: [
-        INJECTED_CONNECTOR,
-        WALLET_CONNECT_CONNECTOR,
-        COINBASE_SDK_CONNECTOR,
-        EMBEDDED_WALLET_CONNECTOR,
-        BINANCE_WALLET_CONNECTOR,
-      ],
+      connectors: [INJECTED_CONNECTOR, WALLET_CONNECT_CONNECTOR, COINBASE_SDK_CONNECTOR, EMBEDDED_WALLET_CONNECTOR],
     } as unknown as ReturnType<typeof useConnect>)
     const { result } = renderHook(() => useOrderedConnections())
     const expectedConnectors = [{ id: CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_ID }]
@@ -243,10 +229,7 @@ describe('useOrderedConnections', () => {
       mocked(useRecentConnectorId).mockReturnValue(CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID)
       const { result } = renderHook(() => useOrderedConnections({ showSecondaryConnectors: true }))
 
-      const expectedConnectors = [
-        { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID },
-        { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID },
-      ]
+      const expectedConnectors = [{ id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID }]
 
       result.current.forEach((connector, index) => {
         expect(connector.id).toEqual(expectedConnectors[index].id)
@@ -260,7 +243,6 @@ describe('useOrderedConnections', () => {
       const expectedConnectors = [
         { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID },
         { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID },
-        { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID },
       ]
 
       result.current.forEach((connector, index) => {

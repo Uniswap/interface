@@ -9,9 +9,8 @@ import {
   Token as RestToken,
   TokenMetadata,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { useRef } from 'react'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   ContractInput,
   ProtectionAttackType,
@@ -26,7 +25,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { RestContract } from 'uniswap/src/features/dataApi/balancesRest'
 import { AttackType, CurrencyInfo, PortfolioBalance, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
-import { SolanaToken } from 'uniswap/src/features/tokens/SolanaToken'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import {
   currencyId,
@@ -34,7 +33,6 @@ import {
   currencyIdToGraphQLAddress,
   isNativeCurrencyAddress,
 } from 'uniswap/src/utils/currencyId'
-import { logger } from 'utilities/src/logger/logger'
 import { sortKeysRecursively } from 'utilities/src/primitives/objects'
 
 type BuildCurrencyParams = {
@@ -111,7 +109,7 @@ function isNonNativeAddress(chainId: UniverseChainId, address: Maybe<string>): a
   return !isNativeCurrencyAddress(chainId, address)
 }
 
-const CURRENCY_CACHE = new Map<string, Token | NativeCurrency | undefined>()
+const CURRENCY_CACHE = new Map<string, Token | NativeCurrency>()
 
 /**
  * Creates a new instance of Token or NativeCurrency, or returns an existing copy if one was already created.
@@ -134,34 +132,19 @@ export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency
 
   const cacheKey = JSON.stringify(sortKeysRecursively(args))
 
-  if (CURRENCY_CACHE.has(cacheKey)) {
+  const cachedCurrency = CURRENCY_CACHE.get(cacheKey)
+
+  if (cachedCurrency) {
     // This allows us to better memoize components that use a `Currency` as a dependency.
-    return CURRENCY_CACHE.get(cacheKey)
+    return cachedCurrency
   }
 
-  let result: Token | NativeCurrency | undefined
-  if (chainId === UniverseChainId.Solana && address) {
-    // TODO(WEB-8055): Remove try/catch once solana tokens aren't being lowercased up the call stack
-    try {
-      result = new SolanaToken(chainId, address, decimals, symbol ?? undefined, name ?? undefined)
-    } catch (error) {
-      if (address.toLowerCase() === address) {
-        logger.warn('buildCurrency', 'SolanaToken', `Invalid lowercased SPL address: ${address}`, {
-          data: args,
-          stacktrace: new Error().stack,
-        })
-      } else {
-        throw error
-      }
-    }
-  } else {
-    const buyFee = buyFeeBps && BigNumber.from(buyFeeBps).gt(0) ? BigNumber.from(buyFeeBps) : undefined
-    const sellFee = sellFeeBps && BigNumber.from(sellFeeBps).gt(0) ? BigNumber.from(sellFeeBps) : undefined
+  const buyFee = buyFeeBps && BigNumber.from(buyFeeBps).gt(0) ? BigNumber.from(buyFeeBps) : undefined
+  const sellFee = sellFeeBps && BigNumber.from(sellFeeBps).gt(0) ? BigNumber.from(sellFeeBps) : undefined
 
-    result = isNonNativeAddress(chainId, address)
-      ? new Token(chainId, address, decimals, symbol ?? undefined, name ?? undefined, bypassChecksum, buyFee, sellFee)
-      : nativeOnChain(chainId)
-  }
+  const result = isNonNativeAddress(chainId, address)
+    ? new Token(chainId, address, decimals, symbol ?? undefined, name ?? undefined, bypassChecksum, buyFee, sellFee)
+    : NativeCurrency.onChain(chainId)
 
   CURRENCY_CACHE.set(cacheKey, result)
   return result

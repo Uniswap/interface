@@ -1,5 +1,5 @@
 diff --git a/RNFastImage.podspec b/RNFastImage.podspec
-index db0fada63fc06191f8620d336d244edde6c3dba3..93d7291b183b9625ad8d50e812ae247a11bad9d3 100644
+index db0fada63fc06191f8620d336d244edde6c3dba3..286fa816e47996fdff9f25261644d612c682ae0b 100644
 --- a/RNFastImage.podspec
 +++ b/RNFastImage.podspec
 @@ -16,6 +16,6 @@ Pod::Spec.new do |s|
@@ -7,7 +7,6 @@ index db0fada63fc06191f8620d336d244edde6c3dba3..93d7291b183b9625ad8d50e812ae247a
  
    s.dependency 'React-Core'
 -  s.dependency 'SDWebImage', '~> 5.11.1'
--  s.dependency 'SDWebImageWebPCoder', '~> 0.8.4'
-+  s.dependency 'SDWebImage', '~> 5.21.0'
-+  s.dependency 'SDWebImageWebPCoder', '~> 0.14.6'
++  s.dependency 'SDWebImage', '~> 5.15.5'
+   s.dependency 'SDWebImageWebPCoder', '~> 0.8.4'
  end

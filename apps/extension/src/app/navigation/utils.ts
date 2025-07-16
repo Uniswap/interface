@@ -1,4 +1,4 @@
-import { To, useLocation } from 'react-router'
+import { To, useLocation } from 'react-router-dom'
 import { TopLevelRoutes, UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { onboardingMessageChannel } from 'src/background/messagePassing/messageChannels'

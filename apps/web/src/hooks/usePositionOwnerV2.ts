@@ -1,4 +1,4 @@
-import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Address } from 'viem'
 
 // Since v2 positions are ERC20s, when they are closed, the liquidity token is burned.
@@ -15,7 +15,7 @@ export function usePositionOwnerV2({
 }: {
   account?: Address
   address?: string
-  chainId?: EVMUniverseChainId
+  chainId?: UniverseChainId
 }): boolean {
   const resultBalance = useReadContract({
     address: assume0xAddress(address),

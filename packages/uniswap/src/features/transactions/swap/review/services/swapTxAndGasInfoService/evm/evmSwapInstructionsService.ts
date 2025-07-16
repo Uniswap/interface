@@ -1,23 +1,21 @@
-import type {
+import {
   BridgeQuoteResponse,
   ClassicQuoteResponse,
   WrapQuoteResponse,
 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import type { CreateSwapRequest, Permit, Routing } from 'uniswap/src/data/tradingApi/__generated__'
-import type { GasStrategy } from 'uniswap/src/data/tradingApi/types'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
-import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'
-import type {
+import { CreateSwapRequest, Permit, Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import {
   EVMSwapRepository,
   SwapData,
-} from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
-import {
   create5792EVMSwapRepository,
   create7702EVMSwapRepository,
   createLegacyEVMSwapRepository,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
-import type { PresignPermitFn } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/hooks'
+import { PresignPermitFn } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/hooks'
 import { createPrepareSwapRequestParams } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
 import { tradingApiToUniverseChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
@@ -34,7 +32,7 @@ export interface EVMSwapInstructionsService {
       | BridgeQuoteResponse
       | WrapQuoteResponse<Routing.WRAP>
       | WrapQuoteResponse<Routing.UNWRAP>
-    transactionSettings: TransactionSettings
+    transactionSettings: TransactionSettingsContextState
     approvalAction: ApprovalAction
   }) => Promise<SwapInstructions>
 }

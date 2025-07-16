@@ -12,7 +12,7 @@ import {
   useCurrencyInputFontSize,
 } from 'uniswap/src/components/CurrencyInputPanel/hooks/useCurrencyInputFontSize'
 import type { PanelTextDisplay } from 'uniswap/src/components/CurrencyInputPanel/hooks/useIndicativeQuoteTextDisplay'
-import { useInputFocusSync } from 'uniswap/src/components/CurrencyInputPanel/hooks/useInputFocusSync/useInputFocusSync.native'
+import { useInputFocusSync } from 'uniswap/src/components/CurrencyInputPanel/hooks/useInputFocusSync/useInputFocusSync'
 import { useRefetchAnimationStyle } from 'uniswap/src/components/CurrencyInputPanel/hooks/useRefetchAnimationStyle'
 import type { CurrencyInputPanelProps, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'

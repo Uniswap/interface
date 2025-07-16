@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Location, NavigationType, Router, createHashRouter } from 'react-router'
+import { Location, NavigationType, Router, createHashRouter } from 'react-router-dom'
 
 interface RouterState {
   historyAction: NavigationType
@@ -52,7 +52,7 @@ export function useRouterState(): RouterState | null {
   return val
 }
 
-// as far as i can tell, react-router doesn't give us this type so have to work around
+// as far as i can tell, react-router-dom doesn't give us this type so have to work around
 type Router = ReturnType<typeof createHashRouter>
 
 let router: Router | null = null

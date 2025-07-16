@@ -4,89 +4,57 @@ import { ViewOnlyModal } from 'uniswap/src/features/transactions/modals/ViewOnly
 import { useBridgingModalActions } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useBridgingModalActions'
 import { useCurrenciesWithProtectionWarnings } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useCurrenciesWithProtectionWarnings'
 import { useOnReviewPress } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useOnReviewPress'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { BridgingModal } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormWarningModals/BridgingModal'
-import {
-  useSwapFormWarningStore,
-  useSwapFormWarningStoreActions,
-} from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/useSwapFormWarningStore'
-import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useSwapFormWarningState } from 'uniswap/src/features/transactions/swap/form/context/SwapFormWarningStateContext'
 
-const LocalLowNativeBalanceModal = (): JSX.Element => {
-  const isMaxNativeTransferModalVisible = useSwapFormWarningStore((s) => s.isMaxNativeTransferModalVisible)
+export const SwapFormWarningModals = (): JSX.Element => {
+  const { derivedSwapInfo } = useSwapFormContext()
 
-  const { handleHideMaxNativeTransferModal } = useSwapFormWarningStoreActions()
+  const {
+    isTokenWarningModalVisible,
+    isBridgingWarningModalVisible,
+    isMaxNativeTransferModalVisible,
+    isViewOnlyModalVisible,
+    handleHideTokenWarningModal,
+    handleHideBridgingWarningModal,
+    handleHideMaxNativeTransferModal,
+    handleHideViewOnlyModal,
+  } = useSwapFormWarningState()
 
-  const { handleOnAcknowledgeLowNativeBalancePress } = useOnReviewPress()
-
-  return (
-    <LowNativeBalanceModal
-      isOpen={isMaxNativeTransferModalVisible}
-      onClose={handleHideMaxNativeTransferModal}
-      onAcknowledge={handleOnAcknowledgeLowNativeBalancePress}
-    />
-  )
-}
-
-const LocalViewOnlyModal = (): JSX.Element => {
-  const isViewOnlyModalVisible = useSwapFormWarningStore((s) => s.isViewOnlyModalVisible)
-  const { handleHideViewOnlyModal } = useSwapFormWarningStoreActions()
-
-  return <ViewOnlyModal isOpen={isViewOnlyModalVisible} onDismiss={handleHideViewOnlyModal} />
-}
-
-const LocalBridgingModal = (): JSX.Element => {
-  const isBridgingWarningModalVisible = useSwapFormWarningStore((s) => s.isBridgingWarningModalVisible)
-  const { handleHideBridgingWarningModal } = useSwapFormWarningStoreActions()
-
-  const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
-
-  const { onReviewPress } = useOnReviewPress()
+  const { onReviewPress, handleOnAcknowledgeTokenWarningPress, handleOnAcknowledgeLowNativeBalancePress } =
+    useOnReviewPress()
 
   const { handleBridgingOnContinue, handleBridgingOnClose } = useBridgingModalActions({
     handleHideBridgingWarningModal,
     onReviewPress,
   })
 
-  return (
-    <BridgingModal
-      isOpen={isBridgingWarningModalVisible}
-      derivedSwapInfo={derivedSwapInfo}
-      onContinue={handleBridgingOnContinue}
-      onClose={handleBridgingOnClose}
-    />
-  )
-}
-
-const LocalTokenWarningModal = (): JSX.Element | null => {
-  const isTokenWarningModalVisible = useSwapFormWarningStore((s) => s.isTokenWarningModalVisible)
-  const { handleHideTokenWarningModal } = useSwapFormWarningStoreActions()
-
   const { currencyInfo0, currencyInfo1 } = useCurrenciesWithProtectionWarnings()
 
-  const { handleOnAcknowledgeTokenWarningPress } = useOnReviewPress()
-
-  if (!currencyInfo0) {
-    return null
-  }
-
-  return (
-    <TokenWarningModal
-      isVisible={isTokenWarningModalVisible}
-      currencyInfo0={currencyInfo0}
-      currencyInfo1={currencyInfo1}
-      closeModalOnly={handleHideTokenWarningModal}
-      onAcknowledge={handleOnAcknowledgeTokenWarningPress}
-    />
-  )
-}
-
-export const SwapFormWarningModals = (): JSX.Element => {
   return (
     <>
-      <LocalLowNativeBalanceModal />
-      <LocalViewOnlyModal />
-      <LocalBridgingModal />
-      <LocalTokenWarningModal />
+      <LowNativeBalanceModal
+        isOpen={isMaxNativeTransferModalVisible}
+        onClose={handleHideMaxNativeTransferModal}
+        onAcknowledge={handleOnAcknowledgeLowNativeBalancePress}
+      />
+      <ViewOnlyModal isOpen={isViewOnlyModalVisible} onDismiss={handleHideViewOnlyModal} />
+      <BridgingModal
+        isOpen={isBridgingWarningModalVisible}
+        derivedSwapInfo={derivedSwapInfo}
+        onContinue={handleBridgingOnContinue}
+        onClose={handleBridgingOnClose}
+      />
+      {currencyInfo0 && (
+        <TokenWarningModal
+          isVisible={isTokenWarningModalVisible}
+          currencyInfo0={currencyInfo0}
+          currencyInfo1={currencyInfo1}
+          closeModalOnly={handleHideTokenWarningModal}
+          onAcknowledge={handleOnAcknowledgeTokenWarningPress}
+        />
+      )}
     </>
   )
 }
