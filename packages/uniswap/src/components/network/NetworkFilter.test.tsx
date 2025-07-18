@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { renderWithProviders } from 'uniswap/src/test/render'
 import { act } from 'uniswap/src/test/test-utils'
 

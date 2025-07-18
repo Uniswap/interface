@@ -1,16 +1,16 @@
-import { NullablePermit } from 'uniswap/src/data/tradingApi/__generated__'
-import { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/contexts/hooks/useTokenApprovalInfo'
+import type { NullablePermit } from 'uniswap/src/data/tradingApi/__generated__'
+import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
+import type { TransactionRequestInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import {
-  TransactionRequestInfo,
   createApprovalFields,
   createGasFields,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
-import {
-  PermitMethod,
+import type {
   UniswapXGasBreakdown,
   UniswapXSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import type { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { validatePermit } from 'uniswap/src/features/transactions/swap/utils/trade'
 
 export function processUniswapXResponse({

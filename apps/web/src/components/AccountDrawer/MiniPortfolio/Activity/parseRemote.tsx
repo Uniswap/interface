@@ -13,9 +13,9 @@ import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { convertGQLTransactionStatus } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import {
-  LimitOrderTextTable,
   MOONPAY_SENDER_ADDRESSES,
-  OrderTextTable,
+  getLimitOrderTextTable,
+  getOrderTextTable,
 } from 'components/AccountDrawer/MiniPortfolio/constants'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
@@ -49,6 +49,7 @@ import {
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { TransactionType as UniswapTransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -138,7 +139,10 @@ function callsV4PositionManagerContract(assetActivity: TransactionActivity) {
     return false
   }
 
-  return isSameAddress(assetActivity.details.to, CHAIN_TO_ADDRESSES_MAP[supportedChain].v4PositionManagerAddress)
+  return (
+    isEVMChain(supportedChain) &&
+    isSameAddress(assetActivity.details.to, CHAIN_TO_ADDRESSES_MAP[supportedChain].v4PositionManagerAddress)
+  )
 }
 function callsPositionManagerContract(assetActivity: TransactionActivity) {
   return callsV3PositionManagerContract(assetActivity) || callsV4PositionManagerContract(assetActivity)
@@ -653,6 +657,10 @@ function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
   }
 
   const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity } = activity.details
+
+  const OrderTextTable = getOrderTextTable()
+  const LimitOrderTextTable = getLimitOrderTextTable()
+
   const orderTextTableEntry =
     signature.type === SignatureType.SIGN_LIMIT
       ? LimitOrderTextTable[signature.status]

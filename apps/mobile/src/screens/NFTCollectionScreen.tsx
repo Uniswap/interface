@@ -240,7 +240,7 @@ export function NFTCollectionScreen({
             fullScreen
             centerElement={collectionData?.name ? <Text variant="body1">{collectionData.name}</Text> : undefined}
             listRef={listRef}
-            rightElement={<NFTCollectionContextMenu collectionAddress={collectionAddress} data={collectionData} />}
+            rightElement={<NFTCollectionContextMenu data={collectionData} />}
             scrollY={scrollY}
             showHeaderScrollYDistance={NFT_BANNER_HEIGHT}
           />
@@ -249,13 +249,7 @@ export function NFTCollectionScreen({
             ListEmptyComponent={
               gridDataLoading ? null : <BaseCard.EmptyState description={t('tokens.nfts.empty.description')} />
             }
-            ListHeaderComponent={
-              <NFTCollectionHeader
-                collectionAddress={collectionAddress}
-                data={collectionData}
-                loading={headerDataLoading}
-              />
-            }
+            ListHeaderComponent={<NFTCollectionHeader data={collectionData} loading={headerDataLoading} />}
             contentContainerStyle={{ paddingBottom: insets.bottom }}
             data={gridDataWithLoadingElements}
             estimatedItemSize={ESTIMATED_ITEM_SIZE}

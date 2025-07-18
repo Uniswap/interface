@@ -43,3 +43,8 @@ export const EMBEDDED_WALLET_CONNECTOR = {
   name: 'Uniswap Wallet',
   type: 'embeddedUniswapWallet',
 } as unknown as Connector
+export const BINANCE_WALLET_CONNECTOR = {
+  id: 'wallet.binance.com',
+  name: 'Binance Wallet',
+  type: 'injected',
+} as unknown as Connector

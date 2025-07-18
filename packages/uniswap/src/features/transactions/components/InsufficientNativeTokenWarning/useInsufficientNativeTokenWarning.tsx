@@ -3,11 +3,11 @@ import { ComponentProps, useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Text } from 'ui/src'
 import { Warning, WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
@@ -27,7 +27,7 @@ export function useInsufficientNativeTokenWarning({
   gasFee,
   warnings,
 }: ComponentProps<typeof InsufficientNativeTokenWarning>): {
-  gasAmount: CurrencyAmount<NativeCurrency> | null | undefined
+  gasAmount: CurrencyAmount<Currency> | null | undefined
   gasAmountFiatFormatted: string
   nativeCurrency: Currency
   nativeCurrencyInfo: CurrencyInfo
@@ -63,7 +63,7 @@ export function useInsufficientNativeTokenWarning({
       getCurrencyAmount({
         value: gasFee.value,
         valueType: ValueType.Raw,
-        currency: nativeCurrency?.chainId ? NativeCurrency.onChain(nativeCurrency.chainId) : undefined,
+        currency: nativeCurrency?.chainId ? nativeOnChain(nativeCurrency.chainId) : undefined,
       }),
     [gasFee.value, nativeCurrency?.chainId],
   )

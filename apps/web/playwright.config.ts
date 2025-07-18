@@ -7,6 +7,18 @@ if (process.env.CI !== 'true') {
   dotenv.config({ path: path.resolve(__dirname, '.env.local') })
 }
 
+// Handle asset files that Node.js can't parse
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Module = require('module')
+const originalLoad = Module._load
+Module._load = function (...args: any[]) {
+  const [request] = args
+  if (request.match(/\.(png|svg|mp4)$/)) {
+    return `mock-${path.basename(request)}`
+  }
+  return originalLoad.apply(this, args)
+}
+
 export default defineConfig({
   testDir: './src',
   testMatch: '**/*.e2e.test.ts',

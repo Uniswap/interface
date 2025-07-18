@@ -13,8 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { HeightAnimator } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
+import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
 
 function IncreaseLiquidityModalInner() {
   const { t } = useTranslation()
@@ -38,10 +37,7 @@ function IncreaseLiquidityModalInner() {
   }
 
   return (
-    <TransactionSettingsContextProvider
-      settingKey={TransactionSettingKey.LP}
-      autoSlippageTolerance={autoSlippageTolerance}
-    >
+    <LPTransactionSettingsStoreContextProvider autoSlippageTolerance={autoSlippageTolerance}>
       <IncreaseLiquidityTxContextProvider>
         <Modal name={ModalName.AddLiquidity} onClose={closeModal} isDismissible gap="$gap24" padding="$padding16">
           <LiquidityModalHeader
@@ -54,7 +50,7 @@ function IncreaseLiquidityModalInner() {
           </HeightAnimator>
         </Modal>
       </IncreaseLiquidityTxContextProvider>
-    </TransactionSettingsContextProvider>
+    </LPTransactionSettingsStoreContextProvider>
   )
 }
 

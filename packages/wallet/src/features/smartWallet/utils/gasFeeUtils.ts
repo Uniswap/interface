@@ -1,5 +1,6 @@
+import { Currency } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 
 export interface GasFeeData {
   chainId: number
@@ -7,7 +8,7 @@ export interface GasFeeData {
 }
 
 export interface GroupedGasFee {
-  currency: NativeCurrency
+  currency: Currency
   totalFeeAmountInWei: string
   chainIds: number[]
 }
@@ -18,9 +19,13 @@ export function groupGasFeesBySymbol(gasFees: GasFeeData[]): Record<string, Grou
       if (!gasFeeDisplayValue) {
         return acc
       }
-      const currency = NativeCurrency.onChain(chainId)
+      const currency = nativeOnChain(chainId)
 
       const symbol = currency.symbol
+      if (!symbol) {
+        return acc
+      }
+
       if (!acc[symbol]) {
         acc[symbol] = {
           currency,

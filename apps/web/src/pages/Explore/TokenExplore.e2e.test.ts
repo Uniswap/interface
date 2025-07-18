@@ -56,7 +56,7 @@ test.describe('Token explore', () => {
     await expect(optimismNetworkLogo).toHaveAttribute('alt', 'OP Mainnet logo')
 
     const nameCell = page.getByTestId(`${TestID.TokenTableRowPrefix}NATIVE`).getByTestId(TestID.NameCell)
-    await expect(nameCell).toContainText('Ethereum')
+    await expect(nameCell).toContainText('Optimistic ETH')
   })
 
   test('should update when token explore table network changed', async ({ page }) => {

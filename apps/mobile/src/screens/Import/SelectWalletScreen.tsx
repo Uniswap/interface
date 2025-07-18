@@ -139,6 +139,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
             <TouchableArea
               flexDirection="row"
               gap="$gap8"
+              pt="$padding8"
               onPress={(): void => {
                 navigate(ModalName.SmartWalletInfoModal)
               }}

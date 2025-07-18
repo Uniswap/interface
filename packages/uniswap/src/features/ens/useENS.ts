@@ -3,6 +3,7 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAddressFromEns, useENSName } from 'uniswap/src/features/ens/api'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { useDebounce } from 'utilities/src/time/timing'
 
@@ -22,7 +23,11 @@ export function useENS({ nameOrAddress, autocompleteDomain = false }: UseENSPara
   name: string | null
 } {
   const debouncedNameOrAddress = useDebounce(nameOrAddress) ?? null
-  const validAddress = getValidAddress({ address: debouncedNameOrAddress, withChecksum: false, log: false })
+  const validAddress = getValidAddress({
+    address: debouncedNameOrAddress,
+    platform: Platform.EVM,
+    log: false,
+  })
   const maybeName = validAddress ? null : debouncedNameOrAddress // if it's a valid address then it's not a name
 
   const { data: name, isLoading: nameFetching } = useENSName(validAddress ?? undefined)

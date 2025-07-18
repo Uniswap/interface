@@ -40,7 +40,7 @@ export function PoolProgressIndicator({
                 {index + 1}
               </Text>
             </Flex>
-            <Flex gap="$spacing2">
+            <Flex shrink gap="$spacing2">
               <Text variant="body3" color={step.active ? '$neutral2' : '$neutral3'} userSelect="none">
                 <Trans i18nKey="common.step.number" values={{ number: index + 1 }} />
               </Text>

@@ -22,10 +22,10 @@ import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Button, Flex, Text, styled, type ButtonProps } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useCurrencyInputFontSize } from 'uniswap/src/components/CurrencyInputPanel/hooks/useCurrencyInputFontSize'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -134,7 +134,7 @@ export default function SendCurrencyInputForm({
 
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const fiatCurrency = useMemo(
-    () => getChainInfo(supportedChainId ?? defaultChainId).spotPriceStablecoinAmount.currency,
+    () => getPrimaryStablecoin(supportedChainId ?? defaultChainId),
     [defaultChainId, supportedChainId],
   )
   const fiatCurrencyEqualsTransferCurrency = !!inputCurrency && fiatCurrency.equals(inputCurrency)

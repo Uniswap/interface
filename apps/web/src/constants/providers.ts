@@ -1,7 +1,7 @@
 import AppJsonRpcProvider from 'rpc/AppJsonRpcProvider'
 import ConfiguredJsonRpcProvider from 'rpc/ConfiguredJsonRpcProvider'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { SUPPORTED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { SUPPORTED_CHAIN_IDS, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 function getAppProvider(chainId: UniverseChainId) {
   const info = getChainInfo(chainId)

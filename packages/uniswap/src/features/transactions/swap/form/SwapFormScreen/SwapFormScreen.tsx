@@ -1,5 +1,6 @@
 import type { BottomSheetView } from '@gorhom/bottom-sheet'
 import type { ComponentProps } from 'react'
+import type { FlexProps } from 'ui/src'
 import { Flex } from 'ui/src'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
@@ -7,20 +8,23 @@ import type { TransactionSettingConfig } from 'uniswap/src/features/transactions
 import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SwapFormSettings'
 import { TradeRoutingPreference } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/TradeRoutingPreference'
 import { Slippage } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { SwapFormCurrencyInputPanel } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormCurrencyInputPanel'
 import { SwapFormCurrencyOutputPanel } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormCurrencyOutputPanel'
-import { SwapFormDecimalPad } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormDecimalPad'
+import { SwapFormDecimalPad } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormDecimalPad/SwapFormDecimalPad'
 import { SwapFormHeader } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormHeader/SwapFormHeader'
 import { SwapFormScreenDetails } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenDetails'
 import { SwapTokenSelector } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapTokenSelector/SwapTokenSelector'
 import { SwitchCurrenciesButton } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwitchCurrenciesButton'
 import { YouReceiveDetails } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/YouReceiveDetails/YouReceiveDetails'
-import { useSwapFormScreenState } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContext'
-import { SwapFormScreenContextProvider } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContextProvider'
+import { SwapFormScreenStoreContextProvider } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/SwapFormScreenStoreContextProvider'
+import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
+import {
+  useSwapFormStore,
+  useSwapFormStoreDerivedSwapInfo,
+} from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isExtension, isInterface, isWeb } from 'utilities/src/platform'
+import { isExtension, isInterface } from 'utilities/src/platform'
 
 interface SwapFormScreenProps {
   hideContent: boolean
@@ -29,6 +33,8 @@ interface SwapFormScreenProps {
   tokenColor?: string
   focusHook?: ComponentProps<typeof BottomSheetView>['focusHook']
 }
+
+const EXIT_STYLE: FlexProps['exitStyle'] = { opacity: 0 }
 
 /**
  * IMPORTANT: In the Extension, this component remains mounted when the user moves to the `SwapReview` screen.
@@ -41,10 +47,15 @@ export function SwapFormScreen({
   focusHook,
 }: SwapFormScreenProps): JSX.Element {
   const { bottomSheetViewStyles } = useTransactionModalContext()
-  const { selectingCurrencyField, hideSettings, derivedSwapInfo } = useSwapFormContext()
+  const { selectingCurrencyField, hideSettings } = useSwapFormStore((s) => ({
+    selectingCurrencyField: s.selectingCurrencyField,
+    hideSettings: s.hideSettings,
+  }))
+
+  const { trade } = useSwapFormStoreDerivedSwapInfo((s) => s.trade)
 
   const showTokenSelector = !hideContent && !!selectingCurrencyField
-  const isBridgeTrade = derivedSwapInfo.trade.trade instanceof BridgeTrade
+  const isBridgeTrade = trade instanceof BridgeTrade
 
   return (
     <TransactionModalInnerContainer fullscreen bottomSheetViewStyles={bottomSheetViewStyles}>
@@ -52,9 +63,9 @@ export function SwapFormScreen({
       {!hideSettings && <SwapFormSettings settings={settings} isBridgeTrade={isBridgeTrade} />}
 
       {!hideContent && (
-        <SwapFormScreenContextProvider tokenColor={tokenColor}>
+        <SwapFormScreenStoreContextProvider tokenColor={tokenColor}>
           <SwapFormContent />
-        </SwapFormScreenContextProvider>
+        </SwapFormScreenStoreContextProvider>
       )}
 
       <SwapTokenSelector isModalOpen={showTokenSelector} focusHook={focusHook} />
@@ -63,41 +74,24 @@ export function SwapFormScreen({
 }
 
 function SwapFormContent(): JSX.Element {
+  const { trade, isBridge } = useSwapFormScreenStore((state) => ({
+    trade: state.trade,
+    isBridge: state.isBridge,
+  }))
+
   const priceUXEnabled = usePriceUXEnabled()
-
-  const {
-    // References
-    decimalPadRef,
-    inputSelectionRef,
-    outputSelectionRef,
-    decimalPadValueRef,
-
-    // State values
-    resetSelection,
-    isBridge,
-
-    // Trade-related values
-    trade,
-
-    // Event handlers
-    onSetPresetValue,
-    onSwitchCurrencies,
-    onDecimalPadTriggerInputShake,
-  } = useSwapFormScreenState()
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
-      <Flex gap="$spacing4" animation="quick" exitStyle={{ opacity: 0 }} grow={isExtension}>
+      <Flex gap="$spacing4" animation="quick" exitStyle={EXIT_STYLE} grow={isExtension}>
         <Flex gap="$spacing2">
           <SwapFormCurrencyInputPanel />
-
-          <SwitchCurrenciesButton onSwitchCurrencies={onSwitchCurrencies} />
-
+          <SwitchCurrenciesButton />
           <SwapFormCurrencyOutputPanel />
         </Flex>
 
         <Flex>
-          {priceUXEnabled && isWeb && (
+          {priceUXEnabled && (
             <YouReceiveDetails
               isIndicative={Boolean(trade.indicativeTrade && !trade.trade)}
               isLoadingIndicative={trade.isIndicativeLoading}
@@ -108,18 +102,7 @@ function SwapFormContent(): JSX.Element {
           <SwapFormScreenDetails />
         </Flex>
       </Flex>
-
-      {!isWeb && (
-        <SwapFormDecimalPad
-          decimalPadRef={decimalPadRef}
-          resetSelection={resetSelection}
-          inputSelectionRef={inputSelectionRef}
-          outputSelectionRef={outputSelectionRef}
-          decimalPadValueRef={decimalPadValueRef}
-          onDecimalPadTriggerInputShake={onDecimalPadTriggerInputShake}
-          onSetPresetValue={onSetPresetValue}
-        />
-      )}
+      <SwapFormDecimalPad />
     </Flex>
   )
 }

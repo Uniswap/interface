@@ -9,7 +9,7 @@ import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import usePrevious from 'hooks/usePrevious'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { useConnectedWallets } from 'state/wallets/hooks'
 import { CONVERSION_EVENTS } from 'uniswap/src/data/rest/conversionTracking/constants'
 import { useConversionTracking } from 'uniswap/src/data/rest/conversionTracking/useConversionTracking'
@@ -133,26 +133,30 @@ export function Web3ProviderUpdater() {
       }
 
       if (connector?.name === WalletType.WALLET_CONNECT) {
-        connector
-          .getProvider()
-          .then((externalProvider) => {
-            const provider = externalProvider as ExternalProvider
-            // Lookup metadata from the wallet connect external provider
-            const meta = getWalletMeta(new EthersWeb3Provider(provider))
-            const name = meta?.name ?? walletName
-            const agent = meta?.agent ?? peerWalletAgent
+        try {
+          connector
+            .getProvider()
+            .then((externalProvider) => {
+              const provider = externalProvider as ExternalProvider
+              // Lookup metadata from the wallet connect external provider
+              const meta = getWalletMeta(new EthersWeb3Provider(provider))
+              const name = meta?.name ?? walletName
+              const agent = meta?.agent ?? peerWalletAgent
 
-            setUserProperty(InterfaceUserPropertyName.WalletName, name)
-            setUserProperty(InterfaceUserPropertyName.PeerWalletAgent, agent ?? '')
-            sendAnalyticsEvent(InterfaceEventName.WalletConnected, {
-              ...walletConnectedProperties,
-              wallet_name: name,
-              peer_wallet_agent: agent,
+              setUserProperty(InterfaceUserPropertyName.WalletName, name)
+              setUserProperty(InterfaceUserPropertyName.PeerWalletAgent, agent ?? '')
+              sendAnalyticsEvent(InterfaceEventName.WalletConnected, {
+                ...walletConnectedProperties,
+                wallet_name: name,
+                peer_wallet_agent: agent,
+              })
             })
-          })
-          .catch((error) => {
-            logger.warn('Web3Provider', 'Updater', 'Failed to get wallet connect metadata', error)
-          })
+            .catch((error) => {
+              logger.warn('Web3Provider', 'Updater', 'Failed to get wallet connect metadata', error)
+            })
+        } catch (error) {
+          logger.warn('Web3Provider', 'Updater', 'Failed to call getProvider on WC connector', error)
+        }
       } else {
         setUserProperty(InterfaceUserPropertyName.WalletName, walletName)
         setUserProperty(InterfaceUserPropertyName.PeerWalletAgent, peerWalletAgent ?? '')

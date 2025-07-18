@@ -61,12 +61,8 @@ function SendCallsRequestContent({
 
 export function SendCallsRequestHandler({ request }: { request: DappRequestStoreItemForSendCallsTxn }): JSX.Element {
   const { dappUrl, onConfirm, onCancel } = useDappRequestQueueContext()
-  const chainId = useDappLastChainId(dappUrl)
+  const chainId = useDappLastChainId(dappUrl) ?? request.dappInfo?.lastChainId
   const activeAccountAddress = useActiveAccountAddressWithThrow()
-
-  if (!chainId) {
-    throw new Error('Chain ID is required')
-  }
 
   const { dappRequest } = request
 
@@ -81,11 +77,13 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
   const { data: encoded7702data } = useWalletEncode7702Query({
     enabled: !!chainId,
     params: {
-      calls: transformCallsToTransactionRequests({
-        calls: dappRequest.calls,
-        chainId,
-        accountAddress: activeAccountAddress,
-      }),
+      calls: chainId
+        ? transformCallsToTransactionRequests({
+            calls: dappRequest.calls,
+            chainId,
+            accountAddress: activeAccountAddress,
+          })
+        : [],
       smartContractDelegationAddress: UNISWAP_DELEGATION_ADDRESS,
       // @ts-ignore - walletAddress is needed for the API but not in the type yet
       // TODO: remove this once the API is updated

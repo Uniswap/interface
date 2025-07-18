@@ -1,7 +1,7 @@
 import { getExploreDescription, getExploreTitle } from 'pages/getExploreTitle'
 import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
 import { ReactNode, Suspense, lazy, useMemo } from 'react'
-import { Navigate, Route, Routes, matchPath, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes, matchPath, useLocation } from 'react-router'
 import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.

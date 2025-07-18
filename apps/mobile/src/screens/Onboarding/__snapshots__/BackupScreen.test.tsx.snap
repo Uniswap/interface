@@ -19,20 +19,16 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
   }
 >
   <View
-    onLayout={[Function]}
+    behavior="padding"
+    enabled={true}
     style={
       [
-        [
-          {
-            "flex": 1,
-            "justifyContent": "flex-end",
-          },
-          {
-            "marginBottom": 0,
-          },
-        ],
         {
-          "paddingBottom": 0,
+          "flex": 1,
+          "justifyContent": "flex-end",
+        },
+        {
+          "marginBottom": 0,
         },
       ]
     }
@@ -496,10 +492,10 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                               "flexDirection": "column",
                               "justifyContent": "center",
                               "maxWidth": "30%",
-                              "paddingBottom": 6,
-                              "paddingLeft": 8,
-                              "paddingRight": 8,
-                              "paddingTop": 6,
+                              "paddingBottom": 2,
+                              "paddingLeft": 6,
+                              "paddingRight": 6,
+                              "paddingTop": 2,
                             }
                           }
                         >
@@ -952,20 +948,16 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
   }
 >
   <View
-    onLayout={[Function]}
+    behavior="padding"
+    enabled={true}
     style={
       [
-        [
-          {
-            "flex": 1,
-            "justifyContent": "flex-end",
-          },
-          {
-            "marginBottom": 0,
-          },
-        ],
         {
-          "paddingBottom": 0,
+          "flex": 1,
+          "justifyContent": "flex-end",
+        },
+        {
+          "marginBottom": 0,
         },
       ]
     }
@@ -1429,10 +1421,10 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                               "flexDirection": "column",
                               "justifyContent": "center",
                               "maxWidth": "30%",
-                              "paddingBottom": 6,
-                              "paddingLeft": 8,
-                              "paddingRight": 8,
-                              "paddingTop": 6,
+                              "paddingBottom": 2,
+                              "paddingLeft": 6,
+                              "paddingRight": 6,
+                              "paddingTop": 2,
                             }
                           }
                         >

@@ -12,6 +12,8 @@ export type ButtonVariantProps = {
   size?: ButtonSize
   variant?: ButtonVariant
   emphasis?: ButtonEmphasis
+  // This prevents trimming the string, when the language has special characters (i.e. Vietnamese)
+  lineHeightDisabled?: boolean
   // TODO(WEB-6347): change variant name back to `disabled`
   isDisabled?: boolean
   // Used for automatically setting the text color to the color that most contrasts with the custom background color provided

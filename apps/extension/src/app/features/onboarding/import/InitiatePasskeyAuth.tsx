@@ -1,7 +1,7 @@
 import { Action, AuthenticationTypes } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Navigate, useLocation } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsContext'
 import { usePasskeyImportContext } from 'src/app/features/onboarding/import/PasskeyImportContextProvider'
 import {

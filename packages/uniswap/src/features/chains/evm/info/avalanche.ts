@@ -1,9 +1,9 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { AVALANCHE_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
-import { USDC_AVALANCHE } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
+import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
   GqlChainId,
   NetworkLayer,
@@ -11,12 +11,24 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
 import { avalanche } from 'wagmi/chains'
+
+const tokens = buildChainTokens({
+  stables: {
+    USDC: buildUSDC('0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E', UniverseChainId.Avalanche),
+    USDT: buildUSDT('0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7', UniverseChainId.Avalanche),
+    // Dai has non-default symbol/name on Avalanche
+    DAI: new Token(UniverseChainId.Avalanche, '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70', 18, 'DAI.e', 'Dai.e Token'),
+  },
+})
 
 export const AVALANCHE_CHAIN_INFO = {
   ...avalanche,
   id: UniverseChainId.Avalanche,
+  platform: Platform.EVM,
   assetRepoNetworkName: 'avalanchec',
   backendChain: {
     chain: BackendChainId.Avalanche as GqlChainId,
@@ -51,8 +63,7 @@ export const AVALANCHE_CHAIN_INFO = {
     [RPCType.Default]: { http: ['https://api.avax.network/ext/bc/C/rpc'] },
     [RPCType.Interface]: { http: [`https://avalanche-mainnet.infura.io/v3/${config.infuraKey}`] },
   },
-  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_AVALANCHE, 10_000e6),
-  stablecoins: [USDC_AVALANCHE],
+  tokens,
   statusPage: undefined,
   supportsV4: true,
   urlParam: 'avalanche',

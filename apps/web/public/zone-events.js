@@ -4,10 +4,8 @@
  */
 
 // Browsers that default key events (`touchmove`, `wheel`) to passive:true
-// and therefore emit the Chrome “Unable to preventDefault …” intervention.
-const IS_BLINK_MOBILE =
-  /\b(?:Chrome|CriOS|SamsungBrowser|Opera)\/\d+/i.test(navigator.userAgent) &&
-  /Android|Linux;.*Mobile/i.test(navigator.userAgent)
+// and therefore emit the Chrome "Unable to preventDefault …" intervention.
+const IS_BLINK_BASED = /\b(?:Chrome|CriOS|SamsungBrowser|Opera|Edg)\/\d+/i.test(navigator.userAgent)
 
 ;(() => {
   const nativeAdd = EventTarget.prototype.addEventListener
@@ -17,7 +15,7 @@ const IS_BLINK_MOBILE =
     if (opts == null) {
       return false
     }
-    if (typeof opts === 'boolean' || IS_BLINK_MOBILE) {
+    if (typeof opts === 'boolean' || IS_BLINK_BASED) {
       return opts
     }
     return !!opts.capture

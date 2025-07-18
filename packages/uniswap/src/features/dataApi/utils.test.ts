@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import { Token } from '@uniswap/sdk-core'
+import { NativeCurrency, Token } from '@uniswap/sdk-core'
 import {
   Chain,
   Token as GQLToken,
@@ -16,7 +16,6 @@ import {
   tokenProjectToCurrencyInfos,
   usePersistedError,
 } from 'uniswap/src/features/dataApi/utils'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import {
   SAMPLE_CURRENCY_ID_1,
   SAMPLE_CURRENCY_ID_2,

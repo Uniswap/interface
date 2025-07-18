@@ -1,8 +1,7 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ETH_LOGO, ZORA_LOGO } from 'ui/src/assets'
-import { USDC_ZORA } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
+import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
   GqlChainId,
   NetworkLayer,
@@ -10,12 +9,21 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { buildUSDC } from 'uniswap/src/features/tokens/stablecoin'
 import { zora } from 'wagmi/chains'
+
+const tokens = buildChainTokens({
+  stables: {
+    USDC: buildUSDC('0xCccCCccc7021b32EBb4e8C08314bD62F7c653EC4', UniverseChainId.Zora),
+  },
+})
 
 export const ZORA_CHAIN_INFO = {
   ...zora,
   id: UniverseChainId.Zora,
+  platform: Platform.EVM,
   assetRepoNetworkName: 'zora',
   backendChain: {
     chain: BackendChainId.Zora as GqlChainId,
@@ -48,8 +56,7 @@ export const ZORA_CHAIN_INFO = {
     [RPCType.Default]: { http: ['https://rpc.zora.energy/'] },
     [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Zora)] },
   },
-  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ZORA, 10_000e6),
-  stablecoins: [USDC_ZORA],
+  tokens,
   statusPage: undefined,
   supportsV4: true,
   urlParam: 'zora',

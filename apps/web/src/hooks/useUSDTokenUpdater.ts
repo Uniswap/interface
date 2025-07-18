@@ -1,8 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
@@ -35,7 +35,7 @@ export function useUSDTokenUpdater({
     if (isFiatInput) {
       const exactAmountUSD = (parseFloat(exactAmount || '0') / conversionRate).toFixed(NUM_DECIMALS_USD)
       const stablecoinAmount = supportedChainId
-        ? tryParseCurrencyAmount(exactAmountUSD, getChainInfo(supportedChainId).spotPriceStablecoinAmount.currency)
+        ? tryParseCurrencyAmount(exactAmountUSD, getPrimaryStablecoin(supportedChainId))
         : undefined
 
       const currencyAmount = stablecoinAmount ? price.invert().quote(stablecoinAmount) : undefined

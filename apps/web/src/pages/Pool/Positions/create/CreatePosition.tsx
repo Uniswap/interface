@@ -1,5 +1,5 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency } from '@uniswap/sdk-core'
+import type { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { ErrorCallout } from 'components/ErrorCallout'
@@ -31,10 +31,11 @@ import { useInitialPoolInputs } from 'pages/Pool/Positions/create/hooks'
 import { useLPSlippageValue } from 'pages/Pool/Positions/create/hooks/useLPSlippageValues'
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { Button, Flex, Text, TouchableArea, styled, useMedia } from 'ui/src'
@@ -46,12 +47,9 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import {
-  TransactionSettingsContextProvider,
-  useTransactionSettingsContext,
-} from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
-import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SwapFormSettings'
+import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
+import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
+import { TransactionSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SwapFormSettings'
 import { Deadline } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/deadline/Deadline/Deadline'
 import { Slippage } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
 import { usePrevious } from 'utilities/src/react/hooks'
@@ -277,7 +275,7 @@ const Toolbar = () => {
   } = useCreatePositionContext()
   const { protocolVersion } = positionState
   const { setPriceRangeState } = usePriceRangeContext()
-  const { customSlippageTolerance } = useTransactionSettingsContext()
+  const customSlippageTolerance = useTransactionSettingsStore((s) => s.customSlippageTolerance)
   const [versionDropdownOpen, setVersionDropdownOpen] = useState(false)
 
   const [showResetModal, setShowResetModal] = useState(false)
@@ -379,7 +377,7 @@ const Toolbar = () => {
           alignItems="center"
           pt="$spacing2"
         >
-          <SwapFormSettings
+          <TransactionSettings
             position="relative"
             adjustRightAlignment={false}
             adjustTopAlignment={false}
@@ -423,10 +421,7 @@ export default function CreatePosition() {
   return (
     <Trace logImpression page={InterfacePageName.CreatePosition}>
       <MultichainContextProvider initialChainId={initialInputs.tokenA.chainId}>
-        <TransactionSettingsContextProvider
-          autoSlippageTolerance={autoSlippageTolerance}
-          settingKey={TransactionSettingKey.LP}
-        >
+        <LPTransactionSettingsStoreContextProvider autoSlippageTolerance={autoSlippageTolerance}>
           {isCreateLiquidityRefactorEnabled ? (
             <CreateLiquidityContextProvider
               initialState={{
@@ -464,7 +459,7 @@ export default function CreatePosition() {
               </PriceRangeContextProvider>
             </CreatePositionContextProvider>
           )}
-        </TransactionSettingsContextProvider>
+        </LPTransactionSettingsStoreContextProvider>
       </MultichainContextProvider>
     </Trace>
   )

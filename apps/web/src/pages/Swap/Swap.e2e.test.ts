@@ -6,6 +6,7 @@ import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import { USDT } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { assume0xAddress } from 'utils/wagmi'
@@ -139,6 +140,17 @@ test.describe('Swap', () => {
   })
 
   test.describe('permit2', () => {
+    test.beforeEach(async ({ page }) => {
+      await stubTradingApiEndpoint({
+        page,
+        endpoint: uniswapUrls.tradingApiPaths.quote,
+        modifyRequestData: (data) => ({
+          ...data,
+          protocols: [ProtocolItems.V4, ProtocolItems.V3, ProtocolItems.V2],
+        }),
+      })
+    })
+
     test('sets permit2 allowance for universal router', async ({ page, anvil }) => {
       await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
@@ -166,7 +178,7 @@ test.describe('Swap', () => {
       })
       await expect(permit2Allowance.amount).toEqual(MaxUint160.toBigInt())
     })
-    test('swaps with existing permi2t approval and missing token approval', async ({ page, anvil }) => {
+    test('swaps with existing permit2 approval and missing token approval', async ({ page, anvil }) => {
       await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
       await stubTradingApiEndpoint({
         page,
@@ -174,6 +186,10 @@ test.describe('Swap', () => {
         modifyResponseData: (data) => ({
           ...data,
           permitData: null,
+        }),
+        modifyRequestData: (data) => ({
+          ...data,
+          protocols: [ProtocolItems.V4, ProtocolItems.V3, ProtocolItems.V2],
         }),
       })
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })

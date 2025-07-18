@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useAcceptedTrade } from 'uniswap/src/features/transactions/swap/review/hooks/useAcceptedTrade'
-import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import type { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/utils/getTradeAmounts'
 import { calculateRateLine, getRateToDisplay } from 'uniswap/src/features/transactions/swap/utils/trade'
 
@@ -24,7 +24,10 @@ export function SwapRateRatio({
   const priceUXEnabled = usePriceUXEnabled()
   const formatter = useLocalizationContext()
   const [showInverseRate, setShowInverseRate] = useState(initialInverse)
-  const { derivedSwapInfo, isSubmitting } = useSwapFormContext()
+  const { derivedSwapInfo, isSubmitting } = useSwapFormStore((s) => ({
+    derivedSwapInfo: s.derivedSwapInfo,
+    isSubmitting: s.isSubmitting,
+  }))
 
   const { acceptedDerivedSwapInfo } = useAcceptedTrade({
     derivedSwapInfo,

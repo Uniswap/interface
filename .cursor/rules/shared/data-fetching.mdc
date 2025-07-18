@@ -1,0 +1,47 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## Data Fetching Patterns
+
+### Direct Query Usage (Preferred)
+- Use direct `useQuery` and `useMutation` calls in components instead of wrapping them in custom hooks
+- Place query/mutation calls at the top of the component with other hooks
+- Use query factories from domain-specific files
+
+```typescript
+// ❌ Avoid: Unnecessary custom hook
+function useTokenPrice(tokenAddress) {
+  const { data, isLoading } = useQuery(tokenQueries.price(tokenAddress));
+  return { data, isLoading }
+}
+
+// ✅ Preferred: Direct usage
+function TokenPriceDisplay({ tokenAddress }) {
+  const { data, isLoading } = useQuery(tokenQueries.price(tokenAddress));
+  // ...
+}
+```
+
+### Custom Hooks (Limited Cases)
+Only create custom hooks when:
+1. Combining multiple related queries
+2. Implementing complex business logic beyond data fetching
+3. Managing domain-specific operations that transcend data fetching
+
+```typescript
+// ✅ Valid: Complex business logic
+function useUserPermissions() {
+  const { data: user } = useQuery(userQueries.current());
+  const { data: roles } = useQuery(roleQueries.forUser(user?.id));
+
+  const canEditProducts = useMemo(() => {
+    if (!user || !roles) return false;
+    return roles.some(r => r.permissions.includes('product:edit')) ||
+           user.isAdmin;
+  }, [user, roles]);
+
+  return { canEditProducts };
+}
+```

@@ -7,13 +7,12 @@ import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/unive
 import JSBI from 'jsbi'
 import { expectSaga, testSaga } from 'redux-saga-test-plan'
 import { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
-import { DAI, USDC } from 'uniswap/src/constants/tokens'
+import { DAI, USDC, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   ExactInputSwapTransactionInfo,
@@ -60,7 +59,7 @@ const { mockProvider } = getTxProvidersMocks()
 const mockTransactionTypeInfo: ExactInputSwapTransactionInfo = {
   type: TransactionType.Swap,
   tradeType: TradeType.EXACT_INPUT,
-  inputCurrencyId: currencyId(NativeCurrency.onChain(CHAIN_ID)),
+  inputCurrencyId: currencyId(nativeOnChain(CHAIN_ID)),
   outputCurrencyId: '0xabc',
   inputCurrencyAmountRaw: '10000',
   expectedOutputCurrencyAmountRaw: '200000',
@@ -77,7 +76,7 @@ jest.mock('uniswap/src/features/transactions/swap/utils/trade', () => {
 // TODO(WEB-4499): Use Trade/Quote fixtures instead of casted objects
 const mockTrade = {
   routing: Routing.CLASSIC,
-  inputAmount: { currency: new NativeCurrency(CHAIN_ID) },
+  inputAmount: { currency: nativeOnChain(CHAIN_ID) },
   outputAmount: { currency: USDC },
   quote: { amount: MaxUint256 },
   slippageTolerance: 0.5,
@@ -85,7 +84,7 @@ const mockTrade = {
 
 const mockUniswapXTrade = {
   routing: Routing.DUTCH_V2,
-  inputAmount: { currency: new NativeCurrency(CHAIN_ID), quotient: JSBI.BigInt(1000) },
+  inputAmount: { currency: nativeOnChain(CHAIN_ID), quotient: JSBI.BigInt(1000) },
   outputAmount: { currency: USDC },
   quote: { amount: MaxUint256, routing: Routing.DUTCH_V2 },
   slippageTolerance: 0.5,

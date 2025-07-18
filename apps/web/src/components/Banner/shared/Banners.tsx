@@ -3,7 +3,7 @@ import { LPIncentiveAnnouncementBanner } from 'components/Liquidity/LPIncentiveA
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'

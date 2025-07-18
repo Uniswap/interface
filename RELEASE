@@ -1,9 +1,23 @@
-We are back with some new updates! Here’s the latest:
+IPFS hash of the deployment:
+- CIDv0: `QmaUJSsdrKhQzKcdmJbSf85q9gMd5ZxdQppebvNyxzTSHo`
+- CIDv1: `bafybeifuih5iffahzpgqzlkimc5hjjqom7lfrrc6puugmtgo54nsujub2i`
 
-Smart Wallet Management: Enjoy granular management of your smart wallet. Enable upgrades to benefit from faster, lower-cost transactions, view your active delegations, and revoke your delegations, all from Advanced Settings.
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Other changes: 
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-- Testnet Mode has now moved into Advanced Settings.
-- WalletConnect improvements
-- Various bug fixes and performance improvements
+IPFS gateways:
+- https://bafybeifuih5iffahzpgqzlkimc5hjjqom7lfrrc6puugmtgo54nsujub2i.ipfs.dweb.link/
+- [ipfs://QmaUJSsdrKhQzKcdmJbSf85q9gMd5ZxdQppebvNyxzTSHo/](ipfs://QmaUJSsdrKhQzKcdmJbSf85q9gMd5ZxdQppebvNyxzTSHo/)
+
+### 5.103.3 (2025-07-18)
+
+
+### Bug Fixes
+
+* **web:** zone events desktop prod (#21831) 8d4022f
+
+

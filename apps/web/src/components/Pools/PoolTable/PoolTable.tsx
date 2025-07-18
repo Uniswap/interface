@@ -142,7 +142,7 @@ function PoolTableHeader({
     [PoolSortFields.Volume30D]: t('pool.volume.thirtyDay.short'),
     [PoolSortFields.Apr]: t('pool.aprText'),
     [PoolSortFields.VolOverTvl]: t('pool.volOverTvl'),
-    [PoolSortFields.RewardApr]: 'Reward APR',
+    [PoolSortFields.RewardApr]: t('pool.apr.reward'),
   }
 
   return (
@@ -377,7 +377,7 @@ export function PoolsTable({
           <Cell loading={showLoadingSkeleton}>
             <TableText>
               {feeTier.getValue?.()
-                ? `${isDynamicFeeTier(feeTier.getValue()!) ? t('common.dynamic') : (feeTier.getValue()!.feeAmount / BIPS_BASE).toFixed(2) + '%'}`
+                ? `${isDynamicFeeTier(feeTier.getValue()!) ? t('common.dynamic') : formatPercent(feeTier.getValue()!.feeAmount / BIPS_BASE, 4)}`
                 : '-'}
             </TableText>
           </Cell>

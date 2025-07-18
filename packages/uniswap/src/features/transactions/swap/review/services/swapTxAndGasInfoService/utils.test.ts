@@ -1,20 +1,15 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { providers } from 'ethers/lib/ethers'
+import type { providers } from 'ethers/lib/ethers'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
-import { ClassicQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import {
-  BridgeQuote,
-  ClassicQuote,
-  QuoteResponse,
-  Routing,
-  TransactionFailureReason,
-} from 'uniswap/src/data/tradingApi/__generated__/index'
+import type { ClassicQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import type { BridgeQuote, ClassicQuote, QuoteResponse } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { Routing, TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { FeeType } from 'uniswap/src/data/tradingApi/types'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import type { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/utils'
-import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import type { TransactionSettingsState } from 'uniswap/src/features/transactions/components/settings/types'
 import { UNKNOWN_SIM_ERROR } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
-import { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
+import type { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import {
   createPrepareSwapRequestParams,
   createProcessSwapResponse,
@@ -23,8 +18,9 @@ import {
   getSwapQuoteQuoteResponse,
   processWrapResponse,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
-import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { ApprovalAction, TokenApprovalInfo, TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
+import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import type { TokenApprovalInfo, TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
+import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
 import { DEFAULT_PROTOCOL_OPTIONS } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -125,11 +121,10 @@ describe('createPrepareSwapRequestParams', () => {
       permitData: { fakePermitField: 'hi' },
     } satisfies ClassicQuoteResponse
     const signature = '0x123'
-    const transactionSettings: TransactionSettingsContextState = {
+    const transactionSettings: TransactionSettingsState = {
       customDeadline: 1800,
       selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
       slippageWarningModalSeen: false,
-      updateTransactionSettings: () => undefined,
       isV4HookPoolsEnabled: false,
     }
     const alreadyApproved = true

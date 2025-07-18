@@ -2,11 +2,11 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { BigNumber, BigNumberish, providers } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
 import { call, cancel, delay, fork, put, race, take } from 'typed-redux-saga'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { waitForFlashbotsProtectReceipt } from 'uniswap/src/features/providers/FlashbotsCommon'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { cancelTransaction, replaceTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -127,7 +127,7 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
 
   const ethersReceipt = yield* call(waitForReceipt, hash, provider)
   const receipt = receiptFromEthersReceipt(ethersReceipt)
-  const nativeCurrency = NativeCurrency.onChain(transaction.chainId)
+  const { nativeCurrency } = getChainInfo(transaction.chainId)
 
   const networkFee = {
     quantity: formatEther(ethersReceipt.effectiveGasPrice.mul(ethersReceipt.gasUsed)),

@@ -2,6 +2,7 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { SerializedToken } from 'uniswap/src/features/tokens/slice/types'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
@@ -87,7 +88,13 @@ export function getCurrencyDisplayText(
     return symbolDisplayText
   }
 
-  return tokenAddressString && getValidAddress({ address: tokenAddressString, withChecksum: true })
+  // TODO(WALL-7065): Handle SVM addresses -- cannot properly pass chainId to getValidAddress because of getCurrencyDisplayText's input shape
+  return tokenAddressString &&
+    getValidAddress({
+      address: tokenAddressString,
+      withEVMChecksum: true,
+      platform: Platform.EVM,
+    })
     ? shortenAddress(tokenAddressString)
     : tokenAddressString
 }

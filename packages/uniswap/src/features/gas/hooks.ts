@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
 import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
@@ -16,7 +17,6 @@ import { GasStrategyType } from 'uniswap/src/features/gating/configs'
 import { useStatsigClientStatus } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
@@ -114,7 +114,7 @@ export function useUSDValueOfGasFee(
   const currencyAmount = getCurrencyAmount({
     value: feeValueInWei,
     valueType: ValueType.Raw,
-    currency: chainId ? NativeCurrency.onChain(chainId) : undefined,
+    currency: chainId ? nativeOnChain(chainId) : undefined,
   })
   const { value, isLoading } = useUSDCValueWithStatus(currencyAmount)
   return { isLoading, value: value?.toExact() }
@@ -128,7 +128,7 @@ export function useUSDCurrencyAmountOfGasFee(
   const currencyAmount = getCurrencyAmount({
     value: feeValueInWei,
     valueType: ValueType.Raw,
-    currency: chainId ? NativeCurrency.onChain(chainId) : undefined,
+    currency: chainId ? nativeOnChain(chainId) : undefined,
   })
   const { value } = useUSDCValueWithStatus(currencyAmount)
   return value
@@ -198,7 +198,7 @@ export function useTransactionGasWarning({
 
   // insufficient funds for gas
   const nativeAmountIn = currencyAmountIn?.currency.isNative
-    ? (currencyAmountIn as CurrencyAmount<NativeCurrency>)
+    ? (currencyAmountIn as CurrencyAmount<Currency>)
     : undefined
   const hasGasFunds = hasSufficientFundsIncludingGas({
     transactionAmount: nativeAmountIn,
@@ -266,7 +266,7 @@ export function useGasFeeFormattedDisplayAmounts<T extends string | undefined>({
   // In testnet mode, use native currency values as USD pricing may be unreliable
   const { isTestnetModeEnabled } = useEnabledChains()
 
-  const nativeCurrency = NativeCurrency.onChain(chainId)
+  const nativeCurrency = nativeOnChain(chainId)
   const nativeCurrencyAmount = getCurrencyAmount({
     currency: nativeCurrency,
     value: gasFee?.displayValue,

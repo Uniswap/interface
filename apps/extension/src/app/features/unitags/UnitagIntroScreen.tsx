@@ -21,7 +21,7 @@ export function UnitagIntroScreen(): JSX.Element {
 
   useEffect(() => {
     if (unitag?.address) {
-      navigate(UnitagClaimRoutes.EditProfile)
+      navigate(`/${UnitagClaimRoutes.EditProfile}`)
     }
   }, [unitag])
 

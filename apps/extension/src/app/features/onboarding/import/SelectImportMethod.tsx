@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { OptionCard } from 'src/app/components/buttons/OptionCard'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import {

@@ -20,6 +20,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { logger } from 'utilities/src/logger/logger'
 
 const options: ImportMethodOption[] = [restoreFromCloudBackupOption, restoreWalletWithSeedPhraseOption]
 
@@ -36,7 +37,15 @@ export function RestoreMethodScreen({ navigation, route: { params } }: Props): J
 
   useNavigationHeader(navigation)
 
-  const handleOnPress = async (nav: OnboardingScreens, importType: ImportType): Promise<void> => {
+  const handleOnPress = async (nav: ImportMethodOption['nav'], importType: ImportType): Promise<void> => {
+    if (nav === OnboardingScreens.PasskeyImport) {
+      const error = new Error('Invalid screen passed to handleOnPress')
+      logger.error(error, {
+        tags: { file: 'RestoreMethodScreen', function: 'handleOnPress' },
+      })
+      throw error
+    }
+
     navigation.navigate({
       name: nav,
       params: { ...params, importType, entryPoint },

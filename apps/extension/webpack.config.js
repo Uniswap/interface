@@ -15,6 +15,7 @@ const POLL_ENV = process.env.WEBPACK_POLLING_INTERVAL
 process.env.NODE_ENV = NODE_ENV
 
 const isDevelopment = NODE_ENV === 'development'
+const isProduction = NODE_ENV === 'production'
 const appDirectory = path.resolve(__dirname)
 const manifest = require('./src/manifest.json')
 
@@ -283,6 +284,12 @@ module.exports = (env) => {
         src: path.resolve(__dirname, 'src'), // absolute imports in apps/web
         'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
         'expo-blur': require.resolve('./__mocks__/expo-blur.js'),
+        'react-router': path.resolve(
+          __dirname,
+          isProduction
+            ? '../../node_modules/react-router/dist/production/index.mjs'
+            : '../../node_modules/react-router/dist/development/index.mjs',
+        ),
       },
       // Add support for web-based extensions so we can share code between mobile/extension
       extensions: [

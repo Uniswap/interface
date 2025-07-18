@@ -21,7 +21,7 @@ import { useSwitchChain } from 'hooks/useSwitchChain'
 import { getBaseAndQuoteCurrencies } from 'pages/Pool/Positions/create/utils'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
@@ -154,8 +154,8 @@ function useDropdownOptions({
       const migrateV2Option = isOpenLiquidityPosition
         ? {
             onPress: async () => {
-              if (chainInfo.id !== account.chainId) {
-                await switchChain(chainInfo.id)
+              if (liquidityPosition.chainId !== account.chainId) {
+                await switchChain(liquidityPosition.chainId)
               }
               navigate(`/migrate/v2/${liquidityPosition.liquidityToken.address}`)
             },

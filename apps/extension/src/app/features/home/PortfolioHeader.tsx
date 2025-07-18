@@ -112,7 +112,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
 
   const onPressAccount = async (): Promise<void> => {
     dispatch(closePopup(PopupName.Connect))
-    navigate(AppRoutes.AccountSwitcher)
+    navigate(`/${AppRoutes.AccountSwitcher}`)
   }
 
   const { isConnected, lastChainId, dappUrl, dappIconUrl } = useDappContext()

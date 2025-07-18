@@ -1,7 +1,8 @@
 import { default as React, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView, TextInput as NativeTextInput, StyleSheet } from 'react-native'
+import { TextInput as NativeTextInput, StyleSheet } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
+import { KeyboardStickyView } from 'react-native-keyboard-controller'
 import { useDispatch } from 'react-redux'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { navigateBackFromEditingWallet } from 'src/components/Settings/EditWalletModal/EditWalletNavigation'
@@ -17,7 +18,6 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isIOS } from 'utilities/src/platform'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -72,12 +72,7 @@ export function EditLabelSettingsModal({
       {/* This GestureDetector is used to consume all pan gestures and prevent
            keyboard from flickering (see https://github.com/Uniswap/universe/pull/8242) */}
       <GestureDetector gesture={Gesture.Pan()}>
-        <KeyboardAvoidingView
-          enabled
-          behavior={isIOS ? 'padding' : undefined}
-          contentContainerStyle={styles.expand}
-          style={styles.base}
-        >
+        <Flex style={styles.base}>
           <BackHeader alignment="center" mx="$spacing16" pt="$spacing16" onPressBack={onPressBack}>
             <Text variant="body1">{t('settings.setting.wallet.action.editLabel')}</Text>
           </BackHeader>
@@ -122,13 +117,15 @@ export function EditLabelSettingsModal({
                 </Flex>
               )}
             </Flex>
-            <Flex row alignSelf="stretch">
-              <Button emphasis="primary" variant="branded" onPress={onPressSaveChanges}>
-                {t('settings.setting.wallet.editLabel.save')}
-              </Button>
-            </Flex>
+            <KeyboardStickyView>
+              <Flex row alignSelf="stretch">
+                <Button emphasis="primary" variant="branded" onPress={onPressSaveChanges}>
+                  {t('settings.setting.wallet.editLabel.save')}
+                </Button>
+              </Flex>
+            </KeyboardStickyView>
           </Flex>
-        </KeyboardAvoidingView>
+        </Flex>
       </GestureDetector>
     </Modal>
   )
@@ -138,8 +135,5 @@ const styles = StyleSheet.create({
   base: {
     flex: 1,
     justifyContent: 'flex-end',
-  },
-  expand: {
-    flexGrow: 1,
   },
 })

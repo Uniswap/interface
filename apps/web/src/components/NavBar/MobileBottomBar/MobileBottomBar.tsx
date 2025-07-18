@@ -13,8 +13,6 @@ export const MobileBottomBar = styled(Flex, {
   gap: '$gap8',
   width: '100%',
   maxHeight: MOBILE_BAR_MAX_HEIGHT,
-  backdropFilter: 'blur(4px)',
-  mask: 'linear-gradient(to bottom, transparent, $surface1 15%)',
   py: '$padding12',
   px: '$padding16',
   animation: 'lazy',

@@ -1,8 +1,12 @@
 import { useEffect } from 'react'
+import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import {
+  useSwapFormStore,
+  useSwapFormStoreDerivedSwapInfo,
+} from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
 
 // Used for rounding in conversion math
@@ -17,10 +21,18 @@ const NUM_DECIMALS_DISPLAY_FIAT = 2
  * amount. This allows us to toggle between 2 modes, without losing the entered amount.
  */
 export function useSyncFiatAndTokenAmountUpdater({ skip = false }: { skip?: boolean }): void {
-  const { isFiatMode, updateSwapForm, exactAmountToken, exactAmountFiat, derivedSwapInfo, exactCurrencyField } =
-    useSwapFormContext()
+  const { isFiatMode, updateSwapForm, exactAmountToken, exactAmountFiat, exactCurrencyField } = useSwapFormStore(
+    (s) => ({
+      isFiatMode: s.isFiatMode,
+      updateSwapForm: s.updateSwapForm,
+      exactAmountToken: s.exactAmountToken,
+      exactAmountFiat: s.exactAmountFiat,
+      exactCurrencyField: s.exactCurrencyField,
+    }),
+  )
 
-  const exactCurrency = derivedSwapInfo.currencies[exactCurrencyField]
+  const currencies = useSwapFormStoreDerivedSwapInfo((s) => s.currencies)
+  const exactCurrency = currencies[exactCurrencyField]
 
   const { price: usdPriceOfCurrency } = useUSDCPrice(skip ? undefined : exactCurrency?.currency ?? undefined)
   const { convertFiatAmount } = useLocalizationContext()
@@ -38,7 +50,7 @@ export function useSyncFiatAndTokenAmountUpdater({ skip = false }: { skip?: bool
       const stablecoinAmount = getCurrencyAmount({
         value: usdAmount,
         valueType: ValueType.Exact,
-        currency: STABLECOIN_AMOUNT_OUT[chainId].currency,
+        currency: getPrimaryStablecoin(chainId),
       })
       const tokenAmount = stablecoinAmount ? usdPriceOfCurrency.invert().quote(stablecoinAmount) : undefined
       updateSwapForm({ exactAmountToken: tokenAmount?.toExact() })

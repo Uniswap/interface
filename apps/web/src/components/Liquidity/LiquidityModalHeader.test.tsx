@@ -2,8 +2,7 @@ import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
 import { ExternalWalletProvider } from 'features/wallet/providers/ExternalWalletProvider'
 import { act, fireEvent, render } from 'test-utils/render'
-import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
+import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
 
 describe('LiquidityModalHeader', () => {
   it('should render with given title and call close callback', () => {
@@ -11,9 +10,9 @@ describe('LiquidityModalHeader', () => {
     const { getByText, getByTestId } = render(
       <ExternalWalletProvider>
         <WebUniswapProvider>
-          <TransactionSettingsContextProvider settingKey={TransactionSettingKey.Swap}>
+          <LPTransactionSettingsStoreContextProvider>
             <LiquidityModalHeader title="Test Title" closeModal={onClose} />
-          </TransactionSettingsContextProvider>
+          </LPTransactionSettingsStoreContextProvider>
         </WebUniswapProvider>
       </ExternalWalletProvider>,
     )

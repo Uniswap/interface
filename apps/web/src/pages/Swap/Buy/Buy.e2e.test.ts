@@ -22,7 +22,7 @@ test.describe('Buy Crypto Form', () => {
 
     await page.getByTestId(TestID.ChooseInputToken).click()
     // eslint-disable-next-line
-    await page.getByTestId('for-currency-list-wrapper').getByText('Ethereum').nth(1).click()
+    await page.getByTestId('for-currency-list-wrapper').getByText('Ethereum').click()
   })
 
   test('quick amount select', async ({ page }) => {

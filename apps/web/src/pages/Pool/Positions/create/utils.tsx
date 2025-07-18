@@ -724,8 +724,12 @@ export function getV3PriceRangeInfo({
     state,
   })
 
-  const outOfRange = Boolean(
-    !invalidRange && price && prices[0] && prices[1] && (price.lessThan(prices[0]) || price.greaterThan(prices[1])),
+  const outOfRange: boolean = Boolean(
+    !invalidRange &&
+      typeof lowerTick === 'number' &&
+      typeof upperTick === 'number' &&
+      poolForPosition &&
+      (poolForPosition.tickCurrent < lowerTick || poolForPosition.tickCurrent > upperTick),
   )
 
   // This is in terms of the sorted tokens
@@ -938,7 +942,11 @@ export function getV4PriceRangeInfo({
   })
 
   const outOfRange: boolean = Boolean(
-    !invalidRange && price && prices[0] && prices[1] && (price.lessThan(prices[0]) || price.greaterThan(prices[1])),
+    !invalidRange &&
+      typeof lowerTick === 'number' &&
+      typeof upperTick === 'number' &&
+      poolForPosition &&
+      (poolForPosition.tickCurrent < lowerTick || poolForPosition.tickCurrent > upperTick),
   )
 
   // This is in terms of the sorted tokens

@@ -3,10 +3,10 @@ import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from 
 import { Contract } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPollingIntervalByBlocktime } from 'uniswap/src/features/chains/utils'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { currencyAddress as getCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -79,7 +79,7 @@ export function useOnChainNativeCurrencyBalance(
   chain: UniverseChainId,
   accountAddress?: Address,
 ): { balance: CurrencyAmount<NativeCurrencyClass> | undefined; isLoading: boolean } {
-  const currency = NativeCurrency.onChain(chain)
+  const currency = nativeOnChain(chain)
   const { balance, isLoading } = useOnChainCurrencyBalance(currency, accountAddress)
   return { balance: balance as CurrencyAmount<NativeCurrencyClass> | undefined, isLoading }
 }

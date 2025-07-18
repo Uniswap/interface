@@ -112,6 +112,7 @@ module.exports = {
       webpackConfig.resolve.extensions.unshift('.web.tsx')
       webpackConfig.resolve.extensions.unshift('.web.ts')
       webpackConfig.resolve.extensions.unshift('.web.js')
+      webpackConfig.resolve.extensions.push('.cjs')
 
       if (isProduction) {
         // Configure bundle analysis based on environment variable
@@ -142,6 +143,12 @@ module.exports = {
         }
       }
 
+      // This suppresses a warning caused by react-router v7. Webpack can't analyze dynamic imports, which RR7 uses to implement lazy routes.
+      // This error doesn't appear at runtime, and won't happen with Vite.
+      webpackConfig.ignoreWarnings = [
+        /Critical dependency: the request of a dependency is an expression/
+      ]
+
       // Configure webpack plugins:
       webpackConfig.plugins = webpackConfig.plugins
         .map((plugin) => {
@@ -171,6 +178,14 @@ module.exports = {
           return true
         })
 
+      // removes the restriction on importing from outside of the src directory,
+      // which is needed to resolve a react-router v7 issue (see resolve.alias below)
+      // https://github.com/remix-run/react-router/issues/12785
+      const scopePluginIndex = webpackConfig.resolve.plugins.findIndex(
+        ({ constructor }) => constructor && constructor.name === 'ModuleScopePlugin'
+      );
+      webpackConfig.resolve.plugins.splice(scopePluginIndex, 1);
+
       // Configure webpack resolution:
       webpackConfig.resolve = Object.assign(webpackConfig.resolve, {
         alias: {
@@ -180,6 +195,10 @@ module.exports = {
           'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
           'react-native$': 'react-native-web',
           'expo-blur': require.resolve('./.storybook/__mocks__/expo-blur.jsx'),
+          'react-router': path.resolve(
+            __dirname,
+            isProduction ? '../../node_modules/react-router/dist/production/index.mjs' : '../../node_modules/react-router/dist/development/index.mjs',
+          ),
         },
         plugins: webpackConfig.resolve.plugins,
         // Webpack 5 does not resolve node modules, so we do so for those necessary:
@@ -211,6 +230,12 @@ module.exports = {
           }
         }
         return rule
+      })
+
+      // parse *.cjs before the asset/resource fallback
+      webpackConfig.module.rules[1].oneOf.unshift({
+        test: /\.cjs$/,
+        type: 'javascript/auto',
       })
 
       // add tamagui compiler for web files

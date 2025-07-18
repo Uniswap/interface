@@ -3,6 +3,7 @@ import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { Mocks } from 'playwright/mocks/mocks'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { assume0xAddress } from 'utils/wagmi'
 
@@ -50,7 +51,9 @@ test.describe('Fees', () => {
   test('displays UniswapX fee in UI', async ({ page }) => {
     await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
 
-    await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${DAI.address}`)
+    await page.goto(
+      `/swap?inputCurrency=ETH&outputCurrency=${DAI.address}&experimentOverride=${Experiments.PriceUxUpdate}`,
+    )
 
     await page.route(`${uniswapUrls.tradingApiUrl}${uniswapUrls.tradingApiPaths.quote}`, async (route, request) => {
       const postData = await request.postData()
@@ -67,7 +70,7 @@ test.describe('Fees', () => {
     // Verify fee UI
     await page.getByTestId(TestID.GasInfoRow).click()
     // Pseudo check to verify that the swap label is visible and the fee is $0:
-    await expect(page.getByText(/Swap/)).toBeVisible()
-    await expect(page.getByText(/$0/)).toBeVisible()
+    await expect(page.getByText('Swap network cost')).toBeVisible()
+    await expect(page.getByText('Free')).toBeVisible()
   })
 })

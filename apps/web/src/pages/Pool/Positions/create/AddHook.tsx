@@ -5,7 +5,7 @@ import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePosi
 import { useInitialPoolInputs } from 'pages/Pool/Positions/create/hooks'
 import { AdvancedButton } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE } from 'pages/Pool/Positions/create/types'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { IconButton, Text, TouchableArea, styled } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
@@ -13,10 +13,12 @@ import { X } from 'ui/src/components/icons/X'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { fonts } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useOnClickOutside, usePrevious } from 'utilities/src/react/hooks'
+import { getAddress } from 'viem'
 
 const MenuFlyout = styled(Flex, {
   animation: 'fastHeavy',
@@ -38,15 +40,34 @@ const MenuFlyout = styled(Flex, {
   shadowRadius: 50,
 })
 
-function AutocompleteFlyout({ address, handleSelectAddress }: { address: string; handleSelectAddress: () => void }) {
+function AutocompleteFlyout({
+  address,
+  handleSelectAddress,
+}: {
+  address: string
+  handleSelectAddress: (checksummedAddress: string) => void
+}) {
   const { t } = useTranslation()
-  const validAddress = getValidAddress({ address, withChecksum: true })
+
+  const potentialChecksummedAddress = useMemo(() => {
+    const validChecksummedAddress = getValidAddress({ address, withEVMChecksum: true, platform: Platform.EVM })
+
+    let result: string | null = validChecksummedAddress
+    if (!result) {
+      try {
+        result = getAddress(address)
+      } catch {
+        result = null
+      }
+    }
+    return result
+  }, [address])
 
   return (
     <MenuFlyout>
-      {validAddress ? (
-        <TouchableArea onPress={handleSelectAddress}>
-          <Text variant="body2">{address}</Text>
+      {potentialChecksummedAddress ? (
+        <TouchableArea onPress={() => handleSelectAddress(potentialChecksummedAddress)}>
+          <Text variant="body2">{potentialChecksummedAddress}</Text>
         </TouchableArea>
       ) : (
         <Text variant="body2" color="$neutral2">
@@ -207,7 +228,13 @@ export function AddHook() {
               icon={<X />}
             />
             {showFlyout && (
-              <AutocompleteFlyout address={hookValue} handleSelectAddress={() => setHookModalOpen(true)} />
+              <AutocompleteFlyout
+                address={hookValue}
+                handleSelectAddress={(checksummedAddress: string) => {
+                  setHookValue(checksummedAddress)
+                  setHookModalOpen(true)
+                }}
+              />
             )}
           </Flex>
         )}

@@ -5,7 +5,7 @@ import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { TamaguiProvider } from '../src/theme/tamaguiProvider'
 
 import '@reach/dialog/styles.css'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router'
 import '../src/global.css'
 import '../src/polyfills'
 
