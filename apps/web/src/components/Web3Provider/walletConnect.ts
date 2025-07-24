@@ -33,7 +33,7 @@ export const WC_PARAMS = {
   metadata: {
     name: 'TangoSwap',
     description: 'TangoSwap Interface',
-    url: process.env.NEXT_PUBLIC_SITE_URL,
+    url: process.env.REACT_APP_SITE_URL,
     icons: [],
   },
   qrModalOptions: {
