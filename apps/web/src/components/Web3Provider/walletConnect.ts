@@ -31,10 +31,10 @@ export const walletTypeToAmplitudeWalletType = (connectionType?: string) => {
 export const WC_PARAMS = {
   projectId: WALLET_CONNECT_PROJECT_ID,
   metadata: {
-    name: 'Uniswap',
-    description: 'Uniswap Interface',
-    url: 'https://app.uniswap.org',
-    icons: ['https://app.uniswap.org/favicon.png'],
+    name: 'TangoSwap',
+    description: 'TangoSwap Interface',
+    url: process.env.NEXT_PUBLIC_SITE_URL,
+    icons: [],
   },
   qrModalOptions: {
     themeVariables: {
