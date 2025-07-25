@@ -93,7 +93,20 @@ const LinksContainer = styled(Column)`
   width: 100%;
 `
 
-function getUnwrappedPoolToken(poolData?: PoolData, chainId?: number): [Token | undefined, Token | undefined] {
+function getUnwrappedPoolToken({
+  poolData,
+  chainId,
+  protocolVersion,
+}: {
+  poolData?: PoolData
+  chainId?: number
+  protocolVersion?: ProtocolVersion
+}): [Token | undefined, Token | undefined] {
+  // for v4 pools can be created with ETH or WETH so we need to keep the original tokens
+  if (protocolVersion === ProtocolVersion.V4) {
+    return [poolData?.token0, poolData?.token1]
+  }
+
   return poolData && chainId
     ? [unwrapToken(chainId, poolData.token0), unwrapToken(chainId, poolData.token1)]
     : [undefined, undefined]
@@ -106,7 +119,11 @@ export default function PoolDetailsPage() {
   const chainInfo = urlChain ? getChainInfo(urlChain) : undefined
   const { data: poolData, loading } = usePoolData(poolAddress?.toLowerCase() ?? '', chainInfo?.id)
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
-  const unwrappedTokens = getUnwrappedPoolToken(poolData, chainInfo?.id)
+  const unwrappedTokens = getUnwrappedPoolToken({
+    poolData,
+    chainId: chainInfo?.id,
+    protocolVersion: poolData?.protocolVersion,
+  })
   const [token0, token1] = isReversed ? [unwrappedTokens[1], unwrappedTokens[0]] : unwrappedTokens
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 

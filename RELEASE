@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmaUJSsdrKhQzKcdmJbSf85q9gMd5ZxdQppebvNyxzTSHo`
-- CIDv1: `bafybeifuih5iffahzpgqzlkimc5hjjqom7lfrrc6puugmtgo54nsujub2i`
+- CIDv0: `QmS8qrGS67nT1Qt9SQdfLvKpUhmRh3XZDyQCNZVE4WzEQm`
+- CIDv1: `bafybeibynbp7iktxacbiaqofl44ckuyo3ioerk6y53xmi3bjmqr44yh4by`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeifuih5iffahzpgqzlkimc5hjjqom7lfrrc6puugmtgo54nsujub2i.ipfs.dweb.link/
-- [ipfs://QmaUJSsdrKhQzKcdmJbSf85q9gMd5ZxdQppebvNyxzTSHo/](ipfs://QmaUJSsdrKhQzKcdmJbSf85q9gMd5ZxdQppebvNyxzTSHo/)
+- https://bafybeibynbp7iktxacbiaqofl44ckuyo3ioerk6y53xmi3bjmqr44yh4by.ipfs.dweb.link/
+- [ipfs://QmS8qrGS67nT1Qt9SQdfLvKpUhmRh3XZDyQCNZVE4WzEQm/](ipfs://QmS8qrGS67nT1Qt9SQdfLvKpUhmRh3XZDyQCNZVE4WzEQm/)
 
-### 5.103.3 (2025-07-18)
+### 5.103.4 (2025-07-25)
 
 
 ### Bug Fixes
 
-* **web:** zone events desktop prod (#21831) 8d4022f
+* **web:** prevent token unwrapping for v4 on the explore page (#22050) 2f9f122
 
 
