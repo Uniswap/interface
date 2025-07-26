@@ -11,13 +11,7 @@ export default function Profile() {
       pt={INTERFACE_NAV_HEIGHT}
       px="$spacing20"
     >
-      <Flex
-        backgroundColor="$surface1"
-        borderRadius="$rounded16"
-        p="$spacing24"
-        maxWidth={600}
-        width="100%"
-      >
+      <Flex backgroundColor="$surface1" borderRadius="$rounded16" p="$spacing24" maxWidth={600} width="100%">
         <Text variant="heading2" textAlign="center" mb="$spacing16">
           Profile Page
         </Text>
