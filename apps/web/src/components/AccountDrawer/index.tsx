@@ -1,5 +1,6 @@
 import DefaultMenu from 'components/AccountDrawer/DefaultMenu'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { Scrim } from 'components/AccountDrawer/Scrim'
 import { Web3StatusRef } from 'components/Web3Status'
 import { useAccount } from 'hooks/useAccount'
 import useDisableScrolling from 'hooks/useDisableScrolling'
@@ -8,23 +9,18 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
 import { useAtom } from 'jotai'
 import { useEffect, useRef } from 'react'
-import { ChevronsRight } from 'react-feather'
 import { transitions } from 'theme/styles'
 import {
   AnimatePresence,
   Flex,
   FlexProps,
-  TouchableArea,
   WebBottomSheet,
   styled,
   useMedia,
   useScrollbarStyles,
   useShadowPropsMedium,
-  useSporeColors,
 } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
+import { INTERFACE_NAV_HEIGHT, breakpoints, zIndexes } from 'ui/src/theme'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const DRAWER_SPECS = {
@@ -57,7 +53,7 @@ const Container = styled(Flex, {
   '$platform-web': { position: 'fixed' },
   top: DRAWER_SPECS.MARGIN,
   right: '0',
-  zIndex: zIndexes.dropdown,
+  zIndex: zIndexes.modal,
   variants: {
     open: {
       true: { right: DRAWER_SPECS.MARGIN },
@@ -95,6 +91,7 @@ const SideDrawerContainer = styled(Flex, {
   transition: `margin-right ${transitions.duration.medium}`,
   width: DRAWER_SPECS.WIDTH_XL,
   maxWidth: DRAWER_SPECS.WIDTH_XL,
+  zIndex: zIndexes.modal,
   $xl: {
     mr: `-${DRAWER_SPECS.WIDTH}`,
     width: DRAWER_SPECS.WIDTH,
@@ -110,22 +107,6 @@ const SideDrawerContainer = styled(Flex, {
   },
 })
 
-const CloseDrawer = styled(Flex, {
-  animation: 'fast',
-  opacity: 0.6,
-  height: '100%',
-  p: '$spacing24',
-  pl: '$spacing12',
-  pr: `calc(18px + ${DRAWER_SPECS.OFFSET})`,
-  borderTopLeftRadius: '$rounded20',
-  borderBottomLeftRadius: '$rounded20',
-  borderTopRightRadius: '$none',
-  borderBottomRightRadius: '$none',
-  '$group-hover': {
-    x: '$spacing8',
-    backgroundColor: 'rgba(153,161,189,0.08)',
-  },
-})
 
 type AccountDrawerProps = {
   isOpen: boolean
@@ -164,12 +145,12 @@ function AccountDropdown({ isOpen, onClose, children }: AccountDrawerProps) {
 }
 
 function AccountSideDrawer({ isOpen, onClose, children }: AccountDrawerProps) {
-  const colors = useSporeColors()
   const scrollbarStyles = useScrollbarStyles()
   const accountDrawer = useAccountDrawer()
   const shadowProps = useShadowPropsMedium()
   const wasAccountDrawerOpen = usePrevious(accountDrawer.isOpen)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const drawerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (wasAccountDrawerOpen && !accountDrawer.isOpen) {
@@ -177,29 +158,28 @@ function AccountSideDrawer({ isOpen, onClose, children }: AccountDrawerProps) {
     }
   }, [accountDrawer, wasAccountDrawerOpen])
 
+  useOnClickOutside({
+    node: drawerRef,
+    handler: onClose,
+  })
+
   return (
-    <Flex row height={`calc(100% - 2 * ${DRAWER_SPECS.MARGIN})`}>
-      {isOpen && (
-        <Trace logPress eventOnTrigger={InterfaceEventName.MiniPortfolioToggled} properties={{ type: 'close' }}>
-          <TouchableArea group zIndex={zIndexes.background} width={60}>
-            <CloseDrawer onPress={onClose} data-testid="close-account-drawer">
-              <ChevronsRight color={colors.neutral2.val} size={24} />
-            </CloseDrawer>
-          </TouchableArea>
-        </Trace>
-      )}
-      <SideDrawerContainer open={isOpen} {...shadowProps}>
-        {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
-        <AccountDrawerScrollWrapper
-          ref={scrollRef}
-          style={scrollbarStyles}
-          id="wallet-dropdown-scroll-wrapper"
-          height="100%"
-        >
-          {children}
-        </AccountDrawerScrollWrapper>
-      </SideDrawerContainer>
-    </Flex>
+    <>
+      <Scrim $open={isOpen} $maxWidth={breakpoints.xxxl} $zIndex={zIndexes.modalBackdrop} onClick={onClose} />
+      <Flex row height={`calc(100% - 2 * ${DRAWER_SPECS.MARGIN})`}>
+        <SideDrawerContainer ref={drawerRef} open={isOpen} {...shadowProps}>
+          {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
+          <AccountDrawerScrollWrapper
+            ref={scrollRef}
+            style={scrollbarStyles}
+            id="wallet-dropdown-scroll-wrapper"
+            height="100%"
+          >
+            {children}
+          </AccountDrawerScrollWrapper>
+        </SideDrawerContainer>
+      </Flex>
+    </>
   )
 }
 
