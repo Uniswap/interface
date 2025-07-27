@@ -107,7 +107,6 @@ const SideDrawerContainer = styled(Flex, {
   },
 })
 
-
 type AccountDrawerProps = {
   isOpen: boolean
   onClose: () => void
