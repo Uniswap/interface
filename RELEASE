@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmYHj3rUHGFTPrskT4YbeyXkrmhsrMBKM4KsYVavcLpYW5`
-- CIDv1: `bafybeiet2uenzqsau5dmg6yzpcufisgiqzghzndejd7ox4ivnbuzxmyidi`
+- CIDv0: `QmVSBSXs5YKGxoQRMTooop6QXxPSEYapNhs6AoRXF9iEjf`
+- CIDv1: `bafybeidjnr27fk4owtjmksfokdkfiw7uz7iolqaj22ylbyjwf3jmlvfpuy`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,99 +10,9 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiet2uenzqsau5dmg6yzpcufisgiqzghzndejd7ox4ivnbuzxmyidi.ipfs.dweb.link/
-- [ipfs://QmYHj3rUHGFTPrskT4YbeyXkrmhsrMBKM4KsYVavcLpYW5/](ipfs://QmYHj3rUHGFTPrskT4YbeyXkrmhsrMBKM4KsYVavcLpYW5/)
+- https://bafybeidjnr27fk4owtjmksfokdkfiw7uz7iolqaj22ylbyjwf3jmlvfpuy.ipfs.dweb.link/
+- [ipfs://QmVSBSXs5YKGxoQRMTooop6QXxPSEYapNhs6AoRXF9iEjf/](ipfs://QmVSBSXs5YKGxoQRMTooop6QXxPSEYapNhs6AoRXF9iEjf/)
 
-## 5.104.0 (2025-07-31)
-
-
-### Features
-
-* **web:** [lp] sort fee tiers by tvl (#21598) 8b6116d
-* **web:** abstracted wallet connector hooks (#21168) c4a4198
-* **web:** add MultiBlockchainAddressDisplay (#21477) 8f07ba1
-* **web:** add svmAccountDetails (#21473) 8ac1623
-* **web:** Add TWIT.json (#21871) 3ad0247
-* **web:** handle solana disconnect (#21572) 67449d8
-* **web:** implement multi-plaftorm connector deduplication util (#21167) 327d7f5
-* **web:** implement WalletConnectorMeta utils (#21166) 9f3996d
-* **web:** improve redux hydration check saga (#19552) c23dd31
-* **web:** jup execute endpoint (#21580) 15b3110
-* **web:** jup order endpoint (#21574) 52f03ba
-* **web:** prepopulate onramp for moonpay ads (#21834) 2ecbaae
-* **web:** replace old WalletConnectorOption with new (#21361) ff1845e
-* **web:** solanaSwapSaga (#21581) 6efb6e1
-* **web:** use git tag as version (#22063) 8f86019
-* **web:** use new WalletConnectorOptions with new hooks (#21389) 8e60136
-* **web:** wallet connector option should use WalletConnectorMeta (#21314) bf69053
-
-
-### Bug Fixes
-
-* **web:** [lp] default increase position currency fields (#21728) 1fe477a
-* **web:** [lp] dynamic fee in default fee tiers (#21723) 829560e
-* **web:** [lp] enable create fee tier with hook (#21727) 68cf2a2
-* **web:** [lp] improve positions page performance (#21750) 5e5edc4
-* **web:** [lp] reset defaultFeeTierSelected when feeTierData changes (#21612) 113e8f0
-* **web:** 07 28 fix web pool fee can be 0 for dynamic pools staging (#22114) ce65c4f
-* **web:** add blast API URL to CSP (#21705) 44d0509
-* **web:** align version in settings (#21842) 712e9c7
-* **web:** catch vite preload errors (#22029) 03935e0
-* **web:** eslint rule useAccount fix (#21804) 70d4d05
-* **web:** fix blockaid logo size (#21858) ea94fc8
-* **web:** fix chart rendering loop (#21913) c99540d
-* **web:** fix storybook tests (#19733) fbc8edb
-* **web:** fix wallet connection analytics (#21765) 6b905f5
-* **web:** handle binance wallet app browser wagmi injected connector (#21900) 55a8ca2
-* **web:** mobile browser injected wallet (#22117) 44992f2
-* **web:** need to account from to send function (#22217) f424d9c
-* **web:** prevent testnet mode from breaking native token logos (#21848) 7f3378f
-* **web:** prevent token unwrapping for v4 on the explore page (#22047) b5ac039
-* **web:** remove conditional hook calls (#22025) 185f349
-* **web:** remove data: from scriptSrc in CSP (#21788) facf675
-* **web:** theme settings (#21856) d913334
-* **web:** unblock solana explore (#21866) 01785b8
-* **web:** Update Order routing popup to show Dynamic instead of flag (#21854) b7a52a3
-* **web:** update rendering for mini-p (#21966) 17dfffb
-* **web:** update the create position review modal for one sided positions (#21655) fa21880
-* **web:** use icon override map for wallet connector icons (#21674) c07d2b2
-* **web:** use native token for increase calldata query (#22169) a6fabfc
-* **web:** vite smoketest - wait for UI element instead of network idle (#21602) f31d52b
-
-
-### Continuous Integration
-
-* **web:** update sitemaps c57b17d
-
-
-### Styles
-
-* **web:** fix hover states on connected wallet and mini-portfolio rail (#21914) 4e4e3e1
-* **web:** update tdp description length from 4 to 6 rows (#21875) 7f1b530
-
-
-### Code Refactoring
-
-* **web:** align types better with Uniswap types by migrating info -> typeInfo (#21498) ba66ce8
-* **web:** break wallet connection logging/analytics/ui/state into wrappers around base functionality (#21792) e694ba8
-* **web:** decouple evm connector chain ID from popup activity (#21582) a4a8905
-* **web:** delete web transaction reducer and update code, types and tests (#21812) 5d71ab0
-* **web:** type RPC_PROVIDERS as EVM only (#21850) efabaa4
-* **web:** update web's transaction reducer structure to use the same structure as Uniswap's transaction reducer for easier migration, and add migration (#21496) 246c2ac
-* **web:** use usePortfolioBalances to fetch token data from gql or rest (#21971) 0a274e0
-
-
-### Tests
-
-* **web:** [lp] create - custom fee tier (#21670) 6a31f2b
-* **web:** [lp] generateCreateCalldataQueryParams and generateAddLiquidityApprovalParams (#21863) da7d009
-* **web:** [lp] generateCreatePositionTxRequest (#21865) 811c197
-* **web:** [lp] migrate v3 e2e (#21654) 532a7cf
-* **web:** [lp] unit tests for getDependentAmountFromV2Pair, getDependentAmountFromV3Position, getDependentAmountFromV4Position (#21868) ca98497
-* **web:** [lp] unit tests for useDepositInfo (#21885) 6c3ef5c
-* **web:** fix a few e2e tests (#22076) ae30666
-* **web:** fix formatting for expected ETH balance after successful swap (#21698) c4935e0
-* **web:** fix Swap Settings test id (#21658) 40abac2
-* **web:** fix swap test for detecting ERC20 balance (#21697) 2f9b3dd
+### 5.104.3 (2025-07-31)
 
 
