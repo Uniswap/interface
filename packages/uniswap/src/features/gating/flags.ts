@@ -21,6 +21,7 @@ export enum FeatureFlags {
   PortionFields,
   Soneium,
   TwoSecondSwapQuotePollingInterval,
+  UnichainFlashblocks,
   UniquoteEnabled,
   UniswapX,
   UniswapXPriorityOrdersBase,
@@ -39,11 +40,7 @@ export enum FeatureFlags {
   DisableFiatOnRampKorea,
   EnableTransactionSpacingForDelegatedAccounts,
   EnableExportPrivateKeys,
-  NotificationPriceAlertsAndroid,
-  NotificationPriceAlertsIOS,
   NotificationOnboardingCard,
-  NotificationUnfundedWalletsAndroid,
-  NotificationUnfundedWalletsIOS,
   OnboardingKeyring,
   PrivateRpc,
   Scantastic,
@@ -54,6 +51,8 @@ export enum FeatureFlags {
   ExecuteTransactionV2,
   EnableRestoreSeedPhrase,
   SmartWalletSettings,
+  SwapPreSign,
+  TradingApiSwapConfirmation,
 
   // Web
   AATestWeb,
@@ -93,7 +92,9 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.SmartWalletDisableVideo, 'smart_wallet_disable_video'],
   [FeatureFlags.Solana, 'solana'],
   [FeatureFlags.Soneium, 'soneium'],
+  [FeatureFlags.TradingApiSwapConfirmation, 'trading_api_swap_confirmation'],
   [FeatureFlags.TwoSecondSwapQuotePollingInterval, 'two_second_swap_quote_polling_interval'],
+  [FeatureFlags.UnichainFlashblocks, 'unichain_flashblocks'],
   [FeatureFlags.UniquoteEnabled, 'uniquote_enabled'],
   [FeatureFlags.UniswapX, 'uniswapx'],
   [FeatureFlags.UniswapXPriorityOrdersBase, 'uniswapx_priority_orders_base'],
@@ -118,6 +119,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.PriceRangeInputV2, 'price_range_input_v2'],
   [FeatureFlags.TraceJsonRpc, 'traceJsonRpc'],
   [FeatureFlags.TwitterConversionTracking, 'twitter_conversion_tracking'],
+  [FeatureFlags.UnichainFlashblocks, 'unichain_flashblocks'],
   [FeatureFlags.UniversalSwap, 'universal_swap'],
 ])
 
@@ -131,15 +133,12 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.EnableRestoreSeedPhrase, 'enable-restore-seed-phrase'],
   [FeatureFlags.EnableTransactionSpacingForDelegatedAccounts, 'enable_transaction_spacing_for_delegated_accounts'],
   [FeatureFlags.NotificationOnboardingCard, 'notification_onboarding_card'],
-  [FeatureFlags.NotificationPriceAlertsAndroid, 'notification_price_alerts_android'],
-  [FeatureFlags.NotificationPriceAlertsIOS, 'notification_price_alerts_ios'],
-  [FeatureFlags.NotificationUnfundedWalletsAndroid, 'notification_unfunded_wallet_android'],
-  [FeatureFlags.NotificationUnfundedWalletsIOS, 'notification_unfunded_wallet_ios'],
   [FeatureFlags.OnboardingKeyring, 'onboarding-keyring'],
   [FeatureFlags.PrivateRpc, 'mev-blocker'],
   [FeatureFlags.Scantastic, 'scantastic'],
   [FeatureFlags.SelfReportSpamNFTs, 'self-report-spam-nfts'],
   [FeatureFlags.SmartWalletSettings, 'smart_wallet_settings'],
+  [FeatureFlags.SwapPreSign, 'swap_pre_sign'],
   [FeatureFlags.UwULink, 'uwu-link'],
 ])
 

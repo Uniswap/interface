@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
@@ -12,6 +12,7 @@ import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactio
 import { SwapCallback, SwapCallbackParams } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { swapActions } from 'wallet/src/features/transactions/swap/swapSaga'
 import { toStringish } from 'wallet/src/utils/number'
@@ -23,17 +24,17 @@ export function useSwapCallback(): SwapCallback {
   const swapStartTimestamp = useSelector(selectSwapStartTimestamp)
   const trace = useTrace()
 
-  const accountMeta = useAccountMeta()
+  const account = useWallet().evmAccount
 
   const { data: portfolioData } = usePortfolioTotalValue({
-    address: accountMeta?.address,
+    address: account?.address,
     fetchPolicy: 'cache-first',
   })
 
   return useCallback(
     (args: SwapCallbackParams) => {
       const {
-        account,
+        account: accountDetails,
         swapTxContext,
         txId,
         onSuccess,
@@ -67,19 +68,31 @@ export function useSwapCallback(): SwapCallback {
         includesDelegation,
         isSmartWalletTransaction,
       })
-      appDispatch(swapActions.trigger({ swapTxContext, txId, account, analytics, onSuccess, onFailure, onPending }))
+      const swapFlowDuration = swapStartTimestamp ? Date.now() - swapStartTimestamp : undefined
+      const accountMeta: AccountMeta = { ...accountDetails, type: accountDetails.accountType }
+
+      appDispatch(
+        swapActions.trigger({
+          swapTxContext,
+          txId,
+          account: accountMeta,
+          analytics,
+          onSuccess,
+          onFailure,
+          onPending,
+        }),
+      )
 
       const blockNumber = getClassicQuoteFromResponse(trade.quote)?.blockNumber?.toString()
 
       sendAnalyticsEvent(SwapEventName.SwapSubmittedButtonClicked, {
         ...analytics,
         estimated_network_fee_wei: gasFee.value,
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        gas_limit: isClassic(swapTxContext) ? toStringish(swapTxContext.txRequests[0]?.gasLimit) : undefined,
+        gas_limit: isClassic(swapTxContext) ? toStringish(swapTxContext.txRequests[0].gasLimit) : undefined,
         transaction_deadline_seconds: trade.deadline,
         swap_quote_block_number: blockNumber,
         is_auto_slippage: isAutoSlippage,
-        swap_flow_duration_milliseconds: swapStartTimestamp ? Date.now() - swapStartTimestamp : undefined,
+        swap_flow_duration_milliseconds: swapFlowDuration,
         is_fiat_input_mode: isFiatInputMode,
       })
 

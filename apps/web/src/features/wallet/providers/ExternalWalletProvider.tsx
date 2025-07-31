@@ -1,15 +1,35 @@
+import { useWallet as useSolanaWalletContext } from '@solana/wallet-adapter-react'
 import { getExternalEVMWalletService } from 'features/wallet/services/ExternalEVMWalletService'
+import { useExternalSVMWalletService } from 'features/wallet/services/ExternalSVMWalletService'
 import { useAccount } from 'hooks/useAccount'
 import { PropsWithChildren, useMemo } from 'react'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { WalletProvider } from 'uniswap/src/features/wallet/contexts/WalletProvider'
+import { createWalletService } from 'uniswap/src/features/wallet/services/createWalletService'
 
 export function ExternalWalletProvider({ children }: PropsWithChildren): JSX.Element {
-  const account = useAccount()
+  const evmAccountAddress = useAccount().address
 
-  const walletService = useMemo(() => getExternalEVMWalletService(), [])
+  const solanaEnabled = useFeatureFlag(FeatureFlags.Solana)
+  const svmAccountAddress = useSolanaWalletContext().wallet?.adapter.publicKey?.toString() // toString is equal to toBase58
+
+  const svmWalletService = useExternalSVMWalletService()
+  const walletService = useMemo(
+    () =>
+      createWalletService({
+        evmWalletService: getExternalEVMWalletService(),
+        svmWalletService,
+      }),
+    [svmWalletService],
+  )
 
   return (
-    <WalletProvider walletService={walletService} evmAddress={account.address}>
+    <WalletProvider
+      walletService={walletService}
+      evmAddress={evmAccountAddress}
+      svmAddress={solanaEnabled ? svmAccountAddress : undefined}
+    >
       {children}
     </WalletProvider>
   )

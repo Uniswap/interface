@@ -10,6 +10,7 @@ import {
   CreatePoolTransactionInfo,
   LiquidityDecreaseTransactionInfo,
   LiquidityIncreaseTransactionInfo,
+  LpIncentivesClaimTransactionInfo,
   TransactionType,
   UnknownTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -18,7 +19,7 @@ import { AssetCase } from 'wallet/src/features/transactions/history/conversion/e
 
 /**
  * Parse LP transaction types from the REST API
- * Handles: Claim, CreatePair, CreatePool, LiquidityIncrease, LiquidityDecrease
+ * Handles: Claim, CreatePair, CreatePool, LiquidityIncrease, LiquidityDecrease, LPIncentivesClaim
  */
 export function parseRestLiquidityTransaction(
   transaction: OnChainTransaction,
@@ -28,6 +29,7 @@ export function parseRestLiquidityTransaction(
   | CollectFeesTransactionInfo
   | CreatePairTransactionInfo
   | CreatePoolTransactionInfo
+  | LpIncentivesClaimTransactionInfo
   | UnknownTransactionInfo {
   const { transfers, chainId, label } = transaction
   let direction: Direction | undefined

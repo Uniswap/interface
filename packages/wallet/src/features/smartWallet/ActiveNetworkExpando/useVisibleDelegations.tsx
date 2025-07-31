@@ -4,7 +4,6 @@ import { ActiveDelegation } from 'wallet/src/features/smartWallet/types'
 
 export interface UseVisibleDelegationsParams {
   data: ActiveDelegation[]
-  isOpen: boolean
 }
 
 export interface UseVisibleDelegationsResult {

@@ -698,8 +698,14 @@ export const v88Schema = v88SchemaIntermediate
 
 export const v89Schema = { ...v88Schema }
 
-const v90Schema = { ...v89Schema }
+export const v90Schema = { ...v89Schema }
 
+const v91Schema = {
+  ...v90Schema,
+  pushNotifications: {
+    generalUpdatesEnabled: v90Schema.pushNotifications.generalUpdatesEnabled,
+  },
+}
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v90Schema => v90Schema
+export const getSchema = (): typeof v91Schema => v91Schema

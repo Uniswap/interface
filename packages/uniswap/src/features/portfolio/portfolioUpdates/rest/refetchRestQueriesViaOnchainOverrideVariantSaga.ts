@@ -54,6 +54,9 @@ export function mergeOnChainBalances(
   // Must return a new object for cache to be updated
   const updatedData = portfolioData.clone()
 
+  // Track balances to remove
+  const balancesToRemove: Balance[] = []
+
   // Update balances in the cloned data
   updatedData.portfolio?.balances.forEach((balance) => {
     if (!balance.token?.chainId || !balance.token.address) {
@@ -81,6 +84,15 @@ export function mergeOnChainBalances(
         balance.valueUsd = (balance.valueUsd * newQuantity) / oldQuantity
       }
 
+      // If balance is now zero, mark it for removal
+      if (newQuantity <= 0) {
+        balancesToRemove.push(balance)
+        log.debug(`Marking balance for removal ${currencyId}`, {
+          oldQuantity,
+          newQuantity,
+        })
+      }
+
       updatedCurrencyIds.add(currencyId)
       onchainBalancesByCurrencyId.delete(currencyId)
 
@@ -91,6 +103,14 @@ export function mergeOnChainBalances(
       })
     }
   })
+
+  // Remove any balances that have become zero
+  if (balancesToRemove.length > 0 && updatedData.portfolio) {
+    updatedData.portfolio.balances = updatedData.portfolio.balances.filter(
+      (balance) => !balancesToRemove.includes(balance),
+    )
+    log.debug(`Removed ${balancesToRemove.length} balance(s) from portfolio`)
+  }
 
   // If there are any tokens left in `onchainBalancesByCurrencyId`, it means the user swapped for a new token so we need to create new balance entries.
   if (onchainBalancesByCurrencyId.size > 0) {

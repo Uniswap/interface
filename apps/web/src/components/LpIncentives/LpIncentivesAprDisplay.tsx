@@ -1,4 +1,4 @@
-import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentiveFeeStatTooltip'
+import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
 import { LP_INCENTIVES_CHAIN_ID, LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useTranslation } from 'react-i18next'

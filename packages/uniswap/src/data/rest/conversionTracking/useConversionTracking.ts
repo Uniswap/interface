@@ -16,6 +16,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { HexString } from 'uniswap/src/utils/hex'
 
 const conversionLeadsAtom = atomWithStorage<ConversionLead[]>(CONVERSION_LEADS_STORAGE_KEY, [])
 
@@ -30,7 +31,7 @@ type UseConversionTracking = {
   initConversionTracking: () => void
 }
 
-export function useConversionTracking(accountAddress?: `0x${string}`): UseConversionTracking {
+export function useConversionTracking(accountAddress?: HexString): UseConversionTracking {
   const { search } = useLocation()
   const queryParams = useMemo(() => parse(search, { ignoreQueryPrefix: true }), [search])
   const [conversionLeads, setConversionLeads] = useAtom(conversionLeadsAtom) as [

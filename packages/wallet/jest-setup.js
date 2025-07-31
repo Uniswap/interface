@@ -30,11 +30,6 @@ jest.mock('ui/src/components/swipeablecards/ClickableWithinGesture', () => {
   return jest.requireActual('ui/src/components/swipeablecards/ClickableWithinGesture.native.tsx')
 })
 
-// Use web TouchableArea
-jest.mock('ui/src/components/touchable/TouchableArea/TouchableArea', () => {
-  return jest.requireActual('ui/src/components/touchable/TouchableArea/TouchableArea.web.tsx')
-})
-
 import crypto from "crypto"
 Object.defineProperty(global, "crypto", {
   value: {

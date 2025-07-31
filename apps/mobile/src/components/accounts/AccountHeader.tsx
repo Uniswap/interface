@@ -180,7 +180,7 @@ export function AccountHeader(): JSX.Element {
                 </TouchableArea>
               )}
             </Flex>
-            <Flex row alignItems="flex-start" gap="$spacing16">
+            <Flex row alignItems="flex-start" gap="$spacing12">
               <TouchableArea
                 scaleTo={SCAN_ICON_ACTIVE_SCALE}
                 activeOpacity={1}

@@ -294,7 +294,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
           class="is_Paragraph font_body _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _color-color _userSelect-auto _whiteSpace-normal"
           data-testid="token-description-truncated"
         >
-          USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value...
+          USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value between people, businesses and financial institutions just like email between mail services and texts...
         </p>
         <span
           class="font_body _mb-_sm_2rem _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _display-flex _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pt-0--5em _cursor-pointer"
@@ -482,7 +482,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
           class="is_Paragraph font_body _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _color-color _userSelect-auto _whiteSpace-normal"
           data-testid="token-description-truncated"
         >
-          USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value...
+          USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value between people, businesses and financial institutions just like email between mail services and texts...
         </p>
         <span
           class="font_body _mb-_sm_2rem _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _display-flex _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pt-0--5em _cursor-pointer"

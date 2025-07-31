@@ -5,6 +5,7 @@ import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { DAI, UNI, USDC_UNICHAIN_SEPOLIA } from 'uniswap/src/constants/tokens'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
@@ -13,10 +14,9 @@ jest.mock('src/app/navigation/rootNavigation', () => ({
 }))
 
 jest.mock('uniswap/src/features/settings/saga', () => ({
-  *getEnabledChainIdsSaga(): Generator<
-    undefined,
-    { isTestnetModeEnabled: boolean; chains: never[]; defaultChainId: number }
-  > {
+  *getEnabledChainIdsSaga(
+    _platform?: Platform,
+  ): Generator<undefined, { isTestnetModeEnabled: boolean; chains: never[]; defaultChainId: number }> {
     yield
     return {
       isTestnetModeEnabled: false,

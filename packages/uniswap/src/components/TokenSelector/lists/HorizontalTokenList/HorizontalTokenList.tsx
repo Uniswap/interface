@@ -10,7 +10,7 @@ export type HorizontalTokenListProps = {
   index: number
   section: OnchainItemSection<TokenOption[]>
   expanded?: boolean
-  onExpand?: () => void
+  onExpand?: (tokens: TokenOption[]) => void
 }
 
 export const HorizontalTokenList = memo(function HorizontalTokenList(_props: HorizontalTokenListProps): JSX.Element {

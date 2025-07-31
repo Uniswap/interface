@@ -4,20 +4,22 @@ import { PortfolioSkeleton } from 'components/AccountDrawer/MiniPortfolio/Portfo
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
 import { PositionInfo } from 'components/Liquidity/types'
-import { getPositionUrl, parseRestPosition } from 'components/Liquidity/utils'
+import { getPositionUrl } from 'components/Liquidity/utils/getPositionUrl'
+import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
 import { useAccount } from 'hooks/useAccount'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
-import { useCallback, useMemo, useReducer, useState } from 'react'
+import { useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate } from 'react-router'
-import { AnimatePresence } from 'ui/src'
+import { useNavigate } from 'react-router'
+import { AnimatePresence, Flex, TouchableArea } from 'ui/src'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
+import { useEvent } from 'utilities/src/react/hooks'
 
 function isPositionInfo(position: PositionInfo | undefined): position is PositionInfo {
   return !!position
@@ -105,9 +107,11 @@ export default function Pools({ account }: { account: string }) {
 
   return (
     <AnimatePresence>
-      {visibleOpenPositions.map((positionInfo) => (
-        <PositionListItem key={getPositionKey(positionInfo)} positionInfo={positionInfo} />
-      ))}
+      <Flex gap="$spacing12">
+        {visibleOpenPositions.map((positionInfo) => (
+          <PositionListItem key={getPositionKey(positionInfo)} positionInfo={positionInfo} />
+        ))}
+      </Flex>
       {visibleClosedPositions.length > 0 && (
         <ExpandoRow
           title={t('liquidityPool.positions.closed.title')}
@@ -115,9 +119,11 @@ export default function Pools({ account }: { account: string }) {
           toggle={toggleShowClosed}
           numItems={visibleClosedPositions.length}
         >
-          {visibleClosedPositions.map((positionInfo) => (
-            <PositionListItem key={getPositionKey(positionInfo)} positionInfo={positionInfo} />
-          ))}
+          <Flex gap="$spacing12">
+            {visibleClosedPositions.map((positionInfo) => (
+              <PositionListItem key={getPositionKey(positionInfo)} positionInfo={positionInfo} />
+            ))}
+          </Flex>
         </ExpandoRow>
       )}
       {hiddenPositions.length > 0 && (
@@ -127,9 +133,11 @@ export default function Pools({ account }: { account: string }) {
           toggle={() => setShowHidden((prev) => !prev)}
           numItems={hiddenPositions.length}
         >
-          {hiddenPositions.map((position) => (
-            <PositionListItem key={getPositionKey(position)} positionInfo={position} isVisible={false} />
-          ))}
+          <Flex gap="$spacing12">
+            {hiddenPositions.map((position) => (
+              <PositionListItem key={getPositionKey(position)} positionInfo={position} isVisible={false} />
+            ))}
+          </Flex>
         </ExpandoRow>
       )}
     </AnimatePresence>
@@ -147,20 +155,14 @@ function PositionListItem({ positionInfo, isVisible = true }: { positionInfo: Po
   const switchChain = useSwitchChain()
   const positionUrl = getPositionUrl(positionInfo)
 
-  const handleClick = useCallback(
-    async (event: React.MouseEvent<HTMLAnchorElement>) => {
-      // Prevent the Link’s default navigation until the switch chain logic completes
-      event.preventDefault()
+  const onPress = useEvent(async () => {
+    if (account.chainId !== chainId) {
+      await switchChain(chainId)
+    }
 
-      if (account.chainId !== chainId) {
-        await switchChain(chainId)
-      }
-
-      accountDrawer.close()
-      navigate(positionUrl)
-    },
-    [account.chainId, chainId, accountDrawer, navigate, positionUrl, switchChain],
-  )
+    accountDrawer.close()
+    navigate(positionUrl)
+  })
 
   const analyticsEventProperties = useMemo(
     () => ({
@@ -175,14 +177,14 @@ function PositionListItem({ positionInfo, isVisible = true }: { positionInfo: Po
 
   return (
     <Trace logPress element={ElementName.MiniPortfolioPoolsRow} properties={analyticsEventProperties}>
-      <Link to={positionUrl} onClick={handleClick} style={{ textDecoration: 'none', display: 'block', margin: '16px' }}>
+      <TouchableArea onPress={onPress} mx="$spacing16">
         <LiquidityPositionCard
           isMiniVersion
           liquidityPosition={positionInfo}
           showVisibilityOption
           isVisible={isVisible}
         />
-      </Link>
+      </TouchableArea>
     </Trace>
   )
 }

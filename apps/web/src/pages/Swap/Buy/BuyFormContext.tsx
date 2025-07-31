@@ -1,4 +1,5 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
+import { useAccount } from 'hooks/useAccount'
 import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import { useFiatOnRampSupportedTokens, useMeldFiatCurrencyInfo } from 'pages/Swap/Buy/hooks'
@@ -32,7 +33,6 @@ import {
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { useDebounce } from 'utilities/src/time/timing'
-import { useAccount } from 'wagmi'
 
 class BuyFormError extends Error {
   constructor(public readonly message: string) {
@@ -50,6 +50,7 @@ type BuyFormState = {
   readonly providerModalOpen: boolean
   readonly rampDirection: RampDirection
   readonly selectedUnsupportedCurrency?: FiatOnRampCurrency
+  readonly moonpayOnly?: boolean
 }
 
 type BuyInfo = {
@@ -81,6 +82,7 @@ const DEFAULT_BUY_FORM_STATE: BuyFormState = {
   providerModalOpen: false,
   rampDirection: RampDirection.ONRAMP,
   selectedUnsupportedCurrency: undefined,
+  moonpayOnly: false,
 }
 
 export const BuyFormContext = createContext<BuyFormContextType>({

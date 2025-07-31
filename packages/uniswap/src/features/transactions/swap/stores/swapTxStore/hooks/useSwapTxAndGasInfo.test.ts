@@ -2,11 +2,11 @@ import { renderHook } from '@testing-library/react-hooks'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { FeeType } from 'uniswap/src/data/tradingApi/types'
-import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/utils'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useTokenApprovalInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import type { TransactionRequestInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import { useSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/hooks/useSwapTxAndGasInfo'
@@ -14,6 +14,7 @@ import { useTransactionRequestInfo } from 'uniswap/src/features/transactions/swa
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { ClassicSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
+import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { createMockDerivedSwapInfo } from 'uniswap/src/test/fixtures/transactions/swap'
 
 jest.mock('uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo')
@@ -27,7 +28,16 @@ describe('useSwapTxAndGasInfo', () => {
     outputAmount: '1000000000',
   })
 
-  const mockAccount: SignerMnemonicAccountMeta = { address: '0x123', type: AccountType.SignerMnemonic }
+  const mockAccount: SignerMnemonicAccountDetails = {
+    platform: Platform.EVM,
+    address: '0x123',
+    accountType: AccountType.SignerMnemonic,
+    walletMeta: {
+      id: '1',
+      name: 'Test Wallet',
+      icon: 'test-icon',
+    },
+  }
 
   beforeEach(() => {
     jest.clearAllMocks()

@@ -2,10 +2,8 @@ import { migrateLpPosition } from 'uniswap/src/data/apiClients/tradingApi/Tradin
 import type { MigrateLPPositionRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { OnChainTransactionFields, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import {
-  ValidatedTransactionRequest,
-  validateTransactionRequest,
-} from 'uniswap/src/features/transactions/swap/utils/trade'
+import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 
 export interface MigratePositionTransactionStep extends OnChainTransactionFields {
   // Migrations that don't require permit

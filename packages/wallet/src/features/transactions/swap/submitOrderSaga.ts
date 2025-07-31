@@ -24,6 +24,7 @@ import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { waitForTransactionConfirmation } from 'wallet/src/features/transactions/swap/confirmation'
+import { SignedPermit, isSignedPermit } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
 import { getSignerManager } from 'wallet/src/features/wallet/context'
 
 // If the app is closed during the waiting period and then reopened, the saga will resume;
@@ -35,7 +36,7 @@ export interface SubmitUniswapXOrderParams {
   txId?: string
   quote: DutchQuoteV2 | DutchQuoteV3 | PriorityQuote
   routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY
-  permit: ValidatedPermit
+  permit: ValidatedPermit | SignedPermit
   chainId: UniverseChainId
   account: AccountMeta
   typeInfo: TransactionTypeInfo
@@ -91,16 +92,19 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
     const addedTime = Date.now() // refresh the addedTime to match the actual submission time
     yield* put(transactionActions.updateTransaction({ ...order, queueStatus: QueuedOrderStatus.Submitted, addedTime }))
 
-    const signerManager = yield* call(getSignerManager)
-    const signer = yield* call([signerManager, 'getSignerForAccount'], account)
-
-    const signature = yield* call(signTypedData, {
-      domain: permit.domain,
-      types: permit.types,
-      value: permit.values,
-      signer,
-    })
-
+    let signature: string
+    if (isSignedPermit(permit)) {
+      signature = permit.signedData
+    } else {
+      const signerManager = yield* call(getSignerManager)
+      const signer = yield* call([signerManager, 'getSignerForAccount'], account)
+      signature = yield* call(signTypedData, {
+        domain: permit.domain,
+        types: permit.types,
+        value: permit.values,
+        signer,
+      })
+    }
     yield* call(submitOrder, { signature, quote, routing })
   } catch {
     // In the rare event that submission fails, we update the order status to prompt the user.

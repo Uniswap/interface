@@ -21,7 +21,7 @@ type WatchTransactionsCallback = (params: WatchTransactionsCallbackParams) => vo
 function* watchTransactions(params: WatchTransactionsCallbackParams) {
   const { address, chainId, pendingDiff, apolloClient } = params
 
-  const info = pendingDiff[0].info
+  const info = pendingDiff[0].typeInfo
   const transaction = createUniverseTransaction({ info, chainId, address })
 
   yield call(refetchGQLQueries, { transaction, apolloClient, activeAddress: address })

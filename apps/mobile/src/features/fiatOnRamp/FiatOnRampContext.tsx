@@ -37,6 +37,9 @@ interface FiatOnRampContextType {
   isTokenInputMode: boolean
   setIsTokenInputMode: React.Dispatch<React.SetStateAction<boolean>>
   externalTransactionIdSuffix: string
+  moonpayOnly: boolean
+  setMoonpayOnly: (moonpayOnly: boolean) => void
+  moonpayCurrencyCode?: string
 }
 
 const initialState: FiatOnRampContextType = {
@@ -59,6 +62,9 @@ const initialState: FiatOnRampContextType = {
   isTokenInputMode: false,
   setIsTokenInputMode: () => undefined,
   externalTransactionIdSuffix: '',
+  moonpayOnly: false,
+  setMoonpayOnly: () => undefined,
+  moonpayCurrencyCode: undefined,
 }
 
 const FiatOnRampContext = createContext<FiatOnRampContextType>(initialState)
@@ -68,21 +74,23 @@ export function useFiatOnRampContext(): FiatOnRampContextType {
 }
 
 export function FiatOnRampProvider({ children }: { children: React.ReactNode }): JSX.Element {
+  const { initialState: initialModalState } = useSelector(selectModalState(ModalName.FiatOnRampAggregator))
+  const { prefilledCurrency, prefilledAmount, moonpayCurrencyCode } = initialModalState ?? {}
+
   const [quotesSections, setQuotesSections] = useState<FiatOnRampContextType['quotesSections']>()
   const [selectedQuote, setSelectedQuote] = useState<FORQuote | undefined>()
   const [countryCode, setCountryCode] = useState<string>(getCountry())
   const [countryState, setCountryState] = useState<string | undefined>()
   const [baseCurrencyInfo, setBaseCurrencyInfo] = useState<FiatCurrencyInfo>()
   const [isTokenInputMode, setIsTokenInputMode] = useState<boolean>(false)
-  const [fiatAmount, setFiatAmount] = useState<number | undefined>()
+  const [fiatAmount, setFiatAmount] = useState<number | undefined>(
+    prefilledAmount ? parseFloat(prefilledAmount) : undefined,
+  )
   const [tokenAmount, setTokenAmount] = useState<number | undefined>()
   const [externalTransactionIdSuffix] = useState<string>(() => {
     // Generate a UUID and extract the last 4 groups as the suffix
     return uuidv4().split('-').slice(1).join('-')
   })
-
-  const { initialState: initialModalState } = useSelector(selectModalState(ModalName.FiatOnRampAggregator))
-  const prefilledCurrency = initialModalState?.prefilledCurrency
 
   // We hardcode ETH as the default starting currency if not specified by modal state's prefilledCurrency
   const ethCurrencyInfo = useCurrencyInfo(
@@ -97,6 +105,7 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   )
   const [quoteCurrency, setQuoteCurrency] = useState<FiatOnRampCurrency>(prefilledCurrency ?? defaultCurrency)
   const [isOffRamp, setIsOffRamp] = useState<boolean>(initialModalState?.isOfframp ?? false)
+  const [moonpayOnly, setMoonpayOnly] = useState<boolean>(initialModalState?.moonpayOnly ?? false)
 
   useEffect(() => {
     if (prefilledCurrency || quoteCurrency.currencyInfo) {
@@ -133,6 +142,9 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
         isTokenInputMode,
         setIsTokenInputMode,
         externalTransactionIdSuffix,
+        moonpayOnly,
+        setMoonpayOnly,
+        moonpayCurrencyCode,
       }}
     >
       {children}

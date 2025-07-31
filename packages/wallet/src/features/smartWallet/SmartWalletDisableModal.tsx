@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Separator, Text, TouchableArea } from 'ui/src'
 import { GlobeFilled, InfoCircle, RotatableChevron } from 'ui/src/components/icons'
-import { iconSizes, zIndexes } from 'ui/src/theme'
+import { iconSizes, spacing, zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -135,7 +135,12 @@ export function SmartWalletDisableModal({
           )}
         </Flex>
 
-        <ActiveNetworkExpando isOpen={isActiveNetworksExpanded} activeDelegations={activeDelegations} />
+        <ActiveNetworkExpando
+          isOpen={isActiveNetworksExpanded}
+          activeDelegations={activeDelegations}
+          // cancel out gap when collapsed to avoid extra space
+          mt={isActiveNetworksExpanded ? undefined : -spacing.spacing16}
+        />
 
         <Flex row justifyContent="space-between" mb="$spacing8">
           <Text variant="body3" color="$neutral2">

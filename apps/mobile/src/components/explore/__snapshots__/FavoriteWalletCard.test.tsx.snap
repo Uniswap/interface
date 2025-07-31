@@ -23,32 +23,28 @@ exports[`FavoriteWalletCard renders without error 1`] = `
   }
 >
   <View
-    disabled={false}
-    hitSlop={
+    collapsable={false}
+    focusVisibleStyle={{}}
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
       {
-        "bottom": 5,
-        "left": 5,
-        "right": 5,
-        "top": 5,
+        "value": {},
       }
     }
     onBlur={[Function]}
     onClick={[Function]}
     onFocus={[Function]}
+    onLayout={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
     onResponderRelease={[Function]}
     onResponderTerminate={[Function]}
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
+    role="button"
     style={
       {
-        "backgroundColor": {
-          "dynamic": {
-            "dark": "#131313",
-            "light": "#FFFFFF",
-          },
-        },
+        "backgroundColor": "#FFFFFF",
         "borderBottomColor": "rgba(34,34,34,0.05)",
         "borderBottomLeftRadius": 16,
         "borderBottomRightRadius": 16,
@@ -86,6 +82,8 @@ exports[`FavoriteWalletCard renders without error 1`] = `
     testID="favorite-wallet-card"
   >
     <View
+      onBlur={[Function]}
+      onFocus={[Function]}
       style={
         {
           "flexDirection": "row",
@@ -99,6 +97,8 @@ exports[`FavoriteWalletCard renders without error 1`] = `
       }
     >
       <View
+        onBlur={[Function]}
+        onFocus={[Function]}
         style={
           {
             "alignItems": "center",
@@ -109,6 +109,8 @@ exports[`FavoriteWalletCard renders without error 1`] = `
         }
       >
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "backgroundColor": {
@@ -157,6 +159,8 @@ exports[`FavoriteWalletCard renders without error 1`] = `
           testID="account-icon"
         >
           <View
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "flexDirection": "column",
@@ -224,6 +228,8 @@ exports[`FavoriteWalletCard renders without error 1`] = `
           </View>
         </View>
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "alignItems": "center",
@@ -236,6 +242,8 @@ exports[`FavoriteWalletCard renders without error 1`] = `
             allowFontScaling={true}
             maxFontSizeMultiplier={1.4}
             numberOfLines={1}
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "color": {
@@ -258,25 +266,22 @@ exports[`FavoriteWalletCard renders without error 1`] = `
         </View>
       </View>
       <View
+        aria-disabled={true}
         collapsable={false}
-        disabled={true}
-        hitSlop={
+        focusVisibleStyle={{}}
+        forwardedRef={[Function]}
+        jestAnimatedStyle={
           {
-            "bottom": 5,
-            "left": 5,
-            "right": 5,
-            "top": 5,
+            "value": {},
           }
         }
+        onLayout={[Function]}
+        pointerEvents="box-none"
+        role="button"
         style={
           {
             "alignItems": "center",
-            "backgroundColor": {
-              "dynamic": {
-                "dark": "rgba(255, 255, 255, 0.38)",
-                "light": "rgba(19, 19, 19, 0.35)",
-              },
-            },
+            "backgroundColor": "rgba(19, 19, 19, 0.35)",
             "borderBottomLeftRadius": 999999,
             "borderBottomRightRadius": 999999,
             "borderTopLeftRadius": 999999,
@@ -294,9 +299,13 @@ exports[`FavoriteWalletCard renders without error 1`] = `
             "zIndex": 1080,
           }
         }
+        tabIndex={-1}
         testID="explore/remove-button"
+        userSelect="none"
       >
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "backgroundColor": {

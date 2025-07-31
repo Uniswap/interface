@@ -32,12 +32,10 @@ export function DeletePasskeyMenu({
   credential?: string
 }) {
   const { t } = useTranslation()
-  const { disconnect } = useDisconnect()
+  const disconnect = useDisconnect()
   const accountDrawer = useAccountDrawer()
   const account = useAccount()
-  const { data: portfolioTotalValue } = usePortfolioTotalValue({
-    address: account.address,
-  })
+  const { data: portfolioTotalValue } = usePortfolioTotalValue(account)
   const { balanceUSD } = portfolioTotalValue || {}
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const [acknowledged, setAcknowledged] = useState(false)

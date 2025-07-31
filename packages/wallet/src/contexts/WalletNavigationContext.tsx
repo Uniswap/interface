@@ -128,11 +128,6 @@ export type ShareTokenArgs = {
   currencyId: string
 }
 
-export type ShareNftArgs = {
-  contractAddress: string
-  tokenId: string
-}
-
 export type WalletNavigationContextState = {
   navigateToAccountActivityList: () => void
   navigateToAccountTokenList: () => void
@@ -147,7 +142,6 @@ export type WalletNavigationContextState = {
   navigateToTokenDetails: (currencyId: string) => void
   navigateToReceive: () => void
   navigateToSend: (args: NavigateToSendFlowArgs) => void
-  handleShareNft: (args: ShareNftArgs) => void
   handleShareToken: (args: ShareTokenArgs) => void
 }
 

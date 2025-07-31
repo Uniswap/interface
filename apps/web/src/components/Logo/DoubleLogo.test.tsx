@@ -1,6 +1,5 @@
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
-import { useCurrencyInfo } from 'hooks/Tokens'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
 import { Flex } from 'ui/src'
@@ -8,8 +7,9 @@ import { UNI, WBTC } from 'uniswap/src/constants/tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 
-vi.mock('hooks/Tokens', () => ({
+vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   useCurrencyInfo: vi.fn(),
 }))
 
@@ -22,6 +22,7 @@ describe('DoubleLogo', () => {
     name: UNI[UniverseChainId.Mainnet].name,
     decimals: UNI[UniverseChainId.Mainnet].decimals,
   } as Token
+  const mockCurrency1Id = `${mockCurrency1.chainId}-${mockCurrency1.address}`
 
   const mockCurrency2: Token = {
     isToken: true,
@@ -31,14 +32,15 @@ describe('DoubleLogo', () => {
     name: WBTC.name,
     decimals: WBTC.decimals,
   } as Token
+  const mockCurrency2Id = `${mockCurrency2.chainId}-${mockCurrency2.address}`
 
   beforeEach(() => {
-    mocked(useCurrencyInfo).mockImplementation((currency: Currency | string | undefined) => {
-      if (typeof currency === 'string' || currency?.isNative) {
+    mocked(useCurrencyInfo).mockImplementation((currencyId: string | undefined) => {
+      if (!currencyId) {
         return undefined
       }
 
-      if (currency?.address === mockCurrency1.address) {
+      if (currencyId === mockCurrency1Id) {
         return {
           currency: mockCurrency1,
           logoUrl:
@@ -48,7 +50,7 @@ describe('DoubleLogo', () => {
         }
       }
 
-      if (currency?.address === mockCurrency2.address) {
+      if (currencyId === mockCurrency2Id) {
         return {
           currency: mockCurrency2,
           logoUrl:

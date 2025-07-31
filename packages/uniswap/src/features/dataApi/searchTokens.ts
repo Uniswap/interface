@@ -2,7 +2,7 @@ import { SearchTokensResponse, SearchType } from '@uniswap/client-search/dist/se
 import { useMemo } from 'react'
 import { searchTokenToCurrencyInfo, useSearchTokensAndPoolsQuery } from 'uniswap/src/data/rest/searchTokensAndPools'
 import { GqlResult } from 'uniswap/src/data/types'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { NUMBER_OF_RESULTS_LONG } from 'uniswap/src/features/search/SearchModal/constants'
@@ -19,15 +19,17 @@ export function useSearchTokens({
   skip: boolean
   size?: number
 }): GqlResult<CurrencyInfo[]> {
+  const { chains: enabledChainIds } = useEnabledChains()
+
   const variables = useMemo(
     () => ({
       searchQuery: searchQuery ?? undefined,
-      chainIds: chainFilter ? [chainFilter] : SUPPORTED_CHAIN_IDS,
+      chainIds: chainFilter ? [chainFilter] : enabledChainIds,
       searchType: SearchType.TOKEN,
       page: 1,
       size,
     }),
-    [searchQuery, chainFilter, size],
+    [searchQuery, chainFilter, size, enabledChainIds],
   )
 
   const tokenSelect = useEvent((data: SearchTokensResponse): CurrencyInfo[] => {

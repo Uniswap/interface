@@ -32,6 +32,7 @@ export const INITIAL_SWAP_FORM_STATE: SwapFormState = {
   presetPercentage: undefined,
   preselectAsset: undefined,
   isSubmitting: false,
+  isConfirmed: false,
   showPendingUI: false,
 }
 
@@ -83,6 +84,7 @@ export const createSwapFormStore = ({
           preselectAsset: undefined,
           isSubmitting: false,
           showPendingUI: false,
+          isConfirmed: false,
           hideFooter,
           hideSettings,
           prefilledCurrencies: undefined,

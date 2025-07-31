@@ -8,6 +8,8 @@ import {
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 
+const PLACEHOLDER_TEXT = '-'
+
 function getFormatterRule(input: number, type: NumberType): FormatterRule {
   const { rules, defaultFormat } = TYPE_TO_FORMATTER_RULES[type]
   for (const rule of rules) {
@@ -36,7 +38,7 @@ export function formatNumber({
   locale,
   currencyCode = 'USD',
   type = NumberType.TokenNonTx,
-  placeholder = '-',
+  placeholder = PLACEHOLDER_TEXT,
 }: {
   input: number | null | undefined
   locale: string
@@ -82,7 +84,7 @@ export function formatNumberOrString({
   locale,
   currencyCode,
   type,
-  placeholder = '-',
+  placeholder = PLACEHOLDER_TEXT,
 }: {
   price: Maybe<number | string>
   locale: string
@@ -109,7 +111,7 @@ export function formatPercent({
   maxDecimals?: 2 | 3 | 4
 }): string {
   if (rawPercentage === null || rawPercentage === undefined) {
-    return '-'
+    return PLACEHOLDER_TEXT
   }
 
   const type =
@@ -120,6 +122,12 @@ export function formatPercent({
         : NumberType.Percentage
   const percentage =
     typeof rawPercentage === 'string' ? parseFloat(rawPercentage) : parseFloat(rawPercentage.toString())
+
+  // Handle NaN cases - return fallback if percentage is invalid
+  if (isNaN(percentage)) {
+    return PLACEHOLDER_TEXT
+  }
+
   return formatNumber({ input: percentage / 100, type, locale })
 }
 

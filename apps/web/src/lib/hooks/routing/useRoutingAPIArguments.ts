@@ -21,9 +21,9 @@ export function useRoutingAPIArguments(input: RoutingAPIInput): GetQuoteArgs | S
   const isUniswapXSupportedChain = useIsUniswapXSupportedChain(input.tokenIn?.chainId)
   const isPriorityOrdersEnabled = useUniswapXPriorityOrderFlag(input.tokenIn?.chainId)
   const isDutchV3Enabled = useFeatureFlag(FeatureFlags.ArbitrumDutchV3)
-  const isMismatchedAccount = useIsMismatchAccountQuery({ chainId: input.tokenIn?.chainId })
+  const { data: isDelegationMismatch } = useIsMismatchAccountQuery({ chainId: input.tokenIn?.chainId })
   // if there is a mismatched account, we want to disable uniswapX
-  const canUseUniswapX = isUniswapXSupportedChain && !isMismatchedAccount.data
+  const canUseUniswapX = isUniswapXSupportedChain && !isDelegationMismatch
 
   const getRoutingAPIArguments = useMemo(
     () =>

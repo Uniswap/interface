@@ -1,6 +1,9 @@
 import { providers } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
+import * as matchers from 'redux-saga-test-plan/matchers'
 import { call } from 'redux-saga/effects'
+import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
 import { cancelTransaction, finalizeTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
 import {
   fiatPurchaseTransactionInfo,
@@ -19,7 +22,22 @@ import {
   waitForSameNonceFinalized,
   watchTransaction,
 } from 'wallet/src/features/transactions/watcher/watchOnChainTransactionSaga'
+import {
+  updateTransactionStatusNetworkFee,
+  waitForTransactionStatus,
+} from 'wallet/src/features/transactions/watcher/watchTransactionSaga'
 import { getProvider } from 'wallet/src/features/wallet/context'
+
+let mockGates: Record<string, boolean> = {}
+
+jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
+  getStatsigClient: jest.fn(() => ({
+    checkGate: jest.fn((gate: string) => mockGates[gate] ?? false),
+    getDynamicConfig: jest.fn(() => ({
+      get: jest.fn(() => undefined),
+    })),
+  })),
+}))
 
 const ACTIVE_ACCOUNT_ADDRESS = '0x000000000000000000000000000000000000000001'
 const {
@@ -38,9 +56,15 @@ describe(watchTransaction, () => {
       return null
     }),
   }
+
+  beforeEach(() => {
+    mockGates = {}
+  })
+
   beforeAll(() => {
     dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => txReceipt.confirmedTime)
   })
+
   afterAll(() => {
     dateNowSpy.mockRestore()
   })
@@ -182,6 +206,38 @@ describe(watchTransaction, () => {
         [call(logTransactionTimeout, transaction), undefined],
       ])
       .call(logTransactionTimeout, transaction)
+      .silentRun()
+  })
+
+  it('uses the trading api to get the status of the transaction', () => {
+    mockGates = {
+      trading_api_swap_confirmation: true,
+    }
+
+    const successProvider = {
+      waitForTransaction: jest.fn(() => ethersTxReceipt),
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { networkFee, receipt, ...finalizedPayload } = finalizedTxAction.payload
+
+    return expectSaga(watchTransaction, {
+      transaction: txDetailsPending,
+      apolloClient: mockApolloClient,
+    })
+      .withState({
+        wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
+        userSettings: { isTestnetModeEnabled: false },
+        transactions: [],
+      })
+      .provide([
+        [call(getProvider, chainId), successProvider],
+        [matchers.call.fn(fetchSwaps), { requestId: '123', swaps: [{ status: SwapStatus.SUCCESS }] }],
+      ])
+      .spawn(updateTransactionStatusNetworkFee, txDetailsPending, successProvider)
+      .call(waitForTransactionStatus, txDetailsPending)
+      .call(fetchSwaps, { txHashes: [txDetailsPending.hash], chainId })
+      .put(finalizeTransaction(finalizedPayload))
       .silentRun()
   })
 })

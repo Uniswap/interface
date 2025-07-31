@@ -1,5 +1,5 @@
 import { PersistState } from 'redux-persist'
-import { LocalWebTransactionState } from 'state/transactions/reducer'
+import { LocalWebTransactionState } from 'state/migrations/legacy'
 
 export type PersistAppStateV13 = {
   _persist: PersistState

@@ -1,9 +1,9 @@
 import { ChainId, ClaimLPRewardsResponse } from 'uniswap/src/data/tradingApi/__generated__'
-import { type SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
+import { type SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 
 export interface LpIncentivesClaimParams {
-  account: SignerMnemonicAccountMeta
+  account: SignerMnemonicAccountDetails
   chainId: ChainId
   claimData: ClaimLPRewardsResponse
   tokenAddress: string

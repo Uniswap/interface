@@ -65,6 +65,21 @@ type PayloadWithUserAddress = BasePayload & { userAddress: string }
  */
 type PayloadWithScantasticParams = BasePayload & { scantasticQueryParams: string }
 
+/**
+ * Payload for all deep link actions that include fiat onramp params.
+ *
+ * @param userAddress - The user address (optional when moonpayOnly is true).
+ * @param moonpayOnly - Show the moonpay only mode.
+ * @param moonpayCurrencyCode - The moonpay currency code (eth, usdc, etc).
+ * @param amount - The input amount to prefill
+ */
+export type PayloadWithFiatOnRampParams = BasePayload & {
+  userAddress?: string
+  moonpayOnly?: boolean
+  moonpayCurrencyCode?: string
+  amount?: string
+}
+
 export type DeepLinkActionResult =
   | { action: DeepLinkAction.UniswapWebLink; data: BasePayload & { urlPath: string } }
   | { action: DeepLinkAction.WalletConnectAsParam; data: PayloadWithWcUri }
@@ -80,7 +95,7 @@ export type DeepLinkActionResult =
   | { action: DeepLinkAction.UniversalWalletConnectLink; data: PayloadWithWcUri }
   | { action: DeepLinkAction.WalletConnect; data: BasePayload & { wcUri: string } }
   | { action: DeepLinkAction.TokenDetails; data: BasePayload & { currencyId: string } }
-  | { action: DeepLinkAction.FiatOnRampScreen; data: BasePayload & { userAddress: string } }
+  | { action: DeepLinkAction.FiatOnRampScreen; data: PayloadWithFiatOnRampParams }
   | { action: DeepLinkAction.Error; data: BasePayload }
   | { action: DeepLinkAction.Unknown; data: BasePayload }
 
@@ -106,13 +121,13 @@ export function parseDeepLinkUrl(urlString: string): DeepLinkActionResult {
   }
 
   const urlPath = url.pathname
-  const userAddress = url.searchParams.get('userAddress')
+  const userAddress = url.searchParams.get('userAddress') ?? undefined
   const fiatOnRamp = url.searchParams.get('fiatOnRamp') === 'true'
   const fiatOffRamp = url.searchParams.get('fiatOffRamp') === 'true'
-  const currencyId = url.searchParams.get('currencyId')
 
   switch (urlPath) {
-    case '/tokendetails':
+    case '/tokendetails': {
+      const currencyId = url.searchParams.get('currencyId')
       if (!currencyId) {
         return logAndReturnError({
           errorMsg: 'No currencyId found',
@@ -133,16 +148,25 @@ export function parseDeepLinkUrl(urlString: string): DeepLinkActionResult {
         action: DeepLinkAction.TokenDetails,
         data: { ...data, currencyId },
       }
-    case '/fiatonramp':
-      if (!userAddress) {
+    }
+    case '/fiatonramp': {
+      const moonpayOnly = url.searchParams.get('moonpayOnly') === 'true'
+      const moonpayCurrencyCode = url.searchParams.get('moonpayCurrencyCode') ?? undefined
+      const amount = url.searchParams.get('amount') ?? undefined
+
+      if (!moonpayOnly && !userAddress) {
         return logAndReturnError({
-          errorMsg: 'No userAddress found',
+          errorMsg: `No userAddress or moonpayOnly param found`,
           action: DeepLinkAction.FiatOnRampScreen,
           urlString,
           data,
         })
       }
-      return { action: DeepLinkAction.FiatOnRampScreen, data: { ...data, userAddress } }
+      return {
+        action: DeepLinkAction.FiatOnRampScreen,
+        data: { ...data, userAddress, moonpayOnly, moonpayCurrencyCode, amount },
+      }
+    }
   }
 
   switch (screen.toLowerCase()) {

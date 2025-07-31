@@ -14,10 +14,9 @@ import { ElementAfterText, Flex, ScrollView, styled, useMedia } from 'ui/src'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import Badge from 'uniswap/src/components/badge/Badge'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
-import { ALL_CHAIN_IDS, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useNewChainIds } from 'uniswap/src/features/chains/hooks/useNewChainIds'
-import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
 import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import type { UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -43,7 +42,7 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
   const [isMenuOpen, toggleMenu] = useState(false)
   const isSupportedChainCallback = useIsSupportedChainIdCallback()
   const { isTestnetModeEnabled } = useEnabledChains()
-  const orderedChainIds = useOrderedChainIds(ALL_CHAIN_IDS)
+  const { chains: enabledChainIds } = useEnabledChains({ includeTestnets: true })
 
   const exploreParams = useExploreParams()
   const currentChainId = useChainIdFromUrlParam()
@@ -98,20 +97,20 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
           <ScrollView px="$spacing8">
             {showMultichainOption && <TableNetworkItem chainInfo={null} toggleMenu={toggleMenu} tab={tab} />}
             {/* non-testnet backend supported chains */}
-            {orderedChainIds
+            {enabledChainIds
               .filter(isBackendSupportedChainId)
               .filter((c) => !isTestnetChain(c))
               .map(tableNetworkItemRenderer)}
             {/* Testnet backend supported chains */}
             {isTestnetModeEnabled
-              ? orderedChainIds
+              ? enabledChainIds
                   .filter(isBackendSupportedChainId)
                   .filter(isTestnetChain)
                   .filter((c) => c !== UniverseChainId.MonadTestnet)
                   .map(tableNetworkItemRenderer)
               : null}
             {/* Unsupported non-testnet backend supported chains */}
-            {orderedChainIds
+            {enabledChainIds
               .filter((c) => !isBackendSupportedChainId(c) && !isTestnetChain(c))
               .map(tableNetworkItemRenderer)}
           </ScrollView>

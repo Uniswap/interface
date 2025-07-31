@@ -1,8 +1,8 @@
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { DisplayName, DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress, sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 import { trimToLength } from 'utilities/src/primitives/string'
@@ -33,7 +33,9 @@ export function useOnchainDisplayName(address: Maybe<string>, options?: DisplayN
   // TODO(WEB-8012): Update to support Solana
   const validated = getValidAddress({ address, platform: Platform.EVM })
   const ens = useENSName(validated ?? undefined)
-  const { unitag } = useUnitagByAddress(validated ?? undefined)
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: validated ? { address: validated } : undefined,
+  })
 
   if (!address) {
     return undefined

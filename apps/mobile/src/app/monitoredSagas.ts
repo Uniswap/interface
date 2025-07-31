@@ -4,6 +4,16 @@ import {
   removeDelegationSaga,
   removeDelegationSagaName,
 } from 'wallet/src/features/smartWallet/sagas/removeDelegationSaga'
+import {
+  executeSwapActions,
+  executeSwapReducer,
+  executeSwapSaga,
+  executeSwapSagaName,
+  prepareAndSignSwapActions,
+  prepareAndSignSwapReducer,
+  prepareAndSignSwapSaga,
+  prepareAndSignSwapSagaName,
+} from 'wallet/src/features/transactions/swap/configuredSagas'
 import { swapActions, swapReducer, swapSaga, swapSagaName } from 'wallet/src/features/transactions/swap/swapSaga'
 import {
   tokenWrapActions,
@@ -38,6 +48,18 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     wrappedSaga: editAccountSaga,
     reducer: editAccountReducer,
     actions: editAccountActions,
+  },
+  [prepareAndSignSwapSagaName]: {
+    name: prepareAndSignSwapSagaName,
+    wrappedSaga: prepareAndSignSwapSaga,
+    reducer: prepareAndSignSwapReducer,
+    actions: prepareAndSignSwapActions,
+  },
+  [executeSwapSagaName]: {
+    name: executeSwapSagaName,
+    wrappedSaga: executeSwapSaga,
+    reducer: executeSwapReducer,
+    actions: executeSwapActions,
   },
   [swapSagaName]: {
     name: swapSagaName,

@@ -1,13 +1,13 @@
-import type { providers } from 'ethers'
+import type { TypedDataDomain, TypedDataField, providers } from 'ethers'
+import { HexString } from 'uniswap/src/utils/hex'
 
 // these are tied to the ethers.js types,
 // but we should eventually move to our own types
 // so we can use viem etc if we want!
-export type TransactionResponse = providers.TransactionResponse
 export type TransactionPopulatedRequest = providers.TransactionRequest
 
 export type TransactionSignerOutput = {
-  transactionResponse: TransactionResponse
+  transactionHash: string
   populatedRequest: TransactionPopulatedRequest
   timestampBeforeSign: number
   timestampBeforeSend: number
@@ -41,12 +41,30 @@ export interface TransactionSigner {
    * @param input The transaction request
    * @returns The signed transaction
    */
-  signTransaction(input: TransactionPopulatedRequest): Promise<string>
+  signTransaction(input: TransactionPopulatedRequest): Promise<HexString>
+
+  /**
+   * Sign a typed data
+   * @param input The typed data
+   * @returns The signed typed data
+   */
+  signTypedData(input: {
+    domain: TypedDataDomain
+    types: Record<string, TypedDataField[]>
+    value: Record<string, unknown>
+  }): Promise<string>
 
   /**
    * Send a transaction
    * @param input The signed transaction hex string
-   * @returns The transaction response
+   * @returns The transaction hash
    */
-  sendTransaction(input: { signedTx: string }): Promise<TransactionResponse>
+  sendTransaction(input: { signedTx: HexString }): Promise<string>
+
+  /**
+   * Send a transaction synchronously and wait for receipt
+   * @param input The signed transaction hex string
+   * @returns The transaction receipt
+   */
+  sendTransactionSync(input: { signedTx: HexString }): Promise<providers.TransactionReceipt>
 }

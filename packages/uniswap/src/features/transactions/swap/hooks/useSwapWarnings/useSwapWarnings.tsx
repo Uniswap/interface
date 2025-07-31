@@ -3,7 +3,6 @@ import isEqual from 'lodash/isEqual'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ParsedWarnings, Warning } from 'uniswap/src/components/modals/WarningModal/types'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -20,6 +19,7 @@ import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { getPriceImpact } from 'uniswap/src/features/transactions/swap/utils/getPriceImpact'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 
@@ -92,7 +92,7 @@ function useSwapWarnings(derivedSwapInfo: DerivedSwapInfo): Warning[] {
 }
 
 export function useParsedSwapWarnings(): ParsedWarnings {
-  const account = useAccountMeta()
+  const account = useWallet().evmAccount
   const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
   const gasFee = useSwapTxStore((s) => s.gasFee)
 

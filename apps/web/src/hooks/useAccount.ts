@@ -1,10 +1,11 @@
 import { useMemo } from 'react'
 import { useEnabledChainsWithConnector } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import {
   Connector,
+  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   useAccount as useAccountWagmi,
+  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   useChainId,
   type Register,
   type UseAccountReturnType as UseAccountReturnTypeWagmi,

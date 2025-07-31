@@ -1,6 +1,5 @@
 import { Flex } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text'
-import { Skeleton } from 'ui/src/loading/Skeleton'
 import { iconSizes } from 'ui/src/theme'
 import { isWeb } from 'utilities/src/platform'
 
@@ -13,14 +12,12 @@ export function TokenLoader({ opacity, withPrice = false }: TokenLoaderProps): J
   return (
     <Flex alignItems="flex-start" flexDirection="row" justifyContent="space-between" opacity={opacity} py="$spacing8">
       <Flex grow row alignItems="center" gap="$spacing12" overflow="hidden">
-        <Skeleton>
-          <Flex
-            backgroundColor="$neutral3"
-            borderRadius="$roundedFull"
-            height={iconSizes.icon36}
-            width={iconSizes.icon36}
-          />
-        </Skeleton>
+        <Flex
+          backgroundColor="$neutral3"
+          borderRadius="$roundedFull"
+          height={iconSizes.icon36}
+          width={iconSizes.icon36}
+        />
 
         <Flex grow alignItems="flex-start">
           <Text

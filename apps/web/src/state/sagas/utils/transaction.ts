@@ -4,7 +4,7 @@ import type {
   TransactionDetails as UniswapTransactionDetails,
   WrapTransactionInfo as UniswapWrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TransactionType as UniswapTransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 const createUniverseSwapTransaction = ({
   inputCurrencyId,
@@ -15,7 +15,7 @@ const createUniverseSwapTransaction = ({
 }) => {
   return {
     typeInfo: {
-      type: UniswapTransactionType.Swap,
+      type: TransactionType.Swap,
       inputCurrencyId,
       outputCurrencyId,
     },
@@ -25,7 +25,7 @@ const createUniverseSwapTransaction = ({
 const createUniverseWrapTransaction = (info: UniswapWrapTransactionInfo) => {
   return {
     typeInfo: {
-      type: UniswapTransactionType.Wrap,
+      type: TransactionType.Wrap,
       unwrapped: info.unwrapped,
       currencyAmountRaw: info.currencyAmountRaw,
     } satisfies UniswapWrapTransactionInfo,
@@ -58,42 +58,57 @@ export const createUniverseTransaction = ({
   let transaction: UniswapTransactionDetails | undefined
 
   switch (info.type) {
-    case UniswapTransactionType.Swap:
+    case TransactionType.Swap:
       transaction = createUniverseSwapTransaction(info)
       break
-    case UniswapTransactionType.Bridge:
+    case TransactionType.Bridge:
       transaction = createUniverseTransactionFromInfo(info)
       break
-    case UniswapTransactionType.Send:
+    case TransactionType.Send:
       transaction = createUniverseTransactionFromInfo(info)
       break
-    case UniswapTransactionType.Wrap:
+    case TransactionType.Wrap:
       transaction = createUniverseWrapTransaction(info)
       break
-    case UniswapTransactionType.CreatePool:
-    case UniswapTransactionType.CreatePair:
-    case UniswapTransactionType.LiquidityIncrease:
-    case UniswapTransactionType.LiquidityDecrease:
-    case UniswapTransactionType.MigrateLiquidityV3ToV4:
+    case TransactionType.CreatePool:
+    case TransactionType.CreatePair:
+    case TransactionType.LiquidityIncrease:
+    case TransactionType.LiquidityDecrease:
+    case TransactionType.MigrateLiquidityV3ToV4:
       transaction = createUniverseSwapTransaction({
         inputCurrencyId: info.currency0Id,
         outputCurrencyId: info.currency1Id,
       })
       break
-    case UniswapTransactionType.CollectFees:
+    case TransactionType.CollectFees:
       transaction = createUniverseTransactionFromInfo(info)
       break
-    case UniswapTransactionType.MigrateLiquidityV2ToV3:
+    case TransactionType.MigrateLiquidityV2ToV3:
       transaction = createUniverseSwapTransaction({
         inputCurrencyId: info.baseCurrencyId,
         outputCurrencyId: info.quoteCurrencyId,
       })
       break
     // Native token spend cases which are already handled in the refetchGQLQueries saga
-    case UniswapTransactionType.Approve:
-    case UniswapTransactionType.ClaimUni:
-    case UniswapTransactionType.LPIncentivesClaimRewards:
-    case UniswapTransactionType.Permit2Approve:
+    case TransactionType.Approve:
+    case TransactionType.ClaimUni:
+    case TransactionType.LPIncentivesClaimRewards:
+    case TransactionType.Permit2Approve:
+      return { ...baseTransaction, ...info } as UniswapTransactionDetails
+    // NFT and other transaction types that don't need special mapping
+    case TransactionType.Receive:
+    case TransactionType.NFTTrade:
+    case TransactionType.NFTApprove:
+    case TransactionType.NFTMint:
+    case TransactionType.WCConfirm:
+    case TransactionType.Unknown:
+    case TransactionType.OnRampPurchase:
+    case TransactionType.OnRampTransfer:
+    case TransactionType.OffRampSale:
+    case TransactionType.LocalOnRamp:
+    case TransactionType.LocalOffRamp:
+    case TransactionType.SendCalls:
+    case TransactionType.RemoveDelegation:
       return { ...baseTransaction, ...info } as UniswapTransactionDetails
     default:
       assertUnreachable(info)

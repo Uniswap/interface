@@ -14,6 +14,7 @@ import {
 import { useAccountCountChanged } from 'wallet/src/features/wallet/hooks'
 
 import { extractUrlHost } from 'utilities/src/format/urls'
+import { ONE_DAY_MS } from 'utilities/src/time/time'
 import {
   SmartWalletDelegationAction,
   useSmartWalletDelegationStatus,
@@ -62,9 +63,20 @@ export function SmartWalletNudgesProvider({ children }: { children: ReactNode })
       ? selectHasShownEip5792Nudge(state, last5792DappInfo.activeConnectedAddress, last5792DappInfo.url)
       : false,
   )
+  // Check if home screen nudge was recently shown (24 hour cooldown)
+  const lastHomeScreenShown = useSelector((state: WalletState) =>
+    last5792DappInfo
+      ? state.behaviorHistory.smartWalletNudge?.[last5792DappInfo.activeConnectedAddress]?.lastHomeScreenNudgeShown
+      : undefined,
+  )
+
+  const hasRecentHomeScreenShown = lastHomeScreenShown ? Date.now() - lastHomeScreenShown < ONE_DAY_MS : false
 
   const shouldShowNudge =
-    !hasShownNudge && delegationStatus.status === SmartWalletDelegationAction.PromptUpgrade && !delegationStatus.loading
+    !hasShownNudge &&
+    !hasRecentHomeScreenShown &&
+    delegationStatus.status === SmartWalletDelegationAction.PromptUpgrade &&
+    !delegationStatus.loading
 
   useEffect(() => {
     if (last5792DappInfo && shouldShowNudge) {

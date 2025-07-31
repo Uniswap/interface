@@ -152,8 +152,7 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
     },
     size: {
       xxsmall: {
-        px: '$spacing6',
-        py: '$spacing4',
+        p: '$spacing6',
         borderRadius: '$rounded12',
         gap: '$spacing4',
       },

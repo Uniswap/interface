@@ -1,6 +1,6 @@
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useENSAvatar } from 'uniswap/src/features/ens/api'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 
 /*
@@ -17,7 +17,9 @@ export function useAvatar(address: Maybe<string>): {
   // TODO(WEB-8012): Update to support Solana
   const validated = getValidAddress({ address, platform: Platform.EVM })
   const { data: ensAvatar, isLoading: ensLoading } = useENSAvatar(validated)
-  const { unitag, loading: unitagLoading } = useUnitagByAddress(validated || undefined)
+  const { data: unitag, isLoading: unitagLoading } = useUnitagsAddressQuery({
+    params: validated ? { address: validated } : undefined,
+  })
 
   const unitagAvatar = unitag?.metadata?.avatar
 

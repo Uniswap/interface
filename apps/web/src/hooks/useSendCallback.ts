@@ -12,7 +12,7 @@ import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { SendTokenTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TransactionType as UniswapTransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
 import { UserRejectedRequestError, toReadableError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -89,7 +89,7 @@ export function useSendCallback({
         }
       })()
       const sendInfo: SendTokenTransactionInfo = {
-        type: UniswapTransactionType.Send,
+        type: TransactionType.Send,
         tokenAddress: currencyAddress(currencyAmount.currency),
         assetType: AssetType.Currency,
         currencyAmountRaw: currencyAmount.quotient.toString(),

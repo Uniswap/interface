@@ -59,7 +59,7 @@ AnimatedItem.displayName = 'AnimatedItem'
 export function TransitionItem({
   animationType = 'fade',
   childKey,
-  animation,
+  animation = 'fastHeavy',
   children,
 }: {
   animationType?: AnimationType
@@ -70,7 +70,7 @@ export function TransitionItem({
   return (
     <AnimatePresence exitBeforeEnter custom={{ going: animationType }} initial={false}>
       {children && (
-        <AnimatedItem key={childKey ?? 'animated-item'} animation={animation ?? 'fastHeavy'} going={animationType}>
+        <AnimatedItem key={childKey ?? 'animated-item'} animation={animation} going={animationType}>
           {children}
         </AnimatedItem>
       )}
@@ -81,24 +81,34 @@ export function TransitionItem({
 export function AnimateTransition({
   currentIndex,
   animationType = 'fade',
+  animation = 'fastHeavy',
   children,
 }: {
   currentIndex: number
   children: ReactNode
   animationType?: AnimationType
+  animation?: AnimationTransitionType
 }): JSX.Element {
   const childrenArray = Children.toArray(children)
 
   return (
     <AnimatePresence exitBeforeEnter custom={{ going: animationType }} initial={false}>
-      <AnimatedItem key={`slide-item-${currentIndex}`} animation="fastHeavy" going={animationType}>
+      <AnimatedItem key={`slide-item-${currentIndex}`} animation={animation} going={animationType}>
         {childrenArray[currentIndex]}
       </AnimatedItem>
     </AnimatePresence>
   )
 }
 
-export function AnimatedPager({ children, currentIndex }: { currentIndex: number; children: ReactNode }): JSX.Element {
+export function AnimatedPager({
+  children,
+  currentIndex,
+  animation,
+}: {
+  currentIndex: number
+  children: ReactNode
+  animation?: AnimationTransitionType
+}): JSX.Element {
   const prevIndex = usePrevious(currentIndex)
   const [direction, setDirection] = useState<TransitionDirection>('forward')
   useEffect(() => {
@@ -112,7 +122,7 @@ export function AnimatedPager({ children, currentIndex }: { currentIndex: number
     }
   }, [currentIndex, prevIndex, setDirection])
   return (
-    <AnimateTransition animationType={direction} currentIndex={currentIndex}>
+    <AnimateTransition animationType={direction} currentIndex={currentIndex} animation={animation}>
       {children}
     </AnimateTransition>
   )

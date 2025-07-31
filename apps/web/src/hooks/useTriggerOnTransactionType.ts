@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { usePendingTransactions } from 'state/transactions/hooks'
-import { BaseTransactionType } from 'state/transactions/types'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 /**
@@ -8,10 +8,10 @@ import { usePrevious } from 'utilities/src/react/hooks'
  * @param type - The type of transaction to trigger on
  * @param trigger - The function to trigger
  */
-export function useTriggerOnTransactionType(type: BaseTransactionType, trigger: () => void) {
+export function useTriggerOnTransactionType(type: TransactionType, trigger: () => void) {
   const pendingTransactions = usePendingTransactions()
   const numPendingTransactions = useMemo(
-    () => pendingTransactions.filter((tx) => tx.info.type === type).length,
+    () => pendingTransactions.filter((tx) => tx.typeInfo.type === type).length,
     [pendingTransactions, type],
   )
   const prevNumPendingTransactions = usePrevious(numPendingTransactions)

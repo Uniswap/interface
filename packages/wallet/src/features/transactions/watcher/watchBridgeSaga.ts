@@ -10,7 +10,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import {
-  FINALIZED_BRIDGE_SWAP_STATUS,
+  FINALIZED_SWAP_STATUS,
   MIN_BRIDGE_WAIT_TIME,
   SWAP_STATUS_TO_TX_STATUS,
 } from 'wallet/src/features/transactions/watcher/transactionSagaUtils'
@@ -51,7 +51,7 @@ export function* waitForBridgingStatus(transaction: TransactionDetails): SagaGen
 
     const currentSwapStatus = data.swaps?.[0]?.status
     logger.debug('watchBridgeSaga', `[${txHash}] waitForBridgingStatus`, 'currentSwapStatus:', currentSwapStatus)
-    if (currentSwapStatus && FINALIZED_BRIDGE_SWAP_STATUS.includes(currentSwapStatus)) {
+    if (currentSwapStatus && FINALIZED_SWAP_STATUS.includes(currentSwapStatus)) {
       swapStatus = currentSwapStatus
       break
     }

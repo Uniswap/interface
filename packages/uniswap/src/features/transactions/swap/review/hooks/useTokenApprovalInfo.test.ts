@@ -5,14 +5,15 @@ import { useCheckApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/us
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import type { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { FeeType } from 'uniswap/src/data/tradingApi/types'
-import type { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/utils'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import type { TokenApprovalInfoParams } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import { useTokenApprovalInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
+import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { logger } from 'utilities/src/logger/logger'
 
 jest.mock('uniswap/src/data/apiClients/tradingApi/useCheckApprovalQuery')
@@ -24,7 +25,16 @@ jest.mock('utilities/src/logger/logger', () => ({
 const mockUseCheckApprovalQuery = useCheckApprovalQuery as jest.Mock
 
 describe('useTokenApprovalInfo', () => {
-  const mockAccount: AccountMeta = { address: '0x123', type: AccountType.SignerMnemonic }
+  const mockAccount: SignerMnemonicAccountDetails = {
+    platform: Platform.EVM,
+    address: '0x123',
+    accountType: AccountType.SignerMnemonic,
+    walletMeta: {
+      id: '1',
+      name: 'Test Wallet',
+      icon: 'test-icon',
+    },
+  }
 
   const mockTokenIn = new Token(UniverseChainId.Mainnet, DAI.address, DAI.decimals, DAI.symbol, DAI.name)
   const mockTokenOut = new Token(UniverseChainId.Mainnet, USDC.address, USDC.decimals, USDC.symbol, USDC.name)

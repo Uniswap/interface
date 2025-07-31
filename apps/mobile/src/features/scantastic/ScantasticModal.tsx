@@ -14,6 +14,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
@@ -313,7 +314,9 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
         <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
           <Laptop color="$accent1" size="$icon.24" />
         </Flex>
-        <Text variant="subheading1">{t('scantastic.confirmation.title')}</Text>
+        <Text testID={TestID.ScantasticConfirmationTitle} variant="subheading1">
+          {t('scantastic.confirmation.title')}
+        </Text>
         <Text color="$neutral2" textAlign="center" variant="body3">
           {t('scantastic.confirmation.subtitle')}
         </Text>
@@ -331,7 +334,9 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
                 <Text color="$neutral2" flex={1} variant="body3">
                   {t('scantastic.confirmation.label.device')}
                 </Text>
-                <Text variant="body3">{device}</Text>
+                <Text testID={TestID.ScantasticDevice} variant="body3">
+                  {device}
+                </Text>
               </Flex>
             )}
             {browser && (
@@ -339,7 +344,9 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
                 <Text color="$neutral2" flex={1} variant="body3">
                   {t('scantastic.confirmation.label.browser')}
                 </Text>
-                <Text variant="body3">{browser}</Text>
+                <Text testID={TestID.ScantasticBrowser} variant="body3">
+                  {browser}
+                </Text>
               </Flex>
             )}
           </Flex>

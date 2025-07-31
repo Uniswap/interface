@@ -11,7 +11,10 @@ import {
   SmartWalletDelegationAction,
   useSmartWalletDelegationStatus,
 } from 'wallet/src/components/smartWallet/smartAccounts/hook'
-import { setHasDismissedSmartWalletHomeScreenNudge } from 'wallet/src/features/behaviorHistory/slice'
+import {
+  setHasDismissedSmartWalletHomeScreenNudge,
+  setHasShownSmartWalletHomeScreenNudge,
+} from 'wallet/src/features/behaviorHistory/slice'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useDisplayName, useHasSmartWalletConsent } from 'wallet/src/features/wallet/hooks'
 import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
@@ -20,12 +23,14 @@ interface SmartWalletUpgradeModalsProps {
   account: Account
   onEnableSmartWallet: (onComplete: () => void) => void
   video?: React.ReactNode
+  isHomeScreenFocused?: boolean
 }
 
 export function SmartWalletUpgradeModals({
   account,
   onEnableSmartWallet,
   video,
+  isHomeScreenFocused = true,
 }: SmartWalletUpgradeModalsProps): JSX.Element | null {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -40,6 +45,13 @@ export function SmartWalletUpgradeModals({
     }
   }, [delegationStatus])
 
+  // Track when home screen modal is shown to prevent immediate dapp nudges
+  useEffect(() => {
+    if (delegationStatus === SmartWalletDelegationAction.PromptUpgrade && showModal) {
+      dispatch(setHasShownSmartWalletHomeScreenNudge({ walletAddress: account.address }))
+    }
+  }, [dispatch, delegationStatus, showModal, account.address])
+
   const handleSmartWalletDismiss = (): void => {
     dispatch(setHasDismissedSmartWalletHomeScreenNudge({ walletAddress: account.address, hasDismissed: true }))
     setShowModal(false)
@@ -52,13 +64,15 @@ export function SmartWalletUpgradeModals({
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element: ElementName.SmartWalletEnabled })
   }
 
+  const isModalOpen = showModal && isHomeScreenFocused
+
   switch (delegationStatus) {
     case SmartWalletDelegationAction.None:
       return null
     case SmartWalletDelegationAction.ShowConflict:
       return (
         <SmartWalletUnavailableModal
-          isOpen={showModal}
+          isOpen={isModalOpen}
           displayName={selectedWalletDisplayName?.name || account.address}
           onClose={() => {
             handleSmartWalletDismiss()
@@ -72,7 +86,7 @@ export function SmartWalletUpgradeModals({
       return (
         <SmartWalletModal
           hideHandlebar
-          isOpen={showModal}
+          isOpen={isModalOpen}
           video={video}
           title={t('delegation.upgradeModal.title')}
           subtext={t('delegation.upgradeModal.description')}

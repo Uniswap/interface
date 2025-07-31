@@ -11,13 +11,10 @@ import { Flex, Switch, Text } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NotificationToggleLoggingType } from 'uniswap/src/features/telemetry/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isIOS } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountsList } from 'wallet/src/features/wallet/hooks'
 
@@ -50,26 +47,14 @@ function _SettingsNotificationsScreen(): JSX.Element {
   const { fullWidth, fullHeight } = useDeviceDimensions()
   const accounts = useAccountsList()
 
-  const priceAlertsToggleEnabled = useFeatureFlagWithExposureLoggingDisabled(
-    isIOS ? FeatureFlags.NotificationPriceAlertsIOS : FeatureFlags.NotificationPriceAlertsAndroid,
-  )
-
   const onGeneralUpdatesToggle = useCallback(
     (enabled: boolean) => onPermissionChanged(enabled, NotifSettingType.GeneralUpdates),
-    [],
-  )
-  const onPriceAlertsToggle = useCallback(
-    (enabled: boolean) => onPermissionChanged(enabled, NotifSettingType.PriceAlerts),
     [],
   )
 
   const { isEnabled: updatesNotifEnabled, toggle: toggleUpdatesNotif } = useSettingNotificationToggle({
     type: NotifSettingType.GeneralUpdates,
     onToggle: onGeneralUpdatesToggle,
-  })
-  const { isEnabled: priceAlertsNotifEnabled, toggle: togglePriceAlertsNotif } = useSettingNotificationToggle({
-    type: NotifSettingType.PriceAlerts,
-    onToggle: onPriceAlertsToggle,
   })
 
   const data: NotificationItem[] = useMemo(() => {
@@ -82,16 +67,6 @@ function _SettingsNotificationsScreen(): JSX.Element {
         onCheckedChange: toggleUpdatesNotif,
       },
     ]
-
-    if (priceAlertsToggleEnabled) {
-      items.push({
-        type: NotificationItemType.Setting,
-        title: t('settings.setting.notifications.row.priceAlerts.title'),
-        description: t('settings.setting.notifications.row.priceAlerts.description'),
-        checked: priceAlertsNotifEnabled,
-        onCheckedChange: togglePriceAlertsNotif,
-      })
-    }
 
     // Add a title item for the accounts section
     items.push({
@@ -110,15 +85,7 @@ function _SettingsNotificationsScreen(): JSX.Element {
     })
 
     return items
-  }, [
-    t,
-    updatesNotifEnabled,
-    toggleUpdatesNotif,
-    priceAlertsToggleEnabled,
-    priceAlertsNotifEnabled,
-    togglePriceAlertsNotif,
-    accounts,
-  ])
+  }, [t, updatesNotifEnabled, toggleUpdatesNotif, accounts])
 
   const estimatedListSize = useMemo(() => {
     return {

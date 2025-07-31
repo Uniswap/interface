@@ -1,23 +1,27 @@
 /* eslint-disable max-lines */
-import { BaseProvider, Provider } from '@ethersproject/providers'
+import { BaseProvider, JsonRpcProvider, Provider, TransactionReceipt } from '@ethersproject/providers'
+import { BigNumber } from 'ethers'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import {
   TransactionOriginType,
   TransactionStatus,
   TransactionType,
+  TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { ensure0xHex } from 'uniswap/src/utils/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { TransactionRepository } from 'wallet/src/features/transactions/executeTransaction/services/TransactionRepository/transactionRepository'
-import { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
-import { createTransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionServiceImpl'
 import {
-  TransactionResponse,
-  TransactionSigner,
-} from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
+  SubmitTransactionParams,
+  TransactionService,
+} from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
+import { createTransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionServiceImpl'
+import { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
 import { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'
 import { TransactionConfigService } from 'wallet/src/features/transactions/executeTransaction/services/transactionConfigService'
 
@@ -39,7 +43,9 @@ describe('TransactionService', () => {
   const mockTransactionSigner: jest.Mocked<TransactionSigner> = {
     prepareTransaction: jest.fn(),
     signTransaction: jest.fn(),
+    signTypedData: jest.fn(),
     sendTransaction: jest.fn(),
+    sendTransactionSync: jest.fn(),
     signAndSendTransaction: jest.fn(),
   }
 
@@ -96,8 +102,8 @@ describe('TransactionService', () => {
     })
   }
 
-  describe('executeTransaction', () => {
-    it('should successfully execute a transaction', async () => {
+  describe('prepareAndSignTransaction', () => {
+    it('should successfully prepare and sign a transaction with provided nonce', async () => {
       // Arrange
       const service = createTestService()
 
@@ -110,112 +116,44 @@ describe('TransactionService', () => {
         to: '0xabcdef1234567890123456789012345678901234',
         value: '0x1234',
         data: '0x123abc',
-        nonce: 5, // Explicitly provide a nonce
+        chainId: UniverseChainId.Mainnet,
+        nonce: 5, // Provided nonce
       }
 
-      const executeParams: ExecuteTransactionParams = {
+      const params = {
         chainId: UniverseChainId.Mainnet,
         account: mockAccount,
-        options: {
-          request: txRequest,
-        },
-        typeInfo: {
-          type: TransactionType.Send,
-          assetType: AssetType.Currency,
-          recipient: '0xabcdef1234567890123456789012345678901234',
-          tokenAddress: '0x0000000000000000000000000000000000000000', // ETH
-          currencyAmountRaw: '0x1234',
-        },
-        transactionOriginType: TransactionOriginType.Internal,
+        request: txRequest,
+        submitViaPrivateRpc: false,
       }
 
-      // Mock transaction response
-      const txResponse: TransactionResponse = {
-        hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-        confirmations: 0,
-        from: mockAccount.address,
-        wait: jest.fn().mockResolvedValue({
-          status: 1, // success
-          gasUsed: { toString: (): string => '21000' },
-        }),
-      } as unknown as TransactionResponse
+      const preparedTransaction = {
+        ...txRequest,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+      }
 
-      // Setup mock responses
-      mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
-        transactionResponse: txResponse,
-        populatedRequest: { ...txRequest },
-        timestampBeforeSign: 1234500000,
-        timestampBeforeSend: 1234567890,
-      })
+      const signedTransaction = '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a'
+
+      // Setup mocks
+      mockTransactionSigner.prepareTransaction.mockResolvedValue(preparedTransaction)
+      mockTransactionSigner.signTransaction.mockResolvedValue(signedTransaction)
 
       // Act
-      const result = await service.executeTransaction(executeParams)
+      const result = await service.prepareAndSignTransaction(params)
 
       // Assert
-      // 1. Verify transaction was added to repository before sending
-      expect(mockTransactionRepository.addTransaction).toHaveBeenCalledWith({
-        transaction: expect.objectContaining({
-          status: TransactionStatus.Pending,
-        }),
-      })
-
-      // 2. Verify transaction was signed and sent with the original request including nonce
-      expect(mockTransactionSigner.signAndSendTransaction).toHaveBeenCalledWith({
+      expect(mockTransactionSigner.prepareTransaction).toHaveBeenCalledWith({
         request: txRequest,
       })
-
-      // 3. Verify transaction was updated in repository after sending
-      expect(mockTransactionRepository.updateTransaction).toHaveBeenCalled()
-
-      // 4. Verify transaction hash was returned
-      expect(result.transactionResponse.hash).toBe(txResponse.hash)
-
-      // 5. Verify logging happened
-      expect(mockLogger.debug).toHaveBeenCalled()
+      expect(mockTransactionSigner.signTransaction).toHaveBeenCalledWith(preparedTransaction)
+      expect(result).toEqual({
+        request: preparedTransaction,
+        signedRequest: signedTransaction,
+      })
     })
 
-    it('should reject transactions from readonly accounts', async () => {
-      // Arrange
-      const service = createTestService()
-
-      const mockReadonlyAccount: AccountMeta = {
-        address: '0x1234567890123456789012345678901234567890',
-        type: AccountType.Readonly,
-      }
-
-      const txRequest = {
-        to: '0xabcdef1234567890123456789012345678901234',
-        value: '0x1234',
-        data: '0x123abc',
-      }
-
-      const executeParams: ExecuteTransactionParams = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockReadonlyAccount,
-        options: {
-          request: txRequest,
-        },
-        typeInfo: {
-          type: TransactionType.Send,
-          assetType: AssetType.Currency,
-          recipient: '0xabcdef1234567890123456789012345678901234',
-          tokenAddress: '0x0000000000000000000000000000000000000000', // ETH
-          currencyAmountRaw: '0x1234',
-        },
-        transactionOriginType: TransactionOriginType.Internal,
-      }
-
-      // Act & Assert
-      await expect(service.executeTransaction(executeParams)).rejects.toThrow('Account must support signing')
-
-      // Verify that no transaction was added to repository
-      expect(mockTransactionRepository.addTransaction).not.toHaveBeenCalled()
-
-      // Verify that signing was never attempted
-      expect(mockTransactionSigner.signAndSendTransaction).not.toHaveBeenCalled()
-    })
-
-    it('should calculate nonce automatically when not provided', async () => {
+    it('should calculate nonce when not provided', async () => {
       // Arrange
       const service = createTestService()
 
@@ -228,73 +166,49 @@ describe('TransactionService', () => {
         to: '0xabcdef1234567890123456789012345678901234',
         value: '0x1234',
         data: '0x123abc',
-        // Note: No nonce provided here
+        chainId: UniverseChainId.Mainnet,
+        // No nonce provided
       }
 
-      const executeParams: ExecuteTransactionParams = {
+      const params = {
         chainId: UniverseChainId.Mainnet,
         account: mockAccount,
-        options: {
-          request: txRequest,
-        },
-        typeInfo: {
-          type: TransactionType.Send,
-          assetType: AssetType.Currency,
-          recipient: '0xabcdef1234567890123456789012345678901234',
-          tokenAddress: '0x0000000000000000000000000000000000000000', // ETH
-          currencyAmountRaw: '0x1234',
-        },
-        transactionOriginType: TransactionOriginType.Internal,
+        request: txRequest,
+        submitViaPrivateRpc: false,
       }
 
-      // Setup mock responses - Important: Use a number not a Promise
-      mockGetTransactionCount.mockReturnValue(42)
+      const calculatedNonce = 42
+      const requestWithNonce = { ...txRequest, nonce: calculatedNonce }
+      const preparedTransaction = {
+        ...requestWithNonce,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+      }
 
-      // Mock transaction response
-      const txResponse = {
-        hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-        confirmations: 0,
-        from: mockAccount.address,
-        wait: jest.fn().mockResolvedValue({
-          status: 1,
-          gasUsed: { toString: (): string => '21000' },
-        }),
-      } as unknown as TransactionResponse
+      const signedTransaction = '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a'
 
-      // Mock the signAndSendTransaction to capture the request object with nonce
-      const requestWithNonce = { ...txRequest, nonce: 42 }
-      mockTransactionSigner.signAndSendTransaction.mockImplementation(async () => {
-        // Return the transaction response
-        return {
-          transactionResponse: txResponse,
-          populatedRequest: requestWithNonce,
-          timestampBeforeSign: 1234500000,
-          timestampBeforeSend: 1234567890,
-        }
-      })
+      // Setup mocks
+      mockGetTransactionCount.mockReturnValue(calculatedNonce)
+      mockConfigService.shouldUsePrivateRpc.mockReturnValue(false)
+      mockTransactionSigner.prepareTransaction.mockResolvedValue(preparedTransaction)
+      mockTransactionSigner.signTransaction.mockResolvedValue(signedTransaction)
 
       // Act
-      const result = await service.executeTransaction(executeParams)
+      const result = await service.prepareAndSignTransaction(params)
 
       // Assert
-      // 1. Verify transaction was added to repository
-      expect(mockTransactionRepository.addTransaction).toHaveBeenCalled()
-
-      // 2. Verify the provider's getTransactionCount was called to calculate the nonce
       expect(mockGetTransactionCount).toHaveBeenCalledWith(mockAccount.address, 'pending')
-
-      // 3. Verify that signAndSendTransaction was called with a request that includes the nonce
-      // Since the service modifies the input object, we can't check by direct matching
-      expect(mockTransactionSigner.signAndSendTransaction).toHaveBeenCalled()
-
-      // 4. Verify transaction was updated with the hash
-      expect(mockTransactionRepository.updateTransaction).toHaveBeenCalled()
-
-      // 5. Verify the response contains the hash
-      expect(result.transactionResponse.hash).toBe(txResponse.hash)
+      expect(mockTransactionSigner.prepareTransaction).toHaveBeenCalledWith({
+        request: requestWithNonce,
+      })
+      expect(mockTransactionSigner.signTransaction).toHaveBeenCalledWith(preparedTransaction)
+      expect(result).toEqual({
+        request: preparedTransaction,
+        signedRequest: signedTransaction,
+      })
     })
 
-    it('should properly handle and categorize transaction errors', async () => {
+    it('should throw error when transaction validation fails', async () => {
       // Arrange
       const service = createTestService()
 
@@ -307,53 +221,30 @@ describe('TransactionService', () => {
         to: '0xabcdef1234567890123456789012345678901234',
         value: '0x1234',
         data: '0x123abc',
+        chainId: UniverseChainId.Mainnet,
+        nonce: 5,
       }
 
-      const executeParams: ExecuteTransactionParams = {
+      const params = {
         chainId: UniverseChainId.Mainnet,
         account: mockAccount,
-        options: {
-          request: txRequest,
-        },
-        typeInfo: {
-          type: TransactionType.Send,
-          assetType: AssetType.Currency,
-          recipient: '0xabcdef1234567890123456789012345678901234',
-          tokenAddress: '0x0000000000000000000000000000000000000000', // ETH
-          currencyAmountRaw: '0x1234',
-        },
-        transactionOriginType: TransactionOriginType.Internal,
+        request: txRequest,
+        submitViaPrivateRpc: false,
       }
 
-      // Create a realistic RPC error
-      const rpcError = new Error('transaction underpriced')
-      rpcError.message = 'transaction underpriced'
-
-      // Mock transaction signer to throw the error
-      mockTransactionSigner.signAndSendTransaction.mockRejectedValue(rpcError)
+      // Setup mocks to throw error during preparation
+      mockTransactionSigner.prepareTransaction.mockRejectedValue(new Error('Preparation failed'))
 
       // Act and Assert
-      await expect(service.executeTransaction(executeParams)).rejects.toThrow('Failed to send transaction:')
+      await expect(service.prepareAndSignTransaction(params)).rejects.toThrow('Preparation failed')
 
-      // Verify that transaction was added as pending first
-      expect(mockTransactionRepository.addTransaction).toHaveBeenCalledWith({
-        transaction: expect.objectContaining({
-          status: TransactionStatus.Pending,
-        }),
+      expect(mockTransactionSigner.prepareTransaction).toHaveBeenCalledWith({
+        request: txRequest,
       })
-
-      // Verify that transaction was properly finalized as failed
-      expect(mockTransactionRepository.finalizeTransaction).toHaveBeenCalledWith({
-        transaction: expect.anything(),
-        status: TransactionStatus.Failed,
-      })
-
-      // Verify that errors were properly logged
-      expect(mockLogger.warn).toHaveBeenCalled()
-      expect(mockLogger.error).toHaveBeenCalled()
+      expect(mockTransactionSigner.signTransaction).not.toHaveBeenCalled()
     })
 
-    it('should handle user rejected signing', async () => {
+    it('should handle private RPC scenario when calculating nonce', async () => {
       // Arrange
       const service = createTestService()
 
@@ -366,46 +257,119 @@ describe('TransactionService', () => {
         to: '0xabcdef1234567890123456789012345678901234',
         value: '0x1234',
         data: '0x123abc',
+        chainId: UniverseChainId.Mainnet,
       }
 
-      const executeParams: ExecuteTransactionParams = {
+      const params = {
         chainId: UniverseChainId.Mainnet,
         account: mockAccount,
-        options: {
-          request: txRequest,
-        },
-        typeInfo: {
-          type: TransactionType.Send,
-          assetType: AssetType.Currency,
-          recipient: '0xabcdef1234567890123456789012345678901234',
-          tokenAddress: '0x0000000000000000000000000000000000000000', // ETH
-          currencyAmountRaw: '0x1234',
-        },
-        transactionOriginType: TransactionOriginType.Internal,
+        request: txRequest,
+        submitViaPrivateRpc: true,
       }
 
-      // Create a user rejected signing error
-      const userRejectedError = new Error('User rejected request')
-      userRejectedError.message = 'User rejected request'
+      const calculatedNonce = 42
+      const requestWithNonce = { ...txRequest, nonce: calculatedNonce }
+      const preparedTransaction = {
+        ...requestWithNonce,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+      }
 
-      // Mock transaction signer to throw the error
-      mockTransactionSigner.signAndSendTransaction.mockRejectedValue(userRejectedError)
+      const signedTransaction = '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a'
 
-      // Act and Assert
-      await expect(service.executeTransaction(executeParams)).rejects.toThrow('Failed to send transaction:')
+      // Setup mocks
+      mockGetTransactionCount.mockReturnValue(calculatedNonce)
+      mockConfigService.shouldUsePrivateRpc.mockReturnValue(true)
+      mockTransactionSigner.prepareTransaction.mockResolvedValue(preparedTransaction)
+      mockTransactionSigner.signTransaction.mockResolvedValue(signedTransaction)
 
-      // Verify that transaction was added as pending first
+      // Act
+      const result = await service.prepareAndSignTransaction(params)
+
+      // Assert
+      expect(mockConfigService.shouldUsePrivateRpc).toHaveBeenCalledWith({
+        chainId: UniverseChainId.Mainnet,
+        submitViaPrivateRpc: true,
+      })
+      expect(result).toEqual({
+        request: preparedTransaction,
+        signedRequest: signedTransaction,
+      })
+    })
+  })
+
+  describe('submitTransaction', () => {
+    it('should successfully submit a signed transaction', async () => {
+      // Arrange
+      const service = createTestService()
+
+      const mockAccount: AccountMeta = {
+        address: '0x1234567890123456789012345678901234567890',
+        type: AccountType.SignerMnemonic,
+      }
+
+      const signedRequest = ensure0xHex(
+        '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a',
+      )
+      const validatedRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x1234',
+        data: '0x123abc',
+        nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
+      }
+
+      const typeInfo: TransactionTypeInfo = {
+        type: TransactionType.Send,
+        assetType: AssetType.Currency,
+        recipient: '0xabcdef1234567890123456789012345678901234',
+        tokenAddress: '0x0000000000000000000000000000000000000000',
+        currencyAmountRaw: '0x1234',
+      }
+
+      const params = {
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        request: {
+          request: validatedRequest,
+          signedRequest,
+        },
+        options: {
+          request: validatedRequest,
+          submitViaPrivateRpc: false,
+        },
+        typeInfo,
+        transactionOriginType: TransactionOriginType.Internal,
+        timestampBeforeSign: 1234567890,
+      }
+
+      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
+
+      // Setup mocks
+      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
+
+      // Act
+      const result = await service.submitTransaction(params)
+
+      // Assert
       expect(mockTransactionRepository.addTransaction).toHaveBeenCalledWith({
         transaction: expect.objectContaining({
           status: TransactionStatus.Pending,
         }),
       })
-
-      // Verify that transaction was properly finalized as failed
-      expect(mockTransactionRepository.finalizeTransaction).toHaveBeenCalledWith({
-        transaction: expect.anything(),
-        status: TransactionStatus.Failed,
+      expect(mockTransactionSigner.sendTransaction).toHaveBeenCalledWith({
+        signedTx: signedRequest,
       })
+      expect(mockTransactionRepository.updateTransaction).toHaveBeenCalledWith({
+        transaction: expect.objectContaining({
+          hash: txHash,
+          status: TransactionStatus.Pending,
+        }),
+        skipProcessing: false,
+      })
+      expect(result.transactionHash).toBe(txHash)
     })
 
     it('should track analytics for swap transactions', async () => {
@@ -417,74 +381,70 @@ describe('TransactionService', () => {
         type: AccountType.SignerMnemonic,
       }
 
-      const txRequest = {
+      const signedRequest = ensure0xHex(
+        '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a',
+      )
+      const validatedRequest = {
         to: '0xabcdef1234567890123456789012345678901234',
         value: '0x0',
         data: '0x123abc',
         nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
       }
 
-      // Mock analytics data
       const mockAnalyticsData = {
         token_in_symbol: 'ETH',
         token_out_symbol: 'USDC',
         token_in_amount: '1.0',
         token_out_amount: '1700.0',
-        routing: 'classic' as const, // Cast to the correct type
+        routing: 'classic' as const,
         transactionOriginType: 'internal',
       }
 
-      const executeParams: ExecuteTransactionParams = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
-        options: {
-          request: txRequest,
-        },
-        typeInfo: {
-          type: TransactionType.Swap,
-          tradeType: 0, // EXACT_INPUT
-          inputCurrencyId: 'eth',
-          outputCurrencyId: 'usdc',
-          inputCurrencyAmountRaw: '1000000000000000000',
-          expectedOutputCurrencyAmountRaw: '1700000000',
-          minimumOutputCurrencyAmountRaw: '1683000000',
-        },
-        transactionOriginType: TransactionOriginType.Internal,
-        // Include analytics data
-        analytics: mockAnalyticsData,
+      const typeInfo: TransactionTypeInfo = {
+        type: TransactionType.Swap,
+        tradeType: 0,
+        inputCurrencyId: 'eth',
+        outputCurrencyId: 'usdc',
+        inputCurrencyAmountRaw: '1000000000000000000',
+        expectedOutputCurrencyAmountRaw: '1700000000',
+        minimumOutputCurrencyAmountRaw: '1683000000',
       }
 
-      // Mock transaction response
-      const txResponse: TransactionResponse = {
-        hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-        confirmations: 0,
-        from: mockAccount.address,
-        wait: jest.fn().mockResolvedValue({
-          status: 1,
-          gasUsed: { toString: (): string => '21000' },
-        }),
-      } as unknown as TransactionResponse
+      const params = {
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        request: {
+          request: validatedRequest,
+          signedRequest,
+        },
+        options: {
+          request: validatedRequest,
+          submitViaPrivateRpc: false,
+        },
+        typeInfo,
+        transactionOriginType: TransactionOriginType.Internal,
+        analytics: mockAnalyticsData,
+        timestampBeforeSign: 1234567890,
+      }
 
-      // Setup mock responses
-      mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
-        transactionResponse: txResponse,
-        populatedRequest: { ...txRequest },
-        timestampBeforeSign: 1234500000,
-        timestampBeforeSend: 1234567890,
-      })
+      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
+
+      // Setup mocks
+      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
 
       // Act
-      await service.executeTransaction(executeParams)
+      await service.submitTransaction(params)
 
       // Assert
-      // Verify analytics was called with the right data
-      expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledTimes(1)
       expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
         expect.objectContaining({
           typeInfo: expect.objectContaining({
             type: TransactionType.Swap,
           }),
-          hash: txResponse.hash,
+          hash: txHash,
         }),
         mockAnalyticsData,
       )
@@ -499,59 +459,56 @@ describe('TransactionService', () => {
         type: AccountType.SignerMnemonic,
       }
 
-      const txRequest = {
+      const signedRequest = ensure0xHex(
+        '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a',
+      )
+      const validatedRequest = {
         to: '0xabcdef1234567890123456789012345678901234',
         value: '0x0',
         data: '0x123abc',
         nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
       }
 
-      const executeParams: ExecuteTransactionParams = {
+      const typeInfo: TransactionTypeInfo = {
+        type: TransactionType.Swap,
+        tradeType: 0,
+        inputCurrencyId: 'eth',
+        outputCurrencyId: 'usdc',
+        inputCurrencyAmountRaw: '1000000000000000000',
+        expectedOutputCurrencyAmountRaw: '1700000000',
+        minimumOutputCurrencyAmountRaw: '1683000000',
+      }
+
+      const params = {
         chainId: UniverseChainId.Mainnet,
         account: mockAccount,
+        request: {
+          request: validatedRequest,
+          signedRequest,
+        },
         options: {
-          request: txRequest,
+          request: validatedRequest,
+          submitViaPrivateRpc: false,
         },
-        typeInfo: {
-          type: TransactionType.Swap,
-          tradeType: 0, // EXACT_INPUT
-          inputCurrencyId: 'eth',
-          outputCurrencyId: 'usdc',
-          inputCurrencyAmountRaw: '1000000000000000000',
-          expectedOutputCurrencyAmountRaw: '1700000000',
-          minimumOutputCurrencyAmountRaw: '1683000000',
-        },
+        typeInfo,
         transactionOriginType: TransactionOriginType.Internal,
-        // Note: No analytics provided here, which should trigger an error log
+        timestampBeforeSign: 1234567890,
+        // Note: No analytics provided
       }
 
-      // Mock transaction response
-      const txResponse: TransactionResponse = {
-        hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-        confirmations: 0,
-        from: mockAccount.address,
-        wait: jest.fn().mockResolvedValue({
-          status: 1,
-          gasUsed: { toString: (): string => '21000' },
-        }),
-      } as unknown as TransactionResponse
+      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
 
-      // Setup mock responses
-      mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
-        transactionResponse: txResponse,
-        populatedRequest: { ...txRequest },
-        timestampBeforeSign: 1234500000,
-        timestampBeforeSend: 1234567890,
-      })
+      // Setup mocks
+      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
 
       // Act
-      await service.executeTransaction(executeParams)
+      await service.submitTransaction(params)
 
       // Assert
-      // Verify that analytics was NOT called
       expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
-
-      // Verify that error was logged
       expect(mockLogger.error).toHaveBeenCalledWith(
         expect.any(Error),
         expect.objectContaining({
@@ -561,7 +518,7 @@ describe('TransactionService', () => {
       )
     })
 
-    it('should use configured private RPC when submitViaPrivateRpc is true', async () => {
+    it('should handle transaction submission errors', async () => {
       // Arrange
       const service = createTestService()
 
@@ -570,229 +527,65 @@ describe('TransactionService', () => {
         type: AccountType.SignerMnemonic,
       }
 
-      const txRequest = {
-        to: '0xabcdef1234567890123456789012345678901234',
-        value: '0x1234',
-        data: '0x123abc',
-      }
-
-      const executeParams: ExecuteTransactionParams = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
-        options: {
-          request: txRequest,
-          submitViaPrivateRpc: true, // Request to use private RPC
-        },
-        typeInfo: {
-          type: TransactionType.Send,
-          assetType: AssetType.Currency,
-          recipient: '0xabcdef1234567890123456789012345678901234',
-          tokenAddress: '0x0000000000000000000000000000000000000000', // ETH
-          currencyAmountRaw: '0x1234',
-        },
-        transactionOriginType: TransactionOriginType.Internal,
-      }
-
-      // Mock config service to indicate private RPC should be used
-      mockConfigService.shouldUsePrivateRpc.mockReturnValue(true)
-      // Indicate private RPC is enabled for this chain
-      mockConfigService.isPrivateRpcEnabled.mockReturnValue(true)
-
-      // Mock the private RPC configuration
-      mockConfigService.getPrivateRpcConfig.mockReturnValue({
-        flashbotsEnabled: true,
-      })
-
-      // Mock that private nonce is different to verify it's used
-      mockGetTransactionCount.mockReturnValue(10) // Regular provider nonce
-
-      // Mock transaction response
-      const txResponse: TransactionResponse = {
-        hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-        confirmations: 0,
-        from: mockAccount.address,
-        wait: jest.fn().mockResolvedValue({
-          status: 1,
-          gasUsed: { toString: (): string => '21000' },
-        }),
-      } as unknown as TransactionResponse
-
-      // Setup mock responses
-      mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
-        transactionResponse: txResponse,
-        populatedRequest: { ...txRequest, nonce: 10 },
-        timestampBeforeSign: 1234500000,
-        timestampBeforeSend: 1234567890,
-      })
-
-      // Act
-      await service.executeTransaction(executeParams)
-
-      // Assert
-      // Verify that the config service was called to check if private RPC should be used
-      expect(mockConfigService.shouldUsePrivateRpc).toHaveBeenCalledWith({
-        chainId: UniverseChainId.Mainnet,
-        submitViaPrivateRpc: true,
-      })
-
-      // Verify transaction was successfully processed
-      expect(mockTransactionRepository.addTransaction).toHaveBeenCalled()
-      expect(mockTransactionSigner.signAndSendTransaction).toHaveBeenCalled()
-      expect(mockTransactionRepository.updateTransaction).toHaveBeenCalled()
-    })
-
-    it('should correctly update transaction status after successful submission', async () => {
-      // Arrange
-      const service = createTestService()
-
-      const mockAccount: AccountMeta = {
-        address: '0x1234567890123456789012345678901234567890',
-        type: AccountType.SignerMnemonic,
-      }
-
-      const txRequest = {
+      const signedRequest = ensure0xHex(
+        '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a',
+      )
+      const validatedRequest = {
         to: '0xabcdef1234567890123456789012345678901234',
         value: '0x1234',
         data: '0x123abc',
         nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
       }
 
-      const executeParams: ExecuteTransactionParams = {
+      const typeInfo: TransactionTypeInfo = {
+        type: TransactionType.Send,
+        assetType: AssetType.Currency,
+        recipient: '0xabcdef1234567890123456789012345678901234',
+        tokenAddress: '0x0000000000000000000000000000000000000000',
+        currencyAmountRaw: '0x1234',
+      }
+
+      const params = {
         chainId: UniverseChainId.Mainnet,
         account: mockAccount,
+        request: {
+          request: validatedRequest,
+          signedRequest,
+        },
         options: {
-          request: txRequest,
+          request: validatedRequest,
+          submitViaPrivateRpc: false,
         },
-        typeInfo: {
-          type: TransactionType.Send,
-          assetType: AssetType.Currency,
-          recipient: '0xabcdef1234567890123456789012345678901234',
-          tokenAddress: '0x0000000000000000000000000000000000000000', // ETH
-          currencyAmountRaw: '0x1234',
-        },
+        typeInfo,
         transactionOriginType: TransactionOriginType.Internal,
+        timestampBeforeSign: 1234567890,
       }
 
-      // Mock transaction response
-      const txResponse: TransactionResponse = {
-        hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-        confirmations: 0,
-        from: mockAccount.address,
-        wait: jest.fn().mockResolvedValue({
-          status: 1, // success
-          gasUsed: { toString: (): string => '21000' },
-        }),
-      } as unknown as TransactionResponse
+      const rpcError = new Error('transaction underpriced')
 
-      // Create a spy on the transaction state transitions
-      const addTxCaptor = jest.fn()
-      const updateTxCaptor = jest.fn()
+      // Setup mocks
+      mockTransactionSigner.sendTransaction.mockRejectedValue(rpcError)
 
-      // Override the mock implementation to capture transaction state
-      mockTransactionRepository.addTransaction.mockImplementation((input) => {
-        addTxCaptor(input.transaction)
-        return Promise.resolve()
-      })
+      // Act and Assert
+      await expect(service.submitTransaction(params)).rejects.toThrow('Failed to send transaction:')
 
-      mockTransactionRepository.updateTransaction.mockImplementation((input) => {
-        updateTxCaptor(input.transaction)
-        return Promise.resolve()
-      })
-
-      // Setup mock responses
-      mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
-        transactionResponse: txResponse,
-        populatedRequest: { ...txRequest },
-        timestampBeforeSign: 1234500000,
-        timestampBeforeSend: 1234567890,
-      })
-
-      // Act
-      await service.executeTransaction(executeParams)
-
-      // Assert
-      // Verify transaction was initially added with pending status and no hash
-      expect(addTxCaptor).toHaveBeenCalled()
-      const initialTx = addTxCaptor.mock.calls[0][0]
-      expect(initialTx.status).toBe(TransactionStatus.Pending)
-      expect(initialTx.hash).toBeUndefined()
-
-      // Verify transaction was updated with the hash and still in pending status
-      expect(updateTxCaptor).toHaveBeenCalled()
-      const updatedTx = updateTxCaptor.mock.calls[0][0]
-      expect(updatedTx.hash).toBe(txResponse.hash)
-      expect(updatedTx.status).toBe(TransactionStatus.Pending)
-    })
-
-    it('should retrieve current block number during transaction processing', async () => {
-      // Arrange
-      const service = createTestService()
-
-      const mockAccount: AccountMeta = {
-        address: '0x1234567890123456789012345678901234567890',
-        type: AccountType.SignerMnemonic,
-      }
-
-      const txRequest = {
-        to: '0xabcdef1234567890123456789012345678901234',
-        value: '0x1234',
-        data: '0x123abc',
-        nonce: 5,
-      }
-
-      const executeParams: ExecuteTransactionParams = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
-        options: {
-          request: txRequest,
-        },
-        typeInfo: {
-          type: TransactionType.Send,
-          assetType: AssetType.Currency,
-          recipient: '0xabcdef1234567890123456789012345678901234',
-          tokenAddress: '0x0000000000000000000000000000000000000000', // ETH
-          currencyAmountRaw: '0x1234',
-        },
-        transactionOriginType: TransactionOriginType.Internal,
-      }
-
-      // Mock transaction response
-      const txResponse: TransactionResponse = {
-        hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-        confirmations: 0,
-        from: mockAccount.address,
-        wait: jest.fn().mockResolvedValue({
-          status: 1, // success
-          gasUsed: { toString: (): string => '21000' },
-        }),
-      } as unknown as TransactionResponse
-
-      // Block number being fetched should be the mocked value (123456)
-      mockGetInternalBlockNumber.mockReturnValue(123456)
-
-      // Setup mock responses
-      mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
-        transactionResponse: txResponse,
-        populatedRequest: { ...txRequest },
-        timestampBeforeSign: 1234500000,
-        timestampBeforeSend: 1234567890,
-      })
-
-      // Act
-      await service.executeTransaction(executeParams)
-
-      // Assert
-      // Verify block number was retrieved
-      expect(mockGetInternalBlockNumber).toHaveBeenCalled()
-      expect(mockTransactionRepository.updateTransaction).toHaveBeenCalledWith({
+      expect(mockTransactionRepository.addTransaction).toHaveBeenCalledWith({
         transaction: expect.objectContaining({
-          hash: txResponse.hash,
           status: TransactionStatus.Pending,
         }),
       })
+      expect(mockTransactionRepository.finalizeTransaction).toHaveBeenCalledWith({
+        transaction: expect.anything(),
+        status: TransactionStatus.Failed,
+      })
+      expect(mockLogger.warn).toHaveBeenCalled()
+      expect(mockLogger.error).toHaveBeenCalled()
     })
 
-    it('should process a bridge transaction with analytics', async () => {
+    it('should handle bridge transactions with analytics', async () => {
       // Arrange
       const service = createTestService()
 
@@ -801,14 +594,19 @@ describe('TransactionService', () => {
         type: AccountType.SignerMnemonic,
       }
 
-      const txRequest = {
+      const signedRequest = ensure0xHex(
+        '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a',
+      )
+      const validatedRequest = {
         to: '0xabcdef1234567890123456789012345678901234',
         value: '0x1234',
         data: '0x123abc',
         nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
       }
 
-      // Mock bridge analytics data
       const mockBridgeAnalyticsData = {
         token_in_symbol: 'ETH',
         token_out_symbol: 'MATIC',
@@ -820,68 +618,52 @@ describe('TransactionService', () => {
         chain_id_out: UniverseChainId.Polygon,
       }
 
-      const executeParams: ExecuteTransactionParams = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
-        options: {
-          request: txRequest,
-        },
-        typeInfo: {
-          type: TransactionType.Bridge,
-          inputCurrencyId: 'eth',
-          inputCurrencyAmountRaw: '1000000000000000000',
-          outputCurrencyId: 'matic',
-          outputCurrencyAmountRaw: '1700000000000000000',
-        },
-        transactionOriginType: TransactionOriginType.Internal,
-        analytics: mockBridgeAnalyticsData,
+      const typeInfo: TransactionTypeInfo = {
+        type: TransactionType.Bridge,
+        inputCurrencyId: 'eth',
+        inputCurrencyAmountRaw: '1000000000000000000',
+        outputCurrencyId: 'matic',
+        outputCurrencyAmountRaw: '1700000000000000000',
       }
 
-      // Mock transaction response
-      const txResponse: TransactionResponse = {
-        hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-        confirmations: 0,
-        from: mockAccount.address,
-        wait: jest.fn().mockResolvedValue({
-          status: 1, // success
-          gasUsed: { toString: (): string => '21000' },
-        }),
-      } as unknown as TransactionResponse
+      const params = {
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        request: {
+          request: validatedRequest,
+          signedRequest,
+        },
+        options: {
+          request: validatedRequest,
+          submitViaPrivateRpc: false,
+        },
+        typeInfo,
+        transactionOriginType: TransactionOriginType.Internal,
+        analytics: mockBridgeAnalyticsData,
+        timestampBeforeSign: 1234567890,
+      }
 
-      // Setup mock responses
-      mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
-        transactionResponse: txResponse,
-        populatedRequest: { ...txRequest },
-        timestampBeforeSign: 1234500000,
-        timestampBeforeSend: 1234567890,
-      })
+      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
+
+      // Setup mocks
+      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
 
       // Act
-      await service.executeTransaction(executeParams)
+      await service.submitTransaction(params)
 
       // Assert
-      // Verify transaction was added to repository
-      expect(mockTransactionRepository.addTransaction).toHaveBeenCalled()
-
-      // Verify transaction was signed and sent
-      expect(mockTransactionSigner.signAndSendTransaction).toHaveBeenCalled()
-
-      // Verify transaction was updated in repository
-      expect(mockTransactionRepository.updateTransaction).toHaveBeenCalled()
-
-      // Verify analytics for bridge was called
       expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
         expect.objectContaining({
           typeInfo: expect.objectContaining({
             type: TransactionType.Bridge,
           }),
-          hash: txResponse.hash,
+          hash: txHash,
         }),
         mockBridgeAnalyticsData,
       )
     })
 
-    it('should properly handle transactions with initial hash value', async () => {
+    it('should not track analytics for external transactions', async () => {
       // Arrange
       const service = createTestService()
 
@@ -890,7 +672,709 @@ describe('TransactionService', () => {
         type: AccountType.SignerMnemonic,
       }
 
-      const initialHash = '0x9876543210987654321098765432109876543210987654321098765432109876'
+      const signedRequest = ensure0xHex(
+        '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a',
+      )
+      const validatedRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x0',
+        data: '0x123abc',
+        nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
+      }
+
+      const typeInfo: TransactionTypeInfo = {
+        type: TransactionType.Swap,
+        tradeType: 0,
+        inputCurrencyId: 'eth',
+        outputCurrencyId: 'usdc',
+        inputCurrencyAmountRaw: '1000000000000000000',
+        expectedOutputCurrencyAmountRaw: '1700000000',
+        minimumOutputCurrencyAmountRaw: '1683000000',
+      }
+
+      const params = {
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        request: {
+          request: validatedRequest,
+          signedRequest,
+        },
+        options: {
+          request: validatedRequest,
+          submitViaPrivateRpc: false,
+        },
+        typeInfo,
+        transactionOriginType: TransactionOriginType.External, // External origin
+        timestampBeforeSign: 1234567890,
+        // Note: No analytics provided for external transaction
+      }
+
+      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
+
+      // Setup mocks
+      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
+
+      // Act
+      await service.submitTransaction(params)
+
+      // Assert
+      expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
+      expect(mockLogger.error).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('submitTransactionSync', () => {
+    // Common setup for all submitTransactionSync tests
+    const mockAccount: AccountMeta = {
+      address: '0x1234567890123456789012345678901234567890',
+      type: AccountType.SignerMnemonic,
+    }
+
+    const signedRequest = ensure0xHex('0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a')
+
+    const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
+
+    // Create common mock objects
+    const createMockFormattedReceipt = (overrides: Partial<TransactionReceipt> = {}): TransactionReceipt => {
+      return {
+        transactionHash: txHash,
+        blockNumber: 0x123456,
+        gasUsed: BigNumber.from('0x5208'),
+        status: 1,
+        blockHash: '0xblock123',
+        transactionIndex: 0,
+        confirmations: 1,
+        from: mockAccount.address,
+        to: '0xabcdef1234567890123456789012345678901234',
+        logs: [],
+        cumulativeGasUsed: BigNumber.from('0x5208'),
+        effectiveGasPrice: BigNumber.from('0x9184e72a000'),
+        contractAddress: null,
+        logsBloom: '0x0',
+        root: '0x0',
+        type: 2,
+        byzantium: true,
+        ...overrides,
+      } as TransactionReceipt
+    }
+
+    // Create a proper mock for JsonRpcProvider
+    const createMockJsonRpcProvider = (mockReceipt: Record<string, unknown> | null = null): JsonRpcProvider => {
+      const receipt = mockReceipt || createMockFormattedReceipt()
+
+      // Create the mocks explicitly
+      const mockSend = jest.fn().mockResolvedValue({})
+      const mockFormatterReceipt = jest.fn().mockImplementation(() => receipt)
+
+      const mockProvider = {
+        ...mockBaseProvider,
+        send: mockSend,
+        formatter: {
+          receipt: mockFormatterReceipt,
+        },
+      } as unknown as JsonRpcProvider
+
+      return mockProvider
+    }
+
+    // Helper function to create service with JsonRpc provider
+    const createTestServiceWithJsonRpc = (mockProvider: JsonRpcProvider | null = null): TransactionService => {
+      const provider = mockProvider || createMockJsonRpcProvider()
+      return createTransactionService({
+        transactionRepository: mockTransactionRepository,
+        transactionSigner: mockTransactionSigner,
+        analyticsService: mockAnalyticsService,
+        configService: mockConfigService,
+        logger: mockLogger,
+        getProvider: jest.fn().mockResolvedValue(provider),
+      })
+    }
+
+    // Helper function to create common test parameters
+    const createTestParams = (
+      overrides: {
+        validatedRequest?: Record<string, unknown>
+        typeInfo?: TransactionTypeInfo
+        analytics?: Record<string, unknown>
+        transactionOriginType?: TransactionOriginType
+      } = {},
+    ): SubmitTransactionParams => {
+      const defaultValidatedRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x1234',
+        data: '0x123abc',
+        nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
+      }
+
+      const validatedRequest = { ...defaultValidatedRequest, ...overrides.validatedRequest }
+
+      const defaultTypeInfo: TransactionTypeInfo = {
+        type: TransactionType.Send,
+        assetType: AssetType.Currency,
+        recipient: '0xabcdef1234567890123456789012345678901234',
+        tokenAddress: '0x0000000000000000000000000000000000000000',
+        currencyAmountRaw: '0x1234',
+      }
+
+      return {
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        request: {
+          request: validatedRequest,
+          signedRequest,
+        },
+        options: {
+          request: validatedRequest,
+          submitViaPrivateRpc: false,
+        },
+        typeInfo: overrides.typeInfo || defaultTypeInfo,
+        transactionOriginType: overrides.transactionOriginType || TransactionOriginType.Internal,
+        timestampBeforeSign: 1234567890,
+        ...(overrides.analytics && { analytics: overrides.analytics }),
+      } as SubmitTransactionParams
+    }
+
+    it('should successfully submit a transaction using sync method and return transaction details', async () => {
+      // Arrange
+      const params = createTestParams()
+      const mockProvider = createMockJsonRpcProvider()
+      const syncService = createTestServiceWithJsonRpc(mockProvider)
+
+      // Mock the transaction signer to return a proper receipt
+      const mockReceipt = createMockFormattedReceipt()
+      mockTransactionSigner.sendTransactionSync.mockResolvedValue(mockReceipt)
+
+      // Act
+      const result = await syncService.submitTransactionSync(params)
+
+      // Assert
+      expect(mockTransactionSigner.sendTransactionSync).toHaveBeenCalledWith({
+        signedTx: signedRequest,
+      })
+
+      expect(mockTransactionRepository.addTransaction).toHaveBeenCalledWith({
+        transaction: expect.objectContaining({
+          status: TransactionStatus.Pending,
+        }),
+      })
+
+      expect(mockTransactionRepository.updateTransaction).toHaveBeenCalledWith({
+        transaction: expect.objectContaining({
+          hash: txHash,
+        }),
+        skipProcessing: true,
+      })
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          hash: txHash,
+        }),
+      )
+
+      expect(mockLogger.debug).toHaveBeenCalledWith(
+        'TransactionService',
+        'submitTransactionSync',
+        'Calling sendTransactionSync...',
+      )
+    })
+
+    it('should track analytics for swap transactions', async () => {
+      // Arrange
+      const mockAnalyticsData = {
+        token_in_symbol: 'ETH',
+        token_out_symbol: 'USDC',
+        token_in_amount: '1.0',
+        token_out_amount: '1700.0',
+        routing: 'classic' as const,
+        transactionOriginType: 'internal',
+      }
+
+      const swapTypeInfo: TransactionTypeInfo = {
+        type: TransactionType.Swap,
+        tradeType: 0,
+        inputCurrencyId: 'eth',
+        outputCurrencyId: 'usdc',
+        inputCurrencyAmountRaw: '1000000000000000000',
+        expectedOutputCurrencyAmountRaw: '1700000000',
+        minimumOutputCurrencyAmountRaw: '1683000000',
+      }
+
+      const params = createTestParams({
+        validatedRequest: { value: '0x0' },
+        typeInfo: swapTypeInfo,
+        analytics: mockAnalyticsData,
+      })
+
+      const syncService = createTestServiceWithJsonRpc()
+
+      // Mock the transaction signer to return a proper receipt
+      const mockReceipt = createMockFormattedReceipt()
+      mockTransactionSigner.sendTransactionSync.mockResolvedValue(mockReceipt)
+
+      // Act
+      await syncService.submitTransactionSync(params)
+
+      // Assert
+      expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
+        expect.objectContaining({
+          typeInfo: expect.objectContaining({
+            type: TransactionType.Swap,
+          }),
+          hash: txHash,
+        }),
+        mockAnalyticsData,
+      )
+    })
+
+    it('should log error when analytics is missing for internal swaps', async () => {
+      // Arrange
+      const validatedRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x0',
+        data: '0x123abc',
+        nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
+      }
+
+      const typeInfo: TransactionTypeInfo = {
+        type: TransactionType.Swap,
+        tradeType: 0,
+        inputCurrencyId: 'eth',
+        outputCurrencyId: 'usdc',
+        inputCurrencyAmountRaw: '1000000000000000000',
+        expectedOutputCurrencyAmountRaw: '1700000000',
+        minimumOutputCurrencyAmountRaw: '1683000000',
+      }
+
+      const params = {
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        request: {
+          request: validatedRequest,
+          signedRequest,
+        },
+        options: {
+          request: validatedRequest,
+          submitViaPrivateRpc: false,
+        },
+        typeInfo,
+        transactionOriginType: TransactionOriginType.Internal,
+        timestampBeforeSign: 1234567890,
+        // Note: No analytics provided
+      }
+
+      const syncService = createTestServiceWithJsonRpc()
+
+      // Mock the transaction signer to return a proper receipt
+      const mockReceipt = createMockFormattedReceipt()
+      mockTransactionSigner.sendTransactionSync.mockResolvedValue(mockReceipt)
+
+      // Act
+      await syncService.submitTransactionSync(params)
+
+      // Assert
+      expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
+      expect(mockLogger.error).toHaveBeenCalledWith(
+        expect.any(Error),
+        expect.objectContaining({
+          tags: { file: 'TransactionService', function: 'submitTransactionSync' },
+          extra: expect.anything(),
+        }),
+      )
+    })
+
+    it('should handle sync transaction submission errors', async () => {
+      // Arrange
+
+      const validatedRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x1234',
+        data: '0x123abc',
+        nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
+      }
+
+      const typeInfo: TransactionTypeInfo = {
+        type: TransactionType.Send,
+        assetType: AssetType.Currency,
+        recipient: '0xabcdef1234567890123456789012345678901234',
+        tokenAddress: '0x0000000000000000000000000000000000000000',
+        currencyAmountRaw: '0x1234',
+      }
+
+      const params = {
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        request: {
+          request: validatedRequest,
+          signedRequest,
+        },
+        options: {
+          request: validatedRequest,
+          submitViaPrivateRpc: false,
+        },
+        typeInfo,
+        transactionOriginType: TransactionOriginType.Internal,
+        timestampBeforeSign: 1234567890,
+      }
+
+      const rpcError = new Error('sync transaction failed')
+
+      const syncService = createTestServiceWithJsonRpc()
+
+      // Mock the transaction signer to throw an error
+      mockTransactionSigner.sendTransactionSync.mockRejectedValue(rpcError)
+
+      // Act and Assert
+      await expect(syncService.submitTransactionSync(params)).rejects.toThrow('Failed to send transaction:')
+
+      expect(mockTransactionRepository.addTransaction).toHaveBeenCalledWith({
+        transaction: expect.objectContaining({
+          status: TransactionStatus.Pending,
+        }),
+      })
+      expect(mockTransactionRepository.finalizeTransaction).toHaveBeenCalledWith({
+        transaction: expect.anything(),
+        status: TransactionStatus.Failed,
+      })
+      expect(mockLogger.warn).toHaveBeenCalled()
+      expect(mockLogger.error).toHaveBeenCalled()
+    })
+
+    it('should handle bridge transactions with analytics', async () => {
+      const validatedRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x1234',
+        data: '0x123abc',
+        nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
+      }
+
+      const mockBridgeAnalyticsData = {
+        token_in_symbol: 'ETH',
+        token_out_symbol: 'MATIC',
+        token_in_amount: '1.0',
+        token_out_amount: '1700.0',
+        routing: 'bridge' as const,
+        transactionOriginType: 'internal',
+        chain_id_in: UniverseChainId.Mainnet,
+        chain_id_out: UniverseChainId.Polygon,
+      }
+
+      const typeInfo: TransactionTypeInfo = {
+        type: TransactionType.Bridge,
+        inputCurrencyId: 'eth',
+        inputCurrencyAmountRaw: '1000000000000000000',
+        outputCurrencyId: 'matic',
+        outputCurrencyAmountRaw: '1700000000000000000',
+      }
+
+      const params = {
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        request: {
+          request: validatedRequest,
+          signedRequest,
+        },
+        options: {
+          request: validatedRequest,
+          submitViaPrivateRpc: false,
+        },
+        typeInfo,
+        transactionOriginType: TransactionOriginType.Internal,
+        analytics: mockBridgeAnalyticsData,
+        timestampBeforeSign: 1234567890,
+      }
+
+      const syncService = createTestServiceWithJsonRpc()
+
+      // Mock the transaction signer to return a proper receipt
+      const mockReceipt = createMockFormattedReceipt()
+      mockTransactionSigner.sendTransactionSync.mockResolvedValue(mockReceipt)
+
+      // Act
+      await syncService.submitTransactionSync(params)
+
+      // Assert
+      expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
+        expect.objectContaining({
+          typeInfo: expect.objectContaining({
+            type: TransactionType.Bridge,
+          }),
+          hash: txHash,
+        }),
+        mockBridgeAnalyticsData,
+      )
+    })
+
+    it('should not track analytics for external transactions', async () => {
+      // Arrange
+
+      const validatedRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x0',
+        data: '0x123abc',
+        nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
+      }
+
+      const typeInfo: TransactionTypeInfo = {
+        type: TransactionType.Swap,
+        tradeType: 0,
+        inputCurrencyId: 'eth',
+        outputCurrencyId: 'usdc',
+        inputCurrencyAmountRaw: '1000000000000000000',
+        expectedOutputCurrencyAmountRaw: '1700000000',
+        minimumOutputCurrencyAmountRaw: '1683000000',
+      }
+
+      const params = {
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        request: {
+          request: validatedRequest,
+          signedRequest,
+        },
+        options: {
+          request: validatedRequest,
+          submitViaPrivateRpc: false,
+        },
+        typeInfo,
+        transactionOriginType: TransactionOriginType.External, // External origin
+        timestampBeforeSign: 1234567890,
+        // Note: No analytics provided for external transaction
+      }
+
+      const syncService = createTestServiceWithJsonRpc()
+
+      // Mock the transaction signer to return a proper receipt
+      const mockReceipt = createMockFormattedReceipt()
+      mockTransactionSigner.sendTransactionSync.mockResolvedValue(mockReceipt)
+
+      // Act
+      await syncService.submitTransactionSync(params)
+
+      // Assert
+      expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
+      expect(mockLogger.error).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('executeTransaction', () => {
+    it('should successfully execute a transaction end-to-end', async () => {
+      // Arrange
+      const service = createTestService()
+
+      const mockAccount: AccountMeta = {
+        address: '0x1234567890123456789012345678901234567890',
+        type: AccountType.SignerMnemonic,
+      }
+
+      const txRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x1234',
+        data: '0x123abc',
+        nonce: 5,
+      }
+
+      const executeParams: ExecuteTransactionParams = {
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        options: {
+          request: txRequest,
+          submitViaPrivateRpc: true,
+        },
+        typeInfo: {
+          type: TransactionType.Send,
+          assetType: AssetType.Currency,
+          recipient: '0xabcdef1234567890123456789012345678901234',
+          tokenAddress: '0x0000000000000000000000000000000000000000', // ETH
+          currencyAmountRaw: '0x1234',
+        },
+        transactionOriginType: TransactionOriginType.Internal,
+      }
+
+      const preparedTransaction = {
+        ...txRequest,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
+      }
+
+      const signedTransaction = '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a'
+      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
+
+      // Setup mocks for the underlying dependencies
+      mockTransactionSigner.prepareTransaction.mockResolvedValue(preparedTransaction)
+      mockTransactionSigner.signTransaction.mockResolvedValue(signedTransaction)
+      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
+
+      // Act
+      const result = await service.executeTransaction(executeParams)
+
+      // Assert - Verify the behavior, not the implementation
+      // 1. Verify transaction was prepared correctly
+      expect(mockTransactionSigner.prepareTransaction).toHaveBeenCalledWith({
+        request: txRequest,
+      })
+
+      // 2. Verify transaction was signed
+      expect(mockTransactionSigner.signTransaction).toHaveBeenCalledWith(preparedTransaction)
+
+      // 3. Verify transaction was submitted
+      expect(mockTransactionSigner.sendTransaction).toHaveBeenCalledWith({
+        signedTx: signedTransaction,
+      })
+
+      // 4. Verify transaction was stored in repository
+      expect(mockTransactionRepository.addTransaction).toHaveBeenCalled()
+      expect(mockTransactionRepository.updateTransaction).toHaveBeenCalled()
+
+      // 5. Verify transaction hash was returned
+      expect(result.transactionHash).toBe(txHash)
+
+      // 6. Verify logging happened
+      expect(mockLogger.debug).toHaveBeenCalledWith(
+        'TransactionService',
+        'executeTransaction',
+        `Executing tx on ${getChainLabel(UniverseChainId.Mainnet)} to ${txRequest.to}`,
+      )
+    })
+
+    it('should handle nonce calculation when not provided', async () => {
+      // Arrange
+      const service = createTestService()
+
+      const mockAccount: AccountMeta = {
+        address: '0x1234567890123456789012345678901234567890',
+        type: AccountType.SignerMnemonic,
+      }
+
+      const txRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x1234',
+        data: '0x123abc',
+        // Note: no nonce provided, should be calculated
+      }
+
+      const executeParams: ExecuteTransactionParams = {
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        options: {
+          request: txRequest,
+        },
+        typeInfo: {
+          type: TransactionType.Send,
+          assetType: AssetType.Currency,
+          recipient: '0xabcdef1234567890123456789012345678901234',
+          tokenAddress: '0x0000000000000000000000000000000000000000',
+          currencyAmountRaw: '0x1234',
+        },
+        transactionOriginType: TransactionOriginType.Internal,
+      }
+
+      const calculatedNonce = 42
+      const requestWithNonce = { ...txRequest, nonce: calculatedNonce }
+      const preparedTransaction = {
+        ...requestWithNonce,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
+      }
+
+      const signedTransaction = '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a'
+      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
+
+      // Setup mocks
+      mockGetTransactionCount.mockReturnValue(calculatedNonce)
+      mockConfigService.shouldUsePrivateRpc.mockReturnValue(false)
+      mockTransactionSigner.prepareTransaction.mockResolvedValue(preparedTransaction)
+      mockTransactionSigner.signTransaction.mockResolvedValue(signedTransaction)
+      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
+
+      // Act
+      const result = await service.executeTransaction(executeParams)
+
+      // Assert
+      // 1. Verify nonce was calculated
+      expect(mockGetTransactionCount).toHaveBeenCalledWith(mockAccount.address, 'pending')
+
+      // 2. Verify transaction was prepared with calculated nonce
+      expect(mockTransactionSigner.prepareTransaction).toHaveBeenCalledWith({
+        request: requestWithNonce,
+      })
+
+      // 3. Verify result
+      expect(result.transactionHash).toBe(txHash)
+    })
+
+    it('should propagate errors from transaction preparation', async () => {
+      // Arrange
+      const service = createTestService()
+
+      const mockAccount: AccountMeta = {
+        address: '0x1234567890123456789012345678901234567890',
+        type: AccountType.SignerMnemonic,
+      }
+
+      const txRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x1234',
+        data: '0x123abc',
+      }
+
+      const executeParams: ExecuteTransactionParams = {
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        options: {
+          request: txRequest,
+        },
+        typeInfo: {
+          type: TransactionType.Send,
+          assetType: AssetType.Currency,
+          recipient: '0xabcdef1234567890123456789012345678901234',
+          tokenAddress: '0x0000000000000000000000000000000000000000',
+          currencyAmountRaw: '0x1234',
+        },
+        transactionOriginType: TransactionOriginType.Internal,
+      }
+
+      // Mock preparation to throw an error
+      const testError = new Error('Failed to prepare transaction')
+      mockTransactionSigner.prepareTransaction.mockRejectedValue(testError)
+
+      // Act and Assert
+      await expect(service.executeTransaction(executeParams)).rejects.toThrow('Failed to prepare transaction')
+
+      // Verify error was logged
+      expect(mockLogger.error).toHaveBeenCalledWith(testError, {
+        tags: { file: 'TransactionService', function: 'executeTransaction' },
+        extra: { chainId: UniverseChainId.Mainnet, transactionType: TransactionType.Send, request: txRequest },
+      })
+    })
+
+    it('should propagate errors from transaction submission', async () => {
+      // Arrange
+      const service = createTestService()
+
+      const mockAccount: AccountMeta = {
+        address: '0x1234567890123456789012345678901234567890',
+        type: AccountType.SignerMnemonic,
+      }
 
       const txRequest = {
         to: '0xabcdef1234567890123456789012345678901234',
@@ -909,62 +1393,116 @@ describe('TransactionService', () => {
           type: TransactionType.Send,
           assetType: AssetType.Currency,
           recipient: '0xabcdef1234567890123456789012345678901234',
-          tokenAddress: '0x0000000000000000000000000000000000000000', // ETH
+          tokenAddress: '0x0000000000000000000000000000000000000000',
           currencyAmountRaw: '0x1234',
         },
         transactionOriginType: TransactionOriginType.Internal,
       }
 
-      // Mock transaction response with hash that's different from initial hash
-      const txResponse: TransactionResponse = {
-        hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-        confirmations: 0,
-        from: mockAccount.address,
-        wait: jest.fn().mockResolvedValue({
-          status: 1, // success
-          gasUsed: { toString: (): string => '21000' },
-        }),
-      } as unknown as TransactionResponse
+      const preparedTransaction = {
+        ...txRequest,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
+      }
 
-      // Create a spy on the transaction state to capture the transaction details
-      const addTxCaptor = jest.fn()
+      const signedTransaction = '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a'
 
-      // Override the mock implementation to capture transaction state and add a hash
-      mockTransactionRepository.addTransaction.mockImplementation((input) => {
-        // Capture the transaction and add a hash to simulate a transaction already having a hash
-        const tx = {
-          ...input.transaction,
-          hash: initialHash,
-        }
-        addTxCaptor(tx)
-        return Promise.resolve()
-      })
+      // Mock successful preparation and signing but failed submission
+      mockTransactionSigner.prepareTransaction.mockResolvedValue(preparedTransaction)
+      mockTransactionSigner.signTransaction.mockResolvedValue(signedTransaction)
+      const submitError = new Error('Transaction underpriced')
+      mockTransactionSigner.sendTransaction.mockRejectedValue(submitError)
 
-      // Setup mock responses
-      mockTransactionSigner.signAndSendTransaction.mockResolvedValue({
-        transactionResponse: txResponse,
-        populatedRequest: { ...txRequest },
-        timestampBeforeSign: 1234500000,
-        timestampBeforeSend: 1234567890,
-      })
+      // Act and Assert
+      await expect(service.executeTransaction(executeParams)).rejects.toThrow('Failed to send transaction:')
 
-      // Act
-      await service.executeTransaction(executeParams)
-
-      // Assert
-      // Verify transaction was added to repository
-      expect(mockTransactionRepository.addTransaction).toHaveBeenCalled()
-
-      // Verify transaction was signed and sent
-      expect(mockTransactionSigner.signAndSendTransaction).toHaveBeenCalled()
-
-      // Verify transaction was updated with new hash
-      expect(mockTransactionRepository.updateTransaction).toHaveBeenCalledWith({
-        transaction: expect.objectContaining({
-          hash: txResponse.hash, // Should be updated to the new hash
-        }),
+      // Verify error was logged
+      expect(mockLogger.error).toHaveBeenCalledWith(expect.any(Error), {
+        tags: { file: 'TransactionService', function: 'executeTransaction' },
+        extra: { chainId: UniverseChainId.Mainnet, transactionType: TransactionType.Send, request: txRequest },
       })
     })
+
+    it('should handle analytics data for swap transactions', async () => {
+      // Arrange
+      const service = createTestService()
+
+      const mockAccount: AccountMeta = {
+        address: '0x1234567890123456789012345678901234567890',
+        type: AccountType.SignerMnemonic,
+      }
+
+      const txRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x0',
+        data: '0x123abc',
+        nonce: 5,
+      }
+
+      const mockAnalyticsData = {
+        token_in_symbol: 'ETH',
+        token_out_symbol: 'USDC',
+        token_in_amount: '1.0',
+        token_out_amount: '1700.0',
+        routing: 'classic' as const,
+        transactionOriginType: 'internal',
+      }
+
+      const executeParams: ExecuteTransactionParams = {
+        chainId: UniverseChainId.Mainnet,
+        account: mockAccount,
+        options: {
+          request: txRequest,
+        },
+        typeInfo: {
+          type: TransactionType.Swap,
+          tradeType: 0,
+          inputCurrencyId: 'eth',
+          outputCurrencyId: 'usdc',
+          inputCurrencyAmountRaw: '1000000000000000000',
+          expectedOutputCurrencyAmountRaw: '1700000000',
+          minimumOutputCurrencyAmountRaw: '1683000000',
+        },
+        transactionOriginType: TransactionOriginType.Internal,
+        analytics: mockAnalyticsData,
+      }
+
+      const preparedTransaction = {
+        ...txRequest,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
+        chainId: UniverseChainId.Mainnet,
+      }
+
+      const signedTransaction = '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a'
+      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
+
+      // Setup mocks
+      mockTransactionSigner.prepareTransaction.mockResolvedValue(preparedTransaction)
+      mockTransactionSigner.signTransaction.mockResolvedValue(signedTransaction)
+      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
+
+      // Act
+      const result = await service.executeTransaction(executeParams)
+
+      // Assert
+      // 1. Verify transaction completed successfully
+      expect(result.transactionHash).toBe(txHash)
+
+      // 2. Verify analytics were tracked for the swap
+      expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
+        expect.objectContaining({
+          typeInfo: expect.objectContaining({
+            type: TransactionType.Swap,
+          }),
+          hash: txHash,
+        }),
+        mockAnalyticsData,
+      )
+    })
+
+    // Additional tests would be in the individual method test suites for prepareAndSignTransaction and submitTransaction
   })
 
   describe('getNextNonce', () => {

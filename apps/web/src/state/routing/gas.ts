@@ -6,7 +6,7 @@ import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20, Weth } from 'uniswap/src/abis/types'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { WRAP_FALLBACK_GAS_LIMIT_IN_GWEI } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import { getContract } from 'utilities/src/contracts/getContract'
 
@@ -20,7 +20,7 @@ export async function getApproveInfo({
   usdCostPerGas,
 }: {
   account?: string
-  currency: Currency
+  currency: Currency & { chainId: EVMUniverseChainId }
   amount: string
   usdCostPerGas?: number
 }): Promise<ApproveInfo> {
@@ -40,7 +40,7 @@ export async function getApproveInfo({
     return { needsApprove: false }
   }
 
-  const provider = RPC_PROVIDERS[currency.chainId as UniverseChainId]
+  const provider = RPC_PROVIDERS[currency.chainId]
   const tokenContract = getContract({ address: currency.address, ABI: ERC20_ABI, provider }) as Erc20
 
   let approveGasUseEstimate
@@ -74,7 +74,7 @@ export async function getWrapInfo({
 }: {
   needsWrap: boolean
   account?: string
-  chainId: UniverseChainId
+  chainId: EVMUniverseChainId
   amount: string
   usdCostPerGas?: number
 }): Promise<WrapInfo> {

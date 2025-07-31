@@ -17,8 +17,8 @@ import { ClickableStyle } from 'theme/components/styles'
 import { capitalize } from 'tsafe'
 import { Flex, Popover, Text, Tooltip } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useENSName } from 'uniswap/src/features/ens/api'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 
 const StyledConfirmedRecipientRow = styled(Row)`
@@ -124,7 +124,9 @@ const AutocompleteRow = ({
 }) => {
   const { t } = useTranslation()
   const account = useAccount()
-  const { unitag } = useUnitagByAddress(address)
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: address ? { address } : undefined,
+  })
   const { data: ENSName } = useENSName(address)
   const cachedEnsName = ENSName || validatedEnsName
   const formattedAddress = shortenAddress(address, 8)

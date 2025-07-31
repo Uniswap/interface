@@ -10,10 +10,10 @@ import { Cloud } from 'ui/src/components/icons/Cloud'
 import { Mobile } from 'ui/src/components/icons/Mobile'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { colors } from 'ui/src/theme'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { AuthenticatorAttachment, registerNewAuthenticator } from 'uniswap/src/features/passkey/embeddedWallet'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 
 export function AddPasskeyMenu({
   show,
@@ -30,7 +30,9 @@ export function AddPasskeyMenu({
 }) {
   const { t } = useTranslation()
   const account = useAccount()
-  const { unitag, loading: unitagLoading } = useUnitagByAddress(account.address)
+  const { data: unitag, isLoading: unitagLoading } = useUnitagsAddressQuery({
+    params: account.address ? { address: account.address } : undefined,
+  })
   const newPasskeyUsername = unitag?.username ? `${unitag.username} (${numAuthenticators + 1})` : undefined
 
   const { mutate: registerAuthenticator } = usePasskeyAuthWithHelpModal(

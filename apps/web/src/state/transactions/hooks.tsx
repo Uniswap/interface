@@ -1,23 +1,37 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { Token } from '@uniswap/sdk-core'
+import type { Token } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useCallback, useEffect, useMemo } from 'react'
+import { getRoutingForTransaction } from 'state/activity/utils'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { addTransaction, cancelTransaction, removeTransaction } from 'state/transactions/reducer'
-import {
-  BaseTransactionType,
-  PendingTransactionDetails,
-  TransactionDetails,
-  TransactionInfo,
-} from 'state/transactions/types'
+import { PendingTransactionDetails } from 'state/transactions/types'
 import { isConfirmedTx, isPendingTx } from 'state/transactions/utils'
-import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { TransactionType as UniswapTransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { selectTransactions } from 'uniswap/src/features/transactions/selectors'
+import {
+  addTransaction,
+  deleteTransaction,
+  interfaceCancelTransactionWithHash,
+} from 'uniswap/src/features/transactions/slice'
+import type {
+  InterfaceTransactionDetails,
+  TransactionDetails,
+  TransactionTypeInfo as TransactionInfo,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isInterfaceTransaction } from 'uniswap/src/features/transactions/types/utils'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { usePrevious } from 'utilities/src/react/hooks'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { useChainId } from 'wagmi'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
@@ -31,7 +45,7 @@ export function useTransactionAdder(): (
   return useCallback(
     // eslint-disable-next-line max-params
     (response: TransactionResponse, info: TransactionInfo, deadline?: number) => {
-      if (account.status !== 'connected' || !account.chainId) {
+      if (account.status !== 'connected' || !account.chainId || !account.address) {
         return
       }
 
@@ -40,7 +54,35 @@ export function useTransactionAdder(): (
         throw Error('No transaction hash found.')
       }
       const chainId: UniverseChainId = toSupportedChainId(response.chainId) || account.chainId
-      dispatch(addTransaction({ hash, from: account.address, info, chainId, nonce, deadline }))
+
+      // Create a classic transaction details object
+      const transaction: TransactionDetails<InterfaceTransactionDetails> = {
+        id: hash,
+        hash,
+        from: account.address,
+        typeInfo: info,
+        chainId,
+        routing: getRoutingForTransaction(info),
+        transactionOriginType: TransactionOriginType.Internal,
+        status: TransactionStatus.Pending,
+        addedTime: Date.now(),
+        nonce,
+        deadline,
+        options: {
+          request: {
+            to: response.to,
+            from: response.from,
+            data: response.data,
+            value: response.value,
+            gasLimit: response.gasLimit,
+            gasPrice: response.gasPrice,
+            nonce: response.nonce,
+            chainId: response.chainId,
+          },
+        },
+      }
+
+      dispatch(addTransaction(transaction))
     },
     [account.address, account.chainId, account.status, dispatch],
   )
@@ -52,53 +94,99 @@ export function useTransactionRemover() {
 
   return useCallback(
     (hash: string) => {
-      if (account.status !== 'connected' || !account.chainId) {
+      if (account.status !== 'connected' || !account.chainId || !account.address) {
         return
       }
 
-      dispatch(removeTransaction({ hash, chainId: account.chainId }))
+      dispatch(
+        deleteTransaction({
+          chainId: account.chainId,
+          id: hash,
+          address: account.address,
+        }),
+      )
     },
-    [account.chainId, account.status, dispatch],
+    [account.chainId, account.address, account.status, dispatch],
   )
 }
 
 export function useTransactionCanceller() {
+  const account = useAccount()
   const dispatch = useAppDispatch()
 
   return useCallback(
     // eslint-disable-next-line max-params
     (hash: string, chainId: number, cancelHash: string) => {
-      dispatch(cancelTransaction({ hash, chainId, cancelHash }))
+      if (!account.address) {
+        return
+      }
+      dispatch(
+        interfaceCancelTransactionWithHash({
+          chainId,
+          id: hash,
+          cancelHash,
+          address: account.address,
+        }),
+      )
     },
-    [dispatch],
+    [dispatch, account.address],
   )
 }
 
-export function useMultichainTransactions(): [TransactionDetails, UniverseChainId][] {
-  const state = useAppSelector((state) => state.localWebTransactions)
-
-  return useMemo(
-    () =>
-      ALL_CHAIN_IDS.flatMap((chainId) =>
-        state[chainId]
-          ? Object.values(state[chainId]).map((tx): [TransactionDetails, UniverseChainId] => [tx, chainId])
-          : [],
-      ),
-    [state],
-  )
-}
-
-// returns all the transactions for the current chain
-function useAllTransactions(): { [txHash: string]: TransactionDetails } {
+export function useMultichainTransactions(accountAddress?: string): [InterfaceTransactionDetails, UniverseChainId][] {
   const account = useAccount()
+  const transactions = useAppSelector(selectTransactions)
+  const address = accountAddress ?? account.address
+  const status = account.status
 
-  const state = useAppSelector((state) => state.localWebTransactions)
+  const { chains: enabledChainIds } = useEnabledChains()
 
-  return account.status === 'connected' && account.chainId ? state[account.chainId] ?? {} : {}
+  return useMemo(() => {
+    if (status !== 'connected' || !address) {
+      return []
+    }
+
+    const addressTransactions = transactions[address]
+    if (!addressTransactions) {
+      return []
+    }
+
+    return enabledChainIds.flatMap((chainId) => {
+      const chainTransactions = addressTransactions[chainId]
+      if (!chainTransactions) {
+        return []
+      }
+      return Object.values(chainTransactions)
+        .filter(isInterfaceTransaction)
+        .map((tx): [InterfaceTransactionDetails, UniverseChainId] => [tx, chainId])
+    })
+  }, [transactions, address, status, enabledChainIds])
 }
 
-export function useTransaction(transactionHash?: string): TransactionDetails | undefined {
-  const allTransactions = useAllTransactions()
+// returns all the transactions for the current chains
+function useAllTransactionsByChain(): { [txHash: string]: InterfaceTransactionDetails } {
+  const { evmAccount, svmAccount } = useWallet()
+  const evmChainId = useChainId()
+
+  const state = useAppSelector(selectTransactions)
+
+  const evmAddress = evmAccount?.address
+  const svmAddress = svmAccount?.address
+
+  return useMemo(() => {
+    const transactions: { [txHash: string]: InterfaceTransactionDetails } = {}
+    if (evmAddress) {
+      Object.assign(transactions, state[evmAddress]?.[evmChainId] ?? {})
+    }
+    if (svmAddress) {
+      Object.assign(transactions, state[svmAddress]?.[UniverseChainId.Solana] ?? {})
+    }
+    return transactions
+  }, [evmChainId, evmAddress, svmAddress, state])
+}
+
+export function useTransaction(transactionHash?: string): InterfaceTransactionDetails | undefined {
+  const allTransactions = useAllTransactionsByChain()
 
   if (!transactionHash) {
     return undefined
@@ -108,7 +196,7 @@ export function useTransaction(transactionHash?: string): TransactionDetails | u
 }
 
 export function useIsTransactionPending(transactionHash?: string): boolean {
-  const transactions = useAllTransactions()
+  const transactions = useAllTransactionsByChain()
 
   if (!transactionHash || !transactions[transactionHash]) {
     return false
@@ -118,7 +206,7 @@ export function useIsTransactionPending(transactionHash?: string): boolean {
 }
 
 export function useIsTransactionConfirmed(transactionHash?: string): boolean {
-  const transactions = useAllTransactions()
+  const transactions = useAllTransactionsByChain()
 
   if (!transactionHash || !transactions[transactionHash]) {
     return false
@@ -136,7 +224,7 @@ function isTransactionRecent(tx: TransactionDetails): boolean {
 }
 
 function usePendingApprovalAmount(token?: Token, spender?: string): BigNumber | undefined {
-  const allTransactions = useAllTransactions()
+  const allTransactions = useAllTransactionsByChain()
   return useMemo(() => {
     if (typeof token?.address !== 'string' || typeof spender !== 'string') {
       return undefined
@@ -145,16 +233,16 @@ function usePendingApprovalAmount(token?: Token, spender?: string): BigNumber | 
     // eslint-disable-next-line guard-for-in
     for (const txHash in allTransactions) {
       const tx = allTransactions[txHash]
-      if (!tx || isConfirmedTx(tx) || tx.info.type !== UniswapTransactionType.Approve) {
+      if (!tx || isConfirmedTx(tx) || tx.typeInfo.type !== TransactionType.Approve) {
         continue
       }
       if (
-        tx.info.spender === spender &&
-        tx.info.tokenAddress === token.address &&
+        tx.typeInfo.spender === spender &&
+        tx.typeInfo.tokenAddress === token.address &&
         isTransactionRecent(tx) &&
-        tx.info.approvalAmount !== undefined
+        tx.typeInfo.approvalAmount !== undefined
       ) {
-        return BigNumber.from(tx.info.approvalAmount)
+        return BigNumber.from(tx.typeInfo.approvalAmount)
       }
     }
     return undefined
@@ -171,7 +259,7 @@ export function useHasPendingRevocation(token?: Token, spender?: string): boolea
 }
 
 export function usePendingTransactions(): PendingTransactionDetails[] {
-  const allTransactions = useAllTransactions()
+  const allTransactions = useAllTransactionsByChain()
   const account = useAccount()
 
   return useMemo(
@@ -184,7 +272,7 @@ export function usePendingTransactions(): PendingTransactionDetails[] {
 }
 
 function usePendingLPTransactions(): PendingTransactionDetails[] {
-  const allTransactions = useAllTransactions()
+  const allTransactions = useAllTransactionsByChain()
   const account = useAccount()
 
   return useMemo(
@@ -195,14 +283,14 @@ function usePendingLPTransactions(): PendingTransactionDetails[] {
           isPendingTx(tx) &&
           (
             [
-              UniswapTransactionType.LiquidityIncrease,
-              UniswapTransactionType.LiquidityDecrease,
-              UniswapTransactionType.CreatePool,
-              UniswapTransactionType.CreatePair,
-              UniswapTransactionType.MigrateLiquidityV3ToV4,
-              UniswapTransactionType.CollectFees,
-            ] as BaseTransactionType[]
-          ).includes(tx.info.type),
+              TransactionType.LiquidityIncrease,
+              TransactionType.LiquidityDecrease,
+              TransactionType.CreatePool,
+              TransactionType.CreatePair,
+              TransactionType.MigrateLiquidityV3ToV4,
+              TransactionType.CollectFees,
+            ] as TransactionType[]
+          ).includes(tx.typeInfo.type),
       ),
     [account.address, allTransactions],
   )

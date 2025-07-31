@@ -6,9 +6,10 @@ import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { Flex, Popover } from 'ui/src'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useEnabledEVMChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 
 type ChainSelectorProps = {
   hideArrow?: boolean
@@ -23,7 +24,7 @@ export const ChainSelector = ({ hideArrow }: ChainSelectorProps) => {
   const selectChain = useSelectChain()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const { chains } = useEnabledEVMChains()
+  const { chains } = useEnabledChains({ platform: Platform.EVM })
 
   const onSelectChain = useCallback(
     async (targetChainId: UniverseChainId | null) => {

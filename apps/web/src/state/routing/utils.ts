@@ -53,6 +53,7 @@ import {
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { toSlippagePercent } from 'utils/slippage'
 
@@ -334,11 +335,20 @@ export async function transformQuoteToTrade({
 
   const [currencyIn, currencyOut] = getTradeCurrencies({ args, isUniswapXTrade: showUniswapXTrade })
 
+  if (!isEVMChain(currencyIn.chainId)) {
+    throw new Error('chainId must be EVM for routing api paths')
+  }
+
   const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate, swapFee } = getClassicTradeDetails(args, data)
 
   const usdCostPerGas = getUSDCostPerGas(gasUseEstimateUSD, gasUseEstimate)
 
-  const approveInfo = await getApproveInfo({ account, currency: currencyIn, amount, usdCostPerGas })
+  const approveInfo = await getApproveInfo({
+    account,
+    currency: currencyIn,
+    amount,
+    usdCostPerGas,
+  })
 
   const classicTrade = new ClassicTrade({
     v2Routes:

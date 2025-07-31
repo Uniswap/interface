@@ -16,14 +16,14 @@ export function createGetUpdatedTransactionDetails(ctx: {
   timestampBeforeSign: number
   timestampBeforeSend: number
   populatedRequest: providers.TransactionRequest
-}) => Promise<OnChainTransactionDetails> {
+}) => Promise<OnChainTransactionDetails & { hash: string }> {
   return async function getUpdatedTransactionDetails(input: {
     transaction: OnChainTransactionDetails
     hash: string
     timestampBeforeSign: number
     timestampBeforeSend: number
     populatedRequest: providers.TransactionRequest
-  }): Promise<OnChainTransactionDetails> {
+  }): Promise<OnChainTransactionDetails & { hash: string }> {
     const { transaction, hash, timestampBeforeSign, timestampBeforeSend, populatedRequest } = input
     const timestampAfterSend = Date.now()
     const blockNumber = await ctx.getBlockNumber()
@@ -36,7 +36,7 @@ export function createGetUpdatedTransactionDetails(ctx: {
         ? 'mevblocker'
         : undefined
 
-    const updatedTransaction: OnChainTransactionDetails = {
+    const updatedTransaction: OnChainTransactionDetails & { hash: string } = {
       ...transaction,
       hash,
       status: TransactionStatus.Pending,

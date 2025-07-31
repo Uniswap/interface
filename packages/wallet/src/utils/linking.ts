@@ -35,10 +35,6 @@ export function getExplorerName(chainId: UniverseChainId): string {
   return getChainInfo(chainId).explorer.name
 }
 
-export function getNftUrl(contractAddress: string, tokenId: string): string {
-  return `${uniswapUrls.webInterfaceNftItemUrl}/${contractAddress}/${tokenId}`
-}
-
 export function getProfileUrl(walletAddress: string): string {
   return `${uniswapUrls.webInterfaceAddressUrl}/${walletAddress}`
 }

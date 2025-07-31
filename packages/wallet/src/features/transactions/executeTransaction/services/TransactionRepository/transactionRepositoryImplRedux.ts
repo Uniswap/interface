@@ -38,9 +38,12 @@ interface SagaTransactionRepository {
   >
   updateTransaction: (input: {
     transaction: OnChainTransactionDetails
+    skipProcessing?: boolean
   }) => SagaGenerator<
-    ReturnType<typeof transactionActions.updateTransaction>,
-    PutEffect<ReturnType<typeof transactionActions.updateTransaction>>
+    | ReturnType<typeof transactionActions.updateTransaction>
+    | ReturnType<typeof transactionActions.updateTransactionWithoutWatch>,
+    | PutEffect<ReturnType<typeof transactionActions.updateTransaction>>
+    | PutEffect<ReturnType<typeof transactionActions.updateTransactionWithoutWatch>>
   >
   finalizeTransaction: (input: {
     transaction: OnChainTransactionDetails
@@ -77,12 +80,16 @@ function createSagaTransactionRepository(ctx: TransactionRepositoryReduxContext)
 
   const updateTransaction: SagaTransactionRepository['updateTransaction'] = (input) => {
     // Log before returning the effect
-    ctx.logger.debug('TransactionRepository', 'updateTransaction', 'Transaction updated:', {
+    const method = input.skipProcessing ? 'updateTransactionWithoutWatch' : 'updateTransaction'
+    ctx.logger.debug('TransactionRepository', method, 'Transaction updated:', {
       chainId: input.transaction.chainId,
       hash: input.transaction.hash,
       ...input.transaction.typeInfo,
     })
 
+    if (input.skipProcessing) {
+      return put(ctx.actions.updateTransactionWithoutWatch(input.transaction))
+    }
     return put(ctx.actions.updateTransaction(input.transaction))
   }
 
@@ -161,7 +168,10 @@ function createAsyncTransactionRepository(ctx: {
       await ctx.runSagaEffect(ctx.sagaRepo.addTransaction(input))
     },
 
-    async updateTransaction(input: { transaction: OnChainTransactionDetails }): Promise<void> {
+    async updateTransaction(input: {
+      transaction: OnChainTransactionDetails
+      skipProcessing?: boolean
+    }): Promise<void> {
       await ctx.runSagaEffect(ctx.sagaRepo.updateTransaction(input))
     },
 

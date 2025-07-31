@@ -1,5 +1,5 @@
 import { Signer, providers } from 'ethers'
-import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
+import { AccountType, SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
 import { createTransactionSignerService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerServiceImpl'
 import { Provider } from 'wallet/src/features/transactions/executeTransaction/services/providerService'
@@ -13,12 +13,14 @@ describe('TransactionSignerService', () => {
   const mockPopulateTransaction = jest.fn()
   const mockSignTransaction = jest.fn()
   const mockEstimateGas = jest.fn()
+  const mockSignTypedData = jest.fn()
 
   const mockSigner = {
     populateTransaction: mockPopulateTransaction,
     signTransaction: mockSignTransaction,
     connect: mockSignerConnect,
     estimateGas: mockEstimateGas,
+    _signTypedData: mockSignTypedData,
   } as unknown as Signer
 
   const mockSendTransaction = jest.fn()
@@ -34,7 +36,7 @@ describe('TransactionSignerService', () => {
   const mockAccount = {
     address: '0x1234567890123456789012345678901234567890',
     type: AccountType.SignerMnemonic,
-  } as AccountMeta
+  } as SignerMnemonicAccountMeta
 
   const mockGetProvider = jest.fn()
 
@@ -143,28 +145,16 @@ describe('TransactionSignerService', () => {
       const signedTx =
         '0x02f86c0105849502f90082500094abcd80823039a08cb1593ca382884e2d2248a81942c93afa94e7190146dbdf7aa93ced3c6ba4ea11fa01bb62ef729131b4f3fab2977c9b9e83cd4b3781fab393db1a1dec3fbad97982'
 
-      const txResponse = {
-        hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-        confirmations: 0,
-        from: '0x1234567890123456789012345678901234567890',
-        wait: jest.fn().mockResolvedValue({
-          status: 1, // success
-          gasUsed: { toString: (): string => '21000' },
-        }),
-        nonce: 5,
-        gasLimit: { toString: (): string => '21000' },
-        value: { toString: (): string => '100000000000000000' }, // 0.1 ETH
-      } as unknown as providers.TransactionResponse
+      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
 
-      mockSendTransaction.mockResolvedValue(txResponse)
+      mockSendTransaction.mockResolvedValue({ hash: txHash })
 
       // Act
       const result = await service.sendTransaction({ signedTx })
 
       // Assert
       expect(mockSendTransaction).toHaveBeenCalledWith(signedTx)
-      expect(result).toEqual(txResponse)
-      expect(result.hash).toBeDefined()
+      expect(result).toEqual(txHash)
     })
 
     it('should handle network errors during transaction sending', async () => {
@@ -212,20 +202,12 @@ describe('TransactionSignerService', () => {
       const signedTx =
         '0x02f86c0105849502f90082500094abcd80823039a08cb1593ca382884e2d2248a81942c93afa94e7190146dbdf7aa93ced3c6ba4ea11fa01bb62ef729131b4f3fab2977c9b9e83cd4b3781fab393db1a1dec3fbad97982'
 
-      const txResponse = {
-        hash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-        confirmations: 0,
-        from: '0x1234567890123456789012345678901234567890',
-        wait: jest.fn().mockResolvedValue({
-          status: 1,
-          gasUsed: { toString: (): string => '21000' },
-        }),
-      } as unknown as providers.TransactionResponse
+      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
 
       // Mock the individual steps
       mockPopulateTransaction.mockResolvedValue(populatedRequest)
       mockSignTransaction.mockResolvedValue(signedTx)
-      mockSendTransaction.mockResolvedValue(txResponse)
+      mockSendTransaction.mockResolvedValue({ hash: txHash })
 
       // Use Date.now mock to make the test deterministic
       const mockTimestamp = 1234567890
@@ -239,7 +221,7 @@ describe('TransactionSignerService', () => {
       expect(mockSignTransaction).toHaveBeenCalledWith(populatedRequest)
       expect(mockSendTransaction).toHaveBeenCalledWith(signedTx)
       expect(result).toEqual({
-        transactionResponse: txResponse,
+        transactionHash: txHash,
         populatedRequest,
         timestampBeforeSign: mockTimestamp,
         timestampBeforeSend: mockTimestamp,
@@ -270,6 +252,124 @@ describe('TransactionSignerService', () => {
 
       // Act & Assert
       await expect(service.signAndSendTransaction({ request })).rejects.toThrow('User denied transaction signature')
+    })
+  })
+
+  describe('signTypedData', () => {
+    it('should sign typed data successfully', async () => {
+      // Arrange
+      const service = createTestService()
+      const domain = {
+        name: 'Test App',
+        version: '1',
+        chainId: 1,
+        verifyingContract: '0x1234567890123456789012345678901234567890',
+      }
+      const types = {
+        Person: [
+          { name: 'name', type: 'string' },
+          { name: 'wallet', type: 'address' },
+        ],
+      }
+      const value = {
+        name: 'John Doe',
+        wallet: '0xabcdef1234567890123456789012345678901234',
+      }
+
+      const expectedSignature =
+        '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef12341b'
+      mockSignTypedData.mockResolvedValue(expectedSignature)
+
+      // Act
+      const result = await service.signTypedData({ domain, types, value })
+
+      // Assert
+      expect(mockGetSignerForAccount).toHaveBeenCalledWith(mockAccount)
+      expect(mockSignerConnect).toHaveBeenCalled()
+      expect(mockSignTypedData).toHaveBeenCalledWith(domain, types, value)
+      expect(result).toEqual(expectedSignature)
+    })
+
+    it('should handle EIP-712 permit signing', async () => {
+      // Arrange
+      const service = createTestService()
+      const domain = {
+        name: 'USD Coin',
+        version: '2',
+        chainId: 1,
+        verifyingContract: '0xa0b86a33e6776e5aa7ff53a3b40e2b0e21afad7c',
+      }
+      const types = {
+        Permit: [
+          { name: 'owner', type: 'address' },
+          { name: 'spender', type: 'address' },
+          { name: 'value', type: 'uint256' },
+          { name: 'nonce', type: 'uint256' },
+          { name: 'deadline', type: 'uint256' },
+        ],
+      }
+      const value = {
+        owner: '0x1234567890123456789012345678901234567890',
+        spender: '0xabcdef1234567890123456789012345678901234',
+        value: '1000000',
+        nonce: 0,
+        deadline: 1234567890,
+      }
+
+      const expectedSignature =
+        '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1b'
+      mockSignTypedData.mockResolvedValue(expectedSignature)
+
+      // Act
+      const result = await service.signTypedData({ domain, types, value })
+
+      // Assert
+      expect(mockSignTypedData).toHaveBeenCalledWith(domain, types, value)
+      expect(result).toEqual(expectedSignature)
+    })
+
+    it('should handle invalid typed data structure', async () => {
+      // Arrange
+      const service = createTestService()
+      const domain = {
+        name: 'Test App',
+        version: '1',
+        chainId: 1,
+        verifyingContract: '0x1234567890123456789012345678901234567890',
+      }
+      const types = {
+        InvalidType: [{ name: 'field', type: 'invalidType' }],
+      }
+      const value = {
+        field: 'some value',
+      }
+
+      const error = new Error('Invalid type definition')
+      mockSignTypedData.mockRejectedValue(error)
+
+      // Act & Assert
+      await expect(service.signTypedData({ domain, types, value })).rejects.toThrow('Invalid type definition')
+    })
+
+    it('should handle signer connection failure for typed data', async () => {
+      // Arrange
+      mockGetSignerForAccount.mockRejectedValue(new Error('Unable to connect signer'))
+      const service = createTestService()
+      const domain = {
+        name: 'Test App',
+        version: '1',
+        chainId: 1,
+        verifyingContract: '0x1234567890123456789012345678901234567890',
+      }
+      const types = {
+        Message: [{ name: 'content', type: 'string' }],
+      }
+      const value = {
+        content: 'Hello World',
+      }
+
+      // Act & Assert
+      await expect(service.signTypedData({ domain, types, value })).rejects.toThrow('Unable to connect signer')
     })
   })
 

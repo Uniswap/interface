@@ -9,7 +9,6 @@ import usePrevious from 'hooks/usePrevious'
 import { useAtom } from 'jotai'
 import { useEffect, useRef } from 'react'
 import { ChevronsRight } from 'react-feather'
-import { transitions } from 'theme/styles'
 import {
   AnimatePresence,
   Flex,
@@ -91,22 +90,14 @@ const DropdownContainer = styled(Flex, {
 
 const SideDrawerContainer = styled(Flex, {
   ...sharedContainerStyles,
-  mr: `-${DRAWER_SPECS.WIDTH_XL}`,
-  transition: `margin-right ${transitions.duration.medium}`,
   width: DRAWER_SPECS.WIDTH_XL,
   maxWidth: DRAWER_SPECS.WIDTH_XL,
+  animation: 'fastHeavy',
+  enterStyle: { x: '100%' },
+  exitStyle: { x: '100%' },
   $xl: {
-    mr: `-${DRAWER_SPECS.WIDTH}`,
     width: DRAWER_SPECS.WIDTH,
     maxWidth: DRAWER_SPECS.WIDTH,
-  },
-  variants: {
-    open: {
-      true: {
-        mr: 8,
-        $xl: { mr: 8 },
-      },
-    },
   },
 })
 
@@ -121,7 +112,7 @@ const CloseDrawer = styled(Flex, {
   borderBottomLeftRadius: '$rounded20',
   borderTopRightRadius: '$none',
   borderBottomRightRadius: '$none',
-  '$group-hover': {
+  hoverStyle: {
     x: '$spacing8',
     backgroundColor: 'rgba(153,161,189,0.08)',
   },
@@ -188,17 +179,21 @@ function AccountSideDrawer({ isOpen, onClose, children }: AccountDrawerProps) {
           </TouchableArea>
         </Trace>
       )}
-      <SideDrawerContainer open={isOpen} {...shadowProps}>
-        {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
-        <AccountDrawerScrollWrapper
-          ref={scrollRef}
-          style={scrollbarStyles}
-          id="wallet-dropdown-scroll-wrapper"
-          height="100%"
-        >
-          {children}
-        </AccountDrawerScrollWrapper>
-      </SideDrawerContainer>
+      <AnimatePresence>
+        {isOpen && (
+          <SideDrawerContainer {...shadowProps}>
+            {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
+            <AccountDrawerScrollWrapper
+              ref={scrollRef}
+              style={scrollbarStyles}
+              id="wallet-dropdown-scroll-wrapper"
+              height="100%"
+            >
+              {children}
+            </AccountDrawerScrollWrapper>
+          </SideDrawerContainer>
+        )}
+      </AnimatePresence>
     </Flex>
   )
 }

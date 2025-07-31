@@ -18,7 +18,7 @@ export function isNonPollingRequestInFlight(networkStatus: NetworkStatus): boole
 }
 
 export function isWarmLoadingStatus(networkStatus: NetworkStatus): boolean {
-  return networkStatus === NetworkStatus.loading
+  return networkStatus === NetworkStatus.loading || networkStatus === NetworkStatus.refetch
 }
 
 /**

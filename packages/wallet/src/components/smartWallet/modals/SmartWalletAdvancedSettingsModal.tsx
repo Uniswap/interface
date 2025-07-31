@@ -57,8 +57,7 @@ export function SmartWalletAdvancedSettingsModal({
           active={isTestnetEnabled}
           icon={
             <Flex centered width={iconSizes.icon24} height={iconSizes.icon24}>
-              {/* TODO(WALL-7179): this icon is oversized; we should update */}
-              <Wrench {...iconProps} size="$icon.20" />
+              <Wrench {...iconProps} size="$icon.18" />
             </Flex>
           }
           title={t('settings.setting.wallet.testnetMode.title')}

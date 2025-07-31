@@ -1,3 +1,4 @@
+import { HexString, isValidHexString } from 'uniswap/src/utils/hex'
 import { Address, createTestClient, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet } from 'viem/chains'
@@ -19,12 +20,16 @@ export const anvilClient = createTestClient({
  * For a mapping(address => uint256) at slot `mappingSlot`,
  * the key for `balances[user]` is keccak256(abi.encodePacked(user, mappingSlot)).
  */
-function getBalanceSlotKey(user: Address, mappingSlot: number): `0x${string}` {
+function getBalanceSlotKey(user: Address, mappingSlot: number): HexString {
   // user must be left-padded to 32 bytes, and the slot number must be 32 bytes.
   const paddedUser = pad(user, { size: 32 }) // 32-byte address
   const paddedSlot = pad(`0x${mappingSlot.toString(16)}`, { size: 32 }) // 32-byte slot
 
-  return keccak256(concat([paddedUser, paddedSlot])) as `0x${string}`
+  const hashResult = keccak256(concat([paddedUser, paddedSlot]))
+  if (!isValidHexString(hashResult)) {
+    throw new Error(`Invalid hex string: ${hashResult}`)
+  }
+  return hashResult
 }
 
 /**

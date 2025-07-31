@@ -1,5 +1,5 @@
 import { OutageBanner, getOutageBannerSessionStorageKey } from 'components/Banner/Outage/OutageBanner'
-import { LPIncentiveAnnouncementBanner } from 'components/Liquidity/LPIncentiveAnnouncementBanner'
+import { LPIncentiveAnnouncementBanner } from 'components/Liquidity/LPIncentives/LPIncentiveAnnouncementBanner'
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'

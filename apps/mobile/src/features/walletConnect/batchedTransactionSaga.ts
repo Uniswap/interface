@@ -9,6 +9,7 @@ import { WalletCheckDelegationResponseBody } from 'uniswap/src/data/tradingApi/_
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
@@ -188,7 +189,7 @@ export function* handleGetCapabilities({
   const hasSmartWalletConsent = yield* select(selectHasSmartWalletConsent, accountAddress)
   const hasShownNudge = yield* select(selectHasShownEip5792Nudge, accountAddress, dappUrl)
 
-  const { chains: enabledChains } = yield* call(getEnabledChainIdsSaga)
+  const { chains: enabledChains } = yield* call(getEnabledChainIdsSaga, Platform.EVM)
 
   const chainIds = (chainIdsFromRequest ?? enabledChains).map((chainId) => chainId.valueOf())
 

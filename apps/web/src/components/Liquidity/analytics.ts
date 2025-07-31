@@ -24,8 +24,8 @@ export function getLPBaseAnalyticsProperties({
   trace: ITraceContext
   fee?: number | string // denominated in hundredths of bips
   tickSpacing: number | undefined
-  tickLower: string | undefined
-  tickUpper: string | undefined
+  tickLower: number | undefined
+  tickUpper: number | undefined
   hook: string | undefined
   currency0: Currency
   currency1: Currency

@@ -164,7 +164,7 @@ function _TokenSelectorList({
           index={index}
           expanded={isExpandedItem(item)}
           onSelectCurrency={onSelectCurrency}
-          onExpand={() => handleExpand(item)}
+          onExpand={handleExpand}
         />
       )
     }

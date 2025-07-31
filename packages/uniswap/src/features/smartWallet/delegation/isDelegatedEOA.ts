@@ -1,15 +1,15 @@
-import { ensure0xHex } from 'uniswap/src/utils/hex'
+import { HexString, ensure0xHex } from 'uniswap/src/utils/hex'
 
 const DELEGATE_PREFIX = 'ef0100'
 const DELEGATE_LENGTH = 46 // 23 bytes
 
 interface IsDelegatedEOAInput {
-  bytecode: `0x${string}`
+  bytecode: HexString
 }
 
 interface IsDelegatedEOAOutput {
   isDelegated: boolean
-  delegateTo: `0x${string}` | null
+  delegateTo: HexString | null
 }
 
 // 0x[ef0100][63c0c19a282a1b52b07dd5a65b58948a07dae32b]

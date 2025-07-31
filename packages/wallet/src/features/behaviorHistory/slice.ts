@@ -28,6 +28,7 @@ export interface BehaviorHistoryState {
       lastPostSwapNudge?: number
       numPostSwapNudges?: number
       isAllSmartWalletNudgesDisabled?: boolean
+      lastHomeScreenNudgeShown?: number
     }
   }
   hasSeenSmartWalletCreatedWalletModal?: boolean
@@ -123,6 +124,13 @@ const slice = createSlice({
     setHasSeenSmartWalletCreatedWalletModal: (state) => {
       state.hasSeenSmartWalletCreatedWalletModal = true
     },
+    setHasShownSmartWalletHomeScreenNudge: (state, action: PayloadAction<{ walletAddress: string }>) => {
+      state.smartWalletNudge ??= {}
+      state.smartWalletNudge[action.payload.walletAddress] = {
+        ...state.smartWalletNudge[action.payload.walletAddress],
+        lastHomeScreenNudgeShown: Date.now(),
+      }
+    },
 
     // Should only be used for testing
     resetWalletBehaviorHistory: (_state, _action: PayloadAction) => {
@@ -162,6 +170,7 @@ export const {
   setIncrementNumPostSwapNudge,
   setHasSeenSmartWalletCreatedWalletModal,
   setIsAllSmartWalletNudgesDisabled,
+  setHasShownSmartWalletHomeScreenNudge,
 } = slice.actions
 
 export const behaviorHistoryReducer = slice.reducer

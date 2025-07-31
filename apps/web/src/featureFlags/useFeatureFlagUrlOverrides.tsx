@@ -21,12 +21,25 @@ export function useFeatureFlagUrlOverrides() {
     // Experiment overrides
     const experimentOverrides =
       typeof parsedQs.experimentOverride === 'string' ? parsedQs.experimentOverride.split(',') : []
+
+    // Layer overrides
+    const layerOverrides = typeof parsedQs.layerOverride === 'string' ? parsedQs.layerOverride.split(',') : []
+    const layerOverridesOff = typeof parsedQs.layerOverrideOff === 'string' ? parsedQs.layerOverrideOff.split(',') : []
+
     if (!isStatsigUninitialized && !isProduction) {
       featureFlagOverrides.forEach((gate) => getOverrideAdapter().overrideGate(gate, true))
       featureFlagOverridesOff.forEach((gate) => getOverrideAdapter().overrideGate(gate, false))
       experimentOverrides.forEach((experiment) => {
         const [experimentName, groupName] = experiment.split(':')
         getOverrideAdapter().overrideDynamicConfig(experimentName, { group: groupName })
+      })
+      layerOverrides.forEach((layer) => {
+        const [layerName, groupName] = layer.split(':')
+        getOverrideAdapter().overrideLayer(layerName, { [groupName]: true })
+      })
+      layerOverridesOff.forEach((layer) => {
+        const [layerName, groupName] = layer.split(':')
+        getOverrideAdapter().overrideLayer(layerName, { [groupName]: false })
       })
     }
   }, [parsedQs, isProduction, isStatsigUninitialized])

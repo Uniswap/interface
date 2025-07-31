@@ -1,5 +1,5 @@
 import styled from 'lib/styled-components'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 
 const Container = styled.div<{ $iconSize: number }>`
   height: ${({ $iconSize: iconSize }) => `${iconSize}px`};
@@ -17,7 +17,9 @@ const Profile = styled.img`
 `
 
 export function UnitagProfilePicture({ account, size }: { account?: string; size: number }) {
-  const { unitag } = useUnitagByAddress(account)
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: account ? { address: account } : undefined,
+  })
 
   return (
     <Container $iconSize={size}>

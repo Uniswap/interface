@@ -11,17 +11,17 @@ import {
   currencyIdToChain,
 } from 'uniswap/src/utils/currencyId'
 
-export function useCurrencyInfo(
+function useCurrencyInfoQuery(
   _currencyId?: string,
   options?: { refetch?: boolean; skip?: boolean },
-): Maybe<CurrencyInfo> {
-  const { data } = useTokenQuery({
+): { currencyInfo: Maybe<CurrencyInfo>; loading: boolean; error?: Error } {
+  const queryResult = useTokenQuery({
     variables: currencyIdToContractInput(_currencyId ?? ''),
     skip: !_currencyId || options?.skip,
     fetchPolicy: options?.refetch ? 'cache-and-network' : 'cache-first',
   })
 
-  return useMemo(() => {
+  const currencyInfo = useMemo(() => {
     if (!_currencyId) {
       return undefined
     }
@@ -40,16 +40,41 @@ export function useCurrencyInfo(
         const copyCommonBase = { ...commonBase }
         // Related to TODO(WEB-5111)
         // Some common base images are broken so this'll ensure we read from uniswap images
-        if (data?.token?.project?.logoUrl) {
-          copyCommonBase.logoUrl = data.token.project.logoUrl
+        if (queryResult.data?.token?.project?.logoUrl) {
+          copyCommonBase.logoUrl = queryResult.data.token.project.logoUrl
         }
         copyCommonBase.currencyId = _currencyId
         return copyCommonBase
       }
     }
 
-    return data?.token && gqlTokenToCurrencyInfo(data.token)
-  }, [_currencyId, data?.token])
+    return queryResult.data?.token && gqlTokenToCurrencyInfo(queryResult.data.token)
+  }, [_currencyId, queryResult.data?.token])
+
+  return {
+    currencyInfo,
+    loading: queryResult.loading,
+    error: queryResult.error,
+  }
+}
+
+export function useCurrencyInfo(
+  _currencyId?: string,
+  options?: { refetch?: boolean; skip?: boolean },
+): Maybe<CurrencyInfo> {
+  const { currencyInfo } = useCurrencyInfoQuery(_currencyId, options)
+  return currencyInfo
+}
+
+export function useCurrencyInfoWithLoading(
+  _currencyId?: string,
+  options?: { refetch?: boolean; skip?: boolean },
+): {
+  currencyInfo: Maybe<CurrencyInfo>
+  loading: boolean
+  error?: Error
+} {
+  return useCurrencyInfoQuery(_currencyId, options)
 }
 
 export function useCurrencyInfos(

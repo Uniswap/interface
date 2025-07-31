@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendTokenActions } from 'wallet/src/features/transactions/send/sendTokenSaga'
 import { SendTokenParams } from 'wallet/src/features/transactions/send/types'
@@ -35,7 +36,7 @@ export function useSendERC20Callback({
 
   return useSendCallback({
     sendTokenParams:
-      chainId && toAddress && tokenAddress && amountInWei && account
+      chainId && toAddress && tokenAddress && amountInWei && account && account.type === AccountType.SignerMnemonic
         ? {
             account,
             chainId,
@@ -77,7 +78,7 @@ export function useSendNFTCallback({
 
   return useSendCallback({
     sendTokenParams:
-      account && chainId && toAddress && tokenAddress && tokenId
+      account && account.type === AccountType.SignerMnemonic && chainId && toAddress && tokenAddress && tokenId
         ? {
             account,
             chainId,

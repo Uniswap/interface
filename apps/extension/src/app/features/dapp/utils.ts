@@ -1,8 +1,9 @@
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { bubbleToTop } from 'utilities/src/primitives/array'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { promiseTimeout } from 'utilities/src/time/timing'
-import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 
 const MAX_TAB_QUERY_TIME = ONE_SECOND_MS
 
@@ -11,10 +12,22 @@ export function isConnectedAccount(connectedAccounts: Account[], address: Addres
 }
 
 /** Gets the Account for a specific address. The address param must be in the list of connectedAccounts. */
-export function getActiveConnectedAccount(connectedAccounts: Account[], activeConnectedAddress: Address): Account {
+function getActiveConnectedAccount(connectedAccounts: Account[], activeConnectedAddress: Address): Account {
   const activeConnectedAccount = connectedAccounts.find((account) => account.address === activeConnectedAddress)
   if (!activeConnectedAccount) {
-    throw new Error('The activeConnectedAddress must be in the list of connectedAccounts.')
+    throw new Error('The active connected address must be in the list of connected accounts.')
+  }
+  return activeConnectedAccount
+}
+
+/** Gets the SignerMnemonicAccount for a specific address. The address param must be in the list of connectedAccounts. */
+export function getActiveSignerConnectedAccount(
+  connectedAccounts: Account[],
+  activeConnectedAddress: Address,
+): SignerMnemonicAccount {
+  const activeConnectedAccount = getActiveConnectedAccount(connectedAccounts, activeConnectedAddress)
+  if (activeConnectedAccount.type !== AccountType.SignerMnemonic) {
+    throw new Error('The active connected address must be a signer mnemonic account.')
   }
   return activeConnectedAccount
 }

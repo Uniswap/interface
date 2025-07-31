@@ -8,7 +8,10 @@ interface MismatchCtx {
   logger?: Logger
 }
 
-export type HasMismatchUtil = (input: { address: Address; chainId: number }) => Promise<boolean>
+type ChainMismatchResults = Record<string, boolean>
+export type HasMismatchInput = { address: Address; chainIds: number[] }
+export type HasMismatchResult = Promise<ChainMismatchResults>
+export type HasMismatchUtil = (input: HasMismatchInput) => HasMismatchResult
 
 export function createHasMismatchUtil(ctx: MismatchCtx): HasMismatchUtil {
   const withPerformanceLogger = createWithPerformanceLogger({
@@ -20,25 +23,35 @@ export function createHasMismatchUtil(ctx: MismatchCtx): HasMismatchUtil {
    * Returns true if the connected wallet thinks the account is not a smart account (EIP-7702),
    * but there is a deployed contract at the address.
    */
-  return withPerformanceLogger(async function hasMismatch(input: {
-    address: Address
-    chainId: number
-  }): Promise<boolean> {
-    const [delegatedResult, isAtomicBatchingSupported] = await Promise.all([
-      ctx.delegationService.getIsAddressDelegated(input),
-      ctx.getIsAtomicBatchingSupported({
-        chainId: input.chainId,
-      }),
+  return withPerformanceLogger(async function hasMismatch(input: HasMismatchInput): HasMismatchResult {
+    const [delegationResults, batchingSupportResults] = await Promise.all([
+      ctx.delegationService.getAddressDelegations(input),
+      Promise.all(
+        input.chainIds.map((chainId) =>
+          ctx.getIsAtomicBatchingSupported({ chainId }).then((supported) => ({ chainId, supported })),
+        ),
+      ),
     ])
-    const isMismatch = !isAtomicBatchingSupported && delegatedResult.isDelegated
-    if (isMismatch && delegatedResult.delegatedAddress) {
-      ctx.onMismatchDetected?.({
-        chainId: input.chainId,
-        isDelegated: delegatedResult.isDelegated,
-        delegatedAddress: delegatedResult.delegatedAddress,
-      })
+    const batchingSupportMap: Record<string, boolean> = {}
+    for (const { chainId, supported } of batchingSupportResults) {
+      batchingSupportMap[String(chainId)] = supported
     }
-    return isMismatch
+    const results: ChainMismatchResults = {}
+    for (const chainId of input.chainIds) {
+      const chainIdString = String(chainId)
+      const delegated = delegationResults[chainIdString]
+      const atomicSupported = batchingSupportMap[chainIdString] ?? false
+      const isMismatch = !atomicSupported && (delegated?.isDelegated ?? false)
+      if (isMismatch && delegated?.delegatedAddress) {
+        ctx.onMismatchDetected?.({
+          chainId,
+          isDelegated: true,
+          delegatedAddress: delegated.delegatedAddress,
+        })
+      }
+      results[chainIdString] = isMismatch
+    }
+    return results
   })
 }
 

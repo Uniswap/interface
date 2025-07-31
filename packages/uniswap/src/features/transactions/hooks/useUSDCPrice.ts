@@ -1,10 +1,11 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
+import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPrimaryStablecoin, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
-import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isClassic, isJupiter } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 
 const SONEIUM_AMOUNT_OVERRIDE = 30
@@ -62,6 +63,13 @@ export function useUSDCPrice(
     if (currencyIsStablecoin) {
       // handle stablecoin
       return { price: new Price(stablecoin, stablecoin, '1', '1'), isLoading: false }
+    }
+
+    if (trade && isJupiter(trade) && currency) {
+      // Convert the string amounts to JSBI.BigInt values
+      const inputAmount = JSBI.BigInt(trade.quote.quote.inAmount)
+      const outputAmount = JSBI.BigInt(trade.quote.quote.outAmount)
+      return { price: new Price(currency, stablecoin, inputAmount, outputAmount), isLoading }
     }
 
     if (!trade || !isClassic(trade) || !trade.routes[0] || !currency) {

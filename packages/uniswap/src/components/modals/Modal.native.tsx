@@ -50,11 +50,39 @@ function useModalBackHandler(modalRef: React.RefObject<BaseModal>, enabled: bool
 const BACKDROP_APPEARS_ON_INDEX = 0
 const DISAPPEARS_ON_INDEX = -1
 
-const Backdrop = (props: BottomSheetBackdropProps): JSX.Element => {
+function ModalBackdrop({
+  fullScreen,
+  zIndex,
+  hideScrim,
+  blurredBackground,
+  isDismissible,
+  ...props
+}: BottomSheetBackdropProps &
+  Pick<ModalProps, 'fullScreen' | 'zIndex' | 'hideScrim' | 'blurredBackground' | 'isDismissible'>): JSX.Element {
   return (
     <BottomSheetBackdrop
       {...props}
-      style={[props.style, { zIndex: zIndexes.popoverBackdrop }]}
+      style={useMemo(
+        () =>
+          StyleSheet.flatten([
+            props.style,
+            { zIndex: fullScreen ? undefined : zIndex ? zIndex - 1 : zIndexes.modalBackdrop },
+          ]),
+        [fullScreen, zIndex, props.style],
+      )}
+      appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
+      disappearsOnIndex={DISAPPEARS_ON_INDEX}
+      opacity={hideScrim ? 0 : blurredBackground ? 0.2 : 0.4}
+      pressBehavior={isDismissible ? 'close' : 'none'}
+    />
+  )
+}
+
+function DetachedModalBackdrop(props: BottomSheetBackdropProps): JSX.Element {
+  return (
+    <BottomSheetBackdrop
+      {...props}
+      style={useMemo(() => StyleSheet.flatten([props.style, { zIndex: zIndexes.popoverBackdrop }]), [props.style])}
       appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
       disappearsOnIndex={DISAPPEARS_ON_INDEX}
       opacity={0.4}
@@ -138,13 +166,13 @@ function BottomSheetModalContents({
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop
+      <ModalBackdrop
+        fullScreen={fullScreen}
+        zIndex={zIndex}
+        hideScrim={hideScrim}
+        blurredBackground={blurredBackground}
+        isDismissible={isDismissible}
         {...props}
-        style={[props.style, { zIndex: fullScreen ? undefined : zIndex ? zIndex - 1 : zIndexes.modalBackdrop }]}
-        appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
-        disappearsOnIndex={DISAPPEARS_ON_INDEX}
-        opacity={hideScrim ? 0 : blurredBackground ? 0.2 : 0.4}
-        pressBehavior={isDismissible ? 'close' : 'none'}
       />
     ),
     [fullScreen, zIndex, hideScrim, blurredBackground, isDismissible],
@@ -224,47 +252,66 @@ function BottomSheetModalContents({
   // on screens < xs (iPhone SE), assume no rounded corners on screen and remove rounded corners from fullscreen modal
   const borderRadius = media.short ? borderRadii.none : borderRadii.rounded24
 
-  const hiddenHandlebarStyle = {
-    borderTopLeftRadius: borderRadius,
-    borderTopRightRadius: borderRadius,
-  }
+  const backgroundStyle = useMemo(
+    () => ({
+      backgroundColor: backgroundColorValue,
+    }),
+    [backgroundColorValue],
+  )
 
-  const background = blurredBackground ? { backgroundComponent: renderBlurredBg } : undefined
-  const backdrop = { backdropComponent: renderBackdrop }
+  const bottomSheetViewStyles: StyleProp<ViewStyle> = useMemo(() => {
+    const styles: StyleProp<ViewStyle> = [{ backgroundColor: backgroundColorValue }]
 
-  const backgroundStyle = {
-    backgroundColor: backgroundColorValue,
-  }
-
-  const bottomSheetViewStyles: StyleProp<ViewStyle> = [{ backgroundColor: backgroundColorValue }]
-
-  if (renderBehindTopInset) {
-    bottomSheetViewStyles.push(bottomSheetStyle.behindInset)
-    if (hideHandlebar) {
-      bottomSheetViewStyles.push(animatedBorderRadius)
+    const hiddenHandlebarStyle = {
+      borderTopLeftRadius: borderRadius,
+      borderTopRightRadius: borderRadius,
     }
-  } else if (hideHandlebar) {
-    bottomSheetViewStyles.push(hiddenHandlebarStyle)
-  }
-  if (!renderBehindBottomInset) {
-    bottomSheetViewStyles.push({ paddingBottom: insets.bottom })
-  }
-  // When in fullScreen mode, set a fixed height to fill the available space
-  // (when not in fullScreen, we use dynamic sizing based on content)
-  if (fullScreen) {
-    bottomSheetViewStyles.push({ height: '100%' })
-  }
+
+    if (renderBehindTopInset) {
+      styles.push(bottomSheetStyle.behindInset)
+
+      if (hideHandlebar) {
+        styles.push(animatedBorderRadius)
+      }
+    } else if (hideHandlebar) {
+      styles.push(hiddenHandlebarStyle)
+    }
+
+    if (!renderBehindBottomInset) {
+      styles.push({ paddingBottom: insets.bottom })
+    }
+    // When in fullScreen mode, set a fixed height to fill the available space
+    // (when not in fullScreen, we use dynamic sizing based on content)
+    if (fullScreen) {
+      styles.push({ height: '100%' })
+    }
+
+    return styles
+  }, [
+    backgroundColorValue,
+    borderRadius,
+    renderBehindTopInset,
+    hideHandlebar,
+    renderBehindBottomInset,
+    fullScreen,
+    animatedBorderRadius,
+    insets.bottom,
+  ])
+
+  const containerStyle = useMemo(() => {
+    return { zIndex: fullScreen ? undefined : zIndex ? zIndex : zIndexes.modal }
+  }, [fullScreen, zIndex])
 
   return (
     <BaseModal
-      {...background}
-      {...backdrop}
       ref={modalRef}
+      backgroundComponent={blurredBackground ? renderBlurredBg : undefined}
+      backdropComponent={renderBackdrop}
       accessible={false}
       animatedPosition={animatedPosition}
       backgroundStyle={backgroundStyle}
       containerComponent={containerComponent}
-      containerStyle={{ zIndex: fullScreen ? undefined : zIndex ? zIndex : zIndexes.modal }}
+      containerStyle={containerStyle}
       enableContentPanningGesture={isDismissible}
       enableDynamicSizing={!snapPoints || enableDynamicSizing}
       enableHandlePanningGesture={isDismissible}
@@ -337,10 +384,10 @@ export function BottomSheetDetachedModal({
   return (
     <BaseModal
       ref={modalRef}
-      backdropComponent={Backdrop}
+      backdropComponent={DetachedModalBackdrop}
       backgroundStyle={backgroundStyle}
       bottomInset={insets.bottom}
-      containerStyle={{ zIndex: zIndexes.popover }}
+      containerStyle={bottomSheetStyle.detachedContainer}
       detached={true}
       enableContentPanningGesture={isDismissible}
       enableDynamicSizing={!snapPoints}
@@ -364,6 +411,9 @@ const bottomSheetStyle = StyleSheet.create({
   },
   detached: {
     marginHorizontal: spacing.spacing12,
+  },
+  detachedContainer: {
+    zIndex: zIndexes.popover,
   },
   modalTransparent: {
     backgroundColor: 'transparent',

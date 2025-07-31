@@ -1,9 +1,9 @@
 import { useColorsFromTokenColor, type ButtonProps, type ColorTokens } from 'ui/src'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useIsBlockingWithCustomMessage } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockingWithCustomMessage'
 import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsSwapButtonDisabled'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 
 type ButtonColors = Pick<ButtonProps, 'backgroundColor' | 'variant' | 'emphasis'> & {
   buttonTextColor?: ColorTokens
@@ -12,7 +12,7 @@ type ButtonColors = Pick<ButtonProps, 'backgroundColor' | 'variant' | 'emphasis'
 export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
   const disabled = useIsSwapButtonDisabled()
   const isBlockingWithCustomMessage = useIsBlockingWithCustomMessage()
-  const activeAccount = useAccountMeta()
+  const activeAccount = useWallet().evmAccount
   const isSubmitting = useSwapFormStore((s) => s.isSubmitting)
   const { validTokenColor, lightTokenColor } = useColorsFromTokenColor(tokenColor)
   const { swapRedirectCallback } = useTransactionModalContext()

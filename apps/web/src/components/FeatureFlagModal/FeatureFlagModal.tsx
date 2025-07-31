@@ -179,11 +179,16 @@ export default function FeatureFlagModal() {
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Swap Features">
             <FeatureFlagOption flag={FeatureFlags.BatchedSwaps} label="Enable Batched Swaps" />
+            <FeatureFlagOption flag={FeatureFlags.UnichainFlashblocks} label="Enable Unichain Flashblocks" />
             <FeatureFlagOption flag={FeatureFlags.UniquoteEnabled} label="Enable Uniquote" />
             <FeatureFlagOption flag={FeatureFlags.ViemProviderEnabled} label="Enable Viem Provider" />
             <FeatureFlagOption flag={FeatureFlags.InstantTokenBalanceUpdate} label="Instant token balance update" />
             <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
             <FeatureFlagOption flag={FeatureFlags.EnablePermitMismatchUX} label="Enable Permit2 mismatch detection" />
+            <FeatureFlagOption
+              flag={FeatureFlags.TradingApiSwapConfirmation}
+              label="Enable Trading API Swap Confirmation"
+            />
             <FeatureFlagOption
               flag={FeatureFlags.ForcePermitTransactions}
               label="Force Permit2 transaction instead of signatures, always"
@@ -229,6 +234,9 @@ export default function FeatureFlagModal() {
               flag={FeatureFlags.PoolSearch}
               label="Enable pool search (turn on search_revamp as well to see)"
             />
+          </FeatureFlagGroup>
+          <FeatureFlagGroup name="Mini Portfolio">
+            <FeatureFlagOption flag={FeatureFlags.GqlToRestBalances} label="Rest Token Balances" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Soneium} label="Enable Soneium" />

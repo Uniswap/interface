@@ -4,10 +4,10 @@ import {
   LiquidityPositionStatusIndicator,
   LiquidityPositionStatusIndicatorLoader,
 } from 'components/Liquidity/LiquidityPositionStatusIndicator'
+import { TextLoader } from 'components/Liquidity/Loader'
 import { PositionInfo } from 'components/Liquidity/types'
-import { getProtocolVersionLabel } from 'components/Liquidity/utils'
+import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
-import { TextLoader } from 'pages/Pool/Positions/shared'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'

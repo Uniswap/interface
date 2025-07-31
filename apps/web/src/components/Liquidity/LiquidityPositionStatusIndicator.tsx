@@ -1,6 +1,6 @@
 import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { lpStatusConfig } from 'components/Liquidity/constants'
-import { TextLoader } from 'pages/Pool/Positions/shared'
+import { TextLoader } from 'components/Liquidity/Loader'
 import { Trans } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { StatusIndicatorCircle } from 'ui/src/components/icons/StatusIndicatorCircle'

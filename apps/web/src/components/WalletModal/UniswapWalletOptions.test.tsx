@@ -1,29 +1,42 @@
 import { UniswapWalletOptions } from 'components/WalletModal/UniswapWalletOptions'
-import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
+import { useWalletConnectors } from 'features/wallet/connection/hooks/useWalletConnectors'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
-import { UNISWAP_EXTENSION_CONNECTOR, WALLET_CONNECT_CONNECTOR } from 'test-utils/wagmi/fixtures'
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import {
+  EMBEDDED_WALLET_CONNECTOR,
+  METAMASK_CONNECTOR,
+  UNISWAP_EXTENSION_CONNECTOR,
+  UNISWAP_WALLET_CONNECTOR,
+  WALLET_CONNECT_CONNECTOR,
+} from 'test-utils/wallets/fixtures'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
-vi.mock('components/WalletModal/useOrderedConnections', () => ({
-  useConnectorWithId: vi.fn(),
+vi.mock('features/wallet/connection/hooks/useWalletConnectors', () => ({
+  useWalletConnectors: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/gating/hooks', () => ({
   useFeatureFlag: vi.fn(),
+  getFeatureFlag: vi.fn(),
 }))
 
 describe('UniswapWalletOptions Test', () => {
   beforeEach(() => {
-    mocked(useConnectorWithId).mockImplementation((id) =>
-      id === CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID ? WALLET_CONNECT_CONNECTOR : undefined,
-    )
+    mocked(useWalletConnectors).mockImplementation(() => [
+      WALLET_CONNECT_CONNECTOR,
+      EMBEDDED_WALLET_CONNECTOR,
+      METAMASK_CONNECTOR,
+      UNISWAP_EXTENSION_CONNECTOR,
+      UNISWAP_WALLET_CONNECTOR,
+    ])
   })
   it('Download wallet option should be visible if extension is not detected', () => {
-    mocked(useConnectorWithId).mockImplementation((id) =>
-      id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS ? undefined : WALLET_CONNECT_CONNECTOR,
-    )
+    mocked(useWalletConnectors).mockImplementation(() => [
+      WALLET_CONNECT_CONNECTOR,
+      EMBEDDED_WALLET_CONNECTOR,
+      METAMASK_CONNECTOR,
+      UNISWAP_WALLET_CONNECTOR,
+    ])
     mocked(useFeatureFlag).mockReturnValue(true)
     const { asFragment } = render(<UniswapWalletOptions />)
     expect(asFragment()).toMatchSnapshot()
@@ -31,9 +44,6 @@ describe('UniswapWalletOptions Test', () => {
     expect(downloadOption).toBeInTheDocument()
   })
   it('Extension connecter should be shown if detected', () => {
-    mocked(useConnectorWithId).mockImplementation((id) =>
-      id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS ? UNISWAP_EXTENSION_CONNECTOR : WALLET_CONNECT_CONNECTOR,
-    )
     mocked(useFeatureFlag).mockReturnValue(false)
     const { asFragment } = render(<UniswapWalletOptions />)
     expect(asFragment()).toMatchSnapshot()

@@ -1,11 +1,11 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CHART_WIDTH } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
-import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentiveFeeStatTooltip'
-import { LPIncentiveRewardsBadge } from 'components/Liquidity/LPIncentiveRewardsBadge'
-import { useGetRangeDisplay } from 'components/Liquidity/hooks'
+import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
+import { LPIncentiveRewardsBadge } from 'components/Liquidity/LPIncentives/LPIncentiveRewardsBadge'
+import { TextLoader } from 'components/Liquidity/Loader'
+import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
 import { PriceOrdering } from 'components/Liquidity/types'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { TextLoader } from 'pages/Pool/Positions/shared'
 import { Dispatch, SetStateAction } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
@@ -179,8 +179,8 @@ export function LiquidityPositionFeeStats({
 interface LiquidityPositionMinMaxRangeProps {
   priceOrdering: PriceOrdering
   tickSpacing?: number
-  tickLower?: string
-  tickUpper?: string
+  tickLower?: number
+  tickUpper?: number
   pricesInverted: boolean
   setPricesInverted: Dispatch<SetStateAction<boolean>>
 }

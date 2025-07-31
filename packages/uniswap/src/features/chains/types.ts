@@ -125,6 +125,7 @@ export interface UniverseChainInfo extends WagmiChain {
     USDT?: Token
   }
   readonly statusPage?: string
+  readonly subblockTimeMs?: number // in milliseconds, used for subblock balance checks
   readonly supportsV4: boolean
   readonly urlParam: string
   readonly wrappedNativeCurrency: {
@@ -133,4 +134,5 @@ export interface UniverseChainInfo extends WagmiChain {
     decimals: number // 18,
     address: string // '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6'
   }
+  readonly tradingApiPollingIntervalMs: number
 }

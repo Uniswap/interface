@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { SagaGenerator, select } from 'typed-redux-saga'
 import { selectTransactions } from 'uniswap/src/features/transactions/selectors'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { selectBatchedTransactionById } from 'wallet/src/features/batchedTransactions/selectors'
 import { GetCallsStatusResult } from 'wallet/src/features/dappRequests/types'
 
@@ -67,7 +67,7 @@ export function* getCallsStatusHelper(
   let overallStatus = getTransactionStatusCode(TransactionStatus.Pending)
 
   for (const hash of txHashes) {
-    const transaction = transactions.find((tx) => tx.hash === hash)
+    const transaction: TransactionDetails | undefined = transactions.find((tx) => tx.hash === hash)
 
     if (!transaction?.receipt) {
       continue

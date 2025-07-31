@@ -15,20 +15,26 @@ const createMockCustomWalletConnectorMeta = (overrides = {}): CustomWalletConnec
   name: 'Custom Wallet',
   icon: 'custom-icon.svg',
   customConnectorId: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+  isInjected: false,
+  analyticsWalletType: 'Wallet Connect',
   ...overrides,
 })
 
 const createMockWagmiWalletConnectorMeta = (overrides = {}): WagmiWalletConnectorMeta => ({
   name: 'Wagmi Wallet',
   icon: 'wagmi-icon.svg',
-  wagmiConnectorId: 'metamask',
+  wagmi: { id: 'metamask', type: 'injected' },
+  isInjected: true,
+  analyticsWalletType: 'Browser Extension',
   ...overrides,
 })
 
 const createMockSolanaWalletConnectorMeta = (overrides = {}): SolanaWalletConnectorMeta => ({
   name: 'Solana Wallet',
   icon: 'solana-icon.svg',
-  solanaWalletName: 'Phantom' as any,
+  solana: { walletName: 'Phantom' as any },
+  isInjected: true,
+  analyticsWalletType: 'Browser Extension',
   ...overrides,
 })
 
@@ -78,7 +84,7 @@ describe('ConnectWalletService', () => {
       const wagmiWalletConnector = createMockWagmiWalletConnectorMeta()
       const expectedWagmiConnector = {
         ...wagmiWalletConnector,
-        wagmiConnectorId: 'metamask',
+        wagmi: { id: 'metamask', type: 'injected' },
       }
 
       // Act
@@ -97,7 +103,7 @@ describe('ConnectWalletService', () => {
       const solanaWalletConnector = createMockSolanaWalletConnectorMeta()
       const expectedSolanaConnector = {
         ...solanaWalletConnector,
-        solanaWalletName: 'Phantom',
+        solana: { walletName: 'Phantom' },
       }
 
       // Act
@@ -196,6 +202,8 @@ describe('ConnectWalletService', () => {
         name: 'Test Custom Wallet',
         icon: 'test-icon.svg',
         customConnectorId: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+        isInjected: false,
+        analyticsWalletType: 'Wallet Connect',
       })
     })
   })

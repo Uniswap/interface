@@ -12,8 +12,8 @@ import { Flex, Text } from 'ui/src'
 import { Ellipsis } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isIOS } from 'utilities/src/platform'
@@ -28,7 +28,9 @@ export function EditProfileSettingsModal({
   const { address, accessPoint } = route.params
   const entryPoint = accessPoint ?? MobileScreens.SettingsWallet
 
-  const { unitag: retrievedUnitag } = useUnitagByAddress(address)
+  const { data: retrievedUnitag } = useUnitagsAddressQuery({
+    params: address ? { address } : undefined,
+  })
   const unitag = retrievedUnitag?.username
 
   const { t } = useTranslation()

@@ -23,11 +23,11 @@ import { Edit, Global } from 'ui/src/components/icons'
 import { Person } from 'ui/src/components/icons/Person'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanAddressClaimUnitag'
@@ -48,7 +48,9 @@ export function ManageWalletsModal({ route }: AppStackScreenProp<typeof ModalNam
   const { sessions } = useWalletConnect(address)
 
   const { defaultChainId } = useEnabledChains()
-  const { unitag } = useUnitagByAddress(address)
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: address ? { address } : undefined,
+  })
   const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId }).name
   const onlyLabeledWallet = ensName === null && unitag?.username === undefined
 

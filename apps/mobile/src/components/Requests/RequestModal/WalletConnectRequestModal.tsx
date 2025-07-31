@@ -31,6 +31,7 @@ import { isSignTypedDataRequest } from 'uniswap/src/features/dappRequests/utils'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -75,7 +76,13 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   }, [chainId, request])
 
   const signerAccounts = useSignerAccounts()
-  const signerAccount = signerAccounts.find((account) => areAddressesEqual(account.address, request.account))
+  const signerAccount = signerAccounts.find((account) =>
+    // TODO(WALL-7065): Update to support solana
+    areAddressesEqual({
+      addressInput1: { address: account.address, platform: Platform.EVM },
+      addressInput2: { address: request.account, platform: Platform.EVM },
+    }),
+  )
   const gasFee = useTransactionGasFee({ tx })
 
   const hasSufficientFunds = useHasSufficientFunds({

@@ -4,15 +4,17 @@ import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import { PasskeysHelpModalTypeAtom } from 'hooks/usePasskeyAuthWithHelpModal'
 import { useAtomValue } from 'jotai/utils'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 
 export default function TopLevelModals() {
   const isLandingPage = useIsPage(PageType.LANDING)
   const account = useAccount()
-  const { unitag } = useUnitagByAddress(account.address)
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: account.address ? { address: account.address } : undefined,
+  })
   const accountName = unitag?.username
     ? unitag.username + '.uni.eth'
     : account.address

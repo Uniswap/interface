@@ -93,11 +93,17 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   }
 
   updateOptions(params: PriceChartModelParams) {
-    const { data, theme, type, locale, format } = params
+    const { data, theme, type, locale, format, tokenFormatType } = params
     super.updateOptions(params, {
       localization: {
         locale,
         priceFormatter: (price: BarPrice) => {
+          if (tokenFormatType) {
+            return format.formatNumberOrString({
+              value: Number(price) / this.lowPriceRangeScaleFactor,
+              type: tokenFormatType,
+            })
+          }
           return format.convertFiatAmountFormatted(
             // Transform price back to original value if it was scaled
             Number(price) / this.lowPriceRangeScaleFactor,

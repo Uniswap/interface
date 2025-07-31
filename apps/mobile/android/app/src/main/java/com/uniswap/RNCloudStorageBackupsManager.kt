@@ -159,11 +159,11 @@ class RNCloudStorageBackupsManager(private val reactContext: ReactApplicationCon
   /**
    * Stops fetching cloud storage backups. It's empty because there is not need to stopping
    * cloud fetch on android. Added just to meet native module interface
-   *
-   * @param promise A promise to return the result of the operation.
    */
   @ReactMethod
-  fun stopFetchingCloudStorageBackups(promise: Promise) {
+  fun stopFetchingCloudStorageBackups() {
+    // No implementation needed for Android, as there is no ongoing fetch process to stop.
+    // This method is added to meet the native module interface.
   }
 
   /**

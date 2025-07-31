@@ -1,10 +1,8 @@
-import dayjs from 'dayjs'
 import { BigNumber, providers } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import { throwError } from 'redux-saga-test-plan/providers'
 import { call } from 'redux-saga/effects'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { addTransaction, finalizeTransaction, updateTransaction } from 'uniswap/src/features/transactions/slice'
@@ -14,13 +12,11 @@ import {
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getTxFixtures } from 'uniswap/src/test/fixtures'
-import { noOpFunction } from 'utilities/src/test/utils'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { executeTransactionLegacy } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSagaLegacy'
 import { signAndSubmitTransaction } from 'wallet/src/features/transactions/executeTransaction/signAndSubmitTransaction'
 import { getPendingPrivateTxCount, tryGetNonce } from 'wallet/src/features/transactions/executeTransaction/tryGetNonce'
-import { ReadOnlyAccount } from 'wallet/src/features/wallet/accounts/types'
 import {
   getPrivateProvider,
   getProvider,
@@ -217,22 +213,6 @@ describe(executeTransactionLegacy, () => {
       .put(finalizeTransaction({ ...transaction, status: TransactionStatus.Failed }))
       .throws(new Error('Failed to send transaction: nonce_error'))
       .run()
-  })
-
-  it('Fails for readonly accounts', () => {
-    jest.spyOn(console, 'error').mockImplementation(noOpFunction)
-    const readOnlyAccount: ReadOnlyAccount = {
-      type: AccountType.Readonly,
-      address: '0xabc',
-      name: 'readonly',
-      timeImportedMs: dayjs().valueOf(),
-      pushNotificationsEnabled: true,
-    }
-    const params = {
-      ...sendParams,
-      account: readOnlyAccount,
-    }
-    return expectSaga(executeTransactionLegacy, params).throws(new Error('Account must support signing')).silentRun()
   })
 
   it('Adds nonce to transaction request when not provided', async () => {

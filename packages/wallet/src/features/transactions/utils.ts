@@ -1,11 +1,14 @@
 import { Currency } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { formatEther } from 'ethers/lib/utils'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { isBridge, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isBridge, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   FinalizedTransactionStatus,
   TransactionDetails,
+  TransactionNetworkFee,
   TransactionOptions,
   TransactionReceipt,
   TransactionStatus,
@@ -52,16 +55,6 @@ export function getFinalizedTransactionStatus(
     return TransactionStatus.Canceled
   }
   return TransactionStatus.Success
-}
-
-export function getIsCancelable(tx: TransactionDetails): boolean {
-  if (isBridge(tx) && tx.sendConfirmed) {
-    return false
-  }
-  if (tx.status === TransactionStatus.Pending && (isUniswapX(tx) || Object.keys(tx.options.request).length > 0)) {
-    return true
-  }
-  return false
 }
 
 export function receiptFromEthersReceipt(
@@ -178,4 +171,58 @@ export function getRPCErrorCategory(error: Error): string {
     default:
       return 'unknown'
   }
+}
+
+export function buildNetworkFeeFromReceipt({
+  receipt,
+  nativeCurrency,
+  chainId,
+}: {
+  receipt: providers.TransactionReceipt
+  nativeCurrency: UniverseChainInfo['nativeCurrency']
+  chainId: UniverseChainId
+}): TransactionNetworkFee {
+  return {
+    quantity: formatEther(receipt.effectiveGasPrice.mul(receipt.gasUsed)),
+    tokenSymbol: nativeCurrency.symbol,
+    tokenAddress: nativeCurrency.address,
+    chainId,
+  }
+}
+
+/**
+ * Processes a transaction receipt and creates updated transaction details with receipt, network fee, and status.
+ */
+export function processTransactionReceipt<T extends TransactionDetails>(params: {
+  ethersReceipt: providers.TransactionReceipt
+  transaction: T
+}): T {
+  const { ethersReceipt, transaction } = params
+
+  const receipt = receiptFromEthersReceipt(ethersReceipt)
+  const { nativeCurrency } = getChainInfo(transaction.chainId)
+
+  const networkFee = buildNetworkFeeFromReceipt({
+    receipt: ethersReceipt,
+    nativeCurrency,
+    chainId: transaction.chainId,
+  })
+
+  let status = transaction.status
+
+  if (
+    isBridge(transaction) &&
+    getFinalizedTransactionStatus(transaction.status, ethersReceipt.status) === TransactionStatus.Success
+  ) {
+    if (!transaction.sendConfirmed) {
+      // Only the send part was successful, transaction watcher will wait for receive part to be confirmed on chain before marking as finalized.
+      // Bridge swaps become non-cancellable after the send transaction is confirmed on chain.
+      return { ...transaction, sendConfirmed: true, networkFee }
+    }
+  } else if (isClassic(transaction)) {
+    // Classic transaction status is based on receipt, while UniswapX status is based backend response and shouldn't be updated here
+    status = getFinalizedTransactionStatus(transaction.status, ethersReceipt.status)
+  }
+
+  return { ...transaction, networkFee, status, receipt }
 }

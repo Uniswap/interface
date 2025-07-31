@@ -12,13 +12,14 @@ import {
   MinMaxRange,
 } from 'components/Liquidity/LiquidityPositionFeeStats'
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/Liquidity/LiquidityPositionInfo'
-import { useGetRangeDisplay } from 'components/Liquidity/hooks'
+import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
 import { PositionInfo, PriceOrdering } from 'components/Liquidity/types'
+import { getBaseAndQuoteCurrencies } from 'components/Liquidity/utils/currency'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { useAccount } from 'hooks/useAccount'
 import useHoverProps from 'hooks/useHoverProps'
 import { useLpIncentivesFormattedEarnings } from 'hooks/useLpIncentivesFormattedEarnings'
 import { useSwitchChain } from 'hooks/useSwitchChain'
-import { getBaseAndQuoteCurrencies } from 'pages/Pool/Positions/create/utils'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -53,7 +54,6 @@ import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
-import { useAccount } from 'wagmi'
 
 export function LiquidityPositionCardLoader() {
   return (
@@ -454,8 +454,8 @@ function MiniPositionCard({
   formattedUsdValue?: string
   priceOrdering: PriceOrdering
   tickSpacing?: number
-  tickLower?: string
-  tickUpper?: string
+  tickLower?: number
+  tickUpper?: number
   disabled?: boolean
 }) {
   const { t } = useTranslation()

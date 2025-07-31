@@ -2,7 +2,7 @@ import { TransactionRequest } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { ALL_EVM_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
@@ -36,7 +36,7 @@ import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/u
 
 export const transactionId = createFixture<TransactionId>()(() => ({
   id: faker.datatype.uuid(),
-  chainId: randomChoice(SUPPORTED_CHAIN_IDS),
+  chainId: randomChoice(ALL_EVM_CHAIN_IDS),
 }))
 
 export const nftSummaryInfo = createFixture<NFTSummaryInfo>()(() => ({

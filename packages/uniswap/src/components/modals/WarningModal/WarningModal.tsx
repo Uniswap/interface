@@ -1,4 +1,4 @@
-import type { PropsWithChildren, ReactNode } from 'react'
+import { useContext, type PropsWithChildren, type ReactNode } from 'react'
 import type { ColorValue } from 'react-native'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import type { ButtonProps } from 'ui/src/components/buttons/Button/types'
@@ -11,9 +11,11 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import type { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
-import { useOptionalSwapFormStoreBase } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import type { SwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/createSwapFormStore'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isMobileApp, isWeb } from 'utilities/src/platform'
+
+export const useMaybeSwapFormStoreBase = (): SwapFormStore | null => useContext(SwapFormStoreContext)
 
 type WarningModalContentProps = {
   onClose?: () => void
@@ -164,7 +166,7 @@ export function WarningModal(props: PropsWithChildren<WarningModalProps>): JSX.E
   const { hideHandlebar, isDismissible = true, isOpen, maxWidth, modalName, onClose, zIndex } = props
   const colors = useSporeColors()
 
-  const maybeSwapFormStore = useOptionalSwapFormStoreBase()
+  const maybeSwapFormStore = useMaybeSwapFormStoreBase()
 
   return (
     <Modal

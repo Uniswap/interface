@@ -8,16 +8,16 @@ import type { FeeAmount } from '@uniswap/v3-sdk'
 import { Pool as V3Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Route as V4Route } from '@uniswap/v4-sdk'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import {
+  ClassicQuoteResponse,
+  DiscriminatedQuoteResponse,
+} from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
   AutoSlippage,
-  BridgeQuote,
   ClassicQuote,
   HooksOptions,
   ProtocolItems,
-  Quote,
   QuoteRequest,
-  QuoteResponse,
   Routing,
   RoutingPreference,
   ChainId as TradingApiChainId,
@@ -30,9 +30,9 @@ import {
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isL2ChainId, isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
-import { getDynamicConfigValue, useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
@@ -46,6 +46,7 @@ import {
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { DEFAULT_PROTOCOL_OPTIONS, useProtocolsForChain } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import type { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
@@ -95,8 +96,14 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
       // UniswapX backend response does not include decimals; local currencies must be passed to UniswapXTrade rather than tokens parsed from the api response.
       // We validate the token addresses match to ensure the trade is valid.
       if (
-        !areAddressesEqual(currencyIn.wrapped.address, quote.orderInfo.input.token) || // UniswapX quotes should use wrapped native as input, rather than the native token
-        !areAddressesEqual(getTokenAddressForApi(currencyOut), quote.orderInfo.outputs[0]?.token)
+        !areAddressesEqual({
+          addressInput1: { address: currencyIn.wrapped.address, chainId: currencyIn.chainId },
+          addressInput2: { address: quote.orderInfo.input.token, chainId: currencyIn.chainId },
+        }) || // UniswapX quotes should use wrapped native as input, rather than the native token
+        !areAddressesEqual({
+          addressInput1: { address: getTokenAddressForApi(currencyOut), chainId: currencyOut.chainId },
+          addressInput2: { address: quote.orderInfo.outputs[0]?.token, chainId: currencyOut.chainId },
+        })
       ) {
         return null
       }
@@ -136,7 +143,7 @@ function computeRoutes({
 }: {
   tokenInIsNative: boolean
   tokenOutIsNative: boolean
-  quoteResponse?: QuoteResponse
+  quoteResponse?: ClassicQuoteResponse
 }):
   | {
       routev4: V4Route<Currency, Currency> | null
@@ -147,8 +154,7 @@ function computeRoutes({
       outputAmount: CurrencyAmount<Currency>
     }[]
   | undefined {
-  // TODO : remove quote type check for Uniswap X integration
-  if (!quoteResponse || !isClassicQuote(quoteResponse.quote)) {
+  if (!quoteResponse) {
     return undefined
   }
 
@@ -389,23 +395,13 @@ export function toTradingApiSupportedChainId(chainId: Maybe<number>): TradingApi
   return chainId
 }
 
-// Classic quote is a non-uniswap x quote. Forces the type on api responses.
-// `route` field doesnt exist on uniswap x quote response, so can be used as the custom type gaurd.
-// TODO:tradingapi MOB-2438 https://linear.app/uniswap/issue/MOB-2438/uniswap-x-clean-forced-types-for-classic-quotes
-export function isClassicQuote(quote?: Quote): quote is ClassicQuote {
-  if (!quote) {
-    return false
+export function getClassicQuoteFromResponse(
+  quote?: ClassicQuoteResponse | { routing: Exclude<Routing, Routing.CLASSIC> },
+): ClassicQuote | undefined {
+  if (quote && isClassic(quote)) {
+    return quote.quote
   }
-  return 'route' in quote
-}
-
-// TODO:tradingapi MOB-2438 https://linear.app/uniswap/issue/MOB-2438/uniswap-x-clean-forced-types-for-classic-quotes
-export function getClassicQuoteFromResponse(quote?: QuoteResponse): ClassicQuote | undefined {
-  return isClassicQuote(quote?.quote) ? quote.quote : undefined
-}
-
-export function getBridgeQuoteFromResponse(quote?: QuoteResponse): BridgeQuote | undefined {
-  return quote?.routing === Routing.BRIDGE ? quote.quote : undefined
+  return undefined
 }
 
 /**
@@ -430,8 +426,17 @@ export function validateTrade({
     return null
   }
 
-  const inputsMatch = areAddressesEqual(currencyIn.wrapped.address, trade.inputAmount.currency.wrapped.address)
-  const outputsMatch = areAddressesEqual(currencyOut.wrapped.address, trade.outputAmount.currency.wrapped.address)
+  const inputsMatch = areAddressesEqual({
+    addressInput1: { address: currencyIn.wrapped.address, chainId: currencyIn.chainId },
+    addressInput2: { address: trade.inputAmount.currency.wrapped.address, chainId: trade.inputAmount.currency.chainId },
+  })
+  const outputsMatch = areAddressesEqual({
+    addressInput1: { address: currencyOut.wrapped.address, chainId: currencyOut.chainId },
+    addressInput2: {
+      address: trade.outputAmount.currency.wrapped.address,
+      chainId: trade.outputAmount.currency.chainId,
+    },
+  })
 
   const tokenAddressesMatch = inputsMatch && outputsMatch
   // TODO(WEB-5132): Add validation checking that exact amount from response matches exact amount from user input
@@ -527,13 +532,6 @@ export function createGetQuoteRoutingParams(ctx: {
   }
 }
 
-type UseQuoteSlippageParamsArgs = {
-  customSlippageTolerance: number | undefined
-  tokenInChainId: UniverseChainId | undefined
-  tokenOutChainId: UniverseChainId | undefined
-  isUSDQuote?: boolean
-}
-
 // Used if dynamic config value fails to resolve
 const DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE = 2.5
 
@@ -545,39 +543,22 @@ export function getMinAutoSlippageToleranceL2(): number {
   })
 }
 
-export type QuoteSlippageParamsResult = Pick<QuoteRequest, 'autoSlippage' | 'slippageTolerance'> | undefined
-
-export function useQuoteSlippageParams({
-  customSlippageTolerance,
-  tokenInChainId,
-  tokenOutChainId,
-  isUSDQuote,
-}: UseQuoteSlippageParamsArgs): QuoteSlippageParamsResult {
-  const minAutoSlippageToleranceL2 = useDynamicConfigValue({
-    config: DynamicConfigs.Swap,
-    key: SwapConfigKey.MinAutoSlippageToleranceL2,
-    defaultValue: DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE,
-  })
-
-  const getQuoteSlippageParams = createGetQuoteSlippageParams({
-    getMinAutoSlippageToleranceL2: () => minAutoSlippageToleranceL2,
-    getIsL2ChainId: (chainId) => isL2ChainId(chainId),
-    getCustomSlippageTolerance: () => customSlippageTolerance,
-  })
-
-  return getQuoteSlippageParams({ tokenInChainId, tokenOutChainId, isUSDQuote })
+type GetQuoteSlippageParamsArgs = {
+  tokenInChainId: UniverseChainId | undefined
+  tokenOutChainId: UniverseChainId | undefined
+  isUSDQuote?: boolean
 }
 
-export type GetQuoteSlippageParams = (
-  input: Omit<UseQuoteSlippageParamsArgs, 'customSlippageTolerance'>,
-) => QuoteSlippageParamsResult
+export type QuoteSlippageParamsResult = Pick<QuoteRequest, 'autoSlippage' | 'slippageTolerance'> | undefined
+
+export type GetQuoteSlippageParams = (input: GetQuoteSlippageParamsArgs) => QuoteSlippageParamsResult
 
 export function createGetQuoteSlippageParams(ctx: {
   getMinAutoSlippageToleranceL2: () => number
   getIsL2ChainId: (chainId?: UniverseChainId) => boolean
   getCustomSlippageTolerance: () => number | undefined
 }): GetQuoteSlippageParams {
-  return (input) => {
+  return function getQuoteSlippageParams(input: GetQuoteSlippageParamsArgs): QuoteSlippageParamsResult {
     const { tokenInChainId, tokenOutChainId, isUSDQuote } = input
     const customSlippageTolerance = ctx.getCustomSlippageTolerance()
     if (customSlippageTolerance) {

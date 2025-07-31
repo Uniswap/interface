@@ -6,4 +6,7 @@ export const Slippage: TransactionSettingConfig = {
   Control() {
     throw new PlatformSplitStubError('Slippage')
   },
+  Warning() {
+    throw new PlatformSplitStubError('Slippage')
+  },
 }

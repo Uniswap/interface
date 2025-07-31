@@ -1,4 +1,4 @@
-import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
+import { useConnectorWithId } from 'components/WalletModal/useConnectorWithId'
 import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
 import { useConnect } from 'hooks/useConnect'
 import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
@@ -45,14 +45,18 @@ export function useSignInWithPasskey({
   onError,
 }: SignInWithPasskeyOptions = {}) {
   const { setIsConnected, setWalletAddress } = useEmbeddedWalletState()
-  const connection = useConnect()
+  const connection = useConnect() // TODO(WEB-8088): use new connection state here
   const connector = useConnectorWithId(CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID, {
     shouldThrow: true,
   })
   const claimUnitag = useClaimUnitag()
   const dispatch = useDispatch()
 
-  const { mutate: signInWithPasskey, ...rest } = usePasskeyAuthWithHelpModal<{
+  const {
+    mutate: signInWithPasskey,
+    mutateAsync: signInWithPasskeyAsync,
+    ...rest
+  } = usePasskeyAuthWithHelpModal<{
     walletAddress: string
     exported?: boolean
   }>(
@@ -132,5 +136,5 @@ export function useSignInWithPasskey({
     },
   )
 
-  return { signInWithPasskey, ...rest }
+  return { signInWithPasskey, signInWithPasskeyAsync, ...rest }
 }

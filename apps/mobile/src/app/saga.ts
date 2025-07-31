@@ -1,5 +1,4 @@
-import { PersistState, REHYDRATE } from 'redux-persist'
-import { SagaIterator } from 'redux-saga'
+import type { SagaIterator } from 'redux-saga'
 import { monitoredSagas } from 'src/app/monitoredSagas'
 import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { appRatingWatcherSaga } from 'src/features/appRating/saga'
@@ -14,7 +13,8 @@ import { telemetrySaga } from 'src/features/telemetry/saga'
 import { restoreMnemonicCompleteWatcher } from 'src/features/wallet/saga'
 import { walletConnectSaga } from 'src/features/walletConnect/saga'
 import { signWcRequestSaga } from 'src/features/walletConnect/signWcRequestSaga'
-import { call, fork, join, select, spawn, take } from 'typed-redux-saga'
+import { call, fork, join, spawn } from 'typed-redux-saga'
+import { waitForRehydration } from 'uniswap/src/utils/saga'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { deviceLocaleWatcher } from 'wallet/src/features/i18n/deviceLocaleWatcherSaga'
 import { transactionWatcher } from 'wallet/src/features/transactions/watcher/transactionWatcherSaga'
@@ -64,25 +64,4 @@ export function* rootMobileSaga(): SagaIterator {
   for (const m of Object.values(monitoredSagas)) {
     yield* spawn(m.wrappedSaga)
   }
-}
-
-function* waitForRehydration() {
-  // First check if already rehydrated (might have happened before saga started)
-  const alreadyRehydrated = yield* call(getIsRehydrated)
-  if (alreadyRehydrated) {
-    return
-  }
-
-  // Wait for the persist/REHYDRATE action that sets the rehydrated flag
-  while (true) {
-    yield* take(REHYDRATE)
-    const isRehydrated = yield* call(getIsRehydrated)
-    if (isRehydrated) {
-      break
-    }
-  }
-}
-
-function* getIsRehydrated(): SagaIterator<boolean | undefined> {
-  return yield* select((state: { _persist?: PersistState }): boolean | undefined => state._persist?.rehydrated)
 }

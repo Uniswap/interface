@@ -47,7 +47,6 @@ exports[`ActionSheetDropdown should render 1`] = `
     style={
       {
         "alignItems": "center",
-        "color": "#FFFFFF",
         "flexDirection": "row",
         "gap": 8,
         "justifyContent": "center",

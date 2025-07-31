@@ -5,8 +5,8 @@ import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { useAddressColorProps } from 'uniswap/src/features/address/color'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
-import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { isWeb } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 
@@ -16,7 +16,7 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
   const { t } = useTranslation()
   const media = useMedia()
   const addressColor = useAddressColorProps(address)
-  const orderedChainIds = useOrderedChainIds(SUPPORTED_CHAIN_IDS)
+  const { chains: enabledChainIds } = useEnabledChains({ platform: Platform.EVM })
 
   const QR_CODE_SIZE = media.short ? 220 : 240
   const UNICON_SIZE = QR_CODE_SIZE / 4
@@ -62,9 +62,9 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
         />
       </QRCodeDisplay>
       <Text color="$neutral2" lineHeight={20} textAlign="center" variant="body4">
-        {t('qrScanner.wallet.title', { numOfNetworks: orderedChainIds.length })}
+        {t('qrScanner.wallet.title', { numOfNetworks: enabledChainIds.length })}
       </Text>
-      <NetworkLogos chains={orderedChainIds} />
+      <NetworkLogos chains={enabledChainIds} />
     </Flex>
   )
 }

@@ -20,6 +20,7 @@ export enum DynamicConfigs {
   DatadogIgnoredErrors = 'datadog_ignored_errors',
   EmbeddedWalletConfig = 'embedded_wallet_config',
   ExtensionBiometricUnlock = 'extension_biometric_unlock_config',
+  SyncTransactionSubmissionChainIds = 'sync_transaction_submission_chain_ids',
 
   // Web
   AstroChain = 'astro_chain',
@@ -90,6 +91,10 @@ export enum ExtensionBiometricUnlockConfigKey {
   EnableOnboardingEnrollment = 'enableOnboardingEnrollment',
   EnableSettingsEnrollment = 'enableSettingsEnrollment',
   EnableUnlocking = 'enableUnlocking',
+}
+
+export enum SyncTransactionSubmissionChainIdsConfigKey {
+  ChainIds = 'chainIds',
 }
 
 export enum HomeScreenExploreTokensConfigKey {
@@ -177,6 +182,7 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.DatadogSessionSampleRate]: DatadogSessionSampleRateKey
   [DynamicConfigs.EmbeddedWalletConfig]: EmbeddedWalletConfigKey
   [DynamicConfigs.ExtensionBiometricUnlock]: ExtensionBiometricUnlockConfigKey
+  [DynamicConfigs.SyncTransactionSubmissionChainIds]: SyncTransactionSubmissionChainIdsConfigKey
 
   // Web
   [DynamicConfigs.AstroChain]: AstroChainConfigKey

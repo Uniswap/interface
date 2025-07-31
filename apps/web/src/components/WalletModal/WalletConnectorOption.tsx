@@ -1,15 +1,11 @@
-import { UseMutateFunction } from '@tanstack/react-query'
 import Loader from 'components/Icons/LoadingSpinner'
 import { DetectedBadge } from 'components/WalletModal/shared'
-import { ConnectorID, useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
-import { CONNECTOR_ICON_OVERRIDE_MAP, useRecentConnectorId } from 'components/Web3Provider/constants'
-import { uniswapWalletConnect, walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
-import { useConnect } from 'hooks/useConnect'
-import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
-import { useAtom } from 'jotai'
-import { useMemo } from 'react'
+import { useRecentConnectorId } from 'components/Web3Provider/constants'
+import { ConnectionStatus, useConnectionState } from 'features/wallet/connection/connectors/state'
+import { useConnectWallet } from 'features/wallet/connection/hooks/useConnectWallet'
+import { WalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
+import { isEqualWalletConnectorMetaId } from 'features/wallet/connection/utils'
 import { Trans, useTranslation } from 'react-i18next'
-import { persistHideMobileAppPromoBannerAtom } from 'state/application/atoms'
 import { ThemedText } from 'theme/components'
 import { Flex, Image, Text, useSporeColors } from 'ui/src'
 import { BINANCE_WALLET_ICON, UNISWAP_LOGO } from 'ui/src/assets'
@@ -25,22 +21,19 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
-import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { isMobileWeb } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 import { isIFramed } from 'utils/isIFramed'
-import { Connector } from 'wagmi'
 
-export enum AlternativeOption {
-  OTHER_WALLETS = 'OTHER_WALLETS',
+function RecentBadge() {
+  return (
+    <Badge badgeVariant={BadgeVariant.SOFT} borderRadius={4} p={1} px={4}>
+      <ThemedText.LabelMicro color="accent1">
+        <Trans i18nKey="common.recent" />
+      </ThemedText.LabelMicro>
+    </Badge>
+  )
 }
-
-const RecentBadge = () => (
-  <Badge badgeVariant={BadgeVariant.SOFT} borderRadius={4} p={1} px={4}>
-    <ThemedText.LabelMicro color="accent1">
-      <Trans i18nKey="common.recent" />
-    </ThemedText.LabelMicro>
-  </Badge>
-)
 
 function EmbeddedWalletIcon() {
   return (
@@ -75,33 +68,28 @@ function OtherWalletsIcon() {
  * This function returns the correct icon for the connector.
  */
 function getIcon({
-  connector,
-  connectorId,
+  walletConnectorMeta,
   isEmbeddedWalletEnabled,
   themeColors,
 }: {
-  connector?: Connector
-  connectorId: string
+  walletConnectorMeta: WalletConnectorMeta
   isEmbeddedWalletEnabled: boolean
   themeColors: UseSporeColorsReturn
 }) {
   const iconSize = isEmbeddedWalletEnabled ? iconSizes.icon32 : iconSizes.icon40
 
-  if (connectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
+  if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
     return <EmbeddedWalletIcon />
-  } else if (connectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
+  } else if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
     return <UniswapMobileIcon iconSize={iconSize} />
-  } else if (connectorId === AlternativeOption.OTHER_WALLETS) {
-    return <OtherWalletsIcon />
-  } else if (connectorId === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID) {
+  } else if (walletConnectorMeta.wagmi?.id === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID) {
     return <BinanceWalletIcon iconSize={iconSize} />
   } else {
-    const icon = CONNECTOR_ICON_OVERRIDE_MAP[connectorId] ?? connector?.icon
     // TODO(WEB-7217): RN Web Image is not properly displaying base64 encoded images (Phantom logo) */
     return (
       <img
-        src={icon}
-        alt={connector?.name}
+        src={walletConnectorMeta.icon}
+        alt={walletConnectorMeta.name}
         style={{
           width: iconSize,
           height: iconSize,
@@ -114,22 +102,18 @@ function getIcon({
 }
 
 function getConnectorText({
-  connector,
-  connectorId,
+  walletConnectorMeta,
   t,
 }: {
-  connector?: Connector
-  connectorId: string
+  walletConnectorMeta: WalletConnectorMeta
   t: ReturnType<typeof useTranslation>['t']
 }) {
-  if (connectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
+  if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
     return t('common.uniswapMobile')
-  } else if (connectorId === AlternativeOption.OTHER_WALLETS) {
-    return t('wallet.other')
-  } else if (connectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
+  } else if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
     return t('account.passkey.log.in.title')
   } else {
-    return connector?.name
+    return walletConnectorMeta.name
   }
 }
 
@@ -137,12 +121,10 @@ function RightSideDetail({
   isPendingConnection,
   isRecent,
   detected,
-  isOtherWallets,
 }: {
   isPendingConnection: boolean
   isRecent: boolean
   detected?: boolean
-  isOtherWallets?: boolean
 }) {
   if (isPendingConnection) {
     return <Loader />
@@ -150,156 +132,86 @@ function RightSideDetail({
     return <RecentBadge />
   } else if (detected) {
     return <DetectedBadge />
-  } else if (isOtherWallets) {
-    return <Chevron rotate="180deg" size="$icon.24" color="$neutral3" />
   }
   return null
 }
 
-function createWalletConnectionHandler({
-  connection,
-  setPersistHideMobileAppPromoBanner,
-  signInWithPasskey,
-}: {
-  connection: ReturnType<typeof useConnect>
-  setPersistHideMobileAppPromoBanner: (value: boolean) => void
-  signInWithPasskey: UseMutateFunction<{ walletAddress: string; exported?: boolean }, Error, void, unknown>
-}) {
-  async function connectEmbeddedWallet() {
-    await signInWithPasskey()
-  }
-
-  function connectUniswapWallet() {
-    setPersistHideMobileAppPromoBanner(true)
-    connection.connect({
-      // Initialize Uniswap Wallet on click instead of in wagmi config
-      // to avoid multiple wallet connect sockets being opened
-      // and causing issues with messages getting dropped
-      connector: uniswapWalletConnect(),
-    })
-  }
-
-  function connectStandardWallet(connector: Connector) {
-    // This is a hack to ensure the connection runs in playwright
-    // TODO(WEB-4173): Look into removing setTimeout connection.connect({ connector })
-    if (isPlaywrightEnv()) {
-      setTimeout(() => connection.connect({ connector }), 1)
-    } else {
-      connection.connect({ connector })
-    }
-  }
-
-  return function handleWalletConnection({
-    connectorId,
-    connector,
-    onPress,
-  }: {
-    connectorId: string
-    connector?: Connector
-    onPress?: () => void
-  }): void {
-    if (onPress) {
-      onPress()
-      return
-    }
-
-    switch (connectorId) {
-      case CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID:
-        connectEmbeddedWallet()
-        return
-
-      case CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID:
-        connectUniswapWallet()
-        return
-
-      default:
-        if (!connector) {
-          return
-        }
-        connectStandardWallet(connector)
-        return
-    }
-  }
-}
-
-export function EVMOption({
-  connectorId,
-  detected,
-  onPress,
-}: {
-  connectorId: string
-  detected?: boolean
-  onPress?: () => void
-}) {
+export function WalletConnectorOption({ walletConnectorMeta }: { walletConnectorMeta: WalletConnectorMeta }) {
   const { t } = useTranslation()
-  const connection = useConnect()
-  const connector = useConnectorWithId(connectorId as ConnectorID)
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const { signInWithPasskey } = useSignInWithPasskey()
-  const [, setPersistHideMobileAppPromoBanner] = useAtom(persistHideMobileAppPromoBannerAtom)
-  const isPendingConnection = connection.isPending && connection.variables.connector === connector
-  const isRecent = connectorId === useRecentConnectorId()
+
+  const connectionState = useConnectionState()
+  const isPendingConnection =
+    connectionState.status === ConnectionStatus.Pending && connectionState.meta.name === walletConnectorMeta.name
+
+  const recentConnectorId = useRecentConnectorId()
+  const isRecent = Boolean(recentConnectorId && isEqualWalletConnectorMetaId(walletConnectorMeta, recentConnectorId))
+
   const themeColors = useSporeColors()
-  const icon = getIcon({ connector, connectorId, isEmbeddedWalletEnabled, themeColors })
-  const text = getConnectorText({ connector, connectorId, t })
+  const icon = getIcon({ walletConnectorMeta, isEmbeddedWalletEnabled, themeColors })
+  const text = getConnectorText({ walletConnectorMeta, t })
+  const isDetected = walletConnectorMeta.isInjected
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
-  const isDisabled = Boolean(connection.isPending && !isIFramed())
+  const isDisabled = Boolean(isPendingConnection && !isIFramed())
 
-  const handleConnectionFn = useMemo(
-    () =>
-      createWalletConnectionHandler({
-        connection,
-        setPersistHideMobileAppPromoBanner,
-        signInWithPasskey,
-      }),
-    [connection, setPersistHideMobileAppPromoBanner, signInWithPasskey],
-  )
-
-  const handleConnect = () => handleConnectionFn({ connectorId, connector, onPress })
+  const connectWallet = useConnectWallet()
+  const handleConnect = useEvent(() => connectWallet(walletConnectorMeta))
 
   return (
-    <WalletConnectorOption
+    <WalletConnectorOptionBase
       icon={icon}
       text={text}
-      handleConnect={handleConnect}
+      rightSideDetail={
+        <RightSideDetail isPendingConnection={isPendingConnection} isRecent={isRecent} detected={isDetected} />
+      }
+      onPress={handleConnect}
       isPendingConnection={isPendingConnection}
-      isRecent={isRecent}
-      isDetected={Boolean(detected)}
       isDisabled={isDisabled}
-      walletMeta={{
-        name: connector?.name,
-        type: connector?.type,
-        connectorId,
+      analyticsProperties={{
+        wallet_name: walletConnectorMeta.name,
+        wallet_type: walletConnectorMeta.analyticsWalletType,
       }}
     />
   )
 }
 
-function WalletConnectorOption({
+export function OtherWalletsOption({ onPress }: { onPress: () => void }) {
+  const { t } = useTranslation()
+
+  return (
+    <WalletConnectorOptionBase
+      icon={<OtherWalletsIcon />}
+      text={t('wallet.other')}
+      rightSideDetail={<Chevron rotate="180deg" size="$icon.24" color="$neutral3" />}
+      onPress={onPress}
+      isPendingConnection={false}
+      isDisabled={false}
+      analyticsProperties={{ wallet_name: 'OTHER_WALLETS', wallet_type: 'OTHER_WALLETS' }}
+    />
+  )
+}
+
+function WalletConnectorOptionBase({
   icon,
   text,
-  handleConnect,
+  rightSideDetail,
+  onPress,
   isPendingConnection,
-  isRecent,
-  isDetected,
   isDisabled,
-  walletMeta,
+  analyticsProperties,
 }: {
   icon: JSX.Element
   text: string | undefined
-  handleConnect: () => void
+  rightSideDetail: JSX.Element | null
+  onPress: () => void
   isPendingConnection: boolean
-  isRecent: boolean
-  isDetected: boolean
   isDisabled: boolean
-  walletMeta: {
-    connectorId: string
-    name?: string
-    type?: string
+  analyticsProperties: {
+    wallet_name: string
+    wallet_type: string
   }
 }) {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const isOtherWallets = walletMeta.connectorId === AlternativeOption.OTHER_WALLETS
 
   return (
     <Flex
@@ -314,16 +226,12 @@ function WalletConnectorOption({
       cursor={isDisabled ? 'auto' : 'pointer'}
       hoverStyle={{ backgroundColor: isDisabled ? '$surface2' : '$surface1Hovered' }}
       opacity={isDisabled && !isPendingConnection ? 0.5 : 1}
-      data-testid={`wallet-option-${walletMeta.type}`}
-      onPress={handleConnect}
+      onPress={onPress}
     >
       <Trace
         logPress
         eventOnTrigger={InterfaceEventName.WalletSelected}
-        properties={{
-          wallet_name: walletMeta.name ?? walletMeta.connectorId,
-          wallet_type: walletTypeToAmplitudeWalletType(walletMeta.type ?? walletMeta.connectorId),
-        }}
+        properties={analyticsProperties}
         element={ElementName.WalletTypeOption}
       >
         <Flex row alignItems="center" gap="$gap12">
@@ -332,12 +240,7 @@ function WalletConnectorOption({
             {text}
           </Text>
         </Flex>
-        <RightSideDetail
-          isPendingConnection={isPendingConnection}
-          isRecent={isRecent}
-          detected={isDetected}
-          isOtherWallets={isOtherWallets}
-        />
+        {rightSideDetail}
       </Trace>
     </Flex>
   )

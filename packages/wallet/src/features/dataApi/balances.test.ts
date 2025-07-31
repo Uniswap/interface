@@ -687,6 +687,8 @@ describe(usePortfolioCacheUpdater, () => {
       // Doesn't include feature flagged chains
       featureFlaggedChainIds: filterChainIdsByFeatureFlag({
         [UniverseChainId.Soneium]: false,
+        // Solana isn't supported by portfolio cache updater.
+        [UniverseChainId.Solana]: false,
       }),
     })
 

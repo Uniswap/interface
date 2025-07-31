@@ -18,6 +18,7 @@ describe('getDeepLinkAction', () => {
     ${'wc:123@2?relay-protocol=irn&symKey=51e'}                                                          | ${DeepLinkAction.WalletConnect}
     ${'https://uniswap.org/app?screen=unknown'}                                                          | ${DeepLinkAction.Unknown}
     ${'uniswap://app/fiatonramp?userAddress=0x123&source=push'}                                          | ${DeepLinkAction.FiatOnRampScreen}
+    ${'uniswap://app/fiatonramp?source=push&moonpayOnly=true&moonpayCurrencyCode=usdc&amount=100'}       | ${DeepLinkAction.FiatOnRampScreen}
     ${'uniswap://app/tokendetails?currencyId=10-0x6fd9d7ad17242c41f7131d257212c54a0e816691&source=push'} | ${DeepLinkAction.TokenDetails}
   `('url=$url should return expected=$expected', ({ url, expected }) => {
     expect(parseDeepLinkUrl(url).action).toEqual(expected)

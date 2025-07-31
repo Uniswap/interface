@@ -3,10 +3,15 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { MismatchAccountEffects } from 'uniswap/src/features/smartWallet/mismatch/MismatchAccountEffects'
+import type {
+  HasMismatchInput,
+  HasMismatchResult,
+  HasMismatchUtil,
+} from 'uniswap/src/features/smartWallet/mismatch/mismatch'
 import { useEvent } from 'utilities/src/react/hooks'
 
 interface MismatchContextValue {
-  mismatchCallback: (input: { address: string; chainId: number }) => Promise<boolean>
+  mismatchCallback: HasMismatchUtil
   account: { address?: string; chainId?: number }
   onHasAnyMismatch: () => void
   chains: UniverseChainId[]
@@ -29,9 +34,11 @@ export const MismatchContextProvider = React.memo(function MismatchContextProvid
   isTestnetModeEnabled,
 }: PropsWithChildren<MismatchContextProviderProps>): JSX.Element {
   const isMismatchForced = useIsMismatchForced()
-  const mismatchCallback = useEvent(async (input: { address: string; chainId: number }) => {
+  const mismatchCallback = useEvent(async (input: HasMismatchInput): HasMismatchResult => {
     if (isMismatchForced) {
-      return true
+      return {
+        [String(chainId)]: true,
+      }
     }
     return mismatchCallbackProp(input)
   })

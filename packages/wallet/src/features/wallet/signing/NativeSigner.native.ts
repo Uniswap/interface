@@ -6,6 +6,7 @@ import { hexlify } from 'ethers/lib/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { areAddressesEqual, ensureLeading0x } from 'uniswap/src/utils/addresses'
+import { HexString, isValidHexString } from 'uniswap/src/utils/hex'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring.native'
 
 // A signer that uses native keystore to access keys
@@ -58,13 +59,18 @@ export class NativeSigner extends Signer {
     return signature
   }
 
-  async signTransaction(transaction: providers.TransactionRequest): Promise<string> {
+  async signTransaction(transaction: providers.TransactionRequest): Promise<HexString> {
     const tx = await utils.resolveProperties(transaction)
     if (tx.chainId === undefined) {
       throw new Error('Expected chainId to be defined')
     }
     if (tx.from != null) {
-      if (!areAddressesEqual(tx.from, this.address)) {
+      if (
+        !areAddressesEqual({
+          addressInput1: { address: tx.from, chainId: tx.chainId },
+          addressInput2: { address: this.address, chainId: tx.chainId },
+        })
+      ) {
         throw new Error('transaction from address mismatch')
       }
       delete tx.from
@@ -74,7 +80,12 @@ export class NativeSigner extends Signer {
     const hashedTx = utils.keccak256(utils.serializeTransaction(ut))
     const signature = await Keyring.signTransactionHashForAddress(this.address, hashedTx.slice(2), tx.chainId)
 
-    return utils.serializeTransaction(ut, `0x${signature}`)
+    const signedTx = utils.serializeTransaction(ut, `0x${signature}`)
+    if (!isValidHexString(signedTx)) {
+      throw new Error('Invalid signed transaction')
+    }
+
+    return signedTx
   }
 
   connect(provider: providers.Provider): NativeSigner {

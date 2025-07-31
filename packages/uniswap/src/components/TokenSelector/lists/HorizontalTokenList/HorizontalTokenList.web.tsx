@@ -55,7 +55,7 @@ export const HorizontalTokenList = memo(function _HorizontalTokenList({
         </Flex>
       ))}
       {!expanded && remainingCount > 0 && (
-        <TouchableArea style={styles.fiveTokenRowCard} onPress={() => onExpand?.()}>
+        <TouchableArea style={styles.fiveTokenRowCard} onPress={() => onExpand?.(suggestedTokens)}>
           <Flex fill centered borderRadius="$rounded16" backgroundColor="$surface2">
             <Text variant="buttonLabel3" color="$neutral2">
               {remainingCount}+

@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
 
 export interface TokenRevocationTransactionStep extends Omit<TokenApprovalTransactionStep, 'type'> {

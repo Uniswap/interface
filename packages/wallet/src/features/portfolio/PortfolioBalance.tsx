@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import { Flex, Shine, useIsDarkMode } from 'ui/src'
 import AnimatedNumber, {
   BALANCE_CHANGE_INDICATION_DURATION,
@@ -11,14 +11,16 @@ import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import i18next from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
+import { isExtension } from 'utilities/src/platform'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
+import { RefreshBalanceButton } from 'wallet/src/features/portfolio/RefreshBalanceButton'
 
 interface PortfolioBalanceProps {
   owner: Address
 }
 
 export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element {
-  const { data, loading, networkStatus } = usePortfolioTotalValue({
+  const { data, loading, networkStatus, refetch } = usePortfolioTotalValue({
     address: owner,
     // TransactionHistoryUpdater will refetch this query on new transaction.
     // No need to be super aggressive with polling here.
@@ -45,6 +47,13 @@ export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: Portf
   const shouldFadePortfolioDecimals =
     (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) && currencyComponents.symbolAtFront
 
+  const EndElement = useMemo(() => {
+    if (!isExtension) {
+      return undefined
+    }
+    return <RefreshBalanceButton isLoading={loading} onPress={refetch} />
+  }, [loading, refetch])
+
   return (
     <Flex gap="$spacing4">
       <AnimatedNumber
@@ -56,6 +65,7 @@ export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: Portf
         value={totalBalance}
         warmLoading={isWarmLoading}
         isRightToLeft={isRightToLeft}
+        EndElement={EndElement}
       />
       <Shine disabled={!isWarmLoading}>
         <RelativeChange

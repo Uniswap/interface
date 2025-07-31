@@ -12,15 +12,27 @@ type AtLeastOne<
 export type WalletConnectorMeta = {
   name: string
   icon?: string
+  isInjected: boolean
+  analyticsWalletType: string
 } & AtLeastOne<{
-   /** The wagmi connector is of this connector, if this connector is linked to a wagmi connector. */
-   wagmiConnectorId?: string
-   /** The "@solana/wallet-adapter-base" `WalletName` of this connector, if this connector is linked to a solana wallet. */
-   solanaWalletName?: SolanaWalletName
-   /** The id of this connector, if this connector has custom logic (e.g. embedded wallet connector or uniswap wallet connect connector). */
-   customConnectorId?: CustomConnectorId
+  wagmi?: WagmiConnectorDetails
+  solana?: SolanaConnectorDetails 
+  /** The id of this connector, if this connector has custom logic (e.g. embedded wallet connector or uniswap wallet connect connector). */
+  customConnectorId?: CustomConnectorId
 }>
 
-export type SolanaWalletConnectorMeta = Prettify<Extract<WalletConnectorMeta, { solanaWalletName: SolanaWalletName }>>
-export type WagmiWalletConnectorMeta = Prettify<Extract<WalletConnectorMeta, { wagmiConnectorId: string }>>
+
+export type SolanaWalletConnectorMeta = Prettify<Extract<WalletConnectorMeta, { solana: SolanaConnectorDetails }>>
+export type WagmiWalletConnectorMeta = Prettify<Extract<WalletConnectorMeta, { wagmi: WagmiConnectorDetails }>>
 export type CustomWalletConnectorMeta = Prettify<Extract<WalletConnectorMeta, { customConnectorId: CustomConnectorId }>>
+
+export type WagmiConnectorDetails = {
+  /** The wagmi connector is of this connector, if this connector is linked to a wagmi connector. */
+  id: string
+  type: string // temporarily kept for backwards analytics compatibility
+}
+
+type SolanaConnectorDetails = {
+  /** The "@solana/wallet-adapter-base" `WalletName` of this connector, if this connector is linked to a solana wallet. */
+  walletName: SolanaWalletName
+}

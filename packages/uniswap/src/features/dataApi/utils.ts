@@ -123,6 +123,8 @@ const CURRENCY_CACHE = new Map<string, Token | NativeCurrency | undefined>()
  * @param params.symbol The token's symbol. This parameter is optional.
  * @param params.name The token's name. This parameter is optional.
  * @param params.bypassChecksum If true, bypasses the EIP-55 checksum on the token address. This parameter is optional and defaults to true.
+ * @param params.buyFeeBps The buy fee in basis points. This parameter is optional.
+ * @param params.sellFeeBps The sell fee in basis points. This parameter is optional.
  * @returns A new instance of Token or NativeCurrency if the parameters are valid, otherwise returns undefined.
  */
 export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency | undefined {

@@ -286,7 +286,7 @@ async function handleGetCapabilities({
     const reduxState = await readReduxStateFromStorage()
     const hasSmartWalletConsent = reduxState ? selectHasSmartWalletConsent(reduxState, request.address) : false
     const isTestnetModeEnabled = reduxState ? reduxState.userSettings.isTestnetModeEnabled ?? false : false
-    const featureFlaggedChainIds = await getFeatureFlaggedChainIds()
+    const featureFlaggedChainIds = getFeatureFlaggedChainIds()
     const { chains: enabledChains } = getEnabledChains({
       isTestnetModeEnabled,
       featureFlaggedChainIds,

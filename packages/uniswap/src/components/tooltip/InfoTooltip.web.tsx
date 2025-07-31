@@ -33,11 +33,11 @@ export function InfoTooltip({
     <Flex row shrink alignItems="center" gap="$spacing4">
       {triggerPlacement === 'end' && children}
       <Tooltip
-        onOpenChange={onOpenChange}
-        {...(enabled && open !== undefined && { open })}
+        open={enabled ? open : false}
         delay={{ close: TOOLTIP_CLOSE_MS, open: 0 }}
         placement={placement}
         restMs={TOOLTIP_REST_MS}
+        onOpenChange={onOpenChange}
       >
         <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
         {text && (

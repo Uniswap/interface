@@ -8,7 +8,7 @@ jobs:
   deploy-to-prod:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: 🧷️ Get version
         uses: juliangruber/read-file-action@02bbba9876a8f870efd4ad64e3b9088d3fb94d4b
@@ -31,7 +31,7 @@ jobs:
           tag_prefix: ""
 
       - name: 🪽 Release
-        uses: actions/create-release@v1.1.0
+        uses: actions/create-release@c9ba6969f07ed90fae07e2e66100dd03f9b1a50e
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

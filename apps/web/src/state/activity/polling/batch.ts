@@ -6,6 +6,7 @@ import { OnActivityUpdate } from 'state/activity/types'
 import { usePendingTransactions } from 'state/transactions/hooks'
 import { PendingTransactionDetails } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { HexString } from 'uniswap/src/utils/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -146,23 +147,23 @@ export function usePollPendingBatchTransactions(onActivityUpdate: OnActivityUpda
 
 type GetCallsResult = {
   version: string
-  id: `0x${string}`
-  chainId: `0x${string}`
+  id: HexString
+  chainId: HexString
   // TODO(WEB-7872): Remove temporary support for v1 of atomic batching schema for coinbase wallet (CONFIRMED | PENDING)
   status: number | 'CONFIRMED' | 'PENDING'
   atomic: boolean
   receipts?: {
     logs: {
-      address: `0x${string}`
-      data: `0x${string}`
-      topics: `0x${string}`[]
+      address: HexString
+      data: HexString
+      topics: HexString[]
     }[]
     // TODO(WEB-7872): Remove temporary support for v1 of atomic batching schema for coinbase wallet (0 | 1)
-    status: `0x${string}` | 0 | 1
-    blockHash: `0x${string}`
-    blockNumber: `0x${string}`
-    gasUsed: `0x${string}`
-    transactionHash: `0x${string}`
+    status: HexString | 0 | 1
+    blockHash: HexString
+    blockNumber: HexString
+    gasUsed: HexString
+    transactionHash: HexString
   }[]
   capabilities?: Record<string, any>
 }

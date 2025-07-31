@@ -1,7 +1,7 @@
 import { TransactionRequest, TransactionResponse } from '@ethersproject/providers'
 import { call } from 'typed-redux-saga'
 import { fetchGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
-import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -44,7 +44,7 @@ export async function getRemoveDelegationTransactionWithGasLimit(
 }
 
 export type RemoveDelegationParams = {
-  account: AccountMeta
+  account: SignerMnemonicAccountMeta
   walletAddress: Address
   chainIds: UniverseChainId[]
   onSuccess: () => void
@@ -53,7 +53,7 @@ export type RemoveDelegationParams = {
 
 type RemoveDelegationForChainParams = {
   chainId: UniverseChainId
-  account: AccountMeta
+  account: SignerMnemonicAccountMeta
   walletAddress: Address
   onSuccess?: (transactionResponse: TransactionResponse) => void
   onFailure?: (error: Error) => void
@@ -76,8 +76,8 @@ function* removeDelegationForChain(params: RemoveDelegationForChainParams) {
     },
     transactionOriginType: TransactionOriginType.Internal,
   }
-  const { transactionResponse } = yield* call(executeTransaction, executeTransactionParams)
-  return transactionResponse
+  const { transactionHash } = yield* call(executeTransaction, executeTransactionParams)
+  return transactionHash
 }
 
 export function* removeDelegation(params: RemoveDelegationParams) {

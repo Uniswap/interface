@@ -5,6 +5,7 @@ import { WalletProvider } from 'uniswap/src/features/wallet/contexts/WalletProvi
 import { WalletService } from 'uniswap/src/features/wallet/services/IWalletService'
 import { createEVMWalletService } from 'uniswap/src/features/wallet/services/createEVMWalletService'
 import { WalletMeta } from 'uniswap/src/features/wallet/types/WalletMeta'
+import { HexString } from 'uniswap/src/utils/hex'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -14,7 +15,7 @@ import { WalletState } from 'wallet/src/state/walletReducer'
 const NATIVE_UNISWAP_WALLET_ID = 'native-uniswap-wallet'
 const NATIVE_UNISWAP_WALLET_NAME = 'Native Uniswap Wallet'
 
-function getUniswapWalletMeta(): WalletMeta {
+export function getUniswapWalletMeta(): WalletMeta {
   return {
     id: NATIVE_UNISWAP_WALLET_ID,
     name: NATIVE_UNISWAP_WALLET_NAME,
@@ -24,7 +25,7 @@ function getUniswapWalletMeta(): WalletMeta {
 function useNativeWalletService(): WalletService {
   const store: Store<WalletState> = useStore()
 
-  const getAccountType = useEvent((address: `0x${string}`) => {
+  const getAccountType = useEvent((address: HexString) => {
     const account = store.getState().wallet.accounts[address]
     if (!account) {
       throw new Error('Account not found')
@@ -57,7 +58,8 @@ export function NativeWalletProvider({ children }: PropsWithChildren): JSX.Eleme
   }, [account?.address])
 
   return (
-    <WalletProvider walletService={walletService} evmAddress={evmAddress}>
+    // SVM address is not yet supported in the native wallet
+    <WalletProvider walletService={walletService} evmAddress={evmAddress} svmAddress={undefined}>
       {children}
     </WalletProvider>
   )

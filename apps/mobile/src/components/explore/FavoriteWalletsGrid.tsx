@@ -66,7 +66,7 @@ export function FavoriteWalletsGrid({ showLoading, listRef, ...rest }: FavoriteW
         ) : (
           <Sortable.Grid
             {...rest}
-            animateHeight
+            dimensionsAnimationType="worklet"
             scrollableRef={listRef}
             autoScrollActivationOffset={[75, 100]}
             data={watchedWalletsList}

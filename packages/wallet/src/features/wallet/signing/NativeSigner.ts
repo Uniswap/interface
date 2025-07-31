@@ -2,6 +2,7 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { Bytes, Signer, providers } from 'ethers'
 import { SignsTypedData } from 'uniswap/src/features/transactions/signing'
+import { HexString } from 'uniswap/src/utils/hex'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
 /**
@@ -41,7 +42,7 @@ export class NativeSigner extends Signer implements SignsTypedData {
     throw new PlatformSplitStubError('_signTypedData')
   }
 
-  async signTransaction(_transaction: providers.TransactionRequest): Promise<string> {
+  async signTransaction(_transaction: providers.TransactionRequest): Promise<HexString> {
     throw new PlatformSplitStubError('signTransaction')
   }
 

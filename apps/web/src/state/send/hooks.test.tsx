@@ -1,8 +1,9 @@
 import { renderHook } from '@testing-library/react-hooks'
-import { useDerivedSendInfo } from 'state/send/hooks'
 import { SendState } from 'state/send/SendContext'
+import { useDerivedSendInfo } from 'state/send/hooks'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { useAddressFromEns, useENSName } from 'uniswap/src/features/ens/api'
-import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { getAddress } from 'viem'
 import type { Mock } from 'vitest'
 
@@ -54,9 +55,11 @@ vi.mock('uniswap/src/features/ens/api', () => ({
   useENSName: vi.fn(),
   useAddressFromEns: vi.fn(),
 }))
-vi.mock('uniswap/src/features/unitags/hooks', () => ({
-  useUnitagByAddress: vi.fn(),
-  useUnitagByName: vi.fn(),
+vi.mock('uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery', () => ({
+  useUnitagsAddressQuery: vi.fn(),
+}))
+vi.mock('uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery', () => ({
+  useUnitagsUsernameQuery: vi.fn(),
 }))
 
 describe('useDerivedSendInfo', () => {
@@ -77,11 +80,13 @@ describe('useDerivedSendInfo', () => {
     ;(useAddressFromEns as Mock).mockReturnValue({
       data: null,
     })
-    ;(useUnitagByAddress as Mock).mockReturnValue({
-      unitag: undefined,
+    ;(useUnitagsAddressQuery as Mock).mockReturnValue({
+      data: undefined,
+      isLoading: false,
     })
-    ;(useUnitagByName as Mock).mockReturnValue({
-      unitag: undefined,
+    ;(useUnitagsUsernameQuery as Mock).mockReturnValue({
+      data: undefined,
+      isLoading: false,
     })
   })
 
@@ -169,8 +174,9 @@ describe('useDerivedSendInfo', () => {
     const validAddressWithUnitag = '0x123456789abcdef0000000000000000000000000'
     const unitagName = 'myunitag'
 
-    ;(useUnitagByName as Mock).mockReturnValue({
-      unitag: { address: { address: validAddressWithUnitag }, username: unitagName },
+    ;(useUnitagsUsernameQuery as Mock).mockReturnValue({
+      data: { address: { address: validAddressWithUnitag }, username: unitagName },
+      isLoading: false,
     })
 
     const mockSendState: SendState = {
@@ -193,11 +199,13 @@ describe('useDerivedSendInfo', () => {
     const unitagName = 'myunitag'
     const fallbackUnitagName = 'myunitagfallackusername'
 
-    ;(useUnitagByName as Mock).mockReturnValue({
-      unitag: { address: { address: validAddressWithUnitag } },
+    ;(useUnitagsUsernameQuery as Mock).mockReturnValue({
+      data: { address: { address: validAddressWithUnitag } },
+      isLoading: false,
     })
-    ;(useUnitagByAddress as Mock).mockReturnValue({
-      unitag: { username: fallbackUnitagName },
+    ;(useUnitagsAddressQuery as Mock).mockReturnValue({
+      data: { username: fallbackUnitagName },
+      isLoading: false,
     })
 
     const mockSendState: SendState = {
@@ -223,11 +231,13 @@ describe('useDerivedSendInfo', () => {
     ;(useENSName as Mock).mockReturnValue({
       data: ensName,
     })
-    ;(useUnitagByName as Mock).mockReturnValue({
-      unitag: undefined,
+    ;(useUnitagsUsernameQuery as Mock).mockReturnValue({
+      data: undefined,
+      isLoading: false,
     })
-    ;(useUnitagByAddress as Mock).mockReturnValue({
-      unitag: { username: fallbackUnitagName },
+    ;(useUnitagsAddressQuery as Mock).mockReturnValue({
+      data: { username: fallbackUnitagName },
+      isLoading: false,
     })
 
     const mockSendState: SendState = {

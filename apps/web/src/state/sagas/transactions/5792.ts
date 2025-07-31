@@ -3,13 +3,19 @@ import { getAccount } from '@wagmi/core'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
+import { getRoutingForTransaction } from 'state/activity/utils'
 import { HandleOnChainStepParams, getSigner, watchForInterruption } from 'state/sagas/transactions/utils'
-import { addTransaction } from 'state/transactions/reducer'
 import { handleGetCapabilities } from 'state/walletCapabilities/lib/handleGetCapabilities'
 import { setCapabilitiesByChain } from 'state/walletCapabilities/reducer'
 import { call, put } from 'typed-redux-saga'
+import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import { OnChainTransactionStepBatched } from 'uniswap/src/features/transactions/steps/types'
-import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import {
+  InterfaceTransactionDetails,
+  TransactionOriginType,
+  TransactionStatus,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 const CURRENT_SEND_CALLS_VERSION = '2.0.0'
@@ -58,7 +64,32 @@ export function* handleAtomicSendCalls(
     const batchInfo = { connectorId, batchId, chainId }
 
     // Add transaction to local state to start polling for status
-    yield* put(addTransaction({ from: account.address, info, hash: batchId, chainId, batchInfo }))
+    yield* put(
+      addTransaction({
+        id: batchId,
+        hash: batchId,
+        from: account.address,
+        typeInfo: info,
+        chainId,
+        batchInfo,
+        routing: getRoutingForTransaction(info),
+        transactionOriginType: TransactionOriginType.Internal,
+        status: TransactionStatus.Pending,
+        addedTime: Date.now(),
+        options: {
+          request: {
+            to: batchedTxRequests[0].to,
+            from: account.address,
+            data: batchedTxRequests[0].data,
+            value: batchedTxRequests[0].value,
+            gasLimit: batchedTxRequests[0].gasLimit,
+            gasPrice: batchedTxRequests[0].gasPrice,
+            nonce: batchedTxRequests[0].nonce,
+            chainId: batchedTxRequests[0].chainId,
+          },
+        },
+      } satisfies InterfaceTransactionDetails),
+    )
 
     popupRegistry.addPopup({ type: PopupType.Transaction, hash: batchId }, batchId)
 

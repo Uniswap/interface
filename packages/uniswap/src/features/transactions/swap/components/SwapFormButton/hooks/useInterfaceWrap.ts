@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
 import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
 } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isJupiter, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isInterface } from 'utilities/src/platform'
 
@@ -18,7 +18,7 @@ export function useInterfaceWrap(): {
 } {
   // TODO(WALL-6391): remove direct usage and replace with SwapService
   const wrapCallback = useSwapDependenciesStore((state) => state.wrapCallback)
-  const account = useAccountMeta()
+  const account = useWallet().evmAccount
   const updateSwapForm = useSwapFormStore((s) => s.updateSwapForm)
   const { currencyAmounts, txId, wrapType } = useSwapFormStoreDerivedSwapInfo((s) => ({
     currencyAmounts: s.currencyAmounts,
@@ -26,7 +26,7 @@ export function useInterfaceWrap(): {
     wrapType: s.wrapType,
   }))
   const { txRequest, gasFeeEstimation } = useSwapTxStore((s) => {
-    if (isUniswapX(s)) {
+    if (isUniswapX(s) || isJupiter(s)) {
       return {
         txRequest: undefined,
         gasFeeEstimation: s.gasFeeEstimation,

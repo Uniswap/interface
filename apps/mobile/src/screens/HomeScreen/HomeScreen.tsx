@@ -40,7 +40,6 @@ import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
 import { HomeScreenQuickActions } from 'src/screens/HomeScreen/HomeScreenQuickActions'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { useHomeScreenState } from 'src/screens/HomeScreen/useHomeScreenState'
-import { useHomeScreenTracking } from 'src/screens/HomeScreen/useHomeScreenTracking'
 import { useHomeScrollRefs } from 'src/screens/HomeScreen/useHomeScrollRefs'
 import { useOpenBackupReminderModal } from 'src/utils/useOpenBackupReminderModal'
 import { Flex, Image, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
@@ -71,7 +70,6 @@ import {
   setIncrementNumPostSwapNudge,
 } from 'wallet/src/features/behaviorHistory/slice'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
-import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
 import { useAccountCountChanged, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
 
@@ -105,13 +103,8 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   const { showEmptyWalletState, isTabsDataLoaded } = useHomeScreenState()
 
-  useHomeScreenTracking()
   // opens the wallet restore modal if recovery phrase is missing after the app is opened
   useWalletRestore({ openModalImmediately: true })
-  // Record a heartbeat for anonymous user DAU
-  useHeartbeatReporter()
-  // Report balances at most every 24 hours, checking every 15 seconds when app is open
-  useLastBalancesReporter()
 
   const { trigger } = useBiometricPrompt()
 
@@ -656,6 +649,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         <SmartWalletUpgradeModals
           account={activeAccount}
           video={!SmartWalletDisableVideo && MemoizedVideo}
+          isHomeScreenFocused={isFocused}
           onEnableSmartWallet={handleSmartWalletEnable}
         />
       )}

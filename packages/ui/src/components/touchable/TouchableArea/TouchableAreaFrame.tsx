@@ -64,6 +64,12 @@ export const TouchableAreaFrame = styled(YStack, {
           pointerEvents: 'none',
         },
       },
+      false: {
+        '$platform-web': {
+          // Explicitly setting this enables a child to be clickable even when the parent is disabled
+          pointerEvents: 'auto',
+        },
+      },
     },
     hoverable: {
       // when true, `hoverStyle` is applied via the variant

@@ -1,95 +1,208 @@
+import { NetworkStatus } from '@apollo/client'
+import { NativeCurrency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useTokenBalancesQuery } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
-import {
-  Chain,
-  useQuickTokenBalancesWebQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { DAI, USDC } from 'uniswap/src/constants/tokens'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
+import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 
 vi.mock('@web3-react/core', () => ({
   useWeb3React: vi.fn(() => ({ account: '0x123', chainId: 1 })),
 }))
 
-vi.mock('appGraphql/data/apollo/AdaptiveTokenBalancesProvider', async () => {
-  const actual = await vi.importActual('appGraphql/data/apollo/AdaptiveTokenBalancesProvider')
+// Mock the balances module with all exports
+vi.mock('uniswap/src/features/dataApi/balances', async () => {
+  const actual = await vi.importActual('uniswap/src/features/dataApi/balances')
   return {
     ...actual,
-    useTokenBalancesQuery: vi.fn(() => ({ data: {}, loading: false })),
+    usePortfolioBalances: vi.fn(() => ({
+      data: undefined,
+      loading: false,
+      networkStatus: NetworkStatus.ready,
+      refetch: vi.fn(),
+      error: undefined,
+    })),
   }
 })
 
-vi.mock('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks', async () => {
-  const actual = await vi.importActual('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks')
+// Mock the feature flag hook
+vi.mock('uniswap/src/features/gating/hooks', async () => {
+  const actual = await vi.importActual('uniswap/src/features/gating/hooks')
   return {
     ...actual,
-    useQuickTokenBalancesWebQuery: vi.fn(() => ({ data: {}, loading: false })),
+    useFeatureFlag: vi.fn(() => false), // Default to GraphQL (false = REST disabled)
   }
 })
 
 describe('useTokenBalances', () => {
+  beforeEach(() => {
+    // Reset mocks before each test
+    vi.clearAllMocks()
+
+    // Default mock for usePortfolioBalances
+    mocked(usePortfolioBalances).mockReturnValue({
+      data: undefined,
+      loading: false,
+      networkStatus: NetworkStatus.ready,
+      refetch: vi.fn(),
+      error: undefined,
+    })
+
+    // Default mock for useFeatureFlag - disable REST to use GraphQL
+    mocked(useFeatureFlag).mockReturnValue(false)
+  })
+
   it('should return empty balances when loading', () => {
-    mocked(useTokenBalancesQuery).mockReturnValueOnce({ data: undefined, loading: true } as any)
-    mocked(useQuickTokenBalancesWebQuery).mockReturnValueOnce({ data: undefined, loading: true } as any)
+    mocked(usePortfolioBalances).mockReturnValueOnce({
+      data: undefined,
+      loading: true,
+      networkStatus: NetworkStatus.loading,
+      refetch: vi.fn(),
+      error: undefined,
+    })
 
     const { loading, balanceList, balanceMap } = renderHook(() => useTokenBalances()).result.current
     expect(balanceMap).toEqual({})
     expect(loading).toEqual(true)
     expect(balanceList).toEqual([])
   })
+
   it('should return empty balances when user is not connected', () => {
     mocked(useWeb3React).mockReturnValueOnce({ account: undefined, chainId: undefined } as any)
-    mocked(useTokenBalancesQuery).mockReturnValueOnce({ data: undefined, loading: false } as any)
-    mocked(useQuickTokenBalancesWebQuery).mockReturnValueOnce({ data: undefined, loading: false } as any)
+    mocked(usePortfolioBalances).mockReturnValueOnce({
+      data: undefined,
+      loading: false,
+      networkStatus: NetworkStatus.ready,
+      refetch: vi.fn(),
+      error: undefined,
+    })
+
     const { loading, balanceList, balanceMap } = renderHook(() => useTokenBalances()).result.current
     expect(balanceMap).toEqual({})
     expect(loading).toEqual(false)
     expect(balanceList).toEqual([])
   })
+
   it('should return balance map when user is connected', () => {
-    mocked(useTokenBalancesQuery).mockReturnValueOnce({
-      data: {
-        portfolios: [
-          {
-            tokenBalances: [
-              {
-                token: {
-                  standard: 'ERC20',
-                  address: '0x123',
-                  chain: Chain.Ethereum,
-                },
-                denominatedValue: {
-                  value: 123,
-                },
-                quantity: 123,
-              },
-              {
-                token: {
-                  standard: NATIVE_CHAIN_ID,
-                  chain: Chain.Ethereum,
-                },
-                denominatedValue: {
-                  value: 123,
-                },
-                quantity: 123,
-              },
-            ],
-          },
-        ],
+    // Create a native currency object
+    class MockNativeCurrency extends NativeCurrency {
+      constructor() {
+        super(1, 18, 'ETH', 'Ethereum')
+      }
+
+      get wrapped(): Token {
+        return WETH
+      }
+
+      equals(other: any): boolean {
+        return other.isNative && other.chainId === this.chainId
+      }
+    }
+    const mockNativeCurrency = new MockNativeCurrency()
+
+    const mockPortfolioBalances: Record<string, PortfolioBalance> = {
+      [`1-${DAI.address}`]: {
+        id: '1',
+        cacheId: 'test-cache-id',
+        quantity: 123,
+        balanceUSD: 123,
+        currencyInfo: {
+          currencyId: `1-${DAI.address}`,
+          currency: DAI,
+          logoUrl: undefined,
+          isSpam: false,
+          safetyInfo: undefined,
+          spamCode: undefined,
+        },
+        relativeChange24: undefined,
+        isHidden: false,
       },
+      '1-native': {
+        id: '2',
+        cacheId: 'test-cache-id-2',
+        quantity: 123,
+        balanceUSD: 123,
+        currencyInfo: {
+          currencyId: '1-native',
+          currency: mockNativeCurrency,
+          logoUrl: undefined,
+          isSpam: false,
+          safetyInfo: undefined,
+          spamCode: undefined,
+        },
+        relativeChange24: undefined,
+        isHidden: false,
+      },
+    }
+
+    mocked(usePortfolioBalances).mockReturnValueOnce({
+      data: mockPortfolioBalances,
       loading: false,
-    } as any)
+      networkStatus: NetworkStatus.ready,
+      refetch: vi.fn(),
+      error: undefined,
+    })
+
     const { balanceMap, loading } = renderHook(() => useTokenBalances()).result.current
     expect(balanceMap).toEqual({
-      '1-0x123': {
+      [`1-${DAI.address.toLowerCase()}`]: {
         balance: 123,
         usdValue: 123,
       },
       '1-native': {
         balance: 123,
         usdValue: 123,
+      },
+    })
+    expect(loading).toEqual(false)
+  })
+
+  it('should work with REST API when feature flag is enabled', () => {
+    // Enable REST API
+    mocked(useFeatureFlag).mockImplementation((flag) => {
+      if (flag === FeatureFlags.GqlToRestBalances) {
+        return true // Use REST
+      }
+      return false
+    })
+
+    const mockPortfolioBalances: Record<string, PortfolioBalance> = {
+      [`1-${USDC.address}`]: {
+        id: '3',
+        cacheId: 'test-cache-id-3',
+        quantity: 456,
+        balanceUSD: 456,
+        currencyInfo: {
+          currencyId: `1-${USDC.address}`,
+          currency: USDC,
+          logoUrl: undefined,
+          isSpam: false,
+          safetyInfo: undefined,
+          spamCode: undefined,
+        },
+        relativeChange24: undefined,
+        isHidden: false,
+      },
+    }
+
+    mocked(usePortfolioBalances).mockReturnValueOnce({
+      data: mockPortfolioBalances,
+      loading: false,
+      networkStatus: NetworkStatus.ready,
+      refetch: vi.fn(),
+      error: undefined,
+    })
+
+    const { balanceMap, loading } = renderHook(() => useTokenBalances()).result.current
+    expect(balanceMap).toEqual({
+      [`1-${USDC.address.toLowerCase()}`]: {
+        balance: 456,
+        usdValue: 456,
       },
     })
     expect(loading).toEqual(false)

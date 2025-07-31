@@ -16,11 +16,12 @@ import {
   fetchListAuthenticatorsRequest,
   fetchRegisterNewAuthenticatorRequest,
   fetchSignMessagesRequest,
-  fetchSignTransactionRequest,
+  fetchSignTransactionsRequest,
   fetchSignTypedDataRequest,
   fetchWalletSigninRequest,
 } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { authenticatePasskey, registerPasskey } from 'uniswap/src/features/passkey/passkey'
+import { HexString } from 'uniswap/src/utils/hex'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -59,7 +60,7 @@ async function registerNewPasskey({
   }
 }
 
-export async function createNewEmbeddedWallet(unitag: string): Promise<`0x${string}` | undefined> {
+export async function createNewEmbeddedWallet(unitag: string): Promise<HexString | undefined> {
   try {
     const passkeyCredential = await registerNewPasskey({ username: unitag })
     if (!passkeyCredential) {
@@ -82,7 +83,11 @@ export async function createNewEmbeddedWallet(unitag: string): Promise<`0x${stri
         })
         return undefined
       }
-      return createWalletResp.walletAddress as `0x${string}`
+      const address = isAddress(createWalletResp.walletAddress)
+      if (!address) {
+        throw new Error(`Invalid wallet address returned: ${createWalletResp.walletAddress}`)
+      }
+      return address
     }
     return undefined
   } catch (error) {
@@ -214,13 +219,13 @@ export async function signMessagesWithPasskey(
   }
 }
 
-export async function signTransactionWithPasskey(
+export async function signTransactionsWithPasskey(
   transactions: string[],
   walletAddress?: string,
 ): Promise<string[] | undefined> {
   try {
     const credential = await authenticateWithPasskey(Action.SIGN_TRANSACTIONS, walletAddress)
-    const signedTransactionResp = await fetchSignTransactionRequest({
+    const signedTransactionResp = await fetchSignTransactionsRequest({
       transactions,
       credential,
     })

@@ -140,12 +140,6 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
             style={
               {
                 "alignItems": "center",
-                "color": {
-                  "dynamic": {
-                    "dark": "#FFFFFF",
-                    "light": "#222222",
-                  },
-                },
                 "flexDirection": "row",
                 "gap": 8,
                 "justifyContent": "flex-start",

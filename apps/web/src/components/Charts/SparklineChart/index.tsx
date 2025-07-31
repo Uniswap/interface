@@ -9,6 +9,7 @@ import { memo } from 'react'
 import { TokenStat } from 'state/explore/types'
 import { Flex, useSporeColors } from 'ui/src'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 
@@ -25,7 +26,10 @@ function _SparklineChart({ width, height, tokenData, pricePercentChange, sparkli
   // for sparkline
   const chainId = getChainIdFromChainUrlParam(tokenData.chain.toLowerCase())
   const chainInfo = chainId && getChainInfo(chainId)
-  const isNative = areAddressesEqual(tokenData.address, chainInfo?.wrappedNativeCurrency.address)
+  const isNative = areAddressesEqual({
+    addressInput1: { address: tokenData.address, platform: chainInfo?.platform ?? Platform.EVM },
+    addressInput2: { address: chainInfo?.wrappedNativeCurrency.address, platform: chainInfo?.platform ?? Platform.EVM },
+  })
   const pricePoints = tokenData.address
     ? sparklineMap[isNative ? NATIVE_CHAIN_ID : tokenData.address.toLowerCase()]
     : null

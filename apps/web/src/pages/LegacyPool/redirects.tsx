@@ -1,8 +1,9 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { getCurrencyWithWrap } from 'components/Liquidity/utils/currency'
 import { useCurrency } from 'hooks/Tokens'
+import { useAccount } from 'hooks/useAccount'
 import { useV2Pair } from 'hooks/useV2Pairs'
-import { getCurrencyWithWrap } from 'pages/Pool/Positions/create/utils'
 import { Suspense, lazy } from 'react'
 import { Navigate, useParams, useSearchParams } from 'react-router'
 import { Loader } from 'ui/src/loading/Loader'
@@ -10,7 +11,6 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { searchParamToBackendName } from 'utils/chainParams'
-import { useAccount } from 'wagmi'
 
 const PoolFinder = lazy(() => import('pages/PoolFinder'))
 

@@ -72,4 +72,5 @@ export const MONAD_CHAIN_INFO = {
   },
   interfaceName: 'monad',
   tokens,
+  tradingApiPollingIntervalMs: 200,
 } as const satisfies UniverseChainInfo

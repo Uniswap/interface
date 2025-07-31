@@ -36,13 +36,23 @@ interface NavDropdownProps {
   children: ReactNode
   isOpen: boolean
   width?: number
+  minWidth?: number
   dropdownRef?: RefObject<HTMLDivElement>
   dataTestId?: string
   padded?: boolean
   mr?: number
 }
 
-export function NavDropdown({ children, width, dropdownRef, isOpen, padded, dataTestId, mr = 0 }: NavDropdownProps) {
+export function NavDropdown({
+  children,
+  width,
+  minWidth,
+  dropdownRef,
+  isOpen,
+  padded,
+  dataTestId,
+  mr = 0,
+}: NavDropdownProps) {
   const shadowProps = useShadowPropsMedium()
   const scrollbarStyles = useScrollbarStyles()
 
@@ -53,6 +63,7 @@ export function NavDropdown({ children, width, dropdownRef, isOpen, padded, data
         enterStyle={{ scale: 0.95, opacity: 0 }}
         exitStyle={{ scale: 0.95, opacity: 0 }}
         width={width}
+        minWidth={minWidth}
         mr={mr}
         elevate
         animation={[
@@ -70,6 +81,7 @@ export function NavDropdown({ children, width, dropdownRef, isOpen, padded, data
           data-testid={dataTestId}
           ref={dropdownRef}
           width={width}
+          minWidth={minWidth}
           padded={padded}
           {...shadowProps}
           $platform-web={{ overflow: 'auto' }}

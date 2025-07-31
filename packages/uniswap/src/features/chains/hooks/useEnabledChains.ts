@@ -4,10 +4,12 @@ import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { useConnector } from 'uniswap/src/contexts/UniswapContext'
 import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
+// This is the only file that should be importing `useOrderedChainIds` directly.
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
-import { EVMUniverseChainId, EnabledChainsInfo, GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EnabledChainsInfo, GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getEnabledChains, isTestnetChain } from 'uniswap/src/features/chains/utils'
-import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 import { WalletConnectConnector } from 'uniswap/src/features/web3/walletConnect'
@@ -61,7 +63,7 @@ export function useIsModeMismatch(chainId?: UniverseChainId): boolean {
   return isTestnetChain(chainId ?? UniverseChainId.Mainnet) ? !isTestnetModeEnabled : isTestnetModeEnabled
 }
 
-export function useEnabledChains(): EnabledChainsInfo {
+export function useEnabledChains(options?: { platform?: Platform; includeTestnets?: boolean }): EnabledChainsInfo {
   const featureFlaggedChainIds = useFeatureFlaggedChainIds()
   const connectedWalletChainIds = useConnectedWalletSupportedChains()
   const isTestnetModeEnabled = useSelector(selectIsTestnetModeEnabled)
@@ -73,11 +75,19 @@ export function useEnabledChains(): EnabledChainsInfo {
   } = useMemo(
     () =>
       getEnabledChains({
+        platform: options?.platform,
+        includeTestnets: options?.includeTestnets,
         isTestnetModeEnabled,
         connectedWalletChainIds,
         featureFlaggedChainIds,
       }),
-    [isTestnetModeEnabled, connectedWalletChainIds, featureFlaggedChainIds],
+    [
+      options?.platform,
+      options?.includeTestnets,
+      isTestnetModeEnabled,
+      connectedWalletChainIds,
+      featureFlaggedChainIds,
+    ],
   )
 
   const orderedChains = useOrderedChainIds(unorderedChains)
@@ -85,11 +95,6 @@ export function useEnabledChains(): EnabledChainsInfo {
   return useMemo(() => {
     return { chains: orderedChains, gqlChains, defaultChainId, isTestnetModeEnabled }
   }, [defaultChainId, gqlChains, isTestnetModeEnabled, orderedChains])
-}
-
-export function useEnabledEVMChains(): { chains: EVMUniverseChainId[] } {
-  const { chains } = useEnabledChains()
-  return useMemo(() => ({ chains: chains.filter(isEVMChain) }), [chains])
 }
 
 // use in non hook contexts
@@ -120,7 +125,12 @@ export function useEnabledChainsWithConnector(connector?: Connector): {
   const isTestnetModeEnabled = useSelector(selectIsTestnetModeEnabled)
 
   return useMemo(
-    () => getEnabledChains({ isTestnetModeEnabled, connectedWalletChainIds, featureFlaggedChainIds }),
+    () =>
+      getEnabledChains({
+        isTestnetModeEnabled,
+        connectedWalletChainIds,
+        featureFlaggedChainIds,
+      }),
     [isTestnetModeEnabled, connectedWalletChainIds, featureFlaggedChainIds],
   )
 }

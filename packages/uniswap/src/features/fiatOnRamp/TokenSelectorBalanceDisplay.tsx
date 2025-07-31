@@ -5,7 +5,7 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useFormatExactCurrencyAmount } from 'uniswap/src/features/fiatOnRamp/hooks'
-import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
+import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 interface TokenSelectorBalanceDisplayProps {
@@ -57,7 +57,7 @@ export function TokenSelectorBalanceDisplay({
           />
         )}
         <Flex grow>
-          <Text color="$neutral1" variant="body2">
+          <Text color="$neutral1" variant="body2" testID={TestID.ForFormTokenSelected}>
             {selectedCurrencyInfo.currency.name}
           </Text>
           <Text color="$neutral2" variant="body3">

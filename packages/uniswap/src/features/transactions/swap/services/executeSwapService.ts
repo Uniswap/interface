@@ -1,13 +1,16 @@
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
-import type { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { AccountType } from 'uniswap/src/features/accounts/types'
 import type { SwapTxStoreState } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/createSwapTxStore'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { SwapCallback, SwapCallbackParams } from 'uniswap/src/features/transactions/swap/types/swapCallback'
+import type {
+  ExecuteSwapCallback,
+  PrepareSwapCallback,
+} from 'uniswap/src/features/transactions/swap/types/swapHandlers'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type { WrapCallback, WrapCallbackParams } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { getEVMTxRequest, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { AccountDetails, isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 type ExecuteSwapInput = {
@@ -39,7 +42,7 @@ export type GetExecuteSwapService = (ctx: {
 }) => ExecuteSwapService
 
 export function createExecuteSwapService(ctx: {
-  getAccount?: () => ReturnType<typeof useAccountMeta>
+  getAccount?: () => AccountDetails | undefined
   getSwapTxContext?: () => SwapTxStoreState
   getDerivedSwapInfo: () => DerivedSwapInfo
   getTxSettings: () => { customSlippageTolerance?: number }
@@ -52,6 +55,8 @@ export function createExecuteSwapService(ctx: {
   setSteps: SwapCallbackParams['setSteps']
   swapCallback: SwapCallback
   wrapCallback: WrapCallback
+  onPrepareSwap?: PrepareSwapCallback
+  onExecuteSwap?: ExecuteSwapCallback
 }): { executeSwap: ExecuteSwap } {
   function executeSwap(input: ExecuteSwapInput): void {
     const swapTxContext = ctx.getSwapTxContext?.()
@@ -59,14 +64,14 @@ export function createExecuteSwapService(ctx: {
     if (
       !account ||
       !swapTxContext ||
-      account.type !== AccountType.SignerMnemonic ||
+      !isSignerMnemonicAccountDetails(account) ||
       !isValidSwapTxContext(swapTxContext)
     ) {
       return
     }
     const { presetPercentage, preselectAsset } = ctx.getPresetInfo()
 
-    const txRequest = isUniswapX(swapTxContext) ? undefined : swapTxContext.txRequests?.[0]
+    const txRequest = getEVMTxRequest(swapTxContext)
     const isSmartWalletTransaction = txRequest?.to === account.address
 
     ctx.swapCallback({
@@ -100,7 +105,7 @@ export function createExecuteSwapService(ctx: {
       return
     }
 
-    const txRequest = isUniswapX(swapTxContext) ? undefined : swapTxContext.txRequests?.[0]
+    const txRequest = isWrap(swapTxContext) ? swapTxContext.txRequests?.[0] : undefined
 
     if (!txRequest || !input.inputCurrencyAmount || !input.wrapType) {
       return
@@ -123,21 +128,64 @@ export function createExecuteSwapService(ctx: {
   // Our unified interface - determines which operation to execute
   return {
     executeSwap: (): void => {
-      const { currencyAmounts, currencyAmountsUSDValue, txId, wrapType } = ctx.getDerivedSwapInfo()
-      const { customSlippageTolerance } = ctx.getTxSettings()
-      if (wrapType) {
-        executeWrap({
-          txId,
-          wrapType,
-          inputCurrencyAmount: currencyAmounts.input ?? undefined,
-        })
+      if (ctx.onPrepareSwap && ctx.onExecuteSwap) {
+        // New unified pattern: Use SwapHandlers for both swaps and wraps
+        const { currencyAmounts, currencyAmountsUSDValue, txId, wrapType } = ctx.getDerivedSwapInfo()
+        const { customSlippageTolerance } = ctx.getTxSettings()
+        const swapTxContext = ctx.getSwapTxContext?.()
+        const account = ctx.getAccount?.()
+
+        if (
+          !account ||
+          !swapTxContext ||
+          !isSignerMnemonicAccountDetails(account) ||
+          !isValidSwapTxContext(swapTxContext)
+        ) {
+          ctx.onFailure(new Error('Invalid account or swap context'))
+          return
+        }
+
+        const { presetPercentage, preselectAsset } = ctx.getPresetInfo()
+
+        ctx
+          .onExecuteSwap({
+            account,
+            swapTxContext,
+            currencyInAmountUSD: currencyAmountsUSDValue[CurrencyField.INPUT] ?? undefined,
+            currencyOutAmountUSD: currencyAmountsUSDValue[CurrencyField.OUTPUT] ?? undefined,
+            isAutoSlippage: !customSlippageTolerance,
+            presetPercentage,
+            preselectAsset,
+            onSuccess: ctx.onSuccess,
+            onFailure: ctx.onFailure,
+            onPending: ctx.onPending,
+            txId,
+            setCurrentStep: ctx.setCurrentStep,
+            setSteps: ctx.setSteps,
+            isFiatInputMode: ctx.getIsFiatMode?.(),
+            // Wrap-specific parameters (will be undefined for regular swaps)
+            wrapType,
+            inputCurrencyAmount: currencyAmounts.input ?? undefined,
+          })
+          .catch(ctx.onFailure)
       } else {
-        executeSwap({
-          txId,
-          currencyInAmountUSD: currencyAmountsUSDValue[CurrencyField.INPUT] ?? undefined,
-          currencyOutAmountUSD: currencyAmountsUSDValue[CurrencyField.OUTPUT] ?? undefined,
-          isAutoSlippage: !customSlippageTolerance,
-        })
+        // Legacy pattern: Direct callback execution
+        const { currencyAmounts, currencyAmountsUSDValue, txId, wrapType } = ctx.getDerivedSwapInfo()
+        const { customSlippageTolerance } = ctx.getTxSettings()
+        if (wrapType) {
+          executeWrap({
+            txId,
+            wrapType,
+            inputCurrencyAmount: currencyAmounts.input ?? undefined,
+          })
+        } else {
+          executeSwap({
+            txId,
+            currencyInAmountUSD: currencyAmountsUSDValue[CurrencyField.INPUT] ?? undefined,
+            currencyOutAmountUSD: currencyAmountsUSDValue[CurrencyField.OUTPUT] ?? undefined,
+            isAutoSlippage: !customSlippageTolerance,
+          })
+        }
       }
     },
   }

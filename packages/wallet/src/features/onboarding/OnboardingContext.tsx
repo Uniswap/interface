@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
@@ -433,7 +434,10 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     }
 
     // Enforces that a unitag claim is made with the correct address
-    const isValidUnitagClaimState = areAddressesEqual(onboardingAccount?.address, unitagClaim?.address)
+    const isValidUnitagClaimState = areAddressesEqual({
+      addressInput1: { address: onboardingAccount?.address, platform: Platform.EVM },
+      addressInput2: { address: unitagClaim?.address, platform: Platform.EVM },
+    })
 
     // Claim unitag if there's a claim to process
     if (unitagClaim && isValidUnitagClaimState && onboardingAccount && !isWatchFlow) {

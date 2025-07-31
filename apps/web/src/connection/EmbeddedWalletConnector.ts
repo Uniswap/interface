@@ -1,5 +1,7 @@
 import { EmbeddedWalletProvider, Listener, embeddedWalletProvider } from 'connection/EmbeddedWalletProvider'
 import { getEmbeddedWalletState } from 'state/embeddedWallet/store'
+import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
+import { HexString } from 'uniswap/src/utils/hex'
 import {
   ProviderConnectInfo,
   ResourceUnavailableRpcError,
@@ -22,8 +24,8 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
   type StorageItem = { 'embeddedUniswapWallet.disconnected': true }
 
   return createConnector<Provider, Properties, StorageItem>((config) => ({
-    id: 'embeddedUniswapWalletConnector',
-    name: 'Uniswap Embedded Wallet',
+    id: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
+    name: CONNECTION_PROVIDER_NAMES.EMBEDDED_WALLET,
     type: 'embeddedUniswapWallet',
     async setup() {
       const provider = await this.getProvider()
@@ -48,7 +50,7 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
 
       const provider = await this.getProvider()
 
-      let accounts: readonly `0x${string}`[] = []
+      let accounts: readonly HexString[] = []
 
       accounts = await this.getAccounts().catch(() => [])
 

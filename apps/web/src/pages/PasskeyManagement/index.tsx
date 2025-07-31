@@ -99,7 +99,7 @@ export function handleRouteToPasskeyManagement({
 export default function PasskeyManagement() {
   const account = useAccount()
   const { walletAddress: embeddedWalletAddress } = useParams()
-  const { disconnect } = useDisconnect()
+  const disconnect = useDisconnect()
   const accountDrawer = useAccountDrawer()
   const dispatch = useDispatch()
   const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)

@@ -7,6 +7,7 @@ import { AssetActivityProvider } from 'appGraphql/data/apollo/AssetActivityProvi
 import { TokenBalancesProvider } from 'appGraphql/data/apollo/TokenBalancesProvider'
 import { Web3ProviderUpdater } from 'components/Web3Provider'
 import TestWeb3Provider from 'components/Web3Provider/TestWeb3Provider'
+import { ExternalWalletProvider } from 'features/wallet/providers/ExternalWalletProvider'
 import { BlockNumberContext } from 'lib/hooks/useBlockNumber'
 import { PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { HelmetProvider } from 'react-helmet-async/lib/index'
@@ -32,22 +33,24 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <TestWeb3Provider>
-              <MockedProvider showWarnings={false}>
-                <AssetActivityProvider>
-                  <TokenBalancesProvider>
-                    <ReactRouterUrlProvider>
-                      <MockedBlockNumberProvider>
-                        <ThemeProvider>
-                          <TamaguiProvider>
-                            <Web3ProviderUpdater />
-                            <MockedMismatchProvider>{children}</MockedMismatchProvider>
-                          </TamaguiProvider>
-                        </ThemeProvider>
-                      </MockedBlockNumberProvider>
-                    </ReactRouterUrlProvider>
-                  </TokenBalancesProvider>
-                </AssetActivityProvider>
-              </MockedProvider>
+              <ExternalWalletProvider>
+                <MockedProvider showWarnings={false}>
+                  <AssetActivityProvider>
+                    <TokenBalancesProvider>
+                      <ReactRouterUrlProvider>
+                        <MockedBlockNumberProvider>
+                          <ThemeProvider>
+                            <TamaguiProvider>
+                              <Web3ProviderUpdater />
+                              <MockedMismatchProvider>{children}</MockedMismatchProvider>
+                            </TamaguiProvider>
+                          </ThemeProvider>
+                        </MockedBlockNumberProvider>
+                      </ReactRouterUrlProvider>
+                    </TokenBalancesProvider>
+                  </AssetActivityProvider>
+                </MockedProvider>
+              </ExternalWalletProvider>
             </TestWeb3Provider>
           </BrowserRouter>
         </QueryClientProvider>
@@ -61,7 +64,7 @@ function MockedMismatchProvider({ children }: PropsWithChildren) {
     <MismatchContextProvider
       address={undefined}
       chainId={undefined}
-      mismatchCallback={() => Promise.resolve(false)}
+      mismatchCallback={() => Promise.resolve({ [String(1)]: false })}
       onHasAnyMismatch={() => {}}
       chains={[1]}
       defaultChainId={1}

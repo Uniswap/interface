@@ -1,5 +1,5 @@
 import { Web3Provider as EthersWeb3Provider, ExternalProvider } from '@ethersproject/providers'
-import { UNISWAP_EXTENSION_CONNECTOR_NAME, recentConnectorIdAtom } from 'components/Web3Provider/constants'
+import { recentConnectorIdAtom } from 'components/Web3Provider/constants'
 import { createWeb3Provider } from 'components/Web3Provider/createWeb3Provider'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
@@ -11,6 +11,7 @@ import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router'
 import { useConnectedWallets } from 'state/wallets/hooks'
+import { CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
 import { CONVERSION_EVENTS } from 'uniswap/src/data/rest/conversionTracking/constants'
 import { useConversionTracking } from 'uniswap/src/data/rest/conversionTracking/useConversionTracking'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
@@ -24,6 +25,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { WalletType, getWalletMeta } from 'utils/walletMeta'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useAccount as useAccountWagmi } from 'wagmi'
 
 // Production Web3Provider – always reconnects on mount and runs capability effects.
@@ -163,7 +165,7 @@ export function Web3ProviderUpdater() {
         sendAnalyticsEvent(InterfaceEventName.WalletConnected, walletConnectedProperties)
       }
 
-      if (walletName === UNISWAP_EXTENSION_CONNECTOR_NAME) {
+      if (walletName === CONNECTION_PROVIDER_NAMES.UNISWAP_EXTENSION) {
         trackConversions(CONVERSION_EVENTS.Extension.Downloaded)
       }
 

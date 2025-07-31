@@ -22,14 +22,26 @@ test.describe('Swap', () => {
     await expect(page.getByText('10,000.00 ETH')).toBeVisible()
   })
 
-  test('should load erc20 balances', async ({ page, anvil }) => {
-    await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: 100_000_000n })
+  test('should load erc20 balances without trailing zeros', async ({ page, anvil }) => {
+    const balance = 100_000_000n
+    await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance })
     await page.goto(`/swap?outputCurrency=${USDT.address}`)
 
     const USDTBalance = await anvil.getErc20Balance(assume0xAddress(USDT.address))
 
-    await expect(USDTBalance).toBe(100_000_000n)
-    await expect(page.getByText('100.00 USDT')).toBeVisible()
+    await expect(USDTBalance).toBe(balance)
+    await expect(page.getByText('100 USDT')).toBeVisible()
+  })
+
+  test('should load erc20 balances with up to 3 decimals', async ({ page, anvil }) => {
+    const balance = 100_111_110n
+    await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance })
+    await page.goto(`/swap?outputCurrency=${USDT.address}`)
+
+    const USDTBalance = await anvil.getErc20Balance(assume0xAddress(USDT.address))
+
+    await expect(USDTBalance).toBe(balance)
+    await expect(page.getByText('100.111 USDT')).toBeVisible()
   })
 
   test('should swap ETH to USDC', async ({ page, anvil }) => {
@@ -50,7 +62,7 @@ test.describe('Swap', () => {
       address: TEST_WALLET_ADDRESS,
     })
     await expect(ethBalance).toBeLessThan(parseEther('9999.9'))
-    await expect(page.getByText('9,999.90 ETH')).toBeVisible()
+    await expect(page.getByText('9,999.9 ETH')).toBeVisible()
   })
 
   test('should be able to swap token with FOT warning via TDP', async ({ page, anvil }) => {

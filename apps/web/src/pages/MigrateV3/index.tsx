@@ -2,41 +2,35 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { ErrorCallout } from 'components/ErrorCallout'
+import { Container } from 'components/Liquidity/Create/Container'
+import { EditSelectTokensStep } from 'components/Liquidity/Create/EditStep'
+import { SelectPriceRangeStep } from 'components/Liquidity/Create/RangeSelectionStep'
+import { SelectTokensStep } from 'components/Liquidity/Create/SelectTokenStep'
+import { useLPSlippageValue } from 'components/Liquidity/Create/hooks/useLPSlippageValues'
+import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'components/Liquidity/Create/types'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
+import { LoadingRow } from 'components/Liquidity/Loader'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import type { PositionInfo } from 'components/Liquidity/types'
-import { parseRestPosition } from 'components/Liquidity/utils'
+import { getCurrencyForProtocol } from 'components/Liquidity/utils/currency'
+import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
 import { LoadingRows } from 'components/Loader/styled'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
+import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
-import { MigrateV3PositionTxContextProvider, useMigrateV3TxContext } from 'pages/MigrateV3/MigrateV3LiquidityTxContext'
-import useInitialPosition from 'pages/MigrateV3/hooks/useInitialPosition'
 import {
-  CreatePositionContextProvider,
-  DepositContextProvider,
-  PriceRangeContextProvider,
-} from 'pages/Pool/Positions/create/ContextProviders'
-import { CreateLiquidityContextProvider } from 'pages/Pool/Positions/create/CreateLiquidityContextProvider'
-import { SharedCreateModals } from 'pages/Pool/Positions/create/CreatePosition'
-import {
+  CreateLiquidityContextProvider,
   DEFAULT_DEPOSIT_STATE,
   DEFAULT_PRICE_RANGE_STATE,
-  useCreatePositionContext,
-  useDepositContext,
-  usePriceRangeContext,
-} from 'pages/Pool/Positions/create/CreatePositionContext'
-import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
-import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
-import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
-import { useLPSlippageValue } from 'pages/Pool/Positions/create/hooks/useLPSlippageValues'
-import { Container } from 'pages/Pool/Positions/create/shared'
-import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
-import { getCurrencyForProtocol } from 'pages/Pool/Positions/create/utils'
-import { LoadingRow } from 'pages/Pool/Positions/shared'
+  useCreateLiquidityContext,
+} from 'pages/CreatePosition/CreateLiquidityContextProvider'
+import { SharedCreateModals } from 'pages/CreatePosition/CreatePosition'
+import { MigrateV3PositionTxContextProvider, useMigrateV3TxContext } from 'pages/MigrateV3/MigrateV3LiquidityTxContext'
+import useInitialPosition from 'pages/MigrateV3/hooks/useInitialPosition'
 import type { Dispatch, SetStateAction } from 'react'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -44,28 +38,25 @@ import { useNavigate, useParams } from 'react-router'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Flex, Main, Text, styled, useMedia } from 'ui/src'
+import { Button, Flex, Main, Text, styled, useMedia } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme/heights'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
-import { AccountType } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
+import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { isSameAddress } from 'utilities/src/addresses'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
-import { useAccount } from 'wagmi'
 
 const BodyWrapper = styled(Main, {
   backgroundColor: '$surface1',
@@ -80,10 +71,18 @@ const BodyWrapper = styled(Main, {
 })
 
 function MigrateV3Inner({
+  initialPosition,
   positionInfo,
   currencyInputs,
   setCurrencyInputs,
 }: {
+  initialPosition:
+    | {
+        tickLower: number
+        tickUpper: number
+        isOutOfRange: boolean
+      }
+    | undefined
   positionInfo: PositionInfo
   currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
@@ -92,25 +91,33 @@ function MigrateV3Inner({
   const trace = useTrace()
   const { t } = useTranslation()
 
-  const { positionState, setPositionState, setStep, step, currentTransactionStep, setCurrentTransactionStep } =
-    useCreatePositionContext()
+  const {
+    positionState,
+    setPositionState,
+    setStep,
+    setPriceRangeState,
+    setDepositState,
+    step,
+    currentTransactionStep,
+    setCurrentTransactionStep,
+  } = useCreateLiquidityContext()
   const { protocolVersion } = positionState
-  const { setPriceRangeState } = usePriceRangeContext()
-  const { setDepositState } = useDepositContext()
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
   const selectChain = useSelectChain()
   const connectedAccount = useAccount()
   const startChainId = connectedAccount.chainId
-  const account = useAccountMeta()
+  const account = useWallet().evmAccount
   const dispatch = useDispatch()
   const { txInfo, error, refetch } = useMigrateV3TxContext()
   const media = useMedia()
   const navigate = useNavigate()
 
-  const onClose = () => {
-    setCurrentTransactionStep(undefined)
-  }
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
+
+  const onClose = useCallback(() => {
+    setIsReviewModalOpen(false)
+  }, [setIsReviewModalOpen])
 
   const { currency0Amount, currency1Amount, owner } = positionInfo
 
@@ -120,6 +127,63 @@ function MigrateV3Inner({
   if (!isSameAddress(account?.address, owner)) {
     navigate('/positions')
   }
+
+  const handleConfirm = useCallback(() => {
+    const isValidTx = isValidLiquidityTxContext(txInfo)
+    if (!account || !isSignerMnemonicAccountDetails(account) || !isValidTx) {
+      return
+    }
+    dispatch(
+      liquiditySaga.actions.trigger({
+        selectChain,
+        startChainId,
+        account,
+        liquidityTxContext: txInfo,
+        setCurrentStep: setCurrentTransactionStep,
+        setSteps: setTransactionSteps,
+        onSuccess: () => {
+          onClose()
+          navigate('/positions')
+        },
+        onFailure: () => {
+          setCurrentTransactionStep(undefined)
+        },
+        analytics: {
+          ...getLPBaseAnalyticsProperties({
+            trace,
+            fee: positionInfo.feeTier?.feeAmount,
+            tickSpacing: positionInfo.tickSpacing,
+            tickLower: positionInfo.tickLower,
+            tickUpper: positionInfo.tickUpper,
+            hook: undefined,
+            currency0: currency0Amount.currency,
+            currency1: currency1Amount.currency,
+            currency0AmountUsd: currency0FiatAmount,
+            currency1AmountUsd: currency1FiatAmount,
+            poolId: positionInfo.poolId,
+            version: ProtocolVersion.V3,
+          }),
+          action: 'V3->V4',
+        },
+      }),
+    )
+  }, [
+    account,
+    dispatch,
+    selectChain,
+    startChainId,
+    txInfo,
+    trace,
+    positionInfo,
+    currency0FiatAmount,
+    currency1FiatAmount,
+    onClose,
+    navigate,
+    setCurrentTransactionStep,
+    setTransactionSteps,
+    currency0Amount.currency,
+    currency1Amount.currency,
+  ])
 
   return (
     <>
@@ -149,6 +213,7 @@ function MigrateV3Inner({
             onPress={() => {
               setPositionState({
                 ...DEFAULT_POSITION_STATE,
+                initialPosition,
                 protocolVersion,
               })
               setCurrencyInputs({
@@ -208,44 +273,7 @@ function MigrateV3Inner({
                   <SelectPriceRangeStep
                     positionInfo={positionInfo}
                     onDisableContinue={!txInfo || Boolean(error)}
-                    onContinue={() => {
-                      const isValidTx = isValidLiquidityTxContext(txInfo)
-                      if (!account || account.type !== AccountType.SignerMnemonic || !isValidTx) {
-                        return
-                      }
-                      dispatch(
-                        liquiditySaga.actions.trigger({
-                          selectChain,
-                          startChainId,
-                          account,
-                          liquidityTxContext: txInfo,
-                          setCurrentStep: setCurrentTransactionStep,
-                          setSteps: setTransactionSteps,
-                          onSuccess: () => {
-                            onClose()
-                            navigate('/positions')
-                          },
-                          onFailure: onClose,
-                          analytics: {
-                            ...getLPBaseAnalyticsProperties({
-                              trace,
-                              fee: positionInfo.feeTier?.feeAmount,
-                              tickSpacing: positionInfo.tickSpacing,
-                              tickLower: positionInfo.tickLower,
-                              tickUpper: positionInfo.tickUpper,
-                              hook: undefined,
-                              currency0: currency0Amount.currency,
-                              currency1: currency1Amount.currency,
-                              currency0AmountUsd: currency0FiatAmount,
-                              currency1AmountUsd: currency1FiatAmount,
-                              poolId: positionInfo.poolId,
-                              version: ProtocolVersion.V3,
-                            }),
-                            action: 'V3->V4',
-                          },
-                        }),
-                      )
-                    }}
+                    onContinue={() => setIsReviewModalOpen(true)}
                   />
                 </Container>
                 <Flex mb="$spacing20">
@@ -261,7 +289,7 @@ function MigrateV3Inner({
         name={ModalName.MigrateLiquidity}
         onClose={onClose}
         isDismissible
-        isModalOpen={Boolean(currentTransactionStep)}
+        isModalOpen={isReviewModalOpen}
         padding="$none"
       >
         <Flex px="$spacing8" pt="$spacing12" pb="$spacing8" gap="$spacing24">
@@ -273,7 +301,19 @@ function MigrateV3Inner({
             </Text>
             <TokenInfo currencyAmount={currency1Amount} currencyUSDAmount={currency1FiatAmount} isMigrating />
           </Flex>
-          <ProgressIndicator steps={transactionSteps} currentStep={currentTransactionStep} />
+          {currentTransactionStep && transactionSteps.length > 1 ? (
+            <ProgressIndicator steps={transactionSteps} currentStep={currentTransactionStep} />
+          ) : (
+            <Button
+              size="large"
+              variant="branded"
+              fill={false}
+              onPress={handleConfirm}
+              loading={Boolean(currentTransactionStep)}
+            >
+              {currentTransactionStep ? t('common.confirmWallet') : t('common.migrate')}
+            </Button>
+          )}
         </Flex>
       </Modal>
     </>
@@ -298,7 +338,6 @@ function getCurrencyInputs(positionInfo?: PositionInfo) {
  * The page for migrating any v3 LP position to v4.
  */
 export default function MigrateV3() {
-  const isCreateLiquidityRefactorEnabled = useFeatureFlag(FeatureFlags.CreateLiquidityRefactor)
   const { tokenId } = useParams<{ tokenId: string }>()
   const chainId = useChainIdFromUrlParam()
   const account = useAccount()
@@ -370,45 +409,23 @@ export default function MigrateV3() {
     >
       <MultichainContextProvider initialChainId={chainId}>
         <LPTransactionSettingsStoreContextProvider autoSlippageTolerance={autoSlippageTolerance}>
-          {isCreateLiquidityRefactorEnabled ? (
-            <CreateLiquidityContextProvider
-              initialState={{
-                initialPosition,
-              }}
-              currencyInputs={currencyInputs}
-              setCurrencyInputs={setCurrencyInputs}
-            >
-              <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
-                <MigrateV3Inner
-                  positionInfo={positionInfo}
-                  currencyInputs={currencyInputs}
-                  setCurrencyInputs={setCurrencyInputs}
-                />
-              </MigrateV3PositionTxContextProvider>
-              <SharedCreateModals />
-            </CreateLiquidityContextProvider>
-          ) : (
-            <CreatePositionContextProvider
-              initialState={{
-                initialPosition,
-              }}
-              currencyInputs={currencyInputs}
-              setCurrencyInputs={setCurrencyInputs}
-            >
-              <PriceRangeContextProvider>
-                <DepositContextProvider>
-                  <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
-                    <MigrateV3Inner
-                      positionInfo={positionInfo}
-                      currencyInputs={currencyInputs}
-                      setCurrencyInputs={setCurrencyInputs}
-                    />
-                  </MigrateV3PositionTxContextProvider>
-                </DepositContextProvider>
-              </PriceRangeContextProvider>
-              <SharedCreateModals />
-            </CreatePositionContextProvider>
-          )}
+          <CreateLiquidityContextProvider
+            initialState={{
+              initialPosition,
+            }}
+            currencyInputs={currencyInputs}
+            setCurrencyInputs={setCurrencyInputs}
+          >
+            <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
+              <MigrateV3Inner
+                initialPosition={initialPosition}
+                positionInfo={positionInfo}
+                currencyInputs={currencyInputs}
+                setCurrencyInputs={setCurrencyInputs}
+              />
+            </MigrateV3PositionTxContextProvider>
+            <SharedCreateModals />
+          </CreateLiquidityContextProvider>
         </LPTransactionSettingsStoreContextProvider>
       </MultichainContextProvider>
     </Trace>

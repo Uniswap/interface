@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { usePendingTransactions } from 'state/transactions/hooks'
-import { TransactionType as UniswapTransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export function useLpIncentivesTransactionState() {
   const [isPendingTransaction, setIsPendingTransaction] = useState(false)
@@ -8,7 +8,7 @@ export function useLpIncentivesTransactionState() {
 
   useEffect(() => {
     const hasPendingClaim = pendingTransactions.some(
-      (tx) => tx.info.type === UniswapTransactionType.LPIncentivesClaimRewards,
+      (tx) => tx.typeInfo.type === TransactionType.LPIncentivesClaimRewards,
     )
 
     setIsPendingTransaction(hasPendingClaim)

@@ -1,4 +1,4 @@
-/* eslint-disable complexity */
+/* eslint-disable complexity, max-lines */
 import { ApolloQueryResult } from '@apollo/client'
 import { isAddress } from 'ethers/lib/utils'
 import React, { useCallback, useMemo } from 'react'
@@ -40,6 +40,8 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, getChainLabel } from 'uniswap/src/features/chains/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -127,8 +129,14 @@ function NFTItemScreenContents({
   }
 
   // Disable navigation to profile if user owns NFT or invalid owner
+  const platform = chainId ? chainIdToPlatform(chainId) : Platform.EVM
   const disableProfileNavigation = Boolean(
-    owner && (areAddressesEqual(owner, activeAccountAddress) || !isAddress(owner)),
+    owner &&
+      (areAddressesEqual({
+        addressInput1: { address: owner, platform },
+        addressInput2: { address: activeAccountAddress, platform },
+      }) ||
+        !isAddress(owner)),
   )
 
   const onPressOwner = (): void => {

@@ -16,7 +16,6 @@ import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfaceEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useDebounce } from 'utilities/src/time/timing'
 
@@ -96,7 +95,6 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
                   includeAllNetworks
                   chainIds={enabledChains}
                   selectedChain={chainFilter}
-                  onDismiss={dismissNativeKeyboard}
                   onPressChain={onChangeChainFilter}
                 />
               </Flex>

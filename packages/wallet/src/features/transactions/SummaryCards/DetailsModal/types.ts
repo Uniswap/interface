@@ -2,6 +2,7 @@ import {
   ConfirmedSwapTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  LpIncentivesClaimTransactionInfo,
   OffRampSaleInfo,
   OnRampPurchaseInfo,
   UnknownTransactionInfo,
@@ -41,6 +42,12 @@ export function isSwapTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo i
 
 export function isUnknownTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is UnknownTransactionInfo {
   return typeInfo.type === TransactionType.Unknown
+}
+
+export function isLpIncentivesClaimTransactionInfo(
+  typeInfo: TransactionTypeInfo,
+): typeInfo is LpIncentivesClaimTransactionInfo {
+  return typeInfo.type === TransactionType.LPIncentivesClaimRewards
 }
 
 export type TransactionParticipantRowProps = {

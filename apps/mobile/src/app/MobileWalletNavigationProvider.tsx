@@ -28,17 +28,15 @@ import {
   NavigateToNftItemArgs,
   NavigateToSendFlowArgs,
   NavigateToSwapFlowArgs,
-  ShareNftArgs,
   ShareTokenArgs,
   WalletNavigationProvider,
   getNavigateToSendFlowArgsInitialState,
   getNavigateToSwapFlowArgsInitialState,
   isNavigateToSwapFlowArgsPartialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
-import { getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
+import { getTokenUrl } from 'wallet/src/utils/linking'
 
 export function MobileWalletNavigationProvider({ children }: PropsWithChildren): JSX.Element {
-  const handleShareNft = useHandleShareNft()
   const handleShareToken = useHandleShareToken()
   const navigateToAccountActivityList = useNavigateToHomepageTab(HomeScreenTabIndex.Activity)
   const navigateToAccountTokenList = useNavigateToHomepageTab(HomeScreenTabIndex.Tokens)
@@ -54,7 +52,6 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
 
   return (
     <WalletNavigationProvider
-      handleShareNft={handleShareNft}
       handleShareToken={handleShareToken}
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
@@ -72,25 +69,6 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
       {children}
     </WalletNavigationProvider>
   )
-}
-
-function useHandleShareNft(): (args: ShareNftArgs) => Promise<void> {
-  return useCallback(async ({ contractAddress, tokenId }: ShareNftArgs): Promise<void> => {
-    try {
-      const url = getNftUrl(contractAddress, tokenId)
-
-      await Share.share({ message: url })
-
-      sendAnalyticsEvent(WalletEventName.ShareButtonClicked, {
-        entity: ShareableEntity.NftItem,
-        url,
-      })
-    } catch (error) {
-      logger.error(error, {
-        tags: { file: 'MobileWalletNavigationProvider.tsx', function: 'useHandleShareNft' },
-      })
-    }
-  }, [])
 }
 
 function useHandleShareToken(): (args: ShareTokenArgs) => Promise<void> {

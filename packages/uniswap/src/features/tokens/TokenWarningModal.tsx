@@ -61,6 +61,9 @@ export interface TokenWarningModalProps extends TokenWarningProps {
   onAcknowledge: () => void
 }
 
+const BLOCKAID_LOGO_WIDTH = 50
+const BLOCKAID_LOGO_HEIGHT = 10
+
 // eslint-disable-next-line complexity
 function TokenWarningModalContent({
   currencyInfo0,
@@ -203,11 +206,13 @@ function TokenWarningModalContent({
                   components={{
                     name: (
                       <BlockaidLogo
-                        minHeight={10}
-                        minWidth={50}
+                        minHeight={BLOCKAID_LOGO_HEIGHT}
+                        minWidth={BLOCKAID_LOGO_WIDTH}
                         // Using the "size" prop does not work as expected for non-square icon like this one
                         // Found that only specifying width fixes all alignment and size issues on mobile
-                        size={isMobileApp ? ({ width: 50 } as { width: number; height: number }) : undefined}
+                        {...(isMobileApp
+                          ? { size: { width: BLOCKAID_LOGO_WIDTH } as { width: number; height: number } }
+                          : { width: BLOCKAID_LOGO_WIDTH, height: BLOCKAID_LOGO_HEIGHT })}
                         color="$neutral3"
                       />
                     ),

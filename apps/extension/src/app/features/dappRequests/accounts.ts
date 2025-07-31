@@ -19,6 +19,7 @@ import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -102,7 +103,7 @@ export function* saveAccount({ url, favIconUrl }: SenderTabInfo) {
   const activeAccount = yield* select(selectActiveAccount)
   const dappUrl = extractBaseUrl(url)
   const dappInfo = yield* call(dappStore.getDappInfo, dappUrl)
-  const { defaultChainId } = yield* call(getEnabledChainIdsSaga)
+  const { defaultChainId } = yield* call(getEnabledChainIdsSaga, Platform.EVM)
 
   if (!dappUrl || !activeAccount) {
     return undefined

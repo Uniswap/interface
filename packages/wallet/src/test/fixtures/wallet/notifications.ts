@@ -1,5 +1,5 @@
 import { AssetType } from 'uniswap/src/entities/assets'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { ALL_EVM_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import {
   AppErrorNotification,
   AppNotificationBase,
@@ -74,7 +74,7 @@ const transactionNotificationBase = createFixture<TransactionNotificationBase>()
   txType: randomEnumValue(TransactionType),
   txStatus: randomChoice(FINALIZED_TRANSACTION_STATUSES),
   txId: faker.datatype.uuid(),
-  chainId: randomChoice(SUPPORTED_CHAIN_IDS),
+  chainId: randomChoice(ALL_EVM_CHAIN_IDS),
 }))
 
 export const approveTxNotification = createFixture<ApproveTxNotification>()(() => ({
@@ -160,7 +160,7 @@ export const successNotification = createFixture<SuccessNotification>()(() => ({
 export const swapNetworkNotification = createFixture<NetworkChangedNotification>()(() => ({
   ...appNotificationBase(),
   type: AppNotificationType.NetworkChanged,
-  chainId: randomChoice(SUPPORTED_CHAIN_IDS),
+  chainId: randomChoice(ALL_EVM_CHAIN_IDS),
   flow: 'swap',
 }))
 

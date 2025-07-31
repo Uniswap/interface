@@ -448,8 +448,8 @@ export type LiquidityAnalyticsProperties = ITraceContext & {
   type: string
   fee_tier: number
   tick_spacing: number | undefined
-  tick_lower: string | undefined
-  tick_upper: string | undefined
+  tick_lower: number | undefined
+  tick_upper: number | undefined
   hook: string | undefined
   pool_address?: string // represents pool contract address for v2&v3, and poolId for v4
   chain_id?: UniverseChainId
@@ -463,10 +463,7 @@ export type LiquidityAnalyticsProperties = ITraceContext & {
   currencyInfo1Decimals: number
 }
 
-export type NotificationToggleLoggingType =
-  | 'settings_general_updates_enabled'
-  | 'settings_price_alerts_enabled'
-  | 'wallet_activity'
+export type NotificationToggleLoggingType = 'settings_general_updates_enabled' | 'wallet_activity'
 
 // Please sort new values by EventName type!
 export type UniverseEventProperties = {

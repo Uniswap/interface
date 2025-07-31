@@ -85,7 +85,7 @@ export async function fetchSignMessagesRequest({
   return await EMBEDDED_WALLET_CLIENT.signMessages({ messages, credential })
 }
 
-export async function fetchSignTransactionRequest({
+export async function fetchSignTransactionsRequest({
   transactions,
   credential,
 }: {

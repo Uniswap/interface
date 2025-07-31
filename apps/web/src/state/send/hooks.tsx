@@ -12,8 +12,9 @@ import { useMemo } from 'react'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { SendState } from 'state/send/SendContext'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { useAddressFromEns, useENSName } from 'uniswap/src/features/ens/api'
-import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { isAddress } from 'utilities/src/addresses'
 import { useCreateTransferTransaction } from 'utils/transfer'
 
@@ -62,7 +63,9 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   const { data: forwardLookupAddress } = useAddressFromEns(forwardLookupInput)
 
   // Check Unitag by name and see if it yields an address
-  const { unitag: recipientInputUnitag } = useUnitagByName(userInput)
+  const { data: recipientInputUnitag } = useUnitagsUsernameQuery({
+    params: userInput ? { username: userInput } : undefined,
+  })
   const recipientInputUnitagAddress = recipientInputUnitag?.address?.address
   const recipientInputUnitagUsername = validatedRecipientData?.unitag ?? recipientInputUnitag?.username
 
@@ -75,9 +78,10 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
 
   // Unitag fallback: If there's no known username from input or validated data,
   // try to look up a unitag by the final address.
-  const { unitag: fallbackUnitag } = useUnitagByAddress(
-    recipientInputUnitagUsername ? undefined : validatedRecipientAddress,
-  )
+  const { data: fallbackUnitag } = useUnitagsAddressQuery({
+    params:
+      !recipientInputUnitagUsername && validatedRecipientAddress ? { address: validatedRecipientAddress } : undefined,
+  })
 
   // If forward lookup succeeded, use the original user input as ENS name.
   const finalEnsName = useMemo(() => {

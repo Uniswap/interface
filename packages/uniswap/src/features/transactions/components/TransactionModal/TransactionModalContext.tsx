@@ -9,6 +9,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 export enum TransactionScreen {
   Form = 'Form',
   Review = 'Review',
+  UnichainInstantBalance = 'UnichainInstantBalance',
 }
 
 export type PasskeyAuthStatus = {

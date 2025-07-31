@@ -50,7 +50,6 @@ exports[`SplitLogo inline renders inline button 1`] = `
     style={
       {
         "alignItems": "center",
-        "color": "#FFFFFF",
         "flexDirection": "row",
         "gap": 4,
         "justifyContent": "center",
@@ -186,7 +185,6 @@ exports[`SplitLogo renders without error 1`] = `
     style={
       {
         "alignItems": "center",
-        "color": "#FFFFFF",
         "flexDirection": "row",
         "gap": 4,
         "justifyContent": "center",

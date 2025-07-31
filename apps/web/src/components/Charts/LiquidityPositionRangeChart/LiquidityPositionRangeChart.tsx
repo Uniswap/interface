@@ -1,6 +1,8 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { Pair } from '@uniswap/v2-sdk'
+import { FeeAmount, Pool as V3Pool } from '@uniswap/v3-sdk'
+import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { ActiveLiquidityChart } from 'components/Charts/ActiveLiquidityChart/ActiveLiquidityChart'
 import { BandsIndicator } from 'components/Charts/BandsIndicator/bands-indicator'
 import { cloneReadonly } from 'components/Charts/BandsIndicator/helpers/simple-clone'
@@ -16,11 +18,12 @@ import { useDensityChartData } from 'components/Charts/LiquidityRangeInput/hooks
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { PriceChartType, formatTickMarks } from 'components/Charts/utils'
 import ErrorBoundary from 'components/ErrorBoundary'
+import { getBaseAndQuoteCurrencies } from 'components/Liquidity/utils/currency'
+import { getPoolIdOrAddressFromCreatePositionInfo } from 'components/Liquidity/utils/getPoolIdOrAddressFromCreatePositionInfo'
+import { isOutOfRange } from 'components/Liquidity/utils/priceRangeInfo'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { CrosshairMode, ISeriesApi, LineStyle, LineType, UTCTimestamp } from 'lightweight-charts'
-import { CreatePositionInfo, PriceRangeInfo } from 'pages/Pool/Positions/create/types'
-import { getBaseAndQuoteCurrencies, getPoolIdOrAddressFromCreatePositionInfo } from 'pages/Pool/Positions/create/utils'
 import { useMemo, useState } from 'react'
 import { ColorTokens, Flex, FlexProps, Shine, useSporeColors } from 'ui/src'
 import { HorizontalDensityChart } from 'ui/src/components/icons/HorizontalDensityChart'
@@ -32,6 +35,7 @@ import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__gen
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import useResizeObserver from 'use-resize-observer'
+
 // Not using the formatters in a react context, so we need to import the formatter directly.
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { formatNumber } from 'utilities/src/format/localeBased'
@@ -345,35 +349,51 @@ interface LiquidityPositionRangeChartProps {
 }
 
 export function getLiquidityRangeChartProps({
-  positionInfo,
-  priceRangeInfo,
+  protocolVersion,
+  sdkCurrencies,
   priceInverted,
   interactive,
+  poolOrPair,
+  ticks,
+  pricesAtTicks,
 }: {
-  positionInfo: CreatePositionInfo
-  priceRangeInfo: PriceRangeInfo
+  protocolVersion: ProtocolVersion
+  sdkCurrencies: {
+    TOKEN0: Maybe<Currency>
+    TOKEN1: Maybe<Currency>
+  }
   priceInverted: boolean
   interactive?: boolean
+  poolOrPair: V3Pool | V4Pool | Pair | undefined
+  ticks: [Maybe<number>, Maybe<number>]
+  pricesAtTicks: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>]
 }): LiquidityPositionRangeChartProps | undefined {
-  const {
-    protocolVersion,
-    currencies: { sdk },
-  } = positionInfo
-  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(sdk, priceInverted)
+  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(sdkCurrencies, priceInverted)
 
   if (!baseCurrency || !quoteCurrency || !quoteCurrency.chainId) {
     return undefined
   }
 
-  const poolAddressOrId = getPoolIdOrAddressFromCreatePositionInfo(positionInfo)
+  const poolAddressOrId = getPoolIdOrAddressFromCreatePositionInfo({
+    protocolVersion,
+    poolOrPair,
+    sdkCurrencies,
+  })
+
   const priceOrdering =
-    priceRangeInfo.protocolVersion === ProtocolVersion.V2
+    protocolVersion === ProtocolVersion.V2
       ? {}
       : {
-          base: sdk.TOKEN0,
-          priceLower: priceRangeInfo.prices[0],
-          priceUpper: priceRangeInfo.prices[1],
+          base: sdkCurrencies.TOKEN0,
+          priceLower: pricesAtTicks[0],
+          priceUpper: pricesAtTicks[1],
         }
+
+  const outOfRange = isOutOfRange({
+    poolOrPair,
+    lowerTick: ticks[0],
+    upperTick: ticks[1],
+  })
 
   return {
     poolAddressOrId,
@@ -381,13 +401,11 @@ export function getLiquidityRangeChartProps({
     priceInverted,
     quoteCurrency,
     baseCurrency,
-    sdkCurrencies: sdk,
+    sdkCurrencies,
     chainId: quoteCurrency.chainId,
     priceOrdering,
     positionStatus:
-      priceRangeInfo.protocolVersion !== ProtocolVersion.V2 && priceRangeInfo.outOfRange
-        ? PositionStatus.OUT_OF_RANGE
-        : PositionStatus.IN_RANGE,
+      protocolVersion !== ProtocolVersion.V2 && outOfRange ? PositionStatus.OUT_OF_RANGE : PositionStatus.IN_RANGE,
     interactive,
   }
 }

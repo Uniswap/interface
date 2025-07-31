@@ -69,17 +69,18 @@ export const Brush = ({
 
   // keep local and external brush extent in sync
   // i.e. snap to ticks on brush end
-  const [brushInProgress, setBrushInProgress] = useState(false)
+  const brushInProgressRef = useRef(false)
+
   useEffect(() => {
-    if (brushInProgress) {
+    if (brushInProgressRef.current) {
       return
     }
     setLocalBrushExtent(brushExtent)
-  }, [brushExtent, brushInProgress])
+  }, [brushExtent])
 
   // initialize the brush
   useEffect(() => {
-    if (!brushRef.current || brushInProgress) {
+    if (!brushRef.current) {
       return
     }
 
@@ -102,7 +103,7 @@ export const Brush = ({
       })
       .on('brush', (event: D3BrushEvent<unknown>) => {
         const { selection } = event
-        setBrushInProgress(true)
+        brushInProgressRef.current = true
 
         if (!selection) {
           setLocalBrushExtent(null)
@@ -127,12 +128,16 @@ export const Brush = ({
           setBrushExtent(priceExtent, mode)
         }
         setLocalBrushExtent(priceExtent)
-        setBrushInProgress(false)
+        brushInProgressRef.current = false
       })
 
     brushBehavior.current(select(brushRef.current))
 
-    if (previousBrushExtent && compare(normalizedExtent, normalizeExtent(previousBrushExtent), yScale)) {
+    if (
+      !brushInProgressRef.current &&
+      previousBrushExtent &&
+      compare(normalizedExtent, normalizeExtent(previousBrushExtent), yScale)
+    ) {
       select(brushRef.current)
         .transition()
         .call(brushBehavior.current.move as any, scaledExtent)
@@ -147,7 +152,7 @@ export const Brush = ({
       .attr('fill-opacity', '0.1')
       .attr('fill', `url(#${id}-gradient-selection)`)
       .attr('cursor', 'grab')
-  }, [brushExtent, id, height, interactive, previousBrushExtent, yScale, width, setBrushExtent, brushInProgress])
+  }, [brushExtent, id, height, interactive, previousBrushExtent, yScale, width, setBrushExtent])
 
   // respond to yScale changes only
   useEffect(() => {

@@ -36,7 +36,7 @@ export function BuyNativeTokenButton({
   }
 
   // prevent users from attempting to buy an unsupported token
-  if (!fiatOnRampCurrency) {
+  if (!isLoading && !fiatOnRampCurrency) {
     return null
   }
 
@@ -44,7 +44,7 @@ export function BuyNativeTokenButton({
     <Trace logPress element={ElementName.BuyNativeTokenButton}>
       <Flex row alignSelf="stretch">
         <Button
-          isDisabled={isLoading}
+          isDisabled={isLoading || !fiatOnRampCurrency}
           backgroundColor={usesStaticTheme ? undefined : backgroundColorFromChain}
           borderColor="$transparent"
           size="medium"

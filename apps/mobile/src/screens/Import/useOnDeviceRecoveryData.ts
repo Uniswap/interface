@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useMultiplePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'
@@ -49,7 +50,14 @@ function useStoredAddressesForMnemonic(mnemonicId: string | undefined): {
 
       const filteredAddresses = possibleAddresses
         .map((address, index): RecoveryWalletInfo | undefined =>
-          address && storedAddresses.find((storedAddress) => areAddressesEqual(storedAddress, address))
+          address &&
+          storedAddresses.find((storedAddress) =>
+            // TODO(WALL-7065): Update to support solana
+            areAddressesEqual({
+              addressInput1: { address: storedAddress, platform: Platform.EVM },
+              addressInput2: { address, platform: Platform.EVM },
+            }),
+          )
             ? { address, derivationIndex: index }
             : undefined,
         )
@@ -103,22 +111,22 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
   const { loading: ensLoading, ensMap } = useAddressesEnsNames(addresses)
 
   // Need to fetch unitags for each derivation index and cannot use a fetch due (see comment at top of func)
-  const unitagStates: Array<ReturnType<typeof useUnitagByAddress>> = Array(NUMBER_OF_WALLETS_TO_GENERATE)
+  const unitagStates: Array<ReturnType<typeof useUnitagsAddressQuery>> = Array(NUMBER_OF_WALLETS_TO_GENERATE)
 
-  unitagStates[0] = useUnitagByAddress(addresses[0])
-  unitagStates[1] = useUnitagByAddress(addresses[1])
-  unitagStates[2] = useUnitagByAddress(addresses[2])
-  unitagStates[3] = useUnitagByAddress(addresses[3])
-  unitagStates[4] = useUnitagByAddress(addresses[4])
-  unitagStates[5] = useUnitagByAddress(addresses[5])
-  unitagStates[6] = useUnitagByAddress(addresses[6])
-  unitagStates[7] = useUnitagByAddress(addresses[7])
-  unitagStates[8] = useUnitagByAddress(addresses[8])
-  unitagStates[9] = useUnitagByAddress(addresses[9])
+  unitagStates[0] = useUnitagsAddressQuery({ params: addresses[0] ? { address: addresses[0] } : undefined })
+  unitagStates[1] = useUnitagsAddressQuery({ params: addresses[1] ? { address: addresses[1] } : undefined })
+  unitagStates[2] = useUnitagsAddressQuery({ params: addresses[2] ? { address: addresses[2] } : undefined })
+  unitagStates[3] = useUnitagsAddressQuery({ params: addresses[3] ? { address: addresses[3] } : undefined })
+  unitagStates[4] = useUnitagsAddressQuery({ params: addresses[4] ? { address: addresses[4] } : undefined })
+  unitagStates[5] = useUnitagsAddressQuery({ params: addresses[5] ? { address: addresses[5] } : undefined })
+  unitagStates[6] = useUnitagsAddressQuery({ params: addresses[6] ? { address: addresses[6] } : undefined })
+  unitagStates[7] = useUnitagsAddressQuery({ params: addresses[7] ? { address: addresses[7] } : undefined })
+  unitagStates[8] = useUnitagsAddressQuery({ params: addresses[8] ? { address: addresses[8] } : undefined })
+  unitagStates[9] = useUnitagsAddressQuery({ params: addresses[9] ? { address: addresses[9] } : undefined })
 
   // Using these values to recalculate dependency array
-  const unitagsCombined = unitagStates.map((unitagState) => unitagState.unitag?.username).join('')
-  const unitagLoading = unitagStates.some((unitagState) => unitagState.loading)
+  const unitagsCombined = unitagStates.map((unitagState) => unitagState.data?.username).join('')
+  const unitagLoading = unitagStates.some((unitagState) => unitagState.isLoading)
 
   const recoveryWalletInfos = useMemo((): RecoveryWalletInfo[] => {
     return addressesWithIndex.map((addressWithIndex, index): RecoveryWalletInfo => {
@@ -128,7 +136,7 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
         derivationIndex,
         balance: balances?.[index],
         ensName: ensMap ? ensMap[address] : undefined,
-        unitag: unitagStates[derivationIndex]?.unitag?.username,
+        unitag: unitagStates[derivationIndex]?.data?.username,
       }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps

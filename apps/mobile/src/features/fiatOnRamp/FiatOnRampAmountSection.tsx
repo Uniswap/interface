@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
 import React, { RefObject, forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
+import { NativeSyntheticEvent, TextInput as RNTextInput, TextInputSelectionChangeEventData } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import {
@@ -19,6 +19,7 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { fonts, spacing } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
+import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useFormatExactCurrencyAmount } from 'uniswap/src/features/fiatOnRamp/hooks'
@@ -27,6 +28,7 @@ import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 
@@ -73,7 +75,7 @@ interface FiatOnRampAmountSectionProps {
 }
 
 export type FiatOnRampAmountSectionRef = {
-  textInputRef: RefObject<TextInput>
+  textInputRef: RefObject<RNTextInput>
   triggerShakeAnimation: () => void
 }
 
@@ -115,7 +117,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
 
     const { isTokenInputMode, isOffRamp } = useFiatOnRampContext()
 
-    const inputRef = useRef<TextInput>(null)
+    const inputRef = useRef<RNTextInput>(null)
 
     useImperativeHandle(forwardedRef, () => ({
       textInputRef: inputRef,
@@ -228,19 +230,27 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
         </Flex>
         <AnimatedFlex style={inputAnimatedStyle} width="100%">
           <Flex alignItems="center" justifyContent="center" flexDirection={isTokenInputMode ? 'row-reverse' : 'row'}>
-            <Text
+            <TextInput
               allowFontScaling
+              disabled
               color={!value ? '$neutral3' : '$neutral1'}
+              fontFamily="$heading"
               fontSize={fontSize}
-              height={fontSize}
-              lineHeight={fontSize}
+              fontWeight="$book"
+              minHeight={MAX_INPUT_FONT_SIZE}
+              maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
+              height={fontSize + 5}
+              placeholderTextColor="$neutral3"
+              px="$none"
+              py="$none"
             >
               {isTokenInputMode ? ' ' + currency.currencyInfo?.currency.symbol : fiatCurrencyInfo.symbol}
-            </Text>
+            </TextInput>
             <AmountInput
               ref={inputRef}
               adjustWidthToContent
               autoFocus
+              testID={TestID.BuyFormAmountInput}
               alignSelf="stretch"
               backgroundColor="$transparent"
               borderWidth="$none"
@@ -249,8 +259,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
               fontFamily="$heading"
               fontSize={fontSize}
               fontWeight="$book"
-              height={fontSize}
-              lineHeight={fontSize + (value ? 5 : 0)}
+              height={fontSize + 5}
               maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
               minHeight={MAX_INPUT_FONT_SIZE}
               placeholder="0"
@@ -296,12 +305,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
               pb="$spacing4"
               pt="$spacing4"
             >
-              <Text
-                color="$neutral2"
-                maxHeight={fonts.subheading1.lineHeight}
-                loading={selectTokenLoading}
-                variant="subheading1"
-              >
+              <Text color="$neutral2" loading={selectTokenLoading} variant="subheading1">
                 {formattedDerivedAmount}
               </Text>
               <ArrowDownArrowUp color="$neutral2" maxWidth={16} size="$icon.16" />

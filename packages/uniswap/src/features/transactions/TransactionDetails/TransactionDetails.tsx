@@ -11,6 +11,7 @@ import type { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExpectedFailureBanner } from 'uniswap/src/features/transactions/TransactionDetails/ExpectedFailureBanner'
+import { ExpectedSpeed } from 'uniswap/src/features/transactions/TransactionDetails/ExpectedSpeed'
 import { FeeOnTransferFeeGroup } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { ListSeparatorToggle } from 'uniswap/src/features/transactions/TransactionDetails/ListSeparatorToggle'
 import { SwapFee } from 'uniswap/src/features/transactions/TransactionDetails/SwapFee'
@@ -153,6 +154,7 @@ export function TransactionDetails({
           />
           {isSwap && RoutingInfo}
           {AccountDetails}
+          <ExpectedSpeed chainId={chainId} />
           {showChildren && !priceUXEnabled ? (
             <AnimatePresence>
               <Flex animation="fast" exitStyle={{ opacity: 0 }} enterStyle={{ opacity: 0 }} gap="$spacing8">

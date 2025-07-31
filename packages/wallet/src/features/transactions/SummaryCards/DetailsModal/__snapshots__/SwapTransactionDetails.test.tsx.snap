@@ -59,12 +59,6 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
         style={
           {
             "alignItems": "center",
-            "color": {
-              "dynamic": {
-                "dark": "#FFFFFF",
-                "light": "#222222",
-              },
-            },
             "flexDirection": "row",
             "justifyContent": "space-between",
           }
@@ -265,12 +259,6 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
         style={
           {
             "alignItems": "center",
-            "color": {
-              "dynamic": {
-                "dark": "#FFFFFF",
-                "light": "#222222",
-              },
-            },
             "flexDirection": "row",
             "justifyContent": "space-between",
           }

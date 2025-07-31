@@ -28,5 +28,5 @@ export const SWAP_STATUS_TO_TX_STATUS: { [key in SwapStatus]: TransactionStatus 
   [SwapStatus.EXPIRED]: TransactionStatus.Expired,
 }
 
-export const FINALIZED_BRIDGE_SWAP_STATUS = [SwapStatus.SUCCESS, SwapStatus.FAILED, SwapStatus.EXPIRED]
+export const FINALIZED_SWAP_STATUS = [SwapStatus.SUCCESS, SwapStatus.FAILED, SwapStatus.EXPIRED]
 export const MIN_BRIDGE_WAIT_TIME = ONE_SECOND_MS * 3

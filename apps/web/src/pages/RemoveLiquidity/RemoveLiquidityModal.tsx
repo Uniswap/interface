@@ -1,15 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { useLPSlippageValue } from 'components/Liquidity/Create/hooks/useLPSlippageValues'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
+import { useModalState } from 'hooks/useModalState'
+import { RemoveLiquidityForm } from 'pages/RemoveLiquidity/RemoveLiquidityForm'
 import {
   DecreaseLiquidityStep,
   RemoveLiquidityModalContextProvider,
   useRemoveLiquidityModalContext,
-} from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
-import { RemoveLiquidityReview } from 'components/RemoveLiquidity/RemoveLiquidityReview'
-import { RemoveLiquidityTxContextProvider } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
-import { useModalState } from 'hooks/useModalState'
-import { useLPSlippageValue } from 'pages/Pool/Positions/create/hooks/useLPSlippageValues'
-import { RemoveLiquidityForm } from 'pages/RemoveLiquidity/RemoveLiquidityForm'
+} from 'pages/RemoveLiquidity/RemoveLiquidityModalContext'
+import { RemoveLiquidityReview } from 'pages/RemoveLiquidity/RemoveLiquidityReview'
+import { RemoveLiquidityTxContextProvider } from 'pages/RemoveLiquidity/RemoveLiquidityTxContext'
 import { useTranslation } from 'react-i18next'
 import { HeightAnimator } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -45,9 +45,7 @@ function RemoveLiquidityModalInner() {
             closeModal={closeModal}
             goBack={step === DecreaseLiquidityStep.Review ? () => setStep(DecreaseLiquidityStep.Input) : undefined}
           />
-          <HeightAnimator animation="fast" useInitialHeight>
-            {modalContent}
-          </HeightAnimator>
+          <HeightAnimator useInitialHeight>{modalContent}</HeightAnimator>
         </Modal>
       </RemoveLiquidityTxContextProvider>
     </LPTransactionSettingsStoreContextProvider>

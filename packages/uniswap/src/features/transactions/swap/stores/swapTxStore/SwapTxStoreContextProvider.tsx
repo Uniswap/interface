@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSwapTxAndGasInfo as useServiceBasedSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/hooks'
@@ -7,10 +6,11 @@ import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/
 import { SwapTxStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/SwapTxStoreContext'
 import { createSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/createSwapTxStore'
 import { useSwapTxAndGasInfo as useLegacySwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/hooks/useSwapTxAndGasInfo'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { usePreviousWithLayoutEffect } from 'utilities/src/react/usePreviousWithLayoutEffect'
 
 const LegacySwapTxStoreContextProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
-  const account = useAccountMeta()
+  const account = useWallet().evmAccount
   const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
   const txState = useLegacySwapTxAndGasInfo({ derivedSwapInfo, account })
 

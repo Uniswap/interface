@@ -2,9 +2,10 @@ import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
 import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
-import { EVMOption } from 'components/WalletModal/WalletConnectorOption'
-import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
+import { UniswapMobileWalletConnectorOption } from 'components/WalletModal/UniswapMobileWalletConnectorOption'
+import { WalletConnectorOption } from 'components/WalletModal/WalletConnectorOption'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
+import { useOrderedWalletConnectors } from 'features/wallet/connection/hooks/useOrderedWalletConnectors'
 import { useAtom } from 'jotai'
 import React from 'react'
 import { Trans } from 'react-i18next'
@@ -16,7 +17,8 @@ import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 export function OtherWalletsModal() {
   const showMoonpayText = useShowMoonpayText()
   const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
-  const connectors = useOrderedConnections({ showSecondaryConnectors: true })
+
+  const connectors = useOrderedWalletConnectors({ showSecondaryConnectors: true })
   const recentConnectorId = useRecentConnectorId()
 
   return (
@@ -56,13 +58,13 @@ export function OtherWalletsModal() {
             {/* If uniswap mobile was the last used connector it will be show on the primary window */}
             {recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID && (
               <>
-                <EVMOption connectorId={CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID} />
+                <UniswapMobileWalletConnectorOption />
                 {connectors.length > 0 && <Separator />}
               </>
             )}
             {connectors.map((c, index) => (
-              <React.Fragment key={c.uid + index}>
-                <EVMOption connectorId={c.id} detected={c.isInjected} />
+              <React.Fragment key={c.name}>
+                <WalletConnectorOption walletConnectorMeta={c} />
                 {index < connectors.length - 1 && <Separator />}
               </React.Fragment>
             ))}

@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import { getCountry } from 'react-native-localize'
 import { useDispatch } from 'react-redux'
 import { useCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useCurrencies'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
@@ -41,6 +40,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { getFormattedCurrencyAmount } from 'uniswap/src/utils/currency'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -253,7 +253,7 @@ export function useFiatOnRampQuotes({
   quotes: FORQuote[] | undefined
 } {
   const debouncedBaseCurrencyAmount = useDebounce(baseCurrencyAmount, SHORT_DELAY)
-  const walletAddress = useAccountMeta()?.address
+  const walletAddress = useWallet().evmAccount?.address
 
   const {
     currentData: quotesResponse,

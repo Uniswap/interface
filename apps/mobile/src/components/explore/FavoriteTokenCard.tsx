@@ -86,6 +86,7 @@ function FavoriteTokenCard({
     currencyId,
     analyticsSection: SectionName.ExploreFavoriteTokensSection,
     onEditFavorites,
+    tokenName: token?.name,
   })
 
   const onPress = (): void => {

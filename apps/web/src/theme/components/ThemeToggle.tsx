@@ -186,7 +186,7 @@ export function ThemeSelector({
 export default function ThemeToggle({ disabled }: { disabled?: boolean }) {
   return (
     <Flex row gap="$gap4" alignItems="center" justifyContent="space-between">
-      <Flex row width="40%">
+      <Flex row>
         <Text variant="body3" color="$neutral1">
           <Trans i18nKey="themeToggle.theme" />
         </Text>

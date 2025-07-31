@@ -2,10 +2,9 @@ import { useMemo } from 'react'
 import { TokenOptionItem } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/TokenOptions/TokenOptionItem/TokenOptionItem'
 import { MAX_NUMBER_OF_TOKENS } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/constants'
 import { useCommonTokensOptionsWithFallback } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptionsWithFallback'
-
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import type { CurrencyField } from 'uniswap/src/types/currency'
 
 const createKey = (currency: CurrencyInfo['currency']): string =>
@@ -15,7 +14,7 @@ const useCommonTokensOptionsInfo = (): {
   allCurrencyInfos: CurrencyInfo[]
   numberOfCommonTokenOptions: number
 } => {
-  const account = useAccountMeta()
+  const account = useWallet().evmAccount
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
 
   const { data: commonTokenOptions } = useCommonTokensOptionsWithFallback(account?.address, chainId)

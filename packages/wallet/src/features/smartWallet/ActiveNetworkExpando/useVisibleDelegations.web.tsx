@@ -3,6 +3,6 @@ import {
   UseVisibleDelegationsResult,
 } from 'wallet/src/features/smartWallet/ActiveNetworkExpando/useVisibleDelegations'
 
-export function useVisibleDelegations({ data, isOpen }: UseVisibleDelegationsParams): UseVisibleDelegationsResult {
-  return { maxHeight: '100%', visibleItems: isOpen ? data : [] }
+export function useVisibleDelegations({ data }: UseVisibleDelegationsParams): UseVisibleDelegationsResult {
+  return { maxHeight: '100%', visibleItems: data }
 }

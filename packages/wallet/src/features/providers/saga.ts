@@ -1,5 +1,5 @@
 import { call, fork, join } from 'typed-redux-saga'
-import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { ALL_EVM_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
@@ -12,7 +12,10 @@ export function* initProviders() {
   const providerManager = yield* call(getProviderManager)
   const viemClientManager = yield* call(getViemClientManager)
   const initTasks = []
-  for (const chainId of ALL_CHAIN_IDS) {
+
+  // TODO(SWAP-150): replace with `const { chains: enabledEVMChainIds } = yield* call(getEnabledChainIdsSaga, Platform.EVM)`
+  //                 once we figure out how to properly wait for statsig to be initialized within that saga..
+  for (const chainId of ALL_EVM_CHAIN_IDS) {
     const task = yield* fork(initProvider, { chainId, providerManager, viemClientManager })
     initTasks.push(task)
   }

@@ -96,7 +96,7 @@ export function SettingsScreen(): JSX.Element {
   const currentAppearanceSetting = useCurrentAppearanceSetting()
   const currentFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const { originName: currentLanguage } = useCurrentLanguageInfo()
-  const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWalletSettings)
+  const isSmartWalletSettingsEnabled = useFeatureFlag(FeatureFlags.SmartWalletSettings)
 
   const { hapticsEnabled, setHapticsEnabled } = useHapticFeedback()
 
@@ -117,7 +117,13 @@ export function SettingsScreen(): JSX.Element {
         enabled: newIsTestnetMode,
         location: 'settings',
       })
-    onClose()
+
+    if (isSmartWalletSettingsEnabled) {
+      // this assumes that we can only navigate to this toggle from the advanced settings modal
+      navigation.goBack()
+    } else {
+      onClose()
+    }
 
     setTimeout(() => {
       // trigger before toggling on (ie disabling analytics)
@@ -133,7 +139,7 @@ export function SettingsScreen(): JSX.Element {
         fireAnalytic()
       }
     }, AVOID_RENDER_DURING_ANIMATION_MS)
-  }, [dispatch, onClose, isTestnetModeEnabled, navigation])
+  }, [dispatch, onClose, isSmartWalletSettingsEnabled, isTestnetModeEnabled, navigation])
 
   // Signer account info
   const signerAccount = useSignerAccounts()[0]
@@ -230,7 +236,7 @@ export function SettingsScreen(): JSX.Element {
             isToggleEnabled: hapticsEnabled,
             onToggle: onToggleEnableHaptics,
           },
-          ...(isSmartWalletEnabled
+          ...(isSmartWalletSettingsEnabled
             ? [
                 {
                   navigationModal: ModalName.SmartWalletAdvancedSettingsModal,
@@ -238,7 +244,7 @@ export function SettingsScreen(): JSX.Element {
                   icon: <Sliders {...iconProps} />,
                   navigationProps: {
                     isTestnetEnabled: isTestnetModeEnabled,
-                    onTestnetModeToggled: (): void => handleTestnetModeToggle(),
+                    onTestnetModeToggled: handleTestnetModeToggle,
                     onPressSmartWallet: (): void => {
                       navigation.navigate(MobileScreens.SettingsSmartWallet)
                     },
@@ -424,7 +430,7 @@ export function SettingsScreen(): JSX.Element {
     hasCloudBackup,
     hasPasskeyBackup,
     isTestnetModeEnabled,
-    isSmartWalletEnabled,
+    isSmartWalletSettingsEnabled,
     handleTestnetModeToggle,
     notificationOSPermission,
     navigation,

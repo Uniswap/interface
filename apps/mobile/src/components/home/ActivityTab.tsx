@@ -13,6 +13,7 @@ import { Flex, useSporeColors } from 'ui/src'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { isAndroid } from 'utilities/src/platform'
@@ -76,7 +77,7 @@ export const ActivityTab = memo(
     const List = renderedInModal ? AnimatedBottomSheetFlatList : AnimatedFlatList
 
     return (
-      <Flex grow px="$spacing24">
+      <Flex grow px="$spacing24" testID={TestID.ActivityContent}>
         <List
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ref={ref as ForwardedRef<Animated.FlatList<any>>}

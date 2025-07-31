@@ -2,13 +2,14 @@
 import { Signer } from '@ethersproject/abstract-signer'
 import { SignerInfo, waitForFlashbotsProtectReceipt } from 'uniswap/src/features/providers/FlashbotsCommon'
 import { createFlashbotsRpcClient } from 'uniswap/src/features/providers/FlashbotsRpcClient'
+import { HexString } from 'uniswap/src/utils/hex'
 import { Chain, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 
 // Mock fetch
 global.fetch = jest.fn() as jest.Mock
 
-const testAddress = '0xF570F45f598fD48AF83FABD692629a2caFe899ec' as `0x${string}`
+const testAddress = '0xF570F45f598fD48AF83FABD692629a2caFe899ec' as HexString
 
 // Define a mock chain for testing
 const mockChain: Chain = {
@@ -32,7 +33,7 @@ describe('FlashbotsRpcClient', () => {
     ;(global.fetch as jest.Mock).mockReset()
     // Create mock signer
     mockSigner = {
-      signMessage: jest.fn().mockResolvedValue(`0xsignature` as `0x${string}`),
+      signMessage: jest.fn().mockResolvedValue(`0xsignature` as HexString),
       getAddress: jest.fn().mockResolvedValue(testAddress),
       signTransaction: jest.fn(),
       connect: jest.fn(),
@@ -165,7 +166,7 @@ describe('FlashbotsRpcClient', () => {
     })
 
     it('should use standard transport for addresses that do not match the signer', async () => {
-      const differentAddress = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984' as `0x${string}`
+      const differentAddress = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984' as HexString
 
       // Mock the response
       mockFetchResponse({ result: '0x7' })

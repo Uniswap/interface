@@ -18,6 +18,7 @@ import {
   CreatePoolTransactionInfo,
   LiquidityDecreaseTransactionInfo,
   LiquidityIncreaseTransactionInfo,
+  LpIncentivesClaimTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
   MigrateV3LiquidityToV4TransactionInfo,
   NFTApproveTransactionInfo,
@@ -122,6 +123,7 @@ export function HeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element
     case TransactionType.CollectFees:
     case TransactionType.MigrateLiquidityV2ToV3:
     case TransactionType.MigrateLiquidityV3ToV4:
+    case TransactionType.LPIncentivesClaimRewards:
       return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     default:
       return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
@@ -270,6 +272,7 @@ function UnknownHeaderLogo({
   | ClaimUniTransactionInfo
   | MigrateV2LiquidityToV3TransactionInfo
   | MigrateV3LiquidityToV4TransactionInfo
+  | LpIncentivesClaimTransactionInfo
 >): JSX.Element {
   const colors = useSporeColors()
   // Check if dappInfo exists since it may not exist on all transaction types

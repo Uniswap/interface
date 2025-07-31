@@ -44,20 +44,35 @@ exports[`AccountHeader renders correctly 1`] = `
         }
       >
         <View
+          collapsable={false}
           dd-action-name="account-header-avatar"
+          focusVisibleStyle={{}}
+          forwardedRef={[Function]}
           hitSlop={20}
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
           onBlur={[Function]}
           onClick={[Function]}
           onFocus={[Function]}
+          onLayout={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          role="button"
           style={
             {
               "alignItems": "center",
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 12,
+              "borderBottomRightRadius": 12,
+              "borderTopLeftRadius": 12,
+              "borderTopRightRadius": 12,
               "flexDirection": "row",
               "opacity": 1,
               "transform": [
@@ -70,6 +85,8 @@ exports[`AccountHeader renders correctly 1`] = `
           testID="account-header-avatar"
         >
           <View
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "backgroundColor": {
@@ -118,6 +135,8 @@ exports[`AccountHeader renders correctly 1`] = `
             testID="account-icon"
           >
             <View
+              onBlur={[Function]}
+              onFocus={[Function]}
               style={
                 {
                   "flexDirection": "column",
@@ -198,18 +217,33 @@ exports[`AccountHeader renders correctly 1`] = `
           testID="account-header/display-name"
         >
           <View
+            collapsable={false}
+            focusVisibleStyle={{}}
+            forwardedRef={[Function]}
             hitSlop={20}
+            jestAnimatedStyle={
+              {
+                "value": {},
+              }
+            }
             onBlur={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
+            onLayout={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
             onResponderRelease={[Function]}
             onResponderTerminate={[Function]}
             onResponderTerminationRequest={[Function]}
             onStartShouldSetResponder={[Function]}
+            role="button"
             style={
               {
+                "backgroundColor": "transparent",
+                "borderBottomLeftRadius": 12,
+                "borderBottomRightRadius": 12,
+                "borderTopLeftRadius": 12,
+                "borderTopRightRadius": 12,
                 "flexDirection": "column",
                 "flexGrow": 1,
                 "opacity": 1,
@@ -222,6 +256,8 @@ exports[`AccountHeader renders correctly 1`] = `
             }
           >
             <View
+              onBlur={[Function]}
+              onFocus={[Function]}
               onLayout={[Function]}
               style={
                 {
@@ -231,6 +267,8 @@ exports[`AccountHeader renders correctly 1`] = `
               }
             >
               <View
+                onBlur={[Function]}
+                onFocus={[Function]}
                 style={
                   {
                     "flexDirection": "row",
@@ -243,6 +281,8 @@ exports[`AccountHeader renders correctly 1`] = `
                   allowFontScaling={true}
                   maxFontSizeMultiplier={1.4}
                   numberOfLines={1}
+                  onBlur={[Function]}
+                  onFocus={[Function]}
                   onLayout={[Function]}
                   style={
                     {
@@ -272,25 +312,32 @@ exports[`AccountHeader renders correctly 1`] = `
                 </Text>
               </View>
               <View
-                hitSlop={
+                collapsable={false}
+                focusVisibleStyle={{}}
+                forwardedRef={[Function]}
+                jestAnimatedStyle={
                   {
-                    "bottom": 5,
-                    "left": 5,
-                    "right": 5,
-                    "top": 5,
+                    "value": {},
                   }
                 }
                 onBlur={[Function]}
                 onClick={[Function]}
                 onFocus={[Function]}
+                onLayout={[Function]}
                 onResponderGrant={[Function]}
                 onResponderMove={[Function]}
                 onResponderRelease={[Function]}
                 onResponderTerminate={[Function]}
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
+                role="button"
                 style={
                   {
+                    "backgroundColor": "transparent",
+                    "borderBottomLeftRadius": 12,
+                    "borderBottomRightRadius": 12,
+                    "borderTopLeftRadius": 12,
+                    "borderTopRightRadius": 12,
                     "flexDirection": "column",
                     "opacity": 1,
                     "transform": [
@@ -303,6 +350,8 @@ exports[`AccountHeader renders correctly 1`] = `
                 testID="account-header-copy-address"
               >
                 <View
+                  onBlur={[Function]}
+                  onFocus={[Function]}
                   style={
                     {
                       "alignItems": "center",
@@ -315,6 +364,8 @@ exports[`AccountHeader renders correctly 1`] = `
                     allowFontScaling={true}
                     maxFontSizeMultiplier={1.4}
                     numberOfLines={1}
+                    onBlur={[Function]}
+                    onFocus={[Function]}
                     style={
                       {
                         "color": {
@@ -409,31 +460,38 @@ exports[`AccountHeader renders correctly 1`] = `
           {
             "alignItems": "flex-start",
             "flexDirection": "row",
-            "gap": 16,
+            "gap": 12,
           }
         }
       >
         <View
+          collapsable={false}
           dd-action-name="Scan"
-          hitSlop={
+          focusVisibleStyle={{}}
+          forwardedRef={[Function]}
+          jestAnimatedStyle={
             {
-              "bottom": 5,
-              "left": 5,
-              "right": 5,
-              "top": 5,
+              "value": {},
             }
           }
           onBlur={[Function]}
           onClick={[Function]}
           onFocus={[Function]}
+          onLayout={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          role="button"
           style={
             {
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 12,
+              "borderBottomRightRadius": 12,
+              "borderTopLeftRadius": 12,
+              "borderTopRightRadius": 12,
               "flexDirection": "column",
               "opacity": 1,
               "transform": [

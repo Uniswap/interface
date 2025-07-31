@@ -6,7 +6,7 @@ import {
   MigrateLPPositionRequest,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { PermitTransaction, PermitTypedData } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 
 export enum LiquidityTransactionType {
   Create = 'create',

@@ -1,5 +1,5 @@
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import type { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import type { Pair } from '@uniswap/v2-sdk'
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import { FiatValue } from 'components/CurrencyInputPanel/FiatValue'
@@ -16,7 +16,8 @@ import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import ms from 'ms'
-import { ReactNode, forwardRef, useCallback, useEffect, useState } from 'react'
+import type { ReactNode } from 'react'
+import { forwardRef, useCallback, useEffect, useState } from 'react'
 import { Lock } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useCurrencyBalance } from 'state/connection/hooks'
@@ -416,11 +417,12 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                     {showMaxButton && selectedCurrencyBalance ? (
                       <Trace logPress element={ElementName.MaxTokenAmountButton}>
                         <Button
+                          alignSelf="center"
                           variant="branded"
-                          emphasis="secondary"
-                          size="xxsmall"
-                          py="$spacing4"
-                          ml="$spacing4"
+                          pr="$spacing6"
+                          pl="$spacing12"
+                          emphasis="text-only"
+                          size="small"
                           isDisabled={disabled}
                           onPress={onMax}
                         >

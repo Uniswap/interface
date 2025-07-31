@@ -1,4 +1,4 @@
-import { FlagWarning, getFlagWarning, getFlagsFromContractAddress } from 'components/Liquidity/utils'
+import { FlagWarning, getFlagWarning, getFlagsFromContractAddress } from 'components/Liquidity/utils/getFlagWarnings'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -139,7 +139,7 @@ export function HookModal({
       isModalOpen={isOpen}
       analyticsProperties={{ hook_address: address, hasDangerous }}
     >
-      <HeightAnimator animation="fast">
+      <HeightAnimator>
         <Flex gap="$spacing24">
           <GetHelpHeader closeModal={onClose} />
           <Flex>

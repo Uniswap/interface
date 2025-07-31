@@ -1,5 +1,4 @@
 import { useCallback } from 'react'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import type { GetExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
@@ -7,20 +6,23 @@ import { createExecuteSwapService } from 'uniswap/src/features/transactions/swap
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { SetCurrentStepFn, SwapCallback } from 'uniswap/src/features/transactions/swap/types/swapCallback'
+import type { SwapHandlers } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useEvent } from 'utilities/src/react/hooks'
 
 interface UseSwapServiceParams {
   swapCallback: SwapCallback
   wrapCallback: WrapCallback
+  swapHandlers?: SwapHandlers
   derivedSwapInfo: DerivedSwapInfo
 }
 
 export function useCreateGetExecuteSwapService(ctx: UseSwapServiceParams): GetExecuteSwapService {
-  const { swapCallback, wrapCallback, derivedSwapInfo } = ctx
+  const { swapCallback, wrapCallback, swapHandlers, derivedSwapInfo } = ctx
 
-  const account = useAccountMeta()
+  const account = useWallet().evmAccount
   const customSlippageTolerance = useTransactionSettingsStore((s) => s.customSlippageTolerance)
   const { isFiatMode, presetPercentage, preselectAsset } = useSwapFormStore((s) => ({
     isFiatMode: s.isFiatMode,
@@ -63,8 +65,19 @@ export function useCreateGetExecuteSwapService(ctx: UseSwapServiceParams): GetEx
         setSteps: input.setSteps,
         swapCallback,
         wrapCallback,
+        onPrepareSwap: swapHandlers?.prepareAndSign,
+        onExecuteSwap: swapHandlers?.execute,
       })
     },
-    [swapCallback, wrapCallback, getAccount, getDerivedSwapInfo, getPresetInfo, getIsFiatMode, getTxSettings],
+    [
+      swapCallback,
+      wrapCallback,
+      swapHandlers,
+      getAccount,
+      getDerivedSwapInfo,
+      getPresetInfo,
+      getIsFiatMode,
+      getTxSettings,
+    ],
   )
 }

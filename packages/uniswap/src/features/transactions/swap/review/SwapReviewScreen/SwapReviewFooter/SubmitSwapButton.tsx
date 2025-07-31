@@ -7,6 +7,8 @@ import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import type { PasskeyAuthStatus } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { FlashblocksConfirmButton } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/FlashblocksConfirmButton'
+import { useIsUnichainFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
@@ -34,6 +36,9 @@ export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }:
   const { renderBiometricsIcon, passkeyAuthStatus } = useTransactionModalContext()
 
   const isSubmitting = useSwapFormStore((s) => s.isSubmitting)
+  const isConfirmed = useSwapFormStore((s) => s.isConfirmed)
+  const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
+  const isFlashblocksEnabled = useIsUnichainFlashblocksEnabled(chainId)
   const {
     wrapType,
     trade: { trade, indicativeTrade },
@@ -78,6 +83,10 @@ export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }:
           <DelayedSubmissionText />
         </Button>
       )
+    }
+    case isConfirmed && isFlashblocksEnabled: {
+      // this has side effects for the balance logic as well
+      return <FlashblocksConfirmButton />
     }
     case isInterface && isSubmitting: {
       return (
@@ -126,39 +135,6 @@ export enum SwapAction {
   SwapAnyway = 'SWAP_ANYWAY',
   ApproveAndSwap = 'APPROVE_AND_SWAP',
   SignAndSwap = 'SIGN_AND_SWAP',
-}
-
-const getSwapAction = ({
-  wrapType,
-  swapTxContext,
-  warning,
-}: {
-  wrapType: WrapType
-  swapTxContext?: SwapTxAndGasInfo
-  warning?: Warning
-}): SwapAction => {
-  if (wrapType === WrapType.Wrap) {
-    return SwapAction.Wrap
-  }
-  if (wrapType === WrapType.Unwrap) {
-    return SwapAction.Unwrap
-  }
-
-  const hasPermitTx =
-    swapTxContext && isClassic(swapTxContext) ? swapTxContext.permit?.method === PermitMethod.Transaction : false
-  const hasApproveTx = Boolean(swapTxContext?.approveTxRequest)
-
-  if (isInterface && (hasPermitTx || hasApproveTx)) {
-    return SwapAction.ApproveAndSwap
-  }
-  if (isInterface && swapTxContext && isClassic(swapTxContext) && swapTxContext.unsigned) {
-    return SwapAction.SignAndSwap
-  }
-  if (warning?.severity === WarningSeverity.High) {
-    return SwapAction.SwapAnyway
-  }
-
-  return SwapAction.Swap
 }
 
 // TODO: Refactor this to not need the entire `swapTxContext` from the store
@@ -247,4 +223,37 @@ function ConfirmInWalletText({ passkeyAuthStatus }: { passkeyAuthStatus?: Passke
       </Flex>
     </AnimatePresence>
   )
+}
+
+const getSwapAction = ({
+  wrapType,
+  swapTxContext,
+  warning,
+}: {
+  wrapType: WrapType
+  swapTxContext?: SwapTxAndGasInfo
+  warning?: Warning
+}): SwapAction => {
+  if (wrapType === WrapType.Wrap) {
+    return SwapAction.Wrap
+  }
+  if (wrapType === WrapType.Unwrap) {
+    return SwapAction.Unwrap
+  }
+
+  const hasPermitTx =
+    swapTxContext && isClassic(swapTxContext) ? swapTxContext.permit?.method === PermitMethod.Transaction : false
+  const hasApproveTx = Boolean(swapTxContext?.approveTxRequest)
+
+  if (isInterface && (hasPermitTx || hasApproveTx)) {
+    return SwapAction.ApproveAndSwap
+  }
+  if (isInterface && swapTxContext && isClassic(swapTxContext) && swapTxContext.unsigned) {
+    return SwapAction.SignAndSwap
+  }
+  if (warning?.severity === WarningSeverity.High) {
+    return SwapAction.SwapAnyway
+  }
+
+  return SwapAction.Swap
 }

@@ -5,7 +5,6 @@ import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { useEffect } from 'react'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import type { Address } from 'uniswap/src/data/tradingApi/__generated__'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
@@ -26,6 +25,7 @@ import { getSwapFeeUsd } from 'uniswap/src/features/transactions/swap/utils/getS
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -152,7 +152,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
 
   const quoteId = trade?.quote.requestId
 
-  const account = useAccountMeta()
+  const account = useWallet().evmAccount
 
   const { data: portfolioData } = usePortfolioTotalValue({
     address: account?.address,

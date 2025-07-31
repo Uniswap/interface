@@ -119,6 +119,7 @@ describe('WalletConnect Saga', () => {
           },
         })
         .withState({
+          userSettings: {},
           wallet: {
             accounts: {
               [activeAccountAddress]: { address: activeAccountAddress },
@@ -193,6 +194,7 @@ describe('WalletConnect Saga', () => {
           },
         })
         .withState({
+          userSettings: {},
           wallet: {
             accounts: {
               [activeAccountAddress]: { address: activeAccountAddress },

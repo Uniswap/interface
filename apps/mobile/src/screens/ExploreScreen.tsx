@@ -2,6 +2,7 @@ import { useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { TextInput } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { useAnimatedRef } from 'react-native-reanimated'
 import { ExploreSections } from 'src/components/explore/ExploreSections'
@@ -17,7 +18,6 @@ import { CancelBehaviorType, SearchTextInput } from 'uniswap/src/features/search
 import { MobileEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 
 // From design to avoid layout thrash as icons show and hide
 const MIN_SEARCH_INPUT_HEIGHT = 52
@@ -28,6 +28,7 @@ export function ExploreScreen(): JSX.Element {
 
   const { t } = useTranslation()
 
+  const textInputRef = useRef<TextInput>(null)
   const listRef = useAnimatedRef<FlatList>()
   useScrollToTop(listRef)
 
@@ -40,6 +41,8 @@ export function ExploreScreen(): JSX.Element {
 
   const onSearchChangeText = (newSearchFilter: string): void => {
     onChangeText(newSearchFilter)
+    // Keep the state of the search input after changing theme
+    textInputRef.current?.setNativeProps({ text: newSearchFilter })
   }
 
   const onSearchFocus = (): void => {
@@ -59,6 +62,7 @@ export function ExploreScreen(): JSX.Element {
       <HandleBar backgroundColor="none" />
       <Flex p="$spacing16">
         <SearchTextInput
+          ref={textInputRef}
           cancelBehaviorType={CancelBehaviorType.BackChevron}
           endAdornment={
             isSearchMode ? (
@@ -68,7 +72,6 @@ export function ExploreScreen(): JSX.Element {
                   chainIds={chains}
                   selectedChain={chainFilter}
                   styles={{ buttonPaddingY: '$none' }}
-                  onDismiss={dismissNativeKeyboard}
                   onPressChain={(newChainId) => {
                     sendAnalyticsEvent(MobileEventName.ExploreSearchNetworkSelected, {
                       networkChainId: newChainId ?? 'all',

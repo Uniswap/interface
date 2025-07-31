@@ -8,6 +8,7 @@ import { Flex, Text } from 'ui/src'
 import { GlobeFilled, XTwitter } from 'ui/src/components/icons'
 import { useTokenProjectUrlsPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isDefaultNativeAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
@@ -64,7 +65,7 @@ export function TokenDetailsLinks(): JSX.Element {
             value: getTwitterLink(twitterName),
           }
         : null,
-      !isDefaultNativeAddress(address)
+      !isDefaultNativeAddress({ address, platform: chainIdToPlatform(chainId) })
         ? {
             buttonType: LinkButtonType.Copy,
             element: ElementName.Copy,

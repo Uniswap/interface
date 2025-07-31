@@ -6,10 +6,16 @@ import { iconSizes } from 'ui/src/theme'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { useToggleFavoriteCallback } from 'uniswap/src/features/favorites/useToggleFavoriteCallback'
 
-export function TokenDetailsFavoriteButton({ currencyId }: { currencyId: string }): JSX.Element {
+export function TokenDetailsFavoriteButton({
+  currencyId,
+  tokenName,
+}: {
+  currencyId: string
+  tokenName?: string
+}): JSX.Element {
   const id = currencyId.toLowerCase()
   const isFavoriteToken = useSelector(selectFavoriteTokens).indexOf(id) !== -1
-  const onFavoritePress = useToggleFavoriteCallback(id, isFavoriteToken)
+  const onFavoritePress = useToggleFavoriteCallback({ id, tokenName, isFavoriteToken })
   return (
     <TouchableArea hitSlop={{ right: 20, left: 5, top: 20, bottom: 20 }} onPress={onFavoritePress}>
       <Favorite isFavorited={isFavoriteToken} size={iconSizes.icon24} />

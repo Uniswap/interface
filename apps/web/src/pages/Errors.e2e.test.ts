@@ -4,6 +4,7 @@ import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { HexString } from 'uniswap/src/utils/hex'
 
 test.describe('Errors', () => {
   test('wallet rejection', async ({ page, anvil }) => {
@@ -51,7 +52,7 @@ test.describe('Errors', () => {
     await page.getByTestId(TestID.Swap).click()
 
     // Get the hash of the transaction in the mempool
-    let hash: `0x${string}` | undefined
+    let hash: HexString | undefined
     const startTime = performance.now()
     const timeoutMs = 5000
     while (!hash) {
@@ -62,7 +63,7 @@ test.describe('Errors', () => {
       const poolContent = await anvil.getTxpoolContent()
       const currentTransaction = Object.entries(
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        poolContent.pending[TEST_WALLET_ADDRESS.toLowerCase() as `0x${string}`] ?? {},
+        poolContent.pending[TEST_WALLET_ADDRESS.toLowerCase() as HexString] ?? {},
       )[0]
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -70,7 +71,7 @@ test.describe('Errors', () => {
     }
 
     await anvil.dropTransaction({
-      hash: hash as `0x${string}`,
+      hash: hash as HexString,
     })
     await anvil.mine({
       blocks: 1,

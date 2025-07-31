@@ -7,8 +7,6 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useStore } from 'zustand'
 import { useShallow } from 'zustand/shallow'
 
-export const useOptionalSwapFormStoreBase = (): SwapFormStore | null => useContext(SwapFormStoreContext)
-
 export const useSwapFormStoreBase = (): SwapFormStore => {
   const store = useContext(SwapFormStoreContext)
 

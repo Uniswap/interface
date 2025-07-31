@@ -8,7 +8,7 @@ export function useV4SwapEnabled(chainId?: number): boolean {
   return createGetV4SwapEnabled({ getSupportedChainId: () => supportedChainId })(chainId)
 }
 
-function createGetV4SwapEnabled(ctx: {
+export function createGetV4SwapEnabled(ctx: {
   getSupportedChainId: (chainId?: number) => UniverseChainId | undefined
 }): (chainId?: number) => boolean {
   function getV4SwapEnabled(chainId?: number): boolean {

@@ -34,7 +34,9 @@ type TxFixtures<T extends ClassicTransactionDetails> = {
   finalizedTxAction: ReturnType<typeof finalizeTransaction>
 }
 
-export const getTxFixtures = <T extends ClassicTransactionDetails>(transaction?: T): TxFixtures<T> => {
+export const getTxFixtures = <T extends ClassicTransactionDetails>(
+  transaction?: T,
+): TxFixtures<T & { hash: string }> => {
   const txBase = merge(
     {},
     transactionDetails({

@@ -239,7 +239,7 @@ describe(approveAndSwap, () => {
         ...sharedProviders,
         [
           call(executeTransaction, expectedSendSwapParams),
-          { transactionResponse: { hash: '0xMockSwapTxHash' }, populatedRequest: {} },
+          { transactionHash: '0xMockSwapTxHash', populatedRequest: {} },
         ],
       ])
       .call(executeTransaction, expectedSendSwapParams)
@@ -262,7 +262,7 @@ describe(approveAndSwap, () => {
       .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next({ nonce })
       .call(executeTransaction, expectedSendSwapParams)
-      .next({ transactionResponse: { hash: '0xMockSwapTxHash' }, populatedRequest: {} })
+      .next({ transactionHash: '0xMockSwapTxHash', populatedRequest: {} })
       .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
       .next()
       .isDone()
@@ -289,11 +289,11 @@ describe(approveAndSwap, () => {
         ...sharedProviders,
         [
           call(executeTransaction, expectedSendApprovalParams),
-          { transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} },
+          { transactionHash: '0xMockApprovalTxHash', populatedRequest: {} },
         ],
         [
           call(executeTransaction, expectedSendSwapParams),
-          { transactionResponse: { hash: '0xMockSwapTxHash' }, populatedRequest: {} },
+          { transactionHash: '0xMockSwapTxHash', populatedRequest: {} },
         ],
       ])
       .call(executeTransaction, expectedSendSwapParams)
@@ -313,7 +313,7 @@ describe(approveAndSwap, () => {
       .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next({ nonce })
       .call(executeTransaction, expectedSendApprovalParams)
-      .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })
+      .next({ transactionHash: '0xMockApprovalTxHash', populatedRequest: {} })
       .call(handleTransactionSpacing, {
         shouldWait: false,
         hash: '0xMockApprovalTxHash',
@@ -321,7 +321,7 @@ describe(approveAndSwap, () => {
       })
       .next()
       .call(executeTransaction, expectedSendSwapParams)
-      .next({ transactionResponse: { hash: '0xMockSwapTxHash' }, populatedRequest: {} })
+      .next({ transactionHash: '0xMockSwapTxHash', populatedRequest: {} })
       .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
       .next()
       .isDone()
@@ -347,7 +347,7 @@ describe(approveAndSwap, () => {
         ...sharedProviders,
         [
           call(executeTransaction, expectedSendApprovalParams),
-          { transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} },
+          { transactionHash: '0xMockApprovalTxHash', populatedRequest: {} },
         ],
         [call(submitUniswapXOrder, expectedSubmitOrderParams), undefined],
       ])
@@ -367,7 +367,7 @@ describe(approveAndSwap, () => {
       .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next({ nonce })
       .call(executeTransaction, expectedSendApprovalParams)
-      .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })
+      .next({ transactionHash: '0xMockApprovalTxHash', populatedRequest: {} })
       .call(handleTransactionSpacing, {
         shouldWait: false,
         hash: '0xMockApprovalTxHash',

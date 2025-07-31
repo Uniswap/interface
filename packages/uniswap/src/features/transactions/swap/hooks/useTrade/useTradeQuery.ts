@@ -1,32 +1,24 @@
 import { UseQueryResult } from '@tanstack/react-query'
 import { useRef } from 'react'
 import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClients/hooks/useQueryWithImmediateGarbageCollection'
-import { QuoteWithTradeAndGasEstimate } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiQuoteQuery'
+import { useTradeService } from 'uniswap/src/features/services'
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
-import { GetQuoteRequestResult } from 'uniswap/src/features/transactions/swap/hooks/useTrade/createGetQuoteRequestArgs'
-import { determineSwapCurrenciesAndStaticArgs } from 'uniswap/src/features/transactions/swap/hooks/useTrade/determineSwapCurrenciesAndStaticArgs'
-import { useGetTradingApiQuoteQueryOptions } from 'uniswap/src/features/transactions/swap/hooks/useTrade/useGetTradingApiQuoteQueryOptions'
+import { parseQuoteCurrencies } from 'uniswap/src/features/transactions/swap/hooks/useTrade/parseQuoteCurrencies'
+import { createTradeServiceQueryOptions } from 'uniswap/src/features/transactions/swap/hooks/useTrade/useTradeServiceQueryOptions'
+import { TradeWithGasEstimates } from 'uniswap/src/features/transactions/swap/services/tradeService/tradeService'
 import { UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
+import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
-export function useTradeQuery(
-  params: UseTradeArgs & { quoteRequestArgs?: GetQuoteRequestResult },
-): UseQueryResult<QuoteWithTradeAndGasEstimate> {
-  /***** Format request arguments ******/
-  const derivedParamData = determineSwapCurrenciesAndStaticArgs(params)
-
-  /***** Fetch quote from trading API  ******/
-  const pollingIntervalForChain = usePollingIntervalByChain(derivedParamData.currencyIn?.chainId)
+export function useTradeQuery(params: UseTradeArgs): UseQueryResult<TradeWithGasEstimates> {
+  const quoteCurrencyData = parseQuoteCurrencies(params)
+  const pollingIntervalForChain = usePollingIntervalByChain(quoteCurrencyData.currencyIn?.chainId)
   const internalPollInterval = params.pollInterval ?? pollingIntervalForChain
-
-  const getTradingApiQuoteQueryOptions = useGetTradingApiQuoteQueryOptions({
-    amountSpecified: params.amountSpecified,
-    isUSDQuote: params.isUSDQuote ?? false,
-    derivedParamData,
-  })
+  const tradeService = useTradeService()
+  const getTradeQueryOptions = useEvent(createTradeServiceQueryOptions({ tradeService }))
 
   const response = useQueryWithImmediateGarbageCollection({
-    ...getTradingApiQuoteQueryOptions(params.quoteRequestArgs),
+    ...getTradeQueryOptions(params),
     refetchInterval: internalPollInterval,
     // We set the `gcTime` to 15 seconds longer than the refetch interval so that there's more than enough time for a refetch to complete before we clear the stale data.
     // If the user loses internet connection (or leaves the app and comes back) for longer than this,
@@ -50,5 +42,5 @@ export function useTradeQuery(
   return {
     ...response,
     error: errorRef.current,
-  } as UseQueryResult<QuoteWithTradeAndGasEstimate>
+  } as UseQueryResult<TradeWithGasEstimates>
 }

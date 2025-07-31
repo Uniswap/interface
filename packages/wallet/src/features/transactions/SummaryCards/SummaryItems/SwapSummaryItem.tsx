@@ -7,8 +7,8 @@ import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionDetails,
-  isConfirmedSwapTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isConfirmedSwapTypeInfo } from 'uniswap/src/features/transactions/types/utils'
 import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { TransactionSummaryLayout } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'

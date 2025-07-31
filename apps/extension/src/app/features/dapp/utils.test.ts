@@ -1,5 +1,5 @@
 import {
-  getActiveConnectedAccount,
+  getActiveSignerConnectedAccount,
   getCapitalizedDisplayNameFromTab,
   getOrderedConnectedAddresses,
   isConnectedAccount,
@@ -8,7 +8,7 @@ import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2, SAMPLE_SEED_ADDRESS_3 } f
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { promiseTimeout } from 'utilities/src/time/timing'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { ACCOUNT, ACCOUNT2, ACCOUNT3 } from 'wallet/src/test/fixtures'
+import { ACCOUNT, ACCOUNT2, ACCOUNT3, readOnlyAccount } from 'wallet/src/test/fixtures'
 
 jest.mock('utilities/src/format/extractNameFromUrl', () => ({
   extractNameFromUrl: jest.fn(),
@@ -48,14 +48,22 @@ describe('getActiveConnectedAccount', () => {
   const accounts: Account[] = [ACCOUNT, ACCOUNT2]
 
   it('returns the account for the given address', () => {
-    const result = getActiveConnectedAccount(accounts, SAMPLE_SEED_ADDRESS_2)
+    const result = getActiveSignerConnectedAccount(accounts, SAMPLE_SEED_ADDRESS_2)
     expect(result).toEqual(ACCOUNT2)
   })
 
   it('throws an error if the address is not in the list', () => {
     expect(() => {
-      getActiveConnectedAccount(accounts, SAMPLE_SEED_ADDRESS_3)
-    }).toThrow('The activeConnectedAddress must be in the list of connectedAccounts.')
+      getActiveSignerConnectedAccount(accounts, SAMPLE_SEED_ADDRESS_3)
+    }).toThrow('The active connected address must be in the list of connected accounts.')
+  })
+
+  it('throws an error if the account is not a signer mnemonic account', () => {
+    const readOnlyAccount1 = readOnlyAccount()
+    const accounts: Account[] = [ACCOUNT, ACCOUNT2, readOnlyAccount1]
+    expect(() => {
+      getActiveSignerConnectedAccount(accounts, readOnlyAccount1.address!)
+    }).toThrow('The active connected address must be a signer mnemonic account.')
   })
 })
 

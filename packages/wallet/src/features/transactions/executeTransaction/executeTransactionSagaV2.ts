@@ -1,6 +1,6 @@
 import { SagaIterator } from 'redux-saga'
 import { call, select } from 'typed-redux-saga'
-import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
@@ -17,10 +17,7 @@ import { DelegationCheckResult } from 'wallet/src/features/smartWallet/delegatio
 import { getAccountDelegationDetails } from 'wallet/src/features/smartWallet/delegation/utils'
 import { createTransactionRepositoryRedux } from 'wallet/src/features/transactions/executeTransaction/services/TransactionRepository/transactionRepositoryImplRedux'
 import { createTransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionServiceImpl'
-import {
-  TransactionResponse,
-  TransactionSigner,
-} from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
+import { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
 import {
   createBundledDelegationTransactionSignerService,
   createTransactionSignerService,
@@ -40,7 +37,7 @@ export interface ExecuteTransactionParams {
   // this is optional as an override in txDetail.id calculation
   txId?: string
   chainId: UniverseChainId
-  account: AccountMeta
+  account: SignerMnemonicAccountMeta
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
   transactionOriginType: TransactionOriginType
@@ -62,7 +59,7 @@ const transactionRepository = createTransactionRepositoryRedux({
 })
 
 function* getTransactionSigner(input: {
-  account: AccountMeta
+  account: SignerMnemonicAccountMeta
   chainId: UniverseChainId
   getProvider: () => Promise<Provider>
   getViemClient: () => Promise<PublicClient>
@@ -109,7 +106,7 @@ const analyticsService = createAnalyticsService({
  * This saga orchestrates the transaction execution process.
  */
 export function* executeTransactionV2(params: ExecuteTransactionParams): SagaIterator<{
-  transactionResponse: TransactionResponse
+  transactionHash: string
 }> {
   // Extract parameters for the transaction
   const { chainId, account, options, typeInfo, txId, transactionOriginType, analytics } = params

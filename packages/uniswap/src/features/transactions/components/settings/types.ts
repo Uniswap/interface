@@ -21,6 +21,8 @@ export type TransactionSettingConfig = {
   featureFlag?: FeatureFlags
   settingId?: TransactionSettingId
   renderTooltip?: (t: AppTFunction) => string
+  /** Returns warning configuration if the setting should show a warning */
+  Warning?: React.FunctionComponent
 }
 
 export interface TransactionSettingsState {

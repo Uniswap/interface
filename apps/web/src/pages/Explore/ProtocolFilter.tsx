@@ -1,6 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
-import { getProtocolVersionLabel } from 'components/Liquidity/utils'
+import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { atom, useAtom } from 'jotai'
 import { useCallback, useMemo, useState } from 'react'
 import { Check } from 'react-feather'

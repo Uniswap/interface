@@ -44,6 +44,7 @@ interface ChartDataParams<TDataType extends SeriesDataItemType> {
   /** Repesents whether `data` is stale. If true, stale UI will appear */
   stale?: boolean
   hideTooltipBorder?: boolean
+  tokenFormatType?: NumberType
 }
 
 export type ChartModelParams<TDataType extends SeriesDataItemType> = ChartUtilParams<TDataType> &

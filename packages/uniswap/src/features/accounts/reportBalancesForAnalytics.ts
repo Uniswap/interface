@@ -4,7 +4,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 interface ReportBalancesParams {
   balances: number[]
   totalBalancesUsd?: number
-  totalBalancesUsdPerChain?: Record<string, number> | null | undefined
+  totalBalancesUsdPerChain?: Record<string, number>
   wallet?: string
   wallets: string[]
   isViewOnly?: boolean
@@ -18,7 +18,8 @@ export function reportBalancesForAnalytics({
   wallets,
   isViewOnly = false,
 }: ReportBalancesParams): void {
-  if (!totalBalancesUsd || !totalBalancesUsdPerChain || !wallets.length || !wallet) {
+  // Note: We should still log zero balances, but we should skip if there's no wallet or balance values
+  if (totalBalancesUsd === undefined || totalBalancesUsdPerChain === undefined || !wallets.length || !wallet) {
     return
   }
 

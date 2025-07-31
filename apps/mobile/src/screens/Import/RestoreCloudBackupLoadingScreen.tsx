@@ -21,7 +21,7 @@ import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'utilities/src/platform'
+import { isAndroid, isIOS } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -62,24 +62,33 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
     setTimeout(async () => {
       try {
         if (ANDROID_E2E_WORKAROUND) {
-          setIsError(false)
+          setIsLoading(false)
           return
         }
         await startFetchingCloudStorageBackups()
+        // Workaround for Android. Android awaits fetching as part of initial call, so we can stop fetching after the await.
+        // TODO: iOS native module needs to be rewritten to await backups fetch instead of using unreliable setTimeout
+        if (isAndroid) {
+          setIsLoading(false)
+        }
       } catch (e) {
+        logger.error(e, { tags: { file: 'RestoreCloudBackupLoadingScreen.tsx', function: 'fetchCloudStorageBackups' } })
         setIsError(true)
       }
     }, 0)
   }, [])
 
   /**
+   * iOS workaround for awaiting for the native module to finish fetching backups.
+   * Current implementation of iOS startFetchingCloudStorageBackups does not await backup fetching.
+   *
    * Monitors the fetching process and uses two different timeouts:
    * - MAX_LOADING_TIMEOUT_MS for initial backup fetch
    * - MIN_LOADING_UI_MS if subsequent backups are being fetched.
    * Stops the backup fetching process and sets the loading state to false once the timeout is reached.
    */
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading || !isIOS) {
       return undefined
     }
     const timer = setTimeout(
@@ -91,7 +100,6 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
             `Timed out fetching cloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`,
           )
         }
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         stopFetchingCloudStorageBackups()
         setIsLoading(false)
       },

@@ -67,4 +67,5 @@ export const ZKSYNC_CHAIN_INFO = {
     decimals: 18,
     address: '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91',
   },
+  tradingApiPollingIntervalMs: 250,
 } as const satisfies UniverseChainInfo

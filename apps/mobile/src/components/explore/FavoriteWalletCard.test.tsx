@@ -1,10 +1,12 @@
+import { UseQueryResult } from '@tanstack/react-query'
 import configureMockStore from 'redux-mock-store'
 import { thunk } from 'redux-thunk'
 import FavoriteWalletCard, { FavoriteWalletCardProps } from 'src/components/explore/FavoriteWalletCard'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { fireEvent, render, waitFor } from 'src/test/test-utils'
+import * as unitagHooks from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import * as ensHooks from 'uniswap/src/features/ens/api'
-import * as unitagHooks from 'uniswap/src/features/unitags/hooks'
+import { UnitagAddressResponse } from 'uniswap/src/features/unitags/types'
 import { ON_PRESS_EVENT_PAYLOAD, SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
@@ -45,12 +47,33 @@ describe('FavoriteWalletCard', () => {
     })
 
     it('renders unitag name if available', () => {
-      jest.spyOn(unitagHooks, 'useUnitagByAddress').mockReturnValue({
-        unitag: { username: 'unitagname' },
-        loading: false,
-        fetching: false,
-        pending: false,
-      })
+      jest.spyOn(unitagHooks, 'useUnitagsAddressQuery').mockReturnValue({
+        data: { username: 'unitagname' },
+        isLoading: false,
+        isFetching: false,
+        isPending: false,
+        error: null,
+        isError: false,
+        isLoadingError: false,
+        isRefetchError: false,
+        isSuccess: true,
+        status: 'success',
+        refetch: jest.fn(),
+        dataUpdatedAt: 0,
+        errorUpdatedAt: 0,
+        failureCount: 0,
+        failureReason: null,
+        fetchStatus: 'idle',
+        isPlaceholderData: false,
+        isRefetching: false,
+        isStale: false,
+        isInitialLoading: false,
+        errorUpdateCount: 0,
+        isFetched: true,
+        isFetchedAfterMount: true,
+        isPaused: false,
+        promise: Promise.resolve({ username: 'unitagname' }),
+      } as UseQueryResult<UnitagAddressResponse>)
 
       const { queryByText } = render(<FavoriteWalletCard {...defaultProps} />)
 

@@ -9,13 +9,13 @@ import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
@@ -32,7 +32,9 @@ type MenuAction = {
 export function ProfileContextMenu({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const { unitag } = useUnitagByAddress(address)
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: address ? { address } : undefined,
+  })
   const { defaultChainId } = useEnabledChains()
 
   const onPressCopyAddress = useCallback(async () => {

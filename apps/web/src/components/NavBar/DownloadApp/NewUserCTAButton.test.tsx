@@ -3,6 +3,7 @@ import { render, screen } from 'test-utils/render'
 
 vi.mock('uniswap/src/features/gating/hooks', () => ({
   useFeatureFlag: vi.fn(),
+  getFeatureFlag: vi.fn(),
 }))
 
 beforeEach(() => {

@@ -35,7 +35,6 @@ import {
   setHasPendingSessionError,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, fork, put, select, take } from 'typed-redux-saga'
-import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
@@ -44,6 +43,8 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import i18n from 'uniswap/src/i18n'
 import { DappRequestType, EthEvent, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
@@ -176,11 +177,13 @@ export function* handleSessionProposal(proposal: ProposalTypes.Struct & { verify
     proposer: { metadata: dapp },
   } = proposal
 
+  const { chains: enabledChainIds } = yield* call(getEnabledChainIdsSaga, Platform.EVM)
+
   const namespaceCheck = proposal.optionalNamespaces
   const firstNamespace = Object.keys(namespaceCheck)[0]
 
   if (firstNamespace && firstNamespace !== 'eip155') {
-    const chainLabels = ALL_CHAIN_IDS.map(getChainLabel).join(', ')
+    const chainLabels = enabledChainIds.map(getChainLabel).join(', ')
     yield* cancelErrorSession({ dappName: dapp.name, chainLabels, proposalId: proposal.id })
     return
   }
@@ -189,7 +192,7 @@ export function* handleSessionProposal(proposal: ProposalTypes.Struct & { verify
   const activeSignerAccountAddresses = activeSignerAccounts.map((account) => account.address)
 
   try {
-    const supportedEip155Chains = ALL_CHAIN_IDS.map((chainId) => `eip155:${chainId}`)
+    const supportedEip155Chains = enabledChainIds.map((chainId) => `eip155:${chainId}`)
 
     const accounts = supportedEip155Chains.flatMap((chain) =>
       activeSignerAccountAddresses.map((account) => `${chain}:${account}`),
@@ -235,7 +238,7 @@ export function* handleSessionProposal(proposal: ProposalTypes.Struct & { verify
       }),
     )
   } catch (e) {
-    const chainLabels = ALL_CHAIN_IDS.map(getChainLabel).join(', ')
+    const chainLabels = enabledChainIds.map(getChainLabel).join(', ')
 
     yield* cancelErrorSession({ dappName: dapp.name, chainLabels, proposalId: proposal.id })
 
@@ -269,9 +272,11 @@ const eip5792Methods = [EthMethod.WalletGetCallsStatus, EthMethod.WalletSendCall
  * This tradeoff simplifies the user experience and remains aligned with the WalletConnect specification.
  */
 export function* handleSessionAuthenticate(authenticate: WalletKitTypes.SessionAuthenticate) {
+  const { chains: enabledChainIds } = yield* call(getEnabledChainIdsSaga, Platform.EVM)
+
   // Filter non wallet supported chains from auth payload, in eip155 format
   const formattedEip155Chains = authenticate.params.authPayload.chains.filter((chain) =>
-    ALL_CHAIN_IDS.some((id) => chain === `eip155:${id}`),
+    enabledChainIds.some((id) => chain === `eip155:${id}`),
   )
 
   const authPayload = populateAuthPayload({
@@ -579,7 +584,11 @@ function* monitorAccountChanges() {
       // Update all sessions if new active account is included in the session namespacess
       const isNewAccountApprovedInNamespace = accounts?.some((eip155String) => {
         const parsedAddress = getAccountAddressFromEIP155String(eip155String)
-        return areAddressesEqual(parsedAddress, newActiveAccountAddress)
+        // TODO(WALL-7065): Update to support solana
+        return areAddressesEqual({
+          addressInput1: { address: parsedAddress, platform: Platform.EVM },
+          addressInput2: { address: newActiveAccountAddress, platform: Platform.EVM },
+        })
       })
 
       if (!isNewAccountApprovedInNamespace) {

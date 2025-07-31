@@ -457,7 +457,7 @@ exports[`TDPPoolTable > renders data filled state 1`] = `
                                 >
                                   <img
                                     height="24"
-                                    src="ethereum-logo.png"
+                                    src="eth-logo.png"
                                     style="object-fit: contain; border-radius: 12px; z-index: 1;"
                                     width="24"
                                   />

@@ -54,12 +54,6 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
         style={
           {
             "alignItems": "center",
-            "color": {
-              "dynamic": {
-                "dark": "#FFFFFF",
-                "light": "#222222",
-              },
-            },
             "flexDirection": "column",
             "gap": 8,
             "justifyContent": "center",
@@ -663,7 +657,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
                 "color": {
                   "dynamic": {
                     "dark": "#FFFFFF",
-                    "light": "#222222",
+                    "light": "#131313",
                   },
                 },
                 "fontFamily": "Basel Grotesk",
@@ -939,7 +933,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
                 "color": {
                   "dynamic": {
                     "dark": "#FFFFFF",
-                    "light": "#222222",
+                    "light": "#131313",
                   },
                 },
                 "fontFamily": "Basel Grotesk",

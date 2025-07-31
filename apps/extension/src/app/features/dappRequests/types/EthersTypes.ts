@@ -16,25 +16,6 @@ const AccessListEntrySchema = z.object({
 
 const AccessListSchema = z.array(AccessListEntrySchema)
 
-const EthersTransactionSchema = z.object({
-  hash: z.string().optional(),
-  to: z.string().optional(),
-  from: z.string().optional(),
-  nonce: z.number(),
-  gasLimit: BigNumberSchema,
-  gasPrice: BigNumberSchema.optional(),
-  data: z.string(),
-  value: BigNumberSchema,
-  chainId: HexadecimalNumberSchema,
-  r: z.string().optional(),
-  s: z.string().optional(),
-  v: z.number().optional(),
-  type: z.union([z.number(), z.null()]).optional(),
-  accessList: AccessListSchema.optional(),
-  maxPriorityFeePerGas: BigNumberSchema.optional(),
-  maxFeePerGas: BigNumberSchema.optional(),
-})
-
 // https://docs.ethers.org/v5/api/utils/bignumber/#BigNumberish
 const BigNumberishSchema = z.union([
   z.string(),
@@ -70,16 +51,4 @@ export const EthersTransactionRequestSchema = z.object({
   // eslint-disable-next-line no-restricted-syntax
   customData: z.record(z.any()).optional(),
   ccipReadEnabled: z.boolean().optional(),
-})
-
-export const EthersTransactionResponseSchema = EthersTransactionSchema.extend({
-  hash: z.string(),
-  confirmations: z.number(),
-  from: z.string(),
-  blockNumber: z.number().optional(),
-  blockHash: z.string().optional(),
-  timestamp: z.number().optional(),
-  raw: z.string().optional(),
-  // eslint-disable-next-line no-restricted-syntax
-  wait: z.any(), // TODO (EXT-831): Add schema
 })

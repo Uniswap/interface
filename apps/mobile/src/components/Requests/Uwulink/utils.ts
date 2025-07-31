@@ -1,6 +1,7 @@
 import { parseEther } from 'ethers/lib/utils'
 import { WalletConnectSigningRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import {
   DynamicConfigs,
@@ -23,7 +24,6 @@ import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
 import { getTokenSendRequest } from 'wallet/src/features/transactions/send/hooks/useSendTransactionRequest'
 import { SendCurrencyParams } from 'wallet/src/features/transactions/send/types'
-import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 const UWULINK_MAX_TXN_VALUE = '0.001'
 
@@ -70,7 +70,12 @@ function findAllowedTokenRecipientForUwuLink(
 
   const { chainId, recipient } = request
   return allowlist.tokenRecipients.find(
-    (item) => item.chainId === chainId && areAddressesEqual(item.address, recipient),
+    (item) =>
+      item.chainId === chainId &&
+      areAddressesEqual({
+        addressInput1: { address: item.address, chainId: item.chainId },
+        addressInput2: { address: recipient, chainId },
+      }),
   )
 }
 /**
@@ -98,7 +103,14 @@ export function isAllowedUwuLinkRequest(request: UwULinkRequest, allowlist: UwUL
   // generic transactions
   const { to, value } = request.value
   const belowMaximumValue = !value || parseFloat(value) <= parseEther(UWULINK_MAX_TXN_VALUE).toNumber()
-  const isAllowedContractAddress = to && allowlist.contracts.some((item) => areAddressesEqual(item.address, to))
+  const isAllowedContractAddress =
+    to &&
+    allowlist.contracts.some((item) =>
+      areAddressesEqual({
+        addressInput1: { address: item.address, chainId: item.chainId },
+        addressInput2: { address: to, chainId: request.chainId },
+      }),
+    )
 
   if (!belowMaximumValue || !isAllowedContractAddress) {
     return false
@@ -109,7 +121,7 @@ export function isAllowedUwuLinkRequest(request: UwULinkRequest, allowlist: UwUL
 
 type HandleUwuLinkRequestParams = {
   request: UwULinkRequest
-  activeAccount: Account
+  activeAccount: SignerMnemonicAccountMeta
   allowList: UwULinkAllowlist
   providerManager: ProviderManager
   contractManager: ContractManager
@@ -204,7 +216,7 @@ async function toTokenTransferRequest({
   contractManager,
 }: {
   request: UwULinkErc20SendRequest
-  account: Account
+  account: SignerMnemonicAccountMeta
   providerManager: ProviderManager
   contractManager: ContractManager
 }): Promise<EthTransaction> {

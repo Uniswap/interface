@@ -46,14 +46,19 @@ vi.mock('components/AccountDrawer/MiniPortfolio/Activity/utils', () => ({
   useCreateCancelTransactionRequest: vi.fn(),
 }))
 
-vi.mock('utilities/src/logger/logger', () => ({
-  logger: {
-    error: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-    debug: vi.fn(),
-  },
-}))
+vi.mock('utilities/src/logger/logger', async () => {
+  const actual = await vi.importActual('utilities/src/logger/logger')
+  return {
+    ...actual,
+    logger: {
+      error: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      debug: vi.fn(),
+      setDatadogEnabled: vi.fn(),
+    },
+  }
+})
 
 describe('CancelOrdersDialog', () => {
   it('should render order cancel correctly', async () => {

@@ -1,5 +1,5 @@
 import { PropsWithChildren, useCallback } from 'react'
-import { createSearchParams, useNavigate } from 'react-router'
+import { createSearchParams, useLocation, useNavigate } from 'react-router'
 import { navigateToInterfaceFiatOnRamp } from 'src/app/features/for/utils'
 import { AppRoutes, HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
@@ -24,16 +24,14 @@ import {
   NavigateToNftItemArgs,
   NavigateToSendFlowArgs,
   NavigateToSwapFlowArgs,
-  ShareNftArgs,
   ShareTokenArgs,
   WalletNavigationProvider,
   getNavigateToSendFlowArgsInitialState,
   getNavigateToSwapFlowArgsInitialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
-import { getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
+import { getTokenUrl } from 'wallet/src/utils/linking'
 
 export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.Element {
-  const handleShareNft = useHandleShareNft()
   const handleShareToken = useHandleShareToken()
   const navigateToAccountActivityList = useNavigateToAccountActivityList()
   const navigateToAccountTokenList = useNavigateToAccountTokenList()
@@ -54,7 +52,6 @@ export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.
 
   return (
     <WalletNavigationProvider
-      handleShareNft={handleShareNft}
       handleShareToken={handleShareToken}
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
@@ -71,24 +68,6 @@ export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.
     >
       {children}
     </WalletNavigationProvider>
-  )
-}
-
-function useHandleShareNft(): (args: ShareNftArgs) => void {
-  const copyToClipboard = useCopyToClipboard()
-
-  return useCallback(
-    async ({ contractAddress, tokenId }: ShareNftArgs): Promise<void> => {
-      const url = getNftUrl(contractAddress, tokenId)
-
-      await copyToClipboard({ textToCopy: url, copyType: CopyNotificationType.NftUrl })
-
-      sendAnalyticsEvent(WalletEventName.ShareButtonClicked, {
-        entity: ShareableEntity.NftItem,
-        url,
-      })
-    },
-    [copyToClipboard],
   )
 }
 
@@ -166,15 +145,17 @@ function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
 
 function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
   const { defaultChainId } = useEnabledChains()
+  const location = useLocation()
   return useCallback(
     (args: NavigateToSwapFlowArgs): void => {
       const initialState = getNavigateToSwapFlowArgsInitialState(args, defaultChainId)
 
       const state: SidebarLocationState = initialState ? { initialTransactionState: initialState } : undefined
 
-      navigate(`/${AppRoutes.Swap}`, { state })
+      const isCurrentlyOnSwap = location.pathname === `/${AppRoutes.Swap}`
+      navigate(`/${AppRoutes.Swap}`, { state, replace: isCurrentlyOnSwap })
     },
-    [defaultChainId],
+    [defaultChainId, location.pathname],
   )
 }
 

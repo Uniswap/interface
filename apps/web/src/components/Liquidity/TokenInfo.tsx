@@ -1,7 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { getCurrencyForProtocol } from 'components/Liquidity/utils/currency'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { getCurrencyForProtocol } from 'pages/Pool/Positions/create/utils'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'

@@ -1,4 +1,5 @@
 import Column from 'components/deprecated/Column'
+import { useAccount } from 'hooks/useAccount'
 import { ModalState } from 'hooks/useModalState'
 import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
@@ -9,7 +10,7 @@ import { ExternalLink } from 'theme/components/Links'
 import { Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useAccount } from 'wagmi'
+
 const ContentWrapper = styled(Column)`
   align-items: center;
   margin: 32px;

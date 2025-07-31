@@ -47,12 +47,6 @@ exports[`LinkButton renders without error 1`] = `
       style={
         {
           "alignItems": "center",
-          "color": {
-            "dynamic": {
-              "dark": "#FFFFFF",
-              "light": "#222222",
-            },
-          },
           "flexDirection": "row",
           "gap": 4,
           "justifyContent": "center",

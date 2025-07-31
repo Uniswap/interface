@@ -83,4 +83,5 @@ export const ARBITRUM_CHAIN_INFO = {
     decimals: 18,
     address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
   },
+  tradingApiPollingIntervalMs: 150,
 } as const satisfies UniverseChainInfo

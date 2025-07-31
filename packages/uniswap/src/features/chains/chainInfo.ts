@@ -55,20 +55,12 @@ function getOrderedEVMChains(): ConstChainInfo<Platform.EVM>[] {
   return evmChains
 }
 
+export const ALL_CHAIN_IDS: UniverseChainId[] = ORDERED_CHAINS.map((chain) => chain.id)
+
 // Exported with narrow typing for viem config typing on web. Will throw if no EVM chain is provided in ORDERED_CHAINS.
 export const ORDERED_EVM_CHAINS = getNonEmptyArrayOrThrow(getOrderedEVMChains())
 
-// TODO(WEB-7958): Update ALL_CHAIN_IDS to include solana, update usage where needed
-// This chain id order is used as a fallback for chain ordering in UI but will otherwise defer to useOrderedChainIds
-export const ALL_CHAIN_IDS: UniverseChainId[] = ORDERED_EVM_CHAINS.map((chain) => chain.id)
-
-export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = ORDERED_EVM_CHAINS.filter((chain) => !chain.testnet).map(
-  (chain) => chain.id,
-)
-
-export const SUPPORTED_TESTNET_CHAIN_IDS: UniverseChainId[] = ORDERED_EVM_CHAINS.filter((chain) => chain.testnet).map(
-  (chain) => chain.id,
-)
+export const ALL_EVM_CHAIN_IDS = ORDERED_EVM_CHAINS.map((chain) => chain.id)
 
 // Typing ensures the `UNIVERSE_CHAIN_INFO` map contains a proper mapping for each item defined in `ORDERED_EVM_CHAINS` (all keys defined & keys match corresponding value's `id` field)
 type AllChainsMap = {

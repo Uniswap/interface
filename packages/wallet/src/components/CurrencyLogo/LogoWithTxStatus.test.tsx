@@ -1,5 +1,5 @@
 import { AssetType } from 'uniswap/src/entities/assets'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { ALL_EVM_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ETH_CURRENCY_INFO, ethCurrencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
@@ -23,7 +23,7 @@ const currencyLogoProps = createFixture<LogoWithTxStatusProps>()(() => ({
   currencyInfo: ethCurrencyInfo(),
   txStatus: randomEnumValue(TransactionStatus),
   size: 40,
-  chainId: randomChoice(SUPPORTED_CHAIN_IDS),
+  chainId: randomChoice(ALL_EVM_CHAIN_IDS),
 }))
 
 const nftLogoProps = createFixture<LogoWithTxStatusProps>()(() => ({
@@ -31,7 +31,7 @@ const nftLogoProps = createFixture<LogoWithTxStatusProps>()(() => ({
   txType: TransactionType.NFTMint,
   txStatus: randomEnumValue(TransactionStatus),
   size: 40,
-  chainId: randomChoice(SUPPORTED_CHAIN_IDS),
+  chainId: randomChoice(ALL_EVM_CHAIN_IDS),
 }))
 
 describe(LogoWithTxStatus, () => {
@@ -102,6 +102,8 @@ describe(LogoWithTxStatus, () => {
         TransactionType.OffRampSale,
         TransactionType.Receive,
         TransactionType.NFTMint,
+        TransactionType.ClaimUni,
+        TransactionType.LPIncentivesClaimRewards,
         TransactionType.Unknown,
       ]
       const transactionWithoutIcons = Object.values(TransactionType).filter(

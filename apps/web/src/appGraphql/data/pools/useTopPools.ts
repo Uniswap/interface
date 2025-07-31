@@ -1,6 +1,6 @@
 import { Percent } from '@uniswap/sdk-core'
 import { OrderDirection } from 'appGraphql/data/util'
-import { FeeData } from 'pages/Pool/Positions/create/types'
+import { FeeData } from 'components/Liquidity/Create/types'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 

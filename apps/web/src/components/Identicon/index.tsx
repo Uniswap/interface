@@ -4,8 +4,8 @@ import { UnitagProfilePicture } from 'components/UnitagProfilePicture'
 import styled from 'lib/styled-components'
 import { fadeInAnimation } from 'theme/components/FadePresence'
 import { Unicon } from 'ui/src'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useENSAvatar } from 'uniswap/src/features/ens/api'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 
 export enum IdenticonType {
   LOADING = 'loading',
@@ -15,7 +15,9 @@ export enum IdenticonType {
 }
 
 export function useIdenticonType(account?: string) {
-  const { unitag, loading: unitagLoading } = useUnitagByAddress(account)
+  const { data: unitag, isLoading: unitagLoading } = useUnitagsAddressQuery({
+    params: account ? { address: account } : undefined,
+  })
   const { data: avatar, isLoading: ensAvatarLoading } = useENSAvatar(account)
 
   if (!account) {

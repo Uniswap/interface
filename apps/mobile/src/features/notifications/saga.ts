@@ -26,11 +26,10 @@ function* syncWithOneSignal() {
   const finishedOnboarding = yield* select(selectFinishedOnboarding)
 
   if (finishedOnboarding) {
-    const { generalUpdatesEnabled, priceAlertsEnabled } = yield* select(selectAllPushNotificationSettings)
+    const { generalUpdatesEnabled } = yield* select(selectAllPushNotificationSettings)
 
     yield* call(OneSignal.User.addTags, {
       [NotifSettingType.GeneralUpdates]: generalUpdatesEnabled.toString(),
-      [NotifSettingType.PriceAlerts]: priceAlertsEnabled.toString(),
     })
   }
 }
@@ -38,7 +37,6 @@ function* syncWithOneSignal() {
 function* initNewUser() {
   yield* call(OneSignal.User.addTags, {
     [NotifSettingType.GeneralUpdates]: 'true',
-    [NotifSettingType.PriceAlerts]: 'true',
   })
 }
 

@@ -1,8 +1,8 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Text } from 'ui/src'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -20,7 +20,7 @@ export function CurrencyInputPanelBalance({
   showInsufficientBalanceWarning,
 }: CurrencyInputBalanceProps): JSX.Element | null {
   const { formatCurrencyAmount } = useLocalizationContext()
-  const account = useAccountMeta()
+  const account = useWallet().evmAccount
   const isOutput = currencyField === CurrencyField.OUTPUT
 
   // Hide balance if panel is output, and no balance
@@ -33,7 +33,7 @@ export function CurrencyInputPanelBalance({
     <Text color={showInsufficientBalanceWarning ? '$statusCritical' : '$neutral2'} variant="body3">
       {formatCurrencyAmount({
         value: currencyBalance,
-        type: NumberType.TokenNonTx,
+        type: NumberType.TokenTx,
       })}{' '}
       {getSymbolDisplayText(currencyInfo.currency.symbol)}
     </Text>

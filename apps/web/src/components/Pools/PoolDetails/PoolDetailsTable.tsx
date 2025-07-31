@@ -1,5 +1,5 @@
 import { PositionInfo } from 'components/Liquidity/types'
-import { parseRestPosition } from 'components/Liquidity/utils'
+import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
 import { PoolDetailsPositionsTable } from 'components/Pools/PoolDetails/PoolDetailsPositionsTable'
 import { PoolDetailsTransactionsTable } from 'components/Pools/PoolDetails/PoolDetailsTransactionsTable'
 import Column from 'components/deprecated/Column'

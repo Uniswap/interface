@@ -3,9 +3,10 @@ import { Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, TICK_SPACINGS, Pool as V3Pool, tickToPrice as tickToPriceV3 } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
 import { TickData, Ticks } from 'appGraphql/data/AllV3TicksQuery'
+import { getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
+import { poolEnabledProtocolVersion } from 'components/Liquidity/utils/protocolVersion'
 import JSBI from 'jsbi'
 import ms from 'ms'
-import { getTokenOrZeroAddress, poolEnabledProtocolVersion } from 'pages/Pool/Positions/create/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { PositionField } from 'types/position'
@@ -33,7 +34,9 @@ function getActiveTick({
   feeAmount?: FeeAmount
   tickSpacing?: number
 }): number | undefined {
-  return tickCurrent && feeAmount && tickSpacing ? Math.floor(tickCurrent / tickSpacing) * tickSpacing : undefined
+  return tickCurrent && feeAmount !== undefined && tickSpacing
+    ? Math.floor(tickCurrent / tickSpacing) * tickSpacing
+    : undefined
 }
 
 const MAX_TICK_FETCH_VALUE = 1000

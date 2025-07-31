@@ -1,57 +1,42 @@
-import { useTokenBalancesQuery } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { PortfolioBalance } from 'appGraphql/data/portfolios'
 import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
-import {
-  QuickTokenBalancePartsFragment,
-  useQuickTokenBalancesWebQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { currencyKeyFromGraphQL } from 'utils/currencyKey'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
+import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { currencyKey } from 'utils/currencyKey'
 
 type TokenBalances = { [tokenAddress: string]: { usdValue: number; balance: number } }
 
 /**
- * Returns the user's token balances via graphql as a map and list.
+ * Returns the user's token balances via the factory hook that switches between GraphQL and REST.
  */
 export function useTokenBalances({ cacheOnly }: { cacheOnly?: boolean } = {}): {
   balanceMap: TokenBalances
-  balanceList: readonly (QuickTokenBalancePartsFragment | PortfolioBalance | undefined)[]
+  balanceList: readonly PortfolioBalance[]
   loading: boolean
 } {
   const account = useAccount()
-  const { gqlChains } = useEnabledChains()
 
-  // Quick result is always available at pageload, but never refetched when stale
-  const quickQueryResult = useQuickTokenBalancesWebQuery({
-    variables: {
-      ownerAddress: account.address ?? '',
-      chains: gqlChains,
-    },
-    skip: !account.address,
-    fetchPolicy: 'cache-first',
+  // Use the factory hook that handles GraphQL/REST switching
+  const { data: balancesById, loading } = usePortfolioBalances({
+    address: account.address ?? '',
+    fetchPolicy: cacheOnly ? 'cache-first' : 'cache-and-network',
   })
-  // Full query result is not available at pageload, but is refetched when needed in UI
-  const fullQueryResult = useTokenBalancesQuery({ cacheOnly })
-  const { data, loading } = fullQueryResult.data ? fullQueryResult : quickQueryResult
 
   return useMemo(() => {
-    const balanceList = data?.portfolios?.[0]?.tokenBalances ?? []
-    const balanceMap = balanceList.reduce((balanceMap, tokenBalance) => {
-      if (!tokenBalance?.token) {
-        return balanceMap
-      }
+    if (!balancesById) {
+      return { balanceMap: {}, balanceList: [], loading }
+    }
 
-      const key = currencyKeyFromGraphQL({
-        address: tokenBalance.token.address,
-        chain: tokenBalance.token.chain,
-        standard: tokenBalance.token.standard,
-      })
-      const usdValue = tokenBalance.denominatedValue?.value ?? 0
-      const balance = tokenBalance.quantity ?? 0
+    const balanceList = Object.values(balancesById)
+    const balanceMap = balanceList.reduce((balanceMap, tokenBalance) => {
+      const currency = tokenBalance.currencyInfo.currency
+      const key = currencyKey(currency)
+      const usdValue = tokenBalance.balanceUSD ?? 0
+      const balance = tokenBalance.quantity
       balanceMap[key] = { usdValue, balance }
       return balanceMap
     }, {} as TokenBalances)
+
     return { balanceMap, balanceList, loading }
-  }, [data?.portfolios, loading])
+  }, [balancesById, loading])
 }

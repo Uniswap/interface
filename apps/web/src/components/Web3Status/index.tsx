@@ -45,7 +45,8 @@ const Web3StatusGeneric = forwardRef<HTMLDivElement, ButtonProps>(function Web3S
         size="xsmall"
         emphasis="text-only"
         userSelect="none"
-        hoverStyle={{ backgroundColor: '$surface1Hovered' }}
+        backgroundColor="$transparent"
+        hoverStyle={{ backgroundColor: '$surface5Hovered' }}
         {...props}
       >
         {children}

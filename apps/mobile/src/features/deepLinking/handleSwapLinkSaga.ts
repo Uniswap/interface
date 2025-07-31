@@ -1,7 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
-import { ALL_CHAIN_IDS, SUPPORTED_TESTNET_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { isTestnetChain } from 'uniswap/src/features/chains/utils'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
@@ -46,9 +48,8 @@ export function* handleSwapLink(url: URL) {
 
     // both should match as of writing because of the check in parseAndValidateSwapParams,
     // but we're including an OR gate in case we update to allow only one chain to be passed
-    const isTestnetChains =
-      SUPPORTED_TESTNET_CHAIN_IDS.includes(inputChain) || SUPPORTED_TESTNET_CHAIN_IDS.includes(outputChain)
-    const { isTestnetModeEnabled } = yield* getEnabledChainIdsSaga()
+    const isTestnetChains = isTestnetChain(inputChain) || isTestnetChain(outputChain)
+    const { isTestnetModeEnabled } = yield* getEnabledChainIdsSaga(Platform.EVM)
 
     // prefill modal irrespective of testnet mode alignment
     navigate(ModalName.Swap, swapFormState)
@@ -118,10 +119,7 @@ const parseAndValidateSwapParams = (url: URL) => {
     throw new Error('Invalid currencyField. Must be either `input` or `output`')
   }
 
-  const isInputTestnet = SUPPORTED_TESTNET_CHAIN_IDS.includes(inputChain)
-  const isOutputTestnet = SUPPORTED_TESTNET_CHAIN_IDS.includes(outputChain)
-
-  if (isInputTestnet !== isOutputTestnet) {
+  if (isTestnetChain(inputChain) !== isTestnetChain(outputChain)) {
     throw new Error('Cannot swap between testnet and mainnet')
   }
 

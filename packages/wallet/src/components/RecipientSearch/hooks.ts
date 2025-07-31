@@ -2,6 +2,7 @@ import isEqual from 'lodash/isEqual'
 import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
+import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { uniqueAddressesOnly } from 'uniswap/src/features/address/utils'
@@ -9,7 +10,6 @@ import { useENS } from 'uniswap/src/features/ens/useENS'
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { selectRecipientsByRecency } from 'uniswap/src/features/transactions/selectors'
-import { useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import { useDebounce } from 'utilities/src/time/timing'
@@ -49,7 +49,9 @@ function useValidatedSearchedAddress(
     autocompleteDomain: false,
   })
 
-  const { loading: unitagLoading, unitag } = useUnitagByName(searchTerm)
+  const { data: unitag, isLoading: unitagLoading } = useUnitagsUsernameQuery({
+    params: searchTerm ? { username: searchTerm } : undefined,
+  })
 
   const getRecipients = useCallback((): SearchableRecipient[] => {
     if (!searchTerm) {

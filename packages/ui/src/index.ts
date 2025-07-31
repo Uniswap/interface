@@ -61,6 +61,7 @@ export type {
 export { LinearGradient, type LinearGradientProps } from 'tamagui/linear-gradient'
 export * from 'ui/src/animations'
 export * from './components/InlineCard/InlineCard'
+export * from './components/OverKeyboardContent/OverKeyboardContent'
 export { QRCodeDisplay } from './components/QRCode/QRCodeDisplay'
 export * from './components/SegmentedControl/SegmentedControl'
 export { Unicon } from './components/Unicon'

@@ -101,7 +101,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   const isPermitMismatchUxEnabled = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
   const { data: isDelegationMismatch } = useIsMismatchAccountQuery({ chainId: LIMIT_SUPPORTED_CHAINS[0] })
-  const displayDelegationMismatchUI = isPermitMismatchUxEnabled && isDelegationMismatch?.hasMismatch
+  const displayDelegationMismatchUI = isPermitMismatchUxEnabled && isDelegationMismatch
 
   const [displayDelegationMismatchModal, setDisplayDelegationMismatchModal] = useState(false)
 

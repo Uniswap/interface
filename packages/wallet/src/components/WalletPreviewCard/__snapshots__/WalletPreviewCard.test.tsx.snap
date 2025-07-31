@@ -69,12 +69,6 @@ exports[`renders wallet preview card 1`] = `
         {
           "alignContent": "center",
           "alignItems": "center",
-          "color": {
-            "dynamic": {
-              "dark": "#FFFFFF",
-              "light": "#222222",
-            },
-          },
           "flex": 1,
           "flexDirection": "row",
           "justifyContent": "space-between",

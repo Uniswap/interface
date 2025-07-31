@@ -72,4 +72,5 @@ export const BNB_CHAIN_INFO = {
     decimals: 18,
     address: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
   },
+  tradingApiPollingIntervalMs: 200,
 } as const satisfies UniverseChainInfo

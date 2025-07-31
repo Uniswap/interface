@@ -1,4 +1,5 @@
-import { GetProps, Text, styled } from 'tamagui'
+import type { GetProps } from 'tamagui'
+import { Text, styled } from 'tamagui'
 import { variantEmphasisHash } from 'ui/src/components/buttons/Button/components/CustomButtonText/variantEmphasisHash'
 import { buttonStyledContext, lineHeights } from 'ui/src/components/buttons/Button/constants'
 import type { ButtonEmphasis, ButtonVariantProps } from 'ui/src/components/buttons/Button/types'
@@ -15,7 +16,7 @@ function createSizeVariant({
   lineHeightValue: string | number
 }) {
   return (
-    size: NonNullable<ButtonVariantProps['size']>,
+    _size: NonNullable<ButtonVariantProps['size']>,
     context: { props: Record<string, unknown> },
   ): Record<string, unknown> => {
     const baseStyles = {
@@ -24,6 +25,7 @@ function createSizeVariant({
     }
 
     const lineHeightDisabled = context.props['line-height-disabled']
+
     if (lineHeightDisabled === 'true') {
       return baseStyles
     }

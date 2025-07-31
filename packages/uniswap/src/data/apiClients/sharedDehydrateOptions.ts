@@ -19,6 +19,10 @@ export const sharedDehydrateOptions: React.ComponentProps<
       return false
     }
 
+    if (query.queryKey.includes(ReactQueryCacheKey.TradeService)) {
+      return false
+    }
+
     return defaultShouldDehydrateQuery(query)
   },
 }

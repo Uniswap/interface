@@ -152,7 +152,7 @@ exports[`StatusIcon > with account > renders children in correct order 1`] = `
     data-testid="MiniIcon"
   >
     <img
-      alt="undefined icon"
+      alt="MetaMask icon"
       class="c4"
       src="/src/assets/wallets/metamask-icon.svg"
     />

@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { SUPPORTED_CHAIN_IDS, SUPPORTED_TESTNET_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   chainIdToHexadecimalString,
@@ -117,10 +117,11 @@ describe('hexadecimalStringToInt', () => {
 
 describe('getEnabledChains', () => {
   it('returns all mainnet chains', () => {
-    expect(getEnabledChains({ isTestnetModeEnabled: false, featureFlaggedChainIds: SUPPORTED_CHAIN_IDS })).toEqual({
+    expect(getEnabledChains({ isTestnetModeEnabled: false, featureFlaggedChainIds: ALL_CHAIN_IDS })).toEqual({
       chains: [
         UniverseChainId.Mainnet,
         UniverseChainId.Unichain,
+        UniverseChainId.Solana,
         UniverseChainId.Polygon,
         UniverseChainId.ArbitrumOne,
         UniverseChainId.Optimism,
@@ -137,6 +138,7 @@ describe('getEnabledChains', () => {
       gqlChains: [
         Chain.Ethereum,
         Chain.Unichain,
+        Chain.Solana,
         Chain.Polygon,
         Chain.Arbitrum,
         Chain.Optimism,
@@ -154,6 +156,7 @@ describe('getEnabledChains', () => {
       isTestnetModeEnabled: false,
     })
   })
+
   it('returns feature flagged chains', () => {
     expect(
       getEnabledChains({
@@ -167,17 +170,54 @@ describe('getEnabledChains', () => {
       isTestnetModeEnabled: false,
     })
   })
+
   it('returns testnet chains', () => {
     expect(
       getEnabledChains({
         isTestnetModeEnabled: true,
-        featureFlaggedChainIds: SUPPORTED_TESTNET_CHAIN_IDS,
+        featureFlaggedChainIds: ALL_CHAIN_IDS,
       }),
     ).toEqual({
       chains: [UniverseChainId.Sepolia, UniverseChainId.UnichainSepolia, UniverseChainId.MonadTestnet],
       gqlChains: [Chain.EthereumSepolia, Chain.AstrochainSepolia, Chain.MonadTestnet],
       defaultChainId: UniverseChainId.Sepolia,
       isTestnetModeEnabled: true,
+    })
+  })
+
+  it('returns both mainnet and testnet chains when includeTestnets is true', () => {
+    expect(
+      getEnabledChains({
+        includeTestnets: true,
+        isTestnetModeEnabled: false,
+        featureFlaggedChainIds: [
+          UniverseChainId.Mainnet,
+          UniverseChainId.Unichain,
+          UniverseChainId.Base,
+          UniverseChainId.Sepolia,
+          UniverseChainId.UnichainSepolia,
+          UniverseChainId.MonadTestnet,
+        ],
+      }),
+    ).toEqual({
+      chains: [
+        UniverseChainId.Mainnet,
+        UniverseChainId.Unichain,
+        UniverseChainId.Base,
+        UniverseChainId.Sepolia,
+        UniverseChainId.UnichainSepolia,
+        UniverseChainId.MonadTestnet,
+      ],
+      gqlChains: [
+        Chain.Ethereum,
+        Chain.Unichain,
+        Chain.Base,
+        Chain.EthereumSepolia,
+        Chain.AstrochainSepolia,
+        Chain.MonadTestnet,
+      ],
+      defaultChainId: UniverseChainId.Mainnet,
+      isTestnetModeEnabled: false,
     })
   })
 })

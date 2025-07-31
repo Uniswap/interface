@@ -12,7 +12,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import i18n from 'uniswap/src/i18n'
 
-const CreatePosition = lazy(() => import('pages/Pool/Positions/create/CreatePosition'))
+const CreatePosition = lazy(() => import('pages/CreatePosition/CreatePosition'))
 const AddLiquidityV3WithTokenRedirects = lazy(() => import('pages/AddLiquidityV3/redirects'))
 const AddLiquidityV2WithTokenRedirects = lazy(() => import('pages/AddLiquidityV2/redirects'))
 const RedirectExplore = lazy(() => import('pages/Explore/redirects'))
@@ -20,7 +20,7 @@ const MigrateV2 = lazy(() => import('pages/MigrateV2'))
 const MigrateV2Pair = lazy(() => import('pages/MigrateV2/MigrateV2Pair'))
 const MigrateV3 = lazy(() => import('pages/MigrateV3'))
 const NotFound = lazy(() => import('pages/NotFound'))
-const Pool = lazy(() => import('pages/Pool'))
+const Pool = lazy(() => import('pages/Positions'))
 const LegacyPoolRedirects = lazy(() =>
   import('pages/LegacyPool/redirects').then((module) => ({ default: module.LegacyPoolRedirects })),
 )
@@ -33,8 +33,8 @@ const LegacyPositionPageRedirects = lazy(() =>
 const RemoveLiquidityV2WithTokenRedirects = lazy(() =>
   import('pages/LegacyPool/redirects').then((module) => ({ default: module.RemoveLiquidityV2WithTokenRedirects })),
 )
-const PositionPage = lazy(() => import('pages/Pool/Positions/PositionPage'))
-const V2PositionPage = lazy(() => import('pages/Pool/Positions/V2PositionPage'))
+const PositionPage = lazy(() => import('pages/Positions/PositionPage'))
+const V2PositionPage = lazy(() => import('pages/Positions/V2PositionPage'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 const ExtensionPasskeyAuthPopUp = lazy(() => import('pages/ExtensionPasskeyAuthPopUp'))

@@ -89,37 +89,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const isDarkMode = useIsDarkMode()
-  const [value, setValue] = useState('')
-  const [showTokenSelector, setShowTokenSelector] = useState(false)
-  const inputRef = useRef<FiatOnRampAmountSectionRef>(null)
-  const [selectingCountry, setSelectingCountry] = useState(false)
-  const [decimalPadReady, setDecimalPadReady] = useState(false)
-  const decimalPadRef = useRef<DecimalPadInputRef>(null)
-  const selectionRef = useRef<TextInputProps['selection']>()
-  const valueRef = useRef<string>('')
-  const amountUpdatedTimeRef = useRef<number>(0)
-
-  const isShortMobileDevice = useIsShortMobileDevice()
-  const { isSheetReady } = useBottomSheetContext()
-
-  // passed to memo(...) component
-  const onDecimalPadReady = useCallback(() => setDecimalPadReady(true), [])
-
-  // passed to memo(...) component
-  const onDecimalPadTriggerInputShake = useCallback(() => {
-    inputRef.current?.triggerShakeAnimation()
-  }, [inputRef])
-
-  // passed to memo(...) component
-  const resetSelection = useCallback(({ start, end }: { start: number; end?: number }): void => {
-    selectionRef.current = { start, end }
-    if (!isWeb && inputRef.current) {
-      setTimeout(() => {
-        inputRef.current?.textInputRef.current?.setNativeProps({ selection: { start, end } })
-      }, 0)
-    }
-  }, [])
-
   const {
     selectedQuote,
     setSelectedQuote,
@@ -141,7 +110,43 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     isTokenInputMode,
     setIsTokenInputMode,
     externalTransactionIdSuffix,
+    moonpayOnly,
+    moonpayCurrencyCode,
   } = useFiatOnRampContext()
+
+  const [showTokenSelector, setShowTokenSelector] = useState(false)
+  const inputRef = useRef<FiatOnRampAmountSectionRef>(null)
+  const [selectingCountry, setSelectingCountry] = useState(false)
+  const [decimalPadReady, setDecimalPadReady] = useState(false)
+  const decimalPadRef = useRef<DecimalPadInputRef>(null)
+  const selectionRef = useRef<TextInputProps['selection']>()
+  const amountUpdatedTimeRef = useRef<number>(0)
+
+  // Initialize value state with prefilled amount if available
+  const initialValue = isTokenInputMode ? tokenAmount?.toString() ?? '' : fiatAmount?.toString() ?? ''
+  const [value, setValue] = useState(initialValue)
+  const valueRef = useRef<string>(initialValue)
+
+  const isShortMobileDevice = useIsShortMobileDevice()
+  const { isSheetReady } = useBottomSheetContext()
+
+  // passed to memo(...) component
+  const onDecimalPadReady = useCallback(() => setDecimalPadReady(true), [])
+
+  // passed to memo(...) component
+  const onDecimalPadTriggerInputShake = useCallback(() => {
+    inputRef.current?.triggerShakeAnimation()
+  }, [inputRef])
+
+  // passed to memo(...) component
+  const resetSelection = useCallback(({ start, end }: { start: number; end?: number }): void => {
+    selectionRef.current = { start, end }
+    if (!isWeb && inputRef.current) {
+      setTimeout(() => {
+        inputRef.current?.textInputRef.current?.setNativeProps({ selection: { start, end } })
+      }, 0)
+    }
+  }, [])
 
   const { appFiatCurrencySupportedInMeld, meldSupportedFiatCurrency, supportedFiatCurrencies } =
     useMeldFiatCurrencySupportInfo({
@@ -240,29 +245,43 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     }
   }, [quotes, isDarkMode])
 
-  const prevQuotes = usePrevious(quotes)
+  const filteredQuotes = useMemo(() => {
+    if (!quotes) {
+      return undefined
+    }
+
+    // In MoonPay exclusive mode, only show MoonPay quotes if one exists
+    if (moonpayOnly) {
+      const moonpayQuotes = quotes.filter((quote) => quote.serviceProviderDetails.serviceProvider === 'MOONPAY')
+      return moonpayQuotes.length > 0 ? moonpayQuotes : quotes
+    }
+
+    return quotes
+  }, [quotes, moonpayOnly])
+
+  const prevQuotes = usePrevious(filteredQuotes)
   useEffect(() => {
-    if (quotes && (!selectedQuote || prevQuotes !== quotes)) {
-      const { quote, type } = selectInitialQuote(quotes)
+    if (filteredQuotes && (!selectedQuote || prevQuotes !== filteredQuotes)) {
+      const { quote, type } = selectInitialQuote(filteredQuotes)
       if (!quote) {
         return
       }
       if (type === InitialQuoteSelection.MostRecent) {
-        const otherQuotes = quotes.filter((item) => item !== quote)
+        const otherQuotes = filteredQuotes.filter((item) => item !== quote)
         setQuotesSections([{ data: [quote], type }, ...(otherQuotes.length ? [{ data: otherQuotes }] : [])])
       } else {
-        setQuotesSections([{ data: quotes, type }])
+        setQuotesSections([{ data: filteredQuotes, type }])
       }
       setSelectedQuote(quote)
     }
-  }, [prevQuotes, quotes, selectedQuote, setQuotesSections, setSelectedQuote, t])
+  }, [prevQuotes, filteredQuotes, selectedQuote, setQuotesSections, setSelectedQuote, t])
 
   useEffect(() => {
-    if (!quotes && (quotesError || !fiatAmount)) {
+    if (!filteredQuotes && (quotesError || !fiatAmount)) {
       setQuotesSections(undefined)
       setSelectedQuote(undefined)
     }
-  }, [quotesError, quotes, setQuotesSections, setSelectedQuote, fiatAmount])
+  }, [quotesError, filteredQuotes, setQuotesSections, setSelectedQuote, fiatAmount])
 
   const onSelectCountry: ComponentProps<typeof FiatOnRampCountryListModal>['onSelectCountry'] = (country): void => {
     dispatch(
@@ -353,7 +372,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   }, [isOffRamp, isTokenInputMode, resetSelection, selectedQuote, setIsTokenInputMode])
 
   const onContinue = (): void => {
-    if (quotes && quoteCurrency.currencyInfo?.currency) {
+    if (filteredQuotes && quoteCurrency.currencyInfo?.currency) {
       setBaseCurrencyInfo(meldSupportedFiatCurrency)
       navigation.navigate(FiatOnRampScreens.ServiceProviders)
     }
@@ -369,6 +388,18 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     countryCode,
     rampDirection: isOffRamp ? RampDirection.OFFRAMP : RampDirection.ONRAMP,
   })
+
+  useEffect(() => {
+    if (!moonpayCurrencyCode || !supportedTokensList) {
+      return
+    }
+
+    const matchingCurrency = supportedTokensList.find(
+      (token) => token.meldCurrencyCode?.toLowerCase() === moonpayCurrencyCode.toLowerCase(),
+    )
+
+    matchingCurrency && setQuoteCurrency(matchingCurrency)
+  }, [moonpayCurrencyCode, supportedTokensList, setQuoteCurrency])
 
   const onSelectCurrency = (currency: FORCurrencyOrBalance): void => {
     if (isTokenInputMode) {
@@ -408,14 +439,14 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const notAvailableInThisRegion =
     supportedFiatCurrencies?.length === 0 ||
     (!supportedTokensLoading && supportedTokensList?.length === 0) ||
-    (US_STATES_WITH_RESTRICTIONS.includes(countryState || '') && quotes?.length === 0)
+    (US_STATES_WITH_RESTRICTIONS.includes(countryState || '') && filteredQuotes?.length === 0)
 
   const { errorText } = useParseFiatOnRampError({
     error: !notAvailableInThisRegion && quotesError,
     currencyCode: meldSupportedFiatCurrency.code,
     tokenCode: quoteCurrency.currencyInfo?.currency.symbol,
     balanceError: exceedsBalanceError,
-    noQuotesReturned: quotes?.length === 0,
+    noQuotesReturned: filteredQuotes?.length === 0,
   })
 
   const onSelectionChange = useCallback(

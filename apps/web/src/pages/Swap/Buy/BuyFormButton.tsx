@@ -1,8 +1,8 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccount } from 'hooks/useAccount'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { useTranslation } from 'react-i18next'
 import { Button, useIsShortMobileDevice, type ButtonProps } from 'ui/src'
-import { useAccount } from 'wagmi'
 
 interface BuyFormButtonProps {
   forceDisabled?: boolean

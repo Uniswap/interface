@@ -2,8 +2,9 @@ import { Pool, SearchTokensResponse, SearchType } from '@uniswap/client-search/d
 import { useMemo } from 'react'
 import { searchPoolToPoolSearchResult, useSearchTokensAndPoolsQuery } from 'uniswap/src/data/rest/searchTokensAndPools'
 import { GqlResult } from 'uniswap/src/data/types'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { NUMBER_OF_RESULTS_LONG } from 'uniswap/src/features/search/SearchModal/constants'
 import { PoolSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -19,15 +20,17 @@ export function useSearchPools({
   skip: boolean
   size?: number
 }): GqlResult<PoolSearchResult[]> {
+  const { chains: enabledChainIds } = useEnabledChains({ platform: Platform.EVM })
+
   const variables = useMemo(
     () => ({
       searchQuery: searchQuery ?? undefined,
-      chainIds: chainFilter ? [chainFilter] : SUPPORTED_CHAIN_IDS,
+      chainIds: chainFilter ? [chainFilter] : enabledChainIds,
       searchType: SearchType.POOL,
       page: 1,
       size,
     }),
-    [searchQuery, chainFilter, size],
+    [searchQuery, chainFilter, size, enabledChainIds],
   )
 
   const poolSelect = useEvent((response: SearchTokensResponse): PoolSearchResult[] => {

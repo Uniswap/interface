@@ -22,10 +22,24 @@ export type SwapFormState = {
   preselectAsset?: boolean
   isSubmitting: boolean
   showPendingUI: boolean
+  isConfirmed: boolean
   hideFooter?: boolean
   hideSettings?: boolean
   prefilledCurrencies?: TradeableAsset[]
   isPrefilled?: boolean
+  // this (change in native asset) tells us if any transaction was completed by the user
+  // used because eth_balance is flashblocks aware but eth_call (ie token balance fetches) are not
+  preSwapNativeAssetAmountRaw?: string
+  preSwapDataPreserved?: {
+    currencyId: string
+    outputBalanceRaw: string
+    /** use `currencyAmounts` for business logic; this one is not cleared when the swap is completed **/
+    preSwapOutputAmountEstimateExact: string
+  }
+  postSwapDataPreserved?: {
+    currencyId: string
+    outputBalanceRaw: string
+  }
 }
 
 type SwapFormMethods = {

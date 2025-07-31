@@ -8,7 +8,8 @@ import {
   UploadFrequency,
 } from '@datadog/mobile-react-native'
 import { ErrorEventMapper } from '@datadog/mobile-react-native/lib/typescript/rum/eventMappers/errorEventMapper'
-import { PropsWithChildren, default as React, useEffect } from 'react'
+import { PropsWithChildren, default as React, useEffect, useState } from 'react'
+import { DatadogContext } from 'src/features/datadog/DatadogContext'
 import { config } from 'uniswap/src/config'
 import {
   DatadogIgnoredErrorsConfigKey,
@@ -102,6 +103,8 @@ export function DatadogProviderWrapper({
   children,
   sessionSampleRate,
 }: PropsWithChildren<{ sessionSampleRate: number | undefined }>): JSX.Element {
+  const [isInitialized, setInitialized] = useState(false)
+
   useEffect(() => {
     if ((datadogEnabledBuild || config.isE2ETest) && sessionSampleRate !== undefined) {
       initializeDatadog(sessionSampleRate).catch(() => undefined)
@@ -113,15 +116,18 @@ export function DatadogProviderWrapper({
   }
   logger.setDatadogEnabled(true)
   return (
-    <DatadogProvider
-      configuration={datadogAutoInstrumentation}
-      onInitialization={async () => {
-        const sessionId = await DdRum.getCurrentSessionId()
-        // we do not want to log anything if session is not sampled
-        logger.setDatadogEnabled(sessionId !== undefined)
-      }}
-    >
-      {children}
-    </DatadogProvider>
+    <DatadogContext.Provider value={{ isInitialized, setInitialized }}>
+      <DatadogProvider
+        configuration={datadogAutoInstrumentation}
+        onInitialization={async () => {
+          const sessionId = await DdRum.getCurrentSessionId()
+          // we do not want to log anything if session is not sampled
+          logger.setDatadogEnabled(sessionId !== undefined)
+          setInitialized(true)
+        }}
+      >
+        {children}
+      </DatadogProvider>
+    </DatadogContext.Provider>
   )
 }

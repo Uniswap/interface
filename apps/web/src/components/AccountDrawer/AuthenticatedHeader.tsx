@@ -1,6 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
+import { MultiBlockchainAddressDisplay } from 'components/AccountDetails/MultiBlockchainAddressDisplay'
 import { ActionTile } from 'components/AccountDrawer/ActionTile'
 import { DownloadGraduatedWalletCard } from 'components/AccountDrawer/DownloadGraduatedWalletCard'
 import IconButton, { IconWithConfirmTextButton } from 'components/AccountDrawer/IconButton'
@@ -38,6 +38,7 @@ import AnimatedNumber, {
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { useENSName } from 'uniswap/src/features/ens/api'
@@ -50,7 +51,7 @@ import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { useHasAccountMismatchOnAnyChain } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -58,10 +59,11 @@ import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
-  const { disconnect } = useDisconnect()
+  const disconnect = useDisconnect()
   const { data: ENSName } = useENSName(account)
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const wallet = useWallet()
 
   const [modalState, setModalState] = useAtom(miniPortfolioModalStateAtom)
 
@@ -126,7 +128,9 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const shouldShowDelegationMismatch = isPermitMismatchUxEnabled && isDelegationMismatch
   const [displayDelegationMismatchModal, setDisplayDelegationMismatchModal] = useState(false)
 
-  const { unitag } = useUnitagByAddress(account)
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: account ? { address: account } : undefined,
+  })
   const showAddress = ENSName || unitag?.username
 
   const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' }) ?? '-'
@@ -164,9 +168,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           </Flex>
         </Flex>
         <Flex gap="$spacing4">
-          <Text variant="subheading1" color="$neutral1">
-            <AddressDisplay enableCopyAddress={!showAddress} address={account} />
-          </Text>
+          <MultiBlockchainAddressDisplay enableCopyAddress={!showAddress} wallet={wallet} />
           {showAddress && (
             <CopyHelper iconSize={14} iconPosition="right" toCopy={account}>
               <Text variant="body3" color="neutral3" data-testid={TestID.AddressDisplayCopyHelper}>

@@ -14,7 +14,7 @@ import { ShareArrow } from 'ui/src/components/icons/ShareArrow'
 import { ContextMenu, ContextMenuProps, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
-import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSelectHasTokenFavorited } from 'uniswap/src/features/favorites/useSelectHasTokenFavorited'
 import { useToggleFavoriteCallback } from 'uniswap/src/features/favorites/useToggleFavoriteCallback'
@@ -22,6 +22,7 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { currencyAddress, currencyId, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
@@ -62,7 +63,7 @@ function _TokenOptionItemContextMenu({
   actions,
 }: TokenOptionItemContextMenuProps): JSX.Element {
   const { t } = useTranslation()
-  const account = useAccountMeta()
+  const account = useWallet().evmAccount
   const { navigateToTokenDetails, navigateToSwapFlow, navigateToSendFlow, navigateToReceive, handleShareToken } =
     useUniswapContext()
   const dispatch = useDispatch()
@@ -103,7 +104,7 @@ function _TokenOptionItemContextMenu({
   }, [dispatch, currency, closeMenu])
 
   const isFavoriteToken = useSelectHasTokenFavorited(id)
-  const toggleFavorite = useToggleFavoriteCallback(id, isFavoriteToken)
+  const toggleFavorite = useToggleFavoriteCallback({ id, tokenName: currency.name, isFavoriteToken })
   const onToggleFavorite = useCallback(() => {
     toggleFavorite()
     closeMenu()

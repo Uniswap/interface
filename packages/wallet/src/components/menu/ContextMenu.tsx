@@ -14,6 +14,7 @@ type ContextMenuProps = {
   menuOptions: MenuContentItem[]
   itemId: string
   menuStyleProps?: FlexProps
+  menuContainerStyleProps?: FlexProps
   onLeftClick?: boolean
   closeOnClick?: boolean
   hoverable?: boolean
@@ -29,6 +30,7 @@ export function ContextMenu({
   children,
   menuOptions,
   menuStyleProps,
+  menuContainerStyleProps,
   itemId,
   onLeftClick = false,
   closeOnClick = false,
@@ -117,6 +119,7 @@ export function ContextMenu({
         exitStyle={{ y: -10, opacity: 0 }}
         p="$none"
         {...contentShadowProps}
+        {...menuContainerStyleProps}
       >
         <div>
           <MenuContent

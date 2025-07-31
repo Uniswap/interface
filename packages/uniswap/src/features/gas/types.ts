@@ -1,5 +1,6 @@
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { Prettify } from 'viem'
 
 export type TransactionLegacyFeeParams = {
   gasPrice: string
@@ -58,7 +59,7 @@ export type GasFeeResult = {
   gasEstimate?: GasEstimate
 }
 
-export type ValidatedGasFeeResult = GasFeeResult & { value: string; error: null }
+export type ValidatedGasFeeResult = Prettify<GasFeeResult & { value: string; error: null }>
 export function validateGasFeeResult(gasFee: GasFeeResult): ValidatedGasFeeResult | undefined {
   if (gasFee.value === undefined || gasFee.error) {
     return undefined

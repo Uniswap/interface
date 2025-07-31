@@ -202,7 +202,7 @@ export class WebKeyring implements IKeyring {
   }
 
   /**
-   * Changes the password by re-encrypting the mnemonic with a new password
+   * Changes the password by re-encrypting the mnemonic and all stored private keys with a new password
    * @param newPassword new password to encrypt with
    * @returns true if successful
    */
@@ -214,8 +214,17 @@ export class WebKeyring implements IKeyring {
         throw new Error(`${ErrorType.RetrieveMnemonicError}: Attempted to change password, but storage is empty.`)
       }
 
+      // Get all addresses with stored private keys and decrypt them BEFORE changing password
+      const privateKeyAddresses = await this.getAddressesForStoredPrivateKeys()
+      const privateKeyPairs = await this.decryptPrivateKeys(privateKeyAddresses)
+
+      // Re-encrypt the mnemonic with new password (this updates the session encryption key)
       const mnemonic = await this.retrieveMnemonicUnlocked(firstMnemonicId)
       await this.importMnemonic(mnemonic, newPassword, true)
+
+      // Now re-encrypt all private keys with the new encryption key (from session)
+      await this.encryptAndStorePrivateKeys(privateKeyPairs)
+
       return true
     } catch (err) {
       logger.error(err, { tags: { file: 'Keyring.web.ts', function: 'changePassword' } })
@@ -513,6 +522,79 @@ export class WebKeyring implements IKeyring {
       return address
     } catch (e) {
       throw new Error(ErrorType.StoreMnemonicError + `: ${e}`)
+    }
+  }
+
+  /**
+   * Decrypts all private keys for the given addresses using the current session encryption key
+   * @param addresses array of addresses to decrypt private keys for
+   * @returns array of address/privateKey pairs
+   */
+  private async decryptPrivateKeys(addresses: string[]): Promise<{ address: string; privateKey: string }[]> {
+    const privateKeyPairs: { address: string; privateKey: string }[] = []
+
+    for (const address of addresses) {
+      try {
+        const privateKey = await this.retrievePrivateKey(address)
+        if (privateKey) {
+          privateKeyPairs.push({ address, privateKey })
+        }
+      } catch (error) {
+        logger.error(error, {
+          tags: { file: 'Keyring.web.ts', function: 'decryptPrivateKeys' },
+          extra: { address },
+        })
+        throw new Error(`Failed to decrypt private key for address ${address}: ${error}`)
+      }
+    }
+
+    return privateKeyPairs
+  }
+
+  /**
+   * Encrypts private keys with the current session encryption key
+   * @param privateKeyPairs array of address/privateKey pairs to re-encrypt
+   */
+  private async encryptAndStorePrivateKeys(privateKeyPairs: { address: string; privateKey: string }[]): Promise<void> {
+    if (privateKeyPairs.length === 0) {
+      return
+    }
+
+    // Get the current encryption key from session (should be the new one after password change)
+    const encryptionKeyString = await this.session.getItem(ENCRYPTION_KEY_STORAGE_KEY)
+    if (!encryptionKeyString) {
+      throw new Error('No encryption key found in session after password change')
+    }
+    const encryptionKey = await convertBase64SeedToCryptoKey(encryptionKeyString)
+
+    // Re-encrypt each private key with the new encryption key
+    for (const { address, privateKey } of privateKeyPairs) {
+      try {
+        // Create new secret payload and encrypt with new key
+        const secretPayload = await createEmptySecretPayload()
+        const secretPayloadWithCiphertext = await addEncryptedCiphertextToSecretPayload({
+          secretPayload,
+          plaintext: privateKey,
+          encryptionKey,
+          additionalData: address,
+        })
+
+        // Store the re-encrypted private key
+        const privateKeyStorageKey = this.keyForPrivateKey(address)
+        await this.storage.setItem(privateKeyStorageKey, JSON.stringify(secretPayloadWithCiphertext))
+
+        logger.debug(
+          'Keyring.web',
+          'reencryptDecryptedPrivateKeys',
+          `Successfully re-encrypted private key for address ${address}`,
+        )
+      } catch (error) {
+        logger.error(error, {
+          tags: { file: 'Keyring.web.ts', function: 'reencryptDecryptedPrivateKeys' },
+          extra: { address },
+        })
+        throw new Error(`Failed to re-encrypt private key for address ${address}: ${error}`)
+      }
     }
   }
 

@@ -34,6 +34,7 @@ type TokenBalanceListContextState = {
   rows: Array<TokenBalanceListRow>
   setHiddenTokensExpanded: Dispatch<SetStateAction<boolean>>
   onPressToken?: (currencyId: CurrencyId) => void
+  owner: Address
 }
 
 export const TokenBalanceListContext = createContext<TokenBalanceListContextState | undefined>(undefined)
@@ -122,6 +123,7 @@ export function TokenBalanceListContextProvider({
       refetch,
       rows,
       setHiddenTokensExpanded,
+      owner,
     }),
     [
       balancesById,
@@ -132,6 +134,7 @@ export function TokenBalanceListContextProvider({
       onPressToken,
       refetch,
       rows,
+      owner,
     ],
   )
 

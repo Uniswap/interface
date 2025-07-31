@@ -9,15 +9,15 @@ import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactio
 import {
   TransactionOriginType,
   TransactionStatus,
-  TransactionType as UniswapTransactionType,
+  TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
-type OnChainSwapTransactionType = UniswapTransactionType.Swap | UniswapTransactionType.Bridge
+type OnChainSwapTransactionType = TransactionType.Swap | TransactionType.Bridge
 const TRANSACTION_TYPE_TO_SWAP_ROUTING: Record<OnChainSwapTransactionType, SwapRouting> = {
-  [UniswapTransactionType.Swap]: 'classic',
-  [UniswapTransactionType.Bridge]: 'bridge',
+  [TransactionType.Swap]: 'classic',
+  [TransactionType.Bridge]: 'bridge',
 }
 
 export function logSwapFinalized({
@@ -61,7 +61,7 @@ export function logSwapFinalized({
   })
 
   // log failed swaps to datadog
-  if (status === TransactionStatus.Failed && type === UniswapTransactionType.Swap) {
+  if (status === TransactionStatus.Failed && type === TransactionType.Swap) {
     logger.warn('swapFlowLoggers', 'logSwapFinalized', 'Onchain Swap Failure', {
       hash,
       chainLabel: getChainLabel(chainInId),

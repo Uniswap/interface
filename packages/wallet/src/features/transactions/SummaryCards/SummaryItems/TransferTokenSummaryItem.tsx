@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ElementAfterText } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -12,7 +13,6 @@ import {
   TransactionDetails,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -87,7 +87,9 @@ export function TransferTokenSummaryItem({
 
   // Search for matching ENS
   const { name: ensName } = useENS({ nameOrAddress: otherAddress, autocompleteDomain: true })
-  const { unitag } = useUnitagByAddress(otherAddress)
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: otherAddress ? { address: otherAddress } : undefined,
+  })
   const personDisplayName = unitag?.username ?? ensName ?? shortenAddress(otherAddress)
 
   const tokenAmountWithSymbol = isCurrency

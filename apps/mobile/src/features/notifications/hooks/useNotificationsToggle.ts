@@ -53,11 +53,10 @@ export function useSettingNotificationToggle({
   onToggle?: (enabled: boolean) => void
 }): ReturnType<typeof useBaseNotificationToggle> {
   const dispatch = useDispatch()
-  const { generalUpdatesEnabled, priceAlertsEnabled } = useSelector(selectAllPushNotificationSettings)
+  const { generalUpdatesEnabled } = useSelector(selectAllPushNotificationSettings)
 
   const permissionEnabledMap: Record<NotifSettingType, boolean> = {
     [NotifSettingType.GeneralUpdates]: generalUpdatesEnabled,
-    [NotifSettingType.PriceAlerts]: priceAlertsEnabled,
   }
   const isAppPermissionEnabled = permissionEnabledMap[type]
 

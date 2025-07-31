@@ -2,7 +2,7 @@ import { useAccount } from 'hooks/useAccount'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useEffect } from 'react'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useAccountEffect, useEnsName } from 'wagmi'
 
@@ -15,7 +15,9 @@ export function useAccountIdentifier() {
   const [recentAccountIdentifierMap, updateRecentAccountIdentifierMap] = useAtom(recentAccountIdentifierMapAtom)
   const account = useAccount()
 
-  const { unitag: unitagResponse } = useUnitagByAddress(account.address)
+  const { data: unitagResponse } = useUnitagsAddressQuery({
+    params: account.address ? { address: account.address } : undefined,
+  })
   const { data: ensNameResponse } = useEnsName({ address: account.address })
 
   // Clear the `recent` account identifier when the user disconnects

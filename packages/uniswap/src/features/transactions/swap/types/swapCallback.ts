@@ -1,13 +1,13 @@
 import { CurrencyAmount, Currency } from "@uniswap/sdk-core"
 import type { PresetPercentage } from "uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types";
-import { SignerMnemonicAccountMeta } from "uniswap/src/features/accounts/types"
 import { TransactionStep } from "uniswap/src/features/transactions/steps/types";
 import { ValidatedSwapTxContext } from "uniswap/src/features/transactions/swap/types/swapTxAndGasInfo"
+import { SignerMnemonicAccountDetails } from "uniswap/src/features/wallet/types/AccountDetails";
 
 export type SetCurrentStepFn = (args: { step: TransactionStep; accepted: boolean }) => void
 
 export interface SwapCallbackParams {
-  account: SignerMnemonicAccountMeta
+  account: SignerMnemonicAccountDetails
   swapTxContext: ValidatedSwapTxContext
   currencyInAmountUSD: Maybe<CurrencyAmount<Currency>>
   currencyOutAmountUSD: Maybe<CurrencyAmount<Currency>>

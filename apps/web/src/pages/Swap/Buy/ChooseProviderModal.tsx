@@ -24,7 +24,7 @@ interface ChooseProviderModal {
 
 function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
   const { derivedBuyFormInfo, buyFormState } = useBuyFormContext()
-  const { quoteCurrency, selectedCountry, inputAmount, inputInFiat, rampDirection } = buyFormState
+  const { quoteCurrency, selectedCountry, inputAmount, inputInFiat, rampDirection, moonpayOnly } = buyFormState
   const { quotes, meldSupportedFiatCurrency, amountOut } = derivedBuyFormInfo
   const [errorProvider, setErrorProvider] = useState<FORServiceProvider>()
   const [connectedProvider, setConnectedProvider] = useState<FORServiceProvider>()
@@ -40,12 +40,21 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
     if (!quotes || !quotes.quotes) {
       return [undefined, []] as const
     }
+    if (moonpayOnly) {
+      // Force moonpay when the user has arrived from an ad and there's a moonpay quote available
+      if (quotes.quotes.some((q: FORQuote) => q.serviceProviderDetails.serviceProvider.toLowerCase() === 'moonpay')) {
+        return [
+          undefined,
+          quotes.quotes.filter((q: FORQuote) => q.serviceProviderDetails.serviceProvider.toLowerCase() === 'moonpay'),
+        ]
+      }
+    }
     const mostRecent = quotes.quotes.find((q: FORQuote) => q.isMostRecentlyUsedProvider)
     if (mostRecent) {
       return [mostRecent, quotes.quotes.filter((q: FORQuote) => !q.isMostRecentlyUsedProvider)] as const
     }
     return [undefined, quotes.quotes] as const
-  }, [quotes])
+  }, [moonpayOnly, quotes])
 
   const onClose = () => {
     closeModal()

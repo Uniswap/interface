@@ -7,27 +7,20 @@ import {
 } from 'components/Popups/PopupContent'
 import { ToastRegularSimple } from 'components/Popups/ToastRegularSimple'
 import { PopupContent, PopupType, SwitchNetworkAction } from 'components/Popups/types'
-import { useAccount } from 'hooks/useAccount'
 import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export function PopupItem({ content, onClose }: { content: PopupContent; popKey: string; onClose: () => void }) {
   const { t } = useTranslation()
 
-  const { chainId } = useAccount()
-  const supportedChainId = useSupportedChainId(chainId)
-
   switch (content.type) {
     case PopupType.Transaction: {
-      return supportedChainId ? (
-        <TransactionPopupContent hash={content.hash} chainId={supportedChainId} onClose={onClose} />
-      ) : null
+      return <TransactionPopupContent hash={content.hash} onClose={onClose} />
     }
     case PopupType.Order: {
       return <UniswapXOrderPopupContent orderHash={content.orderHash} onClose={onClose} />

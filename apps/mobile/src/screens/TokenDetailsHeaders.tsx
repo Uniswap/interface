@@ -138,7 +138,7 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
           <Ellipsis color={ellipsisColor} size="$icon.16" />
         </Flex>
       </ContextMenu>
-      <TokenDetailsFavoriteButton currencyId={currencyId} />
+      <TokenDetailsFavoriteButton currencyId={currencyId} tokenName={currencyInfo?.currency.name} />
     </AnimatedFlex>
   )
 })

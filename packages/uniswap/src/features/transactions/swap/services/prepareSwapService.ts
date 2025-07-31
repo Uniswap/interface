@@ -1,4 +1,3 @@
-import type { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
@@ -6,6 +5,7 @@ import { TransactionScreen } from 'uniswap/src/features/transactions/components/
 import type { WarningService } from 'uniswap/src/features/transactions/swap/services/warningService'
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import type { logger } from 'utilities/src/logger/logger'
@@ -42,7 +42,7 @@ export function createPrepareSwap(
 
 interface GetActionContext {
   swapRedirectCallback?: SwapRedirectFn
-  activeAccount?: AccountMeta
+  activeAccount?: AccountDetails
   onConnectWallet?: () => void
   isViewOnlyWallet: boolean
   isInterfaceWrap: boolean

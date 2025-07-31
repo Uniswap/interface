@@ -98,6 +98,7 @@ vi.mock('ui/src/assets', () => ({
   SECURITY_SCREEN_BACKGROUND_DARK: 'security-screen-background-dark.png',
   SECURITY_SCREEN_BACKGROUND_LIGHT: 'security-screen-background-light.png',
   DEAD_LUNI: 'dead-luni.png',
+  PASSKEY_ICON: 'passkey.svg',
   UNITAGS_ADRIAN_LIGHT: 'unitags-adrian-light.png',
   UNITAGS_ADRIAN_DARK: 'unitags-adrian-dark.png',
   UNITAGS_ANDREW_LIGHT: 'unitags-andrew-light.png',

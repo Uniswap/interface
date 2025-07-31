@@ -163,11 +163,30 @@ export function sanitizeAddressText(address?: string): Maybe<string> {
   return address?.replace('x', `x${zws}`)
 }
 
-// TODO(WEB-8011): Update areAddressesEqual to take named parameters, and make `platform` required / remove the default (requires updating all callsites)
-// eslint-disable-next-line max-params
-export function areAddressesEqual(a1: Maybe<Address>, a2: Maybe<Address>, platform = Platform.EVM): boolean {
-  const validA1 = getValidAddress({ address: a1, platform })
-  const validA2 = getValidAddress({ address: a2, platform })
+type AddressInput =
+  | {
+      address: Maybe<string>
+      chainId: UniverseChainId
+      platform?: never
+    }
+  | {
+      address: Maybe<string>
+      chainId?: never
+      platform: Platform
+    }
+
+type AreAddressesEqualParams = {
+  addressInput1: AddressInput
+  addressInput2: AddressInput
+}
+
+export function areAddressesEqual(params: AreAddressesEqualParams): boolean {
+  const { addressInput1, addressInput2 } = params
+  const platform1 = addressInput1.platform ?? chainIdToPlatform(addressInput1.chainId)
+  const platform2 = addressInput2.platform ?? chainIdToPlatform(addressInput2.chainId)
+
+  const validA1 = getValidAddress({ address: addressInput1.address, platform: platform1 })
+  const validA2 = getValidAddress({ address: addressInput2.address, platform: platform2 })
   return validA1 !== null && validA2 !== null && validA1 === validA2
 }
 

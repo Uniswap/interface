@@ -25,6 +25,7 @@ interface TokenMenuParams {
   analyticsSection: SectionName
   // token, which are in favorite section would have it defined
   onEditFavorites?: () => void
+  tokenName?: string
 }
 
 // Provide context menu related data for token
@@ -33,6 +34,7 @@ export function useExploreTokenContextMenu({
   chainId,
   analyticsSection,
   onEditFavorites,
+  tokenName,
 }: TokenMenuParams): {
   menuActions: Array<ContextMenuAction & { onPress: () => void }>
   onContextMenuPress: (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => void
@@ -56,7 +58,7 @@ export function useExploreTokenContextMenu({
     handleShareToken({ currencyId })
   }, [currencyId, handleShareToken])
 
-  const toggleFavoriteToken = useToggleFavoriteCallback(currencyId, isFavorited)
+  const toggleFavoriteToken = useToggleFavoriteCallback({ id: currencyId, tokenName, isFavoriteToken: isFavorited })
 
   const onPressSwap = useCallback(() => {
     const swapFormState: TransactionState = {

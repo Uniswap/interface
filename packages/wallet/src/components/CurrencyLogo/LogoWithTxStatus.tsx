@@ -78,6 +78,7 @@ function getLogo(props: LogoWithTxStatusProps): JSX.Element {
   )
 }
 
+/* eslint-disable complexity */
 export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
   const { assetType, txType, txStatus, size, chainId } = props
   const colors = useSporeColors()
@@ -117,6 +118,8 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
       case TransactionType.OnRampTransfer:
       case TransactionType.Receive:
       case TransactionType.NFTMint:
+      case TransactionType.LPIncentivesClaimRewards:
+      case TransactionType.ClaimUni:
         Icon = ArrowDownInCircle
         break
       case TransactionType.Unknown:

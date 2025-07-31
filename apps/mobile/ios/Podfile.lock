@@ -2685,7 +2685,7 @@ PODS:
   - react-native-appsflyer (6.13.1):
     - AppsFlyerFramework (= 6.13.1)
     - React
-  - react-native-compat (2.20.0):
+  - react-native-compat (2.21.4):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -3933,7 +3933,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 9af3695e354816d30d4429992714e0c8cefac25f
   React-microtasksnativemodule: ab4c1c9d4841e71a4116f167a4cd3f8dc1ab50ba
   react-native-appsflyer: 2cc1f96348065fc23e976fc7a27e371789fb349e
-  react-native-compat: a0a1d306b448d2a3668eb337fac87973e5f17c48
+  react-native-compat: 17cc6a63937e3fc291b92250f56ce5e9c0c3aa53
   react-native-context-menu-view: dcec18eb8882e20596dbb75802e7d19cb87dac02
   react-native-get-random-values: 21325b2244dfa6b58878f51f9aa42821e7ba3d06
   react-native-image-picker: 2064a7a43d1e204c3b42ce6d2208df32e881fc9d

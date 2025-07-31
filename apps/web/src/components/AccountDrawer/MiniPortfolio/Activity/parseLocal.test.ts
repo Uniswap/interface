@@ -11,7 +11,7 @@ import {
 } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import type { SignatureDetails } from 'state/signatures/types'
 import { SignatureType } from 'state/signatures/types'
-import { TransactionDetails, TransactionInfo } from 'state/transactions/types'
+import type { TransactionDetails, TransactionInfo } from 'state/transactions/types'
 import { mocked } from 'test-utils/mocked'
 import { act, renderHook } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
@@ -22,14 +22,17 @@ import {
   USDT as MockUSDT,
   nativeOnChain,
 } from 'uniswap/src/constants/tokens'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import {
+import type {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
   TransactionOriginType,
   TransactionStatus,
-  TransactionType as UniswapTransactionType,
+  TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
@@ -48,7 +51,7 @@ function mockSwapInfo({
 }): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
   if (type === MockTradeType.EXACT_INPUT) {
     return {
-      type: UniswapTransactionType.Swap,
+      type: TransactionType.Swap,
       tradeType: MockTradeType.EXACT_INPUT,
       inputCurrencyId: currencyId(inputCurrency),
       inputCurrencyAmountRaw,
@@ -59,7 +62,7 @@ function mockSwapInfo({
     }
   } else {
     return {
-      type: UniswapTransactionType.Swap,
+      type: TransactionType.Swap,
       tradeType: MockTradeType.EXACT_OUTPUT,
       inputCurrencyId: currencyId(inputCurrency),
       expectedInputCurrencyAmountRaw: inputCurrencyAmountRaw,
@@ -102,6 +105,8 @@ function mockCommonFields({
     from: account,
     txHash: hash,
     addedTime: 0,
+    routing: Routing.CLASSIC,
+    options: {},
   }
 }
 
@@ -109,15 +114,24 @@ function mockMultiStatus(info: TransactionInfo, id: string): [TransactionDetails
   // Mocks a transaction with multiple statuses
   return [
     [
-      { info, ...mockCommonFields({ id, status: TransactionStatus.Pending }) } as unknown as TransactionDetails,
+      {
+        typeInfo: info,
+        ...mockCommonFields({ id, status: TransactionStatus.Pending }),
+      } as unknown as TransactionDetails,
       mockChainId,
     ],
     [
-      { info, ...mockCommonFields({ id, status: TransactionStatus.Success }) } as unknown as TransactionDetails,
+      {
+        typeInfo: info,
+        ...mockCommonFields({ id, status: TransactionStatus.Success }),
+      } as unknown as TransactionDetails,
       mockChainId,
     ],
     [
-      { info, ...mockCommonFields({ id, status: TransactionStatus.Failed }) } as unknown as TransactionDetails,
+      {
+        typeInfo: info,
+        ...mockCommonFields({ id, status: TransactionStatus.Failed }),
+      } as unknown as TransactionDetails,
       mockChainId,
     ],
   ]
@@ -127,95 +141,104 @@ vi.mock('../../../../state/transactions/hooks', async () => {
   const actual = await vi.importActual('../../../../state/transactions/hooks')
   return {
     ...actual,
-    useMultichainTransactions: (): [TransactionDetails, number][] => {
-      return [
-        [
-          {
-            info: mockSwapInfo({
+    useMultichainTransactions: (accountAddress?: string): [TransactionDetails, number][] => {
+      // Return transactions for the specified account
+      const mockData: Record<string, [TransactionDetails, number][]> = {
+        [mockAccount1]: [
+          [
+            {
+              typeInfo: mockSwapInfo({
+                type: MockTradeType.EXACT_INPUT,
+                inputCurrency: MockUSDC_MAINNET,
+                inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
+                outputCurrency: MockDAI,
+                outputCurrencyAmountRaw: mockCurrencyAmountRaw,
+              }),
+              ...mockCommonFields({ id: '0x123', account: mockAccount1, status: TransactionStatus.Success }),
+            } as TransactionDetails,
+            mockChainId,
+          ],
+        ],
+        [mockAccount2]: [
+          ...mockMultiStatus(
+            mockSwapInfo({
+              type: MockTradeType.EXACT_OUTPUT,
+              inputCurrency: MockUSDC_MAINNET,
+              inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
+              outputCurrency: MockDAI,
+              outputCurrencyAmountRaw: mockCurrencyAmountRaw,
+            }),
+            '0xswap_exact_input',
+          ),
+          ...mockMultiStatus(
+            mockSwapInfo({
               type: MockTradeType.EXACT_INPUT,
               inputCurrency: MockUSDC_MAINNET,
               inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
               outputCurrency: MockDAI,
               outputCurrencyAmountRaw: mockCurrencyAmountRaw,
             }),
-            ...mockCommonFields({ id: '0x123', account: mockAccount1, status: TransactionStatus.Success }),
-          } as TransactionDetails,
-          mockChainId,
+            '0xswap_exact_output',
+          ),
+          ...mockMultiStatus(
+            {
+              type: TransactionType.Approve,
+              tokenAddress: MockDAI.address,
+              spender: mockSpenderAddress,
+              approvalAmount: mockApprovalAmountRaw,
+            },
+            '0xapproval',
+          ),
+          ...mockMultiStatus(
+            {
+              type: TransactionType.Approve,
+              tokenAddress: MockUSDT.address,
+              spender: mockSpenderAddress,
+              approvalAmount: '0',
+            },
+            '0xrevoke_approval',
+          ),
+          ...mockMultiStatus(
+            {
+              type: TransactionType.Wrap,
+              unwrapped: false,
+              currencyAmountRaw: mockCurrencyAmountRaw,
+            },
+            '0xwrap',
+          ),
+          ...mockMultiStatus(
+            {
+              type: TransactionType.Wrap,
+              unwrapped: true,
+              currencyAmountRaw: mockCurrencyAmountRaw,
+            },
+            '0xunwrap',
+          ),
+          ...mockMultiStatus(
+            {
+              type: TransactionType.CollectFees,
+              currency0Id: currencyId(MockUSDC_MAINNET),
+              currency1Id: currencyId(MockDAI),
+              currency0AmountRaw: mockCurrencyAmountRawUSDC,
+              currency1AmountRaw: mockCurrencyAmountRaw,
+            },
+            '0xcollect_fees',
+          ),
+          ...mockMultiStatus(
+            {
+              type: TransactionType.MigrateLiquidityV2ToV3,
+              baseCurrencyId: currencyId(MockUSDC_MAINNET),
+              quoteCurrencyId: currencyId(MockDAI),
+              isFork: false,
+            },
+            '0xmigrate_v3_liquidity',
+          ),
         ],
-        ...mockMultiStatus(
-          mockSwapInfo({
-            type: MockTradeType.EXACT_OUTPUT,
-            inputCurrency: MockUSDC_MAINNET,
-            inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-            outputCurrency: MockDAI,
-            outputCurrencyAmountRaw: mockCurrencyAmountRaw,
-          }),
-          '0xswap_exact_input',
-        ),
-        ...mockMultiStatus(
-          mockSwapInfo({
-            type: MockTradeType.EXACT_INPUT,
-            inputCurrency: MockUSDC_MAINNET,
-            inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-            outputCurrency: MockDAI,
-            outputCurrencyAmountRaw: mockCurrencyAmountRaw,
-          }),
-          '0xswap_exact_output',
-        ),
-        ...mockMultiStatus(
-          {
-            type: UniswapTransactionType.Approve,
-            tokenAddress: MockDAI.address,
-            spender: mockSpenderAddress,
-            approvalAmount: mockApprovalAmountRaw,
-          },
-          '0xapproval',
-        ),
-        ...mockMultiStatus(
-          {
-            type: UniswapTransactionType.Approve,
-            tokenAddress: MockUSDT.address,
-            spender: mockSpenderAddress,
-            approvalAmount: '0',
-          },
-          '0xrevoke_approval',
-        ),
-        ...mockMultiStatus(
-          {
-            type: UniswapTransactionType.Wrap,
-            unwrapped: false,
-            currencyAmountRaw: mockCurrencyAmountRaw,
-          },
-          '0xwrap',
-        ),
-        ...mockMultiStatus(
-          {
-            type: UniswapTransactionType.Wrap,
-            unwrapped: true,
-            currencyAmountRaw: mockCurrencyAmountRaw,
-          },
-          '0xunwrap',
-        ),
-        ...mockMultiStatus(
-          {
-            type: UniswapTransactionType.CollectFees,
-            currency0Id: currencyId(MockUSDC_MAINNET),
-            currency1Id: currencyId(MockDAI),
-            currency0AmountRaw: mockCurrencyAmountRawUSDC,
-            currency1AmountRaw: mockCurrencyAmountRaw,
-          },
-          '0xcollect_fees',
-        ),
-        ...mockMultiStatus(
-          {
-            type: UniswapTransactionType.MigrateLiquidityV2ToV3,
-            baseCurrencyId: currencyId(MockUSDC_MAINNET),
-            quoteCurrencyId: currencyId(MockDAI),
-            isFork: false,
-          },
-          '0xmigrate_v3_liquidity',
-        ),
-      ]
+      }
+      if (!accountAddress) {
+        return []
+      }
+      return mockData[accountAddress]
     },
   }
 })
@@ -225,7 +248,7 @@ describe('parseLocalActivity', () => {
     const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
 
     const details = {
-      info: mockSwapInfo({
+      typeInfo: mockSwapInfo({
         type: MockTradeType.EXACT_INPUT,
         inputCurrency: MockUSDC_MAINNET,
         inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
@@ -234,9 +257,9 @@ describe('parseLocalActivity', () => {
       }),
       hash: '0x123',
       status: TransactionStatus.Success,
+      chainId: 1,
     } as TransactionDetails
-    const chainId = UniverseChainId.Mainnet
-    const result = await transactionToActivity({ details, chainId, formatNumber: formatNumberOrString })
+    const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
     expect(result).toEqual({
       cancelled: undefined,
       prefixIconSrc: undefined,
@@ -255,7 +278,7 @@ describe('parseLocalActivity', () => {
     const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
 
     const details = {
-      info: mockSwapInfo({
+      typeInfo: mockSwapInfo({
         type: MockTradeType.EXACT_OUTPUT,
         inputCurrency: MockUSDC_MAINNET,
         inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
@@ -264,9 +287,9 @@ describe('parseLocalActivity', () => {
       }),
       hash: '0x123',
       status: TransactionStatus.Success,
+      chainId: 1,
     } as TransactionDetails
-    const chainId = UniverseChainId.Mainnet
-    const result = await transactionToActivity({ details, chainId, formatNumber: formatNumberOrString })
+    const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
     expect(result).toMatchObject({
       cancelled: undefined,
       prefixIconSrc: undefined,
@@ -284,7 +307,7 @@ describe('parseLocalActivity', () => {
     const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
 
     const details = {
-      info: mockSwapInfo({
+      typeInfo: mockSwapInfo({
         type: MockTradeType.EXACT_INPUT,
         inputCurrency: MockUSDC_MAINNET,
         inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
@@ -293,9 +316,9 @@ describe('parseLocalActivity', () => {
       }),
       hash: '0x123',
       status: TransactionStatus.Success,
+      chainId: 1,
     } as TransactionDetails
-    const chainId = UniverseChainId.Mainnet
-    const result = await transactionToActivity({ details, chainId, formatNumber: formatNumberOrString })
+    const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
     expect(result).toMatchObject({
       chainId: 1,
       currencies: [undefined, undefined],
@@ -550,7 +573,7 @@ describe('parseLocalActivity', () => {
           minimumOutputCurrencyAmountRaw: '1000000000000000000',
           outputCurrencyId: currencyId(DAI),
           tradeType: 0,
-          type: UniswapTransactionType.Swap,
+          type: TransactionType.Swap,
         },
         type: 'signUniswapXOrder',
       },
@@ -558,7 +581,7 @@ describe('parseLocalActivity', () => {
       status: TransactionStatus.Failed,
       statusMessage: undefined,
       timestamp: undefined,
-      title: 'Swap cancelled',
+      title: 'Swap canceled',
     })
   })
 })

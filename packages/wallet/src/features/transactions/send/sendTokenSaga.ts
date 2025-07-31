@@ -29,6 +29,7 @@ export function* sendToken(params: Params) {
     const { sendTokenParams, txRequest } = params
     const { txId, account, chainId } = sendTokenParams
     const typeInfo = getSendTypeInfo(sendTokenParams)
+
     yield* call(validateSend, sendTokenParams)
     yield* call(executeTransaction, {
       txId,

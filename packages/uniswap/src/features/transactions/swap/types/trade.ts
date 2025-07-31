@@ -17,12 +17,13 @@ import {
   QuoteResponse,
   Routing,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { getSwapFee } from 'uniswap/src/features/transactions/swap/types/getSwapFee'
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
+import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
+import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 
 type QuoteResponseWithAggregatedOutputs = ClassicQuoteResponse | DutchQuoteResponse | DutchV3QuoteResponse | PriorityQuoteResponse
 
@@ -313,7 +314,7 @@ export type Trade<
   TInput extends Currency = Currency,
   TOutput extends Currency = Currency,
   TTradeType extends TradeType = TradeType,
-> = ClassicTrade<TInput, TOutput, TTradeType> | UniswapXTrade | BridgeTrade | WrapTrade | UnwrapTrade
+> = ClassicTrade<TInput, TOutput, TTradeType> | UniswapXTrade | BridgeTrade | WrapTrade | UnwrapTrade | SolanaTrade
 
 export type TradeWithSlippage = Exclude<Trade, BridgeTrade>
 
@@ -329,7 +330,7 @@ export interface TradeWithStatus<T extends Trade = Trade> {
 }
 
 export interface UseTradeArgs {
-  account?: AccountMeta
+  account?: AccountDetails
   amountSpecified: Maybe<CurrencyAmount<Currency>>
   otherCurrency: Maybe<Currency>
   tradeType: TradeType
@@ -337,6 +338,7 @@ export interface UseTradeArgs {
   customSlippageTolerance?: number
   isUSDQuote?: boolean
   sendPortionEnabled?: boolean
+  // TODO(SWAP-154): Remove skip
   skip?: boolean
   selectedProtocols?: FrontendSupportedProtocol[]
   isDebouncing?: boolean

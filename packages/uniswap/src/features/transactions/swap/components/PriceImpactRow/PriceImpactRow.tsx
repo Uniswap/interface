@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
+import { MarketPriceImpactWarningModal } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/MarketPriceImpactWarning'
 import { usePriceImpact } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/usePriceImpact'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
-import { MarketPriceImpactWarningModal } from 'uniswap/src/features/transactions/swap/review/SwapDetails/MarketPriceImpactWarningModal'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 

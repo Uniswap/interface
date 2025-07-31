@@ -1,5 +1,5 @@
+import { FeeData } from 'components/Liquidity/Create/types'
 import ms from 'ms'
-import { FeeData } from 'pages/Pool/Positions/create/types'
 import { useMemo } from 'react'
 import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import {

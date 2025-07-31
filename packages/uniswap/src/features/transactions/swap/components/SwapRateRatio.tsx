@@ -1,22 +1,24 @@
 import { useState } from 'react'
 import { Flex, Text, TouchableArea } from 'ui/src'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
-import { useAcceptedTrade } from 'uniswap/src/features/transactions/swap/review/hooks/useAcceptedTrade'
-import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/utils/getTradeAmounts'
 import { calculateRateLine, getRateToDisplay } from 'uniswap/src/features/transactions/swap/utils/trade'
 
 type SwapRateRatioProps = {
   trade: Trade | IndicativeTrade | undefined | null
+  derivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
   styling?: 'primary' | 'secondary'
   initialInverse?: boolean
   justifyContent?: 'flex-end' | 'flex-start'
 }
 export function SwapRateRatio({
   trade,
+  derivedSwapInfo,
   styling = 'primary',
   initialInverse = false,
   justifyContent = 'flex-start',
@@ -24,17 +26,8 @@ export function SwapRateRatio({
   const priceUXEnabled = usePriceUXEnabled()
   const formatter = useLocalizationContext()
   const [showInverseRate, setShowInverseRate] = useState(initialInverse)
-  const { derivedSwapInfo, isSubmitting } = useSwapFormStore((s) => ({
-    derivedSwapInfo: s.derivedSwapInfo,
-    isSubmitting: s.isSubmitting,
-  }))
 
-  const { acceptedDerivedSwapInfo } = useAcceptedTrade({
-    derivedSwapInfo,
-    isSubmitting,
-  })
-
-  const { outputCurrencyAmount } = getTradeAmounts(acceptedDerivedSwapInfo, priceUXEnabled)
+  const { outputCurrencyAmount } = getTradeAmounts(derivedSwapInfo, priceUXEnabled)
   const usdAmountOut = useUSDCValue(outputCurrencyAmount)
 
   const latestFiatPriceFormatted = calculateRateLine({

@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
-import { NetworkStatus, QueryHookOptions, Reference, useApolloClient, WatchQueryFetchPolicy } from '@apollo/client'
+import { NetworkStatus, Reference, WatchQueryFetchPolicy, useApolloClient } from '@apollo/client'
+import { QueryHookOptions } from '@apollo/client/react/types/types'
 import isEqual from 'lodash/isEqual'
 import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
@@ -19,9 +20,9 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import {
-  useRestPortfolioCacheUpdater,
   useRESTPortfolioData,
   useRESTPortfolioTotalValue,
+  useRestPortfolioCacheUpdater,
 } from 'uniswap/src/features/dataApi/balancesRest'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
@@ -40,6 +41,7 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
 import { logger } from 'utilities/src/logger/logger'
+
 interface BaseResult<T> {
   data?: T
   loading: boolean
@@ -87,7 +89,9 @@ export function usePortfolioBalances({
     skip: !address || !isRestEnabled || queryOptions.skip,
   })
 
-  return isRestEnabled ? restResult : graphqlResult
+  const result = isRestEnabled ? restResult : graphqlResult
+
+  return result
 }
 /**
  * Returns all balances indexed by checksummed currencyId for a given address

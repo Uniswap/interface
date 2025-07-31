@@ -1,9 +1,9 @@
 import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import { DownloadWalletOption } from 'components/WalletModal/DownloadWalletOption'
 import { DetectedBadge } from 'components/WalletModal/shared'
-import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
-import { uniswapWalletConnect } from 'components/Web3Provider/walletConnect'
-import { useConnect } from 'hooks/useConnect'
+import { useConnectWallet } from 'features/wallet/connection/hooks/useConnectWallet'
+import { useWalletConnectors } from 'features/wallet/connection/hooks/useWalletConnectors'
+import { getConnectorWithId, getConnectorWithIdWithThrow } from 'features/wallet/connection/utils'
 import { useAtom } from 'jotai'
 import { PropsWithChildren } from 'react'
 import { Trans } from 'react-i18next'
@@ -51,19 +51,24 @@ export function OptionContainer({ hideBackground, recent, children, onPress, tes
 }
 
 export function UniswapWalletOptions() {
-  const uniswapExtensionConnector = useConnectorWithId(CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS)
+  const allConnectors = useWalletConnectors()
+  const uniswapExtensionConnector = getConnectorWithId({
+    connectors: allConnectors,
+    id: CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS,
+  })
+  const uniswapWalletConnector = getConnectorWithIdWithThrow({
+    connectors: allConnectors,
+    id: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+  })
   const [, setPersistHideMobileAppPromoBanner] = useAtom(persistHideMobileAppPromoBannerAtom)
-  const { connect } = useConnect()
+  const connect = useConnectWallet()
 
   return (
     <Flex gap={16}>
       <Flex gap={8}>
         {uniswapExtensionConnector ? (
           // If the extension is detected, show the option to connect
-          <OptionContainer
-            onPress={() => connect({ connector: uniswapExtensionConnector })}
-            testID="connect-uniswap-extension"
-          >
+          <OptionContainer onPress={() => connect(uniswapExtensionConnector)} testID="connect-uniswap-extension">
             <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
             <Flex row gap={4}>
               <Text variant="buttonLabel2" color="$neutral1" whiteSpace="nowrap">
@@ -75,17 +80,7 @@ export function UniswapWalletOptions() {
         ) : !isMobileWeb ? (
           <DownloadWalletOption />
         ) : null}
-        <OptionContainer
-          onPress={() => {
-            setPersistHideMobileAppPromoBanner(true)
-            connect({
-              // Initialize Uniswap Wallet on click instead of in wagmi config
-              // to avoid multiple wallet connect sockets being opened
-              // and causing issues with messages getting dropped
-              connector: uniswapWalletConnect(),
-            })
-          }}
-        >
+        <OptionContainer onPress={() => connect(uniswapWalletConnector)}>
           {isMobileWeb ? (
             <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
           ) : (

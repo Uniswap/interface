@@ -1,47 +1,44 @@
 import { getLiquidityEventName } from 'components/Liquidity/analytics'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
+import type { HandleOnChainStepParams } from 'state/sagas/transactions/utils'
 import {
   getDisplayableError,
   handleApprovalTransactionStep,
   handleOnChainStep,
-  HandleOnChainStepParams,
   handlePermitTransactionStep,
   handleSignatureStep,
 } from 'state/sagas/transactions/utils'
-import { BaseTransactionType } from 'state/transactions/types'
 import invariant from 'tiny-invariant'
 import { call } from 'typed-redux-saga'
-import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { InterfaceEventName, LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
-import { CollectFeesTransactionStep } from 'uniswap/src/features/transactions/liquidity/steps/collectFees'
-import { DecreasePositionTransactionStep } from 'uniswap/src/features/transactions/liquidity/steps/decreasePosition'
+import type { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
+import type { CollectFeesTransactionStep } from 'uniswap/src/features/transactions/liquidity/steps/collectFees'
+import type { DecreasePositionTransactionStep } from 'uniswap/src/features/transactions/liquidity/steps/decreasePosition'
 import { generateLPTransactionSteps } from 'uniswap/src/features/transactions/liquidity/steps/generateLPTransactionSteps'
-import {
+import type {
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
 } from 'uniswap/src/features/transactions/liquidity/steps/increasePosition'
-import {
+import type {
   MigratePositionTransactionStep,
   MigratePositionTransactionStepAsync,
 } from 'uniswap/src/features/transactions/liquidity/steps/migrate'
-import {
-  LiquidityAction,
-  LiquidityTransactionType,
-  ValidatedLiquidityTxContext,
-} from 'uniswap/src/features/transactions/liquidity/types'
-import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import {
+import type { LiquidityAction, ValidatedLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
+import { LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
+import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
+import type { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
+import type {
   CollectFeesTransactionInfo,
   CreatePoolTransactionInfo,
   LiquidityDecreaseTransactionInfo,
   LiquidityIncreaseTransactionInfo,
   MigrateV3LiquidityToV4TransactionInfo,
-  TransactionType as UniswapTransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
@@ -49,7 +46,7 @@ import { logger } from 'utilities/src/logger/logger'
 type LiquidityParams = {
   selectChain: (chainId: number) => Promise<boolean>
   startChainId?: number
-  account: SignerMnemonicAccountMeta
+  account: SignerMnemonicAccountDetails
   analytics?:
     | Omit<UniverseEventProperties[LiquidityEventName.AddLiquiditySubmitted], 'transaction_hash'>
     | Omit<UniverseEventProperties[LiquidityEventName.RemoveLiquiditySubmitted], 'transaction_hash'>
@@ -59,7 +56,7 @@ type LiquidityParams = {
   setCurrentStep: SetCurrentStepFn
   setSteps: (steps: TransactionStep[]) => void
   onSuccess: () => void
-  onFailure: () => void
+  onFailure: (e?: unknown) => void
 }
 
 function* getLiquidityTxRequest(
@@ -205,8 +202,11 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
 
       if (displayableError) {
         logger.error(displayableError, { tags: { file: 'liquiditySaga', function: 'modifyLiquidity' } })
+        onFailure(e)
+      } else {
+        onFailure()
       }
-      onFailure()
+
       return
     }
   }
@@ -256,22 +256,22 @@ function getLiquidityTransactionInfo(
   | MigrateV3LiquidityToV4TransactionInfo
   | CreatePoolTransactionInfo
   | CollectFeesTransactionInfo {
-  let type: BaseTransactionType
+  let type: TransactionType
   switch (action.type) {
     case LiquidityTransactionType.Create:
-      type = UniswapTransactionType.CreatePool
+      type = TransactionType.CreatePool
       break
     case LiquidityTransactionType.Increase:
-      type = UniswapTransactionType.LiquidityIncrease
+      type = TransactionType.LiquidityIncrease
       break
     case LiquidityTransactionType.Decrease:
-      type = UniswapTransactionType.LiquidityDecrease
+      type = TransactionType.LiquidityDecrease
       break
     case LiquidityTransactionType.Migrate:
-      type = UniswapTransactionType.MigrateLiquidityV3ToV4
+      type = TransactionType.MigrateLiquidityV3ToV4
       break
     case LiquidityTransactionType.Collect:
-      type = UniswapTransactionType.CollectFees
+      type = TransactionType.CollectFees
   }
 
   const {

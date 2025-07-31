@@ -181,7 +181,6 @@ exports[`Header renders without error 1`] = `
     style={
       {
         "alignItems": "center",
-        "color": "#FFFFFF",
         "flexDirection": "row",
         "gap": 16,
         "justifyContent": "space-between",

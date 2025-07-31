@@ -1,27 +1,26 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Percent, TradeType } from '@uniswap/sdk-core'
-import { FlatFeeOptions } from '@uniswap/universal-router-sdk'
-import { FeeOptions } from '@uniswap/v3-sdk'
+import type { Percent } from '@uniswap/sdk-core'
+import { TradeType } from '@uniswap/sdk-core'
+import type { FlatFeeOptions } from '@uniswap/universal-router-sdk'
+import type { FeeOptions } from '@uniswap/v3-sdk'
 import { useAccount } from 'hooks/useAccount'
-import { PermitSignature } from 'hooks/usePermitAllowance'
+import type { PermitSignature } from 'hooks/usePermitAllowance'
 import useSelectChain from 'hooks/useSelectChain'
 import { useUniswapXSwapCallback } from 'hooks/useUniswapXSwapCallback'
 import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
 import { useCallback } from 'react'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { InterfaceTrade, OffchainOrderType, TradeFillType } from 'state/routing/types'
+import type { InterfaceTrade } from 'state/routing/types'
+import { OffchainOrderType, TradeFillType } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useAddOrder } from 'state/signatures/hooks'
-import { UniswapXOrderDetails } from 'state/signatures/types'
+import type { UniswapXOrderDetails } from 'state/signatures/types'
 import { useTransaction, useTransactionAdder } from 'state/transactions/hooks'
-import { TransactionInfo } from 'state/transactions/types'
+import type { TransactionInfo } from 'state/transactions/types'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
-import {
-  TransactionStatus,
-  TransactionType as UniswapTransactionType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 export type SwapResult = Awaited<ReturnType<ReturnType<typeof useSwapCallback>>>
@@ -99,7 +98,7 @@ export function useSwapCallback({
     const result = await swapCallback()
 
     const swapInfo: TransactionInfo = {
-      type: UniswapTransactionType.Swap,
+      type: TransactionType.Swap,
       inputCurrencyId: currencyId(trade.inputAmount.currency),
       outputCurrencyId: currencyId(trade.outputAmount.currency),
       isUniswapXOrder: result.type === TradeFillType.UniswapX || result.type === TradeFillType.UniswapXv2,

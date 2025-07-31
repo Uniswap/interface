@@ -77,7 +77,7 @@ const DescriptionVisibilityWrapper = styled(Paragraph, {
   } as const,
 })
 
-const TRUNCATE_CHARACTER_COUNT = 200
+const TRUNCATE_CHARACTER_COUNT = 300
 
 export function TokenDescription() {
   const { t } = useTranslation()

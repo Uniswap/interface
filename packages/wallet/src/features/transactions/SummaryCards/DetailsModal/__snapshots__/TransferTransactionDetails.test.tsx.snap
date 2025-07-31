@@ -47,12 +47,6 @@ exports[`TransferTransactionDetails Component renders TransferTransactionDetails
       style={
         {
           "alignItems": "center",
-          "color": {
-            "dynamic": {
-              "dark": "#FFFFFF",
-              "light": "#222222",
-            },
-          },
           "flexDirection": "column",
           "gap": 8,
           "justifyContent": "center",

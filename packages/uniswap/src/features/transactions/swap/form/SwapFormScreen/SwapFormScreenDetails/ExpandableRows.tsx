@@ -76,7 +76,7 @@ export function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Elemen
                   {t('swap.details.rate')}
                 </Text>
                 <Flex row shrink justifyContent="flex-end">
-                  <SwapRateRatio trade={trade.trade} />
+                  <SwapRateRatio trade={trade.trade} derivedSwapInfo={derivedSwapInfo} />
                 </Flex>
               </Flex>
             ) : undefined

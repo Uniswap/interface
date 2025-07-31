@@ -3,9 +3,11 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { createApiClient } from 'uniswap/src/data/apiClients/createApiClient'
 import { SwappableTokensParams } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import {
+  Address,
   ApprovalRequest,
   ApprovalResponse,
   BridgeQuote,
+  ChainDelegationMap,
   ChainId,
   CheckApprovalLPRequest,
   CheckApprovalLPResponse,
@@ -36,10 +38,13 @@ import {
   MigrateLPPositionResponse,
   OrderRequest,
   OrderResponse,
+  OrderStatus,
   PriorityQuote,
   QuoteRequest,
   QuoteResponse,
   Routing,
+  RoutingPreference,
+  TradeType,
   TransactionHash,
   UniversalRouterVersion,
   WalletCheckDelegationRequestBody,
@@ -113,9 +118,12 @@ export const getFeatureFlaggedHeaders = (): Record<string, string> => {
   }
 }
 
-export type FetchQuote = (params: QuoteRequest) => Promise<DiscriminatedQuoteResponse>
+export type FetchQuote = (params: QuoteRequest & { isUSDQuote?: boolean }) => Promise<DiscriminatedQuoteResponse>
 
-export async function fetchQuote(params: QuoteRequest): Promise<DiscriminatedQuoteResponse> {
+export async function fetchQuote({
+  isUSDQuote: _isUSDQuote,
+  ...params
+}: QuoteRequest & { isUSDQuote?: boolean }): Promise<DiscriminatedQuoteResponse> {
   return await TradingApiClient.post<DiscriminatedQuoteResponse>(uniswapUrls.tradingApiPaths.quote, {
     body: JSON.stringify(params),
     headers: {
@@ -131,6 +139,33 @@ export async function fetchQuote(params: QuoteRequest): Promise<DiscriminatedQuo
       })
     },
   })
+}
+
+// min parameters needed for indicative quotes
+export interface IndicativeQuoteRequest {
+  type: TradeType
+  amount: string
+  tokenInChainId: number
+  tokenOutChainId: number
+  tokenIn: string
+  tokenOut: string
+  swapper: string
+}
+
+export type FetchIndicativeQuote = (params: IndicativeQuoteRequest) => Promise<DiscriminatedQuoteResponse>
+
+/**
+ * Fetches an indicative quote - a faster quote with FASTEST routing preference
+ * Used to show approximate pricing while the full quote is being fetched
+ */
+export async function fetchIndicativeQuote(params: IndicativeQuoteRequest): Promise<DiscriminatedQuoteResponse> {
+  // convert minimal params to full QuoteRequest with FASTEST routing
+  const quoteRequest: QuoteRequest = {
+    ...params,
+    routingPreference: RoutingPreference.FASTEST,
+  }
+
+  return fetchQuote(quoteRequest)
 }
 
 export async function fetchSwap({ ...params }: CreateSwapRequest): Promise<CreateSwapResponse> {
@@ -188,6 +223,24 @@ export async function fetchOrders({ orderIds }: { orderIds: string[] }): Promise
     },
     headers: {
       ...getFeatureFlaggedHeaders(),
+    },
+  })
+}
+
+export async function fetchOrdersWithoutIds({
+  swapper,
+  limit = 1,
+  orderStatus,
+}: {
+  swapper: string
+  limit: number
+  orderStatus: OrderStatus
+}): Promise<GetOrdersResponse> {
+  return await TradingApiClient.get<GetOrdersResponse>(uniswapUrls.tradingApiPaths.orders, {
+    params: {
+      swapper,
+      limit,
+      orderStatus,
     },
   })
 }
@@ -305,7 +358,33 @@ export async function fetchWalletEncoding7702(params: WalletEncode7702RequestBod
   })
 }
 
-export async function checkWalletDelegation(
+// Default maximum amount of combinations wallet<>chainId per check delegation request
+const DEFAULT_CHECK_VALIDATIONS_BATCH_THRESHOLD = 140
+
+// Utility function to chunk wallet addresses for batching
+function chunkWalletAddresses(params: {
+  walletAddresses: Address[]
+  chainIds: ChainId[]
+  batchThreshold: number
+}): Address[][] {
+  const { walletAddresses, chainIds, batchThreshold } = params
+  const totalCombinations = walletAddresses.length * chainIds.length
+
+  if (totalCombinations <= batchThreshold) {
+    return [walletAddresses]
+  }
+
+  const maxWalletsPerBatch = Math.floor(batchThreshold / chainIds.length)
+  const chunks: Address[][] = []
+
+  for (let i = 0; i < walletAddresses.length; i += maxWalletsPerBatch) {
+    chunks.push(walletAddresses.slice(i, i + maxWalletsPerBatch))
+  }
+
+  return chunks
+}
+
+export async function checkWalletDelegationWithoutBatching(
   params: WalletCheckDelegationRequestBody,
 ): Promise<WalletCheckDelegationResponseBody> {
   return await TradingApiClient.post<WalletCheckDelegationResponseBody>(
@@ -319,4 +398,77 @@ export async function checkWalletDelegation(
       },
     },
   )
+}
+
+function mergeDelegationResponses(responses: WalletCheckDelegationResponseBody[]): WalletCheckDelegationResponseBody {
+  if (responses.length === 0) {
+    throw new Error('No responses to merge')
+  }
+
+  const firstResponse = responses[0]
+  if (!firstResponse) {
+    throw new Error('First response is undefined')
+  }
+
+  if (responses.length === 1) {
+    return firstResponse
+  }
+
+  const mergedDelegationDetails: Record<string, ChainDelegationMap> = {}
+
+  for (const response of responses) {
+    for (const [walletAddress, chainDelegationMap] of Object.entries(response.delegationDetails)) {
+      mergedDelegationDetails[walletAddress] = chainDelegationMap
+    }
+  }
+
+  return {
+    requestId: firstResponse.requestId,
+    delegationDetails: mergedDelegationDetails,
+  }
+}
+
+export type CheckWalletDelegation = (
+  params: WalletCheckDelegationRequestBody,
+) => Promise<WalletCheckDelegationResponseBody>
+
+export async function checkWalletDelegation(
+  params: WalletCheckDelegationRequestBody,
+  batchThreshold: number = DEFAULT_CHECK_VALIDATIONS_BATCH_THRESHOLD,
+): Promise<WalletCheckDelegationResponseBody> {
+  const { walletAddresses, chainIds } = params
+
+  // If no wallet addresses provided, no need to make a call to backend
+  if (!walletAddresses || walletAddresses.length === 0) {
+    return {
+      requestId: '',
+      delegationDetails: {},
+    }
+  }
+
+  // Ensure batchThreshold is at least the number of chain IDs
+  const effectiveBatchThreshold = Math.max(batchThreshold, chainIds.length)
+
+  const totalCombinations = walletAddresses.length * chainIds.length
+
+  // If under threshold, make a single request
+  if (totalCombinations <= effectiveBatchThreshold) {
+    return await checkWalletDelegationWithoutBatching(params)
+  }
+
+  // Split into batches
+  const walletChunks = chunkWalletAddresses({ walletAddresses, chainIds, batchThreshold: effectiveBatchThreshold })
+
+  // Make batched requests
+  const batchPromises = walletChunks.map((chunk) =>
+    checkWalletDelegationWithoutBatching({
+      walletAddresses: chunk,
+      chainIds,
+    }),
+  )
+
+  const responses = await Promise.all(batchPromises)
+
+  // Merge all responses
+  return mergeDelegationResponses(responses)
 }

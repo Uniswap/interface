@@ -1,13 +1,13 @@
 import { ErrorCallout } from 'components/ErrorCallout'
 import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
+import { canUnwrapCurrency } from 'components/Liquidity/utils/currency'
 import { StyledPercentInput } from 'components/PercentInput'
 import {
   DecreaseLiquidityStep,
   useRemoveLiquidityModalContext,
-} from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
-import { useRemoveLiquidityTxContext } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
-import { canUnwrapCurrency } from 'pages/Pool/Positions/create/utils'
+} from 'pages/RemoveLiquidity/RemoveLiquidityModalContext'
+import { useRemoveLiquidityTxContext } from 'pages/RemoveLiquidity/RemoveLiquidityTxContext'
 import { PredefinedAmount } from 'pages/Swap/Buy/PredefinedAmount'
 import { NumericalInputMimic, NumericalInputSymbolContainer, NumericalInputWrapper } from 'pages/Swap/common/shared'
 import { useMemo } from 'react'

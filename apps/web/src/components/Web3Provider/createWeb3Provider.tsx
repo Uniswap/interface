@@ -1,5 +1,5 @@
-import { CoinbaseWalletAdapter } from '@solana/wallet-adapter-coinbase'
 import { WalletProvider as SolanaWalletProvider } from '@solana/wallet-adapter-react'
+import { SolanaSignerUpdater } from 'components/Web3Provider/signSolanaTransaction'
 import { ConnectionProvider } from 'hooks/useConnect'
 import React, { PropsWithChildren, ReactNode, useMemo } from 'react'
 import { useWalletCapabilitiesStateEffect } from 'state/walletCapabilities/hooks/useWalletCapabilitiesStateEffect'
@@ -35,10 +35,11 @@ export function createWeb3Provider(params: {
 
 function SolanaProvider({ children }: PropsWithChildren) {
   // WalletProvider has most wallet adapters built in
-  const wallets = useMemo(() => [new CoinbaseWalletAdapter()], [])
+  const wallets = useMemo(() => [], [])
 
   return (
     <SolanaWalletProvider wallets={wallets} autoConnect>
+      <SolanaSignerUpdater />
       {children}
     </SolanaWalletProvider>
   )

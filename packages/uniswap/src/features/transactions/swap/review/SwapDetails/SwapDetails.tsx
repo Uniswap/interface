@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { Flex, HeightAnimator, Text } from 'ui/src'
 import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import type { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -19,12 +19,12 @@ import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/components
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import { AcceptNewQuoteRow } from 'uniswap/src/features/transactions/swap/review/SwapDetails/AcceptNewQuoteRow'
-import { HeightAnimatorWrapper } from 'uniswap/src/features/transactions/swap/review/SwapDetails/HeightAnimatorWrapper'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { isMobileApp, isMobileWeb } from 'utilities/src/platform'
 
 interface SwapDetailsProps {
   acceptedDerivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
@@ -94,7 +94,7 @@ export function SwapDetails({
   }, [derivedSwapInfo.trade.trade?.quote])
 
   return (
-    <HeightAnimatorWrapper>
+    <HeightAnimator animationDisabled={isMobileApp || isMobileWeb}>
       <TransactionDetails
         isSwap
         banner={
@@ -132,7 +132,7 @@ export function SwapDetails({
           <Text color="$neutral2" variant="body3">
             {t('swap.details.rate')}
           </Text>
-          <SwapRateRatio trade={trade} justifyContent="flex-end" />
+          <SwapRateRatio trade={trade} derivedSwapInfo={acceptedDerivedSwapInfo} justifyContent="flex-end" />
         </Flex>
         {isBridgeTrade && <EstimatedTime visibleIfLong={false} timeMs={estimatedBridgingTime} />}
         {isBridgeTrade && <AcrossRoutingInfo />}
@@ -148,6 +148,6 @@ export function SwapDetails({
         )}
         {!priceUxEnabled && <PriceImpactRow derivedSwapInfo={acceptedDerivedSwapInfo} />}
       </TransactionDetails>
-    </HeightAnimatorWrapper>
+    </HeightAnimator>
   )
 }

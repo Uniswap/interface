@@ -1,23 +1,24 @@
 /* eslint-disable max-lines */
 import { expectSaga } from 'redux-saga-test-plan'
-import { call } from 'redux-saga/effects'
+import { call, delay } from 'redux-saga/effects'
 import { navigationRef } from 'src/app/navigation/navigationRef'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { DeepLinkAction } from 'src/features/deepLinking/deepLinkUtils'
 import {
+  LinkSource,
+  ONRAMP_DEEPLINK_DELAY,
   handleDeepLink,
-  handleGoToFiatOnRampDeepLink,
   handleGoToTokenDetailsDeepLink,
   handleUniswapAppDeepLink,
   handleWalletConnectDeepLink,
-  LinkSource,
   parseAndValidateUserAddress,
 } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
+import { openModal } from 'src/features/modals/modalSlice'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/walletConnectClient'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
-import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   SAMPLE_CURRENCY_ID_1,
@@ -541,13 +542,79 @@ describe(handleDeepLink, () => {
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
-      .call(handleGoToFiatOnRampDeepLink)
+      .provide([[delay(ONRAMP_DEEPLINK_DELAY), undefined]])
+      .call(parseAndValidateUserAddress, account.address)
+      .put(setAccountAsActive(account.address))
       .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
         action: DeepLinkAction.FiatOnRampScreen,
         url: payload.url,
         screen: 'other',
         is_cold_start: payload.coldStart,
         source: 'push',
+      })
+      .returns(undefined)
+      .silentRun()
+  })
+
+  it('Handles MoonPay exclusive fiat onramp deeplink', () => {
+    const payload = {
+      url: `uniswap://app/fiatonramp?moonpayOnly=true&source=moonpay-ad`,
+      coldStart: false,
+    }
+    return expectSaga(handleDeepLink, {
+      payload,
+      type: '',
+    })
+      .withState(stateWithActiveAccountAddress)
+      .provide([[delay(ONRAMP_DEEPLINK_DELAY), undefined]])
+      .put(
+        openModal({
+          name: ModalName.FiatOnRampAggregator,
+          initialState: {
+            moonpayOnly: true,
+            prefilledAmount: undefined,
+            moonpayCurrencyCode: undefined,
+          },
+        }),
+      )
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+        action: DeepLinkAction.FiatOnRampScreen,
+        url: payload.url,
+        screen: 'other',
+        is_cold_start: payload.coldStart,
+        source: 'moonpay-ad',
+      })
+      .returns(undefined)
+      .silentRun()
+  })
+
+  it('Handles MoonPay exclusive fiat onramp deeplink with token and amount', () => {
+    const payload = {
+      url: `uniswap://app/fiatonramp?moonpayOnly=true&moonpayCurrencyCode=eth&amount=100&source=moonpay-ad`,
+      coldStart: false,
+    }
+    return expectSaga(handleDeepLink, {
+      payload,
+      type: '',
+    })
+      .withState(stateWithActiveAccountAddress)
+      .provide([[delay(ONRAMP_DEEPLINK_DELAY), undefined]])
+      .put(
+        openModal({
+          name: ModalName.FiatOnRampAggregator,
+          initialState: {
+            moonpayOnly: true,
+            prefilledAmount: '100',
+            moonpayCurrencyCode: 'eth',
+          },
+        }),
+      )
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+        action: DeepLinkAction.FiatOnRampScreen,
+        url: payload.url,
+        screen: 'other',
+        is_cold_start: payload.coldStart,
+        source: 'moonpay-ad',
       })
       .returns(undefined)
       .silentRun()

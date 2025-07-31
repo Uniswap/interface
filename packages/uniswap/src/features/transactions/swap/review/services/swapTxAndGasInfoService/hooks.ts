@@ -1,7 +1,7 @@
 import type { UseQueryResult } from '@tanstack/react-query'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import type { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -19,6 +19,7 @@ import { FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS } from 'uniswap/src/features/tra
 import { createEVMSwapInstructionsService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapInstructionsService'
 import { usePresignPermit } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/hooks'
 import { createDecorateSwapTxInfoServiceWithEVMLogging } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/logging'
+import { createSolanaSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/svm/solanaSwapTxAndGasInfoService'
 import type {
   RoutingServicesMap,
   SwapTxAndGasInfoParameters,
@@ -34,6 +35,7 @@ import {
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -119,6 +121,10 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
     return decorateWithEVMLogging(wrapService)
   }, [swapConfig, transactionSettings, instructionService, decorateWithEVMLogging])
 
+  const solanaSwapTxInfoService = useMemo(() => {
+    return createSolanaSwapTxAndGasInfoService()
+  }, [])
+
   const services = useMemo(() => {
     return {
       [Routing.CLASSIC]: classicSwapTxInfoService,
@@ -130,8 +136,15 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
       [Routing.UNWRAP]: wrapTxInfoService,
       [Routing.LIMIT_ORDER]: createNoopService(),
       [Routing.DUTCH_LIMIT]: createNoopService(),
+      [Routing.JUPITER]: solanaSwapTxInfoService,
     } satisfies RoutingServicesMap
-  }, [classicSwapTxInfoService, bridgeSwapTxInfoService, uniswapXSwapTxInfoService, wrapTxInfoService])
+  }, [
+    classicSwapTxInfoService,
+    bridgeSwapTxInfoService,
+    uniswapXSwapTxInfoService,
+    wrapTxInfoService,
+    solanaSwapTxInfoService,
+  ])
 
   return useMemo(() => {
     return createSwapTxAndGasInfoService({ services })
@@ -231,7 +244,7 @@ function useSwapParams(): {
 } {
   const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
 
-  const account = useAccountMeta()
+  const account = useWallet().evmAccount
 
   const {
     chainId,

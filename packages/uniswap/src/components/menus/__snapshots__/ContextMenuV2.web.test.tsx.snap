@@ -218,7 +218,6 @@ exports[`ContextMenu renders without error 1`] = `
                 style={
                   {
                     "alignItems": "center",
-                    "color": "#FFFFFF",
                     "flexDirection": "row",
                     "flexShrink": 1,
                   }
@@ -239,7 +238,6 @@ exports[`ContextMenu renders without error 1`] = `
                       "fontSize": 17,
                       "fontWeight": "500",
                       "lineHeight": 19.549999999999997,
-                      "opacity": 1,
                     }
                   }
                   suppressHighlighting={true}
@@ -252,7 +250,6 @@ exports[`ContextMenu renders without error 1`] = `
                 onFocus={[Function]}
                 style={
                   {
-                    "color": "#FFFFFF",
                     "flexDirection": "column",
                     "flexShrink": 0,
                   }
@@ -350,7 +347,6 @@ exports[`ContextMenu renders without error 1`] = `
                 style={
                   {
                     "alignItems": "center",
-                    "color": "#FFFFFF",
                     "flexDirection": "row",
                     "flexShrink": 1,
                   }
@@ -371,7 +367,6 @@ exports[`ContextMenu renders without error 1`] = `
                       "fontSize": 17,
                       "fontWeight": "500",
                       "lineHeight": 19.549999999999997,
-                      "opacity": 1,
                     }
                   }
                   suppressHighlighting={true}
@@ -384,7 +379,6 @@ exports[`ContextMenu renders without error 1`] = `
                 onFocus={[Function]}
                 style={
                   {
-                    "color": "#FFFFFF",
                     "flexDirection": "column",
                     "flexShrink": 0,
                   }

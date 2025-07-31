@@ -1,8 +1,8 @@
 /* eslint-disable max-params */
 import { BigNumber } from '@ethersproject/bignumber'
+import type { Currency } from '@uniswap/sdk-core'
 import {
   CHAIN_TO_ADDRESSES_MAP,
-  Currency,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   TradeType,
   UNI_ADDRESSES,
@@ -10,7 +10,7 @@ import {
 import { gqlToCurrency, supportedChainIdFromGQLChain } from 'appGraphql/data/util'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
-import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
+import type { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { convertGQLTransactionStatus } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import {
   MOONPAY_SENDER_ADDRESSES,
@@ -22,7 +22,8 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { parseRemote as parseRemoteSignature } from 'state/signatures/parseRemote'
-import { OrderActivity, SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
+import type { OrderActivity, UniswapXOrderDetails } from 'state/signatures/types'
+import { SignatureType } from 'state/signatures/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { Flex, Text, styled } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
@@ -30,9 +31,8 @@ import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import {
+import type {
   AssetActivityPartsFragment,
-  Currency as GQLCurrency,
   NftApprovalPartsFragment,
   NftApproveForAllPartsFragment,
   NftTransferPartsFragment,
@@ -43,6 +43,9 @@ import {
   TokenAssetPartsFragment,
   TokenTransferPartsFragment,
   TransactionDetailsPartsFragment,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  Currency as GQLCurrency,
   TransactionDirection,
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'

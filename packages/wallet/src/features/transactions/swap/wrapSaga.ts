@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
-import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import {
@@ -21,7 +21,7 @@ export type WrapParams = {
   // The id that will be used for the swap submitted after the wrap, if applicable.
   swapTxId?: string
   txRequest: providers.TransactionRequest
-  account: AccountMeta
+  account: SignerMnemonicAccountMeta
   inputCurrencyAmount: CurrencyAmount<Currency>
   skipPushNotification?: boolean
   gasEstimate?: GasEstimate

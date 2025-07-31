@@ -1,10 +1,11 @@
 import { useMemo } from 'react'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
+import { createGetSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
+import { getFeatureFlag, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { createGetV4SwapEnabled, useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 
 export const DEFAULT_PROTOCOL_OPTIONS = [
   // `as const` allows us to derive a type narrower than ProtocolItems, and the `...` spread removes readonly, allowing DEFAULT_PROTOCOL_OPTIONS to be passed around as an argument without `readonly`
@@ -23,87 +24,120 @@ export function useProtocolsForChain(
   const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
   const priorityOrdersAllowed = useUniswapXPriorityOrderFlag(chainId)
   const isDutchV3Enabled = useFeatureFlag(FeatureFlags.ArbitrumDutchV3)
-  const arbUniswapXAllowed = chainId === UniverseChainId.ArbitrumOne && isDutchV3Enabled
   const v4SwapAllowed = useV4SwapEnabled(chainId)
 
-  const getProtocolsForChain = useMemo(
+  const protocolFilter = useMemo(
     () =>
-      createGetProtocolsForChain({
-        getUniswapXEnabled: () =>
-          getIsUniswapXSupported ? uniswapXEnabled && getIsUniswapXSupported(chainId) : uniswapXEnabled,
-        getPriorityOrdersAllowed: () => priorityOrdersAllowed,
-        getV4SwapAllowed: () => v4SwapAllowed,
-        getArbUniswapXAllowed: () => arbUniswapXAllowed,
+      createProtocolFilter({
+        getUniswapXEnabled: () => uniswapXEnabled,
+        getIsUniswapXSupported,
+        getPriorityOrderFlag: () => priorityOrdersAllowed,
+        getV4Enabled: () => v4SwapAllowed,
+        getArbitrumDutchV3Enabled: () => isDutchV3Enabled,
       }),
-    [uniswapXEnabled, priorityOrdersAllowed, arbUniswapXAllowed, v4SwapAllowed, getIsUniswapXSupported, chainId],
+    [uniswapXEnabled, priorityOrdersAllowed, isDutchV3Enabled, v4SwapAllowed, getIsUniswapXSupported],
   )
 
   return useMemo(() => {
-    return getProtocolsForChain(userSelectedProtocols, chainId)
-  }, [getProtocolsForChain, userSelectedProtocols, chainId])
+    return protocolFilter(userSelectedProtocols, chainId)
+  }, [protocolFilter, userSelectedProtocols, chainId])
 }
 
-function createGetProtocolsForChain(ctx: {
+export function createProtocolFilter(ctx: {
   getUniswapXEnabled: () => boolean
-  getPriorityOrdersAllowed: (chainId?: UniverseChainId) => boolean
-  getV4SwapAllowed: (chainId?: UniverseChainId) => boolean
-  getArbUniswapXAllowed: (chainId?: UniverseChainId) => boolean
+  getIsUniswapXSupported?: (chainId?: UniverseChainId) => boolean
+  getPriorityOrderFlag: (chainId?: UniverseChainId) => boolean
+  getV4Enabled: (chainId?: UniverseChainId) => boolean
+  getArbitrumDutchV3Enabled: () => boolean
 }) {
-  return function getProtocolsForChain(
-    userSelectedProtocols: FrontendSupportedProtocol[],
-    chainId?: UniverseChainId,
-  ): ProtocolItems[] {
+  return function filterProtocols(protocols: FrontendSupportedProtocol[], chainId?: UniverseChainId): ProtocolItems[] {
     const uniswapXEnabled = ctx.getUniswapXEnabled()
-    const priorityOrdersAllowed = ctx.getPriorityOrdersAllowed(chainId)
-    const arbUniswapXAllowed = ctx.getArbUniswapXAllowed(chainId)
-    const v4SwapAllowed = ctx.getV4SwapAllowed(chainId)
+    const uniswapXSupportedForChain = ctx.getIsUniswapXSupported ? ctx.getIsUniswapXSupported(chainId) : true
+    const combinedUniswapXEnabled = uniswapXEnabled && uniswapXSupportedForChain
+
+    const priorityOrdersAllowed = ctx.getPriorityOrderFlag(chainId)
+    const arbDutchV3Enabled = chainId === UniverseChainId.ArbitrumOne && ctx.getArbitrumDutchV3Enabled()
+    const v4Enabled = ctx.getV4Enabled(chainId)
 
     const uniswapXAllowedForChain =
-      (chainId && LAUNCHED_UNISWAPX_CHAINS.includes(chainId)) || priorityOrdersAllowed || arbUniswapXAllowed
+      (chainId && LAUNCHED_UNISWAPX_CHAINS.includes(chainId)) || priorityOrdersAllowed || arbDutchV3Enabled
 
-    let protocols: ProtocolItems[] = [...userSelectedProtocols]
+    let filteredProtocols: ProtocolItems[] = [...protocols]
+
     // Remove UniswapX from the options we send to TradingAPI if UniswapX hasn't been launched or isn't in experiment on that chain
-    if (!uniswapXAllowedForChain || !uniswapXEnabled) {
-      protocols = protocols.filter((protocol) => protocol !== ProtocolItems.UNISWAPX_V2)
+    if (!uniswapXAllowedForChain || !combinedUniswapXEnabled) {
+      filteredProtocols = filteredProtocols.filter((protocol) => protocol !== ProtocolItems.UNISWAPX_V2)
     }
+
     // Replace UniswapXV2 with V3 if V3 experiment is enabled on arbitrum
-    if (arbUniswapXAllowed) {
-      protocols = protocols.map((protocol) =>
+    if (arbDutchV3Enabled) {
+      filteredProtocols = filteredProtocols.map((protocol) =>
         protocol === ProtocolItems.UNISWAPX_V2 ? ProtocolItems.UNISWAPX_V3 : protocol,
       )
     }
 
-    // Remove UniswapX from the options we send to TradingAPI if UniswapX hasn't been launched or isn't in experiment on that chain
-    if (!uniswapXAllowedForChain || !uniswapXEnabled) {
-      protocols = protocols.filter((protocol) => protocol !== ProtocolItems.UNISWAPX_V2)
+    if (!v4Enabled) {
+      filteredProtocols = filteredProtocols.filter((protocol) => protocol !== ProtocolItems.V4)
     }
 
-    if (!v4SwapAllowed) {
-      protocols = protocols.filter((protocol) => protocol !== ProtocolItems.V4)
-    }
-
-    return protocols
+    return filteredProtocols
   }
 }
 
 export function useUniswapXPriorityOrderFlag(chainId?: UniverseChainId): boolean {
-  const flagName = UNISWAP_PRIORITY_ORDERS_CHAIN_FLAG_MAP[chainId ?? UniverseChainId.Base]
-  const result = useFeatureFlag(flagName ?? FeatureFlags.UniswapXPriorityOrdersBase)
-
   if (!chainId) {
     return false
   }
 
-  if (!flagName) {
-    return false
+  return getUniswapXPriorityOrderFlag(chainId)
+}
+
+export function createGetProtocolsForChain(ctx: {
+  // these need to come from react unfortunately
+  getIsUniswapXSupported?: (chainId?: UniverseChainId) => boolean
+  getEnabledChains: () => UniverseChainId[]
+}): (userSelectedProtocols: FrontendSupportedProtocol[], chainId?: UniverseChainId) => ProtocolItems[] {
+  const uniswapXEnabled = getFeatureFlag(FeatureFlags.UniswapX)
+  const isDutchV3Enabled = getFeatureFlag(FeatureFlags.ArbitrumDutchV3)
+
+  const getV4SwapAllowed = createGetV4SwapEnabled({
+    getSupportedChainId: createGetSupportedChainId({
+      getChains: () => ctx.getEnabledChains(),
+    }).getSupportedChainId,
+  })
+
+  const getProtocolsForChain = createProtocolFilter({
+    getUniswapXEnabled: () => uniswapXEnabled,
+    getIsUniswapXSupported: ctx.getIsUniswapXSupported,
+    getPriorityOrderFlag: getUniswapXPriorityOrderFlag,
+    getV4Enabled: getV4SwapAllowed,
+    getArbitrumDutchV3Enabled: () => isDutchV3Enabled,
+  })
+
+  return getProtocolsForChain
+}
+
+export function createGetUniswapXPriorityOrderFlag(ctx: {
+  getFeatureFlag: (flagName: FeatureFlags) => boolean
+}): (chainId?: UniverseChainId) => boolean {
+  return (chainId?: UniverseChainId) => {
+    if (!chainId) {
+      return false
+    }
+
+    switch (chainId) {
+      case UniverseChainId.Base:
+        return ctx.getFeatureFlag(FeatureFlags.UniswapXPriorityOrdersBase)
+      case UniverseChainId.Optimism:
+        return ctx.getFeatureFlag(FeatureFlags.UniswapXPriorityOrdersOptimism)
+      case UniverseChainId.Unichain:
+        return ctx.getFeatureFlag(FeatureFlags.UniswapXPriorityOrdersUnichain)
+      default:
+        return false
+    }
   }
-
-  return result
 }
 
-// These are primarily OP stack chains, since only Priority Orders can only operate on chains with Priority Gas Auctions (PGA)
-const UNISWAP_PRIORITY_ORDERS_CHAIN_FLAG_MAP: Partial<Record<UniverseChainId, FeatureFlags>> = {
-  [UniverseChainId.Base]: FeatureFlags.UniswapXPriorityOrdersBase,
-  [UniverseChainId.Optimism]: FeatureFlags.UniswapXPriorityOrdersOptimism,
-  [UniverseChainId.Unichain]: FeatureFlags.UniswapXPriorityOrdersUnichain,
-}
+export const getUniswapXPriorityOrderFlag = createGetUniswapXPriorityOrderFlag({
+  getFeatureFlag,
+})

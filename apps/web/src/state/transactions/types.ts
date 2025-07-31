@@ -1,86 +1,24 @@
 import type { TransactionResponse } from '@ethersproject/abstract-provider'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import type {
-  ApproveTransactionInfo,
-  BridgeTransactionInfo,
-  ClaimUniTransactionInfo,
-  CollectFeesTransactionInfo,
-  CreatePairTransactionInfo,
-  CreatePoolTransactionInfo,
-  ExactInputSwapTransactionInfo,
-  ExactOutputSwapTransactionInfo,
-  LiquidityDecreaseTransactionInfo,
-  LiquidityIncreaseTransactionInfo,
-  MigrateV2LiquidityToV3TransactionInfo,
-  MigrateV3LiquidityToV4TransactionInfo,
-  Permit2ApproveTransactionInfo,
-  SendTokenTransactionInfo,
-  TransactionOriginType,
+  InterfaceTransactionDetails,
   TransactionStatus,
-  TransactionType as UniswapTransactionType,
-  WrapTransactionInfo,
+  TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 
-export type BaseTransactionType =
-  | UniswapTransactionType.Approve
-  | UniswapTransactionType.Swap
-  | UniswapTransactionType.ClaimUni
-  | UniswapTransactionType.Wrap
-  | UniswapTransactionType.MigrateLiquidityV2ToV3
-  | UniswapTransactionType.CollectFees
-  | UniswapTransactionType.LiquidityIncrease
-  | UniswapTransactionType.LiquidityDecrease
-  | UniswapTransactionType.CreatePool
-  | UniswapTransactionType.CreatePair
-  | UniswapTransactionType.MigrateLiquidityV3ToV4
-  | UniswapTransactionType.Permit2Approve
-  | UniswapTransactionType.Bridge
-  | UniswapTransactionType.Send
-  | UniswapTransactionType.LPIncentivesClaimRewards
+// Re-export for backward compatibility
+export type TransactionInfo = TransactionTypeInfo
 
-export type TransactionInfo =
-  | ApproveTransactionInfo
-  | Permit2ApproveTransactionInfo
-  | ExactOutputSwapTransactionInfo
-  | ExactInputSwapTransactionInfo
-  | ClaimUniTransactionInfo
-  | WrapTransactionInfo
-  | MigrateV2LiquidityToV3TransactionInfo
-  | CollectFeesTransactionInfo
-  | SendTokenTransactionInfo
-  | LiquidityIncreaseTransactionInfo
-  | LiquidityDecreaseTransactionInfo
-  | BridgeTransactionInfo
-  | CreatePoolTransactionInfo
-  | CreatePairTransactionInfo
-  | MigrateV3LiquidityToV4TransactionInfo
-  | LpIncentivesClaimTransactionInfo
-
-interface BaseTransactionDetails {
-  id: string
-  chainId: UniverseChainId
-  hash: string
-  nonce?: number
-
-  from: Address
-  status: TransactionStatus
-  batchInfo?: { connectorId?: string; batchId: string; chainId: UniverseChainId }
-  addedTime: number
-
-  transactionOriginType: TransactionOriginType
-  info: TransactionInfo
-  cancelled?: true
-}
-
-export interface PendingTransactionDetails extends BaseTransactionDetails {
+// Web-specific pending transaction details with guaranteed pending status
+export type PendingTransactionDetails = InterfaceTransactionDetails & {
   status: TransactionStatus.Pending
   lastCheckedBlockNumber?: number
   deadline?: number
 }
 
-export interface ConfirmedTransactionDetails extends BaseTransactionDetails {
+// Web-specific confirmed transaction details with guaranteed confirmed/failed status
+export type ConfirmedTransactionDetails = InterfaceTransactionDetails & {
   status: TransactionStatus.Success | TransactionStatus.Failed
   confirmedTime: number
 }
@@ -88,11 +26,6 @@ export interface ConfirmedTransactionDetails extends BaseTransactionDetails {
 export type TransactionDetails = PendingTransactionDetails | ConfirmedTransactionDetails
 
 export type VitalTxFields = Pick<TransactionResponse, 'hash' | 'nonce' | 'data'>
-
-export interface LpIncentivesClaimTransactionInfo {
-  type: UniswapTransactionType.LPIncentivesClaimRewards
-  tokenAddress: string
-}
 
 export type LpIncentivesClaimTransactionStep = TransactionStep & {
   type: TransactionStepType.CollectLpIncentiveRewardsTransactionStep

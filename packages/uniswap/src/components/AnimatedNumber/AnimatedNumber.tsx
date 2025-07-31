@@ -32,6 +32,8 @@ export const DIGIT_HEIGHT = 40 // matches heading2 lineHeight
 export const DIGIT_MAX_WIDTH = 29
 export const ADDITIONAL_WIDTH_FOR_ANIMATIONS = 8
 
+const ICON_LEFT_MARGIN = 4
+
 // TODO: remove need to manually define width of each character
 const NUMBER_WIDTH_ARRAY_SCALED = NUMBER_WIDTH_ARRAY.map(
   (width) => width * (fonts.heading2.fontSize / fonts.heading1.fontSize),
@@ -258,6 +260,7 @@ type AnimatedNumberProps = {
   warmLoading: boolean
   disableAnimations?: boolean
   isRightToLeft: boolean
+  EndElement?: JSX.Element
 }
 
 interface ReanimatedNumberProps extends AnimatedNumberProps {
@@ -309,6 +312,7 @@ const ReanimatedNumber = ({
   shouldFadeDecimals,
   warmLoading,
   isRightToLeft,
+  EndElement,
 }: ReanimatedNumberProps): JSX.Element => {
   const prevValue = usePrevious(value)
   const prevBalance = usePrevious(balance)
@@ -322,6 +326,8 @@ const ReanimatedNumber = ({
   const scaleWrapper = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: -SCREEN_WIDTH / 2 }, { scale: scale.value }, { translateX: SCREEN_WIDTH / 2 }],
+      display: 'flex',
+      flexDirection: 'row',
     }
   }, [scale])
 
@@ -377,6 +383,14 @@ const ReanimatedNumber = ({
     })
   }, [chars])
 
+  const endElementLeft = charsSizes[chars.length - 1] || 0
+  const iconAnimatedLeft = useAnimatedStyle(
+    () => ({
+      marginLeft: withTiming(endElementLeft + ICON_LEFT_MARGIN),
+    }),
+    [endElementLeft],
+  )
+
   if (loading) {
     return (
       <TextLoaderWrapper loadingShimmer={loading !== 'no-shimmer'}>
@@ -395,7 +409,14 @@ const ReanimatedNumber = ({
 
   return (
     <Animated.View style={scaleWrapper} testID={TestID.PortfolioBalance}>
-      <Flex row alignItems="flex-start" backgroundColor="$surface1" borderRadius="$rounded4" width={MAX_DEVICE_WIDTH}>
+      <Flex
+        group
+        row
+        alignItems="flex-start"
+        backgroundColor="$surface1"
+        borderRadius="$rounded4"
+        width={MAX_DEVICE_WIDTH}
+      >
         <TopAndBottomGradient />
         <Shine disabled={!warmLoading}>
           <Flex row animation="fast" width={MAX_DEVICE_WIDTH}>
@@ -421,6 +442,25 @@ const ReanimatedNumber = ({
         >
           {value}
         </Animated.Text>
+        {EndElement && (
+          <Animated.View key="refresh-icon" style={{ height: DIGIT_HEIGHT }}>
+            <Animated.View
+              style={[
+                {
+                  height: DIGIT_HEIGHT,
+                  width: DIGIT_MAX_WIDTH,
+                  position: 'absolute',
+                  marginVertical: 'auto',
+                  justifyContent: 'center',
+                },
+                AnimatedCharStyles.wrapperStyle,
+                iconAnimatedLeft,
+              ]}
+            >
+              {EndElement}
+            </Animated.View>
+          </Animated.View>
+        )}
       </Flex>
     </Animated.View>
   )

@@ -1,7 +1,8 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { useAccountMeta, useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
+import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
@@ -14,6 +15,7 @@ import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { getWrapType } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import type { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
@@ -33,14 +35,13 @@ export function useDerivedSwapInfo({
     txId,
   } = state
 
+  const { defaultChainId } = useEnabledChains()
+
   const { customSlippageTolerance, selectedProtocols, isV4HookPoolsEnabled } = useTransactionSettingsStore((s) => ({
     customSlippageTolerance: s.customSlippageTolerance,
     selectedProtocols: s.selectedProtocols,
     isV4HookPoolsEnabled: s.isV4HookPoolsEnabled,
   }))
-
-  const account = useAccountMeta()
-  const { defaultChainId } = useEnabledChains()
 
   const currencyInInfo = useCurrencyInfo(
     currencyAssetIn ? buildCurrencyId(currencyAssetIn.chainId, currencyAssetIn.address) : undefined,
@@ -52,17 +53,21 @@ export function useDerivedSwapInfo({
     { refetch: true },
   )
 
+  const currencyIn = currencyInInfo?.currency
+  const currencyOut = currencyOutInfo?.currency
+
+  const chainId = currencyIn?.chainId ?? currencyOut?.chainId ?? defaultChainId
+
+  const { evmAccount, svmAccount } = useWallet()
+
+  const account = chainId === UniverseChainId.Solana ? svmAccount : evmAccount
+
   const currencies = useMemo(() => {
     return {
       [CurrencyField.INPUT]: currencyInInfo,
       [CurrencyField.OUTPUT]: currencyOutInfo,
     }
   }, [currencyInInfo, currencyOutInfo])
-
-  const currencyIn = currencyInInfo?.currency
-  const currencyOut = currencyOutInfo?.currency
-
-  const chainId = currencyIn?.chainId ?? currencyOut?.chainId ?? defaultChainId
 
   const { balance: tokenInBalance } = useOnChainCurrencyBalance(currencyIn, account?.address)
   const { balance: tokenOutBalance } = useOnChainCurrencyBalance(currencyOut, account?.address)

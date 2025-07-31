@@ -1,4 +1,5 @@
 import { Signer } from '@ethersproject/abstract-signer'
+import { HexString } from 'uniswap/src/utils/hex'
 import { sleep } from 'utilities/src/time/timing'
 import { z } from 'zod'
 
@@ -51,7 +52,7 @@ export function buildFlashbotsUrl({
   refundPercent,
 }: {
   baseUrl?: string
-  address?: `0x${string}` | string | undefined
+  address?: HexString | string | undefined
   refundPercent?: number
 }): string {
   const refundParam = getRefundString(address, refundPercent)

@@ -114,7 +114,15 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
 
   const walletExists = Object.keys(initialAccounts.current).some(
     (accountAddress) =>
-      areAddressesEqual(accountAddress, resolvedAddress) || areAddressesEqual(accountAddress, validAddress),
+      // TODO(WALL-7065): Update to support solana
+      areAddressesEqual({
+        addressInput1: { address: accountAddress, platform: Platform.EVM },
+        addressInput2: { address: resolvedAddress, platform: Platform.EVM },
+      }) ||
+      areAddressesEqual({
+        addressInput1: { address: accountAddress, platform: Platform.EVM },
+        addressInput2: { address: validAddress, platform: Platform.EVM },
+      }),
   )
 
   // Form validation.

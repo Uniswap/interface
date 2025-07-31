@@ -97,6 +97,7 @@ export const MAINNET_CHAIN_INFO = {
     decimals: 18,
     address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   },
+  tradingApiPollingIntervalMs: 500,
 } as const satisfies UniverseChainInfo
 
 const testnetTokens = buildChainTokens({
@@ -168,4 +169,5 @@ export const SEPOLIA_CHAIN_INFO = {
     decimals: 18,
     address: '0xfff9976782d46cc05630d1f6ebab18b2324d6b14',
   },
+  tradingApiPollingIntervalMs: 500,
 } as const satisfies UniverseChainInfo

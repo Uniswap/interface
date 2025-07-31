@@ -76,6 +76,7 @@ interface PoolDetailsStatsButtonsProps {
   token1?: Token
   feeTier?: number
   hookAddress?: string
+  isDynamic?: boolean
   protocolVersion?: ProtocolVersion
   loading?: boolean
 }
@@ -132,6 +133,7 @@ export function PoolDetailsStatsButtons({
   token1,
   feeTier,
   hookAddress,
+  isDynamic,
   protocolVersion,
   loading,
 }: PoolDetailsStatsButtonsProps) {
@@ -169,6 +171,9 @@ export function PoolDetailsStatsButtons({
         }
         if (hookAddress) {
           queryParams.set('hook', hookAddress)
+        }
+        if (isDynamic) {
+          queryParams.set('isDynamic', 'true')
         }
         const url = `/positions/create/${protocolVersion?.toLowerCase()}?${queryParams.toString()}`
         navigate(url, {

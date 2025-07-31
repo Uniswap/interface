@@ -10,10 +10,10 @@ import { CopyToClipboard } from 'theme/components/CopyHelper'
 import { Flex, GeneratedIcon, IconButton, Separator, Text, TouchableArea } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { QrCode } from 'ui/src/components/icons/QrCode'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 
 function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
   return <IconButton emphasis="secondary" size="xxsmall" icon={<Icon />} />
@@ -21,7 +21,9 @@ function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
 
 function AccountCardItem(): JSX.Element {
   const account = useAccount()
-  const { unitag } = useUnitagByAddress(account.address)
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: account.address ? { address: account.address } : undefined,
+  })
   const { data: ENSName } = useENSName(account.address)
   const setModalState = useUpdateAtom(miniPortfolioModalStateAtom)
 

@@ -1,15 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
+import { useAllFeeTierPoolData } from 'components/Liquidity/hooks/useAllFeeTierPoolData'
 import {
   MAX_FEE_TIER_DECIMALS,
   calculateTickSpacingFromFeeAmount,
   getFeeTierKey,
   isDynamicFeeTier,
-} from 'components/Liquidity/utils'
+} from 'components/Liquidity/utils/feeTiers'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import { StyledPercentInput } from 'components/PercentInput'
 import ms from 'ms'
-import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
+import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import { NumericalInputMimic, NumericalInputSymbolContainer } from 'pages/Swap/common/shared'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -54,12 +54,12 @@ export function FeeTierSearchModal() {
   const { chainId } = useMultichainContext()
   const {
     positionState: { fee: selectedFee, protocolVersion, hook },
-    derivedPositionInfo,
+    currencies,
     setPositionState,
     feeTierSearchModalOpen,
     setFeeTierSearchModalOpen,
     setDynamicFeeTierSpeedbumpData,
-  } = useCreatePositionContext()
+  } = useCreateLiquidityContext()
   const onClose = () => {
     setCreateFeeValue('')
     setCreateModeEnabled(false)
@@ -81,12 +81,12 @@ export function FeeTierSearchModal() {
   const { feeTierData, hasExistingFeeTiers } = useAllFeeTierPoolData({
     chainId,
     protocolVersion,
-    sdkCurrencies: derivedPositionInfo.currencies.sdk,
+    sdkCurrencies: currencies.sdk,
     withDynamicFeeTier,
     hook: hook ?? ZERO_ADDRESS,
   })
 
-  const showCreateModal = !withDynamicFeeTier && (createModeEnabled || !hasExistingFeeTiers)
+  const showCreateModal = createModeEnabled || !hasExistingFeeTiers
 
   useEffect(() => {
     let interval: NodeJS.Timeout
@@ -175,7 +175,7 @@ export function FeeTierSearchModal() {
         <Flex row justifyContent="space-between" alignItems="center" gap="$spacing4" width="100%">
           {createModeEnabled && (
             <Flex {...ClickableTamaguiStyle} onPress={() => setCreateModeEnabled(false)}>
-              <BackArrow size="$icon.24" />
+              <BackArrow size="$icon.24" color="$neutral2" />
             </Flex>
           )}
           <Text

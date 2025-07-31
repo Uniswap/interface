@@ -21,12 +21,13 @@ import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { SwapModalHeaderAmount } from 'components/swap/SwapModalHeaderAmount'
 import { useCurrency } from 'hooks/Tokens'
 import { useUSDPrice } from 'hooks/useUSDPrice'
+import { TFunction } from 'i18next'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import styled, { useTheme } from 'lib/styled-components'
-import { ReactNode, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
-import { Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useOrder } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { ThemedText } from 'theme/components'
@@ -144,23 +145,31 @@ export function useOrderAmounts(order?: UniswapXOrderDetails):
   }
 }
 
-function getOrderTitle(order: UniswapXOrderDetails): ReactNode {
-  const isLimit = order.type === SignatureType.SIGN_LIMIT
-  switch (order.status) {
+function getOrderTitle({
+  orderType,
+  orderStatus,
+  t,
+}: {
+  orderType: SignatureType | undefined
+  orderStatus: UniswapXOrderStatus
+  t: TFunction
+}): string {
+  const isLimit = orderType === SignatureType.SIGN_LIMIT
+  switch (orderStatus) {
     case UniswapXOrderStatus.OPEN:
-      return isLimit ? <Trans i18nKey="common.limit.pending" /> : <Trans i18nKey="common.orderPending" />
+      return isLimit ? t('common.limit.pending') : t('common.orderPending')
     case UniswapXOrderStatus.EXPIRED:
-      return isLimit ? <Trans i18nKey="common.limit.expired" /> : <Trans i18nKey="common.orderExpired" />
+      return isLimit ? t('common.limit.expired') : t('common.orderExpired')
     case UniswapXOrderStatus.PENDING_CANCELLATION:
-      return <Trans i18nKey="common.pending.cancellation" />
+      return t('common.pending.cancellation')
     case UniswapXOrderStatus.INSUFFICIENT_FUNDS:
-      return <Trans i18nKey="common.insufficient.funds" />
+      return t('common.insufficient.funds')
     case UniswapXOrderStatus.CANCELLED:
-      return isLimit ? <Trans i18nKey="common.limit.cancelled" /> : <Trans i18nKey="common.orderCancelled" />
+      return isLimit ? t('common.limit.canceled') : t('common.orderCanceled')
     case UniswapXOrderStatus.FILLED:
-      return isLimit ? <Trans i18nKey="common.limit.executed" /> : <Trans i18nKey="common.orderExecuted" />
+      return isLimit ? t('common.limit.executed') : t('common.orderExecuted')
     default:
-      return null
+      return ''
   }
 }
 
@@ -172,6 +181,7 @@ export function OrderContent({
   logos?: Logos
   onCancel?: () => void
 }) {
+  const { t } = useTranslation()
   const amounts = useOrderAmounts(order)
   const amountsDefined = !!amounts?.inputAmount.currency && !!amounts.outputAmount.currency
   const fiatValueInput = useUSDPrice(amounts?.inputAmount)
@@ -213,6 +223,11 @@ export function OrderContent({
     [amounts?.inputAmount.currency, amounts?.outputAmount.currency],
   )
 
+  const orderTitle = useMemo(
+    () => getOrderTitle({ orderType: order.type, orderStatus: order.status, t }),
+    [order.type, order.status, t],
+  )
+
   if (!amounts?.inputAmount) {
     return null
   }
@@ -222,7 +237,7 @@ export function OrderContent({
       <Row gap="md">
         <PortfolioLogo chainId={amounts.inputAmount.currency.chainId} currencies={currencies} />
         <Column>
-          <ThemedText.SubHeader fontWeight={500}>{getOrderTitle(order)}</ThemedText.SubHeader>
+          <ThemedText.SubHeader fontWeight={500}>{orderTitle}</ThemedText.SubHeader>
           <ThemedText.BodySmall color="neutral2" fontWeight={500}>
             {createdAt}
           </ThemedText.BodySmall>
@@ -259,11 +274,7 @@ export function OrderContent({
       {Boolean(isLimitCancellable(order) && order.encodedOrder) && (
         <Flex mt="$spacing12" row>
           <Button size="small" variant="default" emphasis="secondary" onPress={onCancel}>
-            {order.type === SignatureType.SIGN_LIMIT ? (
-              <Trans i18nKey="common.limit.cancel" count={1} />
-            ) : (
-              <Trans i18nKey="common.cancelOrder" />
-            )}
+            {order.type === SignatureType.SIGN_LIMIT ? t('common.limit.cancel', { count: 1 }) : t('common.cancelOrder')}
           </Button>
         </Flex>
       )}
@@ -273,15 +284,11 @@ export function OrderContent({
             <AlertTriangleFilled size="20px" />
           </AlertIconContainer>
           <Column>
-            <ThemedText.SubHeader lineHeight="24px">
-              <Trans i18nKey="common.insufficientBalance.error" />
-            </ThemedText.SubHeader>
+            <ThemedText.SubHeader lineHeight="24px">{t('common.insufficientBalance.error')}</ThemedText.SubHeader>
             <ThemedText.SubHeaderSmall lineHeight="20px">
-              {order.type === SignatureType.SIGN_LIMIT ? (
-                <Trans i18nKey="account.portfolio.activity.signLimit" />
-              ) : (
-                <Trans i18nKey="account.porfolio.activity.cancelledBelow" />
-              )}
+              {order.type === SignatureType.SIGN_LIMIT
+                ? t('account.portfolio.activity.signLimit')
+                : t('account.portfolio.activity.canceledBelow')}
             </ThemedText.SubHeaderSmall>
           </Column>
         </InsufficientFundsCopyContainer>
@@ -326,6 +333,7 @@ function useSyncedSelectedOrder(): UniswapXOrderDetails | undefined {
  * be defined in the remote cases.
  */
 export function OffchainActivityModal() {
+  const { t } = useTranslation()
   const selectedOrderAtomValue = useAtomValue(selectedOrderAtom)
   const [cancelState, setCancelState] = useState(CancellationState.NOT_STARTED)
   const [cancelTxHash, setCancelTxHash] = useState<string | undefined>()
@@ -382,9 +390,7 @@ export function OffchainActivityModal() {
       >
         <Wrapper data-testid="offchain-activity-modal">
           <Row justify="space-between">
-            <ThemedText.SubHeader fontWeight={500}>
-              <Trans i18nKey="common.transactionDetails" />
-            </ThemedText.SubHeader>
+            <ThemedText.SubHeader fontWeight={500}>{t('common.transactionDetails')}</ThemedText.SubHeader>
             <TouchableArea onPress={reset}>
               <X size="$icon.20" color="$neutral1" hoverColor="$neutral1Hovered" />
             </TouchableArea>

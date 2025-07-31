@@ -16,8 +16,8 @@ import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
-  isFinalizedTx,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
@@ -27,7 +27,7 @@ import { CancelConfirmationView } from 'wallet/src/features/transactions/Summary
 import TransactionActionsModal, {
   TransactionActionItem,
 } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionActionsModal'
-import { getIsCancelable } from 'wallet/src/features/transactions/utils'
+import { useIsCancelable } from 'wallet/src/features/transactions/hooks'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { openFORSupportLink } from 'wallet/src/utils/linking'
 
@@ -59,7 +59,7 @@ export const useTransactionActions = ({
 
   const { status, addedTime } = transaction
 
-  const isCancelable = !readonly && getIsCancelable(transaction)
+  const isCancelable = useIsCancelable(transaction) && !readonly
 
   const baseActionItems = useTransactionActionItems(transaction)
 

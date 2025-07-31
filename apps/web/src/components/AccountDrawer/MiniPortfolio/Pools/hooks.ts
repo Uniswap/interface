@@ -16,6 +16,7 @@ import {
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currencyKey'
 
@@ -43,10 +44,12 @@ function useContractMultichain<T extends BaseContract>({
         .filter((chainId) => isSupportedChain(chainId))
 
     return relevantChains.reduce((acc: ContractMap<T>, chainId) => {
+      const isSupported = isSupportedChain(chainId) && isEVMChain(chainId)
+
       const provider =
         walletProvider && account.chainId === chainId
           ? walletProvider
-          : isSupportedChain(chainId)
+          : isSupported
             ? RPC_PROVIDERS[chainId]
             : undefined
       if (provider) {

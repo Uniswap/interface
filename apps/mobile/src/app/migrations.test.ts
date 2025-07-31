@@ -93,6 +93,7 @@ import {
   v88Schema,
   v89Schema,
   v8Schema,
+  v90Schema,
   v9Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
@@ -144,6 +145,7 @@ import {
   testMoveTokenAndNFTVisibility,
   testRemoveCreatedOnboardingRedesignAccount,
   testRemoveHoldToSwap,
+  testRemovePriceAlertsEnabledFromPushNotifications,
   testUnchecksumDismissedTokenWarningKeys,
   testUpdateExploreOrderByType,
 } from 'wallet/src/state/walletMigrationsTests'
@@ -1726,5 +1728,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v89 to v90', () => {
     testMigrateLiquidityTransactionInfoRename(migrations[90], v89Schema)
+  })
+
+  it('migrates from v90 to v91', () => {
+    testRemovePriceAlertsEnabledFromPushNotifications(migrations[91], v90Schema)
   })
 })

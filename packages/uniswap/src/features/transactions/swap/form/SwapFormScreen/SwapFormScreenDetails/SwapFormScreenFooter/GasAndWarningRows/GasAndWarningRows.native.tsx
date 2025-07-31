@@ -4,23 +4,22 @@ import { Flex, Text, TouchableArea, useIsShortMobileDevice, useMedia } from 'ui/
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import type { WarningWithStyle } from 'uniswap/src/components/modals/WarningModal/types'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { SwapWarningModal } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/SwapWarningModal'
 import { TradeInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/TradeInfoRow'
 import { useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/useDebouncedGasInfo'
-
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 
 export function GasAndWarningRows(): JSX.Element {
   const isShort = useMedia().short
   const isShortMobileDevice = useIsShortMobileDevice()
 
-  const account = useAccountMeta()
+  const account = useWallet().evmAccount
 
   const [showWarningModal, setShowWarningModal] = useState(false)
 

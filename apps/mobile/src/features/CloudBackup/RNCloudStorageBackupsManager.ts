@@ -4,7 +4,7 @@ interface RNCloudStorageBackupsManager {
   isCloudStorageAvailable: () => Promise<boolean>
   deleteCloudStorageMnemonicBackup: (mnemonicId: string) => Promise<boolean>
   startFetchingCloudStorageBackups: () => Promise<void>
-  stopFetchingCloudStorageBackups: () => Promise<void>
+  stopFetchingCloudStorageBackups: () => void
   backupMnemonicToCloudStorage: (mnemonicId: string, password: string) => Promise<boolean>
   restoreMnemonicFromCloudStorage: (mnemonicId: string, password: string) => Promise<boolean>
 }
@@ -29,7 +29,7 @@ export function startFetchingCloudStorageBackups(): Promise<void> {
   return RNCloudStorageBackupsManager.startFetchingCloudStorageBackups()
 }
 
-export function stopFetchingCloudStorageBackups(): Promise<void> {
+export function stopFetchingCloudStorageBackups(): void {
   return RNCloudStorageBackupsManager.stopFetchingCloudStorageBackups()
 }
 

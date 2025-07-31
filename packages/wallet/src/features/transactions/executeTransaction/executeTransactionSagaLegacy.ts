@@ -2,7 +2,7 @@ import { BaseProvider } from '@ethersproject/providers'
 import { providers } from 'ethers'
 import { SagaIterator } from 'redux-saga'
 import { call, put } from 'typed-redux-saga'
-import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
+import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
@@ -36,7 +36,7 @@ export interface ExecuteTransactionParams {
   // this is optional as an override in txDetail.id calculation
   txId?: string
   chainId: UniverseChainId
-  account: AccountMeta
+  account: SignerMnemonicAccountMeta
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
   transactionOriginType: TransactionOriginType
@@ -47,16 +47,12 @@ export interface ExecuteTransactionParams {
 // All outgoing transactions should go through here
 
 export function* executeTransactionLegacy(params: ExecuteTransactionParams): SagaIterator<{
-  transactionResponse: providers.TransactionResponse
+  transactionHash: string
 }> {
   const { chainId, account, options, typeInfo } = params
   let request = options.request
 
   logger.debug('executeTransaction', '', `Sending tx on ${getChainLabel(chainId)} to ${request.to}`)
-
-  if (account.type === AccountType.Readonly) {
-    throw new Error('Account must support signing')
-  }
 
   // Register the tx in the store before it's submitted
   const unsubmittedTransaction = yield* call(addUnsubmittedTransaction, params)
@@ -113,7 +109,7 @@ export function* executeTransactionLegacy(params: ExecuteTransactionParams): Sag
       hash: transactionResponse.hash,
     })
 
-    return { transactionResponse }
+    return { transactionHash: transactionResponse.hash }
   } catch (error) {
     yield* put(transactionActions.finalizeTransaction({ ...unsubmittedTransaction, status: TransactionStatus.Failed }))
 

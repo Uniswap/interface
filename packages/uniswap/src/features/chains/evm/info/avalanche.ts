@@ -73,4 +73,5 @@ export const AVALANCHE_CHAIN_INFO = {
     decimals: 18,
     address: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
   },
+  tradingApiPollingIntervalMs: 200,
 } as const satisfies UniverseChainInfo

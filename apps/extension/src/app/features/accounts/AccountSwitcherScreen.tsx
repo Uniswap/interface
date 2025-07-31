@@ -70,6 +70,7 @@ export function AccountSwitcherScreen(): JSX.Element {
   // TODO: EXT-899 https://linear.app/uniswap/issue/EXT-899/enable-unitag-edit-button-is-account-header
   const activeAccountDisplayName = useDisplayName(activeAddress)
   const activeAccountHasUnitag = activeAccountDisplayName?.type === DisplayNameType.Unitag
+  const activeAccountHasENS = activeAccountDisplayName?.type === DisplayNameType.ENS
 
   const [showEditLabelModal, setShowEditLabelModal] = useState(false)
 
@@ -245,6 +246,7 @@ export function AccountSwitcherScreen(): JSX.Element {
               menuOptions={menuOptions}
               placement="bottom"
               onLeftClick
+              menuContainerStyleProps={{ mr: '$spacing12' }}
             >
               <TouchableArea
                 borderRadius="$roundedFull"
@@ -274,20 +276,22 @@ export function AccountSwitcherScreen(): JSX.Element {
             </Flex>
           </Flex>
 
-          <Flex pt="$padding16">
+          <Flex pt={activeAccountHasENS ? undefined : '$padding16'}>
             {activeAccountHasUnitag ? (
               <UnitagActionButton />
             ) : (
-              <Flex row>
-                <Button
-                  size="small"
-                  testID={TestID.AccountCard}
-                  emphasis="secondary"
-                  onPress={() => setShowEditLabelModal(true)}
-                >
-                  {t('account.wallet.header.button.title')}
-                </Button>
-              </Flex>
+              !activeAccountHasENS && (
+                <Flex row>
+                  <Button
+                    size="small"
+                    testID={TestID.AccountCard}
+                    emphasis="secondary"
+                    onPress={() => setShowEditLabelModal(true)}
+                  >
+                    {t('account.wallet.header.button.title')}
+                  </Button>
+                </Flex>
+              )
             )}
           </Flex>
         </Flex>

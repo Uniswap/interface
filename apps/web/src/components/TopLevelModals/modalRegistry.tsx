@@ -40,7 +40,7 @@ const RemoveLiquidityModal = lazy(() =>
   import('pages/RemoveLiquidity/RemoveLiquidityModal').then((module) => ({ default: module.RemoveLiquidityModal })),
 )
 const ClaimFeeModal = lazy(() =>
-  import('pages/Pool/Positions/ClaimFeeModal').then((module) => ({ default: module.ClaimFeeModal })),
+  import('components/Liquidity/ClaimFeeModal').then((module) => ({ default: module.ClaimFeeModal })),
 )
 const PasskeysHelpModal = lazy(() =>
   import('uniswap/src/features/passkey/PasskeysHelpModal').then((module) => ({ default: module.PasskeysHelpModal })),

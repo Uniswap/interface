@@ -25,6 +25,7 @@ export const getDefaultState = (defaultChainId: UniverseChainId): Readonly<Omit<
   isFiatMode: false,
   isMax: false,
   isSubmitting: false,
+  isConfirmed: false,
   showPendingUI: false,
 })
 

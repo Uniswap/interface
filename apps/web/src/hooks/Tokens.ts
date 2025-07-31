@@ -6,15 +6,55 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { useCurrencyInfo as useUniswapCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import {
+  useCurrencyInfo as useUniswapCurrencyInfo,
+  useCurrencyInfoWithLoading as useUniswapCurrencyInfoWithLoading,
+} from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { isAddress } from 'utilities/src/addresses'
 
 type Maybe<T> = T | undefined
 
+// Extract the common preprocessing logic
+function useCurrencyPreprocessing({
+  addressOrCurrency,
+  chainId,
+  skip,
+}: {
+  addressOrCurrency?: string | Currency
+  chainId?: UniverseChainId
+  skip?: boolean
+}) {
+  const { chainId: connectedChainId } = useAccount()
+  const chainIdWithFallback =
+    (typeof addressOrCurrency === 'string' ? chainId : addressOrCurrency?.chainId) ?? connectedChainId
+  const supportedChainId = useSupportedChainId(chainIdWithFallback)
+  const nativeAddressWithFallback = getChainInfo(supportedChainId ?? UniverseChainId.Mainnet).nativeCurrency.address
+
+  const isNative = useMemo(() => checkIsNative(addressOrCurrency), [addressOrCurrency])
+  const address = useMemo(
+    () => getAddress({ isNative, nativeAddressWithFallback, addressOrCurrency }),
+    [isNative, nativeAddressWithFallback, addressOrCurrency],
+  )
+
+  const addressWithFallback = isNative || !address ? nativeAddressWithFallback : address
+  const currencyId = buildCurrencyId(supportedChainId ?? UniverseChainId.Mainnet, addressWithFallback)
+  const shouldSkip = !addressOrCurrency || skip
+
+  return { currencyId, shouldSkip, addressOrCurrency }
+}
+
 export function useCurrency({ address, chainId }: { address?: string; chainId?: UniverseChainId }): Maybe<Currency> {
   const currencyInfo = useCurrencyInfo(address, chainId, false)
   return currencyInfo?.currency
+}
+
+export function useCurrencyWithLoading(
+  { address, chainId }: { address?: string; chainId?: UniverseChainId },
+  options?: { skip?: boolean },
+): { currency: Maybe<Currency>; loading: boolean } {
+  const { currencyInfo, loading } = useCurrencyInfoWithLoading(address, chainId, options?.skip)
+  return { currency: currencyInfo?.currency, loading }
 }
 
 /**
@@ -29,30 +69,52 @@ export function useCurrencyInfo(
   chainId?: UniverseChainId,
   skip?: boolean,
 ): Maybe<CurrencyInfo> {
-  const { chainId: connectedChainId } = useAccount()
-  const chainIdWithFallback =
-    (typeof addressOrCurrency === 'string' ? chainId : addressOrCurrency?.chainId) ?? connectedChainId
-  const supportedChainId = useSupportedChainId(chainIdWithFallback)
-  const nativeAddressWithFallback = getChainInfo(supportedChainId ?? UniverseChainId.Mainnet).nativeCurrency.address
-
-  const isNative = useMemo(() => checkIsNative(addressOrCurrency), [addressOrCurrency])
-  const address = useMemo(
-    () => getAddress({ isNative, nativeAddressWithFallback, addressOrCurrency }),
-    [isNative, nativeAddressWithFallback, addressOrCurrency],
-  )
-
-  const addressWithFallback = isNative || !address ? nativeAddressWithFallback : address
-
-  const currencyId = buildCurrencyId(supportedChainId ?? UniverseChainId.Mainnet, addressWithFallback)
-  const currencyInfo = useUniswapCurrencyInfo(currencyId, { skip })
+  const {
+    currencyId,
+    shouldSkip,
+    addressOrCurrency: processedAddress,
+  } = useCurrencyPreprocessing({ addressOrCurrency, chainId, skip })
+  const currencyInfo = useUniswapCurrencyInfo(currencyId, { skip: shouldSkip })
 
   return useMemo(() => {
-    if (!currencyInfo || !addressOrCurrency || skip) {
+    if (!currencyInfo || !processedAddress || skip) {
       return undefined
     }
-
     return currencyInfo
-  }, [addressOrCurrency, skip, currencyInfo])
+  }, [processedAddress, skip, currencyInfo])
+}
+
+function useCurrencyInfoWithLoading(
+  currency?: Currency,
+  chainId?: UniverseChainId,
+  skip?: boolean,
+): { currencyInfo: Maybe<CurrencyInfo>; loading: boolean }
+function useCurrencyInfoWithLoading(
+  address?: string,
+  chainId?: UniverseChainId,
+  skip?: boolean,
+): { currencyInfo: Maybe<CurrencyInfo>; loading: boolean }
+// eslint-disable-next-line max-params
+function useCurrencyInfoWithLoading(
+  addressOrCurrency?: string | Currency,
+  chainId?: UniverseChainId,
+  skip?: boolean,
+): { currencyInfo: Maybe<CurrencyInfo>; loading: boolean } {
+  const {
+    currencyId,
+    shouldSkip,
+    addressOrCurrency: processedAddress,
+  } = useCurrencyPreprocessing({ addressOrCurrency, chainId, skip })
+  const { currencyInfo, loading } = useUniswapCurrencyInfoWithLoading(currencyId, { skip: shouldSkip })
+
+  const finalCurrencyInfo = useMemo(() => {
+    if (!currencyInfo || !processedAddress || skip) {
+      return undefined
+    }
+    return currencyInfo
+  }, [processedAddress, skip, currencyInfo])
+
+  return { currencyInfo: finalCurrencyInfo, loading }
 }
 
 export function checkIsNative(addressOrCurrency?: string | Currency): boolean {

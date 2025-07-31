@@ -164,6 +164,7 @@ export enum ElementName {
   SwapReview = 'swap-review',
   SwapRoutingPreferenceDefault = 'swap-routing-preference-default',
   SwapRoutingPreferenceUniswapX = 'swap-routing-preference-UniswapX',
+  SwapRoutingPreferenceV2 = 'swap-routing-preference-v2',
   SwapRoutingPreferenceV3 = 'swap-routing-preference-v3',
   SwapRoutingPreferenceV4 = 'swap-routing-preference-v4',
   SwapRoutingPreferenceV4Hooks = 'swap-routing-preference-v4-hooks',

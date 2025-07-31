@@ -5,6 +5,7 @@ import { RankingType } from 'uniswap/src/data/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { BasicTokenInfo, SerializedTokenMap } from 'uniswap/src/features/tokens/slice/types'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -173,7 +174,14 @@ export function deleteDefaultFavoritesFromFavoritesState(state: any): any {
 
   const filteredWatchedAddresses = newState.favorites?.watchedAddresses?.filter(
     (address: string) =>
-      !areAddressesEqual(address, VITALIK_ETH_ADDRESS) && !areAddressesEqual(address, HAYDEN_ETH_ADDRESS),
+      !areAddressesEqual({
+        addressInput1: { address, platform: Platform.EVM },
+        addressInput2: { address: VITALIK_ETH_ADDRESS, platform: Platform.EVM },
+      }) &&
+      !areAddressesEqual({
+        addressInput1: { address, platform: Platform.EVM },
+        addressInput2: { address: HAYDEN_ETH_ADDRESS, platform: Platform.EVM },
+      }),
   )
 
   return {
@@ -458,4 +466,11 @@ export function migrateLiquidityTransactionInfo(state: any): any {
     }
   }
   return { ...state, transactions: newTransactionState }
+}
+
+// Mobile: 91
+export function removePriceAlertsEnabledFromPushNotifications(state: any): any {
+  const newState = { ...state }
+  delete newState.pushNotifications.priceAlertsEnabled
+  return newState
 }

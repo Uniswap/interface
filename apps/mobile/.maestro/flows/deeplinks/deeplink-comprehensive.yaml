@@ -1,0 +1,111 @@
+appId: com.uniswap.mobile.dev
+env:
+  E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
+---
+- runFlow: ../../shared-flows/start.yaml
+- runFlow: ../../shared-flows/recover-fast.yaml
+
+# Open onramp deeplink
+- openLink:
+    link: 'uniswap://app/fiatonramp?userAddress=0xEEf806b3Cae8fcecAe1793EE1e0B2c738F61C6bB&source=push'
+    autoVerify: true
+# Handle iOS deeplink permission dialog (optional - only appears on first run)
+- tapOn:
+    text: 'Open'
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: ${output.testIds.ForFormTokenSelected}
+- assertVisible:
+    id: ${output.testIds.BuyFormAmountInput}
+- killApp
+
+# Open widget deeplink
+- openLink:
+    link: 'uniswap://widget/#/tokens/ethereum/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
+    autoVerify: true
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: ${output.testIds.TokenDetailsHeaderText}
+    text: 'Uniswap'
+- killApp
+
+# Open swap deeplink
+- openLink:
+    link: 'uniswap://redirect?screen=swap&userAddress=0xEEf806b3Cae8fcecAe1793EE1e0B2c738F61C6bB&inputCurrencyId=1-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrencyId=1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=input&amount=100'
+    autoVerify: true
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: ${output.testIds.SwapFormHeader}
+- assertVisible:
+    id: ${output.testIds.AmountInputIn}
+- assertVisible:
+    id: ${output.testIds.ChooseInputToken}
+- assertVisible:
+    id: ${output.testIds.ChooseOutputToken}
+- killApp
+
+# Open token details deeplink
+- openLink:
+    link: 'uniswap://app/tokendetails?currencyId=10-0x6fd9d7ad17242c41f7131d257212c54a0e816691&source=push'
+    autoVerify: true
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: ${output.testIds.TokenDetailsHeaderText}
+- assertVisible:
+    id: ${output.testIds.TokenDetailsSwapButton}
+- killApp
+
+# Open transaction history deeplink
+- openLink:
+    link: 'uniswap://redirect?screen=transaction&fiatOnRamp=true&userAddress=0xEEf806b3Cae8fcecAe1793EE1e0B2c738F61C6bB'
+    autoVerify: true
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: ${output.testIds.ActivityContent}
+- killApp
+
+# Invalid deeplink (should fail gracefully and remain functional)
+- openLink:
+    link: 'uniswap://invalid-path'
+    autoVerify: true
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: ${output.testIds.AccountHeaderAvatar}
+- killApp
+
+# Open moonpayOnly onramp deeplink
+- openLink:
+    link: 'uniswap://app/fiatonramp?source=push&moonpayOnly=true&moonpayCurrencyCode=usdc&amount=200'
+    autoVerify: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: ${output.testIds.ForFormTokenSelected}
+    text: 'USD Coin'
+- assertVisible:
+    id: ${output.testIds.BuyFormAmountInput}
+    text: '200'
+- killApp
+
+# Open scantastic deeplink (when user scans QR code on the extension)
+- openLink:
+    link: 'uniswap://scantastic?pubKey=%7B%22alg%22%3A%22RSA-OAEP-256%22%2C%22kty%22%3A%22RSA%22%2C%22n%22%3A%224X4nRAEZ8FWoVmoQ5KrxcssIR7XpdcVo_y7yD1SgmYuXekvHMIYuLxxkxVTjsyxj2s9jctIHOhZ-g96w4oM8-HXjCJG_v55w6FZyDskllcmaGeUlZFwWkiqZ-PKkHCWxCe_dZGvL33sazS_L8P3eAxXEPEJMG9p9lxsIlPp7ki0GSyVjq4rrHgW0lIz6qy6WqHbnyJWQAMSPnZTGM697ZCdkW_GTD3MyqitBwK5xNQN8Pxgbu6S7xbQglanYNBbeMYpJ3X1PDl37sp16YwPm6ryGaX1ESDPHa3M7-_we_yQEUQvtU5t2dd8chISJX8L1D7s8iNxM1LxG_nZTwKnccRPtrzKj-osBMbfCoU4fiNS2LC7q6zsyHxgDpeFlrV--iboQ9TsaQ7RGaFOSKs0l74_dt8GvX2JtNJ0ah8K__eNg9q0xBD8DTdeY2duMTEKJZIKgEyX0KUiRpsbsNmm_76iqhhZyYvcb6mwvNnVcXPg_TabX7lQEEippd7JTWVnF2LKzldlUonchQSsbLEUlN_ALa0Nuq6GG1MVJ0JjSsNMcpin6rH9fPzmDKkqzM2qvhdyuV66vkS82Wj9tQpqXL_jkRk7bQsDlB-HiVbzM2oNPk6or5u6p5tJni0th6BZm4z-sYgmMj3D5xHeusyap-8dmS9J4mXDxGLL_NloaHY8%22%2C%22e%22%3A%22AQAB%22%7D&uuid=28c01911-8e69-46e9-b2f0-f5e719bb714b&vendor=Apple&model=Macintosh&browser=Chrome'
+    autoVerify: true
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: ${output.testIds.ScantasticConfirmationTitle}
+- assertVisible:
+    id: ${output.testIds.ScantasticDevice}
+    text: 'Apple Macintosh'
+- assertVisible:
+    id: ${output.testIds.ScantasticBrowser}
+    text: 'Chrome'
+- killApp

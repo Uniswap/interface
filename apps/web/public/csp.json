@@ -4,7 +4,6 @@
   ],
   "scriptSrc": [
     "'self'",
-    "data:",
     "'wasm-unsafe-eval'"
   ],
   "styleSrc": [
@@ -85,6 +84,7 @@
     "https://ipv4-check-perf.radar.cloudflare.com",
     "https://ipv6-check-perf.radar.cloudflare.com/",
     "https://lh3.googleusercontent.com/",
+    "https://lite-api.jup.ag/",
     "https://mainnet.base.org/",
     "https://browser-intake-datadoghq.com",
     "https://openseauserdata.com/",
@@ -95,6 +95,7 @@
     "https://rpc-mainnet.maticvigil.com",
     "https://rpc-mumbai.maticvigil.com",
     "https://rpc.ankr.com",
+    "https://eth-mainnet.public.blastapi.io",
     "https://rpc.blast.io/",
     "https://rpc.degen.tips",
     "https://rpc.goerli.mudit.blog/",

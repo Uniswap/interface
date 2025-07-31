@@ -3,6 +3,7 @@ import { WalletAlertBadge } from 'components/Badge/WalletAlertBadge'
 import { Dialog } from 'components/Dialog/Dialog'
 import { useWalletDisplay } from 'components/Web3Status/RecentlyConnectedModal'
 import { useAccount } from 'hooks/useAccount'
+import { useDisconnect } from 'hooks/useDisconnect'
 import { useTheme } from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
@@ -12,7 +13,7 @@ import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
 import { useEvent } from 'utilities/src/react/hooks'
-import { useDisconnect } from 'wagmi'
+
 interface DelegationMismatchModalProps {
   onClose: () => void
 }
@@ -21,7 +22,7 @@ function DelegationMismatchModal({ onClose }: DelegationMismatchModalProps) {
   const { t } = useTranslation()
   const account = useAccount()
   const { displayName } = useWalletDisplay(account.address)
-  const { disconnect } = useDisconnect()
+  const disconnect = useDisconnect()
   const theme = useTheme()
 
   const walletName = account.connector?.name ?? t('common.your.connected.wallet')

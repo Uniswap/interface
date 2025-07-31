@@ -1,14 +1,14 @@
+import { useLPSlippageValue } from 'components/Liquidity/Create/hooks/useLPSlippageValues'
+import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
+import { useModalState } from 'hooks/useModalState'
 import {
   IncreaseLiquidityContextProvider,
   IncreaseLiquidityStep,
   useIncreaseLiquidityContext,
-} from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
-import { IncreaseLiquidityReview } from 'components/IncreaseLiquidity/IncreaseLiquidityReview'
-import { IncreaseLiquidityTxContextProvider } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
-import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
-import { useModalState } from 'hooks/useModalState'
+} from 'pages/IncreaseLiquidity/IncreaseLiquidityContext'
 import { IncreaseLiquidityForm } from 'pages/IncreaseLiquidity/IncreaseLiquidityForm'
-import { useLPSlippageValue } from 'pages/Pool/Positions/create/hooks/useLPSlippageValues'
+import { IncreaseLiquidityReview } from 'pages/IncreaseLiquidity/IncreaseLiquidityReview'
+import { IncreaseLiquidityTxContextProvider } from 'pages/IncreaseLiquidity/IncreaseLiquidityTxContext'
 import { useTranslation } from 'react-i18next'
 import { HeightAnimator } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -45,9 +45,7 @@ function IncreaseLiquidityModalInner() {
             closeModal={closeModal}
             goBack={step === IncreaseLiquidityStep.Review ? () => setStep(IncreaseLiquidityStep.Input) : undefined}
           />
-          <HeightAnimator animation="fast" useInitialHeight>
-            {modalContent}
-          </HeightAnimator>
+          <HeightAnimator useInitialHeight>{modalContent}</HeightAnimator>
         </Modal>
       </IncreaseLiquidityTxContextProvider>
     </LPTransactionSettingsStoreContextProvider>

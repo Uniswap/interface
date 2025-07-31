@@ -4,10 +4,8 @@ import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { OnChainTransactionFields, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import {
-  ValidatedTransactionRequest,
-  validateTransactionRequest,
-} from 'uniswap/src/features/transactions/swap/utils/trade'
+import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { logger } from 'utilities/src/logger/logger'
 
 export interface IncreasePositionTransactionStep extends OnChainTransactionFields {
@@ -101,9 +99,8 @@ export function createIncreasePositionAsyncStep(
             ...increasePositionRequestArgs,
           })
         }
-        throw new Error('increase failed to get transaction request', {
-          cause: message,
-        })
+
+        throw e
       }
     },
   }

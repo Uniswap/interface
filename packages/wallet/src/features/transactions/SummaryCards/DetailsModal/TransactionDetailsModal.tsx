@@ -36,7 +36,7 @@ import {
 } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 import { useTransactionActions } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActions'
 import { getTransactionSummaryTitle } from 'wallet/src/features/transactions/SummaryCards/utils'
-import { getIsCancelable } from 'wallet/src/features/transactions/utils'
+import { useIsCancelable } from 'wallet/src/features/transactions/hooks'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type TransactionDetailsModalProps = {
@@ -173,7 +173,7 @@ export function TransactionDetailsModal({
 
   const { type } = useActiveAccountWithThrow()
   const readonly = type === AccountType.Readonly
-  const isCancelable = !readonly && getIsCancelable(transactionDetails)
+  const isCancelable = useIsCancelable(transactionDetails) && !readonly
 
   const transactionActions = useTransactionActions({
     authTrigger,

@@ -10,6 +10,7 @@ import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleAtomicSendCalls } from 'state/sagas/transactions/5792'
 import { useGetOnPressRetry } from 'state/sagas/transactions/retry'
+import { jupiterSwap } from 'state/sagas/transactions/solana'
 import { handleUniswapXSignatureStep } from 'state/sagas/transactions/uniswapx'
 import {
   HandleOnChainStepParams,
@@ -24,8 +25,8 @@ import { VitalTxFields } from 'state/transactions/types'
 import invariant from 'tiny-invariant'
 import { call } from 'typed-redux-saga'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
@@ -57,6 +58,11 @@ import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/sw
 import { generateSwapTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateSwapTransactionSteps'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
+import {
+  SignerMnemonicAccountDetails,
+  isSignerMnemonicAccountDetails,
+} from 'uniswap/src/features/wallet/types/AccountDetails'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -179,7 +185,7 @@ function* getSwapTxRequest(step: SwapTransactionStep | SwapTransactionStepAsync,
 type SwapParams = {
   selectChain: (chainId: number) => Promise<boolean>
   startChainId?: number
-  account: SignerMnemonicAccountMeta
+  account: SignerMnemonicAccountDetails
   analytics: SwapTradeBaseProperties
   swapTxContext: ValidatedSwapTxContext
   setCurrentStep: SetCurrentStepFn
@@ -218,6 +224,8 @@ function* swap(params: SwapParams) {
       case Routing.DUTCH_V3:
       case Routing.PRIORITY:
         return yield* uniswapXSwap({ ...params, swapTxContext, steps })
+      case Routing.JUPITER:
+        return yield* jupiterSwap({ ...params, swapTxContext })
     }
   } catch (error) {
     logger.error(error, { tags: { file: 'swapSaga', function: 'swap' } })
@@ -357,11 +365,11 @@ export function useSwapCallback(): SwapCallback {
 
   const disableOneClickSwap = useSetOverrideOneClickSwapFlag()
   const getOnPressRetry = useGetOnPressRetry()
+  const wallet = useWallet()
 
   return useCallback(
     (args: SwapCallbackParams) => {
       const {
-        account,
         swapTxContext,
         onSuccess,
         onFailure,
@@ -392,6 +400,12 @@ export function useSwapCallback(): SwapCallback {
         isBatched,
         includedPermitTransactionStep,
       })
+
+      const account = isSVMChain(trade.inputAmount.currency.chainId) ? wallet.svmAccount : wallet.evmAccount
+
+      if (!account || !isSignerMnemonicAccountDetails(account)) {
+        throw new Error('No account found')
+      }
 
       const swapParams = {
         swapTxContext,
@@ -436,6 +450,8 @@ export function useSwapCallback(): SwapCallback {
       swapStartTimestamp,
       getOnPressRetry,
       disableOneClickSwap,
+      wallet.evmAccount,
+      wallet.svmAccount,
     ],
   )
 }

@@ -25,6 +25,7 @@ const mockSendContext: SendContextType = {
 vi.mock('uniswap/src/features/gating/hooks', () => {
   return {
     useFeatureFlag: vi.fn(),
+    getFeatureFlag: vi.fn(),
   }
 })
 

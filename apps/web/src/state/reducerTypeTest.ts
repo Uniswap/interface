@@ -13,8 +13,6 @@ import { FullRange, MintState as MintV3State } from 'state/mint/v3/reducer'
 import { routingApi } from 'state/routing/slice'
 import { RouterPreference } from 'state/routing/types'
 import { SignatureState } from 'state/signatures/reducer'
-import { LocalWebTransactionState } from 'state/transactions/reducer'
-import { TransactionDetails } from 'state/transactions/types'
 import { UserState } from 'state/user/reducer'
 import { SerializedPair, SlippageTolerance } from 'state/user/types'
 import { WalletCapabilitiesState } from 'state/walletCapabilities/types'
@@ -34,6 +32,10 @@ import { TimingState } from 'uniswap/src/features/timing/slice'
 import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
 import { SwapSettingsState } from 'uniswap/src/features/transactions/swap/state/slice'
+import {
+  InterfaceTransactionDetails,
+  TransactionDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { VisibilityState } from 'uniswap/src/features/visibility/slice'
 
 /**
@@ -46,8 +48,8 @@ import { VisibilityState } from 'uniswap/src/features/visibility/slice'
  * with the new types.
  *
  * If compatibility could be broken, you may need to create a migration
- * function that can convert the existing state into a format that's compatible with
- * the new types, or otherwise adjust the user's persisted state in some way
+ * function that can convert the existing state into a format that's compatible
+ * with the new types, or otherwise adjust the user's persisted state in some way
  * to prevent undesirable behavior.
  *
  * See state/README.md for more information on creating a migration.
@@ -58,7 +60,6 @@ import { VisibilityState } from 'uniswap/src/features/visibility/slice'
 type ExpectedAppState = CombinedState<{
   // Web State
   readonly user: UserState
-  readonly localWebTransactions: LocalWebTransactionState
   readonly signatures: SignatureState
   readonly fiatOnRampTransactions: FiatOnRampTransactionsState
   readonly lists: ListsState
@@ -109,12 +110,12 @@ interface ExpectedUserState {
 assert<Equals<UserState, ExpectedUserState>>()
 
 interface ExpectedTransactionState {
-  [chainId: number]: {
-    [txHash: string]: TransactionDetails
-  }
+  [address: Address]: Partial<
+    Record<UniverseChainId, { [txId: string]: TransactionDetails | InterfaceTransactionDetails }>
+  >
 }
 
-assert<Equals<LocalWebTransactionState, ExpectedTransactionState>>()
+assert<Equals<TransactionsState, ExpectedTransactionState>>()
 
 interface ExpectedListsState {
   readonly byUrl: {

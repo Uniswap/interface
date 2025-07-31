@@ -76,25 +76,32 @@ exports[`AccountList renders without error 1`] = `
           onPress={[Function]}
         >
           <View
-            hitSlop={
+            collapsable={false}
+            focusVisibleStyle={{}}
+            forwardedRef={[Function]}
+            jestAnimatedStyle={
               {
-                "bottom": 5,
-                "left": 5,
-                "right": 5,
-                "top": 5,
+                "value": {},
               }
             }
             onBlur={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
+            onLayout={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
             onResponderRelease={[Function]}
             onResponderTerminate={[Function]}
             onResponderTerminationRequest={[Function]}
             onStartShouldSetResponder={[Function]}
+            role="button"
             style={
               {
+                "backgroundColor": "transparent",
+                "borderBottomLeftRadius": 12,
+                "borderBottomRightRadius": 12,
+                "borderTopLeftRadius": 12,
+                "borderTopRightRadius": 12,
                 "flexDirection": "column",
                 "opacity": 1,
                 "paddingBottom": 12,
@@ -110,6 +117,8 @@ exports[`AccountList renders without error 1`] = `
             }
           >
             <View
+              onBlur={[Function]}
+              onFocus={[Function]}
               style={
                 {
                   "alignItems": "flex-start",
@@ -120,6 +129,8 @@ exports[`AccountList renders without error 1`] = `
               testID="account-item/0x82D56A352367453f74FC0dC7B071b311da373Fa6"
             >
               <View
+                onBlur={[Function]}
+                onFocus={[Function]}
                 style={
                   {
                     "flex": 1,
@@ -128,6 +139,8 @@ exports[`AccountList renders without error 1`] = `
                 }
               >
                 <View
+                  onBlur={[Function]}
+                  onFocus={[Function]}
                   onLayout={[Function]}
                   style={
                     {
@@ -139,6 +152,8 @@ exports[`AccountList renders without error 1`] = `
                   }
                 >
                   <View
+                    onBlur={[Function]}
+                    onFocus={[Function]}
                     style={
                       {
                         "flexDirection": "column",
@@ -147,6 +162,8 @@ exports[`AccountList renders without error 1`] = `
                     }
                   >
                     <View
+                      onBlur={[Function]}
+                      onFocus={[Function]}
                       style={
                         {
                           "backgroundColor": {
@@ -195,6 +212,8 @@ exports[`AccountList renders without error 1`] = `
                       testID="account-icon"
                     >
                       <View
+                        onBlur={[Function]}
+                        onFocus={[Function]}
                         style={
                           {
                             "flexDirection": "column",
@@ -263,6 +282,8 @@ exports[`AccountList renders without error 1`] = `
                     </View>
                   </View>
                   <View
+                    onBlur={[Function]}
+                    onFocus={[Function]}
                     style={
                       {
                         "flexDirection": "column",
@@ -272,6 +293,8 @@ exports[`AccountList renders without error 1`] = `
                     }
                   >
                     <View
+                      onBlur={[Function]}
+                      onFocus={[Function]}
                       style={
                         {
                           "flexDirection": "row",
@@ -280,6 +303,8 @@ exports[`AccountList renders without error 1`] = `
                       }
                     >
                       <View
+                        onBlur={[Function]}
+                        onFocus={[Function]}
                         style={
                           {
                             "alignItems": "center",
@@ -295,6 +320,8 @@ exports[`AccountList renders without error 1`] = `
                           ellipsizeMode="tail"
                           maxFontSizeMultiplier={1.4}
                           numberOfLines={1}
+                          onBlur={[Function]}
+                          onFocus={[Function]}
                           style={
                             {
                               "color": {
@@ -323,6 +350,8 @@ exports[`AccountList renders without error 1`] = `
               <Text
                 allowFontScaling={true}
                 maxFontSizeMultiplier={1.4}
+                onBlur={[Function]}
+                onFocus={[Function]}
                 style={
                   {
                     "color": {

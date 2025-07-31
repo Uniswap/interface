@@ -7,7 +7,6 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
 import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
-import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -23,6 +22,7 @@ import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { isWeb } from 'utilities/src/platform'
@@ -184,7 +184,7 @@ export function useTransactionGasWarning({
   derivedInfo,
   gasFee,
 }: {
-  account?: AccountMeta
+  account?: AccountDetails
   derivedInfo: DerivedSwapInfo | DerivedSendInfo
   gasFee?: string
 }): Warning | undefined {

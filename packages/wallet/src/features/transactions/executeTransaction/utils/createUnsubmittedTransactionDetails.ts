@@ -2,8 +2,8 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import {
   OnChainTransactionDetails,
   TransactionStatus,
-  isBridgeTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isBridgeTypeInfo } from 'uniswap/src/features/transactions/types/utils'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 
@@ -21,9 +21,7 @@ export function createUnsubmittedTransactionDetails(
     from: account.address,
     addedTime: Date.now(),
     status: TransactionStatus.Pending,
-    options: {
-      ...options,
-    },
+    options,
     transactionOriginType,
   }
   return transaction

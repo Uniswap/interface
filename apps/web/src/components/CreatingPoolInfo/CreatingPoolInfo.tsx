@@ -1,20 +1,18 @@
-import { usePrevious } from 'utilities/src/react/hooks'
-
-import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
-
+import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
+import { usePrevious } from 'utilities/src/react/hooks'
 
 function CreatingPoolInfo() {
   const { t } = useTranslation()
-  const { derivedPositionInfo } = useCreatePositionContext()
+  const { creatingPoolOrPair, poolOrPairLoading } = useCreateLiquidityContext()
 
-  const previouslyCreatingPoolOrPair = usePrevious(derivedPositionInfo.creatingPoolOrPair)
+  const previouslyCreatingPoolOrPair = usePrevious(creatingPoolOrPair)
 
-  const shouldShowDisabled = previouslyCreatingPoolOrPair && derivedPositionInfo.poolOrPairLoading
+  const shouldShowDisabled = previouslyCreatingPoolOrPair && poolOrPairLoading
 
-  if (!shouldShowDisabled && !derivedPositionInfo.creatingPoolOrPair) {
+  if (!shouldShowDisabled && !creatingPoolOrPair) {
     return null
   }
 

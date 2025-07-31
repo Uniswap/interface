@@ -2,12 +2,10 @@ import { Linking } from 'react-native'
 import { OneSignal } from 'react-native-onesignal'
 import { NotificationType } from 'src/features/notifications/constants'
 import { config } from 'uniswap/src/config'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/portfolio/portfolioUpdates/constants'
 import { getUniqueId } from 'utilities/src/device/uniqueId'
 import { logger } from 'utilities/src/logger/logger'
-import { isIOS } from 'utilities/src/platform'
+import { isAndroid } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 
@@ -23,23 +21,9 @@ export const initOneSignal = (): void => {
     const notificationType = additionalData?.notification_type
 
     let enabled = false
-    // Some special notif filtering logic is needed for iOS
-    if (isIOS) {
-      switch (notificationType) {
-        case NotificationType.UnfundedWalletReminder:
-          enabled = getFeatureFlagWithExposureLoggingDisabled(FeatureFlags.NotificationPriceAlertsIOS)
-          break
-        case NotificationType.PriceAlert:
-          enabled = getFeatureFlagWithExposureLoggingDisabled(FeatureFlags.NotificationPriceAlertsIOS)
-          break
-        default:
-          enabled = false
-      }
-    } else {
-      if (
-        notificationType === NotificationType.UnfundedWalletReminder ||
-        notificationType === NotificationType.PriceAlert
-      ) {
+
+    if (isAndroid) {
+      if (notificationType === NotificationType.UnfundedWalletReminder) {
         enabled = true
       }
     }

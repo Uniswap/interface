@@ -81,6 +81,7 @@ function mockSwapFormStore(inputAmount: string, outputAmount: string): void {
       isFiatMode: false,
       isMax: false,
       isSubmitting: false,
+      isConfirmed: false,
       showPendingUI: false,
       derivedSwapInfo: {
         currencyAmountsUSDValue: {

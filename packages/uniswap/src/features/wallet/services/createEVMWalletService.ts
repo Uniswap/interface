@@ -2,11 +2,12 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import type { WalletService } from 'uniswap/src/features/wallet/services/IWalletService'
 import { WalletMeta } from 'uniswap/src/features/wallet/types/WalletMeta'
+import { HexString } from 'uniswap/src/utils/hex'
 import { logger } from 'utilities/src/logger/logger'
 
 export function createEVMWalletService(ctx: {
-  getWalletMeta: (address: `0x${string}`) => WalletMeta
-  getAccountType: (address: `0x${string}`) => AccountType
+  getWalletMeta: (address: HexString) => WalletMeta
+  getAccountType: (address: HexString) => AccountType
 }): WalletService {
   const service: WalletService = {
     getWallet(params) {

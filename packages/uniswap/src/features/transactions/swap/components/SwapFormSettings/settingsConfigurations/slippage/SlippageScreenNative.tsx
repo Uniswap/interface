@@ -11,7 +11,7 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { MAX_CUSTOM_SLIPPAGE_TOLERANCE, SLIPPAGE_CRITICAL_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/useSlippageSettings'
+import { useSlippageSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/useSlippageSettings'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import type { TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
 import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -98,6 +98,8 @@ export function SlippageScreenNative(): JSX.Element {
   const colors = useSporeColors()
   const trade = useSwapFormStoreDerivedSwapInfo((s) => s.trade).trade
 
+  const isBridgeTrade = trade instanceof BridgeTrade
+
   const {
     isEditingSlippage,
     showSlippageWarning,
@@ -111,9 +113,7 @@ export function SlippageScreenNative(): JSX.Element {
     onFocusSlippageInput,
     onBlurSlippageInput,
     onPressPlusMinusButton,
-  } = useSlippageSettings()
-
-  const isBridgeTrade = trade instanceof BridgeTrade
+  } = useSlippageSettings({ isZeroSlippage: isBridgeTrade })
 
   const inputValueTextColor = useMemo(
     () =>

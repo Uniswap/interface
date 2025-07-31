@@ -104,7 +104,7 @@ export function* approveAndSwap(params: SwapParams) {
       }
 
       // TODO(WEB-4406) - Refactor the approval submission's rpc call latency to not delay wrap submission
-      approveTxHash = (yield* call(executeTransaction, executeTransactionParams)).transactionResponse.hash
+      approveTxHash = (yield* call(executeTransaction, executeTransactionParams)).transactionHash
       nonce = nonce ? nonce + 1 : undefined
 
       yield* call(handleTransactionSpacing, { shouldWait, hash: approveTxHash, onFailure })
@@ -135,7 +135,7 @@ export function* approveAndSwap(params: SwapParams) {
         transactionOriginType: TransactionOriginType.Internal,
       }
 
-      const permitTxHash = (yield* call(executeTransaction, executeTransactionParams)).transactionResponse.hash
+      const permitTxHash = (yield* call(executeTransaction, executeTransactionParams)).transactionHash
       nonce = nonce ? nonce + 1 : undefined
 
       yield* call(handleTransactionSpacing, { shouldWait, hash: permitTxHash, onFailure })

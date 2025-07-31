@@ -1,11 +1,11 @@
 import sockImg from 'assets/svg/socks.svg'
 import Identicon from 'components/Identicon'
 import { CONNECTOR_ICON_OVERRIDE_MAP } from 'components/Web3Provider/constants'
-import { useAccount } from 'hooks/useAccount'
 import { useHasSocks } from 'hooks/useSocksBalance'
 import styled from 'lib/styled-components'
 import { flexColumnNoWrap } from 'theme/styles'
 import { breakpoints } from 'ui/src/theme'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 
 const IconWrapper = styled.div<{ size?: number }>`
   position: relative;
@@ -58,16 +58,17 @@ function Socks() {
 }
 
 function MiniWalletIcon() {
-  const { connector } = useAccount()
-  if (!connector) {
+  const account = useWallet().evmAccount
+  if (!account) {
     return null
   }
 
-  const icon = CONNECTOR_ICON_OVERRIDE_MAP[connector.id] ?? connector.icon
+  // TODO(APPS-8471): this should use useConnectedWallet() which returns connected WalletConnectorMeta, which is post-icon-override-map transformation
+  const icon = CONNECTOR_ICON_OVERRIDE_MAP[account.walletMeta.name ?? ''] ?? account.walletMeta.icon
 
   return (
     <MiniIconContainer side="right" data-testid="MiniIcon">
-      <MiniImg src={icon} alt={`${connector.name} icon`} />
+      <MiniImg src={icon} alt={`${account.walletMeta.name} icon`} />
     </MiniIconContainer>
   )
 }
@@ -81,11 +82,11 @@ export default function StatusIcon({
   showMiniIcons?: boolean
   address?: string
 }) {
-  const account = useAccount()
+  const account = useWallet().evmAccount
   const hasSocks = useHasSocks()
   return (
     <IconWrapper size={size} data-testid="StatusIconRoot">
-      <Identicon account={address ?? account.address} size={size} />
+      <Identicon account={address ?? account?.address} size={size} />
       {showMiniIcons && <MiniWalletIcon />}
       {hasSocks && showMiniIcons && <Socks />}
     </IconWrapper>

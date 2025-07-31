@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
@@ -11,6 +10,7 @@ import { useIsTradeIndicative } from 'uniswap/src/features/transactions/swap/com
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { getActionText } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/SubmitSwapButton'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export const useSwapFormButtonText = (): string => {
@@ -34,7 +34,7 @@ export const useSwapFormButtonText = (): string => {
 
   const isIndicative = useIsTradeIndicative()
 
-  const activeAccount = useAccountMeta()
+  const activeAccount = useWallet().evmAccount
 
   if (swapRedirectCallback) {
     return t('common.getStarted')

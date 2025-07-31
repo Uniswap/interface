@@ -5,12 +5,12 @@ import { initialState as initialListsState } from 'state/lists/reducer'
 import { PERSIST_VERSION } from 'state/migrations'
 import { RouterPreference } from 'state/routing/types'
 import { initialState as initialSignaturesState } from 'state/signatures/reducer'
-import { initialState as initialTransactionsState } from 'state/transactions/reducer'
 import { initialState as initialUserState } from 'state/user/reducer'
+import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 
 const defaultState = {
   lists: {},
-  localWebTransactions: {},
+  transactions: {},
   user: {},
   _persist: {
     rehydrated: true,
@@ -95,6 +95,30 @@ describe('redux migrations', () => {
       // this is cleared in a future migration
       signatures: {},
     })
+  })
+
+  it('clears localWebTransactions during migration', async () => {
+    // Set up legacy state with localWebTransactions
+    localStorage.setItem(
+      'persist:interface',
+      JSON.stringify({
+        user: { ...initialUserState, test: 'user' },
+        localWebTransactions: { test: 'localWebTransactions' },
+        transactions: initialTransactionsState,
+        lists: initialListsState,
+        signatures: initialSignaturesState,
+        _persist: { version: -1 },
+      }),
+    )
+
+    persistStore(store)
+    // wait for the migration to complete
+    await new Promise((resolve) => setTimeout(resolve, 0))
+
+    const state = store.getState()
+    expect(state).toMatchObject(defaultState)
+    // Verify localWebTransactions is not present in the final state
+    expect(state.localWebTransactions).toBeUndefined()
   })
 
   it('initial state with no previous persisted state', async () => {

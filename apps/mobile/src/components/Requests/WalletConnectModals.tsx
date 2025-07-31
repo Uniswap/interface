@@ -18,6 +18,7 @@ import { Eye } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
@@ -124,7 +125,11 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
   }
 
   const isRequestFromSignerAccount = signerAccounts.some((account) =>
-    areAddressesEqual(account.address, currRequest.account),
+    // TODO(WALL-7065): Update to support solana
+    areAddressesEqual({
+      addressInput1: { address: account.address, platform: Platform.EVM },
+      addressInput2: { address: currRequest.account, platform: Platform.EVM },
+    }),
   )
 
   if (!isRequestFromSignerAccount) {

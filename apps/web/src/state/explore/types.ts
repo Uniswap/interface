@@ -1,6 +1,6 @@
 import { Amount, PoolStats, TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { Percent } from '@uniswap/sdk-core'
-import { FeeData as CreatePositionFeeData } from 'pages/Pool/Positions/create/types'
+import { FeeData as CreatePositionFeeData } from 'components/Liquidity/Create/types'
 import { FeeData } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 type PricePoint = { timestamp: number; value: number }

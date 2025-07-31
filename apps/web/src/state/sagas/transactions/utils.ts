@@ -6,16 +6,15 @@ import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { clientToProvider } from 'hooks/useEthersProvider'
 import ms from 'ms'
 import type { Action } from 'redux'
-import { addTransaction, finalizeTransaction, updateTransactionInfo } from 'state/transactions/reducer'
+import { getRoutingForTransaction } from 'state/activity/utils'
 import type { TransactionDetails, TransactionInfo, VitalTxFields } from 'state/transactions/types'
 import { isPendingTx } from 'state/transactions/utils'
 import type { InterfaceState } from 'state/webReducer'
 import type { SagaGenerator } from 'typed-redux-saga'
-import { call, cancel, delay, fork, put, race, select, take } from 'typed-redux-saga'
+import { call, cancel, delay, fork, put, race, select, spawn, take } from 'typed-redux-saga'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
-import type { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { isL2ChainId } from 'uniswap/src/features/chains/utils'
+import { isL2ChainId, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import {
   ApprovalEditedInWalletError,
   HandledTransactionInterrupt,
@@ -23,6 +22,11 @@ import {
   TransactionStepFailedError,
   UnexpectedTransactionStateError,
 } from 'uniswap/src/features/transactions/errors'
+import {
+  addTransaction,
+  interfaceFinalizeTransaction,
+  interfaceUpdateTransactionInfo,
+} from 'uniswap/src/features/transactions/slice'
 import type { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import type { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
 import type { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
@@ -32,6 +36,7 @@ import type {
   TransactionStep,
 } from 'uniswap/src/features/transactions/steps/types'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
+import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 import type { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import type { BridgeTrade, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -40,14 +45,19 @@ import type {
   BridgeTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  InterfaceTransactionDetails,
   Permit2ApproveTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
+  TransactionOriginType,
   TransactionStatus,
-  TransactionType as UniswapTransactionType,
+  TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { getInterfaceTransaction, isInterfaceTransaction } from 'uniswap/src/features/transactions/types/utils'
+import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { HexString, isValidHexString } from 'uniswap/src/utils/hex'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { isSameAddress } from 'utilities/src/addresses'
 import { percentFromFloat } from 'utilities/src/format/percent'
@@ -58,7 +68,7 @@ import type { Transaction } from 'viem'
 import { getConnectorClient, getTransaction } from 'wagmi/actions'
 
 export interface HandleSignatureStepParams<T extends SignatureTransactionStep = SignatureTransactionStep> {
-  account: AccountMeta
+  account: AccountDetails
   step: T
   setCurrentStep: SetCurrentStepFn
   ignoreInterrupt?: boolean
@@ -90,7 +100,7 @@ export function* handleSignatureStep({ setCurrentStep, step, ignoreInterrupt, ac
 }
 
 export interface HandleOnChainStepParams<T extends OnChainTransactionStep = OnChainTransactionStep> {
-  account: AccountMeta
+  account: AccountDetails
   info: TransactionInfo
   step: T
   setCurrentStep: SetCurrentStepFn
@@ -104,21 +114,40 @@ export interface HandleOnChainStepParams<T extends OnChainTransactionStep = OnCh
   onModification?: (response: VitalTxFields) => void | Generator<unknown, void, unknown>
 }
 export function* handleOnChainStep<T extends OnChainTransactionStep>(params: HandleOnChainStepParams<T>) {
-  const { account, step, setCurrentStep, info, allowDuplicativeTx, ignoreInterrupt, onModification } = params
+  const {
+    account,
+    step,
+    setCurrentStep,
+    info,
+    allowDuplicativeTx,
+    ignoreInterrupt,
+    onModification,
+    shouldWaitForConfirmation,
+  } = params
   const { chainId } = step.txRequest
 
   addTransactionBreadcrumb({ step, data: { ...info } })
 
   // Avoid sending prompting a transaction if the user already submitted an equivalent tx, e.g. by closing and reopening a transaction flow
   const duplicativeTx = yield* findDuplicativeTx({ info, account, chainId, allowDuplicativeTx })
-  if (duplicativeTx) {
-    if (duplicativeTx.status === TransactionStatus.Success) {
-      addTransactionBreadcrumb({ step, data: { duplicativeTx: true, hash: duplicativeTx.hash }, status: 'complete' })
-      return duplicativeTx.hash
+
+  const interfaceDuplicativeTx = duplicativeTx ? getInterfaceTransaction(duplicativeTx) : undefined
+  if (interfaceDuplicativeTx) {
+    if (interfaceDuplicativeTx.status === TransactionStatus.Success) {
+      addTransactionBreadcrumb({
+        step,
+        data: { duplicativeTx: true, hash: interfaceDuplicativeTx.hash },
+        status: 'complete',
+      })
+      return interfaceDuplicativeTx.hash
     } else {
-      addTransactionBreadcrumb({ step, data: { duplicativeTx: true, hash: duplicativeTx.hash }, status: 'in progress' })
+      addTransactionBreadcrumb({
+        step,
+        data: { duplicativeTx: true, hash: interfaceDuplicativeTx.hash },
+        status: 'in progress',
+      })
       setCurrentStep({ step, accepted: true })
-      return yield* handleOnChainConfirmation(params, duplicativeTx.hash)
+      return yield* handleOnChainConfirmation(params, interfaceDuplicativeTx.hash)
     }
   }
 
@@ -128,23 +157,60 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   // Trigger UI prompting user to accept
   setCurrentStep({ step, accepted: false })
 
+  let transaction: InterfaceTransactionDetails
+  const createTransaction = (hash: string): InterfaceTransactionDetails => ({
+    id: hash,
+    from: account.address,
+    typeInfo: info,
+    hash,
+    chainId,
+    routing: getRoutingForTransaction(info),
+    transactionOriginType: TransactionOriginType.Internal,
+    status: TransactionStatus.Pending,
+    addedTime: Date.now(),
+    options: {
+      request: {
+        to: step.txRequest.to,
+        from: account.address,
+        data: step.txRequest.data,
+        value: step.txRequest.value,
+        gasLimit: step.txRequest.gasLimit,
+        gasPrice: step.txRequest.gasPrice,
+        nonce: step.txRequest.nonce,
+        chainId: step.txRequest.chainId,
+      },
+    },
+  })
+
   // Prompt wallet to submit transaction
-  const { hash, nonce, data } = yield* call(submitTransaction, params)
+  // If should wait for confirmation, we block until the transaction is confirmed
+  // Otherwise, we submit the transaction and return the hash immediately and spawn a detection task to check for modifications
+  if (shouldWaitForConfirmation) {
+    const { hash, data, nonce } = yield* call(submitTransaction, params)
+    transaction = createTransaction(hash)
+
+    if (step.txRequest.data !== data && onModification) {
+      yield* call(onModification, { hash, data, nonce })
+    }
+  } else {
+    const hash = yield* call(submitTransactionAsync, params)
+    transaction = createTransaction(hash)
+
+    if (onModification) {
+      yield* spawn(handleOnModificationAsync, { onModification, hash, step })
+    }
+  }
 
   // Trigger waiting UI after user accepts
   setCurrentStep({ step, accepted: true })
 
   // Add transaction to local state to start polling for status
-  yield* put(addTransaction({ from: account.address, nonce, info, hash, chainId }))
-
-  if (step.txRequest.data !== data && onModification) {
-    yield* call(onModification, { hash, data, nonce })
-  }
+  yield* put(addTransaction(transaction))
 
   // If the transaction flow was interrupted while awaiting input, throw an error after input is received
   yield* call(throwIfInterrupted)
 
-  return yield* handleOnChainConfirmation(params, hash)
+  return yield* handleOnChainConfirmation(params, transaction.hash)
 }
 
 /** Waits for a transaction to complete, or immediately throws if interrupted. */
@@ -174,6 +240,21 @@ function* handleOnChainConfirmation(params: HandleOnChainStepParams, hash: strin
   return hash
 }
 
+function* handleOnModificationAsync({
+  onModification,
+  hash,
+  step,
+}: {
+  onModification: NonNullable<HandleOnChainStepParams['onModification']>
+  hash: HexString
+  step: OnChainTransactionStep
+}) {
+  const { data, nonce } = yield* call(recoverTransactionFromHash, hash, step)
+  if (step.txRequest.data !== data) {
+    yield* call(onModification, { hash, data, nonce })
+  }
+}
+
 /** Submits a transaction and handles potential wallet errors */
 function* submitTransaction(params: HandleOnChainStepParams): SagaGenerator<VitalTxFields> {
   const { account, step } = params
@@ -183,15 +264,35 @@ function* submitTransaction(params: HandleOnChainStepParams): SagaGenerator<Vita
     const response = yield* call([signer, 'sendTransaction'], step.txRequest)
     return transformTransactionResponse(response)
   } catch (error) {
-    if (error && typeof error === 'object' && 'transactionHash' in error) {
-      return yield* recoverTransactionFromHash(error.transactionHash as `0x${string}`, step)
+    if (error && typeof error === 'object' && 'transactionHash' in error && isValidHexString(error.transactionHash)) {
+      return yield* recoverTransactionFromHash(error.transactionHash, step)
     }
     throw error
   }
 }
 
+/** Submits a transaction and handles potential wallet errors */
+function* submitTransactionAsync(params: HandleOnChainStepParams): SagaGenerator<HexString> {
+  const { account, step } = params
+  const signer = yield* call(getSigner, account.address)
+
+  try {
+    const response = yield* call([signer.provider, 'send'], 'eth_sendTransaction', [
+      { from: account.address, ...step.txRequest },
+    ])
+
+    if (!isValidHexString(response)) {
+      throw new TransactionStepFailedError({ message: 'Transaction failed', step })
+    }
+
+    return response
+  } catch (error) {
+    throw new TransactionStepFailedError({ message: 'Transaction failed', step })
+  }
+}
+
 /** Polls for transaction details when only hash is known */
-function* recoverTransactionFromHash(hash: `0x${string}`, step: OnChainTransactionStep): SagaGenerator<VitalTxFields> {
+function* recoverTransactionFromHash(hash: HexString, step: OnChainTransactionStep): SagaGenerator<VitalTxFields> {
   const transaction = yield* pollForTransaction(hash, step.txRequest.chainId)
 
   if (!transaction) {
@@ -202,7 +303,7 @@ function* recoverTransactionFromHash(hash: `0x${string}`, step: OnChainTransacti
 }
 
 /** Polls until transaction is found or timeout is reached */
-function* pollForTransaction(hash: `0x${string}`, chainId: number) {
+function* pollForTransaction(hash: HexString, chainId: number) {
   const POLL_INTERVAL = 2_000
   const MAX_POLLING_TIME = isL2ChainId(chainId) ? 12_000 : 24_000
   let elapsed = 0
@@ -236,7 +337,7 @@ export function* handlePermitTransactionStep(params: HandlePermitStepParams) {
 interface HandleApprovalStepParams
   extends Omit<HandleOnChainStepParams<TokenApprovalTransactionStep | TokenRevocationTransactionStep>, 'info'> {}
 export function* handleApprovalTransactionStep(params: HandleApprovalStepParams) {
-  const { step } = params
+  const { step, account } = params
   const info = getApprovalTransactionInfo(step)
   return yield* call(handleOnChainStep, {
     ...params,
@@ -246,10 +347,11 @@ export function* handleApprovalTransactionStep(params: HandleApprovalStepParams)
 
       // Update state to reflect hte actual approval amount submitted on-chain
       yield* put(
-        updateTransactionInfo({
+        interfaceUpdateTransactionInfo({
           chainId: step.txRequest.chainId,
-          hash,
-          info: { ...info, approvalAmount: approvedAmount },
+          id: hash,
+          address: account.address,
+          typeInfo: { ...info, approvalAmount: approvedAmount },
         }),
       )
 
@@ -264,7 +366,7 @@ function getApprovalTransactionInfo(
   approvalStep: TokenApprovalTransactionStep | TokenRevocationTransactionStep | Permit2TransactionStep,
 ): ApproveTransactionInfo {
   return {
-    type: UniswapTransactionType.Approve,
+    type: TransactionType.Approve,
     tokenAddress: approvalStep.token.address,
     spender: approvalStep.spender,
     approvalAmount: approvalStep.amount,
@@ -273,7 +375,7 @@ function getApprovalTransactionInfo(
 
 function getPermitTransactionInfo(approvalStep: Permit2TransactionStep): Permit2ApproveTransactionInfo {
   return {
-    type: UniswapTransactionType.Permit2Approve,
+    type: TransactionType.Permit2Approve,
     tokenAddress: approvalStep.token.address,
     spender: approvalStep.spender,
     amount: approvalStep.amount,
@@ -293,7 +395,7 @@ function checkApprovalAmount(data: string, step: TokenApprovalTransactionStep | 
   return { isInsufficient: submitted.amount < requiredAmount, approvedAmount }
 }
 
-function isRecentTx(tx: TransactionDetails) {
+function isRecentTx(tx: InterfaceTransactionDetails | TransactionDetails) {
   const currentTime = Date.now()
   const failed = tx.status === TransactionStatus.Failed
   return !failed && currentTime - tx.addedTime < ms('30s') // 30s is an arbitrary upper limit to combat e.g. a duplicative approval to be included in tx steps, caused by polling intervals.
@@ -306,7 +408,7 @@ function* findDuplicativeTx({
   allowDuplicativeTx,
 }: {
   info: TransactionInfo
-  account: AccountMeta
+  account: AccountDetails
   chainId: number
   allowDuplicativeTx?: boolean
 }) {
@@ -314,13 +416,22 @@ function* findDuplicativeTx({
     return undefined
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const transactionMap = (yield* select((state: InterfaceState) => state.localWebTransactions[chainId])) ?? {}
-  const transactionsForAccount = Object.values(transactionMap).filter((tx) => isSameAddress(tx.from, account.address))
+  if (!isUniverseChainId(chainId)) {
+    throw new Error(`Invalid chainId: ${chainId} is not a valid UniverseChainId`)
+  }
+
+  const transactionMap = yield* select(
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    (state: InterfaceState) => state.transactions[account.address]?.[chainId] ?? {},
+  )
+
+  const transactionsForAccount = Object.values(transactionMap)
+    .filter((tx) => isSameAddress(tx.from, account.address))
+    .filter(isInterfaceTransaction)
 
   // Check all pending and recent transactions
   return transactionsForAccount.find(
-    (tx) => (isPendingTx(tx) || isRecentTx(tx)) && JSON.stringify(tx.info) === JSON.stringify(info),
+    (tx) => (isPendingTx(tx) || isRecentTx(tx)) && JSON.stringify(tx.typeInfo) === JSON.stringify(info),
   )
 }
 
@@ -353,7 +464,7 @@ export function* watchForInterruption(ignoreInterrupt = false) {
 /** Returns when a transaction is confirmed in local state. Throws an error if the transaction fails. */
 function* waitForTransaction(hash: string, step: TransactionStep) {
   while (true) {
-    const { payload } = yield* take<ReturnType<typeof finalizeTransaction>>(finalizeTransaction.type)
+    const { payload } = yield* take<ReturnType<typeof interfaceFinalizeTransaction>>(interfaceFinalizeTransaction.type)
     if (payload.hash === hash) {
       if (payload.status === TransactionStatus.Success) {
         return
@@ -380,14 +491,16 @@ export async function getSigner(account: string): Promise<JsonRpcSigner> {
 }
 
 type SwapInfo = ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
-export function getSwapTransactionInfo(trade: ClassicTrade | BridgeTrade): SwapInfo | BridgeTransactionInfo
+export function getSwapTransactionInfo(
+  trade: ClassicTrade | BridgeTrade | SolanaTrade,
+): SwapInfo | BridgeTransactionInfo
 export function getSwapTransactionInfo(trade: UniswapXTrade): SwapInfo & { isUniswapXOrder: true }
 export function getSwapTransactionInfo(
-  trade: ClassicTrade | BridgeTrade | UniswapXTrade,
+  trade: ClassicTrade | BridgeTrade | UniswapXTrade | SolanaTrade,
 ): SwapInfo | BridgeTransactionInfo {
   if (trade.routing === Routing.BRIDGE) {
     return {
-      type: UniswapTransactionType.Bridge,
+      type: TransactionType.Bridge,
       inputCurrencyId: currencyId(trade.inputAmount.currency),
       outputCurrencyId: currencyId(trade.outputAmount.currency),
       inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
@@ -400,7 +513,7 @@ export function getSwapTransactionInfo(
   const slippage = percentFromFloat(trade.slippageTolerance)
 
   return {
-    type: UniswapTransactionType.Swap,
+    type: TransactionType.Swap,
     inputCurrencyId: currencyId(trade.inputAmount.currency),
     outputCurrencyId: currencyId(trade.outputAmount.currency),
     isUniswapXOrder: isUniswapX(trade),

@@ -4,9 +4,8 @@ import {
   ConfirmedSwapTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
-  isBridgeTypeInfo,
-  isConfirmedSwapTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isBridgeTypeInfo, isConfirmedSwapTypeInfo } from 'uniswap/src/features/transactions/types/utils'
 
 export function getAmountsFromTrade(
   typeInfo:

@@ -1,5 +1,5 @@
 import { providers, utils } from 'ethers'
-import { ensure0xHex } from 'uniswap/src/utils/hex'
+import { HexString, ensure0xHex, isValidHexString } from 'uniswap/src/utils/hex'
 import { logger } from 'utilities/src/logger/logger'
 import {
   Address,
@@ -31,11 +31,17 @@ export function convertToEIP7702({
   if (ethersTx.to !== ethersTx.from) {
     throw new Error('Smart wallet transactions must already be encoded and have matching to/from addresses')
   }
+
+  const data = ethersTx.data
+  if (!data || typeof data !== 'string' || (data !== '0x' && !isValidHexString(data))) {
+    throw new Error(`Invalid data value: ${data}`)
+  }
+
   const serializableTx: TransactionSerializableEIP7702 = {
     // Standard transaction fields
     to: walletAddress,
     value: ethersTx.value ? BigInt(ethersTx.value.toString()) : BigInt(0),
-    data: ethersTx.data as `0x${string}`,
+    data,
     nonce: ethersTx.nonce ? Number(ethersTx.nonce) : 0,
     chainId: Number(ethersTx.chainId),
 
@@ -70,7 +76,7 @@ export async function signAndSerializeEIP7702Transaction({
   tx: TransactionSerializable
   address: string
   chainId: number
-}): Promise<`0x${string}`> {
+}): Promise<HexString> {
   // Serialize the transaction using viem
   const serializedTx = serializeTransaction(tx)
 
@@ -113,13 +119,13 @@ export async function createSignedAuthorization({
   signer: NativeSigner
   walletAddress: Address
   chainId: number
-  contractAddress: string
+  contractAddress: Address
   nonce: number
 }): Promise<SignedAuthorization> {
   try {
-    const authorizationHash: `0x${string}` = hashAuthorization({
+    const authorizationHash: HexString = hashAuthorization({
       chainId,
-      contractAddress: contractAddress as `0x${string}`,
+      contractAddress,
       nonce,
     })
 
@@ -132,7 +138,7 @@ export async function createSignedAuthorization({
     // Reconstruct authorization from signature
     let signedAuthorization = reconstructAuthorization({
       chainId,
-      contractAddress: contractAddress as `0x${string}`,
+      contractAddress,
       nonce,
       signature: signedAuthorizationMessage,
     })
@@ -147,14 +153,18 @@ export async function createSignedAuthorization({
       s,
     }
 
+    if (!isValidHexString(signedAuthorizationMessage)) {
+      throw new Error(`Invalid signed authorization message: ${signedAuthorizationMessage}`)
+    }
+
     // Verify the authorization
     const recoveredAddress = await recoverAuthorizationAddress({
       authorization: signedAuthorization,
-      signature: signedAuthorizationMessage as `0x${string}`,
+      signature: signedAuthorizationMessage,
     })
 
     const signedAuthorizationValid = await verifyAuthorization({
-      address: walletAddress as `0x${string}`,
+      address: walletAddress,
       authorization: signedAuthorization,
     })
 
@@ -176,7 +186,7 @@ export async function createSignedAuthorization({
 }
 
 // Function to normalize hex strings by removing leading zeros
-function normalizeHexValue(hexValue: `0x${string}`): `0x${string}` {
+function normalizeHexValue(hexValue: HexString): HexString {
   // Check if it's a hex string with 0x prefix
   if (!hexValue.startsWith('0x')) {
     return hexValue
@@ -188,7 +198,7 @@ function normalizeHexValue(hexValue: `0x${string}`): `0x${string}` {
   if (normalized === '') {
     return '0x0'
   }
-  return `0x${normalized}` as `0x${string}`
+  return `0x${normalized}`
 }
 
 /**
@@ -206,7 +216,7 @@ function reconstructAuthorization({
   signature,
 }: {
   chainId: number
-  contractAddress: `0x${string}`
+  contractAddress: HexString
   nonce: number
   signature: string
 }): SignedAuthorization {
@@ -216,7 +226,11 @@ function reconstructAuthorization({
       throw new Error('Invalid signature format')
     }
 
-    const parsedSignature = parseSignature(signature as `0x${string}`)
+    if (!isValidHexString(signature)) {
+      throw new Error(`Invalid signature: ${signature}`)
+    }
+
+    const parsedSignature = parseSignature(signature)
     const signedAuthorization: SignedAuthorization = {
       address: contractAddress,
       chainId,

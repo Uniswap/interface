@@ -2,6 +2,7 @@ flows:
   - 'flows/onboarding/*'
   - 'flows/swap/*'
   - 'flows/restore/*'
+  - 'flows/deeplinks/*'
 baselineBranch: main
 executionOrder:
   continueOnFailure: true

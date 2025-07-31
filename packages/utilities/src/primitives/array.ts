@@ -76,3 +76,13 @@ export function getNonEmptyArrayOrThrow<T>(array: T[]): NonEmptyArray<T> {
   }
   return [first, ...rest]
 }
+
+/**
+ * Pipe a value through a series of functions.
+ * @param value - The value to pipe through the functions.
+ * @param fns - The functions to pipe the value through.
+ * @returns The value after all functions have been applied.
+ */
+export function pipe<T>(value: T, fns: Array<(arg: T) => T>): T {
+  return fns.reduce((acc, fn) => fn(acc), value)
+}

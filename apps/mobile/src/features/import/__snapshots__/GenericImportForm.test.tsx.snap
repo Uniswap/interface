@@ -223,31 +223,28 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         }
       >
         <View
-          hitSlop={
+          collapsable={false}
+          focusVisibleStyle={{}}
+          forwardedRef={[Function]}
+          jestAnimatedStyle={
             {
-              "bottom": 5,
-              "left": 5,
-              "right": 5,
-              "top": 5,
+              "value": {},
             }
           }
           onBlur={[Function]}
           onClick={[Function]}
           onFocus={[Function]}
+          onLayout={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          role="button"
           style={
             {
-              "backgroundColor": {
-                "dynamic": {
-                  "dark": "rgba(255, 55, 199, 0.08)",
-                  "light": "rgba(255, 55, 199, 0.08)",
-                },
-              },
+              "backgroundColor": "rgba(255, 55, 199, 0.08)",
               "borderBottomLeftRadius": 12,
               "borderBottomRightRadius": 12,
               "borderTopLeftRadius": 12,
@@ -267,6 +264,8 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
           }
         >
           <View
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "alignItems": "center",
@@ -279,6 +278,8 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             <Text
               allowFontScaling={true}
               maxFontSizeMultiplier={1.2}
+              onBlur={[Function]}
+              onFocus={[Function]}
               style={
                 {
                   "color": {

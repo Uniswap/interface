@@ -6,7 +6,7 @@ import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { Button, Flex, GeneratedIcon, Text } from 'ui/src'
 import { Bolt, Coupon, UserSquare } from 'ui/src/components/icons'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const CONTAINER_WIDTH = 531
@@ -17,7 +17,9 @@ export function UnitagIntroScreen(): JSX.Element {
   const { goToNextStep } = useOnboardingSteps()
 
   const address = useAccountAddressFromUrlWithThrow()
-  const { unitag } = useUnitagByAddress(address)
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: address ? { address } : undefined,
+  })
 
   useEffect(() => {
     if (unitag?.address) {

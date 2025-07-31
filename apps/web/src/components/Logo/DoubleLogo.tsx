@@ -1,5 +1,4 @@
 import { Currency } from '@uniswap/sdk-core'
-import { useCurrencyInfo } from 'hooks/Tokens'
 import styled from 'lib/styled-components'
 import { memo } from 'react'
 import { Flex, useColorSchemeFromSeed } from 'ui/src'
@@ -9,6 +8,8 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { isMobileApp } from 'utilities/src/platform'
 
 const MissingImageLogo = styled.div<{ $size?: string; $textColor: string; $backgroundColor: string }>`
@@ -67,7 +68,10 @@ export const DoubleCurrencyLogo = memo(function DoubleCurrencyLogo({
   customIcon?: React.ReactNode
   includeNetwork?: boolean
 }) {
-  const currencyInfos = [useCurrencyInfo(currencies[0]), useCurrencyInfo(currencies[1])]
+  const currencyId0 = currencies[0] ? buildCurrencyId(currencies[0].chainId, currencyAddress(currencies[0])) : undefined
+  const currencyId1 = currencies[1] ? buildCurrencyId(currencies[1].chainId, currencyAddress(currencies[1])) : undefined
+
+  const currencyInfos = [useCurrencyInfo(currencyId0), useCurrencyInfo(currencyId1)]
   const invalidCurrencyLogo0 = !currencyInfos[0]?.logoUrl
   const invalidCurrencyLogo1 = !currencyInfos[1]?.logoUrl
   const chainId = includeNetwork ? currencyInfos[0]?.currency.chainId ?? null : null

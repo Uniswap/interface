@@ -33,7 +33,7 @@ const entryGzipSize = report.reduce(
 )
 
 const maxBuffer = 50_000
-const limit = 2_440_000
+const limit = 2_330_000
 
 if (entryGzipSize > limit) {
   console.error(`Bundle size has grown too big! Entry JS size is ${entryGzipSize}, over the limit of ${limit}.`)

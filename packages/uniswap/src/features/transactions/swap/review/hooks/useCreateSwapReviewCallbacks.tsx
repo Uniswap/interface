@@ -3,7 +3,9 @@ import type { ParsedWarnings } from 'uniswap/src/components/modals/WarningModal/
 import type { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { TransactionScreen } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { useIsUnichainFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import type { GetExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
+import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import type { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
@@ -60,6 +62,13 @@ export function useCreateSwapReviewCallbacks(ctx: {
     setSteps,
   } = ctx
 
+  const { derivedSwapInfo } = useSwapDependenciesStore((s) => ({
+    derivedSwapInfo: s.derivedSwapInfo,
+    getExecuteSwapService: s.getExecuteSwapService,
+  }))
+  const chainId = derivedSwapInfo.chainId
+  const isFlashblocksEnabled = useIsUnichainFlashblocksEnabled(chainId)
+
   const onFailure = useCallback(
     (error?: Error, onPressRetry?: () => void) => {
       resetCurrentStep()
@@ -75,17 +84,37 @@ export function useCreateSwapReviewCallbacks(ctx: {
   )
 
   const onSuccess = useCallback(() => {
+    // For Unichain networks, trigger confirmation and branch to stall+fetch logic (ie handle in component)
+    if (isFlashblocksEnabled) {
+      updateSwapForm({
+        isConfirmed: true,
+        isSubmitting: false,
+        showPendingUI: false,
+      })
+      return
+    }
+
     // On interface, the swap component stays mounted; after swap we reset the form to avoid showing the previous values.
     if (isInterface) {
-      updateSwapForm({ exactAmountFiat: undefined, exactAmountToken: '', isSubmitting: false, showPendingUI: false })
+      updateSwapForm({
+        exactAmountFiat: undefined,
+        exactAmountToken: '',
+        isSubmitting: false,
+        showPendingUI: false,
+        isConfirmed: false,
+      })
       setScreen(TransactionScreen.Form)
     }
     onClose()
-  }, [setScreen, updateSwapForm, onClose])
+  }, [setScreen, updateSwapForm, onClose, isFlashblocksEnabled])
 
   const onPending = useCallback(() => {
+    // Skip pending UI for Unichain networks since they confirm instantly
+    if (isFlashblocksEnabled) {
+      return
+    }
     updateSwapForm({ showPendingUI: true })
-  }, [updateSwapForm])
+  }, [updateSwapForm, isFlashblocksEnabled])
 
   const swapTxContext = useSwapTxStore((s) => s)
 

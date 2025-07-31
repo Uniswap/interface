@@ -2,6 +2,8 @@ import { providers } from 'ethers'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { HexString } from 'uniswap/src/utils/hex'
+import { isAddress } from 'utilities/src/addresses/index'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { PublicClient } from 'viem'
@@ -56,14 +58,24 @@ export async function signAndSubmitTransaction({
       throw new Error('Delegation contract address not found')
     }
 
-    let newDelegationContractAddress: Address | undefined
+    const delegationContractAddress = isAddress(delegationInfo.contractAddress)
+    if (!delegationContractAddress) {
+      throw new Error('Delegation contract address is invalid')
+    }
+
+    const walletAddress = isAddress(account.address)
+    if (!walletAddress) {
+      throw new Error('Wallet address is invalid')
+    }
+
+    let newDelegationContractAddress: HexString | undefined
     if (isRemoveDelegation) {
       newDelegationContractAddress = DEFAULT_NATIVE_ADDRESS
       logger.debug('signAndSubmitTransaction', 'signAndSubmitTransaction', 'Remove delegation request')
     } else {
       // new delegation or contract address update
       if (delegationInfo.needsDelegation) {
-        newDelegationContractAddress = delegationInfo.contractAddress
+        newDelegationContractAddress = delegationContractAddress
         logger.debug(
           'signAndSubmitTransaction',
           'signAndSubmitTransaction',
@@ -80,7 +92,7 @@ export async function signAndSubmitTransaction({
       const authorizationNonce = Number(populatedRequest.nonce) + 1
       const signedAuthorization = await createSignedAuthorization({
         signer: connectedSigner,
-        walletAddress: account.address as `0x${string}`,
+        walletAddress,
         chainId,
         contractAddress: newDelegationContractAddress,
         nonce: authorizationNonce,
@@ -89,7 +101,7 @@ export async function signAndSubmitTransaction({
       // Convert to EIP-7702 transaction format
       const viemTxRequest = convertToEIP7702({
         ethersTx: populatedRequest,
-        walletAddress: account.address as `0x${string}`,
+        walletAddress,
         signedAuthorization,
       })
       const serializedTxWithSignature = await signAndSerializeEIP7702Transaction({

@@ -15,6 +15,7 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getStablecoinsForChain, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export type LimitInfo = {
@@ -165,7 +166,7 @@ function useLimitOrderTrade({
 
   useEffect(() => {
     async function calculateWrapInfo() {
-      if (!inputCurrency) {
+      if (!inputCurrency || !isEVMChain(inputCurrency.chainId)) {
         setWrapInfo(undefined)
         return
       }

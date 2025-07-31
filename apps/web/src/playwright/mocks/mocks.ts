@@ -30,7 +30,9 @@ export const Mocks = {
     token_warning: path.resolve(__dirname, '../mocks/graphql/TokenWeb/token_warning.json'),
   },
   Positions: {
-    get_position: path.resolve(__dirname, '../mocks/rest/positions/get_position.json'),
+    get_single_sided_v3_position: path.resolve(__dirname, '../mocks/rest/positions/get_single_sided_v3_position.json'),
+    get_v3_position: path.resolve(__dirname, '../mocks/rest/positions/get_v3_position.json'),
+    get_v4_position: path.resolve(__dirname, '../mocks/rest/positions/get_v4_position.json'),
   },
   Account: {
     tokens: path.resolve(__dirname, '../mocks/graphql/Account/tokens.json'),

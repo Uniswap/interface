@@ -1,11 +1,9 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Signer } from 'ethers/lib/ethers'
 import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react'
-import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useEvent } from 'utilities/src/react/hooks'
 import { Connector } from 'wagmi'
 
@@ -161,21 +159,6 @@ export function useUniswapContextSelector<T>(selector: (ctx: UniswapContextValue
   const stableSelector = useEvent(selector)
   const context = useContext(UniswapContext)
   return context ? stableSelector(context) : undefined
-}
-
-/** Cross-platform util for getting metadata for the active account/wallet, regardless of platform/environment. */
-export function useAccountMeta(): AccountMeta | undefined {
-  const wallet = useWallet()
-  return useMemo(() => {
-    if (!wallet.evmAccount) {
-      return undefined
-    }
-
-    return {
-      address: wallet.evmAccount.address,
-      type: wallet.evmAccount.accountType,
-    }
-  }, [wallet])
 }
 
 /** Cross-platform util for getting connector for the active account/wallet, only applicable to web, other platforms are undefined. */

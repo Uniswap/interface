@@ -146,7 +146,8 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
   const parsedQs = useParsedQueryString()
   useEffect(() => {
     let supportedToken: Maybe<FiatOnRampCurrency>
-    const quoteCurrencyCode = parsedQs.quoteCurrencyCode
+    const quoteCurrencyCode = parsedQs.quoteCurrencyCode as string | undefined
+    const moonpayCurrencyCode = parsedQs.moonpayCurrencyCode as string | undefined
 
     if (initialCurrency) {
       const supportedNativeToken = supportedTokens?.find(
@@ -162,9 +163,18 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
             meldToken.currencyInfo.currency.isToken &&
             meldToken.currencyInfo.currency.address === initialCurrency.address,
         ) || supportedNativeToken
+    } else if (moonpayCurrencyCode) {
+      supportedToken = supportedTokens?.find(
+        (meldToken) => meldToken.meldCurrencyCode?.toLowerCase() === moonpayCurrencyCode.toLowerCase(),
+      )
     } else if (quoteCurrencyCode) {
       // Defaults the quote currency to the initial currency (from query params) if supported
-      supportedToken = supportedTokens?.find((meldToken) => meldToken.meldCurrencyCode === quoteCurrencyCode)
+      const chainId = parsedQs.chainId ? Number(parsedQs.chainId) : UniverseChainId.Mainnet
+      supportedToken = supportedTokens?.find(
+        (meldToken) =>
+          meldToken.currencyInfo?.currency.symbol === quoteCurrencyCode &&
+          meldToken.currencyInfo.currency.chainId === chainId,
+      )
     } else {
       supportedToken =
         supportedTokens?.find((meldToken) =>
@@ -173,8 +183,14 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
     }
 
     if (supportedToken) {
+      const moonpayState: Partial<{ inputAmount: string; moonpayOnly: boolean }> = {}
+      if (moonpayCurrencyCode) {
+        moonpayState.inputAmount = parsedQs.amount as string | undefined
+        moonpayState.moonpayOnly = true
+      }
       setBuyFormState((state) => ({
         ...state,
+        ...moonpayState,
         quoteCurrency: supportedToken,
       }))
       return

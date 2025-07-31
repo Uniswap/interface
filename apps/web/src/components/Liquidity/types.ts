@@ -3,8 +3,8 @@ import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-co
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
-import { FeeData } from 'pages/Pool/Positions/create/types'
-import { Dispatch, ReactNode, SetStateAction } from 'react'
+import { FeeData } from 'components/Liquidity/Create/types'
+import { ReactNode } from 'react'
 import { PositionField } from 'types/position'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -22,17 +22,10 @@ export interface DepositState {
   }
 }
 
-export type DepositContextType = {
-  reset: () => void
-  depositState: DepositState
-  setDepositState: Dispatch<SetStateAction<DepositState>>
-  derivedDepositInfo: DepositInfo
-}
-
 export interface DepositInfo {
   formattedAmounts?: { [field in PositionField]?: string }
   currencyBalances?: { [field in PositionField]?: CurrencyAmount<Currency> }
-  currencyAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
+  currencyAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   currencyAmountsUSDValue?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   error?: ReactNode
 }
@@ -45,8 +38,8 @@ interface BasePositionInfo {
   chainId: EVMUniverseChainId
   poolId: string // Refers to pool contract address for v2 & v3, and poolId for v4
   tokenId?: string
-  tickLower?: string
-  tickUpper?: string
+  tickLower?: number
+  tickUpper?: number
   tickSpacing?: number
   liquidity?: string
   liquidityToken?: Token
@@ -90,8 +83,6 @@ type V4PositionInfo = BasePositionInfo & {
   totalApr?: number
   unclaimedRewardsAmountUni?: string
   boostedApr?: number
-  token0Address?: string
-  token1Address?: string
 }
 
 export type PositionInfo = V2PairInfo | V3PositionInfo | V4PositionInfo

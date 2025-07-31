@@ -3,33 +3,28 @@
 exports[`RemoveButton renders without error 1`] = `
 <View
   collapsable={false}
-  disabled={false}
-  hitSlop={
+  focusVisibleStyle={{}}
+  forwardedRef={[Function]}
+  jestAnimatedStyle={
     {
-      "bottom": 5,
-      "left": 5,
-      "right": 5,
-      "top": 5,
+      "value": {},
     }
   }
   onBlur={[Function]}
   onClick={[Function]}
   onFocus={[Function]}
+  onLayout={[Function]}
   onResponderGrant={[Function]}
   onResponderMove={[Function]}
   onResponderRelease={[Function]}
   onResponderTerminate={[Function]}
   onResponderTerminationRequest={[Function]}
   onStartShouldSetResponder={[Function]}
+  role="button"
   style={
     {
       "alignItems": "center",
-      "backgroundColor": {
-        "dynamic": {
-          "dark": "rgba(255, 255, 255, 0.38)",
-          "light": "rgba(19, 19, 19, 0.35)",
-        },
-      },
+      "backgroundColor": "rgba(19, 19, 19, 0.35)",
       "borderBottomLeftRadius": 999999,
       "borderBottomRightRadius": 999999,
       "borderTopLeftRadius": 999999,
@@ -50,6 +45,8 @@ exports[`RemoveButton renders without error 1`] = `
   testID="explore/remove-button"
 >
   <View
+    onBlur={[Function]}
+    onFocus={[Function]}
     style={
       {
         "backgroundColor": {

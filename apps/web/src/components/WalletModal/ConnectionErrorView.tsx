@@ -27,7 +27,7 @@ const AlertTriangleIcon = styled(AlertTriangle, {
 })
 
 export default function ConnectionErrorView() {
-  const connection = useConnect()
+  const connection = useConnect() // TODO(WEB-8088): use new connection state here
 
   const retry = useCallback(() => {
     const connector = connection.variables?.connector

@@ -6003,7 +6003,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                 class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _lineHeight-f-lineHeigh1263414315 _textAlign-center _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548"
                 data-disable-theme="true"
               >
-                You can send and receive tokens and NFTs on all of our 14 supported networks.
+                You can send and receive tokens and NFTs on all of our 13 supported networks.
               </span>
               <div
                 class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center"
@@ -6012,7 +6012,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                   aria-label="Networks"
                   class=" is_Button  t_group_item"
                   dd-action-name="Networks"
-                  style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; outline-color: rgba(0, 0, 0, 0); padding: 4px 6px 4px 6px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 4px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+                  style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; outline-color: rgba(0, 0, 0, 0); padding: 6px 6px 6px 6px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 4px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
                 >
                   <span
                     class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-micr111 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1263414315"
@@ -12040,7 +12040,7 @@ exports[`ReceiveScreen renders without error 1`] = `
               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _lineHeight-f-lineHeigh1263414315 _textAlign-center _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548"
               data-disable-theme="true"
             >
-              You can send and receive tokens and NFTs on all of our 14 supported networks.
+              You can send and receive tokens and NFTs on all of our 13 supported networks.
             </span>
             <div
               class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center"
@@ -12049,7 +12049,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                 aria-label="Networks"
                 class=" is_Button  t_group_item"
                 dd-action-name="Networks"
-                style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; outline-color: rgba(0, 0, 0, 0); padding: 4px 6px 4px 6px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 4px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+                style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; outline-color: rgba(0, 0, 0, 0); padding: 6px 6px 6px 6px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 4px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
               >
                 <span
                   class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-micr111 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1263414315"

@@ -1,13 +1,13 @@
-import { UseMutationResult, useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query'
+import { UseMutationResult, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo, useRef } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useMismatchContext } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
 import {
   MisMatchQueryOptions,
-  MisMatchQueryResult,
-  MismatchResult,
+  getIsMismatchAccountQueryOptions,
+  type MisMatchQueryResult,
+  type MismatchResult,
 } from 'uniswap/src/features/smartWallet/mismatch/queryOptions'
-import { useMakeAccountMismatchQueryOptions } from 'uniswap/src/features/smartWallet/mismatch/useMakeAccountMismatchQueryOptions'
 import { getLogger } from 'utilities/src/logger/logger'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 
@@ -15,9 +15,19 @@ import { useEvent, usePrevious } from 'utilities/src/react/hooks'
  * [public] useIsMismatchAccountQuery -- gets the mismatch account status for the current account, specific to a chain
  * @returns the mismatch account status for the current account (useQuery result)
  */
-export function useIsMismatchAccountQuery(input?: { chainId?: number }): MisMatchQueryResult {
-  const getQueryOptions = useCurrentAccountMismatchQueryOptions()
-  return useQuery(getQueryOptions(input?.chainId))
+export function useIsMismatchAccountQuery(input?: { chainId?: number }): MisMatchQueryResult<boolean> {
+  const { defaultChainId } = useMismatchContext()
+  const targetChainId = input?.chainId ?? defaultChainId
+  const queryOptions = useGetMismatchQueryOptions()
+
+  const singleChainSelector = useEvent((data: MismatchResult | undefined): boolean => {
+    return data?.[String(targetChainId)] ?? false
+  })
+
+  return useQuery({
+    ...queryOptions,
+    select: singleChainSelector,
+  })
 }
 
 /**
@@ -25,10 +35,26 @@ export function useIsMismatchAccountQuery(input?: { chainId?: number }): MisMatc
  * @returns the mismatch account status for the current account
  */
 export function useHasAccountMismatchOnAnyChain(): boolean {
-  const queries = useAllChainMismatchQueries()
-  return useMemo(() => {
-    return queries.some((query) => query.data?.hasMismatch)
-  }, [queries])
+  const queryOptions = useGetMismatchQueryOptions()
+
+  const anyMismatchSelector = useEvent((data: MismatchResult | undefined): boolean => {
+    if (!data) {
+      return false
+    }
+    for (const chainId in data) {
+      if (data[chainId]) {
+        return true
+      }
+    }
+    return false
+  })
+
+  const { data } = useQuery({
+    ...queryOptions,
+    select: anyMismatchSelector,
+  })
+
+  return data ?? false
 }
 
 /**
@@ -36,12 +62,24 @@ export function useHasAccountMismatchOnAnyChain(): boolean {
  * @returns a callback that checks if the current account has a mismatch for a given chain
  */
 export function useHasAccountMismatchCallback(): (chainId?: UniverseChainId) => boolean {
-  const queries = useAllChainMismatchQueries()
+  const queryOptions = useGetMismatchQueryOptions()
+  const queryClient = useQueryClient()
+
   return useEvent((chainId?: UniverseChainId) => {
-    if (!chainId) {
-      return queries.some((query) => query.data?.hasMismatch)
+    const data = queryClient.getQueryData(queryOptions.queryKey)
+    if (!data) {
+      return false
     }
-    return Boolean(queries.find((query) => query.data?.chainId === chainId)?.data?.hasMismatch)
+
+    if (!chainId) {
+      for (const cId in data) {
+        if (data[cId]) {
+          return true
+        }
+      }
+      return false
+    }
+    return data[String(chainId)] ?? false
   })
 }
 
@@ -50,9 +88,8 @@ export function useHasAccountMismatchCallback(): (chainId?: UniverseChainId) => 
  * NB: only call this once per app instance, eg in the root component
  */
 export function useCurrentAccountChainMismatchEffect(): void {
-  const account = useMismatchContext().account
-  const getQueryOptions = useCurrentAccountMismatchQueryOptions()
-  const queryOptions = getQueryOptions(account.chainId)
+  const { account } = useMismatchContext()
+  const queryOptions = useGetMismatchQueryOptions()
   const queryClient = useQueryClient()
 
   useEffect(() => {
@@ -61,7 +98,7 @@ export function useCurrentAccountChainMismatchEffect(): void {
     }
     // invalidate on chain change so we ensure we are always checking the latest chain results
     queryClient.invalidateQueries({ queryKey: queryOptions.queryKey }).catch(() => {})
-  }, [account.address, account.chainId, queryOptions, queryClient])
+  }, [account.address, account.chainId, queryOptions.queryKey, queryClient])
 }
 
 /**
@@ -98,49 +135,17 @@ export function useOnConnectCheckAllAccountChainMismatchEffect(): void {
 }
 
 /**
- * [private] useAllChainMismatchQueries -- gets the mismatch account status for all chains
- * @returns the mismatch account status for all chains (useQueries result)
- */
-function useAllChainMismatchQueries(): MisMatchQueryResult[] {
-  const queryOptions = useAllAccountChainMismatchQueryOptions()
-  return useQueries({ queries: queryOptions })
-}
-
-/**
- * [private] useCurrentAccountMismatchQueryOptions -- gets the query options for the mismatch account status for the current account
- * @returns a function that returns the query options for the mismatch account status for the passed in address
- */
-function useCurrentAccountMismatchQueryOptions(): (chainId?: number) => MisMatchQueryOptions {
-  const mismatchContext = useMismatchContext()
-  return useMakeAccountMismatchQueryOptions({
-    hasMismatch: mismatchContext.mismatchCallback,
-    account: { address: mismatchContext.account.address, chainId: mismatchContext.account.chainId },
-  })
-}
-
-/**
- * [private] useAllAccountChainMismatchQueryOptions -- gets the query options for all account chain mismatch queries
- * @returns an array of query options for all account chain mismatch queries
- */
-function useAllAccountChainMismatchQueryOptions(): MisMatchQueryOptions[] {
-  const chains = useMismatchContext().chains
-  const getQueryOptions = useCurrentAccountMismatchQueryOptions()
-  return useMemo(() => {
-    return chains.map((chainId) => getQueryOptions(chainId))
-  }, [getQueryOptions, chains])
-}
-
-/**
  * [private] useAllAcountChainMismatchMutation -- checks all account chain mismatch queries
  * @returns a mutation that checks all account chain mismatch queries
  */
 const useAllAcountChainMismatchMutation = (ctx: {
   onHasAnyMismatch: () => void
-}): UseMutationResult<MismatchResult[], Error, void> => {
-  const queryOptions = useAllAccountChainMismatchQueryOptions()
+}): UseMutationResult<MismatchResult, Error, void> => {
+  const { account } = useMismatchContext()
+  const queryOptions = useGetMismatchQueryOptions()
   const queryClient = useQueryClient()
   const logger = getLogger()
-  const account = useMismatchContext().account
+
   return useMutation({
     retry: (failureCount, error) => {
       const isRetryable = isRetryableError(error)
@@ -155,32 +160,30 @@ const useAllAcountChainMismatchMutation = (ctx: {
     },
     mutationFn: async () => {
       if (!account.address) {
-        return []
+        return {}
       }
-      return Promise.all(
-        queryOptions.map((query) =>
-          // we fetch via the query so we can cache the result in RQ
-          // staleTime is set to 0 so we don't use cached data
-          queryClient.fetchQuery({ ...query, staleTime: 0 }),
-        ),
-      )
+      // Fetch via the query so we can cache the result in RQ
+      // staleTime is set to 0 so we don't use cached data
+      return queryClient.fetchQuery({ ...queryOptions, staleTime: 0 })
     },
     onSuccess: (data) => {
       if (!account.address) {
         return
       }
-      const hasMismatch = data.some((result) => result.hasMismatch)
+      let hasMismatch = false
+      for (const chainId in data) {
+        const result = data[String(chainId)]
+        if (result) {
+          hasMismatch = true
+          logger.info(
+            'useMismatchAccount.ts',
+            'useAllAcountChainMismatchMutation',
+            `mismatch found on chain ${chainId}`,
+          )
+        }
+      }
       if (hasMismatch) {
         ctx.onHasAnyMismatch()
-        for (const result of data) {
-          if (result.hasMismatch) {
-            logger.info(
-              'useMismatchAccount.ts',
-              'useAllAcountChainMismatchMutation',
-              `mismatch found on chain ${result.chainId}`,
-            )
-          }
-        }
       }
     },
   })
@@ -204,4 +207,23 @@ const ERROR_MAP: Record<string, { retry: boolean }> = {
   'Not implemented': {
     retry: false,
   },
+}
+
+/**
+ * [private] useGetBulkMismatchQueryOptions -- returns query options for bulk mismatch queries
+ * @returns query options with chains already included from context
+ */
+function useGetMismatchQueryOptions(): MisMatchQueryOptions {
+  const { isTestnetModeEnabled, mismatchCallback, account, chains } = useMismatchContext()
+
+  return useMemo(() => {
+    const getQueryOptions = getIsMismatchAccountQueryOptions({
+      hasMismatch: mismatchCallback,
+      isMainnet: !isTestnetModeEnabled,
+    })
+    return getQueryOptions({
+      address: account.address,
+      chainIds: chains,
+    })
+  }, [account.address, chains, isTestnetModeEnabled, mismatchCallback])
 }

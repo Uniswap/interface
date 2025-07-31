@@ -15,6 +15,7 @@ import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/
 import {
   getTokenAddressFromChainForTradingApi,
   toTradingApiSupportedChainId,
+  tradingApiToUniverseChainId,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
@@ -228,7 +229,17 @@ function hasMatchingBridgeToken({
   tokenAddress: Address
   tokenChainId: ChainId
 }): boolean {
-  return !!bridgePairs.tokens.find(
-    (token) => areAddressesEqual(token.address, tokenAddress) && token.chainId === tokenChainId,
-  )
+  const tokenUniverseChainId = tradingApiToUniverseChainId(tokenChainId)
+  return !!bridgePairs.tokens.find((token) => {
+    const bridgeTokenUniverseChainId = tradingApiToUniverseChainId(token.chainId)
+    return (
+      tokenUniverseChainId &&
+      bridgeTokenUniverseChainId &&
+      areAddressesEqual({
+        addressInput1: { address: token.address, chainId: bridgeTokenUniverseChainId },
+        addressInput2: { address: tokenAddress, chainId: tokenUniverseChainId },
+      }) &&
+      tokenUniverseChainId === bridgeTokenUniverseChainId
+    )
+  })
 }

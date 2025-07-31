@@ -243,61 +243,38 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               }
             >
               <View
-                hitSlop={
+                collapsable={false}
+                focusVisibleStyle={{}}
+                forwardedRef={[Function]}
+                jestAnimatedStyle={
                   {
-                    "bottom": 5,
-                    "left": 5,
-                    "right": 5,
-                    "top": 5,
+                    "value": {},
                   }
                 }
                 onBlur={[Function]}
                 onClick={[Function]}
                 onFocus={[Function]}
+                onLayout={[Function]}
                 onResponderGrant={[Function]}
                 onResponderMove={[Function]}
                 onResponderRelease={[Function]}
                 onResponderTerminate={[Function]}
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
+                role="button"
                 style={
                   {
-                    "backgroundColor": {
-                      "dynamic": {
-                        "dark": "#131313",
-                        "light": "#FFFFFF",
-                      },
-                    },
-                    "borderBottomColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "backgroundColor": "#FFFFFF",
+                    "borderBottomColor": "rgba(34,34,34,0.05)",
                     "borderBottomLeftRadius": 20,
                     "borderBottomRightRadius": 20,
                     "borderBottomWidth": 1,
-                    "borderLeftColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderLeftColor": "rgba(34,34,34,0.05)",
                     "borderLeftWidth": 1,
-                    "borderRightColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderRightColor": "rgba(34,34,34,0.05)",
                     "borderRightWidth": 1,
                     "borderStyle": "solid",
-                    "borderTopColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderTopColor": "rgba(34,34,34,0.05)",
                     "borderTopLeftRadius": 20,
                     "borderTopRightRadius": 20,
                     "borderTopWidth": 1,
@@ -317,6 +294,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 testID="add-cloud-backup"
               >
                 <View
+                  onBlur={[Function]}
+                  onFocus={[Function]}
                   style={
                     {
                       "alignContent": "center",
@@ -327,6 +306,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   }
                 >
                   <View
+                    onBlur={[Function]}
+                    onFocus={[Function]}
                     style={
                       {
                         "alignItems": "center",
@@ -415,6 +396,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     </RNSVGSvgView>
                   </View>
                   <View
+                    onBlur={[Function]}
+                    onFocus={[Function]}
                     style={
                       {
                         "alignItems": "center",
@@ -425,6 +408,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     }
                   >
                     <View
+                      onBlur={[Function]}
+                      onFocus={[Function]}
                       style={
                         {
                           "alignItems": "flex-start",
@@ -436,6 +421,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       }
                     >
                       <View
+                        onBlur={[Function]}
+                        onFocus={[Function]}
                         style={
                           {
                             "flexDirection": "row",
@@ -444,6 +431,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         }
                       >
                         <View
+                          onBlur={[Function]}
+                          onFocus={[Function]}
                           style={
                             {
                               "flex": 1,
@@ -456,6 +445,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                           <Text
                             allowFontScaling={false}
                             maxFontSizeMultiplier={1.4}
+                            onBlur={[Function]}
+                            onFocus={[Function]}
                             style={
                               {
                                 "color": {
@@ -476,6 +467,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                           </Text>
                         </View>
                         <View
+                          onBlur={[Function]}
+                          onFocus={[Function]}
                           style={
                             {
                               "alignItems": "center",
@@ -502,6 +495,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                           <Text
                             allowFontScaling={true}
                             maxFontSizeMultiplier={1.2}
+                            onBlur={[Function]}
+                            onFocus={[Function]}
                             style={
                               {
                                 "color": {
@@ -526,6 +521,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       <Text
                         allowFontScaling={false}
                         maxFontSizeMultiplier={1.4}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
                         style={
                           {
                             "color": {
@@ -549,61 +546,38 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 </View>
               </View>
               <View
-                hitSlop={
+                collapsable={false}
+                focusVisibleStyle={{}}
+                forwardedRef={[Function]}
+                jestAnimatedStyle={
                   {
-                    "bottom": 5,
-                    "left": 5,
-                    "right": 5,
-                    "top": 5,
+                    "value": {},
                   }
                 }
                 onBlur={[Function]}
                 onClick={[Function]}
                 onFocus={[Function]}
+                onLayout={[Function]}
                 onResponderGrant={[Function]}
                 onResponderMove={[Function]}
                 onResponderRelease={[Function]}
                 onResponderTerminate={[Function]}
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
+                role="button"
                 style={
                   {
-                    "backgroundColor": {
-                      "dynamic": {
-                        "dark": "#131313",
-                        "light": "#FFFFFF",
-                      },
-                    },
-                    "borderBottomColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "backgroundColor": "#FFFFFF",
+                    "borderBottomColor": "rgba(34,34,34,0.05)",
                     "borderBottomLeftRadius": 20,
                     "borderBottomRightRadius": 20,
                     "borderBottomWidth": 1,
-                    "borderLeftColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderLeftColor": "rgba(34,34,34,0.05)",
                     "borderLeftWidth": 1,
-                    "borderRightColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderRightColor": "rgba(34,34,34,0.05)",
                     "borderRightWidth": 1,
                     "borderStyle": "solid",
-                    "borderTopColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderTopColor": "rgba(34,34,34,0.05)",
                     "borderTopLeftRadius": 20,
                     "borderTopRightRadius": 20,
                     "borderTopWidth": 1,
@@ -623,6 +597,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 testID="add-manual-backup"
               >
                 <View
+                  onBlur={[Function]}
+                  onFocus={[Function]}
                   style={
                     {
                       "alignContent": "center",
@@ -633,6 +609,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   }
                 >
                   <View
+                    onBlur={[Function]}
+                    onFocus={[Function]}
                     style={
                       {
                         "alignItems": "center",
@@ -712,6 +690,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     </RNSVGSvgView>
                   </View>
                   <View
+                    onBlur={[Function]}
+                    onFocus={[Function]}
                     style={
                       {
                         "alignItems": "center",
@@ -722,6 +702,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     }
                   >
                     <View
+                      onBlur={[Function]}
+                      onFocus={[Function]}
                       style={
                         {
                           "alignItems": "flex-start",
@@ -733,6 +715,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       }
                     >
                       <View
+                        onBlur={[Function]}
+                        onFocus={[Function]}
                         style={
                           {
                             "flexDirection": "row",
@@ -741,6 +725,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         }
                       >
                         <View
+                          onBlur={[Function]}
+                          onFocus={[Function]}
                           style={
                             {
                               "flex": 1,
@@ -751,6 +737,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                           <Text
                             allowFontScaling={false}
                             maxFontSizeMultiplier={1.4}
+                            onBlur={[Function]}
+                            onFocus={[Function]}
                             style={
                               {
                                 "color": {
@@ -774,6 +762,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       <Text
                         allowFontScaling={false}
                         maxFontSizeMultiplier={1.4}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
                         style={
                           {
                             "color": {
@@ -808,27 +798,34 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             }
           >
             <View
-              hitSlop={
+              collapsable={false}
+              focusVisibleStyle={{}}
+              forwardedRef={[Function]}
+              jestAnimatedStyle={
                 {
-                  "bottom": 5,
-                  "left": 5,
-                  "right": 5,
-                  "top": 5,
+                  "value": {},
                 }
               }
               onBlur={[Function]}
               onClick={[Function]}
               onFocus={[Function]}
+              onLayout={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
               onResponderRelease={[Function]}
               onResponderTerminate={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
+              role="button"
               style={
                 {
                   "alignItems": "center",
                   "alignSelf": "center",
+                  "backgroundColor": "transparent",
+                  "borderBottomLeftRadius": 12,
+                  "borderBottomRightRadius": 12,
+                  "borderTopLeftRadius": 12,
+                  "borderTopRightRadius": 12,
                   "flexDirection": "row",
                   "gap": 8,
                   "opacity": 1,
@@ -902,6 +899,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               <Text
                 allowFontScaling={true}
                 maxFontSizeMultiplier={1.4}
+                onBlur={[Function]}
+                onFocus={[Function]}
                 style={
                   {
                     "color": {
@@ -1172,61 +1171,38 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               }
             >
               <View
-                hitSlop={
+                collapsable={false}
+                focusVisibleStyle={{}}
+                forwardedRef={[Function]}
+                jestAnimatedStyle={
                   {
-                    "bottom": 5,
-                    "left": 5,
-                    "right": 5,
-                    "top": 5,
+                    "value": {},
                   }
                 }
                 onBlur={[Function]}
                 onClick={[Function]}
                 onFocus={[Function]}
+                onLayout={[Function]}
                 onResponderGrant={[Function]}
                 onResponderMove={[Function]}
                 onResponderRelease={[Function]}
                 onResponderTerminate={[Function]}
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
+                role="button"
                 style={
                   {
-                    "backgroundColor": {
-                      "dynamic": {
-                        "dark": "#131313",
-                        "light": "#FFFFFF",
-                      },
-                    },
-                    "borderBottomColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "backgroundColor": "#FFFFFF",
+                    "borderBottomColor": "rgba(34,34,34,0.05)",
                     "borderBottomLeftRadius": 20,
                     "borderBottomRightRadius": 20,
                     "borderBottomWidth": 1,
-                    "borderLeftColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderLeftColor": "rgba(34,34,34,0.05)",
                     "borderLeftWidth": 1,
-                    "borderRightColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderRightColor": "rgba(34,34,34,0.05)",
                     "borderRightWidth": 1,
                     "borderStyle": "solid",
-                    "borderTopColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderTopColor": "rgba(34,34,34,0.05)",
                     "borderTopLeftRadius": 20,
                     "borderTopRightRadius": 20,
                     "borderTopWidth": 1,
@@ -1246,6 +1222,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 testID="add-cloud-backup"
               >
                 <View
+                  onBlur={[Function]}
+                  onFocus={[Function]}
                   style={
                     {
                       "alignContent": "center",
@@ -1256,6 +1234,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   }
                 >
                   <View
+                    onBlur={[Function]}
+                    onFocus={[Function]}
                     style={
                       {
                         "alignItems": "center",
@@ -1344,6 +1324,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     </RNSVGSvgView>
                   </View>
                   <View
+                    onBlur={[Function]}
+                    onFocus={[Function]}
                     style={
                       {
                         "alignItems": "center",
@@ -1354,6 +1336,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     }
                   >
                     <View
+                      onBlur={[Function]}
+                      onFocus={[Function]}
                       style={
                         {
                           "alignItems": "flex-start",
@@ -1365,6 +1349,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       }
                     >
                       <View
+                        onBlur={[Function]}
+                        onFocus={[Function]}
                         style={
                           {
                             "flexDirection": "row",
@@ -1373,6 +1359,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         }
                       >
                         <View
+                          onBlur={[Function]}
+                          onFocus={[Function]}
                           style={
                             {
                               "flex": 1,
@@ -1385,6 +1373,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                           <Text
                             allowFontScaling={false}
                             maxFontSizeMultiplier={1.4}
+                            onBlur={[Function]}
+                            onFocus={[Function]}
                             style={
                               {
                                 "color": {
@@ -1405,6 +1395,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                           </Text>
                         </View>
                         <View
+                          onBlur={[Function]}
+                          onFocus={[Function]}
                           style={
                             {
                               "alignItems": "center",
@@ -1431,6 +1423,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                           <Text
                             allowFontScaling={true}
                             maxFontSizeMultiplier={1.2}
+                            onBlur={[Function]}
+                            onFocus={[Function]}
                             style={
                               {
                                 "color": {
@@ -1455,6 +1449,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       <Text
                         allowFontScaling={false}
                         maxFontSizeMultiplier={1.4}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
                         style={
                           {
                             "color": {
@@ -1478,61 +1474,38 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 </View>
               </View>
               <View
-                hitSlop={
+                collapsable={false}
+                focusVisibleStyle={{}}
+                forwardedRef={[Function]}
+                jestAnimatedStyle={
                   {
-                    "bottom": 5,
-                    "left": 5,
-                    "right": 5,
-                    "top": 5,
+                    "value": {},
                   }
                 }
                 onBlur={[Function]}
                 onClick={[Function]}
                 onFocus={[Function]}
+                onLayout={[Function]}
                 onResponderGrant={[Function]}
                 onResponderMove={[Function]}
                 onResponderRelease={[Function]}
                 onResponderTerminate={[Function]}
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
+                role="button"
                 style={
                   {
-                    "backgroundColor": {
-                      "dynamic": {
-                        "dark": "#131313",
-                        "light": "#FFFFFF",
-                      },
-                    },
-                    "borderBottomColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "backgroundColor": "#FFFFFF",
+                    "borderBottomColor": "rgba(34,34,34,0.05)",
                     "borderBottomLeftRadius": 20,
                     "borderBottomRightRadius": 20,
                     "borderBottomWidth": 1,
-                    "borderLeftColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderLeftColor": "rgba(34,34,34,0.05)",
                     "borderLeftWidth": 1,
-                    "borderRightColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderRightColor": "rgba(34,34,34,0.05)",
                     "borderRightWidth": 1,
                     "borderStyle": "solid",
-                    "borderTopColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderTopColor": "rgba(34,34,34,0.05)",
                     "borderTopLeftRadius": 20,
                     "borderTopRightRadius": 20,
                     "borderTopWidth": 1,
@@ -1552,6 +1525,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 testID="add-manual-backup"
               >
                 <View
+                  onBlur={[Function]}
+                  onFocus={[Function]}
                   style={
                     {
                       "alignContent": "center",
@@ -1562,6 +1537,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   }
                 >
                   <View
+                    onBlur={[Function]}
+                    onFocus={[Function]}
                     style={
                       {
                         "alignItems": "center",
@@ -1641,6 +1618,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     </RNSVGSvgView>
                   </View>
                   <View
+                    onBlur={[Function]}
+                    onFocus={[Function]}
                     style={
                       {
                         "alignItems": "center",
@@ -1651,6 +1630,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     }
                   >
                     <View
+                      onBlur={[Function]}
+                      onFocus={[Function]}
                       style={
                         {
                           "alignItems": "flex-start",
@@ -1662,6 +1643,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       }
                     >
                       <View
+                        onBlur={[Function]}
+                        onFocus={[Function]}
                         style={
                           {
                             "flexDirection": "row",
@@ -1670,6 +1653,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         }
                       >
                         <View
+                          onBlur={[Function]}
+                          onFocus={[Function]}
                           style={
                             {
                               "flex": 1,
@@ -1680,6 +1665,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                           <Text
                             allowFontScaling={false}
                             maxFontSizeMultiplier={1.4}
+                            onBlur={[Function]}
+                            onFocus={[Function]}
                             style={
                               {
                                 "color": {
@@ -1703,6 +1690,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       <Text
                         allowFontScaling={false}
                         maxFontSizeMultiplier={1.4}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
                         style={
                           {
                             "color": {
@@ -1737,27 +1726,34 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             }
           >
             <View
-              hitSlop={
+              collapsable={false}
+              focusVisibleStyle={{}}
+              forwardedRef={[Function]}
+              jestAnimatedStyle={
                 {
-                  "bottom": 5,
-                  "left": 5,
-                  "right": 5,
-                  "top": 5,
+                  "value": {},
                 }
               }
               onBlur={[Function]}
               onClick={[Function]}
               onFocus={[Function]}
+              onLayout={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
               onResponderRelease={[Function]}
               onResponderTerminate={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
+              role="button"
               style={
                 {
                   "alignItems": "center",
                   "alignSelf": "center",
+                  "backgroundColor": "transparent",
+                  "borderBottomLeftRadius": 12,
+                  "borderBottomRightRadius": 12,
+                  "borderTopLeftRadius": 12,
+                  "borderTopRightRadius": 12,
                   "flexDirection": "row",
                   "gap": 8,
                   "opacity": 1,
@@ -1831,6 +1827,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               <Text
                 allowFontScaling={true}
                 maxFontSizeMultiplier={1.4}
+                onBlur={[Function]}
+                onFocus={[Function]}
                 style={
                   {
                     "color": {

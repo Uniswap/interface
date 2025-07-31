@@ -1,5 +1,5 @@
-import { isDynamicFeeTier } from 'components/Liquidity/utils'
-import { FeeData } from 'pages/Pool/Positions/create/types'
+import { FeeData } from 'components/Liquidity/Create/types'
+import { isDynamicFeeTier } from 'components/Liquidity/utils/feeTiers'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components/CopyHelper'

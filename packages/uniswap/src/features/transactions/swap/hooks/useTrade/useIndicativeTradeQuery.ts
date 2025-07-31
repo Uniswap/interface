@@ -1,23 +1,20 @@
-import { useMemo } from 'react'
-import { useIndicativeTrade } from 'uniswap/src/features/transactions/swap/hooks/useIndicativeTrade'
-import { type GetQuoteRequestResult } from 'uniswap/src/features/transactions/swap/hooks/useTrade/createGetQuoteRequestArgs'
-import { determineSwapCurrenciesAndStaticArgs } from 'uniswap/src/features/transactions/swap/hooks/useTrade/determineSwapCurrenciesAndStaticArgs'
-import { type UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
+import { useQuery, UseQueryResult } from '@tanstack/react-query'
+import { useTradeService } from 'uniswap/src/features/services'
+import { createIndicativeTradeServiceQueryOptions } from 'uniswap/src/features/transactions/swap/hooks/useTrade/useIndicativeTradeServiceQueryOptions'
+import { IndicativeTrade, type UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
+import { useEvent } from 'utilities/src/react/hooks'
 
-export function useIndicativeTradeQuery(
-  params: UseTradeArgs & { quoteRequestArgs?: GetQuoteRequestResult },
-): ReturnType<typeof useIndicativeTrade> {
-  const { currencyIn, currencyOut } = determineSwapCurrenciesAndStaticArgs(params)
-  const { isUSDQuote } = params
+export function useIndicativeTradeQuery(params: UseTradeArgs): {
+  trade: IndicativeTrade | undefined
+  isLoading: boolean
+} {
+  const tradeService = useTradeService()
+  const getIndicativeTradeQueryOptions = useEvent(createIndicativeTradeServiceQueryOptions({ tradeService }))
 
-  const indicativeParams = useMemo(() => {
-    return {
-      quoteRequestArgs: params.quoteRequestArgs,
-      currencyIn,
-      currencyOut,
-      skip: isUSDQuote,
-    }
-  }, [isUSDQuote, currencyIn, currencyOut, params.quoteRequestArgs])
+  const { data, isLoading }: UseQueryResult<IndicativeTrade | null> = useQuery(getIndicativeTradeQueryOptions(params))
 
-  return useIndicativeTrade(indicativeParams)
+  return {
+    trade: data ?? undefined,
+    isLoading,
+  }
 }

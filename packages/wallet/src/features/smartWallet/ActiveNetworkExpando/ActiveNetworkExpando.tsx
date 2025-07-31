@@ -1,28 +1,35 @@
 import { useCallback } from 'react'
 import { FlatList } from 'react-native-gesture-handler'
-import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, GetThemeValueForKey, HeightAnimator, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ExternalLink } from 'ui/src/components/icons'
 import { iconSizes, padding, spacing } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
-import { ITEM_PADDING, TEXT_VARIANT } from 'wallet/src/features/smartWallet/ActiveNetworkExpando/constants'
+import { isMobileApp } from 'utilities/src/platform'
+import {
+  ITEM_PADDING,
+  MAX_VISIBLE_HEIGHT_MOBILE,
+  ROW_HEIGHT,
+  TEXT_VARIANT,
+} from 'wallet/src/features/smartWallet/ActiveNetworkExpando/constants'
 import { useVisibleDelegations } from 'wallet/src/features/smartWallet/ActiveNetworkExpando/useVisibleDelegations'
 import { ActiveDelegation } from 'wallet/src/features/smartWallet/types'
 
 export function ActiveNetworkExpando({
   isOpen,
   activeDelegations,
+  mt,
 }: {
   isOpen: boolean
   activeDelegations: ActiveDelegation[]
+  mt?: number | GetThemeValueForKey<'marginTop'>
 }): JSX.Element | null {
   const colors = useSporeColors()
 
   const { maxHeight, visibleItems: displayData } = useVisibleDelegations({
     data: activeDelegations,
-    isOpen,
   })
 
   const renderActiveDelegationItem = useCallback(
@@ -36,25 +43,37 @@ export function ActiveNetworkExpando({
     [],
   )
 
-  if (!isOpen || !displayData.length) {
+  if (!activeDelegations.length) {
     return null
   }
 
   return (
-    <Flex py="$spacing4">
-      <FlatList
-        data={displayData}
-        keyExtractor={({ chainId, delegationAddress }) => `${chainId}-${delegationAddress}`}
-        renderItem={renderActiveDelegationItem}
-        style={{
-          backgroundColor: colors.surface2.get(),
-          borderRadius: spacing.spacing12,
-          maxHeight,
-          paddingHorizontal: padding.padding12,
-        }}
-        ItemSeparatorComponent={Separator}
-      />
-    </Flex>
+    <HeightAnimator useInitialHeight open={isOpen} animation="300ms" mt={mt}>
+      {isOpen && (
+        <Flex
+          key="active-network-expando-container"
+          py="$spacing4"
+          animation="300ms"
+          enterStyle={{ opacity: 0, scale: 0.95 }}
+          exitStyle={{ opacity: 0, scale: 0.95 }}
+        >
+          <FlatList
+            data={displayData}
+            keyExtractor={({ chainId, delegationAddress }) => `${chainId}-${delegationAddress}`}
+            renderItem={renderActiveDelegationItem}
+            // only bounce if there's more to scroll
+            bounces={isMobileApp && displayData.length * ROW_HEIGHT > MAX_VISIBLE_HEIGHT_MOBILE}
+            style={{
+              backgroundColor: colors.surface2.get(),
+              borderRadius: spacing.spacing12,
+              maxHeight,
+              paddingHorizontal: padding.padding12,
+            }}
+            ItemSeparatorComponent={Separator}
+          />
+        </Flex>
+      )}
+    </HeightAnimator>
   )
 }
 

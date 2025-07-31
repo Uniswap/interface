@@ -66,6 +66,7 @@ claude.md
 claude.local.md
 CLAUDE.md
 CLAUDE.local.md
+.claude/settings.local.json
 
 # cursor
 .cursor/mcp.json

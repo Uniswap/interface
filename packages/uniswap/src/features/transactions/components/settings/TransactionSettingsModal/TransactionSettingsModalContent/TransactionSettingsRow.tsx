@@ -12,15 +12,10 @@ import type { TransactionSettingConfig } from 'uniswap/src/features/transactions
 interface TransactionSettingRowProps {
   setting: TransactionSettingConfig
   setSelectedSetting: (setting: TransactionSettingConfig) => void
-  warning?: JSX.Element | undefined
 }
 
-export function TransactionSettingRow({
-  setting,
-  setSelectedSetting,
-  warning,
-}: TransactionSettingRowProps): JSX.Element | null {
-  const { renderTitle, renderTooltip, Control, Description, Screen, InfoModal, featureFlag } = setting
+export function TransactionSettingRow({ setting, setSelectedSetting }: TransactionSettingRowProps): JSX.Element | null {
+  const { renderTitle, renderTooltip, Control, Description, Screen, InfoModal, featureFlag, Warning } = setting
   const { t } = useTranslation()
 
   const [showInfoModal, setShowInfoModal] = useState(false)
@@ -52,7 +47,7 @@ export function TransactionSettingRow({
                   <Description />
                 </Text>
               )}
-              {warning}
+              {Warning && <Warning />}
             </Flex>
           </TouchableAreaWrapper>
           <TouchableArea

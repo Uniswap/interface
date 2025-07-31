@@ -47,6 +47,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType, EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { isSelfCallWithData } from 'uniswap/src/features/dappRequests/utils'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 
@@ -144,7 +145,7 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
 
       source?.postMessage({
         requestId: message.requestId,
-        result: message.transactionResponse.hash,
+        result: message.transactionHash,
       })
     })
 
@@ -586,7 +587,12 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
   }
 
   private isValidRequestAddress(address: string): boolean {
-    return (this.getConnectedAddresses() ?? []).some((connectedAddress) => areAddressesEqual(connectedAddress, address))
+    return (this.getConnectedAddresses() ?? []).some((connectedAddress) =>
+      areAddressesEqual({
+        addressInput1: { address: connectedAddress, platform: Platform.EVM },
+        addressInput2: { address, platform: Platform.EVM },
+      }),
+    )
   }
 
   /**

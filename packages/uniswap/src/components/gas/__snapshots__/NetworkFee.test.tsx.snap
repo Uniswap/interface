@@ -65,7 +65,6 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         style={
           {
             "alignItems": "center",
-            "color": "#FFFFFF",
             "flexDirection": "row",
             "flexShrink": 1,
             "gap": 4,
@@ -244,7 +243,6 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
         style={
           {
             "alignItems": "center",
-            "color": "#FFFFFF",
             "flexDirection": "row",
             "flexShrink": 1,
             "gap": 4,
@@ -452,7 +450,6 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         style={
           {
             "alignItems": "center",
-            "color": "#FFFFFF",
             "flexDirection": "row",
             "flexShrink": 1,
             "gap": 4,

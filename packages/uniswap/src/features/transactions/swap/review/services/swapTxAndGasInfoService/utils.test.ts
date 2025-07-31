@@ -2,7 +2,7 @@ import { CurrencyAmount } from '@uniswap/sdk-core'
 import type { providers } from 'ethers/lib/ethers'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import type { ClassicQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import type { BridgeQuote, ClassicQuote, QuoteResponse } from 'uniswap/src/data/tradingApi/__generated__/index'
+import type { BridgeQuote, ClassicQuote } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { Routing, TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import type { GasFeeResult } from 'uniswap/src/features/gas/types'
@@ -15,7 +15,6 @@ import {
   createProcessSwapResponse,
   getShouldSkipSwapRequest,
   getSimulationError,
-  getSwapQuoteQuoteResponse,
   processWrapResponse,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
@@ -180,48 +179,6 @@ describe('getSimulationError', () => {
     const error = getSimulationError({ swapQuote, isRevokeNeeded: false })
 
     expect(error).toBeNull()
-  })
-})
-
-describe('getBridgeOrClassicQuoteResponse', () => {
-  it('should return classic quote response', () => {
-    const quote = { routing: Routing.CLASSIC } as QuoteResponse
-
-    const result = getSwapQuoteQuoteResponse({ quote })
-
-    expect(result).toBe(quote)
-  })
-
-  it('should return bridge quote response', () => {
-    const quote = { routing: Routing.BRIDGE } as QuoteResponse
-
-    const result = getSwapQuoteQuoteResponse({ quote })
-
-    expect(result).toBe(quote)
-  })
-
-  it('should return wrap quote response', () => {
-    const quote = { routing: Routing.WRAP } as QuoteResponse
-
-    const result = getSwapQuoteQuoteResponse({ quote })
-
-    expect(result).toBe(quote)
-  })
-
-  it('should return unwrap quote response', () => {
-    const quote = { routing: Routing.UNWRAP } as QuoteResponse
-
-    const result = getSwapQuoteQuoteResponse({ quote })
-
-    expect(result).toBe(quote)
-  })
-
-  it('should return undefined for other routing types', () => {
-    const quote = { routing: Routing.DUTCH_V2 } as QuoteResponse
-
-    const result = getSwapQuoteQuoteResponse({ quote })
-
-    expect(result).toBeUndefined()
   })
 })
 

@@ -22,6 +22,7 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { DynamicConfigs, OnDeviceRecoveryConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -85,7 +86,15 @@ export function OnDeviceRecoveryScreen({
     const storedAddresses = await Keyring.getAddressesForStoredPrivateKeys()
     await Promise.all(
       storedAddresses.map((address) => {
-        if (!selectedRecoveryWalletInfos.find((walletInfo) => areAddressesEqual(walletInfo.address, address))) {
+        if (
+          !selectedRecoveryWalletInfos.find((walletInfo) =>
+            // TODO(WALL-7065): Update to support solana
+            areAddressesEqual({
+              addressInput1: { address: walletInfo.address, platform: Platform.EVM },
+              addressInput2: { address, platform: Platform.EVM },
+            }),
+          )
+        ) {
           return Keyring.removePrivateKey(address)
         }
         return Promise.resolve()

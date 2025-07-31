@@ -72,4 +72,5 @@ export const BLAST_CHAIN_INFO = {
     decimals: 18,
     address: '0x4300000000000000000000000000000000000004',
   },
+  tradingApiPollingIntervalMs: 200,
 } as const satisfies UniverseChainInfo

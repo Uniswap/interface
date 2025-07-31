@@ -9,8 +9,7 @@ import { spacing, zIndexes } from 'ui/src/theme'
 import { TokenSelectorEmptySearchList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorEmptySearchList'
 import { TokenSelectorSearchResultsList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSearchResultsList'
 import { TokenSelectorSendList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSendList'
-import { TokenSelectorSwapInputList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapInputList'
-import { TokenSelectorSwapOutputList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapOutputList'
+import { TokenSelectorSwapList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapList'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { flowToModalName } from 'uniswap/src/components/TokenSelector/utils'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
@@ -245,7 +244,7 @@ export function TokenSelectorContent({
         )
       case TokenSelectorVariation.SwapInput:
         return (
-          <TokenSelectorSwapInputList
+          <TokenSelectorSwapList
             oppositeSelectedToken={output}
             activeAccountAddress={activeAccountAddress}
             chainFilter={chainFilter}
@@ -254,7 +253,7 @@ export function TokenSelectorContent({
         )
       case TokenSelectorVariation.SwapOutput:
         return (
-          <TokenSelectorSwapOutputList
+          <TokenSelectorSwapList
             oppositeSelectedToken={input}
             activeAccountAddress={activeAccountAddress}
             chainFilter={chainFilter}
@@ -305,7 +304,6 @@ export function TokenSelectorContent({
                   chainIds={chainIds || enabledChains}
                   selectedChain={chainFilter}
                   styles={isExtension || isMobileWeb ? { dropdownZIndex: zIndexes.overlay } : undefined}
-                  onDismiss={dismissNativeKeyboard}
                   onPressChain={(newChainId) => {
                     onChangeChainFilter(newChainId)
                     onSelectChain?.(newChainId)

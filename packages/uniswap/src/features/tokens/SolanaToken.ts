@@ -33,14 +33,7 @@ export class SolanaToken implements Token {
   }
 
   equals(other: Currency): boolean {
-    return (
-      !other.isNative &&
-      other.address === this.address &&
-      other.decimals === this.decimals &&
-      other.symbol === this.symbol &&
-      other.name === this.name &&
-      other.chainId === this.chainId
-    )
+    return !other.isNative && other.address === this.address && other.chainId === this.chainId
   }
 
   sortsBefore(other: Token): boolean {

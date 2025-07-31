@@ -4,27 +4,35 @@ exports[`TokenItem renders without error 1`] = `
 <View
   actions={[]}
   onPress={[MockFunction]}
+  previewBackgroundColor="#FFFFFF"
 >
   <View
-    hitSlop={
+    collapsable={false}
+    focusVisibleStyle={{}}
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
       {
-        "bottom": 5,
-        "left": 5,
-        "right": 5,
-        "top": 5,
+        "value": {},
       }
     }
     onBlur={[Function]}
     onClick={[Function]}
     onFocus={[Function]}
+    onLayout={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
     onResponderRelease={[Function]}
     onResponderTerminate={[Function]}
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
+    role="button"
     style={
       {
+        "backgroundColor": "transparent",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
         "flexDirection": "column",
         "opacity": 1,
         "transform": [
@@ -38,6 +46,8 @@ exports[`TokenItem renders without error 1`] = `
   >
     <View
       collapsable={false}
+      onBlur={[Function]}
+      onFocus={[Function]}
       style={
         {
           "alignItems": "center",
@@ -52,6 +62,8 @@ exports[`TokenItem renders without error 1`] = `
       }
     >
       <View
+        onBlur={[Function]}
+        onFocus={[Function]}
         style={
           {
             "alignItems": "center",
@@ -62,6 +74,8 @@ exports[`TokenItem renders without error 1`] = `
         }
       >
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "flexDirection": "column",
@@ -73,6 +87,8 @@ exports[`TokenItem renders without error 1`] = `
           <Text
             allowFontScaling={true}
             maxFontSizeMultiplier={1.4}
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "color": {
@@ -93,6 +109,8 @@ exports[`TokenItem renders without error 1`] = `
           </Text>
         </View>
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           pointerEvents="auto"
           style={
             {
@@ -107,6 +125,8 @@ exports[`TokenItem renders without error 1`] = `
           testID="token-logo"
         >
           <View
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "backgroundColor": "#FFFFFF",
@@ -117,7 +137,7 @@ exports[`TokenItem renders without error 1`] = `
                 "flexDirection": "column",
                 "height": "96%",
                 "left": "2%",
-                "opacity": 0,
+                "opacity": 1,
                 "position": "absolute",
                 "top": "2%",
                 "width": "96%",
@@ -148,6 +168,8 @@ exports[`TokenItem renders without error 1`] = `
         </View>
       </View>
       <View
+        onBlur={[Function]}
+        onFocus={[Function]}
         style={
           {
             "flex": 1,
@@ -161,6 +183,8 @@ exports[`TokenItem renders without error 1`] = `
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
           numberOfLines={1}
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "color": {
@@ -183,6 +207,8 @@ exports[`TokenItem renders without error 1`] = `
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
           numberOfLines={1}
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "color": {
@@ -202,6 +228,8 @@ exports[`TokenItem renders without error 1`] = `
         />
       </View>
       <View
+        onBlur={[Function]}
+        onFocus={[Function]}
         onLayout={[Function]}
         style={
           {
@@ -212,6 +240,8 @@ exports[`TokenItem renders without error 1`] = `
         }
       >
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "flexDirection": "row",
@@ -219,6 +249,8 @@ exports[`TokenItem renders without error 1`] = `
           }
         >
           <View
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "alignItems": "flex-end",
@@ -231,6 +263,8 @@ exports[`TokenItem renders without error 1`] = `
             <Text
               allowFontScaling={true}
               maxFontSizeMultiplier={1.4}
+              onBlur={[Function]}
+              onFocus={[Function]}
               style={
                 {
                   "color": {
@@ -251,6 +285,8 @@ exports[`TokenItem renders without error 1`] = `
               -
             </Text>
             <View
+              onBlur={[Function]}
+              onFocus={[Function]}
               style={
                 {
                   "alignItems": "center",
@@ -262,6 +298,8 @@ exports[`TokenItem renders without error 1`] = `
               testID="relative-change"
             >
               <View
+                onBlur={[Function]}
+                onFocus={[Function]}
                 style={
                   {
                     "flexDirection": "column",
@@ -271,6 +309,8 @@ exports[`TokenItem renders without error 1`] = `
                 <Text
                   allowFontScaling={true}
                   maxFontSizeMultiplier={1.4}
+                  onBlur={[Function]}
+                  onFocus={[Function]}
                   style={
                     {
                       "color": {

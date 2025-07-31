@@ -8,8 +8,8 @@ import {
   QueuedOrderStatus,
   TransactionStatus,
   UniswapXOrderDetails,
-  isFinalizedTxStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isFinalizedTxStatus } from 'uniswap/src/features/transactions/types/utils'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 

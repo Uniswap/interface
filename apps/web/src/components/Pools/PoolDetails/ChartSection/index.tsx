@@ -14,6 +14,7 @@ import { VolumeChart } from 'components/Charts/VolumeChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
 import ErrorBoundary from 'components/ErrorBoundary'
+import { getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
 import { usePDPVolumeChartData } from 'components/Pools/PoolDetails/ChartSection/hooks'
 import { ChartActionsContainer, DEFAULT_PILL_TIME_SELECTOR_OPTIONS } from 'components/Tokens/TokenDetails/ChartSection'
 import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
@@ -27,7 +28,6 @@ import {
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { useAtomValue } from 'jotai/utils'
 import styled, { useTheme } from 'lib/styled-components'
-import { getTokenOrZeroAddress } from 'pages/Pool/Positions/create/utils'
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
@@ -206,7 +206,14 @@ export default function ChartSection(props: ChartSectionProps) {
 
     switch (activeQuery.chartType) {
       case ChartType.PRICE:
-        return <PriceChart {...selectedChartProps} data={activeQuery.entries} stale={stale} />
+        return (
+          <PriceChart
+            {...selectedChartProps}
+            data={activeQuery.entries}
+            stale={stale}
+            tokenFormatType={NumberType.TokenNonTx}
+          />
+        )
       case ChartType.VOLUME:
         return <VolumeChart {...selectedChartProps} data={activeQuery.entries} stale={stale} />
     }
@@ -283,20 +290,24 @@ function PriceChart({
   isReversed,
   data,
   stale,
+  tokenFormatType,
 }: {
   tokenA: Token | NativeCurrency
   tokenB: Token | NativeCurrency
   isReversed: boolean
   data: PriceChartData[]
   stale: boolean
+  tokenFormatType?: NumberType
 }) {
   const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
   const [baseCurrency, quoteCurrency] = isReversed ? [tokenB, tokenA] : [tokenA, tokenB]
 
-  const params = useMemo(() => ({ data, stale, type: PriceChartType.LINE }), [data, stale])
+  const params = useMemo(
+    () => ({ data, stale, type: PriceChartType.LINE, tokenFormatType }),
+    [data, stale, tokenFormatType],
+  )
 
   const { price } = useUSDCPrice(baseCurrency)
-
   const lastPrice = data[data.length - 1]
   return (
     <Chart height={PDP_CHART_HEIGHT_PX} Model={PriceChartModel} params={params}>

@@ -3,9 +3,11 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   signMessagesWithPasskey,
-  signTransactionWithPasskey,
+  signTransactionsWithPasskey,
   signTypedDataWithPasskey,
 } from 'uniswap/src/features/passkey/embeddedWallet'
+import { HexString, isValidHexString } from 'uniswap/src/utils/hex'
+import { isAddress } from 'utilities/src/addresses/index'
 import { logger } from 'utilities/src/logger/logger'
 import { Account, Hash, SignableMessage, createPublicClient, fallback, http } from 'viem'
 
@@ -139,17 +141,21 @@ export class EmbeddedWalletProvider {
 
   getAccount() {
     const { walletAddress } = getEmbeddedWalletState()
-    const address = walletAddress as `0x${string}` | undefined
+    const address = isAddress(walletAddress) || undefined
 
     if (!address) {
       logger.debug('EmbeddedWalletProvider.ts', 'getAccount', 'No embedded wallet connected')
       return undefined
     }
 
-    const signMessage = async ({ message }: { message: SignableMessage }): Promise<`0x${string}`> => {
+    const signMessage = async ({ message }: { message: SignableMessage }): Promise<HexString> => {
       try {
         const signedMessages = await signMessagesWithPasskey([message.toString()], address)
-        return signedMessages?.[0] as `0x${string}`
+        const signedMessage = signedMessages?.[0]
+        if (!signedMessage || !isValidHexString(signedMessage)) {
+          throw new Error(`Invalid signed message: ${signedMessage}`)
+        }
+        return signedMessage
       } catch (e: any) {
         logger.error(e, {
           tags: { file: 'EmbeddedWalletProvider.ts', function: 'signMessage' },
@@ -157,10 +163,14 @@ export class EmbeddedWalletProvider {
         throw e
       }
     }
-    const signTransaction = async (transaction: any): Promise<`0x${string}`> => {
+    const signTransaction = async (transaction: any): Promise<HexString> => {
       try {
-        const signedTransaction = await signTransactionWithPasskey([safeJSONStringify(transaction)], address)
-        return signedTransaction?.[0] as `0x${string}`
+        const signedTransactions = await signTransactionsWithPasskey([safeJSONStringify(transaction)], address)
+        const signedTransaction = signedTransactions?.[0]
+        if (!signedTransaction || !isValidHexString(signedTransaction)) {
+          throw new Error(`Invalid signed transaction: ${signedTransaction}`)
+        }
+        return signedTransaction
       } catch (e: any) {
         logger.error(e, {
           tags: { file: 'EmbeddedWalletProvider.ts', function: 'signTransaction' },
@@ -168,10 +178,14 @@ export class EmbeddedWalletProvider {
         throw e
       }
     }
-    const signTypedData = async (transaction: any): Promise<`0x${string}`> => {
+    const signTypedData = async (transaction: any): Promise<HexString> => {
       try {
         const signedTypedData = await signTypedDataWithPasskey([safeJSONStringify(transaction)], address)
-        return signedTypedData?.[0] as `0x${string}`
+        const signature = signedTypedData?.[0]
+        if (!signature || !isValidHexString(signature)) {
+          throw new Error(`Invalid signature: ${signature}`)
+        }
+        return signature
       } catch (e: any) {
         logger.error(e, {
           tags: { file: 'EmbeddedWalletProvider.ts', function: 'signTypedData' },

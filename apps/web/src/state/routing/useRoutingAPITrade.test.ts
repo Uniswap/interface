@@ -28,6 +28,7 @@ vi.mock('uniswap/src/features/gating/hooks', () => {
   return {
     useFeatureFlag: vi.fn(),
     useExperimentValue: vi.fn(),
+    getFeatureFlag: vi.fn(),
   }
 })
 vi.mock('uniswap/src/features/smartWallet/mismatch/hooks', () => ({

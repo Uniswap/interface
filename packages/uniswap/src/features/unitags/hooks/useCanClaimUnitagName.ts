@@ -40,41 +40,40 @@ export const useCanClaimUnitagName = (unitag: string | undefined): { error: stri
   const errorMessageRef = useRef<string | undefined>(undefined)
 
   // Check for length and alphanumeric characters
-  const maybeError = unitag ? getUnitagFormatError(unitag, t) : undefined
+  const formatError = unitag ? getUnitagFormatError(unitag, t) : undefined
 
   // Skip the backend calls if we found an error
-  const unitagToSearch = maybeError ? undefined : unitag
+  const unitagToSearch = formatError ? undefined : unitag
 
   const { isLoading: unitagLoading, data } = useUnitagsUsernameQuery({
     params: unitagToSearch ? { username: unitagToSearch } : undefined,
     staleTime: 2 * ONE_MINUTE_MS,
   })
+
   const { loading: ensLoading } = useENS({ nameOrAddress: unitagToSearch, autocompleteDomain: true })
   const loading = unitagLoading || ensLoading
+  const unitagAvailable = !loading && data?.available
 
-  // This handles the case where the user has already checked a unitag, received an error, and proceeds to change their inputted text
-  if (unitag === undefined) {
-    errorMessageRef.current = undefined
+  // Check for local error, if it exists
+  if (formatError) {
+    errorMessageRef.current = formatError
     return { error: errorMessageRef.current, loading }
   }
 
-  if (maybeError) {
-    // Check for local error, if it exists
-    errorMessageRef.current = maybeError
+  const shouldClearError = unitag === undefined || loading || unitagAvailable
 
+  // This check removes the error when:
+  // 1. The unitag input is empty
+  // 2. The unitag is being loaded (either from the backend or ENS)
+  // 3. The unitag is available (meaning it can be claimed)
+  if (shouldClearError) {
+    errorMessageRef.current = undefined
     return { error: errorMessageRef.current, loading }
   }
 
   // If nothing is loading, and we're told the unitag is unavailable, change the error message to the default remote error message
-  if (!loading && data?.available === false) {
+  if (data?.available === false) {
     errorMessageRef.current = t('unitags.claim.error.unavailable')
-
-    return { error: errorMessageRef.current, loading }
-  }
-
-  if (unitagLoading) {
-    // If the unitag query is loading, clear the error message
-    errorMessageRef.current = undefined
     return { error: errorMessageRef.current, loading }
   }
 

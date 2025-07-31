@@ -32,10 +32,16 @@ export function setupSharedApolloCache(): InMemoryCache {
                 // simply use chain / address pair as id instead for tokens
                 token: {
                   read(_, { args, toReference }): Reference | undefined {
+                    let address = args?.address
+                    // TODO(WEB-8055): Integrate better pattern for GQL token address normalization
+                    // EVM addresses
+                    if (address?.length === 42) {
+                      address = address.toLowerCase()
+                    }
                     return toReference({
                       __typename: 'Token',
                       chain: args?.chain,
-                      address: args?.address?.toLowerCase(),
+                      address,
                     })
                   },
                 },
@@ -62,7 +68,13 @@ export function setupSharedApolloCache(): InMemoryCache {
             read(address: string | null): string | null {
               // backend endpoint sometimes returns checksummed, sometimes lowercased addresses
               // always use lowercased addresses in our app for consistency
-              return address?.toLowerCase() ?? null
+
+              // TODO(WEB-8055): Integrate better pattern for GQL token address normalization
+              // EVM addresses
+              if (address?.length === 42) {
+                return address.toLowerCase()
+              }
+              return address ?? null
             },
           },
           feeData: {

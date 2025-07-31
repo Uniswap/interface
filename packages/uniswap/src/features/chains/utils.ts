@@ -2,15 +2,9 @@ import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { Token } from '@uniswap/sdk-core'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import {
-  ALL_CHAIN_IDS,
-  GQL_MAINNET_CHAINS,
-  GQL_TESTNET_CHAINS,
-  SUPPORTED_CHAIN_IDS,
-  SUPPORTED_TESTNET_CHAIN_IDS,
-  getChainInfo,
-} from 'uniswap/src/features/chains/chainInfo'
+import { ALL_CHAIN_IDS, ORDERED_CHAINS, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { EnabledChainsInfo, GqlChainId, NetworkLayer, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 
 // Some code from the web app uses chainId types as numbers
 // This validates them as coerces into SupportedChainId
@@ -201,46 +195,72 @@ export function filterChainIdsByFeatureFlag(featureFlaggedChainIds: {
 }
 
 export function getEnabledChains({
+  platform,
+  /**
+   * When `true`, it will return all enabled chains, including testnets.
+   */
+  includeTestnets = false,
   isTestnetModeEnabled,
   featureFlaggedChainIds,
   connectedWalletChainIds,
 }: {
+  platform?: Platform
   isTestnetModeEnabled: boolean
   featureFlaggedChainIds: UniverseChainId[]
   connectedWalletChainIds?: UniverseChainId[]
+  includeTestnets?: boolean
 }): EnabledChainsInfo {
-  if (isTestnetModeEnabled) {
-    const supportedTestnetChainIds = SUPPORTED_TESTNET_CHAIN_IDS.filter(
-      (chainId) =>
-        featureFlaggedChainIds.includes(chainId) &&
-        (connectedWalletChainIds ? connectedWalletChainIds.includes(chainId) : true),
-    )
-
-    return {
-      chains: supportedTestnetChainIds,
-      gqlChains: GQL_TESTNET_CHAINS,
-      defaultChainId: UniverseChainId.Sepolia as UniverseChainId,
-      isTestnetModeEnabled,
+  const enabledChainInfos = ORDERED_CHAINS.filter((chainInfo) => {
+    // Filter by platform
+    if (platform !== undefined && platform !== chainInfo.platform) {
+      return false
     }
-  }
 
-  const supportedChainIds = SUPPORTED_CHAIN_IDS.filter(
-    (chainId) =>
-      featureFlaggedChainIds.includes(chainId) &&
-      (connectedWalletChainIds ? connectedWalletChainIds.includes(chainId) : true),
-  )
+    // Filter by testnet mode
+    if (!includeTestnets && isTestnetModeEnabled !== isTestnetChain(chainInfo.id)) {
+      return false
+    }
 
-  const supportedGqlChains = GQL_MAINNET_CHAINS.filter((chain) => {
-    const chainId = fromGraphQLChain(chain)
-    return chainId && supportedChainIds.includes(chainId)
+    // Filter by feature flags
+    if (!featureFlaggedChainIds.includes(chainInfo.id)) {
+      return false
+    }
+
+    // Filter by connected wallet chains if provided
+    if (connectedWalletChainIds && !connectedWalletChainIds.includes(chainInfo.id)) {
+      return false
+    }
+
+    return true
   })
 
-  return {
-    chains: supportedChainIds,
-    gqlChains: supportedGqlChains,
-    defaultChainId: UniverseChainId.Mainnet as UniverseChainId,
+  // Extract chain IDs and GQL chains from filtered results
+  const chains = enabledChainInfos.map((chainInfo) => chainInfo.id)
+  const gqlChains = enabledChainInfos.map((chainInfo) => chainInfo.backendChain.chain)
+
+  const result = {
+    chains,
+    gqlChains,
+    defaultChainId: getDefaultChainId({ platform, isTestnetModeEnabled }),
     isTestnetModeEnabled,
   }
+
+  return result
+}
+
+function getDefaultChainId({
+  platform,
+  isTestnetModeEnabled,
+}: {
+  platform?: Platform
+  isTestnetModeEnabled: boolean
+}): UniverseChainId {
+  if (platform === Platform.SVM) {
+    // TODO(Solana): is there a Solana testnet we can return here?
+    return UniverseChainId.Solana
+  }
+
+  return isTestnetModeEnabled ? UniverseChainId.Sepolia : UniverseChainId.Mainnet
 }
 
 /** Returns all stablecoins for a given chainId. */

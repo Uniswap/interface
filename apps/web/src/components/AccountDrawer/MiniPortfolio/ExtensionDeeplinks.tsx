@@ -3,7 +3,7 @@ import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/
 import { useOpenLimitOrders, usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool } from 'components/Icons/Pool'
-import { ExtensionRequestMethods, useUniswapExtensionConnector } from 'components/WalletModal/useOrderedConnections'
+import { ExtensionRequestMethods, useUniswapExtensionConnector } from 'components/WalletModal/useConnectorWithId'
 import { useUpdateAtom } from 'jotai/utils'
 import { useTheme } from 'lib/styled-components'
 import { useEffect, useState } from 'react'

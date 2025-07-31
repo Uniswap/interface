@@ -3,24 +3,23 @@ import { useCallback, useEffect, useMemo } from 'react'
 import type { OnActivityUpdate } from 'state/activity/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
 import type { ConfirmedTransactionDetails, TransactionDetails } from 'state/transactions/types'
-
 import { isPendingTx } from 'state/transactions/utils'
 import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
-import type { BridgeTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import {
-  TransactionStatus,
-  TransactionType as UniswapTransactionType,
+import type {
+  BridgeTransactionInfo,
+  InterfaceTransactionDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 
 const MIN_BRIDGE_WAIT_TIME = ms('2s')
 
-type BridgeTransactionDetails = TransactionDetails & { info: BridgeTransactionInfo }
-function isBridgeTransactionDetails(tx: TransactionDetails): tx is BridgeTransactionDetails {
-  return tx.info.type === UniswapTransactionType.Bridge
+type BridgeTransactionDetails = TransactionDetails & { typeInfo: BridgeTransactionInfo }
+function isBridgeTransactionDetails(tx: InterfaceTransactionDetails): tx is BridgeTransactionDetails {
+  return tx.typeInfo.type === TransactionType.Bridge
 }
 
 type BridgeTransactionDetailsWithChainId = BridgeTransactionDetails & { chainId: UniverseChainId }
@@ -30,7 +29,7 @@ function usePendingDepositedBridgeTransactions(): BridgeTransactionDetailsWithCh
   return useMemo(
     () =>
       multichainTransactions.flatMap(([tx, chainId]) => {
-        if (isPendingTx(tx) && isBridgeTransactionDetails(tx) && tx.info.depositConfirmed) {
+        if (isPendingTx(tx) && isBridgeTransactionDetails(tx) && tx.typeInfo.depositConfirmed) {
           return { ...tx, chainId }
         } else {
           return []

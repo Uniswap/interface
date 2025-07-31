@@ -21,18 +21,18 @@ export function createConnectWalletService(ctx: CreateConnectWalletServiceContex
 
   return {
     connect: async (params: { walletConnector: WalletConnectorMeta }) => {
-      const { customConnectorId, wagmiConnectorId, solanaWalletName } = params.walletConnector
+      const { customConnectorId, wagmi, solana } = params.walletConnector
       if (customConnectorId) {
         const connectCustomWallet = connectCustomWalletsMap[customConnectorId]
         await connectCustomWallet({ ...params.walletConnector, customConnectorId })
       }
 
-      if (wagmiConnectorId) {
-        await connectWagmiWallet({ ...params.walletConnector, wagmiConnectorId })
+      if (wagmi?.id) {
+        await connectWagmiWallet({ ...params.walletConnector, wagmi })
       }
 
-      if (solanaWalletName) {
-        await connectSolanaWallet({ ...params.walletConnector, solanaWalletName })
+      if (solana?.walletName) {
+        await connectSolanaWallet({ ...params.walletConnector, solana })
       }
     },
   }

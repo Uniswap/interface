@@ -59,6 +59,7 @@ export const UNICHAIN_CHAIN_INFO = {
   },
   tokens,
   statusPage: undefined,
+  subblockTimeMs: 200,
   supportsV4: true,
   urlParam: 'unichain',
   wrappedNativeCurrency: {
@@ -68,6 +69,7 @@ export const UNICHAIN_CHAIN_INFO = {
     address: '0x4200000000000000000000000000000000000006',
   },
   testnet: false,
+  tradingApiPollingIntervalMs: 150,
 } as const satisfies UniverseChainInfo
 
 const testnetTokens = buildChainTokens({
@@ -122,6 +124,7 @@ export const UNICHAIN_SEPOLIA_CHAIN_INFO = {
   },
   tokens: testnetTokens,
   statusPage: undefined,
+  subblockTimeMs: 200,
   supportsV4: true,
   urlParam: 'unichain_sepolia',
   wrappedNativeCurrency: {
@@ -130,4 +133,5 @@ export const UNICHAIN_SEPOLIA_CHAIN_INFO = {
     decimals: 18,
     address: '0x4200000000000000000000000000000000000006',
   },
+  tradingApiPollingIntervalMs: 150,
 } as const satisfies UniverseChainInfo

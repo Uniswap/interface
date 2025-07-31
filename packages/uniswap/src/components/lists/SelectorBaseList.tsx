@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimateTransition, Flex, Loader, Skeleton, Text } from 'ui/src'
+import { AnimateTransition, Flex, Loader, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
@@ -101,9 +101,7 @@ function _SelectorBaseList<T extends OnchainItemListOption>({
     <AnimateTransition animationType="fade" currentIndex={(!sections || !sections.length) && loading ? 0 : 1}>
       <Flex grow px="$spacing20">
         <Flex height={ITEM_SECTION_HEADER_ROW_HEIGHT} justifyContent="center" py="$spacing12" width={80}>
-          <Skeleton>
-            <Loader.Box height={fonts.subheading2.lineHeight} />
-          </Skeleton>
+          <Loader.Box height={fonts.subheading2.lineHeight} />
         </Flex>
         <Loader.Token gap="$none" repeat={15} />
       </Flex>

@@ -8,8 +8,8 @@ import { Flex, useSporeColors } from 'ui/src'
 import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { SUPPORTED_TESTNET_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 
 interface PortfolioLogoProps {
   chainId: UniverseChainId
@@ -26,7 +26,7 @@ const LOGO_DEFAULT_SIZE = 40
 export const PortfolioLogo = memo(function PortfolioLogo(props: PortfolioLogoProps) {
   const colors = useSporeColors()
 
-  if (SUPPORTED_TESTNET_CHAIN_IDS.includes(props.chainId)) {
+  if (isTestnetChain(props.chainId)) {
     return <CurrencyLogo currency={props.currencies?.[0]} size={props.size} />
   }
 

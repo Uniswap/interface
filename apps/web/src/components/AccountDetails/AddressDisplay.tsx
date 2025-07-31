@@ -3,8 +3,8 @@ import { CopyHelper } from 'theme/components/CopyHelper'
 import { EllipsisStyle } from 'theme/components/styles'
 import { Flex } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useENSName } from 'uniswap/src/features/ens/api'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 
@@ -18,7 +18,9 @@ const IdentifierText = styled.span`
 
 export function AddressDisplay({ address, enableCopyAddress }: { address: Address; enableCopyAddress?: boolean }) {
   const { data: ENSName } = useENSName(address)
-  const { unitag } = useUnitagByAddress(address)
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: address ? { address } : undefined,
+  })
   const uniswapUsername = unitag?.username
 
   const AddressDisplay = (

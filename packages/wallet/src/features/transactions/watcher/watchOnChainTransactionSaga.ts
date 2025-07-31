@@ -1,28 +1,27 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { BigNumber, BigNumberish, providers } from 'ethers'
-import { formatEther } from 'ethers/lib/utils'
-import { call, cancel, delay, fork, put, race, take } from 'typed-redux-saga'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { call, cancel, delay, fork, put, race, spawn, take } from 'typed-redux-saga'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { waitForFlashbotsProtectReceipt } from 'uniswap/src/features/providers/FlashbotsCommon'
 import { cancelTransaction, replaceTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
-  BridgeTransactionDetails,
   FinalizedTransactionDetails,
   OnChainTransactionDetails,
   TEMPORARY_TRANSACTION_STATUSES,
   TransactionDetails,
   TransactionStatus,
-  isFinalizedTx,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
-import { getFinalizedTransactionStatus, receiptFromEthersReceipt } from 'wallet/src/features/transactions/utils'
+import { processTransactionReceipt } from 'wallet/src/features/transactions/utils'
 import { OrderWatcher } from 'wallet/src/features/transactions/watcher/orderWatcherSaga'
 import {
   finalizeTransaction,
@@ -31,19 +30,12 @@ import {
 import { deleteTransaction } from 'wallet/src/features/transactions/watcher/transactionSagaUtils'
 import { waitForBridgingStatus } from 'wallet/src/features/transactions/watcher/watchBridgeSaga'
 import { watchForAppBackgrounded } from 'wallet/src/features/transactions/watcher/watchForAppBackgroundedSaga'
+import {
+  updateTransactionStatusNetworkFee,
+  waitForReceipt,
+  waitForTransactionStatus,
+} from 'wallet/src/features/transactions/watcher/watchTransactionSaga'
 import { getProvider } from 'wallet/src/features/wallet/context'
-
-export async function waitForReceipt(
-  hash: string,
-  provider: providers.Provider,
-): Promise<providers.TransactionReceipt> {
-  const txReceipt = await provider.waitForTransaction(hash)
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (txReceipt) {
-    logger.debug('watchOnChainTransactionSaga', 'waitForReceipt', 'Tx receipt received', hash)
-  }
-  return txReceipt
-}
 
 /**
  * Flashbots transactions won't return a receipt until they're included, and will fail silently.
@@ -125,45 +117,34 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     }
   }
 
-  const ethersReceipt = yield* call(waitForReceipt, hash, provider)
-  const receipt = receiptFromEthersReceipt(ethersReceipt)
-  const { nativeCurrency } = getChainInfo(transaction.chainId)
+  const tradingApiPollingFlagEnabled = getStatsigClient().checkGate(
+    getFeatureFlagName(FeatureFlags.TradingApiSwapConfirmation),
+  )
+  // Bridge transactions need to wait for the send part to be confirmed
+  const tradingApiPollingEnabled = tradingApiPollingFlagEnabled && !isBridge(transaction)
+  if (tradingApiPollingEnabled) {
+    // The network fee does not get returned from the trading api
+    // so we need to update the transaction with the network fee after the transaction is confirmed
+    yield* spawn(updateTransactionStatusNetworkFee, { ...transaction, hash }, provider)
+    status = yield* call(waitForTransactionStatus, { ...transaction, hash })
 
-  const networkFee = {
-    quantity: formatEther(ethersReceipt.effectiveGasPrice.mul(ethersReceipt.gasUsed)),
-    tokenSymbol: nativeCurrency.symbol,
-    tokenAddress: nativeCurrency.address,
-    chainId: transaction.chainId,
+    return { ...transaction, status, hash }
   }
 
-  if (
-    isBridge(transaction) &&
-    getFinalizedTransactionStatus(transaction.status, ethersReceipt.status) === TransactionStatus.Success
-  ) {
-    // Only the send part was successful, wait for receive part to be confirmed on chain.
-    // Bridge swaps become non-cancellable after the send transaction is confirmed on chain.
-    if (!transaction.sendConfirmed) {
-      const updatedTransaction: BridgeTransactionDetails = {
-        ...transaction,
-        sendConfirmed: true,
-        networkFee,
-      }
-      yield* put(transactionActions.updateTransaction(updatedTransaction))
-      // Updating the transaction will trigger a new watch.
-      // Return undefined to break out of the current watcher.
-      return undefined
-    }
-
-    // Send part was successful, poll for bridging status from BE
+  // If the send part was already confirmed, we need to wait for the bridging status from BE
+  if (isBridge(transaction) && transaction.sendConfirmed) {
     status = yield* call(waitForBridgingStatus, transaction)
+    return { ...transaction, status }
   }
 
-  // Classic transaction status is based on receipt, while UniswapX status is based backend response.
-  if (isClassic(transaction)) {
-    status = getFinalizedTransactionStatus(transaction.status, ethersReceipt.status)
-  }
+  const ethersReceipt = yield* call(waitForReceipt, hash, provider)
 
-  return { ...transaction, status, receipt, hash, networkFee }
+  const updatedTransaction = processTransactionReceipt({
+    ethersReceipt,
+    transaction: { ...transaction, status, hash },
+  })
+
+  return updatedTransaction
 }
 
 /**

@@ -80,4 +80,5 @@ export const SOLANA_CHAIN_INFO = {
   },
   testnet: false,
   statusPage: 'https://status.solana.com/',
+  tradingApiPollingIntervalMs: 250,
 } as const satisfies UniverseChainInfo

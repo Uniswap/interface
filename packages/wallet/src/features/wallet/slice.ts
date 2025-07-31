@@ -80,7 +80,13 @@ const slice = createSlice({
       // Reset active account to first account if currently active account is deleted
       if (
         state.activeAccountAddress &&
-        addressesToRemove.some((addressToRemove) => areAddressesEqual(addressToRemove, state.activeAccountAddress))
+        addressesToRemove.some((addressToRemove) =>
+          // TODO(WALL-7065): Update to support solana
+          areAddressesEqual({
+            addressInput1: { address: addressToRemove, platform: Platform.EVM },
+            addressInput2: { address: state.activeAccountAddress, platform: Platform.EVM },
+          }),
+        )
       ) {
         const firstAccountId = Object.keys(state.accounts)[0]
         state.activeAccountAddress = firstAccountId ?? null

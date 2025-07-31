@@ -11,17 +11,17 @@ import { selectHasShownMismatchToast } from 'uniswap/src/features/behaviorHistor
 import { setHasShownMismatchToast } from 'uniswap/src/features/behaviorHistory/slice'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { createHasMismatchUtil } from 'uniswap/src/features/smartWallet/mismatch/mismatch'
+import { createHasMismatchUtil, type HasMismatchUtil } from 'uniswap/src/features/smartWallet/mismatch/mismatch'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
 import { getLogger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 
 /**
- * [private] useHasMismatchCallback -- gets the mismatch account status for the current account
+ * [public] useHasMismatchCallback -- gets the mismatch account status for the current account
  * @returns a stable callback that gets the mismatch account status for the current account
  */
-export function useHasMismatchCallback(): (input: { address: string; chainId: number }) => Promise<boolean> {
+export function useHasMismatchCallback(): HasMismatchUtil {
   const { mutateAsync } = useWalletGetCapabilitiesMutation()
   const getIsAtomicBatchingSupportedByChainId = useIsAtomicBatchingSupportedByChainIdCallback()
   const isWalletGetCapabilitiesDisabled = useIsWalletGetCapabilitiesDisabled()

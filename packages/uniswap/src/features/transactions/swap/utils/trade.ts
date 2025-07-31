@@ -4,7 +4,6 @@ import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap
 import { NullablePermit, Permit } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
-import { PopulatedTransactionRequestArray } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { ACROSS_DAPP_INFO, isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -16,6 +15,10 @@ import {
   ExactOutputSwapTransactionInfo,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  PopulatedTransactionRequestArray,
+  ValidatedTransactionRequest,
+} from 'uniswap/src/features/transactions/types/transactionRequests'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -192,7 +195,6 @@ export function getProtocolVersionFromTrade(trade: Trade): Protocol | undefined 
   return Protocol.MIXED
 }
 
-export type ValidatedTransactionRequest = providers.TransactionRequest & { to: string; chainId: number }
 export function validateTransactionRequest(
   request?: providers.TransactionRequest | null,
 ): ValidatedTransactionRequest | undefined {

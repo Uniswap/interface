@@ -747,3 +747,12 @@ export function testMigrateLiquidityTransactionInfoRename(migration: (state: any
     expect(result.transactions.testAddress.testChainId[id].typeInfo.currency1AmountRaw).toEqual(undefined)
   }
 }
+
+export function testRemovePriceAlertsEnabledFromPushNotifications(
+  migration: (state: any) => any,
+  prevSchema: any,
+): void {
+  const result = migration(prevSchema)
+  expect(result.pushNotifications.generalUpdatesEnabled).toBe(prevSchema.pushNotifications.generalUpdatesEnabled)
+  expect(result.pushNotifications.priceAlertsEnabled).toBeUndefined()
+}

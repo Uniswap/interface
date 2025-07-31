@@ -10,7 +10,7 @@ import { useTokenProjectsQuery } from 'uniswap/src/data/graphql/uniswap-data-api
 import { GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
 import { GqlResult } from 'uniswap/src/data/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
-import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
@@ -183,20 +183,21 @@ function useBridgingTokensToTokenOptions(
   bridgingTokens: GetSwappableTokensResponse['tokens'] | undefined,
   portfolioBalancesById?: Record<string, PortfolioBalance>,
 ): TokenOption[] | undefined {
+  const { chains: enabledChainIds } = useEnabledChains()
+
   return useMemo(() => {
     if (!bridgingTokens) {
       return undefined
     }
 
-    // We sort the tokens by chain in the same order chains in the network selector
-    const chainOrder = ALL_CHAIN_IDS
+    // We sort the tokens by chain in the same order as in the network selector
     const sortedBridgingTokens = [...bridgingTokens].sort((a, b) => {
       const chainIdA = toSupportedChainId(a.chainId)
       const chainIdB = toSupportedChainId(b.chainId)
       if (!chainIdA || !chainIdB) {
         return 0
       }
-      return chainOrder.indexOf(chainIdA) - chainOrder.indexOf(chainIdB)
+      return enabledChainIds.indexOf(chainIdA) - enabledChainIds.indexOf(chainIdB)
     })
 
     return sortedBridgingTokens
@@ -215,5 +216,5 @@ function useBridgingTokensToTokenOptions(
         }
       })
       .filter((tokenOption): tokenOption is TokenOption => tokenOption !== undefined)
-  }, [bridgingTokens, portfolioBalancesById])
+  }, [bridgingTokens, portfolioBalancesById, enabledChainIds])
 }

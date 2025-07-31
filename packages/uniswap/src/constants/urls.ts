@@ -42,6 +42,7 @@ export const uniswapUrls = {
     batchedSwapsReview: createHelpArticleUrl('36394497329933'),
     cexTransferKorea: createHelpArticleUrl('29425131525901-How-to-transfer-crypto-to-a-Uniswap-Wallet-in-Korea'),
     contractAddressExplainer: createHelpArticleUrl('26757826138637-What-is-a-token-contract-address'),
+    extensionBiometricsEnrollment: createHelpArticleUrl('38225957094541'),
     extensionHelp: createHelpArticleUrl('24458735271181'),
     extensionDappTroubleshooting: createHelpArticleUrl(
       '25811698471565-Connecting-Uniswap-Extension-Beta-to-other-dapps',
@@ -157,6 +158,12 @@ export const uniswapUrls = {
       encode7702: `${tradingApiVersionPrefix}/wallet/encode_7702`,
     },
     swap7702: `${tradingApiVersionPrefix}/swap_7702`,
+  },
+
+  jupiterApiUrl: 'https://lite-api.jup.ag/ultra/v1',
+  jupiterApiPaths: {
+    order: '/order',
+    execute: '/execute',
   },
 
   // App and Redirect URL's

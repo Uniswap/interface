@@ -10,11 +10,10 @@ import { AcrossLogo } from 'ui/src/components/logos/AcrossLogo'
 import type { WarningWithStyle } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import type { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
+import { useSlippageSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/useSlippageSettings'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/useSlippageSettings'
 import { AcrossRoutingInfoTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/AcrossRoutingTooltip'
 import {
   BestRouteTooltip,
@@ -39,6 +38,7 @@ import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/sw
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
@@ -299,7 +299,7 @@ export function YouReceiveDetails({
   isLoadingIndicative,
   isBridge,
 }: YouReceiveDetailsProps): JSX.Element | null {
-  const account = useAccountMeta()
+  const account = useWallet().evmAccount
   const { value: isOpen, toggle } = useBooleanState(false)
   const { formatPercent } = useLocalizationContext()
 

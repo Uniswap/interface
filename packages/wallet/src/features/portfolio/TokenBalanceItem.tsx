@@ -13,11 +13,11 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { isWeb } from 'utilities/src/platform'
+import { useTokenBalanceListContext } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import {
   useTokenBalanceMainPartsFragment,
   useTokenBalanceQuantityPartsFragment,
 } from 'wallet/src/features/portfolio/fragments'
-import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { disableOnPress } from 'wallet/src/utils/disableOnPress'
 
 /**
@@ -46,7 +46,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   isHidden,
 }: TokenBalanceItemProps) {
   const { currency } = currencyInfo
-  const address = useActiveAccount()?.address
+  const address = useTokenBalanceListContext().owner
 
   // Ensure items rerender when theme is switched
   useIsDarkMode()

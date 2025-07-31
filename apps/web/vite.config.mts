@@ -1,6 +1,7 @@
 import { tamaguiPlugin } from '@tamagui/vite-plugin'
 import react from '@vitejs/plugin-react'
 import { execSync } from 'child_process'
+import fs from 'fs'
 import path from 'path'
 import process from 'process'
 import { fileURLToPath } from 'url'
@@ -169,6 +170,28 @@ export default defineConfig(({ mode }) => {
               { name: '**/*', limit: Infinity, mode: 'uncompressed' },
             ],
           }),
+      {
+        name: 'copy-twit-config',
+        writeBundle() {
+          const configMode = isProduction ? 'production' : 'staging'
+          const sourceFile = path.resolve(__dirname, `twit-configs/twit.${configMode}.json`)
+          const targetFile = path.resolve(__dirname, `build/.well-known/twit.json`)
+
+          if (fs.existsSync(sourceFile)) {
+            // Ensure the .well-known directory exists in build output
+            const targetDir = path.dirname(targetFile)
+            if (!fs.existsSync(targetDir)) {
+              fs.mkdirSync(targetDir, { recursive: true })
+            }
+
+            // Copy the file directly to the build output
+            fs.copyFileSync(sourceFile, targetFile)
+            console.log(`Copied ${configMode} TWIT config to build output for env ${mode}`)
+          } else {
+            console.warn(`${configMode} TWIT config not found for env ${mode}`)
+          }
+        },
+      },
     ].filter(Boolean as unknown as <T>(x: T) => x is NonNullable<T>),
 
     optimizeDeps: {

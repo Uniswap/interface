@@ -64,6 +64,7 @@ import {
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -263,7 +264,7 @@ function* dappRequestApproval({
         }
         case DappRequestType.GetChainId: {
           const validatedRequest: GetChainIdRequest = GetChainIdRequestSchema.parse(confirmedRequest.dappRequest)
-          const { defaultChainId } = yield getEnabledChainIdsSaga()
+          const { defaultChainId } = yield getEnabledChainIdsSaga(Platform.EVM)
           yield* call(getChainIdNoDappInfo, {
             request: validatedRequest,
             senderTabInfo: confirmedRequest.senderTabInfo,

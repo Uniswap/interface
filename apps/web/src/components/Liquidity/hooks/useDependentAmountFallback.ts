@@ -69,14 +69,14 @@ export function useUpdatedAmountsFromDependentAmount({
   token1: Maybe<Currency>
   dependentAmount?: string
   exactField: PositionField
-  deposit0Disabled: boolean
-  deposit1Disabled: boolean
+  deposit0Disabled?: boolean
+  deposit1Disabled?: boolean
 } & Pick<DepositInfo, 'currencyAmounts' | 'currencyAmountsUSDValue' | 'formattedAmounts'>): {
   updatedFormattedAmounts?: { [field in PositionField]?: string }
   updatedUSDAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   updatedCurrencyAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
-  updatedDeposit0Disabled: boolean
-  updatedDeposit1Disabled: boolean
+  updatedDeposit0Disabled?: boolean
+  updatedDeposit1Disabled?: boolean
 } {
   const dependentAmount0 =
     dependentAmount && exactField === PositionField.TOKEN1 && token0

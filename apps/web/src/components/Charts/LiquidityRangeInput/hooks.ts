@@ -48,7 +48,7 @@ export function useDensityChartData({
   })
 
   const fetcher = async () => {
-    if (!data?.length || !sdkCurrencies.TOKEN0 || !sdkCurrencies.TOKEN1 || !feeAmount || !tickSpacing) {
+    if (!data?.length || !sdkCurrencies.TOKEN0 || !sdkCurrencies.TOKEN1 || feeAmount === undefined || !tickSpacing) {
       return null
     }
 

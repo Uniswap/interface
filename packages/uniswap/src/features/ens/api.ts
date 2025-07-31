@@ -2,6 +2,7 @@
 import { skipToken, useQuery } from '@tanstack/react-query'
 import { providers } from 'ethers/lib/ethers'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -30,7 +31,12 @@ async function getNameFetch(address: string, provider: providers.JsonRpcProvider
   const fwdAddr = name ? await provider.resolveName(name) : null
 
   // Normalize data as provider response is checksummed
-  return areAddressesEqual(fwdAddr, address) ? name : null
+  return areAddressesEqual({
+    addressInput1: { address: fwdAddr, platform: Platform.EVM },
+    addressInput2: { address, platform: Platform.EVM },
+  })
+    ? name
+    : null
 }
 
 async function getAddressFetch(name: string, provider: providers.JsonRpcProvider) {
@@ -40,7 +46,12 @@ async function getAddressFetch(name: string, provider: providers.JsonRpcProvider
 async function getAvatarFetch(address: string, provider: providers.JsonRpcProvider) {
   const name = await provider.lookupAddress(address)
   const fwdAddr = name ? await provider.resolveName(name) : null
-  const checkedName = areAddressesEqual(address, fwdAddr) ? name : null
+  const checkedName = areAddressesEqual({
+    addressInput1: { address, platform: Platform.EVM },
+    addressInput2: { address: fwdAddr, platform: Platform.EVM },
+  })
+    ? name
+    : null
   return checkedName ? await provider.getAvatar(checkedName) : null
 }
 

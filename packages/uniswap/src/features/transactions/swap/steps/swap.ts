@@ -5,10 +5,8 @@ import {
   OnChainTransactionFieldsBatched,
   TransactionStepType,
 } from 'uniswap/src/features/transactions/steps/types'
-import {
-  ValidatedTransactionRequest,
-  validateTransactionRequest,
-} from 'uniswap/src/features/transactions/swap/utils/trade'
+import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 
 export interface SwapTransactionStep extends OnChainTransactionFields {
   // Swaps that don't require permit

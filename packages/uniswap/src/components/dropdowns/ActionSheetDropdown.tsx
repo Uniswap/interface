@@ -3,7 +3,16 @@ import type { View } from 'react-native'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { GestureResponderEvent } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
-import { AnimatePresence, Flex, FlexProps, Portal, TouchableArea, styled, useIsDarkMode } from 'ui/src'
+import {
+  AnimatePresence,
+  Flex,
+  FlexProps,
+  OverKeyboardContent,
+  Portal,
+  TouchableArea,
+  styled,
+  useIsDarkMode,
+} from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing, zIndexes } from 'ui/src/theme'
@@ -187,19 +196,24 @@ const ActionSheetBackdropWithContent = memo(function ActionSheetBackdropWithCont
   return (
     <Portal zIndex={styles?.dropdownZIndex || zIndexes.popover}>
       <AnimatePresence custom={{ isOpen }}>
-        {isOpen && toggleMeasurements && (
+        {toggleMeasurements && (
           <>
-            <Backdrop handleClose={closeDropdown} opacity={!isInterface || isTouchable ? styles?.backdropOpacity : 0} />
-            <DropdownContent
-              {...contentProps}
-              alignment={styles?.alignment}
-              dropdownMaxHeight={styles?.dropdownMaxHeight}
-              dropdownMinWidth={styles?.dropdownMinWidth}
-              dropdownGap={styles?.dropdownGap}
-              handleClose={closeDropdown}
-              toggleMeasurements={toggleMeasurements}
-              closeOnSelect={closeOnSelect}
-            />
+            <OverKeyboardContent visible={isOpen}>
+              <Backdrop
+                handleClose={closeDropdown}
+                opacity={!isInterface || isTouchable ? styles?.backdropOpacity : 0}
+              />
+              <DropdownContent
+                {...contentProps}
+                alignment={styles?.alignment}
+                dropdownMaxHeight={styles?.dropdownMaxHeight}
+                dropdownMinWidth={styles?.dropdownMinWidth}
+                dropdownGap={styles?.dropdownGap}
+                handleClose={closeDropdown}
+                toggleMeasurements={toggleMeasurements}
+                closeOnSelect={closeOnSelect}
+              />
+            </OverKeyboardContent>
           </>
         )}
       </AnimatePresence>

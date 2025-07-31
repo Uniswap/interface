@@ -1,5 +1,4 @@
 import { DeepPartial } from '@apollo/client/utilities'
-import { BigNumber } from '@ethersproject/bignumber'
 import { DataTag, DefaultError, QueryKey, UndefinedInitialDataOptions, queryOptions } from '@tanstack/react-query'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -24,6 +23,7 @@ import {
   toGraphQLChain,
   toSupportedChainId,
 } from 'uniswap/src/features/chains/utils'
+import { buildCurrency } from 'uniswap/src/features/dataApi/utils'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 import { getChainIdFromBackendChain, getChainIdFromChainUrlParam } from 'utils/chainParams'
@@ -80,16 +80,16 @@ export function gqlToCurrency(token: DeepPartial<GqlToken | TokenStat>): Currenc
   if (token.standard === TokenStandard.Native || token.address === NATIVE_CHAIN_ID || !token.address) {
     return nativeOnChain(chainId)
   } else {
-    return new Token(
+    return buildCurrency({
+      ...token,
+      decimals: token.decimals ?? 18,
+      symbol: token.symbol ?? undefined,
+      name: token.name ?? token.project?.name ?? undefined,
       chainId,
-      token.address,
-      token.decimals ?? 18,
-      token.symbol ?? undefined,
-      token.name ?? token.project?.name ?? undefined,
-      undefined,
-      token.feeData?.buyFeeBps ? BigNumber.from(token.feeData.buyFeeBps) : undefined,
-      token.feeData?.sellFeeBps ? BigNumber.from(token.feeData.sellFeeBps) : undefined,
-    )
+      bypassChecksum: false,
+      buyFeeBps: token.feeData?.buyFeeBps,
+      sellFeeBps: token.feeData?.sellFeeBps,
+    })
   }
 }
 

@@ -1,8 +1,11 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Pool } from '@uniswap/v4-sdk'
 import { V3PositionInfo } from 'components/Liquidity/types'
-import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
-import { getCurrencyForProtocol, getTokenOrZeroAddress } from 'pages/Pool/Positions/create/utils'
+import { getCurrencyForProtocol, getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
+import { isInvalidPrice, isInvalidRange } from 'components/Liquidity/utils/priceRangeInfo'
+import { useAccount } from 'hooks/useAccount'
+import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -26,7 +29,6 @@ import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapT
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useAccount } from 'wagmi'
 
 interface MigrateV3PositionTxContextType {
   txInfo?: MigrateV3PositionTxAndGasInfo
@@ -52,11 +54,8 @@ export function MigrateV3PositionTxContextProvider({
   const account = useAccount()
   const [hasMigrateErrorResponse, setHasMigrateErrorResponse] = useState(false)
 
-  const { derivedPositionInfo, positionState, currentTransactionStep } = useCreatePositionContext()
-  const {
-    derivedPriceRangeInfo,
-    priceRangeState: { fullRange },
-  } = usePriceRangeContext()
+  const { creatingPoolOrPair, protocolVersion, positionState, currentTransactionStep, poolOrPair, ticks, price } =
+    useCreateLiquidityContext()
   const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(positionInfo.chainId)
 
   const increaseLiquidityApprovalParams: CheckApprovalLPRequest | undefined = useMemo(() => {
@@ -105,19 +104,18 @@ export function MigrateV3PositionTxContextProvider({
     if (
       !positionInfo.tokenId ||
       !account.address ||
-      derivedPositionInfo.protocolVersion !== ProtocolVersion.V4 ||
-      derivedPriceRangeInfo.protocolVersion !== ProtocolVersion.V4 ||
+      protocolVersion !== ProtocolVersion.V4 ||
       !positionInfo.pool ||
       !positionInfo.liquidity
     ) {
       return undefined
     }
-    const destinationPool = derivedPositionInfo.pool ?? derivedPriceRangeInfo.mockPool
+    const destinationPool = poolOrPair as Pool | undefined
     if (!destinationPool) {
       return undefined
     }
-    const tickLower = fullRange ? derivedPriceRangeInfo.tickSpaceLimits[0] : derivedPriceRangeInfo.ticks[0]
-    const tickUpper = fullRange ? derivedPriceRangeInfo.tickSpaceLimits[1] : derivedPriceRangeInfo.ticks[1]
+    const tickLower = ticks[0]
+    const tickUpper = ticks[1]
 
     if (tickLower === undefined || tickUpper === undefined || !positionInfo.liquidity) {
       return undefined
@@ -157,11 +155,11 @@ export function MigrateV3PositionTxContextProvider({
         tickLower: tickLower ?? undefined,
         tickUpper: tickUpper ?? undefined,
       },
-      outputPoolLiquidity: derivedPositionInfo.creatingPoolOrPair ? undefined : destinationPool.liquidity.toString(),
-      outputSqrtRatioX96: derivedPositionInfo.creatingPoolOrPair ? undefined : destinationPool.sqrtRatioX96.toString(),
-      outputCurrentTick: derivedPositionInfo.creatingPoolOrPair ? undefined : destinationPool.tickCurrent,
+      outputPoolLiquidity: creatingPoolOrPair ? undefined : destinationPool.liquidity.toString(),
+      outputSqrtRatioX96: creatingPoolOrPair ? undefined : destinationPool.sqrtRatioX96.toString(),
+      outputCurrentTick: creatingPoolOrPair ? undefined : destinationPool.tickCurrent,
 
-      initialPrice: derivedPositionInfo.creatingPoolOrPair ? destinationPool.sqrtRatioX96.toString() : undefined,
+      initialPrice: creatingPoolOrPair ? destinationPool.sqrtRatioX96.toString() : undefined,
 
       chainId: positionInfo.currency0Amount.currency.chainId,
       walletAddress: account.address,
@@ -171,20 +169,20 @@ export function MigrateV3PositionTxContextProvider({
       amount1: positionInfo.currency1Amount.quotient.toString(),
     }
   }, [
-    derivedPositionInfo,
+    protocolVersion,
+    creatingPoolOrPair,
     positionInfo,
     account,
-    derivedPriceRangeInfo,
-    fullRange,
+    poolOrPair,
+    ticks,
     positionState.fee.feeAmount,
     positionState.hook,
     approvalsNeeded,
   ])
 
-  const isRangeValid =
-    derivedPriceRangeInfo.protocolVersion !== ProtocolVersion.V2 &&
-    !derivedPriceRangeInfo.invalidPrice &&
-    !derivedPriceRangeInfo.invalidRange
+  const invalidPrice = isInvalidPrice(price)
+  const invalidRange = isInvalidRange(ticks[0], ticks[1])
+  const isRangeValid = protocolVersion !== ProtocolVersion.V2 && !invalidPrice && !invalidRange
 
   const isUserCommitedToMigrate =
     currentTransactionStep?.step.type === TransactionStepType.MigratePositionTransaction ||

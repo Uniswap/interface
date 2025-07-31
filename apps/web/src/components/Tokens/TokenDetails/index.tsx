@@ -136,9 +136,19 @@ function TDPSwapComponent() {
       const outputCurrencyURLAddress = getCurrencyURLAddress(tokens.outputCurrency)
 
       const inputEquivalent =
-        areAddressesEqual(inputCurrencyURLAddress, address) && tokens.inputCurrency?.chainId === currencyChainId
+        tokens.inputCurrency &&
+        areAddressesEqual({
+          addressInput1: { address: inputCurrencyURLAddress, chainId: tokens.inputCurrency.chainId },
+          addressInput2: { address, chainId: currencyChainId },
+        }) &&
+        tokens.inputCurrency.chainId === currencyChainId
       const outputEquivalent =
-        areAddressesEqual(outputCurrencyURLAddress, address) && tokens.outputCurrency?.chainId === currencyChainId
+        tokens.outputCurrency &&
+        areAddressesEqual({
+          addressInput1: { address: outputCurrencyURLAddress, chainId: tokens.outputCurrency.chainId },
+          addressInput2: { address, chainId: currencyChainId },
+        }) &&
+        tokens.outputCurrency.chainId === currencyChainId
 
       if (inputEquivalent || outputEquivalent || isBridgePair) {
         setPrevTokens(tokens)

@@ -1,13 +1,12 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
-import { Trans } from 'react-i18next'
-import { Flex, styled as tamaguiStyled, Text, Tooltip } from 'ui/src'
+import { Trans, useTranslation } from 'react-i18next'
+import { Flex, Text, Tooltip, styled as tamaguiStyled } from 'ui/src'
 import { DotLine } from 'ui/src/components/icons/DotLine'
 import { zIndexes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
-import { BIPS_BASE } from 'uniswap/src/constants/misc'
+import { DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
@@ -53,11 +52,13 @@ function Pool({
 }: {
   currency0: Currency
   currency1: Currency
-  feeAmount: FeeAmount
+  feeAmount: number
 }): JSX.Element {
+  const { t } = useTranslation()
   const priceUXEnabled = usePriceUXEnabled()
   const currency0CurrencyInfo = useCurrencyInfo(currencyToCurrencyId(currency0))
   const currency1CurrencyInfo = useCurrencyInfo(currencyToCurrencyId(currency1))
+  const isDynamicFee = feeAmount === DYNAMIC_FEE_AMOUNT
 
   return (
     <Tooltip placement="top">
@@ -71,7 +72,7 @@ function Pool({
               size={priceUXEnabled ? 12 : 20}
             />
           </Flex>
-          <BadgeText>{feeAmount / BIPS_BASE}%</BadgeText>
+          {isDynamicFee ? <BadgeText>{t('common.dynamic')}</BadgeText> : <BadgeText>{feeAmount}%</BadgeText>}
         </OpaqueBadge>
       </Tooltip.Trigger>
       <Tooltip.Content>

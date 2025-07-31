@@ -13,7 +13,8 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { ActionSheetModal, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { AccountType } from 'uniswap/src/features/accounts/types'
+import { AccountType, DisplayNameType } from 'uniswap/src/features/accounts/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -28,7 +29,7 @@ import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOn
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
-import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountAddress, useDisplayName, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAllAccountsSorted, selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 
@@ -58,6 +59,9 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const hasImportedSeedPhrase = useNativeAccountExists()
   const isModalOpen = useIsFocused()
   const { openWalletRestoreModal, walletRestoreType } = useWalletRestore()
+  const displayName = useDisplayName(activeAccountAddress)
+
+  const activeAccountHasENS = displayName?.type === DisplayNameType.ENS
 
   const sortedMnemonicAccounts = useSelector(selectSortedSignerMnemonicAccounts)
 
@@ -239,7 +243,13 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const accountsWithoutActive = accounts.filter((a) => a.address !== activeAccountAddress)
 
   const isViewOnly =
-    accounts.find((a) => areAddressesEqual(a.address, activeAccountAddress))?.type === AccountType.Readonly
+    accounts.find((a) =>
+      // TODO(WALL-7065): Update to support solana
+      areAddressesEqual({
+        addressInput1: { address: a.address, platform: Platform.EVM },
+        addressInput2: { address: activeAccountAddress, platform: Platform.EVM },
+      }),
+    )?.type === AccountType.Readonly
 
   if (!activeAccountAddress) {
     return null
@@ -260,17 +270,19 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           size={spacing.spacing60 - spacing.spacing4}
           variant="subheading1"
         />
-        <Flex row px="$spacing12">
-          <Button
-            lineHeightDisabled
-            size="medium"
-            testID={TestID.WalletSettings}
-            emphasis="secondary"
-            onPress={onManageWallet}
-          >
-            {t('account.wallet.button.manage')}
-          </Button>
-        </Flex>
+        {!activeAccountHasENS && (
+          <Flex row px="$spacing12">
+            <Button
+              lineHeightDisabled
+              size="medium"
+              testID={TestID.WalletSettings}
+              emphasis="secondary"
+              onPress={onManageWallet}
+            >
+              {t('account.wallet.button.manage')}
+            </Button>
+          </Flex>
+        )}
       </Flex>
       <Flex maxHeight={fullScreenContentHeight / 2}>
         <AccountList

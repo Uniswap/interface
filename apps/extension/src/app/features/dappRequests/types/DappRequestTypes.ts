@@ -3,7 +3,6 @@ import { EthereumRpcErrorSchema } from 'src/app/features/dappRequests/types/Erro
 import { BatchIdSchema, CallSchema, CapabilitySchema, GetCallsStatusResultSchema, SendCallsResultSchema } from 'wallet/src/features/dappRequests/types'
 import {
   EthersTransactionRequestSchema,
-  EthersTransactionResponseSchema,
 } from 'src/app/features/dappRequests/types/EthersTypes'
 import { NonfungiblePositionManagerCallSchema } from 'src/app/features/dappRequests/types/NonfungiblePositionManagerTypes'
 import { UniversalRouterCallSchema } from 'src/app/features/dappRequests/types/UniversalRouterTypes'
@@ -179,7 +178,7 @@ export type SignTransactionResponse = z.infer<typeof SignTransactionResponseSche
 
 export const SendTransactionResponseSchema = BaseDappResponseSchema.extend({
   type: z.literal(DappResponseType.SendTransactionResponse),
-  transactionResponse: EthersTransactionResponseSchema,
+  transactionHash: z.string(),
 })
 export type SendTransactionResponse = z.infer<typeof SendTransactionResponseSchema>
 

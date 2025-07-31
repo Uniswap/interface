@@ -22,6 +22,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 vi.mock('uniswap/src/features/gating/hooks', () => {
   return {
     useFeatureFlag: vi.fn(),
+    getFeatureFlag: vi.fn(),
   }
 })
 

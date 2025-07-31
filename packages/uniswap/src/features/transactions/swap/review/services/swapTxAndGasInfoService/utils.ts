@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import type { providers } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import type {
@@ -13,7 +12,6 @@ import type {
   ClassicQuote,
   CreateSwapRequest,
   NullablePermit,
-  QuoteResponse,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { Routing, TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__/index'
 import type { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
@@ -28,14 +26,15 @@ import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/revi
 import { UNKNOWN_SIM_ERROR } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import type { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import type {
+import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
+import {
   BaseSwapTxAndGasInfo,
   BridgeSwapTxAndGasInfo,
   ClassicSwapTxAndGasInfo,
+  PermitMethod,
   SwapGasFeeEstimation,
   WrapSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type {
   BridgeTrade,
   ClassicTrade,
@@ -45,14 +44,14 @@ import type {
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
 import { mergeGasFeeResults } from 'uniswap/src/features/transactions/swap/utils/gas'
-import { isBridge, isClassic, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
-import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   validatePermit,
   validateTransactionRequest,
   validateTransactionRequests,
 } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { SWAP_GAS_URGENCY_OVERRIDE, isClassicQuote } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { SWAP_GAS_URGENCY_OVERRIDE } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
@@ -173,7 +172,7 @@ export function getSimulationError({
   swapQuote: ClassicQuote | BridgeQuote | undefined
   isRevokeNeeded: boolean
 }): Error | null {
-  if (!isClassicQuote(swapQuote)) {
+  if (!swapQuote || !('txFailureReasons' in swapQuote)) {
     return null
   }
 
@@ -245,23 +244,6 @@ export function createProcessSwapResponse({ gasStrategy }: { gasStrategy: GasStr
   }
 }
 
-/** Extracts classic or bridge quote from a quote response */
-export function getSwapQuoteQuoteResponse({
-  quote,
-}: {
-  quote: QuoteResponse | undefined
-}):
-  | BridgeQuoteResponse
-  | ClassicQuoteResponse
-  | WrapQuoteResponse<Routing.WRAP>
-  | WrapQuoteResponse<Routing.UNWRAP>
-  | undefined {
-  if (quote && (isClassic(quote) || isBridge(quote) || isWrap(quote))) {
-    return quote
-  }
-  return undefined
-}
-
 export function createLogSwapRequestErrors({ trace }: { trace: ITraceContext }) {
   return function logSwapRequestErrors({
     txRequest,
@@ -284,17 +266,17 @@ export function createLogSwapRequestErrors({ trace }: { trace: ITraceContext }) 
       return
     }
 
-    const swapQuote = getSwapQuoteQuoteResponse({ quote })?.quote
+    const quoteId = 'quoteId' in quote.quote ? quote.quote.quoteId : undefined
 
     if (gasFeeResult.error) {
-      logger.warn('useTransactionRequestInfo', 'useTransactionRequestInfo', UNKNOWN_SIM_ERROR, {
+      logger.warn('utils', 'logSwapRequestErrors', UNKNOWN_SIM_ERROR, {
         ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, trace }),
         // we explicitly log it here to show on Datadog dashboard
         chainLabel: getChainLabel(derivedSwapInfo.chainId),
         requestId: quote.requestId,
-        quoteId: swapQuote && 'quoteId' in swapQuote ? swapQuote.quoteId : undefined,
+        quoteId,
         error: gasFeeResult.error,
-        simulationFailureReasons: isClassicQuote(swapQuote) ? swapQuote.txFailureReasons : undefined,
+        simulationFailureReasons: isClassic(quote) ? quote.quote.txFailureReasons : undefined,
         txRequest,
       })
 
@@ -303,7 +285,7 @@ export function createLogSwapRequestErrors({ trace }: { trace: ITraceContext }) 
           ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, trace }),
           error: gasFeeResult.error,
           txRequest,
-          simulationFailureReasons: isClassicQuote(swapQuote) ? swapQuote.txFailureReasons : undefined,
+          simulationFailureReasons: isClassic(quote) ? quote.quote.txFailureReasons : undefined,
         })
       }
     }
@@ -408,7 +390,11 @@ const EMPTY_PERMIT_TX_INFO: PermitTxInfo = {
   },
 }
 
-export function usePermitTxInfo({ quote }: { quote?: DiscriminatedQuoteResponse }): PermitTxInfo {
+export function usePermitTxInfo({
+  quote,
+}: {
+  quote?: DiscriminatedQuoteResponse | SolanaTrade['quote']
+}): PermitTxInfo {
   const classicQuote = quote && isClassic(quote) ? quote : undefined
   const gasStrategy = useActiveGasStrategy(classicQuote?.quote.chainId, 'swap')
 

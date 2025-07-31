@@ -101,6 +101,7 @@ export function generateActivityItemRenderer({
       case TransactionType.Wrap:
         SummaryItem = WrapSummaryItem
         break
+      case TransactionType.LPIncentivesClaimRewards:
       case TransactionType.CollectFees:
       case TransactionType.CreatePair:
       case TransactionType.CreatePool:
@@ -312,6 +313,14 @@ function getTransactionTypeVerbs(
         failed: t('transaction.status.claim.failed'),
         canceling: t('transaction.status.claim.canceling'),
         canceled: t('transaction.status.claim.canceled'),
+      }
+    case TransactionType.LPIncentivesClaimRewards:
+      return {
+        success: t('transaction.status.lpIncentivesClaim.success'),
+        pending: t('transaction.status.lpIncentivesClaim.pending'),
+        failed: t('transaction.status.lpIncentivesClaim.failed'),
+        canceling: t('transaction.status.lpIncentivesClaim.canceling'),
+        canceled: t('transaction.status.lpIncentivesClaim.canceled'),
       }
     case TransactionType.CreatePair:
       return {

@@ -2,10 +2,11 @@ import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import type { LpIncentivesClaimParams } from 'state/sagas/lp_incentives/types'
 import { handleOnChainStep } from 'state/sagas/transactions/utils'
-import type { LpIncentivesClaimTransactionInfo, LpIncentivesClaimTransactionStep } from 'state/transactions/types'
+import type { LpIncentivesClaimTransactionStep } from 'state/transactions/types'
 import { call } from 'typed-redux-saga'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import { TransactionType as UniswapTransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { LpIncentivesClaimTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { createSaga } from 'uniswap/src/utils/saga'
 
 function* lpIncentivesClaim(params: LpIncentivesClaimParams) {
@@ -26,7 +27,7 @@ function* lpIncentivesClaim(params: LpIncentivesClaimParams) {
     }
 
     const info: LpIncentivesClaimTransactionInfo = {
-      type: UniswapTransactionType.LPIncentivesClaimRewards,
+      type: TransactionType.LPIncentivesClaimRewards,
       tokenAddress,
     }
 

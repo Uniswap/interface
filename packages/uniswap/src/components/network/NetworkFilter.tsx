@@ -22,7 +22,6 @@ interface NetworkFilterProps {
   chainIds: UniverseChainId[]
   selectedChain: UniverseChainId | null
   onPressChain: (chainId: UniverseChainId | null) => void
-  onDismiss?: () => void
   includeAllNetworks?: boolean
   showUnsupportedConnectedChainWarning?: boolean
   styles?: ActionSheetDropdownStyleProps
@@ -86,7 +85,6 @@ export function NetworkFilter({
   chainIds,
   selectedChain,
   onPressChain,
-  onDismiss,
   includeAllNetworks,
   showUnsupportedConnectedChainWarning,
   styles,
@@ -123,7 +121,6 @@ export function NetworkFilter({
         ...styles,
       }}
       testID="chain-selector"
-      onPress={onDismiss}
     >
       {showUnsupportedConnectedChainWarning ? (
         <AlertTriangle color="$neutral2" size={20} />

@@ -1,4 +1,5 @@
 import { AnalyticsToggle } from 'components/AccountDrawer/AnalyticsToggle'
+import { AppVersionRow } from 'components/AccountDrawer/AppVersionRow'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { TestnetsToggle } from 'components/AccountDrawer/TestnetsToggle'
 import Column from 'components/deprecated/Column'
@@ -73,7 +74,7 @@ export default function SettingsMenu({
     useAccount().connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
 
   return (
-    <SlideOutMenu title={<Trans i18nKey="common.settings" />} onClose={onClose}>
+    <SlideOutMenu title={<Trans i18nKey="common.settings" />} onClose={onClose} versionComponent={<AppVersionRow />}>
       <Container>
         <Flex gap="$gap12">
           <ThemeToggle />

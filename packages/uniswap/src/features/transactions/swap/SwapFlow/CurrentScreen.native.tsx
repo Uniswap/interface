@@ -9,6 +9,7 @@ import {
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { SwapFormButton } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButton'
+import { UnichainInstantBalanceModal } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/UnichainInstantBalanceModal'
 import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreen'
 import { SwapFormWarningModals } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormWarningModals/SwapFormWarningModals'
 import { SwapFormWarningStoreContextProvider } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/SwapFormWarningStoreContextProvider'
@@ -40,10 +41,14 @@ export function CurrentScreen({
         </Trace>
       )
     case TransactionScreen.Review:
+    case TransactionScreen.UnichainInstantBalance:
       return (
-        <Trace logImpression section={SectionName.SwapReview}>
-          <SwapReviewScreenDelayedRender onSubmitSwap={onSubmitSwap} />
-        </Trace>
+        <>
+          <Trace logImpression section={SectionName.SwapReview}>
+            <SwapReviewScreenDelayedRender onSubmitSwap={onSubmitSwap} />
+          </Trace>
+          {screen === TransactionScreen.UnichainInstantBalance && <UnichainInstantBalanceModal />}
+        </>
       )
   }
 }

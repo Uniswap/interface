@@ -43,6 +43,7 @@ import {
   moveTokenAndNFTVisibility,
   moveUserSettings,
   removeCreatedOnboardingRedesignAccountBehaviorHistory,
+  removePriceAlertsEnabledFromPushNotifications,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
   updateExploreOrderByType,
@@ -1065,6 +1066,8 @@ export const migrations = {
   89: removeThaiBahtFromFiatCurrency,
 
   90: migrateLiquidityTransactionInfo,
+
+  91: removePriceAlertsEnabledFromPushNotifications,
 }
 
-export const MOBILE_STATE_VERSION = 90
+export const MOBILE_STATE_VERSION = 91

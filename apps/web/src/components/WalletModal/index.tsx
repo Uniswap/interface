@@ -4,13 +4,14 @@ import { Page, downloadAppModalPageAtom } from 'components/NavBar/DownloadApp/Mo
 import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
 import { DownloadWalletRow } from 'components/WalletModal/DownloadWalletRow'
 import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
+import { UniswapMobileWalletConnectorOption } from 'components/WalletModal/UniswapMobileWalletConnectorOption'
 import { UniswapWalletOptions } from 'components/WalletModal/UniswapWalletOptions'
-import { AlternativeOption, EVMOption } from 'components/WalletModal/WalletConnectorOption'
-import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
+import { OtherWalletsOption, WalletConnectorOption } from 'components/WalletModal/WalletConnectorOption'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
+import { useOrderedWalletConnectors } from 'features/wallet/connection/hooks/useOrderedWalletConnectors'
 import { useModalState } from 'hooks/useModalState'
 import { useAtom } from 'jotai'
-import { useReducer } from 'react'
+import { Fragment, useReducer } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { transitions } from 'theme/styles'
@@ -31,11 +32,12 @@ export default function WalletModal() {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const [expandMoreWallets, toggleExpandMoreWallets] = useReducer((s) => !s, !isEmbeddedWalletEnabled)
   const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
-  const connectors = useOrderedConnections({ showSecondaryConnectors: isMobileWeb })
+
+  const connectors = useOrderedWalletConnectors({ showSecondaryConnectors: isMobileWeb })
   const recentConnectorId = useRecentConnectorId()
 
   const showDownloadHeader =
-    !connectors.some((c) => c.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS) &&
+    !connectors.some((c) => c.wagmi?.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS) &&
     recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID &&
     isEmbeddedWalletEnabled
   const { openModal: openGetTheAppModal } = useModalState(ModalName.GetTheApp)
@@ -120,21 +122,18 @@ export default function WalletModal() {
             {(recentConnectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID || isMobileWeb) &&
               isEmbeddedWalletEnabled && (
                 <>
-                  <EVMOption connectorId={CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID} />
+                  <UniswapMobileWalletConnectorOption />
                   <Separator />
                 </>
               )}
             {connectors.map((c, index) => (
-              <>
-                <EVMOption connectorId={c.id} key={c.uid} detected={c.isInjected} />
+              <Fragment key={c.name}>
+                <WalletConnectorOption walletConnectorMeta={c} />
                 {index < connectors.length - 1 || isEmbeddedWalletEnabled ? <Separator /> : null}
-              </>
+              </Fragment>
             ))}
             {isEmbeddedWalletEnabled && !isMobileWeb && (
-              <EVMOption
-                connectorId={AlternativeOption.OTHER_WALLETS}
-                onPress={() => setMenu(MenuState.OTHER_WALLETS)}
-              />
+              <OtherWalletsOption onPress={() => setMenu(MenuState.OTHER_WALLETS)} />
             )}
           </Flex>
         </Flex>

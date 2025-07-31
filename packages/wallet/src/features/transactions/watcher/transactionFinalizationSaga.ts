@@ -10,6 +10,7 @@ import { findLocalGasStrategy } from 'uniswap/src/features/gas/utils'
 import { Experiments, PrivateRpcProperties } from 'uniswap/src/features/gating/experiments'
 import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { refetchQueries } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesSaga'
 import {
   DEFAULT_FLASHBOTS_ENABLED,
@@ -59,7 +60,7 @@ export function* finalizeTransaction({
     activeAddress,
   })
 
-  const { chains } = yield* call(getEnabledChainIdsSaga)
+  const { chains } = yield* call(getEnabledChainIdsSaga, Platform.EVM)
   const accountAddresses = yield* select(selectAllSignerMnemonicAccountAddresses)
 
   try {

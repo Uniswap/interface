@@ -1,5 +1,4 @@
-import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import type { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useInterfaceWrap'
@@ -10,11 +9,13 @@ import { usePrefilledNeedsTokenProtectionWarning } from 'uniswap/src/features/tr
 import { createPrepareSwap } from 'uniswap/src/features/transactions/swap/services/prepareSwapService'
 import type { WarningService } from 'uniswap/src/features/transactions/swap/services/warningService'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
+import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 
-const getIsViewOnlyWallet = (activeAccount?: AccountMeta): boolean => {
-  return activeAccount?.type === AccountType.Readonly
+const getIsViewOnlyWallet = (activeAccount?: AccountDetails): boolean => {
+  return activeAccount?.accountType === AccountType.Readonly
 }
 
 export function usePrepareSwap(ctx: { warningService: WarningService }): () => void {
@@ -34,7 +35,7 @@ export function usePrepareSwap(ctx: { warningService: WarningService }): () => v
   }))
   const { currencies, exactCurrencyField, chainId } = derivedSwapInfo
   const { swapRedirectCallback, setScreen } = useTransactionModalContext()
-  const activeAccount = useAccountMeta()
+  const activeAccount = useWallet().evmAccount
   const { onConnectWallet } = useUniswapContext()
 
   // needsTokenProtectionWarning is only true in interface, where swap component might be prefilled with a token that has a protection warning

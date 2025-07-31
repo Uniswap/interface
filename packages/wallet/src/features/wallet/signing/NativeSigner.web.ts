@@ -7,6 +7,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { SignsTypedData } from 'uniswap/src/features/transactions/signing'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { HexString, isValidHexString } from 'uniswap/src/utils/hex'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 /**
@@ -64,7 +65,7 @@ export class NativeSigner extends Signer implements SignsTypedData {
     return signature
   }
 
-  async signTransaction(transaction: providers.TransactionRequest): Promise<string> {
+  async signTransaction(transaction: providers.TransactionRequest): Promise<HexString> {
     const tx = await utils.resolveProperties(transaction)
 
     if (tx.chainId === undefined) {
@@ -72,7 +73,12 @@ export class NativeSigner extends Signer implements SignsTypedData {
     }
 
     if (tx.from != null) {
-      if (!areAddressesEqual(tx.from, this.address)) {
+      if (
+        !areAddressesEqual({
+          addressInput1: { address: tx.from, chainId: tx.chainId },
+          addressInput2: { address: this.address, chainId: tx.chainId },
+        })
+      ) {
         throw new Error(`Signing address does not match the tx 'from' address`)
       }
       delete tx.from
@@ -87,7 +93,12 @@ export class NativeSigner extends Signer implements SignsTypedData {
       tx.chainId || UniverseChainId.Mainnet,
     )
 
-    return utils.serializeTransaction(ut, signature)
+    const signedTx = utils.serializeTransaction(ut, signature)
+    if (!isValidHexString(signedTx)) {
+      throw new Error('Invalid signed transaction')
+    }
+
+    return signedTx
   }
 
   connect(provider: providers.Provider): NativeSigner {

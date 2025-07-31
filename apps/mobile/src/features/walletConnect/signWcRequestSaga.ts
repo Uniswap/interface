@@ -9,10 +9,12 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { DappRequestInfo, DappRequestType, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
@@ -42,7 +44,7 @@ type SignTransactionParams = {
   sessionId: string
   requestInternalId: string
   transaction: providers.TransactionRequest
-  account: Account
+  account: SignerMnemonicAccountMeta
   method: EthMethod.EthSendTransaction | EthMethod.WalletSendCalls
   dappRequestInfo: DappRequestInfo
   chainId: UniverseChainId
@@ -51,7 +53,7 @@ type SignTransactionParams = {
 
 function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
   const { sessionId, requestInternalId, account, method, chainId } = params
-  const { defaultChainId } = yield* getEnabledChainIdsSaga()
+  const { defaultChainId } = yield* getEnabledChainIdsSaga(Platform.EVM)
   try {
     const signerManager = yield* call(getSignerManager)
     let result: string | SendCallsResult = ''
@@ -88,8 +90,8 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         },
         transactionOriginType: TransactionOriginType.External,
       }
-      const { transactionResponse } = yield* call(executeTransaction, txParams)
-      result = transactionResponse.hash
+      const { transactionHash } = yield* call(executeTransaction, txParams)
+      result = transactionHash
     } else if (method === EthMethod.EthSendTransaction) {
       const txParams: ExecuteTransactionParams = {
         chainId: params.transaction.chainId || defaultChainId,
@@ -103,8 +105,8 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         },
         transactionOriginType: TransactionOriginType.External,
       }
-      const { transactionResponse } = yield* call(executeTransaction, txParams)
-      result = transactionResponse.hash
+      const { transactionHash } = yield* call(executeTransaction, txParams)
+      result = transactionHash
 
       // Trigger a pending transaction notification after we send the transaction to chain
       yield* put(
@@ -128,14 +130,14 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         transactionOriginType: TransactionOriginType.External,
       }
 
-      const { transactionResponse } = yield* call(executeTransaction, txParams)
+      const { transactionHash } = yield* call(executeTransaction, txParams)
       result = { id: params.request.id, capabilities: {} }
 
       // Store the batch transaction in Redux
       yield* put(
         addBatchedTransaction({
           batchId: params.request.id,
-          txHashes: [transactionResponse.hash],
+          txHashes: [transactionHash],
           requestId: params.request.encodedRequestId,
           chainId: params.request.chainId,
         }),

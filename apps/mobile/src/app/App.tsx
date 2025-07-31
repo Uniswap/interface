@@ -46,6 +46,7 @@ import {
   setI18NUserDefaults,
 } from 'src/features/widgets/widgets'
 import { initDynamicIntlPolyfills } from 'src/polyfills/intl-delayed'
+import { useDatadogUserAttributesTracking } from 'src/screens/HomeScreen/useDatadogUserAttributesTracking'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
@@ -57,8 +58,8 @@ import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProvi
 import { DatadogSessionSampleRateKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
-import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
-import { getDynamicConfigValue, getFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { StatsigUser, Storage, getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
@@ -81,6 +82,8 @@ import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
+import { useHeartbeatReporter } from 'wallet/src/features/telemetry/useHeartbeatReporter'
+import { useLastBalancesReporter } from 'wallet/src/features/telemetry/useLastBalancesReporter'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
@@ -88,6 +91,7 @@ import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { NativeWalletProvider } from 'wallet/src/features/wallet/providers/NativeWalletProvider'
+import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 import { SharedWalletProvider as SharedWalletReduxProvider } from 'wallet/src/providers/SharedWalletProvider'
 import { getReduxPersistor } from 'wallet/src/state/persistor'
 
@@ -156,7 +160,7 @@ function App(): JSX.Element | null {
           <StrictMode>
             <I18nextProvider i18n={i18n}>
               <SafeAreaProvider>
-                <KeyboardProvider>
+                <KeyboardProvider navigationBarTranslucent>
                   <SharedWalletReduxProvider reduxStore={store}>
                     <AnalyticsNavigationContextProvider
                       shouldLogScreen={shouldLogScreen}
@@ -227,14 +231,9 @@ function AppOuter(): JSX.Element | null {
       ).catch(() => undefined)
     }
 
-    // Used in case we aren't able to resolve notification filtering issues on iOS
     if (isIOS) {
-      const notificationsPriceAlertsEnabled = getFeatureFlag(FeatureFlags.NotificationPriceAlertsIOS)
-      const notificationsUnfundedWalletEnabled = getFeatureFlag(FeatureFlags.NotificationUnfundedWalletsIOS)
-
       OneSignal.User.addTags({
-        [OneSignalUserTagField.GatingPriceAlertsEnabled]: notificationsPriceAlertsEnabled ? 'true' : 'false',
-        [OneSignalUserTagField.GatingUnfundedWalletsEnabled]: notificationsUnfundedWalletEnabled ? 'true' : 'false',
+        [OneSignalUserTagField.GatingUnfundedWalletsEnabled]: 'true',
       })
     }
   }, [])
@@ -251,11 +250,11 @@ function AppOuter(): JSX.Element | null {
             <LocalizationContextProvider>
               <GestureHandlerRootView style={flexStyles.fill}>
                 <WalletContextProvider>
-                  <DataUpdaters />
                   <NavigationContainer>
                     <MobileWalletNavigationProvider>
                       <NativeWalletProvider>
                         <WalletUniswapProvider>
+                          <DataUpdaters />
                           <BottomSheetModalProvider>
                             <AppModals />
                             <PerformanceProfiler onReportPrepared={onReportPrepared}>
@@ -282,8 +281,6 @@ function AppInner(): JSX.Element {
   const isDarkMode = useIsDarkMode()
   const themeSetting = useCurrentAppearanceSetting()
   const allowAnalytics = useSelector(selectAllowAnalytics)
-
-  useTestnetModeForLoggingAndAnalytics()
 
   // handles AppsFlyer enable/disable based on the allow analytics toggle
   useEffect(() => {
@@ -323,11 +320,22 @@ function AppInner(): JSX.Element {
   )
 }
 
+/**
+ * Background side effects that run in the background and are not part of the main app.
+ * A separate component is used to avoid unnecessary re-rendering of the main app when
+ * these services are running.
+ */
 function DataUpdaters(): JSX.Element {
   const favoriteTokens: CurrencyId[] = useSelector(selectFavoriteTokens)
   const accountsMap: Record<string, Account> = useAccounts()
   const { locale } = useCurrentLanguageInfo()
   const { code } = useAppFiatCurrencyInfo()
+  const finishedOnboarding = useSelector(selectFinishedOnboarding)
+
+  useDatadogUserAttributesTracking({ isOnboarded: !!finishedOnboarding })
+  useHeartbeatReporter({ isOnboarded: !!finishedOnboarding })
+  useLastBalancesReporter({ isOnboarded: !!finishedOnboarding })
+  useTestnetModeForLoggingAndAnalytics()
 
   // Refreshes widgets when bringing app to foreground
   useAppStateTrigger({ from: 'background', to: 'active', callback: processWidgetEvents })

@@ -47,10 +47,6 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
     }
   }, [isEditing])
 
-  const toggleShowMore = useCallback((): void => {
-    setShowAll(!showAll)
-  }, [showAll])
-
   const handleDragStart = useCallback(async () => {
     await hapticFeedback.light()
   }, [hapticFeedback])
@@ -103,7 +99,7 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
         <Flex>
           <Sortable.Grid
             {...rest}
-            animateHeight
+            dimensionsAnimationType="worklet"
             scrollableRef={listRef}
             data={visibleTokens}
             sortEnabled={isEditing}
@@ -120,7 +116,7 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
               isExpanded={showAll}
               label={showAll ? t('common.showLess.button') : t('common.showMore.button')}
               mx="$spacing16"
-              onPress={toggleShowMore}
+              onPress={(): void => setShowAll((value: boolean) => !value)}
             />
           )}
         </Flex>

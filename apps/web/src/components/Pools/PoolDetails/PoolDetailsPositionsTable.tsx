@@ -1,6 +1,6 @@
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
 import { PositionInfo } from 'components/Liquidity/types'
-import { getPositionUrl } from 'components/Liquidity/utils'
+import { getPositionUrl } from 'components/Liquidity/utils/getPositionUrl'
 import { Link } from 'react-router'
 import { Flex } from 'ui/src'
 

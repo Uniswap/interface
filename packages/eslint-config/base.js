@@ -136,6 +136,7 @@ module.exports = {
       excludedFiles: ['*.test.ts', '*.test.tsx'],
       rules: {
         'no-console': 'error',
+        'local-rules/no-hex-string-casting': 'error',
         'react/forbid-elements': [
           'error',
           {

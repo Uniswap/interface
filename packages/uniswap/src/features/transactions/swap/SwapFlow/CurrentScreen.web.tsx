@@ -6,6 +6,7 @@ import {
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
+import { UnichainInstantBalanceModal } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/UnichainInstantBalanceModal'
 import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreen'
 import { SwapReviewScreen } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewScreen'
 import { isInterface } from 'utilities/src/platform'
@@ -43,6 +44,8 @@ export function CurrentScreen({
           <SwapReviewScreen hideContent={false} onSubmitSwap={onSubmitSwap} />
         </Trace>
       </Modal>
+
+      <UnichainInstantBalanceModal />
     </>
   )
 }

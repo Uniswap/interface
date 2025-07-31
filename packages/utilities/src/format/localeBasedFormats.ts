@@ -6,6 +6,9 @@ import { NumberType } from 'utilities/src/format/types'
 
 const numberFormatCache: Record<string, Intl.NumberFormat> = {}
 
+export const TOKEN_AMOUNT_DISPLAY_FLOOR = 0.00001
+export const TOKEN_AMOUNT_DISPLAY_FLOOR_FALLBACK = '<0.00001'
+
 function getNumberFormat({
   name,
   locale,
@@ -451,7 +454,7 @@ export const tokenNonTxFormatter: Formatter = {
 export const tokenTxFormatter: Formatter = {
   rules: [
     { exact: 0, formatter: '0' },
-    { upperBound: 0.00001, formatter: '<0.00001' },
+    { upperBound: TOKEN_AMOUNT_DISPLAY_FLOOR, formatter: TOKEN_AMOUNT_DISPLAY_FLOOR_FALLBACK },
     { upperBound: 1, formatter: FiveDecimalsMaxTwoDecimalsMin },
     { upperBound: 10000, formatter: SixSigFigsTwoDecimals },
     { upperBound: Infinity, formatter: TwoDecimals },
@@ -472,7 +475,7 @@ export const swapTradeAmountFormatter: Formatter = {
 export const swapPriceFormatter: Formatter = {
   rules: [
     { exact: 0, formatter: '0' },
-    { upperBound: 0.00001, formatter: '<0.00001' },
+    { upperBound: TOKEN_AMOUNT_DISPLAY_FLOOR, formatter: TOKEN_AMOUNT_DISPLAY_FLOOR_FALLBACK },
     ...swapTradeAmountFormatter.rules,
   ],
   defaultFormat: SixSigFigsTwoDecimalsNoCommas,

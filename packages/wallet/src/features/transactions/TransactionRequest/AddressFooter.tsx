@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, SpaceTokens, Text, Tooltip } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -21,7 +22,13 @@ export function AddressFooter({
 
   const currentAccountAddress = connectedAccountAddress || activeAccountAddress
 
-  const showWarning = connectedAccountAddress && !areAddressesEqual(connectedAccountAddress, activeAccountAddress)
+  const showWarning =
+    connectedAccountAddress &&
+    // TODO(WALL-7065): Update to support solana
+    !areAddressesEqual({
+      addressInput1: { address: connectedAccountAddress, platform: Platform.EVM },
+      addressInput2: { address: activeAccountAddress, platform: Platform.EVM },
+    })
 
   return (
     <Flex grow px={px}>

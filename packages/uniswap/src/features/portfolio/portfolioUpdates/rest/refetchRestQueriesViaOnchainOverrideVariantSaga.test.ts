@@ -160,6 +160,40 @@ describe('mergeOnChainBalances', () => {
     expect(result?.portfolio?.balances[1]?.valueUsd).toBe(50)
   })
 
+  it('should remove balances that become zero', () => {
+    const portfolioData = {
+      balances: [
+        {
+          token: { chainId: mockChainId, address: MOCK_TOKEN_ADDRESS },
+          amount: { amount: 2, raw: MOCK_BALANCE_2_ETH },
+          valueUsd: 20,
+        },
+        {
+          token: { chainId: mockChainId, address: MOCK_OTHER_ADDRESS },
+          amount: { amount: 5, raw: MOCK_BALANCE_5_ETH },
+          valueUsd: 50,
+        },
+      ],
+    }
+
+    const mockPortfolioData: GetPortfolioResponse = {
+      portfolio: portfolioData,
+      clone: jest.fn().mockReturnValue({
+        portfolio: portfolioData,
+      }),
+    } as unknown as GetPortfolioResponse
+
+    const zeroBalance: PartialMessage<Balance> = { amount: { amount: 0, raw: '0' } }
+
+    const onchainBalances: OnChainMapRest = new Map([[mockCurrencyId, zeroBalance]])
+
+    const result = mergeOnChainBalances(mockPortfolioData, onchainBalances)
+
+    expect(result?.portfolio?.balances).toHaveLength(1)
+    expect(result?.portfolio?.balances[0]?.token?.address).toBe(MOCK_OTHER_ADDRESS)
+    expect(result?.portfolio?.balances[0]?.amount?.amount).toBe(5)
+  })
+
   it('should handle balances without token information', () => {
     const portfolioData = {
       balances: [

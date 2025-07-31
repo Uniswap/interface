@@ -89,86 +89,162 @@ describe(submitUniswapXOrder, () => {
     Date.now = jest.fn(() => mockTimestamp++)
   })
 
-  it('sends a uniswapx order', async () => {
-    const expectedSubmittedOrderDetails = {
-      ...baseExpectedInitialOrderDetails,
-      addedTime: 2,
-      queueStatus: QueuedOrderStatus.Submitted,
-    } satisfies UniswapXOrderDetails
+  describe('with ValidatedPermit', () => {
+    it('sends a uniswapx order', async () => {
+      const expectedSubmittedOrderDetails = {
+        ...baseExpectedInitialOrderDetails,
+        addedTime: 2,
+        queueStatus: QueuedOrderStatus.Submitted,
+      } satisfies UniswapXOrderDetails
 
-    testSaga(submitUniswapXOrder, baseSubmitOrderParams)
-      .next()
-      .put({ type: addTransaction.type, payload: baseExpectedInitialOrderDetails })
-      .next()
-      .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
-      .next()
-      .call(getSignerManager)
-      .next(mockSignerManager)
-      .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
-      .next(mockSigner)
-      .call(signTypedData, {
-        domain: mockPermit.typedData.domain,
-        types: mockPermit.typedData.types,
-        value: mockPermit.typedData.values,
-        signer: mockSigner,
-      })
-      .next(mockSignature)
-      .call(submitOrder, expectedOrderRequest)
-      .next()
-      .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
-        routing: 'uniswap_x_v2',
-        order_hash: baseExpectedInitialOrderDetails.orderHash,
-        transactionOriginType: TransactionOriginType.Internal,
-        v2Used: false,
-        v3Used: false,
-        v4Used: false,
-        uniswapXUsed: true,
-      })
-      .next()
-      .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
-      .next()
-      .call(baseSubmitOrderParams.onSuccess)
-      .next()
-      .isDone()
+      testSaga(submitUniswapXOrder, baseSubmitOrderParams)
+        .next()
+        .put({ type: addTransaction.type, payload: baseExpectedInitialOrderDetails })
+        .next()
+        .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
+        .next()
+        .call(getSignerManager)
+        .next(mockSignerManager)
+        .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
+        .next(mockSigner)
+        .call(signTypedData, {
+          domain: mockPermit.typedData.domain,
+          types: mockPermit.typedData.types,
+          value: mockPermit.typedData.values,
+          signer: mockSigner,
+        })
+        .next(mockSignature)
+        .call(submitOrder, expectedOrderRequest)
+        .next()
+        .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
+          routing: 'uniswap_x_v2',
+          order_hash: baseExpectedInitialOrderDetails.orderHash,
+          transactionOriginType: TransactionOriginType.Internal,
+          v2Used: false,
+          v3Used: false,
+          v4Used: false,
+          uniswapXUsed: true,
+        })
+        .next()
+        .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
+        .next()
+        .call(baseSubmitOrderParams.onSuccess)
+        .next()
+        .isDone()
+    })
+
+    it('updates an order properly if order submission fails', async () => {
+      const expectedSubmittedOrderDetails = {
+        ...baseExpectedInitialOrderDetails,
+        addedTime: 2,
+        queueStatus: QueuedOrderStatus.Submitted,
+      }
+
+      testSaga(submitUniswapXOrder, baseSubmitOrderParams)
+        .next()
+        .put({ type: addTransaction.type, payload: baseExpectedInitialOrderDetails })
+        .next()
+        .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
+        .next()
+        .call(getSignerManager)
+        .next(mockSignerManager)
+        .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
+        .next(mockSigner)
+        .call(signTypedData, {
+          domain: mockPermit.typedData.domain,
+          types: mockPermit.typedData.types,
+          value: mockPermit.typedData.values,
+          signer: mockSigner,
+        })
+        .next(mockSignature)
+        .call(submitOrder, expectedOrderRequest)
+        .throw(new Error('pretend the order endpoint failed'))
+        .put({
+          type: updateTransaction.type,
+          payload: {
+            ...baseExpectedInitialOrderDetails,
+            queueStatus: QueuedOrderStatus.SubmissionFailed,
+          },
+        })
+        .next()
+        .call(baseSubmitOrderParams.onFailure)
+        .next()
+        .isDone()
+    })
   })
 
-  it('updates an order properly if order submission fails', async () => {
-    const expectedSubmittedOrderDetails = {
-      ...baseExpectedInitialOrderDetails,
-      addedTime: 2,
-      queueStatus: QueuedOrderStatus.Submitted,
+  describe('with SignedPermit', () => {
+    const mockSignedPermit = {
+      permit: mockPermit.typedData,
+      signedData: mockSignature,
     }
 
-    testSaga(submitUniswapXOrder, baseSubmitOrderParams)
-      .next()
-      .put({ type: addTransaction.type, payload: baseExpectedInitialOrderDetails })
-      .next()
-      .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
-      .next()
-      .call(getSignerManager)
-      .next(mockSignerManager)
-      .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
-      .next(mockSigner)
-      .call(signTypedData, {
-        domain: mockPermit.typedData.domain,
-        types: mockPermit.typedData.types,
-        value: mockPermit.typedData.values,
-        signer: mockSigner,
-      })
-      .next(mockSignature)
-      .call(submitOrder, expectedOrderRequest)
-      .throw(new Error('pretend the order endpoint failed'))
-      .put({
-        type: updateTransaction.type,
-        payload: {
-          ...baseExpectedInitialOrderDetails,
-          queueStatus: QueuedOrderStatus.SubmissionFailed,
-        },
-      })
-      .next()
-      .call(baseSubmitOrderParams.onFailure)
-      .next()
-      .isDone()
+    const signedPermitParams = {
+      ...baseSubmitOrderParams,
+      permit: mockSignedPermit,
+    }
+
+    it('sends a uniswapx order without calling signer', async () => {
+      const expectedSubmittedOrderDetails = {
+        ...baseExpectedInitialOrderDetails,
+        addedTime: 2,
+        queueStatus: QueuedOrderStatus.Submitted,
+      } satisfies UniswapXOrderDetails
+
+      testSaga(submitUniswapXOrder, signedPermitParams)
+        .next()
+        .put({ type: addTransaction.type, payload: baseExpectedInitialOrderDetails })
+        .next()
+        .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
+        .next()
+        // Should skip getSignerManager and getSignerForAccount calls
+        // Should skip signTypedData call and use the pre-signed data directly
+        .call(submitOrder, expectedOrderRequest)
+        .next()
+        .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
+          routing: 'uniswap_x_v2',
+          order_hash: baseExpectedInitialOrderDetails.orderHash,
+          transactionOriginType: TransactionOriginType.Internal,
+          v2Used: false,
+          v3Used: false,
+          v4Used: false,
+          uniswapXUsed: true,
+        })
+        .next()
+        .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
+        .next()
+        .call(signedPermitParams.onSuccess)
+        .next()
+        .isDone()
+    })
+
+    it('updates an order properly if order submission fails', async () => {
+      const expectedSubmittedOrderDetails = {
+        ...baseExpectedInitialOrderDetails,
+        addedTime: 2,
+        queueStatus: QueuedOrderStatus.Submitted,
+      }
+
+      testSaga(submitUniswapXOrder, signedPermitParams)
+        .next()
+        .put({ type: addTransaction.type, payload: baseExpectedInitialOrderDetails })
+        .next()
+        .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
+        .next()
+        .call(submitOrder, expectedOrderRequest)
+        .throw(new Error('pretend the order endpoint failed'))
+        .put({
+          type: updateTransaction.type,
+          payload: {
+            ...baseExpectedInitialOrderDetails,
+            queueStatus: QueuedOrderStatus.SubmissionFailed,
+          },
+        })
+        .next()
+        .call(signedPermitParams.onFailure)
+        .next()
+        .isDone()
+    })
   })
 
   describe('blocking tx edge cases', () => {

@@ -27,6 +27,7 @@ export function TradeInfoRow({ gasInfo, warning }: { gasInfo: GasInfo; warning?:
   const priceUXEnabled = usePriceUXEnabled()
 
   const currencies = useSwapFormStoreDerivedSwapInfo((s) => s.currencies)
+  const derivedSwapInfo = useSwapFormStoreDerivedSwapInfo((s) => s)
 
   if (isTestnetModeEnabled) {
     return null
@@ -47,7 +48,12 @@ export function TradeInfoRow({ gasInfo, warning }: { gasInfo: GasInfo; warning?:
     <Flex centered row>
       <Flex fill>
         {debouncedTrade && !warning && (
-          <SwapRateRatio initialInverse={true} styling="secondary" trade={debouncedTrade} />
+          <SwapRateRatio
+            initialInverse={true}
+            styling="secondary"
+            trade={debouncedTrade}
+            derivedSwapInfo={derivedSwapInfo}
+          />
         )}
 
         {warning && (

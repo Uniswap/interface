@@ -1,4 +1,6 @@
 import { useMemo } from 'react'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -7,7 +9,6 @@ import { useENS } from 'uniswap/src/features/ens/useENS'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SearchResultType, WalletSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
-import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 
 // eslint-disable-next-line complexity
@@ -45,12 +46,15 @@ export function useWalletSearchResults(
   } = useENS({ nameOrAddress: querySkippedIfValidAddress, autocompleteDomain: false })
 
   // Search for matching Unitag by name
-  const { unitag: unitagByName, loading: unitagLoading } = useUnitagByName(query)
+  const { data: unitagByName, isLoading: unitagLoading } = useUnitagsUsernameQuery({
+    params: query ? { username: query } : undefined,
+  })
 
   // Search for matching Unitag by address (try user input address, then resolved ENS address, then autocompleted ENS address)
-  const { unitag: unitagByAddress, loading: unitagByAddressLoading } = useUnitagByAddress(
-    validAddress ?? ensAddress ?? dotEthAddress ?? undefined,
-  )
+  const searchAddress = validAddress ?? ensAddress ?? dotEthAddress
+  const { data: unitagByAddress, isLoading: unitagByAddressLoading } = useUnitagsAddressQuery({
+    params: searchAddress ? { address: searchAddress } : undefined,
+  })
 
   // Search for matching EOA wallet address
   const { isSmartContractAddress, loading: loadingIsSmartContractAddress } = useIsSmartContractAddress(

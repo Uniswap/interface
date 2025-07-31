@@ -3,7 +3,7 @@ import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { Mocks } from 'playwright/mocks/mocks'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { Experiments } from 'uniswap/src/features/gating/experiments'
+import { Layers, PriceUxUpdateProperties } from 'uniswap/src/features/gating/experiments'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { assume0xAddress } from 'utils/wagmi'
 
@@ -52,7 +52,7 @@ test.describe('Fees', () => {
     await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
 
     await page.goto(
-      `/swap?inputCurrency=ETH&outputCurrency=${DAI.address}&experimentOverride=${Experiments.PriceUxUpdate}`,
+      `/swap?inputCurrency=ETH&outputCurrency=${DAI.address}&layerOverride=${Layers.SwapPage}:${PriceUxUpdateProperties.UpdatedPriceUX}`,
     )
 
     await page.route(`${uniswapUrls.tradingApiUrl}${uniswapUrls.tradingApiPaths.quote}`, async (route, request) => {

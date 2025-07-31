@@ -33,6 +33,11 @@ export function usePriceDifference(derivedSwapInfo?: DerivedSwapInfo): UsePriceD
         ? ((+outputPrice - +inputPrice) / +inputPrice) * 100
         : +(getPriceImpact(derivedSwapInfo)?.toFixed() || 0)
 
+    // Handle NaN cases - return early without warning if calculation is invalid
+    if (isNaN(priceDifferencePercentage)) {
+      return { showPriceDifferenceWarning: false }
+    }
+
     const showPriceDifferenceWarning =
       !!priceDifferencePercentage && priceDifferencePercentage * -1 > PRICE_DIFFERENCE_THRESHOLD
 

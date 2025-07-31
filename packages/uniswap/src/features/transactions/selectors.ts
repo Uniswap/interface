@@ -7,12 +7,12 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
-  isFinalizedTx,
   SendTokenTransactionInfo,
   TransactionDetails,
   TransactionType,
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
 import { selectTokensVisibility } from 'uniswap/src/features/visibility/selectors'
 import { CurrencyIdToVisibility } from 'uniswap/src/features/visibility/slice'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
@@ -180,6 +180,7 @@ export const makeSelectUniswapXOrder = (): Selector<
       return undefined
     },
   )
+
 // Returns a list of past recipients ordered from most to least recent
 // TODO: [MOB-232] either revert this to return addresses or keep but also return displayName so that it's searchable for RecipientSelect
 export const selectRecipientsByRecency = (state: UniswapState): SearchableRecipient[] => {
@@ -204,7 +205,12 @@ export const selectRecipientsByRecency = (state: UniswapState): SearchableRecipi
 export const selectIncompleteTransactions = (state: UniswapState): TransactionDetails[] => {
   const transactionsByChainId = flattenObjectOfObjects(state.transactions)
   return transactionsByChainId.reduce<TransactionDetails[]>((accum, transactions) => {
-    const pendingTxs = Object.values(transactions).filter((tx) => Boolean(!tx.receipt) && !isFinalizedTx(tx))
+    const pendingTxs = Object.values(transactions)
+      .filter((tx) => {
+        // Check if receipt property exists before accessing it
+        return !('receipt' in tx) || !tx.receipt
+      })
+      .filter((tx) => !isFinalizedTx(tx))
     return [...accum, ...pendingTxs]
   }, [])
 }

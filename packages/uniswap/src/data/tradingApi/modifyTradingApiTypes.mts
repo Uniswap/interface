@@ -18,7 +18,10 @@ const createSendResponseFile = project.addSourceFileAtPath(`${path}/CreateSendRe
 const classicQuoteFile = project.addSourceFileAtPath(`${path}/ClassicQuote.ts`)
 const responseFiles = [approvalResponseFile, createSwapResponseFile, createSendResponseFile, classicQuoteFile]
 
-function addImport(file: SourceFile, importName: string) {
+// Enums
+const routingFile = project.addSourceFileAtPath(`${path}/Routing.ts`)
+
+function addImport(file: SourceFile, importName: string): void {
   if (!file.getImportDeclaration((imp) => imp.getModuleSpecifierValue() === '../../types')) {
     file.addImportDeclaration({
       namedImports: [importName],
@@ -39,7 +42,7 @@ function modifyType(
   file: SourceFile,
   typeName: string,
   newProperties: { name: string; type: string; isOptional?: boolean }[],
-) {
+): void {
   const typeAlias = file.getTypeAlias(typeName)
   if (typeAlias) {
     const typeNode = typeAlias.getTypeNode()
@@ -65,6 +68,29 @@ function modifyType(
   }
 }
 
+function addEnumMember(file: SourceFile, enumName: string, newMember: { name: string; value: string }): void {
+  const enumDecl = file.getEnum(enumName)
+
+  if (!enumDecl) {
+    console.log(`Enum ${enumName} not found in ${file.getBaseName()}`)
+    return
+  }
+
+  const existing = enumDecl.getMember(newMember.name)
+
+  if (existing) {
+    console.log(`Enum member ${newMember.name} already exists in ${enumName}`)
+    return
+  }
+
+  enumDecl.addMember({
+    name: newMember.name,
+    initializer: `"${newMember.value}"`,
+  })
+
+  console.log(`Added enum member ${newMember.name} = "${newMember.value}" to ${enumName}`)
+}
+
 // Modify the request interfaces
 requestFiles.forEach((file) => {
   addImport(file, 'GasStrategy')
@@ -81,6 +107,9 @@ responseFiles.forEach((file) => {
   ])
 })
 
+// Add new enum member
+addEnumMember(routingFile, 'Routing', { name: 'JUPITER', value: 'JUPITER' })
+
 // Save the changes
 requestFiles.forEach((file) => {
   file.saveSync()
@@ -88,5 +117,6 @@ requestFiles.forEach((file) => {
 responseFiles.forEach((file) => {
   file.saveSync()
 })
+routingFile.saveSync()
 
 console.log('Trading API types have been updated')

@@ -6,6 +6,7 @@ import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import ERC721_ABI from 'uniswap/src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'uniswap/src/abis/types'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
@@ -16,21 +17,20 @@ import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { queryWithoutCache } from 'utilities/src/reactQuery/queryOptions'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { SendCurrencyParams, SendNFTParams, SendTokenParams } from 'wallet/src/features/transactions/send/types'
-import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'
 
 export function useSendTransactionRequest(
   derivedSendInfo: DerivedSendInfo,
 ): UseQueryResult<providers.TransactionRequest | null> {
   const { defaultChainId } = useEnabledChains()
-  const account = useActiveAccountWithThrow()
+  const account = useActiveSignerAccount()
   const chainId = toSupportedChainId(derivedSendInfo.chainId)
   const provider = useProvider(chainId ?? defaultChainId)
   const contractManager = useContractManager()
 
   const transactionFetcher = useCallback(async (): Promise<providers.TransactionRequest | null> => {
-    if (!provider) {
+    if (!provider || !account) {
       return null
     }
 
@@ -54,7 +54,7 @@ async function getSendTransaction({
 }: {
   provider: providers.Provider
   contractManager: ContractManager
-  account: Account
+  account: SignerMnemonicAccountMeta
   derivedSendInfo: DerivedSendInfo
 }): Promise<providers.TransactionRequest | undefined> {
   const params = getSendParams(account, derivedSendInfo)
@@ -76,7 +76,10 @@ async function getSendTransaction({
 }
 
 // eslint-disable-next-line consistent-return
-function getSendParams(account: Account, derivedSendInfo: DerivedSendInfo): SendTokenParams | undefined {
+function getSendParams(
+  account: SignerMnemonicAccountMeta,
+  derivedSendInfo: DerivedSendInfo,
+): SendTokenParams | undefined {
   const { currencyAmounts, currencyTypes, chainId, recipient, currencyInInfo, nftIn } = derivedSendInfo
   const tokenAddress = currencyInInfo ? currencyAddress(currencyInInfo.currency) : nftIn?.nftContract?.address
   const amount = currencyAmounts[CurrencyField.INPUT]?.quotient.toString()

@@ -1,8 +1,10 @@
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Animated } from 'react-native'
+import { useDispatch } from 'react-redux'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
+import { handleExternallySubmittedUniswapXOrder } from 'src/app/features/dappRequests/handleUniswapX'
 import { useIsDappRequestConfirming } from 'src/app/features/dappRequests/hooks'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/shared'
 import {
@@ -195,6 +197,7 @@ function DappRequestFooter({
   disableConfirm,
 }: DappRequestFooterProps): JSX.Element {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   const activeAccount = useActiveAccountWithThrow()
   const { defaultChainId } = useEnabledChains()
   const {
@@ -242,6 +245,9 @@ function DappRequestFooter({
       onConfirm()
     } else {
       await defaultOnConfirm(request)
+      if (isUniswapX) {
+        await handleExternallySubmittedUniswapXOrder(activeAccount.address, dispatch)
+      }
     }
 
     if (maybeCloseOnConfirm && shouldCloseSidebar) {

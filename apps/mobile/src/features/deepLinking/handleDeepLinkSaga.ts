@@ -8,7 +8,12 @@ import {
   isAllowedUwuLinkRequest,
   parseUwuLinkDataFromDeeplink,
 } from 'src/components/Requests/Uwulink/utils'
-import { DeepLinkAction, DeepLinkActionResult, parseDeepLinkUrl } from 'src/features/deepLinking/deepLinkUtils'
+import {
+  DeepLinkAction,
+  DeepLinkActionResult,
+  PayloadWithFiatOnRampParams,
+  parseDeepLinkUrl,
+} from 'src/features/deepLinking/deepLinkUtils'
 import { handleOffRampReturnLink } from 'src/features/deepLinking/handleOffRampReturnLinkSaga'
 import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
@@ -17,7 +22,8 @@ import { closeAllModals, openModal } from 'src/features/modals/modalSlice'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/walletConnectClient'
 import { addRequest, setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
-import { call, put, select, takeLatest } from 'typed-redux-saga'
+import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { fromUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs, UwuLinkConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
@@ -35,6 +41,7 @@ import { WidgetType } from 'uniswap/src/types/widgets'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
+import { isAndroid } from 'utilities/src/platform'
 import { ScantasticParams } from 'wallet/src/features/scantastic/types'
 import { getContractManager, getProviderManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts, selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
@@ -57,6 +64,8 @@ const TOKEN_SHARE_LINK_HASH_REGEX = RegExp(
   `^(#\/)?tokens\/([\\w\\d]*)\/(0x[a-fA-F0-9]{40}|${BACKEND_NATIVE_CHAIN_ADDRESS_STRING})$`,
 )
 const ADDRESS_SHARE_LINK_HASH_REGEX = /^(#\/)?address\/(0x[a-fA-F0-9]{40})$/
+
+export const ONRAMP_DEEPLINK_DELAY = 1500
 
 export const openDeepLink = createAction<DeepLink>('deeplink/open')
 
@@ -253,9 +262,11 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
         break
       }
       case DeepLinkAction.FiatOnRampScreen: {
-        const validUserAddress = yield* call(parseAndValidateUserAddress, deepLinkAction.data.userAddress)
-        yield* put(setAccountAsActive(validUserAddress))
-        yield* call(handleGoToFiatOnRampDeepLink)
+        if (deepLinkAction.data.userAddress) {
+          const validUserAddress = yield* call(parseAndValidateUserAddress, deepLinkAction.data.userAddress)
+          yield* put(setAccountAsActive(validUserAddress))
+        }
+        yield* call(handleGoToFiatOnRampDeepLink, deepLinkAction.data)
         break
       }
       case DeepLinkAction.TokenDetails: {
@@ -287,14 +298,24 @@ function* _sendAnalyticsEvent(deepLinkAction: DeepLinkActionResult, coldStart: b
   })
 }
 
-export function* handleGoToFiatOnRampDeepLink() {
+function* handleGoToFiatOnRampDeepLink(data: PayloadWithFiatOnRampParams) {
   const disableForKorea = getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.DisableFiatOnRampKorea))
   if (disableForKorea) {
     navigate(ModalName.KoreaCexTransferInfoModal)
   } else {
+    const { moonpayOnly, amount, moonpayCurrencyCode } = data
+
+    // Add delay to fix android onramp issue causing isSheetReady to remain false
+    yield* delay(isAndroid ? ONRAMP_DEEPLINK_DELAY : 0)
+
     yield* put(
       openModal({
         name: ModalName.FiatOnRampAggregator,
+        initialState: {
+          moonpayOnly,
+          prefilledAmount: amount,
+          moonpayCurrencyCode,
+        },
       }),
     )
   }
@@ -388,19 +409,20 @@ function* handleUwuLinkDeepLink(uri: string): Generator {
       customTypeGuard: isUwULinkAllowlistType,
     })
 
+    const activeAccount = yield* select(selectActiveAccount)
+    const isSignerAccount = activeAccount?.type === AccountType.SignerMnemonic
     const isAllowed = isAllowedUwuLinkRequest(parsedUwulinkRequest, uwuLinkAllowList)
 
-    if (!isAllowed) {
-      Alert.alert(i18n.t('walletConnect.error.uwu.title'), i18n.t('walletConnect.error.uwu.scan'), [
-        {
-          text: i18n.t('common.button.ok'),
-        },
-      ])
-      return
-    }
-
-    const activeAccount = yield* select(selectActiveAccount)
-    if (!activeAccount) {
+    if (!isAllowed || !isSignerAccount) {
+      Alert.alert(
+        i18n.t('walletConnect.error.uwu.title'),
+        !isAllowed ? i18n.t('walletConnect.error.uwu.unsupported') : i18n.t('account.wallet.viewOnly.title'),
+        [
+          {
+            text: i18n.t('common.button.ok'),
+          },
+        ],
+      )
       return
     }
 

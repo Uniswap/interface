@@ -78,4 +78,5 @@ export const OPTIMISM_CHAIN_INFO = {
     decimals: 18,
     address: '0x4200000000000000000000000000000000000006',
   },
+  tradingApiPollingIntervalMs: 200,
 } as const satisfies UniverseChainInfo

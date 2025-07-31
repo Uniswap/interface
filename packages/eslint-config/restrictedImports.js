@@ -55,6 +55,11 @@ const sharedRules = {
       message: 'Use via `useLocalizationContext` instead.',
     },
     {
+      name: 'uniswap/src/features/chains/hooks/useOrderedChainIds',
+      importNames: ['useOrderedChainIds'],
+      message: 'Use `useEnabledChains` instead, which returns the ordered chains that are currently enabled.',
+    },
+    {
       name: 'ui/src/hooks/useDeviceInsets',
       importNames: ['useDeviceInsets'],
       message: 'Use `useAppInsets` instead.'
@@ -261,23 +266,8 @@ const interfaceRules = {
     },
     {
       name: 'wagmi',
-      importNames: ['useChainId', 'useAccount'],
-      message: 'Import properly typed account data from `hooks/useAccount` instead.',
-    },
-    {
-      name: 'wagmi',
-      importNames: ['useConnect'],
-      message: 'Import wrapped useConnect util from `hooks/useConnect` instead.',
-    },
-    {
-      name: 'wagmi',
-      importNames: ['useDisconnect'],
-      message: 'Import wrapped useDisconnect util from `hooks/useDisconnect` instead.',
-    },
-    {
-      name: 'wagmi',
-      importNames: ['useBlockNumber', 'useWatchBlockNumber'],
-      message: 'Import wrapped useBlockNumber util from `hooks/useBlockNumber` instead.',
+      importNames: ['useChainId', 'useAccount', 'useConnect', 'useDisconnect', 'useBlockNumber', 'useWatchBlockNumber'],
+      message: 'Import wrapped utilities from internal hooks instead: useAccount from `hooks/useAccount`, useConnect from `hooks/useConnect`, useDisconnect from `hooks/useDisconnect`, useBlockNumber from `hooks/useBlockNumber`.',
     },
   ],
   patterns: webPlatformRules.patterns

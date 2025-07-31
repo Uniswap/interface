@@ -11,6 +11,7 @@ type ExpandoRowProps = PropsWithChildren<{
   toggle: () => void
   enableOverflow?: boolean
 }>
+
 export function ExpandoRow({ title, numItems, isExpanded, toggle, children, enableOverflow = false }: ExpandoRowProps) {
   const { t } = useTranslation()
   const titleWithFallback = title ?? t('common.hidden')
@@ -52,8 +53,12 @@ export function ExpandoRow({ title, numItems, isExpanded, toggle, children, enab
           <Button.Text color="$neutral2">{isExpanded ? t('common.hide.button') : t('common.show.button')}</Button.Text>
         </Button>
       </Flex>
-      <HeightAnimator open={isExpanded} overflow={allowOverflow ? 'visible' : 'hidden'}>
-        {children}
+      <HeightAnimator
+        open={isExpanded}
+        useInitialHeight
+        styleProps={{ overflow: allowOverflow ? 'visible' : 'hidden' }}
+      >
+        {isExpanded && children}
       </HeightAnimator>
     </>
   )

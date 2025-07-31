@@ -123,19 +123,15 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
   )
 }
 
-export function TransactionPopupContent({
-  chainId,
-  hash,
-  onClose,
-}: {
-  chainId: UniverseChainId
-  hash: string
-  onClose: () => void
-}) {
+export function TransactionPopupContent({ hash, onClose }: { hash: string; onClose: () => void }) {
   const transaction = useTransaction(hash)
+
   const { formatNumberOrString } = useLocalizationContext()
   const { data: activity } = useQuery(
-    getTransactionToActivityQueryOptions({ transaction, chainId, formatNumber: formatNumberOrString }),
+    getTransactionToActivityQueryOptions({
+      transaction,
+      formatNumber: formatNumberOrString,
+    }),
   )
 
   if (!transaction || !activity) {

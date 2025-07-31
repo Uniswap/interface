@@ -25,7 +25,16 @@ export function SettingsDropdown({ selected, items, disableDropdown, onSelect }:
     <Flex>
       <Popover open={isOpen} stayInFrame={true} onOpenChange={setIsOpen}>
         <Popover.Trigger disabled={disableDropdown}>
-          <Flex row backgroundColor="$surface3" borderRadius="$roundedFull" cursor="pointer" p="$spacing8" gap="$gap4">
+          <Flex
+            row
+            backgroundColor="$surface3"
+            borderRadius="$roundedFull"
+            cursor="pointer"
+            p="$spacing8"
+            gap="$gap4"
+            alignItems="center"
+            pl="$spacing12"
+          >
             <Text color="$neutral1" variant="buttonLabel4">
               {selected}
             </Text>

@@ -21,6 +21,7 @@ import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { QrCode, Scan } from 'ui/src/components/icons'
 import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -156,16 +157,21 @@ export function WalletConnectModal({
         setShouldFreezeCamera(true)
         try {
           const parsedUwulinkRequest: UwULinkRequest = JSON.parse(supportedURI.value)
+          const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
           const isAllowed = isAllowedUwuLinkRequest(parsedUwulinkRequest, uwuLinkContractAllowlist)
-          if (!isAllowed) {
-            Alert.alert(t('walletConnect.error.uwu.title'), t('walletConnect.error.uwu.unsupported'), [
-              {
-                text: t('common.button.ok'),
-                onPress: (): void => {
-                  setShouldFreezeCamera(false)
+          if (!isAllowed || !isSignerAccount) {
+            Alert.alert(
+              t('walletConnect.error.uwu.title'),
+              !isAllowed ? t('walletConnect.error.uwu.unsupported') : t('account.wallet.viewOnly.title'),
+              [
+                {
+                  text: t('common.button.ok'),
+                  onPress: (): void => {
+                    setShouldFreezeCamera(false)
+                  },
                 },
-              },
-            ])
+              ],
+            )
             return
           }
 
@@ -289,7 +295,11 @@ export function WalletConnectModal({
             onPress={onPressBottomToggle}
           >
             <Flex row alignItems="center" gap="$spacing12">
-              {isScanningQr ? <QrCode color="$neutral1" size="$icon.24" /> : <Scan color="$neutral1" size="$icon.24" />}
+              {isScanningQr ? (
+                <QrCode color={colors.neutral1.val} size="$icon.24" />
+              ) : (
+                <Scan color={colors.neutral1.val} size="$icon.24" />
+              )}
               <Text color={colors.neutral1.val} variant="buttonLabel2">
                 {isScanningQr ? t('qrScanner.recipient.action.show') : t('qrScanner.recipient.action.scan')}
               </Text>

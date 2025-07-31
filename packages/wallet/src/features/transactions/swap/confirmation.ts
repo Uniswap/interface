@@ -1,12 +1,12 @@
 import { SagaGenerator, take } from 'typed-redux-saga'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { getDelegationService } from 'uniswap/src/domains/services'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { PermitMethod, SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { getDelegationService } from 'wallet/src/features/smartWallet/delegation'
 
 /** Returns success condition after the transactions corresponding to the given hash finalizes. */
 export function* waitForTransactionConfirmation(params: { hash: string }): SagaGenerator<{ success: boolean }> {

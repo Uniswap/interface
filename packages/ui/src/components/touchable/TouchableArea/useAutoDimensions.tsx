@@ -39,14 +39,16 @@ export function useAutoDimensions({
   const onLayout = useCallback(
     (event: LayoutChangeEvent) => {
       onLayoutParam?.(event)
+
+      if (!shouldConsiderMinimumDimensions) {
+        return
+      }
+
       // Get the dimensions of the component
       const { width: layoutWidth, height: layoutHeight } = event.nativeEvent.layout
 
       const width = Math.round(layoutWidth)
       const height = Math.round(layoutHeight)
-      if (!shouldConsiderMinimumDimensions) {
-        return
-      }
 
       // Determine if dimensions need to be set or cleared
       const maybeNewWidth = width <= DEFAULT_MIN_WIDTH ? DEFAULT_MIN_WIDTH : undefined

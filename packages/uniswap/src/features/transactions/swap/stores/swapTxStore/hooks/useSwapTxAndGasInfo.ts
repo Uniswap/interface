@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
-import type { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { useTokenApprovalInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import { getUniswapXSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/uniswapx/utils'
 import {
@@ -13,6 +12,7 @@ import {
 import { useTransactionRequestInfo } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/hooks/useTransactionRequestInfo'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export function useSwapTxAndGasInfo({
@@ -20,7 +20,7 @@ export function useSwapTxAndGasInfo({
   account,
 }: {
   derivedSwapInfo: DerivedSwapInfo
-  account?: AccountMeta
+  account?: AccountDetails
 }): SwapTxAndGasInfo {
   const {
     chainId,
