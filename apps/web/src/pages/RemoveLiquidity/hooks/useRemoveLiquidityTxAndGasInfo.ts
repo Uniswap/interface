@@ -103,8 +103,8 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
       expectedTokenOwed0RawAmount: positionInfo.version !== ProtocolVersion.V4 ? token0UncollectedFees : undefined,
       expectedTokenOwed1RawAmount: positionInfo.version !== ProtocolVersion.V4 ? token1UncollectedFees : undefined,
       position: {
-        tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,
-        tickUpper: positionInfo.tickUpper ? Number(positionInfo.tickUpper) : undefined,
+        tickLower: positionInfo.tickLower !== undefined ? positionInfo.tickLower : undefined,
+        tickUpper: positionInfo.tickUpper !== undefined ? positionInfo.tickUpper : undefined,
         pool: {
           token0: getTokenOrZeroAddress(currency0),
           token1: getTokenOrZeroAddress(currency1),

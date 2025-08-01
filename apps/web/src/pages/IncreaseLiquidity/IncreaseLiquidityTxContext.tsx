@@ -194,8 +194,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       independentToken,
       defaultDependentAmount: positionInfo.version === ProtocolVersion.V2 ? dependentAmount : undefined,
       position: {
-        tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,
-        tickUpper: positionInfo.tickUpper ? Number(positionInfo.tickUpper) : undefined,
+        tickLower: positionInfo.tickLower !== undefined ? positionInfo.tickLower : undefined,
+        tickUpper: positionInfo.tickUpper !== undefined ? positionInfo.tickUpper : undefined,
         pool: {
           token0: token0.isNative ? ZERO_ADDRESS : token0.address,
           token1: token1.isNative ? ZERO_ADDRESS : token1.address,
