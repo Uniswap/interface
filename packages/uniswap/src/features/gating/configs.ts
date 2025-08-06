@@ -9,6 +9,7 @@ export enum DynamicConfigs {
   Swap = 'swap_config',
   NetworkRequests = 'network_requests',
   Chains = 'chains',
+  SyncTransactionSubmissionChainIds = 'sync_transaction_submission_chain_ids',
 
   // Wallet
   HomeScreenExploreTokens = 'home_screen_explore_tokens',
@@ -20,7 +21,6 @@ export enum DynamicConfigs {
   DatadogIgnoredErrors = 'datadog_ignored_errors',
   EmbeddedWalletConfig = 'embedded_wallet_config',
   ExtensionBiometricUnlock = 'extension_biometric_unlock_config',
-  SyncTransactionSubmissionChainIds = 'sync_transaction_submission_chain_ids',
 
   // Web
   AstroChain = 'astro_chain',

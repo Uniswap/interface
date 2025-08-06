@@ -5,9 +5,9 @@ import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { RotatableChevron, Verified } from 'ui/src/components/icons'
 import { iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
 import { Currency, NftItemScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
-import { NFTItem } from 'wallet/src/features/nfts/types'
+import { NFTItem } from 'uniswap/src/features/nfts/types'
 
 type Collection = NonNullable<
   NonNullable<NonNullable<NftItemScreenQuery['nftAssets']>>['edges'][0]

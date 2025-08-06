@@ -6,11 +6,8 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import {
-  makeSelectTransaction,
-  selectTransactions,
-  useSelectAddressTransactions,
-} from 'uniswap/src/features/transactions/selectors'
+import { useSelectTransaction } from 'uniswap/src/features/transactions/hooks/useSelectTransaction'
+import { selectTransactions, useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -31,7 +28,6 @@ import {
   createWrapFormFromTxDetails,
 } from 'wallet/src/features/transactions/swap/createSwapFormFromTxDetails'
 import { useActiveAccount, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { WalletState } from 'wallet/src/state/walletReducer'
 
 type HashToTxMap = Map<string, TransactionDetails>
 
@@ -100,19 +96,6 @@ export function useSortedPendingTransactions(address: Address | null): Transacti
     }
     return transactions.sort((a: TransactionDetails, b: TransactionDetails) => a.addedTime - b.addedTime)
   }, [transactions])
-}
-
-export function useSelectTransaction({
-  address,
-  chainId,
-  txId,
-}: {
-  address?: Address
-  chainId?: UniverseChainId
-  txId?: string
-}): TransactionDetails | undefined {
-  const selectTransaction = useMemo(makeSelectTransaction, [])
-  return useSelector((state: WalletState) => selectTransaction(state, { address, chainId, txId }))
 }
 
 export function useCreateSwapFormState({

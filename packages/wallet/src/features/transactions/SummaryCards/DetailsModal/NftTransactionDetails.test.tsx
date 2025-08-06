@@ -36,7 +36,7 @@ const mockTransaction = {
 } as TransactionDetails
 
 // Mock the ImageUri component
-jest.mock('wallet/src/features/images/ImageUri', () => ({
+jest.mock('uniswap/src/components/nfts/images/ImageUri', () => ({
   ImageUri: jest.fn(() => null),
 }))
 

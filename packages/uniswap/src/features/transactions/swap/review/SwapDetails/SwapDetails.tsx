@@ -11,11 +11,12 @@ import type {
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/components/AcrossRoutingInfo'
-import { EstimatedTime } from 'uniswap/src/features/transactions/swap/components/EstimatedTime'
+import { EstimatedBridgeTime } from 'uniswap/src/features/transactions/swap/components/EstimatedBridgeTime'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/MaxSlippageRow'
 import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/PriceImpactRow'
 import { RoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/components/SwapRateRatio'
+import { useIsUnichainFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import { AcceptNewQuoteRow } from 'uniswap/src/features/transactions/swap/review/SwapDetails/AcceptNewQuoteRow'
@@ -75,6 +76,8 @@ export function SwapDetails({
 
   const swapFeeUsd = getSwapFeeUsdFromDerivedSwapInfo(derivedSwapInfo)
 
+  const showUnichainPoweredMessage = useIsUnichainFlashblocksEnabled(derivedSwapInfo.chainId)
+
   if (!trade) {
     throw new Error('Invalid render of `SwapDetails` with no `trade`')
   }
@@ -117,6 +120,7 @@ export function SwapDetails({
         indicative={acceptedTrade.indicative}
         outputCurrency={acceptedTrade.outputAmount.currency}
         showExpandedChildren={!!customSlippageTolerance}
+        showNetworkLogo={!showUnichainPoweredMessage}
         showWarning={warning && !newTradeRequiresAcceptance}
         transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
         uniswapXGasBreakdown={uniswapXGasBreakdown}
@@ -134,7 +138,7 @@ export function SwapDetails({
           </Text>
           <SwapRateRatio trade={trade} derivedSwapInfo={acceptedDerivedSwapInfo} justifyContent="flex-end" />
         </Flex>
-        {isBridgeTrade && <EstimatedTime visibleIfLong={false} timeMs={estimatedBridgingTime} />}
+        {isBridgeTrade && <EstimatedBridgeTime visibleIfLong={false} timeMs={estimatedBridgingTime} />}
         {isBridgeTrade && <AcrossRoutingInfo />}
         {isBridgeTrade === false && (
           <MaxSlippageRow

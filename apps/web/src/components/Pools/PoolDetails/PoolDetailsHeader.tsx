@@ -119,12 +119,7 @@ const PoolDetailsTitle = ({
         </StyledLink>
       </Flex>
       <Flex row gap="$spacing2">
-        <LiquidityPositionInfoBadges
-          versionLabel={protocolVersion?.toLowerCase()}
-          v4hook={hookAddress}
-          feeTier={feeTier}
-          size="default"
-        />
+        <LiquidityPositionInfoBadges version={protocolVersion} v4hook={hookAddress} feeTier={feeTier} size="default" />
       </Flex>
       <TouchableArea
         hoverable

@@ -1795,7 +1795,7 @@
   "swap.approveInWallet": "Genehmigen Sie in Ihrer Brieftasche",
   "swap.balance.amount": "Guthaben: {{amount}}",
   "swap.bestRoute.cost": "Die Netzwerkkosten für die effizienteste Route betragen schätzungsweise{{gasPrice}} . ",
-  "swap.bridging.estimatedTime": "Geschätzte Zeit",
+  "swap.details.estimatedTime": "Geschätzte Zeit",
   "swap.bridging.title": "Netzwerkübergreifendes Swapping",
   "swap.bridging.warning.description": "Sie wechseln von {{fromNetwork}} zu {{toNetwork}}. Dies wird auch als „Bridging“ bezeichnet und verschiebt Ihre Token von einem Netzwerk in ein anderes.",
   "swap.button.max": "Max",

@@ -35,12 +35,14 @@ import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
 import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
+import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import {
   SwapTransactionStep,
   SwapTransactionStepAsync,
   SwapTransactionStepBatched,
 } from 'uniswap/src/features/transactions/swap/steps/swap'
+import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import {
   SetCurrentStepFn,
   SwapCallback,
@@ -72,16 +74,10 @@ interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'i
   signature?: string
   trade: ClassicTrade | BridgeTrade
   analytics: SwapTradeBaseProperties
-}
-
-interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
-  step: SwapTransactionStep | SwapTransactionStepAsync
-  signature?: string
-  trade: ClassicTrade | BridgeTrade
-  analytics: SwapTradeBaseProperties
+  onTransactionHash?: (hash: string) => void
 }
 function* handleSwapTransactionStep(params: HandleSwapStepParams) {
-  const { trade, step, signature, analytics } = params
+  const { trade, step, signature, analytics, onTransactionHash } = params
 
   const info = getSwapTransactionInfo(trade)
   const txRequest = yield* call(getSwapTxRequest, step, signature)
@@ -108,7 +104,14 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
 
   handleSwapTransactionAnalytics({ ...params, hash })
 
-  popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash)
+  if (!getIsFlashblocksEnabled(trade.inputAmount.currency.chainId)) {
+    popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash)
+  }
+
+  // Update swap form store with actual transaction hash
+  if (onTransactionHash) {
+    onTransactionHash(hash)
+  }
 
   return
 }
@@ -195,6 +198,7 @@ type SwapParams = {
   disableOneClickSwap: () => void
   onSuccess: () => void
   onFailure: (error?: Error, onPressRetry?: () => void) => void
+  onTransactionHash?: (hash: string) => void
   v4Enabled: boolean
 }
 
@@ -270,7 +274,15 @@ function* classicSwap(
         }
         case TransactionStepType.SwapTransaction:
         case TransactionStepType.SwapTransactionAsync: {
-          yield* call(handleSwapTransactionStep, { account, signature, step, setCurrentStep, trade, analytics })
+          yield* call(handleSwapTransactionStep, {
+            account,
+            signature,
+            step,
+            setCurrentStep,
+            trade,
+            analytics,
+            onTransactionHash: params.onTransactionHash,
+          })
           break
         }
         case TransactionStepType.SwapTransactionBatched: {
@@ -360,6 +372,7 @@ export function useSwapCallback(): SwapCallback {
   const startChainId = connectedAccount.chainId
   const v4SwapEnabled = useV4SwapEnabled(startChainId)
   const trace = useTrace()
+  const updateSwapForm = useSwapFormStore((s) => s.updateSwapForm)
 
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
@@ -420,6 +433,9 @@ export function useSwapCallback(): SwapCallback {
         selectChain,
         startChainId,
         v4Enabled: v4SwapEnabled,
+        onTransactionHash: (hash: string): void => {
+          updateSwapForm({ txHash: hash, txHashReceivedTime: Date.now() })
+        },
       }
       appDispatch(swapSaga.actions.trigger(swapParams))
 
@@ -452,6 +468,7 @@ export function useSwapCallback(): SwapCallback {
       disableOneClickSwap,
       wallet.evmAccount,
       wallet.svmAccount,
+      updateSwapForm,
     ],
   )
 }

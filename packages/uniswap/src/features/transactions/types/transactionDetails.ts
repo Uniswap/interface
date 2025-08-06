@@ -57,6 +57,8 @@ export interface InterfaceTransactionExtensions {
   cancelled?: boolean
   /** Confirmation timestamp */
   confirmedTime?: number
+  /** Used to track if this transaction was a flashblock transaction within the instant threshold */
+  isFlashblockTxWithinThreshold?: boolean
 }
 
 export interface WalletTransactionExtensions {

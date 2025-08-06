@@ -1,18 +1,21 @@
-import { useCallback, useRef } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button, Flex, ModalCloseIcon, Text, useExtractedTokenColor } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { UnichainPoweredMessage } from 'uniswap/src/features/transactions/TransactionDetails/UnichainPoweredMessage'
 import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { AnimatedTokenFlip } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/AnimatedTokenFlip'
 import { GradientContainer } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/GradientContainer'
-import { StyledTokenLogo } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/StyledTokenLogo'
 import { useActualCompletionTime } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/hooks/useActualCompletionTime'
 import { useActualSwapOutput } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/hooks/useActualSwapOutput'
 import { useBackgroundColor } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/hooks/useBackgroundColor'
+import { useClearFlashblocksSwapNotifications } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/hooks/useClearFlashblocksSwapNotifications'
+import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { isInterface, isWeb } from 'utilities/src/platform'
 
@@ -20,6 +23,9 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
   const { t } = useTranslation()
 
   const { outputCurrencyInfo, lastSwapOutputBalance } = useActualSwapOutput()
+
+  // Get currency info from the swap dependencies store
+  const inputCurrencyInfo = useSwapDependenciesStore((s) => s.derivedSwapInfo.currencies.input)
 
   const backgroundColor = useBackgroundColor()
   const { tokenColor } = useExtractedTokenColor({
@@ -31,37 +37,33 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
 
   const { setScreen, onClose, screen } = useTransactionModalContext()
 
-  const confirmTimeSeconds = useActualCompletionTime({
-    outputCurrencyInfo,
-  })
+  // Clear swap-related notifications when the instant balance screen is active
+  useClearFlashblocksSwapNotifications(screen === TransactionScreen.UnichainInstantBalance)
+
+  const confirmTimeSeconds = useActualCompletionTime()
 
   const updateSwapForm = useSwapFormStore((s) => s.updateSwapForm)
-  const isHandleCloseCalledRef = useRef(false)
   const handleClose = useCallback(() => {
-    if (isHandleCloseCalledRef.current) {
-      return
-    }
-    isHandleCloseCalledRef.current = true
     updateSwapForm({
-      preSwapDataPreserved: undefined,
-      postSwapDataPreserved: undefined,
       exactAmountFiat: undefined,
       exactAmountToken: '',
       isSubmitting: false,
       showPendingUI: false,
       isConfirmed: false,
-      preSwapNativeAssetAmountRaw: undefined,
+      instantOutputAmountRaw: undefined,
+      instantReceiptFetchTime: undefined,
+      txHash: undefined,
+      txHashReceivedTime: undefined,
     })
 
     // Close the entire swap flow
     if (isWeb) {
       setScreen(TransactionScreen.Form)
-    } else {
-      onClose()
     }
+    onClose()
   }, [onClose, updateSwapForm, setScreen])
 
-  const isModalOpen = outputCurrencyInfo && lastSwapOutputBalance && confirmTimeSeconds
+  const isModalOpen = inputCurrencyInfo && outputCurrencyInfo && lastSwapOutputBalance && confirmTimeSeconds
 
   if (!isModalOpen) {
     return null
@@ -69,7 +71,6 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
 
   return (
     <Modal
-      height="auto"
       // currency null guard ensures this is only shown when a Unichain swap is completed
       isModalOpen={screen === TransactionScreen.UnichainInstantBalance}
       name={ModalName.UnichainInstantBalanceModal}
@@ -79,64 +80,48 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
       onClose={handleClose}
     >
       <GradientContainer tokenBackground={tokenColor ?? backgroundColor}>
-        <Flex gap="$spacing28" alignItems="center" p="$spacing24">
+        <Flex alignItems="center" p="$padding8" pt="$padding12">
           {/* TOP-RIGHT CLOSE BUTTON */}
           {isWeb && (
-            <Flex width="100%" height="$spacing32" flexDirection="row-reverse">
+            <Flex width="100%" flexDirection="row-reverse" px="$padding12" pt="$padding20">
               <ModalCloseIcon onClose={handleClose} />
             </Flex>
           )}
 
-          {/* TOKEN LOGO */}
-          <StyledTokenLogo currencyInfo={outputCurrencyInfo} size={80} />
+          <Flex width="100%" p="$spacing24" content="center" alignItems="center">
+            {/* TOKEN LOGO */}
+            <AnimatedTokenFlip
+              size={80}
+              inputCurrencyInfo={inputCurrencyInfo}
+              outputCurrencyInfo={outputCurrencyInfo}
+            />
 
-          {/* TEXT CONTENT */}
-          <Flex gap="$gap8" alignItems="center">
-            <Text variant="subheading1" color="$neutral1">
-              {t('swap.details.completed')}
-            </Text>
-            <Text variant="heading2" color="$neutral1">
-              {`${lastSwapOutputBalance} ${outputCurrencyInfo.currency.symbol}`}
-            </Text>
-            <Text variant="body3" color="$neutral2" textAlign="center">
-              {confirmTimeSeconds === 0.2 ? (
-                <Trans
-                  i18nKey="swap.details.completedIn.withFasterThan"
-                  values={{ percent: 90 }}
-                  components={{
-                    time: (
-                      <Text variant="body3" color="$neutral1">
-                        {t('common.time.past.seconds.short', { seconds: confirmTimeSeconds })}
-                      </Text>
-                    ),
-                  }}
-                />
-              ) : (
-                <Trans
-                  i18nKey="swap.details.completedIn"
-                  components={{
-                    time: (
-                      <Text variant="body3" color="$neutral1">
-                        {t('common.time.past.seconds.short', { seconds: confirmTimeSeconds })}
-                      </Text>
-                    ),
-                  }}
-                />
-              )}
-            </Text>
+            {/* TEXT CONTENT */}
+            <Flex
+              gap="$gap8"
+              alignItems="center"
+              animation="200msDelayed200ms"
+              enterStyle={{
+                opacity: 0,
+                y: 20,
+              }}
+            >
+              <Text variant="subheading1" color="$neutral1">
+                {t('swap.details.completed')}
+              </Text>
+              <Text variant="heading2" color="$neutral1">
+                {`${lastSwapOutputBalance} ${outputCurrencyInfo.currency.symbol}`}
+              </Text>
+              <UnichainPoweredMessage swappedInTime={confirmTimeSeconds} />
+            </Flex>
           </Flex>
 
           {/* PRIMARY CLOSE BUTTON */}
-          <Button
-            p="$padding16"
-            emphasis="tertiary"
-            size="large"
-            borderColor="$surface3"
-            minHeight={56}
-            onPress={handleClose}
-          >
-            {t('common.button.close')}
-          </Button>
+          <Flex row width="100%" px={isWeb ? '$none' : '$gap16'} mb={isWeb ? '$none' : '$gap16'}>
+            <Button emphasis="tertiary" size="large" borderColor="$surface3" onPress={handleClose}>
+              {t('common.button.close')}
+            </Button>
+          </Flex>
         </Flex>
       </GradientContainer>
     </Modal>

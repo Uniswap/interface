@@ -68,6 +68,9 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const [modalState, setModalState] = useAtom(miniPortfolioModalStateAtom)
 
   const isUniExtensionConnected = useIsUniExtensionConnected()
+  const isExtensionDeeplinkingDisabled = useFeatureFlag(FeatureFlags.DisableExtensionDeeplinks)
+  const shouldShowExtensionDeeplinks = isUniExtensionConnected && !isExtensionDeeplinkingDisabled
+
   const { isTestnetModeEnabled } = useEnabledChains()
   const connectedAccount = useAccount()
   const connectedWithEmbeddedWallet =
@@ -206,7 +209,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           {shouldShowDelegationMismatch && (
             <LimitedSupportBanner onPress={() => setDisplayDelegationMismatchModal(true)} />
           )}
-          {isUniExtensionConnected ? (
+          {shouldShowExtensionDeeplinks ? (
             <ExtensionDeeplinks account={account} />
           ) : (
             <>

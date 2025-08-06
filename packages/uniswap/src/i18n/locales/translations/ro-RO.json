@@ -1795,7 +1795,7 @@
   "swap.approveInWallet": "Aprobați în portofel",
   "swap.balance.amount": "Sold: {{amount}}",
   "swap.bestRoute.cost": "Se estimează că cea mai eficientă rută costă ~{{gasPrice}} în costuri de rețea. ",
-  "swap.bridging.estimatedTime": "EST. timp",
+  "swap.details.estimatedTime": "EST. timp",
   "swap.bridging.title": "Schimbarea între rețele",
   "swap.bridging.warning.description": "Schimbați de la {{fromNetwork}} la {{toNetwork}}. Acest lucru este cunoscut și sub denumirea de „punte”, care vă mută jetoanele de la o rețea la alta.",
   "swap.button.max": "Max",

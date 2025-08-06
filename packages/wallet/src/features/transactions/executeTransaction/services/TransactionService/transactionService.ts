@@ -20,6 +20,7 @@ export interface PrepareTransactionParams {
 }
 
 export interface SubmitTransactionParams {
+  txId?: string
   chainId: UniverseChainId
   account: SignerMnemonicAccountMeta
   request: SignedTransactionRequest

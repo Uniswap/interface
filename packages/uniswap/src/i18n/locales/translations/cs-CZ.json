@@ -1795,7 +1795,7 @@
   "swap.approveInWallet": "Schválit v peněžence",
   "swap.balance.amount": "Zůstatek: {{amount}}",
   "swap.bestRoute.cost": "Odhaduje se, že nejúčinnější trasa stojí ~{{gasPrice}} nákladů na síť. ",
-  "swap.bridging.estimatedTime": "Odhad. čas",
+  "swap.details.estimatedTime": "Odhad. čas",
   "swap.bridging.title": "Výměna napříč sítěmi",
   "swap.bridging.warning.description": "Přepínáte z {{fromNetwork}} na {{toNetwork}}. Toto je také známé jako \"přemostění\", které přesune vaše tokeny z jedné sítě do druhé.",
   "swap.button.max": "Max",

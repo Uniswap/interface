@@ -39,6 +39,7 @@ export interface SwapTransactionData {
   transactedUSDValue?: number
   includesDelegation?: boolean
   isSmartWalletTransaction?: boolean
+  txId?: string
 }
 
 export interface WrapTransactionData {
@@ -72,6 +73,7 @@ interface SubmitTransactionParamsInput {
   request: SignedTransactionRequest
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
+  txId?: string
 }
 
 /**
@@ -96,8 +98,10 @@ export function createTransactionParamsFactory(context: BaseTransactionContext):
     request,
     options,
     typeInfo,
+    txId,
   }: SubmitTransactionParamsInput): SubmitTransactionParams {
     return {
+      txId,
       chainId: context.chainId,
       account: context.account,
       request,
@@ -128,6 +132,7 @@ export function createTransactionParamsFactory(context: BaseTransactionContext):
       request: data.signedTx,
       options,
       typeInfo,
+      txId: data.txId,
     })
   }
 
@@ -172,6 +177,7 @@ export function createTransactionParamsFactory(context: BaseTransactionContext):
       request: signedTx,
       options,
       typeInfo,
+      txId: data.txId,
     })
   }
 

@@ -1,20 +1,19 @@
 import isEqual from 'lodash/isEqual'
 import { Fragment, PropsWithChildren, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { View } from 'react-native'
+import { NativeSyntheticEvent, View } from 'react-native'
 import { AnimatePresence, Flex, Portal, Separator, TouchableArea, useWindowDimensions } from 'ui/src'
 import { DropdownMenuSheetItem } from 'ui/src/components/dropdownMenuSheet/DropdownMenuSheetItem'
-import { zIndexes } from 'ui/src/theme'
+import { spacing, zIndexes } from 'ui/src/theme'
 import { ContextMenuProps } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { logger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
+
+const MIN_CONTEXT_MENU_WIDTH = 205
 
 // used for positioning
-const CONTEXT_MENU_WIDTH = 205
-const MIN_MENU_PADDING = 15
-const MENU_OPTION_HEIGHT = 40
-const MENU_OPTION_GAP = 4
-const MENU_PADDING = 8
+const MIN_MENU_PADDING = spacing.spacing16
 
 // used for animation
 const ANIMATION_START_POINT = 10
@@ -42,6 +41,8 @@ export function ContextMenu({
   openMenu,
 }: PropsWithChildren<ContextMenuProps>): JSX.Element {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions()
+  const maxUsableWidth = screenWidth - MIN_MENU_PADDING
+  const maxMenuWidth = maxUsableWidth * 0.8 // Design spec: max width should be 80% of usable screen space
 
   const [isAboveTrigger, setIsAboveTrigger] = useState(isPlacementAbove)
 
@@ -50,7 +51,8 @@ export function ContextMenu({
 
   const { hapticFeedback } = useHapticFeedback()
 
-  // used to control the visibility of the menu to allow for position calculations to complete before rendering
+  // Menu measurement and visibility states
+  const [measuredMenuDimensions, setMeasuredMenuDimensions] = useState<{ width: number; height: number } | null>(null)
   const [isMenuVisible, setIsMenuVisible] = useState(false)
 
   const handleMenuClose = useCallback(() => {
@@ -58,47 +60,48 @@ export function ContextMenu({
     closeMenu()
     setTimeout(() => {
       setIsMenuVisible(false)
+      setMeasuredMenuDimensions(null) // Reset dimensions for next open
     }, ANIMATION_TIME)
-  }, [closeMenu, setIsMenuVisible])
+  }, [closeMenu])
 
   const [position, setPosition] = useState<{
     left: number | undefined
     top: number | undefined
   }>({ left: 0, top: 0 })
 
+  // Handle menu layout measurement
+  const handleMenuLayout = useEvent((event: NativeSyntheticEvent<{ layout: { width: number; height: number } }>) => {
+    const { width, height } = event.nativeEvent.layout
+    setMeasuredMenuDimensions({ width, height })
+  })
+
   const recalculateMenuPosition = useCallback((): void => {
-    if (isOpen && triggerRef.current) {
+    if (isOpen && triggerRef.current && measuredMenuDimensions) {
       // eslint-disable-next-line max-params
       triggerRef.current.measure((_fx, _fy, triggerWidth, triggerHeight, triggerX, triggerY) => {
-        const maxUsableWidth = screenWidth - MIN_MENU_PADDING
-
         const getLeft = (): number => {
           const left: number = isPlacementRight
             ? triggerX + triggerWidth + offsetX // align *left* edge of menu to *right* edge of trigger
-            : triggerX + triggerWidth - offsetX - CONTEXT_MENU_WIDTH // align *right* edge of menu to *right* edge of trigger
+            : triggerX + triggerWidth - offsetX - measuredMenuDimensions.width // align *right* edge of menu to *right* edge of trigger
 
           // if menu overflows too far off the screen, clamp to edge of screen +/- MIN_MENU_PADDING
-          if (left > maxUsableWidth - CONTEXT_MENU_WIDTH) {
-            return maxUsableWidth - CONTEXT_MENU_WIDTH
+          if (left > maxUsableWidth - measuredMenuDimensions.width) {
+            return maxUsableWidth - measuredMenuDimensions.width
           } else if (left < MIN_MENU_PADDING) {
             return MIN_MENU_PADDING
           }
           return left
         }
 
-        // lazy eval to avoid unnecessary calculations
-        const estimatedMenuHeight =
-          menuItems.length * MENU_OPTION_HEIGHT + MENU_OPTION_GAP * (menuItems.length - 1) + MENU_PADDING * 2
-
         const getTop = (): number => {
-          const aboveTriggerY: number = triggerY - estimatedMenuHeight - offsetY
+          const aboveTriggerY: number = triggerY - measuredMenuDimensions.height - offsetY
           const belowTriggerY: number = triggerY + triggerHeight + offsetY
 
           if (aboveTriggerY < MIN_MENU_PADDING) {
             // if the menu overflows too far up off the screen, display below trigger
             setIsAboveTrigger(false)
             return belowTriggerY
-          } else if (belowTriggerY + estimatedMenuHeight > screenHeight - MIN_MENU_PADDING) {
+          } else if (belowTriggerY + measuredMenuDimensions.height > screenHeight - MIN_MENU_PADDING) {
             // if the menu overflows too far down off the screen, display above trigger
             setIsAboveTrigger(true)
             return aboveTriggerY
@@ -108,6 +111,7 @@ export function ContextMenu({
             return belowTriggerY
           }
         }
+
         const left = getLeft()
         const top = getTop()
         setPosition((prev) => {
@@ -124,14 +128,28 @@ export function ContextMenu({
           return updated
         })
 
-        setIsMenuVisible(true)
+        // Show menu after position is calculated
+        setTimeout(() => {
+          setIsMenuVisible(true)
+        }, 0)
       })
     }
-  }, [isOpen, screenWidth, menuItems.length, isPlacementRight, offsetX, offsetY, isPlacementAbove, screenHeight])
+  }, [
+    isOpen,
+    isPlacementRight,
+    offsetX,
+    maxUsableWidth,
+    offsetY,
+    screenHeight,
+    isPlacementAbove,
+    measuredMenuDimensions,
+  ])
 
   useLayoutEffect(() => {
-    recalculateMenuPosition()
-  }, [recalculateMenuPosition])
+    if (measuredMenuDimensions) {
+      recalculateMenuPosition()
+    }
+  }, [recalculateMenuPosition, measuredMenuDimensions])
 
   const menuSheetItems = useMemo(() => {
     return menuItems.map(
@@ -147,7 +165,7 @@ export function ContextMenu({
             label={label}
             textColor={textColor}
             icon={Icon && <Icon size="$icon.24" color={iconColor} />}
-            height={MENU_OPTION_HEIGHT}
+            height={spacing.spacing40}
             disabled={itemDisabled}
             closeDelay={(closeDelay ?? 0) + ANIMATION_TIME}
             handleCloseMenu={() => {
@@ -170,6 +188,28 @@ export function ContextMenu({
       ),
     )
   }, [closeMenu, menuItems, onPressAny])
+
+  // Render the menu content component
+  const MenuContent = useCallback(
+    () => (
+      <Flex
+        backgroundColor="$surface1"
+        p="$spacing8"
+        borderRadius="$rounded20"
+        borderColor="$surface3"
+        borderWidth="$spacing1"
+        gap="$spacing4"
+        alignItems="flex-start"
+        minWidth={MIN_CONTEXT_MENU_WIDTH}
+        maxWidth={maxMenuWidth}
+        shadowRadius="$spacing4"
+        shadowColor="$shadowColor"
+      >
+        {menuSheetItems}
+      </Flex>
+    ),
+    [maxMenuWidth, menuSheetItems],
+  )
 
   // the idea is that we cover the whole screen with a transparent area that closes the menu when pressed
   // and we have a child on top of that that is the actual menu
@@ -195,8 +235,22 @@ export function ContextMenu({
           zIndex={zIndexes.overlay}
           onPress={handleMenuClose}
         >
+          {/* Hidden pre-render for measurement */}
+          {!measuredMenuDimensions && (
+            <Flex
+              position="absolute"
+              top={-9999} // Render off-screen
+              left={-9999}
+              opacity={0}
+              onLayout={handleMenuLayout}
+            >
+              <MenuContent />
+            </Flex>
+          )}
+
+          {/* Visible menu */}
           <AnimatePresence>
-            {isMenuVisible && (
+            {isMenuVisible && measuredMenuDimensions && (
               <Flex
                 justifyContent="flex-start"
                 alignItems="flex-start"
@@ -214,20 +268,7 @@ export function ContextMenu({
                   y: isAboveTrigger ? ANIMATION_START_POINT : -ANIMATION_START_POINT,
                 }}
               >
-                <Flex
-                  backgroundColor="$surface1"
-                  p={MENU_PADDING}
-                  borderRadius="$rounded20"
-                  borderColor="$surface3"
-                  borderWidth="$spacing1"
-                  gap={MENU_OPTION_GAP}
-                  alignItems="flex-start"
-                  width={CONTEXT_MENU_WIDTH}
-                  shadowRadius="$spacing4"
-                  shadowColor="$shadowColor"
-                >
-                  {menuSheetItems}
-                </Flex>
+                <MenuContent />
               </Flex>
             )}
           </AnimatePresence>

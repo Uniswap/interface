@@ -1,8 +1,8 @@
 import { Flex, TouchableArea } from 'ui/src'
+import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
+import { ESTIMATED_NFT_LIST_ITEM_SIZE, MAX_NFT_IMAGE_SIZE } from 'uniswap/src/features/nfts/constants'
 import noop from 'utilities/src/react/noop'
 import { NftViewProps } from 'wallet/src/components/nfts/NftViewProps'
-import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
-import { ESTIMATED_NFT_LIST_ITEM_SIZE, MAX_NFT_IMAGE_SIZE } from 'wallet/src/features/nfts/constants'
 
 // WALL-4875 TODO try to combine web and mobile versions
 export function NftView({ item, onPress, index }: NftViewProps): JSX.Element {

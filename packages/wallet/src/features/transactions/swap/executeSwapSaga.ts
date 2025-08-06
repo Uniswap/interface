@@ -7,6 +7,8 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
+import { FLASHBLOCKS_UI_SKIP_ROUTES } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
+import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import {
   SwapGasFeeEstimation,
   ValidatedSwapTxContext,
@@ -310,6 +312,7 @@ export function createExecuteSwapSaga(
           transactedUSDValue,
           includesDelegation: swapTxContext.includesDelegation,
           isSmartWalletTransaction: preSignedTransaction.signedSwapTx.request.to === account.address,
+          txId,
         }
 
         const swapParams = factory.createSwapParams(swapData)
@@ -318,7 +321,12 @@ export function createExecuteSwapSaga(
           params: swapParams,
         }
 
-        yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
+        if (
+          !getIsFlashblocksEnabled(chainId) ||
+          FLASHBLOCKS_UI_SKIP_ROUTES.includes(preSignedTransaction.swapTxContext.routing)
+        ) {
+          yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
+        }
 
         swapResult = yield* executeTransactionStep({
           executor,

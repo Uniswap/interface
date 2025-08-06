@@ -74,6 +74,7 @@ export const ModalName = {
   FundWallet: 'fund-wallet',
   GetTheApp: 'get-the-app',
   GettingStartedModal: 'getting-started-modal',
+  Help: 'help-modal',
   HiddenNFTInfoModal: 'hidden-nft-info-modal',
   HiddenTokenInfoModal: 'hidden-token-info-modal',
   Hook: 'hook',

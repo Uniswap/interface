@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { IndicativeLoadingWrapper } from 'uniswap/src/components/misc/IndicativeLoadingWrapper'
@@ -23,6 +24,14 @@ export function SwapFee({
   const formatter = useLocalizationContext()
   const { convertFiatAmountFormatted, formatPercent, formatNumberOrString } = formatter
 
+  // Track the last valid (non-loading) swapFee
+  const lastValidSwapFee = useRef<SwapFeeType | undefined>(undefined)
+
+  // Update the last valid swapFee when not loading
+  if (!loading) {
+    lastValidSwapFee.current = swapFee
+  }
+
   const formattedAmountFiat =
     swapFeeUsd && !isNaN(swapFeeUsd) ? convertFiatAmountFormatted(swapFeeUsd, NumberType.FiatGasPrice) : undefined
 
@@ -36,6 +45,11 @@ export function SwapFee({
         formattedAmountFiat,
       }
     : undefined
+
+  // If we're loading and the last valid swapFee was null, don't show the fee line
+  if (loading && !lastValidSwapFee.current) {
+    return null
+  }
 
   if (!swapFeeInfo && !loading) {
     return null

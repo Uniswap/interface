@@ -5,6 +5,7 @@ import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { UnichainPoweredMessage } from 'uniswap/src/features/transactions/TransactionDetails/UnichainPoweredMessage'
 import { getShouldDisplayTokenWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/utils/getShouldDisplayTokenWarningCard'
 import { TransactionModalFooterContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
+import { useIsUnichainFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { SubmitSwapButton } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/SubmitSwapButton'
 import { useSwapOnPrevious } from 'uniswap/src/features/transactions/swap/review/hooks/useSwapOnPrevious'
 import { useSwapReviewCallbacksStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/useSwapReviewCallbacksStore'
@@ -21,6 +22,7 @@ export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | 
   const { disabled, showPendingUI, warning, onSubmit } = useSwapSubmitButton()
   const isShortMobileDevice = useIsShortMobileDevice()
   const { chainId } = useSwapReviewTransactionStore((s) => ({ chainId: s.chainId }))
+  const showUnichainPoweredMessage = useIsUnichainFlashblocksEnabled(chainId)
 
   if (showInterfaceReviewSteps) {
     return null
@@ -28,7 +30,7 @@ export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | 
 
   return (
     <TransactionModalFooterContainer>
-      <UnichainPoweredMessage chainId={chainId} />
+      {showUnichainPoweredMessage && <UnichainPoweredMessage />}
       <Flex row gap="$spacing8">
         {!isWeb && !showPendingUI && (
           <IconButton

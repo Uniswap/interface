@@ -75,7 +75,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
 
       // Create a new txId for the next transaction, as the existing one may be used in state to track the failed submission.
       const newTxId = createTransactionId()
-      updateSwapForm({ isSubmitting: false, txId: newTxId, showPendingUI: false })
+      updateSwapForm({ isSubmitting: false, isConfirmed: false, txId: newTxId, showPendingUI: false })
 
       setSubmissionError(error)
       setRetrySwap(() => onPressRetry)
@@ -102,6 +102,10 @@ export function useCreateSwapReviewCallbacks(ctx: {
         isSubmitting: false,
         showPendingUI: false,
         isConfirmed: false,
+        instantReceiptFetchTime: undefined,
+        instantOutputAmountRaw: undefined,
+        txHash: undefined,
+        txHashReceivedTime: undefined,
       })
       setScreen(TransactionScreen.Form)
     }

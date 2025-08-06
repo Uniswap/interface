@@ -7,21 +7,21 @@ import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { useUpdateOnChainBalancePreconfirmation } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/hooks/useUpdateOnChainBalancePreconfirmation'
+import {
+  FLASHBLOCKS_INSTANT_BALANCE_TIMEOUT,
+  FLASHBLOCKS_UI_SKIP_ROUTES,
+} from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
+import { useInstantReceiptOutput } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/hooks/useInstantReceiptOutput'
 import { useIsUnichainFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
 import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
 } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-
-const INSTANT_BALANCE_TIMEOUT = 2 * ONE_SECOND_MS
 
 export function FlashblocksConfirmButton(): JSX.Element {
   const { t } = useTranslation()
-  const { setScreen, screen } = useTransactionModalContext()
+  const { setScreen, screen, onClose } = useTransactionModalContext()
   const colors = useSporeColors()
 
   const updateSwapForm = useSwapFormStore((s) => s.updateSwapForm)
@@ -32,13 +32,11 @@ export function FlashblocksConfirmButton(): JSX.Element {
   const isShortMobileDevice = useIsShortMobileDevice()
   const size = isShortMobileDevice ? 'medium' : 'large'
 
-  // Check if this is a bridge transaction - don't show modal for bridges
-  const isBridgeTransaction = useSwapDependenciesStore(
-    (s) => s.derivedSwapInfo.trade.trade && isBridge(s.derivedSwapInfo.trade.trade),
-  )
+  const tradeRoute = useSwapDependenciesStore((s) => s.derivedSwapInfo.trade.trade?.routing)
+  const isFlashblocksModalRoute = tradeRoute && !FLASHBLOCKS_UI_SKIP_ROUTES.includes(tradeRoute)
 
-  // handles navigation
-  useUpdateOnChainBalancePreconfirmation()
+  // Trigger parsing of flashblock receipt and navigation
+  useInstantReceiptOutput()
   useEffect(() => {
     if (!isConfirmed || !isFlashblocksEnabled) {
       return noop
@@ -49,7 +47,7 @@ export function FlashblocksConfirmButton(): JSX.Element {
       return noop
     }
 
-    // if we're still on this screen after INSTANT_BALANCE_TIMEOUT, revert to existing behavior (ie return to form screen)
+    // if we're still on this screen after FLASHBLOCKS_INSTANT_BALANCE_TIMEOUT, revert to existing behavior (ie return to form screen)
     const timeout = setTimeout(
       () => {
         setScreen(TransactionScreen.Form)
@@ -59,16 +57,20 @@ export function FlashblocksConfirmButton(): JSX.Element {
           isSubmitting: false,
           showPendingUI: false,
           isConfirmed: false,
-          preSwapDataPreserved: undefined,
-          preSwapNativeAssetAmountRaw: undefined,
-          postSwapDataPreserved: undefined,
+          instantReceiptFetchTime: undefined,
+          instantOutputAmountRaw: undefined,
+          txHash: undefined,
+          txHashReceivedTime: undefined,
         })
+        onClose()
       },
-      isBridgeTransaction ? 0 : INSTANT_BALANCE_TIMEOUT,
+      // skip modal if flashblocks is enabled but we're not on a compatible route
+      isFlashblocksModalRoute ? FLASHBLOCKS_INSTANT_BALANCE_TIMEOUT : 0,
     )
 
     return () => clearTimeout(timeout)
-  }, [isConfirmed, isFlashblocksEnabled, screen, setScreen, updateSwapForm, isBridgeTransaction])
+  }, [isConfirmed, isFlashblocksEnabled, screen, setScreen, updateSwapForm, isFlashblocksModalRoute, onClose])
+
   return (
     <Button
       isDisabled
@@ -78,7 +80,7 @@ export function FlashblocksConfirmButton(): JSX.Element {
       size={size}
       hoverStyle={{ backgroundColor: '$statusSuccess2', filter: 'none' }}
       pressStyle={{ backgroundColor: '$statusSuccess2', filter: 'none' }}
-      animation="200msDelayed160ms"
+      animation="200ms"
     >
       <Flex row gap="$gap8" alignItems="center" enterStyle={{ y: 10, opacity: 0 }} animation="200msDelayed160ms">
         <Check strokeWidth={4} size="$icon.24" color={colors.statusSuccess.val} />

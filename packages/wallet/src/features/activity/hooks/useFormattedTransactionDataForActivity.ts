@@ -11,6 +11,7 @@ import {
   useTransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
+import { isNonPollingRequestInFlight } from 'uniswap/src/data/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -20,7 +21,6 @@ import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/sel
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { selectNftsVisibility } from 'uniswap/src/features/visibility/selectors'
 import { useEvent } from 'utilities/src/react/hooks'
-import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useRestOnRampAuth } from 'wallet/src/features/activity/hooks/useRestOnRampAuth'
 import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from 'wallet/src/features/activity/utils'
 import {

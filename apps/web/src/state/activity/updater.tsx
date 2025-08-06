@@ -20,6 +20,8 @@ import {
   interfaceConfirmBridgeDeposit,
   interfaceFinalizeTransaction,
 } from 'uniswap/src/features/transactions/slice'
+import { isNonInstantFlashblockTransactionType } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/utils'
+import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import {
   InterfaceTransactionDetails,
   TransactionOriginType,
@@ -107,7 +109,17 @@ function useOnActivityUpdate(): OnActivityUpdate {
           })
         }
 
-        popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
+        // Check if this is a flashblock transaction that should skip notifications
+        const isUnichainFlashblock = getIsFlashblocksEnabled(chainId)
+        const shouldShowPopup =
+          !isUnichainFlashblock ||
+          isNonInstantFlashblockTransactionType(original) ||
+          !('isFlashblockTxWithinThreshold' in original) ||
+          !original.isFlashblockTxWithinThreshold
+
+        if (shouldShowPopup) {
+          popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
+        }
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       } else if (activity.type === 'signature') {
         const { chainId, original, update } = activity

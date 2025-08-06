@@ -42,7 +42,7 @@ export function LegalAndPrivacyMenu({ closeMenu }: { closeMenu?: () => void }) {
     <Expand
       isOpen={isOpen}
       onToggle={toggleIsOpen}
-      iconSize="icon16"
+      iconSize="icon20"
       button={
         <Text color="$neutral2" variant="body4" pr={spacing.spacing4}>
           {t('common.legalAndPrivacy')}

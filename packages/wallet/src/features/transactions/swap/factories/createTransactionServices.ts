@@ -45,7 +45,10 @@ export function* createTransactionServices(
     getSignerManager: () => signerManager,
   })
 
-  const getProvider = (): Promise<Provider> => providerService.getProvider({ chainId: input.chainId })
+  const getProvider = (): Promise<Provider> =>
+    input.submitViaPrivateRpc
+      ? providerService.getPrivateProvider({ chainId: input.chainId, account: input.account })
+      : providerService.getProvider({ chainId: input.chainId })
 
   const transactionConfigService = dependencies.createTransactionConfigService({
     featureFlagService: dependencies.createFeatureFlagService(),
@@ -53,13 +56,10 @@ export function* createTransactionServices(
   })
 
   const getViemClient = async (): Promise<PublicClient> => {
-    const usePrivate = transactionConfigService.shouldUsePrivateRpc({
-      chainId: input.chainId,
-      submitViaPrivateRpc: input.submitViaPrivateRpc,
-    })
-
     const viemClients = dependencies.getViemClients()
-    return usePrivate ? viemClients.getPrivateViemClient(input.chainId) : viemClients.getViemClient(input.chainId)
+    return input.submitViaPrivateRpc
+      ? viemClients.getPrivateViemClient(input.chainId)
+      : viemClients.getViemClient(input.chainId)
   }
 
   const getDelegationInfo = (): Promise<DelegationCheckResult> =>

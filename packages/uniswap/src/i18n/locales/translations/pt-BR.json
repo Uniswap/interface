@@ -1758,7 +1758,7 @@
   "swap.approveInWallet": "Aprovar na sua carteira",
   "swap.balance.amount": "Saldo: {{amount}}",
   "swap.bestRoute.cost": "A rota de melhor preço custa ~{{gasPrice}} em gas. ",
-  "swap.bridging.estimatedTime": "Tempo estimado",
+  "swap.details.estimatedTime": "Tempo estimado",
   "swap.bridging.title": "Troca entre redes",
   "swap.bridging.warning.description": "Você está trocando de {{fromNetwork}} para {{toNetwork}}. Isso também é conhecido como \"transferência\", que move seus tokens de uma rede para outra.",
   "swap.button.max": "Máx.",

@@ -19,6 +19,14 @@ export function getChainLabel(chainId: UniverseChainId): string {
   return getChainInfo(chainId).label
 }
 
+/**
+ * Return the explorer name for the given chain ID
+ * @param chainId the ID of the chain for which to return the explorer name
+ */
+export function getChainExplorerName(chainId: UniverseChainId): string {
+  return getChainInfo(chainId).explorer.name
+}
+
 export function isTestnetChain(chainId: UniverseChainId): boolean {
   return Boolean(getChainInfo(chainId).testnet)
 }

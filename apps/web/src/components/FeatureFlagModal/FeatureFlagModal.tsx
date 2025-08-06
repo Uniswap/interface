@@ -237,6 +237,15 @@ export default function FeatureFlagModal() {
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Mini Portfolio">
             <FeatureFlagOption flag={FeatureFlags.GqlToRestBalances} label="Rest Token Balances" />
+            <FeatureFlagOption
+              flag={FeatureFlags.SharedPortfolioUI}
+              label="Enable new mini portfolio UI shared across platforms"
+            />
+            <FeatureFlagOption flag={FeatureFlags.SelfReportSpamNFTs} label="Report spam NFTs" />
+            <FeatureFlagOption
+              flag={FeatureFlags.DisableExtensionDeeplinks}
+              label="Disable extension deeplinks for testing mini portfolio UI on web"
+            />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Soneium} label="Enable Soneium" />

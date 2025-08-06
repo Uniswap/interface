@@ -37,7 +37,7 @@ import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { formatDappURL } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
-import { useDebouncedCallback } from 'utilities/src/react/useDebouncedCallback'
+import { useThrottledCallback } from 'utilities/src/react/useThrottledCallback'
 import { MAX_HIDDEN_CALLS_BY_DEFAULT } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { WarningBox } from 'wallet/src/components/WarningBox/WarningBox'
@@ -256,7 +256,7 @@ function DappRequestFooter({
   })
 
   // This is strictly a UI debounce to prevent submitting the same confirmation multiple times.
-  const [debouncedHandleOnConfirm, isConfirming] = useDebouncedCallback(handleOnConfirm)
+  const [debouncedHandleOnConfirm, isConfirming] = useThrottledCallback(handleOnConfirm)
 
   const handleOnCancel = useEvent(async () => {
     if (onCancel) {

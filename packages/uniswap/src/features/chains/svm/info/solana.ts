@@ -8,7 +8,7 @@ import { SolanaToken } from 'uniswap/src/features/tokens/SolanaToken'
 
 // TODO(WEB-8095): Remove this once we have a proper RPC URL
 const TEMP_RPC_URL =
-  'https://falling-warmhearted-choice.solana-mainnet.quiknode.pro/2f1a4f46a3c5c418dfb09753286952d377e7a00f'
+  'https://wandering-stylish-forest.solana-mainnet.quiknode.pro/d6166fc738c9c06adee384fff922a7929ccb7222'
 
 const tokens = buildChainTokens({
   stables: {

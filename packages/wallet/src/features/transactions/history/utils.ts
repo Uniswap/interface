@@ -16,6 +16,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { FORMAT_DATE_MONTH, FORMAT_DATE_MONTH_YEAR, LocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
+import { getIsNftHidden } from 'uniswap/src/features/nfts/utils'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -28,7 +29,6 @@ import {
 import { CurrencyIdToVisibility, NFTKeyToVisibility } from 'uniswap/src/features/visibility/slice'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { getIsNftHidden } from 'wallet/src/features/nfts/utils'
 import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 import extractRestOnChainTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractOnChainTransactionDetails'
 import extractRestFiatOnRampDetails from 'wallet/src/features/transactions/history/conversion/extractRestFiatOnRampDetails'

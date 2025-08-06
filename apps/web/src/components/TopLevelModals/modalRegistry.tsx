@@ -3,6 +3,7 @@ import { useModalState } from 'hooks/useModalState'
 import { Suspense, lazy, memo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { isMobileWeb } from 'utilities/src/platform'
 const AddressClaimModal = lazy(() => import('components/claim/AddressClaimModal'))
 const ConnectedAccountBlocked = lazy(() => import('components/ConnectedAccountBlocked'))
 const UniwalletModal = lazy(() => import('components/AccountDrawer/UniwalletModal'))
@@ -51,6 +52,7 @@ const DelegationMismatchModal = lazy(() =>
     default: module.default,
   })),
 )
+const HelpModal = lazy(() => import('components/HelpModal/HelpModal').then((module) => ({ default: module.HelpModal })))
 
 const ModalLoadingFallback = memo(() => null)
 ModalLoadingFallback.displayName = 'ModalLoadingFallback'
@@ -139,6 +141,10 @@ export const modalRegistry: ModalRegistry = {
   [ModalName.DelegationMismatch]: {
     component: DelegationMismatchModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.DelegationMismatch,
+  },
+  [ModalName.Help]: {
+    component: HelpModal,
+    shouldMount: () => !isMobileWeb,
   },
 } as const
 

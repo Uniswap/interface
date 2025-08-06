@@ -24,6 +24,7 @@ export function NetworkFee({
   transactionUSDValue,
   indicative,
   includesDelegation,
+  showNetworkLogo = true,
 }: {
   chainId: UniverseChainId
   gasFee: GasFeeResult
@@ -31,6 +32,7 @@ export function NetworkFee({
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
   indicative?: boolean
   includesDelegation?: boolean
+  showNetworkLogo?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -61,7 +63,7 @@ export function NetworkFee({
         </NetworkFeeWarning>
         <IndicativeLoadingWrapper loading={indicative || (!gasFee.value && gasFee.isLoading)}>
           <Flex row alignItems="center" gap={uniswapXGasBreakdown ? '$spacing4' : '$spacing8'}>
-            {(!uniswapXGasBreakdown || gasFee.error) && (
+            {(!uniswapXGasBreakdown || gasFee.error) && showNetworkLogo && (
               <NetworkLogo chainId={chainId} shape="square" size={iconSizes.icon16} />
             )}
             {gasFee.error ? (

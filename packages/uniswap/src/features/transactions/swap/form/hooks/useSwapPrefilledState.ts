@@ -40,6 +40,10 @@ export function useSwapPrefilledState(initialState: TransactionState | undefined
       isConfirmed: false,
       isMax: false,
       showPendingUI: false,
+      instantReceiptFetchTime: undefined,
+      instantOutputAmountRaw: undefined,
+      txHash: undefined,
+      txHashReceivedTime: undefined,
     }
   }, [initialState])
 

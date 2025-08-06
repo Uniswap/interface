@@ -41,6 +41,8 @@ test.describe('Create position', () => {
     // eslint-disable-next-line
     await page.getByTestId('token-option-1-USDT').first().click()
     await page.getByRole('button', { name: 'Continue' }).click()
+    await graphql.waitForResponse('PoolPriceHistory')
+    await graphql.waitForResponse('AllV4Ticks')
     await page.getByText('Custom range').click()
     await page.getByTestId(TestID.AmountInputIn).first().click()
     await page.getByTestId(TestID.AmountInputIn).first().fill('1')

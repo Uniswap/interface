@@ -12,7 +12,6 @@ export function GradientContainer({
   children: ReactNode
 }): ReactNode {
   const backgroundColor = useBackgroundColor()
-
   if (isInterfaceDesktop) {
     // for interface, use CSS gradient via background prop
     return (
@@ -25,7 +24,6 @@ export function GradientContainer({
       </Flex>
     )
   }
-
   // do not wrap in gradient for wallet
   return children
 }

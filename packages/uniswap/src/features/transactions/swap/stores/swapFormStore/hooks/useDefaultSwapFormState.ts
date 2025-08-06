@@ -27,6 +27,10 @@ export const getDefaultState = (defaultChainId: UniverseChainId): Readonly<Omit<
   isSubmitting: false,
   isConfirmed: false,
   showPendingUI: false,
+  instantReceiptFetchTime: undefined,
+  instantOutputAmountRaw: undefined,
+  txHash: undefined,
+  txHashReceivedTime: undefined,
 })
 
 export const useDefaultSwapFormState = (): ReturnType<typeof getDefaultState> => {

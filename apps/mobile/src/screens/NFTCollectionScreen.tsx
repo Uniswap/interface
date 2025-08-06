@@ -17,18 +17,18 @@ import { AnimatedBottomSheetFlashList, AnimatedFlashList } from 'ui/src/componen
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
 import {
   NftCollectionScreenQuery,
   useNftCollectionScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { isError } from 'uniswap/src/data/utils'
+import { NFTItem } from 'uniswap/src/features/nfts/types'
+import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'utilities/src/platform'
-import { isError } from 'wallet/src/data/utils'
-import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
-import { NFTItem } from 'wallet/src/features/nfts/types'
-import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 
 const PREFETCH_ITEMS_THRESHOLD = 0.5
 const ASSET_FETCH_PAGE_SIZE = 30

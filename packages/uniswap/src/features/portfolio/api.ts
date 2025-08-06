@@ -1,13 +1,17 @@
-import { ParsedAccountData, PublicKey } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import { skipToken, useQuery } from '@tanstack/react-query'
 import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from '@uniswap/sdk-core'
 import { Contract } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
+import { getSolanaParsedTokenAccountsByOwnerQueryOptions } from 'uniswap/src/data/solanaConnection/getSolanaParsedTokenAccountsByOwnerQueryOptions'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPollingIntervalByBlocktime } from 'uniswap/src/features/chains/utils'
+import { DynamicConfigs, SyncTransactionSubmissionChainIdsConfigKey } from 'uniswap/src/features/gating/configs'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
@@ -43,6 +47,18 @@ export async function getOnChainBalancesFetch(params: BalanceLookupParams): Prom
 
 async function getOnChainBalancesFetchEVM(params: BalanceLookupParams): Promise<{ balance?: string }> {
   const { currencyAddress, chainId, currencyIsNative, accountAddress } = params
+
+  const defaultSyncChainIds: UniverseChainId[] = []
+  const syncTransactionSubmissionChainIds = getDynamicConfigValue({
+    config: DynamicConfigs.SyncTransactionSubmissionChainIds,
+    key: SyncTransactionSubmissionChainIdsConfigKey.ChainIds,
+    defaultValue: defaultSyncChainIds,
+  })
+  const isSyncChain = syncTransactionSubmissionChainIds.includes(chainId)
+
+  if (isSyncChain) {
+    return getOnChainBalancesFetchWithPending(params)
+  }
 
   const provider = createEthersProvider({ chainId })
   if (!provider) {
@@ -99,54 +115,29 @@ export async function getOnChainBalancesFetchWithPending(params: BalanceLookupPa
   return { balance: decodedBalance.toString() }
 }
 
-const SOLANA_TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
-
 async function getOnChainBalancesFetchSVM(params: BalanceLookupParams): Promise<{ balance?: string }> {
   const { currencyAddress, chainId, accountAddress } = params
 
   try {
-    const connection = getSolanaConnection()
-
     // Native currency lookup
     if (currencyAddress === getChainInfo(chainId).nativeCurrency.address) {
+      const connection = getSolanaConnection()
       const balance = await connection.getBalance(new PublicKey(accountAddress))
       return { balance: balance.toString() }
     }
 
-    // SPL token lookup
-    const tokenAccounts = await connection.getParsedTokenAccountsByOwner(new PublicKey(accountAddress), {
-      programId: SOLANA_TOKEN_PROGRAM_ID,
-    })
+    // SPL token lookup with caching
+    const tokenAccountsMap = await SharedQueryClient.ensureQueryData(
+      getSolanaParsedTokenAccountsByOwnerQueryOptions({ params: { accountAddress } }),
+    )
 
-    // TODO(WEB-8156): Dedupe requests made at similar times
-    const balanceMap: { [key: string]: string } = {}
-    tokenAccounts.value.forEach((account) => {
-      const { mint, tokenAmount } = parseTokenAccount(account.account.data)
-      if (mint && tokenAmount) {
-        balanceMap[mint] = tokenAmount
-      }
-    })
-    return { balance: balanceMap[currencyAddress] }
+    return { balance: tokenAccountsMap[currencyAddress]?.tokenAmount }
   } catch (error) {
     logger.error(error, {
       tags: { file: 'api.ts', function: 'getOnChainBalancesFetchSVM' },
       extra: { params },
     })
     return { balance: undefined }
-  }
-}
-
-function parseTokenAccount(account: ParsedAccountData): { mint?: string; tokenAmount?: string } {
-  try {
-    const mint = account.parsed.info.mint?.toString()
-    const tokenAmount = account.parsed.info.tokenAmount?.amount?.toString()
-    return { mint, tokenAmount }
-  } catch (error) {
-    logger.error(error, {
-      tags: { file: 'api.ts', function: 'parseTokenAccount' },
-      extra: { account },
-    })
-    return { mint: undefined, tokenAmount: undefined }
   }
 }
 

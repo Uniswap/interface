@@ -20,10 +20,6 @@ export type DropdownMenuSheetItemProps = {
   height?: number
 }
 
-// Designated by Design Spec
-// https://www.notion.so/uniswaplabs/Dropdown-Selector-91299ddf1ba94e2d8f0168350d2dc923?pvs=4
-export const MAX_WIDTH = 250
-
 export const DropdownMenuSheetItem = ({
   label,
   icon,
@@ -68,7 +64,6 @@ export const DropdownMenuSheetItem = ({
       flexDirection={flexDirection}
       justifyContent="space-between"
       alignItems="center"
-      maxWidth={MAX_WIDTH}
       disabled={disabled}
       borderRadius="$rounded12"
       width="100%"
@@ -93,7 +88,9 @@ export const DropdownMenuSheetItem = ({
           {label}
         </Text>
       </Flex>
-      <Flex flexShrink={0}>{isSelected ? <CheckCircleFilled size="$icon.20" /> : <Spacer size="$spacing20" />}</Flex>
+      {isSelected !== undefined && (
+        <Flex flexShrink={0}>{isSelected ? <CheckCircleFilled size="$icon.20" /> : <Spacer size="$spacing20" />}</Flex>
+      )}
     </TouchableArea>
   )
 }

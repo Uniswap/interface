@@ -46,31 +46,36 @@ test.describe('Landing Page', () => {
     await expect(page).toHaveURL('/swap')
   })
 
-  test('renders UK compliance banner in UK', async ({ page }) => {
-    await page.route(/(?:interface|beta).gateway.uniswap.org\/v1\/amplitude-proxy/, async (route) => {
-      const requestBody = JSON.stringify(await route.request().postDataJSON())
-      const originalResponse = await route.fetch()
-      const byteSize = new Blob([requestBody]).size
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        headers: { ...originalResponse.headers(), 'origin-country': 'GB' },
-        body: JSON.stringify({
-          code: 200,
-          server_upload_time: Date.now(),
-          payload_size_bytes: byteSize,
-          events_ingested: (await route.request().postDataJSON()).events.length,
-        }),
+  test.describe('UK compliance banner', () => {
+    test.afterEach(async ({ page }) => {
+      await page.unrouteAll({ behavior: 'ignoreErrors' })
+    })
+    test('renders UK compliance banner in UK', async ({ page }) => {
+      await page.route(/(?:interface|beta).gateway.uniswap.org\/v1\/amplitude-proxy/, async (route) => {
+        const requestBody = JSON.stringify(await route.request().postDataJSON())
+        const originalResponse = await route.fetch()
+        const byteSize = new Blob([requestBody]).size
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          headers: { ...originalResponse.headers(), 'origin-country': 'GB' },
+          body: JSON.stringify({
+            code: 200,
+            server_upload_time: Date.now(),
+            payload_size_bytes: byteSize,
+            events_ingested: (await route.request().postDataJSON()).events.length,
+          }),
+        })
       })
+
+      await page.goto(`/swap${UNCONNECTED_USER_PARAM}`)
+      await page.getByText('Read more').click()
+      await expect(page.getByText('Disclaimer for UK residents')).toBeVisible()
     })
 
-    await page.goto(`/swap${UNCONNECTED_USER_PARAM}`)
-    await page.getByText('Read more').click()
-    await expect(page.getByText('Disclaimer for UK residents')).toBeVisible()
-  })
-
-  test('does not render UK compliance banner in US', async ({ page }) => {
-    await page.goto(`/swap${UNCONNECTED_USER_PARAM}`)
-    await expect(page.getByTestId(TestID.UKDisclaimer)).not.toBeVisible()
+    test('does not render UK compliance banner in US', async ({ page }) => {
+      await page.goto(`/swap${UNCONNECTED_USER_PARAM}`)
+      await expect(page.getByTestId(TestID.UKDisclaimer)).not.toBeVisible()
+    })
   })
 })

@@ -7,11 +7,11 @@ import { ColorTokens, Flex, SegmentedControl, useMedia, useSporeColors } from 'u
 
 const CandlestickIcon = ({ color, isDisabled }: { color: ColorTokens; isDisabled?: boolean }) => {
   return (
-    <Flex row centered width={20}>
+    <Flex row centered width="$spacing.18">
       <CandlestickChartIcon
         color={color}
-        width={16}
-        height={16}
+        width={14}
+        height={14}
         style={isDisabled ? { opacity: 0.2, cursor: 'not-allowed' } : {}}
       />
     </Flex>
@@ -35,7 +35,7 @@ export const AdvancedPriceChartToggle = ({
   const options = [
     {
       value: PriceChartType.LINE,
-      display: <LineChartIcon color={iconColor} width={20} height={20} />,
+      display: <LineChartIcon color={iconColor} width="$spacing.18" height="$spacing.18" />,
     },
     {
       value: PriceChartType.CANDLESTICK,

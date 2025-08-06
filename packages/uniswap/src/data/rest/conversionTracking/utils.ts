@@ -4,8 +4,11 @@ import {
   CONVERSION_LEADS_EXTERNAL_COOKIE_DOMAIN,
   CONVERSION_LEADS_EXTERNAL_COOKIE_NAME,
   DEV_CONVERSION_PROXY_API_BASE_URL,
+  DEV_CONVERSION_PROXY_API_BASE_URL_DEPRECATED,
   PROD_CONVERSION_PROXY_API_BASE_URL,
+  PROD_CONVERSION_PROXY_API_BASE_URL_DEPRECATED,
   STAGING_CONVERSION_PROXY_API_BASE_URL,
+  STAGING_CONVERSION_PROXY_API_BASE_URL_DEPRECATED,
 } from 'uniswap/src/data/rest/conversionTracking/constants'
 import { PlatformIdType } from 'uniswap/src/data/rest/conversionTracking/types'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
@@ -57,12 +60,22 @@ export const getExternalConversionLeadsCookie = (): { key: PlatformIdType; value
   return result
 }
 
-export const getConversionProxyApiBaseUrl = (): string => {
+export const getConversionProxyApiBaseUrl = (isConversionApiMigrationEnabled: boolean): string => {
+  if (isConversionApiMigrationEnabled) {
+    if (isDevEnv()) {
+      return DEV_CONVERSION_PROXY_API_BASE_URL
+    } else if (isBetaEnv()) {
+      return STAGING_CONVERSION_PROXY_API_BASE_URL
+    } else {
+      return PROD_CONVERSION_PROXY_API_BASE_URL
+    }
+  }
+
   if (isDevEnv()) {
-    return DEV_CONVERSION_PROXY_API_BASE_URL
+    return DEV_CONVERSION_PROXY_API_BASE_URL_DEPRECATED
   } else if (isBetaEnv()) {
-    return STAGING_CONVERSION_PROXY_API_BASE_URL
+    return STAGING_CONVERSION_PROXY_API_BASE_URL_DEPRECATED
   } else {
-    return PROD_CONVERSION_PROXY_API_BASE_URL
+    return PROD_CONVERSION_PROXY_API_BASE_URL_DEPRECATED
   }
 }

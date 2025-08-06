@@ -69,6 +69,7 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
   const signer = useWalletSigner()
   const {
     navigateToTokenDetails,
+    navigateToNftDetails,
     navigateToBuyOrReceiveWithEmptyWallet,
     navigateToFiatOnRamp,
     navigateToSwapFlow,
@@ -114,6 +115,7 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
       navigateToReceive={navigateToReceive}
       navigateToTokenDetails={navigateToTokenDetails}
       navigateToExternalProfile={navigateToExternalProfile}
+      navigateToNftDetails={navigateToNftDetails}
       navigateToNftCollection={navigateToNftCollection}
       navigateToPoolDetails={navigateToPoolDetails}
       handleShareToken={handleShareToken}

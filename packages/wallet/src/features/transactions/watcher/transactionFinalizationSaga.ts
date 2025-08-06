@@ -22,6 +22,8 @@ import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/tel
 import { selectSwapTransactionsCount } from 'uniswap/src/features/transactions/selectors'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import { getRouteAnalyticsData, tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
+import { isNonInstantFlashblockTransactionType } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/utils'
+import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -49,8 +51,17 @@ export function* finalizeTransaction({
 }): Generator<unknown> {
   yield* put(transactionActions.finalizeTransaction(transaction))
 
-  // Flip status to true so we can render Notification badge on home
-  yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
+  const isUnichainFlashblock = getIsFlashblocksEnabled(transaction.chainId)
+  const shouldSkipSuccessNotification =
+    isUnichainFlashblock &&
+    'isFlashblockTxWithinThreshold' in transaction &&
+    transaction.isFlashblockTxWithinThreshold &&
+    !isNonInstantFlashblockTransactionType(transaction)
+
+  // Only show notification badge if not a fast flashblock transaction
+  if (!shouldSkipSuccessNotification) {
+    yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
+  }
 
   // Refetch data when a local tx has confirmed
   const activeAddress = yield* select(selectActiveAccountAddress)

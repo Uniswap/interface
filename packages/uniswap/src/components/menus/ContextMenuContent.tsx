@@ -20,6 +20,7 @@ export function MenuContent({ items, handleCloseMenu }: MenuContentProps): JSX.E
       borderWidth="$spacing1"
       borderColor="$surface3"
       minWidth={200}
+      maxWidth={250}
     >
       {/* eslint-disable-next-line react/forbid-elements */}
       <div

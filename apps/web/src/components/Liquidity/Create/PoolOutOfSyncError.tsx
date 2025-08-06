@@ -10,7 +10,7 @@ export function PoolOutOfSyncError() {
 
   const { creatingPoolOrPair, poolOrPair, refetchPoolData } = useCreateLiquidityContext()
 
-  const isPoolOutOfSync = useIsPoolOutOfSync(poolOrPair?.token0Price)
+  const isPoolOutOfSync = useIsPoolOutOfSync(poolOrPair)
 
   if (creatingPoolOrPair || !isPoolOutOfSync) {
     return null

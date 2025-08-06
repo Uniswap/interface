@@ -7,8 +7,8 @@ import { useUwuLinkContractAllowlist } from 'src/components/Requests/Uwulink/uti
 import { SignRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, useIsDarkMode } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { RemoteImage } from 'uniswap/src/components/nfts/images/RemoteImage'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
 type Props = {
   onClose: () => void

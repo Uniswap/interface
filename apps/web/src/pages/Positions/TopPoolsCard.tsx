@@ -41,11 +41,7 @@ export function TopPoolsCard({ pool }: { pool: PoolStat }) {
             {token0?.symbol} / {token1?.symbol}
           </Text>
           <Flex row gap="$spacing2" alignItems="center">
-            <LiquidityPositionInfoBadges
-              size="small"
-              versionLabel={pool.protocolVersion?.toLowerCase()}
-              feeTier={pool.feeTier}
-            />
+            <LiquidityPositionInfoBadges size="small" version={pool.protocolVersion} feeTier={pool.feeTier} />
           </Flex>
         </Flex>
       </Flex>

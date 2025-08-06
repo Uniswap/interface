@@ -1,11 +1,15 @@
+import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { FeeData } from 'components/Liquidity/Create/types'
 import { isDynamicFeeTier } from 'components/Liquidity/utils/feeTiers'
+import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components/CopyHelper'
 import { Flex, styled, Text, Tooltip } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
+import { ProtocolVersion as GraphQLProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 
 const PositionInfoBadge = styled(Text, {
@@ -56,12 +60,12 @@ interface BadgeData {
 }
 
 export function LiquidityPositionInfoBadges({
-  versionLabel,
+  version,
   v4hook,
   feeTier,
   size = 'default',
 }: {
-  versionLabel?: string
+  version?: RestProtocolVersion | GraphQLProtocolVersion | string
   v4hook?: string
   feeTier?: FeeData
   size: 'small' | 'default'
@@ -69,6 +73,21 @@ export function LiquidityPositionInfoBadges({
   const { t } = useTranslation()
 
   const badges = useMemo(() => {
+    const versionLabel = version
+      ? typeof version === 'string'
+        ? version.toLowerCase()
+        : getProtocolVersionLabel(version)
+      : undefined
+
+    const isV2 = versionLabel === 'v2'
+    const feeTierLabel = feeTier
+      ? isDynamicFeeTier(feeTier)
+        ? { label: t('common.dynamic') }
+        : { label: `${feeTier.feeAmount / BIPS_BASE}%` }
+      : isV2
+        ? { label: `${V2_DEFAULT_FEE_TIER / BIPS_BASE}%` }
+        : undefined
+
     return [
       versionLabel ? { label: versionLabel } : undefined,
       v4hook && v4hook !== ZERO_ADDRESS
@@ -79,13 +98,9 @@ export function LiquidityPositionInfoBadges({
             icon: <DocumentList color="$neutral2" size={16} />,
           }
         : undefined,
-      feeTier
-        ? isDynamicFeeTier(feeTier)
-          ? { label: t('common.dynamic') }
-          : { label: `${feeTier.feeAmount / 10000}%` }
-        : undefined,
+      feeTierLabel,
     ].filter(Boolean) as BadgeData[]
-  }, [versionLabel, v4hook, feeTier, t])
+  }, [version, v4hook, feeTier, t])
 
   return (
     <>

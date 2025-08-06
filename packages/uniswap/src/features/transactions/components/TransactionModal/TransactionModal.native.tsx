@@ -34,6 +34,7 @@ export function TransactionModal({
 }: TransactionModalProps): JSX.Element {
   const [screen, setScreen] = useState<TransactionScreen>(TransactionScreen.Form)
   const fullscreen = screen === TransactionScreen.Form
+
   const colors = useSporeColors()
 
   const insets = useAppInsets()

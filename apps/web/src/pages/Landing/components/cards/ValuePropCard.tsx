@@ -4,8 +4,10 @@ import { Flex, FlexProps, Text } from 'ui/src'
 type ValuePropCardProps = FlexProps & {
   smaller?: boolean
   children?: React.ReactNode
+  title?: React.ReactNode
+  subtitle?: string
+  bodyText?: string | React.ReactNode
   button?: React.ReactNode
-  titleText?: string
   alignTextToBottom?: boolean
   href?: string
   to?: string
@@ -13,7 +15,7 @@ type ValuePropCardProps = FlexProps & {
 }
 
 export default function ValuePropCard(props: ValuePropCardProps) {
-  const { color, alignTextToBottom, href, to, button, children, titleText, smaller, ...rest } = props
+  const { color, alignTextToBottom, href, to, title, children, bodyText, button, smaller, subtitle, ...rest } = props
   const navigate = useNavigate()
 
   const handleClick = () => {
@@ -30,7 +32,6 @@ export default function ValuePropCard(props: ValuePropCardProps) {
       flexBasis="auto"
       borderRadius={32}
       width="100%"
-      height={609}
       overflow="hidden"
       minHeight={240}
       maxWidth="calc(50% - 8px)"
@@ -50,57 +51,75 @@ export default function ValuePropCard(props: ValuePropCardProps) {
         height: 'auto',
       }}
       $xl={{
-        height: 516,
         ...(smaller && {
-          height: 'auto',
           pr: 0,
         }),
       }}
       {...(smaller && {
-        height: 340,
         pr: '16%',
-
-        $sm: {
-          height: 'auto',
-        },
       })}
       {...rest}
     >
       <Flex
         width="100%"
-        height="100%"
-        gap={16}
-        p={32}
+        flex={1}
+        gap={8}
+        p="$spacing48"
         alignItems="flex-start"
         zIndex={2}
         pointerEvents="none"
         justifyContent={alignTextToBottom ? 'space-between' : 'flex-start'}
+        $xl={{
+          p: '$spacing32',
+        }}
         $xs={{
           p: 20,
         }}
       >
-        {button}
+        {title}
+        {subtitle && (
+          <Text
+            mt="$spacing16"
+            variant="heading2"
+            fontWeight="$true"
+            color={color}
+            whiteSpace="nowrap"
+            overflow="visible"
+            $xl={{
+              variant: 'heading3',
+            }}
+            $lg={{
+              variant: 'heading2',
+              whiteSpace: 'normal',
+            }}
+            $xs={{
+              variant: 'heading3',
+              mt: '$spacing8',
+            }}
+          >
+            {subtitle}
+          </Text>
+        )}
         <Text
-          className="text-wrap-pretty"
-          fontSize={36}
-          lineHeight={44}
-          whiteSpace="pre-line"
+          mb="$spacing24"
+          variant="heading3"
           color={color}
-          $platform-web={{
-            fontFeatureSettings: `'ss07' on`,
-            textDecoration: 'none',
-          }}
           $xl={{
-            fontSize: 28,
-            lineHeight: 32,
+            fontSize: 18,
+            lineHeight: 24,
           }}
-          $md={{
-            fontSize: 24,
-            lineHeight: 32,
+          $lg={{
+            variant: 'heading3',
+          }}
+          $xs={{
+            fontSize: 18,
+            lineHeight: 24,
+            mb: '$spacing16',
           }}
         >
-          {titleText}
+          {bodyText}
         </Text>
+        {button}
       </Flex>
       {children}
     </Flex>

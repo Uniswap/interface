@@ -365,6 +365,7 @@ function* findDuplicativeTx({
   }
 
   const transactionMap = yield* select(
+    // TODO(INFRA-645): DO NOT REMOVE THIS OPTIONAL CHAINING OPERATOR UNTIL THE TYPE IS FIXED.
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     (state: InterfaceState) => state.transactions[account.address]?.[chainId] ?? {},
   )

@@ -9,13 +9,13 @@ import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useSelectTransaction } from 'uniswap/src/features/transactions/hooks/useSelectTransaction'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { isWeb } from 'utilities/src/platform'
 import { useCancellationGasFeeInfo } from 'wallet/src/features/gas/hooks'
-import { useSelectTransaction } from 'wallet/src/features/transactions/hooks'
 
 export function CancelConfirmationView({
   authTrigger,

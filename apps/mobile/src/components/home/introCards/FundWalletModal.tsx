@@ -12,11 +12,11 @@ import { ArrowDownCircle, Buy } from 'ui/src/components/icons'
 import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
 import { ActionCard, ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ImageUri } from 'uniswap/src/components/nfts/images/ImageUri'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ImageUri } from 'wallet/src/features/images/ImageUri'
 
 export function FundWalletModal(): JSX.Element {
   const isDarkMode = useIsDarkMode()

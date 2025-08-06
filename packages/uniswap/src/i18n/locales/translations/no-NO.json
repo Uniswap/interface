@@ -1795,7 +1795,7 @@
   "swap.approveInWallet": "Godkjenne i lommeboken",
   "swap.balance.amount": "Saldo: {{amount}}",
   "swap.bestRoute.cost": "Den mest effektive ruten er beregnet til å koste ~{{gasPrice}} i nettverkskostnader. ",
-  "swap.bridging.estimatedTime": "Est. tid",
+  "swap.details.estimatedTime": "Est. tid",
   "swap.bridging.title": "Bytte på tvers av nettverk",
   "swap.bridging.warning.description": "Du bytter fra {{fromNetwork}} til {{toNetwork}}. Dette er også kjent som \"bridging\", som flytter dine tokens fra ett nettverk til et annet.",
   "swap.button.max": "Maks",

@@ -259,6 +259,27 @@ async function processAddChanges() {
       )
     }
   })
+
+  // Warn if any changed file contains TouchableArea (entire file, not just diff)
+  const changedFiles = danger.git.modified_files
+    .concat(danger.git.created_files)
+    .filter((file) => file.endsWith('.ts') || file.endsWith('.tsx'))
+  const filesWithTouchableArea: string[] = []
+  for (const file of changedFiles) {
+    try {
+      const fileContent = fs.readFileSync(file, 'utf8')
+      if (fileContent.includes('TouchableArea')) {
+        filesWithTouchableArea.push(file)
+      }
+    } catch (e) {
+      // Ignore files that can't be read (e.g., deleted or binary)
+    }
+  }
+  if (filesWithTouchableArea.length > 0) {
+    warn(
+      `Detected usage of \`TouchableArea\` in the following file(s):\n\n${filesWithTouchableArea.map((f) => `- ${f}`).join('\n')}\n\nIn each of these files, please audit the usage of \`TouchableArea\` and consider migrating to the new implementation! Examples of new variants and API usage can be found in the \`TouchableArea.stories.tsx\` file.`,
+    )
+  }
 }
 
 async function checkCocoaPodsVersion() {

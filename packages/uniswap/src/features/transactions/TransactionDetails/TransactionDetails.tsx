@@ -23,7 +23,7 @@ import type {
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
-import { EstimatedTime } from 'uniswap/src/features/transactions/swap/components/EstimatedTime'
+import { EstimatedBridgeTime } from 'uniswap/src/features/transactions/swap/components/EstimatedBridgeTime'
 import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippageUpdate/SlippageUpdate'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import type { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
@@ -39,6 +39,7 @@ interface TransactionDetailsProps {
   uniswapXGasBreakdown?: UniswapXGasBreakdown
   showExpandedChildren?: boolean
   showGasFeeError?: boolean
+  showNetworkLogo?: boolean
   showWarning?: boolean
   showSeparatorToggle?: boolean
   warning?: Warning
@@ -73,6 +74,7 @@ export function TransactionDetails({
   swapFee,
   swapFeeUsd,
   showGasFeeError = true,
+  showNetworkLogo = true,
   showSeparatorToggle = true,
   showWarning,
   warning,
@@ -129,7 +131,7 @@ export function TransactionDetails({
           onPress={onPressToggleShowChildren}
         />
       ) : null}
-      <Flex gap="$spacing16" pb="$spacing8">
+      <Flex gap="$spacing16">
         <Flex gap="$spacing8" px="$spacing8">
           {showChildren && priceUXEnabled ? (
             <AnimatePresence>
@@ -140,7 +142,7 @@ export function TransactionDetails({
           ) : null}
           {RateInfo}
           {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
-          {isSwap && isBridgeTrade && <EstimatedTime visibleIfLong={true} timeMs={estimatedBridgingTime} />}
+          {isSwap && isBridgeTrade && <EstimatedBridgeTime visibleIfLong={true} timeMs={estimatedBridgingTime} />}
           {isSwap && outputCurrency && (
             <SwapFee currency={outputCurrency} loading={indicative} swapFee={swapFee} swapFeeUsd={swapFeeUsd} />
           )}
@@ -151,6 +153,7 @@ export function TransactionDetails({
             transactionUSDValue={transactionUSDValue}
             uniswapXGasBreakdown={uniswapXGasBreakdown}
             includesDelegation={includesDelegation}
+            showNetworkLogo={showNetworkLogo}
           />
           {isSwap && RoutingInfo}
           {AccountDetails}
