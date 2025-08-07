@@ -27,6 +27,8 @@ export interface QRCodeProps extends BaseQRProps {
   overlayColor: string
   /* quiet zone in pixels */
   quietZone?: number
+  /* whether to show the eyes */
+  showEyes?: boolean
 }
 
 interface SVGPartProps {
@@ -157,6 +159,7 @@ export function QRCode({
   overlayColor = '#FFFFFF',
   quietZone = 8,
   ecl = 'H',
+  showEyes = true,
 }: QRCodeProps): JSX.Element | null {
   const colors = useSporeColors()
 
@@ -198,26 +201,30 @@ export function QRCode({
       <G>
         <Path d={path} fill={color} />
         <Path d={path} fill={overlayColor + '2D'} />
-        <QREyeWrapper
-          backgroundColor={backgroundColor}
-          fillColor={color}
-          overlayColor={overlayColor + '2D'}
-          size={eyeSize}
-        />
-        <QREyeWrapper
-          backgroundColor={backgroundColor}
-          fillColor={color}
-          overlayColor={overlayColor + '2D'}
-          size={eyeSize}
-          y={cornerPosition}
-        />
-        <QREyeWrapper
-          backgroundColor={backgroundColor}
-          fillColor={color}
-          overlayColor={overlayColor + '2D'}
-          size={eyeSize}
-          x={cornerPosition}
-        />
+        {showEyes && (
+          <>
+            <QREyeWrapper
+              backgroundColor={backgroundColor}
+              fillColor={color}
+              overlayColor={overlayColor + '2D'}
+              size={eyeSize}
+            />
+            <QREyeWrapper
+              backgroundColor={backgroundColor}
+              fillColor={color}
+              overlayColor={overlayColor + '2D'}
+              size={eyeSize}
+              y={cornerPosition}
+            />
+            <QREyeWrapper
+              backgroundColor={backgroundColor}
+              fillColor={color}
+              overlayColor={overlayColor + '2D'}
+              size={eyeSize}
+              x={cornerPosition}
+            />
+          </>
+        )}
       </G>
     </Svg>
   )

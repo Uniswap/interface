@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmTwwxuuo1RVvJZ2Hr4YCJ1WS7f1zVoX7n9B21FHT2ptmp`
-- CIDv1: `bafybeictkvdaqcxnu26w4ptkdsg4slui4nnh3rdugaa2eeexll4cxje57m`
+- CIDv0: `QmetF1nv9iB4qm98jPxjZ7BKK7kyyoKtvUpnX7W3EdndZV`
+- CIDv1: `bafybeihv2lenyitisjqjo2umicolfybfoisbutccnv5t75s5sccyarst2q`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,9 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeictkvdaqcxnu26w4ptkdsg4slui4nnh3rdugaa2eeexll4cxje57m.ipfs.dweb.link/
-- [ipfs://QmTwwxuuo1RVvJZ2Hr4YCJ1WS7f1zVoX7n9B21FHT2ptmp/](ipfs://QmTwwxuuo1RVvJZ2Hr4YCJ1WS7f1zVoX7n9B21FHT2ptmp/)
+- https://bafybeihv2lenyitisjqjo2umicolfybfoisbutccnv5t75s5sccyarst2q.ipfs.dweb.link/
+- [ipfs://QmetF1nv9iB4qm98jPxjZ7BKK7kyyoKtvUpnX7W3EdndZV/](ipfs://QmetF1nv9iB4qm98jPxjZ7BKK7kyyoKtvUpnX7W3EdndZV/)
 
-### 5.105.3 (2025-08-07)
+### 5.105.4 (2025-08-07)
+
+
+### Bug Fixes
+
+* **web:** hide misaligned QR code eyes - prod (#22462) 0492b1f
 
 

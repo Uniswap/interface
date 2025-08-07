@@ -9,15 +9,24 @@ export type BaseQRProps = {
   ecl?: QRCodeErrorCorrectionLevel
   size: number
   color: string
+  showEyes?: boolean
 }
 
 type AddressQRCodeProps = BaseQRProps & {
   address: Address
   ecl: QRCodeErrorCorrectionLevel
   backgroundColor?: string
+  showEyes?: boolean
 }
 
-function AddressQRCode({ address, ecl, size, backgroundColor, color }: AddressQRCodeProps): JSX.Element {
+function AddressQRCode({
+  address,
+  ecl,
+  size,
+  backgroundColor,
+  color,
+  showEyes = true,
+}: AddressQRCodeProps): JSX.Element {
   const colors = useSporeColors()
 
   return (
@@ -28,6 +37,7 @@ function AddressQRCode({ address, ecl, size, backgroundColor, color }: AddressQR
       overlayColor={colors.neutral1.val}
       size={size}
       value={address}
+      showEyes={showEyes}
     />
   )
 }
@@ -44,6 +54,7 @@ const _QRCodeDisplay = ({
   color,
   containerBackgroundColor,
   children,
+  showEyes = true,
 }: PropsWithChildren<QRCodeDisplayProps>): JSX.Element => {
   return (
     <Flex alignItems="center" backgroundColor={containerBackgroundColor} justifyContent="center" position="relative">
@@ -53,6 +64,7 @@ const _QRCodeDisplay = ({
         color={color}
         ecl={ecl}
         size={size}
+        showEyes={showEyes}
       />
       <Flex
         alignItems="center"
