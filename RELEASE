@@ -1,7 +1,7 @@
-## iOS / Android
+## Extension
 
 We are back with some new updates! We’ve added some bug fixes and performance improvements:
 
-- Fixed some minor issues QR code display
-- Improved biometric authentication error messages
-- Corrected a visual bug in managing favorite token
+- Improved responsiveness times for balance and activity updates
+- Improved browser sidebar sizing for compatibility with different sizes
+- Small visual improvements
