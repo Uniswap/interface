@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmPRH8iDRHw8B4Jd4jKWTneDBYLxe82ZuLSfvanVJ6adhi`
-- CIDv1: `bafybeiaqbmy7l6u4r5477ta5tht6zn5zlmukbkgldpbartpx7pn5to5m4e`
+- CIDv0: `QmTwwxuuo1RVvJZ2Hr4YCJ1WS7f1zVoX7n9B21FHT2ptmp`
+- CIDv1: `bafybeictkvdaqcxnu26w4ptkdsg4slui4nnh3rdugaa2eeexll4cxje57m`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,72 +10,9 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiaqbmy7l6u4r5477ta5tht6zn5zlmukbkgldpbartpx7pn5to5m4e.ipfs.dweb.link/
-- [ipfs://QmPRH8iDRHw8B4Jd4jKWTneDBYLxe82ZuLSfvanVJ6adhi/](ipfs://QmPRH8iDRHw8B4Jd4jKWTneDBYLxe82ZuLSfvanVJ6adhi/)
+- https://bafybeictkvdaqcxnu26w4ptkdsg4slui4nnh3rdugaa2eeexll4cxje57m.ipfs.dweb.link/
+- [ipfs://QmTwwxuuo1RVvJZ2Hr4YCJ1WS7f1zVoX7n9B21FHT2ptmp/](ipfs://QmTwwxuuo1RVvJZ2Hr4YCJ1WS7f1zVoX7n9B21FHT2ptmp/)
 
-## 5.105.0 (2025-08-06)
-
-
-### Features
-
-* **web:** [landing] add new help modal (#22175) 8d1d6e8
-* **web:** [landing] add Stats header and simplify layout (#21878) e1f5c19
-* **web:** [landing] add uniswapx and unichain cards (#21892) 52a4dc9
-* **web:** [landing] Convert Connect cards to Table (#21915) a13175a
-* **web:** [landing] Copy changes to web landing page (#21872) f87d5fc
-* **web:** [landing] new desktop navbar menu (#21939) c5fb361
-* **web:** [landing] peek fold contents (#21849) 7083c2a
-* **web:** [landing] replace LP fees stats with TVL (#21873) 55cacbf
-* **web:** [landing] update app cards structure (#21890) 4781252
-* **web:** [landing] update footer links (#21938) 3229be8
-* **web:** [landing] update mweb navbar (#22157) d7a2991
-* **web:** [landing] update Trading API and LP cards (#21891) 7c6b3fd
-* **web:** add ui feature flags (#21931) 2218517
-
-
-### Bug Fixes
-
-* **web:** [lp] undefined check for tickUpper or tickLower since 0 is possible (#22264) 290b03a
-* **web:** add fee tier for v2 to badges (#22172) 3424ca4
-* **web:** Add null check for transactions state access (#22191) 62346c4
-* **web:** fix division by zero error (#22352) 9f5ad3a
-* **web:** mobile browser injected wallet (#22116) b8e42f6
-* **web:** need to account from to send function (#22210) 135be30
-* **web:** permanently skip statsig health check test (#22268) f1acdec
-* **web:** pool fee can be 0 for dynamic pools (#22113) 445407a
-* **web:** restore hide toast logic (#22203) ded2826
-* **web:** revert submit transaction with transaction hash (#22246) 7829df0
-* **web:** update formatting on the liquidity position card (#22171) 5ae7ea7
-* **web:** use most recent tx for flashblocks modal (#22202) 03a76b6
-* **web:** use native token for increase calldata query (#22168) 9cd3079
-* **web:** wallet modal other options should be toggled open by default (#22142) c4fa804
-
-
-### Performance Improvements
-
-* **web:** use tx hash to fetch transaction (#22238) a1daacd
-
-
-### Continuous Integration
-
-* **web:** update sitemaps 800ba02
-
-
-### Code Refactoring
-
-* **web:** use usePortfolioBalances with rest support in TDP balances (#22112) e2620e7
-
-
-### Styles
-
-* **web:** add hover state for other balances on TDP (#22104) 5d9d4f2
-* **web:** improve tdp control sizing consistency (#21879) 19870b3
-
-
-### Tests
-
-* **web:** more e2e test fixes (#22093) 8e9e5de
-* **web:** skip statsig test (#22220) 28a6bbd
-* **web:** update playwright statsig health check (#22233) f14409a
+### 5.105.3 (2025-08-07)
 
 

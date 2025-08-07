@@ -1843,7 +1843,6 @@
   "swap.details.rate": "Rate",
   "swap.details.slippage": "Max slippage",
   "swap.details.slippage.uniswap": "Uniswap Protected slippage",
-  "swap.details.swappedIn": "Swapped in {{time}}s",
   "swap.details.swappedIn.unichain": "Completed in {{time}}s on Unichain",
   "swap.details.uniswapFee": "Fee",
   "swap.error.default": "You may need to increase your slippage tolerance. Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.",
