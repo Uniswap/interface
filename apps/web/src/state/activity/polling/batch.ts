@@ -55,6 +55,37 @@ function finalizeBatch(params: {
   delete FAILURE_COUNT_MAP[transaction.batchInfo.batchId]
 }
 
+/**
+ * TODO(WEB-7872):Temporary parsing logic for Coinbase Smart Wallet responses that do not yet conform
+ * to the EIP-5972 spec. Once the coinbase smart wallet is updated, this method (and its caller) can be
+ * deleted.
+ */
+function handleFallbackParsingForCoinbase(params: {
+  result: GetCallsResult
+  transaction: PendingBatchDetails
+  onActivityUpdate: OnActivityUpdate
+}) {
+  const { result, transaction, onActivityUpdate } = params
+
+  // We only care about confirmed results. "PENDING" responses are ignored so the
+  // next poll can re-check them later.
+  if (result.status !== 'CONFIRMED') {
+    return
+  }
+
+  const receipt = result.receipts?.[0]
+  if (!receipt) {
+    throw new Error(
+      `${transaction.batchInfo.connectorId ?? 'wallet'} returned CONFIRMED with no receipt (legacy Coinbase path)`,
+    )
+  }
+
+  const hash = receipt.transactionHash
+  const updatedStatus = receipt.status === 1 ? TransactionStatus.Success : TransactionStatus.Failed
+
+  finalizeBatch({ transaction, onActivityUpdate, hash, status: updatedStatus })
+}
+
 export function usePollPendingBatchTransactions(onActivityUpdate: OnActivityUpdate) {
   const pendingBatchTransactions = usePendingBatches()
   const walletProvider = useEthersWeb3Provider()
@@ -63,6 +94,12 @@ export function usePollPendingBatchTransactions(onActivityUpdate: OnActivityUpda
     for (const transaction of pendingBatchTransactions) {
       try {
         const result = await getCallsStatus({ provider, batchId: transaction.batchInfo.batchId })
+
+        // TODO(WEB-7872) If Coinbase smart wallet returns a string status, handle via fallback helper.
+        if (typeof result.status === 'string') {
+          handleFallbackParsingForCoinbase({ result, transaction, onActivityUpdate })
+          continue
+        }
 
         const receipt = result.receipts?.[0]
         if (result.status === 200) {
@@ -112,7 +149,8 @@ type GetCallsResult = {
   version: string
   id: HexString
   chainId: HexString
-  status: number
+  // TODO(WEB-7872): Remove temporary support for v1 of atomic batching schema for coinbase wallet (CONFIRMED | PENDING)
+  status: number | 'CONFIRMED' | 'PENDING'
   atomic: boolean
   receipts?: {
     logs: {
@@ -120,7 +158,8 @@ type GetCallsResult = {
       data: HexString
       topics: HexString[]
     }[]
-    status: HexString
+    // TODO(WEB-7872): Remove temporary support for v1 of atomic batching schema for coinbase wallet (0 | 1)
+    status: HexString | 0 | 1
     blockHash: HexString
     blockNumber: HexString
     gasUsed: HexString

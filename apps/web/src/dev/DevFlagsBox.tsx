@@ -48,9 +48,9 @@ export default function DevFlagsBox() {
       $sm={{
         bottom: 30,
       }}
-      bottom="$spacing48"
-      left="$spacing20"
-      zIndex="$modal"
+      bottom="$spacing24"
+      left="$spacing24"
+      zIndex={Number.MAX_SAFE_INTEGER}
       padding={10}
       borderWidth={1}
       borderColor="$surface3"

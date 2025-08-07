@@ -34,9 +34,7 @@ function getActiveTick({
   feeAmount?: FeeAmount
   tickSpacing?: number
 }): number | undefined {
-  return tickCurrent && feeAmount !== undefined && tickSpacing
-    ? Math.floor(tickCurrent / tickSpacing) * tickSpacing
-    : undefined
+  return tickCurrent && feeAmount && tickSpacing ? Math.floor(tickCurrent / tickSpacing) * tickSpacing : undefined
 }
 
 const MAX_TICK_FETCH_VALUE = 1000

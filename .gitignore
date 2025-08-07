@@ -62,10 +62,11 @@ apps/mobile/.maestro/scripts/testIds.js
 .rnef/
 
 # claude
+claude.md
 claude.local.md
+CLAUDE.md
 CLAUDE.local.md
 .claude/settings.local.json
-.claude/local/
 
 # cursor
 .cursor/mcp.json

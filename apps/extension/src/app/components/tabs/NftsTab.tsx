@@ -1,16 +1,13 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { memo, useCallback } from 'react'
 import { Flex } from 'ui/src'
-import { NftsList } from 'uniswap/src/components/nfts/NftsList'
-import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NftViewWithContextMenu } from 'wallet/src/components/nfts/NftViewWithContextMenu'
-import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { NftsList } from 'wallet/src/components/nfts/NftsList'
+import { NFTItem } from 'wallet/src/features/nfts/types'
 
 export const NftsTab = memo(function _NftsTab({ owner, skip }: { owner: Address; skip?: boolean }): JSX.Element {
-  const accounts = useAccounts()
-
   const renderNFTItem = useCallback(
     (item: NFTItem) => {
       const onPress = (): void => {
@@ -22,11 +19,11 @@ export const NftsTab = memo(function _NftsTab({ owner, skip }: { owner: Address;
 
       return (
         <Flex fill m="$spacing4">
-          <NftViewWithContextMenu walletAddresses={Object.keys(accounts)} item={item} owner={owner} onPress={onPress} />
+          <NftViewWithContextMenu item={item} owner={owner} onPress={onPress} />
         </Flex>
       )
     },
-    [accounts, owner],
+    [owner],
   )
 
   return (

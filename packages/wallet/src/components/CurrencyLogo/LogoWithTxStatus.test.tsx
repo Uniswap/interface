@@ -185,8 +185,8 @@ describe(LogoWithTxStatus, () => {
 // Mock ImageUri component using the native implementation
 // (this is needed because native implementation is not used by default
 // with our test setup where we exclude files with native extensions)
-jest.mock('uniswap/src/components/nfts/images/ImageUri', () =>
-  jest.requireActual('uniswap/src/components/nfts/images/ImageUri.native.tsx'),
+jest.mock('wallet/src/features/images/ImageUri', () =>
+  jest.requireActual('wallet/src/features/images/ImageUri.native.tsx'),
 )
 
 describe(DappLogoWithTxStatus, () => {

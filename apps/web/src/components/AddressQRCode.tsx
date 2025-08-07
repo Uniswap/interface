@@ -45,8 +45,6 @@ export function AddressQRCode({ accountAddress }: { accountAddress: Address }) {
           containerBackgroundColor={colors.surface1.val}
           size={QR_CODE_SIZE}
           encodedValue={accountAddress!}
-          // TODO (GROW-421): Show QR Code Eyes once web alignment is fixed
-          showEyes={false}
         >
           <Flex
             justifyContent="center"

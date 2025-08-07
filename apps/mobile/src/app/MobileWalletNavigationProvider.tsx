@@ -6,7 +6,6 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
-import { NavigateToNftItemArgs } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
   useFiatOnRampAggregatorCountryListQuery,
@@ -26,6 +25,7 @@ import {
   NavigateToExternalProfileArgs,
   NavigateToFiatOnRampArgs,
   NavigateToNftCollectionArgs,
+  NavigateToNftItemArgs,
   NavigateToSendFlowArgs,
   NavigateToSwapFlowArgs,
   ShareTokenArgs,

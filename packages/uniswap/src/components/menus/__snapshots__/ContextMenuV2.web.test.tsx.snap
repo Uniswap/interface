@@ -154,7 +154,6 @@ exports[`ContextMenu renders without error 1`] = `
                 "borderTopWidth": 1,
                 "flexDirection": "column",
                 "gap": 4,
-                "maxWidth": 250,
                 "minWidth": 200,
                 "paddingBottom": 8,
                 "paddingLeft": 8,
@@ -198,6 +197,7 @@ exports[`ContextMenu renders without error 1`] = `
                   "flexGrow": 1,
                   "gap": 8,
                   "justifyContent": "space-between",
+                  "maxWidth": 250,
                   "opacity": 1,
                   "paddingBottom": 8,
                   "paddingLeft": 8,
@@ -244,6 +244,30 @@ exports[`ContextMenu renders without error 1`] = `
                 >
                   Option 1
                 </Text>
+              </View>
+              <View
+                onBlur={[Function]}
+                onFocus={[Function]}
+                style={
+                  {
+                    "flexDirection": "column",
+                    "flexShrink": 0,
+                  }
+                }
+              >
+                <View
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  pointerEvents="none"
+                  style={
+                    {
+                      "height": 20,
+                      "minHeight": 20,
+                      "minWidth": 20,
+                      "width": 20,
+                    }
+                  }
+                />
               </View>
             </View>
             <View
@@ -302,6 +326,7 @@ exports[`ContextMenu renders without error 1`] = `
                   "flexGrow": 1,
                   "gap": 8,
                   "justifyContent": "space-between",
+                  "maxWidth": 250,
                   "opacity": 1,
                   "paddingBottom": 8,
                   "paddingLeft": 8,
@@ -348,6 +373,30 @@ exports[`ContextMenu renders without error 1`] = `
                 >
                   Option 2
                 </Text>
+              </View>
+              <View
+                onBlur={[Function]}
+                onFocus={[Function]}
+                style={
+                  {
+                    "flexDirection": "column",
+                    "flexShrink": 0,
+                  }
+                }
+              >
+                <View
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  pointerEvents="none"
+                  style={
+                    {
+                      "height": 20,
+                      "minHeight": 20,
+                      "minWidth": 20,
+                      "width": 20,
+                    }
+                  }
+                />
               </View>
             </View>
           </div>

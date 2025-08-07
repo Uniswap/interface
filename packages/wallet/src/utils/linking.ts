@@ -1,4 +1,5 @@
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search/utils'
@@ -24,6 +25,14 @@ export async function openFORSupportLink(serviceProvider: ServiceProviderInfo): 
 
 export async function openOfframpPendingSupportLink(): Promise<void> {
   return openUri({ uri: uniswapUrls.helpArticleUrls.fiatOffRampHelp })
+}
+
+/**
+ * Return the explorer name for the given chain ID
+ * @param chainId the ID of the chain for which to return the explorer name
+ */
+export function getExplorerName(chainId: UniverseChainId): string {
+  return getChainInfo(chainId).explorer.name
 }
 
 export function getProfileUrl(walletAddress: string): string {

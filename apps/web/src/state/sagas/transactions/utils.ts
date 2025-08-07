@@ -364,11 +364,7 @@ function* findDuplicativeTx({
     throw new Error(`Invalid chainId: ${chainId} is not a valid UniverseChainId`)
   }
 
-  const transactionMap = yield* select(
-    // TODO(INFRA-645): DO NOT REMOVE THIS OPTIONAL CHAINING OPERATOR UNTIL THE TYPE IS FIXED.
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    (state: InterfaceState) => state.transactions[account.address]?.[chainId] ?? {},
-  )
+  const transactionMap = yield* select((state: InterfaceState) => state.transactions[account.address][chainId] ?? {})
 
   const transactionsForAccount = Object.values(transactionMap)
     .filter((tx) => isSameAddress(tx.from, account.address))

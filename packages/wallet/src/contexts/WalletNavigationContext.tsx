@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { createContext, ReactNode, useContext } from 'react'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { NavigateToNftItemArgs } from 'uniswap/src/contexts/UniswapContext'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { getSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getSendPrefilledState } from 'wallet/src/features/transactions/send/getSendPrefilledState'
 
 type NavigateToTransactionFlowTransactionState = {
@@ -94,6 +94,15 @@ export function getNavigateToSendFlowArgsInitialState(args: NavigateToSendFlowAr
     : isNavigateToSendFlowArgsPartialState(args)
       ? getSendPrefilledState(args)
       : undefined
+}
+
+export type NavigateToNftItemArgs = {
+  owner?: Address
+  address: Address
+  tokenId: string
+  chainId?: UniverseChainId
+  isSpam?: boolean
+  fallbackData?: NFTItem
 }
 
 export type NavigateToNftCollectionArgs = {

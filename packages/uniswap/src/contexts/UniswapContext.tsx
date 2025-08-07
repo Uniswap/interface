@@ -3,19 +3,9 @@ import { Signer } from 'ethers/lib/ethers'
 import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { Connector } from 'wagmi'
-
-export type NavigateToNftItemArgs = {
-  owner?: Address
-  address: Address
-  tokenId: string
-  chainId?: UniverseChainId
-  isSpam?: boolean
-  fallbackData?: NFTItem
-}
 
 /** Stores objects/utils that exist on all platforms, abstracting away app-level specifics for each, in order to allow usage in cross-platform code. */
 interface UniswapContextValue {
@@ -27,7 +17,6 @@ interface UniswapContextValue {
   navigateToReceive: () => void
   navigateToTokenDetails: (currencyId: string) => void
   navigateToExternalProfile: (args: { address: Address }) => void
-  navigateToNftDetails: (args: NavigateToNftItemArgs) => void
   navigateToNftCollection: (args: { collectionAddress: Address; chainId: UniverseChainId }) => void
   navigateToPoolDetails: (args: { poolId: Address; chainId: UniverseChainId }) => void
   handleShareToken: (args: { currencyId: string }) => void
@@ -66,7 +55,6 @@ export function UniswapProvider({
   navigateToReceive,
   navigateToTokenDetails,
   navigateToExternalProfile,
-  navigateToNftDetails,
   navigateToNftCollection,
   navigateToPoolDetails,
   handleShareToken,
@@ -97,7 +85,6 @@ export function UniswapProvider({
       navigateToTokenDetails,
       navigateToExternalProfile,
       navigateToNftCollection,
-      navigateToNftDetails,
       navigateToPoolDetails,
       handleShareToken,
       onSwapChainsChanged: ({
@@ -137,7 +124,6 @@ export function UniswapProvider({
       navigateToTokenDetails,
       navigateToExternalProfile,
       navigateToNftCollection,
-      navigateToNftDetails,
       navigateToPoolDetails,
       handleShareToken,
       signer,
@@ -146,12 +132,13 @@ export function UniswapProvider({
       swapInputChainId,
       swapOutputChainId,
       isSwapTokenSelectorOpen,
+      setIsSwapTokenSelectorOpen,
       getCanSignPermits,
+      onSwapChainsChanged,
       getIsUniswapXSupported,
       handleOnPressUniswapXUnsupported,
       getCanBatchTransactions,
       getSwapDelegationInfo,
-      onSwapChainsChanged,
     ],
   )
 

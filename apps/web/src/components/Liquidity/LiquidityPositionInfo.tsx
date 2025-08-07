@@ -6,6 +6,7 @@ import {
 } from 'components/Liquidity/LiquidityPositionStatusIndicator'
 import { TextLoader } from 'components/Liquidity/Loader'
 import { PositionInfo } from 'components/Liquidity/types'
+import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -59,6 +60,7 @@ export function LiquidityPositionInfo({
   includeNetwork = false,
 }: LiquidityPositionInfoProps) {
   const { currency0Amount, currency1Amount, status, feeTier, v4hook, version, chainId } = positionInfo
+  const versionLabel = getProtocolVersionLabel(version)
   const navigate = useNavigate()
   const chainInfo = getChainInfo(positionInfo.chainId)
   const media = useMedia()
@@ -136,7 +138,7 @@ export function LiquidityPositionInfo({
             )}
           </Flex>
           <Flex row gap={2} alignItems="center">
-            <LiquidityPositionInfoBadges size="small" version={version} v4hook={v4hook} feeTier={feeTier} />
+            <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={v4hook} feeTier={feeTier} />
           </Flex>
           {isMigrateToV4ButtonVisible && migrateToV4Button()}
         </Flex>

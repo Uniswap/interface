@@ -1,74 +1,71 @@
 import { Currency } from '@uniswap/sdk-core'
-import { getTokenDetailsURL } from 'appGraphql/data/util'
+import { PortfolioBalance } from 'appGraphql/data/portfolios'
+import { getTokenDetailsURL, gqlToCurrency, supportedChainIdFromGQLChain } from 'appGraphql/data/util'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { useAccount } from 'hooks/useAccount'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { ThemedText } from 'theme/components'
+import { Flex } from 'ui/src'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
 interface BalanceProps {
   currency?: Currency
   chainId?: UniverseChainId
-  fetchedBalance?: PortfolioBalance
+  gqlBalance?: PortfolioBalance
   alignLeft?: boolean
   onClick?: () => void
 }
 const Balance = ({
   currency,
   chainId = UniverseChainId.Mainnet,
-  fetchedBalance,
+  gqlBalance,
   alignLeft = false,
   onClick,
 }: BalanceProps) => {
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
-  const currencies = useMemo(() => (currency ? [currency] : []), [currency])
+  const currencies = useMemo(() => [currency], [currency])
 
-  const formattedBalance = formatNumberOrString({
-    value: fetchedBalance?.quantity,
+  const formattedGqlBalance = formatNumberOrString({
+    value: gqlBalance?.quantity,
     type: NumberType.TokenNonTx,
   })
-  const formattedUsdValue = convertFiatAmountFormatted(fetchedBalance?.balanceUSD, NumberType.PortfolioBalance)
+  const formattedUsdGqlValue = convertFiatAmountFormatted(
+    gqlBalance?.denominatedValue?.value,
+    NumberType.PortfolioBalance,
+  )
 
   return (
-    <TouchableArea onPress={onClick} {...(onClick ? ClickableTamaguiStyle : {})}>
-      <Flex mt="$spacing12" row alignItems="center">
-        <PortfolioLogo
-          currencies={currencies}
-          chainId={chainId}
-          images={fetchedBalance?.currencyInfo.logoUrl ? [fetchedBalance.currencyInfo.logoUrl] : undefined}
-          size={32}
-        />
-        <Flex
-          shrink
-          row
-          width="100%"
-          justifyContent={alignLeft ? 'flex-start' : 'space-between'}
-          gap={alignLeft ? '$spacing8' : 'unset'}
-          alignItems="center"
-          ml="$spacing12"
-        >
-          <Flex>
-            <Text variant="body2" color="$neutral1">
-              {formattedUsdValue}
-            </Text>
-          </Flex>
-          <Flex>
-            <Text variant="body2" color="$neutral2">
-              {formattedBalance}
-            </Text>
-          </Flex>
+    <Flex mt="$spacing12" row alignItems="center" onPress={onClick}>
+      <PortfolioLogo
+        currencies={currencies}
+        chainId={chainId}
+        images={[gqlBalance?.token?.project?.logoUrl]}
+        size={32}
+      />
+      <Flex
+        shrink
+        row
+        width="100%"
+        justifyContent={alignLeft ? 'flex-start' : 'space-between'}
+        gap={alignLeft ? '$spacing8' : 'unset'}
+        alignItems="center"
+        ml="$spacing12"
+      >
+        <Flex>
+          <ThemedText.BodyPrimary>{formattedUsdGqlValue}</ThemedText.BodyPrimary>
+        </Flex>
+        <Flex>
+          <ThemedText.BodySecondary>{formattedGqlBalance}</ThemedText.BodySecondary>
         </Flex>
       </Flex>
-    </TouchableArea>
+    </Flex>
   )
 }
 
@@ -80,16 +77,14 @@ export const PageChainBalanceSummary = ({
   alignLeft?: boolean
 }) => {
   const { t } = useTranslation()
-  if (!pageChainBalance) {
+  if (!pageChainBalance || !pageChainBalance.token) {
     return null
   }
-  const currency = pageChainBalance.currencyInfo.currency
+  const currency = gqlToCurrency(pageChainBalance.token)
   return (
     <Flex height="fit-content" width="100%">
-      <Text variant="subheading1" color="$neutral1">
-        {t('tdp.balanceSummary.title')}
-      </Text>
-      <Balance currency={currency} chainId={currency.chainId} fetchedBalance={pageChainBalance} alignLeft={alignLeft} />
+      <ThemedText.HeadlineSmall color="neutral1">{t('tdp.balanceSummary.title')}</ThemedText.HeadlineSmall>
+      <Balance currency={currency} chainId={currency?.chainId} gqlBalance={pageChainBalance} alignLeft={alignLeft} />
     </Flex>
   )
 }
@@ -111,28 +106,24 @@ const OtherChainsBalanceSummary = ({
   return (
     <Flex>
       {hasPageChainBalance ? (
-        <Text variant="body3" color="$neutral2">
-          {t('tdp.balanceSummary.otherNetworks')}
-        </Text>
+        <ThemedText.SubHeaderSmall>{t('tdp.balanceSummary.otherNetworks')}</ThemedText.SubHeaderSmall>
       ) : (
-        <Text variant="subheading1" color="$neutral1">
-          {t('tdp.balanceSummary.otherNetworksBalance')}
-        </Text>
+        <ThemedText.HeadlineSmall>{t('tdp.balanceSummary.otherNetworksBalance')}</ThemedText.HeadlineSmall>
       )}
       {otherChainBalances.map((balance) => {
-        const currency = balance.currencyInfo.currency
-        const chainId = currency.chainId || defaultChainId
+        const currency = balance.token && gqlToCurrency(balance.token)
+        const chainId = (balance.token && supportedChainIdFromGQLChain(balance.token.chain)) ?? defaultChainId
         return (
           <Balance
             key={balance.id}
             currency={currency}
             chainId={chainId}
-            fetchedBalance={balance}
+            gqlBalance={balance}
             onClick={() =>
               navigate(
                 getTokenDetailsURL({
-                  address: currency.isToken ? currency.address : undefined,
-                  chain: toGraphQLChain(chainId),
+                  address: balance.token?.address,
+                  chain: balance.token?.chain ?? Chain.Ethereum,
                 }),
               )
             }
@@ -155,8 +146,8 @@ export default function BalanceSummary() {
     }
   }
   otherChainBalances.sort((a, b) => {
-    const aQty = Number(a.quantity)
-    const bQty = Number(b.quantity)
+    const aQty = Number(a.quantity ?? 0)
+    const bQty = Number(b.quantity ?? 0)
     return bQty - aQty
   })
   const hasBalances = pageChainBalance || Boolean(otherChainBalances.length)

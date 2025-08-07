@@ -28,6 +28,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { FLASHBLOCKS_INSTANT_BALANCE_TIMEOUT } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
 import type {
   ApproveTransactionInfo,
   BridgeTransactionInfo,
@@ -51,6 +52,7 @@ import { isAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 type FormatNumberFunctionType = ReturnType<typeof useLocalizationContext>['formatNumberOrString']
 type FormatFiatPriceFunctionType = ReturnType<typeof useLocalizationContext>['convertFiatAmountFormatted']
@@ -398,6 +400,27 @@ export async function transactionToActivity({
       timestamp: (isConfirmedTx(details) ? details.confirmedTime : details.addedTime) / 1000,
       from: details.from,
       cancelled: details.cancelled,
+    }
+
+    // Override title for successful Unichain swaps
+    const isUnichainNetwork = chainId === UniverseChainId.Unichain || chainId === UniverseChainId.UnichainSepolia
+    const confirmTimeSeconds = isConfirmedTx(details) ? (details.confirmedTime - details.addedTime) / 1000 : undefined
+    if (
+      details.typeInfo.type === TransactionType.Swap &&
+      details.status === TransactionStatus.Success &&
+      isUnichainNetwork &&
+      confirmTimeSeconds !== undefined
+    ) {
+      // Calculate actual confirm time from transaction details
+
+      // Round to nearest 0.1
+      const roundedConfirmTime = Math.round(confirmTimeSeconds * 10) / 10
+
+      if (roundedConfirmTime * ONE_SECOND_MS < FLASHBLOCKS_INSTANT_BALANCE_TIMEOUT) {
+        defaultFields.title = i18n.t('swap.details.swappedIn', {
+          time: roundedConfirmTime,
+        })
+      }
     }
 
     let additionalFields: Partial<Activity> = {}

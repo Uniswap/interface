@@ -43,8 +43,8 @@ export const WORLD_CHAIN_INFO = {
   docs: 'https://docs.worldcoin.org/',
   elementName: ElementName.ChainWorldChain,
   explorer: {
-    name: 'World Chain Mainnet Explorer',
-    url: 'https://worldscan.org/',
+    name: 'World Chain Explorer',
+    url: 'https://worldchain-mainnet.explorer.alchemy.com/',
   },
   interfaceName: 'worldchain',
   label: 'World Chain',

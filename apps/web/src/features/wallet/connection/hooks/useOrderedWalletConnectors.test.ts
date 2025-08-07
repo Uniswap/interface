@@ -8,8 +8,7 @@ import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
-// eslint-disable-next-line no-var
-var mockIsMobileWeb = false
+let mockIsMobileWeb = false
 vi.mock('utilities/src/platform', async () => {
   const actual = await vi.importActual('utilities/src/platform')
   return {

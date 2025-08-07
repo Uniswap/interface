@@ -7,6 +7,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { logger } from 'utilities/src/logger/logger'
 import { escapeRegExp } from 'utilities/src/primitives/string'
+import { useEvent } from 'utilities/src/react/hooks'
 import { getTokenUrl } from 'wallet/src/utils/linking'
 
 export type SidebarLocationState =
@@ -20,8 +21,10 @@ export const useExtensionNavigation = (): {
   navigateBack: () => void
   locationState: SidebarLocationState
 } => {
-  const navigateTo = (path: To): void => navigate(path)
-  const navigateBack = (): void => navigate(-1)
+  const navigateTo = useEvent((path: To): void => navigate(path))
+  const navigateBack = useEvent((): void => {
+    navigate(-1)
+  })
   const locationState = useLocation().state as SidebarLocationState
 
   return { navigateTo, navigateBack, locationState }

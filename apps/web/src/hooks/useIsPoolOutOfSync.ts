@@ -1,7 +1,4 @@
-import { Currency, CurrencyAmount, Fraction } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
-import { Pool as V3Pool } from '@uniswap/v3-sdk'
-import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { Currency, CurrencyAmount, Fraction, Price } from '@uniswap/sdk-core'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
@@ -45,15 +42,7 @@ function useMarketPrice(baseCurrency?: Currency, quoteCurrency?: Currency) {
  * @param quoteCurrency The pool's quote currency (a.k.a. token1)
  * @param poolPrice The exchange rate between token0 and token1
  */
-export function useIsPoolOutOfSync(poolOrPair?: V4Pool | V3Pool | Pair) {
-  let poolPrice
-  try {
-    poolPrice = poolOrPair?.token0Price
-  } catch (_e) {
-    // for a v2 pool if it has been created but there is no liquidity then getting the price will throw an error
-    poolPrice = undefined
-  }
-
+export function useIsPoolOutOfSync(poolPrice?: Price<Currency, Currency>) {
   const marketPrice = useMarketPrice(poolPrice?.baseCurrency, poolPrice?.quoteCurrency)
 
   if (!poolPrice || !marketPrice) {

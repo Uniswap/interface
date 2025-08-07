@@ -1,8 +1,6 @@
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
-import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   NFTApproveTransactionInfo,
@@ -15,6 +13,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isWeb } from 'utilities/src/platform'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 
 const MAX_NFT_IMAGE_HEIGHT = 375
 
@@ -54,8 +53,7 @@ export function NftTransactionContent({
   nftSummaryInfo: NFTSummaryInfo
   onClose: () => void
 }): JSX.Element {
-  const { navigateToNftCollection } = useWalletNavigation()
-  const { navigateToNftDetails } = useUniswapContext()
+  const { navigateToNftCollection, navigateToNftDetails } = useWalletNavigation()
 
   const onPressNft = (): void => {
     navigateToNftDetails({

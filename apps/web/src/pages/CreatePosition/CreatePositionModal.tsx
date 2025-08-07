@@ -10,6 +10,7 @@ import { PoolOutOfSyncError } from 'components/Liquidity/Create/PoolOutOfSyncErr
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { getPoolIdOrAddressFromCreatePositionInfo } from 'components/Liquidity/utils/getPoolIdOrAddressFromCreatePositionInfo'
+import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
@@ -104,6 +105,8 @@ export function CreatePositionModal({
     const postfix = `${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`
     return [`${lowerPriceFormatted} ${postfix}`, `${upperPriceFormatted} ${postfix}`]
   }, [formatNumberOrString, pricesAtTicks, ticksAtLimit, protocolVersion, baseCurrency, quoteCurrency])
+
+  const versionLabel = getProtocolVersionLabel(protocolVersion)
 
   const [steps, setSteps] = useState<TransactionStep[]>([])
   const dispatch = useDispatch()
@@ -236,7 +239,7 @@ export function CreatePositionModal({
                   <Text variant="heading3">{currencyAmounts?.TOKEN1?.currency.symbol}</Text>
                 </Flex>
                 <Flex row gap={2} alignItems="center">
-                  <LiquidityPositionInfoBadges size="small" version={protocolVersion} v4hook={hook} feeTier={fee} />
+                  <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={hook} feeTier={fee} />
                 </Flex>
               </Flex>
               <DoubleCurrencyLogo

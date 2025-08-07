@@ -1,12 +1,15 @@
-import { LiveIcon, StatCard } from 'pages/Landing/components/StatCard'
+import { Body1, H2 } from 'pages/Landing/components/Generics'
+import { StatCard } from 'pages/Landing/components/StatCard'
 import { useInView } from 'pages/Landing/sections/useInView'
-import { parseToRgb } from 'polished'
-import { useTranslation } from 'react-i18next'
-import { use24hProtocolVolume, useDailyTVLWithChange } from 'state/explore/protocolStats'
+import { useMemo } from 'react'
+import { ArrowRightCircle } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { ExternalLink } from 'theme/components/Links'
 import { Flex, Text, styled, useSporeColors } from 'ui/src'
-import { RightArrow } from 'ui/src/components/icons/RightArrow'
-
+import {
+  ProtocolVersion,
+  useDailyProtocolVolumeQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -30,25 +33,72 @@ const SectionLayout = styled(Flex, {
   maxWidth: 1280,
 })
 
+const HideWhenAboveMedium = styled(Flex, {
+  display: 'none',
+
+  $md: {
+    display: 'flex',
+  },
+})
+
+const HideWhenMedium = styled(Flex, {
+  display: 'flex',
+
+  $md: {
+    display: 'none',
+  },
+})
+
 const GridArea = styled(Flex, {
   className: 'grid-area',
+  height: '100%',
 
   '$platform-web': {
     display: 'grid',
     gridTemplateColumns: 'repeat(4, 1fr)',
     gridTemplateRows: 'repeat(4, 1fr)',
-    gridColumnGap: '12px',
-    gridRowGap: '12px',
+    gridColumnGap: '16px',
+    gridRowGap: '16px',
   },
 
   $xs: {
     height: 320,
+
+    '$platform-web': {
+      gridColumnGap: '12px',
+      gridRowGap: '12px',
+    },
   },
 
   $xxs: {
     '$platform-web': {
       gridColumnGap: '8px',
       gridRowGap: '8px',
+    },
+  },
+})
+
+const Layout = styled(Flex, {
+  width: '100%',
+
+  '$platform-web': {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gridTemplateRows: 'repeat(2, 234px)',
+    gridColumnGap: '24px',
+    gridRowGap: '16px',
+    gap: '16px',
+  },
+
+  $md: {
+    '$platform-web': {
+      gridTemplateRows: 'repeat(2, 160px)',
+    },
+  },
+
+  $lg: {
+    '$platform-web': {
+      gridTemplateRows: 'repeat(2, 200px)',
     },
   },
 })
@@ -61,15 +111,19 @@ const LearnMoreButton = styled(Flex, {
   alignSelf: 'flex-start',
 })
 
-function GetStarted() {
-  const { t } = useTranslation()
+const ProtocolDescription = () => <Trans i18nKey="landing.protocolDescription" />
+
+function LearnMore() {
+  const colors = useSporeColors()
 
   return (
     <LearnMoreButton href="/explore">
-      <ExternalLink href="/explore" style={{ stroke: 'unset' }}>
+      <ExternalLink href="/explore">
         <Flex row gap="$gap8" alignItems="center">
-          <Text variant="buttonLabel1">{t('landing.getStarted')}</Text>
-          <RightArrow size="$icon.24" color="$neutral1" />
+          <Text fontSize={20} lineHeight={24} color="$neutral1">
+            <Trans i18nKey="common.button.learn" />
+          </Text>
+          <ArrowRightCircle size={24} stroke={colors.surface2.val} fill={colors.neutral1.val} />
         </Flex>
       </ExternalLink>
     </LearnMoreButton>
@@ -77,53 +131,41 @@ function GetStarted() {
 }
 
 export function Stats() {
-  const { t } = useTranslation()
   const { ref, inView } = useInView()
-  const colors = useSporeColors()
-  const { red, green, blue } = parseToRgb(colors.neutral2.val)
 
   return (
     <Container>
       <SectionLayout ref={ref}>
-        <Flex row justifyContent="space-between" gap="$gap24" $lg={{ flexDirection: 'column', gap: '$gap32' }}>
-          <Flex justifyContent="space-between" flex={0} gap="$gap32">
-            <Text variant="heading1" $md={{ variant: 'heading2' }}>
-              {t('landing.trusted')}
-            </Text>
-            <Flex gap="$spacing24">
-              <Text variant="heading2" $lg={{ variant: 'heading3' }} $md={{ fontSize: 18, lineHeight: 24 }}>
-                {t('landing.protocolDescription')}
-              </Text>
-              <GetStarted />
+        <HideWhenMedium>
+          <Layout>
+            <Flex start={1} end={3} gridRowStart={1} gridRowEnd={3} height="100%">
+              <Flex justifyContent="space-between" height="100%">
+                <H2>
+                  <Trans i18nKey="landing.trusted" />
+                </H2>
+                <Flex bottom={0} position="absolute" maxWidth={480} gap="$spacing24">
+                  <Body1>
+                    <ProtocolDescription />
+                  </Body1>
+                  <LearnMore />
+                </Flex>
+              </Flex>
             </Flex>
-          </Flex>
-          <Flex gap="$gap12">
-            <Flex
-              backgroundColor="$surface2"
-              borderRadius="$rounded20"
-              py="$spacing16"
-              px="$spacing20"
-              gap="$spacing8"
-              alignItems="center"
-              row
-              backgroundImage={`radial-gradient(rgba(${red}, ${green}, ${blue}, 0.25) 0.5px, transparent 0)`}
-              backgroundSize="12px 12px"
-              backgroundPosition="-8.5px -8.5px"
-            >
-              <LiveIcon display="block" />
-              <Text
-                variant="heading3"
-                color="$neutral2"
-                fontWeight="$medium"
-                $xl={{ fontSize: 18, lineHeight: 24 }}
-                $lg={{ lineHeight: 20 }}
-              >
-                {t('landing.protocolStats')}
-              </Text>
+            <Flex start={2} end={3} gridRowStart={1} gridRowEnd={3} height="100%">
+              <Cards inView={inView} />
             </Flex>
-            <Cards inView={inView} />
-          </Flex>
-        </Flex>
+          </Layout>
+        </HideWhenMedium>
+        <HideWhenAboveMedium maxWidth={1280} gap="$spacing32">
+          <Text fontSize={32}>
+            <Trans i18nKey="landing.trusted" />
+          </Text>
+          <Cards inView={inView} />
+          <Body1>
+            <ProtocolDescription />
+          </Body1>
+          <LearnMore />
+        </HideWhenAboveMedium>
       </SectionLayout>
     </Container>
   )
@@ -168,45 +210,62 @@ const RightBottom = styled(Flex, {
 function Cards({ inView }: { inView: boolean }) {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
-  const { totalVolume } = use24hProtocolVolume()
-  const { totalTVL } = useDailyTVLWithChange()
-  // Currently hardcoded, BE task [DAT-1435] to make this data available
-  const allTimeVolume = 3.3 * 10 ** 12
-  const allTimeSwappers = 119 * 10 ** 6
+  const dailyV2VolumeQuery = useDailyProtocolVolumeQuery({
+    variables: {
+      version: ProtocolVersion.V2,
+    },
+  })
+  const dailyV3VolumeQuery = useDailyProtocolVolumeQuery({
+    variables: {
+      version: ProtocolVersion.V3,
+    },
+  })
+
+  const totalVolume = useMemo(() => {
+    // Second to last data point is most recent 24H period
+    // Last data point is today's volume, which is still accumulating
+    const v2DataPoints = dailyV2VolumeQuery.data?.historicalProtocolVolume
+    const v2Volume = v2DataPoints && v2DataPoints.length >= 2 ? v2DataPoints[v2DataPoints.length - 2].value : 0
+
+    const v3DataPoints = dailyV3VolumeQuery.data?.historicalProtocolVolume
+    const v3Volume = v3DataPoints && v3DataPoints.length >= 2 ? v3DataPoints[v3DataPoints.length - 2].value : 0
+
+    return v2Volume + v3Volume
+  }, [dailyV2VolumeQuery.data?.historicalProtocolVolume, dailyV3VolumeQuery.data?.historicalProtocolVolume])
 
   return (
     <GridArea>
       <LeftTop>
         <StatCard
           title={t('stats.allTimeVolume')}
-          value={convertFiatAmountFormatted(allTimeVolume, NumberType.FiatTokenStats)}
+          value={convertFiatAmountFormatted(2.9 * 10 ** 12, NumberType.FiatTokenStats)}
           delay={0}
           inView={inView}
         />
       </LeftTop>
       <RightTop>
         <StatCard
-          title={t('stats.tvl')}
-          value={convertFiatAmountFormatted(totalTVL, NumberType.FiatTokenStats)}
+          title={t('stats.allTimeSwappers')}
+          value={formatNumberOrString({
+            value: 119 * 10 ** 6,
+            type: NumberType.TokenQuantityStats,
+          })}
           delay={0.2}
           inView={inView}
         />
       </RightTop>
       <LeftBottom>
         <StatCard
-          title={t('stats.allTimeSwappers')}
-          value={formatNumberOrString({
-            value: allTimeSwappers,
-            type: NumberType.TokenQuantityStats,
-          })}
+          title={t('stats.allTimeFees')}
+          value={convertFiatAmountFormatted(4.9 * 10 ** 9, NumberType.FiatTokenStats)}
           delay={0.4}
           inView={inView}
         />
       </LeftBottom>
       <RightBottom>
         <StatCard
-          title={t('stats.24swapVolume')}
-          value={convertFiatAmountFormatted(totalVolume, NumberType.FiatTokenStats)}
+          title={t('stats.24volume')}
+          value={convertFiatAmountFormatted(totalVolume || 500000000, NumberType.FiatTokenStats)}
           live
           delay={0.6}
           inView={inView}

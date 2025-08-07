@@ -11,17 +11,17 @@ import {
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
 import { CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
-import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
+import { ExplorerDataType, getExplorerLink, getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { escapeRegExp } from 'utilities/src/primitives/string'
 import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboard'
 import {
   NavigateToFiatOnRampArgs,
+  NavigateToNftItemArgs,
   NavigateToSendFlowArgs,
   NavigateToSwapFlowArgs,
   ShareTokenArgs,
@@ -36,7 +36,7 @@ export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.
   const navigateToAccountActivityList = useNavigateToAccountActivityList()
   const navigateToAccountTokenList = useNavigateToAccountTokenList()
   const navigateToBuyOrReceiveWithEmptyWallet = useNavigateToBuyOrReceiveWithEmptyWallet()
-  const navigateToNftDetails = useNavigateToNftExplorerLink()
+  const navigateToNftDetails = useNavigateToNftDetails()
   const navigateToReceive = useNavigateToReceive()
   const navigateToSend = useNavigateToSend()
   const navigateToSwapFlow = useNavigateToSwapFlow()
@@ -174,6 +174,22 @@ function useNavigateToPoolDetails(): (args: { poolId: Address; chainId: Universe
       reuseActiveTabIfItMatches: new RegExp(`^${escapeRegExp(uniswapUrls.webInterfacePoolsUrl)}`),
     })
   }, [])
+}
+
+function useNavigateToNftDetails(): (args: NavigateToNftItemArgs) => void {
+  const { defaultChainId } = useEnabledChains()
+  return useCallback(
+    ({ address, tokenId, chainId }: NavigateToNftItemArgs): void => {
+      window.open(
+        getExplorerLink({
+          chainId: chainId ?? defaultChainId,
+          data: `${address}/${tokenId}`,
+          type: ExplorerDataType.NFT,
+        }),
+      )
+    },
+    [defaultChainId],
+  )
 }
 
 function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {

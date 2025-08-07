@@ -163,8 +163,6 @@ test.describe('Mini Portfolio account drawer', () => {
     // connects to accountB by default
     await page.goto(`/swap`)
 
-    await page.getByTestId(TestID.Web3StatusConnected).click()
-
     const newBalance = await page.getByTestId(TestID.MiniPortfolioTotalBalance).textContent()
 
     // Verify new account address

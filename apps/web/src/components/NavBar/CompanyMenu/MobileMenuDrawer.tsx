@@ -1,11 +1,12 @@
-import { HelpModal } from 'components/HelpModal/HelpModal'
-import { MenuSectionTitle, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
+import { useMenuContent } from 'components/NavBar/CompanyMenu/Content'
+import { DownloadApp } from 'components/NavBar/CompanyMenu/DownloadAppCTA'
 import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
 import { LegalAndPrivacyMenu } from 'components/NavBar/LegalAndPrivacyMenu'
 import { NavDropdown } from 'components/NavBar/NavDropdown'
 import { getSettingsViewIndex } from 'components/NavBar/PreferencesMenu'
 import { CurrencySettings } from 'components/NavBar/PreferencesMenu/Currency'
 import { LanguageSettings } from 'components/NavBar/PreferencesMenu/Language'
+import { PreferenceSettings } from 'components/NavBar/PreferencesMenu/Preferences'
 import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
 import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
 import { useTheme } from 'lib/styled-components'
@@ -13,7 +14,7 @@ import { Socials } from 'pages/Landing/sections/Footer'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Accordion, AnimateTransition, Flex, Separator, Square, Text } from 'ui/src'
+import { Accordion, AnimateTransition, Flex, Square, Text } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -35,7 +36,7 @@ function MenuSection({
         <Accordion.Trigger flexDirection="row" p="0" gap="4px">
           {({ open }: { open: boolean }) => (
             <>
-              <Text variant="body4" color="$neutral2">
+              <Text variant="body1" color="$neutral1">
                 {title}
               </Text>
               {collapsible && (
@@ -73,12 +74,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
   const onExitPreferencesMenu = useCallback(() => changeView(PreferencesView.SETTINGS), [changeView])
   const { t } = useTranslation()
   const tabsContent = useTabsContent()
-  const productContent = useMenuContent({
-    keys: [MenuSectionTitle.Products],
-  })
-  const menuContent = useMenuContent({
-    keys: [MenuSectionTitle.Protocol, MenuSectionTitle.Company],
-  })
+  const menuContent = useMenuContent()
 
   // Collapse sections on close
   useEffect(() => {
@@ -110,28 +106,11 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
                     href={tab.href}
                     internal
                     closeMenu={closeMenu}
-                    icon={tab.icon}
                   />
                 ))}
               </MenuSection>
-              {Object.values(productContent).map((sectionContent, index) => (
-                <MenuSection key={`${sectionContent.title}_${index}`} title={sectionContent.title} collapsible={false}>
-                  {sectionContent.items.map(({ label, href, internal, icon }, index) => (
-                    <MenuLink
-                      key={`${label}_${index}}`}
-                      label={label}
-                      href={href}
-                      internal={internal}
-                      closeMenu={closeMenu}
-                      icon={icon}
-                    />
-                  ))}
-                </MenuSection>
-              ))}
 
-              <Separator backgroundColor="$surface3" />
-
-              {Object.values(menuContent).map((sectionContent, index) => (
+              {menuContent.map((sectionContent, index) => (
                 <MenuSection key={`${sectionContent.title}_${index}`} title={sectionContent.title}>
                   {sectionContent.items.map(({ label, href, internal }, index) => (
                     <MenuLink
@@ -144,13 +123,14 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
                   ))}
                 </MenuSection>
               ))}
+
+              <MenuSection title={t('common.displaySettings')}>
+                <PreferenceSettings showHeader={false} showThemeLabel={false} setSettingsView={changeView} />
+              </MenuSection>
+
+              <DownloadApp onClick={closeMenu} />
+              <Socials iconSize="25px" />
               {isConversionTrackingEnabled && <LegalAndPrivacyMenu closeMenu={closeMenu} />}
-              <Flex row width="100%" justifyContent="space-between" alignItems="flex-end">
-                <HelpModal />
-                <Flex gap="$spacing16">
-                  <Socials iconSize="20px" />
-                </Flex>
-              </Flex>
             </Flex>
           </Accordion>
 

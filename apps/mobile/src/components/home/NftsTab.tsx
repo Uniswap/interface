@@ -5,15 +5,14 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { Flex, useSporeColors } from 'ui/src'
-import { NftsList } from 'uniswap/src/components/nfts/NftsList'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
-import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
 import { NftViewWithContextMenu } from 'wallet/src/components/nfts/NftViewWithContextMenu'
-import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { NftsList } from 'wallet/src/components/nfts/NftsList'
+import { NFTItem } from 'wallet/src/features/nfts/types'
 
 export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]
 
@@ -34,7 +33,6 @@ export const NftsTab = memo(
     const colors = useSporeColors()
     const insets = useAppInsets()
     const navigation = useAppStackNavigation()
-    const accounts = useAccounts()
 
     const { onContentSizeChange, footerHeight, adaptiveFooter } = useAdaptiveFooter(
       containerProps?.contentContainerStyle,
@@ -54,17 +52,11 @@ export const NftsTab = memo(
 
         return (
           <Flex m="$spacing4">
-            <NftViewWithContextMenu
-              index={index}
-              item={item}
-              owner={owner}
-              walletAddresses={Object.keys(accounts)}
-              onPress={onPressNft}
-            />
+            <NftViewWithContextMenu index={index} item={item} owner={owner} onPress={onPressNft} />
           </Flex>
         )
       },
-      [owner, navigation, accounts],
+      [owner, navigation],
     )
 
     const refreshControl = useMemo(() => {

@@ -99,7 +99,7 @@ export default function Navbar() {
         <Right>
           {collapseSearchBar && <SearchBar />}
           {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
-          {!account.isConnected && <PreferenceMenu />}
+          {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
           {!hideChainSelector && <ChainSelector />}
           {isTestnetModeEnabled && <TestnetModeTooltip />}
           {isEmbeddedWalletEnabled && !account.address && <NewUserCTAButton />}

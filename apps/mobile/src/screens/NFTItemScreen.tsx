@@ -30,7 +30,6 @@ import { CopyAlt, Ellipsis } from 'ui/src/components/icons'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   NftActivityType,
@@ -39,7 +38,6 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, getChainLabel } from 'uniswap/src/features/chains/utils'
-import { useNFTContextMenu } from 'uniswap/src/features/nfts/useNftContextMenu'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -52,8 +50,10 @@ import { setClipboard, setClipboardImage } from 'uniswap/src/utils/clipboard'
 import { useNearestThemeColorFromImageUri } from 'uniswap/src/utils/colors'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
+import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
+import { useNFTContextMenu } from 'wallet/src/features/nfts/useNftContextMenu'
 import { shortenHash } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
-import { useAccounts, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const MAX_NFT_IMAGE_HEIGHT = 375
 
@@ -483,13 +483,10 @@ function RightElement({
   owner?: string
   isSpam?: boolean
 }): JSX.Element {
-  const accounts = useAccounts()
-
   const { menuActions, onContextMenuPress } = useNFTContextMenu({
     contractAddress,
     tokenId,
     owner,
-    walletAddresses: Object.keys(accounts),
     showNotification: true,
     isSpam,
     chainId,

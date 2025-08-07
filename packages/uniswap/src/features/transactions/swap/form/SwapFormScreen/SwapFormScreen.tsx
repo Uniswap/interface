@@ -62,11 +62,11 @@ export function SwapFormScreen({
       {!isInterface && <SwapFormHeader /> /* Interface renders its own header with multiple tabs */}
       {!hideSettings && <SwapFormSettings settings={settings} isBridgeTrade={isBridgeTrade} />}
 
-      <Flex grow animation="quick" opacity={hideContent ? 0 : 1}>
+      {!hideContent && (
         <SwapFormScreenStoreContextProvider tokenColor={tokenColor}>
           <SwapFormContent />
         </SwapFormScreenStoreContextProvider>
-      </Flex>
+      )}
 
       <SwapTokenSelector isModalOpen={showTokenSelector} focusHook={focusHook} />
     </TransactionModalInnerContainer>

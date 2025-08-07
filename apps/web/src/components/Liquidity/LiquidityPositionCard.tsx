@@ -282,7 +282,7 @@ export function LiquidityPositionCard({
 
   const formattedUsdValue =
     fiatValue0 && fiatValue1
-      ? convertFiatAmountFormatted(fiatValue0.add(fiatValue1).toExact(), NumberType.FiatTokenPrice)
+      ? convertFiatAmountFormatted(fiatValue0.add(fiatValue1).toExact(), NumberType.FiatStandard)
       : undefined
 
   const { totalFormattedEarnings, hasRewards, formattedFeesValue } = useLpIncentivesFormattedEarnings({

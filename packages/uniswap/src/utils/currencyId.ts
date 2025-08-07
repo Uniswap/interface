@@ -1,12 +1,12 @@
 import { Currency } from '@uniswap/sdk-core'
 import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 
@@ -155,7 +155,12 @@ export function currencyIdToGraphQLAddress(_currencyId?: string): Address | null
     return null
   }
 
-  return normalizeTokenAddressForCache(address)
+  // TODO(WEB-8055): Integrate better pattern for GQL token address normalization
+  if (isEVMChain(chainId)) {
+    return address.toLowerCase()
+  }
+
+  return address
 }
 
 export function currencyIdToChain(_currencyId: string): UniverseChainId | null {

@@ -181,9 +181,7 @@ export function ViewPrivateKeysScreen({ navigation, route }: Props): JSX.Element
               testID={TestID.ViewNativePrivateKeysOnCopied}
               onPress={onFinished}
             >
-              {addresses.length === 1
-                ? t('privateKeys.view.button.continue.single')
-                : t('privateKeys.view.button.continue')}
+              {t('privateKeys.view.button.continue')}
             </Button>
           </Trace>
         </Flex>

@@ -155,7 +155,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
 
       {/* header row */}
       <Flex row alignItems="center" justifyContent="space-between" mx="$spacing4" px="$spacing24">
-        <Flex centered backgroundColor="$surface4" borderRadius="$roundedFull" p="$spacing4">
+        <Flex centered backgroundColor="$surface3" borderRadius="$roundedFull" p="$spacing4">
           <BackButton color="$white" size={iconSizes.icon24} />
         </Flex>
         <ProfileContextMenu address={address} />

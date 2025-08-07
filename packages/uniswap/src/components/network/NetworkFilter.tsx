@@ -1,8 +1,10 @@
 import { useCallback } from 'react'
+import { Flex } from 'ui/src'
 import { easeInEaseOutLayoutAnimation } from 'ui/src/animations/layout/layoutAnimation'
 import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
+import { Ellipsis } from 'ui/src/components/icons/Ellipsis'
 import { iconSizes } from 'ui/src/theme'
-import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { NetworkLogo, SQUIRCLE_BORDER_RADIUS_RATIO } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import {
   ActionSheetDropdown,
   ActionSheetDropdownStyleProps,
@@ -12,7 +14,9 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isMobileApp } from 'utilities/src/platform'
 
+const ELLIPSIS = 'ellipsis'
 const NETWORK_ICON_SIZE = iconSizes.icon20
+const NETWORK_ICON_SHIFT = 8
 
 interface NetworkFilterProps {
   chainIds: UniverseChainId[]
@@ -22,6 +26,59 @@ interface NetworkFilterProps {
   showUnsupportedConnectedChainWarning?: boolean
   styles?: ActionSheetDropdownStyleProps
   hideArrow?: boolean
+}
+
+type EllipsisPosition = 'start' | 'end'
+
+type ListItem = 'ellipsis' | number
+
+export function NetworksInSeries({
+  networks,
+  ellipsisPosition,
+  networkIconSize = NETWORK_ICON_SIZE,
+}: {
+  networks: UniverseChainId[]
+  ellipsisPosition?: EllipsisPosition
+  networkIconSize?: number
+}): JSX.Element {
+  const items = [
+    ...(ellipsisPosition === 'start' ? [ELLIPSIS] : []),
+    ...networks,
+    ...(ellipsisPosition === 'end' ? [ELLIPSIS] : []),
+  ] as Array<UniverseChainId | typeof ELLIPSIS>
+
+  const renderItem = useCallback(
+    ({ item: chainId }: { item: ListItem }) => (
+      <Flex
+        key={chainId}
+        borderColor="$surface2"
+        borderRadius="$rounded8"
+        borderWidth="$spacing2"
+        ml={-NETWORK_ICON_SHIFT}
+      >
+        {chainId === ELLIPSIS ? (
+          <Flex
+            centered
+            backgroundColor="$neutral3"
+            borderRadius={networkIconSize * SQUIRCLE_BORDER_RADIUS_RATIO}
+            height={networkIconSize}
+            width={networkIconSize}
+          >
+            <Ellipsis color="$white" size="$icon.12" />
+          </Flex>
+        ) : (
+          <NetworkLogo chainId={chainId} shape="square" size={networkIconSize} />
+        )}
+      </Flex>
+    ),
+    [networkIconSize],
+  )
+
+  return (
+    <Flex row pl={NETWORK_ICON_SHIFT}>
+      {items.map((chainId) => renderItem({ item: chainId }))}
+    </Flex>
+  )
 }
 
 export function NetworkFilter({

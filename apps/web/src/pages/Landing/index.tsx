@@ -9,7 +9,6 @@ import LandingV2 from 'pages/Landing/LandingV2'
 import { parse } from 'qs'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import { ExploreContextProvider } from 'state/explore'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import { useConversionTracking } from 'uniswap/src/data/rest/conversionTracking/useConversionTracking'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -73,9 +72,7 @@ export default function Landing() {
 
   return (
     <Trace logImpression page={InterfacePageName.LandingPage}>
-      <ExploreContextProvider>
-        <LandingV2 transition={transition} />
-      </ExploreContextProvider>
+      <LandingV2 transition={transition} />
     </Trace>
   )
 }

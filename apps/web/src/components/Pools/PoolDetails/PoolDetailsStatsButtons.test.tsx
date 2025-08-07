@@ -55,7 +55,6 @@ describe('PoolDetailsStatsButton', () => {
     navigateToPoolDetails: () => {},
     navigateToExternalProfile: () => {},
     navigateToNftCollection: () => {},
-    navigateToNftDetails: () => {},
     onSwapChainsChanged: () => {},
     isSwapTokenSelectorOpen: false,
     setSwapOutputChainId: () => {},

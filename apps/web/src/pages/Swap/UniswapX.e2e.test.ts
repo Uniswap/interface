@@ -44,6 +44,7 @@ test.describe('UniswapX', async () => {
       })
     })
 
+    await expect(page.getByText('Wrapped')).toBeVisible()
     await expect(page.getByText('Approved')).toBeVisible()
     await expect(page.getByRole('button', { name: 'Swapping 1.00 WETH for 3,665.13 DAI' })).toBeVisible()
   })

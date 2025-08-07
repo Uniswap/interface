@@ -13,8 +13,6 @@ import {
 import { borderRadii, zIndexes } from 'ui/src/theme'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { ImageUri } from 'uniswap/src/components/nfts/images/ImageUri'
-import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -26,6 +24,8 @@ import {
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
+import { ImageUri } from 'wallet/src/features/images/ImageUri'
+import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 
 interface LogoWithTxStatusBaseProps {
   assetType: AssetType

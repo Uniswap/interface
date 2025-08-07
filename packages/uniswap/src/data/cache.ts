@@ -1,7 +1,5 @@
 import { FieldFunctionOptions, InMemoryCache } from '@apollo/client'
 import { Reference, StoreObject, relayStylePagination } from '@apollo/client/utilities'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { isTestEnv } from 'utilities/src/environment/env'
 
 export function setupSharedApolloCache(): InMemoryCache {
@@ -34,10 +32,16 @@ export function setupSharedApolloCache(): InMemoryCache {
                 // simply use chain / address pair as id instead for tokens
                 token: {
                   read(_, { args, toReference }): Reference | undefined {
+                    let address = args?.address
+                    // TODO(WEB-8055): Integrate better pattern for GQL token address normalization
+                    // EVM addresses
+                    if (address?.length === 42) {
+                      address = address.toLowerCase()
+                    }
                     return toReference({
                       __typename: 'Token',
                       chain: args?.chain,
-                      address: normalizeTokenAddressForCache(args?.address),
+                      address,
                     })
                   },
                 },
@@ -62,7 +66,15 @@ export function setupSharedApolloCache(): InMemoryCache {
         fields: {
           address: {
             read(address: string | null): string | null {
-              return normalizeTokenAddressForCache(address)
+              // backend endpoint sometimes returns checksummed, sometimes lowercased addresses
+              // always use lowercased addresses in our app for consistency
+
+              // TODO(WEB-8055): Integrate better pattern for GQL token address normalization
+              // EVM addresses
+              if (address?.length === 42) {
+                return address.toLowerCase()
+              }
+              return address ?? null
             },
           },
           feeData: {
@@ -122,19 +134,4 @@ function incomingOrExistingArray(
   incoming: unknown[] | undefined,
 ): unknown[] | undefined {
   return incoming ?? existing
-}
-
-export function normalizeTokenAddressForCache(address: string): string
-export function normalizeTokenAddressForCache(address: null): null
-export function normalizeTokenAddressForCache(address: string | null): string | null
-export function normalizeTokenAddressForCache(address: string | null): string | null {
-  // Our graphql backend would sometimes return checksummed addresses and sometimes lowercase addresses.
-  // In order to improve local cache hits, avoid unnecessary network requests, and avoid having duplicate `Token` items stored in the cache,
-  // we use lowercase addresses when accessing the `Token` object from our local cache.
-  // Solana addresses are case sensitive though, so this only applies to EVM addresses.
-
-  const normalizedEvmAddress = getValidAddress({ address, platform: Platform.EVM, withEVMChecksum: false })
-
-  // if not a valid EVM address, must be SVM address
-  return normalizedEvmAddress ?? address ?? null
 }

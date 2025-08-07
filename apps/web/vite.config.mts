@@ -1,6 +1,5 @@
 import { tamaguiPlugin } from '@tamagui/vite-plugin'
 import react from '@vitejs/plugin-react'
-import reactOxc from '@vitejs/plugin-react-oxc'
 import { execSync } from 'child_process'
 import fs from 'fs'
 import path from 'path'
@@ -21,15 +20,6 @@ const ENABLE_REACT_COMPILER = process.env.ENABLE_REACT_COMPILER === 'true'
 const ReactCompilerConfig = {
   target: '18', // '17' | '18' | '19'
 }
-
-const reactPlugin = () =>
-  ENABLE_REACT_COMPILER
-    ? react({
-        babel: {
-          plugins: [['babel-plugin-react-compiler', ReactCompilerConfig]],
-        },
-      })
-    : reactOxc()
 
 // Get git commit hash
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
@@ -97,7 +87,15 @@ export default defineConfig(({ mode }) => {
     },
 
     plugins: [
-      reactPlugin(),
+      react(
+        ENABLE_REACT_COMPILER
+          ? {
+              babel: {
+                plugins: [['babel-plugin-react-compiler', ReactCompilerConfig]],
+              },
+            }
+          : undefined,
+      ),
       isProduction
         ? tamaguiPlugin({
             config: '../../packages/ui/src/tamagui.config.ts',

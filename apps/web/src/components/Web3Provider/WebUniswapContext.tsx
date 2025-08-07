@@ -19,7 +19,6 @@ import { useEnabledChainsWithConnector } from 'uniswap/src/features/chains/hooks
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
 import { useSetActiveChainId } from 'uniswap/src/features/smartWallet/delegation/hooks/useSetActiveChainId'
 import { DelegatedState } from 'uniswap/src/features/smartWallet/delegation/types'
 import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
@@ -163,8 +162,6 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
     },
   )
 
-  const navigateToNftDetails = useNavigateToNftExplorerLink()
-
   useAccountChainIdEffect()
 
   return (
@@ -180,7 +177,6 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       navigateToTokenDetails={navigateToTokenDetails}
       navigateToExternalProfile={navigateToExternalProfile}
       navigateToNftCollection={navigateToNftCollection}
-      navigateToNftDetails={navigateToNftDetails}
       navigateToPoolDetails={navigateToPoolDetails}
       handleShareToken={handleShareToken}
       onConnectWallet={accountDrawer.open}

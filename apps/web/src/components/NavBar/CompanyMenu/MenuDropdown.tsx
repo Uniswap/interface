@@ -1,4 +1,5 @@
-import { MenuItem, MenuSection, MenuSectionTitle, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
+import { MenuItem, MenuSection, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
+import { DownloadApp } from 'components/NavBar/CompanyMenu/DownloadAppCTA'
 import { LegalAndPrivacyMenu } from 'components/NavBar/LegalAndPrivacyMenu'
 import { NavDropdown } from 'components/NavBar/NavDropdown'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
@@ -7,25 +8,21 @@ import { Socials } from 'pages/Landing/sections/Footer'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
+import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Anchor, Flex, Separator, Text, styled } from 'ui/src'
+import { Flex, Separator, Text, styled } from 'ui/src'
 import { TextVariantTokens } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const Container = styled(Flex, {
-  width: '400px',
-  p: '$gap16',
+  width: '295px',
+  p: '$gap24',
+  mb: '$gap8',
   userSelect: 'none',
   height: 'unset',
   borderRadius: '$rounded12',
-  backgroundColor: '$surface2',
-  borderColor: '$surface3',
-  borderWidth: 1,
-  borderStyle: 'solid',
-  boxShadow: '$shadow.1',
 })
 
 const LinkStyle = {
@@ -35,7 +32,7 @@ const LinkStyle = {
 }
 
 const LinkTextStyle = {
-  color: '$neutral1',
+  color: '$neutral2',
   hoverStyle: {
     opacity: 0.6,
   },
@@ -46,35 +43,26 @@ export function MenuLink({
   href,
   internal,
   closeMenu,
-  textVariant = 'body3',
-  icon,
+  textVariant = 'subheading1',
 }: MenuItem & { textVariant?: TextVariantTokens }) {
   return internal ? (
     <Link to={href} onClick={closeMenu} style={LinkStyle}>
-      <Flex row gap="$gap8">
-        {icon}
-        <Text variant={textVariant} {...LinkTextStyle}>
-          {label}
-        </Text>
-      </Flex>
+      <Text variant={textVariant} {...LinkTextStyle}>
+        {label}
+      </Text>
     </Link>
   ) : (
-    <ExternalLink href={href} onClick={closeMenu} style={{ ...LinkStyle, stroke: 'unset' }}>
-      <Flex row gap="$gap8">
-        {icon}
-        <Text variant={textVariant} {...LinkTextStyle}>
-          {label}
-        </Text>
-      </Flex>
+    <ExternalLink href={href} onClick={closeMenu} style={LinkStyle}>
+      <Text variant={textVariant} {...LinkTextStyle}>
+        {label}
+      </Text>
     </ExternalLink>
   )
 }
 function Section({ title, items, closeMenu }: MenuSection) {
   return (
-    <Flex gap="$spacing4" flex={1}>
-      <Text variant="body4" color="$neutral2">
-        {title}
-      </Text>
+    <Flex gap="$spacing8">
+      <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
       {items.map((item, index) => (
         <MenuLink
           key={`${title}_${index}}`}
@@ -88,51 +76,10 @@ function Section({ title, items, closeMenu }: MenuSection) {
     </Flex>
   )
 }
-
-function ProductSection({ items }: { items: MenuItem[] }) {
-  const { t } = useTranslation()
-  return (
-    <Flex gap="$gap12">
-      <Text variant="body4" color="$neutral2">
-        {t('common.products')}
-      </Text>
-      <Flex row gap="$gap16" flexWrap="wrap">
-        {items.map((item, index) => (
-          <Anchor
-            href={item.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            {...ClickableTamaguiStyle}
-            key={`${item.label}_${index}}`}
-            aria-label={item.label}
-          >
-            <Flex row gap="$gap8" minWidth={168}>
-              <Flex p="$padding6" borderRadius="$rounded8" backgroundColor="$accent2">
-                {item.icon}
-              </Flex>
-              <Flex>
-                <Text variant="body4">{item.label}</Text>
-                <Text fontSize={10} lineHeight={14} color="$neutral2">
-                  {item.body}
-                </Text>
-              </Flex>
-            </Flex>
-          </Anchor>
-        ))}
-      </Flex>
-    </Flex>
-  )
-}
-
 export function MenuDropdown({ close }: { close?: () => void }) {
   const { t } = useTranslation()
   const isConversionTrackingEnabled = useFeatureFlag(FeatureFlags.ConversionTracking)
-  const menuContent = useMenuContent({
-    keys: [MenuSectionTitle.Protocol, MenuSectionTitle.Company],
-  })
-  const productSection = useMenuContent({
-    keys: [MenuSectionTitle.Products],
-  })
+  const menuContent = useMenuContent()
   const areTabsVisible = useTabsVisible()
   const tabs = useTabsContent()
   const tabsMenuItems = useMemo(() => {
@@ -149,22 +96,18 @@ export function MenuDropdown({ close }: { close?: () => void }) {
   return (
     <NavDropdown isOpen={false} dataTestId={TestID.NavCompanyDropdown}>
       <Container>
-        <Flex gap="$spacing16">
-          {productSection[MenuSectionTitle.Products] && (
-            <ProductSection items={productSection[MenuSectionTitle.Products].items} />
-          )}
+        <Flex gap="$spacing20">
           {!areTabsVisible && <Section title={t('common.app')} items={tabsMenuItems} closeMenu={close} />}
+          {menuContent.map((sectionContent, index) => (
+            <Section
+              key={`menu_section_${index}`}
+              title={sectionContent.title}
+              items={sectionContent.items}
+              closeMenu={close}
+            />
+          ))}
           <Separator />
-          <Flex row>
-            {Object.values(menuContent).map((sectionContent, index) => (
-              <Section
-                key={`menu_section_${index}`}
-                title={sectionContent.title}
-                items={sectionContent.items}
-                closeMenu={close}
-              />
-            ))}
-          </Flex>
+          <DownloadApp onClick={close} />
           <Socials iconSize="25px" />
           {isConversionTrackingEnabled && <LegalAndPrivacyMenu closeMenu={close} />}
         </Flex>

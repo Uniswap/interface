@@ -5,6 +5,7 @@ import { DisplayCurrentPrice } from 'components/Liquidity/Create/RangeSelectionS
 import { useDefaultInitialPrice } from 'components/Liquidity/Create/hooks/useDefaultInitialPrice'
 import { PositionFlowStep } from 'components/Liquidity/Create/types'
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
+import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import { useCallback } from 'react'
@@ -47,6 +48,7 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
 
   const { fee, hook } = positionState
   const { TOKEN0, TOKEN1 } = display
+  const versionLabel = getProtocolVersionLabel(protocolVersion)
   const media = useMedia()
 
   const handleEdit = useCallback(() => {
@@ -78,7 +80,7 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
               <Text variant="subheading1">{TOKEN1?.symbol}</Text>
             </Flex>
             <Flex row gap={2} alignItems="center">
-              <LiquidityPositionInfoBadges size="small" version={protocolVersion} v4hook={hook} feeTier={fee} />
+              <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={hook} feeTier={fee} />
             </Flex>
           </Flex>
         </Flex>

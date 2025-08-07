@@ -15,15 +15,31 @@ export function useWagmiWalletConnectors(): WagmiWalletConnectorMeta[] {
   const connectors = useConnectors()
 
   return useMemo(() => {
-    return connectors.map(({ id, name, icon, type }) => {
-      return {
-        wagmi: { id, type },
-        name,
-        icon,
-        isInjected: type === CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_TYPE,
-        analyticsWalletType: walletTypeToAmplitudeWalletType(type),
-      }
-    })
+    let isEip6963Supported = false
+    return connectors
+      .map(({ id, name, icon, type }) => {
+        if (
+          type === CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_TYPE &&
+          id !== CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_ID
+        ) {
+          isEip6963Supported = true
+        }
+
+        return {
+          wagmi: { id, type },
+          name,
+          icon,
+          isInjected:
+            id === CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_ID ||
+            type === CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_TYPE,
+          analyticsWalletType: walletTypeToAmplitudeWalletType(type),
+        }
+      })
+      .filter((connector) => {
+        // if we have any eip6963 connectors (type == "injected"), ignore any legacy connectors (type == 'injected' && id === "injected")
+        // if EIP-6963 is not supported, include all connectors (legacy injected + all other wallets)
+        return isEip6963Supported ? connector.wagmi.id !== CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_ID : true
+      })
   }, [connectors])
 }
 

@@ -231,7 +231,6 @@ describe('hooks', () => {
         navigateToTokenDetails: () => {},
         navigateToExternalProfile: () => {},
         navigateToPoolDetails: () => {},
-        navigateToNftDetails: () => {},
         navigateToNftCollection: () => {},
         navigateToSendFlow: () => {},
         navigateToReceive: () => {},
