@@ -6,7 +6,7 @@ Shared code packages covering UI, shared functionality, and shared utilities. Fo
 
 ## `uniswap`
 
-Shared code across all of our apps. Where any cross functional features should be built by default.
+Shared code across all of our apps. Where any cross-functional features should be built by default.
 
 ## `ui`
 
