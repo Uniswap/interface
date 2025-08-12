@@ -9,7 +9,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isInterface, isWeb } from 'utilities/src/platform'
+import { isWeb } from 'utilities/src/platform'
 
 export function SwapFeeWarning({ noFee, children }: PropsWithChildren<{ noFee: boolean }>): JSX.Element {
   const priceUXEnabled = usePriceUXEnabled()
@@ -30,10 +30,7 @@ export function SwapFeeWarning({ noFee, children }: PropsWithChildren<{ noFee: b
     <WarningInfo
       infoButton={
         <TouchableArea onPress={onPressLearnMore}>
-          <Text
-            color={priceUXEnabled && isInterface ? '$neutral1' : '$accent1'}
-            variant={isWeb ? (priceUXEnabled ? 'buttonLabel4' : 'body4') : 'buttonLabel2'}
-          >
+          <Text color="$accent1" variant={isWeb ? (priceUXEnabled ? 'buttonLabel4' : 'body4') : 'buttonLabel2'}>
             {t('common.button.learn')}
           </Text>
         </TouchableArea>

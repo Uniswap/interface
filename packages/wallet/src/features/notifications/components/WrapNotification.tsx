@@ -8,7 +8,7 @@ import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { formWrapNotificationTitle } from 'wallet/src/features/notifications/utils'
-import { useCreateWrapFormState } from 'wallet/src/features/transactions/hooks'
+import { useCreateWrapFormState } from 'wallet/src/features/transactions/hooks/useCreateWrapFormState'
 
 export function WrapNotification({
   notification: { txId, txStatus, currencyAmountRaw, address, hideDelay, unwrapped, chainId },

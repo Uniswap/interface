@@ -4,20 +4,21 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 /**
- * Hook to debounce button clicks and prevent multiple submissions
+ * Hook to debounce callback execution, delaying execution until after the specified delay
+ * has passed since the last time it was invoked
  *
- * @param callback The function to execute when button is clicked
- * @param debounceTimeMs Time in milliseconds to wait before allowing another click
+ * @param callback The function to execute after debounce delay
+ * @param debounceTimeMs Time in milliseconds to wait after last call before executing
  *
- * @returns [debouncedCallback, isDebouncing] - The debounced callback and a boolean indicating if debouncing is active
+ * @returns [debouncedCallback, isDebouncing] - The debounced callback and a boolean indicating if execution is pending
  */
 export function useDebouncedCallback<T extends (...args: unknown[]) => unknown>(
   callback: T,
   debounceTimeMs = ONE_SECOND_MS,
-): [(...args: Parameters<T>) => Promise<void>, boolean] {
-  const isDebouncingRef = useRef(false)
-  const [isDebouncing, setIsDebouncing] = useState(false)
+): [(...args: Parameters<T>) => void, boolean] {
+  const [isPending, setIsPending] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout>()
+  const argsRef = useRef<Parameters<T>>()
 
   useEffect(() => {
     return () => {
@@ -27,25 +28,27 @@ export function useDebouncedCallback<T extends (...args: unknown[]) => unknown>(
     }
   }, [])
 
-  const debouncedCallback = useEvent(async (...args: Parameters<T>) => {
-    if (isDebouncingRef.current) {
-      return
+  const debouncedCallback = useEvent((...args: Parameters<T>) => {
+    // Cancel any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
     }
 
-    isDebouncingRef.current = true
-    setIsDebouncing(true)
+    // Store the latest arguments
+    argsRef.current = args
+    setIsPending(true)
 
-    try {
-      await callback(...args)
-    } catch (e) {
-      logger.error(e, { tags: { file: 'useButtonDebounce', function: 'debouncedCallback' } })
-    } finally {
-      timeoutRef.current = setTimeout(() => {
-        isDebouncingRef.current = false
-        setIsDebouncing(false)
-      }, debounceTimeMs)
-    }
+    // Set new timeout for delayed execution
+    timeoutRef.current = setTimeout(async () => {
+      try {
+        await callback(...(argsRef.current as Parameters<T>))
+      } catch (e) {
+        logger.error(e, { tags: { file: 'useDebouncedCallback', function: 'debouncedCallback' } })
+      } finally {
+        setIsPending(false)
+      }
+    }, debounceTimeMs)
   })
 
-  return [debouncedCallback, isDebouncing]
+  return [debouncedCallback, isPending]
 }

@@ -91,7 +91,7 @@ class SeedPhraseInputViewModel: ObservableObject {
     let valid = rnEthersRS.validateMnemonic(mnemonic: mnemonic)
       
     error = nil
-    if (words.count < minCount) {
+    if (words.count < minCount || minCount + 1 ..< maxCount ~= words.count) {
       status = .error
       error = .notEnoughWords
     } else if (words.count > maxCount) {

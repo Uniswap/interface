@@ -1,9 +1,9 @@
 import { Flex, useSporeColors } from 'ui/src'
+import { ImageUri } from 'uniswap/src/components/nfts/images/ImageUri'
+import { RemoteImage } from 'uniswap/src/components/nfts/images/RemoteImage'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useENSAvatar } from 'uniswap/src/features/ens/api'
 import { isSVGUri } from 'utilities/src/format/urls'
-import { ImageUri } from 'wallet/src/features/images/ImageUri'
-import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
 export function UnitagProfilePicture({
   address,

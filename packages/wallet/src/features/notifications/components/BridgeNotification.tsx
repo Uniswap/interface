@@ -5,13 +5,13 @@ import { BridgeIcon, SplitLogo } from 'uniswap/src/components/CurrencyLogo/Split
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { BridgeTxNotification } from 'uniswap/src/features/notifications/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { BridgingCurrencyRow } from 'uniswap/src/features/transactions/swap/components/BridgingCurrencyRow'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getFormattedCurrencyAmount } from 'uniswap/src/utils/currency'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { formBridgeNotificationTitle } from 'wallet/src/features/notifications/utils'
-import { useCreateSwapFormState } from 'wallet/src/features/transactions/hooks'
-import { BridgingCurrencyRow } from 'wallet/src/features/transactions/swap/BridgingCurrencyRow'
+import { useCreateSwapFormState } from 'wallet/src/features/transactions/hooks/useCreateSwapFormState'
 
 export function BridgeNotification({ notification }: { notification: BridgeTxNotification }): JSX.Element {
   const { t } = useTranslation()

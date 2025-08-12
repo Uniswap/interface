@@ -31,6 +31,8 @@ import { logger } from 'utilities/src/logger/logger'
 import { isInterface, isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
+const NO_OUTPUT_ERROR = 'No output amount found in receipt logs'
+
 /**
  * Polls for the flashblock-aware transaction receipt and extracts the output amount.
  * Sets instantOutputCurrencyId and instantOutputAmountRaw on the swap form store once found,
@@ -58,8 +60,9 @@ export function useInstantReceiptOutput(): void {
   const isFlashblocksModalRoute =
     derivedSwapInfo.trade.trade?.routing && !FLASHBLOCKS_UI_SKIP_ROUTES.includes(derivedSwapInfo.trade.trade.routing)
 
-  const { isConfirmed } = useSwapFormStore((s) => ({
+  const { isConfirmed, instantReceiptFetchTime } = useSwapFormStore((s) => ({
     isConfirmed: s.isConfirmed,
+    instantReceiptFetchTime: s.instantReceiptFetchTime,
   }))
 
   const updateSwapForm = useSwapFormStore((s) => s.updateSwapForm)
@@ -90,7 +93,9 @@ export function useInstantReceiptOutput(): void {
       !provider ||
       !accountAddress ||
       isReceiptPopulatedRef.current ||
-      !isFlashblocksModalRoute
+      !isFlashblocksModalRoute ||
+      // don't attempt to fetch if already fetched
+      instantReceiptFetchTime
     ) {
       return
     }
@@ -117,6 +122,7 @@ export function useInstantReceiptOutput(): void {
     })
   }, [
     isConfirmed,
+    instantReceiptFetchTime,
     txHash,
     provider,
     outputCurrencyInfo,
@@ -247,13 +253,14 @@ async function fetchReceipt({
       }
     }
 
-    throw new Error('No output amount found in receipt logs')
+    throw new Error(NO_OUTPUT_ERROR)
   } catch (e) {
     logger.error(e, {
       tags: { file: 'useInstantReceiptOutput', function: 'fetchReceipt' },
     })
 
-    if (retryCount < MAX_RETRIES) {
+    const isReceiptFetchedAndProcessed = e instanceof Error && e.message === NO_OUTPUT_ERROR
+    if (retryCount < MAX_RETRIES && !isReceiptFetchedAndProcessed) {
       setTimeout(
         () =>
           fetchReceipt({

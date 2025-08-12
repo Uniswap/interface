@@ -31,6 +31,7 @@ export enum ReactQueryCacheKey {
   PrepareSwapTransaction = 'PrepareSwapTransaction',
   RemoteSvg = 'RemoteSvg',
   SignatureToActivity = 'SignatureToActivity',
+  SolanaConnection = 'SolanaConnection',
   StatsigUser = 'StatsigUser',
   TradingApi = 'TradingApi',
   TradeService = 'TradeService',

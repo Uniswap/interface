@@ -7,7 +7,7 @@ import {
 import { GqlResult } from 'uniswap/src/data/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
+import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances/balances'
 
 export function useAccountListData({
   addresses,

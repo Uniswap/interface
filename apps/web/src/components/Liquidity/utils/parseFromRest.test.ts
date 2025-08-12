@@ -283,7 +283,7 @@ describe('parseRestPosition', () => {
     expect(result).toEqual({
       status: PositionStatus.IN_RANGE,
       version: ProtocolVersion.V2,
-      pair: expect.any(Pair),
+      poolOrPair: expect.any(Pair),
       liquidityToken,
       chainId: UniverseChainId.Mainnet,
       poolId: liquidityToken.address,
@@ -341,7 +341,7 @@ describe('parseRestPosition', () => {
         tickSpacing: Number(mockV3Position.tickSpacing),
         isDynamic: false,
       },
-      pool: expect.any(V3Pool),
+      poolOrPair: expect.any(V3Pool),
       position: expect.any(V3Position),
     })
   })
@@ -397,7 +397,7 @@ describe('parseRestPosition', () => {
       owner: mockV4PoolPosition.owner,
       isHidden: false,
       boostedApr: mockV4PoolPosition.boostedApr,
-      pool: expect.any(V4Pool),
+      poolOrPair: expect.any(V4Pool),
       position: expect.any(V4Position),
     })
   })

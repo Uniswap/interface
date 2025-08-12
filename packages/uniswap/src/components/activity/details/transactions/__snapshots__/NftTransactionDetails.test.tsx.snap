@@ -1,0 +1,158 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NftTransactionDetails Component renders NftTransactionDetails without error 1`] = `
+<View
+  style={
+    {
+      "borderBottomLeftRadius": 20,
+      "borderBottomRightRadius": 20,
+      "borderTopLeftRadius": 20,
+      "borderTopRightRadius": 20,
+      "flexDirection": "column",
+      "overflow": "hidden",
+    }
+  }
+>
+  <View
+    cancelable={true}
+    collapsable={false}
+    disabled={false}
+    focusVisibleStyle={{}}
+    focusable={true}
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {},
+      }
+    }
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onLayout={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
+    role="button"
+    style={
+      {
+        "backgroundColor": "transparent",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+  />
+  <View
+    style={
+      {
+        "borderBottomColor": "rgba(255,255,255,0.12)",
+        "borderBottomLeftRadius": 20,
+        "borderBottomRightRadius": 20,
+        "borderBottomWidth": 1,
+        "borderLeftColor": "rgba(255,255,255,0.12)",
+        "borderLeftWidth": 1,
+        "borderRightColor": "rgba(255,255,255,0.12)",
+        "borderRightWidth": 1,
+        "borderStyle": "solid",
+        "borderTopColor": "rgba(255,255,255,0.12)",
+        "borderTopWidth": 0,
+        "flexDirection": "column",
+        "paddingBottom": 12,
+        "paddingLeft": 12,
+        "paddingRight": 12,
+        "paddingTop": 12,
+      }
+    }
+  >
+    <Text
+      allowFontScaling={true}
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
+          "color": "#FFFFFF",
+          "fontFamily": "Basel Grotesk",
+          "fontSize": 17,
+          "fontWeight": "400",
+          "lineHeight": 20,
+        }
+      }
+      suppressHighlighting={true}
+    >
+      voluptates repudiandae aliquid
+    </Text>
+    <View
+      aria-disabled={true}
+      collapsable={false}
+      focusVisibleStyle={{}}
+      forwardedRef={[Function]}
+      jestAnimatedStyle={
+        {
+          "value": {},
+        }
+      }
+      onLayout={[Function]}
+      pointerEvents="box-none"
+      role="button"
+      style={
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 0.6,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        }
+      }
+      tabIndex={-1}
+      userSelect="none"
+    >
+      <View
+        onBlur={[Function]}
+        onFocus={[Function]}
+        style={
+          {
+            "flexDirection": "row",
+            "paddingRight": 12,
+          }
+        }
+      >
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          numberOfLines={1}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={
+            {
+              "color": "rgba(255, 255, 255, 0.65)",
+              "fontFamily": "Basel Grotesk",
+              "fontSize": 15,
+              "fontWeight": "400",
+              "lineHeight": 19.5,
+            }
+          }
+          suppressHighlighting={true}
+        >
+          inventore qui fugiat
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;

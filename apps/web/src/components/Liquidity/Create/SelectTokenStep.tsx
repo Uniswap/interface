@@ -27,7 +27,7 @@ import { useNavigate } from 'react-router'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import type { DropdownButtonProps, FlexProps } from 'ui/src'
+import type { FlexProps } from 'ui/src'
 import { Button, DropdownButton, Flex, HeightAnimator, Text, styled } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -62,18 +62,16 @@ interface WrappedNativeWarning {
 export const CurrencySelector = ({
   currencyInfo,
   onPress,
-  emphasis,
 }: {
   currencyInfo: Maybe<CurrencyInfo>
   onPress: () => void
-  emphasis?: DropdownButtonProps['emphasis']
 }) => {
   const { t } = useTranslation()
   const currency = currencyInfo?.currency
 
   return (
     <DropdownButton
-      emphasis={emphasis}
+      emphasis={currencyInfo ? undefined : 'primary'}
       onPress={onPress}
       elementPositioning="grouped"
       isExpanded={false}
@@ -319,7 +317,9 @@ export function SelectTokensStep({
   }, [userApprovedHook])
 
   useEffect(() => {
-    if (mostUsedFeeTier && !defaultFeeTierSelected && !parsedQs.feeTier) {
+    // Don't auto-select recommended fee if user provided either legacy feeTier param or modern fee param
+    const hasUserProvidedFee = parsedQs.feeTier || parsedQs.fee
+    if (mostUsedFeeTier && !defaultFeeTierSelected && !hasUserProvidedFee) {
       setDefaultFeeTierSelected(true)
       setPositionState((prevState) => ({
         ...prevState,
@@ -459,14 +459,12 @@ export function SelectTokensStep({
                 <Flex row gap="$gap16" $md={{ flexDirection: 'column' }}>
                   <Flex row grow>
                     <CurrencySelector
-                      emphasis={token0CurrencyInfo ? undefined : 'primary'}
                       currencyInfo={token0CurrencyInfo}
                       onPress={() => setCurrencySearchInputState('tokenA')}
                     />
                   </Flex>
                   <Flex row grow>
                     <CurrencySelector
-                      emphasis={token1CurrencyInfo ? undefined : 'primary'}
                       currencyInfo={token1CurrencyInfo}
                       onPress={() => setCurrencySearchInputState('tokenB')}
                     />

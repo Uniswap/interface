@@ -1,0 +1,135 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DisplayNameText renders address display name without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    numberOfLines={1}
+    style={
+      {
+        "color": "#FFFFFF",
+        "flexShrink": 1,
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 17,
+        "fontWeight": "400",
+        "lineHeight": 22.1,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    0x82D56A352367453f74FC0dC7B071b311da373Fa6
+  </Text>
+</View>
+`;
+
+exports[`DisplayNameText renders ens display name without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    numberOfLines={1}
+    style={
+      {
+        "color": "#FFFFFF",
+        "flexShrink": 1,
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 17,
+        "fontWeight": "400",
+        "lineHeight": 22.1,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    vitalik.eth
+  </Text>
+</View>
+`;
+
+exports[`DisplayNameText renders local display name without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    numberOfLines={1}
+    style={
+      {
+        "color": "#FFFFFF",
+        "flexShrink": 1,
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 17,
+        "fontWeight": "400",
+        "lineHeight": 22.1,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    Wallet 1
+  </Text>
+</View>
+`;
+
+exports[`DisplayNameText renders unitag without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    numberOfLines={1}
+    style={
+      {
+        "color": "#FFFFFF",
+        "flexShrink": 1,
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 17,
+        "fontWeight": "400",
+        "lineHeight": 22.1,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    luni
+  </Text>
+  <View
+    style={
+      {
+        "bottom": 2,
+        "display": "inline",
+        "flexDirection": "column",
+        "transform": [
+          {
+            "translateY": 1,
+          },
+        ],
+      }
+    }
+  />
+</View>
+`;

@@ -8,7 +8,8 @@ import { TokenDocument, TokenQuery } from 'uniswap/src/data/graphql/uniswap-data
 import { TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
-import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
+import { gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils/gqlTokenToCurrencyInfo'
 import { getOnChainBalancesFetch } from 'uniswap/src/features/portfolio/api'
 import {
   DenominatedValue,

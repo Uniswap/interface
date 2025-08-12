@@ -1,11 +1,10 @@
 import { getWagmiConnectorV2 } from '@binance/w3w-wagmi-connector-v2'
 import { PLAYWRIGHT_CONNECT_ADDRESS } from 'components/Web3Provider/constants'
-import { injectedWithFallback } from 'components/Web3Provider/injectedWithFallback'
 import { WC_PARAMS } from 'components/Web3Provider/walletConnect'
 import { embeddedWallet } from 'connection/EmbeddedWalletConnector'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
-import { ORDERED_EVM_CHAINS, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { getChainInfo, ORDERED_EVM_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { isPlaywrightEnv, isTestEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
@@ -36,7 +35,6 @@ function createWagmiConnectors(params: {
   const { includeMockConnector } = params
 
   const baseConnectors = [
-    injectedWithFallback(),
     // There are no unit tests that expect WalletConnect to be included here,
     // so we can disable it to reduce log noise.
     BinanceConnector({

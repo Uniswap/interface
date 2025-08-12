@@ -2,9 +2,9 @@ import { ApolloError } from '@apollo/client'
 import { useMemo } from 'react'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { GqlResult } from 'uniswap/src/data/types'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
+import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
+import { usePersistedError } from 'uniswap/src/features/dataApi/utils/usePersistedError'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
 export function useCurrencies(currencyIds: string[]): GqlResult<CurrencyInfo[]> {

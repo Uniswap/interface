@@ -1,4 +1,4 @@
-/// <reference types="react-scripts" />
+/// <reference types="vite/client" />
 
 interface Window {
   GIT_COMMIT_HASH?: string
@@ -34,4 +34,17 @@ declare module '*.webm' {
 declare module '*.mov' {
   const src: string
   export default src
+}
+
+declare module '*.svg' {
+  import React from 'react'
+  const ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement> & { title?: string }>
+  export { ReactComponent }
+  const src: string
+  export default src
+}
+
+declare module '*.svg?url' {
+  const content: string
+  export default content
 }

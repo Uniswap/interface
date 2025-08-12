@@ -24,6 +24,7 @@ import { ENS_LOGO } from 'ui/src/assets'
 import { SendAction, XTwitter } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { DEP_accentColors, iconSizes, imageSizes, spacing, validColor } from 'ui/src/theme'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { useENSDescription, useENSName, useENSTwitterUsername } from 'uniswap/src/features/ens/api'
@@ -35,7 +36,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { openUri } from 'uniswap/src/utils/linking'
 import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { HeaderRadial, solidHeaderProps } from 'wallet/src/features/unitags/HeaderRadial'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
@@ -155,7 +155,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
 
       {/* header row */}
       <Flex row alignItems="center" justifyContent="space-between" mx="$spacing4" px="$spacing24">
-        <Flex centered backgroundColor="$surface3" borderRadius="$roundedFull" p="$spacing4">
+        <Flex centered backgroundColor="$surface4" borderRadius="$roundedFull" p="$spacing4">
           <BackButton color="$white" size={iconSizes.icon24} />
         </Flex>
         <ProfileContextMenu address={address} />

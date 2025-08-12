@@ -30,7 +30,7 @@ const sharedRules = {
         'Avoid using due to issue with unsupported locales. Use utilities/src/device/locales.ts getDeviceLocales instead',
     },
     {
-      name: 'uniswap/src/features/dataApi/balances',
+      name: 'uniswap/src/features/dataApi/balances/balances',
       importNames: ['usePortfolioValueModifiers'],
       message:
         'Use the wrapper hooks `usePortfolioTotalValue`, `useAccountListData` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly.',

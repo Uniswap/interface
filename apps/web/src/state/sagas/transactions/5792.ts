@@ -34,11 +34,6 @@ async function sendCalls(params: {
     { version: CURRENT_SEND_CALLS_VERSION, calls, from, chainId, atomicRequired: true },
   ])
 
-  // TODO(WEB-7872): Remove temporary support for v1 of atomic batching schema for coinbase wallet (remove case below)
-  if (typeof result === 'string') {
-    return result
-  }
-
   return result.id as string
 }
 

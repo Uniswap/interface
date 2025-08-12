@@ -11,7 +11,7 @@ import { renderHook } from 'test-utils/render'
 import { PositionField } from 'types/position'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { USDC, USDT } from 'uniswap/src/constants/tokens'
-import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
@@ -31,7 +31,7 @@ vi.mock('uniswap/src/features/gating/hooks', async (importOriginal) => ({
   useDynamicConfigValue: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/gas/useMaxAmountSpend', async (importOriginal) => ({
+vi.mock('uniswap/src/features/gas/hooks/useMaxAmountSpend', async (importOriginal) => ({
   ...(await importOriginal()),
   useMaxAmountSpend: vi.fn(),
 }))
@@ -122,7 +122,7 @@ describe('useDepositInfo', () => {
             [PositionField.TOKEN0]: '100',
             [PositionField.TOKEN1]: '',
           },
-          pair,
+          poolOrPair: pair,
         }),
       )
 
@@ -149,7 +149,7 @@ describe('useDepositInfo', () => {
             [PositionField.TOKEN0]: '',
             [PositionField.TOKEN1]: '5',
           },
-          pair,
+          poolOrPair: pair,
         }),
       )
 
@@ -187,7 +187,7 @@ describe('useDepositInfo', () => {
             [PositionField.TOKEN0]: '100',
             [PositionField.TOKEN1]: '',
           },
-          pool,
+          poolOrPair: pool,
           tickLower: nearestUsableTick(TickMath.MIN_TICK, pool.tickSpacing),
           tickUpper: nearestUsableTick(TickMath.MAX_TICK, pool.tickSpacing),
         }),
@@ -216,7 +216,7 @@ describe('useDepositInfo', () => {
             [PositionField.TOKEN0]: '',
             [PositionField.TOKEN1]: '0.038175301569531354',
           },
-          pool,
+          poolOrPair: pool,
           tickLower: nearestUsableTick(TickMath.MIN_TICK, pool.tickSpacing),
           tickUpper: nearestUsableTick(TickMath.MAX_TICK, pool.tickSpacing),
         }),
@@ -258,7 +258,7 @@ describe('useDepositInfo', () => {
             [PositionField.TOKEN0]: '0.038175301569531354',
             [PositionField.TOKEN1]: '',
           },
-          pool,
+          poolOrPair: pool,
           tickLower: nearestUsableTick(TickMath.MIN_TICK, pool.tickSpacing),
           tickUpper: nearestUsableTick(TickMath.MAX_TICK, pool.tickSpacing),
         }),
@@ -287,7 +287,7 @@ describe('useDepositInfo', () => {
             [PositionField.TOKEN0]: '',
             [PositionField.TOKEN1]: '99.999999',
           },
-          pool,
+          poolOrPair: pool,
           tickLower: nearestUsableTick(TickMath.MIN_TICK, pool.tickSpacing),
           tickUpper: nearestUsableTick(TickMath.MAX_TICK, pool.tickSpacing),
         }),

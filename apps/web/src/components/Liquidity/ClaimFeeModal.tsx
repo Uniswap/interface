@@ -39,6 +39,7 @@ import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
@@ -140,8 +141,8 @@ export function ClaimFeeModal() {
           tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
           hooks: positionInfo.v4hook,
         },
-        tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,
-        tickUpper: positionInfo.tickUpper ? Number(positionInfo.tickUpper) : undefined,
+        tickLower: positionInfo.tickLower !== undefined ? positionInfo.tickLower : undefined,
+        tickUpper: positionInfo.tickUpper !== undefined ? positionInfo.tickUpper : undefined,
       },
       expectedTokenOwed0RawAmount: positionInfo.version !== ProtocolVersion.V4 ? token0UncollectedFees : undefined,
       expectedTokenOwed1RawAmount: positionInfo.version !== ProtocolVersion.V4 ? token1UncollectedFees : undefined,
@@ -312,6 +313,7 @@ export function ClaimFeeModal() {
         <ErrorCallout errorMessage={getErrorMessageToDisplay({ calldataError: error })} onPress={refetch} />
         <Flex row>
           <Button
+            data-testid={TestID.ClaimFees}
             key="LoaderButton-animation-ClaimFeeModal-button"
             isDisabled={!data?.claim || Boolean(currentTransactionStep)}
             loading={calldataLoading || Boolean(currentTransactionStep)}

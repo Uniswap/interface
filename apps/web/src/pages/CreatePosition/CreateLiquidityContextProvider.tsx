@@ -4,6 +4,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { useDerivedPositionInfo } from 'components/Liquidity/Create/hooks/useDerivedPositionInfo'
+import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
 import {
   PositionFlowStep,
   type DynamicFeeTierSpeedbumpData,
@@ -107,7 +108,7 @@ type CreateLiquidityContextType = CreateLiquidityState & {
   // Setters
   setPositionState: React.Dispatch<React.SetStateAction<PositionState>>
   setCurrencyInputs: React.Dispatch<React.SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
-  setStep: React.Dispatch<React.SetStateAction<PositionFlowStep>>
+  setStep: (step: PositionFlowStep | null) => void
   setCurrentTransactionStep: React.Dispatch<
     React.SetStateAction<{ step: TransactionStep; accepted: boolean } | undefined>
   >
@@ -115,11 +116,9 @@ type CreateLiquidityContextType = CreateLiquidityState & {
   setDynamicFeeTierSpeedbumpData: React.Dispatch<React.SetStateAction<DynamicFeeTierSpeedbumpData>>
   setPriceRangeState: React.Dispatch<React.SetStateAction<PriceRangeState>>
   setDepositState: React.Dispatch<React.SetStateAction<DepositState>>
-  setError: React.Dispatch<React.SetStateAction<string | boolean>>
   setRefetch: React.Dispatch<React.SetStateAction<(() => void) | undefined>>
 
   // Transaction info
-  error: string | boolean
   refetch?: () => void
   refetchPoolData: () => void
 
@@ -133,41 +132,77 @@ const CreateLiquidityContext = createContext<CreateLiquidityContextType | undefi
 
 export function CreateLiquidityContextProvider({
   children,
-  initialState = {},
   currencyInputs,
   setCurrencyInputs,
+  defaultInitialToken,
+  initialPositionState,
+  initialPriceRangeState,
+  initialDepositState,
+  initialFlowStep,
 }: {
   children: React.ReactNode
-  initialState?: Partial<PositionState>
   currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
+  defaultInitialToken?: Maybe<Currency>
+  initialPositionState?: Partial<PositionState>
+  initialPriceRangeState?: Partial<PriceRangeState>
+  initialDepositState?: Partial<DepositState>
+  initialFlowStep: PositionFlowStep
 }) {
   // Combined state from all 4 providers
   const initialCurrencyInputs = useRef(currencyInputs).current
 
-  const [positionState, setPositionState] = useState<PositionState>({ ...DEFAULT_POSITION_STATE, ...initialState })
-  const [step, setStep] = useState<PositionFlowStep>(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
+  const [positionState, setPositionState] = useState<PositionState>(() => ({
+    ...DEFAULT_POSITION_STATE,
+    ...initialPositionState,
+  }))
+  // Use URL step as source of truth (always defined now with default)
+  const step = initialFlowStep
   const [currentTransactionStep, setCurrentTransactionStep] = useState<
     { step: TransactionStep; accepted: boolean } | undefined
   >()
+
   const [feeTierSearchModalOpen, setFeeTierSearchModalOpen] = useState(false)
   const [dynamicFeeTierSpeedbumpData, setDynamicFeeTierSpeedbumpData] = useState<DynamicFeeTierSpeedbumpData>({
     open: false,
     wishFeeData: DEFAULT_POSITION_STATE.fee,
   })
-  const [error, setError] = useState<string | boolean>(false)
   const [refetch, setRefetch] = useState<() => void>()
 
-  // Price range state
+  // Initialize price range state
   const initialPosition = positionState.initialPosition
-  const fullRange = initialPosition?.isOutOfRange ? false : true
-  const [priceRangeState, setPriceRangeState] = useState<PriceRangeState>({ ...DEFAULT_PRICE_RANGE_STATE, fullRange })
+  const defaultFullRange = initialPosition?.isOutOfRange ? false : true
+  const urlFullRange = initialPriceRangeState?.fullRange
+  const initialFullRange = urlFullRange !== undefined ? urlFullRange : defaultFullRange
+  const [priceRangeState, setPriceRangeState] = useState<PriceRangeState>(() => ({
+    ...DEFAULT_PRICE_RANGE_STATE,
+    fullRange: initialFullRange,
+    ...initialPriceRangeState,
+  }))
 
-  // Deposit state
-  const [depositState, setDepositState] = useState<DepositState>(DEFAULT_DEPOSIT_STATE)
+  // Initialize deposit state
+  const [depositState, setDepositState] = useState<DepositState>({
+    ...DEFAULT_DEPOSIT_STATE,
+    ...initialDepositState,
+  })
 
   // Derived info
   const derivedPositionInfo = useDerivedPositionInfo(currencyInputs, positionState)
+
+  // Get URL sync function from consolidated hook
+  const { setHistoryState, syncToUrl } = useLiquidityUrlState()
+
+  // Single sync effect with batched updates
+  useEffect(() => {
+    syncToUrl({
+      currencyInputs,
+      positionState,
+      priceRangeState,
+      depositState,
+    })
+  }, [currencyInputs, positionState, priceRangeState, depositState, syncToUrl])
+
+  // Derived price range info
   const derivedPriceRangeInfo = useMemo(() => {
     return getPriceRangeInfo({ derivedPositionInfo, state: priceRangeState, positionState })
   }, [derivedPositionInfo, priceRangeState, positionState])
@@ -199,9 +234,12 @@ export function CreateLiquidityContextProvider({
 
   // Reset functions
   const reset = useEvent(() => {
-    setPositionState({ ...DEFAULT_POSITION_STATE, ...initialState })
-    setCurrencyInputs(initialCurrencyInputs)
-    setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
+    setPositionState(DEFAULT_POSITION_STATE)
+    setCurrencyInputs({
+      tokenA: defaultInitialToken,
+      tokenB: undefined,
+    })
+    setHistoryState(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   })
 
   const resetPriceRange = useEvent(() => {
@@ -211,20 +249,6 @@ export function CreateLiquidityContextProvider({
   const resetDeposit = useEvent(() => {
     setDepositState(DEFAULT_DEPOSIT_STATE)
   })
-
-  useEffect(() => {
-    setPriceRangeState({ ...DEFAULT_PRICE_RANGE_STATE, fullRange })
-  }, [fullRange])
-
-  useEffect(() => {
-    setPriceRangeState((prevState) => {
-      if (prevState.fullRange) {
-        return { ...prevState, fullRange, minPrice: '', maxPrice: '' }
-      } else {
-        return { ...prevState, fullRange: false, minPrice: undefined, maxPrice: undefined }
-      }
-    })
-  }, [priceRangeState.priceInverted, fullRange])
 
   const protocolSpecificValues = useMemo(() => {
     if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
@@ -278,18 +302,16 @@ export function CreateLiquidityContextProvider({
     priceRangeState,
     depositState,
     // Transaction info
-    error,
     refetch,
     // Setters
     setPositionState,
-    setStep,
+    setStep: setHistoryState,
     setCurrentTransactionStep,
     setFeeTierSearchModalOpen,
     setDynamicFeeTierSpeedbumpData,
     setPriceRangeState,
     setDepositState,
     setCurrencyInputs,
-    setError,
     setRefetch,
     refetchPoolData: derivedPositionInfo.refetchPoolData,
     // Reset functions

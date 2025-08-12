@@ -1,6 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { AdvancedButton } from 'components/Liquidity/Create/AdvancedButton'
-import { useInitialPoolInputs } from 'components/Liquidity/Create/hooks/useInitialPoolInputs'
+import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
 import { DEFAULT_POSITION_STATE } from 'components/Liquidity/Create/types'
 import { HookModal } from 'components/Liquidity/HookModal'
 import { isDynamicFeeTier } from 'components/Liquidity/utils/feeTiers'
@@ -92,7 +92,7 @@ export function AddHook() {
 
   const [hookModalOpen, setHookModalOpen] = useState(false)
 
-  const { hook: initialHook } = useInitialPoolInputs()
+  const { hook: initialHook } = useLiquidityUrlState()
   const {
     positionState: { hook, fee, protocolVersion },
     setPositionState,

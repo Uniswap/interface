@@ -57,7 +57,7 @@ export const SearchBar = () => {
     disabled: isModalOpen,
     preventDefault: !isModalOpen,
     keyAction: KeyAction.UP,
-    shouldTriggerInInput: true,
+    shouldTriggerInInput: false,
   })
   useKeyDown({
     callback: closeSearchModal,

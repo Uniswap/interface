@@ -328,7 +328,6 @@ export function useGetTxInfo({
     ticks,
     poolOrPair,
     depositState,
-    setError,
     setRefetch,
   } = useCreateLiquidityContext()
   const { customDeadline, customSlippageTolerance } = useTransactionSettingsStore((s) => ({
@@ -337,7 +336,7 @@ export function useGetTxInfo({
   }))
   const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(poolOrPair?.chainId)
 
-  const [hasCreateErrorResponse, setHasCreateErrorResponse] = useState(false)
+  const [transactionError, setTransactionError] = useState<string | boolean>(false)
 
   const addLiquidityApprovalParams = useMemo(() => {
     return generateAddLiquidityApprovalParams({
@@ -358,7 +357,7 @@ export function useGetTxInfo({
     params: addLiquidityApprovalParams,
     staleTime: 5 * ONE_SECOND_MS,
     retry: false,
-    enabled: !!addLiquidityApprovalParams && !hasInputError && !hasCreateErrorResponse && !invalidRange,
+    enabled: !!addLiquidityApprovalParams && !hasInputError && !transactionError && !invalidRange,
   })
 
   if (approvalError) {
@@ -408,7 +407,7 @@ export function useGetTxInfo({
   const isQueryEnabled =
     !isUserCommittedToCreate &&
     !hasInputError &&
-    !hasCreateErrorResponse &&
+    !transactionError &&
     !approvalLoading &&
     !approvalError &&
     !invalidRange &&
@@ -422,25 +421,27 @@ export function useGetTxInfo({
   } = useCreateLpPositionCalldataQuery({
     params: createCalldataQueryParams,
     deadlineInMinutes: customDeadline,
-    refetchInterval: hasCreateErrorResponse ? false : 5 * ONE_SECOND_MS,
+    refetchInterval: transactionError ? false : 5 * ONE_SECOND_MS,
     retry: false,
     enabled: isQueryEnabled,
   })
 
   useEffect(() => {
-    setHasCreateErrorResponse(!!createError)
-    setError(getErrorMessageToDisplay({ approvalError, calldataError: createError }))
     setRefetch(() => (approvalError ? approvalRefetch : createError ? createRefetch : undefined)) // this must set it as a function otherwise it will actually call createRefetch immediately
   }, [
     approvalError,
     createError,
     createCalldataQueryParams,
     addLiquidityApprovalParams,
-    setError,
+    setTransactionError,
     setRefetch,
     createRefetch,
     approvalRefetch,
   ])
+
+  useEffect(() => {
+    setTransactionError(getErrorMessageToDisplay({ approvalError, calldataError: createError }))
+  }, [approvalError, createError, setTransactionError])
 
   if (createError) {
     const message = parseErrorMessageTitle(createError, { defaultTitle: 'unknown CreateLpPositionCalldataQuery' })
@@ -503,7 +504,8 @@ export function useGetTxInfo({
   return {
     txInfo,
     gasFeeEstimateUSD: totalGasFee,
-    error: getErrorMessageToDisplay({ approvalError, calldataError: createError }),
+    transactionError,
+    setTransactionError,
     dependentAmount: createError && dependentAmountFallback ? dependentAmountFallback : createCalldata?.dependentAmount,
   }
 }

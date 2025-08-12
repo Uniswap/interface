@@ -1,13 +1,19 @@
-import { H2, H3 } from 'pages/Landing/components/Generics'
-import { BookOpen, ChatBubbles, HelpCircle } from 'pages/Landing/components/Icons'
-import { PillButton } from 'pages/Landing/components/cards/PillButton'
+import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Flex, Text, styled, useSporeColors } from 'ui/src'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { Anchor, Flex, Text, styled } from 'ui/src'
+import { ArrowUpRight } from 'ui/src/components/icons/ArrowUpRight'
+import { BookOpen } from 'ui/src/components/icons/BookOpen'
+import { GraduationCap } from 'ui/src/components/icons/GraduationCap'
+import { PenLine } from 'ui/src/components/icons/PenLine'
+import { SpeechBubbles } from 'ui/src/components/icons/SpeechBubbles'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const SectionLayout = styled(Flex, {
   width: '100%',
   maxWidth: 1360,
   alignItems: 'center',
+  gap: 40,
   p: 40,
 
   $lg: {
@@ -19,145 +25,144 @@ const SectionLayout = styled(Flex, {
   },
 })
 
-const Layout = styled(Flex, {
-  width: '100%',
-  maxWidth: 1280,
-  // TODO: tamagui needs a fix for changing display in media query in platform
-  className: 'connect-with-us-layout',
-
-  '$platform-web': {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gridColumnGap: '16px',
-    gridRowGap: '16px',
-  },
+const RowContent = React.memo(function RowContent({
+  icon,
+  title,
+  description,
+  showArrow,
+}: {
+  icon: React.ReactNode
+  title: string
+  description: string | React.ReactNode
+  showArrow: boolean
+}) {
+  return (
+    <Flex
+      row
+      py="$gap32"
+      borderTopWidth={1}
+      borderTopColor="$surface3"
+      alignItems="center"
+      width="100%"
+      $lg={{ alignItems: 'flex-start' }}
+    >
+      <Flex row gap="$gap24" alignItems="center" flex={1} $lg={{ alignItems: 'flex-start', gap: '$gap16' }}>
+        <Flex flexShrink={0}>{icon}</Flex>
+        <Flex row alignItems="center" flex={1} gap="$gap16" $lg={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+          <Text
+            variant="heading2"
+            minWidth={220}
+            $xl={{ minWidth: 180 }}
+            $lg={{ flexBasis: 0 }}
+            $md={{ variant: 'heading3', lineHeight: 36 }}
+          >
+            {title}
+          </Text>
+          <Text variant="heading3" $lg={{ ml: -48 }} $md={{ fontSize: 18, lineHeight: 24 }}>
+            {description}
+          </Text>
+        </Flex>
+      </Flex>
+      {showArrow && (
+        <Flex flexShrink={0}>
+          <ArrowUpRight size="$icon.36" color="$neutral1" />
+        </Flex>
+      )}
+    </Flex>
+  )
 })
 
-const SectionCol = styled(Flex, {
-  flex: 1,
-  maxWidth: 1328,
-  gap: 24,
+RowContent.displayName = 'RowContent'
 
-  $lg: {
-    gap: 24,
-  },
-})
+function UniverseRow({
+  icon,
+  title,
+  description,
+  href,
+}: {
+  icon: React.ReactNode
+  title: string
+  description: string | React.ReactNode
+  href?: string
+}) {
+  const showArrow = Boolean(href)
 
-const Card = styled(Flex, {
-  containerType: 'normal',
-  alignItems: 'flex-start',
-  justifyContent: 'space-between',
-  backgroundColor: '$surface2',
-  position: 'relative',
-  height: 250,
-  borderRadius: 20,
-  p: 32,
-  overflow: 'hidden',
+  if (href) {
+    return (
+      <Anchor
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        textDecorationLine="none"
+        {...ClickableTamaguiStyle}
+      >
+        <RowContent icon={icon} title={title} description={description} showArrow={showArrow} />
+      </Anchor>
+    )
+  }
 
-  $xl: {
-    gap: 16,
-    p: 24,
-  },
+  return <RowContent icon={icon} title={title} description={description} showArrow={showArrow} />
+}
 
-  $lg: {
-    gap: 16,
-    p: 24,
-    width: '100%',
-  },
-})
-
-const SquareCard = styled(Card, {
-  cursor: 'pointer',
-  tag: 'a',
-  className: 'text-decoration-none',
-
-  '$platform-web': {
-    gridColumn: 'span 1',
-    gridRow: 'span 4',
-  },
-
-  $xl: {
-    '$platform-web': {
-      gridArea: `3 / span 2 / 5 / span 2`,
-    },
-  },
-})
-
-const RectCard = styled(Card, {
-  cursor: 'pointer',
-  tag: 'a',
-
-  '$platform-web': {
+const SocialLink = styled(Anchor, {
+  fontSize: 'inherit',
+  lineHeight: 'inherit',
+  fontWeight: 'inherit',
+  color: '$neutral2',
+  target: '_blank',
+  rel: 'noopener noreferrer',
+  ...ClickableTamaguiStyle,
+  style: {
     textDecoration: 'none',
-    gridColumn: 'span 2',
-    gridRow: 'span 4',
-    gap: 32,
   },
 })
-
-const helpPrimary = '#FF4D00'
-const blogPrimary = '#8E8767'
 
 export function NewsletterEtc() {
   const { t } = useTranslation()
-  const theme = useSporeColors()
 
   return (
     <SectionLayout>
-      <Flex row maxWidth={1328} gap="$spacing24" width="100%">
-        <SectionCol justifyContent="space-between" height="100%">
-          <H2>
-            <Trans i18nKey="landing.connectWithUs" />
-          </H2>
-          <Layout>
-            <SquareCard
-              group="card"
-              href="https://help.uniswap.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              backgroundColor="rgba(255, 77, 0, 0.04)"
-              $theme-dark={{
-                backgroundColor: 'rgba(255, 77, 0, 0.08)',
+      <Text variant="heading1" width="100%" $md={{ variant: 'heading2' }}>
+        {t('landing.exploreUniverse')}
+      </Text>
+      <Flex width="100%">
+        <UniverseRow
+          icon={<GraduationCap size="$icon.36" fill="$neutral1" />}
+          title={t('common.helpCenter')}
+          description={t('landing.helpCenter.body')}
+          href={uniswapUrls.helpCenterUrl}
+        />
+        <UniverseRow
+          icon={
+            <Flex p="$gap4">
+              <PenLine size="$icon.28" color="$neutral1" />
+            </Flex>
+          }
+          title={t('common.blog')}
+          description={t('landing.blog.description')}
+          href={uniswapUrls.blogUrl}
+        />
+        <UniverseRow
+          icon={<BookOpen size="$icon.36" fill="$neutral1" />}
+          title={t('common.docs')}
+          description={t('landing.docs.description')}
+          href={uniswapUrls.docsUrl}
+        />
+        <UniverseRow
+          icon={<SpeechBubbles size="$icon.36" color="$neutral1" />}
+          title={t('common.socials')}
+          description={
+            <Trans
+              i18nKey="landing.socials"
+              components={{
+                LinkX: <SocialLink href={uniswapUrls.social.x} />,
+                LinkFarcaster: <SocialLink href={uniswapUrls.social.farcaster} />,
+                LinkLinkedIn: <SocialLink href={uniswapUrls.social.linkedin} />,
+                LinkTikTok: <SocialLink href={uniswapUrls.social.tiktok} />,
               }}
-            >
-              <PillButton icon={<HelpCircle fill={helpPrimary} />} color={helpPrimary} label={t('common.helpCenter')} />
-              <H3 color={helpPrimary}>
-                <Trans i18nKey="common.getSupport.button" />
-              </H3>
-            </SquareCard>
-            <SquareCard
-              group="card"
-              href="https://blog.uniswap.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              backgroundColor="rgba(98, 84, 50, 0.04)"
-              $theme-dark={{
-                backgroundColor: 'rgba(98, 84, 50, 0.16)',
-              }}
-            >
-              <PillButton icon={<BookOpen fill={blogPrimary} />} color={blogPrimary} label={t('common.blog')} />
-              <H3 color={blogPrimary}>
-                <Trans i18nKey="landing.teamInsights" />
-              </H3>
-            </SquareCard>
-            <RectCard
-              group="card"
-              href="https://twitter.com/Uniswap/"
-              target="_blank"
-              rel="noopener noreferrer"
-              backgroundColor="$accent2"
-            >
-              <PillButton
-                icon={<ChatBubbles fill={theme.accent1.val} />}
-                color={theme.accent1.val}
-                label={t('common.stayConnected')}
-              />
-              <Text color="$accent1" fontSize={24}>
-                <Trans i18nKey="landing.followOnX" />
-              </Text>
-            </RectCard>
-          </Layout>
-        </SectionCol>
+            />
+          }
+        />
       </Flex>
     </SectionLayout>
   )

@@ -4,7 +4,7 @@ exports[`should inject metadata for valid tokens 1`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
-    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh"
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
 injectIntoGlobalHook(window);
 window.$RefreshReg$ = () => {};
 window.$RefreshSig$ = () => (type) => type;</script>
@@ -133,7 +133,7 @@ exports[`should inject metadata for valid tokens 2`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
-    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh"
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
 injectIntoGlobalHook(window);
 window.$RefreshReg$ = () => {};
 window.$RefreshSig$ = () => (type) => type;</script>
@@ -262,7 +262,7 @@ exports[`should inject metadata for valid tokens 3`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
-    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh"
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
 injectIntoGlobalHook(window);
 window.$RefreshReg$ = () => {};
 window.$RefreshSig$ = () => (type) => type;</script>
@@ -391,7 +391,7 @@ exports[`should inject metadata for valid tokens 4`] = `
 "<!DOCTYPE html>
 <html translate="no">
   <head>
-    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh"
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
 injectIntoGlobalHook(window);
 window.$RefreshReg$ = () => {};
 window.$RefreshSig$ = () => (type) => type;</script>

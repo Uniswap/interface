@@ -3,10 +3,12 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const companyMenu = [
   {
-    label: 'Company',
+    label: 'Products',
     items: [
-      { label: 'Careers', href: 'https://careers.uniswap.org/' },
-      { label: 'Blog', href: 'https://blog.uniswap.org/' },
+      { label: 'Wallet', href: 'https://wallet.uniswap.org/' },
+      { label: 'UniswapX', href: 'https://x.uniswap.org/' },
+      { label: 'API', href: 'https://hub.uniswap.org/' },
+      { label: 'Unichain', href: 'https://www.unichain.org/' },
     ],
   },
   {
@@ -14,13 +16,14 @@ const companyMenu = [
     items: [
       { label: 'Governance', href: 'https://uniswap.org/governance' },
       { label: 'Developers', href: 'https://uniswap.org/developers' },
+      { label: 'Vote', href: 'https://vote.uniswapfoundation.org' },
     ],
   },
   {
-    label: 'Need help?',
+    label: 'Company',
     items: [
-      { label: 'Help center', href: 'https://support.uniswap.org/hc/en-us' },
-      { label: 'Contact us', href: 'https://support.uniswap.org/hc/en-us/requests/new' },
+      { label: 'Careers', href: 'https://careers.uniswap.org/' },
+      { label: 'Blog', href: 'https://blog.uniswap.org/' },
     ],
   },
 ]
@@ -72,7 +75,9 @@ test.describe('Navigation', () => {
       await expect(page.getByTestId(TestID.NavCompanyDropdown).first()).toBeVisible()
 
       for (const section of companyMenu) {
-        await expect(page.getByTestId(TestID.NavCompanyDropdown).getByText(section.label)).toBeVisible()
+        await expect(
+          page.getByTestId(TestID.NavCompanyDropdown).getByTestId(`menu-section-${section.label}`),
+        ).toBeVisible()
         for (const item of section.items) {
           await expect(
             page.getByTestId(TestID.NavCompanyDropdown).locator(`a:has-text("${item.label}")`),
@@ -81,19 +86,27 @@ test.describe('Navigation', () => {
       }
     })
 
-    test('Download Uniswap opens the app modal', async ({ page }) => {
-      await page.getByTestId(TestID.NavCompanyMenu).hover()
-      const downloadBtn = page.getByTestId(TestID.DownloadUniswapApp)
-      await expect(downloadBtn).toBeVisible()
-      await downloadBtn.click()
-      await expect(page.getByTestId(TestID.DownloadUniswapModal)).toBeVisible()
-    })
-
     test('includes social media links', async ({ page }) => {
       await page.getByTestId(TestID.NavCompanyMenu).hover()
       for (const link of socialMediaLinks) {
         await expect(page.getByTestId(TestID.NavCompanyDropdown).locator(`a[href='${link}']`)).toBeVisible()
       }
+    })
+
+    test('contains Legal & Privacy section with appropriate links', async ({ page }) => {
+      await page.getByTestId(TestID.NavCompanyMenu).hover()
+      await expect(page.getByTestId(TestID.NavCompanyDropdown).first()).toBeVisible()
+
+      await expect(page.getByText('Legal & Privacy')).toBeVisible()
+      await page.getByText('Legal & Privacy').click()
+
+      await expect(page.getByText('Your Privacy Choices')).toBeVisible()
+      await expect(page.getByText('Privacy Policy')).toBeVisible()
+      await expect(page.getByText('Terms of Service')).toBeVisible()
+
+      await expect(
+        page.getByTestId(TestID.NavCompanyDropdown).locator('a[href="https://uniswap.org/terms-of-service"]'),
+      ).toBeVisible()
     })
   })
 
@@ -127,6 +140,24 @@ test.describe('Navigation', () => {
       })
     })
   }
+
+  test('help modal displays appropriate content when clicked', async ({ page }) => {
+    await page.goto('/')
+    await page.getByTestId(TestID.HelpIcon).click()
+    await expect(page.getByTestId(TestID.HelpModal)).toBeVisible()
+
+    await expect(page.getByTestId(TestID.HelpModal).getByText('Get help')).toBeVisible()
+    await expect(page.getByTestId(TestID.HelpModal).getByText('Docs')).toBeVisible()
+    await expect(page.getByTestId(TestID.HelpModal).getByText('Contact us')).toBeVisible()
+
+    await expect(
+      page.getByTestId(TestID.HelpModal).locator('a[href="https://support.uniswap.org/hc/en-us"]'),
+    ).toBeVisible()
+    await expect(page.getByTestId(TestID.HelpModal).locator('a[href="https://docs.uniswap.org/"]')).toBeVisible()
+    await expect(
+      page.getByTestId(TestID.HelpModal).locator('a[href="https://support.uniswap.org/hc/en-us/requests/new"]'),
+    ).toBeVisible()
+  })
 })
 
 test.describe('Mobile navigation', () => {
@@ -148,38 +179,57 @@ test.describe('Mobile navigation', () => {
     })
   }
 
-  test('display settings are visible in mobile menu', async ({ page }) => {
-    const drawer = page.getByTestId(TestID.CompanyMenuMobileDrawer)
-    await expect(drawer).toBeVisible()
-    await page.getByRole('button', { name: 'Display settings' }).click()
-
-    const settings = ['Language', 'Currency']
-    for (const label of settings) {
-      await expect(page.getByText(label)).toBeVisible()
-    }
-  })
-
   test('contains appropriate sections and links', async ({ page }) => {
     const drawer = page.getByTestId(TestID.CompanyMenuMobileDrawer)
     await expect(drawer).toBeVisible()
 
     for (const section of companyMenu) {
-      // Expand the section
-      await drawer.getByText(section.label).click()
+      // Products section is not expandable
+      if (section.label !== 'Products') {
+        // Expand the section
+        await drawer.getByText(section.label).click()
+      }
       for (const item of section.items) {
         await expect(drawer.locator(`a:has-text("${item.label}")`)).toHaveAttribute('href', item.href)
       }
     }
   })
 
-  test('Download Uniswap is visible', async ({ page }) => {
-    await expect(page.getByTestId(TestID.DownloadUniswapApp)).toBeVisible()
-  })
-
   test('includes social media links', async ({ page }) => {
     for (const link of socialMediaLinks) {
       await expect(page.getByTestId(TestID.CompanyMenuMobileDrawer).locator(`a[href='${link}']`)).toBeVisible()
     }
+  })
+
+  test('contains Legal & Privacy section with appropriate links', async ({ page }) => {
+    const drawer = page.getByTestId(TestID.CompanyMenuMobileDrawer)
+    await expect(drawer).toBeVisible()
+
+    await expect(drawer.getByText('Legal & Privacy')).toBeVisible()
+    await drawer.getByText('Legal & Privacy').click()
+
+    await expect(drawer.getByText('Your Privacy Choices')).toBeVisible()
+    await expect(drawer.getByText('Privacy Policy')).toBeVisible()
+    await expect(drawer.getByText('Terms of Service')).toBeVisible()
+
+    await expect(drawer.locator('a[href="https://uniswap.org/terms-of-service"]')).toBeVisible()
+  })
+
+  test('help modal displays appropriate content when clicked', async ({ page }) => {
+    await page.getByTestId(TestID.CompanyMenuMobileDrawer).getByTestId(TestID.HelpIcon).click()
+    await expect(page.getByTestId(TestID.HelpModal)).toBeVisible()
+
+    await expect(page.getByTestId(TestID.HelpModal).getByText('Get help')).toBeVisible()
+    await expect(page.getByTestId(TestID.HelpModal).getByText('Docs')).toBeVisible()
+    await expect(page.getByTestId(TestID.HelpModal).getByText('Contact us')).toBeVisible()
+
+    await expect(
+      page.getByTestId(TestID.HelpModal).locator('a[href="https://support.uniswap.org/hc/en-us"]'),
+    ).toBeVisible()
+    await expect(page.getByTestId(TestID.HelpModal).locator('a[href="https://docs.uniswap.org/"]')).toBeVisible()
+    await expect(
+      page.getByTestId(TestID.HelpModal).locator('a[href="https://support.uniswap.org/hc/en-us/requests/new"]'),
+    ).toBeVisible()
   })
 })
 

@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import {
   Chain,
   PoolTransaction,
@@ -46,7 +47,7 @@ export function useTokenTransactions({
     error: errorV4,
   } = useV4TokenTransactionsQuery({
     variables: {
-      address: address.toLowerCase(),
+      address: normalizeTokenAddressForCache(address),
       chain: toGraphQLChain(chainId),
       first: TokenTransactionDefaultQuerySize,
     },
@@ -58,7 +59,7 @@ export function useTokenTransactions({
     error: errorV3,
   } = useV3TokenTransactionsQuery({
     variables: {
-      address: address.toLowerCase(),
+      address: normalizeTokenAddressForCache(address),
       chain: toGraphQLChain(chainId),
       first: TokenTransactionDefaultQuerySize,
     },
@@ -70,7 +71,7 @@ export function useTokenTransactions({
     fetchMore: fetchMoreV2,
   } = useV2TokenTransactionsQuery({
     variables: {
-      address: address.toLowerCase(),
+      address: normalizeTokenAddressForCache(address),
       first: TokenTransactionDefaultQuerySize,
       chain: toGraphQLChain(chainId),
     },

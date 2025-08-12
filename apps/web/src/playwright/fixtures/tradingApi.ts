@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { test as base } from '@playwright/test'
 import { Page } from 'playwright/test'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 
@@ -54,7 +56,10 @@ export async function stubTradingApiEndpoint({
         body: JSON.stringify(responseJson),
       })
     } catch (error) {
-      if (error.message?.includes('Target page, context or browser has been closed')) {
+      if (
+        error.message?.includes('Target page, context or browser has been closed') ||
+        error.message?.includes('Test ended')
+      ) {
         // eslint-disable-next-line no-console
         console.log(`🟡 Ignored route error after page close: ${error.message}`)
         return
@@ -65,3 +70,50 @@ export async function stubTradingApiEndpoint({
     }
   })
 }
+
+type TradingApiFixture = {
+  txPolling: void
+}
+
+export const test = base.extend<TradingApiFixture>({
+  // Intercept tx polling requests to trading api and succeed
+  // https://trading-api-labs.interface.gateway.uniswap.org/v1/swaps
+  // {
+  //     "requestId": "1b0bef68-a804-4532-b956-781bf9856229",
+  //     "swaps": [
+  //         {
+  //             "status": "SUCCESS",
+  //             "swapType": "CLASSIC",
+  //             "txHash": "0x3feefd82ee859f26985bb90467361f49c42dde6f9c3c9199f5bc33849f74ecd0"
+  //         }
+  //     ]
+  // }
+  txPolling: [
+    async ({ page }, use) => {
+      try {
+        await page.route(
+          `${uniswapUrls.tradingApiUrl}${uniswapUrls.tradingApiPaths.swaps}?txHashes=*`,
+          async (route) => {
+            const response = await route.fetch()
+            const responseText = await response.text()
+            const responseJson = JSON.parse(responseText)
+            if (responseJson.swaps?.[0]) {
+              responseJson.swaps[0].status = 'SUCCESS'
+            }
+
+            return route.fulfill({
+              body: JSON.stringify(responseJson),
+            })
+          },
+        )
+
+        await use(undefined)
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn('[txPolling fixture] Failed to set up route interception:', e)
+        await use(undefined)
+      }
+    },
+    { auto: true },
+  ],
+})

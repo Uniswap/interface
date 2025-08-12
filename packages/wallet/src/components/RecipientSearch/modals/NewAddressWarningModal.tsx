@@ -1,8 +1,9 @@
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, GetProps, ScrollView, Text } from 'ui/src'
-import { UserSquare } from 'ui/src/components/icons'
+import { Person } from 'ui/src/components/icons/Person'
 import { fonts, imageSizes } from 'ui/src/theme'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
@@ -13,7 +14,6 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isMobileApp } from 'utilities/src/platform'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 type NewAddressWarningModalProps = {
@@ -61,7 +61,7 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
     <Modal name={ModalName.NewAddressWarning} onClose={onClose}>
       <Flex px={isMobileApp ? '$spacing24' : undefined} py={isMobileApp ? '$spacing12' : undefined}>
         <GenericHeader
-          Icon={UserSquare}
+          Icon={Person}
           iconSize="$icon.24"
           title={t('send.warning.newAddress.title')}
           subtitle={t('send.warning.newAddress.message')}

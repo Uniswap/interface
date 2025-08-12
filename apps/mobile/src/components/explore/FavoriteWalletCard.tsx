@@ -8,12 +8,12 @@ import RemoveButton from 'src/components/explore/RemoveButton'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, TouchableArea, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
 import { borderRadii, iconSizes } from 'ui/src/theme'
+import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { removeWatchedAddress } from 'uniswap/src/features/favorites/slice'
 import { isIOS } from 'utilities/src/platform'
-import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export type FavoriteWalletCardProps = {

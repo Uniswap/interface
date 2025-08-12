@@ -23,7 +23,7 @@ import {
   toGraphQLChain,
   toSupportedChainId,
 } from 'uniswap/src/features/chains/utils'
-import { buildCurrency } from 'uniswap/src/features/dataApi/utils'
+import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 import { getChainIdFromBackendChain, getChainIdFromChainUrlParam } from 'utils/chainParams'

@@ -6,6 +6,7 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
+import { NavigateToNftItemArgs } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
   useFiatOnRampAggregatorCountryListQuery,
@@ -17,6 +18,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { getTokenUrl } from 'uniswap/src/utils/linking'
 import { closeKeyboardBeforeCallback } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
 import noop from 'utilities/src/react/noop'
@@ -25,7 +27,6 @@ import {
   NavigateToExternalProfileArgs,
   NavigateToFiatOnRampArgs,
   NavigateToNftCollectionArgs,
-  NavigateToNftItemArgs,
   NavigateToSendFlowArgs,
   NavigateToSwapFlowArgs,
   ShareTokenArgs,
@@ -34,7 +35,6 @@ import {
   getNavigateToSwapFlowArgsInitialState,
   isNavigateToSwapFlowArgsPartialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
-import { getTokenUrl } from 'wallet/src/utils/linking'
 
 export function MobileWalletNavigationProvider({ children }: PropsWithChildren): JSX.Element {
   const handleShareToken = useHandleShareToken()

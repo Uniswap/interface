@@ -15,11 +15,34 @@ import { PropsWithChildren } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { TamaguiProvider as OGTamaguiProvider, TamaguiProviderProps } from 'ui/src'
 import { config } from 'ui/src/tamagui.config'
+import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { UrlContext } from 'uniswap/src/contexts/UrlContext'
 import { SharedPersistQueryClientProvider } from 'uniswap/src/data/apiClients/SharedPersistQueryClientProvider'
 import 'uniswap/src/i18n'
 import { UniswapState, uniswapReducer } from 'uniswap/src/state/uniswapReducer'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
+
+export const mockUniswapContext = {
+  navigateToBuyOrReceiveWithEmptyWallet: jest.fn(),
+  navigateToFiatOnRamp: jest.fn(),
+  navigateToSwapFlow: jest.fn(),
+  navigateToSendFlow: jest.fn(),
+  navigateToReceive: jest.fn(),
+  navigateToTokenDetails: jest.fn(),
+  navigateToExternalProfile: jest.fn(),
+  navigateToNftDetails: jest.fn(),
+  navigateToNftCollection: jest.fn(),
+  navigateToPoolDetails: jest.fn(),
+  handleShareToken: jest.fn(),
+  onSwapChainsChanged: jest.fn(),
+  isSwapTokenSelectorOpen: false,
+  setSwapOutputChainId: jest.fn(),
+  setIsSwapTokenSelectorOpen: jest.fn(),
+  signer: undefined,
+  useProviderHook: jest.fn(),
+  useWalletDisplayName: jest.fn(),
+  onConnectWallet: jest.fn(),
+}
 
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
@@ -149,12 +172,14 @@ export function renderHookWithProviders<P extends any[], R>(
 
 function SharedUniswapProvider({ children }: Pick<TamaguiProviderProps, 'children'>): JSX.Element {
   return (
-    <UrlContext.Provider value={{ useParsedQueryString: () => ({}) as ParsedQs, usePathname: () => '' }}>
-      <SharedPersistQueryClientProvider>
-        <OGTamaguiProvider config={config} defaultTheme="dark">
-          {children}
-        </OGTamaguiProvider>
-      </SharedPersistQueryClientProvider>
-    </UrlContext.Provider>
+    <UniswapProvider {...mockUniswapContext}>
+      <UrlContext.Provider value={{ useParsedQueryString: () => ({}) as ParsedQs, usePathname: () => '' }}>
+        <SharedPersistQueryClientProvider>
+          <OGTamaguiProvider config={config} defaultTheme="dark">
+            {children}
+          </OGTamaguiProvider>
+        </SharedPersistQueryClientProvider>
+      </UrlContext.Provider>
+    </UniswapProvider>
   )
 }

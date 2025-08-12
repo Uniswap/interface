@@ -1,8 +1,11 @@
+import { Contract } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SpamCode } from 'uniswap/src/data/types'
 import { FoTPercent } from 'uniswap/src/features/tokens/TokenWarningModal'
 import { CurrencyId } from 'uniswap/src/types/currency'
+
+export type RestContract = Pick<Contract, 'chainId' | 'address'>
 
 export enum TokenList {
   Default = 'default',

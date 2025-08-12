@@ -5,6 +5,9 @@ import { MenuItem } from 'components/NavBar/CompanyMenu/Content'
 import { useTheme } from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
+import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
+import { Compass } from 'ui/src/components/icons/Compass'
+import { Pools } from 'ui/src/components/icons/Pools'
 import { ReceiveAlt } from 'ui/src/components/icons/ReceiveAlt'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -15,6 +18,7 @@ export type TabsSection = {
   isActive?: boolean
   items?: TabsItem[]
   closeMenu?: () => void
+  icon?: JSX.Element
 }
 
 export type TabsItem = MenuItem & {
@@ -32,6 +36,7 @@ export const useTabsContent = (): TabsSection[] => {
       title: t('common.trade'),
       href: '/swap',
       isActive: pathname.startsWith('/swap') || pathname.startsWith('/limit') || pathname.startsWith('/send'),
+      icon: <CoinConvert color="$accent1" size="$icon.20" />,
       items: [
         {
           label: t('common.swap'),
@@ -67,6 +72,7 @@ export const useTabsContent = (): TabsSection[] => {
       title: t('common.explore'),
       href: '/explore',
       isActive: pathname.startsWith('/explore') || pathname.startsWith('/nfts'),
+      icon: <Compass color="$accent1" size="$icon.20" />,
       items: [
         { label: t('common.tokens'), href: '/explore/tokens', internal: true },
         { label: t('common.pools'), href: '/explore/pools', internal: true },
@@ -81,6 +87,7 @@ export const useTabsContent = (): TabsSection[] => {
       title: t('common.pool'),
       href: '/positions',
       isActive: pathname.startsWith('/positions'),
+      icon: <Pools color="$accent1" size="$icon.20" />,
       items: [
         {
           label: t('nav.tabs.viewPositions'),

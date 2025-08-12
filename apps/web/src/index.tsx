@@ -16,6 +16,7 @@ import { useAccount } from 'hooks/useAccount'
 import { useDeferredComponent } from 'hooks/useDeferredComponent'
 import { LanguageProvider } from 'i18n/LanguageProvider'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
+import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
 import App from 'pages/App'
 import type { PropsWithChildren } from 'react'
 import { StrictMode, useEffect, useMemo } from 'react'
@@ -34,6 +35,7 @@ import type { StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import i18n from 'uniswap/src/i18n'
 import { initializeDatadog } from 'uniswap/src/utils/datadog'
+import { localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
@@ -121,7 +123,8 @@ function StatsigProvider({ children }: PropsWithChildren) {
   }, [account])
 
   const onStatsigInit = () => {
-    if (!isDevEnv()) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!isDevEnv() || localDevDatadogEnabled) {
       initializeDatadog('web').catch(() => undefined)
     }
   }
@@ -143,35 +146,37 @@ createRoot(container).render(
       <ReactRouterUrlProvider>
         <Provider store={store}>
           <QueryClientPersistProvider>
-            <Router>
-              <I18nextProvider i18n={i18n}>
-                <LanguageProvider>
-                  <Web3Provider>
-                    <StatsigProvider>
-                      <ExternalWalletProvider>
-                        <WebUniswapProvider>
-                          <GraphqlProviders>
-                            <LocalizationContextProvider>
-                              <BlockNumberProvider>
-                                <Updaters />
-                                <ThemeProvider>
-                                  <TamaguiProvider>
-                                    <PortalProvider>
-                                      <ThemedGlobalStyle />
-                                      <App />
-                                    </PortalProvider>
-                                  </TamaguiProvider>
-                                </ThemeProvider>
-                              </BlockNumberProvider>
-                            </LocalizationContextProvider>
-                          </GraphqlProviders>
-                        </WebUniswapProvider>
-                      </ExternalWalletProvider>
-                    </StatsigProvider>
-                  </Web3Provider>
-                </LanguageProvider>
-              </I18nextProvider>
-            </Router>
+            <NuqsAdapter>
+              <Router>
+                <I18nextProvider i18n={i18n}>
+                  <LanguageProvider>
+                    <Web3Provider>
+                      <StatsigProvider>
+                        <ExternalWalletProvider>
+                          <WebUniswapProvider>
+                            <GraphqlProviders>
+                              <LocalizationContextProvider>
+                                <BlockNumberProvider>
+                                  <Updaters />
+                                  <ThemeProvider>
+                                    <TamaguiProvider>
+                                      <PortalProvider>
+                                        <ThemedGlobalStyle />
+                                        <App />
+                                      </PortalProvider>
+                                    </TamaguiProvider>
+                                  </ThemeProvider>
+                                </BlockNumberProvider>
+                              </LocalizationContextProvider>
+                            </GraphqlProviders>
+                          </WebUniswapProvider>
+                        </ExternalWalletProvider>
+                      </StatsigProvider>
+                    </Web3Provider>
+                  </LanguageProvider>
+                </I18nextProvider>
+              </Router>
+            </NuqsAdapter>
           </QueryClientPersistProvider>
         </Provider>
       </ReactRouterUrlProvider>

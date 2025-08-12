@@ -8,7 +8,7 @@ import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel
 import type { Address } from 'uniswap/src/data/tradingApi/__generated__'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
+import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balances'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
@@ -20,7 +20,6 @@ import type { TransactionSettings } from 'uniswap/src/features/transactions/comp
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { ClassicTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
-import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { getSwapFeeUsd } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
@@ -221,8 +220,6 @@ export function getBaseTradeAnalyticsProperties({
 
   const finalOutputAmount = feeCurrencyAmount ? trade.outputAmount.subtract(feeCurrencyAmount) : trade.outputAmount
 
-  const slippagePercent = slippageToleranceToPercent(trade.slippageTolerance ?? 0)
-
   return {
     ...trace,
     routing: tradeRoutingToFillType(trade),
@@ -266,9 +263,9 @@ export function getBaseTradeAnalyticsProperties({
         })
       : undefined,
     type: trade.tradeType,
-    minimum_output_after_slippage: trade.minimumAmountOut(slippagePercent).toSignificant(6),
-    token_in_amount_max: trade.maximumAmountIn(slippagePercent).toExact(),
-    token_out_amount_min: trade.minimumAmountOut(slippagePercent).toExact(),
+    minimum_output_after_slippage: trade.minAmountOut.toSignificant(6),
+    token_in_amount_max: trade.maxAmountIn.toExact(),
+    token_out_amount_min: trade.minAmountOut.toExact(),
     token_in_detected_tax: parseFloat(trade.inputTax.toFixed(2)),
     token_out_detected_tax: parseFloat(trade.outputTax.toFixed(2)),
     simulation_failure_reasons: isClassic(trade) ? trade.quote.quote.txFailureReasons : undefined,

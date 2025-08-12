@@ -39,6 +39,7 @@ export default function TopLevelModals() {
         <ModalRenderer modalName={ModalName.UniWalletConnect} />
         <ModalRenderer modalName={ModalName.BlockedAccount} />
         {shouldShowDevFlags && <ModalRenderer modalName={ModalName.DevFlags} />}
+        <ModalRenderer modalName={ModalName.Help} />
         <ModalRenderer modalName={ModalName.OffchainActivity} />
       </>
     )
@@ -58,12 +59,15 @@ export default function TopLevelModals() {
       <ModalRenderer modalName={ModalName.PrivacyPolicy} />
       <ModalRenderer modalName={ModalName.PrivacyChoices} />
       <ModalRenderer modalName={ModalName.FeatureFlags} />
+      <ModalRenderer modalName={ModalName.SolanaPromo} />
       {shouldShowDevFlags && <ModalRenderer modalName={ModalName.DevFlags} />}
       <ModalRenderer modalName={ModalName.AddLiquidity} />
       <ModalRenderer modalName={ModalName.RemoveLiquidity} />
       <ModalRenderer modalName={ModalName.ClaimFee} />
       <ModalRenderer modalName={ModalName.PasskeysHelp} componentProps={{ type: passkeysHelpModalType, accountName }} />
+      <ModalRenderer modalName={ModalName.Help} />
       <ModalRenderer modalName={ModalName.DelegationMismatch} />
+      <ModalRenderer modalName={ModalName.ReceiveCryptoModal} />
     </>
   )
 }

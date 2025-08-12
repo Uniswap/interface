@@ -17,14 +17,14 @@ export default function useInitialPosition(positionInfo?: PositionInfo) {
       return undefined
     }
 
-    if (!positionInfo.pool) {
+    if (!positionInfo.poolOrPair) {
       return undefined
     }
 
     const tickLower = Number(positionInfo.tickLower)
     const tickUpper = Number(positionInfo.tickUpper)
 
-    const shouldFlip = unwrappedToken(positionInfo.pool.token1).isNative
+    const shouldFlip = unwrappedToken(positionInfo.poolOrPair.token1).isNative
 
     return {
       tickLower: shouldFlip ? -tickUpper : tickLower,

@@ -9,7 +9,7 @@ import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Flex, Text, useMedia } from 'ui/src'
-import { LDO, UNI, USDC_BASE } from 'uniswap/src/constants/tokens'
+import { MATIC_MAINNET, UNI, USDC_BASE } from 'uniswap/src/constants/tokens'
 import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -33,7 +33,7 @@ const tokens: { chainId: UniverseChainId; address: string }[] = [
   },
   {
     chainId: UniverseChainId.Mainnet,
-    address: LDO.address,
+    address: MATIC_MAINNET.address,
   },
 ]
 
@@ -59,7 +59,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
   return (
     <Flex
       width="100%"
-      height={72}
+      height={80}
       overflow="hidden"
       p={16}
       pr={24}
@@ -85,17 +85,17 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
         scale: 1.03,
       }}
       $xl={{
-        height: 64,
+        height: 56,
         pr: 16,
       }}
       $lg={{
-        height: 56,
-        pr: 16,
+        height: 80,
+        pr: 24,
       }}
       $xs={{
         height: 48,
         p: 12,
-        borderRadius: 16,
+        pr: 16,
       }}
     >
       <PortfolioLogo currencies={[currency]} chainId={chainId} size={isSmallScreen ? 24 : 32} />
@@ -103,19 +103,20 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
         <Flex row width="auto" gap="$gap8" alignItems="center" overflow="hidden">
           <Text
             fontWeight="$medium"
-            fontSize={24}
-            lineHeight={32}
+            variant="heading3"
             overflow="hidden"
             whiteSpace="nowrap"
             textOverflow="ellipsis"
             color="$neutral1"
-            $xl={{
+            $xxl={{
+              display: 'none',
+            }}
+            $lg={{
               fontSize: 18,
               lineHeight: 24,
+              display: 'flex',
             }}
             $xs={{
-              fontSize: 16,
-              lineHeight: 20,
               display: 'none',
             }}
           >
@@ -123,8 +124,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
           </Text>
           <Text
             fontWeight="$medium"
-            fontSize={24}
-            lineHeight={32}
+            variant="heading3"
             color="$neutral2"
             $xl={{
               fontSize: 18,
@@ -142,8 +142,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
         <Flex row width="auto" gap="$gap8" alignItems="center">
           <Text
             fontWeight="$medium"
-            fontSize={24}
-            lineHeight={32}
+            variant="heading3"
             color="$neutral1"
             $xl={{
               fontSize: 18,
@@ -165,25 +164,25 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
               display: 'none',
             }}
             $lg={{
+              display: 'flex',
+            }}
+            $sm={{
               display: 'none',
             }}
           >
             <DeltaArrow delta={pricePercentChange} formattedDelta={formatPercent(Math.abs(pricePercentChange))} />
             <Text
               textAlign="right"
-              fontSize={24}
+              variant="heading3"
               fontWeight="$medium"
-              lineHeight={32}
               color={pricePercentChange < 0 ? '$statusCritical' : '$statusSuccess'}
               $xl={{
                 fontSize: 18,
                 lineHeight: 24,
-                width: 50,
               }}
               $xs={{
                 fontSize: 16,
                 lineHeight: 20,
-                width: 50,
               }}
             >
               {formatPercent(Math.abs(pricePercentChange))}
@@ -208,15 +207,15 @@ export function WebappCard() {
       $theme-light={{
         backgroundColor: 'rgba(0, 102, 255, 0.04)',
       }}
-      button={<PillButton color={primary} label={t('common.webApp')} icon={<Computer size="24px" fill={primary} />} />}
-      titleText={t('landing.swapSimple')}
+      title={<PillButton color={primary} label={t('common.webApp')} icon={<Computer size="24px" fill={primary} />} />}
+      subtitle={t('landing.swapSubtitle')}
+      bodyText={t('landing.swapBody')}
+      button={<PillButton color={primary} label={t('common.exploreTokens')} backgroundColor="$surface1" />}
     >
       <Flex
         gap="$gap8"
         alignItems="center"
-        position="absolute"
         width="100%"
-        bottom={0}
         p={32}
         pb={32}
         $xl={{

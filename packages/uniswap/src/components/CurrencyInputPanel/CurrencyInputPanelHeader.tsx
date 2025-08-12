@@ -11,7 +11,7 @@ import { Layers, SwapPresetsProperties } from 'uniswap/src/features/gating/exper
 import { useExperimentValueFromLayer } from 'uniswap/src/features/gating/hooks'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isInterfaceDesktop, isWeb } from 'utilities/src/platform'
+import { isExtension, isInterfaceDesktop, isWeb } from 'utilities/src/platform'
 
 interface CurrencyInputPanelHeaderProps {
   headerLabel?: string
@@ -47,7 +47,10 @@ export function CurrencyInputPanelHeader({
   }
 
   const showInputPresets =
-    isInputPresetsEnabled && isInterfaceDesktop && currencyField === CurrencyField.INPUT && currencyBalance
+    isInputPresetsEnabled &&
+    (isInterfaceDesktop || isExtension) &&
+    currencyField === CurrencyField.INPUT &&
+    currencyBalance
 
   return (
     <Flex row justifyContent="space-between">

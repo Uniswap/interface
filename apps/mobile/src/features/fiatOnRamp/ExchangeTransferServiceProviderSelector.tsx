@@ -5,10 +5,10 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
+import { RemoteImage } from 'uniswap/src/components/nfts/images/RemoteImage'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
 function key(item: FORServiceProvider): string {
   return item.serviceProvider

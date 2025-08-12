@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion'
 import styled, { keyframes, useTheme } from 'lib/styled-components'
 import { parseToRgb } from 'polished'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { opacify } from 'ui/src/theme'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 
 const Mask = motion(styled.div`
   position: relative;
@@ -87,14 +88,12 @@ const pulsate = (color: string) => keyframes`
     box-shadow: 0 0 0 4px ${opacify(24, color)};
   }
 `
-const LiveIcon = styled.div<{ display: string }>`
+export const LiveIcon = styled.div<{ display: string }>`
   display: ${({ display }) => display};
   width: 6px;
   height: 6px;
-
   border-radius: 50%;
   background: ${({ theme }) => theme.success};
-
   animation-name: ${({ theme }) => pulsate(theme.success)};
   animation-fill-mode: forwards;
   animation-direction: alternate;
@@ -102,6 +101,7 @@ const LiveIcon = styled.div<{ display: string }>`
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
 `
+
 const Title = styled.h3<{ color: string }>`
   padding: 0;
   margin: 0;
@@ -141,10 +141,10 @@ const delineators = [',', '.']
 
 export function StatCard(props: StatCardProps) {
   const theme = useTheme()
+
   return (
     <Container live={props.live}>
       <Flex row alignItems="center" gap="$gap4">
-        <LiveIcon display={props.live ? 'block' : 'none'} />
         <Title color={props.live ? theme.success : theme.neutral2}>{props.title}</Title>
       </Flex>
       <StringInterpolationWithMotion
@@ -162,6 +162,17 @@ export function StatCard(props: StatCardProps) {
 function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<StatCardProps, 'title'>) {
   const chars = value.split('')
   const theme = useTheme()
+  const locale = useCurrentLocale()
+
+  // For Arabic locales, use simple Text component instead of animated sprites
+  const isArabic = locale.startsWith('ar')
+  if (isArabic) {
+    return (
+      <Text variant="heading2" color={live ? theme.success : theme.neutral1} allowFontScaling={false}>
+        {value}
+      </Text>
+    )
+  }
 
   return (
     <Mask

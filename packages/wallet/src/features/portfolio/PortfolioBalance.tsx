@@ -5,7 +5,7 @@ import AnimatedNumber, {
 } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
+import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balances'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'

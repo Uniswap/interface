@@ -17,16 +17,16 @@ import {
   FavoriteTokenCardQuery,
   useFavoriteTokenCardQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { isNonPollingRequestInFlight } from 'uniswap/src/data/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { removeFavoriteToken } from 'uniswap/src/features/favorites/slice'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { isIOS } from 'utilities/src/platform'
-import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 
 const ESTIMATED_FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 116
 

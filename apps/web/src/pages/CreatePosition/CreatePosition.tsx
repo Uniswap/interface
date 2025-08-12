@@ -2,7 +2,6 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { DropdownSelector } from 'components/DropdownSelector'
-import { ErrorCallout } from 'components/ErrorCallout'
 import { LPSettings } from 'components/LPSettings'
 import { Container } from 'components/Liquidity/Create/Container'
 import { DynamicFeeTierSpeedbump } from 'components/Liquidity/Create/DynamicFeeTierSpeedbump'
@@ -10,8 +9,8 @@ import { EditSelectTokensStep } from 'components/Liquidity/Create/EditStep'
 import { SelectPriceRangeStep } from 'components/Liquidity/Create/RangeSelectionStep'
 import ResetCreatePositionFormModal from 'components/Liquidity/Create/ResetCreatePositionsFormModal'
 import { SelectTokensStep } from 'components/Liquidity/Create/SelectTokenStep'
-import { useInitialPoolInputs } from 'components/Liquidity/Create/hooks/useInitialPoolInputs'
 import { useLPSlippageValue } from 'components/Liquidity/Create/hooks/useLPSlippageValues'
+import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'components/Liquidity/Create/types'
 import { DepositStep } from 'components/Liquidity/Deposit'
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
@@ -62,7 +61,6 @@ function CreatePositionInner({
     setStep,
   } = useCreateLiquidityContext()
   const v2Selected = protocolVersion === ProtocolVersion.V2
-  const { error, refetch } = useCreateLiquidityContext()
 
   const handleContinue = useCallback(() => {
     if (v2Selected) {
@@ -72,7 +70,7 @@ function CreatePositionInner({
         setStep(PositionFlowStep.DEPOSIT)
       }
     } else {
-      setStep((prevStep) => prevStep + 1)
+      setStep(step + 1)
     }
   }, [creatingPoolOrPair, step, v2Selected, setStep])
 
@@ -95,7 +93,6 @@ function CreatePositionInner({
         <Container>
           <SelectPriceRangeStep />
           <DepositStep />
-          <ErrorCallout errorMessage={error} onPress={refetch} />
         </Container>
       </Trace>
     )
@@ -107,7 +104,6 @@ function CreatePositionInner({
       <Container>
         <DepositStep />
       </Container>
-      <ErrorCallout errorMessage={error} onPress={refetch} />
     </Trace>
   )
 }
@@ -395,7 +391,7 @@ function CreatePositionContent({
   paramsProtocolVersion,
   autoSlippageTolerance,
 }: {
-  initialInputs: ReturnType<typeof useInitialPoolInputs>
+  initialInputs: ReturnType<typeof useLiquidityUrlState>
   paramsProtocolVersion: ProtocolVersion | undefined
   autoSlippageTolerance: number
 }) {
@@ -411,13 +407,17 @@ function CreatePositionContent({
       <MultichainContextProvider initialChainId={initialInputs.tokenA.chainId}>
         <LPTransactionSettingsStoreContextProvider autoSlippageTolerance={autoSlippageTolerance}>
           <CreateLiquidityContextProvider
-            initialState={{
-              hook: initialInputs.hook,
-              fee: initialInputs.fee,
-              protocolVersion: initialProtocolVersion,
-            }}
             currencyInputs={currencyInputs}
             setCurrencyInputs={setCurrencyInputs}
+            initialPositionState={{
+              fee: initialInputs.fee,
+              hook: initialInputs.hook ?? undefined,
+              protocolVersion: initialProtocolVersion,
+            }}
+            defaultInitialToken={initialInputs.defaultInitialToken}
+            initialPriceRangeState={initialInputs.priceRangeState}
+            initialDepositState={initialInputs.depositState}
+            initialFlowStep={initialInputs.flowStep}
           >
             <CreatePositionWrapper>
               <CreatePositionInner currencyInputs={currencyInputs} setCurrencyInputs={setCurrencyInputs} />
@@ -441,7 +441,7 @@ export default function CreatePosition() {
     version: paramsProtocolVersion,
   })
 
-  const initialInputs = useInitialPoolInputs()
+  const initialInputs = useLiquidityUrlState()
 
   if (initialInputs.loading) {
     return null

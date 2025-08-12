@@ -13,7 +13,7 @@ import {
   useTokenMarketPartsFragment,
   useTokenProjectMarketsPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Language } from 'uniswap/src/features/language/constants'
 import { useCurrentLanguage, useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'

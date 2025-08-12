@@ -12,7 +12,7 @@ export const CardContents = styled(Flex, {
   opacity: 1,
 
   $xxl: {
-    opacity: 0.24,
+    opacity: 0.2,
   },
 
   $lg: {

@@ -128,7 +128,7 @@ class SeedPhraseInputViewModel(
       val words = mnemonic.split(" ")
       val valid = EthersRs.validateMnemonic(mnemonic)
 
-      if (words.size < MIN_LENGTH) {
+      if (words.size < MIN_LENGTH || words.size in MIN_LENGTH + 1..<MAX_LENGTH) {
         status = Status.Error(MnemonicError.NotEnoughWords)
       } else if (words.size > MAX_LENGTH) {
         status = Status.Error(MnemonicError.TooManyWords)

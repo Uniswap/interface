@@ -86,7 +86,7 @@ export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }:
     }
     case isConfirmed && isFlashblocksEnabled: {
       // this has side effects for the balance logic as well
-      return <FlashblocksConfirmButton />
+      return <FlashblocksConfirmButton size={size} />
     }
     case isInterface && isSubmitting: {
       return (

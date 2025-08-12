@@ -14,7 +14,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { fetchOnChainBalances } from 'uniswap/src/features/portfolio/portfolioUpdates/fetchOnChainBalances'
 import { makeSelectTokenBalanceOverridesForWalletAddress } from 'uniswap/src/features/portfolio/slice/selectors'
 import {

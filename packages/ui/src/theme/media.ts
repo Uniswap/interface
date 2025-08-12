@@ -13,4 +13,5 @@ export const media = createMedia({
   xxs: { maxWidth: breakpoints.xxs },
   short: { maxHeight: heightBreakpoints.short },
   midHeight: { maxHeight: heightBreakpoints.midHeight },
+  lgHeight: { maxHeight: heightBreakpoints.lgHeight },
 })

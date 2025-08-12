@@ -6,7 +6,7 @@ import { Flex } from 'ui/src'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
+import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 
 vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({

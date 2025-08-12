@@ -10,12 +10,12 @@ import {
 import { Flex, Switch, Text } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NotificationToggleLoggingType } from 'uniswap/src/features/telemetry/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountsList } from 'wallet/src/features/wallet/hooks'
 
 const ROW_ITEM_HEIGHT = 40

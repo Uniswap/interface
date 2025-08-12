@@ -1,4 +1,3 @@
-import { useTokenBalancesQuery } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { gqlToCurrency } from 'appGraphql/data/util'
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
@@ -21,7 +20,10 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { buildCurrencyId, buildNativeCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
@@ -74,26 +76,45 @@ function useTDPCurrency({
 
 /** Returns a map to store addresses and balances of the TDP token on other chains */
 function useMultiChainMap(tokenQuery: ReturnType<typeof useTokenWebQuery>) {
-  // Build map to store addresses and balances of this token on other chains
-  const { data: balanceQuery } = useTokenBalancesQuery()
+  const account = useAccount()
+
+  const { data: balancesById } = usePortfolioBalances({
+    address: account.address ?? '',
+    skip: !account.address,
+  })
+
   return useMemo(() => {
-    const tokenBalances = balanceQuery?.portfolios?.[0]?.tokenBalances
     const tokensAcrossChains = tokenQuery.data?.token?.project?.tokens
     if (!tokensAcrossChains) {
       return {}
     }
+
     return tokensAcrossChains.reduce<MultiChainMap>((map, current) => {
       if (!map[current.chain]) {
         map[current.chain] = {}
       }
       const update = map[current.chain] ?? {}
       update.address = current.address
-      update.balance = tokenBalances?.find((tokenBalance) => tokenBalance?.token?.id === current.id)
-      map[current.chain] = update
 
+      // Find the balance for this token using the balancesById map
+      if (balancesById) {
+        // Convert GraphQL chain to UniverseChainId and construct currency ID
+        const chainId = fromGraphQLChain(current.chain)
+        if (chainId) {
+          // For native tokens (no address or NATIVE_CHAIN_ID), use the native address
+          // For non-native tokens, use the token address
+          const currencyId =
+            !current.address || isNativeCurrencyAddress(chainId, current.address)
+              ? buildNativeCurrencyId(chainId)
+              : buildCurrencyId(chainId, current.address)
+          update.balance = balancesById[currencyId]
+        }
+      }
+
+      map[current.chain] = update
       return map
     }, {})
-  }, [balanceQuery?.portfolios, tokenQuery.data?.token?.project?.tokens])
+  }, [balancesById, tokenQuery.data?.token?.project?.tokens])
 }
 
 function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {

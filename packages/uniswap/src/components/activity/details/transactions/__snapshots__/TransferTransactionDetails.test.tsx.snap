@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransferTransactionDetails Component renders TransferTransactionDetails without error 1`] = `
+<View
+  cancelable={true}
+  collapsable={false}
+  disabled={false}
+  focusVisibleStyle={{}}
+  focusable={true}
+  forwardedRef={[Function]}
+  jestAnimatedStyle={
+    {
+      "value": {},
+    }
+  }
+  minPressDuration={0}
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onLayout={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onPress={[Function]}
+  onPressIn={[Function]}
+  onPressOut={[Function]}
+  role="button"
+  style={
+    {
+      "backgroundColor": "transparent",
+      "borderBottomLeftRadius": 12,
+      "borderBottomRightRadius": 12,
+      "borderTopLeftRadius": 12,
+      "borderTopRightRadius": 12,
+      "flexDirection": "column",
+      "opacity": 1,
+      "transform": [
+        {
+          "scale": 1,
+        },
+      ],
+    }
+  }
+>
+  <View
+    onBlur={[Function]}
+    onFocus={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "column",
+        "gap": 8,
+        "justifyContent": "center",
+        "paddingBottom": 32,
+        "paddingLeft": 32,
+        "paddingRight": 32,
+        "paddingTop": 32,
+      }
+    }
+  >
+    <View
+      onBlur={[Function]}
+      onFocus={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "gap": 8,
+          "justifyContent": "center",
+        }
+      }
+    />
+  </View>
+</View>
+`;

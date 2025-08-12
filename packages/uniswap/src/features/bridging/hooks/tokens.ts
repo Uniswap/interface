@@ -14,7 +14,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import {
   NATIVE_ADDRESS_FOR_TRADING_API,
   getTokenAddressFromChainForTradingApi,

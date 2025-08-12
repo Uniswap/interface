@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
 import { Flex } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
+import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
 
 /**
  * Renders a blurred image background combined with a color overlay for a given image uri.

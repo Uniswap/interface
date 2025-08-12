@@ -5,14 +5,16 @@ import { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { Check, Info } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { FlexProps } from 'ui/src'
+import { TextProps } from 'ui/src'
 import { isMobileWeb } from 'utilities/src/platform'
 
 const StyledDropdownButton = {
   borderRadius: 20,
   width: '100%',
-  height: 36,
-} satisfies FlexProps
+  height: 34,
+  marginTop: 1,
+  fontSize: '$small',
+} satisfies TextProps
 
 interface ChartTypeSelectorOption<T extends ChartType | PriceChartType> {
   value: T // Value to be selected/stored, used as default display value

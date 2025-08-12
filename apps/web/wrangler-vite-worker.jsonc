@@ -21,7 +21,12 @@
       }
     },
     "production": {
-      "name": "app"
+      "name": "app",
+      "observability": {
+        "enabled": true,
+        "head_sampling_rate": 1,
+        "invocation_logs": false
+      }
     }
   }
 }

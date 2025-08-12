@@ -1,4 +1,7 @@
-import { Currency, CurrencyAmount, Fraction, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction } from '@uniswap/sdk-core'
+import { Pair } from '@uniswap/v2-sdk'
+import { Pool as V3Pool } from '@uniswap/v3-sdk'
+import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
@@ -38,11 +41,18 @@ function useMarketPrice(baseCurrency?: Currency, quoteCurrency?: Currency) {
  * on liquidity conditions, the price in a particular pool can diverge from the rest of the market (i.e. other pools).
  * This hook computes the market exchange rate between two currencies and compares it to the given pool price.
  * If these prices diverge by more than WARNING_THRESHOLD, return true. Otherwise, return false.
- * @param baseCurrency The pool's base currency (a.k.a. token0)
- * @param quoteCurrency The pool's quote currency (a.k.a. token1)
- * @param poolPrice The exchange rate between token0 and token1
+ * @param poolOrPair The pool or pair to check (V4Pool, V3Pool, or V2 Pair)
+ * @returns true if the pool price differs significantly from the market price, false otherwise
  */
-export function useIsPoolOutOfSync(poolPrice?: Price<Currency, Currency>) {
+export function useIsPoolOutOfSync(poolOrPair?: V4Pool | V3Pool | Pair) {
+  let poolPrice
+  try {
+    poolPrice = poolOrPair?.token0Price
+  } catch (_e) {
+    // for a v2 pool if it has been created but there is no liquidity then getting the price will throw an error
+    poolPrice = undefined
+  }
+
   const marketPrice = useMarketPrice(poolPrice?.baseCurrency, poolPrice?.quoteCurrency)
 
   if (!poolPrice || !marketPrice) {

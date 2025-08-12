@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useTokenDetailsScreenLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 

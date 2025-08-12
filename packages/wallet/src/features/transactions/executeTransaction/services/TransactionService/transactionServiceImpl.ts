@@ -1,4 +1,5 @@
 import type { BaseProvider, Provider } from '@ethersproject/providers'
+import { utils } from 'ethers'
 import { type AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
@@ -257,7 +258,7 @@ export function createTransactionService(ctx: {
   }
 
   /**
-   * Prepare a transaction for signing
+   * Prepare and sign a transaction
    */
   async function prepareAndSignTransaction(params: PrepareTransactionParams): Promise<SignedTransactionRequest> {
     const { chainId, account, request, submitViaPrivateRpc } = params
@@ -331,14 +332,26 @@ export function createTransactionService(ctx: {
       }
     }
 
+    // Calculate the transaction hash immediately from the signed request
+    const transactionHash = utils.keccak256(params.request.signedRequest)
+
+    // Start the submission process in the background (fire and forget)
     const submit = createSubmitTransaction({
       submissionFunction,
       methodName: 'sendTransaction',
     })
 
-    const updatedTransaction = await submit(params)
+    // Don't await the submission - let it continue in the background
+    submit(params).catch((error) => {
+      // Log any errors that occur during background submission
+      logger.error(error, {
+        tags: { file: 'TransactionService', function: 'submitTransaction' },
+        extra: { context: 'Background submission failed' },
+      })
+    })
 
-    return { transactionHash: updatedTransaction.hash }
+    // Return the hash immediately
+    return { transactionHash }
   }
 
   /**

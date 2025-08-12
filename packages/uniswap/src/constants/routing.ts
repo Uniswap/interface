@@ -23,6 +23,7 @@ import {
   USDC_OPTIMISM,
   USDC_POLYGON,
   USDC_SEPOLIA,
+  USDC_SOLANA,
   USDC_SONEIUM,
   USDC_UNICHAIN,
   USDC_WORLD_CHAIN,
@@ -48,7 +49,7 @@ import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__ge
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
-import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
+import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { isSameAddress } from 'utilities/src/addresses'
 
@@ -143,6 +144,8 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Soneium] as Token,
     USDC_SONEIUM,
   ].map(buildPartialCurrencyInfo),
+
+  [UniverseChainId.Solana]: [nativeOnChain(UniverseChainId.Solana), USDC_SOLANA].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Unichain]: [
     nativeOnChain(UniverseChainId.Unichain),

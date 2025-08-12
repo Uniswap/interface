@@ -1,7 +1,7 @@
 import { Result } from 'ethers/lib/utils'
 import { TransactionDescription } from 'no-yolo-signatures'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
+import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { isAddress } from 'utilities/src/addresses'

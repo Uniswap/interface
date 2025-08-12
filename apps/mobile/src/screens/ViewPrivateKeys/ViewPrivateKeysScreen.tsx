@@ -15,6 +15,7 @@ import { Button, Flex, GeneratedIcon, IconButton, Spacer, Text } from 'ui/src'
 import { Eye, Key, Laptop } from 'ui/src/components/icons'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { HiddenWordView } from 'ui/src/components/placeholders/HiddenWordView'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -23,7 +24,6 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { setHasCopiedPrivateKeys } from 'wallet/src/features/behaviorHistory/slice'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -181,7 +181,9 @@ export function ViewPrivateKeysScreen({ navigation, route }: Props): JSX.Element
               testID={TestID.ViewNativePrivateKeysOnCopied}
               onPress={onFinished}
             >
-              {t('privateKeys.view.button.continue')}
+              {addresses.length === 1
+                ? t('privateKeys.view.button.continue.single')
+                : t('privateKeys.view.button.continue')}
             </Button>
           </Trace>
         </Flex>

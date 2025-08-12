@@ -5,7 +5,7 @@ import { useTokenBalances } from 'hooks/useTokenBalances'
 import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -16,8 +16,8 @@ vi.mock('@web3-react/core', () => ({
 }))
 
 // Mock the balances module with all exports
-vi.mock('uniswap/src/features/dataApi/balances', async () => {
-  const actual = await vi.importActual('uniswap/src/features/dataApi/balances')
+vi.mock('uniswap/src/features/dataApi/balances/balances', async () => {
+  const actual = await vi.importActual('uniswap/src/features/dataApi/balances/balances')
   return {
     ...actual,
     usePortfolioBalances: vi.fn(() => ({

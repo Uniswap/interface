@@ -5,13 +5,20 @@ import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/constants'
 import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
-import { isWeb } from 'utilities/src/platform'
+import { GasInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/GasInfoRow'
+import { useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/useDebouncedGasInfo'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
+import { isExtension, isWeb } from 'utilities/src/platform'
 
 export function InsufficientNativeTokenBaseComponent({
   parsedInsufficientNativeTokenWarning,
 }: {
   parsedInsufficientNativeTokenWarning: NonNullable<ReturnType<typeof useInsufficientNativeTokenWarning>>
 }): JSX.Element | null {
+  const priceUXEnabled = usePriceUXEnabled()
+
+  const debouncedGasInfo = useDebouncedGasInfo()
+
   const { nativeCurrency, networkColors, networkName, flow } = parsedInsufficientNativeTokenWarning
 
   const currencySymbol = nativeCurrency.symbol
@@ -23,14 +30,7 @@ export function InsufficientNativeTokenBaseComponent({
   )
 
   return (
-    <Flex
-      centered
-      row
-      backgroundColor={isWeb ? '$surface2' : undefined}
-      borderRadius="$rounded12"
-      gap="$spacing8"
-      p={isWeb ? '$spacing16' : '$none'}
-    >
+    <Flex centered row borderRadius="$rounded12" gap="$spacing8" p={isWeb ? '$spacing16' : '$none'}>
       {isWeb && (
         <Flex>
           <AlertTriangleFilled color="$neutral2" size="$icon.16" />
@@ -82,6 +82,7 @@ export function InsufficientNativeTokenBaseComponent({
           )}
         </Text>
       </Flex>
+      {priceUXEnabled && (isWeb || isExtension) && <GasInfoRow gasInfo={debouncedGasInfo} />}
 
       {!isWeb && (
         <Flex>

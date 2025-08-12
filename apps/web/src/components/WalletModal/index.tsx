@@ -30,7 +30,7 @@ export default function WalletModal() {
   const { t } = useTranslation()
   const showMoonpayText = useShowMoonpayText()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const [expandMoreWallets, toggleExpandMoreWallets] = useReducer((s) => !s, !isEmbeddedWalletEnabled)
+  const [expandMoreWallets, toggleExpandMoreWallets] = useReducer((s) => !s, true)
   const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
 
   const connectors = useOrderedWalletConnectors({ showSecondaryConnectors: isMobileWeb })
@@ -100,9 +100,9 @@ export default function WalletModal() {
               <Trans i18nKey="wallet.other" />
             </Text>
             {expandMoreWallets ? (
-              <DoubleChevronInverted size={20} color="$neutral3" />
-            ) : (
               <DoubleChevron size={20} color="$neutral3" />
+            ) : (
+              <DoubleChevronInverted size={20} color="$neutral3" />
             )}
           </Flex>
           <Separator />
@@ -114,8 +114,8 @@ export default function WalletModal() {
             borderRadius="$rounded16"
             overflow="hidden"
             width="100%"
-            maxHeight={expandMoreWallets && !isEmbeddedWalletEnabled ? 0 : '100vh'}
-            opacity={expandMoreWallets && !isEmbeddedWalletEnabled ? 0 : 1}
+            maxHeight={expandMoreWallets ? '100vh' : 0}
+            opacity={expandMoreWallets ? 1 : 0}
             transition={`${transitions.duration.fast} ${transitions.timing.inOut}`}
             data-testid="option-grid"
           >

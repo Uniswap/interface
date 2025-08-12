@@ -5,7 +5,6 @@ import { NullablePermit, Permit } from 'uniswap/src/data/tradingApi/__generated_
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { ACROSS_DAPP_INFO, isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
@@ -32,7 +31,6 @@ export function tradeToTransactionInfo({
   transactedUSDValue?: number
   gasEstimate?: GasEstimate
 }): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo | BridgeTransactionInfo {
-  const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance ?? 0)
   const { quote, slippageTolerance } = trade
   const { quoteId, gasUseEstimate, routeString } = getClassicQuoteFromResponse(quote) ?? {}
 
@@ -75,36 +73,41 @@ export function tradeToTransactionInfo({
         tradeType: TradeType.EXACT_INPUT,
         inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
         expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-        minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(slippageTolerancePercent).quotient.toString(),
+        minimumOutputCurrencyAmountRaw: trade.minAmountOut.quotient.toString(),
       }
     : {
         ...baseTransactionInfo,
         tradeType: TradeType.EXACT_OUTPUT,
         outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
         expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-        maximumInputCurrencyAmountRaw: trade.maximumAmountIn(slippageTolerancePercent).quotient.toString(),
+        maximumInputCurrencyAmountRaw: trade.maxAmountIn.quotient.toString(),
       }
+}
+
+/** Returns true if the new trade price is outside the threshold for trade prices to be considered auto-acceptable or not.*/
+function isNewTradePriceOutsideThreshold(oldTrade: Trade, newTrade: Trade): boolean {
+  const multiplier = new Fraction(ONE).subtract(ACCEPT_NEW_TRADE_THRESHOLD)
+  const thresholdAmount = multiplier.multiply(oldTrade.executionPrice)
+
+  return newTrade.executionPrice.lessThan(thresholdAmount)
 }
 
 // any price movement below ACCEPT_NEW_TRADE_THRESHOLD is auto-accepted for the user
 const ACCEPT_NEW_TRADE_THRESHOLD = new Percent(1, 100)
+/** Returns true if `newTrade` differs from `oldTrade` enough to require explicit user acceptance. */
 export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Trade>): boolean {
   if (!oldTrade || !newTrade) {
     return false
   }
 
-  const isExecutionPriceWithinThreshold = isBridge(newTrade)
-    ? !newTrade.executionPrice.lessThan(
-        // Bridge trades have no slippage and hence a static execution price, so we calculate the threshold here.
-        new Fraction(ONE).subtract(ACCEPT_NEW_TRADE_THRESHOLD).multiply(oldTrade.executionPrice),
-      )
-    : !newTrade.executionPrice.lessThan(oldTrade.worstExecutionPrice(ACCEPT_NEW_TRADE_THRESHOLD))
+  if (isNewTradePriceOutsideThreshold(oldTrade, newTrade)) {
+    return true
+  }
 
   return (
     oldTrade.tradeType !== newTrade.tradeType ||
     !oldTrade.inputAmount.currency.equals(newTrade.inputAmount.currency) ||
-    !oldTrade.outputAmount.currency.equals(newTrade.outputAmount.currency) ||
-    !isExecutionPriceWithinThreshold
+    !oldTrade.outputAmount.currency.equals(newTrade.outputAmount.currency)
   )
 }
 

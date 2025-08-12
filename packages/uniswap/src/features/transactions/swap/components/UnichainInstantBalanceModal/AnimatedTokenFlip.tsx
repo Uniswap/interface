@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, { Easing, interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { Flex } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -27,7 +27,10 @@ export function AnimatedTokenFlip({
   }, [])
 
   useEffect(() => {
-    flipAnimation.value = withTiming(processingState === 'complete' ? 1 : 0, { duration: 300 })
+    flipAnimation.value = withTiming(processingState === 'complete' ? 1 : 0, {
+      duration: 600,
+      easing: Easing.bezier(0.68, -0.3, 0.265, 1.3),
+    })
   }, [processingState, flipAnimation])
 
   const handleTokenClick = (): void => {

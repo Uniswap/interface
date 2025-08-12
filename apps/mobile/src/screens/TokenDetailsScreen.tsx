@@ -37,7 +37,7 @@ import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridgin
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import Trace from 'uniswap/src/features/telemetry/Trace'

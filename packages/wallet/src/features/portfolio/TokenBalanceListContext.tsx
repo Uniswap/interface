@@ -16,7 +16,7 @@ import {
   sortPortfolioBalances,
   usePortfolioBalances,
   useTokenBalancesGroupedByVisibility,
-} from 'uniswap/src/features/dataApi/balances'
+} from 'uniswap/src/features/dataApi/balances/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 

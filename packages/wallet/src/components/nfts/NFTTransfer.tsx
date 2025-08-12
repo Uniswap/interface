@@ -1,7 +1,7 @@
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
-import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 
 export function NFTTransfer({ asset, nftSize }: { asset: GQLNftAsset; nftSize?: number }): JSX.Element {
   return (

@@ -25,7 +25,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
   justify-content: flex-start;
 }
 
-.c15 {
+.c12 {
   color: #131313;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -33,54 +33,24 @@ exports[`TDP Skeleton > should render correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c14 {
+.c11 {
   gap: 16px;
   padding: 24px 0px;
   -webkit-animation: iAjNNh 125ms ease-in;
   animation: iAjNNh 125ms ease-in;
 }
 
-.c16 {
+.c13 {
   font-size: 28px !important;
 }
 
 .c10 {
-  color: rgba(19,19,19,0.63);
-  font-size: 14px;
-  min-width: 121px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  padding-top: 24px;
-  padding-bottom: 0px;
-}
-
-.c9 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-}
-
-.c6 {
-  gap: 16px;
-  -webkit-animation: iAjNNh 125ms ease-in;
-  animation: iAjNNh 125ms ease-in;
-}
-
-.c13 {
   background-color: rgba(34,34,34,0.05);
   border: none;
   height: 0.5px;
 }
 
-.c20 {
+.c17 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -99,37 +69,37 @@ exports[`TDP Skeleton > should render correctly 1`] = `
   background-color: #FFFFFF;
 }
 
-.c24 {
+.c21 {
   background-color: #F9F9F9;
   border-radius: 4px;
   height: 56px;
   width: 60px;
 }
 
-.c26 {
+.c23 {
   background-color: #F9F9F9;
   border-radius: 16px;
   height: 56px;
   width: 100px;
 }
 
-.c28 {
+.c25 {
   background-color: #F9F9F9;
   border-radius: 16px;
   height: 56px;
   width: 100%;
 }
 
-.c25 {
+.c22 {
   background-color: rgba(34,34,34,0.05);
   height: 36px;
 }
 
-.c21 {
+.c18 {
   padding: 8px;
 }
 
-.c23 {
+.c20 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -144,7 +114,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
   justify-content: space-between;
 }
 
-.c22 {
+.c19 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -162,7 +132,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
   padding: 48px 12px;
 }
 
-.c27 {
+.c24 {
   position: relative;
 }
 
@@ -171,7 +141,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
   width: 180px;
 }
 
-.c7 {
+.c6 {
   height: 32px;
   border-radius: 8px;
 }
@@ -191,29 +161,29 @@ exports[`TDP Skeleton > should render correctly 1`] = `
   width: 136px;
 }
 
-.c8 {
+.c7 {
   width: 120px;
 }
 
-.c11 {
+.c8 {
   width: 80px;
   margin-bottom: 4px;
 }
 
-.c12 {
+.c9 {
   width: 116px;
 }
 
-.c17 {
+.c14 {
   margin-bottom: 6px;
   width: 100%;
 }
 
-.c19 {
+.c16 {
   width: 120px;
 }
 
-.c18 {
+.c15 {
   width: 50%;
 }
 
@@ -534,7 +504,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _height-4px"
         />
         <div
-          class="c6"
+          class="_opacity-0enter-0 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
         >
           <style>
             
@@ -553,17 +523,17 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
           >
             <div
-              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c7 c8"
+              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c6 c7"
             />
           </div>
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _width-10037"
           >
             <div
-              class="c9"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _flexWrap-wrap"
             >
               <div
-                class="c10"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexDirection-column _minWidth-121px _flexGrow-1 _mr-t-space-spa1360334080 _pt-t-space-spa1360334047"
               >
                 <style>
                   
@@ -582,7 +552,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
                 >
                   <div
-                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c11"
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c8"
                   />
                 </div>
                 <style>
@@ -602,12 +572,12 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
                 >
                   <div
-                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c7 c12"
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c6 c9"
                   />
                 </div>
               </div>
               <div
-                class="c10"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexDirection-column _minWidth-121px _flexGrow-1 _mr-t-space-spa1360334080 _pt-t-space-spa1360334047"
               >
                 <style>
                   
@@ -626,7 +596,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
                 >
                   <div
-                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c11"
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c8"
                   />
                 </div>
                 <style>
@@ -646,16 +616,16 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
                 >
                   <div
-                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c7 c12"
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c6 c9"
                   />
                 </div>
               </div>
             </div>
             <div
-              class="c9"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _flexWrap-wrap"
             >
               <div
-                class="c10"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexDirection-column _minWidth-121px _flexGrow-1 _mr-t-space-spa1360334080 _pt-t-space-spa1360334047"
               >
                 <style>
                   
@@ -674,7 +644,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
                 >
                   <div
-                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c11"
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c8"
                   />
                 </div>
                 <style>
@@ -694,12 +664,12 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
                 >
                   <div
-                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c7 c12"
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c6 c9"
                   />
                 </div>
               </div>
               <div
-                class="c10"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexDirection-column _minWidth-121px _flexGrow-1 _mr-t-space-spa1360334080 _pt-t-space-spa1360334047"
               >
                 <style>
                   
@@ -718,7 +688,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
                 >
                   <div
-                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c11"
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c8"
                   />
                 </div>
                 <style>
@@ -738,7 +708,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
                   style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
                 >
                   <div
-                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c7 c12"
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c6 c9"
                   />
                 </div>
               </div>
@@ -746,13 +716,13 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           </div>
         </div>
         <hr
-          class="c13"
+          class="c10"
         />
         <div
-          class="c14"
+          class="c11"
         >
           <div
-            class="c15 c16 css-1a9hfw6"
+            class="c12 c13 css-1a9hfw6"
           >
             <style>
               
@@ -771,7 +741,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
             >
               <div
-                class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c7 c8"
+                class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c6 c7"
               />
             </div>
           </div>
@@ -793,7 +763,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
         >
           <div
-            class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c17"
+            class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c14"
           />
         </div>
         <style>
@@ -813,7 +783,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
         >
           <div
-            class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c17"
+            class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c14"
           />
         </div>
         <style>
@@ -833,7 +803,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
         >
           <div
-            class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c17 c18"
+            class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c14 c15"
             style="margin-bottom: 24px;"
           />
         </div>
@@ -857,7 +827,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
           >
             <div
-              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c17 c19"
+              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c14 c16"
             />
           </div>
           <style>
@@ -877,7 +847,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
           >
             <div
-              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c17 c18"
+              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c14 c15"
             />
           </div>
         </div>
@@ -901,7 +871,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
           >
             <div
-              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c17 c19"
+              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c14 c16"
             />
           </div>
           <style>
@@ -921,7 +891,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
           >
             <div
-              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c17 c18"
+              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c14 c15"
             />
           </div>
         </div>
@@ -930,36 +900,36 @@ exports[`TDP Skeleton > should render correctly 1`] = `
         class="_width-_xl_10037 _maxWidth-_xl_780px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-53px _gap-40px _width-360px"
       >
         <div
-          class="c20"
+          class="c17"
         >
           <div
-            class="c21"
+            class="c18"
           >
             <div
-              class="c15 css-n8z49y"
+              class="c12 css-n8z49y"
             >
               Swap
             </div>
           </div>
           <div
-            class="c22"
+            class="c19"
           >
             <div
-              class="c23"
+              class="c20"
             >
               <div
-                class="c24 c25"
+                class="c21 c22"
                 width="60"
               />
               <div
-                class="c26 c25"
+                class="c23 c22"
                 radius="16"
                 width="100"
               />
             </div>
           </div>
           <div
-            class="c27"
+            class="c24"
           >
             <div
               class="_alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _display-flex _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-40px _width-40px _mt-0px _mb-0px _ml-0px _mr-0px _backgroundColor-surface2 _borderTopWidth-t-space-spa94665589 _borderRightWidth-t-space-spa94665589 _borderBottomWidth-t-space-spa94665589 _borderLeftWidth-t-space-spa94665589 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface1 _borderRightColor-surface1 _borderBottomColor-surface1 _borderLeftColor-surface1 _zIndex-2 _position-absolute _left-5037 _transform-translate-51285172859"
@@ -991,17 +961,17 @@ exports[`TDP Skeleton > should render correctly 1`] = `
               </div>
             </div>
             <div
-              class="c22"
+              class="c19"
             >
               <div
-                class="c23"
+                class="c20"
               >
                 <div
-                  class="c24 c25"
+                  class="c21 c22"
                   width="60"
                 />
                 <div
-                  class="c26 c25"
+                  class="c23 c22"
                   radius="16"
                   width="100"
                 />
@@ -1009,7 +979,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             </div>
           </div>
           <div
-            class="c28"
+            class="c25"
             radius="16"
           />
         </div>

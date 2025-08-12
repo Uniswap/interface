@@ -24,7 +24,7 @@ describe('getPositionUrl', () => {
       ...BASE_POSITION,
       version: ProtocolVersion.V2,
       liquidityToken: TEST_TOKEN_1,
-      pair: new Pair(currency0Amount, currency1Amount),
+      poolOrPair: new Pair(currency0Amount, currency1Amount),
       feeTier: undefined,
       v4hook: undefined,
       owner: undefined,

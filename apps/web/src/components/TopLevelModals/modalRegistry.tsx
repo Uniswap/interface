@@ -1,55 +1,71 @@
 import { ModalRegistry, ModalWrapperProps } from 'components/TopLevelModals/types'
 import { useModalState } from 'hooks/useModalState'
-import { Suspense, lazy, memo } from 'react'
+import { Suspense, memo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-const AddressClaimModal = lazy(() => import('components/claim/AddressClaimModal'))
-const ConnectedAccountBlocked = lazy(() => import('components/ConnectedAccountBlocked'))
-const UniwalletModal = lazy(() => import('components/AccountDrawer/UniwalletModal'))
-const Banners = lazy(() => import('components/Banner/shared/Banners').then((module) => ({ default: module.Banners })))
-const OffchainActivityModal = lazy(() =>
+import { createLazy } from 'utils/lazyWithRetry'
+
+const AddressClaimModal = createLazy(() => import('components/claim/AddressClaimModal'))
+const ConnectedAccountBlocked = createLazy(() => import('components/ConnectedAccountBlocked'))
+const UniwalletModal = createLazy(() => import('components/AccountDrawer/UniwalletModal'))
+const Banners = createLazy(() =>
+  import('components/Banner/shared/Banners').then((module) => ({ default: module.Banners })),
+)
+const OffchainActivityModal = createLazy(() =>
   import('components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal').then((module) => ({
     default: module.OffchainActivityModal,
   })),
 )
-const UkDisclaimerModal = lazy(() =>
+const UkDisclaimerModal = createLazy(() =>
   import('components/TopLevelModals/UkDisclaimerModal').then((module) => ({ default: module.UkDisclaimerModal })),
 )
-const TestnetModeModal = lazy(() =>
+const TestnetModeModal = createLazy(() =>
   import('uniswap/src/features/testnets/TestnetModeModal').then((module) => ({ default: module.TestnetModeModal })),
 )
-const GetTheAppModal = lazy(() =>
+const GetTheAppModal = createLazy(() =>
   import('components/NavBar/DownloadApp/Modal').then((module) => ({ default: module.GetTheAppModal })),
 )
-const PrivacyPolicyModal = lazy(() =>
+const PrivacyPolicyModal = createLazy(() =>
   import('components/PrivacyPolicy').then((module) => ({ default: module.PrivacyPolicyModal })),
 )
-const PrivacyChoicesModal = lazy(() =>
+const PrivacyChoicesModal = createLazy(() =>
   import('components/PrivacyChoices').then((module) => ({ default: module.PrivacyChoicesModal })),
 )
-const FeatureFlagModal = lazy(() => import('components/FeatureFlagModal/FeatureFlagModal'))
-const DevFlagsBox = lazy(() => import('dev/DevFlagsBox'))
-const TokenNotFoundModal = lazy(() => import('components/NotFoundModal/TokenNotFoundModal'))
-const PoolNotFoundModal = lazy(() => import('components/NotFoundModal/PoolNotFoundModal'))
-const IncreaseLiquidityModal = lazy(() =>
+const FeatureFlagModal = createLazy(() => import('components/FeatureFlagModal/FeatureFlagModal'))
+const SolanaPromoModal = createLazy(() =>
+  import('components/Banner/SolanaPromo/SolanaPromoModal').then((module) => ({
+    default: module.SolanaPromoModal,
+  })),
+)
+const DevFlagsBox = createLazy(() => import('dev/DevFlagsBox'))
+const TokenNotFoundModal = createLazy(() => import('components/NotFoundModal/TokenNotFoundModal'))
+const PoolNotFoundModal = createLazy(() => import('components/NotFoundModal/PoolNotFoundModal'))
+const IncreaseLiquidityModal = createLazy(() =>
   import('pages/IncreaseLiquidity/IncreaseLiquidityModal').then((module) => ({
     default: module.IncreaseLiquidityModal,
   })),
 )
-const RemoveLiquidityModal = lazy(() =>
+const RemoveLiquidityModal = createLazy(() =>
   import('pages/RemoveLiquidity/RemoveLiquidityModal').then((module) => ({ default: module.RemoveLiquidityModal })),
 )
-const ClaimFeeModal = lazy(() =>
+const ClaimFeeModal = createLazy(() =>
   import('components/Liquidity/ClaimFeeModal').then((module) => ({ default: module.ClaimFeeModal })),
 )
-const PasskeysHelpModal = lazy(() =>
+const PasskeysHelpModal = createLazy(() =>
   import('uniswap/src/features/passkey/PasskeysHelpModal').then((module) => ({ default: module.PasskeysHelpModal })),
 )
 
-const DelegationMismatchModal = lazy(() =>
+const DelegationMismatchModal = createLazy(() =>
   import('components/delegation/DelegationMismatchModal').then((module) => ({
     default: module.default,
   })),
+)
+const HelpModal = createLazy(() =>
+  import('components/HelpModal/HelpModal').then((module) => ({ default: module.HelpModal })),
+)
+
+const ReceiveCryptoModal = createLazy(() =>
+  import('components/ReceiveCryptoModal').then((module) => ({ default: module.ReceiveCryptoModal })),
 )
 
 const ModalLoadingFallback = memo(() => null)
@@ -108,6 +124,10 @@ export const modalRegistry: ModalRegistry = {
     component: FeatureFlagModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.FeatureFlags,
   },
+  [ModalName.SolanaPromo]: {
+    component: SolanaPromoModal,
+    shouldMount: (state) => state.application.openModal?.name === ModalName.SolanaPromo,
+  },
   [ModalName.AddLiquidity]: {
     component: IncreaseLiquidityModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.AddLiquidity,
@@ -139,6 +159,14 @@ export const modalRegistry: ModalRegistry = {
   [ModalName.DelegationMismatch]: {
     component: DelegationMismatchModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.DelegationMismatch,
+  },
+  [ModalName.Help]: {
+    component: HelpModal,
+    shouldMount: () => true,
+  },
+  [ModalName.ReceiveCryptoModal]: {
+    component: ReceiveCryptoModal,
+    shouldMount: () => true,
   },
 } as const
 

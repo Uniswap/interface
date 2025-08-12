@@ -52,7 +52,7 @@ export function IncreaseLiquidityForm() {
   const { tickLower, tickUpper } = position
   const { TOKEN0: deposit0Disabled, TOKEN1: deposit1Disabled } = getFieldsDisabled({
     ticks: [tickLower, tickUpper],
-    poolOrPair: position.version === ProtocolVersion.V2 ? undefined : position.pool,
+    poolOrPair: position.version === ProtocolVersion.V2 ? undefined : position.poolOrPair,
   })
   const { updatedFormattedAmounts, updatedUSDAmounts, updatedDeposit0Disabled, updatedDeposit1Disabled } =
     useUpdatedAmountsFromDependentAmount({

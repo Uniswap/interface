@@ -19,9 +19,8 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
+import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { getProfileUrl } from 'wallet/src/utils/linking'
 
 type MenuAction = {
   title: string
@@ -122,13 +121,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
         await menuActions[e.nativeEvent.index]?.action()
       }}
     >
-      <TouchableArea
-        backgroundColor="$surface3"
-        borderRadius="$roundedFull"
-        opacity={0.8}
-        p="$spacing8"
-        onLongPress={disableOnPress}
-      >
+      <TouchableArea backgroundColor="$surface4" borderRadius="$roundedFull" p="$spacing8" onLongPress={disableOnPress}>
         <Flex centered grow height={iconSizes.icon16} width={iconSizes.icon16}>
           <TripleDot color="$white" size={3.5} />
         </Flex>

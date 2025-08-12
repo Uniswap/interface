@@ -5,6 +5,7 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Text, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { spacing } from 'ui/src/theme'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
@@ -14,7 +15,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { isWeb } from 'utilities/src/platform'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 
 interface RecipientListProps {
   renderedInModal?: boolean

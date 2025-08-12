@@ -4,7 +4,6 @@ import { TokenInfo } from 'components/Liquidity/TokenInfo'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { useGetPoolTokenPercentage } from 'components/Liquidity/hooks/useGetPoolTokenPercentage'
-import { usePositionCurrentPrice } from 'components/Liquidity/hooks/usePositionCurrentPrice'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
@@ -79,7 +78,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
     chainId,
   } = increaseLiquidityState.position ?? {}
 
-  const currentPrice = usePositionCurrentPrice(increaseLiquidityState.position)
+  const currentPrice = increaseLiquidityState.position?.poolOrPair?.token1Price
   const poolTokenPercentage = useGetPoolTokenPercentage(increaseLiquidityState.position)
 
   const newToken0Amount = useMemo(() => {

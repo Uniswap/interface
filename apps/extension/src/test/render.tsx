@@ -11,8 +11,10 @@ import {
 import React, { PropsWithChildren } from 'react'
 import { ExtensionState, extensionReducer } from 'src/store/extensionReducer'
 import { AppStore } from 'src/store/store'
+import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
+import { mockUniswapContext } from 'uniswap/src/test/render'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 // This type extends the default options for render from RTL, as well
@@ -48,9 +50,11 @@ export function renderWithProviders(
 } {
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <AutoMockedApolloProvider resolvers={resolvers}>
-        <SharedWalletProvider reduxStore={store}>{children}</SharedWalletProvider>
-      </AutoMockedApolloProvider>
+      <UniswapProvider {...mockUniswapContext}>
+        <AutoMockedApolloProvider resolvers={resolvers}>
+          <SharedWalletProvider reduxStore={store}>{children}</SharedWalletProvider>
+        </AutoMockedApolloProvider>
+      </UniswapProvider>
     )
   }
 
@@ -108,9 +112,11 @@ export function renderHookWithProviders<P, R>(
 
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <AutoMockedApolloProvider resolvers={resolvers}>
-        <SharedWalletProvider reduxStore={store}>{children}</SharedWalletProvider>
-      </AutoMockedApolloProvider>
+      <UniswapProvider {...mockUniswapContext}>
+        <AutoMockedApolloProvider resolvers={resolvers}>
+          <SharedWalletProvider reduxStore={store}>{children}</SharedWalletProvider>
+        </AutoMockedApolloProvider>
+      </UniswapProvider>
     )
   }
 

@@ -8,7 +8,7 @@ import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { formSwapNotificationTitle } from 'wallet/src/features/notifications/utils'
-import { useCreateSwapFormState } from 'wallet/src/features/transactions/hooks'
+import { useCreateSwapFormState } from 'wallet/src/features/transactions/hooks/useCreateSwapFormState'
 
 export function SwapNotification({
   notification: {

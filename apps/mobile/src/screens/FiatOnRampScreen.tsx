@@ -21,7 +21,7 @@ import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheet
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { PillMultiToggle } from 'uniswap/src/components/pill/PillMultiToggle'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { TokenSelectorBalanceDisplay } from 'uniswap/src/features/fiatOnRamp/TokenSelectorBalanceDisplay'
 import UnsupportedTokenModal from 'uniswap/src/features/fiatOnRamp/UnsupportedTokenModal'

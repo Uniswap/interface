@@ -1,7 +1,91 @@
-## Extension
+IPFS hash of the deployment:
+- CIDv0: `QmfJFPWr9f4SjRf9HSXXbGuptKWCJoTWsrPZ7AH8EF98Xu`
+- CIDv1: `bafybeih37es4g3qlxbf2gybzjq4hhlaxkchj2fyks3qyihuohpowa3y47q`
 
-We are back with some new updates! We’ve added some bug fixes and performance improvements:
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-- Improved responsiveness times for balance and activity updates
-- Improved browser sidebar sizing for compatibility with different sizes
-- Small visual improvements
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
+
+IPFS gateways:
+- https://bafybeih37es4g3qlxbf2gybzjq4hhlaxkchj2fyks3qyihuohpowa3y47q.ipfs.dweb.link/
+- [ipfs://QmfJFPWr9f4SjRf9HSXXbGuptKWCJoTWsrPZ7AH8EF98Xu/](ipfs://QmfJFPWr9f4SjRf9HSXXbGuptKWCJoTWsrPZ7AH8EF98Xu/)
+
+## 5.106.0 (2025-08-12)
+
+
+### Features
+
+* **web:** [create - lp] gracefully handle tapi errors (#22379) 7b46727
+* **web:** [landing] update navbar e2e tests (#22334) 10534eb
+* **web:** [lp] better migrate to v4 cta (#22503) cd222f9
+* **web:** [migrate] gracefully handle tapi errors (#22343) 0ec758e
+* **web:** add feature flag for new v2 migrate flow (#22447) e733843
+* **web:** add nuqs package and setup infrastructure (#22315) 71feec4
+* **web:** add swap account delayed pending state for unichain (#22507) 876a3cd
+* **web:** add url parsers (#22316) a6b00cc
+* **web:** add useLiquidityUrlState (#22318) 5c84ef4
+* **web:** create solana banner (#22348) 665a2e5
+* **web:** create solana promo modal (#22349) 7ee0114
+* **web:** delete unused craco config (#22422) 2006abe
+* **web:** remove some craco usage (#20723) 85865ff
+* **web:** turn on logs for prod worker (#22373) a92ee0f
+* **web:** use useLiquidityUrlState (#22177) d22fd52
+
+
+### Bug Fixes
+
+* **mweb:** refresh tdp icons and fix send logic (#22590) 2017055
+* **web:** [landing] change mweb selector for help icon (#22301) 071505c
+* **web:** [landing] disable number roller animation in arabic (#22350) 1aa4d3b
+* **web:** [lp] legacy feeTier test fix (#22412) ae095c4
+* **web:** [lp] validate created feeTier value (#22500) 0cde383
+* **web:** add landing page to Trace (#22099) 6a79d86
+* **web:** create position with dynamic fee tier (#22458) cb2946f
+* **web:** deploy to worker, not pages (#22533) ed978a3
+* **web:** don't have to click other wallets to connect mock connector (#22288) ac448dd
+* **web:** fix division by zero error (#22351) 558f080
+* **web:** fix nested a tags on landing page (#22304) e78d328
+* **web:** fix token selector color on import screen (#22120) 5167e94
+* **web:** implement a lazy() wrapper with retries and error handling (#22354) 719d683
+* **web:** init datadog when localDevDatadogEnabled is true (#22073) 1201ece
+* **web:** learn more link color on fee tooltip not matching website t… (#22229) e03fbef
+* **web:** refactor receive modal display to show correctly for token search modal (#22130) 96cf6f3
+* **web:** remount sheet to fix drag bug - PORT-231 (#22151) b9d4f11
+* **web:** remove useEnabledChains from useNavigateToNftExplorerLink as it's not available outside of Uniswap Context (#22303) e1dd7d3
+* **web:** reset position state and defaultInitialToken (#22589) c28fe0d
+* **web:** revert pageSize change back to 25 (#22586) 71f1283
+* **web:** scroll text overlap of getting started button (#22286) 8060454
+* **web:** Update company in web nav dropdown and update text styling  (#22427) 6e8d6ef
+* **web:** update network cost text (#22385) 875f827
+* **web:** update not insufficient token text (#22228) 06a1ac2
+* **web:** use port 3000 for web dev (#22494) 9c0e7bd
+* **web:** use transaction hash for submission (#22465) 9c9f71f
+
+
+### Continuous Integration
+
+* **web:** update sitemaps eb12dbc
+
+
+### Code Refactoring
+
+* **web:** [lp] remove dupe tx error states (#22380) 0a3c6c1
+
+
+### Styles
+
+* **web:** fix stat values overlap (#22103) eabd0c2
+
+
+### Tests
+
+* **web:** [lp] div by zero 0 liquidity (#22345) 3c59828
+* **web:** [lp] test increase error handling (approvals and permit) (#22381) 7120fe0
+* **web:** CreatePosition e2e (#22179) b267f1f
+* **web:** fix cloud test snapshots (#22234) 79e4a5c
+* **web:** useLiquidityUrlState test (#22178) 639596b
+
+

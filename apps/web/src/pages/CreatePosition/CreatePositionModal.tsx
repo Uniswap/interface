@@ -10,7 +10,6 @@ import { PoolOutOfSyncError } from 'components/Liquidity/Create/PoolOutOfSyncErr
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { getPoolIdOrAddressFromCreatePositionInfo } from 'components/Liquidity/utils/getPoolIdOrAddressFromCreatePositionInfo'
-import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
@@ -38,6 +37,7 @@ import {
   CreatePositionTxAndGasInfo,
   isValidLiquidityTxContext,
 } from 'uniswap/src/features/transactions/liquidity/types'
+import { getErrorMessageToDisplay } from 'uniswap/src/features/transactions/liquidity/utils'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
@@ -50,6 +50,8 @@ export function CreatePositionModal({
   currencyAmountsUSDValue,
   txInfo,
   gasFeeEstimateUSD,
+  transactionError,
+  setTransactionError,
   isOpen,
   onClose,
 }: {
@@ -58,6 +60,8 @@ export function CreatePositionModal({
   currencyAmountsUSDValue?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   txInfo?: CreatePositionTxAndGasInfo
   gasFeeEstimateUSD?: Maybe<CurrencyAmount<Currency>>
+  transactionError: string | boolean
+  setTransactionError: (error: string | boolean) => void
   isOpen: boolean
   onClose: () => void
 }) {
@@ -73,7 +77,6 @@ export function CreatePositionModal({
     ticksAtLimit,
     pricesAtTicks,
     priceRangeState: { priceInverted },
-    error,
     refetch,
   } = useCreateLiquidityContext()
   const { t } = useTranslation()
@@ -105,8 +108,6 @@ export function CreatePositionModal({
     const postfix = `${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`
     return [`${lowerPriceFormatted} ${postfix}`, `${upperPriceFormatted} ${postfix}`]
   }, [formatNumberOrString, pricesAtTicks, ticksAtLimit, protocolVersion, baseCurrency, quoteCurrency])
-
-  const versionLabel = getProtocolVersionLabel(protocolVersion)
 
   const [steps, setSteps] = useState<TransactionStep[]>([])
   const dispatch = useDispatch()
@@ -144,6 +145,8 @@ export function CreatePositionModal({
   )
 
   const handleCreate = useCallback(() => {
+    setTransactionError(false)
+
     const isValidTx = isValidLiquidityTxContext(txInfo)
     if (
       !account ||
@@ -165,7 +168,10 @@ export function CreatePositionModal({
         setCurrentStep: setCurrentTransactionStep,
         setSteps,
         onSuccess,
-        onFailure: () => {
+        onFailure: (e) => {
+          if (e) {
+            setTransactionError(getErrorMessageToDisplay({ calldataError: e }))
+          }
           setCurrentTransactionStep(undefined)
         },
         analytics: {
@@ -204,6 +210,7 @@ export function CreatePositionModal({
     dispatch,
     selectChain,
     startChainId,
+    setTransactionError,
     setCurrentTransactionStep,
     onSuccess,
     trace,
@@ -239,7 +246,7 @@ export function CreatePositionModal({
                   <Text variant="heading3">{currencyAmounts?.TOKEN1?.currency.symbol}</Text>
                 </Flex>
                 <Flex row gap={2} alignItems="center">
-                  <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={hook} feeTier={fee} />
+                  <LiquidityPositionInfoBadges size="small" version={protocolVersion} v4hook={hook} feeTier={fee} />
                 </Flex>
               </Flex>
               <DoubleCurrencyLogo
@@ -322,8 +329,10 @@ export function CreatePositionModal({
               </Flex>
             )}
           </Flex>
-          <ErrorCallout errorMessage={error} onPress={refetch} />
-          <PoolOutOfSyncError />
+          <Flex gap="$spacing12">
+            <ErrorCallout errorMessage={transactionError} onPress={refetch} />
+            <PoolOutOfSyncError />
+          </Flex>
         </Flex>
         {currentTransactionStep && steps.length > 1 ? (
           <ProgressIndicator steps={steps} currentStep={currentTransactionStep} />

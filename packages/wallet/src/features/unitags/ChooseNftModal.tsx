@@ -4,14 +4,15 @@ import { X } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
+import { NftsList } from 'uniswap/src/components/nfts/NftsList'
+import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { isMobileApp, isWeb } from 'utilities/src/platform'
 import { NftView } from 'wallet/src/components/nfts/NftView'
 import { NftViewWithContextMenu } from 'wallet/src/components/nfts/NftViewWithContextMenu'
-import { NftsList } from 'wallet/src/components/nfts/NftsList'
-import { NFTItem } from 'wallet/src/features/nfts/types'
 import { ChoosePhotoOptionsProps } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 export const NFT_MODAL_MAX_WIDTH = 610
 
@@ -47,6 +48,7 @@ export const ChooseNftModal = ({
   const colors = useSporeColors()
   const insets = useAppInsets()
   const { t } = useTranslation()
+  const accounts = useAccounts()
 
   const renderNFT = (item: NFTItem): JSX.Element => {
     const onPressNft = (): void => {
@@ -54,12 +56,14 @@ export const ChooseNftModal = ({
       onClose()
     }
 
+    const walletAddresses = Object.keys(accounts)
+
     return (
       <Flex fill m={itemMargin}>
         {includeContextMenu ? (
-          <NftViewWithContextMenu item={item} owner={address} onPress={onPressNft} />
+          <NftViewWithContextMenu item={item} owner={address} walletAddresses={walletAddresses} onPress={onPressNft} />
         ) : (
-          <NftView item={item} onPress={onPressNft} />
+          <NftView item={item} walletAddresses={walletAddresses} onPress={onPressNft} />
         )}
       </Flex>
     )

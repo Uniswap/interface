@@ -2,50 +2,35 @@ import { TokenQueryData } from 'appGraphql/data/Token'
 import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable'
 import { TokenSortMethod } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
-import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
-import { Trans } from 'react-i18next'
-import { ThemedText } from 'theme/components'
-import { textFadeIn } from 'theme/styles'
+import { useTranslation } from 'react-i18next'
+import { Flex, FlexProps, Text } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
-export const StatWrapper = styled.div`
-  color: ${({ theme }) => theme.neutral2};
-  font-size: 14px;
-  min-width: 121px;
-  flex: 1;
-  padding-top: 24px;
-  padding-bottom: 0px;
-`
-const TokenStatsSection = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`
-export const StatPair = styled.div`
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-`
+export const StatWrapper = ({ children, ...props }: { children: ReactNode } & FlexProps) => (
+  <Flex minWidth={121} flex={1} mr="$spacing12" pt="$spacing24" {...props}>
+    {children}
+  </Flex>
+)
 
-const Header = styled(ThemedText.MediumHeader)`
-  font-size: 28px !important;
-  padding-top: 40px;
-`
+export const StatPair = ({ children, ...props }: { children: ReactNode } & FlexProps) => (
+  <Flex row flex={1} flexWrap="wrap" {...props}>
+    {children}
+  </Flex>
+)
 
-const StatPrice = styled.div`
-  margin-top: 4px;
-  font-size: 28px;
-  color: ${({ theme }) => theme.neutral1};
-`
-const NoData = styled.div`
-  color: ${({ theme }) => theme.neutral3};
-  padding-top: 40px;
-`
-export const StatsWrapper = styled.div`
-  gap: 16px;
-  ${textFadeIn}
-`
+export const StatsWrapper = ({ children, ...props }: { children: ReactNode } & FlexProps) => (
+  <Flex animation="200ms" animateEnter="fadeIn" {...props}>
+    {children}
+  </Flex>
+)
+
+const TokenStatsSection = ({ children }: { children: ReactNode }) => (
+  <Flex row flexWrap="wrap">
+    {children}
+  </Flex>
+)
 
 type NumericStat = number | undefined | null
 
@@ -64,10 +49,22 @@ function Stat({
 
   return (
     <StatWrapper data-cy={`${testID}`} data-testid={`${testID}`}>
-      <MouseoverTooltip disabled={!description} text={description}>
-        {title}
-      </MouseoverTooltip>
-      <StatPrice>{convertFiatAmountFormatted(value, NumberType.FiatTokenStats)}</StatPrice>
+      <Text variant="body3" color="$neutral2">
+        <MouseoverTooltip disabled={!description} text={description}>
+          {title}
+        </MouseoverTooltip>
+      </Text>
+      <Text
+        mt="$spacing8"
+        fontSize={28}
+        color="$neutral1"
+        fontWeight="$book"
+        $platform-web={{
+          overflowWrap: 'break-word',
+        }}
+      >
+        {convertFiatAmountFormatted(value, NumberType.FiatTokenStats)}
+      </Text>
     </StatWrapper>
   )
 }
@@ -77,6 +74,7 @@ type StatsSectionProps = {
 }
 export default function StatsSection(props: StatsSectionProps) {
   const { tokenQueryData } = props
+  const { t } = useTranslation()
 
   const tokenMarketInfo = tokenQueryData?.market
   const tokenProjectMarketInfo = tokenQueryData?.project?.markets?.[0] // aggregated market price from CoinGecko
@@ -91,22 +89,22 @@ export default function StatsSection(props: StatsSectionProps) {
   if (hasStats) {
     return (
       <StatsWrapper data-testid="token-details-stats">
-        <Header>
-          <Trans i18nKey="common.stats" />
-        </Header>
+        <Text variant="heading2" color="$neutral1" fontSize={28} pt="$spacing40">
+          {t('common.stats')}
+        </Text>
         <TokenStatsSection>
           <StatPair>
             <Stat
               testID="tvl"
               value={TVL}
-              description={<Trans i18nKey="stats.tvl.description" />}
-              title={<Trans i18nKey="common.totalValueLocked" />}
+              description={t('stats.tvl.description')}
+              title={t('common.totalValueLocked')}
             />
             <Stat
               testID="market-cap"
               value={marketCap}
-              description={<Trans i18nKey="stats.marketCap.description" />}
-              title={<Trans i18nKey="stats.marketCap" />}
+              description={t('stats.marketCap.description')}
+              title={t('stats.marketCap')}
             />
           </StatPair>
           <StatPair>
@@ -114,19 +112,23 @@ export default function StatsSection(props: StatsSectionProps) {
               testID="fdv"
               value={FDV}
               description={HEADER_DESCRIPTIONS[TokenSortMethod.FULLY_DILUTED_VALUATION]}
-              title={<Trans i18nKey="stats.fdv" />}
+              title={t('stats.fdv')}
             />
             <Stat
               testID="volume-24h"
               value={volume24H}
-              description={<Trans i18nKey="stats.volume.1d.description" />}
-              title={<Trans i18nKey="stats.volume.1d" />}
+              description={t('stats.volume.1d.description')}
+              title={t('stats.volume.1d')}
             />
           </StatPair>
         </TokenStatsSection>
       </StatsWrapper>
     )
   } else {
-    return <NoData data-cy="token-details-no-stats-data">No stats available</NoData>
+    return (
+      <Text color="$neutral3" pt="$spacing40" data-cy="token-details-no-stats-data">
+        {t('stats.noStatsAvailable')}
+      </Text>
+    )
   }
 }

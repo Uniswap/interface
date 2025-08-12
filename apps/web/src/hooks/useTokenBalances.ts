@@ -1,6 +1,6 @@
 import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { currencyKey } from 'utils/currencyKey'
 

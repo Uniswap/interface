@@ -1,5 +1,4 @@
 import { expect, test } from 'playwright/fixtures'
-import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
@@ -9,7 +8,7 @@ test.describe('Wallet Connection', () => {
     await page.getByTestId(TestID.AmountInputIn).fill('1')
 
     // Verify wallet is connected
-    await expect(await page.getByText(await TEST_WALLET_ADDRESS.substring(0, 6)).first()).toBeVisible()
+    await expect(await page.getByText('test0')).toBeVisible()
     await expect(await page.getByText('10,000.00 ETH')).toBeVisible()
 
     // Disconnect the wallet
@@ -31,7 +30,6 @@ test.describe('Wallet Connection', () => {
     )
 
     await page.getByText('Connect Wallet').click()
-    await page.getByText('Other wallets').click()
     await page.getByText('Mock Connector').click()
 
     await expect(await page.getByText('Connect wallet')).not.toBeVisible()

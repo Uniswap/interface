@@ -76,7 +76,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
       y={translateY}
       opacity={opacityY}
       minWidth="100%"
-      minHeight="100vh"
+      minHeight="90vh"
       height="min-content"
       pt={INTERFACE_NAV_HEIGHT}
       pointerEvents="none"
@@ -150,7 +150,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         pointerEvents="none"
         bottom={48}
         style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
-        $midHeight={{ display: 'none' }}
+        $lgHeight={{ display: 'none' }}
       >
         <RiseIn delay={0.3}>
           <Flex

@@ -55,7 +55,7 @@ interface BasePositionInfo {
 
 type V2PairInfo = BasePositionInfo & {
   version: ProtocolVersion.V2
-  pair?: Pair
+  poolOrPair?: Pair
   liquidityToken: Token
   feeTier: undefined
   v4hook: undefined
@@ -65,7 +65,7 @@ type V2PairInfo = BasePositionInfo & {
 export type V3PositionInfo = BasePositionInfo & {
   version: ProtocolVersion.V3
   tokenId: string
-  pool?: V3Pool
+  poolOrPair?: V3Pool
   feeTier?: FeeData
   position?: V3Position
   v4hook: undefined
@@ -75,7 +75,7 @@ export type V3PositionInfo = BasePositionInfo & {
 type V4PositionInfo = BasePositionInfo & {
   version: ProtocolVersion.V4
   tokenId: string
-  pool?: V4Pool
+  poolOrPair?: V4Pool
   position?: V4Position
   feeTier?: FeeData
   v4hook?: string

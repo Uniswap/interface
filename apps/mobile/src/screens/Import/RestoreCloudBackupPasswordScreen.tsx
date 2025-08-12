@@ -14,8 +14,8 @@ import {
   setLockoutEndTime,
 } from 'src/features/CloudBackup/passwordLockoutSlice'
 import { selectLockoutEndTime, selectPasswordAttempts } from 'src/features/CloudBackup/selectors'
-import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
+import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
@@ -151,10 +151,25 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
   }
 
   return (
-    <OnboardingScreen
+    <SafeKeyboardOnboardingScreen
       Icon={Cloud}
       subtitle={t('account.cloud.password.subtitle', { cloudProviderName: getCloudProviderName() })}
       title={t('account.cloud.password.title')}
+      footer={
+        <Flex row>
+          <Button
+            isDisabled={!enteredPassword || isLockedOut || isLoading}
+            testID={TestID.Continue}
+            variant="branded"
+            size="large"
+            my="$spacing12"
+            mx="$spacing16"
+            onPress={onPasswordSubmit}
+          >
+            {t('common.button.continue')}
+          </Button>
+        </Flex>
+      }
     >
       <Flex>
         <PasswordInput
@@ -181,18 +196,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
             </Text>
           </TouchableArea>
         )}
-        <Flex row>
-          <Button
-            isDisabled={!enteredPassword || isLockedOut || isLoading}
-            testID={TestID.Continue}
-            variant="branded"
-            size="large"
-            onPress={onPasswordSubmit}
-          >
-            {t('common.button.continue')}
-          </Button>
-        </Flex>
       </Flex>
-    </OnboardingScreen>
+    </SafeKeyboardOnboardingScreen>
   )
 }

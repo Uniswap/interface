@@ -4,121 +4,34 @@ import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { useNativeTokenPercentageBufferExperiment } from 'components/Liquidity/Create/hooks/useNativeTokenPercentageBufferExperiment'
-import { DepositInfo, DepositState } from 'components/Liquidity/types'
+import { DepositInfo } from 'components/Liquidity/types'
 import {
   getDependentAmountFromV2Pair,
   getDependentAmountFromV3Position,
   getDependentAmountFromV4Position,
 } from 'components/Liquidity/utils/getDependentAmount'
-import { isInvalidRange, isOutOfRange } from 'components/Liquidity/utils/priceRangeInfo'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { PositionField } from 'types/position'
-import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { applyNativeTokenPercentageBuffer } from 'uniswap/src/features/gas/utils'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 
-export type UseDepositInfoProps = {
+type UseDepositInfoProps = {
   protocolVersion: ProtocolVersion
+  poolOrPair?: V3Pool | V4Pool | Pair | undefined
   address?: string
   token0?: Maybe<Currency>
   token1?: Maybe<Currency>
+  tickLower?: number
+  tickUpper?: number
   exactField: PositionField
   exactAmounts: {
     [field in PositionField]?: string
   }
   skipDependentAmount?: boolean
-} & (
-  | {
-      protocolVersion: ProtocolVersion.V4
-      pool?: V4Pool
-      tickLower?: number
-      tickUpper?: number
-    }
-  | {
-      protocolVersion: ProtocolVersion.V3
-      pool?: V3Pool
-      tickLower?: number
-      tickUpper?: number
-    }
-  | {
-      protocolVersion: ProtocolVersion.V2
-      pair?: Pair
-    }
-  | {
-      protocolVersion: ProtocolVersion.UNSPECIFIED
-    }
-)
-
-export function getDepositInfoProps({
-  protocolVersion,
-  address,
-  displayCurrencies,
-  ticks,
-  poolOrPair,
-  state,
-}: {
-  protocolVersion: ProtocolVersion
-  address?: string
-  displayCurrencies: {
-    TOKEN0: Maybe<Currency>
-    TOKEN1: Maybe<Currency>
-  }
-  ticks: [Maybe<number>, Maybe<number>]
-  poolOrPair: V3Pool | V4Pool | Pair | undefined
-  state: DepositState
-}): UseDepositInfoProps {
-  const { exactAmounts, exactField } = state
-
-  if (protocolVersion === ProtocolVersion.V2) {
-    return {
-      protocolVersion,
-      pair: poolOrPair as Pair,
-      address,
-      token0: displayCurrencies.TOKEN0,
-      token1: displayCurrencies.TOKEN1,
-      exactField,
-      exactAmounts,
-    } satisfies UseDepositInfoProps
-  }
-
-  const [tickLower, tickUpper] = ticks
-  const invalidRange = isInvalidRange(tickLower, tickUpper)
-  const outOfRange = isOutOfRange({
-    poolOrPair,
-    lowerTick: tickLower,
-    upperTick: tickUpper,
-  })
-
-  if (protocolVersion === ProtocolVersion.V3) {
-    return {
-      protocolVersion,
-      pool: poolOrPair as V3Pool,
-      address,
-      tickLower: tickLower ?? undefined,
-      tickUpper: tickUpper ?? undefined,
-      token0: displayCurrencies.TOKEN0,
-      token1: displayCurrencies.TOKEN1,
-      exactField,
-      exactAmounts,
-      skipDependentAmount: outOfRange || invalidRange,
-    } satisfies UseDepositInfoProps
-  }
-
-  return {
-    protocolVersion,
-    pool: poolOrPair as V4Pool,
-    address,
-    tickLower: tickLower ?? undefined,
-    tickUpper: tickUpper ?? undefined,
-    token0: displayCurrencies.TOKEN0,
-    token1: displayCurrencies.TOKEN1,
-    exactField,
-    exactAmounts,
-    skipDependentAmount: outOfRange || invalidRange,
-  } satisfies UseDepositInfoProps
 }
 
 export function useTokenBalanceWithBuffer(currencyBalance: Maybe<CurrencyAmount<Currency>>, bufferPercentage: number) {
@@ -161,7 +74,7 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
       return getDependentAmountFromV2Pair({
         independentAmount,
         otherAmount,
-        pair: state.pair,
+        pair: state.poolOrPair as Pair,
         exactField,
         token0,
         token1,
@@ -170,7 +83,7 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
     }
 
     const { tickLower, tickUpper } = state
-    if (tickLower === undefined || tickUpper === undefined || !state.pool || !independentAmount) {
+    if (tickLower === undefined || tickUpper === undefined || !state.poolOrPair || !independentAmount) {
       return undefined
     }
 
@@ -178,13 +91,13 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
       protocolVersion === ProtocolVersion.V3
         ? getDependentAmountFromV3Position({
             independentAmount,
-            pool: state.pool,
+            pool: state.poolOrPair as V3Pool,
             tickLower,
             tickUpper,
           })
         : getDependentAmountFromV4Position({
             independentAmount,
-            pool: state.pool,
+            pool: state.poolOrPair as V4Pool,
             tickLower,
             tickUpper,
           })

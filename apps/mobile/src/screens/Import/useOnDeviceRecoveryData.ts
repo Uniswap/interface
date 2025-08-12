@@ -3,7 +3,7 @@ import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/u
 import { useMultiplePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
+import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances/balances'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'

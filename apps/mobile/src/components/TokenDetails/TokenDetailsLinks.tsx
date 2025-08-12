@@ -12,8 +12,7 @@ import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isDefaultNativeAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
-import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { getTwitterLink } from 'wallet/src/utils/linking'
+import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'uniswap/src/utils/linking'
 
 const ItemSeparatorComponent = (): JSX.Element => <Flex width="$spacing8" />
 

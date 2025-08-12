@@ -1,6 +1,6 @@
 import { Status } from 'components/AccountDrawer/Status'
-import { ModalState, miniPortfolioModalStateAtom } from 'components/AccountDrawer/constants'
 import { ProviderOption } from 'components/ReceiveCryptoModal/ProviderOption'
+import { ReceiveModalState, receiveCryptoModalStateAtom } from 'components/ReceiveCryptoModal/state'
 import { useAccount } from 'hooks/useAccount'
 import { useUpdateAtom } from 'jotai/utils'
 import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
@@ -25,10 +25,10 @@ function AccountCardItem(): JSX.Element {
     params: account.address ? { address: account.address } : undefined,
   })
   const { data: ENSName } = useENSName(account.address)
-  const setModalState = useUpdateAtom(miniPortfolioModalStateAtom)
+  const setModalState = useUpdateAtom(receiveCryptoModalStateAtom)
 
   const onPressShowWalletQr = (): void => {
-    setModalState(ModalState.QR_CODE)
+    setModalState(ReceiveModalState.QR_CODE)
   }
 
   return (

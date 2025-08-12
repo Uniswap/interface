@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useNFT } from 'uniswap/src/features/nfts/hooks/useNFT'
 import { useOnChainCurrencyBalance, useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -8,7 +9,6 @@ import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { useNFT } from 'wallet/src/features/nfts/hooks'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 export function useDerivedSendInfo(state: TransactionState): DerivedSendInfo {

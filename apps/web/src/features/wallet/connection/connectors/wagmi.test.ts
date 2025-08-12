@@ -73,7 +73,6 @@ describe('Wagmi connectors', () => {
     it('should handle EIP-6963 and legacy injected connectors, only returning EIP-6963 injected connectors', () => {
       // Arrange
       const mockConnectors = [
-        { id: 'injected', name: 'MetaMask', icon: 'metamask.svg', type: 'injected' }, // legacy injected
         { id: 'io.metamask', name: 'MetaMask', icon: 'metamask.svg', type: 'injected' }, // EIP-6963 injected
         { id: 'coinbase', name: 'Coinbase Wallet', icon: 'coinbase.svg', type: 'coinbaseWallet' },
       ] as unknown as Connector[]

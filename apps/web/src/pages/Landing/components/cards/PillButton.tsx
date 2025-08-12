@@ -1,68 +1,37 @@
-import { ArrowRight } from 'pages/Landing/components/Icons'
 import { Flex, Text } from 'ui/src'
+import { RightArrow } from 'ui/src/components/icons/RightArrow'
 
 type PillButtonProps = {
   label: string
-  icon: React.ReactNode
+  icon?: React.ReactNode
+  backgroundColor?: string
   color?: string
   cursor?: 'pointer' | 'default'
   onClick?: () => void
 }
 
-export function PillButton({ label, icon, color, onClick, cursor }: PillButtonProps) {
+export function PillButton({ label, icon, color, onClick, cursor, backgroundColor }: PillButtonProps) {
   return (
     <Flex
-      px="$spacing16"
-      py="$spacing12"
-      borderRadius="$rounded24"
+      // padding and border radius are only needed if backgroundColor is provided to differentiate from the surface color
+      px={backgroundColor ? '$spacing16' : 0}
+      py={backgroundColor ? '$spacing12' : 0}
+      borderRadius={backgroundColor ? '$rounded24' : undefined}
       gap="$gap8"
       centered
       cursor={cursor}
       borderWidth="$none"
-      backgroundColor="$surface1"
       overflow="hidden"
       onPress={onClick}
       userSelect="none"
+      backgroundColor={backgroundColor}
     >
-      <Flex
-        animation="quick"
-        row
-        centered
-        gap="$gap8"
-        $group-card-hover={{
-          x: -24,
-        }}
-        hoverStyle={{
-          x: -24,
-        }}
-      >
-        <Flex animation="quick" opacity={1} $group-card-hover={{ opacity: 0 }}>
-          {icon}
-        </Flex>
-        <Text
-          fontSize={20}
-          lineHeight={24}
-          fontWeight="$medium"
-          color={color}
-          $xl={{
-            fontSize: 18,
-          }}
-        >
+      <Flex animation="quick" row centered gap="$gap8">
+        {icon && <Flex>{icon}</Flex>}
+        <Text variant="buttonLabel1" color={color}>
           {label}
         </Text>
-        <Flex
-          animation="bouncy"
-          opacity={0}
-          width={24}
-          mr={-24}
-          $group-card-hover={{
-            opacity: 1,
-          }}
-        >
-          <Flex overflow="visible">
-            <ArrowRight size="24" fill={color} />
-          </Flex>
-        </Flex>
+        {!icon && <RightArrow size="$icon.24" color={color} />}
       </Flex>
     </Flex>
   )

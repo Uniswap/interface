@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { BaseProvider, JsonRpcProvider, Provider, TransactionReceipt } from '@ethersproject/providers'
-import { BigNumber } from 'ethers'
+import { BigNumber, utils } from 'ethers'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -28,6 +28,15 @@ import { TransactionConfigService } from 'wallet/src/features/transactions/execu
 // Mock external utilities
 jest.mock('wallet/src/features/providers/utils', () => ({
   isPrivateRpcSupportedOnChain: jest.fn(),
+}))
+
+// Mock ethers utils
+jest.mock('ethers', () => ({
+  ...jest.requireActual('ethers'),
+  utils: {
+    ...jest.requireActual('ethers').utils,
+    keccak256: jest.fn(),
+  },
 }))
 
 describe('TransactionService', () => {
@@ -88,6 +97,10 @@ describe('TransactionService', () => {
     // Setup default mock for private RPC support check
     const mockIsPrivateRpcSupportedOnChain = isPrivateRpcSupportedOnChain as jest.Mock
     mockIsPrivateRpcSupportedOnChain.mockReturnValue(false)
+
+    // Setup keccak256 mock to return a predictable hash
+    const mockKeccak256 = utils.keccak256 as jest.Mock
+    mockKeccak256.mockReturnValue('0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890')
   })
 
   // Create the service with mocked dependencies
@@ -353,7 +366,16 @@ describe('TransactionService', () => {
       // Act
       const result = await service.submitTransaction(params)
 
-      // Assert
+      // Assert immediate response
+      // Hash should be calculated from the signed request, not the actual submission response
+      expect(result.transactionHash).toBeDefined()
+      expect(typeof result.transactionHash).toBe('string')
+      expect(result.transactionHash).toMatch(/^0x[a-fA-F0-9]{64}$/)
+
+      // Wait for background operations to complete
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
+      // Assert background operations
       expect(mockTransactionRepository.addTransaction).toHaveBeenCalledWith({
         transaction: expect.objectContaining({
           status: TransactionStatus.Pending,
@@ -369,7 +391,6 @@ describe('TransactionService', () => {
         }),
         skipProcessing: false,
       })
-      expect(result.transactionHash).toBe(txHash)
     })
 
     it('should track analytics for swap transactions', async () => {
@@ -437,6 +458,9 @@ describe('TransactionService', () => {
 
       // Act
       await service.submitTransaction(params)
+
+      // Wait for background operations to complete
+      await new Promise((resolve) => setTimeout(resolve, 100))
 
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
@@ -507,6 +531,9 @@ describe('TransactionService', () => {
       // Act
       await service.submitTransaction(params)
 
+      // Wait for background operations to complete
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
       expect(mockLogger.error).toHaveBeenCalledWith(
@@ -569,9 +596,18 @@ describe('TransactionService', () => {
       // Setup mocks
       mockTransactionSigner.sendTransaction.mockRejectedValue(rpcError)
 
-      // Act and Assert
-      await expect(service.submitTransaction(params)).rejects.toThrow('Failed to send transaction:')
+      // Act
+      const result = await service.submitTransaction(params)
 
+      // Assert immediate response - should return hash despite background error
+      expect(result.transactionHash).toBeDefined()
+      expect(typeof result.transactionHash).toBe('string')
+      expect(result.transactionHash).toMatch(/^0x[a-fA-F0-9]{64}$/)
+
+      // Wait for background operations to complete
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
+      // Assert background error handling
       expect(mockTransactionRepository.addTransaction).toHaveBeenCalledWith({
         transaction: expect.objectContaining({
           status: TransactionStatus.Pending,
@@ -651,6 +687,9 @@ describe('TransactionService', () => {
       // Act
       await service.submitTransaction(params)
 
+      // Wait for background operations to complete
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -719,6 +758,9 @@ describe('TransactionService', () => {
 
       // Act
       await service.submitTransaction(params)
+
+      // Wait for background operations to complete
+      await new Promise((resolve) => setTimeout(resolve, 100))
 
       // Assert
       expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
@@ -1242,7 +1284,7 @@ describe('TransactionService', () => {
 
       // 4. Verify transaction was stored in repository
       expect(mockTransactionRepository.addTransaction).toHaveBeenCalled()
-      expect(mockTransactionRepository.updateTransaction).toHaveBeenCalled()
+      // Note: updateTransaction now happens asynchronously in the background
 
       // 5. Verify transaction hash was returned
       expect(result.transactionHash).toBe(txHash)
@@ -1414,13 +1456,21 @@ describe('TransactionService', () => {
       const submitError = new Error('Transaction underpriced')
       mockTransactionSigner.sendTransaction.mockRejectedValue(submitError)
 
-      // Act and Assert
-      await expect(service.executeTransaction(executeParams)).rejects.toThrow('Failed to send transaction:')
+      // Act
+      const result = await service.executeTransaction(executeParams)
 
-      // Verify error was logged
+      // Assert immediate response - should return hash immediately despite background submission error
+      expect(result.transactionHash).toBe('0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890')
+
+      // Wait for background operations to complete
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
+      // Verify error was logged for background submission failure
       expect(mockLogger.error).toHaveBeenCalledWith(expect.any(Error), {
-        tags: { file: 'TransactionService', function: 'executeTransaction' },
-        extra: { chainId: UniverseChainId.Mainnet, transactionType: TransactionType.Send, request: txRequest },
+        tags: { file: 'TransactionService', function: 'submitTransaction' },
+        extra: expect.objectContaining({
+          context: 'Background submission failed',
+        }),
       })
     })
 
@@ -1489,6 +1539,9 @@ describe('TransactionService', () => {
       // Assert
       // 1. Verify transaction completed successfully
       expect(result.transactionHash).toBe(txHash)
+
+      // Wait for background operations to complete
+      await new Promise((resolve) => setTimeout(resolve, 100))
 
       // 2. Verify analytics were tracked for the swap
       expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(

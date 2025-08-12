@@ -6,13 +6,12 @@ import {
 } from 'components/Liquidity/LiquidityPositionStatusIndicator'
 import { TextLoader } from 'components/Liquidity/Loader'
 import { PositionInfo } from 'components/Liquidity/types'
-import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Anchor, Button, Circle, Flex, Text, useMedia } from 'ui/src'
+import { Anchor, Circle, Flex, Text, useMedia } from 'ui/src'
 
 import { RightArrow } from 'ui/src/components/icons/RightArrow'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -60,7 +59,6 @@ export function LiquidityPositionInfo({
   includeNetwork = false,
 }: LiquidityPositionInfoProps) {
   const { currency0Amount, currency1Amount, status, feeTier, v4hook, version, chainId } = positionInfo
-  const versionLabel = getProtocolVersionLabel(version)
   const navigate = useNavigate()
   const chainInfo = getChainInfo(positionInfo.chainId)
   const media = useMedia()
@@ -89,25 +87,6 @@ export function LiquidityPositionInfo({
   ])
 
   const includeNetworkInLogo = useMemo(() => !includeNetwork || media.lg, [includeNetwork, media.lg])
-
-  const migrateToV4Button = (): JSX.Element => {
-    return (
-      <Button
-        icon={<RightArrow />}
-        iconPosition="after"
-        py="$spacing2"
-        borderRadius="$rounded4"
-        emphasis="secondary"
-        size="xxsmall"
-        onPress={(e) => {
-          e.preventDefault()
-          navigate(`/migrate/v3/${chainInfo.urlParam}/${positionInfo.tokenId}`)
-        }}
-      >
-        {t('pool.migrateToV4')}
-      </Button>
-    )
-  }
 
   return (
     <Flex row gap="$gap16" $md={{ width: '100%' }} alignItems={isMiniVersion ? 'center' : 'flex-start'}>
@@ -138,9 +117,22 @@ export function LiquidityPositionInfo({
             )}
           </Flex>
           <Flex row gap={2} alignItems="center">
-            <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={v4hook} feeTier={feeTier} />
+            <LiquidityPositionInfoBadges
+              size="small"
+              version={version}
+              v4hook={v4hook}
+              feeTier={feeTier}
+              cta={
+                isMigrateToV4ButtonVisible
+                  ? {
+                      label: t('pool.migrateToV4'),
+                      iconAfter: <RightArrow />,
+                      onPress: () => navigate(`/migrate/v3/${chainInfo.urlParam}/${positionInfo.tokenId}`),
+                    }
+                  : undefined
+              }
+            />
           </Flex>
-          {isMigrateToV4ButtonVisible && migrateToV4Button()}
         </Flex>
 
         {!isMiniVersion && (

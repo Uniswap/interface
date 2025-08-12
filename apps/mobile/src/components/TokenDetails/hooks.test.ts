@@ -2,7 +2,7 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import {
   SAMPLE_CURRENCY_ID_1,
   SAMPLE_SEED_ADDRESS_1,

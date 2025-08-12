@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
+import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balances'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -13,9 +13,9 @@ import { SwapCallback, SwapCallbackParams } from 'uniswap/src/features/transacti
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
+import { toStringish } from 'uniswap/src/utils/number'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { swapActions } from 'wallet/src/features/transactions/swap/swapSaga'
-import { toStringish } from 'wallet/src/utils/number'
 
 /** Callback to submit trades and track progress */
 export function useSwapCallback(): SwapCallback {

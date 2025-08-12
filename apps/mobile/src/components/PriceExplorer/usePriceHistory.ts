@@ -9,9 +9,9 @@ import {
   useTokenPriceHistoryQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { isError, isNonPollingRequestInFlight } from 'uniswap/src/data/utils'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 
 export type TokenSpotData = {
   value: SharedValue<number>

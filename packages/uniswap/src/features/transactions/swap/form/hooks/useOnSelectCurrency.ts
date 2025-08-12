@@ -6,7 +6,7 @@ import { getSwappableTokensQueryData } from 'uniswap/src/data/apiClients/trading
 import type { ChainId, GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
 import type { TradeableAsset } from 'uniswap/src/entities/assets'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
+import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { getShouldResetExactAmountToken } from 'uniswap/src/features/transactions/swap/form/utils'
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'

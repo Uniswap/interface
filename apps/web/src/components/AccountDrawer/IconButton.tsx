@@ -258,7 +258,9 @@ export const IconWithConfirmTextButton = ({
             minWidth: showText ? dimensions.innerText : 0,
           }}
         >
-          <TextWrapper ref={hiddenObserver.ref}>{text}</TextWrapper>
+          <TextWrapper ref={hiddenObserver.ref} style={{ whiteSpace: 'nowrap' }}>
+            {text}
+          </TextWrapper>
         </TextHide>
       </Row>
     </IconBlock>

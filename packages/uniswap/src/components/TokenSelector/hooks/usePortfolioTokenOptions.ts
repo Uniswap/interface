@@ -5,7 +5,10 @@ import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/l
 import { GqlResult } from 'uniswap/src/data/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { sortPortfolioBalances, useTokenBalancesGroupedByVisibility } from 'uniswap/src/features/dataApi/balances'
+import {
+  sortPortfolioBalances,
+  useTokenBalancesGroupedByVisibility,
+} from 'uniswap/src/features/dataApi/balances/balances'
 
 export function usePortfolioTokenOptions({
   address,

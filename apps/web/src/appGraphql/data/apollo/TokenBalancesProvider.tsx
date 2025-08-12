@@ -8,7 +8,7 @@ import { usePendingTransactions } from 'state/transactions/hooks'
 import { usePortfolioBalancesLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
+import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances/balances'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 function useHasAccountUpdate() {

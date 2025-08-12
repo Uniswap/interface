@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { Token } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { buildCurrency } from 'uniswap/src/features/dataApi/utils'
+import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { getExactOutputWillFail } from 'uniswap/src/features/transactions/swap/utils/getExactOutputWillFail'
 import { SAMPLE_CURRENCY_ID_1 } from 'uniswap/src/test/fixtures'
 import { CurrencyField } from 'uniswap/src/types/currency'

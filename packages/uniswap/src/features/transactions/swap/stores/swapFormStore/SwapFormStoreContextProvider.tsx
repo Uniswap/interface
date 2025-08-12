@@ -2,7 +2,7 @@ import type { PropsWithChildren } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import type { TradeableAsset } from 'uniswap/src/entities/assets'
-import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { useSwapAnalytics } from 'uniswap/src/features/transactions/swap/analytics'
 import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
 import {

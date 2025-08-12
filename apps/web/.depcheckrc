@@ -16,6 +16,7 @@ ignores: [
     'babel-plugin-react-compiler',
     'react-compiler-runtime',
     '@vitest/coverage-v8',
+    'expo-crypto',
     # Dependencies that depcheck thinks are missing but are actually present or never used
     'stories',
     ## package.json scripts
@@ -48,6 +49,8 @@ ignores: [
     'detect-package-manager',
     'eslint-plugin-storybook',
     'prop-types',
+    # Storybook requires react-scripts
+    'react-scripts',
     ## i18n
     'dotenv-cli',
     '@crowdin/cli',

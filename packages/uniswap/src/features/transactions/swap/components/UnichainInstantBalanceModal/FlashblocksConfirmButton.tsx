@@ -1,7 +1,7 @@
 import noop from 'lodash/noop'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, useIsShortMobileDevice, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
 import {
   TransactionScreen,
@@ -19,7 +19,7 @@ import {
   useSwapFormStoreDerivedSwapInfo,
 } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 
-export function FlashblocksConfirmButton(): JSX.Element {
+export function FlashblocksConfirmButton({ size }: { size: 'medium' | 'large' }): JSX.Element {
   const { t } = useTranslation()
   const { setScreen, screen, onClose } = useTransactionModalContext()
   const colors = useSporeColors()
@@ -28,9 +28,6 @@ export function FlashblocksConfirmButton(): JSX.Element {
   const isConfirmed = useSwapFormStore((s) => s.isConfirmed)
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
   const isFlashblocksEnabled = useIsUnichainFlashblocksEnabled(chainId)
-
-  const isShortMobileDevice = useIsShortMobileDevice()
-  const size = isShortMobileDevice ? 'medium' : 'large'
 
   const tradeRoute = useSwapDependenciesStore((s) => s.derivedSwapInfo.trade.trade?.routing)
   const isFlashblocksModalRoute = tradeRoute && !FLASHBLOCKS_UI_SKIP_ROUTES.includes(tradeRoute)
@@ -56,12 +53,18 @@ export function FlashblocksConfirmButton(): JSX.Element {
           exactAmountToken: '',
           isSubmitting: false,
           showPendingUI: false,
-          isConfirmed: false,
           instantReceiptFetchTime: undefined,
           instantOutputAmountRaw: undefined,
           txHash: undefined,
           txHashReceivedTime: undefined,
         })
+
+        // remove isConfirmed after 1 second to allow the user to see the success state before clearing
+        setTimeout(() => {
+          updateSwapForm({
+            isConfirmed: false,
+          })
+        }, 1000)
         onClose()
       },
       // skip modal if flashblocks is enabled but we're not on a compatible route
@@ -82,9 +85,16 @@ export function FlashblocksConfirmButton(): JSX.Element {
       pressStyle={{ backgroundColor: '$statusSuccess2', filter: 'none' }}
       animation="200ms"
     >
-      <Flex row gap="$gap8" alignItems="center" enterStyle={{ y: 10, opacity: 0 }} animation="200msDelayed160ms">
-        <Check strokeWidth={4} size="$icon.24" color={colors.statusSuccess.val} />
-        <Text variant="buttonLabel1" color="$statusSuccess">
+      <Flex row alignItems="center" enterStyle={{ y: 10, opacity: 0 }} animation="200msDelayed160ms">
+        <Check
+          strokeWidth={4}
+          size="$icon.24"
+          color={colors.statusSuccess.val}
+          position="absolute" // Manually position the icon so its height doesn't affect the button height
+          top="50%"
+          transform={[{ translateY: -12 }]} // Half of icon size ($icon.24 = 24px)
+        />
+        <Text variant="buttonLabel1" color="$statusSuccess" ml="$gap32">
           {t('common.confirmed')}
         </Text>
       </Flex>

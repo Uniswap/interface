@@ -1,8 +1,8 @@
 import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker'
+import { NUM_FIRST_NFTS } from 'uniswap/src/components/nfts/NftsList'
 import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { NUM_FIRST_NFTS } from 'wallet/src/components/nfts/NftsList'
-import { formatNftItems } from 'wallet/src/features/nfts/utils'
+import { formatNftItems } from 'uniswap/src/features/nfts/utils'
 
 // Selected image will be shrunk to max width/height
 // URI will then be for an image of those dimensions

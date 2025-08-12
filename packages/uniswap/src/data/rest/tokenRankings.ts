@@ -13,7 +13,8 @@ import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
 import { parseProtectionInfo, parseSafetyLevel } from 'uniswap/src/data/rest/utils'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { buildCurrency, buildCurrencyInfo, getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
+import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
+import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 /**

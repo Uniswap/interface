@@ -3,7 +3,6 @@ import { CurrencyAmount } from '@uniswap/sdk-core'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { useGetPoolTokenPercentage } from 'components/Liquidity/hooks/useGetPoolTokenPercentage'
-import { usePositionCurrentPrice } from 'components/Liquidity/hooks/usePositionCurrentPrice'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
@@ -82,7 +81,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
     v4hook,
   } = positionInfo
 
-  const currentPrice = usePositionCurrentPrice(positionInfo)
+  const currentPrice = positionInfo.poolOrPair?.token1Price
 
   const currency0 = currencies?.TOKEN0 ?? positionInfo.currency0Amount.currency
   const currency1 = currencies?.TOKEN1 ?? positionInfo.currency1Amount.currency

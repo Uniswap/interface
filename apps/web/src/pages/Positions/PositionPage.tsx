@@ -295,8 +295,8 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
 
   const hasFees = fee0Amount?.greaterThan(0) || fee1Amount?.greaterThan(0)
 
-  const token0Price = positionInfo.version !== ProtocolVersion.V2 ? positionInfo.pool?.token0Price : undefined
-  const token1Price = positionInfo.version !== ProtocolVersion.V2 ? positionInfo.pool?.token1Price : undefined
+  const token0Price = positionInfo.version !== ProtocolVersion.V2 ? positionInfo.poolOrPair?.token0Price : undefined
+  const token1Price = positionInfo.version !== ProtocolVersion.V2 ? positionInfo.poolOrPair?.token1Price : undefined
 
   const isOwner = areAddressesEqual({
     addressInput1: { address: positionInfo.owner, chainId: positionInfo.chainId },

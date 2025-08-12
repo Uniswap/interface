@@ -64,7 +64,6 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     customDeadline: s.customDeadline,
     customSlippageTolerance: s.customSlippageTolerance,
   }))
-  const [hasIncreaseErrorResponse, setHasIncreaseErrorResponse] = useState(false)
   const [transactionError, setTransactionError] = useState<string | boolean>(false)
 
   const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(positionInfo?.chainId)
@@ -160,17 +159,25 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
         token1PermitTransaction,
     )
 
+  const token0 = currencyAmounts?.TOKEN0?.currency
+  const token1 = currencyAmounts?.TOKEN1?.currency
+
   const token0Amount = currencyAmounts?.TOKEN0?.quotient.toString()
   const token1Amount = currencyAmounts?.TOKEN1?.quotient.toString()
 
   const increaseCalldataQueryParams = useMemo((): IncreaseLPPositionRequest | undefined => {
     const apiProtocolItems = getProtocolItems(positionInfo?.version)
-    if (!positionInfo || !account.address || !apiProtocolItems || !token0Amount || !token1Amount) {
+    if (
+      !positionInfo ||
+      !account.address ||
+      !apiProtocolItems ||
+      !token0 ||
+      !token1 ||
+      !token0Amount ||
+      !token1Amount
+    ) {
       return undefined
     }
-
-    const token0 = positionInfo.currency0Amount.currency
-    const token1 = positionInfo.currency1Amount.currency
 
     const [independentAmount, dependentAmount] =
       exactField === PositionField.TOKEN0 ? [token0Amount, token1Amount] : [token1Amount, token0Amount]
@@ -186,8 +193,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       independentToken,
       defaultDependentAmount: positionInfo.version === ProtocolVersion.V2 ? dependentAmount : undefined,
       position: {
-        tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,
-        tickUpper: positionInfo.tickUpper ? Number(positionInfo.tickUpper) : undefined,
+        tickLower: positionInfo.tickLower !== undefined ? positionInfo.tickLower : undefined,
+        tickUpper: positionInfo.tickUpper !== undefined ? positionInfo.tickUpper : undefined,
         pool: {
           token0: token0.isNative ? ZERO_ADDRESS : token0.address,
           token1: token1.isNative ? ZERO_ADDRESS : token1.address,
@@ -198,7 +205,17 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       },
       slippageTolerance: customSlippageTolerance,
     }
-  }, [account, positionInfo, token0Amount, token1Amount, approvalsNeeded, customSlippageTolerance, exactField])
+  }, [
+    account,
+    positionInfo,
+    token0,
+    token1,
+    token0Amount,
+    token1Amount,
+    approvalsNeeded,
+    customSlippageTolerance,
+    exactField,
+  ])
 
   const currency0Info = useCurrencyInfo(currencyId(positionInfo?.currency0Amount.currency))
   const currency1Info = useCurrencyInfo(currencyId(positionInfo?.currency1Amount.currency))
@@ -226,14 +243,10 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   } = useIncreaseLpPositionCalldataQuery({
     params: increaseCalldataQueryParams,
     deadlineInMinutes: customDeadline,
-    refetchInterval: hasIncreaseErrorResponse ? false : 5 * ONE_SECOND_MS,
+    refetchInterval: transactionError ? false : 5 * ONE_SECOND_MS,
     retry: false,
     enabled: isQueryEnabled,
   })
-
-  useEffect(() => {
-    setHasIncreaseErrorResponse(!!calldataError)
-  }, [calldataError, increaseCalldataQueryParams])
 
   const { increase, gasFee: actualGasFee, dependentAmount } = increaseCalldata || {}
 
@@ -272,7 +285,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
         calldataError,
       }),
     )
-  }, [approvalError, calldataError])
+  }, [approvalError, calldataError, setTransactionError])
 
   useEffect(() => {
     setTransactionError(false)

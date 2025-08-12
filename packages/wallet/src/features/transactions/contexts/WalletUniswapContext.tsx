@@ -26,7 +26,7 @@ import {
 } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/hooks/useShowSwapNetworkNotification'
 import { useProvider, useWalletSigners } from 'wallet/src/features/wallet/context'
-import { useActiveAccount, useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccount, useActiveSignerAccount, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
 
 // Adapts useProvider to fit uniswap context requirement of returning undefined instead of null
@@ -69,6 +69,7 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
   const signer = useWalletSigner()
   const {
     navigateToTokenDetails,
+    navigateToNftDetails,
     navigateToBuyOrReceiveWithEmptyWallet,
     navigateToFiatOnRamp,
     navigateToSwapFlow,
@@ -114,11 +115,13 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
       navigateToReceive={navigateToReceive}
       navigateToTokenDetails={navigateToTokenDetails}
       navigateToExternalProfile={navigateToExternalProfile}
+      navigateToNftDetails={navigateToNftDetails}
       navigateToNftCollection={navigateToNftCollection}
       navigateToPoolDetails={navigateToPoolDetails}
       handleShareToken={handleShareToken}
       signer={signer}
       useProviderHook={useWalletProvider}
+      useWalletDisplayName={useDisplayName}
       getIsUniswapXSupported={getIsUniswapXSupported}
       getCanSignPermits={getCanSignPermits}
       getSwapDelegationInfo={getSwapDelegationInfo}

@@ -9,7 +9,7 @@ import { useReactNavigationModal } from 'src/components/modals/useReactNavigatio
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
 import { Button, Flex, GeneratedIcon, Image, Text, useIsDarkMode } from 'ui/src'
 import { UNITAGS_INTRO_BANNER_DARK, UNITAGS_INTRO_BANNER_LIGHT } from 'ui/src/assets'
-import { Lightning, Ticket, UserSquare } from 'ui/src/components/icons'
+import { Lightning, Person, Ticket } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -58,7 +58,7 @@ export function UnitagsIntroModal({ route }: AppStackScreenProp<typeof ModalName
           />
         </Flex>
         <Flex gap="$spacing16" px="$spacing20">
-          <BodyItem Icon={UserSquare} title={t('unitags.intro.features.profile')} />
+          <BodyItem Icon={Person} title={t('unitags.intro.features.profile')} />
           <BodyItem Icon={Ticket} title={t('unitags.intro.features.free')} />
           <BodyItem Icon={Lightning} title={t('unitags.intro.features.ens')} />
         </Flex>

@@ -7,12 +7,12 @@ import { isNonZeroBigNumber } from 'src/app/features/dappRequests/requestContent
 import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { Anchor, Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedCopySheets, ExternalLink } from 'ui/src/components/icons'
+import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
 import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboard'
-import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import {
   SpendingDetails,
   SpendingEthDetails,

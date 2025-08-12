@@ -55,12 +55,14 @@ describe('PoolDetailsStatsButton', () => {
     navigateToPoolDetails: () => {},
     navigateToExternalProfile: () => {},
     navigateToNftCollection: () => {},
+    navigateToNftDetails: () => {},
     onSwapChainsChanged: () => {},
     isSwapTokenSelectorOpen: false,
     setSwapOutputChainId: () => {},
     setIsSwapTokenSelectorOpen: () => {},
     signer: undefined,
     useProviderHook: () => undefined,
+    useWalletDisplayName: () => undefined,
   }
 
   beforeEach(() => {

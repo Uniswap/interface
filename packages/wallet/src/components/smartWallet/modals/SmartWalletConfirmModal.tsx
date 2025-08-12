@@ -63,7 +63,7 @@ export function SmartWalletConfirmModal({
       title={t('smartWallets.disable.modal.title')}
       subtext={t('smartWallets.disable.modal.description')}
       modalName={ModalName.SmartWalletConfirmModal}
-      primaryButtonText={t('common.button.confirm')}
+      primaryButtonText={!inProgress ? t('common.button.confirm') : t('common.button.disabling')}
       primaryButtonOnClick={onConfirm}
       primaryButtonVariant="default"
       primaryButtonDisabled={isGasFeesLoading}

@@ -76,8 +76,9 @@ export const CurrencyInputPanel = memo(
       const showPercentagePresetOptions =
         isInputPresetsEnabled && !showMaxButtonOnly && currencyField === CurrencyField.INPUT
 
-      const showPercentagePresetsOnBottom =
-        showPercentagePresetOptions && (isExtension || isMobileWeb || (isInterfaceDesktop && !headerLabel))
+      const isDesktop = isInterfaceDesktop || isExtension
+
+      const showPercentagePresetsOnBottom = showPercentagePresetOptions && (isMobileWeb || (isDesktop && !headerLabel))
 
       const shakeAnimation = useShakeAnimation()
       const { triggerShakeAnimation } = shakeAnimation

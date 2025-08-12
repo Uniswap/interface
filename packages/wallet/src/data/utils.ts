@@ -9,24 +9,8 @@ import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 export const ON_RAMP_AUTH_MAX_LIMIT = 100
 export const ON_RAMP_AUTH_MIN_LIMIT = 1
 
-export function isNonPollingRequestInFlight(networkStatus: NetworkStatus): boolean {
-  return (
-    networkStatus === NetworkStatus.loading ||
-    networkStatus === NetworkStatus.setVariables ||
-    networkStatus === NetworkStatus.refetch
-  )
-}
-
 export function isWarmLoadingStatus(networkStatus: NetworkStatus): boolean {
   return networkStatus === NetworkStatus.loading || networkStatus === NetworkStatus.refetch
-}
-
-/**
- * Consider a query in an error state for UI purposes if query has no data, and
- * query has been loading at least once.
- */
-export function isError(networkStatus: NetworkStatus, hasData: boolean): boolean {
-  return !hasData && networkStatus !== NetworkStatus.loading
 }
 
 export function useRefetchQueries(): (

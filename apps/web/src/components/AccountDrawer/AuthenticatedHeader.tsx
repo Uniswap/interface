@@ -8,12 +8,12 @@ import { EmptyWallet } from 'components/AccountDrawer/MiniPortfolio/EmptyWallet'
 import { ExtensionDeeplinks } from 'components/AccountDrawer/MiniPortfolio/ExtensionDeeplinks'
 import MiniPortfolio from 'components/AccountDrawer/MiniPortfolio/MiniPortfolio'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ModalState, miniPortfolioModalStateAtom } from 'components/AccountDrawer/constants'
 import { LimitedSupportBanner } from 'components/Banner/LimitedSupportBanner'
 import { Power } from 'components/Icons/Power'
 import { Settings } from 'components/Icons/Settings'
 import StatusIcon from 'components/Identicon/StatusIcon'
-import { ReceiveCryptoModal } from 'components/ReceiveCryptoModal'
+
+import { ReceiveModalState, receiveCryptoModalStateAtom } from 'components/ReceiveCryptoModal/state'
 import DelegationMismatchModal from 'components/delegation/DelegationMismatchModal'
 import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
@@ -40,7 +40,7 @@ import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBan
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
+import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balances'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -65,9 +65,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const navigate = useNavigate()
   const wallet = useWallet()
 
-  const [modalState, setModalState] = useAtom(miniPortfolioModalStateAtom)
+  const [, setReceiveModalState] = useAtom(receiveCryptoModalStateAtom)
 
   const isUniExtensionConnected = useIsUniExtensionConnected()
+  const isExtensionDeeplinkingDisabled = useFeatureFlag(FeatureFlags.DisableExtensionDeeplinks)
+  const shouldShowExtensionDeeplinks = isUniExtensionConnected && !isExtensionDeeplinkingDisabled
+
   const { isTestnetModeEnabled } = useEnabledChains()
   const connectedAccount = useAccount()
   const connectedWithEmbeddedWallet =
@@ -96,9 +99,9 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     navigate(`/buy`, { replace: true })
   }, [accountDrawer, navigate])
 
-  const openAddressQRModal = useEvent(() => setModalState(ModalState.QR_CODE))
-  const openCEXTransferModal = useEvent(() => setModalState(ModalState.CEX_TRANSFER))
-  const openReceiveCryptoModal = useEvent(() => setModalState(ModalState.DEFAULT))
+  const openAddressQRModal = useEvent(() => setReceiveModalState(ReceiveModalState.QR_CODE))
+  const openCEXTransferModal = useEvent(() => setReceiveModalState(ReceiveModalState.CEX_TRANSFER))
+  const openReceiveCryptoModal = useEvent(() => setReceiveModalState(ReceiveModalState.DEFAULT))
   const {
     isOpen: isSendFormModalOpen,
     openModal: openSendFormModal,
@@ -206,7 +209,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           {shouldShowDelegationMismatch && (
             <LimitedSupportBanner onPress={() => setDisplayDelegationMismatchModal(true)} />
           )}
-          {isUniExtensionConnected ? (
+          {shouldShowExtensionDeeplinks ? (
             <ExtensionDeeplinks account={account} />
           ) : (
             <>
@@ -250,7 +253,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           )}
         </Flex>
       </Flex>
-      {modalState !== undefined && <ReceiveCryptoModal />}
       {isSendFormModalOpen && <SendFormModal isModalOpen={isSendFormModalOpen} onClose={closeSendFormModal} />}
       {displayDelegationMismatchModal && (
         <DelegationMismatchModal onClose={() => setDisplayDelegationMismatchModal(false)} />

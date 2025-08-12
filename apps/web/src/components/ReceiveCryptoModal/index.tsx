@@ -1,12 +1,12 @@
-import { ModalState, miniPortfolioModalStateAtom } from 'components/AccountDrawer/constants'
 import { AddressQRCode } from 'components/AddressQRCode'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ChooseProvider } from 'components/ReceiveCryptoModal/ChooseProvider'
+import { ReceiveModalState, receiveCryptoModalStateAtom } from 'components/ReceiveCryptoModal/state'
 import { useAccount } from 'hooks/useAccount'
 import { useAtom } from 'jotai'
 import ms from 'ms'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
-import { useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimateTransition } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -17,9 +17,8 @@ import { useEvent } from 'utilities/src/react/hooks'
 
 export function ReceiveCryptoModal() {
   const account = useAccount()
-  const [modalState, setModalState] = useAtom(miniPortfolioModalStateAtom)
+  const [modalState, setModalState] = useAtom(receiveCryptoModalStateAtom)
 
-  const initialModalState = useRef(modalState)
   const [errorProvider, setErrorProvider] = useState<FORServiceProvider>()
   const [connectedProvider, setConnectedProvider] = useState<FORServiceProvider>()
 
@@ -34,28 +33,41 @@ export function ReceiveCryptoModal() {
   })
 
   const goBack = useEvent(() => {
-    setModalState(initialModalState.current)
+    // If we have a connected or error provider, clear those first
+    if (connectedProvider || errorProvider) {
+      setConnectedProvider(undefined)
+      setErrorProvider(undefined)
+    } else {
+      // Otherwise, navigate back to DEFAULT state (for QR_CODE -> DEFAULT)
+      setModalState(ReceiveModalState.DEFAULT)
+    }
   })
 
+  // Close modal if account becomes disconnected - use useEffect to avoid infinite re-renders
+  useEffect(() => {
+    if (!account.address && modalState !== undefined) {
+      logger.debug('ReceiveCryptoModal', 'ReceiveCryptoModal', 'Modal opened with invalid state. Closing modal.')
+      onClose()
+    }
+  }, [account.address, modalState, onClose])
+
   if (!account.address) {
-    logger.debug('ReceiveCryptoModal', 'ReceiveCryptoModal', 'Modal opened with invalid state. Closing modal.')
-    onClose()
     return null
   }
 
-  const currentIndex = modalState === ModalState.CEX_TRANSFER || modalState === ModalState.DEFAULT ? 0 : 1
+  const currentIndex = modalState === ReceiveModalState.CEX_TRANSFER || modalState === ReceiveModalState.DEFAULT ? 0 : 1
 
   return (
     <Modal name={ModalName.ReceiveCryptoModal} isModalOpen={modalState !== undefined} onClose={onClose} maxWidth={420}>
       <ContentWrapper>
         <GetHelpHeader
-          goBack={modalState !== initialModalState.current ? goBack : undefined}
+          goBack={modalState === ReceiveModalState.QR_CODE || connectedProvider || errorProvider ? goBack : undefined}
           link={uniswapUrls.helpArticleUrls.transferCryptoHelp}
           closeModal={onClose}
         />
         <AnimateTransition currentIndex={currentIndex} animationType="forward">
           <ChooseProvider
-            providersOnly={modalState === ModalState.CEX_TRANSFER}
+            providersOnly={modalState === ReceiveModalState.CEX_TRANSFER}
             errorProvider={errorProvider}
             connectedProvider={connectedProvider}
             setErrorProvider={setErrorProvider}
