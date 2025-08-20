@@ -1,11 +1,11 @@
 import * as matchers from 'jest-extended'
 expect.extend(matchers)
 
-import { mocked } from '../../src/test-utils/mocked'
-import Cache, { Data } from './cache'
-import { getRequest } from './getRequest'
+import Cache, { Data } from 'functions/utils/cache'
+import { getRequest } from 'functions/utils/getRequest'
+import { mocked } from 'src/test-utils/mocked'
 
-vi.mock('./cache', () => ({
+vi.mock('functions/utils/cache', () => ({
   default: {
     match: vi.fn(),
     put: vi.fn(),

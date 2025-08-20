@@ -29,6 +29,9 @@ jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
     getDynamicConfig: jest.fn(() => ({
       get: jest.fn(() => undefined),
     })),
+    getLayer: jest.fn(() => ({
+      get: jest.fn(() => false),
+    })),
   })),
 }))
 

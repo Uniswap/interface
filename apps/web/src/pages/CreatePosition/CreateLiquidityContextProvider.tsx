@@ -234,7 +234,10 @@ export function CreateLiquidityContextProvider({
 
   // Reset functions
   const reset = useEvent(() => {
-    setPositionState(DEFAULT_POSITION_STATE)
+    setPositionState({
+      ...DEFAULT_POSITION_STATE,
+      protocolVersion: positionState.protocolVersion,
+    })
     setCurrencyInputs({
       tokenA: defaultInitialToken,
       tokenB: undefined,

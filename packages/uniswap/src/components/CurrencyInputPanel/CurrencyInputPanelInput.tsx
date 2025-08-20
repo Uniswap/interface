@@ -19,7 +19,7 @@ import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isExtension, isInterfaceDesktop, isWeb } from 'utilities/src/platform'
+import { isInterfaceDesktop, isWeb } from 'utilities/src/platform'
 
 type CurrencyInputPanelInputProps = {
   shakeAnimation: ShakeAnimation
@@ -78,8 +78,6 @@ export const CurrencyInputPanelInput = memo(
       const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
 
       const { value, color } = indicativeQuoteTextDisplay
-
-      const isDesktop = isInterfaceDesktop || isExtension
 
       const inputRef = useRef<TextInput>(null)
 
@@ -186,7 +184,7 @@ export const CurrencyInputPanelInput = memo(
                   onSelectionChange={onSelectionChange}
                 />
               </Flex>
-            ) : showDefaultTokenOptions && !isDesktop ? (
+            ) : showDefaultTokenOptions && !isInterfaceDesktop ? (
               <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
             ) : (
               <TouchableArea onPress={onShowTokenSelector}>

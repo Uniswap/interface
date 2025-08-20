@@ -10,7 +10,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import type { CalculatedNonce } from 'wallet/src/features/transactions/executeTransaction/tryGetNonce'
-import { SignedTransactionRequest } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
+import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 
 export interface PrepareTransactionParams {
   chainId: UniverseChainId
@@ -27,7 +27,6 @@ export interface SubmitTransactionParams {
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
   transactionOriginType: TransactionOriginType
-  timestampBeforeSign: number
   analytics?: SwapTradeBaseProperties
 }
 
@@ -67,7 +66,8 @@ export interface TransactionService {
   submitTransactionSync(input: SubmitTransactionParams): Promise<TransactionDetails>
 
   /**
-   * Send a transaction to the blockchain
+   * Execute a transaction by preparing, signing, and submitting it
+   * If a pre-signed transaction is provided, it will skip the preparation and signing steps
    * @param input Transaction parameters
    * @returns The transaction response
    */

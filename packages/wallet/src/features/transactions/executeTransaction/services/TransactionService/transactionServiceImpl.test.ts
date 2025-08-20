@@ -2,7 +2,7 @@
 import { BaseProvider, JsonRpcProvider, Provider, TransactionReceipt } from '@ethersproject/providers'
 import { BigNumber, utils } from 'ethers'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
+import { AccountMeta, AccountType, SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import {
@@ -17,6 +17,7 @@ import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/util
 import { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { TransactionRepository } from 'wallet/src/features/transactions/executeTransaction/services/TransactionRepository/transactionRepository'
 import {
+  PrepareTransactionParams,
   SubmitTransactionParams,
   TransactionService,
 } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
@@ -87,9 +88,15 @@ describe('TransactionService', () => {
     error: jest.fn(),
   } as unknown as typeof logger
 
+  // Mock Date.now to return a consistent timestamp
+  let dateNowSpy: jest.SpyInstance
+
   // Reset mocks before each test
   beforeEach(() => {
     jest.clearAllMocks()
+
+    // Mock Date.now to return consistent timestamp
+    dateNowSpy = jest.spyOn(Date, 'now').mockReturnValue(1234567890)
 
     // Reset the mocks with their default implementations
     mockGetTransactionCount.mockImplementation(() => Promise.resolve(42))
@@ -101,6 +108,11 @@ describe('TransactionService', () => {
     // Setup keccak256 mock to return a predictable hash
     const mockKeccak256 = utils.keccak256 as jest.Mock
     mockKeccak256.mockReturnValue('0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890')
+  })
+
+  // Restore Date.now after each test
+  afterEach(() => {
+    dateNowSpy.mockRestore()
   })
 
   // Create the service with mocked dependencies
@@ -115,15 +127,73 @@ describe('TransactionService', () => {
     })
   }
 
+  // Helper functions to consolidate params creation
+  const createMockAccount = (): SignerMnemonicAccountMeta => ({
+    address: '0x1234567890123456789012345678901234567890',
+    type: AccountType.SignerMnemonic,
+  })
+
+  const createPrepareTransactionParams = (
+    overrides: Partial<PrepareTransactionParams> = {},
+  ): PrepareTransactionParams => ({
+    chainId: UniverseChainId.Mainnet,
+    account: createMockAccount(),
+    request: {
+      to: '0xabcdef1234567890123456789012345678901234',
+      value: '0x1234',
+      data: '0x123abc',
+      chainId: UniverseChainId.Mainnet,
+      nonce: 5,
+    },
+    submitViaPrivateRpc: false,
+    ...overrides,
+  })
+
+  const createSubmitTransactionParams = (overrides: Partial<SubmitTransactionParams> = {}): SubmitTransactionParams => {
+    const defaultValidatedRequest = {
+      to: '0xabcdef1234567890123456789012345678901234',
+      value: '0x1234',
+      data: '0x123abc',
+      nonce: 5,
+      gasLimit: '0x5208',
+      gasPrice: '0x9184e72a000',
+      chainId: UniverseChainId.Mainnet,
+    }
+
+    const defaultSignedRequest = ensure0xHex(
+      '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a',
+    )
+
+    const defaultTypeInfo: TransactionTypeInfo = {
+      type: TransactionType.Send,
+      assetType: AssetType.Currency,
+      recipient: '0xabcdef1234567890123456789012345678901234',
+      tokenAddress: '0x0000000000000000000000000000000000000000',
+      currencyAmountRaw: '0x1234',
+    }
+
+    return {
+      chainId: UniverseChainId.Mainnet,
+      account: createMockAccount(),
+      request: {
+        request: defaultValidatedRequest,
+        signedRequest: defaultSignedRequest,
+        timestampBeforeSign: 1234567890,
+      },
+      options: {
+        request: defaultValidatedRequest,
+        submitViaPrivateRpc: false,
+      },
+      typeInfo: defaultTypeInfo,
+      transactionOriginType: TransactionOriginType.Internal,
+      ...overrides,
+    }
+  }
+
   describe('prepareAndSignTransaction', () => {
     it('should successfully prepare and sign a transaction with provided nonce', async () => {
       // Arrange
       const service = createTestService()
-
-      const mockAccount: AccountMeta = {
-        address: '0x1234567890123456789012345678901234567890',
-        type: AccountType.SignerMnemonic,
-      }
 
       const txRequest = {
         to: '0xabcdef1234567890123456789012345678901234',
@@ -133,12 +203,9 @@ describe('TransactionService', () => {
         nonce: 5, // Provided nonce
       }
 
-      const params = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
+      const params = createPrepareTransactionParams({
         request: txRequest,
-        submitViaPrivateRpc: false,
-      }
+      })
 
       const preparedTransaction = {
         ...txRequest,
@@ -163,17 +230,13 @@ describe('TransactionService', () => {
       expect(result).toEqual({
         request: preparedTransaction,
         signedRequest: signedTransaction,
+        timestampBeforeSign: 1234567890,
       })
     })
 
     it('should calculate nonce when not provided', async () => {
       // Arrange
       const service = createTestService()
-
-      const mockAccount: AccountMeta = {
-        address: '0x1234567890123456789012345678901234567890',
-        type: AccountType.SignerMnemonic,
-      }
 
       const txRequest = {
         to: '0xabcdef1234567890123456789012345678901234',
@@ -183,12 +246,9 @@ describe('TransactionService', () => {
         // No nonce provided
       }
 
-      const params = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
+      const params = createPrepareTransactionParams({
         request: txRequest,
-        submitViaPrivateRpc: false,
-      }
+      })
 
       const calculatedNonce = 42
       const requestWithNonce = { ...txRequest, nonce: calculatedNonce }
@@ -210,7 +270,7 @@ describe('TransactionService', () => {
       const result = await service.prepareAndSignTransaction(params)
 
       // Assert
-      expect(mockGetTransactionCount).toHaveBeenCalledWith(mockAccount.address, 'pending')
+      expect(mockGetTransactionCount).toHaveBeenCalledWith(params.account.address, 'pending')
       expect(mockTransactionSigner.prepareTransaction).toHaveBeenCalledWith({
         request: requestWithNonce,
       })
@@ -218,17 +278,13 @@ describe('TransactionService', () => {
       expect(result).toEqual({
         request: preparedTransaction,
         signedRequest: signedTransaction,
+        timestampBeforeSign: 1234567890,
       })
     })
 
     it('should throw error when transaction validation fails', async () => {
       // Arrange
       const service = createTestService()
-
-      const mockAccount: AccountMeta = {
-        address: '0x1234567890123456789012345678901234567890',
-        type: AccountType.SignerMnemonic,
-      }
 
       const txRequest = {
         to: '0xabcdef1234567890123456789012345678901234',
@@ -238,12 +294,9 @@ describe('TransactionService', () => {
         nonce: 5,
       }
 
-      const params = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
+      const params = createPrepareTransactionParams({
         request: txRequest,
-        submitViaPrivateRpc: false,
-      }
+      })
 
       // Setup mocks to throw error during preparation
       mockTransactionSigner.prepareTransaction.mockRejectedValue(new Error('Preparation failed'))
@@ -261,11 +314,6 @@ describe('TransactionService', () => {
       // Arrange
       const service = createTestService()
 
-      const mockAccount: AccountMeta = {
-        address: '0x1234567890123456789012345678901234567890',
-        type: AccountType.SignerMnemonic,
-      }
-
       const txRequest = {
         to: '0xabcdef1234567890123456789012345678901234',
         value: '0x1234',
@@ -273,12 +321,10 @@ describe('TransactionService', () => {
         chainId: UniverseChainId.Mainnet,
       }
 
-      const params = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
+      const params = createPrepareTransactionParams({
         request: txRequest,
         submitViaPrivateRpc: true,
-      }
+      })
 
       const calculatedNonce = 42
       const requestWithNonce = { ...txRequest, nonce: calculatedNonce }
@@ -307,6 +353,7 @@ describe('TransactionService', () => {
       expect(result).toEqual({
         request: preparedTransaction,
         signedRequest: signedTransaction,
+        timestampBeforeSign: 1234567890,
       })
     })
   })
@@ -316,47 +363,7 @@ describe('TransactionService', () => {
       // Arrange
       const service = createTestService()
 
-      const mockAccount: AccountMeta = {
-        address: '0x1234567890123456789012345678901234567890',
-        type: AccountType.SignerMnemonic,
-      }
-
-      const signedRequest = ensure0xHex(
-        '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a',
-      )
-      const validatedRequest = {
-        to: '0xabcdef1234567890123456789012345678901234',
-        value: '0x1234',
-        data: '0x123abc',
-        nonce: 5,
-        gasLimit: '0x5208',
-        gasPrice: '0x9184e72a000',
-        chainId: UniverseChainId.Mainnet,
-      }
-
-      const typeInfo: TransactionTypeInfo = {
-        type: TransactionType.Send,
-        assetType: AssetType.Currency,
-        recipient: '0xabcdef1234567890123456789012345678901234',
-        tokenAddress: '0x0000000000000000000000000000000000000000',
-        currencyAmountRaw: '0x1234',
-      }
-
-      const params = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
-        request: {
-          request: validatedRequest,
-          signedRequest,
-        },
-        options: {
-          request: validatedRequest,
-          submitViaPrivateRpc: false,
-        },
-        typeInfo,
-        transactionOriginType: TransactionOriginType.Internal,
-        timestampBeforeSign: 1234567890,
-      }
+      const params = createSubmitTransactionParams()
 
       const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
 
@@ -382,7 +389,7 @@ describe('TransactionService', () => {
         }),
       })
       expect(mockTransactionSigner.sendTransaction).toHaveBeenCalledWith({
-        signedTx: signedRequest,
+        signedTx: params.request.signedRequest,
       })
       expect(mockTransactionRepository.updateTransaction).toHaveBeenCalledWith({
         transaction: expect.objectContaining({
@@ -396,24 +403,6 @@ describe('TransactionService', () => {
     it('should track analytics for swap transactions', async () => {
       // Arrange
       const service = createTestService()
-
-      const mockAccount: AccountMeta = {
-        address: '0x1234567890123456789012345678901234567890',
-        type: AccountType.SignerMnemonic,
-      }
-
-      const signedRequest = ensure0xHex(
-        '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a',
-      )
-      const validatedRequest = {
-        to: '0xabcdef1234567890123456789012345678901234',
-        value: '0x0',
-        data: '0x123abc',
-        nonce: 5,
-        gasLimit: '0x5208',
-        gasPrice: '0x9184e72a000',
-        chainId: UniverseChainId.Mainnet,
-      }
 
       const mockAnalyticsData = {
         token_in_symbol: 'ETH',
@@ -434,22 +423,29 @@ describe('TransactionService', () => {
         minimumOutputCurrencyAmountRaw: '1683000000',
       }
 
-      const params = {
+      const validatedRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x0',
+        data: '0x123abc',
+        nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
         chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
+      }
+
+      const params = createSubmitTransactionParams({
         request: {
           request: validatedRequest,
-          signedRequest,
+          signedRequest: ensure0xHex('0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a'),
+          timestampBeforeSign: 1234567890,
         },
         options: {
           request: validatedRequest,
           submitViaPrivateRpc: false,
         },
         typeInfo,
-        transactionOriginType: TransactionOriginType.Internal,
         analytics: mockAnalyticsData,
-        timestampBeforeSign: 1234567890,
-      }
+      })
 
       const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
 
@@ -478,24 +474,6 @@ describe('TransactionService', () => {
       // Arrange
       const service = createTestService()
 
-      const mockAccount: AccountMeta = {
-        address: '0x1234567890123456789012345678901234567890',
-        type: AccountType.SignerMnemonic,
-      }
-
-      const signedRequest = ensure0xHex(
-        '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a',
-      )
-      const validatedRequest = {
-        to: '0xabcdef1234567890123456789012345678901234',
-        value: '0x0',
-        data: '0x123abc',
-        nonce: 5,
-        gasLimit: '0x5208',
-        gasPrice: '0x9184e72a000',
-        chainId: UniverseChainId.Mainnet,
-      }
-
       const typeInfo: TransactionTypeInfo = {
         type: TransactionType.Swap,
         tradeType: 0,
@@ -506,22 +484,29 @@ describe('TransactionService', () => {
         minimumOutputCurrencyAmountRaw: '1683000000',
       }
 
-      const params = {
+      const validatedRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x0',
+        data: '0x123abc',
+        nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
         chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
+      }
+
+      const params = createSubmitTransactionParams({
         request: {
           request: validatedRequest,
-          signedRequest,
+          signedRequest: ensure0xHex('0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a'),
+          timestampBeforeSign: 1234567890,
         },
         options: {
           request: validatedRequest,
           submitViaPrivateRpc: false,
         },
         typeInfo,
-        transactionOriginType: TransactionOriginType.Internal,
-        timestampBeforeSign: 1234567890,
         // Note: No analytics provided
-      }
+      })
 
       const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
 
@@ -549,47 +534,7 @@ describe('TransactionService', () => {
       // Arrange
       const service = createTestService()
 
-      const mockAccount: AccountMeta = {
-        address: '0x1234567890123456789012345678901234567890',
-        type: AccountType.SignerMnemonic,
-      }
-
-      const signedRequest = ensure0xHex(
-        '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a',
-      )
-      const validatedRequest = {
-        to: '0xabcdef1234567890123456789012345678901234',
-        value: '0x1234',
-        data: '0x123abc',
-        nonce: 5,
-        gasLimit: '0x5208',
-        gasPrice: '0x9184e72a000',
-        chainId: UniverseChainId.Mainnet,
-      }
-
-      const typeInfo: TransactionTypeInfo = {
-        type: TransactionType.Send,
-        assetType: AssetType.Currency,
-        recipient: '0xabcdef1234567890123456789012345678901234',
-        tokenAddress: '0x0000000000000000000000000000000000000000',
-        currencyAmountRaw: '0x1234',
-      }
-
-      const params = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
-        request: {
-          request: validatedRequest,
-          signedRequest,
-        },
-        options: {
-          request: validatedRequest,
-          submitViaPrivateRpc: false,
-        },
-        typeInfo,
-        transactionOriginType: TransactionOriginType.Internal,
-        timestampBeforeSign: 1234567890,
-      }
+      const params = createSubmitTransactionParams()
 
       const rpcError = new Error('transaction underpriced')
 
@@ -625,24 +570,6 @@ describe('TransactionService', () => {
       // Arrange
       const service = createTestService()
 
-      const mockAccount: AccountMeta = {
-        address: '0x1234567890123456789012345678901234567890',
-        type: AccountType.SignerMnemonic,
-      }
-
-      const signedRequest = ensure0xHex(
-        '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a',
-      )
-      const validatedRequest = {
-        to: '0xabcdef1234567890123456789012345678901234',
-        value: '0x1234',
-        data: '0x123abc',
-        nonce: 5,
-        gasLimit: '0x5208',
-        gasPrice: '0x9184e72a000',
-        chainId: UniverseChainId.Mainnet,
-      }
-
       const mockBridgeAnalyticsData = {
         token_in_symbol: 'ETH',
         token_out_symbol: 'MATIC',
@@ -662,22 +589,10 @@ describe('TransactionService', () => {
         outputCurrencyAmountRaw: '1700000000000000000',
       }
 
-      const params = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
-        request: {
-          request: validatedRequest,
-          signedRequest,
-        },
-        options: {
-          request: validatedRequest,
-          submitViaPrivateRpc: false,
-        },
+      const params = createSubmitTransactionParams({
         typeInfo,
-        transactionOriginType: TransactionOriginType.Internal,
         analytics: mockBridgeAnalyticsData,
-        timestampBeforeSign: 1234567890,
-      }
+      })
 
       const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
 
@@ -706,24 +621,6 @@ describe('TransactionService', () => {
       // Arrange
       const service = createTestService()
 
-      const mockAccount: AccountMeta = {
-        address: '0x1234567890123456789012345678901234567890',
-        type: AccountType.SignerMnemonic,
-      }
-
-      const signedRequest = ensure0xHex(
-        '0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a',
-      )
-      const validatedRequest = {
-        to: '0xabcdef1234567890123456789012345678901234',
-        value: '0x0',
-        data: '0x123abc',
-        nonce: 5,
-        gasLimit: '0x5208',
-        gasPrice: '0x9184e72a000',
-        chainId: UniverseChainId.Mainnet,
-      }
-
       const typeInfo: TransactionTypeInfo = {
         type: TransactionType.Swap,
         tradeType: 0,
@@ -734,12 +631,21 @@ describe('TransactionService', () => {
         minimumOutputCurrencyAmountRaw: '1683000000',
       }
 
-      const params = {
+      const validatedRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x0',
+        data: '0x123abc',
+        nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
         chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
+      }
+
+      const params = createSubmitTransactionParams({
         request: {
           request: validatedRequest,
-          signedRequest,
+          signedRequest: ensure0xHex('0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a'),
+          timestampBeforeSign: 1234567890,
         },
         options: {
           request: validatedRequest,
@@ -747,9 +653,8 @@ describe('TransactionService', () => {
         },
         typeInfo,
         transactionOriginType: TransactionOriginType.External, // External origin
-        timestampBeforeSign: 1234567890,
         // Note: No analytics provided for external transaction
-      }
+      })
 
       const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
 
@@ -870,6 +775,7 @@ describe('TransactionService', () => {
         request: {
           request: validatedRequest,
           signedRequest,
+          timestampBeforeSign: 1234567890,
         },
         options: {
           request: validatedRequest,
@@ -877,7 +783,6 @@ describe('TransactionService', () => {
         },
         typeInfo: overrides.typeInfo || defaultTypeInfo,
         transactionOriginType: overrides.transactionOriginType || TransactionOriginType.Internal,
-        timestampBeforeSign: 1234567890,
         ...(overrides.analytics && { analytics: overrides.analytics }),
       } as SubmitTransactionParams
     }
@@ -976,16 +881,6 @@ describe('TransactionService', () => {
 
     it('should log error when analytics is missing for internal swaps', async () => {
       // Arrange
-      const validatedRequest = {
-        to: '0xabcdef1234567890123456789012345678901234',
-        value: '0x0',
-        data: '0x123abc',
-        nonce: 5,
-        gasLimit: '0x5208',
-        gasPrice: '0x9184e72a000',
-        chainId: UniverseChainId.Mainnet,
-      }
-
       const typeInfo: TransactionTypeInfo = {
         type: TransactionType.Swap,
         tradeType: 0,
@@ -996,22 +891,29 @@ describe('TransactionService', () => {
         minimumOutputCurrencyAmountRaw: '1683000000',
       }
 
-      const params = {
+      const validatedRequest = {
+        to: '0xabcdef1234567890123456789012345678901234',
+        value: '0x0',
+        data: '0x123abc',
+        nonce: 5,
+        gasLimit: '0x5208',
+        gasPrice: '0x9184e72a000',
         chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
+      }
+
+      const params = createSubmitTransactionParams({
         request: {
           request: validatedRequest,
-          signedRequest,
+          signedRequest: ensure0xHex('0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a'),
+          timestampBeforeSign: 1234567890,
         },
         options: {
           request: validatedRequest,
           submitViaPrivateRpc: false,
         },
         typeInfo,
-        transactionOriginType: TransactionOriginType.Internal,
-        timestampBeforeSign: 1234567890,
         // Note: No analytics provided
-      }
+      })
 
       const syncService = createTestServiceWithJsonRpc()
 
@@ -1054,21 +956,18 @@ describe('TransactionService', () => {
         currencyAmountRaw: '0x1234',
       }
 
-      const params = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
+      const params = createSubmitTransactionParams({
         request: {
           request: validatedRequest,
-          signedRequest,
+          signedRequest: ensure0xHex('0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a'),
+          timestampBeforeSign: 1234567890,
         },
         options: {
           request: validatedRequest,
           submitViaPrivateRpc: false,
         },
         typeInfo,
-        transactionOriginType: TransactionOriginType.Internal,
-        timestampBeforeSign: 1234567890,
-      }
+      })
 
       const rpcError = new Error('sync transaction failed')
 
@@ -1123,22 +1022,19 @@ describe('TransactionService', () => {
         outputCurrencyAmountRaw: '1700000000000000000',
       }
 
-      const params = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
+      const params = createSubmitTransactionParams({
         request: {
           request: validatedRequest,
-          signedRequest,
+          signedRequest: ensure0xHex('0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a'),
+          timestampBeforeSign: 1234567890,
         },
         options: {
           request: validatedRequest,
           submitViaPrivateRpc: false,
         },
         typeInfo,
-        transactionOriginType: TransactionOriginType.Internal,
         analytics: mockBridgeAnalyticsData,
-        timestampBeforeSign: 1234567890,
-      }
+      })
 
       const syncService = createTestServiceWithJsonRpc()
 
@@ -1184,12 +1080,11 @@ describe('TransactionService', () => {
         minimumOutputCurrencyAmountRaw: '1683000000',
       }
 
-      const params = {
-        chainId: UniverseChainId.Mainnet,
-        account: mockAccount,
+      const params = createSubmitTransactionParams({
         request: {
           request: validatedRequest,
-          signedRequest,
+          signedRequest: ensure0xHex('0xf86c808509184e72a0008252089412345678901234567890123456789012345678908201234a'),
+          timestampBeforeSign: 1234567890,
         },
         options: {
           request: validatedRequest,
@@ -1197,9 +1092,8 @@ describe('TransactionService', () => {
         },
         typeInfo,
         transactionOriginType: TransactionOriginType.External, // External origin
-        timestampBeforeSign: 1234567890,
         // Note: No analytics provided for external transaction
-      }
+      })
 
       const syncService = createTestServiceWithJsonRpc()
 

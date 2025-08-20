@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "Odobritev zahteve {{indexText}}...",
   "common.approveSpend": "Odobrite {{symbol}} porabo",
   "common.approving": "Odobritev",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "Ali si prepričan?",
   "common.automatic": "Avto",
   "common.availableIn": "Uniswap na voljo v: <locale />",

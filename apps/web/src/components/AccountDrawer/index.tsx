@@ -56,7 +56,7 @@ const Container = styled(Flex, {
   '$platform-web': { position: 'fixed' },
   top: DRAWER_SPECS.MARGIN,
   right: '0',
-  zIndex: zIndexes.dropdown,
+  zIndex: zIndexes.sidebar,
   variants: {
     open: {
       true: { right: DRAWER_SPECS.MARGIN },

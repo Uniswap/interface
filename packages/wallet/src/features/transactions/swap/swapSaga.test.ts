@@ -45,6 +45,9 @@ import { getTxProvidersMocks } from 'wallet/src/test/mocks'
 jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
   getStatsigClient: jest.fn(() => ({
     checkGate: jest.fn().mockReturnValue(true),
+    getLayer: jest.fn(() => ({
+      get: jest.fn(() => false),
+    })),
   })),
 }))
 

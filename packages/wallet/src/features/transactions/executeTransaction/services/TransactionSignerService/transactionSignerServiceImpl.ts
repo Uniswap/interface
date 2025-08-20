@@ -1,4 +1,5 @@
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { signTypedData as signTypedDataFunction } from 'uniswap/src/features/transactions/signing'
 import { isAddress } from 'utilities/src/addresses/index'
 import { PublicClient } from 'viem'
 import { DelegationCheckResult } from 'wallet/src/features/smartWallet/delegation/types'
@@ -39,7 +40,12 @@ export function createTransactionSignerService(ctx: {
 
   const signTypedData: TransactionSigner['signTypedData'] = async (input) => {
     const signer = await getSigner()
-    const signedData = await signer._signTypedData(input.domain, input.types, input.value)
+    const signedData = await signTypedDataFunction({
+      domain: input.domain,
+      types: input.types,
+      value: input.value,
+      signer,
+    })
     return signedData
   }
 
@@ -143,7 +149,12 @@ export function createBundledDelegationTransactionSignerService(ctx: {
 
   const signTypedData: TransactionSigner['signTypedData'] = async (input) => {
     const signer = await getSigner()
-    const signedData = await signer._signTypedData(input.domain, input.types, input.value)
+    const signedData = await signTypedDataFunction({
+      domain: input.domain,
+      types: input.types,
+      value: input.value,
+      signer,
+    })
     return signedData
   }
 

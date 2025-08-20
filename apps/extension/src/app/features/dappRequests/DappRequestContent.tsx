@@ -244,7 +244,7 @@ function DappRequestFooter({
     if (onConfirm) {
       onConfirm()
     } else {
-      await defaultOnConfirm(request)
+      await defaultOnConfirm({ request })
       if (isUniswapX) {
         await handleExternallySubmittedUniswapXOrder(activeAccount.address, dispatch)
       }

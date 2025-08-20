@@ -1,5 +1,7 @@
-import { expect, test } from 'playwright/fixtures'
+import { expect, getTest } from 'playwright/fixtures'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+
+const test = getTest()
 
 test.describe('Token explore filter', () => {
   test('should filter correctly by search term', async ({ page }) => {

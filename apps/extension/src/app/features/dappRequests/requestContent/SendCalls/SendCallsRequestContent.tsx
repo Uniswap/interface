@@ -130,7 +130,7 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
       encodedTransaction: txFormattedWithGasInfo,
       encodedRequestId,
     }
-    await onConfirm(request, transactionTypeInfo)
+    await onConfirm({ request, transactionTypeInfo })
   }, [encodedTransaction, encodedRequestId, onConfirm, request, transactionGasFeeResult])
 
   const onCancelRequest = useCallback(async () => {

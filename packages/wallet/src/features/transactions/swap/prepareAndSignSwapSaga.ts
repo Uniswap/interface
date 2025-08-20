@@ -6,13 +6,14 @@ import { PrepareSwapParams } from 'uniswap/src/features/transactions/swap/types/
 import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isBridge, isClassic, isUniswapX, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
-import { PrepareTransactionParams } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
-import { createTransactionServices } from 'wallet/src/features/transactions/swap/factories/createTransactionServices'
+import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import {
-  PreSignedSwapTransaction,
-  SignedTransactionRequest,
-} from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
-import { SwapSagaDependencies } from 'wallet/src/features/transactions/swap/types/swapSagaDependencies'
+  handleTransactionPreparationError,
+  prepareTransactionServices,
+  signSingleTransaction,
+} from 'wallet/src/features/transactions/shared/baseTransactionPreparationSaga'
+import { PreSignedSwapTransaction } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
+import { TransactionSagaDependencies } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
@@ -25,7 +26,7 @@ export type PrepareAndSignSwapSagaParams = PrepareSwapParams & {
 /**
  * Factory function that creates a prepare and sign swap saga with injected dependencies
  */
-export function createPrepareAndSignSwapSaga(dependencies: SwapSagaDependencies) {
+export function createPrepareAndSignSwapSaga(dependencies: TransactionSagaDependencies) {
   /**
    * Core business logic for preparing and signing swap transactions
    * Handles all transaction types required for swap: approval, permit, UniswapX, classic, bridge, and wrap
@@ -39,20 +40,18 @@ export function createPrepareAndSignSwapSaga(dependencies: SwapSagaDependencies)
     const submitViaPrivateRpc = isClassic(swapTxContext) && (yield* call(shouldSubmitViaPrivateRpc, chainId))
     const includesDelegation = swapTxContext.includesDelegation ?? false
 
-    const { transactionSigner, transactionService } = yield* call(createTransactionServices, dependencies, {
-      account,
-      chainId,
-      submitViaPrivateRpc,
-      includesDelegation,
-    })
-
     try {
-      // Calculate nonce using TransactionService
-      const calculatedNonce = yield* call(transactionService.getNextNonce, {
-        account,
-        chainId,
-        submitViaPrivateRpc,
-      })
+      // Use shared service preparation utility
+      const { transactionService, transactionSigner, calculatedNonce } = yield* call(
+        prepareTransactionServices,
+        dependencies,
+        {
+          account,
+          chainId,
+          submitViaPrivateRpc,
+          includesDelegation,
+        },
+      )
 
       const timestampBeforeSign = Date.now()
 
@@ -70,25 +69,27 @@ export function createPrepareAndSignSwapSaga(dependencies: SwapSagaDependencies)
 
       // Approval transaction preparation (if needed)
       if (swapTxContext.approveTxRequest) {
-        const prepareTransactionParams: PrepareTransactionParams = {
+        const approvalResult = yield* signSingleTransaction(transactionService, {
           chainId,
           account,
-          request: { ...swapTxContext.approveTxRequest, nonce: getCurrentNonce() },
+          request: swapTxContext.approveTxRequest,
+          nonce: getCurrentNonce(),
           submitViaPrivateRpc,
-        }
-        signedApproveTx = yield* call(transactionService.prepareAndSignTransaction, prepareTransactionParams)
+        })
+        signedApproveTx = approvalResult.signedTransaction
         nonceIncrement = nonceIncrement + 1
       }
 
       // Permit transaction preparation (smart account mismatch case)
       if (isClassic(swapTxContext) && swapTxContext.permit?.method === PermitMethod.Transaction) {
-        const prepareTransactionParams: PrepareTransactionParams = {
+        const permitResult = yield* signSingleTransaction(transactionService, {
           chainId,
           account,
-          request: { ...swapTxContext.permit.txRequest, nonce: getCurrentNonce() },
+          request: swapTxContext.permit.txRequest,
+          nonce: getCurrentNonce(),
           submitViaPrivateRpc,
-        }
-        signedPermitTx = yield* call(transactionService.prepareAndSignTransaction, prepareTransactionParams)
+        })
+        signedPermitTx = permitResult.signedTransaction
         nonceIncrement = nonceIncrement + 1
       }
 
@@ -124,25 +125,24 @@ export function createPrepareAndSignSwapSaga(dependencies: SwapSagaDependencies)
         }
       } else if (isClassic(swapTxContext) || isBridge(swapTxContext) || isWrap(swapTxContext)) {
         // Classic, Bridge, and Wrap transactions - All use regular transaction preparation
-        const prepareTransactionParams: PrepareTransactionParams = {
+        const txRequest = swapTxContext.txRequests?.[0]
+        if (!txRequest) {
+          throw new Error('Transaction request is required for swap execution')
+        }
+        const swapResult = yield* signSingleTransaction(transactionService, {
           chainId,
           account,
-          request: { ...swapTxContext.txRequests?.[0], nonce: getCurrentNonce() },
+          request: txRequest,
+          nonce: getCurrentNonce(),
           submitViaPrivateRpc,
-        }
-
-        const signedSwapTx = yield* call(transactionService.prepareAndSignTransaction, prepareTransactionParams)
+        })
 
         preSignedSwapTx = {
           signedApproveTx,
           signedPermitTx,
-          signedSwapTx,
+          signedSwapTx: swapResult.signedTransaction,
           swapTxContext,
-          metadata: {
-            timestampBeforeSign,
-            timestampAfterSign: Date.now(),
-            submitViaPrivateRpc,
-          },
+          metadata: swapResult.metadata,
           chainId,
           account,
         }
@@ -153,17 +153,16 @@ export function createPrepareAndSignSwapSaga(dependencies: SwapSagaDependencies)
       onSuccess?.(preSignedSwapTx)
       return preSignedSwapTx
     } catch (error) {
-      const errorMessage = `Failed to prepare and sign transaction: ${
-        error instanceof Error ? error.message : 'Unknown error'
-      }`
-
-      dependencies.logger.error(error, {
-        tags: { file: 'prepareAndSignSwapSaga', function: 'prepareAndSignSwapTransaction' },
-        extra: { chainId },
+      const formattedError = handleTransactionPreparationError(dependencies, {
+        error,
+        chainId,
+        errorConfig: {
+          sagaName: 'prepareAndSignSwapSaga',
+          functionName: 'prepareAndSignSwapTransaction',
+        },
+        onFailure,
       })
-
-      onFailure?.(new Error(errorMessage))
-      throw new Error(errorMessage, { cause: error })
+      throw formattedError
     }
   }
 }

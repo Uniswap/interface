@@ -22,6 +22,7 @@ import {
   DEFAULT_PRICE_RANGE_STATE,
   useCreateLiquidityContext,
 } from 'pages/CreatePosition/CreateLiquidityContextProvider'
+import { CreatePositionTxContextProvider } from 'pages/CreatePosition/CreatePositionTxContext'
 import type { Dispatch, SetStateAction } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
@@ -301,7 +302,8 @@ const Toolbar = () => {
     (version: ProtocolVersion) => {
       const versionUrl = getProtocolVersionLabel(version)
       if (versionUrl) {
-        navigate(`/positions/create/${versionUrl}`)
+        // Ensure useLiquidityUrlState is synced
+        setTimeout(() => navigate(`/positions/create/${versionUrl}`), 1)
       }
 
       setPositionState({
@@ -419,10 +421,12 @@ function CreatePositionContent({
             initialDepositState={initialInputs.depositState}
             initialFlowStep={initialInputs.flowStep}
           >
-            <CreatePositionWrapper>
-              <CreatePositionInner currencyInputs={currencyInputs} setCurrencyInputs={setCurrencyInputs} />
-            </CreatePositionWrapper>
-            <SharedCreateModals />
+            <CreatePositionTxContextProvider>
+              <CreatePositionWrapper>
+                <CreatePositionInner currencyInputs={currencyInputs} setCurrencyInputs={setCurrencyInputs} />
+              </CreatePositionWrapper>
+              <SharedCreateModals />
+            </CreatePositionTxContextProvider>
           </CreateLiquidityContextProvider>
         </LPTransactionSettingsStoreContextProvider>
       </MultichainContextProvider>

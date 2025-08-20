@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "Kérelem jóváhagyása {{indexText}}...",
   "common.approveSpend": "{{symbol}} kiadás jóváhagyása",
   "common.approving": "Jóváhagyás",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "biztos vagy ebben?",
   "common.automatic": "Auto",
   "common.availableIn": "Uniswap elérhető: <locale />",

@@ -1,4 +1,4 @@
-import Cache, { Data } from './cache'
+import Cache, { Data } from 'functions/utils/cache'
 
 export async function getRequest<T extends Data>({
   url,

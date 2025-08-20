@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "Approving request {{indexText}}...",
   "common.approveSpend": "Одобрите {{symbol}} потрошњу",
   "common.approving": "Одобравање",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "Јеси ли сигуран?",
   "common.automatic": "Ауто",
   "common.availableIn": "Унисвап доступан у: <locale />",

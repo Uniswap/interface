@@ -124,13 +124,6 @@ export function SmartWalletModalsManager({
     //Block all nudges
     dispatch(setIsAllSmartWalletNudgesDisabled({ walletAddress: selectedWallet.walletAddress, isDisabled: true }))
 
-    await refreshDelegationData().catch((error) => {
-      logger.error(error, {
-        tags: { file: 'SmartWalletModalsManager', function: 'onDelegationsRemoved' },
-        extra: { activeAccountAddress },
-      })
-    })
-
     setInProgressFalse()
     onModalStateChange(SmartWalletModalState.None)
 
@@ -139,6 +132,13 @@ export function SmartWalletModalsManager({
       : eligibleNetworksToRemoveDelegation.length > 1
         ? t('notification.smartWallet.disabled.plural', { amount: eligibleNetworksToRemoveDelegation.length })
         : t('notification.smartWallet.disabled')
+
+    await refreshDelegationData().catch((delegationError) => {
+      logger.error(delegationError, {
+        tags: { file: 'SmartWalletModalsManager', function: 'handleRemoveDelegations' },
+        extra: { activeAccountAddress },
+      })
+    })
 
     dispatch(
       pushNotification({

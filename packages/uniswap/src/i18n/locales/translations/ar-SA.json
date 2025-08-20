@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "جاري الموافقة على الطلب {{indexText}}...",
   "common.approveSpend": "الموافقة على الإنفاق {{symbol}}",
   "common.approving": "الموافقة",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "هل أنت متأكد؟",
   "common.automatic": "آلي",
   "common.availableIn": "Uniswap متاح في: <locale />",

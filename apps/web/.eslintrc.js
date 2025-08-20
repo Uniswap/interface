@@ -141,6 +141,40 @@ module.exports = {
       },
     },
     {
+      // Enforce anvil test separation - anvil tests must only be in *.anvil.e2e.test.ts files
+      files: ['**/*.e2e.test.ts'],
+      excludedFiles: ['**/*.anvil.e2e.test.ts'],
+      rules: {
+        'no-restricted-syntax': [
+          'error',
+          // Block getTest({ withAnvil: true })
+          {
+            selector:
+              'CallExpression[callee.name="getTest"] > ObjectExpression > Property[key.name="withAnvil"][value.value=true]',
+            message:
+              'Anvil tests must be in *.anvil.e2e.test.ts files. Move this test to a file with .anvil.e2e.test.ts extension.',
+          },
+          // Block anvil fixture usage (anvil.setErc20Balance, etc.)
+          {
+            selector: 'MemberExpression[object.name="anvil"]',
+            message:
+              'Anvil fixture usage must be in *.anvil.e2e.test.ts files. Move this test to a file with .anvil.e2e.test.ts extension.',
+          },
+        ],
+        'no-restricted-imports': [
+          'error',
+          {
+            patterns: [
+              {
+                group: ['**/playwright/anvil/**', '**/playwright/fixtures/anvil'],
+                message: 'Anvil imports must only be used in *.anvil.e2e.test.ts files.',
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
       files: ['**/*.ts', '**/*.tsx'],
       excludedFiles: ['src/analytics/*'],
       rules: {},

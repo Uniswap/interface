@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "Hyväksytään pyyntö {{indexText}}...",
   "common.approveSpend": "Hyväksy {{symbol}} kulutus",
   "common.approving": "Hyväksytään",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "Oletko varma?",
   "common.automatic": "Auto",
   "common.availableIn": "Uniswap saatavilla: <locale />",

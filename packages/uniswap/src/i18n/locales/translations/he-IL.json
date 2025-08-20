@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "מאשר את הבקשה {{indexText}}...",
   "common.approveSpend": "אשר הוצאה של {{symbol}}",
   "common.approving": "מאשר",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "האם אתה בטוח?",
   "common.automatic": "אוטומטי",
   "common.availableIn": "החלפה חד פעמית זמינה ב: <locale />",

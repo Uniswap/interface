@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "Godkänner begäran {{indexText}}...",
   "common.approveSpend": "Godkänn {{symbol}} utgifter",
   "common.approving": "Godkännande",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "Är du säker?",
   "common.automatic": "Bil",
   "common.availableIn": "Uniswap tillgängligt i: <locale />",

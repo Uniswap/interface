@@ -35,6 +35,7 @@ import { OTPInput } from 'src/app/features/onboarding/scan/OTPInput'
 import { ScanToOnboard } from 'src/app/features/onboarding/scan/ScanToOnboard'
 import { ScantasticContextProvider } from 'src/app/features/onboarding/scan/ScantasticContextProvider'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
+import { OnboardingNavigationProvider } from 'src/app/navigation/providers'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
@@ -42,6 +43,7 @@ import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebu
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
+import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { getReduxPersistor } from 'wallet/src/state/persistor'
 
 const supportsSidePanel = checksIfSupportsSidePanel()
@@ -192,8 +194,12 @@ export default function OnboardingApp(): JSX.Element {
   return (
     <PersistGate persistor={getReduxPersistor()}>
       <BaseAppContainer appName={DatadogAppNameTag.Onboarding}>
-        <PrimaryAppInstanceDebuggerLazy />
-        <RouterProvider router={router} />
+        <OnboardingNavigationProvider>
+          <WalletUniswapProvider>
+            <PrimaryAppInstanceDebuggerLazy />
+            <RouterProvider router={router} />
+          </WalletUniswapProvider>
+        </OnboardingNavigationProvider>
       </BaseAppContainer>
     </PersistGate>
   )

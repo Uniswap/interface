@@ -162,7 +162,8 @@ export function WalletDelegationProvider({
   // Function to force refresh delegation data
   const refreshDelegationData = useEvent(async (): Promise<void> => {
     logger.debug('WalletDelegationProvider', 'refreshDelegationData', 'refreshing delegation data')
-    await queryClient.fetchQuery({ ...delegationQueryOptions, staleTime: 0 })
+    await queryClient.invalidateQueries({ queryKey: delegationQueryOptions.queryKey })
+    await queryClient.refetchQueries({ queryKey: delegationQueryOptions.queryKey })
   })
 
   const contextValue = useMemo(

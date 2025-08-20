@@ -5,7 +5,7 @@ const previousStateWithLocalTransactions = {
     version: 24,
     rehydrated: true,
   },
-  localWebTransactions: {
+  transactions: {
     [1]: {
       ['0x0']: {
         status: 'these value dont matter as they are not checked',
@@ -23,7 +23,7 @@ describe('migration to clear local transactions', () => {
   it('ensure all transactions are cleared and version is updated correctly', async () => {
     const migration = createLocalTransactionClearingMigration(420)
     const newState = migration(previousStateWithLocalTransactions)
-    expect(newState?.localWebTransactions).toEqual({})
+    expect(newState?.transactions).toEqual({})
     expect(newState?._persist.version).toEqual(420)
   })
 })

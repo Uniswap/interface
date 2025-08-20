@@ -5,6 +5,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SolanaToken } from 'uniswap/src/features/tokens/SolanaToken'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { logger } from 'utilities/src/logger/logger'
 import { sortKeysRecursively } from 'utilities/src/primitives/objects'
 
 type BuildCurrencyParams = {
@@ -55,7 +56,17 @@ export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency
 
   let result: Token | NativeCurrency | undefined
   if (chainId === UniverseChainId.Solana && address) {
-    result = new SolanaToken(chainId, address, decimals, symbol ?? undefined, name ?? undefined)
+    try {
+      result = new SolanaToken(chainId, address, decimals, symbol ?? undefined, name ?? undefined)
+    } catch (error) {
+      // TODO(SWAP-262): Investigate remaining source of lowercased SPL token addresses
+      const isLowercasedAddress = address.toLowerCase() === address
+      const displayError = isLowercasedAddress ? new Error(`Invalid lowercased SPL token address: ${address}`) : error
+
+      logger.error(displayError, {
+        tags: { file: 'buildCurrency.ts', function: 'buildCurrency' },
+      })
+    }
   } else {
     const buyFee = buyFeeBps && BigNumber.from(buyFeeBps).gt(0) ? BigNumber.from(buyFeeBps) : undefined
     const sellFee = sellFeeBps && BigNumber.from(sellFeeBps).gt(0) ? BigNumber.from(sellFeeBps) : undefined

@@ -1,6 +1,8 @@
-import { expect, test } from 'playwright/fixtures'
+import { expect, getTest } from 'playwright/fixtures'
 import { Mocks } from 'playwright/mocks/mocks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+
+const test = getTest()
 
 test.describe('Token Details', () => {
   test('token with warning and low trading volume should have all information populated', async ({ page, graphql }) => {

@@ -21,4 +21,6 @@ ignores: [
     'turbo-ignore',
     'prettier',
     'prettier-plugin-organize-imports',
+    # needed for ci
+    'dd-trace',
   ]

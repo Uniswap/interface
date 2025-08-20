@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "Goedkeuring van versoek {{indexText}}...",
   "common.approveSpend": "Keur {{symbol}} besteding goed",
   "common.approving": "Goedkeurend",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "Is jy seker?",
   "common.automatic": "Outo",
   "common.availableIn": "Uniswap beskikbaar in: <locale />",

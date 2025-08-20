@@ -12252,57 +12252,137 @@
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/ethereum/0x53ead11073fc0651dce70572666f0ed0752abfea</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/base/0xa0ca5bebc42cdbf3623b1c09206ae4e3975b0fc7</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/arbitrum/0x18aa3faeedb077aa604d748587093adcc9c5172b</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/base/0xb655dc66ecead581d1f1a5759c2c37c2dbef2275</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/base/0x2e8b5cf35680f8b7df0957d05c6a0a4ae1d00cde</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/base/0x87c0676255be413399c9a205d9cbeb2a04814cca</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/bnb/0xc09b0b0bde3b1f97ed3d3b5f5b0a74a74ee99768</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/bnb/0x9950c1f3754fb8a3ebbaf24b8573cafc7474c00f</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/bnb/0x9fca4c864a30c03c21cc8743ee0c73312deda0ec</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/worldchain/0x9b03dd0d04c2953a6a74471c53f24f15f592df1e</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/avalanche/0x260e34c78b27ece3fc6de8cd170e3ffb49fac35f</loc>
     <lastmod>2025-08-09T00:43:25.949Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/optimism/0x29f07e631a2f990e1f6117c6285a44e746b1f090</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/polygon/0x3dc10d7bfb94eeb009203e84a653e5764f71771d</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/polygon/0x29f07e631a2f990e1f6117c6285a44e746b1f090</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0x29f07e631a2f990e1f6117c6285a44e746b1f090</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/bnb/0x0e5828c7eb7c7c9066201718f7ff044cf9fa10d9</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/bnb/0x29f07e631a2f990e1f6117c6285a44e746b1f090</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/celo/0x29f07e631a2f990e1f6117c6285a44e746b1f090</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/unichain/0x29f07e631a2f990e1f6117c6285a44e746b1f090</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/avalanche/0xb0828467656ef9a9804e0d57da3fbd79374877f4</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/avalanche/0x29f07e631a2f990e1f6117c6285a44e746b1f090</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/blast/0x29f07e631a2f990e1f6117c6285a44e746b1f090</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/soneium/0x29f07e631a2f990e1f6117c6285a44e746b1f090</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/worldchain/0x075138693e0d65fa038753e3f3f97aad0989dd43</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/worldchain/0x29f07e631a2f990e1f6117c6285a44e746b1f090</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/zksync/0x29f07e631a2f990e1f6117c6285a44e746b1f090</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/zora/0x29f07e631a2f990e1f6117c6285a44e746b1f090</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
     <priority>0.8</priority>
   </url>
 </urlset>

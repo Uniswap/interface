@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "अनुरोध स्वीकृत किया जा रहा है {{indexText}}...",
   "common.approveSpend": "{{symbol}} व्यय स्वीकृत करें",
   "common.approving": "का अनुमोदन",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "क्या आपको यकीन है?",
   "common.automatic": "ऑटो",
   "common.availableIn": "यूनिस्वैप उपलब्ध है: <locale />",

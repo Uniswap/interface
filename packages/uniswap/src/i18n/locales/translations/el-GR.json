@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "Έγκριση αιτήματος {{indexText}}...",
   "common.approveSpend": "Έγκριση {{symbol}} δαπανών",
   "common.approving": "Έγκριση",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "Είσαι σίγουρος;",
   "common.automatic": "Αυτο",
   "common.availableIn": "Unswap διαθέσιμη σε: <locale />",

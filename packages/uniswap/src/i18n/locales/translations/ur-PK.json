@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "درخواست کی منظوری {{indexText}}...",
   "common.approveSpend": "{{symbol}} خرچ کی منظوری دیں۔",
   "common.approving": "منظور کرنا",
+  "common.approximatelyValue": "{{value}}",
   "common.areYouSure": "کیا تمہیں یقین ہے؟",
   "common.automatic": "آٹو",
   "common.availableIn": "ان کی تبدیلی دستیاب ہے اس میں: <locale />",

@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "Meluluskan permintaan {{indexText}}...",
   "common.approveSpend": "Luluskan {{symbol}} perbelanjaan",
   "common.approving": "Meluluskan",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "Adakah anda pasti?",
   "common.automatic": "Auto",
   "common.availableIn": "Uniswap tersedia dalam: <locale />",

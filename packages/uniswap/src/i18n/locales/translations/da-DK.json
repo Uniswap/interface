@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "Godkender anmodning {{indexText}}...",
   "common.approveSpend": "Godkend {{symbol}} udgifter",
   "common.approving": "Godkender",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "Er du sikker?",
   "common.automatic": "Auto",
   "common.availableIn": "Uniswap tilgængelig i: <locale />",

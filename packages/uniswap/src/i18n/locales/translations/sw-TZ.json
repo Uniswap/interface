@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "Approving request {{indexText}}...",
   "common.approveSpend": "Idhinisha {{symbol}} matumizi",
   "common.approving": "Kuidhinisha",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "Una uhakika?",
   "common.automatic": "Otomatiki",
   "common.availableIn": "Uniswap inapatikana katika: <locale />",

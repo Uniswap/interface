@@ -9,12 +9,12 @@ import { ETH, WETH } from 'uniswap/src/test/fixtures'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
-import { SwapSagaDependencies } from 'wallet/src/features/transactions/swap/types/swapSagaDependencies'
 import { PrepareAndSignSwapSagaParams } from 'wallet/src/features/transactions/swap/prepareAndSignSwapSaga'
 import { SwapParams } from 'wallet/src/features/transactions/swap/executeSwapSaga'
 import { TransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
 import { SwapTransactionData, TransactionParamsFactory, UniswapXOrderTransactionData } from 'wallet/src/features/transactions/swap/services/transactionParamsFactory'
-import { PreSignedSwapTransaction, SignedTransactionRequest, UniswapXPreSignedSwapTransaction } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
+import { PreSignedSwapTransaction, UniswapXPreSignedSwapTransaction } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
+import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { BigNumber } from 'ethers'
@@ -22,6 +22,7 @@ import { createFixture } from 'uniswap/src/test/utils'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
 import JSBI from 'jsbi'
 import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { TransactionSagaDependencies } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 
 export const mockTransactionService: jest.Mocked<TransactionService> = {
   getNextNonce: jest.fn(),
@@ -71,7 +72,7 @@ export const mockTransactionParamsFactory: jest.Mocked<TransactionParamsFactory>
   })),
 }
 
-export const mockSwapSagaDependencies: jest.Mocked<SwapSagaDependencies> = {
+export const mockTransactionSagaDependencies: jest.Mocked<TransactionSagaDependencies> = {
   logger: {
     error: jest.fn(),
     warn: jest.fn(),
@@ -146,7 +147,27 @@ const mockSignedTransactionRequest: SignedTransactionRequest = {
     value: BigNumber.from('1000000000000000000'),
   },
   signedRequest: '0xsignedTxData',
+  timestampBeforeSign: 1487076708000,
 }
+
+/**
+ * Helper function to create a mockSignedApproveTx with consistent structure and timestamp.
+ */
+export const createMockSignedApproveTx = (overrides?: Partial<SignedTransactionRequest>): SignedTransactionRequest => ({
+  request: {
+    nonce: 1,
+    to: '0xtoken',
+    chainId: UniverseChainId.Mainnet,
+    data: '0x',
+    value: '0',
+    gasLimit: '21000',
+    gasPrice: '20000000000',
+    ...overrides?.request,
+  },
+  signedRequest: '0xsignedapproval',
+  timestampBeforeSign: 1487076708000,
+  ...overrides,
+})
 
 export const mockSignerAccount = signerMnemonicAccount()
 

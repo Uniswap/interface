@@ -17,7 +17,7 @@ import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/t
 import { logger as loggerUtil } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
-import type { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import type { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSagaV2'
 import type { TransactionRepository } from 'wallet/src/features/transactions/executeTransaction/services/TransactionRepository/transactionRepository'
 import type {
   PrepareTransactionParams,
@@ -28,9 +28,9 @@ import type { TransactionSigner } from 'wallet/src/features/transactions/execute
 import type { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'
 import type { TransactionConfigService } from 'wallet/src/features/transactions/executeTransaction/services/transactionConfigService'
 import type { CalculatedNonce } from 'wallet/src/features/transactions/executeTransaction/tryGetNonce'
+import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { createGetUpdatedTransactionDetails } from 'wallet/src/features/transactions/executeTransaction/utils/createGetUpdatedTransactionDetails'
 import { createUnsubmittedTransactionDetails } from 'wallet/src/features/transactions/executeTransaction/utils/createUnsubmittedTransactionDetails'
-import { SignedTransactionRequest } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
 import { getRPCErrorCategory, processTransactionReceipt } from 'wallet/src/features/transactions/utils'
 
 /**
@@ -198,7 +198,7 @@ export function createTransactionService(ctx: {
       submitParams: SubmitTransactionParams,
     ): Promise<TransactionDetails & { hash: string }> {
       const { submissionFunction, methodName } = config
-      const { chainId, request, options, typeInfo, analytics, timestampBeforeSign } = submitParams
+      const { chainId, request, options, typeInfo, analytics } = submitParams
 
       logger.debug('TransactionService', methodName, `Sending tx on ${getChainLabel(chainId)} to ${request.request.to}`)
 
@@ -215,7 +215,7 @@ export function createTransactionService(ctx: {
           request,
           provider,
           unsubmittedTransaction,
-          timestampBeforeSign,
+          timestampBeforeSign: request.timestampBeforeSign,
           timestampBeforeSend,
         })
 
@@ -285,9 +285,10 @@ export function createTransactionService(ctx: {
       throw new Error('Invalid transaction request')
     }
 
+    const timestampBeforeSign = Date.now()
     const signedTransaction = await ctx.transactionSigner.signTransaction(validatedTransaction)
 
-    return { request: validatedTransaction, signedRequest: signedTransaction }
+    return { request: validatedTransaction, signedRequest: signedTransaction, timestampBeforeSign }
   }
 
   /**
@@ -419,9 +420,10 @@ export function createTransactionService(ctx: {
 
   /**
    * Execute a transaction by preparing, signing, and submitting it
+   * If a pre-signed transaction is provided, it will skip the preparation and signing steps
    */
   async function executeTransaction(params: ExecuteTransactionParams): Promise<{ transactionHash: string }> {
-    const { chainId, account, options, typeInfo, analytics, transactionOriginType } = params
+    const { chainId, account, options, typeInfo, preSignedTransaction } = params
 
     logger.debug(
       'TransactionService',
@@ -430,27 +432,19 @@ export function createTransactionService(ctx: {
     )
 
     try {
-      // Capture timestamp before signing
-      const timestampBeforeSign = Date.now()
-
-      // Prepare and sign the transaction
-      const signedTransactionRequest = await prepareAndSignTransaction({
-        chainId,
-        account,
-        request: options.request,
-        submitViaPrivateRpc: options.submitViaPrivateRpc ?? false,
-      })
+      const signedTransactionRequest =
+        preSignedTransaction ??
+        (await prepareAndSignTransaction({
+          chainId,
+          account,
+          request: options.request,
+          submitViaPrivateRpc: options.submitViaPrivateRpc ?? false,
+        }))
 
       // Submit the signed transaction
       const result = await submitTransaction({
-        chainId,
-        account,
+        ...params,
         request: signedTransactionRequest,
-        options,
-        typeInfo,
-        transactionOriginType,
-        timestampBeforeSign,
-        analytics,
       })
 
       return result

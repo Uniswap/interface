@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "Aprovant la sol·licitud {{indexText}}...",
   "common.approveSpend": "Aprova la despesa de {{symbol}}",
   "common.approving": "Aprovant",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "Estàs segur?",
   "common.automatic": "Automàtic",
   "common.availableIn": "Uniswap disponible a: <locale />",

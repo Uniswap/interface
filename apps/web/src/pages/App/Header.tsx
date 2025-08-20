@@ -23,7 +23,7 @@ export const Header = memo(function Header() {
       className="webkitSticky"
       width="100vw"
       top={0}
-      zIndex={zIndexes.dropdown}
+      zIndex={zIndexes.header}
       pointerEvents="none"
     >
       <style>

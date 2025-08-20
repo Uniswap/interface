@@ -10607,57 +10607,57 @@
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/tokens/base/0x2f299be3b081e8cd47dc56c1932fcae7a91b5dcd</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/tokens/base/0x5f5668d7c748fc1a17540c3a7f9245d8cea10c29</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/tokens/ethereum/0xf9902edfca4f49dcaebc335c73aebd82c79c2886</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/tokens/ethereum/0xc96de26018a54d51c097160568752c4e3bd6c364</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/tokens/bnb/0x0e7779e698052f8fe56c415c3818fcf89de9ac6d</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/tokens/ethereum/0x3e05284ff11a92d66e44b6b3ea70533729670257</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/tokens/ethereum/0x6b785a0322126826d8226d77e173d75dafb84d11</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/tokens/base/0x226a2fa2556c48245e57cd1cba4c6c9e67077dd2</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/tokens/bnb/0x1d58e204ca59328007469a614522903d69dc0a4c</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/tokens/ethereum/0xea87148a703adc0de89db2ac2b6b381093ae8ee0</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/tokens/ethereum/0xcaa1e525acb44aec4e0d17a0e2467aa3ea7ee3a6</loc>
-    <lastmod>2025-08-08T21:02:12.429Z</lastmod>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
@@ -10668,6 +10668,41 @@
   <url>
     <loc>https://app.uniswap.org/explore/tokens/celo/0xd221812de1bd094f35587ee8e174b07b6167d9af</loc>
     <lastmod>2025-08-09T00:43:25.949Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/ethereum/0x7b10d50b5885be4c7985a88408265c109bd1eec8</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/base/0x4a0aaf171446dda0ed95295c46820e2015a28b07</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/ethereum/0x00c83aecc790e8a4453e5dd3b0b4b3680501a7a7</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/unichain/0x07f1508a8fe276fb96b9fcf80ace41eb2abddf81</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/base/0x6555255b8ded3c538cb398d9e36769f45d7d3ea7</loc>
+    <lastmod>2025-08-15T20:58:46.611Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/ethereum/0xc299004a310303d1c0005cb14c70ccc02863924d</loc>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/bnb/0xe3225e11cab122f1a126a28997788e5230838ab9</loc>
+    <lastmod>2025-08-15T23:14:05.946Z</lastmod>
     <priority>0.8</priority>
   </url>
 </urlset>

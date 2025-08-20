@@ -169,6 +169,7 @@
   "common.approvePermitTx.pending": "Схвалення запиту {{indexText}}...",
   "common.approveSpend": "Затвердити {{symbol}} витрати",
   "common.approving": "Схвалення",
+  "common.approximatelyValue": "~{{value}}",
   "common.areYouSure": "Ти впевнений?",
   "common.automatic": "Авто",
   "common.availableIn": "Uniswap доступний у: <locale />",

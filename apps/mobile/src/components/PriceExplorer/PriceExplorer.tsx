@@ -15,6 +15,7 @@ import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady
 import { Flex, SegmentedControl, Text } from 'ui/src'
 import GraphCurve from 'ui/src/assets/backgrounds/graph-curve.svg'
 import { spacing } from 'ui/src/theme'
+import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -25,6 +26,9 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
+
+const DEFAULT_Y_PADDING = 20
+const LOW_VARIANCE_Y_PADDING = 100
 
 type PriceTextProps = {
   loading: boolean
@@ -141,6 +145,21 @@ const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
     )
   }, [data, convertedSpotValue])
 
+  // Zoom out y-axis for low variance assets
+  const shouldZoomOut = useMemo(() => {
+    if (convertedPriceHistory.length === 0) {
+      return false
+    }
+
+    const values = convertedPriceHistory.map((point) => point.value)
+    const min = Math.min(...values)
+    const max = Math.max(...values)
+
+    return isLowVarianceRange({ min, max, duration: selectedDuration })
+  }, [convertedPriceHistory, selectedDuration])
+
+  const chartYGutter = shouldZoomOut ? LOW_VARIANCE_Y_PADDING : DEFAULT_Y_PADDING
+
   const segmentedControlOptions = useMemo(() => {
     return TIME_RANGES.map(([duration, label, elementName]) => ({
       value: duration,
@@ -174,6 +193,7 @@ const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
               lastPricePoint={lastPricePoint}
               shouldShowAnimatedDot={shouldShowAnimatedDot}
               tokenColor={tokenColor ?? undefined}
+              yGutter={chartYGutter}
             />
           ) : (
             <Flex my="$spacing24">
@@ -201,11 +221,13 @@ const PriceExplorerChart = memo(function PriceExplorerChart({
   additionalPadding,
   shouldShowAnimatedDot,
   lastPricePoint,
+  yGutter,
 }: {
   tokenColor?: string
   additionalPadding: number
   shouldShowAnimatedDot: boolean
   lastPricePoint: number
+  yGutter: number
 }): JSX.Element {
   const { chartHeight, chartWidth } = useChartDimensions()
   const isRTL = I18nManager.isRTL
@@ -219,7 +241,7 @@ const PriceExplorerChart = memo(function PriceExplorerChart({
       style={{ transform: [{ scaleX: isRTL ? -1 : 1 }] }}
       testID={TestID.PriceExplorerChart}
     >
-      <LineChart height={chartHeight} width={chartWidth - additionalPadding} yGutter={20}>
+      <LineChart height={chartHeight} width={chartWidth - additionalPadding} yGutter={yGutter}>
         <LineChart.Path color={tokenColor} pathProps={{ isTransitionEnabled: false }}>
           {shouldShowAnimatedDot && (
             <LineChart.Dot

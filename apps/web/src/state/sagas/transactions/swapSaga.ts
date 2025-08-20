@@ -36,6 +36,7 @@ import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
 import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
+import { FLASHBLOCKS_UI_SKIP_ROUTES } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
 import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import {
@@ -99,7 +100,10 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
 
   handleSwapTransactionAnalytics({ ...params, hash })
 
-  if (!getIsFlashblocksEnabled(trade.inputAmount.currency.chainId)) {
+  if (
+    !getIsFlashblocksEnabled(trade.inputAmount.currency.chainId) ||
+    FLASHBLOCKS_UI_SKIP_ROUTES.includes(trade.routing)
+  ) {
     popupRegistry.addPopup(
       { type: PopupType.Transaction, hash },
       hash,

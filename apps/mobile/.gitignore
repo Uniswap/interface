@@ -121,3 +121,7 @@ ios/OneSignalNotificationServiceExtension/Env.swift
 
 # Expo
 .expo/
+
+# Maestro E2E Scripts (compiled/generated)
+.maestro/scripts/dist/
+.maestro/scripts/performance/dist/

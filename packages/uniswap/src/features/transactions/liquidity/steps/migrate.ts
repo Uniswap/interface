@@ -42,6 +42,7 @@ export function createMigratePositionAsyncStep(
           ...migratePositionRequestArgs,
           signature,
           signatureDeadline,
+          simulateTransaction: true,
         })
 
         return validateTransactionRequest(migrate)

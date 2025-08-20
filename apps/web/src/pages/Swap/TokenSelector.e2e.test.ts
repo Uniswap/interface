@@ -1,6 +1,8 @@
-import { expect, test } from 'playwright/fixtures'
+import { expect, getTest } from 'playwright/fixtures'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+
+const test = getTest()
 
 test.describe('TokenSelector', () => {
   test('output - should show bridging and top tokens sections if empty', async ({ page }) => {
