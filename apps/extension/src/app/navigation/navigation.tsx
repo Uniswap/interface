@@ -11,8 +11,8 @@ import { NotificationToastWrapper } from 'src/app/features/notifications/Notific
 import { StorageWarningModal } from 'src/app/features/warnings/StorageWarningModal'
 import { useIsWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
 import { HideContentsWhenSidebarBecomesInactive } from 'src/app/navigation/HideContentsWhenSidebarBecomesInactive'
+import { SideBarNavigationProvider } from 'src/app/navigation/SideBarNavigationProvider'
 import { AppRoutes } from 'src/app/navigation/constants'
-import { SidebarNavigationProvider } from 'src/app/navigation/providers'
 import { useRouterState } from 'src/app/navigation/state'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
@@ -146,7 +146,7 @@ export function WebNavigation(): JSX.Element {
   }, [isLoggedIn, pathname, towards])
 
   return (
-    <SidebarNavigationProvider>
+    <SideBarNavigationProvider>
       <NativeWalletProvider>
         <WalletUniswapProvider>
           <NotificationToastWrapper />
@@ -155,7 +155,7 @@ export function WebNavigation(): JSX.Element {
           {isLoggedIn && <ForceUpgradeModal />}
         </WalletUniswapProvider>
       </NativeWalletProvider>
-    </SidebarNavigationProvider>
+    </SideBarNavigationProvider>
   )
 }
 

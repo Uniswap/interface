@@ -10,6 +10,9 @@ import { CurrencyInputPanelInput } from 'uniswap/src/components/CurrencyInputPan
 import { CurrencyInputPanelValue } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelValue'
 import { useIndicativeQuoteTextDisplay } from 'uniswap/src/components/CurrencyInputPanel/hooks/useIndicativeQuoteTextDisplay'
 import type { CurrencyInputPanelProps, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
+import type { Experiments } from 'uniswap/src/features/gating/experiments'
+import { Layers, SwapPresetsProperties } from 'uniswap/src/features/gating/experiments'
+import { useExperimentValueFromLayer } from 'uniswap/src/features/gating/hooks'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isExtension, isInterfaceDesktop, isMobileWeb } from 'utilities/src/platform'
@@ -48,18 +51,30 @@ export const CurrencyInputPanel = memo(
       const account = useWallet().evmAccount
       const isShortMobileDevice = useIsShortMobileDevice()
 
+      const isInputPresetsEnabled = useExperimentValueFromLayer<Layers.SwapPage, Experiments.SwapPresets, boolean>({
+        layerName: Layers.SwapPage,
+        param: SwapPresetsProperties.InputEnabled,
+        defaultValue: false,
+      })
+      const isOutputPresetsEnabled = useExperimentValueFromLayer<Layers.SwapPage, Experiments.SwapPresets, boolean>({
+        layerName: Layers.SwapPage,
+        param: SwapPresetsProperties.OutputEnabled,
+        defaultValue: false,
+      })
+
       const display = useIndicativeQuoteTextDisplay(props)
       const { value, usdValue } = display
 
       const isOutput = currencyField === CurrencyField.OUTPUT
 
-      const showDefaultTokenOptions = isOutput && !currencyInfo
+      const showDefaultTokenOptions = isOutputPresetsEnabled && isOutput && !currencyInfo
 
       const showInsufficientBalanceWarning =
         !isOutput && !!currencyBalance && !!currencyAmount && currencyBalance.lessThan(currencyAmount)
 
-      const showMaxButton = showMaxButtonOnly && !isOutput && account
-      const showPercentagePresetOptions = !showMaxButtonOnly && currencyField === CurrencyField.INPUT
+      const showMaxButton = (!isInputPresetsEnabled || showMaxButtonOnly) && !isOutput && account
+      const showPercentagePresetOptions =
+        isInputPresetsEnabled && !showMaxButtonOnly && currencyField === CurrencyField.INPUT
 
       const isDesktop = isInterfaceDesktop || isExtension
 

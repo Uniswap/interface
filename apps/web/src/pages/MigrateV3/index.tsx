@@ -35,7 +35,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useLocation, useNavigate, useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
@@ -51,7 +51,6 @@ import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/con
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
-import { getErrorMessageToDisplay } from 'uniswap/src/features/transactions/liquidity/utils'
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
@@ -111,7 +110,7 @@ function MigrateV3Inner({
   const startChainId = connectedAccount.chainId
   const account = useWallet().evmAccount
   const dispatch = useDispatch()
-  const { txInfo, transactionError, refetch, setTransactionError } = useMigrateV3TxContext()
+  const { txInfo, error, refetch } = useMigrateV3TxContext()
   const media = useMedia()
   const navigate = useNavigate()
 
@@ -119,8 +118,7 @@ function MigrateV3Inner({
 
   const onClose = useCallback(() => {
     setIsReviewModalOpen(false)
-    setTransactionError(false)
-  }, [setIsReviewModalOpen, setTransactionError])
+  }, [setIsReviewModalOpen])
 
   const { currency0Amount, currency1Amount, owner } = positionInfo
 
@@ -132,13 +130,10 @@ function MigrateV3Inner({
   }
 
   const handleConfirm = useCallback(() => {
-    setTransactionError(false)
-
     const isValidTx = isValidLiquidityTxContext(txInfo)
     if (!account || !isSignerMnemonicAccountDetails(account) || !isValidTx) {
       return
     }
-
     dispatch(
       liquiditySaga.actions.trigger({
         selectChain,
@@ -151,14 +146,7 @@ function MigrateV3Inner({
           onClose()
           navigate('/positions')
         },
-        onFailure: (e) => {
-          if (e) {
-            setTransactionError(
-              getErrorMessageToDisplay({
-                calldataError: e,
-              }),
-            )
-          }
+        onFailure: () => {
           setCurrentTransactionStep(undefined)
         },
         analytics: {
@@ -194,7 +182,6 @@ function MigrateV3Inner({
     navigate,
     setCurrentTransactionStep,
     setTransactionSteps,
-    setTransactionError,
     currency0Amount.currency,
     currency1Amount.currency,
   ])
@@ -286,15 +273,13 @@ function MigrateV3Inner({
                 <Container width="100%" maxWidth="unset">
                   <SelectPriceRangeStep
                     positionInfo={positionInfo}
-                    onDisableContinue={!txInfo || Boolean(transactionError)}
+                    onDisableContinue={!txInfo || Boolean(error)}
                     onContinue={() => setIsReviewModalOpen(true)}
                   />
                 </Container>
-                {!isReviewModalOpen && (
-                  <Flex mb="$spacing20">
-                    <ErrorCallout errorMessage={transactionError} onPress={refetch} />
-                  </Flex>
-                )}
+                <Flex mb="$spacing20">
+                  <ErrorCallout errorMessage={error} onPress={refetch} />
+                </Flex>
               </>
             )}
           </Flex>
@@ -317,7 +302,6 @@ function MigrateV3Inner({
             </Text>
             <TokenInfo currencyAmount={currency1Amount} currencyUSDAmount={currency1FiatAmount} isMigrating />
           </Flex>
-          <ErrorCallout errorMessage={transactionError} />
           {currentTransactionStep && transactionSteps.length > 1 ? (
             <ProgressIndicator steps={transactionSteps} currentStep={currentTransactionStep} />
           ) : (
@@ -356,24 +340,19 @@ function getCurrencyInputs(positionInfo?: PositionInfo) {
  */
 export default function MigrateV3() {
   const { tokenId } = useParams<{ tokenId: string }>()
-  const { pairAddress } = useParams<{ pairAddress: string }>()
-
   const chainId = useChainIdFromUrlParam()
   const account = useAccount()
   const autoSlippageTolerance = useLPSlippageValue({
     version: ProtocolVersion.V3,
   })
-  const { pathname } = useLocation()
-  const protocolVersion = pathname.includes('v2') ? ProtocolVersion.V2 : ProtocolVersion.V3
 
   const urlState = useLiquidityUrlState()
   const { data, isLoading: positionLoading } = useGetPositionQuery(
     account.address
       ? {
           owner: account.address,
-          protocolVersion,
-          tokenId: protocolVersion === ProtocolVersion.V3 ? tokenId : undefined,
-          pairAddress: protocolVersion === ProtocolVersion.V2 ? pairAddress : undefined,
+          protocolVersion: ProtocolVersion.V3,
+          tokenId,
           chainId: chainId ?? account.chainId,
         }
       : undefined,

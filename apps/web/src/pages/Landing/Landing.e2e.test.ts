@@ -1,7 +1,5 @@
-import { expect, getTest } from 'playwright/fixtures'
+import { expect, test } from 'playwright/fixtures'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-
-const test = getTest()
 const MOBILE_VIEWPORT = { width: 375, height: 667 }
 const UNCONNECTED_USER_PARAM = '?eagerlyConnect=false' // Query param to prevent automatic wallet connection
 const FORCE_INTRO_PARAM = '?intro=true' // Query param to force the intro screen to be displayed

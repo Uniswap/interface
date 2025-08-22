@@ -14,12 +14,10 @@ import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationPr
 import type { MobileState } from 'src/app/mobileReducer'
 import { navigationRef } from 'src/app/navigation/navigationRef'
 import { store as appStore, persistedReducer } from 'src/app/store'
-import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
-import { mockUniswapContext } from 'uniswap/src/test/render'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 type AppStore = typeof appStore
@@ -57,17 +55,15 @@ export function renderWithProviders(
 } {
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <UniswapProvider {...mockUniswapContext}>
-        <AutoMockedApolloProvider resolvers={resolvers}>
-          <BlankUrlProvider>
-            <SharedWalletProvider reduxStore={store}>
-              <NavigationContainer ref={navigationRef}>
-                <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
-              </NavigationContainer>
-            </SharedWalletProvider>
-          </BlankUrlProvider>
-        </AutoMockedApolloProvider>
-      </UniswapProvider>
+      <AutoMockedApolloProvider resolvers={resolvers}>
+        <BlankUrlProvider>
+          <SharedWalletProvider reduxStore={store}>
+            <NavigationContainer ref={navigationRef}>
+              <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
+            </NavigationContainer>
+          </SharedWalletProvider>
+        </BlankUrlProvider>
+      </AutoMockedApolloProvider>
     )
   }
 
@@ -125,17 +121,15 @@ export function renderHookWithProviders<P, R>(
 
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <UniswapProvider {...mockUniswapContext}>
-        <AutoMockedApolloProvider resolvers={resolvers}>
-          <BlankUrlProvider>
-            <NavigationContainer ref={navigationRef}>
-              <SharedWalletProvider reduxStore={store}>
-                <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
-              </SharedWalletProvider>
-            </NavigationContainer>
-          </BlankUrlProvider>
-        </AutoMockedApolloProvider>
-      </UniswapProvider>
+      <AutoMockedApolloProvider resolvers={resolvers}>
+        <BlankUrlProvider>
+          <NavigationContainer ref={navigationRef}>
+            <SharedWalletProvider reduxStore={store}>
+              <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
+            </SharedWalletProvider>
+          </NavigationContainer>
+        </BlankUrlProvider>
+      </AutoMockedApolloProvider>
     )
   }
 

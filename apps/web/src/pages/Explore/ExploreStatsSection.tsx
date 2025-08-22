@@ -4,7 +4,6 @@ import { Fragment, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { use24hProtocolVolume, useDailyTVLWithChange } from 'state/explore/protocolStats'
 import { Flex, Popover, Text, isTouchable, useMedia, useShadowPropsMedium } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -154,7 +153,6 @@ const StatDisplayWithPopover = memo(({ data, isLoading }: StatDisplayProps) => {
         <StatDisplay data={data} isLoading={isLoading} isHoverable />
       </Popover.Trigger>
       <Popover.Content
-        zIndex={zIndexes.dropdown}
         borderColor="$surface2"
         borderRadius="$rounded16"
         borderWidth="$spacing1"

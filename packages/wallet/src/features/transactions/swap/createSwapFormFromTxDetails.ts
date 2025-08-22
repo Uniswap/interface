@@ -1,13 +1,13 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/utils/getAmountsFromTrade'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { isBridgeTypeInfo } from 'uniswap/src/features/transactions/types/utils'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
+import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 
 interface Props {
   transactionDetails: TransactionDetails

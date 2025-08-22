@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, QRCodeDisplay, Text, useMedia, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
@@ -9,6 +8,7 @@ import { useAddressColorProps } from 'uniswap/src/features/address/color'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { isWeb } from 'utilities/src/platform'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 
 export function WalletQRCode({ address }: { address: Address }): JSX.Element | null {
   const colors = useSporeColors()

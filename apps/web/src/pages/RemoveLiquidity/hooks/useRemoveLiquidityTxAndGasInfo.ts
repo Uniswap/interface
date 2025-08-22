@@ -26,7 +26,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     customSlippageTolerance: s.customSlippageTolerance,
   }))
 
-  const [transactionError, setTransactionError] = useState<string | boolean>(false)
+  const [hasDecreaseErrorResponse, setHasDecreaseErrorResponse] = useState(false)
 
   const currency0 = currencies?.TOKEN0
   const currency1 = currencies?.TOKEN1
@@ -139,7 +139,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
   } = useDecreaseLpPositionCalldataQuery({
     params: decreaseCalldataQueryParams,
     deadlineInMinutes: customDeadline,
-    refetchInterval: transactionError ? false : 5 * ONE_SECOND_MS,
+    refetchInterval: hasDecreaseErrorResponse ? false : 5 * ONE_SECOND_MS,
     retry: false,
     enabled:
       !isUserCommittedToDecrease &&
@@ -149,8 +149,8 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
   })
 
   useEffect(() => {
-    setTransactionError(getErrorMessageToDisplay({ approvalError, calldataError }))
-  }, [calldataError, decreaseCalldataQueryParams, approvalError])
+    setHasDecreaseErrorResponse(!!calldataError)
+  }, [calldataError, decreaseCalldataQueryParams])
 
   if (calldataError) {
     const message = parseErrorMessageTitle(calldataError, { defaultTitle: 'DecreaseLpPositionCalldataQuery' })

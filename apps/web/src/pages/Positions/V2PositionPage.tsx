@@ -22,11 +22,7 @@ import { usePairAdder } from 'state/user/hooks'
 import { Button, Circle, Flex, Main, Shine, Text, styled } from 'ui/src'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -86,8 +82,6 @@ function V2PositionPage() {
   const chainId = useChainIdFromUrlParam()
   const account = useAccount()
   const supportedAccountChainId = useSupportedChainId(account.chainId)
-  const chainInfo = getChainInfo(chainId ?? UniverseChainId.Mainnet)
-  const isMigrateV2Enabled = useFeatureFlag(FeatureFlags.MigrateV2)
 
   const {
     data,
@@ -187,7 +181,7 @@ function V2PositionPage() {
                   if (pair && chainId && pairAddress && !savedSerializedPairs[chainId]?.[pairAddress]) {
                     addPair(pair)
                   }
-                  navigate(isMigrateV2Enabled ? `/migrate/v2/${chainInfo.urlParam}/${pairAddress}` : `/migrate/v2`, {
+                  navigate('/migrate/v2', {
                     state: {
                       from: location.pathname,
                     },

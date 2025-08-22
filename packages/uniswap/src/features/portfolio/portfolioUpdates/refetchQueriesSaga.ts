@@ -1,5 +1,4 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { QueryClient } from '@tanstack/react-query'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isInstantTokenBalanceUpdateEnabled } from 'uniswap/src/features/portfolio/portfolioUpdates/isInstantTokenBalanceUpdateEnabled'
@@ -12,15 +11,13 @@ export function* refetchGQLQueries({
   transaction,
   apolloClient,
   activeAddress,
-  queryClient,
 }: {
   transaction: TransactionDetails
   apolloClient: ApolloClient<NormalizedCacheObject>
   activeAddress: string | null
-  queryClient?: QueryClient
 }) {
   if (isInstantTokenBalanceUpdateEnabled()) {
-    yield* refetchGQLQueriesViaOnchainOverrideVariant({ transaction, apolloClient, activeAddress, queryClient })
+    yield* refetchGQLQueriesViaOnchainOverrideVariant({ transaction, apolloClient, activeAddress })
   } else {
     yield* refetchGQLQueriesViaBackendPollVariant({ transaction, apolloClient, activeAddress })
   }

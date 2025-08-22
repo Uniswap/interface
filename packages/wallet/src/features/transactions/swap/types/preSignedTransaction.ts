@@ -2,7 +2,13 @@ import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ValidatedSwapTxContext, ValidatedUniswapXSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ValidatedPermit } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
+import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
+import { HexString } from 'uniswap/src/utils/hex'
+
+export interface SignedTransactionRequest {
+  request: ValidatedTransactionRequest
+  signedRequest: HexString
+}
 
 export interface SignedPermit {
   permit: ValidatedPermit

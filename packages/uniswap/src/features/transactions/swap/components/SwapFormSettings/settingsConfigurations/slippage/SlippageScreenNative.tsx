@@ -15,6 +15,7 @@ import { useSlippageSettings } from 'uniswap/src/features/transactions/component
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import type { TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
 import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -23,18 +24,21 @@ import { isWeb } from 'utilities/src/platform'
 function SlippageMessage({
   inputWarning,
   trade,
+  slippageTolerance,
   showSlippageWarning,
   showEmpty = true,
   color = '$statusWarning',
 }: {
   inputWarning?: string
   trade: TradeWithSlippage | null
+  slippageTolerance: number
   showSlippageWarning: boolean
   showEmpty?: boolean
   color?: ColorTokens
 }): JSX.Element | null {
   const { t } = useTranslation()
   const { formatCurrencyAmount } = useLocalizationContext()
+  const slippageTolerancePercent = slippageToleranceToPercent(slippageTolerance)
 
   if (inputWarning) {
     return <WarningMessage showAlert text={inputWarning} color={color} />
@@ -47,7 +51,7 @@ function SlippageMessage({
           ? t('swap.settings.slippage.input.receive.title')
           : t('swap.settings.slippage.output.spend.title')}{' '}
         {formatCurrencyAmount({
-          value: trade.minAmountOut,
+          value: trade.minimumAmountOut(slippageTolerancePercent),
           type: NumberType.TokenTx,
         })}{' '}
         {getSymbolDisplayText(
@@ -128,12 +132,13 @@ export function SlippageScreenNative(): JSX.Element {
         <SlippageMessage
           inputWarning={inputWarning}
           showSlippageWarning={showSlippageWarning}
+          slippageTolerance={currentSlippageTolerance}
           trade={trade}
           color={inputValueTextColor}
         />
       )
     }
-  }, [inputWarning, isBridgeTrade, showSlippageWarning, t, trade, inputValueTextColor])
+  }, [currentSlippageTolerance, inputWarning, isBridgeTrade, showSlippageWarning, t, trade, inputValueTextColor])
 
   return (
     <Flex centered gap="$spacing16">

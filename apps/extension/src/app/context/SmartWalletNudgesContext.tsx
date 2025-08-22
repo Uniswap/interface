@@ -18,7 +18,7 @@ import { ONE_DAY_MS } from 'utilities/src/time/time'
 import {
   SmartWalletDelegationAction,
   useSmartWalletDelegationStatus,
-} from 'wallet/src/components/smartWallet/smartAccounts/hooks'
+} from 'wallet/src/components/smartWallet/smartAccounts/hook'
 import { WalletState } from 'wallet/src/state/walletReducer'
 
 type DappInfo = {

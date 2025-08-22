@@ -3,9 +3,7 @@ import dotenv from 'dotenv'
 import ms from 'ms'
 import path from 'path'
 
-const IS_CI = process.env.CI === 'true'
-
-if (!IS_CI) {
+if (process.env.CI !== 'true') {
   dotenv.config({ path: path.resolve(__dirname, '.env.local') })
 }
 
@@ -24,12 +22,10 @@ Module._load = function (...args: any[]) {
 export default defineConfig({
   testDir: './src',
   testMatch: '**/*.e2e.test.ts',
-  workers: 1, // this is manually configured in the github action depending on type of tests
+  // TODO: WEB-7311 - Increase number of workers
+  workers: 1,
   fullyParallel: true,
-  maxFailures: IS_CI ? 10 : undefined,
-  retries: IS_CI ? 3 : 0,
-  reporter: IS_CI && process.env.REPORT_TO_SLACK ? [['blob'], ['list']] : 'list',
-  timeout: ms('60s'),
+  reporter: process.env.CI && process.env.REPORT_TO_SLACK ? [['blob', 'list']] : 'list',
   expect: {
     timeout: ms('10s'),
   },
@@ -41,9 +37,6 @@ export default defineConfig({
     headless: true,
     extraHTTPHeaders: {
       origin: 'http://localhost:3000',
-    },
-    launchOptions: {
-      args: ['--disable-blink-features=AutomationControlled'],
     },
   },
   projects: [

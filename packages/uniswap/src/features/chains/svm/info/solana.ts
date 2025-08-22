@@ -75,7 +75,7 @@ export const SOLANA_CHAIN_INFO = {
   },
   backendChain: {
     chain: BackendChainId.Solana,
-    backendSupported: true,
+    backendSupported: false,
     nativeTokenBackendAddress: undefined,
   },
   testnet: false,

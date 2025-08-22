@@ -32,9 +32,6 @@ let mockExperiments: Record<string, Record<string, unknown>> = {}
 jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
   getStatsigClient: jest.fn(() => ({
     checkGate: jest.fn((gate: string) => mockGates[gate] ?? false),
-    getLayer: jest.fn(() => ({
-      get: jest.fn(() => false),
-    })),
   })),
 }))
 

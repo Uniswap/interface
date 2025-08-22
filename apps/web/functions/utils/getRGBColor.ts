@@ -2,7 +2,7 @@ import JPEG from 'jpeg-js'
 import PNG from 'png-ts'
 import { parseToRgb } from 'polished'
 import { RgbColor, RgbaColor } from 'polished/lib/types/color'
-import { SPECIAL_CASE_TOKEN_COLORS } from 'ui/src/utils/colors/specialCaseTokens'
+import { SPECIAL_CASE_TOKEN_COLORS } from 'ui/src/utils/colors'
 
 const DEFAULT_COLOR = { red: 35, green: 43, blue: 43 }
 
@@ -40,8 +40,8 @@ function getAverageColor({
       pixels = image.decode()
       break
     }
-    case 'image/jpeg':
-    case 'image/jpg': {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    case 'image/jpeg' || 'image/jpg': {
       const jpeg = JPEG.decode(arrayBuffer, { useTArray: true })
       pixels = jpeg.data
       break

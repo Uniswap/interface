@@ -23,8 +23,6 @@ import { useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, Text, styled } from 'ui/src'
 import { opacify } from 'ui/src/theme'
-import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -32,7 +30,6 @@ export type PriceChartData = CandlestickData<UTCTimestamp> & AreaData<UTCTimesta
 
 interface PriceChartModelParams extends ChartModelParams<PriceChartData> {
   type: PriceChartType
-  timePeriod?: HistoryDuration
 }
 
 const LOW_PRICE_RANGE_THRESHOLD = 0.2
@@ -43,7 +40,6 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   private originalData: PriceChartData[]
   private lowPriceRangeScaleFactor = 1
   private type: PriceChartType
-  private timePeriod?: HistoryDuration
   private minPriceLine: IPriceLine | undefined
   private maxPriceLine: IPriceLine | undefined
   private priceLineOptions: Partial<PriceLineOptions> | undefined
@@ -61,7 +57,6 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
     this.max = max
 
     this.type = params.type
-    this.timePeriod = params.timePeriod
     this.series =
       this.type === PriceChartType.LINE ? this.api.addAreaSeries() : this.api.addCustomSeries(new RoundedCandleSeries())
     this.series.setData(this.data)
@@ -99,23 +94,6 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
 
   updateOptions(params: PriceChartModelParams) {
     const { data, theme, type, locale, format, tokenFormatType } = params
-    const { min, max } = getCandlestickPriceBounds(data)
-
-    // Handles changes in time period
-    if (this.timePeriod !== params.timePeriod) {
-      this.timePeriod = params.timePeriod
-    }
-
-    const shouldZoomOut = isLowVarianceRange({ min, max, duration: this.timePeriod })
-
-    // Zoom out y-axis for low-variance assets
-    const scaleMargins = shouldZoomOut
-      ? {
-          top: 0.49,
-          bottom: 0.49,
-        }
-      : undefined
-
     super.updateOptions(params, {
       localization: {
         locale,
@@ -137,11 +115,6 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
         vertLines: { style: LineStyle.CustomDotGrid, color: theme.neutral3 },
         horzLines: { style: LineStyle.CustomDotGrid, color: theme.neutral3 },
       },
-      ...(scaleMargins && {
-        rightPriceScale: {
-          scaleMargins,
-        },
-      }),
     })
 
     // Handles changing between line/candlestick view
@@ -252,7 +225,6 @@ interface PriceChartProps {
   height: number
   data: PriceChartData[]
   stale: boolean
-  timePeriod?: HistoryDuration
 }
 
 const CandlestickTooltipRow = styled(Flex, {
@@ -287,13 +259,13 @@ function CandlestickTooltip({ data }: { data: PriceChartData }) {
   )
 }
 
-export function PriceChart({ data, height, type, stale, timePeriod }: PriceChartProps) {
+export function PriceChart({ data, height, type, stale }: PriceChartProps) {
   const lastPrice = data[data.length - 1]
 
   return (
     <Chart
       Model={PriceChartModel}
-      params={useMemo(() => ({ data, type, stale, timePeriod }), [data, stale, type, timePeriod])}
+      params={useMemo(() => ({ data, type, stale }), [data, stale, type])}
       height={height}
       TooltipBody={type === PriceChartType.CANDLESTICK ? CandlestickTooltip : undefined}
     >

@@ -2,7 +2,7 @@ import { PersistState } from 'redux-persist'
 
 type PersistAppStateLocalTransactions = {
   _persist: PersistState
-  transactions?: any
+  localWebTransactions?: any
 }
 
 export function createLocalTransactionClearingMigration(version: number) {
@@ -13,7 +13,7 @@ export function createLocalTransactionClearingMigration(version: number) {
 
     return {
       ...state,
-      transactions: {},
+      localWebTransactions: {},
       _persist: { ...state._persist, version },
     }
   }

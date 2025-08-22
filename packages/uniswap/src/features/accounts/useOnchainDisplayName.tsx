@@ -9,11 +9,7 @@ import { trimToLength } from 'utilities/src/primitives/string'
 
 const ENS_TRIM_LENGTH = 8
 
-export type WalletDisplayNameOptions = OnchainDisplayNameOptions & {
-  showLocalName?: boolean
-}
-
-export type OnchainDisplayNameOptions = {
+type DisplayNameOptions = {
   showShortenedEns?: boolean
   includeUnitagSuffix?: boolean
   overrideDisplayName?: string
@@ -26,10 +22,7 @@ export type OnchainDisplayNameOptions = {
  * @param options.showShortenedEns - Whether to shorten the ENS name to ENS_TRIM_LENGTH characters
  * @param options.includeUnitagSuffix - Whether to include the unitag suffix (.uni.eth) in returned unitag name
  */
-export function useOnchainDisplayName(
-  address: Maybe<string>,
-  options?: OnchainDisplayNameOptions,
-): DisplayName | undefined {
+export function useOnchainDisplayName(address: Maybe<string>, options?: DisplayNameOptions): DisplayName | undefined {
   const defaultOptions = {
     showShortenedEns: false,
     includeUnitagSuffix: false,

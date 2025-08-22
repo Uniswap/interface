@@ -28,7 +28,7 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
   const inputCurrencyInfo = useSwapDependenciesStore((s) => s.derivedSwapInfo.currencies.input)
 
   const backgroundColor = useBackgroundColor()
-  const { tokenColor: toTokenColor } = useExtractedTokenColor({
+  const { tokenColor } = useExtractedTokenColor({
     imageUrl: outputCurrencyInfo?.logoUrl,
     tokenName: outputCurrencyInfo?.currency.name,
     backgroundColor,
@@ -78,10 +78,6 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
   return (
     <Modal
       // currency null guard ensures this is only shown when a Unichain swap is completed
-      hideHandlebar
-      forceRoundedCorners
-      renderBehindTopInset
-      renderBehindBottomInset
       isModalOpen={isModalOpen}
       name={ModalName.UnichainInstantBalanceModal}
       alignment={isInterface ? 'center' : 'top'}
@@ -89,7 +85,7 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
       zIndex={zIndexes.popover}
       onClose={handleClose}
     >
-      <GradientContainer toTokenColor={toTokenColor ?? backgroundColor}>
+      <GradientContainer tokenBackground={tokenColor ?? backgroundColor}>
         <Flex alignItems="center" p="$padding8" pt="$padding12">
           {/* TOP-RIGHT CLOSE BUTTON */}
           {isWeb && (

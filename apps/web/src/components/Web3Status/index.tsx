@@ -5,7 +5,6 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import StatusIcon from 'components/Identicon/StatusIcon'
 import { RecentlyConnectedModal } from 'components/Web3Status/RecentlyConnectedModal'
 import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier'
-import { useShowPendingAfterDelay } from 'components/Web3Status/useShowPendingAfterDelay'
 import { useAccount } from 'hooks/useAccount'
 import { useModalState } from 'hooks/useModalState'
 import { atom, useAtom } from 'jotai'
@@ -14,7 +13,7 @@ import { Portal } from 'nft/components/common/Portal'
 import { RefObject, forwardRef, useCallback, useEffect, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAppSelector } from 'state/hooks'
-import { AnimatePresence, Button, ButtonProps, Flex, Popover, Text } from 'ui/src'
+import { Button, ButtonProps, Flex, Popover, Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { breakpoints } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -48,7 +47,6 @@ const Web3StatusGeneric = forwardRef<HTMLDivElement, ButtonProps>(function Web3S
         userSelect="none"
         backgroundColor="$transparent"
         hoverStyle={{ backgroundColor: '$surface5Hovered' }}
-        shouldAnimateBetweenLoadingStates={true}
         {...props}
       >
         {children}
@@ -111,9 +109,8 @@ function Web3StatusInner() {
     accountDrawer.toggle()
   }, [accountDrawer])
 
-  const { hasPendingActivity, pendingActivityCount, isOnlyUnichainPendingActivity } = usePendingActivity()
+  const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
   const { accountIdentifier, hasUnitag, hasRecent } = useAccountIdentifier()
-  const showLoadingState = useShowPendingAfterDelay(hasPendingActivity, isOnlyUnichainPendingActivity)
 
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
   if ((account.isConnecting || account.isReconnecting) && hasRecent && !isIFramed()) {
@@ -138,44 +135,28 @@ function Web3StatusInner() {
   if (account.address) {
     return (
       <Trace logPress eventOnTrigger={InterfaceEventName.MiniPortfolioToggled} properties={{ type: 'open' }}>
-        <AnimatePresence exitBeforeEnter>
-          {showLoadingState ? (
-            <Flex key="pending" animation="125ms" enterStyle={{ opacity: 0, y: -2 }} exitStyle={{ opacity: 0, y: 2 }}>
-              <Web3StatusGeneric
-                isDisabled={Boolean(switchingChain)}
-                data-testid={TestID.Web3StatusConnected}
-                onPress={handleWalletDropdownClick}
-                onDisabledPress={handleWalletDropdownClick}
-                loading
-                ref={ref}
-                icon={undefined}
-              >
-                <TextStyled>
-                  <Trans i18nKey="activity.pending" values={{ pendingActivityCount }} />
-                </TextStyled>
-              </Web3StatusGeneric>
-            </Flex>
+        <Web3StatusGeneric
+          isDisabled={Boolean(switchingChain)}
+          data-testid={TestID.Web3StatusConnected}
+          onPress={handleWalletDropdownClick}
+          onDisabledPress={handleWalletDropdownClick}
+          loading={hasPendingActivity}
+          ref={ref}
+          icon={!hasPendingActivity ? <StatusIcon size={24} showMiniIcons={false} /> : undefined}
+        >
+          {hasPendingActivity ? (
+            <TextStyled>
+              <Trans i18nKey="activity.pending" values={{ pendingActivityCount }} />
+            </TextStyled>
           ) : (
-            <Flex key="normal" animation="125ms" enterStyle={{ opacity: 0, y: -2 }} exitStyle={{ opacity: 0, y: 2 }}>
-              <Web3StatusGeneric
-                isDisabled={Boolean(switchingChain)}
-                data-testid={TestID.Web3StatusConnected}
-                onPress={handleWalletDropdownClick}
-                onDisabledPress={handleWalletDropdownClick}
-                loading={false}
-                ref={ref}
-                icon={<StatusIcon size={24} showMiniIcons={false} />}
-              >
-                <AddressAndChevronContainer>
-                  <Text variant="body2" marginRight={hasUnitag ? '$spacing8' : undefined}>
-                    {accountIdentifier}
-                  </Text>
-                  {hasUnitag && <Unitag size={18} />}
-                </AddressAndChevronContainer>
-              </Web3StatusGeneric>
-            </Flex>
+            <AddressAndChevronContainer>
+              <Text variant="body2" marginRight={hasUnitag ? '$spacing8' : undefined}>
+                {accountIdentifier}
+              </Text>
+              {hasUnitag && <Unitag size={18} />}
+            </AddressAndChevronContainer>
           )}
-        </AnimatePresence>
+        </Web3StatusGeneric>
       </Trace>
     )
   }

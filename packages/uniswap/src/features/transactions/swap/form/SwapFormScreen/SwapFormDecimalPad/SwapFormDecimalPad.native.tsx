@@ -5,6 +5,9 @@ import { Flex, type ButtonProps, type FlexProps } from 'ui/src'
 import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
+import type { Experiments } from 'uniswap/src/features/gating/experiments'
+import { Layers, SwapPresetsProperties } from 'uniswap/src/features/gating/experiments'
+import { useExperimentValueFromLayer } from 'uniswap/src/features/gating/hooks'
 import type { DecimalPadInputRef } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
 import {
   DecimalPadCalculateSpace,
@@ -61,6 +64,12 @@ function SwapFormDecimalPadContent({
   decimalPadValueRef,
   onDecimalPadTriggerInputShake,
 }: SwapFormDecimalPadProps): JSX.Element {
+  const areInputPresetsEnabled = useExperimentValueFromLayer<Layers.SwapPage, Experiments.SwapPresets, boolean>({
+    layerName: Layers.SwapPage,
+    param: SwapPresetsProperties.InputEnabled,
+    defaultValue: false,
+  })
+
   const { isFiatMode, exactCurrencyField, updateSwapForm } = useSwapFormStore((s) => ({
     isFiatMode: s.isFiatMode,
     exactCurrencyField: s.exactCurrencyField,
@@ -149,7 +158,7 @@ function SwapFormDecimalPadContent({
            *
            * *********** IMPORTANT! ***********
            */}
-          {currencyBalances[CurrencyField.INPUT] && (
+          {areInputPresetsEnabled && currencyBalances[CurrencyField.INPUT] && (
             <AmountInputPresets
               flex={1}
               gap="$gap8"

@@ -1,7 +1,5 @@
-import { expect, getTest } from 'playwright/fixtures'
+import { expect, test } from 'playwright/fixtures'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-
-const test = getTest()
 
 const companyMenu = [
   {
@@ -99,12 +97,12 @@ test.describe('Navigation', () => {
       await page.getByTestId(TestID.NavCompanyMenu).hover()
       await expect(page.getByTestId(TestID.NavCompanyDropdown).first()).toBeVisible()
 
-      await expect(page.getByTestId(TestID.NavCompanyDropdown).getByText('Legal & Privacy')).toBeVisible()
-      await page.getByTestId(TestID.NavCompanyDropdown).getByText('Legal & Privacy').click()
+      await expect(page.getByText('Legal & Privacy')).toBeVisible()
+      await page.getByText('Legal & Privacy').click()
 
-      await expect(page.getByTestId(TestID.NavCompanyDropdown).getByText('Your Privacy Choices')).toBeVisible()
-      await expect(page.getByTestId(TestID.NavCompanyDropdown).getByText('Privacy Policy')).toBeVisible()
-      await expect(page.getByTestId(TestID.NavCompanyDropdown).getByText('Terms of Service')).toBeVisible()
+      await expect(page.getByText('Your Privacy Choices')).toBeVisible()
+      await expect(page.getByText('Privacy Policy')).toBeVisible()
+      await expect(page.getByText('Terms of Service')).toBeVisible()
 
       await expect(
         page.getByTestId(TestID.NavCompanyDropdown).locator('a[href="https://uniswap.org/terms-of-service"]'),
@@ -242,4 +240,5 @@ test('shows bottom bar on token details page on mobile', async ({ page }) => {
   await expect(bottomBar).toBeVisible()
   await expect(bottomBar.getByText('Buy')).toBeVisible()
   await expect(bottomBar.getByText('Sell')).toBeVisible()
+  await expect(bottomBar.getByText('Send')).toBeVisible()
 })

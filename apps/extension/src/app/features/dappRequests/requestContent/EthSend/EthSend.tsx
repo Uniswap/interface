@@ -75,10 +75,7 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
 
   const onConfirmRequest = useCallback(
     async (transactionTypeInfo?: TransactionTypeInfo) => {
-      await onConfirm({
-        request: requestWithGasValues,
-        transactionTypeInfo,
-      })
+      await onConfirm(requestWithGasValues, transactionTypeInfo)
     },
     [onConfirm, requestWithGasValues],
   )

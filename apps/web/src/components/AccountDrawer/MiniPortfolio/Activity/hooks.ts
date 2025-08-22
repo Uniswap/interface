@@ -8,7 +8,6 @@ import { useEffect, useMemo } from 'react'
 import { usePendingOrders } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
@@ -127,13 +126,8 @@ export function usePendingActivity() {
 
   const hasPendingActivity = pendingTransactions.length > 0 || pendingOrdersWithoutLimits.length > 0
   const pendingActivityCount = pendingTransactions.length + pendingOrdersWithoutLimits.length
-  const isOnlyUnichainPendingActivity =
-    hasPendingActivity &&
-    [...pendingTransactions, ...pendingOrdersWithoutLimits].every((tx) =>
-      [UniverseChainId.Unichain, UniverseChainId.UnichainSepolia].includes(tx.chainId),
-    )
 
-  return { hasPendingActivity, pendingActivityCount, isOnlyUnichainPendingActivity }
+  return { hasPendingActivity, pendingActivityCount }
 }
 
 export function useCancelOrdersGasEstimate(orders?: UniswapXOrderDetails[]): GasFeeResult {

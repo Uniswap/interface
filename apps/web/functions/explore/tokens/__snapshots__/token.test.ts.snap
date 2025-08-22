@@ -113,18 +113,7 @@ window.$RefreshSig$ = () => (type) => type;</script>
         }
       }
     </style>
-  <meta property="og:title" content="Get USDC on Uniswap" data-rh="true">
-<meta property="og:image" content="http://localhost:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true">
-<meta property="og:image:width" content="1200" data-rh="true">
-<meta property="og:image:height" content="630" data-rh="true">
-<meta property="og:image:alt" content="Get USDC on Uniswap" data-rh="true">
-<meta property="og:type" content="website" data-rh="true">
-<meta property="og:url" content="http://localhost:3000/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true">
-<meta property="twitter:card" content="summary_large_image" data-rh="true">
-<meta property="twitter:title" content="Get USDC on Uniswap" data-rh="true">
-<meta property="twitter:image" content="http://localhost:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true">
-<meta property="twitter:image:alt" content="Get USDC on Uniswap" data-rh="true">
-</head>
+  <meta property="og:title" content="Get USDC on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="Get USDC on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="Get USDC on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true"><meta property="twitter:image:alt" content="Get USDC on Uniswap" data-rh="true"></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -253,18 +242,7 @@ window.$RefreshSig$ = () => (type) => type;</script>
         }
       }
     </style>
-  <meta property="og:title" content="Get ETH on Uniswap" data-rh="true">
-<meta property="og:image" content="http://localhost:3000/api/image/tokens/ethereum/NATIVE" data-rh="true">
-<meta property="og:image:width" content="1200" data-rh="true">
-<meta property="og:image:height" content="630" data-rh="true">
-<meta property="og:image:alt" content="Get ETH on Uniswap" data-rh="true">
-<meta property="og:type" content="website" data-rh="true">
-<meta property="og:url" content="http://localhost:3000/explore/tokens/ethereum/NATIVE" data-rh="true">
-<meta property="twitter:card" content="summary_large_image" data-rh="true">
-<meta property="twitter:title" content="Get ETH on Uniswap" data-rh="true">
-<meta property="twitter:image" content="http://localhost:3000/api/image/tokens/ethereum/NATIVE" data-rh="true">
-<meta property="twitter:image:alt" content="Get ETH on Uniswap" data-rh="true">
-</head>
+  <meta property="og:title" content="Get ETH on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/NATIVE" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="Get ETH on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/NATIVE" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="Get ETH on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/NATIVE" data-rh="true"><meta property="twitter:image:alt" content="Get ETH on Uniswap" data-rh="true"></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -393,18 +371,7 @@ window.$RefreshSig$ = () => (type) => type;</script>
         }
       }
     </style>
-  <meta property="og:title" content="Get POL on Uniswap" data-rh="true">
-<meta property="og:image" content="http://localhost:3000/api/image/tokens/polygon/NATIVE" data-rh="true">
-<meta property="og:image:width" content="1200" data-rh="true">
-<meta property="og:image:height" content="630" data-rh="true">
-<meta property="og:image:alt" content="Get POL on Uniswap" data-rh="true">
-<meta property="og:type" content="website" data-rh="true">
-<meta property="og:url" content="http://localhost:3000/explore/tokens/polygon/NATIVE" data-rh="true">
-<meta property="twitter:card" content="summary_large_image" data-rh="true">
-<meta property="twitter:title" content="Get POL on Uniswap" data-rh="true">
-<meta property="twitter:image" content="http://localhost:3000/api/image/tokens/polygon/NATIVE" data-rh="true">
-<meta property="twitter:image:alt" content="Get POL on Uniswap" data-rh="true">
-</head>
+  <meta property="og:title" content="Get POL on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="Get POL on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/polygon/NATIVE" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="Get POL on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE" data-rh="true"><meta property="twitter:image:alt" content="Get POL on Uniswap" data-rh="true"></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -533,18 +500,7 @@ window.$RefreshSig$ = () => (type) => type;</script>
         }
       }
     </style>
-  <meta property="og:title" content="Get PEPE on Uniswap" data-rh="true">
-<meta property="og:image" content="http://localhost:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933" data-rh="true">
-<meta property="og:image:width" content="1200" data-rh="true">
-<meta property="og:image:height" content="630" data-rh="true">
-<meta property="og:image:alt" content="Get PEPE on Uniswap" data-rh="true">
-<meta property="og:type" content="website" data-rh="true">
-<meta property="og:url" content="http://localhost:3000/explore/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933" data-rh="true">
-<meta property="twitter:card" content="summary_large_image" data-rh="true">
-<meta property="twitter:title" content="Get PEPE on Uniswap" data-rh="true">
-<meta property="twitter:image" content="http://localhost:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933" data-rh="true">
-<meta property="twitter:image:alt" content="Get PEPE on Uniswap" data-rh="true">
-</head>
+  <meta property="og:title" content="Get PEPE on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="Get PEPE on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="Get PEPE on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933" data-rh="true"><meta property="twitter:image:alt" content="Get PEPE on Uniswap" data-rh="true"></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

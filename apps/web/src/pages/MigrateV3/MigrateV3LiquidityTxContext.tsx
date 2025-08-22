@@ -6,16 +6,7 @@ import { getCurrencyForProtocol, getTokenOrZeroAddress } from 'components/Liquid
 import { isInvalidPrice, isInvalidRange } from 'components/Liquidity/utils/priceRangeInfo'
 import { useAccount } from 'hooks/useAccount'
 import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
-import {
-  Dispatch,
-  PropsWithChildren,
-  SetStateAction,
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
@@ -42,9 +33,8 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 interface MigrateV3PositionTxContextType {
   txInfo?: MigrateV3PositionTxAndGasInfo
   gasFeeEstimateUSD?: CurrencyAmount<Currency>
-  transactionError: boolean | string
+  error: boolean | string
   refetch?: () => void
-  setTransactionError: Dispatch<SetStateAction<string | boolean>>
 }
 
 const MigrateV3PositionTxContext = createContext<MigrateV3PositionTxContextType | undefined>(undefined)
@@ -62,13 +52,13 @@ export function MigrateV3PositionTxContextProvider({
   positionInfo,
 }: PropsWithChildren<{ positionInfo: V3PositionInfo }>): JSX.Element {
   const account = useAccount()
-  const [transactionError, setTransactionError] = useState<string | boolean>(false)
+  const [hasMigrateErrorResponse, setHasMigrateErrorResponse] = useState(false)
 
   const { creatingPoolOrPair, protocolVersion, positionState, currentTransactionStep, poolOrPair, ticks, price } =
     useCreateLiquidityContext()
   const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(positionInfo.chainId)
 
-  const migrateLiquidityApprovalParams: CheckApprovalLPRequest | undefined = useMemo(() => {
+  const increaseLiquidityApprovalParams: CheckApprovalLPRequest | undefined = useMemo(() => {
     if (!account.address) {
       return undefined
     }
@@ -88,12 +78,12 @@ export function MigrateV3PositionTxContextProvider({
     error: approvalError,
     refetch: approvalRefetch,
   } = useCheckLpApprovalQuery({
-    params: migrateLiquidityApprovalParams,
+    params: increaseLiquidityApprovalParams,
     headers: {
       'x-universal-router-version': UniversalRouterVersion._2_0,
     },
     staleTime: 5 * ONE_SECOND_MS,
-    enabled: Boolean(migrateLiquidityApprovalParams),
+    enabled: Boolean(increaseLiquidityApprovalParams),
   })
 
   if (approvalError) {
@@ -206,23 +196,21 @@ export function MigrateV3PositionTxContextProvider({
 
   const {
     data: migrateCalldata,
-    error: migrateCalldataError,
+    error: migrateError,
     refetch: migrateRefetch,
   } = useMigrateV3LpPositionCalldataQuery({
     params: migratePositionRequestArgs,
-    refetchInterval: transactionError ? false : 5 * ONE_SECOND_MS,
+    refetchInterval: hasMigrateErrorResponse ? false : 5 * ONE_SECOND_MS,
     retry: false,
     enabled: isQueryEnabled,
   })
 
   useEffect(() => {
-    setTransactionError(getErrorMessageToDisplay({ calldataError: migrateCalldataError, approvalError }))
-  }, [migrateCalldataError, approvalError])
+    setHasMigrateErrorResponse(!!migrateError)
+  }, [migrateError, migratePositionRequestArgs])
 
-  if (migrateCalldataError) {
-    const message = parseErrorMessageTitle(migrateCalldataError, {
-      defaultTitle: 'unknown MigrateLpPositionCalldataQuery',
-    })
+  if (migrateError) {
+    const message = parseErrorMessageTitle(migrateError, { defaultTitle: 'unknown MigrateLpPositionCalldataQuery' })
     logger.error(message, {
       tags: {
         file: 'MigrateV3LiquidityTxContext',
@@ -301,9 +289,8 @@ export function MigrateV3PositionTxContextProvider({
     <MigrateV3PositionTxContext.Provider
       value={{
         txInfo: validatedValue,
-        transactionError,
-        setTransactionError,
-        refetch: approvalError ? approvalRefetch : transactionError ? migrateRefetch : undefined,
+        error: getErrorMessageToDisplay({ approvalError, calldataError: migrateError }),
+        refetch: approvalError ? approvalRefetch : migrateError ? migrateRefetch : undefined,
       }}
     >
       {children}

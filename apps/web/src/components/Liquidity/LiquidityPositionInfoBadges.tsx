@@ -57,12 +57,6 @@ interface BadgeData {
   tooltipContent?: string
   copyable?: boolean
   icon?: JSX.Element
-  iconAfter?: JSX.Element
-  onPress?: () => void
-}
-
-interface BadgeCta extends BadgeData {
-  onPress: () => void
 }
 
 export function LiquidityPositionInfoBadges({
@@ -70,13 +64,11 @@ export function LiquidityPositionInfoBadges({
   v4hook,
   feeTier,
   size = 'default',
-  cta,
 }: {
   version?: RestProtocolVersion | GraphQLProtocolVersion | string
   v4hook?: string
   feeTier?: FeeData
   size: 'small' | 'default'
-  cta?: BadgeCta
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -107,30 +99,19 @@ export function LiquidityPositionInfoBadges({
           }
         : undefined,
       feeTierLabel,
-      cta,
     ].filter(Boolean) as BadgeData[]
-  }, [version, v4hook, feeTier, cta, t])
+  }, [version, v4hook, feeTier, t])
 
   return (
     <>
-      {badges.map((badge, index) => {
-        const { label, copyable, icon, iconAfter, tooltipContent } = badge
+      {badges.map(({ label, copyable, icon, tooltipContent }, index) => {
         const displayLabel = isAddress(label) ? shortenAddress(label) : label
         const key = label + index
         const content = (
           <PositionInfoBadge
-            cursor={copyable || badge.onPress ? 'pointer' : 'unset'}
-            color={badge.onPress ? '$neutral1' : '$neutral2'}
+            cursor={copyable ? 'pointer' : 'unset'}
             placement={getPlacement(index, badges.length)}
             size={size}
-            onPress={
-              badge.onPress
-                ? (e) => {
-                    e.preventDefault()
-                    badge.onPress?.()
-                  }
-                : undefined
-            }
           >
             {icon}
             {copyable ? (
@@ -140,7 +121,6 @@ export function LiquidityPositionInfoBadges({
             ) : (
               displayLabel
             )}
-            {iconAfter}
           </PositionInfoBadge>
         )
 

@@ -12,7 +12,6 @@ export type JupiterOrderUrlParams = {
   referralAccount?: string
   referralFee?: string
   slippageBps?: string
-  swapMode: 'ExactIn' | 'ExactOut'
 }
 
 // Output types derived from https://dev.jup.ag/docs/api/ultra-api/order
@@ -80,8 +79,8 @@ export const jupiterOrderResponseSchema = z
     outputMint: z.string(),
     inAmount: z.string(),
     outAmount: z.string(),
-    otherAmountThreshold: z.string(),
-    swapMode: z.enum(['ExactIn', 'ExactOut']),
+    // otherAmountThreshold: z.string(),
+    // swapMode: z.string(),
     slippageBps: z.number(),
     priceImpactPct: z.string(),
     routePlan: routePlanSchema,

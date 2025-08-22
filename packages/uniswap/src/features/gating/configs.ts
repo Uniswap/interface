@@ -10,7 +10,6 @@ export enum DynamicConfigs {
   NetworkRequests = 'network_requests',
   Chains = 'chains',
   SyncTransactionSubmissionChainIds = 'sync_transaction_submission_chain_ids',
-  BlockedAsyncSubmissionChainIds = 'blocked_async_submission_chain_ids',
 
   // Wallet
   HomeScreenExploreTokens = 'home_screen_explore_tokens',
@@ -95,10 +94,6 @@ export enum ExtensionBiometricUnlockConfigKey {
 }
 
 export enum SyncTransactionSubmissionChainIdsConfigKey {
-  ChainIds = 'chainIds',
-}
-
-export enum BlockedAsyncSubmissionChainIdsConfigKey {
   ChainIds = 'chainIds',
 }
 
@@ -195,7 +190,6 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.ExternallyConnectableExtension]: ExternallyConnectableExtensionConfigKey
   [DynamicConfigs.LPConfig]: LPConfigKey
   [DynamicConfigs.AllowedV4WethHookAddresses]: AllowedV4WethHookAddressesConfigKey
-  [DynamicConfigs.BlockedAsyncSubmissionChainIds]: BlockedAsyncSubmissionChainIdsConfigKey
 }
 
 // This type must match the format in statsig dynamic config for uwulink

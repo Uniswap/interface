@@ -1,7 +1,5 @@
-import { expect, getTest } from 'playwright/fixtures'
+import { expect, test } from 'playwright/fixtures'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-
-const test = getTest()
 
 // Note: only run critical tests in this file
 // this file will block merging PRs if it fails

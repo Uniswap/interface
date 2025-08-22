@@ -165,66 +165,16 @@ const anvil = anvilClient
         return (originalRequest as any).apply(this, args) as ReturnType<typeof originalRequest>
       } as typeof originalRequest
     },
-    /**
-     * Take a snapshot of the current blockchain state and return the snapshot ID
-     * This is useful for test isolation - take snapshot at beginning of test, revert at end
-     */
-    async takeSnapshot() {
-      return await client.snapshot()
-    },
-    /**
-     * Revert to a previously taken snapshot
-     * @param snapshotId - The ID returned from takeSnapshot()
-     */
-    async revertToSnapshot(snapshotId: `0x${string}`) {
-      await client.revert({ id: snapshotId })
-    },
-    /**
-     * Advanced state management: take snapshot, run function, then revert
-     * This ensures the function runs in isolation without affecting the blockchain state
-     * @param fn - Function to run in isolation
-     */
-    async withSnapshot<T>(fn: () => Promise<T>): Promise<T> {
-      const snapshotId = await client.snapshot()
-      try {
-        return await fn()
-      } finally {
-        await client.revert({ id: snapshotId })
-      }
-    },
   }))
 
 export const test = base.extend<{ anvil: typeof anvil; delegateToZeroAddress?: void }>({
   // eslint-disable-next-line no-empty-pattern
   async anvil({}, use) {
-    // Take a snapshot at the beginning to ensure clean state for each test
-    let snapshotId: `0x${string}` | undefined
-    try {
-      snapshotId = await anvil.snapshot()
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn('Failed to take initial snapshot, falling back to reset pattern:', error)
-    }
-
     await use(anvil)
-
-    // Revert to snapshot for efficient state cleanup
-    // If snapshot fails, fall back to full reset
-    try {
-      if (snapshotId) {
-        await anvil.revert({ id: snapshotId })
-      } else {
-        await anvil.reset()
-      }
-    } catch (error) {
+    await anvil.reset().catch(() => {
       // eslint-disable-next-line no-console
-      console.error('Failed to revert/reset Anvil state:', error)
-      // Try full reset as last resort
-      await anvil.reset().catch(() => {
-        // eslint-disable-next-line no-console
-        console.error('👉 Anvil is not running. Start it by running `yarn web anvil:mainnet`')
-      })
-    }
+      console.error('👉 Anvil is not running. Start it by running `yarn web anvil:mainnet`')
+    })
   },
   // Delegate the test wallet to the zero address to avoid any smart wallet conflicts
   delegateToZeroAddress: [
@@ -253,5 +203,3 @@ export const test = base.extend<{ anvil: typeof anvil; delegateToZeroAddress?: v
     { auto: true },
   ],
 })
-
-export type AnvilClient = typeof anvil

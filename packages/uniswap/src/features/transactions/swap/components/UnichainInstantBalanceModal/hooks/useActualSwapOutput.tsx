@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
@@ -11,18 +10,12 @@ export function useActualSwapOutput(): {
   outputCurrencyInfo?: CurrencyInfo
   lastSwapOutputBalance: string | undefined
 } {
-  const { t } = useTranslation()
   const { formatCurrencyAmount } = useLocalizationContext()
 
   const instantReceiptFetchTime = useSwapFormStore((s) => s.instantReceiptFetchTime)
 
   const { derivedSwapInfo } = useSwapDependenciesStore((s) => ({ derivedSwapInfo: s.derivedSwapInfo }))
   const instantOutputAmountRaw = useSwapFormStore((s) => s.instantOutputAmountRaw)
-
-  const isTxSuccessfulButUnparsable = !!useSwapFormStore((s) => s.instantReceiptFetchTime)
-  const outputAmountFromForm = useSwapDependenciesStore((s) =>
-    s.derivedSwapInfo.currencyAmounts.output?.quotient.toString(),
-  )
 
   const outputCurrencyInfo = derivedSwapInfo.currencies.output ?? undefined
 
@@ -49,22 +42,10 @@ export function useActualSwapOutput(): {
     }
 
     return undefined
-  }, [outputCurrencyInfo, instantOutputAmountRaw, instantReceiptFetchTime, formatCurrencyAmount])
-
-  const shouldEstimateOutput = outputCurrencyInfo && isTxSuccessfulButUnparsable && !swapOutputAmountFinal
+  }, [outputCurrencyInfo, instantOutputAmountRaw, formatCurrencyAmount, instantReceiptFetchTime])
 
   return {
     outputCurrencyInfo,
-    lastSwapOutputBalance: shouldEstimateOutput
-      ? t('common.approximatelyValue', {
-          value: formatCurrencyAmount({
-            value: getCurrencyAmount({
-              value: outputAmountFromForm,
-              valueType: ValueType.Raw,
-              currency: outputCurrencyInfo.currency,
-            }),
-          }),
-        })
-      : swapOutputAmountFinal,
+    lastSwapOutputBalance: swapOutputAmountFinal,
   }
 }

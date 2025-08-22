@@ -9,22 +9,21 @@ import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
-import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
 import {
   getShouldWaitBetweenTransactions,
   getSwapTransactionCount,
 } from 'wallet/src/features/transactions/swap/confirmation'
 import { createExecuteSwapSaga } from 'wallet/src/features/transactions/swap/executeSwapSaga'
+import { createTransactionServices } from 'wallet/src/features/transactions/swap/factories/createTransactionServices'
 import { submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
 import {
   mockSignerAccount as account,
-  createMockSignedApproveTx,
   mockAnalytics,
   mockBridgeTrade,
   mockClassicTrade,
+  mockSwapSagaDependencies,
   mockTransactionExecutor,
   mockTransactionParamsFactory,
-  mockTransactionSagaDependencies,
   mockTransactionService,
   mockTransactionSigner,
   mockWrapTrade,
@@ -40,7 +39,7 @@ import {
 } from 'wallet/src/features/transactions/swap/types/transactionExecutor'
 
 // Mock dependencies
-jest.mock('wallet/src/features/transactions/factories/createTransactionServices')
+jest.mock('wallet/src/features/transactions/swap/factories/createTransactionServices')
 jest.mock('wallet/src/features/transactions/swap/confirmation')
 jest.mock('wallet/src/features/transactions/swap/submitOrderSaga')
 
@@ -72,7 +71,7 @@ describe('executeSwapSaga', () => {
 
   const sharedProviders: (EffectProviders | StaticProvider)[] = [
     [
-      call(createTransactionServices, mockTransactionSagaDependencies, {
+      call(createTransactionServices, mockSwapSagaDependencies, {
         account,
         chainId: CHAIN_ID,
         submitViaPrivateRpc: false,
@@ -94,7 +93,7 @@ describe('executeSwapSaga', () => {
   beforeAll(() => {
     dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => MOCK_TIMESTAMP)
     mockPrepareAndSignSwapSaga = jest.fn()
-    executeSwapSaga = createExecuteSwapSaga(mockTransactionSagaDependencies, mockPrepareAndSignSwapSaga)
+    executeSwapSaga = createExecuteSwapSaga(mockSwapSagaDependencies, mockPrepareAndSignSwapSaga)
   })
 
   afterAll(() => {
@@ -142,7 +141,18 @@ describe('executeSwapSaga', () => {
 
     it('should execute a classic swap with approval', async () => {
       const preSignedTransaction = preparePreSignedSwapTransaction({
-        signedApproveTx: createMockSignedApproveTx(),
+        signedApproveTx: {
+          request: {
+            nonce: 1,
+            to: '0xtoken',
+            chainId: CHAIN_ID,
+            data: '0x',
+            value: '0',
+            gasLimit: '21000',
+            gasPrice: '20000000000',
+          },
+          signedRequest: '0xsignedapproval',
+        },
       })
 
       const params = prepareExecuteSwapSagaParams({
@@ -190,7 +200,18 @@ describe('executeSwapSaga', () => {
 
     it('should call onFailure and log error when approval transaction fails', async () => {
       const preSignedTransaction = preparePreSignedSwapTransaction({
-        signedApproveTx: createMockSignedApproveTx(),
+        signedApproveTx: {
+          request: {
+            nonce: 1,
+            to: '0xtoken',
+            chainId: CHAIN_ID,
+            data: '0x',
+            value: '0',
+            gasLimit: '21000',
+            gasPrice: '20000000000',
+          },
+          signedRequest: '0xsignedapproval',
+        },
       })
 
       const params = prepareExecuteSwapSagaParams({
@@ -222,7 +243,7 @@ describe('executeSwapSaga', () => {
         shouldWait: false,
       })
 
-      expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(
+      expect(mockSwapSagaDependencies.logger.error).toHaveBeenCalledWith(
         expect.objectContaining({
           message: 'Approval transaction failed',
         }),
@@ -246,7 +267,7 @@ describe('executeSwapSaga', () => {
         .call(params.onFailure)
         .run()
 
-      expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(
+      expect(mockSwapSagaDependencies.logger.error).toHaveBeenCalledWith(
         expect.objectContaining({
           message: 'Transaction failed',
         }),
@@ -290,7 +311,18 @@ describe('executeSwapSaga', () => {
 
     it('should execute a wrap transaction with approval', async () => {
       const preSignedTransaction = preparePreSignedSwapTransaction({
-        signedApproveTx: createMockSignedApproveTx(),
+        signedApproveTx: {
+          request: {
+            nonce: 1,
+            to: '0xtoken',
+            chainId: CHAIN_ID,
+            data: '0x',
+            value: '0',
+            gasLimit: '21000',
+            gasPrice: '20000000000',
+          },
+          signedRequest: '0xsignedapproval',
+        },
       })
 
       const params = prepareExecuteSwapSagaParams({
@@ -340,7 +372,18 @@ describe('executeSwapSaga', () => {
 
     it('should call onFailure and log error when approval transaction fails', async () => {
       const preSignedTransaction = preparePreSignedSwapTransaction({
-        signedApproveTx: createMockSignedApproveTx(),
+        signedApproveTx: {
+          request: {
+            nonce: 1,
+            to: '0xtoken',
+            chainId: CHAIN_ID,
+            data: '0x',
+            value: '0',
+            gasLimit: '21000',
+            gasPrice: '20000000000',
+          },
+          signedRequest: '0xsignedapproval',
+        },
       })
 
       const params = prepareExecuteSwapSagaParams({
@@ -374,7 +417,7 @@ describe('executeSwapSaga', () => {
         shouldWait: false,
       })
 
-      expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(
+      expect(mockSwapSagaDependencies.logger.error).toHaveBeenCalledWith(
         expect.objectContaining({
           message: 'Approval transaction failed',
         }),
@@ -400,7 +443,7 @@ describe('executeSwapSaga', () => {
 
       await expectSaga(executeSwapSaga, params).provide(sharedProviders).call(params.onFailure).run()
 
-      expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(
+      expect(mockSwapSagaDependencies.logger.error).toHaveBeenCalledWith(
         expect.objectContaining({
           message: 'Transaction failed',
         }),
@@ -448,7 +491,18 @@ describe('executeSwapSaga', () => {
           permit: mockPermit.typedData,
           signedData: '0xsignedPermit',
         },
-        signedApproveTx: createMockSignedApproveTx(),
+        signedApproveTx: {
+          request: {
+            nonce: 1,
+            to: '0xtoken',
+            chainId: CHAIN_ID,
+            data: '0x',
+            value: '0',
+            gasLimit: '21000',
+            gasPrice: '20000000000',
+          },
+          signedRequest: '0xsignedapproval',
+        },
       })
 
       const params = prepareExecuteSwapSagaParams({
@@ -484,7 +538,18 @@ describe('executeSwapSaga', () => {
           permit: mockPermit.typedData,
           signedData: '0xsignedPermit',
         },
-        signedApproveTx: createMockSignedApproveTx(),
+        signedApproveTx: {
+          request: {
+            nonce: 1,
+            to: '0xtoken',
+            chainId: CHAIN_ID,
+            data: '0x',
+            value: '0',
+            gasLimit: '21000',
+            gasPrice: '20000000000',
+          },
+          signedRequest: '0xsignedapproval',
+        },
       })
 
       const params = prepareExecuteSwapSagaParams({
@@ -507,7 +572,7 @@ describe('executeSwapSaga', () => {
         shouldWait: false,
       })
 
-      expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(
+      expect(mockSwapSagaDependencies.logger.error).toHaveBeenCalledWith(
         expect.objectContaining({
           message: 'Approval transaction failed',
         }),
@@ -551,7 +616,18 @@ describe('executeSwapSaga', () => {
 
     it('should execute a bridge transaction with approval', async () => {
       const preSignedTransaction = preparePreSignedSwapTransaction({
-        signedApproveTx: createMockSignedApproveTx(),
+        signedApproveTx: {
+          request: {
+            nonce: 1,
+            to: '0xtoken',
+            chainId: CHAIN_ID,
+            data: '0x',
+            value: '0',
+            gasLimit: '21000',
+            gasPrice: '20000000000',
+          },
+          signedRequest: '0xsignedapproval',
+        },
       })
 
       const params = prepareExecuteSwapSagaParams({
@@ -601,7 +677,18 @@ describe('executeSwapSaga', () => {
 
     it('should call onFailure and log error when approval transaction fails', async () => {
       const preSignedTransaction = preparePreSignedSwapTransaction({
-        signedApproveTx: createMockSignedApproveTx(),
+        signedApproveTx: {
+          request: {
+            nonce: 1,
+            to: '0xtoken',
+            chainId: CHAIN_ID,
+            data: '0x',
+            value: '0',
+            gasLimit: '21000',
+            gasPrice: '20000000000',
+          },
+          signedRequest: '0xsignedapproval',
+        },
       })
 
       const params = prepareExecuteSwapSagaParams({
@@ -635,7 +722,7 @@ describe('executeSwapSaga', () => {
         shouldWait: false,
       })
 
-      expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(
+      expect(mockSwapSagaDependencies.logger.error).toHaveBeenCalledWith(
         expect.objectContaining({
           message: 'Approval transaction failed',
         }),
@@ -661,7 +748,7 @@ describe('executeSwapSaga', () => {
 
       await expectSaga(executeSwapSaga, params).provide(sharedProviders).call(params.onFailure).run()
 
-      expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(
+      expect(mockSwapSagaDependencies.logger.error).toHaveBeenCalledWith(
         expect.objectContaining({
           message: 'Transaction failed',
         }),
@@ -676,7 +763,18 @@ describe('executeSwapSaga', () => {
   describe('Transaction spacing', () => {
     it('should call onPending when transaction spacing is required', async () => {
       const preSignedTransaction = preparePreSignedSwapTransaction({
-        signedApproveTx: createMockSignedApproveTx(),
+        signedApproveTx: {
+          request: {
+            nonce: 1,
+            to: '0xtoken',
+            chainId: CHAIN_ID,
+            data: '0x',
+            value: '0',
+            gasLimit: '21000',
+            gasPrice: '20000000000',
+          },
+          signedRequest: '0xsignedapproval',
+        },
       })
 
       const params = prepareExecuteSwapSagaParams({
@@ -701,7 +799,7 @@ describe('executeSwapSaga', () => {
       await expectSaga(executeSwapSaga, params)
         .provide([
           [
-            call(createTransactionServices, mockTransactionSagaDependencies, {
+            call(createTransactionServices, mockSwapSagaDependencies, {
               account,
               chainId: CHAIN_ID,
               submitViaPrivateRpc: false,
@@ -789,7 +887,7 @@ describe('executeSwapSaga', () => {
 
       await expectSaga(executeSwapSaga, params).provide(sharedProviders).run()
 
-      expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(
+      expect(mockSwapSagaDependencies.logger.error).toHaveBeenCalledWith(
         expect.any(Error),
         expect.objectContaining({
           tags: { file: 'executeSwapSaga', function: 'executeSwap' },
@@ -805,7 +903,7 @@ describe('executeSwapSaga', () => {
       await expectSaga(executeSwapSaga, params)
         .provide([
           [
-            call(createTransactionServices, mockTransactionSagaDependencies, {
+            call(createTransactionServices, mockSwapSagaDependencies, {
               account,
               chainId: CHAIN_ID,
               submitViaPrivateRpc: false,
@@ -816,7 +914,7 @@ describe('executeSwapSaga', () => {
         ])
         .run()
 
-      expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(
+      expect(mockSwapSagaDependencies.logger.error).toHaveBeenCalledWith(
         error,
         expect.objectContaining({
           tags: { file: 'executeSwapSaga', function: 'executeSwap' },
@@ -830,8 +928,16 @@ describe('executeSwapSaga', () => {
     it('should not include swap txId in approval transaction data', async () => {
       const preSignedTransaction = preparePreSignedSwapTransaction({
         signedApproveTx: {
-          ...createMockSignedApproveTx(),
-          txId: 'test-tx-id',
+          request: {
+            nonce: 1,
+            to: '0xtoken',
+            chainId: CHAIN_ID,
+            data: '0x',
+            value: '0',
+            gasLimit: '21000',
+            gasPrice: '20000000000',
+          },
+          signedRequest: '0xsignedapproval',
         },
       })
 
@@ -857,7 +963,7 @@ describe('executeSwapSaga', () => {
       })
 
       const mockDependencies = {
-        ...mockTransactionSagaDependencies,
+        ...mockSwapSagaDependencies,
         createTransactionParamsFactory: jest.fn().mockReturnValue({
           ...mockTransactionParamsFactory,
           createApprovalParams: mockCreateApprovalParams,
@@ -923,7 +1029,7 @@ describe('executeSwapSaga', () => {
       await expectSaga(executeSwapSaga, params)
         .provide([
           [
-            call(createTransactionServices, mockTransactionSagaDependencies, {
+            call(createTransactionServices, mockSwapSagaDependencies, {
               account,
               chainId: CHAIN_ID,
               submitViaPrivateRpc: true,
@@ -940,7 +1046,7 @@ describe('executeSwapSaga', () => {
             false,
           ],
         ])
-        .call(createTransactionServices, mockTransactionSagaDependencies, {
+        .call(createTransactionServices, mockSwapSagaDependencies, {
           account,
           chainId: CHAIN_ID,
           submitViaPrivateRpc: true,
@@ -958,7 +1064,7 @@ describe('Sync transaction submission', () => {
 
   beforeAll(() => {
     mockPrepareAndSignSwapSaga = jest.fn()
-    executeSwapSaga = createExecuteSwapSaga(mockTransactionSagaDependencies, mockPrepareAndSignSwapSaga)
+    executeSwapSaga = createExecuteSwapSaga(mockSwapSagaDependencies, mockPrepareAndSignSwapSaga)
   })
 
   beforeEach(() => {
@@ -986,7 +1092,7 @@ describe('Sync transaction submission', () => {
     await expectSaga(executeSwapSaga, params)
       .provide([
         [
-          call(createTransactionServices, mockTransactionSagaDependencies, {
+          call(createTransactionServices, mockSwapSagaDependencies, {
             account,
             chainId: CHAIN_ID,
             submitViaPrivateRpc: false,

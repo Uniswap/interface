@@ -120,7 +120,7 @@ export function createMockDerivedSwapInfo({
   }
 }
 
-const createMockUniswapXOrder = (inputToken: string, outputToken: string): DutchOrderInfoV2 => ({
+const createMockUniswapXOrder = (token: string): DutchOrderInfoV2 => ({
   chainId: 1,
   reactor: '0x00000011F84B9aa48e5f8aA8B9897600006289Be',
   swapper: '0x123',
@@ -129,26 +129,26 @@ const createMockUniswapXOrder = (inputToken: string, outputToken: string): Dutch
   additionalValidationContract: '0x0000000000000000000000000000000000000000',
   additionalValidationData: '0x',
   input: {
-    token: inputToken,
+    token: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     startAmount: '44000',
     endAmount: '49000',
   },
   outputs: [
-    createMockDutchOutput({ token: outputToken, startAmount: '100000000', endAmount: '100000000', recipient: '0x123' }),
-    createMockDutchOutput({ token: outputToken, startAmount: '250000', endAmount: '250000', recipient: '0x321' }),
+    createMockDutchOutput({ token, startAmount: '100000000', endAmount: '100000000', recipient: '0x123' }),
+    createMockDutchOutput({ token, startAmount: '250000', endAmount: '250000', recipient: token }),
   ],
   cosigner: '0x4449Cd34d1eb1FEDCF02A1Be3834FfDe8E6A6180',
 })
-export const createMockUniswapXQuote = (inputToken: string, outputToken: string): DutchQuoteV2 => ({
+export const createMockUniswapXQuote = (token: string): DutchQuoteV2 => ({
   encodedOrder: '0x000',
   orderId: '0xbbb',
-  orderInfo: createMockUniswapXOrder(inputToken, outputToken),
+  orderInfo: createMockUniswapXOrder(token),
   slippageTolerance: 0.5,
   quoteId: '123',
   classicGasUseEstimateUSD: '10',
   portionAmount: '250000',
   portionBips: 25,
-  portionRecipient: inputToken,
+  portionRecipient: token,
 })
 
 function createMockDutchOutput({
@@ -248,7 +248,7 @@ export const createMockUniswapXTrade = (inputCurrency: Token, outputCurrency: To
     quote: {
       requestId: '1',
       routing: Routing.DUTCH_V2,
-      quote: createMockUniswapXQuote(inputCurrency.address, outputCurrency.address),
+      quote: createMockUniswapXQuote(inputCurrency.address),
       permitData: createMockPermitData(inputCurrency.address),
     },
   })

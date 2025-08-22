@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { createContext, PropsWithChildren, useContext } from 'react'
+import { createContext, ReactNode, useContext } from 'react'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { NavigateToNftItemArgs } from 'uniswap/src/contexts/UniswapContext'
 import { AssetType } from 'uniswap/src/entities/assets'
@@ -141,7 +141,9 @@ export const WalletNavigationContext = createContext<WalletNavigationContextStat
 export function WalletNavigationProvider({
   children,
   ...props
-}: PropsWithChildren<WalletNavigationContextState>): JSX.Element {
+}: {
+  children: ReactNode
+} & WalletNavigationContextState): JSX.Element {
   return <WalletNavigationContext.Provider value={props}>{children}</WalletNavigationContext.Provider>
 }
 

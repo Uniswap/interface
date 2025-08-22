@@ -7,7 +7,7 @@ import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { atom, useAtom } from 'jotai'
 import styled, { useTheme } from 'lib/styled-components'
 import { Suspense, lazy, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { Loader } from 'ui/src/loading/Loader'
 import { breakpoints } from 'ui/src/theme'
@@ -69,7 +69,7 @@ const PageWrapper = styled.div`
 `
 
 interface Page {
-  title: string
+  title: React.ReactNode
   key: string
   component: ({ account }: { account: string }) => JSX.Element
   loggingElementName: ElementName
@@ -77,7 +77,7 @@ interface Page {
 
 const Pages: Array<Page> = [
   {
-    title: 'common.tokens',
+    title: <Trans i18nKey="common.tokens" />,
     key: 'tokens',
     component: () => (
       <Suspense fallback={<Loader.Box />}>
@@ -87,7 +87,7 @@ const Pages: Array<Page> = [
     loggingElementName: ElementName.MiniPortfolioTokensTab,
   },
   {
-    title: 'common.nfts',
+    title: <Trans i18nKey="common.nfts" />,
     key: 'nfts',
     component: ({ account }: { account: string }) => (
       <Suspense fallback={<Loader.Box />}>
@@ -97,7 +97,7 @@ const Pages: Array<Page> = [
     loggingElementName: ElementName.MiniPortfolioNftTab,
   },
   {
-    title: 'common.pools',
+    title: <Trans i18nKey="common.pools" />,
     key: 'pools',
     component: ({ account }: { account: string }) => (
       <Suspense fallback={<Loader.Box />}>
@@ -107,7 +107,7 @@ const Pages: Array<Page> = [
     loggingElementName: ElementName.MiniPortfolioPoolsTab,
   },
   {
-    title: 'common.activity',
+    title: <Trans i18nKey="common.activity" />,
     key: 'activity',
     component: ({ account }: { account: string }) => (
       <Suspense fallback={<Loader.Box />}>
@@ -119,7 +119,6 @@ const Pages: Array<Page> = [
 ]
 
 export default function MiniPortfolio({ account }: { account: string }) {
-  const { t } = useTranslation()
   const theme = useTheme()
   const [lastPage, setLastPage] = useAtom(lastPageAtom)
   // Resumes at the last viewed page
@@ -163,7 +162,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
                   key={key}
                   data-testid={loggingElementName}
                 >
-                  <span>{t(title)}</span>
+                  <span>{title}</span>
                   {showActivityIndicator && (
                     <>
                       &nbsp;

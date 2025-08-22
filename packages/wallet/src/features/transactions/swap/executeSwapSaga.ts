@@ -19,11 +19,11 @@ import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { Logger } from 'utilities/src/logger/logger'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
-import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
 import {
   getShouldWaitBetweenTransactions,
   getSwapTransactionCount,
 } from 'wallet/src/features/transactions/swap/confirmation'
+import { createTransactionServices } from 'wallet/src/features/transactions/swap/factories/createTransactionServices'
 import { createPrepareAndSignSwapSaga } from 'wallet/src/features/transactions/swap/prepareAndSignSwapSaga'
 import { TransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
 import {
@@ -39,13 +39,13 @@ import {
   PreSignedSwapTransaction,
   isUniswapXPreSignedSwapTransaction,
 } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
+import { SwapSagaDependencies } from 'wallet/src/features/transactions/swap/types/swapSagaDependencies'
 import {
   BaseTransactionContext,
   TransactionExecutionSyncResultSuccess,
   TransactionStep,
   TransactionStepType,
 } from 'wallet/src/features/transactions/swap/types/transactionExecutor'
-import { TransactionSagaDependencies } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 import { finalizeTransaction } from 'wallet/src/features/transactions/watcher/transactionFinalizationSaga'
 
 export type SwapParams = {
@@ -174,7 +174,7 @@ function* executeTransactionStep(params: {
  * Factory function that creates an execute swap saga with injected dependencies
  */
 export function createExecuteSwapSaga(
-  dependencies: TransactionSagaDependencies,
+  dependencies: SwapSagaDependencies,
   prepareAndSignSwapTransaction: ReturnType<typeof createPrepareAndSignSwapSaga>,
 ) {
   return function* executeSwap(params: SwapParams) {

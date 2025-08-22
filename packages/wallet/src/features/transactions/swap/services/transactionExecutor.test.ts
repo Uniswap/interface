@@ -54,7 +54,6 @@ describe('TransactionExecutor', () => {
       chainId: 1,
     },
     signedRequest: ensure0xHex('0xsignedTxData'),
-    timestampBeforeSign: MOCK_TIMESTAMP,
   }
 
   const mockSwapTypeInfo: ExactInputSwapTransactionInfo = {
@@ -85,6 +84,7 @@ describe('TransactionExecutor', () => {
       },
       typeInfo: options.typeInfo || mockSwapTypeInfo,
       transactionOriginType: TransactionOriginType.Internal,
+      timestampBeforeSign: MOCK_TIMESTAMP,
       analytics: undefined,
     },
   })

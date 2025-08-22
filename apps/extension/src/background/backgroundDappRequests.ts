@@ -9,7 +9,7 @@ import {
   GetCapabilitiesRequest,
   RevokePermissionsRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { focusOrCreateDappRequestWindow, focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
+import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import {
   DappBackgroundPortChannel,
   contentScriptToBackgroundMessageChannel,
@@ -22,6 +22,7 @@ import {
   ContentScriptUtilityMessageType,
   DappRequestMessage,
 } from 'src/background/messagePassing/types/requests'
+import { openSidePanel } from 'src/background/utils/chromeSidePanelUtils'
 import { checkAreMigrationsPending, readReduxStateFromStorage } from 'src/background/utils/persistedStateUtils'
 import { getFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import { getEnabledChains, hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
@@ -35,20 +36,6 @@ import { getCapabilitiesCore } from 'wallet/src/features/batchedTransactions/uti
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
-
-// Request classification constants for determining which requests need user interaction
-const REQUEST_CLASSIFICATION = {
-  interactive: new Set([
-    DappRequestType.RequestAccount,
-    DappRequestType.SendTransaction,
-    DappRequestType.SignMessage,
-    DappRequestType.SignTypedData,
-    DappRequestType.UniswapOpenSidebar,
-    DappRequestType.RequestPermissions,
-    DappRequestType.SendCalls,
-  ]),
-  silent: new Set([DappRequestType.ChangeChain, DappRequestType.RevokePermissions, DappRequestType.GetCapabilities]),
-} as const
 
 const INACTIVITY_ALARM_NAME = 'inactivity'
 // TODO(EXT-546): add a setting to turn off the auto-lock setting
@@ -106,79 +93,39 @@ export function initMessageBridge(): void {
     return
   }
 
-  contentScriptToBackgroundMessageChannel.addAllMessageListener((message, sender) => {
-    // CRITICAL: This listener must NOT be async to preserve user gesture context.
-    // Chrome's sidePanel.open() API requires execution within ~1ms of a user gesture.
-    // Using async/await here breaks the gesture context and causes the error:
-    // "sidePanel.open() may only be called in response to a user gesture"
+  contentScriptToBackgroundMessageChannel.addAllMessageListener(async (message, sender) => {
+    // The side panel needs to be opened here because it has to be in response to a user action.
+    // Further down in the chain it will be opened in response to a message from the background script.
 
-    // Validate sender has required information
-    if (!isValidSender(sender)) {
+    if (sender?.tab?.id === undefined || sender.tab.url === undefined) {
       logger.error(new Error('sender.tab id or url is not defined'), {
         tags: {
-          file: 'backgroundDappRequests.ts',
+          file: 'background/background.ts',
           function: 'dappMessageListener',
         },
       })
       return
     }
 
-    const requestType = message.type
-    const windowId = sender.tab.windowId
-    const windowIdString = windowId.toString()
-    const isSidebarActive = Boolean(windowIdToSidebarPortMap.get(windowIdString))
-
-    // CRITICAL: Open side panel synchronously to preserve user gesture context.
-    // This must happen immediately, before any async operations.
-    if (requiresSidePanel(requestType) && !isSidebarActive) {
-      openSidePanelSync({
-        tabId: sender.tab.id,
-        windowId,
-        onSuccess: () => {
-          // Process request after panel opens (async operations safe here)
-          handleRequestAsync({ message, sender })
-        },
-        onError: (error, fallbackOpened) => {
-          // Panel failed to open, but fallback might have succeeded
-          logger.error(error, {
-            tags: {
-              file: 'backgroundDappRequests.ts',
-              function: 'initMessageBridge',
-            },
-            extra: {
-              action: 'openSidePanel',
-              fallbackOpened,
-            },
-          })
-
-          // Revalidate sender in error callback context
-          if (!isValidSender(sender)) {
-            logger.error(new Error('Sender tab info unexpectedly invalid in error callback'), {
-              tags: {
-                file: 'backgroundDappRequests.ts',
-                function: 'initMessageBridge',
-              },
-            })
-            return
-          }
-
-          // Queue the message for when panel/popup eventually connects
-          // This works for both side panel and popup window
-          queueMessageForPanel({
-            windowId,
-            message,
-            senderTabInfo: {
-              id: sender.tab.id,
-              url: sender.tab.url,
-              favIconUrl: sender.tab.favIconUrl,
-            },
-          })
-        },
-      })
-    } else {
-      // Non-interactive request or panel already open - async handling is safe
-      handleRequestAsync({ message, sender })
+    const senderTabInfo = {
+      id: sender.tab.id,
+      url: sender.tab.url,
+      favIconUrl: sender.tab.favIconUrl,
     }
+
+    const isSidebarActive = Boolean(windowIdToSidebarPortMap.get(sender.tab.windowId.toString()))
+    if (!isSidebarActive) {
+      const handled = await handleSilentBackgroundRequest(message, senderTabInfo)
+      if (handled) {
+        return
+      }
+    }
+
+    await handleSidebarRequest({
+      request: message,
+      windowId: sender.tab.windowId,
+      senderTabInfo,
+    })
   })
 
   contentScriptUtilityMessageChannel.addMessageListener(ContentScriptUtilityMessageType.ErrorLog, async (message) => {
@@ -368,58 +315,10 @@ async function handleGetCapabilities({
   }
 }
 
-/**
- * Handles dapp requests asynchronously after the side panel has been opened (if needed).
- * This function contains the original async logic that was previously in the message listener.
- * Moving it here allows us to open the side panel synchronously while preserving all existing behavior.
- */
-async function handleRequestAsync({
-  message,
-  sender,
-}: {
-  message: DappRequest
-  sender: chrome.runtime.MessageSender
-}): Promise<void> {
-  // Revalidate sender
-  if (!isValidSender(sender)) {
-    logger.error(new Error('Invalid sender tab info in handleRequestAsync'), {
-      tags: {
-        file: 'backgroundDappRequests.ts',
-        function: 'handleRequestAsync',
-      },
-      extra: {
-        hasTab: !!sender.tab,
-        hasId: sender.tab?.id !== undefined,
-        hasUrl: !!sender.tab?.url,
-      },
-    })
-    return
+class ExpectedNoPortError extends Error {
+  constructor() {
+    super('No port in storage to post message to')
   }
-
-  const senderTabInfo: SenderTabInfo = {
-    id: sender.tab.id,
-    url: sender.tab.url,
-    favIconUrl: sender.tab.favIconUrl,
-  }
-
-  const windowId = sender.tab.windowId
-  const windowIdString = windowId.toString()
-  const isSidebarActive = Boolean(windowIdToSidebarPortMap.get(windowIdString))
-
-  // Try to handle silently if sidebar is not active
-  if (!isSidebarActive) {
-    const handled = await handleSilentBackgroundRequest(message, senderTabInfo)
-    if (handled) {
-      return
-    }
-  }
-
-  // Handle via sidebar (queue message for processing)
-  await handleSidebarRequest({
-    request: message,
-    windowId,
-    senderTabInfo,
-  })
 }
 
 async function handleSidebarRequest({
@@ -440,111 +339,25 @@ async function handleSidebarRequest({
     isSidebarClosed: !portChannel,
   }
 
-  if (portChannel) {
-    // Port exists, send message directly
-    try {
-      await portChannel.sendMessage(message)
-    } catch (error) {
+  try {
+    if (!portChannel) {
+      throw new ExpectedNoPortError()
+    }
+
+    await portChannel.sendMessage(message)
+  } catch (error) {
+    await openSidePanel(senderTabInfo.id, windowId)
+
+    windowIdToPendingRequestsMap.set(windowIdString, windowIdToPendingRequestsMap.get(windowIdString) ?? [])
+    windowIdToPendingRequestsMap.get(windowIdString)?.push(message)
+
+    if (!(error instanceof ExpectedNoPortError)) {
       logger.error(error, {
         tags: {
           file: 'backgroundDappRequests.ts',
           function: 'handleSidebarRequest',
         },
       })
-      // Queue message if send fails
-      queueMessageForPanel({ windowId, message: request, senderTabInfo })
     }
-  } else {
-    // IMPORTANT: No port channel means the panel is opening or about to open.
-    // We do NOT call openSidePanel here because it was already opened synchronously
-    // in the message listener to preserve the user gesture context.
-    // Just queue the message - it will be processed when the panel connects.
-    queueMessageForPanel({ windowId, message: request, senderTabInfo })
   }
-}
-
-/**
- * Determines if a request requires the side panel to be opened for user interaction
- */
-function requiresSidePanel(requestType: DappRequestType): boolean {
-  return REQUEST_CLASSIFICATION.interactive.has(requestType)
-}
-
-/**
- * Validates that the sender has all required tab information
- */
-function isValidSender(sender?: chrome.runtime.MessageSender): sender is chrome.runtime.MessageSender & {
-  tab: chrome.tabs.Tab & { id: number; url: string }
-} {
-  return sender?.tab?.id !== undefined && sender.tab.url !== undefined
-}
-
-/**
- * Opens the side panel synchronously to preserve user gesture context.
- * Must be called within ~1ms of user gesture.
- * Falls back to opening a popup window if side panel fails.
- */
-function openSidePanelSync({
-  tabId,
-  windowId,
-  onSuccess,
-  onError,
-}: {
-  tabId: number
-  windowId: number
-  onSuccess: () => void
-  onError: (error: chrome.runtime.LastError, fallbackOpened: boolean) => void
-}): void {
-  chrome.sidePanel.open({ tabId }, () => {
-    const lastError = chrome.runtime.lastError
-    if (lastError) {
-      // Try fallback to popup window - still in sync callback to preserve gesture
-      focusOrCreateDappRequestWindow(tabId, windowId)
-        .then(() => {
-          // Fallback succeeded - notify that we opened a window instead
-          onError(lastError, true)
-        })
-        .catch((fallbackError) => {
-          // Even fallback failed
-          logger.error(fallbackError, {
-            tags: {
-              file: 'backgroundDappRequests.ts',
-              function: 'openSidePanelSync',
-            },
-            extra: { action: 'fallbackToPopupWindow' },
-          })
-          onError(lastError, false)
-        })
-    } else {
-      onSuccess()
-    }
-  })
-}
-
-/**
- * Queues a message for processing when the side panel connects
- */
-function queueMessageForPanel({
-  windowId,
-  message,
-  senderTabInfo,
-}: {
-  windowId: number
-  message: DappRequest
-  senderTabInfo: SenderTabInfo
-}): void {
-  const windowIdString = windowId.toString()
-
-  if (!windowIdToPendingRequestsMap.has(windowIdString)) {
-    windowIdToPendingRequestsMap.set(windowIdString, [])
-  }
-
-  const queuedMessage: DappRequestMessage = {
-    type: BackgroundToSidePanelRequestType.DappRequestReceived,
-    dappRequest: message,
-    senderTabInfo,
-    isSidebarClosed: true,
-  }
-
-  windowIdToPendingRequestsMap.get(windowIdString)?.push(queuedMessage)
 }

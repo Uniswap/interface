@@ -23,7 +23,6 @@ import {
   USDC_OPTIMISM,
   USDC_POLYGON,
   USDC_SEPOLIA,
-  USDC_SOLANA,
   USDC_SONEIUM,
   USDC_UNICHAIN,
   USDC_WORLD_CHAIN,
@@ -144,8 +143,6 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Soneium] as Token,
     USDC_SONEIUM,
   ].map(buildPartialCurrencyInfo),
-
-  [UniverseChainId.Solana]: [nativeOnChain(UniverseChainId.Solana), USDC_SOLANA].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Unichain]: [
     nativeOnChain(UniverseChainId.Unichain),

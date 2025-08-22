@@ -1,7 +1,7 @@
 import { useTotalBalancesUsdForAnalytics } from 'appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
-import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS, ZERO_PERCENT } from 'constants/misc'
+import { ZERO_PERCENT } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
@@ -25,7 +25,6 @@ import { VitalTxFields } from 'state/transactions/types'
 import invariant from 'tiny-invariant'
 import { call } from 'typed-redux-saga'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
@@ -36,7 +35,6 @@ import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
 import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
-import { FLASHBLOCKS_UI_SKIP_ROUTES } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
 import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import {
@@ -50,11 +48,17 @@ import {
   SwapCallback,
   SwapCallbackParams,
 } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import { PermitMethod, ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import {
+  PermitMethod,
+  ValidatedBridgeSwapTxAndGasInfo,
+  ValidatedClassicSwapTxAndGasInfo,
+  ValidatedSwapTxContext,
+  ValidatedUniswapXSwapTxAndGasInfo,
+} from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { generateSwapTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateSwapTransactionSteps'
-import { UNISWAPX_ROUTING_VARIANTS, isClassic, isJupiter } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import {
@@ -100,15 +104,8 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
 
   handleSwapTransactionAnalytics({ ...params, hash })
 
-  if (
-    !getIsFlashblocksEnabled(trade.inputAmount.currency.chainId) ||
-    FLASHBLOCKS_UI_SKIP_ROUTES.includes(trade.routing)
-  ) {
-    popupRegistry.addPopup(
-      { type: PopupType.Transaction, hash },
-      hash,
-      isL2ChainId(trade.inputAmount.currency.chainId) ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS,
-    )
+  if (!getIsFlashblocksEnabled(trade.inputAmount.currency.chainId)) {
+    popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash)
   }
 
   // Update swap form store with actual transaction hash
@@ -205,66 +202,62 @@ type SwapParams = {
   v4Enabled: boolean
 }
 
-/** Asserts that a given object fits a given routing variant. */
-function requireRouting<T extends Routing, V extends { routing: Routing }>(
-  val: V,
-  routing: readonly T[],
-): asserts val is V & { routing: T } {
-  if (!routing.includes(val.routing as T)) {
-    throw new UnexpectedTransactionStateError(`Expected routing ${routing}, got ${val.routing}`)
-  }
-}
-
-/** Switches to the proper chain, if needed. If a chain switch is necessary and it fails, returns success=false. */
-async function handleSwitchChains(
-  params: Pick<SwapParams, 'selectChain' | 'startChainId' | 'swapTxContext'>,
-): Promise<{ chainSwitchFailed: boolean }> {
-  const { selectChain, startChainId, swapTxContext } = params
-
-  const swapChainId = swapTxContext.trade.inputAmount.currency.chainId
-  if (isJupiter(swapTxContext) || swapChainId === startChainId) {
-    return { chainSwitchFailed: false }
-  }
-
-  const chainSwitched = await selectChain(swapChainId)
-  return { chainSwitchFailed: !chainSwitched }
-}
-
+// eslint-disable-next-line consistent-return
 function* swap(params: SwapParams) {
+  const { swapTxContext, setSteps, selectChain, startChainId, v4Enabled, onFailure } = params
+
+  try {
+    const steps = yield* call(generateSwapTransactionSteps, swapTxContext, v4Enabled)
+    setSteps(steps)
+
+    // Switch chains if needed
+    const swapChainId = swapTxContext.trade.inputAmount.currency.chainId
+    if (swapChainId !== startChainId) {
+      const chainSwitched = yield* call(selectChain, swapChainId)
+      if (!chainSwitched) {
+        onFailure()
+        return undefined
+      }
+    }
+
+    switch (swapTxContext.routing) {
+      case Routing.CLASSIC:
+      case Routing.BRIDGE:
+        return yield* classicSwap({ ...params, swapTxContext, steps })
+      case Routing.DUTCH_V2:
+      case Routing.DUTCH_V3:
+      case Routing.PRIORITY:
+        return yield* uniswapXSwap({ ...params, swapTxContext, steps })
+      case Routing.JUPITER:
+        return yield* jupiterSwap({ ...params, swapTxContext })
+    }
+  } catch (error) {
+    logger.error(error, { tags: { file: 'swapSaga', function: 'swap' } })
+    onFailure(error)
+  }
+}
+
+function* classicSwap(
+  params: SwapParams & {
+    swapTxContext: ValidatedClassicSwapTxAndGasInfo | ValidatedBridgeSwapTxAndGasInfo
+    steps: TransactionStep[]
+  },
+) {
   const {
     account,
     disableOneClickSwap,
     setCurrentStep,
-    swapTxContext,
+    steps,
+    swapTxContext: { trade },
     analytics,
     onSuccess,
     onFailure,
-    v4Enabled,
-    setSteps,
   } = params
-  const { trade } = swapTxContext
-
-  const { chainSwitchFailed } = yield* call(handleSwitchChains, params)
-  if (chainSwitchFailed) {
-    onFailure()
-    return
-  }
-
-  const steps = yield* call(generateSwapTransactionSteps, swapTxContext, v4Enabled)
-  setSteps(steps)
 
   let signature: string | undefined
-  let step: TransactionStep | undefined
 
-  try {
-    // TODO(SWAP-287): Integrate jupiter swap into TransactionStep, rather than special-casing.
-    if (isJupiter(swapTxContext)) {
-      yield* call(jupiterSwap, { ...params, swapTxContext })
-      yield* call(onSuccess)
-      return
-    }
-
-    for (step of steps) {
+  for (const step of steps) {
+    try {
       switch (step.type) {
         case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {
@@ -281,7 +274,6 @@ function* swap(params: SwapParams) {
         }
         case TransactionStepType.SwapTransaction:
         case TransactionStepType.SwapTransactionAsync: {
-          requireRouting(trade, [Routing.CLASSIC, Routing.BRIDGE])
           yield* call(handleSwapTransactionStep, {
             account,
             signature,
@@ -294,7 +286,6 @@ function* swap(params: SwapParams) {
           break
         }
         case TransactionStepType.SwapTransactionBatched: {
-          requireRouting(trade, [Routing.CLASSIC, Routing.BRIDGE])
           yield* call(handleSwapTransactionBatchedStep, {
             account,
             step,
@@ -305,8 +296,50 @@ function* swap(params: SwapParams) {
           })
           break
         }
+        default: {
+          throw new UnexpectedTransactionStateError(`Unexpected step type: ${step.type}`)
+        }
+      }
+    } catch (error) {
+      const displayableError = getDisplayableError({ error, step })
+      if (displayableError) {
+        logger.error(displayableError, { tags: { file: 'swapSaga', function: 'classicSwap' } })
+      }
+      const onPressRetry = params.getOnPressRetry(displayableError)
+      onFailure(displayableError, onPressRetry)
+      return
+    }
+  }
+
+  yield* call(onSuccess)
+}
+
+function* uniswapXSwap(
+  params: SwapParams & {
+    swapTxContext: ValidatedUniswapXSwapTxAndGasInfo
+    steps: TransactionStep[]
+    analytics: SwapTradeBaseProperties
+  },
+) {
+  const {
+    account,
+    setCurrentStep,
+    steps,
+    swapTxContext: { trade },
+    analytics,
+    onFailure,
+    onSuccess,
+  } = params
+
+  for (const step of steps) {
+    try {
+      switch (step.type) {
+        case TransactionStepType.TokenRevocationTransaction:
+        case TransactionStepType.TokenApprovalTransaction: {
+          yield* call(handleApprovalTransactionStep, { account, step, setCurrentStep })
+          break
+        }
         case TransactionStepType.UniswapXSignature: {
-          requireRouting(trade, UNISWAPX_ROUTING_VARIANTS)
           yield* call(handleUniswapXSignatureStep, { account, step, setCurrentStep, trade, analytics })
           break
         }
@@ -314,15 +347,14 @@ function* swap(params: SwapParams) {
           throw new UnexpectedTransactionStateError(`Unexpected step type: ${step.type}`)
         }
       }
+    } catch (error) {
+      const displayableError = getDisplayableError({ error, step })
+      if (displayableError) {
+        logger.error(displayableError, { tags: { file: 'swapSaga', function: 'uniswapXSwap' } })
+      }
+      onFailure(displayableError)
+      return
     }
-  } catch (error) {
-    const displayableError = getDisplayableError({ error, step })
-    if (displayableError) {
-      logger.error(displayableError, { tags: { file: 'swapSaga', function: 'swap' } })
-    }
-    const onPressRetry = params.getOnPressRetry(displayableError)
-    onFailure(displayableError, onPressRetry)
-    return
   }
 
   yield* call(onSuccess)

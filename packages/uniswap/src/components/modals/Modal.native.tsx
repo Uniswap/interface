@@ -122,7 +122,6 @@ function BottomSheetModalContents({
   renderBehindBottomInset = false,
   hideKeyboardOnDismiss = false,
   hideKeyboardOnSwipeDown = false,
-  forceRoundedCorners = false,
   // keyboardBehavior="extend" does not work and it's hard to figure why,
   // probably it requires usage of <BottomSheetTextInput>
   extendOnKeyboardVisible = false,
@@ -272,11 +271,7 @@ function BottomSheetModalContents({
       styles.push(bottomSheetStyle.behindInset)
 
       if (hideHandlebar) {
-        if (forceRoundedCorners) {
-          styles.push(hiddenHandlebarStyle)
-        } else {
-          styles.push(animatedBorderRadius)
-        }
+        styles.push(animatedBorderRadius)
       }
     } else if (hideHandlebar) {
       styles.push(hiddenHandlebarStyle)
@@ -299,7 +294,6 @@ function BottomSheetModalContents({
     hideHandlebar,
     renderBehindBottomInset,
     fullScreen,
-    forceRoundedCorners,
     animatedBorderRadius,
     insets.bottom,
   ])

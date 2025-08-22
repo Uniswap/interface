@@ -10,7 +10,7 @@ import { SmartWalletUnavailableModal } from 'wallet/src/components/smartWallet/m
 import {
   SmartWalletDelegationAction,
   useSmartWalletDelegationStatus,
-} from 'wallet/src/components/smartWallet/smartAccounts/hooks'
+} from 'wallet/src/components/smartWallet/smartAccounts/hook'
 import {
   setHasDismissedSmartWalletHomeScreenNudge,
   setHasShownSmartWalletHomeScreenNudge,

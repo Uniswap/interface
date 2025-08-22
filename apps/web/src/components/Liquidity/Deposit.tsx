@@ -1,15 +1,15 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { ErrorCallout } from 'components/ErrorCallout'
 import { useDefaultInitialPrice } from 'components/Liquidity/Create/hooks/useDefaultInitialPrice'
+import { useDepositInfo } from 'components/Liquidity/Create/hooks/useDepositInfo'
+import { useGetTxInfo } from 'components/Liquidity/Create/hooks/useGetTxInfo'
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { getPriceDifference } from 'components/Liquidity/utils/getPriceDifference'
-import { getFieldsDisabled, isInvalidRange } from 'components/Liquidity/utils/priceRangeInfo'
+import { getFieldsDisabled, isInvalidRange, isOutOfRange } from 'components/Liquidity/utils/priceRangeInfo'
 import { useAccount } from 'hooks/useAccount'
 import ConfirmCreatePositionModal from 'pages/CreatePosition/ConfirmCreatePositionModal'
 import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import { CreatePositionModal } from 'pages/CreatePosition/CreatePositionModal'
-import { useCreatePositionTxContext } from 'pages/CreatePosition/CreatePositionTxContext'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { PositionField } from 'types/position'
@@ -27,7 +27,7 @@ export const DepositStep = () => {
     poolOrPair,
     depositState,
     setDepositState,
-    refetch,
+    error: dataFetchingError,
   } = useCreateLiquidityContext()
 
   const { t } = useTranslation()
@@ -58,20 +58,45 @@ export const DepositStep = () => {
     [initialPrice, defaultInitialPrice, priceInverted],
   )
 
-  const invalidRange = protocolVersion !== ProtocolVersion.V2 && isInvalidRange(ticks[0], ticks[1])
+  const depositInfoProps = useMemo(() => {
+    const [tickLower, tickUpper] = ticks
+    const invalidRange = isInvalidRange(tickLower, tickUpper)
+    const outOfRange = isOutOfRange({
+      poolOrPair,
+      lowerTick: tickLower,
+      upperTick: tickUpper,
+    })
+
+    return {
+      protocolVersion,
+      poolOrPair,
+      address: account.address,
+      token0: TOKEN0,
+      token1: TOKEN1,
+      tickLower: protocolVersion !== ProtocolVersion.V2 ? tickLower ?? undefined : undefined,
+      tickUpper: protocolVersion !== ProtocolVersion.V2 ? tickUpper ?? undefined : undefined,
+      exactField,
+      exactAmounts: depositState.exactAmounts,
+      skipDependentAmount: protocolVersion === ProtocolVersion.V2 ? false : outOfRange || invalidRange,
+    }
+  }, [TOKEN0, TOKEN1, exactField, ticks, poolOrPair, depositState, account.address, protocolVersion])
 
   const {
-    txInfo,
-    gasFeeEstimateUSD,
-    dependentAmount,
-    transactionError,
-    setTransactionError,
-    currencyAmounts,
-    inputError,
     formattedAmounts,
+    currencyAmounts,
     currencyAmountsUSDValue,
     currencyBalances,
-  } = useCreatePositionTxContext()
+    error: inputError,
+  } = useDepositInfo(depositInfoProps)
+
+  const invalidRange = protocolVersion !== ProtocolVersion.V2 && isInvalidRange(ticks[0], ticks[1])
+
+  const { txInfo, gasFeeEstimateUSD, dependentAmount } = useGetTxInfo({
+    hasInputError: !!inputError,
+    invalidRange,
+    displayCurrencies: currencies.display,
+    currencyAmounts,
+  })
 
   const handleUserInput = (field: PositionField, newValue: string) => {
     setDepositState((prev) => ({
@@ -140,7 +165,7 @@ export const DepositStep = () => {
   const disabled = !!inputError || !txInfo?.txRequest
 
   const requestLoading = Boolean(
-    !transactionError &&
+    !dataFetchingError &&
       !inputError &&
       !txInfo?.txRequest &&
       currencyAmounts?.TOKEN0 &&
@@ -195,7 +220,6 @@ export const DepositStep = () => {
           </Button>
         )}
       </Flex>
-      <ErrorCallout errorMessage={transactionError} onPress={refetch} />
       <CreatePositionModal
         formattedAmounts={updatedFormattedAmounts}
         currencyAmounts={updatedCurrencyAmounts ?? currencyAmounts}
@@ -203,8 +227,6 @@ export const DepositStep = () => {
         gasFeeEstimateUSD={gasFeeEstimateUSD}
         txInfo={txInfo}
         isOpen={isReviewModalOpen}
-        transactionError={transactionError}
-        setTransactionError={setTransactionError}
         onClose={() => setIsReviewModalOpen(false)}
       />
       {priceDifference?.warning === WarningSeverity.High && (

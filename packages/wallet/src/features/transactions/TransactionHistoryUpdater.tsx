@@ -10,7 +10,6 @@ import {
   useTransactionHistoryUpdaterQuery,
   useTransactionListLazyQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { parseDataResponseToTransactionDetails } from 'uniswap/src/features/activity/parseRestResponse'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { selectLastTxNotificationUpdate } from 'uniswap/src/features/notifications/selectors'
 import {
@@ -26,6 +25,7 @@ import { TransactionStatus, TransactionType } from 'uniswap/src/features/transac
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
 import { shouldSuppressNotification } from 'wallet/src/features/notifications/notificationWatcherSaga'
+import { parseDataResponseToTransactionDetails } from 'wallet/src/features/transactions/history/utils'
 import { useAccounts, useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 /**

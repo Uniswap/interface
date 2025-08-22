@@ -1,7 +1,5 @@
-import { expect, getTest } from 'playwright/fixtures'
+import { expect, test } from 'playwright/fixtures'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-
-const test = getTest()
 
 test.describe('Swap Settings', () => {
   test('opens and closes the settings menu', async ({ page }) => {

@@ -10,7 +10,6 @@ import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { Lock } from 'ui/src/components/icons'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
-import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useENSAvatar } from 'uniswap/src/features/ens/api'
@@ -21,6 +20,7 @@ import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { NumberType } from 'utilities/src/format/types'
+import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import {
   useCreateOnboardingAccountIfNone,
   useOnboardingContext,

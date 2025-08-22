@@ -4,8 +4,6 @@ import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 
 export function getCurrentPageFromLocation(locationPathname: string): InterfacePageName | undefined {
   switch (true) {
-    case locationPathname === '/':
-      return InterfacePageName.LandingPage
     case locationPathname.startsWith('/swap'):
       return InterfacePageName.SwapPage
     case locationPathname.startsWith('/explore/tokens') &&

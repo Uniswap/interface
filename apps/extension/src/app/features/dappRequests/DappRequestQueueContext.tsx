@@ -12,7 +12,6 @@ import { DappRequestAction } from 'uniswap/src/features/telemetry/types'
 import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { useEvent } from 'utilities/src/react/hooks'
-import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 interface DappRequestQueueContextValue {
@@ -26,11 +25,7 @@ interface DappRequestQueueContextValue {
   totalRequestCount: number
   onPressNext: () => void
   onPressPrevious: () => void
-  onConfirm: (params: {
-    request: DappRequestStoreItem
-    transactionTypeInfo?: TransactionTypeInfo
-    preSignedTransaction?: SignedTransactionRequest
-  }) => Promise<void>
+  onConfirm: (request: DappRequestStoreItem, transactionTypeInfo?: TransactionTypeInfo) => Promise<void>
   onCancel: (request: DappRequestStoreItem) => Promise<void>
 }
 
@@ -79,24 +74,18 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
   }
 
   const onConfirm = useEvent(
-    async (params: {
-      request: DappRequestStoreItem
-      transactionTypeInfo?: TransactionTypeInfo
-      preSignedTransaction?: SignedTransactionRequest
-    }): Promise<void> => {
-      const { request, transactionTypeInfo, preSignedTransaction } = params
+    async (requestToConfirm: DappRequestStoreItem, transactionTypeInfo?: TransactionTypeInfo): Promise<void> => {
       const requestWithTxInfo = {
-        ...request,
+        ...requestToConfirm,
         transactionTypeInfo,
-        preSignedTransaction,
       }
-      if (request.dappInfo) {
-        const { activeConnectedAddress, lastChainId } = request.dappInfo
-        const connectedAddresses = request.dappInfo.connectedAccounts.map((account) => account.address)
+      if (requestToConfirm.dappInfo) {
+        const { activeConnectedAddress, lastChainId } = requestToConfirm.dappInfo
+        const connectedAddresses = requestToConfirm.dappInfo.connectedAccounts.map((account) => account.address)
         sendAnalyticsEvent(ExtensionEventName.DappRequest, {
           action: DappRequestAction.Accept,
-          requestType: request.dappRequest.type,
-          dappUrl: extractBaseUrl(request.senderTabInfo.url),
+          requestType: requestToConfirm.dappRequest.type,
+          dappUrl: extractBaseUrl(requestToConfirm.senderTabInfo.url),
           chainId: lastChainId,
           activeConnectedAddress,
           connectedAddresses,

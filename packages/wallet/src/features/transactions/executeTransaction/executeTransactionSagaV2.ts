@@ -27,7 +27,6 @@ import { createFeatureFlagService } from 'wallet/src/features/transactions/execu
 import type { Provider } from 'wallet/src/features/transactions/executeTransaction/services/providerService'
 import { createProviderService } from 'wallet/src/features/transactions/executeTransaction/services/providerServiceImpl'
 import { createTransactionConfigService } from 'wallet/src/features/transactions/executeTransaction/services/transactionConfigServiceImpl'
-import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { getSignerManager, walletContextValue } from 'wallet/src/features/wallet/context'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { runSagaEffect } from 'wallet/src/state'
@@ -43,7 +42,6 @@ export interface ExecuteTransactionParams {
   typeInfo: TransactionTypeInfo
   transactionOriginType: TransactionOriginType
   analytics?: SwapTradeBaseProperties
-  preSignedTransaction?: SignedTransactionRequest // Pre-signed transaction to skip signing step
 }
 
 const transactionConfigService = createTransactionConfigService({
@@ -111,7 +109,7 @@ export function* executeTransactionV2(params: ExecuteTransactionParams): SagaIte
   transactionHash: string
 }> {
   // Extract parameters for the transaction
-  const { chainId, account, options, typeInfo, txId, transactionOriginType, analytics, preSignedTransaction } = params
+  const { chainId, account, options, typeInfo, txId, transactionOriginType, analytics } = params
 
   const signerAccounts = yield* select(selectSortedSignerMnemonicAccounts)
   const activeAccount = signerAccounts.find((a) => a.address === account.address)
@@ -182,7 +180,6 @@ export function* executeTransactionV2(params: ExecuteTransactionParams): SagaIte
     txId,
     transactionOriginType,
     analytics,
-    preSignedTransaction,
   })
 
   return result

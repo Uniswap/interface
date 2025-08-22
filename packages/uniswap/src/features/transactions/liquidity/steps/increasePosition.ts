@@ -59,8 +59,9 @@ export function createCreatePositionAsyncStep(
             ...createPositionRequestArgs,
           })
         }
-
-        throw e
+        throw new Error('create failed to get transaction request', {
+          cause: message,
+        })
       }
     },
   }

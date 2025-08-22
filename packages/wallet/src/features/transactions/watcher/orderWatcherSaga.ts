@@ -1,8 +1,8 @@
 import { call, delay, fork, select, take } from 'typed-redux-saga'
-import { OrderStatus, UniswapXOrder } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { fetchOrders } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { GetOrdersResponse, OrderStatus } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { makeSelectUniswapXOrder } from 'uniswap/src/features/transactions/selectors'
 import { updateTransaction } from 'uniswap/src/features/transactions/slice'
-import { getOrders } from 'uniswap/src/features/transactions/swap/orders'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   QueuedOrderStatus,
@@ -25,6 +25,10 @@ const ORDER_STATUS_TO_TX_STATUS: { [key in OrderStatus]: TransactionStatus } = {
 
 // If the backend cannot provide a status for an order, we can assume after a certain threshold the submission failed.
 const ORDER_TIMEOUT_BUFFER = 20 * ONE_SECOND_MS
+
+export async function getOrders(orderIds: string[]): Promise<GetOrdersResponse> {
+  return await fetchOrders({ orderIds })
+}
 
 export class OrderWatcher {
   private static listeners: {
@@ -59,7 +63,7 @@ export class OrderWatcher {
 
     try {
       const data = yield* call(getOrders, orderHashes)
-      const remoteOrderMap = new Map(data.orders.map((order: UniswapXOrder) => [order.orderId, order]))
+      const remoteOrderMap = new Map(data.orders.map((order) => [order.orderId, order]))
 
       for (const localOrderHash of orderHashes) {
         const remoteOrder = remoteOrderMap.get(localOrderHash)

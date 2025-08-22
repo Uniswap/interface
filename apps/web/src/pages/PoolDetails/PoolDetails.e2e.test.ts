@@ -1,7 +1,5 @@
-import { expect, getTest } from 'playwright/fixtures'
+import { expect, test } from 'playwright/fixtures'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-
-const test = getTest()
 
 test.describe('Pool details', () => {
   test('should display the pool details', async ({ page }) => {

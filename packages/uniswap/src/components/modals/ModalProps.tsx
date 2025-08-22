@@ -8,7 +8,6 @@ import type { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 export type ModalProps = PropsWithChildren<{
   animatedPosition?: SharedValue<number>
   hideHandlebar?: boolean
-  forceRoundedCorners?: boolean
   name: ModalNameType
   enableDynamicSizing?: boolean
   onClose?: () => void

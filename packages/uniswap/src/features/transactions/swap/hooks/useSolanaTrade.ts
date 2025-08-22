@@ -24,16 +24,11 @@ export function createSolanaTradeService(): SolanaTradeService {
         return null
       }
 
-      const slippageBps = args.customSlippageTolerance ? (args.customSlippageTolerance * 100).toString() : undefined
-      const swapMode = args.tradeType === TradeType.EXACT_INPUT ? 'ExactIn' : 'ExactOut'
-
       const quote = await fetchOrder({
         inputMint: input.wrapped.address,
         outputMint: output.wrapped.address,
         amount: args.amountSpecified?.quotient.toString() ?? '0',
         taker: args.account?.address,
-        slippageBps,
-        swapMode,
       })
 
       return createSolanaTrade({ quote, inputToken: input, outputToken: output })

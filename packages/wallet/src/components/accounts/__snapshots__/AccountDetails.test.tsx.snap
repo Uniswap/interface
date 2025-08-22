@@ -168,8 +168,10 @@ exports[`AccountDetails renders without error 1`] = `
                   }
                 }
                 suppressHighlighting={true}
-                testID="address-display/name/undefined"
-              />
+                testID="address-display/name/0x​82D5...3Fa6"
+              >
+                0x​82D5...3Fa6
+              </Text>
             </View>
           </View>
         </View>
@@ -388,8 +390,10 @@ exports[`AccountDetails renders without error with chevron 1`] = `
                   }
                 }
                 suppressHighlighting={true}
-                testID="address-display/name/undefined"
-              />
+                testID="address-display/name/0x​82D5...3Fa6"
+              >
+                0x​82D5...3Fa6
+              </Text>
             </View>
           </View>
         </View>

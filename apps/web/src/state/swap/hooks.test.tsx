@@ -239,7 +239,6 @@ describe('hooks', () => {
         onSwapChainsChanged: () => {},
         signer: undefined,
         useProviderHook: (_chainId: number) => undefined,
-        useWalletDisplayName: () => undefined,
         isSwapTokenSelectorOpen: false,
         setIsSwapTokenSelectorOpen: () => {},
         setSwapOutputChainId: () => {},

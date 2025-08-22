@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, SpaceTokens, Text, Tooltip } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
-import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
-import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isExtension, isMobileApp } from 'utilities/src/platform'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
+import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 
 export function AddressFooter({
   connectedAccountAddress,

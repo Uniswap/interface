@@ -6,6 +6,9 @@ import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel
 import { DefaultTokenOptions } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/DefaultTokenOptions'
 import { TokenRate } from 'uniswap/src/components/CurrencyInputPanel/TokenRate'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import type { Experiments } from 'uniswap/src/features/gating/experiments'
+import { Layers, SwapPresetsProperties } from 'uniswap/src/features/gating/experiments'
+import { useExperimentValueFromLayer } from 'uniswap/src/features/gating/hooks'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isExtension, isInterfaceDesktop, isWeb } from 'utilities/src/platform'
@@ -30,6 +33,11 @@ export function CurrencyInputPanelHeader({
   showDefaultTokenOptions,
 }: CurrencyInputPanelHeaderProps): JSX.Element | null {
   const priceUXEnabled = usePriceUXEnabled()
+  const isInputPresetsEnabled = useExperimentValueFromLayer<Layers.SwapPage, Experiments.SwapPresets, boolean>({
+    layerName: Layers.SwapPage,
+    param: SwapPresetsProperties.InputEnabled,
+    defaultValue: false,
+  })
 
   const isOutput = currencyField === CurrencyField.OUTPUT
   const showFlippableRate = priceUXEnabled && isOutput && !!currencyInfo
@@ -39,7 +47,10 @@ export function CurrencyInputPanelHeader({
   }
 
   const showInputPresets =
-    (isInterfaceDesktop || isExtension) && currencyField === CurrencyField.INPUT && currencyBalance
+    isInputPresetsEnabled &&
+    (isInterfaceDesktop || isExtension) &&
+    currencyField === CurrencyField.INPUT &&
+    currencyBalance
 
   return (
     <Flex row justifyContent="space-between">

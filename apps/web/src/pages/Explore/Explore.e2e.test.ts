@@ -1,6 +1,4 @@
-import { expect, getTest } from 'playwright/fixtures'
-
-const test = getTest()
+import { expect, test } from 'playwright/fixtures'
 
 test.describe('Explore', () => {
   test('should redirect to explore page when token is not found', async ({ page }) => {

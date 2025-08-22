@@ -6,12 +6,10 @@ import { logger } from 'utilities/src/logger/logger'
 export async function openSidePanel(tabId: number | undefined, windowId: number): Promise<void> {
   let hasError = false
   try {
-    // Chrome API accepts either tabId or windowId, prefer tabId for specific tab targeting
-    if (tabId !== undefined) {
-      await chrome.sidePanel.open({ tabId })
-    } else {
-      await chrome.sidePanel.open({ windowId })
-    }
+    await chrome.sidePanel.open({
+      tabId,
+      windowId,
+    })
   } catch (error) {
     // TODO WALL-4313 - Backup for some broken chrome.sidePanel.open functionality
     // Consider removing this once the issue is resolved or leaving as fallback

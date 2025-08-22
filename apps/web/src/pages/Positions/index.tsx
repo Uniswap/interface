@@ -41,9 +41,9 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 
 // The BE limits the number of positions by chain and protocol version.
-// PAGE_SIZE=25 means the limit is at most 25 positions * x chains * y protocol versions.
-// TODO: LP-4: Improve performance by loading pageSize limit positions at a time.
-const PAGE_SIZE = 25
+// PAGE_SIZE=1 means the limit is at most 1 position * x chains * y protocol versions.
+// We use PAGE_SIZE=1 to avoid loading more positions than necessary.
+const PAGE_SIZE = 1
 
 function DisconnectedWalletView() {
   const { t } = useTranslation()

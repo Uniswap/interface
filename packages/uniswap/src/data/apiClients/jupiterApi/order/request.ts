@@ -15,8 +15,6 @@ export async function fetchOrder(params: JupiterOrderUrlParams): Promise<Jupiter
 
   query.set('amount', params.amount.toString())
 
-  query.set('swapMode', params.swapMode)
-
   if (params.taker) {
     query.set('taker', params.taker)
   }

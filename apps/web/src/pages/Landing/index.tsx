@@ -69,7 +69,7 @@ export default function Landing() {
       }
     }, TRANSITION_DURATIONS.fast)
     return () => clearTimeout(timeoutId)
-  }, [account.address, prevAccount, accountDrawer.isOpen, navigate, queryParams.intro, connector, disconnect])
+  }, [account.address, prevAccount, accountDrawer, navigate, queryParams.intro, connector, disconnect])
 
   return (
     <Trace logImpression page={InterfacePageName.LandingPage}>

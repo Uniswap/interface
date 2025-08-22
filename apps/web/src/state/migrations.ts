@@ -29,9 +29,9 @@ import { migration6 } from 'state/migrations/6'
 import { migration7 } from 'state/migrations/7'
 import { migration8 } from 'state/migrations/8'
 import { migration9 } from 'state/migrations/9'
+import { createLocalTransactionClearingMigration } from 'state/migrations/clearLocalTransactions'
 import { createLocalTransactionAndSignatureClearingMigration } from 'state/migrations/clearLocalTransactionsAndSignatures'
 import { legacyLocalStorageMigration } from 'state/migrations/legacy'
-import { legacyCreateLocalTransactionClearingMigration } from 'state/migrations/legacyClearLocalTransactions'
 
 /**
  * These run once per state re-hydration when a version mismatch is detected.
@@ -69,29 +69,29 @@ export const migrations: MigrationManifest = {
   23: migration23,
   24: migration24,
   25: migration25,
-  26: legacyCreateLocalTransactionClearingMigration(26),
-  27: legacyCreateLocalTransactionClearingMigration(27),
-  28: legacyCreateLocalTransactionClearingMigration(28),
-  29: legacyCreateLocalTransactionClearingMigration(29),
+  26: createLocalTransactionClearingMigration(26),
+  27: createLocalTransactionClearingMigration(27),
+  28: createLocalTransactionClearingMigration(28),
+  29: createLocalTransactionClearingMigration(29),
   30: createLocalTransactionAndSignatureClearingMigration(30),
   31: createLocalTransactionAndSignatureClearingMigration(31),
-  32: legacyCreateLocalTransactionClearingMigration(32),
-  33: legacyCreateLocalTransactionClearingMigration(33),
-  34: legacyCreateLocalTransactionClearingMigration(34),
-  35: legacyCreateLocalTransactionClearingMigration(35),
-  36: legacyCreateLocalTransactionClearingMigration(36),
-  37: legacyCreateLocalTransactionClearingMigration(37),
-  38: legacyCreateLocalTransactionClearingMigration(38),
-  39: legacyCreateLocalTransactionClearingMigration(39),
-  40: legacyCreateLocalTransactionClearingMigration(40),
-  41: legacyCreateLocalTransactionClearingMigration(41),
-  42: legacyCreateLocalTransactionClearingMigration(42),
-  43: legacyCreateLocalTransactionClearingMigration(43),
-  44: legacyCreateLocalTransactionClearingMigration(44),
-  45: legacyCreateLocalTransactionClearingMigration(45),
-  46: legacyCreateLocalTransactionClearingMigration(46),
-  47: legacyCreateLocalTransactionClearingMigration(47),
-  48: legacyCreateLocalTransactionClearingMigration(48),
+  32: createLocalTransactionClearingMigration(32),
+  33: createLocalTransactionClearingMigration(33),
+  34: createLocalTransactionClearingMigration(34),
+  35: createLocalTransactionClearingMigration(35),
+  36: createLocalTransactionClearingMigration(36),
+  37: createLocalTransactionClearingMigration(37),
+  38: createLocalTransactionClearingMigration(38),
+  39: createLocalTransactionClearingMigration(39),
+  40: createLocalTransactionClearingMigration(40),
+  41: createLocalTransactionClearingMigration(41),
+  42: createLocalTransactionClearingMigration(42),
+  43: createLocalTransactionClearingMigration(43),
+  44: createLocalTransactionClearingMigration(44),
+  45: createLocalTransactionClearingMigration(45),
+  46: createLocalTransactionClearingMigration(46),
+  47: createLocalTransactionClearingMigration(47),
+  48: createLocalTransactionClearingMigration(48),
   49: migration49,
 } as const
 

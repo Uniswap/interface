@@ -88,16 +88,6 @@ export class TransactionStepFailedError extends TransactionError {
   }
 }
 
-export class JupiterExecuteError extends TransactionError {
-  code: number
-
-  constructor(message: string, code: number) {
-    super(message)
-    this.name = 'JupiterExecuteError'
-    this.code = code
-  }
-}
-
 export class ApprovalEditedInWalletError extends TransactionStepFailedError {
   logError = false
 
@@ -127,13 +117,6 @@ export function getErrorContent(
     return getStepSpecificErrorContent(t, error)
   }
 
-  if (error instanceof JupiterExecuteError) {
-    return {
-      title: t('common.unknownError.error'),
-      // TODO(SWAP-288): Parse & map jupiter errors to translated strings
-      message: error.message,
-    }
-  }
   // Generic / default error
   return {
     title: t('common.unknownError.error'),
