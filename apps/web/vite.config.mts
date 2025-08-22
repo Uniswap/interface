@@ -1,3 +1,4 @@
+import { cloudflare } from '@cloudflare/vite-plugin'
 import { tamaguiPlugin } from '@tamagui/vite-plugin'
 import react from '@vitejs/plugin-react'
 import reactOxc from '@vitejs/plugin-react-oxc'
@@ -21,6 +22,7 @@ const ENABLE_REACT_COMPILER = process.env.ENABLE_REACT_COMPILER === 'true'
 const ReactCompilerConfig = {
   target: '18', // '17' | '18' | '19'
 }
+const DEPLOY_TARGET = process.env.DEPLOY_TARGET || 'cloudflare'
 
 const reactPlugin = () =>
   ENABLE_REACT_COMPILER
@@ -194,9 +196,22 @@ export default defineConfig(({ mode }) => {
           }
         },
       },
+      DEPLOY_TARGET === 'cloudflare'
+        ? cloudflare({
+            configPath: './wrangler-vite-worker.jsonc',
+            // Workaround for cloudflare plugin bug: explicitly set environment name based on CLOUDFLARE_ENV
+            viteEnvironment:
+              process.env.CLOUDFLARE_ENV === 'production'
+                ? { name: 'app' }
+                : process.env.CLOUDFLARE_ENV === 'staging'
+                  ? { name: 'app_staging' }
+                  : undefined,
+          })
+        : undefined,
     ].filter(Boolean as unknown as <T>(x: T) => x is NonNullable<T>),
 
     optimizeDeps: {
+      entries: ['index.html'],
       include: [
         'graphql',
         'expo-linear-gradient',
@@ -216,6 +231,7 @@ export default defineConfig(({ mode }) => {
         '@uniswap/permit2-sdk',
         'jsbi',
         'ethers',
+        '@visx/responsive',
       ],
       // Libraries that shouldn't be pre-bundled
       exclude: ['expo-clipboard'],
@@ -227,6 +243,10 @@ export default defineConfig(({ mode }) => {
           '.tsx': 'tsx',
         },
       },
+    },
+
+    server: {
+      port: 3000,
     },
 
     build: {

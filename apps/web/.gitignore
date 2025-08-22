@@ -9,6 +9,7 @@
 # generated files
 /src/**/__generated__
 !/src/**/__generated__/.gitkeep
+/src/playwright/slack-reporter/generateCustomLayout.js
 
 # dependencies
 /node_modules

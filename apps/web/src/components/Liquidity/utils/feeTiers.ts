@@ -9,6 +9,15 @@ import { t } from 'i18next'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export const MAX_FEE_TIER_DECIMALS = 4
+const MAX_FEE_TIER_VALUE = 99.9999
+
+export function validateFeeTier(feeTier: string): string {
+  const numValue = parseFloat(feeTier)
+  if (numValue > MAX_FEE_TIER_VALUE) {
+    return MAX_FEE_TIER_VALUE.toString()
+  }
+  return feeTier
+}
 
 // tick spacing must be a whole number >= 1
 export function calculateTickSpacingFromFeeAmount(feeAmount: number): number {

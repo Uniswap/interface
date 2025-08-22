@@ -3,24 +3,24 @@ const pools = [
     address: '0xCBCdF9626bC03E24f779434178A73a0B4bad62eD',
     network: 'ethereum',
     name: 'WBTC/WETH',
-    image: 'http://127.0.0.1:3000/api/image/pools/ethereum/0xCBCdF9626bC03E24f779434178A73a0B4bad62eD',
+    image: 'http://localhost:3000/api/image/pools/ethereum/0xCBCdF9626bC03E24f779434178A73a0B4bad62eD',
   },
   {
     address: '0x517F9dD285e75b599234F7221227339478d0FcC8',
     network: 'ethereum',
     name: 'DAI/MKR',
-    image: 'http://127.0.0.1:3000/api/image/pools/ethereum/0x517F9dD285e75b599234F7221227339478d0FcC8',
+    image: 'http://localhost:3000/api/image/pools/ethereum/0x517F9dD285e75b599234F7221227339478d0FcC8',
   },
   {
     address: '0xD1F1baD4c9E6c44DeC1e9bF3B94902205c5Cd6C3',
     network: 'optimism',
     name: 'USDC/WLD',
-    image: 'http://127.0.0.1:3000/api/image/pools/optimism/0xD1F1baD4c9E6c44DeC1e9bF3B94902205c5Cd6C3',
+    image: 'http://localhost:3000/api/image/pools/optimism/0xD1F1baD4c9E6c44DeC1e9bF3B94902205c5Cd6C3',
   },
 ]
 
 test.each(pools)('should inject metadata for valid pools', async (pool) => {
-  const url = 'http://127.0.0.1:3000/explore/pools/' + pool.network + '/' + pool.address
+  const url = 'http://localhost:3000/explore/pools/' + pool.network + '/' + pool.address
   const body = await fetch(new Request(url)).then((res) => res.text())
   expect(body).toMatchSnapshot()
   expect(body).toContain(`<meta property="og:title" content="${pool.name} on Uniswap" data-rh="true">`)
@@ -39,9 +39,9 @@ test.each(pools)('should inject metadata for valid pools', async (pool) => {
 })
 
 const invalidPools = [
-  'http://127.0.0.1:3000/explore/pools/ethereum/0xa0b869',
-  'http://127.0.0.1:3000/explore/pools/invalidnetwork',
-  'http://127.0.0.1:3000/explore/pools/optimism/0x0',
+  'http://localhost:3000/explore/pools/ethereum/0xa0b869',
+  'http://localhost:3000/explore/pools/invalidnetwork',
+  'http://localhost:3000/explore/pools/optimism/0x0',
 ]
 
 test.each(invalidPools)('should not inject metadata for invalid pools', async (url) => {

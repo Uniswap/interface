@@ -7,8 +7,7 @@ import { NFTCollectionData } from 'src/features/nfts/collection/types'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { ColorTokens, Flex, TouchableArea } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { openUri } from 'uniswap/src/utils/linking'
-import { getTwitterLink } from 'wallet/src/utils/linking'
+import { getTwitterLink, openUri } from 'uniswap/src/utils/linking'
 
 type MenuOption = {
   title: string

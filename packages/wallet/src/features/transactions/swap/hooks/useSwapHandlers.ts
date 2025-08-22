@@ -18,10 +18,10 @@ import {
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
+import { toStringish } from 'uniswap/src/utils/number'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { executeSwapActions } from 'wallet/src/features/transactions/swap/configuredSagas'
 import { useSwapSigning } from 'wallet/src/features/transactions/swap/hooks/useSwapSigning'
-import { toStringish } from 'wallet/src/utils/number'
 
 /**
  * Custom hook that provides SwapHandlers with improved caching for prepared transactions

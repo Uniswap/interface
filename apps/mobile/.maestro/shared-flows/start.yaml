@@ -2,10 +2,36 @@
 # it will generate the test ids and launch the app consistently across all flows
 appId: com.uniswap.mobile.dev
 ---
-- runScript: ../scripts/testIds.js
+- runScript: ../scripts/dist/testIds.js
+
+# Start tracking shared flow
+- runScript:
+    file: ../scripts/performance/dist/actions/start-sub-flow.js
+    env:
+      SUB_FLOW_NAME: 'shared-start'
+
+# Track app launch
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'launchApp'
+      TARGET: 'app'
+      PHASE: 'start'
 - launchApp:
     permissions:
       contacts: unset
       notifications: unset
     clearState: true
     clearKeychain: true # optional: clear *entire* iOS keychain
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'launchApp'
+      TARGET: 'app'
+      PHASE: 'end'
+
+# End tracking shared flow
+- runScript:
+    file: ../scripts/performance/dist/actions/end-sub-flow.js
+    env:
+      SUB_FLOW_NAME: 'shared-start'

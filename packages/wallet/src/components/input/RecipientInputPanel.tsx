@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAllTransactionsBetweenAddresses } from 'wallet/src/features/transactions/hooks/useAllTransactionsBetweenAddresses'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 

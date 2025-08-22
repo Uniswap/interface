@@ -4,6 +4,7 @@ import { isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export const FLASHBLOCKS_INSTANT_BALANCE_TIMEOUT = isMobileApp ? 5 * ONE_SECOND_MS : 2 * ONE_SECOND_MS
+export const NON_FLASHBLOCKS_INSTANT_BALANCE_BUTTON_DURATION = 1 * ONE_SECOND_MS
 
 export const ERC20_TRANSFER_SIGNATURE = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
 export const NATIVE_WITHDRAWAL_SIGNATURE = '0x7fcf532c15f0a6db0bd6d0e038bea71d30d808c7d98cb3bf7268a95bf5081b65'

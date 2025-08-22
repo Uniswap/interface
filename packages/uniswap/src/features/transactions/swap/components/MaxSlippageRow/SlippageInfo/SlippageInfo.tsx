@@ -11,7 +11,6 @@ import { SlippageInfoCaption } from 'uniswap/src/features/transactions/swap/comp
 import type { SlippageInfoProps } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/types'
 import { MaxSlippageTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/MaxSlippageTooltip'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
-import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { isMobileApp } from 'utilities/src/platform'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
@@ -32,9 +31,8 @@ export function SlippageInfo({
     return <>{children}</>
   }
 
-  const minimumAmount = trade.minimumAmountOut(slippageToleranceToPercent(trade.slippageTolerance))
   const formattedMinimumAmount = `${formatCurrencyAmount({
-    amount: minimumAmount,
+    amount: trade.minAmountOut,
     locale: 'en-US',
     type: NumberType.TokenTx,
     placeholder: '-',

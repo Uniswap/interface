@@ -64,7 +64,6 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     customDeadline: s.customDeadline,
     customSlippageTolerance: s.customSlippageTolerance,
   }))
-  const [hasIncreaseErrorResponse, setHasIncreaseErrorResponse] = useState(false)
   const [transactionError, setTransactionError] = useState<string | boolean>(false)
 
   const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(positionInfo?.chainId)
@@ -244,14 +243,10 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   } = useIncreaseLpPositionCalldataQuery({
     params: increaseCalldataQueryParams,
     deadlineInMinutes: customDeadline,
-    refetchInterval: hasIncreaseErrorResponse ? false : 5 * ONE_SECOND_MS,
+    refetchInterval: transactionError ? false : 5 * ONE_SECOND_MS,
     retry: false,
     enabled: isQueryEnabled,
   })
-
-  useEffect(() => {
-    setHasIncreaseErrorResponse(!!calldataError)
-  }, [calldataError, increaseCalldataQueryParams])
 
   const { increase, gasFee: actualGasFee, dependentAmount } = increaseCalldata || {}
 
@@ -290,7 +285,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
         calldataError,
       }),
     )
-  }, [approvalError, calldataError])
+  }, [approvalError, calldataError, setTransactionError])
 
   useEffect(() => {
     setTransactionError(false)

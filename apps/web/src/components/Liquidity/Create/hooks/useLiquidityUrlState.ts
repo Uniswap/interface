@@ -13,7 +13,7 @@ import {
 } from 'components/Liquidity/parsers/urlParsers'
 import type { DepositState } from 'components/Liquidity/types'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { MatchType, PageType, useIsPage } from 'hooks/useIsPage'
+import { MatchType, PageType, getIsBrowserPage } from 'hooks/useIsPage'
 import { parseAsBoolean, parseAsString, useQueryState, useQueryStates } from 'nuqs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
@@ -53,15 +53,19 @@ const replaceStateParser = {
   currencyb: parseAsCurrencyAddress.withDefault(''),
 }
 
+// Only sync URL state when on create position or migrate routes
+// we use a function here so we can get the latest value of the pathname
+// without re-rendering the component (only used in the function!)
+function getIsSyncing() {
+  const isCreatePosition = getIsBrowserPage(PageType.CREATE_POSITION, MatchType.STARTS_WITH)
+  const isMigrateV3 = getIsBrowserPage(PageType.MIGRATE_V3, MatchType.EXACT)
+  return isCreatePosition || isMigrateV3
+}
+
 export function useLiquidityUrlState() {
   const { defaultChainId } = useEnabledChains()
   const defaultInitialToken = nativeOnChain(defaultChainId)
   const [isMigrated, setIsMigrated] = useState(false)
-
-  // Only sync URL state when on create position or migrate routes
-  const isCreatePosition = useIsPage(PageType.CREATE_POSITION, MatchType.STARTS_WITH)
-  const isMigrateV3 = useIsPage(PageType.MIGRATE_V3, MatchType.EXACT)
-  const isSyncing = isCreatePosition || isMigrateV3
 
   // Step uses push history for browser navigation
   const [historyState, setHistoryState] = useQueryState(
@@ -128,7 +132,7 @@ export function useLiquidityUrlState() {
       flowStep?: PositionFlowStep
     }) => {
       // Only sync to URL when on create position routes and after migration is complete
-      if (!isSyncing || !isMigrated) {
+      if (!getIsSyncing() || !isMigrated) {
         return
       }
 
@@ -147,7 +151,7 @@ export function useLiquidityUrlState() {
         depositState: data.depositState,
       })
     },
-    [setReplaceState, isSyncing, isMigrated],
+    [setReplaceState, isMigrated],
   )
 
   const loading = currencyValidationLoading || !isMigrated
@@ -155,6 +159,7 @@ export function useLiquidityUrlState() {
   return useMemo(() => {
     return {
       // Read state
+      defaultInitialToken,
       tokenA: currencyALoaded ?? defaultInitialToken,
       tokenB: currencyBLoaded,
       fee,

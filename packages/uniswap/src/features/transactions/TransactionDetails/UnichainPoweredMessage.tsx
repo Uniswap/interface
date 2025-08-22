@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Image, Text } from 'ui/src'
 import { UNICHAIN_LOGO } from 'ui/src/assets'
-import { isInterfaceDesktop } from 'utilities/src/platform'
 
 const UNICHAIN_LOGO_SIZE = 14
 const UNICHAIN_LOGO_BORDER_RADIUS = 4.2
@@ -11,7 +10,7 @@ export function UnichainPoweredMessage({ swappedInTime }: { swappedInTime?: numb
   const { t } = useTranslation()
 
   return (
-    <Flex row centered gap="$spacing6" py="$spacing4" mb={isInterfaceDesktop ? '$spacing8' : '$none'}>
+    <Flex row centered gap="$spacing6" py="$spacing4" mb="$spacing4">
       <Image
         source={UNICHAIN_LOGO}
         width={UNICHAIN_LOGO_SIZE}

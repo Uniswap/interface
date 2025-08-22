@@ -70,7 +70,7 @@ export function SlippageInfoCaption({
   return (
     <Flex gap="$spacing12" width="100%">
       <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={isWeb ? 'body4' : 'body2'}>
-        {tradeType === TradeType.EXACT_INPUT
+        {[TradeType.EXACT_INPUT, 'EXACT_INPUT'].includes(tradeType)
           ? t('swap.settings.slippage.input.message')
           : t('swap.settings.slippage.output.message')}{' '}
         {isWeb && (
@@ -100,7 +100,7 @@ export function SlippageInfoCaption({
 
         <Flex row alignItems="center" gap={isWeb ? '$spacing8' : '$spacing12'} justifyContent="space-between">
           <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant={isWeb ? 'body4' : 'body2'}>
-            {tradeType === TradeType.EXACT_INPUT
+            {[TradeType.EXACT_INPUT, 'EXACT_INPUT'].includes(tradeType)
               ? t('swap.settings.slippage.input.receive.title')
               : t('swap.settings.slippage.output.spend.title')}
           </Text>

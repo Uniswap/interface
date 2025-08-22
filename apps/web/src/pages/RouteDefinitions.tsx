@@ -16,8 +16,8 @@ const CreatePosition = lazy(() => import('pages/CreatePosition/CreatePosition'))
 const AddLiquidityV3WithTokenRedirects = lazy(() => import('pages/AddLiquidityV3/redirects'))
 const AddLiquidityV2WithTokenRedirects = lazy(() => import('pages/AddLiquidityV2/redirects'))
 const RedirectExplore = lazy(() => import('pages/Explore/redirects'))
-const MigrateV2 = lazy(() => import('pages/MigrateV2'))
-const MigrateV2Pair = lazy(() => import('pages/MigrateV2/MigrateV2Pair'))
+const LegacyMigrateV2 = lazy(() => import('pages/MigrateV2'))
+const LegacyMigrateV2Pair = lazy(() => import('pages/MigrateV2/MigrateV2Pair'))
 const MigrateV3 = lazy(() => import('pages/MigrateV3'))
 const NotFound = lazy(() => import('pages/NotFound'))
 const Pool = lazy(() => import('pages/Positions'))
@@ -251,6 +251,12 @@ export const routes: RouteDefinition[] = [
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
+    path: '/migrate/v2/:chainName/:pairAddress',
+    getElement: () => <MigrateV3 />,
+    getTitle: () => StaticTitlesAndDescriptions.MigrateTitle,
+    getDescription: () => StaticTitlesAndDescriptions.MigrateDescription,
+  }),
+  createRouteDefinition({
     path: '/migrate/v3/:chainName/:tokenId',
     getElement: () => <MigrateV3 />,
     getTitle: () => StaticTitlesAndDescriptions.MigrateTitleV3,
@@ -332,13 +338,13 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/migrate/v2',
-    getElement: () => <MigrateV2 />,
+    getElement: () => <LegacyMigrateV2 />,
     getTitle: () => StaticTitlesAndDescriptions.MigrateTitle,
     getDescription: () => StaticTitlesAndDescriptions.MigrateDescription,
   }),
   createRouteDefinition({
     path: '/migrate/v2/:address',
-    getElement: () => <MigrateV2Pair />,
+    getElement: () => <LegacyMigrateV2Pair />,
     getTitle: () => StaticTitlesAndDescriptions.MigrateTitle,
     getDescription: () => StaticTitlesAndDescriptions.MigrateDescription,
   }),

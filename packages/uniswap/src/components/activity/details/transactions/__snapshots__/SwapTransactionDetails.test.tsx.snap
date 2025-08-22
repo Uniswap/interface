@@ -1,0 +1,293 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwapTransactionDetails Component renders SwapTransactionDetails without error 1`] = `
+<View
+  style={
+    {
+      "flexDirection": "column",
+      "gap": 16,
+      "paddingBottom": 12,
+      "paddingLeft": 8,
+      "paddingRight": 8,
+      "paddingTop": 12,
+    }
+  }
+>
+  <View
+    cancelable={true}
+    collapsable={false}
+    disabled={false}
+    focusVisibleStyle={{}}
+    focusable={true}
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {},
+      }
+    }
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onLayout={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
+    role="button"
+    style={
+      {
+        "backgroundColor": "transparent",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+  >
+    <View
+      onBlur={[Function]}
+      onFocus={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+        }
+      }
+    >
+      <View
+        onBlur={[Function]}
+        onFocus={[Function]}
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.2}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Basel Grotesk",
+              "fontSize": 25,
+              "fontWeight": "400",
+              "lineHeight": 30,
+            }
+          }
+          suppressHighlighting={true}
+        >
+          -
+           
+        </Text>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "flexDirection": "column",
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={20}
+      bbWidth={20}
+      fill="none"
+      focusable={false}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      strokeWidth={2}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "color": "rgba(255, 255, 255, 0.38)",
+            "height": 20,
+            "transform": [
+              {
+                "rotateZ": "0deg",
+              },
+            ],
+            "width": 20,
+          },
+          {
+            "flex": 0,
+            "height": 20,
+            "width": 20,
+          },
+        ]
+      }
+      transform={
+        [
+          {
+            "rotateZ": "0deg",
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+    >
+      <RNSVGGroup
+        color="rgba(255, 255, 255, 0.38)"
+        fill={null}
+        propList={
+          [
+            "fill",
+            "strokeWidth",
+          ]
+        }
+        strokeWidth={2}
+      >
+        <RNSVGPath
+          d="M12 5V19"
+          fill={
+            {
+              "payload": 4278190080,
+              "type": 0,
+            }
+          }
+          propList={
+            [
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "type": 2,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth="2"
+        />
+        <RNSVGPath
+          d="M19 12L12 19L5 12"
+          fill={
+            {
+              "payload": 4278190080,
+              "type": 0,
+            }
+          }
+          propList={
+            [
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "type": 2,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth="2"
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <View
+    cancelable={true}
+    collapsable={false}
+    disabled={false}
+    focusVisibleStyle={{}}
+    focusable={true}
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {},
+      }
+    }
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onLayout={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
+    role="button"
+    style={
+      {
+        "backgroundColor": "transparent",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+  >
+    <View
+      onBlur={[Function]}
+      onFocus={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+        }
+      }
+    >
+      <View
+        onBlur={[Function]}
+        onFocus={[Function]}
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.2}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Basel Grotesk",
+              "fontSize": 25,
+              "fontWeight": "400",
+              "lineHeight": 30,
+            }
+          }
+          suppressHighlighting={true}
+        >
+          -
+           
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;

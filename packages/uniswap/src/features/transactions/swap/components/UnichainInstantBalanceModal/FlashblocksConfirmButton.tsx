@@ -9,9 +9,10 @@ import {
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import {
   FLASHBLOCKS_INSTANT_BALANCE_TIMEOUT,
-  FLASHBLOCKS_UI_SKIP_ROUTES,
+  NON_FLASHBLOCKS_INSTANT_BALANCE_BUTTON_DURATION,
 } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
 import { useInstantReceiptOutput } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/hooks/useInstantReceiptOutput'
+import { shouldShowFlashblocksUI } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/utils'
 import { useIsUnichainFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
 import {
@@ -30,7 +31,7 @@ export function FlashblocksConfirmButton({ size }: { size: 'medium' | 'large' })
   const isFlashblocksEnabled = useIsUnichainFlashblocksEnabled(chainId)
 
   const tradeRoute = useSwapDependenciesStore((s) => s.derivedSwapInfo.trade.trade?.routing)
-  const isFlashblocksModalRoute = tradeRoute && !FLASHBLOCKS_UI_SKIP_ROUTES.includes(tradeRoute)
+  const isFlashblocksModalRoute = shouldShowFlashblocksUI(tradeRoute)
 
   // Trigger parsing of flashblock receipt and navigation
   useInstantReceiptOutput()
@@ -67,8 +68,8 @@ export function FlashblocksConfirmButton({ size }: { size: 'medium' | 'large' })
         }, 1000)
         onClose()
       },
-      // skip modal if flashblocks is enabled but we're not on a compatible route
-      isFlashblocksModalRoute ? FLASHBLOCKS_INSTANT_BALANCE_TIMEOUT : 0,
+      // use a shorter timeout when we don't need to show the modal
+      isFlashblocksModalRoute ? FLASHBLOCKS_INSTANT_BALANCE_TIMEOUT : NON_FLASHBLOCKS_INSTANT_BALANCE_BUTTON_DURATION,
     )
 
     return () => clearTimeout(timeout)

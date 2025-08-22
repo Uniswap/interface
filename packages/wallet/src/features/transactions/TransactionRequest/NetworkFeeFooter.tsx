@@ -4,12 +4,12 @@ import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
 import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
+import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappRequestType, EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
 import { useGasFeeFormattedDisplayAmounts } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { isMobileApp } from 'utilities/src/platform'
-import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 
 interface NetworkFeeFooterProps {
   chainId: UniverseChainId

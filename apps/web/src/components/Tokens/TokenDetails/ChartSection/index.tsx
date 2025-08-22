@@ -128,7 +128,13 @@ export default function ChartSection() {
     switch (activeQuery.chartType) {
       case ChartType.PRICE:
         return (
-          <PriceChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} type={priceChartType} stale={stale} />
+          <PriceChart
+            data={activeQuery.entries}
+            height={TDP_CHART_HEIGHT_PX}
+            type={priceChartType}
+            stale={stale}
+            timePeriod={toHistoryDuration(timePeriod)}
+          />
         )
       case ChartType.VOLUME:
         return (

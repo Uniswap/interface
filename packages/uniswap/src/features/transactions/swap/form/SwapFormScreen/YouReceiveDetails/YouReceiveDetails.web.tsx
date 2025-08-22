@@ -34,7 +34,6 @@ import { usePriceDifference } from 'uniswap/src/features/transactions/swap/hooks
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
-import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
@@ -331,7 +330,7 @@ export function YouReceiveDetails({
   const outputCurrency = derivedSwapInfo.currencies.output
   const formattedPostFeesAmount =
     outputCurrency && receivedAmountPostFees ? `${receivedAmountPostFees} ${outputCurrency.currency.symbol}` : undefined
-  const minimumAmount = trade?.minimumAmountOut(slippageToleranceToPercent(currentSlippageTolerance))
+  const minimumAmount = trade?.minAmountOut
   const formattedMinimumAmount = `${formatCurrencyAmount({
     amount: minimumAmount,
     locale: 'en-US',

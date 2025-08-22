@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, Text, useIsShortMobileDevice } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
+import { SwapTransactionDetails } from 'uniswap/src/components/activity/details/transactions/SwapTransactionDetails'
+import { isSwapTransactionInfo } from 'uniswap/src/components/activity/details/types'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -12,6 +14,10 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import {
+  ErroredQueuedOrderStatus,
+  useErroredQueuedOrders,
+} from 'uniswap/src/features/transactions/hooks/useErroredQueuedOrder'
 import { updateTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   QueuedOrderStatus,
@@ -24,9 +30,6 @@ import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { isMobileApp, isWeb } from 'utilities/src/platform'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { SwapTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/SwapTransactionDetails'
-import { isSwapTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
-import { ErroredQueuedOrderStatus, useErroredQueuedOrders } from 'wallet/src/features/transactions/hooks'
 import { useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'
 
 export function QueuedOrderModal(): JSX.Element | null {

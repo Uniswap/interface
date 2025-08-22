@@ -1,6 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
-import { render } from 'test-utils/render'
+import { fireEvent, render } from 'test-utils/render'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 
 describe('LiquidityPositionInfoBadges', () => {
@@ -36,5 +36,26 @@ describe('LiquidityPositionInfoBadges', () => {
     )
     expect(getByText('v2')).toBeInTheDocument()
     expect(getByText('0.01%')).toBeInTheDocument()
+  })
+
+  it('should render with cta', () => {
+    const onPressSpy = vi.fn()
+
+    const { getByText } = render(
+      <LiquidityPositionInfoBadges
+        version={ProtocolVersion.V3}
+        feeTier={{ feeAmount: 100, tickSpacing: DEFAULT_TICK_SPACING, isDynamic: false }}
+        size="default"
+        cta={{
+          label: 'Migrate to V4',
+          onPress: onPressSpy,
+        }}
+      />,
+    )
+    expect(getByText('v3')).toBeInTheDocument()
+    expect(getByText('0.01%')).toBeInTheDocument()
+    expect(getByText('Migrate to V4')).toBeInTheDocument()
+    fireEvent.click(getByText('Migrate to V4'))
+    expect(onPressSpy).toHaveBeenCalled()
   })
 })

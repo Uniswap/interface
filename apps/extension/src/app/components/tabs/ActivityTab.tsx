@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { ScrollView } from 'ui/src'
-import { useActivityData } from 'wallet/src/features/activity/hooks/useActivityData'
+import { useActivityDataWallet } from 'wallet/src/features/activity/useActivityDataWallet'
 
 export const ActivityTab = memo(function _ActivityTab({
   address,
@@ -9,7 +9,7 @@ export const ActivityTab = memo(function _ActivityTab({
   address: Address
   skip?: boolean
 }): JSX.Element {
-  const { maybeEmptyComponent, renderActivityItem, sectionData } = useActivityData({
+  const { maybeEmptyComponent, renderActivityItem, sectionData } = useActivityDataWallet({
     owner: address,
     skip,
   })

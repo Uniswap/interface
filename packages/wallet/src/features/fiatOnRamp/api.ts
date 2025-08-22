@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { extractFORTransactionDetails } from 'uniswap/src/features/activity/extract/extractFiatOnRampTransactionDetails'
 import { FOR_API_HEADERS } from 'uniswap/src/features/fiatOnRamp/constants'
 import {
   FORTransactionDetails,
@@ -10,7 +11,6 @@ import {
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { extractFORTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 import { isOffRampTransaction } from 'wallet/src/features/transactions/utils'
 
 const FIAT_ONRAMP_STALE_TX_TIMEOUT = ONE_MINUTE_MS * 20

@@ -37,6 +37,7 @@ import {
   CreatePositionTxAndGasInfo,
   isValidLiquidityTxContext,
 } from 'uniswap/src/features/transactions/liquidity/types'
+import { getErrorMessageToDisplay } from 'uniswap/src/features/transactions/liquidity/utils'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
@@ -49,6 +50,8 @@ export function CreatePositionModal({
   currencyAmountsUSDValue,
   txInfo,
   gasFeeEstimateUSD,
+  transactionError,
+  setTransactionError,
   isOpen,
   onClose,
 }: {
@@ -57,6 +60,8 @@ export function CreatePositionModal({
   currencyAmountsUSDValue?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   txInfo?: CreatePositionTxAndGasInfo
   gasFeeEstimateUSD?: Maybe<CurrencyAmount<Currency>>
+  transactionError: string | boolean
+  setTransactionError: (error: string | boolean) => void
   isOpen: boolean
   onClose: () => void
 }) {
@@ -72,7 +77,6 @@ export function CreatePositionModal({
     ticksAtLimit,
     pricesAtTicks,
     priceRangeState: { priceInverted },
-    error,
     refetch,
   } = useCreateLiquidityContext()
   const { t } = useTranslation()
@@ -141,6 +145,8 @@ export function CreatePositionModal({
   )
 
   const handleCreate = useCallback(() => {
+    setTransactionError(false)
+
     const isValidTx = isValidLiquidityTxContext(txInfo)
     if (
       !account ||
@@ -162,7 +168,10 @@ export function CreatePositionModal({
         setCurrentStep: setCurrentTransactionStep,
         setSteps,
         onSuccess,
-        onFailure: () => {
+        onFailure: (e) => {
+          if (e) {
+            setTransactionError(getErrorMessageToDisplay({ calldataError: e }))
+          }
           setCurrentTransactionStep(undefined)
         },
         analytics: {
@@ -201,6 +210,7 @@ export function CreatePositionModal({
     dispatch,
     selectChain,
     startChainId,
+    setTransactionError,
     setCurrentTransactionStep,
     onSuccess,
     trace,
@@ -319,8 +329,10 @@ export function CreatePositionModal({
               </Flex>
             )}
           </Flex>
-          <ErrorCallout errorMessage={error} onPress={refetch} />
-          <PoolOutOfSyncError />
+          <Flex gap="$spacing12">
+            <ErrorCallout errorMessage={transactionError} onPress={refetch} />
+            <PoolOutOfSyncError />
+          </Flex>
         </Flex>
         {currentTransactionStep && steps.length > 1 ? (
           <ProgressIndicator steps={steps} currentStep={currentTransactionStep} />

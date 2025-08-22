@@ -10,6 +10,7 @@ import { JupiterExecuteResponse } from 'uniswap/src/data/apiClients/jupiterApi/e
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import { JupiterExecuteError } from 'uniswap/src/features/transactions/errors'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 import { ValidatedSolanaSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
@@ -21,7 +22,6 @@ type JupiterSwapParams = {
   account: SignerMnemonicAccountDetails
   analytics: SwapTradeBaseProperties
   swapTxContext: ValidatedSolanaSwapTxAndGasInfo
-  onSuccess: () => void
 }
 
 async function signAndSendJupiterSwap({
@@ -65,7 +65,7 @@ function updateAppState({ hash, trade, from }: { hash: string; trade: SolanaTrad
 
 function createJupiterSwap(signSolanaTransaction: (tx: VersionedTransaction) => Promise<VersionedTransaction>) {
   return function* jupiterSwap(params: JupiterSwapParams) {
-    const { swapTxContext, onSuccess, account } = params
+    const { swapTxContext, account } = params
     const { trade, transactionBase64 } = swapTxContext
     const { requestId } = trade.quote.quote
 
@@ -78,14 +78,13 @@ function createJupiterSwap(signSolanaTransaction: (tx: VersionedTransaction) => 
     if (error) {
       throw error
     }
-    const { signature: hash, status } = data
+    const { signature: hash, status, code, error: errorMessage } = data
     if (status !== 'Success' || !hash) {
-      throw new Error('Unknown Jupiter Execution Error')
+      throw new JupiterExecuteError(errorMessage ?? 'Unknown Jupiter Execution Error', code)
     }
 
     updateAppState({ hash, trade, from: account.address })
 
-    yield* call(onSuccess)
     return
   }
 }

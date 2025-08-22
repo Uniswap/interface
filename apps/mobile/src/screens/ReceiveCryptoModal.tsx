@@ -7,6 +7,7 @@ import { ServiceProviderSelector } from 'src/features/fiatOnRamp/ExchangeTransfe
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { CopySheets, QrCode } from 'ui/src/components/icons'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
@@ -14,7 +15,6 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const ACCOUNT_IMAGE_SIZE = 52

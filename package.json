@@ -8,6 +8,7 @@
     "@crowdin/cli": "3.14.0",
     "@ethersproject/keccak256": "5.7.0",
     "@manypkg/cli": "0.19.2",
+    "@slack/types": "2.15.0",
     "@types/inquirer": "9.0.8",
     "@typescript-eslint/eslint-plugin": "6.20.0",
     "@typescript-eslint/parser": "6.20.0",
@@ -22,12 +23,13 @@
     "js-yaml": "4.1.0",
     "knip": "5.50.5",
     "moti": "0.29.0",
+    "playwright-slack-report": "1.1.99",
     "prettier": "3.3.2",
     "prettier-plugin-organize-imports": "3.2.4",
     "syncpack": "8.5.14",
     "turbo": "1.13.4",
     "turbo-ignore": "1.11.3",
-    "wrangler": "4.20.0"
+    "wrangler": "4.28.0"
   },
   "engines": {
     "node": "=22.13.1",
@@ -133,7 +135,7 @@
     "extension": "yarn workspace @uniswap/extension",
     "g:build": "turbo run build --concurrency=100%",
     "g:build:storybook": "turbo run storybook:build --force --concurrency=100%",
-    "g:check:deps:usage": " depcheck && turbo run check:deps:usage",
+    "g:check:deps:usage": "depcheck && turbo run check:deps:usage",
     "g:check:deps:mismatch": "manypkg check",
     "g:check:circular": "turbo run check:circular",
     "g:format:deps": "syncpack format",

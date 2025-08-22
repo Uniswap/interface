@@ -30,6 +30,7 @@ import { CopyAlt, Ellipsis } from 'ui/src/components/icons'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
@@ -50,9 +51,8 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { setClipboard, setClipboardImage } from 'uniswap/src/utils/clipboard'
 import { useNearestThemeColorFromImageUri } from 'uniswap/src/utils/colors'
+import { shortenAddress } from 'utilities/src/addresses'
 import { isAndroid, isIOS } from 'utilities/src/platform'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { shortenHash } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
 import { useAccounts, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const MAX_NFT_IMAGE_HEIGHT = 375
@@ -404,7 +404,7 @@ function NFTItemScreenContents({
                           justifyContent="center"
                           onPress={onPressCopyAddress}
                         >
-                          <Text variant="body2">{shortenHash(contractAddress)}</Text>
+                          <Text variant="body2">{shortenAddress(contractAddress)}</Text>
                           <CopyAlt color="$neutral3" size="$icon.16" />
                         </TouchableArea>
                       }

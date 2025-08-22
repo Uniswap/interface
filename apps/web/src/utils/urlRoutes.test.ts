@@ -2,6 +2,11 @@ import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { getCanonicalUrl, getCurrentPageFromLocation } from 'utils/urlRoutes'
 
 describe('getCurrentPageFromLocation', () => {
+  it('should return LANDING_PAGE when location pathname is "/"', () => {
+    const result = getCurrentPageFromLocation('/')
+    expect(result).toBe(InterfacePageName.LandingPage)
+  })
+
   it('should return SWAP_PAGE when location pathname starts with "/swap"', () => {
     const result = getCurrentPageFromLocation('/swap/123')
     expect(result).toBe(InterfacePageName.SwapPage)

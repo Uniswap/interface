@@ -184,10 +184,8 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                         <span
                           class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-18px _lineHeight-24px _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _textAlign-center _flexShrink-1"
                           data-disable-theme="true"
-                          data-testid="address-display/name/Colin Schowalter Jr."
-                        >
-                          Colin Schowalter Jr.
-                        </span>
+                          data-testid="address-display/name/undefined"
+                        />
                       </div>
                     </div>
                     <div
@@ -479,10 +477,8 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                       <span
                         class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-18px _lineHeight-24px _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _textAlign-center _flexShrink-1"
                         data-disable-theme="true"
-                        data-testid="address-display/name/Colin Schowalter Jr."
-                      >
-                        Colin Schowalter Jr.
-                      </span>
+                        data-testid="address-display/name/undefined"
+                      />
                     </div>
                   </div>
                   <div

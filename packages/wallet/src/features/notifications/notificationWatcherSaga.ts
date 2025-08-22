@@ -5,6 +5,7 @@ import { makeSelectAddressNotifications } from 'uniswap/src/features/notificatio
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
+import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/utils/getAmountsFromTrade'
 import {
   TransactionDetails,
   TransactionStatus,
@@ -13,7 +14,6 @@ import {
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
-import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export function* notificationWatcher() {

@@ -1,5 +1,29 @@
 import { useLocation } from 'react-router'
 
+function createGetIsPage(ctx: {
+  getPathname: () => string
+}): (page: PageType, matchTypeOverride?: MatchType) => boolean {
+  return function getIsPage(page: PageType, matchTypeOverride?: MatchType) {
+    const pathname = ctx.getPathname()
+
+    // Determine the match type: override or default from the mapping
+    const matchType = matchTypeOverride ?? pageMatchDefaults[page]
+
+    switch (matchType) {
+      case MatchType.EXACT:
+        return pathname === page
+      case MatchType.ENDS_WITH:
+        return pathname.endsWith(page)
+      case MatchType.INCLUDES:
+        return pathname.includes(page)
+      case MatchType.STARTS_WITH:
+        return pathname.startsWith(page)
+      default:
+        return pathname === page
+    }
+  }
+}
+
 export enum PageType {
   BUY = '/buy',
   EXPLORE = '/explore',
@@ -44,20 +68,18 @@ const pageMatchDefaults: Record<PageType, MatchType> = {
  */
 export function useIsPage(page: PageType, matchTypeOverride?: MatchType) {
   const { pathname } = useLocation()
-
-  // Determine the match type: override or default from the mapping
-  const matchType = matchTypeOverride ?? pageMatchDefaults[page]
-
-  switch (matchType) {
-    case MatchType.EXACT:
-      return pathname === page
-    case MatchType.ENDS_WITH:
-      return pathname.endsWith(page)
-    case MatchType.INCLUDES:
-      return pathname.includes(page)
-    case MatchType.STARTS_WITH:
-      return pathname.startsWith(page)
-    default:
-      return pathname === page
-  }
+  const getIsPage = createGetIsPage({ getPathname: () => pathname })
+  return getIsPage(page, matchTypeOverride)
 }
+
+function getWindowPathname() {
+  if (typeof window === 'undefined') {
+    throw new Error(
+      'getIsBrowserPage cannot be used in server-side rendering (SSR) environments. ' +
+        'Use useIsPage hook instead, which works with React Router and is SSR-compatible.',
+    )
+  }
+  return window.location.pathname
+}
+
+export const getIsBrowserPage = createGetIsPage({ getPathname: getWindowPathname })

@@ -73,10 +73,8 @@ exports[`ReceiveScreen renders without error 1`] = `
                         <span
                           class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-24px _lineHeight-28--7999999991290300390 _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _flexShrink-1"
                           data-disable-theme="true"
-                          data-testid="address-display/name/Test Account"
-                        >
-                          Test Account
-                        </span>
+                          data-testid="address-display/name/undefined"
+                        />
                       </div>
                     </div>
                     <div
@@ -5800,7 +5798,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                       y="0"
                     >
                       <g
-                        transform="scale(1.1351351351351353)"
+                        transform="translate(0, 0) scale(1.1351351351351353)"
                       >
                         <path
                           d="M0 0H40V40H0V0Z"
@@ -5813,7 +5811,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                       y="0"
                     >
                       <g
-                        transform="scale(1.1351351351351353)"
+                        transform="translate(0, 0) scale(1.1351351351351353)"
                       >
                         <path
                           clip-rule="evenodd"
@@ -5832,7 +5830,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                       y="0"
                     >
                       <g
-                        transform="scale(1.1351351351351353)"
+                        transform="translate(0, 0) scale(1.1351351351351353)"
                       >
                         <path
                           clip-rule="evenodd"
@@ -5852,7 +5850,6 @@ exports[`ReceiveScreen renders without error 1`] = `
                     >
                       <g
                         transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
-                        translate="0, 97.29729729729729"
                       >
                         <path
                           d="M0 0H40V40H0V0Z"
@@ -5866,7 +5863,6 @@ exports[`ReceiveScreen renders without error 1`] = `
                     >
                       <g
                         transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
-                        translate="0, 97.29729729729729"
                       >
                         <path
                           clip-rule="evenodd"
@@ -5886,7 +5882,6 @@ exports[`ReceiveScreen renders without error 1`] = `
                     >
                       <g
                         transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
-                        translate="0, 97.29729729729729"
                       >
                         <path
                           clip-rule="evenodd"
@@ -5906,7 +5901,6 @@ exports[`ReceiveScreen renders without error 1`] = `
                     >
                       <g
                         transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
-                        translate="97.29729729729729, 0"
                       >
                         <path
                           d="M0 0H40V40H0V0Z"
@@ -5920,7 +5914,6 @@ exports[`ReceiveScreen renders without error 1`] = `
                     >
                       <g
                         transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
-                        translate="97.29729729729729, 0"
                       >
                         <path
                           clip-rule="evenodd"
@@ -5940,7 +5933,6 @@ exports[`ReceiveScreen renders without error 1`] = `
                     >
                       <g
                         transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
-                        translate="97.29729729729729, 0"
                       >
                         <path
                           clip-rule="evenodd"
@@ -6110,10 +6102,8 @@ exports[`ReceiveScreen renders without error 1`] = `
                       <span
                         class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-24px _lineHeight-28--7999999991290300390 _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _flexShrink-1"
                         data-disable-theme="true"
-                        data-testid="address-display/name/Test Account"
-                      >
-                        Test Account
-                      </span>
+                        data-testid="address-display/name/undefined"
+                      />
                     </div>
                   </div>
                   <div
@@ -11837,7 +11827,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                     y="0"
                   >
                     <g
-                      transform="scale(1.1351351351351353)"
+                      transform="translate(0, 0) scale(1.1351351351351353)"
                     >
                       <path
                         d="M0 0H40V40H0V0Z"
@@ -11850,7 +11840,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                     y="0"
                   >
                     <g
-                      transform="scale(1.1351351351351353)"
+                      transform="translate(0, 0) scale(1.1351351351351353)"
                     >
                       <path
                         clip-rule="evenodd"
@@ -11869,7 +11859,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                     y="0"
                   >
                     <g
-                      transform="scale(1.1351351351351353)"
+                      transform="translate(0, 0) scale(1.1351351351351353)"
                     >
                       <path
                         clip-rule="evenodd"
@@ -11889,7 +11879,6 @@ exports[`ReceiveScreen renders without error 1`] = `
                   >
                     <g
                       transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
-                      translate="0, 97.29729729729729"
                     >
                       <path
                         d="M0 0H40V40H0V0Z"
@@ -11903,7 +11892,6 @@ exports[`ReceiveScreen renders without error 1`] = `
                   >
                     <g
                       transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
-                      translate="0, 97.29729729729729"
                     >
                       <path
                         clip-rule="evenodd"
@@ -11923,7 +11911,6 @@ exports[`ReceiveScreen renders without error 1`] = `
                   >
                     <g
                       transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
-                      translate="0, 97.29729729729729"
                     >
                       <path
                         clip-rule="evenodd"
@@ -11943,7 +11930,6 @@ exports[`ReceiveScreen renders without error 1`] = `
                   >
                     <g
                       transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
-                      translate="97.29729729729729, 0"
                     >
                       <path
                         d="M0 0H40V40H0V0Z"
@@ -11957,7 +11943,6 @@ exports[`ReceiveScreen renders without error 1`] = `
                   >
                     <g
                       transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
-                      translate="97.29729729729729, 0"
                     >
                       <path
                         clip-rule="evenodd"
@@ -11977,7 +11962,6 @@ exports[`ReceiveScreen renders without error 1`] = `
                   >
                     <g
                       transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
-                      translate="97.29729729729729, 0"
                     >
                       <path
                         clip-rule="evenodd"

@@ -1,6 +1,8 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Signer } from 'ethers/lib/ethers'
 import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react'
+import { DisplayName } from 'uniswap/src/features/accounts/types'
+import { WalletDisplayNameOptions } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
@@ -42,6 +44,7 @@ interface UniswapContextValue {
   swapOutputChainId?: UniverseChainId
   signer: Signer | undefined
   useProviderHook: (chainId: number) => JsonRpcProvider | undefined
+  useWalletDisplayName: (address: Maybe<Address>, options?: WalletDisplayNameOptions) => DisplayName | undefined
   // Used for triggering wallet connection on web
   onConnectWallet?: () => void
   // Used for web to open the token selector from a banner not in the swap flow
@@ -74,6 +77,7 @@ export function UniswapProvider({
   onSwapChainsChanged,
   signer,
   useProviderHook,
+  useWalletDisplayName,
   onConnectWallet,
   getCanSignPermits,
   getIsUniswapXSupported,
@@ -116,6 +120,7 @@ export function UniswapProvider({
       },
       signer,
       useProviderHook,
+      useWalletDisplayName,
       onConnectWallet,
       swapInputChainId,
       swapOutputChainId,
@@ -143,6 +148,7 @@ export function UniswapProvider({
       handleShareToken,
       signer,
       useProviderHook,
+      useWalletDisplayName,
       onConnectWallet,
       swapInputChainId,
       swapOutputChainId,

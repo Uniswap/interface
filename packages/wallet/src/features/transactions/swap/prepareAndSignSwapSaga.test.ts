@@ -14,14 +14,14 @@ import { ETH, WETH } from 'uniswap/src/test/fixtures'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
 import { ensure0xHex } from 'uniswap/src/utils/hex'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
-import { createTransactionServices } from 'wallet/src/features/transactions/swap/factories/createTransactionServices'
+import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
 import {
   createPrepareAndSignSwapSaga,
   shouldSubmitViaPrivateRpc,
 } from 'wallet/src/features/transactions/swap/prepareAndSignSwapSaga'
 import {
   mockSignerAccount as account,
-  mockSwapSagaDependencies,
+  mockTransactionSagaDependencies,
   mockTransactionService,
   mockTransactionSigner,
   prepareAndSignSwapSagaParams,
@@ -31,7 +31,7 @@ import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/se
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
 // Mock dependencies
-jest.mock('wallet/src/features/transactions/swap/factories/createTransactionServices')
+jest.mock('wallet/src/features/transactions/factories/createTransactionServices')
 
 const mockPrivateRpcFlag = jest.fn().mockReturnValue(true)
 
@@ -43,6 +43,9 @@ jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
       }
       return false // Default for other flags
     }),
+    getLayer: jest.fn(() => ({
+      get: jest.fn(() => false),
+    })),
   })),
 }))
 
@@ -69,15 +72,18 @@ const mockPermitTxRequest = {
 const mockSignedTransactionRequest = {
   request: { ...mockSwapTxRequest, nonce: 1 },
   signedRequest: ensure0xHex('0xsignedTxData'),
+  timestampBeforeSign: MOCK_TIMESTAMP,
 }
 
 const mockSignedApprovalRequest = {
   request: { ...mockSwapTxRequest, nonce: 1 },
   signedRequest: ensure0xHex('0xsignedApprovalData'),
+  timestampBeforeSign: MOCK_TIMESTAMP,
 }
 const mockSignedPermitRequest = {
   request: { ...mockPermitTxRequest, nonce: 1 },
   signedRequest: ensure0xHex('0xsignedPermitData'),
+  timestampBeforeSign: MOCK_TIMESTAMP,
 }
 
 describe('prepareAndSignSwapSaga', () => {
@@ -87,7 +93,7 @@ describe('prepareAndSignSwapSaga', () => {
   const sharedProviders: (EffectProviders | StaticProvider)[] = [
     [select(selectWalletSwapProtectionSetting), SwapProtectionSetting.Off],
     [
-      call(createTransactionServices, mockSwapSagaDependencies, {
+      call(createTransactionServices, mockTransactionSagaDependencies, {
         account,
         chainId: CHAIN_ID,
         submitViaPrivateRpc: false,
@@ -99,7 +105,7 @@ describe('prepareAndSignSwapSaga', () => {
 
   beforeAll(() => {
     dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => MOCK_TIMESTAMP)
-    prepareAndSignSwapSaga = createPrepareAndSignSwapSaga(mockSwapSagaDependencies)
+    prepareAndSignSwapSaga = createPrepareAndSignSwapSaga(mockTransactionSagaDependencies)
   })
 
   afterAll(() => {
@@ -428,7 +434,7 @@ describe('prepareAndSignSwapSaga', () => {
       ).rejects.toThrow('Failed to prepare and sign transaction: Failed to sign typed data')
 
       expect(onFailure).toHaveBeenCalledWith(expect.any(Error))
-      expect(mockSwapSagaDependencies.logger.error).toHaveBeenCalledWith(error, {
+      expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(error, {
         tags: { file: 'prepareAndSignSwapSaga', function: 'prepareAndSignSwapTransaction' },
         extra: { chainId: CHAIN_ID },
       })
@@ -462,7 +468,7 @@ describe('prepareAndSignSwapSaga', () => {
       ).rejects.toThrow('Failed to prepare and sign transaction: Transaction service failed')
 
       expect(onFailure).toHaveBeenCalledWith(expect.any(Error))
-      expect(mockSwapSagaDependencies.logger.error).toHaveBeenCalledWith(error, {
+      expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(error, {
         tags: { file: 'prepareAndSignSwapSaga', function: 'prepareAndSignSwapTransaction' },
         extra: { chainId: CHAIN_ID },
       })
@@ -511,7 +517,7 @@ describe('prepareAndSignSwapSaga', () => {
           [select(selectWalletSwapProtectionSetting), SwapProtectionSetting.On],
           [call(shouldSubmitViaPrivateRpc, CHAIN_ID), true],
           [
-            call(createTransactionServices, mockSwapSagaDependencies, {
+            call(createTransactionServices, mockTransactionSagaDependencies, {
               account,
               chainId: CHAIN_ID,
               submitViaPrivateRpc: true,

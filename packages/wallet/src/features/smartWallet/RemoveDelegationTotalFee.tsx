@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { ChainFiatFeeCalculator } from 'wallet/src/components/smartWallet/ChainFiatFeeCalculator'
@@ -7,7 +8,6 @@ import { FiatFeeDisplay } from 'wallet/src/components/smartWallet/FiatFeeDisplay
 import { NativeFeeDisplay } from 'wallet/src/components/smartWallet/NativeFeeDisplay'
 import { useFiatGasFees } from 'wallet/src/features/smartWallet/hooks/useFiatGasFees'
 import { GasFeeData, groupGasFeesBySymbol } from 'wallet/src/features/smartWallet/utils/gasFeeUtils'
-import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 
 interface RemoveDelegationTotalFeeProps {
   gasFees: GasFeeData[]

@@ -80,6 +80,8 @@ ignores: [
     'polyfills',
     'rpc',
     'shared-cloud',
+    'functions',
+    'src',
     'state',
     'test-utils',
     'theme',
@@ -91,4 +93,6 @@ ignores: [
     'setupRive',
     'sideEffects',
     'global.css',
+    # needed for ci
+    'dd-trace',
   ]

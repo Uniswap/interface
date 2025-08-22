@@ -11,10 +11,13 @@ import type { TransactionDetails, TransactionInfo, VitalTxFields } from 'state/t
 import { isPendingTx } from 'state/transactions/utils'
 import type { InterfaceState } from 'state/webReducer'
 import type { SagaGenerator } from 'typed-redux-saga'
-import { call, cancel, delay, fork, put, race, select, take } from 'typed-redux-saga'
+import { call, cancel, delay, fork, put, race, select, spawn, take } from 'typed-redux-saga'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId, isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { BlockedAsyncSubmissionChainIdsConfigKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import {
   ApprovalEditedInWalletError,
   HandledTransactionInterrupt,
@@ -60,7 +63,6 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 import { HexString, isValidHexString } from 'uniswap/src/utils/hex'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { isSameAddress } from 'utilities/src/addresses'
-import { percentFromFloat } from 'utilities/src/format/percent'
 import noop from 'utilities/src/react/noop'
 import { signTypedData } from 'utils/signing'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -114,7 +116,16 @@ export interface HandleOnChainStepParams<T extends OnChainTransactionStep = OnCh
   onModification?: (response: VitalTxFields) => void | Generator<unknown, void, unknown>
 }
 export function* handleOnChainStep<T extends OnChainTransactionStep>(params: HandleOnChainStepParams<T>) {
-  const { account, step, setCurrentStep, info, allowDuplicativeTx, ignoreInterrupt, onModification } = params
+  const {
+    account,
+    step,
+    setCurrentStep,
+    info,
+    allowDuplicativeTx,
+    ignoreInterrupt,
+    onModification,
+    shouldWaitForConfirmation,
+  } = params
   const { chainId } = step.txRequest
 
   addTransactionBreadcrumb({ step, data: { ...info } })
@@ -148,48 +159,67 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   // Trigger UI prompting user to accept
   setCurrentStep({ step, accepted: false })
 
+  let transaction: InterfaceTransactionDetails
+  const createTransaction = (hash: string): InterfaceTransactionDetails => ({
+    id: hash,
+    from: account.address,
+    typeInfo: info,
+    hash,
+    chainId,
+    routing: getRoutingForTransaction(info),
+    transactionOriginType: TransactionOriginType.Internal,
+    status: TransactionStatus.Pending,
+    addedTime: Date.now(),
+    options: {
+      request: {
+        to: step.txRequest.to,
+        from: account.address,
+        data: step.txRequest.data,
+        value: step.txRequest.value,
+        gasLimit: step.txRequest.gasLimit,
+        gasPrice: step.txRequest.gasPrice,
+        nonce: step.txRequest.nonce,
+        chainId: step.txRequest.chainId,
+      },
+    },
+  })
+
+  const defaultBlockedAsyncSubmissionChainIds: UniverseChainId[] = []
+  const blockedAsyncSubmissionChainIds = getDynamicConfigValue({
+    config: DynamicConfigs.BlockedAsyncSubmissionChainIds,
+    key: BlockedAsyncSubmissionChainIdsConfigKey.ChainIds,
+    defaultValue: defaultBlockedAsyncSubmissionChainIds,
+  })
+
   // Prompt wallet to submit transaction
-  const { hash, nonce, data } = yield* call(submitTransaction, params)
+  // If should wait for confirmation, we block until the transaction is confirmed
+  // Otherwise, we submit the transaction and return the hash immediately and spawn a detection task to check for modifications
+  if (blockedAsyncSubmissionChainIds.includes(chainId) || shouldWaitForConfirmation) {
+    const { hash, data, nonce } = yield* call(submitTransaction, params)
+    transaction = createTransaction(hash)
+
+    if (step.txRequest.data !== data && onModification) {
+      yield* call(onModification, { hash, data, nonce })
+    }
+  } else {
+    const hash = yield* call(submitTransactionAsync, params)
+    transaction = createTransaction(hash)
+
+    if (onModification) {
+      yield* spawn(handleOnModificationAsync, { onModification, hash, step })
+    }
+  }
 
   // Trigger waiting UI after user accepts
   setCurrentStep({ step, accepted: true })
 
   // Add transaction to local state to start polling for status
-  yield* put(
-    addTransaction({
-      id: hash,
-      from: account.address,
-      nonce,
-      typeInfo: info,
-      hash,
-      chainId,
-      routing: getRoutingForTransaction(info),
-      transactionOriginType: TransactionOriginType.Internal,
-      status: TransactionStatus.Pending,
-      addedTime: Date.now(),
-      options: {
-        request: {
-          to: step.txRequest.to,
-          from: account.address,
-          data: step.txRequest.data,
-          value: step.txRequest.value,
-          gasLimit: step.txRequest.gasLimit,
-          gasPrice: step.txRequest.gasPrice,
-          nonce: step.txRequest.nonce,
-          chainId: step.txRequest.chainId,
-        },
-      },
-    } satisfies InterfaceTransactionDetails),
-  )
-
-  if (step.txRequest.data !== data && onModification) {
-    yield* call(onModification, { hash, data, nonce })
-  }
+  yield* put(addTransaction(transaction))
 
   // If the transaction flow was interrupted while awaiting input, throw an error after input is received
   yield* call(throwIfInterrupted)
 
-  return yield* handleOnChainConfirmation(params, hash)
+  return yield* handleOnChainConfirmation(params, transaction.hash)
 }
 
 /** Waits for a transaction to complete, or immediately throws if interrupted. */
@@ -219,6 +249,21 @@ function* handleOnChainConfirmation(params: HandleOnChainStepParams, hash: strin
   return hash
 }
 
+function* handleOnModificationAsync({
+  onModification,
+  hash,
+  step,
+}: {
+  onModification: NonNullable<HandleOnChainStepParams['onModification']>
+  hash: HexString
+  step: OnChainTransactionStep
+}) {
+  const { data, nonce } = yield* call(recoverTransactionFromHash, hash, step)
+  if (step.txRequest.data !== data) {
+    yield* call(onModification, { hash, data, nonce })
+  }
+}
+
 /** Submits a transaction and handles potential wallet errors */
 function* submitTransaction(params: HandleOnChainStepParams): SagaGenerator<VitalTxFields> {
   const { account, step } = params
@@ -231,6 +276,30 @@ function* submitTransaction(params: HandleOnChainStepParams): SagaGenerator<Vita
     if (error && typeof error === 'object' && 'transactionHash' in error && isValidHexString(error.transactionHash)) {
       return yield* recoverTransactionFromHash(error.transactionHash, step)
     }
+    throw error
+  }
+}
+
+/** Submits a transaction and handles potential wallet errors */
+function* submitTransactionAsync(params: HandleOnChainStepParams): SagaGenerator<HexString> {
+  const { account, step } = params
+  const signer = yield* call(getSigner, account.address)
+
+  try {
+    const response = yield* call([signer.provider, 'send'], 'eth_sendTransaction', [
+      { from: account.address, ...step.txRequest },
+    ])
+
+    if (!isValidHexString(response)) {
+      throw new TransactionStepFailedError({ message: `Transaction failed, not a valid hex string: ${response}`, step })
+    }
+
+    return response
+  } catch (error) {
+    if (error && typeof error === 'object' && 'transactionHash' in error && isValidHexString(error.transactionHash)) {
+      return error.transactionHash
+    }
+
     throw error
   }
 }
@@ -455,8 +524,6 @@ export function getSwapTransactionInfo(
     }
   }
 
-  const slippage = percentFromFloat(trade.slippageTolerance)
-
   return {
     type: TransactionType.Swap,
     inputCurrencyId: currencyId(trade.inputAmount.currency),
@@ -467,11 +534,11 @@ export function getSwapTransactionInfo(
           tradeType: TradeType.EXACT_INPUT,
           inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
           expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-          minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(slippage).quotient.toString(),
+          minimumOutputCurrencyAmountRaw: trade.minAmountOut.quotient.toString(),
         }
       : {
           tradeType: TradeType.EXACT_OUTPUT,
-          maximumInputCurrencyAmountRaw: trade.maximumAmountIn(slippage).quotient.toString(),
+          maximumInputCurrencyAmountRaw: trade.maxAmountIn.quotient.toString(),
           outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
           expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
         }),
@@ -503,18 +570,20 @@ export function getDisplayableError({
   flow = 'swap',
 }: {
   error: Error
-  step: TransactionStep
+  step?: TransactionStep
   flow?: string
-}): TransactionError | undefined {
+}): Error | undefined {
   const userRejected = didUserReject(error)
   // If the user rejects a request, or it's a known interruption e.g. trade update, we handle gracefully / do not show error UI
   if (userRejected || error instanceof HandledTransactionInterrupt) {
     const loggableMessage = userRejected ? 'user rejected request' : error.message // for user rejections, avoid logging redundant/long message
-    addTransactionBreadcrumb({ step, status: 'interrupted', data: { message: loggableMessage } })
+    if (step) {
+      addTransactionBreadcrumb({ step, status: 'interrupted', data: { message: loggableMessage } })
+    }
     return undefined
   } else if (error instanceof TransactionError) {
     return error // If the error was already formatted as a TransactionError, we just propagate
-  } else {
+  } else if (step) {
     const isBackendRejection = error instanceof FetchError
     return new TransactionStepFailedError({
       message: `${step.type} failed during ${flow}`,
@@ -522,5 +591,7 @@ export function getDisplayableError({
       isBackendRejection,
       originalError: error,
     })
+  } else {
+    return error
   }
 }

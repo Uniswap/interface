@@ -9,7 +9,7 @@ import type {
   PresetPercentageNumber,
 } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { isMaxPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/utils'
-import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'

@@ -170,6 +170,7 @@ export default function FeatureFlagModal() {
         <Flex maxHeight="600px" pb="$gap8" overflow="scroll" $md={{ maxHeight: 'unset' }}>
           <FeatureFlagGroup name="Solana">
             <FeatureFlagOption flag={FeatureFlags.Solana} label="Enable Solana UX" />
+            <FeatureFlagOption flag={FeatureFlags.SolanaPromo} label="Turn on Solana promo banners" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Swap Refactor">
             <FeatureFlagOption
@@ -211,8 +212,8 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.ArbitrumDutchV3} label="Enable Dutch V3 on Arbitrum" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="LP">
-            <FeatureFlagOption flag={FeatureFlags.CreateLiquidityRefactor} label="Enable Create Liquidity Refactor" />
             <FeatureFlagOption flag={FeatureFlags.LpIncentives} label="Enable LP Incentives" />
+            <FeatureFlagOption flag={FeatureFlags.MigrateV2} label="Enable new Migrate V2 flow" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="FOR">
             <FeatureFlagOption flag={FeatureFlags.FiatOffRamp} label="Enable Fiat OffRamp" />

@@ -1,9 +1,11 @@
-import { expect, test } from 'playwright/fixtures'
+import { expect, getTest } from 'playwright/fixtures'
 import { mockUnitagResponse } from 'playwright/fixtures/account'
 import { HAYDEN_ADDRESS, TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import { Page } from 'playwright/test'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
+
+const test = getTest()
 
 test.describe('AuthenticatedHeader unitag and ENS display', () => {
   // Test cases:

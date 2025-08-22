@@ -62,6 +62,7 @@ describe('PoolDetailsStatsButton', () => {
     setIsSwapTokenSelectorOpen: () => {},
     signer: undefined,
     useProviderHook: () => undefined,
+    useWalletDisplayName: () => undefined,
   }
 
   beforeEach(() => {

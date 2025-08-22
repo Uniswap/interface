@@ -1,23 +1,11 @@
-import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
-import {
-  CosignedPriorityOrder,
-  CosignedV2DutchOrder,
-  CosignedV3DutchOrder,
-  DutchOrder,
-  getCancelSingleParams,
-} from '@uniswap/uniswapx-sdk'
-import { BigNumber, Contract, providers } from 'ethers'
+import { providers } from 'ethers'
 import { call, select } from 'typed-redux-saga'
-import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
-import { Permit2 } from 'uniswap/src/abis/types'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { signAndSubmitTransaction } from 'wallet/src/features/transactions/executeTransaction/signAndSubmitTransaction'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
-import { getOrders } from 'wallet/src/features/transactions/watcher/orderWatcherSaga'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 // Note, transaction cancellation on Ethereum is inherently flaky
@@ -31,48 +19,6 @@ export function* attemptCancelTransaction(
     yield* call(attemptReplaceTransaction, { transaction, newTxRequest: cancelRequest, isCancellation: true })
   } else if (isUniswapX(transaction)) {
     yield* call(cancelOrder, transaction, cancelRequest)
-  }
-}
-
-function getPermit2Contract(): Permit2 {
-  return new Contract(PERMIT2_ADDRESS, PERMIT2_ABI) as Permit2
-}
-
-const ROUTING_TO_ORDER_CLASS = {
-  [Routing.DUTCH_V2]: CosignedV2DutchOrder,
-  [Routing.DUTCH_V3]: CosignedV3DutchOrder,
-  [Routing.PRIORITY]: CosignedPriorityOrder,
-  [Routing.DUTCH_LIMIT]: DutchOrder,
-} as const
-
-function getPermit2NonceForOrder({
-  encodedOrder,
-  chainId,
-  routing,
-}: {
-  encodedOrder: string
-  chainId: number
-  routing: UniswapXOrderDetails['routing']
-}): BigNumber {
-  return ROUTING_TO_ORDER_CLASS[routing].parse(encodedOrder, chainId).info.nonce
-}
-
-export async function getCancelOrderTxRequest(tx: UniswapXOrderDetails): Promise<providers.TransactionRequest | null> {
-  const { orderHash, chainId, from, routing } = tx
-  if (!orderHash) {
-    return null
-  } else {
-    const { encodedOrder } = (await getOrders([orderHash])).orders[0] ?? {}
-    if (!encodedOrder) {
-      return null
-    }
-
-    const nonce = getPermit2NonceForOrder({ encodedOrder, chainId, routing })
-    const cancelParams = getCancelSingleParams(nonce)
-
-    const permit2 = getPermit2Contract()
-    const cancelTx = await permit2.populateTransaction.invalidateUnorderedNonces(cancelParams.word, cancelParams.mask)
-    return { ...cancelTx, from, chainId }
   }
 }
 

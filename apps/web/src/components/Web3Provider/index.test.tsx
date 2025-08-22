@@ -56,6 +56,7 @@ describe('Web3Provider', () => {
         wallet_type: 'Network',
         is_reconnect: false,
         peer_wallet_agent: '(Injected)',
+        page: 'landing-page',
       })
       expect(first(mocked(sendAnalyticsEvent).mock.invocationCallOrder)).toBeGreaterThan(
         last(mocked(setUserProperty).mock.invocationCallOrder),
@@ -82,6 +83,7 @@ describe('Web3Provider', () => {
         wallet_type: 'Network',
         is_reconnect: true,
         peer_wallet_agent: '(Injected)',
+        page: 'landing-page',
       })
     })
   })

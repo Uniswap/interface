@@ -14,6 +14,7 @@ import { serializeSwapAddressesToURLParameters } from 'state/swap/hooks'
 import { useIsAtomicBatchingSupportedByChainIdCallback } from 'state/walletCapabilities/hooks/useIsAtomicBatchingSupportedByChain'
 import { useHasMismatchCallback, useShowMismatchToast } from 'state/walletCapabilities/hooks/useMismatchAccount'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
+import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChainsWithConnector } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -171,6 +172,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       signer={signer}
       connector={connector}
       useProviderHook={useWebProvider}
+      useWalletDisplayName={useOnchainDisplayName}
       onSwapChainsChanged={onSwapChainsChanged}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       navigateToSwapFlow={navigateToSwapFlow}

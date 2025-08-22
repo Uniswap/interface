@@ -17,7 +17,7 @@ import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { getSolanaConnection } from 'uniswap/src/features/providers/getSolanaConnection'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { currencyAddress as getCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { currencyId, currencyAddress as getCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
@@ -148,7 +148,7 @@ export function useOnChainCurrencyBalance(
   const refetchInterval = getPollingIntervalByBlocktime(currency?.chainId)
 
   const { data, error } = useQuery<{ balance?: string }>({
-    queryKey: [ReactQueryCacheKey.OnchainBalances, accountAddress, currency],
+    queryKey: [ReactQueryCacheKey.OnchainBalances, accountAddress, currencyId(currency)],
     queryFn:
       currency && accountAddress
         ? async (): ReturnType<typeof getOnChainBalancesFetch> =>

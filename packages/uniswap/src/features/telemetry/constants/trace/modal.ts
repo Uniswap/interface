@@ -152,6 +152,7 @@ export const ModalName = {
   SmartWalletUpgradeModal: 'smart-wallet-upgrade-modal',
   SmartWalletUnavailableModal: 'smart-wallet-unavailable-modal',
   SmartWalletWarningModal: 'smart-wallet-warning-modal',
+  SolanaPromo: 'solana-promo-modal',
   StorageWarning: 'storage-warning-modal',
   Swap: 'swap-modal',
   SwapError: 'swap-error-modal',

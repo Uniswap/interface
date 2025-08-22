@@ -1,7 +1,9 @@
-import { expect, test } from 'playwright/fixtures'
+import { expect, getTest } from 'playwright/fixtures'
 import { setupWebAuthn } from 'playwright/mocks/webAuthn'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+
+const test = getTest()
 
 const UNITAG_NAME = 'newunitag'
 

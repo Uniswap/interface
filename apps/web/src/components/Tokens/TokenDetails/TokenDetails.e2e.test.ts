@@ -1,6 +1,8 @@
 /* eslint-disable no-restricted-syntax */
-import { expect, test } from 'playwright/fixtures'
+import { expect, getTest } from 'playwright/fixtures'
 import { shortenAddress } from 'utilities/src/addresses'
+
+const test = getTest()
 
 const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 

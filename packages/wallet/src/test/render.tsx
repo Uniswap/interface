@@ -14,6 +14,7 @@ import React, { PropsWithChildren } from 'react'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
+import { mockUniswapContext } from 'uniswap/src/test/render'
 import { WalletNavigationContextState, WalletNavigationProvider } from 'wallet/src/contexts/WalletNavigationContext'
 import { NativeWalletProvider } from 'wallet/src/features/wallet/providers/NativeWalletProvider'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
@@ -26,27 +27,6 @@ type ExtendedRenderOptions = RenderOptions & {
   resolvers?: Resolvers
   preloadedState?: PreloadedState<WalletStateReducersOnly>
   store?: EnhancedStore<WalletStateReducersOnly>
-}
-
-const mockUniswapContext = {
-  navigateToBuyOrReceiveWithEmptyWallet: jest.fn(),
-  navigateToFiatOnRamp: jest.fn(),
-  navigateToSwapFlow: jest.fn(),
-  navigateToSendFlow: jest.fn(),
-  navigateToReceive: jest.fn(),
-  navigateToTokenDetails: jest.fn(),
-  navigateToExternalProfile: jest.fn(),
-  navigateToNftDetails: jest.fn(),
-  navigateToNftCollection: jest.fn(),
-  navigateToPoolDetails: jest.fn(),
-  handleShareToken: jest.fn(),
-  onSwapChainsChanged: jest.fn(),
-  isSwapTokenSelectorOpen: false,
-  setSwapOutputChainId: jest.fn(),
-  setIsSwapTokenSelectorOpen: jest.fn(),
-  signer: undefined,
-  useProviderHook: jest.fn(),
-  onConnectWallet: jest.fn(),
 }
 
 const mockNavigationFunctions: WalletNavigationContextState = {

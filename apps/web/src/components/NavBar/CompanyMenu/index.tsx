@@ -30,7 +30,11 @@ export function CompanyMenu() {
   const closeMenu = useCallback(() => {
     popoverRef.current?.close()
   }, [popoverRef])
-  useEffect(() => closeMenu(), [location, closeMenu])
+  useEffect(() => {
+    // Immediately reset state to prevent flash during transitions
+    setIsOpen(false)
+    closeMenu()
+  }, [location, closeMenu])
 
   const isTouchDevice = useIsTouchDevice()
 

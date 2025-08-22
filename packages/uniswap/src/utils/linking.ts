@@ -1,11 +1,14 @@
 import * as WebBrowser from 'expo-web-browser'
 import { colorsLight } from 'ui/src/theme'
 import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { toGraphQLChain, toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
+import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search/utils'
+import { ServiceProviderInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { currencyIdToChain, currencyIdToGraphQLAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { canOpenURL, openURL } from 'uniswap/src/utils/link'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -189,4 +192,54 @@ export function getTokenDetailsURL({
 export function getPoolDetailsURL(address: string, chain: UniverseChainId): string {
   const chainName = getChainInfo(chain).urlParam
   return `/explore/pools/${chainName}/${address}`
+}
+
+export async function openTransactionLink(hash: string | undefined, chainId: UniverseChainId): Promise<void> {
+  if (!hash) {
+    return undefined
+  }
+  const explorerUrl = getExplorerLink({ chainId, data: hash, type: ExplorerDataType.TRANSACTION })
+  return openUri({ uri: explorerUrl })
+}
+
+export async function openUniswapHelpLink(): Promise<void> {
+  return openUri({ uri: uniswapUrls.helpRequestUrl })
+}
+
+export async function openFORSupportLink(serviceProvider: ServiceProviderInfo): Promise<void> {
+  return openUri({ uri: serviceProvider.supportUrl ?? uniswapUrls.helpRequestUrl })
+}
+
+export async function openOfframpPendingSupportLink(): Promise<void> {
+  return openUri({ uri: uniswapUrls.helpArticleUrls.fiatOffRampHelp })
+}
+
+export function getProfileUrl(walletAddress: string): string {
+  return `${uniswapUrls.webInterfaceAddressUrl}/${walletAddress}`
+}
+
+const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'
+
+export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = false): string | undefined {
+  const chainId = currencyIdToChain(currencyId)
+  if (!chainId) {
+    return undefined
+  }
+  const network = toUniswapWebAppLink(chainId)
+  try {
+    let tokenAddress = currencyIdToGraphQLAddress(currencyId)
+    // in case it's a native token
+    if (tokenAddress === null) {
+      // this is how web app handles native tokens
+      tokenAddress = BACKEND_NATIVE_CHAIN_ADDRESS_STRING
+    }
+    const tokenUrl = `${uniswapUrls.webInterfaceTokensUrl}/${network}/${tokenAddress}`
+    return addMobileUTMTags ? tokenUrl + `?${UTM_TAGS_MOBILE}` : tokenUrl
+  } catch (_) {
+    return undefined
+  }
+}
+
+export function getTwitterLink(twitterName: string): string {
+  return `https://twitter.com/${twitterName}`
 }

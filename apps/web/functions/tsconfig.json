@@ -6,7 +6,9 @@
     "incremental": true,
     "isolatedModules": false,
     "paths": {
-      "shared-cloud/*": ["../src/shared-cloud/*"]
+      "shared-cloud/*": ["../src/shared-cloud/*"],
+      "src/*": ["../src/*"],
+      "functions/*": ["./*"]
     },
     "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/functions", // avoid clobbering the build tsbuildinfo
     "types": ["node", "@cloudflare/workers-types", "vitest/globals"],

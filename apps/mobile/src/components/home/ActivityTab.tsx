@@ -18,7 +18,7 @@ import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { isAndroid } from 'utilities/src/platform'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { useActivityData } from 'wallet/src/features/activity/hooks/useActivityData'
+import { useActivityDataWallet } from 'wallet/src/features/activity/useActivityDataWallet'
 
 export const ACTIVITY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
 
@@ -53,7 +53,7 @@ export const ActivityTab = memo(
       dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
     }
 
-    const { maybeEmptyComponent, renderActivityItem, sectionData, keyExtractor } = useActivityData({
+    const { maybeEmptyComponent, renderActivityItem, sectionData, keyExtractor } = useActivityDataWallet({
       owner,
       authTrigger: requiresBiometrics ? biometricsTrigger : undefined,
       isExternalProfile,

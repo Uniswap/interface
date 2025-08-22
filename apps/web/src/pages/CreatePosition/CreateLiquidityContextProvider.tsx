@@ -116,11 +116,9 @@ type CreateLiquidityContextType = CreateLiquidityState & {
   setDynamicFeeTierSpeedbumpData: React.Dispatch<React.SetStateAction<DynamicFeeTierSpeedbumpData>>
   setPriceRangeState: React.Dispatch<React.SetStateAction<PriceRangeState>>
   setDepositState: React.Dispatch<React.SetStateAction<DepositState>>
-  setError: React.Dispatch<React.SetStateAction<string | boolean>>
   setRefetch: React.Dispatch<React.SetStateAction<(() => void) | undefined>>
 
   // Transaction info
-  error: string | boolean
   refetch?: () => void
   refetchPoolData: () => void
 
@@ -136,6 +134,7 @@ export function CreateLiquidityContextProvider({
   children,
   currencyInputs,
   setCurrencyInputs,
+  defaultInitialToken,
   initialPositionState,
   initialPriceRangeState,
   initialDepositState,
@@ -144,6 +143,7 @@ export function CreateLiquidityContextProvider({
   children: React.ReactNode
   currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
+  defaultInitialToken?: Maybe<Currency>
   initialPositionState?: Partial<PositionState>
   initialPriceRangeState?: Partial<PriceRangeState>
   initialDepositState?: Partial<DepositState>
@@ -167,7 +167,6 @@ export function CreateLiquidityContextProvider({
     open: false,
     wishFeeData: DEFAULT_POSITION_STATE.fee,
   })
-  const [error, setError] = useState<string | boolean>(false)
   const [refetch, setRefetch] = useState<() => void>()
 
   // Initialize price range state
@@ -237,9 +236,12 @@ export function CreateLiquidityContextProvider({
   const reset = useEvent(() => {
     setPositionState({
       ...DEFAULT_POSITION_STATE,
-      ...initialPositionState,
+      protocolVersion: positionState.protocolVersion,
     })
-    setCurrencyInputs(initialCurrencyInputs)
+    setCurrencyInputs({
+      tokenA: defaultInitialToken,
+      tokenB: undefined,
+    })
     setHistoryState(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   })
 
@@ -303,7 +305,6 @@ export function CreateLiquidityContextProvider({
     priceRangeState,
     depositState,
     // Transaction info
-    error,
     refetch,
     // Setters
     setPositionState,
@@ -314,7 +315,6 @@ export function CreateLiquidityContextProvider({
     setPriceRangeState,
     setDepositState,
     setCurrencyInputs,
-    setError,
     setRefetch,
     refetchPoolData: derivedPositionInfo.refetchPoolData,
     // Reset functions

@@ -13,9 +13,9 @@ import { SwapCallback, SwapCallbackParams } from 'uniswap/src/features/transacti
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
+import { toStringish } from 'uniswap/src/utils/number'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { swapActions } from 'wallet/src/features/transactions/swap/swapSaga'
-import { toStringish } from 'wallet/src/utils/number'
 
 /** Callback to submit trades and track progress */
 export function useSwapCallback(): SwapCallback {

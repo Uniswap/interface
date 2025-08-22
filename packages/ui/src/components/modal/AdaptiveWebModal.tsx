@@ -1,5 +1,5 @@
 import { RemoveScroll } from '@tamagui/remove-scroll'
-import { PropsWithChildren, ReactNode, useCallback, useEffect, useState } from 'react'
+import { PropsWithChildren, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { DimensionValue } from 'react-native'
 import { Adapt, Dialog, GetProps, Sheet, View, VisuallyHidden, styled, useIsTouchDevice, useMedia } from 'tamagui'
 import { CloseIconProps, CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
@@ -18,11 +18,40 @@ export function ModalCloseIcon(props: CloseIconProps): JSX.Element {
   return hideCloseIcon ? <></> : <CloseIconWithHover {...props} />
 }
 
+const useIncrementTouchDeviceSheetKey = ({
+  isOpen,
+  isTouchDevice,
+}: {
+  isOpen: boolean
+  isTouchDevice: boolean
+}): number => {
+  const prevIsOpenRef = useRef(isOpen)
+  const [sheetKey, setSheetKey] = useState(0)
+
+  useEffect(() => {
+    if (!isTouchDevice) {
+      return
+    }
+    // Only increment sheetKey when transitioning from open to closed
+    if (prevIsOpenRef.current && !isOpen) {
+      setSheetKey((prev) => prev + 1)
+    }
+    prevIsOpenRef.current = isOpen
+  }, [isOpen, isTouchDevice])
+
+  return sheetKey
+}
+
 export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: ModalProps): JSX.Element | null {
   const isTouchDevice = useIsTouchDevice()
   const [isHandlePressed, setHandlePressed] = useState(false)
 
-  // TODO: https://linear.app/uniswap/issue/WEB-6258/token-selector-not-rendering-bottom-sheet-on-web
+  // TODO(INFRA-644): Remove this workaround once Tamagui sheet bug is fixed
+  // Force a new key to remount the Sheet on touch devices on sheet close
+  // This is a workaround for bug where sheet does not respect disableDrag value changes unless remounted
+  const touchDeviceSheetKey = useIncrementTouchDeviceSheetKey({ isOpen, isTouchDevice })
+
+  // TODO(WEB-6258): Token selector not rendering bottom sheet on web without this workaround
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     setMounted(true)
@@ -59,6 +88,7 @@ export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: Moda
   return (
     <RemoveScroll enabled={isOpen}>
       <Sheet
+        key={touchDeviceSheetKey}
         dismissOnOverlayPress
         dismissOnSnapToBottom
         modal

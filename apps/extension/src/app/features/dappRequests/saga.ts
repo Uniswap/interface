@@ -64,8 +64,9 @@ import { generateBatchId, getCapabilitiesCore } from 'wallet/src/features/batche
 import { Call } from 'wallet/src/features/dappRequests/types'
 import {
   ExecuteTransactionParams,
-  executeTransaction,
-} from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+  executeTransactionV2,
+} from 'wallet/src/features/transactions/executeTransaction/executeTransactionSagaV2'
+import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount, selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
@@ -320,11 +321,13 @@ export function* handleSendTransaction({
   senderTabInfo: { id },
   dappInfo,
   transactionTypeInfo,
+  preSignedTransaction,
 }: {
   request: BaseSendTransactionRequest
   senderTabInfo: SenderTabInfo
   dappInfo: DappInfo
   transactionTypeInfo?: TransactionTypeInfo
+  preSignedTransaction?: SignedTransactionRequest
 }) {
   const transactionRequest = request.transaction
   const { lastChainId, activeConnectedAddress, connectedAccounts } = dappInfo
@@ -351,9 +354,10 @@ export function* handleSendTransaction({
       },
     },
     transactionOriginType: TransactionOriginType.External,
+    preSignedTransaction,
   }
 
-  const { transactionHash } = yield* call(executeTransaction, sendTransactionParams)
+  const { transactionHash } = yield* call(executeTransactionV2, sendTransactionParams)
 
   // Trigger a pending transaction notification after we send the transaction to chain
   yield* put(
@@ -599,7 +603,7 @@ export function* handleSendCalls({
       transactionOriginType: TransactionOriginType.External,
     }
 
-    const { transactionHash } = yield* call(executeTransaction, sendTransactionParams)
+    const { transactionHash } = yield* call(executeTransactionV2, sendTransactionParams)
 
     yield* put(
       addBatchedTransaction({

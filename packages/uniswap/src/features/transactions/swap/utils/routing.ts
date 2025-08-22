@@ -3,15 +3,16 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 
-export function isUniswapX<T extends { routing: Routing }>(
-  obj: T,
-): obj is T & { routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.DUTCH_LIMIT | Routing.PRIORITY } {
-  return (
-    obj.routing === Routing.DUTCH_V2 ||
-    obj.routing === Routing.DUTCH_V3 ||
-    obj.routing === Routing.DUTCH_LIMIT ||
-    obj.routing === Routing.PRIORITY
-  )
+export const UNISWAPX_ROUTING_VARIANTS = [
+  Routing.DUTCH_V2,
+  Routing.DUTCH_V3,
+  Routing.DUTCH_LIMIT,
+  Routing.PRIORITY,
+] as const
+type UniswapXRouting = (typeof UNISWAPX_ROUTING_VARIANTS)[number]
+
+export function isUniswapX<T extends { routing: Routing }>(obj: T): obj is T & { routing: UniswapXRouting } {
+  return UNISWAPX_ROUTING_VARIANTS.includes(obj.routing as UniswapXRouting)
 }
 
 export function isClassic<T extends { routing: Routing }>(obj: T): obj is T & { routing: Routing.CLASSIC } {

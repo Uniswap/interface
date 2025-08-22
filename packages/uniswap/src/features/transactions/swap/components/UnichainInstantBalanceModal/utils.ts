@@ -67,6 +67,15 @@ export function getOutputAmountUsingOutputTransferLog({
 }
 
 /**
+ * Checks if a routing type should show flashblocks UI treatment
+ * @param routing - The routing type to check
+ * @returns true if the routing should show flashblocks UI
+ */
+export function shouldShowFlashblocksUI(routing?: Routing): boolean {
+  return routing ? !FLASHBLOCKS_UI_SKIP_ROUTES.includes(routing) : false
+}
+
+/**
  *
  * This is used to skip flashblock transaction treatments for non-swapish types.
  *

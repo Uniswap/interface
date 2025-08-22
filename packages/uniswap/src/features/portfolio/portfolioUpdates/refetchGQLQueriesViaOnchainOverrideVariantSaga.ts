@@ -1,5 +1,6 @@
 import { ApolloClient, NormalizedCacheObject, Reference } from '@apollo/client'
 import { AsStoreObject, isArray, isReference } from '@apollo/client/utilities'
+import { QueryClient } from '@tanstack/react-query'
 import { call, delay, put } from 'typed-redux-saga'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import {
@@ -18,6 +19,7 @@ import { TransactionDetails } from 'uniswap/src/features/transactions/types/tran
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 const REFETCH_DELAY = ONE_SECOND_MS * 3
@@ -26,10 +28,12 @@ export function* refetchGQLQueriesViaOnchainOverrideVariant({
   transaction,
   apolloClient,
   activeAddress,
+  queryClient,
 }: {
   transaction: TransactionDetails
   apolloClient: ApolloClient<NormalizedCacheObject>
   activeAddress: string | null
+  queryClient?: QueryClient
 }): Generator {
   const owner = transaction.from
   const currenciesWithBalanceToUpdate = getCurrenciesWithExpectedUpdates(transaction)
@@ -45,6 +49,7 @@ export function* refetchGQLQueriesViaOnchainOverrideVariant({
       apolloClient,
       ownerAddress: activeAddress,
       currencyIds: currenciesWithBalanceToUpdate,
+      queryClient,
     })
   }
 
@@ -62,10 +67,12 @@ function* modifyLocalCache({
   apolloClient,
   ownerAddress,
   currencyIds,
+  queryClient,
 }: {
   apolloClient: ApolloClient<NormalizedCacheObject>
   ownerAddress: string
   currencyIds: Set<CurrencyId>
+  queryClient?: QueryClient
 }) {
   logger.debug(
     'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
@@ -106,6 +113,15 @@ function* modifyLocalCache({
     accountAddress: ownerAddress,
     currencyIds,
   })
+
+  if (queryClient) {
+    for (const currencyId of currencyIds) {
+      queryClient.setQueryData<{ balance?: string }>(
+        [ReactQueryCacheKey.OnchainBalances, ownerAddress, currencyId],
+        (old) => ({ ...old, balance: onchainBalancesByCurrencyId.get(currencyId)?.rawBalance }),
+      )
+    }
+  }
 
   apolloClient.cache.modify({
     id: apolloClient.cache.identify(cachedPortfolio),

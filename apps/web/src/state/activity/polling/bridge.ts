@@ -96,10 +96,16 @@ export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpd
     let attempts = 0
     let interval = 500
     let timeoutId: NodeJS.Timeout
+    let isPolling = true
 
     const poll = async () => {
+      if (!isPolling) {
+        return
+      }
+
       // Do not poll if there are no pending bridge transactions
       if (!pendingDepositedBridgeTransactions.length) {
+        isPolling = false
         return
       }
       if (attempts >= 10) {
@@ -109,6 +115,7 @@ export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpd
             function: 'usePollPendingBridgeTransactions',
           },
         })
+        isPolling = false
         return
       }
 
@@ -122,6 +129,7 @@ export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpd
     timeoutId = setTimeout(poll, MIN_BRIDGE_WAIT_TIME)
 
     return () => {
+      isPolling = false
       clearTimeout(timeoutId)
     }
   }, [fetchStatuses, pendingDepositedBridgeTransactions])

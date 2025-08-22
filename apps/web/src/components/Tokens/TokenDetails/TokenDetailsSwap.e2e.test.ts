@@ -1,8 +1,10 @@
 /* eslint-disable no-restricted-syntax */
-import { expect, test } from 'playwright/fixtures'
+import { expect, getTest } from 'playwright/fixtures'
 import { UNI, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+
+const test = getTest()
 
 const UNI_MAINNET = UNI[UniverseChainId.Mainnet]
 

@@ -2,7 +2,6 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { DropdownSelector } from 'components/DropdownSelector'
-import { ErrorCallout } from 'components/ErrorCallout'
 import { LPSettings } from 'components/LPSettings'
 import { Container } from 'components/Liquidity/Create/Container'
 import { DynamicFeeTierSpeedbump } from 'components/Liquidity/Create/DynamicFeeTierSpeedbump'
@@ -23,6 +22,7 @@ import {
   DEFAULT_PRICE_RANGE_STATE,
   useCreateLiquidityContext,
 } from 'pages/CreatePosition/CreateLiquidityContextProvider'
+import { CreatePositionTxContextProvider } from 'pages/CreatePosition/CreatePositionTxContext'
 import type { Dispatch, SetStateAction } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
@@ -62,7 +62,6 @@ function CreatePositionInner({
     setStep,
   } = useCreateLiquidityContext()
   const v2Selected = protocolVersion === ProtocolVersion.V2
-  const { error, refetch } = useCreateLiquidityContext()
 
   const handleContinue = useCallback(() => {
     if (v2Selected) {
@@ -95,7 +94,6 @@ function CreatePositionInner({
         <Container>
           <SelectPriceRangeStep />
           <DepositStep />
-          <ErrorCallout errorMessage={error} onPress={refetch} />
         </Container>
       </Trace>
     )
@@ -107,7 +105,6 @@ function CreatePositionInner({
       <Container>
         <DepositStep />
       </Container>
-      <ErrorCallout errorMessage={error} onPress={refetch} />
     </Trace>
   )
 }
@@ -305,7 +302,8 @@ const Toolbar = () => {
     (version: ProtocolVersion) => {
       const versionUrl = getProtocolVersionLabel(version)
       if (versionUrl) {
-        navigate(`/positions/create/${versionUrl}`)
+        // Ensure useLiquidityUrlState is synced
+        setTimeout(() => navigate(`/positions/create/${versionUrl}`), 1)
       }
 
       setPositionState({
@@ -418,14 +416,17 @@ function CreatePositionContent({
               hook: initialInputs.hook ?? undefined,
               protocolVersion: initialProtocolVersion,
             }}
+            defaultInitialToken={initialInputs.defaultInitialToken}
             initialPriceRangeState={initialInputs.priceRangeState}
             initialDepositState={initialInputs.depositState}
             initialFlowStep={initialInputs.flowStep}
           >
-            <CreatePositionWrapper>
-              <CreatePositionInner currencyInputs={currencyInputs} setCurrencyInputs={setCurrencyInputs} />
-            </CreatePositionWrapper>
-            <SharedCreateModals />
+            <CreatePositionTxContextProvider>
+              <CreatePositionWrapper>
+                <CreatePositionInner currencyInputs={currencyInputs} setCurrencyInputs={setCurrencyInputs} />
+              </CreatePositionWrapper>
+              <SharedCreateModals />
+            </CreatePositionTxContextProvider>
           </CreateLiquidityContextProvider>
         </LPTransactionSettingsStoreContextProvider>
       </MultichainContextProvider>

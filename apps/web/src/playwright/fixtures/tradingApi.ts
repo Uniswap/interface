@@ -5,6 +5,19 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 export const DEFAULT_TEST_GAS_LIMIT = '20000000'
 
+const shouldIgnorePageError = (error: Error): { ignored: boolean } => {
+  if (
+    error.message.includes('Target page, context or browser has been closed') ||
+    error.message.includes('Test ended')
+  ) {
+    // eslint-disable-next-line no-console
+    console.log(`🟡 Ignored route error after page close: ${error.message}`)
+    return { ignored: true }
+  }
+
+  return { ignored: false }
+}
+
 /**
  * Generic helper function to stub trading API endpoints and disable transaction simulation
  */
@@ -56,13 +69,11 @@ export async function stubTradingApiEndpoint({
         body: JSON.stringify(responseJson),
       })
     } catch (error) {
-      if (error.message?.includes('Target page, context or browser has been closed')) {
-        // eslint-disable-next-line no-console
-        console.log(`🟡 Ignored route error after page close: ${error.message}`)
+      const { ignored } = shouldIgnorePageError(error)
+      if (ignored) {
         return
       }
 
-      // Re-throw unexpected errors
       throw error
     }
   })
@@ -91,16 +102,25 @@ export const test = base.extend<TradingApiFixture>({
         await page.route(
           `${uniswapUrls.tradingApiUrl}${uniswapUrls.tradingApiPaths.swaps}?txHashes=*`,
           async (route) => {
-            const response = await route.fetch()
-            const responseText = await response.text()
-            const responseJson = JSON.parse(responseText)
-            if (responseJson.swaps?.[0]) {
-              responseJson.swaps[0].status = 'SUCCESS'
-            }
+            try {
+              const response = await route.fetch()
+              const responseText = await response.text()
+              const responseJson = JSON.parse(responseText)
+              if (responseJson.swaps?.[0]) {
+                responseJson.swaps[0].status = 'SUCCESS'
+              }
 
-            return route.fulfill({
-              body: JSON.stringify(responseJson),
-            })
+              return route.fulfill({
+                body: JSON.stringify(responseJson),
+              })
+            } catch (error) {
+              const { ignored } = shouldIgnorePageError(error)
+              if (ignored) {
+                return undefined
+              }
+
+              throw error
+            }
           },
         )
 

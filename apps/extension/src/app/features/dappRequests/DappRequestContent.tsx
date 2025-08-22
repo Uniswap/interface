@@ -25,6 +25,7 @@ import {
 } from 'ui/src'
 import { Verified } from 'ui/src/components/icons'
 import { borderRadii, iconSizes } from 'ui/src/theme'
+import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceholder'
 import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -39,7 +40,6 @@ import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useThrottledCallback } from 'utilities/src/react/useThrottledCallback'
 import { MAX_HIDDEN_CALLS_BY_DEFAULT } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
-import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { WarningBox } from 'wallet/src/components/WarningBox/WarningBox'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 import { NetworkFeeFooter } from 'wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter'
@@ -244,7 +244,7 @@ function DappRequestFooter({
     if (onConfirm) {
       onConfirm()
     } else {
-      await defaultOnConfirm(request)
+      await defaultOnConfirm({ request })
       if (isUniswapX) {
         await handleExternallySubmittedUniswapXOrder(activeAccount.address, dispatch)
       }

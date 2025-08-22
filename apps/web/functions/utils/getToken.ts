@@ -1,12 +1,12 @@
+import client from 'functions/client'
+import { Data } from 'functions/utils/cache'
 import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
+import { NATIVE_CHAIN_ID } from 'src/constants/tokens'
 import {
   Chain,
   TokenWebDocument,
   TokenWebQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Data } from 'utils/cache'
-import { NATIVE_CHAIN_ID } from '../../src/constants/tokens'
-import client from '../client'
 
 const convertTokenAddress = (networkName: string, tokenAddress: string) => {
   if (tokenAddress === NATIVE_CHAIN_ID) {

@@ -5,10 +5,10 @@ import { onboardingMessageChannel } from 'src/background/messagePassing/messageC
 import { OnboardingMessageType } from 'src/background/messagePassing/types/ExtensionMessages'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import { getTokenUrl } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { escapeRegExp } from 'utilities/src/primitives/string'
 import { useEvent } from 'utilities/src/react/hooks'
-import { getTokenUrl } from 'wallet/src/utils/linking'
 
 export type SidebarLocationState =
   | {

@@ -6,8 +6,8 @@ import {
   useSelectAddressNotifications,
 } from 'uniswap/src/features/notifications/hooks'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { useSortedPendingTransactions } from 'uniswap/src/features/transactions/hooks/usePendingTransactions'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useSortedPendingTransactions } from 'wallet/src/features/transactions/hooks'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 const PENDING_TX_TIME_LIMIT = 60_000 * 5 // 5 mins

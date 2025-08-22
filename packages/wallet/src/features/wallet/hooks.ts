@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { AccountType, DisplayName, DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
+import { WalletDisplayNameOptions, useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
@@ -154,13 +154,6 @@ export function useSelectAccountNotificationSetting(address: Address): boolean {
   return useSelector((state: WalletState) => selectAccountNotificationSetting(state, address))
 }
 
-type DisplayNameOptions = {
-  showShortenedEns?: boolean
-  includeUnitagSuffix?: boolean
-  showLocalName?: boolean
-  overrideDisplayName?: string
-}
-
 /**
  * If user has an onchain ENS/Unitag name, display that name.
  * Otherwise if user is onboarding or has saved a local label, display the local name.
@@ -171,7 +164,7 @@ type DisplayNameOptions = {
  * @param options.includeUnitagSuffix - Whether to include the unitag suffix (.uni.eth) in returned unitag name
  * @param options.showLocalName - Whether to show the local wallet name
  */
-export function useDisplayName(address: Maybe<string>, options?: DisplayNameOptions): DisplayName | undefined {
+export function useDisplayName(address: Maybe<string>, options?: WalletDisplayNameOptions): DisplayName | undefined {
   const onchainDisplayName = useOnchainDisplayName(address, options)
 
   // Need to account for pending accounts for use within onboarding

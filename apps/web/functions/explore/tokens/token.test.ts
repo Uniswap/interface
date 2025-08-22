@@ -1,34 +1,34 @@
-import { NATIVE_CHAIN_ID } from '../../../src/constants/tokens'
+import { NATIVE_CHAIN_ID } from 'src/constants/tokens'
 
 const tokens = [
   {
     address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
     network: 'ethereum',
     tokenData: { symbol: 'USDC' },
-    image: 'http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+    image: 'http://localhost:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   },
   {
     address: NATIVE_CHAIN_ID,
     network: 'ethereum',
     tokenData: { symbol: 'ETH' },
-    image: 'http://127.0.0.1:3000/api/image/tokens/ethereum/NATIVE',
+    image: 'http://localhost:3000/api/image/tokens/ethereum/NATIVE',
   },
   {
     address: NATIVE_CHAIN_ID,
     network: 'polygon',
     tokenData: { symbol: 'POL' },
-    image: 'http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE',
+    image: 'http://localhost:3000/api/image/tokens/polygon/NATIVE',
   },
   {
     address: '0x6982508145454ce325ddbe47a25d4ec3d2311933',
     network: 'ethereum',
     tokenData: { symbol: 'PEPE' },
-    image: 'http://127.0.0.1:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933',
+    image: 'http://localhost:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933',
   },
 ]
 
 test.each(tokens)('should inject metadata for valid tokens', async (token) => {
-  const url = 'http://127.0.0.1:3000/explore/tokens/' + token.network + '/' + token.address
+  const url = 'http://localhost:3000/explore/tokens/' + token.network + '/' + token.address
   const body = await fetch(new Request(url)).then((res) => res.text())
   expect(body).toMatchSnapshot()
   expect(body).toContain(`<meta property="og:title" content="Get ${token.tokenData.symbol} on Uniswap" data-rh="true">`)
@@ -53,12 +53,12 @@ test.each(tokens)('should inject metadata for valid tokens', async (token) => {
 })
 
 const invalidTokens = [
-  'http://127.0.0.1:3000/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb49',
-  'http://127.0.0.1:3000/explore/tokens/ethereum',
-  'http://127.0.0.1:3000/explore/tokens/ethereun',
-  'http://127.0.0.1:3000/explore/tokens/ethereum/0x0',
-  'http://127.0.0.1:3000/explore/tokens/ethereum//',
-  'http://127.0.0.1:3000/explore/tokens/potato/?potato=1',
+  'http://localhost:3000/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb49',
+  'http://localhost:3000/explore/tokens/ethereum',
+  'http://localhost:3000/explore/tokens/ethereun',
+  'http://localhost:3000/explore/tokens/ethereum/0x0',
+  'http://localhost:3000/explore/tokens/ethereum//',
+  'http://localhost:3000/explore/tokens/potato/?potato=1',
 ]
 
 test.each(invalidTokens)('should not inject metadata for invalid tokens', async (url) => {

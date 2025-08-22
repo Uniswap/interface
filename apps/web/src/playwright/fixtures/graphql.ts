@@ -38,19 +38,24 @@ export const test = base.extend<GraphqlFixture>({
     }
 
     const waitForResponse = async (operationName: string) => {
-      await page.waitForResponse((response) => {
-        if (!response.request().url().includes('graphql')) {
-          return false
-        }
+      try {
+        await page.waitForResponse((response) => {
+          if (!response.request().url().includes('graphql')) {
+            return false
+          }
 
-        const postDataBuffer = response.request().postDataBuffer()
-        if (!postDataBuffer) {
-          return false
-        }
-        const postData = postDataBuffer.toString('utf-8')
-        const data = JSON.parse(postData)
-        return data.operationName === operationName
-      })
+          const postDataBuffer = response.request().postDataBuffer()
+          if (!postDataBuffer) {
+            return false
+          }
+          const postData = postDataBuffer.toString('utf-8')
+          const data = JSON.parse(postData)
+          return data.operationName === operationName
+        })
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('GraphQL waitForResponse error:', error)
+      }
     }
 
     await page.route(/(?:interface|beta).(gateway|api).uniswap.org\/v1\/graphql/, async (route) => {

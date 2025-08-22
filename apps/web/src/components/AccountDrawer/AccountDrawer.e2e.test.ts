@@ -1,10 +1,12 @@
 /* eslint-disable no-restricted-syntax */
 import type { Page, Request } from '@playwright/test'
-import { expect, test } from 'playwright/fixtures'
+import { expect, getTest } from 'playwright/fixtures'
 import { HAYDEN_ADDRESS, TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import { Mocks } from 'playwright/mocks/mocks'
 import { WEB_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+
+const test = getTest()
 
 const GRAPHQL_URL = /(?:interface|beta).(gateway|api).uniswap.org\/v1\/graphql/
 

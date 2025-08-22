@@ -126,7 +126,12 @@ export function formatCommonPropertiesForTrade({
         ? trade.quote.quote.gasFeeUSD
         : undefined
       : getEstimatedNetworkFee(trade)?.toString(),
-    minimum_output_after_slippage: trade.minimumAmountOut(allowedSlippage).toSignificant(6),
+    minimum_output_after_slippage:
+      trade instanceof ClassicTrade
+        ? trade.minAmountOut.toSignificant(6)
+        : !isUniversalSwapFlow && isClassicTrade(trade)
+          ? trade.minimumAmountOut(allowedSlippage).toSignificant(6)
+          : undefined,
     allowed_slippage: formatPercentNumber(allowedSlippage),
     method: isUniversalSwapFlow ? undefined : getQuoteMethod(trade),
     fee_usd: outputFeeFiatValue,

@@ -7,6 +7,7 @@ import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import { FLASHBLOCKS_UI_SKIP_ROUTES } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
 import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { PermitMethod, ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -215,7 +216,7 @@ export function* approveAndSwap(params: SwapParams) {
       yield* call(executeTransaction, executeTransactionParams)
 
       // Only show pending notification if not a flashblock transaction
-      if (!getIsFlashblocksEnabled(chainId)) {
+      if (!getIsFlashblocksEnabled(chainId) || FLASHBLOCKS_UI_SKIP_ROUTES.includes(swapTxContext.routing)) {
         yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
       }
 

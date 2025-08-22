@@ -16,11 +16,9 @@ import {
   WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { SubmitTransactionParams } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
+import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { SubmitUniswapXOrderParams } from 'wallet/src/features/transactions/swap/submitOrderSaga'
-import {
-  SignedPermit,
-  SignedTransactionRequest,
-} from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
+import { SignedPermit } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
 import { BaseTransactionContext } from 'wallet/src/features/transactions/swap/types/transactionExecutor'
 
 export interface ApprovalTransactionData {
@@ -108,7 +106,6 @@ export function createTransactionParamsFactory(context: BaseTransactionContext):
       options,
       typeInfo,
       transactionOriginType: TransactionOriginType.Internal,
-      timestampBeforeSign: context.timestampBeforeSign,
       analytics: context.analytics,
     }
   }

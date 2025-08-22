@@ -11,7 +11,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Anchor, Button, Circle, Flex, Text, useMedia } from 'ui/src'
+import { Anchor, Circle, Flex, Text, useMedia } from 'ui/src'
 
 import { RightArrow } from 'ui/src/components/icons/RightArrow'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -88,25 +88,6 @@ export function LiquidityPositionInfo({
 
   const includeNetworkInLogo = useMemo(() => !includeNetwork || media.lg, [includeNetwork, media.lg])
 
-  const migrateToV4Button = (): JSX.Element => {
-    return (
-      <Button
-        icon={<RightArrow />}
-        iconPosition="after"
-        py="$spacing2"
-        borderRadius="$rounded4"
-        emphasis="secondary"
-        size="xxsmall"
-        onPress={(e) => {
-          e.preventDefault()
-          navigate(`/migrate/v3/${chainInfo.urlParam}/${positionInfo.tokenId}`)
-        }}
-      >
-        {t('pool.migrateToV4')}
-      </Button>
-    )
-  }
-
   return (
     <Flex row gap="$gap16" $md={{ width: '100%' }} alignItems={isMiniVersion ? 'center' : 'flex-start'}>
       <SplitLogo
@@ -136,9 +117,22 @@ export function LiquidityPositionInfo({
             )}
           </Flex>
           <Flex row gap={2} alignItems="center">
-            <LiquidityPositionInfoBadges size="small" version={version} v4hook={v4hook} feeTier={feeTier} />
+            <LiquidityPositionInfoBadges
+              size="small"
+              version={version}
+              v4hook={v4hook}
+              feeTier={feeTier}
+              cta={
+                isMigrateToV4ButtonVisible
+                  ? {
+                      label: t('pool.migrateToV4'),
+                      iconAfter: <RightArrow />,
+                      onPress: () => navigate(`/migrate/v3/${chainInfo.urlParam}/${positionInfo.tokenId}`),
+                    }
+                  : undefined
+              }
+            />
           </Flex>
-          {isMigrateToV4ButtonVisible && migrateToV4Button()}
         </Flex>
 
         {!isMiniVersion && (

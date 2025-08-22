@@ -51,7 +51,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
         class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _mt-0auto24pxau30540443 _mr-0auto24pxau30540443 _mb-0auto24pxau30540443 _ml-0auto24pxau30540443 _maxHeight-600px _position-relative scrollbar-hidden"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-998 _justifyContent-flex-end _backgroundColor-surface1 scrollbar-hidden"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-968 _justifyContent-flex-end _backgroundColor-surface1 scrollbar-hidden"
         >
           <div
             class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopRightRadius-t-radius-ro291586424 _borderTopLeftRadius-t-radius-ro291586424 _backgroundColor-surface1Hov3121676 _scrollbarWidth-none scrollbar-hidden"
@@ -316,7 +316,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
         class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _mt-0auto24pxau30540443 _mr-0auto24pxau30540443 _mb-0auto24pxau30540443 _ml-0auto24pxau30540443 _maxHeight-600px _position-relative scrollbar-hidden"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-998 _justifyContent-flex-end _backgroundColor-surface1 scrollbar-hidden"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-968 _justifyContent-flex-end _backgroundColor-surface1 scrollbar-hidden"
         >
           <div
             class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopRightRadius-t-radius-ro291586424 _borderTopLeftRadius-t-radius-ro291586424 _backgroundColor-surface1Hov3121676 _scrollbarWidth-none _opacity-0--4 scrollbar-hidden"
@@ -4110,7 +4110,7 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
         class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _mt-0auto24pxau30540443 _mr-0auto24pxau30540443 _mb-0auto24pxau30540443 _ml-0auto24pxau30540443 _maxHeight-600px _position-relative scrollbar-hidden"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-998 _justifyContent-flex-end _backgroundColor-surface1 scrollbar-hidden"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _zIndex-968 _justifyContent-flex-end _backgroundColor-surface1 scrollbar-hidden"
         >
           <div
             class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _minWidth-10037 _height-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopRightRadius-t-radius-ro291586424 _borderTopLeftRadius-t-radius-ro291586424 _backgroundColor-surface1Hov3121676 _scrollbarWidth-none scrollbar-hidden"
