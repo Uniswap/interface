@@ -4,5 +4,5 @@ Flashblocks on Unichain: This infra upgrade brings 200ms blocktimes to the netwo
 
 Other changes: 
 
-- Improved virtual keyboard behavior
+- Fixed visual glitches in token selector
 - Various bug fixes and performance improvements
