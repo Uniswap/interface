@@ -15,7 +15,7 @@ import { parseProtectionInfo, parseRestProtocolVersion, parseSafetyLevel } from 
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
-import { PoolSearchResult, SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { PoolSearchHistoryResult, SearchHistoryResultType } from 'uniswap/src/features/search/SearchHistoryResult'
 import { buildCurrencyId, currencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 
 /**
@@ -65,7 +65,7 @@ export function searchTokenToCurrencyInfo(token: SearchToken): CurrencyInfo | nu
   return buildCurrencyInfo({ currency, currencyId: currencyId(currency), logoUrl, safetyInfo })
 }
 
-export function searchPoolToPoolSearchResult(pool: Pool): PoolSearchResult | undefined {
+export function searchPoolToPoolSearchResult(pool: Pool): PoolSearchHistoryResult | undefined {
   const protocolVersion = parseRestProtocolVersion(pool.protocolVersion)
   if (!pool.token0 || !pool.token1 || !protocolVersion) {
     return undefined
@@ -77,7 +77,7 @@ export function searchPoolToPoolSearchResult(pool: Pool): PoolSearchResult | und
     ? getNativeAddress(pool.chainId)
     : pool.token1.address
   return {
-    type: SearchResultType.Pool,
+    type: SearchHistoryResultType.Pool,
     chainId: pool.chainId,
     poolId: pool.id,
     protocolVersion,

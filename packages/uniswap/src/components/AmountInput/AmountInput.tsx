@@ -9,7 +9,7 @@ import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { useOnMobileAppState } from 'utilities/src/device/appState'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 
 type Props = {
   adjustWidthToContent?: boolean

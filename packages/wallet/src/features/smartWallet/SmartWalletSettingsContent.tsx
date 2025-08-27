@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Flex, ScrollView, Text, TouchableArea } from 'ui/src'
-import { CloudSlash, QuestionInCircleFilled, RoundExclamation } from 'ui/src/components/icons'
+import { Flex, ScrollView, Separator, Text, TouchableArea } from 'ui/src'
+import { QuestionInCircleFilled, RoundExclamation } from 'ui/src/components/icons'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { fonts, iconSizes, zIndexes } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
@@ -54,7 +54,11 @@ function WalletItem({ wallet, onPress }: { wallet: WalletData; onPress: (wallet:
       )
     }
     if (isUnavailable) {
-      return <CloudSlash size="$icon.20" color="$neutral3" />
+      return (
+        <Text variant="body4" color="$neutral2">
+          {t('settings.setting.smartWallet.notEligible')}
+        </Text>
+      )
     }
     return <RotatableChevron color="$neutral3" direction="right" height={iconSizes.icon20} width={iconSizes.icon20} />
   }, [isInactive, isUnavailable, onPressCallback, t])
@@ -70,18 +74,10 @@ function WalletItem({ wallet, onPress }: { wallet: WalletData; onPress: (wallet:
       flexDirection="row"
       gap="$spacing12"
       justifyContent="space-between"
-      mb="$spacing12"
       cursor={isInactive ? 'default' : 'pointer'}
       onPress={!isInactive ? onPressCallback : undefined}
     >
-      <Flex
-        row
-        shrink
-        minWidth={0}
-        alignItems="center"
-        gap="$spacing12"
-        opacity={isUnavailable || isInactive ? 0.5 : 1}
-      >
+      <Flex row shrink minWidth={0} alignItems="center" gap="$spacing12" opacity={isUnavailable ? 0.5 : 1}>
         <Flex>
           {wallet.status === WalletStatus.ActionRequired && (
             <Flex bottom={-2} position="absolute" right={-3} zIndex={zIndexes.mask}>
@@ -100,11 +96,11 @@ function WalletItem({ wallet, onPress }: { wallet: WalletData; onPress: (wallet:
             centered
             backgroundColor="$surface1"
             borderRadius="$roundedFull"
-            height={iconSizes.icon32}
-            width={iconSizes.icon32}
+            height={iconSizes.icon40}
+            width={iconSizes.icon40}
             overflow="hidden"
           >
-            <AccountIcon avatarUri={avatar} address={wallet.walletAddress} size={iconSizes.icon32} />
+            <AccountIcon avatarUri={avatar} address={wallet.walletAddress} size={iconSizes.icon40} />
           </Flex>
         </Flex>
         <Flex shrink minWidth={0}>
@@ -177,28 +173,41 @@ export function SmartWalletSettingsContent(): JSX.Element {
         return undefined
       }
 
+      const isActionRequired = status === WalletStatus.ActionRequired
+
       return (
-        <Flex gap="$spacing12">
-          <Text color="$neutral1" variant="subheading2">
-            {getTranslatedStatus(status)}
-          </Text>
+        <Flex gap="$spacing16">
+          {isActionRequired && (
+            <Text color="$statusCritical" variant="subheading2">
+              {getTranslatedStatus(status)}
+            </Text>
+          )}
           {walletsForStatus.map((wallet) => (
             <WalletItem key={wallet.walletAddress} wallet={wallet} onPress={handleOnWalletPress} />
           ))}
         </Flex>
       )
     },
-    [wallets, getTranslatedStatus, handleOnWalletPress],
+    [wallets, handleOnWalletPress, getTranslatedStatus],
   )
+
+  const hasActionRequiredWallets = wallets.some((w) => w.status === WalletStatus.ActionRequired)
 
   return (
     <>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Flex gap="$gap20" px="$padding8">
+        <Flex px="$padding8">
           {renderWalletSection(WalletStatus.ActionRequired)}
-          {renderWalletSection(WalletStatus.Active)}
-          {renderWalletSection(WalletStatus.Inactive)}
-          {renderWalletSection(WalletStatus.Unavailable)}
+          {hasActionRequiredWallets && (
+            <Flex py="$spacing20">
+              <Separator backgroundColor="$surface3" mt="$spacing4" />
+            </Flex>
+          )}
+          <Flex gap="$spacing16">
+            {renderWalletSection(WalletStatus.Active)}
+            {renderWalletSection(WalletStatus.Inactive)}
+            {renderWalletSection(WalletStatus.Unavailable)}
+          </Flex>
         </Flex>
       </ScrollView>
 

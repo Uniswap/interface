@@ -24,11 +24,13 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/curren
 import { logger } from 'utilities/src/logger/logger'
 
 export function useBridgingTokenWithHighestBalance({
-  address,
+  evmAddress,
+  svmAddress,
   currencyAddress,
   currencyChainId,
 }: {
-  address: Address
+  evmAddress?: Address
+  svmAddress?: Address
   currencyAddress: Address
   currencyChainId: UniverseChainId
 }): {
@@ -52,7 +54,8 @@ export function useBridgingTokenWithHighestBalance({
   const crossChainTokens = tokenProjectsData?.tokenProjects?.[0]?.tokens
 
   const { otherChainBalances } = useCrossChainBalances({
-    address,
+    evmAddress,
+    svmAddress,
     currencyId,
     crossChainTokens,
     fetchPolicy: 'cache-first',
@@ -120,11 +123,13 @@ export function useBridgingTokenWithHighestBalance({
 
 export function useBridgingTokensOptions({
   oppositeSelectedToken,
-  walletAddress,
+  evmAddress,
+  svmAddress,
   chainFilter,
 }: {
   oppositeSelectedToken: TradeableAsset | undefined
-  walletAddress: Address | undefined
+  evmAddress: Address | undefined
+  svmAddress: Address | undefined
   chainFilter: UniverseChainId | null
 }): GqlResult<TokenOption[] | undefined> & { shouldNest?: boolean } {
   const tokenIn = oppositeSelectedToken?.address
@@ -152,7 +157,7 @@ export function useBridgingTokensOptions({
     error: portfolioBalancesByIdError,
     refetch: portfolioBalancesByIdRefetch,
     loading: loadingPorfolioBalancesById,
-  } = usePortfolioBalancesForAddressById(walletAddress)
+  } = usePortfolioBalancesForAddressById({ evmAddress, svmAddress })
 
   const tokenOptions = useBridgingTokensToTokenOptions(bridgingTokens?.tokens, portfolioBalancesById)
   // Filter out tokens that are not on the current chain, unless the input token is the same as the current chain

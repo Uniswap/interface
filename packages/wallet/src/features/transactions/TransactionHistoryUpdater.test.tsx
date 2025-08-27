@@ -50,6 +50,7 @@ const walletSlice = {
     isReplacingAccount: false,
     skipToSeedPhrase: false,
   },
+  androidCloudBackupEmail: null,
 }
 
 const assetActivities = [

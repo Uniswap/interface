@@ -15,7 +15,7 @@ export function isFinalizedTxStatus(status: TransactionStatus): status is Finali
   return FINAL_STATUSES.some((finalStatus) => finalStatus === status)
 }
 
-export function isFinalizedTx(tx: TransactionDetails | FinalizedTransactionDetails): tx is FinalizedTransactionDetails {
+export function isFinalizedTx(tx: TransactionDetails | InterfaceTransactionDetails | FinalizedTransactionDetails): tx is FinalizedTransactionDetails {
   const validateFinalizedTx = (): FinalizedTransactionDetails | undefined => {
     const { status, hash } = tx
     if (status === TransactionStatus.Success) {
@@ -39,30 +39,21 @@ export function isWalletTransaction(
 ): transaction is TransactionDetails {
   // Wallet transactions have these optional fields that interface transactions don't have.  We can't rely on this alone because it's possible none of these fields are present.
   const hasWalletOptionalFields =
-    'ownerAddress' in transaction ||
-    'receipt' in transaction ||
     'cancelRequest' in transaction ||
     'networkFee' in transaction
 
-  // Interface transactions have a required 'hash' field
-  // Wallet transactions have an optional 'hash' field
-  const hasRequiredInterfaceHash = 'hash' in transaction && typeof transaction.hash === 'string'
-
-  if (hasWalletOptionalFields || !hasRequiredInterfaceHash) {
+  if (hasWalletOptionalFields) {
     return true
   }
 
   // Interface transactions have these optional fields that wallet transactions don't have:
   const hasInterfaceOptionalFields =
-    'nonce' in transaction ||
     'batchInfo' in transaction ||
     'lastCheckedBlockNumber' in transaction ||
     'deadline' in transaction ||
-    'cancelled' in transaction ||
-    'confirmedTime' in transaction
+    'cancelled' in transaction
 
-  // If it has the required interface hash OR any interface-specific optional fields, it's an interface transaction
-  return !hasInterfaceOptionalFields
+    return !hasInterfaceOptionalFields
 }
 
 // Function that returns the transaction typed as TransactionDetails when it's a wallet transaction
@@ -79,32 +70,24 @@ export function isInterfaceTransaction(
 
   // Interface transactions have these optional fields that wallet transactions don't have.  We can't rely on this alone because it's possible none of these fields are present.
   const hasInterfaceOptionalFields =
-    'nonce' in transaction ||
     'batchInfo' in transaction ||
     'lastCheckedBlockNumber' in transaction ||
     'deadline' in transaction ||
-    'cancelled' in transaction ||
-    'confirmedTime' in transaction
+    'cancelled' in transaction
 
   if (hasInterfaceOptionalFields) {
     return true
   }
-  // Interface transactions have a required 'hash' field
-  const hasRequiredInterfaceHash = 'hash' in transaction && typeof transaction.hash === 'string'
 
   // Wallet transactions have these optional fields that interface transactions don't have:
-  // - ownerAddress
   // - receipt
   // - cancelRequest
   // - networkFee
   const hasWalletOptionalFields =
-    'ownerAddress' in transaction ||
-    'receipt' in transaction ||
     'cancelRequest' in transaction ||
     'networkFee' in transaction
 
-  // It's an interface transaction if it has the required interface hash AND no wallet-specific fields
-  return hasRequiredInterfaceHash && !hasWalletOptionalFields
+  return !hasWalletOptionalFields
 }
 
 // Function that returns the transaction typed as InterfaceTransactionDetails when it's an interface transaction

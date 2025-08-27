@@ -48,7 +48,7 @@ import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 import { CardType, IntroCard, IntroCardGraphicType } from 'wallet/src/components/introCards/IntroCard'
 import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
 import { PermissionsModal } from 'wallet/src/components/settings/permissions/PermissionsModal'

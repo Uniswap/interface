@@ -17,7 +17,13 @@ import { zIndexes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { InformationBanner } from 'uniswap/src/components/banners/InformationBanner'
+import { TokenBalanceItem } from 'uniswap/src/components/portfolio/TokenBalanceItem'
 import { isError, isNonPollingRequestInFlight } from 'uniswap/src/data/utils'
+import {
+  TokenBalanceListContextProvider,
+  useTokenBalanceListContext,
+} from 'uniswap/src/features/portfolio/TokenBalanceListContext'
+import { TokenBalanceListRow, isHiddenTokenBalancesRow } from 'uniswap/src/features/portfolio/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -25,13 +31,6 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { isAndroid } from 'utilities/src/platform'
-import { TokenBalanceItem } from 'wallet/src/features/portfolio/TokenBalanceItem'
-import {
-  HIDDEN_TOKEN_BALANCES_ROW,
-  TokenBalanceListContextProvider,
-  TokenBalanceListRow,
-  useTokenBalanceListContext,
-} from 'wallet/src/features/portfolio/TokenBalanceListContext'
 
 type TokenBalanceListProps = TabProps & {
   empty?: JSX.Element | null
@@ -266,7 +265,7 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
     onPressToken,
   ])
 
-  if (item === HIDDEN_TOKEN_BALANCES_ROW) {
+  if (isHiddenTokenBalancesRow(item)) {
     return <HiddenTokensRowWrapper />
   }
 

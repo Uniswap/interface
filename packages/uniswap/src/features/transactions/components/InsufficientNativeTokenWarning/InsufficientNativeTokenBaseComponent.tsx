@@ -31,11 +31,9 @@ export function InsufficientNativeTokenBaseComponent({
 
   return (
     <Flex centered row borderRadius="$rounded12" gap="$spacing8" p={isWeb ? '$spacing16' : '$none'}>
-      {isWeb && (
-        <Flex>
-          <AlertTriangleFilled color="$neutral2" size="$icon.16" />
-        </Flex>
-      )}
+      <Flex>
+        <AlertTriangleFilled color="$neutral2" size="$icon.16" />
+      </Flex>
 
       <Flex fill={isWeb}>
         <Text color="$neutral2" variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}>

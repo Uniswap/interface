@@ -19,10 +19,10 @@ export function SwapFlowScreen(): JSX.Element {
   const account = useActiveAccountWithThrow()
   const ignorePersistedFilteredChainIds = !!locationState?.initialTransactionState
   const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
-  const inputCurrencyId = useHighestBalanceNativeCurrencyId(
-    account.address,
-    !ignorePersistedFilteredChainIds ? persistedFilteredChainIds?.[CurrencyField.INPUT] : undefined,
-  )
+  const inputCurrencyId = useHighestBalanceNativeCurrencyId({
+    evmAddress: account.address,
+    chainId: !ignorePersistedFilteredChainIds ? persistedFilteredChainIds?.[CurrencyField.INPUT] : undefined,
+  })
   const initialState = prepareSwapFormState({
     inputCurrencyId,
     defaultChainId,

@@ -5,7 +5,6 @@ import { NativeSyntheticEvent, Share } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
 import { TripleDot } from 'src/components/icons/TripleDot'
-import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -21,6 +20,7 @@ import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
+import { noop } from 'utilities/src/react/noop'
 
 type MenuAction = {
   title: string
@@ -121,7 +121,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
         await menuActions[e.nativeEvent.index]?.action()
       }}
     >
-      <TouchableArea backgroundColor="$surface4" borderRadius="$roundedFull" p="$spacing8" onLongPress={disableOnPress}>
+      <TouchableArea backgroundColor="$surface4" borderRadius="$roundedFull" p="$spacing8" onLongPress={noop}>
         <Flex centered grow height={iconSizes.icon16} width={iconSizes.icon16}>
           <TripleDot color="$white" size={3.5} />
         </Flex>

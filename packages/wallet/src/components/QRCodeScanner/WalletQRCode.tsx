@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, QRCodeDisplay, Text, useMedia, useSporeColors } from 'ui/src'
+import { Flex, QRCodeDisplay, Text, useIsShortMobileDevice, useMedia, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
@@ -17,6 +17,7 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
   const media = useMedia()
   const addressColor = useAddressColorProps(address)
   const { chains: enabledChainIds } = useEnabledChains({ platform: Platform.EVM })
+  const isShortMobileDevice = useIsShortMobileDevice()
 
   const QR_CODE_SIZE = media.short ? 220 : 240
   const UNICON_SIZE = QR_CODE_SIZE / 4
@@ -30,7 +31,7 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
       gap="$spacing12"
       justifyContent={isWeb ? 'flex-start' : 'center'}
       mb="$spacing8"
-      px={isWeb ? '$spacing16' : '$spacing60'}
+      px={isWeb || isShortMobileDevice ? '$spacing16' : '$spacing60'}
       py={isWeb ? '$spacing60' : '$spacing24'}
     >
       <Flex py="$spacing12">

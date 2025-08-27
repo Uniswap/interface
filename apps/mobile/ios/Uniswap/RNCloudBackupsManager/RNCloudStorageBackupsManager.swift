@@ -25,23 +25,17 @@ enum ICloudBackupError: String, Error  {
   case iCloudError = "iCloudError"
 }
 
-enum ICloudManagerEventType: String, CaseIterable {
-  case foundCloudBackup = "FoundCloudBackup"
-}
-
 @objc(RNCloudStorageBackupsManager)
-class RNCloudStorageBackupsManager: RCTEventEmitter {
-  
-  private let backupsQuery = NSMetadataQuery()
+class RNCloudStorageBackupsManager: NSObject, RCTBridgeModule {
   
   let rnEthersRS = RNEthersRS()
   
-  @objc override static func requiresMainQueueSetup() -> Bool {
-    return false
+  static func moduleName() -> String! {
+    return "RNCloudStorageBackupsManager"
   }
   
-  override func supportedEvents() -> [String]! {
-    return ICloudManagerEventType.allCases.map { $0.rawValue }
+  @objc static func requiresMainQueueSetup() -> Bool {
+    return false
   }
   
   /**
@@ -196,81 +190,43 @@ class RNCloudStorageBackupsManager: RCTEventEmitter {
    
    Referenced sample implementation here: https://developer.apple.com/documentation/uikit/documents_data_and_pasteboard/synchronizing_documents_in_the_icloud_environment
    */
-  @objc
-  func startFetchingCloudStorageBackups() {
-    // Fetch all JSON files in Uniswap iCloud container
-    backupsQuery.searchScopes = [NSMetadataQueryUbiquitousDataScope]
-    backupsQuery.predicate =
-    NSPredicate(format: "%K LIKE %@", NSMetadataItemFSNameKey, "*.json")
-    
-    NotificationCenter.default.addObserver(self,
-                                           selector: #selector(backupsMetadataDidChange),
-                                           name: .NSMetadataQueryDidFinishGathering,
-                                           object: nil)
-    NotificationCenter.default.addObserver(self,
-                                           selector: #selector(backupsMetadataDidChange),
-                                           name: .NSMetadataQueryDidUpdate,
-                                           object: nil)
-    
-    DispatchQueue.main.async {
-      self.backupsQuery.start()
+  @objc(getCloudBackupList:reject:)
+  func getCloudBackupList(resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    // Access Uniswap iCloud Documents container
+    guard let containerUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
+        return reject(ICloudBackupError.iCloudError.rawValue, "Failed to find iCloud container", ICloudBackupError.iCloudError)
     }
-  }
-  
-  /**
-   Stops listening to updates from the NSMetadataQuery
-   */
-  @objc
-  func stopFetchingCloudStorageBackups() {
-    NotificationCenter.default.removeObserver(self)
-    self.backupsQuery.stop()
-  }
-  
-  /**
-   Handles any updates to discovered backup files from the NSMetadataQuery. Downloads backup files from iCloud if they are not found locally and sends discovered backups' metadata to JS.
-   */
-  @objc func backupsMetadataDidChange() {
-    self.backupsQuery.disableUpdates()
     
-    self.backupsQuery.enumerateResults { (item: Any, _: Int, _: UnsafeMutablePointer<ObjCBool>) in
-      if let metadataItem = item as? NSMetadataItem, let url = metadataItem.value(forAttribute: NSMetadataItemURLKey) as? URL {
-        if isMetadataItemDownloaded(item: metadataItem) {
-          handleDownloadedBackup(url: url)
-        } else {
-          try? FileManager.default.startDownloadingUbiquitousItem(at: url)
-        }
+    // Try to list all JSON files in the iCloud Documents container
+    do {
+      let directoryContents = try FileManager.default.contentsOfDirectory(at: containerUrl, includingPropertiesForKeys: nil)
+      
+      // Filter only .json files
+      let jsonFiles = directoryContents.filter { $0.pathExtension == "json" }
+      
+      if jsonFiles.isEmpty {
+        return reject(ICloudBackupError.iCloudError.rawValue, "No backup files found", ICloudBackupError.iCloudError)
       }
-    }
-    
-    self.backupsQuery.enableUpdates()
-  }
-  
-  /**
-   Decodes a backup JSON file and sends backup metadata to JS via RCTEventEmitter
-   
-   - parameter url: URL of downloaded backup JSON file
-   */
-  func handleDownloadedBackup(url: URL) {
-    let data = try? Data(contentsOf: url)
-    if let backup = try? JSONDecoder().decode(CloudStorageMnemonicBackup.self, from: data!) {
-      sendEvent(withName: ICloudManagerEventType.foundCloudBackup.rawValue, body: ["mnemonicId": backup.mnemonicId, "createdAt": backup.createdAt ])
-    } else {
-      print("Error decoding iCloud backup JSON at \(url)")
-    }
-  }
-  
-  
-  /**
-   Determines if an iCloud Documents file discovered from NSMetadataQuery exists locally.
-   
-   - parameter item: NSMetadataItem that represents a file found in iCloud Documents
-   - returns: boolean for whether the file is downloaded from iCloud yet
-   */
-  func isMetadataItemDownloaded(item : NSMetadataItem) -> Bool {
-    if item.value(forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey) as? String == NSMetadataUbiquitousItemDownloadingStatusCurrent {
-      return true
-    } else {
-      return false
+      
+      // Serializable type to send it via bridge
+      var backups = [[String : Any]]()
+        
+        for file in jsonFiles {
+          if let data = try? Data(contentsOf: file.absoluteURL),
+            let backup = try? JSONDecoder().decode(CloudStorageMnemonicBackup.self, from: data) {
+            backups.append([
+              "mnemonicId": backup.mnemonicId,
+              "createdAt": backup.createdAt
+            ])
+          } else {
+            print("Error reading or decoding iCloud backup JSON at \(file.absoluteURL)")
+          }
+        }
+      
+        return resolve(backups)
+        
+    } catch {
+        return reject(ICloudBackupError.iCloudError.rawValue, "Failed to read iCloud directory", ICloudBackupError.iCloudError)
     }
   }
 }

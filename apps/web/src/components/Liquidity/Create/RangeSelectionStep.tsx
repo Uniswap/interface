@@ -476,6 +476,7 @@ export const SelectPriceRangeStep = ({
     positionState: { fee, hook, initialPosition },
     currencies,
     creatingPoolOrPair,
+    poolOrPairLoading,
     poolId,
     protocolVersion,
     poolOrPair,
@@ -494,10 +495,14 @@ export const SelectPriceRangeStep = ({
 
   const handleSelectToken = useCallback(
     (option: string) => {
+      const initialMinMaxPrice = {
+        minPrice: undefined,
+        maxPrice: undefined,
+      }
       if (option === TOKEN0?.symbol) {
-        setPriceRangeState((prevState) => ({ ...prevState, priceInverted: false }))
+        setPriceRangeState((prevState) => ({ ...prevState, ...initialMinMaxPrice, priceInverted: false }))
       } else {
-        setPriceRangeState((prevState) => ({ ...prevState, priceInverted: true }))
+        setPriceRangeState((prevState) => ({ ...prevState, ...initialMinMaxPrice, priceInverted: true }))
       }
     },
     [TOKEN0?.symbol, setPriceRangeState],
@@ -687,7 +692,7 @@ export const SelectPriceRangeStep = ({
               zIndex={zIndexes.overlay}
             />
           )}
-          {baseCurrency && quoteCurrency && poolId && (
+          {baseCurrency && quoteCurrency && (
             <Flex
               backgroundColor="$surface2"
               p="$padding16"
@@ -705,7 +710,7 @@ export const SelectPriceRangeStep = ({
                 alignItems="center"
                 $sm={{ row: false, alignItems: 'flex-start', gap: '$gap8' }}
               >
-                <DisplayCurrentPrice price={price} />
+                <DisplayCurrentPrice price={price} isLoading={poolOrPairLoading} />
                 {!creatingPoolOrPair && (
                   <SegmentedControl
                     options={controlOptions}
@@ -716,7 +721,7 @@ export const SelectPriceRangeStep = ({
                 )}
               </Flex>
               <LiquidityRangeInput
-                key={buildRangeInputKey({ protocolVersion, poolId, priceRangeState })}
+                key={buildRangeInputKey({ protocolVersion, poolId: poolId ?? '', priceRangeState })}
                 quoteCurrency={quoteCurrency}
                 baseCurrency={baseCurrency}
                 sdkCurrencies={currencies.sdk}
@@ -726,6 +731,7 @@ export const SelectPriceRangeStep = ({
                 tickSpacing={poolOrPair?.tickSpacing}
                 protocolVersion={protocolVersion}
                 poolId={poolId}
+                poolOrPairLoading={poolOrPairLoading}
                 disableBrushInteraction={priceRangeState.fullRange}
                 midPrice={Number(price?.toSignificant())}
                 minPrice={rangeInputMinPrice}

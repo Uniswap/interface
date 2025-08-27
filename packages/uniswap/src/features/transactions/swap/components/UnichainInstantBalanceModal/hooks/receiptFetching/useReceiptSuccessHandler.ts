@@ -17,6 +17,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { receiptFromEthersReceipt } from 'uniswap/src/features/transactions/utils/receipt'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isInterface } from 'utilities/src/platform'
@@ -74,12 +75,12 @@ export function useReceiptSuccessHandler(): (params: ReceiptSuccessParams) => Pr
       // updates if the tx is successful so we know to fallback to the form value
       updateSwapForm({ instantReceiptFetchTime: methodFetchTime - methodRoundtripTime })
 
-      // Update the transaction in Redux store with receipt info
       // TODO(APPS-8546): move to a saga to avoid anti-pattern
+      const parsedReceipt = receiptFromEthersReceipt(receipt, methodFetchTime)
       dispatch(
         updateTransaction({
           ...transaction,
-          confirmedTime: methodFetchTime,
+          receipt: parsedReceipt,
           status: TransactionStatus.Success,
           ...(isInterface && { isFlashblockTxWithinThreshold }),
         }),

@@ -3,11 +3,11 @@ import { useMemo } from 'react'
 import { OnchainItemListOptionType, PoolOption } from 'uniswap/src/components/lists/items/types'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
-import { PoolSearchResult } from 'uniswap/src/features/search/SearchResult'
+import { PoolSearchHistoryResult } from 'uniswap/src/features/search/SearchHistoryResult'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { CurrencyId } from 'uniswap/src/types/currency'
 
-export function usePoolSearchResultsToPoolOptions(searchResults: PoolSearchResult[]): PoolOption[] {
+export function usePoolSearchResultsToPoolOptions(searchResults: PoolSearchHistoryResult[]): PoolOption[] {
   // combine all pool search results' tokens' currencyIds in an array of de-duped currencyIds
   // & then fetch currencyInfos for all
   const currencyIds: CurrencyId[] = useMemo(

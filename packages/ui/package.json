@@ -2,7 +2,7 @@
   "name": "ui",
   "version": "0.0.0",
   "dependencies": {
-    "@gorhom/bottom-sheet": "4.6.4",
+    "@gorhom/bottom-sheet": "5.1.8",
     "@react-native-masked-view/masked-view": "0.3.2",
     "@shopify/flash-list": "1.7.3",
     "@shopify/react-native-skia": "1.12.4",

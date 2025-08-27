@@ -2,14 +2,15 @@
 import { test as base } from '@playwright/test'
 import { MaxUint160, MaxUint256, permit2Address } from '@uniswap/permit2-sdk'
 import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
-import { anvilClient, setErc20BalanceWithMultipleSlots } from 'playwright/anvil/utils'
+import { getAnvilManager } from 'playwright/anvil/anvil-manager'
+import { setErc20BalanceWithMultipleSlots } from 'playwright/anvil/utils'
 import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import PERMIT2_ABI from 'uniswap/src/abis/permit2'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { assume0xAddress } from 'utils/wagmi'
-import { Address, erc20Abi, publicActions, walletActions } from 'viem'
+import { Address, erc20Abi } from 'viem'
 
 class WalletError extends Error {
   code?: number
@@ -17,10 +18,19 @@ class WalletError extends Error {
 
 const allowedErc20BalanceAddresses = [USDT.address, DAI.address, WETH_ADDRESS(UniverseChainId.Mainnet)]
 
-const anvil = anvilClient
-  .extend(publicActions)
-  .extend(walletActions)
-  .extend((client) => ({
+// Helper to check if error is a timeout
+const isTimeoutError = (error: any): boolean => {
+  return (
+    error?.message?.includes('timeout') ||
+    error?.message?.includes('took too long') ||
+    error?.details?.includes('timed out')
+  )
+}
+
+// Create anvil client with restart capability
+const createAnvilClient = () => {
+  const client = getAnvilManager().getClient()
+  return client.extend((client) => ({
     async getWalletAddress() {
       return TEST_WALLET_ADDRESS
     },
@@ -193,37 +203,66 @@ const anvil = anvilClient
       }
     },
   }))
+}
 
-export const test = base.extend<{ anvil: typeof anvil; delegateToZeroAddress?: void }>({
+export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: void }>({
   // eslint-disable-next-line no-empty-pattern
   async anvil({}, use) {
-    // Take a snapshot at the beginning to ensure clean state for each test
-    let snapshotId: `0x${string}` | undefined
-    try {
-      snapshotId = await anvil.snapshot()
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn('Failed to take initial snapshot, falling back to reset pattern:', error)
+    // Ensure Anvil is running and healthy
+    if (!(await getAnvilManager().ensureHealthy())) {
+      throw new Error('Failed to ensure Anvil is healthy for test')
     }
 
-    await use(anvil)
+    // Get fresh client for this test
+    const testAnvil = createAnvilClient()
 
-    // Revert to snapshot for efficient state cleanup
-    // If snapshot fails, fall back to full reset
+    // Take snapshot for test isolation
+    let snapshotId: `0x${string}` | undefined
     try {
-      if (snapshotId) {
-        await anvil.revert({ id: snapshotId })
+      snapshotId = await testAnvil.snapshot()
+    } catch (error) {
+      if (isTimeoutError(error)) {
+        // Anvil timed out during snapshot, restart and retry
+        // eslint-disable-next-line no-console
+        console.error('Snapshot timeout, restarting Anvil...')
+        if (await getAnvilManager().restart()) {
+          await new Promise((resolve) => setTimeout(resolve, 2000))
+          snapshotId = await testAnvil.snapshot()
+        } else {
+          throw new Error('Failed to restart Anvil after snapshot timeout')
+        }
       } else {
-        await anvil.reset()
+        throw error
+      }
+    }
+
+    // Run the test
+    await use(testAnvil)
+
+    // Cleanup with auto-recovery
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (snapshotId) {
+        await testAnvil.revert({ id: snapshotId })
+      } else {
+        await testAnvil.reset()
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to revert/reset Anvil state:', error)
-      // Try full reset as last resort
-      await anvil.reset().catch(() => {
+      if (isTimeoutError(error)) {
         // eslint-disable-next-line no-console
-        console.error('👉 Anvil is not running. Start it by running `yarn web anvil:mainnet`')
-      })
+        console.error('Cleanup timeout, marking Anvil for restart...')
+        // Don't restart here - let the next test handle it
+        // This avoids race conditions between parallel tests
+      } else {
+        // eslint-disable-next-line no-console
+        console.error('Cleanup failed:', error)
+        try {
+          await testAnvil.reset()
+        } catch (resetError) {
+          // eslint-disable-next-line no-console
+          console.error('Reset also failed:', resetError)
+        }
+      }
     }
   },
   // Delegate the test wallet to the zero address to avoid any smart wallet conflicts
@@ -254,4 +293,4 @@ export const test = base.extend<{ anvil: typeof anvil; delegateToZeroAddress?: v
   ],
 })
 
-export type AnvilClient = typeof anvil
+export type AnvilClient = ReturnType<typeof createAnvilClient>

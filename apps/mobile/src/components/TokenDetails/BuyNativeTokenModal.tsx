@@ -29,7 +29,7 @@ export function BuyNativeTokenModal({
   const { onClose } = useReactNavigationModal()
 
   const { data: bridgingTokenWithHighestBalance } = useBridgingTokenWithHighestBalance({
-    address: activeAddress ?? '',
+    evmAddress: activeAddress ?? '',
     currencyAddress: currencyIdToAddress(nativeCurrencyInfo?.currencyId ?? ''),
     currencyChainId: chainId,
   })

@@ -21,6 +21,7 @@ const TRANSACTION_TYPE_TO_SWAP_ROUTING: Record<OnChainSwapTransactionType, SwapR
 }
 
 export function logSwapFinalized({
+  id,
   hash,
   batchId,
   chainInId,
@@ -29,7 +30,8 @@ export function logSwapFinalized({
   status,
   type,
 }: {
-  hash: string
+  id: string
+  hash: string | undefined
   batchId?: string
   chainInId: number
   chainOutId: number
@@ -51,6 +53,7 @@ export function logSwapFinalized({
     time_to_swap_since_first_input: hasSetSwapSuccess
       ? undefined
       : timestampTracker.getElapsedTime(SwapEventType.FirstSwapSuccess, SwapEventType.FirstSwapAction),
+    id,
     hash,
     batch_id: batchId,
     chain_id: chainInId,
@@ -78,6 +81,7 @@ const SIGNATURE_TYPE_TO_SWAP_ROUTING: Record<SignatureType, SwapRouting> = {
 }
 
 export function logUniswapXSwapFinalized({
+  id,
   hash,
   orderHash,
   chainId,
@@ -85,6 +89,7 @@ export function logUniswapXSwapFinalized({
   signatureType,
   status,
 }: {
+  id: string
   hash?: string
   orderHash: string
   chainId: number
@@ -108,6 +113,7 @@ export function logUniswapXSwapFinalized({
     time_to_swap_since_first_input: hasSetSwapSuccess
       ? undefined
       : timestampTracker.getElapsedTime(SwapEventType.FirstSwapSuccess, SwapEventType.FirstSwapAction),
+    id,
     hash,
     chain_id: chainId,
     ...analyticsContext,

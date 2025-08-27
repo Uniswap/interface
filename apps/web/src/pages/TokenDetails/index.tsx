@@ -23,6 +23,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { buildCurrencyId, buildNativeCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
@@ -76,11 +77,14 @@ function useTDPCurrency({
 
 /** Returns a map to store addresses and balances of the TDP token on other chains */
 function useMultiChainMap(tokenQuery: ReturnType<typeof useTokenWebQuery>) {
-  const account = useAccount()
+  const wallet = useWallet()
+  const evmAddress = wallet.evmAccount?.address
+  const svmAddress = wallet.svmAccount?.address
 
   const { data: balancesById } = usePortfolioBalances({
-    address: account.address ?? '',
-    skip: !account.address,
+    evmAddress,
+    svmAddress,
+    skip: !evmAddress && !svmAddress,
   })
 
   return useMemo(() => {

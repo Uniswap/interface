@@ -2,6 +2,7 @@ import type { TransactionResponse } from '@ethersproject/abstract-provider'
 import type { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import type {
   InterfaceTransactionDetails,
+  TransactionReceipt,
   TransactionStatus,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -20,7 +21,7 @@ export type PendingTransactionDetails = InterfaceTransactionDetails & {
 // Web-specific confirmed transaction details with guaranteed confirmed/failed status
 export type ConfirmedTransactionDetails = InterfaceTransactionDetails & {
   status: TransactionStatus.Success | TransactionStatus.Failed
-  confirmedTime: number
+  receipt: TransactionReceipt
 }
 
 export type TransactionDetails = PendingTransactionDetails | ConfirmedTransactionDetails

@@ -15,6 +15,7 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName, SectionName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTokenVisibility } from 'uniswap/src/features/visibility/selectors'
 import { setTokenVisibility } from 'uniswap/src/features/visibility/slice'
 import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
@@ -68,7 +69,7 @@ export function useTokenContextMenu({
 
   const activeAccountHoldsToken =
     portfolioBalance && areCurrencyIdsEqual(currencyId, portfolioBalance.currencyInfo.currencyId)
-  const isVisible = !portfolioBalance?.isHidden
+  const isVisible = useTokenVisibility(currencyId, portfolioBalance?.isHidden)
 
   const currencyAddress = currencyIdToAddress(currencyId)
   const isNative = isNativeCurrency(currencyAddress)

@@ -105,7 +105,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   const address = isSmartContractAddress ? (validAddress || resolvedAddress) ?? undefined : undefined
   // Allow smart contracts with non-null balances
   const { data: balancesById } = usePortfolioBalances({
-    address,
+    evmAddress: address,
     fetchPolicy: 'cache-and-network',
   })
   const isValidSmartContract = isSmartContractAddress && !!balancesById

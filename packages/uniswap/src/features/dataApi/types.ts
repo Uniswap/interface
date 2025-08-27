@@ -1,3 +1,4 @@
+import { NetworkStatus } from '@apollo/client'
 import { Contract } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -6,6 +7,14 @@ import { FoTPercent } from 'uniswap/src/features/tokens/TokenWarningModal'
 import { CurrencyId } from 'uniswap/src/types/currency'
 
 export type RestContract = Pick<Contract, 'chainId' | 'address'>
+
+export interface BaseResult<T> {
+  data?: T
+  loading: boolean
+  networkStatus: NetworkStatus
+  refetch: () => void
+  error?: Error
+}
 
 export enum TokenList {
   Default = 'default',

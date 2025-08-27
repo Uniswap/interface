@@ -93,3 +93,5 @@ export const selectHasSmartWalletConsent = createSelector(
     return account?.type === AccountType.SignerMnemonic && account.smartWalletConsent === true
   },
 )
+
+export const selectAndroidCloudBackupEmail = (state: WalletState): string | null => state.wallet.androidCloudBackupEmail

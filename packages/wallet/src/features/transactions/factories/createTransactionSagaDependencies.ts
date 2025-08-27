@@ -17,8 +17,7 @@ import { createTransactionExecutor } from 'wallet/src/features/transactions/swap
 import { createTransactionParamsFactory } from 'wallet/src/features/transactions/swap/services/transactionParamsFactory'
 import { TransactionSagaDependencies } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
-import { runSagaEffect } from 'wallet/src/state'
-
+import { RunSagaEffect } from 'wallet/src/state/createSagaEffectRunner'
 /**
  * Creates the default dependencies for transaction sagas
  * This factory provides all the services needed for executing transactions
@@ -45,6 +44,12 @@ export function createTransactionSagaDependencies(): TransactionSagaDependencies
     sendAnalyticsEvent,
     transactionActions,
     makeSelectAddressTransactions,
-    runSagaEffect,
+    // Lazy access to runSagaEffect to avoid circular dependency during module initialization
+    get runSagaEffect(): RunSagaEffect {
+      // Import runSagaEffect only when actually accessed, not during module initialization
+      // This prevents the "Cannot access 'runSagaEffect' before initialization" error
+      const { runSagaEffect } = require('wallet/src/state') as { runSagaEffect: RunSagaEffect }
+      return runSagaEffect
+    },
   }
 }

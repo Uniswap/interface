@@ -3,7 +3,7 @@ import styled from 'lib/styled-components'
 import { transparentize } from 'polished'
 import { Fragment, PropsWithChildren, ReactNode, memo, useCallback, useEffect, useState } from 'react'
 import { Flex } from 'ui/src'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 
 export enum TooltipSize {
   ExtraSmall = '200px',

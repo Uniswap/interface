@@ -11,11 +11,16 @@ import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
-export function useCommonTokensOptionsWithFallback(
-  address: Address | undefined,
-  chainFilter: UniverseChainId | null,
-): GqlResult<TokenOption[] | undefined> {
-  const { data, error, refetch, loading } = useCommonTokensOptions(address, chainFilter)
+export function useCommonTokensOptionsWithFallback({
+  evmAddress,
+  svmAddress,
+  chainFilter,
+}: {
+  evmAddress: Address | undefined
+  svmAddress: Address | undefined
+  chainFilter: UniverseChainId | null
+}): GqlResult<TokenOption[] | undefined> {
+  const { data, error, refetch, loading } = useCommonTokensOptions({ evmAddress, svmAddress, chainFilter })
   const commonBases = chainFilter ? currencyInfosToTokenOptions(COMMON_BASES[chainFilter]) : undefined
   const commonBasesCurrencyIds = useMemo(
     () => commonBases?.map((token) => currencyId(token.currencyInfo.currency)).filter(Boolean) ?? [],

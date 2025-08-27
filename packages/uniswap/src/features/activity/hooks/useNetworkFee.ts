@@ -14,7 +14,7 @@ export function useNetworkFee(transactionDetails: TransactionDetails): {
   const formatter = useLocalizationContext()
 
   const currencyId = transactionDetails.networkFee
-    ? buildCurrencyId(transactionDetails.chainId, transactionDetails.networkFee.tokenAddress)
+    ? buildCurrencyId(transactionDetails.networkFee.chainId, transactionDetails.networkFee.tokenAddress)
     : buildNativeCurrencyId(transactionDetails.chainId)
   const currencyInfo = useCurrencyInfo(currencyId)
 

@@ -1,7 +1,7 @@
 import { isMobileWeb } from 'utilities/src/platform'
 
 const RIGHT_AXIS_WIDTH = 64
-const CHART_CONTAINER_WIDTH = 452 + RIGHT_AXIS_WIDTH
+const CHART_CONTAINER_WIDTH = 586 + RIGHT_AXIS_WIDTH
 const LIQUIDITY_CHART_WIDTH = 68
 const INTER_CHART_PADDING = 12
 const CHART_HEIGHT = 164

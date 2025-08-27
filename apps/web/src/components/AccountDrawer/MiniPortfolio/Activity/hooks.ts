@@ -2,7 +2,11 @@ import { useAssetActivity } from 'appGraphql/data/apollo/AssetActivityProvider'
 import { useLocalActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { parseRemoteActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
 import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
-import { useCreateCancelTransactionRequest } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import {
+  getActivityNonce,
+  haveSameNonce,
+  useCreateCancelTransactionRequest,
+} from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import { GasFeeResult, GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
 import { useEffect, useMemo } from 'react'
 import { usePendingOrders } from 'state/signatures/hooks'
@@ -22,8 +26,8 @@ function findCancelTx({
   remoteMap: ActivityMap
   account: string
 }): string | undefined {
-  // handles locally cached tx's that were stored before we started tracking nonces
-  if (!localActivity.nonce || localActivity.status !== TransactionStatus.Pending) {
+  // Skip activities without nonce or non-pending status
+  if (!getActivityNonce(localActivity) || localActivity.status !== TransactionStatus.Pending) {
     return undefined
   }
 
@@ -34,8 +38,10 @@ function findCancelTx({
 
     // A pending tx is 'cancelled' when another tx with the same account & nonce but different hash makes it on chain
     if (
-      remoteTx.nonce === localActivity.nonce &&
+      haveSameNonce(localActivity, remoteTx) &&
       remoteTx.from.toLowerCase() === account.toLowerCase() &&
+      remoteTx.hash &&
+      localActivity.hash &&
       remoteTx.hash.toLowerCase() !== localActivity.hash.toLowerCase() &&
       remoteTx.chainId === localActivity.chainId
     ) {
@@ -48,13 +54,13 @@ function findCancelTx({
 
 /** Deduplicates local and remote activities */
 function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = {}): Array<Activity> {
-  const txHashes = [...new Set([...Object.keys(localMap), ...Object.keys(remoteMap)])]
+  const activityIds = [...new Set([...Object.keys(localMap), ...Object.keys(remoteMap)])]
 
-  return txHashes.reduce((acc: Array<Activity>, hash) => {
-    const localActivity = (localMap[hash] ?? {}) as Activity
-    const remoteActivity = (remoteMap[hash] ?? {}) as Activity
+  return activityIds.reduce((acc: Array<Activity>, id) => {
+    const localActivity = (localMap[id] ?? {}) as Activity
+    const remoteActivity = (remoteMap[id] ?? {}) as Activity
 
-    if (localActivity.cancelled) {
+    if (localActivity.status === TransactionStatus.Canceled) {
       // Hides misleading activities caused by cross-chain nonce collisions previously being incorrectly labelled as cancelled txs in redux
       // If there is no remote activity fallback to local activity
       if (localActivity.chainId !== remoteActivity.chainId) {
@@ -97,7 +103,7 @@ export function useAllActivities(account: string) {
       const cancelHash = findCancelTx({ localActivity, remoteMap, account })
 
       if (cancelHash) {
-        updateCancelledTx(localActivity.hash, localActivity.chainId, cancelHash)
+        updateCancelledTx({ id: localActivity.id, chainId: localActivity.chainId, cancelHash })
       }
     })
   }, [account, localMap, remoteMap, updateCancelledTx])

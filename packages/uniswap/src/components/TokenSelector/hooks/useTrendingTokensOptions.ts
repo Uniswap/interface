@@ -6,16 +6,21 @@ import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-export function useTrendingTokensOptions(
-  address: Address | undefined,
-  chainFilter: Maybe<UniverseChainId>,
-): GqlResult<TokenOption[] | undefined> {
+export function useTrendingTokensOptions({
+  evmAddress,
+  svmAddress,
+  chainFilter,
+}: {
+  evmAddress: Address | undefined
+  svmAddress: Address | undefined
+  chainFilter: Maybe<UniverseChainId>
+}): GqlResult<TokenOption[] | undefined> {
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: portfolioBalancesByIdRefetch,
     loading: loadingPortfolioBalancesById,
-  } = usePortfolioBalancesForAddressById(address)
+  } = usePortfolioBalancesForAddressById({ evmAddress, svmAddress })
 
   const {
     data: tokens,

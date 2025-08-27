@@ -54,8 +54,10 @@ export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpd
       const allTxMap: Record<string, BridgeTransactionDetailsWithChainId> = {}
 
       const txHashesByChain = txs.reduce<Map<UniverseChainId, string[]>>((acc, tx) => {
-        allTxMap[tx.hash] = tx
-        acc.set(tx.chainId, [...(acc.get(tx.chainId) ?? []), tx.hash])
+        if (tx.hash) {
+          allTxMap[tx.hash] = tx
+          acc.set(tx.chainId, [...(acc.get(tx.chainId) ?? []), tx.hash])
+        }
         return acc
       }, new Map())
 

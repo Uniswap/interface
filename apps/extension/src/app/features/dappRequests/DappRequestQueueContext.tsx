@@ -2,6 +2,7 @@ import { providerErrors, serializeError } from '@metamask/rpc-errors'
 import { PropsWithChildren, createContext, useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { confirmRequest, confirmRequestNoDappInfo, rejectRequest } from 'src/app/features/dappRequests/actions'
+import { useTransactionConfirmationTracker } from 'src/app/features/dappRequests/context/TransactionConfirmationTracker'
 import { isDappRequestWithDappInfo } from 'src/app/features/dappRequests/saga'
 import type { DappRequestStoreItem } from 'src/app/features/dappRequests/shared'
 import { selectAllDappRequests } from 'src/app/features/dappRequests/slice'
@@ -47,6 +48,7 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
   const totalRequestCount = dappRequests.length
 
   const activeAccount = useActiveAccountWithThrow()
+  const { markTransactionConfirmed } = useTransactionConfirmationTracker()
 
   // values to help with animations
   const [forwards, setForwards] = useState(true)
@@ -107,6 +109,12 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
         await dispatch(confirmRequest(requestWithTxInfo))
       } else {
         await dispatch(confirmRequestNoDappInfo(requestWithTxInfo))
+      }
+
+      // Mark transaction as confirmed for nonce delay tracking
+      // Only mark if we have chain info (transactions that could conflict)
+      if (request.dappInfo?.lastChainId) {
+        markTransactionConfirmed(request.dappInfo.lastChainId)
       }
 
       setCurrentIndex((prev) => Math.max(0, prev - 1))

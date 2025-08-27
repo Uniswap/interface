@@ -19,7 +19,7 @@ import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { getPoolDetailsURL, getTokenUrl } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { escapeRegExp } from 'utilities/src/primitives/string'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboard'
 import {
   NavigateToFiatOnRampArgs,

@@ -45,7 +45,7 @@ export function DisplayNameText({
         )}
       </Text>
       {isUnitag ? (
-        <Flex display="inline" bottom="$spacing2" y={platformAdjustedUnitagYPosition}>
+        <Flex display="inline" y={platformAdjustedUnitagYPosition}>
           <Unitag size={unitagIconSize} />
         </Flex>
       ) : null}

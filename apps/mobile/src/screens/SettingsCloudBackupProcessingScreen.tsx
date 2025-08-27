@@ -18,7 +18,14 @@ export function SettingsCloudBackupProcessingScreen({
   }
 
   const onErrorPress = (): void => {
-    navigation.navigate(MobileScreens.Settings)
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: MobileScreens.Settings,
+        },
+      ],
+    })
   }
 
   return (

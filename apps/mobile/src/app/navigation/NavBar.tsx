@@ -130,10 +130,10 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96, onSwapLayout }: Swa
   const isDarkMode = useIsDarkMode()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
-  const inputCurrencyId = useHighestBalanceNativeCurrencyId(
-    activeAccountAddress,
-    persistedFilteredChainIds?.[CurrencyField.INPUT],
-  )
+  const inputCurrencyId = useHighestBalanceNativeCurrencyId({
+    evmAddress: activeAccountAddress,
+    chainId: persistedFilteredChainIds?.[CurrencyField.INPUT],
+  })
 
   const onPress = useCallback(async () => {
     navigate(

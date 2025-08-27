@@ -4,7 +4,7 @@ import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 
 vi.mock('state/user/hooks')
 

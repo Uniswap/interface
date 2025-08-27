@@ -308,6 +308,8 @@ struct SeedPhraseInput: View {
       return viewModel.strings.errorPhraseLength
     case .wrongRecoveryPhrase:
       return viewModel.strings.errorWrongPhrase
+    case .wordIsAddress:
+      return viewModel.strings.errorWordIsAddress
     default:
       return nil
     }

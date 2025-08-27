@@ -2,6 +2,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/Liquidity/LiquidityPositionInfo'
 import { TextLoader } from 'components/Liquidity/Loader'
+import { PositionPageActionButtons } from 'components/Liquidity/PositionPageActionButtons'
 import { useGetPoolTokenPercentage } from 'components/Liquidity/hooks/useGetPoolTokenPercentage'
 import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
@@ -14,8 +15,7 @@ import { ChevronRight } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
-import { setOpenModal } from 'state/application/reducer'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useAppSelector } from 'state/hooks'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { usePairAdder } from 'state/user/hooks'
@@ -29,10 +29,10 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 const BodyWrapper = styled(Main, {
@@ -101,7 +101,6 @@ function V2PositionPage() {
   })
   const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
-  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const location = useLocation()
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
@@ -123,6 +122,18 @@ function V2PositionPage() {
     account: account.address,
     address: liquidityTokenAddress,
     chainId: positionInfo?.chainId,
+  })
+
+  const onMigrate = useEvent(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (pair && chainId && pairAddress && !savedSerializedPairs[chainId]?.[pairAddress]) {
+      addPair(pair)
+    }
+    navigate(isMigrateV2Enabled ? `/migrate/v2/${chainInfo.urlParam}/${pairAddress}` : `/migrate/v2`, {
+      state: {
+        from: location.pathname,
+      },
+    })
   })
 
   if (!positionLoading && (!positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount)) {
@@ -175,50 +186,9 @@ function V2PositionPage() {
           ) : (
             <LiquidityPositionInfo positionInfo={positionInfo} />
           )}
-          {isOwner && (
-            <Flex row gap="$gap12" alignItems="center" maxWidth="100%" flexWrap="wrap">
-              <Button
-                size="small"
-                emphasis="secondary"
-                $sm={{ width: '100%' }}
-                isDisabled={positionLoading}
-                onPress={() => {
-                  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                  if (pair && chainId && pairAddress && !savedSerializedPairs[chainId]?.[pairAddress]) {
-                    addPair(pair)
-                  }
-                  navigate(isMigrateV2Enabled ? `/migrate/v2/${chainInfo.urlParam}/${pairAddress}` : `/migrate/v2`, {
-                    state: {
-                      from: location.pathname,
-                    },
-                  })
-                }}
-              >
-                {t('common.migrate.v3')}
-              </Button>
-              <Button
-                size="small"
-                emphasis="secondary"
-                $sm={{ width: '100%' }}
-                isDisabled={positionLoading}
-                onPress={() => {
-                  dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: positionInfo }))
-                }}
-              >
-                {t('common.addLiquidity')}
-              </Button>
-              <Button
-                size="small"
-                $sm={{ width: '100%' }}
-                isDisabled={positionLoading}
-                onPress={() => {
-                  dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: positionInfo }))
-                }}
-              >
-                {t('pool.removeLiquidity')}
-              </Button>
-            </Flex>
-          )}
+          <Flex>
+            <PositionPageActionButtons buttonFill isOwner={isOwner} positionInfo={positionInfo} onMigrate={onMigrate} />
+          </Flex>
           <Flex borderColor="$surface3" borderWidth="$spacing1" p="$spacing24" gap="$gap12" borderRadius="$rounded20">
             {positionLoading || !currency0Amount || !currency1Amount ? (
               <Shine>

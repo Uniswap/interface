@@ -215,6 +215,7 @@ function* dappRequestApproval({
             senderTabInfo: confirmedRequest.senderTabInfo,
             dappInfo: confirmedRequest.dappInfo,
             transactionTypeInfo: confirmedRequest.transactionTypeInfo,
+            preSignedTransaction: confirmedRequest.preSignedTransaction,
           })
           break
         }

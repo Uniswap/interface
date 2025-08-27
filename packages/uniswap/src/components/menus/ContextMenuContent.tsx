@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { DropdownMenuSheetItem, DropdownMenuSheetItemProps, Flex, Separator } from 'ui/src'
+import { DropdownMenuSheetItem, DropdownMenuSheetItemProps, Flex, Separator, getMenuItemColor } from 'ui/src'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { isWeb } from 'utilities/src/platform'
 
@@ -30,14 +30,19 @@ export function MenuContent({ items, handleCloseMenu }: MenuContentProps): JSX.E
           e.stopPropagation()
         }}
       >
-        {items.map(({ label, onPress, Icon, showDivider, disabled, iconColor, closeDelay }, index) => (
+        {items.map(({ label, onPress, Icon, showDivider, disabled, iconColor, closeDelay, destructive }, index) => (
           <Fragment key={index}>
             {showDivider && <Separator my="$spacing6" />}
             <DropdownMenuSheetItem
               variant={isWeb ? 'small' : 'medium'}
               label={label}
-              icon={Icon && <Icon size="$icon.16" color={iconColor ?? '$neutral2'} />}
+              icon={
+                Icon && (
+                  <Icon size="$icon.16" color={getMenuItemColor({ overrideColor: iconColor, destructive, disabled })} />
+                )
+              }
               disabled={disabled}
+              destructive={destructive}
               closeDelay={closeDelay}
               handleCloseMenu={handleCloseMenu}
               onPress={onPress}

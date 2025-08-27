@@ -10,21 +10,20 @@ import {
   SearchModalOption,
   TokenOption,
   WalletByAddressOption,
-  WalletOption,
 } from 'uniswap/src/components/lists/items/types'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
-import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import {
-  SearchResult,
-  isEtherscanSearchResult,
-  isNFTCollectionSearchResult,
-  isPoolSearchResult,
-  isTokenSearchResult,
-  isWalletSearchResult,
-} from 'uniswap/src/features/search/SearchResult'
+  SearchHistoryResult,
+  isEtherscanSearchHistoryResult,
+  isNFTCollectionSearchHistoryResult,
+  isPoolSearchHistoryResult,
+  isTokenSearchHistoryResult,
+  isWalletSearchHistoryResult,
+} from 'uniswap/src/features/search/SearchHistoryResult'
+import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId, buildNativeCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
@@ -43,26 +42,26 @@ export function useRecentlySearchedOptions({
     .filter((searchResult) => {
       switch (activeTab) {
         case SearchTab.Tokens:
-          return isTokenSearchResult(searchResult)
+          return isTokenSearchHistoryResult(searchResult)
         case SearchTab.Pools:
-          return isPoolSearchResult(searchResult)
+          return isPoolSearchHistoryResult(searchResult)
         case SearchTab.Wallets:
-          return isWalletSearchResult(searchResult)
+          return isWalletSearchHistoryResult(searchResult)
         case SearchTab.NFTCollections:
-          return isNFTCollectionSearchResult(searchResult)
+          return isNFTCollectionSearchHistoryResult(searchResult)
         default:
         case SearchTab.All:
           return isMobileApp
-            ? isTokenSearchResult(searchResult) ||
-                isWalletSearchResult(searchResult) ||
-                isNFTCollectionSearchResult(searchResult)
-            : isTokenSearchResult(searchResult) || isPoolSearchResult(searchResult)
+            ? isTokenSearchHistoryResult(searchResult) ||
+                isWalletSearchHistoryResult(searchResult) ||
+                isNFTCollectionSearchHistoryResult(searchResult)
+            : isTokenSearchHistoryResult(searchResult) || isPoolSearchHistoryResult(searchResult)
       }
     })
     .filter((searchResult) => {
       return (
-        isWalletSearchResult(searchResult) ||
-        isEtherscanSearchResult(searchResult) ||
+        isWalletSearchHistoryResult(searchResult) ||
+        isEtherscanSearchHistoryResult(searchResult) ||
         (chainFilter ? searchResult.chainId === chainFilter : true)
       )
     })
@@ -70,7 +69,7 @@ export function useRecentlySearchedOptions({
 
   // Fetch updated currencyInfos for each recent token search result
   // Token info may change since last stored in redux (protectionInfo/feeData/logoUrl/etc), so we should refetch currencyInfos from saved chain+address. See WEB-6283
-  const currencyIds = recentHistory.filter(isTokenSearchResult).map((searchResult) => {
+  const currencyIds = recentHistory.filter(isTokenSearchHistoryResult).map((searchResult) => {
     const id = searchResult.address
       ? buildCurrencyId(searchResult.chainId, searchResult.address)
       : buildNativeCurrencyId(searchResult.chainId)
@@ -82,32 +81,31 @@ export function useRecentlySearchedOptions({
   })
 
   // Get pool options
-  const poolOptions = usePoolSearchResultsToPoolOptions(recentHistory.filter(isPoolSearchResult))
+  const poolOptions = usePoolSearchResultsToPoolOptions(recentHistory.filter(isPoolSearchHistoryResult))
 
-  const walletOptions = recentHistory
-    .filter((result) => isWalletSearchResult(result))
-    .map(
-      (searchResult) =>
-        ({
-          ...searchResult,
-          type: OnchainItemListOptionType.WalletByAddress,
-        }) as WalletByAddressOption,
-    )
+  const walletOptions: WalletByAddressOption[] = recentHistory
+    .filter(isWalletSearchHistoryResult)
+    .map((searchResult) => ({
+      ...searchResult,
+      type: OnchainItemListOptionType.WalletByAddress,
+    }))
 
-  const nftOptions: NFTCollectionOption[] = recentHistory.filter(isNFTCollectionSearchResult).map((searchResult) => ({
-    ...searchResult,
-    type: OnchainItemListOptionType.NFTCollection,
-  }))
+  const nftOptions: NFTCollectionOption[] = recentHistory
+    .filter(isNFTCollectionSearchHistoryResult)
+    .map((searchResult) => ({
+      ...searchResult,
+      type: OnchainItemListOptionType.NFTCollection,
+    }))
 
   return useMemo(() => {
     /** If we only have 1 asset type, we can return the Options directly */
-    if (recentHistory.every(isTokenSearchResult)) {
+    if (recentHistory.every(isTokenSearchHistoryResult)) {
       return tokenOptions ?? []
-    } else if (recentHistory.every(isPoolSearchResult)) {
+    } else if (recentHistory.every(isPoolSearchHistoryResult)) {
       return poolOptions
-    } else if (recentHistory.every(isWalletSearchResult)) {
+    } else if (recentHistory.every(isWalletSearchHistoryResult)) {
       return walletOptions
-    } else if (recentHistory.every(isNFTCollectionSearchResult)) {
+    } else if (recentHistory.every(isNFTCollectionSearchHistoryResult)) {
       return nftOptions
     }
 
@@ -122,7 +120,7 @@ export function useRecentlySearchedOptions({
       poolOptionsMap[`${option.chainId}-${option.poolId.toLowerCase()}`] = option
     })
 
-    const walletOptionsMap: { [key: string]: WalletOption } = {}
+    const walletOptionsMap: { [key: string]: WalletByAddressOption } = {}
     walletOptions.forEach((option) => {
       walletOptionsMap[option.address.toLowerCase()] = option
     })
@@ -133,20 +131,20 @@ export function useRecentlySearchedOptions({
     })
 
     const data: SearchModalOption[] = []
-    recentHistory.forEach((asset: SearchResult) => {
-      if (isTokenSearchResult(asset)) {
+    recentHistory.forEach((asset: SearchHistoryResult) => {
+      if (isTokenSearchHistoryResult(asset)) {
         const option =
           tokenOptionsMap[
             buildCurrencyId(asset.chainId, asset.address ?? getNativeAddress(asset.chainId)).toLowerCase()
           ]
         option && data.push(option)
-      } else if (isPoolSearchResult(asset)) {
+      } else if (isPoolSearchHistoryResult(asset)) {
         const option = poolOptionsMap[`${asset.chainId}-${asset.poolId.toLowerCase()}`]
         option && data.push(option)
-      } else if (isWalletSearchResult(asset)) {
+      } else if (isWalletSearchHistoryResult(asset)) {
         const option = walletOptionsMap[asset.address.toLowerCase()]
         option && data.push(option)
-      } else if (isNFTCollectionSearchResult(asset)) {
+      } else if (isNFTCollectionSearchHistoryResult(asset)) {
         const option = nftOptionsMap[asset.address.toLowerCase()]
         option && data.push(option)
       }

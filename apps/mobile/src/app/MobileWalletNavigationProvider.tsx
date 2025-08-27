@@ -21,7 +21,7 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { getTokenUrl } from 'uniswap/src/utils/linking'
 import { closeKeyboardBeforeCallback } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
   NavigateToExternalProfileArgs,

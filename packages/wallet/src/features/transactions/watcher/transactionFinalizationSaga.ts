@@ -143,6 +143,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
 
     const baseProperties = {
       routing: tradeRoutingToFillType({ routing: payload.routing, indicative: false }),
+      id: payload.id,
       hash,
       transactionOriginType,
       address: from,

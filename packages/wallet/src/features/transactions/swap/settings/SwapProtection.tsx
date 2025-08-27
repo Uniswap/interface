@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { Switch, Text } from 'ui/src'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
@@ -13,6 +14,7 @@ import { SwapProtectionSetting, setSwapProtectionSetting } from 'wallet/src/feat
 
 export const SwapProtection: TransactionSettingConfig = {
   renderTitle: (t) => t('swap.settings.protection.title'),
+  applicablePlatforms: [Platform.EVM],
   Description() {
     const { t } = useTranslation()
     const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)

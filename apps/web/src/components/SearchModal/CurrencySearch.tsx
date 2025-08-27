@@ -1,6 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
 import { SwitchNetworkAction } from 'components/Popups/types'
-import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { useCallback, useEffect } from 'react'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
@@ -12,6 +11,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
@@ -33,7 +33,7 @@ export function CurrencySearch({
   onDismiss,
   chainIds,
 }: CurrencySearchProps) {
-  const account = useAccount()
+  const wallet = useWallet()
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, isMultichainContext } =
     useMultichainContext()
   const { currentTab } = useSwapAndLimitContext()
@@ -71,7 +71,8 @@ export function CurrencySearch({
     <Trace logImpression eventOnTrigger={InterfaceEventName.TokenSelectorOpened} modal={ModalName.TokenSelectorWeb}>
       <Flex width="100%" flexGrow={1} flexShrink={1} flexBasis="auto">
         <TokenSelectorContent
-          activeAccountAddress={account.address!}
+          evmAddress={wallet.evmAccount?.address}
+          svmAddress={wallet.svmAccount?.address}
           isLimits={currentTab === SwapTab.Limit}
           chainId={!isMultichainContext || isUserSelectedToken ? chainId : undefined}
           chainIds={chainIds ?? chains}

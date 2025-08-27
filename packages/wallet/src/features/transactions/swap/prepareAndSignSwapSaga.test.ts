@@ -98,6 +98,7 @@ describe('prepareAndSignSwapSaga', () => {
         chainId: CHAIN_ID,
         submitViaPrivateRpc: false,
         includesDelegation: false,
+        request: mockSwapTxRequest,
       }),
       { transactionSigner: mockTransactionSigner, transactionService: mockTransactionService },
     ],
@@ -373,12 +374,23 @@ describe('prepareAndSignSwapSaga', () => {
             approvalCost: '5',
             inputTokenSymbol: 'ETH',
           },
+          txRequests: undefined,
         }),
       })
 
       const result = await expectSaga(prepareAndSignSwapSaga, params)
         .provide([
           ...sharedProviders,
+          [
+            call(createTransactionServices, mockTransactionSagaDependencies, {
+              account,
+              chainId: CHAIN_ID,
+              submitViaPrivateRpc: false,
+              includesDelegation: false,
+              request: undefined,
+            }),
+            { transactionSigner: mockTransactionSigner, transactionService: mockTransactionService },
+          ],
           [call(shouldSubmitViaPrivateRpc, CHAIN_ID), false],
           [
             call(mockTransactionService.getNextNonce, {
@@ -410,6 +422,7 @@ describe('prepareAndSignSwapSaga', () => {
             approvalCost: '5',
             inputTokenSymbol: 'ETH',
           },
+          txRequests: undefined,
         }),
       })
 
@@ -420,6 +433,16 @@ describe('prepareAndSignSwapSaga', () => {
         expectSaga(prepareAndSignSwapSaga, params)
           .provide([
             ...sharedProviders,
+            [
+              call(createTransactionServices, mockTransactionSagaDependencies, {
+                account,
+                chainId: CHAIN_ID,
+                submitViaPrivateRpc: false,
+                includesDelegation: false,
+                request: undefined,
+              }),
+              { transactionSigner: mockTransactionSigner, transactionService: mockTransactionService },
+            ],
             [call(shouldSubmitViaPrivateRpc, CHAIN_ID), false],
             [
               call(mockTransactionService.getNextNonce, {
@@ -442,35 +465,37 @@ describe('prepareAndSignSwapSaga', () => {
   })
 
   describe('Error handling', () => {
-    it('should handle transaction service errors and call onFailure', async () => {
-      const onFailure = jest.fn()
+    it('should handle nonce calculation errors gracefully and continue execution', async () => {
+      const onSuccess = jest.fn()
       const params = prepareAndSignSwapSagaParams({
-        onFailure,
+        onSuccess,
       })
 
-      const error = new Error('Transaction service failed')
+      const nonceError = new Error('Transaction service failed')
 
-      await expect(
-        expectSaga(prepareAndSignSwapSaga, params)
-          .provide([
-            ...sharedProviders,
-            [call(shouldSubmitViaPrivateRpc, CHAIN_ID), false],
-            [
-              call(mockTransactionService.getNextNonce, {
-                account,
-                chainId: CHAIN_ID,
-                submitViaPrivateRpc: false,
-              }),
-              Promise.reject(error),
-            ],
-          ])
-          .run(),
-      ).rejects.toThrow('Failed to prepare and sign transaction: Transaction service failed')
+      const result = await expectSaga(prepareAndSignSwapSaga, params)
+        .provide([
+          ...sharedProviders,
+          [call(shouldSubmitViaPrivateRpc, CHAIN_ID), false],
+          [
+            call(mockTransactionService.getNextNonce, {
+              account,
+              chainId: CHAIN_ID,
+              submitViaPrivateRpc: false,
+            }),
+            Promise.reject(nonceError),
+          ],
+        ])
+        .run()
 
-      expect(onFailure).toHaveBeenCalledWith(expect.any(Error))
-      expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(error, {
-        tags: { file: 'prepareAndSignSwapSaga', function: 'prepareAndSignSwapTransaction' },
-        extra: { chainId: CHAIN_ID },
+      // Saga should complete successfully despite nonce error
+      expect(result.returnValue).toBeDefined()
+      expect(onSuccess).toHaveBeenCalled()
+
+      // Nonce error should be logged by prepareTransactionServices
+      expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(nonceError, {
+        tags: { file: 'baseTransactionPreparationSaga', function: 'prepareTransactionServices' },
+        extra: { account, chainId: CHAIN_ID },
       })
     })
 
@@ -522,6 +547,7 @@ describe('prepareAndSignSwapSaga', () => {
               chainId: CHAIN_ID,
               submitViaPrivateRpc: true,
               includesDelegation: false,
+              request: mockSwapTxRequest,
             }),
             { transactionSigner: mockTransactionSigner, transactionService: mockTransactionService },
           ],

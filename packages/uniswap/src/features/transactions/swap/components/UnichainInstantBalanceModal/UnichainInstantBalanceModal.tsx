@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, ModalCloseIcon, Text, useExtractedTokenColor } from 'ui/src'
+import { Button, Flex, ModalCloseIcon, Text, useExtractedTokenColor, useSporeColors } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -28,11 +28,15 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
   const inputCurrencyInfo = useSwapDependenciesStore((s) => s.derivedSwapInfo.currencies.input)
 
   const backgroundColor = useBackgroundColor()
+  const {
+    accent1: { val: accent1 },
+  } = useSporeColors()
   const { tokenColor: toTokenColor } = useExtractedTokenColor({
     imageUrl: outputCurrencyInfo?.logoUrl,
     tokenName: outputCurrencyInfo?.currency.name,
     backgroundColor,
-    defaultColor: backgroundColor,
+    // default to uni pink
+    defaultColor: accent1,
   })
 
   const { setScreen, onClose, screen } = useTransactionModalContext()

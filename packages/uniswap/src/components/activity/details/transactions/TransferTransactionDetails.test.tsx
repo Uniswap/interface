@@ -44,7 +44,6 @@ const mockTransaction = {
     blockNumber: 17489,
     blockHash: 'dfd3ad45-78e7-4124-90f2-92758b4499ba',
     confirmedTime: 1719946653408,
-    confirmations: 57408,
     gasUsed: 27844,
     effectiveGasPrice: 2941,
   },

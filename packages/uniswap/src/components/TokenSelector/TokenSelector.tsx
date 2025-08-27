@@ -60,7 +60,8 @@ export interface TokenSelectorProps {
   isModalOpen: boolean
   currencyField: CurrencyField
   flow: TokenSelectorFlow
-  activeAccountAddress?: string
+  evmAddress?: string
+  svmAddress?: string
   chainId?: UniverseChainId
   chainIds?: UniverseChainId[]
   input?: TradeableAsset
@@ -89,7 +90,8 @@ export function TokenSelectorContent({
   variation,
   input,
   output,
-  activeAccountAddress,
+  evmAddress,
+  svmAddress,
   chainId,
   chainIds,
   isSurfaceReady = true,
@@ -209,7 +211,8 @@ export function TokenSelectorContent({
     if (searchInFocus && !searchFilter && !isTestnetModeEnabled) {
       return (
         <TokenSelectorEmptySearchList
-          activeAccountAddress={activeAccountAddress}
+          evmAddress={evmAddress}
+          svmAddress={svmAddress}
           chainFilter={chainFilter}
           onSelectCurrency={onSelectCurrencyCallback}
         />
@@ -219,7 +222,8 @@ export function TokenSelectorContent({
     if (searchFilter) {
       return (
         <TokenSelectorSearchResultsList
-          activeAccountAddress={activeAccountAddress}
+          evmAddress={evmAddress}
+          svmAddress={svmAddress}
           chainFilter={chainFilter}
           debouncedParsedSearchFilter={debouncedParsedSearchFilter}
           debouncedSearchFilter={debouncedSearchFilter}
@@ -236,7 +240,8 @@ export function TokenSelectorContent({
       case TokenSelectorVariation.BalancesOnly:
         return (
           <TokenSelectorSendList
-            activeAccountAddress={activeAccountAddress}
+            evmAddress={evmAddress}
+            svmAddress={svmAddress}
             chainFilter={chainFilter}
             onEmptyActionPress={onSendEmptyActionPress}
             onSelectCurrency={onSelectCurrencyCallback}
@@ -246,7 +251,8 @@ export function TokenSelectorContent({
         return (
           <TokenSelectorSwapList
             oppositeSelectedToken={output}
-            activeAccountAddress={activeAccountAddress}
+            evmAddress={evmAddress}
+            svmAddress={svmAddress}
             chainFilter={chainFilter}
             onSelectCurrency={onSelectCurrencyCallback}
           />
@@ -255,7 +261,8 @@ export function TokenSelectorContent({
         return (
           <TokenSelectorSwapList
             oppositeSelectedToken={input}
-            activeAccountAddress={activeAccountAddress}
+            evmAddress={evmAddress}
+            svmAddress={svmAddress}
             chainFilter={chainFilter}
             onSelectCurrency={onSelectCurrencyCallback}
           />
@@ -268,7 +275,8 @@ export function TokenSelectorContent({
     searchFilter,
     isTestnetModeEnabled,
     variation,
-    activeAccountAddress,
+    evmAddress,
+    svmAddress,
     chainFilter,
     onSelectCurrencyCallback,
     debouncedParsedSearchFilter,

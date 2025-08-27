@@ -29,7 +29,7 @@ import { isNonInstantFlashblockTransactionType } from 'uniswap/src/features/tran
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 
 export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: UniverseChainId; onClose: () => void }) {
   const isSupportedChain = useIsSupportedChainId(chainId)
@@ -60,7 +60,7 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: Univer
 
 type ActivityPopupContentProps = { activity: Activity; onClick?: () => void; onClose: () => void }
 function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupContentProps) {
-  const success = activity.status === TransactionStatus.Success && !activity.cancelled
+  const success = activity.status === TransactionStatus.Success
   const pending = activity.status === TransactionStatus.Pending
 
   const showPortfolioLogo = success || pending || !!activity.offchainOrderDetails
@@ -150,18 +150,22 @@ export function TransactionPopupContent({ hash, onClose }: { hash: string; onClo
     return null
   }
 
-  const onClick = () =>
+  const onClick = () => {
+    if (!activity.hash) {
+      return
+    }
     window.open(
       getExplorerLink({ chainId: activity.chainId, data: activity.hash, type: ExplorerDataType.TRANSACTION }),
       '_blank',
     )
+  }
 
   const explorerUrlUnavailable = isPendingTx(transaction) && transaction.batchInfo
 
   return (
     <ActivityPopupContent
       activity={activity}
-      onClick={explorerUrlUnavailable ? undefined : onClick}
+      onClick={explorerUrlUnavailable || !activity.hash ? undefined : onClick}
       onClose={onClose}
     />
   )

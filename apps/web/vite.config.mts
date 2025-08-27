@@ -175,11 +175,11 @@ export default defineConfig(({ mode }) => {
             ],
           }),
       {
-        name: 'copy-twit-config',
+        name: 'copy-twist-config',
         writeBundle() {
           const configMode = isProduction ? 'production' : 'staging'
-          const sourceFile = path.resolve(__dirname, `twit-configs/twit.${configMode}.json`)
-          const targetFile = path.resolve(__dirname, `build/.well-known/twit.json`)
+          const sourceFile = path.resolve(__dirname, `twist-configs/twist.${configMode}.json`)
+          const targetFile = path.resolve(__dirname, `build/.well-known/twist.json`)
 
           if (fs.existsSync(sourceFile)) {
             // Ensure the .well-known directory exists in build output
@@ -190,9 +190,9 @@ export default defineConfig(({ mode }) => {
 
             // Copy the file directly to the build output
             fs.copyFileSync(sourceFile, targetFile)
-            console.log(`Copied ${configMode} TWIT config to build output for env ${mode}`)
+            console.log(`Copied ${configMode} TWIST config to build output for env ${mode}`)
           } else {
-            console.warn(`${configMode} TWIT config not found for env ${mode}`)
+            console.warn(`${configMode} TWIST config not found for env ${mode}`)
           }
         },
       },

@@ -314,6 +314,66 @@ describe(useFilterCallbacks, () => {
       expect(result.current.parsedChainFilter).toEqual(UniverseChainId.Base)
       expect(result.current.parsedSearchFilter).toEqual('uni corn')
     })
+
+    it('parses chain from end of search filter', async () => {
+      const { result } = renderHook(() => useFilterCallbacks(null, ModalName.Swap))
+
+      expect(result.current.parsedSearchFilter).toEqual(null)
+
+      await act(() => {
+        result.current.onChangeText('uni BaSE')
+      })
+
+      expect(result.current.chainFilter).toEqual(null)
+      expect(result.current.searchFilter).toEqual('uni BaSE')
+      expect(result.current.parsedChainFilter).toEqual(UniverseChainId.Base)
+      expect(result.current.parsedSearchFilter).toEqual('uni')
+    })
+
+    it('parses chain from end with multiple search words', async () => {
+      const { result } = renderHook(() => useFilterCallbacks(null, ModalName.Swap))
+
+      expect(result.current.parsedSearchFilter).toEqual(null)
+
+      await act(() => {
+        result.current.onChangeText('uni corn token base')
+      })
+
+      expect(result.current.chainFilter).toEqual(null)
+      expect(result.current.searchFilter).toEqual('uni corn token base')
+      expect(result.current.parsedChainFilter).toEqual(UniverseChainId.Base)
+      expect(result.current.parsedSearchFilter).toEqual('uni corn token')
+    })
+
+    it('prioritizes first word chain match over last word', async () => {
+      const { result } = renderHook(() => useFilterCallbacks(null, ModalName.Swap))
+
+      expect(result.current.parsedSearchFilter).toEqual(null)
+
+      await act(() => {
+        result.current.onChangeText('base token ethereum')
+      })
+
+      expect(result.current.chainFilter).toEqual(null)
+      expect(result.current.searchFilter).toEqual('base token ethereum')
+      expect(result.current.parsedChainFilter).toEqual(UniverseChainId.Base)
+      expect(result.current.parsedSearchFilter).toEqual('token ethereum')
+    })
+
+    it('does not parse unsupported chains from end', async () => {
+      const { result } = renderHook(() => useFilterCallbacks(null, ModalName.Swap))
+
+      expect(result.current.parsedSearchFilter).toEqual(null)
+
+      await act(() => {
+        result.current.onChangeText('uni UNSUPPORTED')
+      })
+
+      expect(result.current.chainFilter).toEqual(null)
+      expect(result.current.searchFilter).toEqual('uni UNSUPPORTED')
+      expect(result.current.parsedChainFilter).toEqual(null)
+      expect(result.current.parsedSearchFilter).toEqual(null)
+    })
   })
 
   describe('chain filter', () => {
@@ -439,7 +499,7 @@ describe(usePortfolioBalancesForAddressById, () => {
     const { resolvers } = queryResolvers({
       portfolios: queryResolver(input),
     })
-    const { result } = renderHook(() => usePortfolioBalancesForAddressById(SAMPLE_SEED_ADDRESS_1), {
+    const { result } = renderHook(() => usePortfolioBalancesForAddressById({ evmAddress: SAMPLE_SEED_ADDRESS_1 }), {
       resolvers,
     })
 
@@ -479,7 +539,7 @@ describe(usePortfolioTokenOptions, () => {
         portfolios: queryResolver(input),
       })
       const { result } = renderHook(
-        () => usePortfolioTokenOptions({ address: SAMPLE_SEED_ADDRESS_1, chainFilter: null }),
+        () => usePortfolioTokenOptions({ evmAddress: SAMPLE_SEED_ADDRESS_1, svmAddress: undefined, chainFilter: null }),
         {
           resolvers,
         },
@@ -527,7 +587,7 @@ describe(usePortfolioTokenOptions, () => {
     }[] = [
       {
         test: 'returns only shown tokens after data is fetched',
-        input: { address: SAMPLE_SEED_ADDRESS_1, chainFilter: null },
+        input: { evmAddress: SAMPLE_SEED_ADDRESS_1, svmAddress: undefined, chainFilter: null },
         output: {
           data: shownPortfolioBalanceTokenOptions,
           loading: false,
@@ -537,7 +597,11 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns shown tokens filtered by chain',
-        input: { address: SAMPLE_SEED_ADDRESS_1, chainFilter: fromGraphQLChain(usdcTokenBalance.token.chain) },
+        input: {
+          evmAddress: SAMPLE_SEED_ADDRESS_1,
+          svmAddress: undefined,
+          chainFilter: fromGraphQLChain(usdcTokenBalance.token.chain),
+        },
         output: {
           data: [usdcPortfolioBalanceTokenOption],
           loading: false,
@@ -547,7 +611,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns shown tokens starting with "et" (ETH) filtered by search filter',
-        input: { address: SAMPLE_SEED_ADDRESS_1, chainFilter: null, searchFilter: 'et' },
+        input: { evmAddress: SAMPLE_SEED_ADDRESS_1, svmAddress: undefined, chainFilter: null, searchFilter: 'et' },
         output: {
           data: [ethPortfolioBalanceTokenOption],
           loading: false,
@@ -557,7 +621,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns shown tokens starting with "us" (USDC) filtered by search filter',
-        input: { address: SAMPLE_SEED_ADDRESS_1, chainFilter: null, searchFilter: 'us' },
+        input: { evmAddress: SAMPLE_SEED_ADDRESS_1, svmAddress: undefined, chainFilter: null, searchFilter: 'us' },
         output: {
           data: [usdcPortfolioBalanceTokenOption],
           loading: false,
@@ -567,7 +631,12 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns no data when there is no token that matches both chain and search filter',
-        input: { address: SAMPLE_SEED_ADDRESS_1, chainFilter: UniverseChainId.Base, searchFilter: 'et' },
+        input: {
+          evmAddress: SAMPLE_SEED_ADDRESS_1,
+          svmAddress: undefined,
+          chainFilter: UniverseChainId.Base,
+          searchFilter: 'et',
+        },
         output: {
           data: [],
           loading: false,
@@ -647,9 +716,17 @@ describe(useTrendingTokensOptions, () => {
       portfolios: queryResolver(portfolios),
     })
 
-    const { result } = renderHook(() => useTrendingTokensOptions(SAMPLE_SEED_ADDRESS_1, UniverseChainId.ArbitrumOne), {
-      resolvers,
-    })
+    const { result } = renderHook(
+      () =>
+        useTrendingTokensOptions({
+          evmAddress: SAMPLE_SEED_ADDRESS_1,
+          svmAddress: undefined,
+          chainFilter: UniverseChainId.ArbitrumOne,
+        }),
+      {
+        resolvers,
+      },
+    )
 
     expect(result.current.loading).toBe(true)
     await waitFor(() => {
@@ -676,9 +753,17 @@ describe(useTrendingTokensOptions, () => {
       portfolios: errorResolver(new Error('Test')),
     })
 
-    const { result } = renderHook(() => useTrendingTokensOptions(SAMPLE_SEED_ADDRESS_1, UniverseChainId.ArbitrumOne), {
-      resolvers,
-    })
+    const { result } = renderHook(
+      () =>
+        useTrendingTokensOptions({
+          evmAddress: SAMPLE_SEED_ADDRESS_1,
+          svmAddress: undefined,
+          chainFilter: UniverseChainId.ArbitrumOne,
+        }),
+      {
+        resolvers,
+      },
+    )
 
     expect(result.current.loading).toBe(true)
     await waitFor(() => {
@@ -707,9 +792,17 @@ describe(useTrendingTokensOptions, () => {
       portfolios: queryResolver(portfolios),
     })
 
-    const { result } = renderHook(() => useTrendingTokensOptions(SAMPLE_SEED_ADDRESS_1, UniverseChainId.ArbitrumOne), {
-      resolvers,
-    })
+    const { result } = renderHook(
+      () =>
+        useTrendingTokensOptions({
+          evmAddress: SAMPLE_SEED_ADDRESS_1,
+          svmAddress: undefined,
+          chainFilter: UniverseChainId.ArbitrumOne,
+        }),
+      {
+        resolvers,
+      },
+    )
 
     expect(result.current.loading).toBe(true)
     await waitFor(() => {
@@ -735,9 +828,17 @@ describe(useTrendingTokensOptions, () => {
       portfolios: queryResolver(portfolios),
     })
 
-    const { result } = renderHook(() => useTrendingTokensOptions(SAMPLE_SEED_ADDRESS_1, UniverseChainId.ArbitrumOne), {
-      resolvers,
-    })
+    const { result } = renderHook(
+      () =>
+        useTrendingTokensOptions({
+          evmAddress: SAMPLE_SEED_ADDRESS_1,
+          svmAddress: undefined,
+          chainFilter: UniverseChainId.ArbitrumOne,
+        }),
+      {
+        resolvers,
+      },
+    )
 
     expect(result.current.loading).toBe(true)
     await waitFor(() => {
@@ -815,9 +916,17 @@ describe(useCommonTokensOptionsWithFallback, () => {
     const { resolvers } = queryResolvers(
       Object.fromEntries(Object.entries(resolverResults).map(([name, resolver]) => [name, queryResolver(resolver)])),
     )
-    const { result } = renderHook(() => useCommonTokensOptionsWithFallback(SAMPLE_SEED_ADDRESS_1, chainFilter), {
-      resolvers,
-    })
+    const { result } = renderHook(
+      () =>
+        useCommonTokensOptionsWithFallback({
+          evmAddress: SAMPLE_SEED_ADDRESS_1,
+          svmAddress: undefined,
+          chainFilter,
+        }),
+      {
+        resolvers,
+      },
+    )
 
     expect(result.current.loading).toEqual(true)
 
@@ -888,10 +997,18 @@ describe(useFavoriteTokensOptions, () => {
     const { resolvers } = queryResolvers(
       Object.fromEntries(Object.entries(resolverResults).map(([name, resolver]) => [name, queryResolver(resolver)])),
     )
-    const { result } = renderHook(() => useFavoriteTokensOptions(SAMPLE_SEED_ADDRESS_1, chainFilter), {
-      resolvers,
-      preloadedState,
-    })
+    const { result } = renderHook(
+      () =>
+        useFavoriteTokensOptions({
+          evmAddress: SAMPLE_SEED_ADDRESS_1,
+          svmAddress: undefined,
+          chainFilter,
+        }),
+      {
+        resolvers,
+        preloadedState,
+      },
+    )
 
     expect(result.current.loading).toEqual(true)
 

@@ -38,6 +38,7 @@ describe('swapFlowLoggers', () => {
     const mockAnalyticsContext = { page: 'mockContext' }
 
     logSwapFinalized({
+      id: mockHash,
       hash: mockHash,
       batchId: mockBatchId,
       chainInId: mockChainId,
@@ -56,6 +57,8 @@ describe('swapFlowLoggers', () => {
       chain_id: mockChainId,
       chain_id_in: mockChainId,
       chain_id_out: mockChainId,
+      id: mockHash,
+      batch_id: mockBatchId,
       ...mockAnalyticsContext,
     })
   })
@@ -67,6 +70,7 @@ describe('swapFlowLoggers', () => {
     const mockAnalyticsContext = { page: 'mockContext' }
 
     logUniswapXSwapFinalized({
+      id: 'mockId',
       hash: mockHash,
       orderHash: mockOrderHash,
       chainId: mockChainId,
@@ -83,6 +87,7 @@ describe('swapFlowLoggers', () => {
       hash: mockHash,
       order_hash: mockOrderHash,
       chain_id: mockChainId,
+      id: 'mockId',
       ...mockAnalyticsContext,
     })
   })

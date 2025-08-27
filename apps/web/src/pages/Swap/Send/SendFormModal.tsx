@@ -20,7 +20,7 @@ import {
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 
 type SendFormModalProps = {

@@ -7,6 +7,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
+  InterfaceTransactionDetails,
   SendTokenTransactionInfo,
   TransactionDetails,
   TransactionType,
@@ -135,7 +136,11 @@ interface MakeSelectParams {
   txId: string | undefined
 }
 
-export const makeSelectTransaction = (): Selector<UniswapState, TransactionDetails | undefined, [MakeSelectParams]> =>
+export const makeSelectTransaction = (): Selector<
+  UniswapState,
+  TransactionDetails | InterfaceTransactionDetails | undefined,
+  [MakeSelectParams]
+> =>
   createSelector(
     selectTransactions,
     (_: UniswapState, { address, chainId, txId }: MakeSelectParams) => ({
@@ -143,7 +148,7 @@ export const makeSelectTransaction = (): Selector<UniswapState, TransactionDetai
       chainId,
       txId,
     }),
-    (transactions, { address, chainId, txId }): TransactionDetails | undefined => {
+    (transactions, { address, chainId, txId }): TransactionDetails | InterfaceTransactionDetails | undefined => {
       if (!address || !transactions[address] || !chainId || !txId) {
         return undefined
       }

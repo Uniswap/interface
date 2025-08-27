@@ -6,7 +6,6 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { Loader } from 'src/components/loading/loaders'
-import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { AnimatedTouchableArea, Flex, Text, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
 import { borderRadii, fonts, imageSizes } from 'ui/src/theme'
@@ -27,6 +26,7 @@ import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { isIOS } from 'utilities/src/platform'
+import { noop } from 'utilities/src/react/noop'
 
 const ESTIMATED_FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 116
 
@@ -128,7 +128,7 @@ function FavoriteTokenCard({
         overflow={isIOS ? 'hidden' : 'visible'}
         borderWidth={isDarkMode ? '$none' : '$spacing1'}
         testID={`token-box-${token?.symbol}`}
-        onLongPress={disableOnPress}
+        onLongPress={noop}
         onPress={onPress}
         {...shadowProps}
       >

@@ -19,6 +19,7 @@ export function ExploreModal(): JSX.Element {
       hideHandlebar
       renderBehindBottomInset
       renderBehindTopInset
+      overrideInnerContainer
       backgroundColor={colors.surface1.val}
       name={ModalName.Explore}
       onClose={onClose}

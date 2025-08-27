@@ -165,6 +165,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
           [StringKey.ErrorPhraseLength]: t('account.recoveryPhrase.error.phraseLength'),
           [StringKey.ErrorWrongPhrase]: t('account.recoveryPhrase.error.wrong'),
           [StringKey.ErrorInvalidPhrase]: t('account.recoveryPhrase.error.invalid'),
+          [StringKey.ErrorWordIsAddress]: t('account.recoveryPhrase.error.wordIsAddress'),
         }}
         targetMnemonicId={targetMnemonicId}
         testID={TestID.ImportAccountInput}

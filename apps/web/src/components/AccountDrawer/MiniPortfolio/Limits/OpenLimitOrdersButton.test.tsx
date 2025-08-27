@@ -14,6 +14,7 @@ vi.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', async () => {
 })
 
 const mockLimitActivity = {
+  id: '0x123',
   hash: '0x123',
   chainId: UniverseChainId.Mainnet,
   status: TransactionStatus.Pending,

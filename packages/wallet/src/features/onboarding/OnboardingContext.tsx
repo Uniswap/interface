@@ -86,6 +86,8 @@ export interface OnboardingContext {
   getOnboardingAccountMnemonicString: () => string | undefined
   setPendingWalletName: (walletName: string) => void
   resetOnboardingContextData: () => void
+  getAndroidBackupEmail: () => string | undefined
+  addAndroidBackupEmail: (email: string) => void
 }
 
 const initialOnboardingContext: OnboardingContext = {
@@ -118,6 +120,8 @@ const initialOnboardingContext: OnboardingContext = {
   getOnboardingAccountMnemonicString: () => undefined,
   setPendingWalletName: () => undefined,
   resetOnboardingContextData: () => undefined,
+  getAndroidBackupEmail: () => undefined,
+  addAndroidBackupEmail: () => undefined,
 }
 
 const OnboardingContext = createContext<OnboardingContext>(initialOnboardingContext)
@@ -141,6 +145,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
   const [generatedAddresses, setGeneratedAddresses] = useState<string[] | undefined>()
   const [importedAccounts, setImportedAccounts] = useState<SignerMnemonicAccount[] | undefined>()
   const [onboardingAccountMnemonic, setOnboardingAccountMnemonic] = useState<string[] | undefined>()
+  const [androidBackupEmail, setAndroidBackupEmail] = useState<string | undefined>()
 
   const sortedImportedAccountAddresses = useMemo(
     () =>
@@ -537,6 +542,15 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     setOnboardingAccount(undefined)
     setImportedAccounts(undefined)
     setOnboardingAccountMnemonic(undefined)
+    setAndroidBackupEmail(undefined)
+  }
+
+  const getAndroidBackupEmail = (): string | undefined => {
+    return androidBackupEmail
+  }
+
+  const addAndroidBackupEmail = (email: string): void => {
+    setAndroidBackupEmail(email)
   }
 
   return (
@@ -566,6 +580,8 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
         getOnboardingAccountMnemonicString,
         setPendingWalletName,
         resetOnboardingContextData,
+        getAndroidBackupEmail,
+        addAndroidBackupEmail,
       }}
     >
       {children}

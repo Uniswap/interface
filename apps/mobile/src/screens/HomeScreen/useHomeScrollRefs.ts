@@ -2,7 +2,7 @@ import { FlashList } from '@shopify/flash-list'
 import { useCallback } from 'react'
 import { FlatList } from 'react-native'
 import { useAnimatedRef, useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
-import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
+import { TokenBalanceListRow } from 'uniswap/src/features/portfolio/types'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FlashListAnyType = FlashList<any>

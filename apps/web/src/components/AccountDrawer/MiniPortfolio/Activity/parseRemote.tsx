@@ -672,6 +672,7 @@ function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
   const title = orderTextTableEntry.getTitle()
 
   return {
+    id: signature.id,
     hash: signature.orderHash,
     chainId: signature.chainId,
     offchainOrderDetails: signature,
@@ -709,6 +710,7 @@ function parseFiatOnRampTransaction(activity: TransactionActivity | FiatOnRampAc
     case 'OnRampTransactionDetails': {
       const onRampTransfer = activity.details.onRampTransfer
       return {
+        id: activity.id,
         from: activity.details.receiverAddress,
         hash: activity.id,
         chainId,
@@ -740,6 +742,7 @@ function parseFiatOnRampTransaction(activity: TransactionActivity | FiatOnRampAc
       }
       const onRampTransfer = assetChange as OnRampTransferPartsFragment
       return {
+        id: activity.details.id,
         from: activity.details.from,
         hash: activity.details.hash,
         chainId,
@@ -789,6 +792,7 @@ function parseFiatOffRampTransaction(activity: FiatOffRampActivity): Activity {
 
   const { offRampTransfer } = activity.details
   return {
+    id: activity.id,
     from: activity.details.senderAddress,
     hash: activity.id,
     chainId,
@@ -869,6 +873,7 @@ function parseRemoteActivity(
     }
 
     const defaultFields = {
+      id: assetActivity.id,
       hash: assetActivity.details.hash,
       chainId: supportedChain,
       status: convertGQLTransactionStatus(assetActivity.details.status),
@@ -877,7 +882,24 @@ function parseRemoteActivity(
       title: assetActivity.details.type,
       descriptor: assetActivity.details.to,
       from: assetActivity.details.from,
-      nonce: assetActivity.details.nonce,
+      options: {
+        request: {
+          to: assetActivity.details.to,
+          from: assetActivity.details.from,
+          nonce: assetActivity.details.nonce,
+          chainId: supportedChain,
+          // Additional fields that could be useful for transaction management
+          // Note: Some fields like data, value, gasLimit, gasPrice are not available
+          // in the current GraphQL schema but could be added if needed
+          ...(assetActivity.details.networkFee && {
+            // Include network fee information
+            networkFee: {
+              ...assetActivity.details.networkFee,
+              chainId: fromGraphQLChain(assetActivity.details.networkFee.tokenChain),
+            },
+          }),
+        },
+      },
       isSpam: isSpam(changes, assetActivity.details, account),
       type: assetActivity.details.type,
     }
@@ -902,10 +924,10 @@ export function parseRemoteActivities(
   account: string,
   formatNumberOrString: FormatNumberOrStringFunctionType,
 ) {
-  return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
+  return assetActivities?.reduce((acc: { [id: string]: Activity }, assetActivity) => {
     const activity = parseRemoteActivity(assetActivity, account, formatNumberOrString)
     if (activity) {
-      acc[activity.hash] = activity
+      acc[activity.id] = activity
     }
     return acc
   }, {})

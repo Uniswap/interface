@@ -53,6 +53,7 @@ const mockOrderDetails: UniswapXOrderDetails = {
 }
 
 const mockLimitActivity: Activity = {
+  id: '0x123',
   hash: '0x123',
   chainId: UniverseChainId.Mainnet,
   status: TransactionStatus.Pending,
@@ -84,7 +85,7 @@ describe('LimitsMenu', () => {
 
   it('should render when there are two open orders', async () => {
     mocked(useOpenLimitOrders).mockReturnValue({
-      openLimitOrders: [mockLimitActivity, { ...mockLimitActivity, hash: '0x456' }],
+      openLimitOrders: [mockLimitActivity, { ...mockLimitActivity, id: '0x456', hash: '0x456' }],
       loading: false,
     })
     await act(async () => {

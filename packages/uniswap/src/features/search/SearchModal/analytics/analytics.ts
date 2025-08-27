@@ -1,8 +1,8 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { OnchainItemListOptionType, SearchModalOption } from 'uniswap/src/components/lists/items/types'
+import { extractDomain } from 'uniswap/src/components/lists/items/wallets/utils'
 import { SearchContext, SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
-import { SearchResultType, extractDomain } from 'uniswap/src/features/search/SearchResult'
 import { InterfaceEventName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NavBarSearchTypes } from 'uniswap/src/features/telemetry/types'
@@ -92,7 +92,7 @@ export function sendSearchOptionItemClickedAnalytics({
         name: item.ensName,
         address: item.address,
         type: 'address',
-        domain: extractDomain(item.ensName, SearchResultType.ENSAddress),
+        domain: extractDomain(item.ensName, OnchainItemListOptionType.ENSAddress),
       })
       return
     case OnchainItemListOptionType.Unitag: {
@@ -101,7 +101,7 @@ export function sendSearchOptionItemClickedAnalytics({
         name: item.unitag,
         address: item.address,
         type: 'address',
-        domain: extractDomain(item.unitag, SearchResultType.Unitag),
+        domain: extractDomain(item.unitag, OnchainItemListOptionType.Unitag),
       })
       return
     }

@@ -3,12 +3,11 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
-import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { Button, Flex, Text } from 'ui/src'
@@ -25,8 +24,9 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { Account, BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { Account, BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { selectAndroidCloudBackupEmail } from 'wallet/src/features/wallet/selectors'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsCloudBackupStatus>
 
@@ -41,9 +41,8 @@ export function SettingsCloudBackupStatus({
   const dimensions = useDeviceDimensions()
   const dispatch = useDispatch()
   const accounts = useAccounts()
-  const account = accounts[address]
-  const mnemonicId = account?.type === AccountType.SignerMnemonic ? account.mnemonicId : undefined
-  const backups = useCloudBackups(mnemonicId)
+  const mnemonicId = (accounts[address] as SignerMnemonicAccount).mnemonicId
+  const androidCloudBackupEmail = useSelector(selectAndroidCloudBackupEmail)
   const associatedAccounts = Object.values(accounts).filter(
     (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === mnemonicId,
   )
@@ -71,7 +70,14 @@ export function SettingsCloudBackupStatus({
         }),
       )
       setShowBackupDeleteWarning(false)
-      navigation.navigate(MobileScreens.Settings)
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: MobileScreens.Settings,
+          },
+        ],
+      })
     } catch (error) {
       setShowBackupDeleteWarning(false)
       logger.error(error, { tags: { file: 'SettingsCloudBackupStatus', function: 'deleteBackup' } })
@@ -88,7 +94,14 @@ export function SettingsCloudBackupStatus({
   const { trigger: biometricTrigger } = useBiometricPrompt(deleteBackup)
 
   const onPressBack = (): void => {
-    navigation.navigate(MobileScreens.Settings)
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: MobileScreens.Settings,
+        },
+      ],
+    })
   }
 
   const renderItem = ({ item, index }: { item: Account; index: number }): JSX.Element => (
@@ -98,8 +111,6 @@ export function SettingsCloudBackupStatus({
   )
 
   const fullScreenContentHeight = (dimensions.fullHeight - insets.top - insets.bottom - spacing.spacing36) / 2
-
-  const googleDriveEmail = backups[0]?.googleDriveEmail
 
   return (
     <Screen mx="$spacing16" my="$spacing16">
@@ -129,9 +140,9 @@ export function SettingsCloudBackupStatus({
                 {/* @TODO: [MOB-249] Add non-backed up state once we have more options on this page  */}
                 <Check color="$statusSuccess" size="$icon.24" />
               </Flex>
-              {googleDriveEmail && (
+              {androidCloudBackupEmail && (
                 <Text color="$neutral3" variant="buttonLabel3">
-                  {googleDriveEmail}
+                  {androidCloudBackupEmail}
                 </Text>
               )}
             </Flex>

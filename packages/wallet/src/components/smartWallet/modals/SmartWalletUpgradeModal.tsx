@@ -74,6 +74,7 @@ export function SmartWalletUpgradeModals({
         <SmartWalletUnavailableModal
           isOpen={isModalOpen}
           displayName={selectedWalletDisplayName?.name || account.address}
+          walletAddress={account.address}
           onClose={() => {
             handleSmartWalletDismiss()
             if (hasSmartWalletConsent) {

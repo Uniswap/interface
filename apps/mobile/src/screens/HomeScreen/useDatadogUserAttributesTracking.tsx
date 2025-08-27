@@ -22,7 +22,7 @@ export function useDatadogUserAttributesTracking({ isOnboarded }: { isOnboarded:
   const activeAccount = useSelector(selectActiveAccount)
 
   const { data: balanceData } = usePortfolioBalances({
-    address: activeAccount?.address,
+    evmAddress: activeAccount?.address,
     fetchPolicy: 'cache-only',
   })
 

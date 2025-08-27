@@ -10,10 +10,11 @@ import { GqlResult } from 'uniswap/src/data/types'
 import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRecentSearchesButton'
 
 export function useTokenSectionsForEmptySearch({
-  activeAccountAddress,
+  evmAddress,
+  svmAddress,
   chainFilter,
-}: Omit<TokenSectionsHookProps, 'input' | 'isKeyboardOpen'>): GqlResult<OnchainItemSection<TokenOption>[]> {
-  const { data: trendingTokenOptions, loading } = useTrendingTokensOptions(activeAccountAddress, chainFilter)
+}: Omit<TokenSectionsHookProps, 'oppositeSelectedToken'>): GqlResult<OnchainItemSection<TokenOption>[]> {
+  const { data: trendingTokenOptions, loading } = useTrendingTokensOptions({ evmAddress, svmAddress, chainFilter })
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 

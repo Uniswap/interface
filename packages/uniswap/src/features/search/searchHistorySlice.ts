@@ -1,34 +1,34 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { isPoolSearchResult, SearchResult, SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import {
+  isPoolSearchHistoryResult,
+  SearchHistoryResult,
+  SearchHistoryResultType,
+} from 'uniswap/src/features/search/SearchHistoryResult'
 
 const SEARCH_HISTORY_LENGTH = 5
 
 // eslint-disable-next-line consistent-return
-export function searchResultId(searchResult: SearchResult): string {
+export function searchResultId(searchResult: SearchHistoryResult): string {
   const { type } = searchResult
-  const address = isPoolSearchResult(searchResult) ? searchResult.poolId : searchResult.address
+  const address = isPoolSearchHistoryResult(searchResult) ? searchResult.poolId : searchResult.address
   const normalizedAddress = address?.toLowerCase() ?? null
 
   switch (type) {
-    case SearchResultType.Token:
+    case SearchHistoryResultType.Token:
       return `token-${searchResult.chainId}-${normalizedAddress}`
-    case SearchResultType.ENSAddress:
-      return `ens-${normalizedAddress}`
-    case SearchResultType.Unitag:
-      return `unitag-${normalizedAddress}`
-    case SearchResultType.WalletByAddress:
+    case SearchHistoryResultType.WalletByAddress:
       return `wallet-${normalizedAddress}`
-    case SearchResultType.Etherscan:
+    case SearchHistoryResultType.Etherscan:
       return `etherscan-${normalizedAddress}`
-    case SearchResultType.NFTCollection:
+    case SearchHistoryResultType.NFTCollection:
       return `nftCollection-${searchResult.chainId}-${normalizedAddress}`
-    case SearchResultType.Pool:
+    case SearchHistoryResultType.Pool:
       return `pool-${searchResult.chainId}-${normalizedAddress}-${searchResult.feeTier}`
   }
 }
 
 export interface SearchHistoryState {
-  results: SearchResult[]
+  results: SearchHistoryResult[]
 }
 
 export const initialSearchHistoryState: Readonly<SearchHistoryState> = {
@@ -39,7 +39,7 @@ const slice = createSlice({
   name: 'searchHistory',
   initialState: initialSearchHistoryState,
   reducers: {
-    addToSearchHistory: (state, action: PayloadAction<{ searchResult: SearchResult }>) => {
+    addToSearchHistory: (state, action: PayloadAction<{ searchResult: SearchHistoryResult }>) => {
       const { searchResult } = action.payload
       // Store search results with a standard searchId to prevent duplicates
       const searchId = searchResultId(searchResult)

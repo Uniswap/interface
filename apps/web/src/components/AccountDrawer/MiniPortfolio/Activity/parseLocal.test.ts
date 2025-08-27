@@ -261,7 +261,6 @@ describe('parseLocalActivity', () => {
     } as TransactionDetails
     const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
     expect(result).toEqual({
-      cancelled: undefined,
       prefixIconSrc: undefined,
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
@@ -291,7 +290,6 @@ describe('parseLocalActivity', () => {
     } as TransactionDetails
     const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
     expect(result).toMatchObject({
-      cancelled: undefined,
       prefixIconSrc: undefined,
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],

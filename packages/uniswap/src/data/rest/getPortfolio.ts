@@ -65,11 +65,13 @@ export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
 
   // Changes in the modifier should not cause a refetch, so it's excluded from the queryKey
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { modifier: _modifier, walletAccount, ...inputWithoutModifierAndAddress } = transformedInput ?? {}
-  const address = walletAccount?.platformAddresses[0]?.address
+  const { modifier: _modifier, walletAccount, ...inputWithoutModifierAndWalletAccount } = transformedInput ?? {}
+  const walletAccountsKey = walletAccount?.platformAddresses
+    .map((platformAddress) => `${platformAddress.address}-${platformAddress.platform}`)
+    .join(',')
 
   return queryOptions({
-    queryKey: [ReactQueryCacheKey.GetPortfolio, address, inputWithoutModifierAndAddress],
+    queryKey: [ReactQueryCacheKey.GetPortfolio, walletAccountsKey, inputWithoutModifierAndWalletAccount],
     queryFn: () => (transformedInput ? portfolioClient.getPortfolio(transformedInput) : Promise.resolve(undefined)),
     placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when hiding/unhiding tokens
     refetchInterval,

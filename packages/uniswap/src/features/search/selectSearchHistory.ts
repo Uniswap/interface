@@ -1,6 +1,6 @@
-import { SearchResult } from 'uniswap/src/features/search/SearchResult'
+import { SearchHistoryResult } from 'uniswap/src/features/search/SearchHistoryResult'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
 
-export const selectSearchHistory = (state: UniswapState): SearchResult[] => {
+export const selectSearchHistory = (state: UniswapState): SearchHistoryResult[] => {
   return state.searchHistory.results
 }

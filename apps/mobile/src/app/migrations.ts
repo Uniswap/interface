@@ -18,6 +18,7 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
+  migrateSearchHistory,
   removeThaiBahtFromFiatCurrency,
   unchecksumDismissedTokenWarningKeys,
 } from 'uniswap/src/state/uniswapMigrations'
@@ -1068,6 +1069,21 @@ export const migrations = {
   90: migrateLiquidityTransactionInfo,
 
   91: removePriceAlertsEnabledFromPushNotifications,
+
+  92: function migrateAndRemoveCloudBackupSlice(state: any) {
+    const newState = { ...state }
+    const activeAccountAddress = newState.wallet.activeAccountAddress
+    const backups = newState.cloudBackup.backupsFound
+    const backupEmail = backups?.find((backup: any) => backup.mnemonicId === activeAccountAddress)?.email
+    if (backupEmail) {
+      newState.wallet.androidCloudBackupEmail = backupEmail
+    }
+    delete newState.cloudBackup
+
+    return newState
+  },
+
+  93: migrateSearchHistory,
 }
 
-export const MOBILE_STATE_VERSION = 91
+export const MOBILE_STATE_VERSION = 93

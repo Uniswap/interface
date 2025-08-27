@@ -12,7 +12,8 @@ export type OnSelectCurrency = (
 ) => void
 
 export type TokenSectionsHookProps = {
-  activeAccountAddress?: string
+  evmAddress?: Address
+  svmAddress?: Address
   chainFilter: UniverseChainId | null
   oppositeSelectedToken?: TradeableAsset
 }

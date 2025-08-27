@@ -26,25 +26,46 @@ export function useFilterCallbacks(
   const { chains: enabledChains } = useEnabledChains()
 
   // Parses the user input to determine if the user is searching for a chain + token
-  // i.e "eth dai"
+  // i.e "eth dai" or "dai eth"
   // parsedChainFilter: 1
   // parsedSearchFilter: "dai"
   useEffect(() => {
-    const splitSearch = searchFilter?.split(' ')
-    const maybeChainName = splitSearch?.[0]?.toLowerCase()
-
-    const chainMatch = getNativeCurrencyNames(enabledChains).find((currency) =>
-      currency.name.startsWith(maybeChainName ?? ''),
-    )
-    const search = splitSearch?.slice(1).join(' ')
-
-    if (!chainFilter && chainMatch && search) {
-      setParsedChainFilter(chainMatch.chainId)
-      setParsedSearchFilter(search)
-    } else {
+    const sanitizedSearch = searchFilter?.trim().replace('  ', ' ')
+    const splitSearch = sanitizedSearch?.split(' ')
+    if (!splitSearch || splitSearch.length < 2) {
       setParsedChainFilter(null)
       setParsedSearchFilter(null)
+      return
     }
+
+    const firstWord = splitSearch[0]?.toLowerCase()
+    const lastWord = splitSearch[splitSearch.length - 1]?.toLowerCase()
+
+    const firstWordChainMatch = firstWord ? getMatchingChainId(firstWord, enabledChains) : undefined
+    const lastWordChainMatch = lastWord ? getMatchingChainId(lastWord, enabledChains) : undefined
+
+    if (!chainFilter && firstWordChainMatch) {
+      // First word is chain, rest is search term
+      const search = splitSearch.slice(1).join(' ')
+      if (search) {
+        setParsedChainFilter(firstWordChainMatch)
+        setParsedSearchFilter(search)
+        return
+      }
+    }
+
+    if (!chainFilter && lastWordChainMatch && !firstWordChainMatch) {
+      // Last word is chain, preceding words are search term
+      const search = splitSearch.slice(0, -1).join(' ')
+      if (search) {
+        setParsedChainFilter(lastWordChainMatch)
+        setParsedSearchFilter(search)
+        return
+      }
+    }
+
+    setParsedChainFilter(null)
+    setParsedSearchFilter(null)
   }, [searchFilter, chainFilter, enabledChains])
 
   useEffect(() => {
@@ -79,14 +100,37 @@ export function useFilterCallbacks(
   }
 }
 
-const getNativeCurrencyNames = (chains: UniverseChainId[]): { chainId: UniverseChainId; name: string }[] =>
-  chains
-    .map((chainId) => {
-      return isTestnetChain(chainId)
-        ? false
-        : {
-            chainId,
-            name: getChainInfo(chainId).nativeCurrency.name.toLowerCase(),
-          }
-    })
-    .filter(Boolean) as { chainId: UniverseChainId; name: string }[]
+/**
+ * Finds a matching chain ID based on the provided chain name.
+ *
+ * @param maybeChainName - The potential chain name to match against
+ * @param enabledChains - Array of enabled chain IDs to search within
+ * @returns The matching UniverseChainId or undefined if no match found
+ */
+const getMatchingChainId = (maybeChainName: string, enabledChains: UniverseChainId[]): UniverseChainId | undefined => {
+  const lowerCaseChainName = maybeChainName.toLowerCase()
+
+  for (const chainId of enabledChains) {
+    if (isTestnetChain(chainId)) {
+      continue
+    }
+
+    const chainInfo = getChainInfo(chainId)
+
+    // Check against native currency name
+    const nativeCurrencyName = chainInfo.nativeCurrency.name.toLowerCase()
+    const firstWord = nativeCurrencyName.split(' ')[0]
+
+    if (firstWord === lowerCaseChainName) {
+      return chainId
+    }
+
+    // Check against interface name
+    const interfaceName = chainInfo.interfaceName.toLowerCase()
+    if (interfaceName === lowerCaseChainName) {
+      return chainId
+    }
+  }
+
+  return undefined
+}

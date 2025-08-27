@@ -18,7 +18,7 @@
     "@ethersproject/constants": "5.7.0",
     "@ethersproject/contracts": "5.7.0",
     "@ethersproject/providers": "5.7.2",
-    "@gorhom/bottom-sheet": "4.6.4",
+    "@gorhom/bottom-sheet": "5.1.8",
     "@react-navigation/core": "7.9.2",
     "@redux-saga/core": "1.2.3",
     "@reduxjs/toolkit": "1.9.3",

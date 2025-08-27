@@ -111,7 +111,7 @@ export function useDensityChartData({
     return {
       isLoading: isLoading || (Boolean(data) && !formattedData),
       error,
-      formattedData: isLoading ? undefined : formattedData,
+      formattedData: isLoading || !formattedData ? undefined : formattedData,
     }
   }, [data, error, formattedData, isLoading])
 }

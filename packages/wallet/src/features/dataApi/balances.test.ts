@@ -231,7 +231,7 @@ describe(usePortfolioBalances, () => {
   })
 
   it('returns loading set to true when data is being fetched', async () => {
-    const { result } = renderHook(() => usePortfolioBalances({ address: Portfolio.ownerAddress }), {
+    const { result } = renderHook(() => usePortfolioBalances({ evmAddress: Portfolio.ownerAddress }), {
       resolvers: portfolioResolvers,
     })
 
@@ -254,7 +254,7 @@ describe(usePortfolioBalances, () => {
         throw new Error('test')
       },
     })
-    const { result } = renderHook(() => usePortfolioBalances({ address: Portfolio.ownerAddress }), {
+    const { result } = renderHook(() => usePortfolioBalances({ evmAddress: Portfolio.ownerAddress }), {
       resolvers,
     })
 
@@ -273,7 +273,7 @@ describe(usePortfolioBalances, () => {
     const { resolvers } = queryResolvers({
       portfolios: () => [],
     })
-    const { result } = renderHook(() => usePortfolioBalances({ address: Portfolio.ownerAddress }), {
+    const { result } = renderHook(() => usePortfolioBalances({ evmAddress: Portfolio.ownerAddress }), {
       resolvers,
     })
 
@@ -291,7 +291,7 @@ describe(usePortfolioBalances, () => {
   })
 
   it('returns balances grouped by currencyId', async () => {
-    const { result } = renderHook(() => usePortfolioBalances({ address: Portfolio.ownerAddress }), {
+    const { result } = renderHook(() => usePortfolioBalances({ evmAddress: Portfolio.ownerAddress }), {
       resolvers: portfolioResolvers,
     })
 
@@ -311,7 +311,7 @@ describe(usePortfolioBalances, () => {
 
   it('calls onCompleted callback when query completes', async () => {
     const onCompleted = jest.fn()
-    const { result } = renderHook(() => usePortfolioBalances({ address: daiCurrencyId, onCompleted }), {
+    const { result } = renderHook(() => usePortfolioBalances({ evmAddress: daiCurrencyId, onCompleted }), {
       resolvers: portfolioResolvers,
     })
 
@@ -339,7 +339,7 @@ describe(usePortfolioTotalValue, () => {
   })
 
   it('returns loading set to true when data is being fetched', async () => {
-    const { result } = renderHook(() => usePortfolioTotalValue({ address: Portfolio.ownerAddress }), {
+    const { result } = renderHook(() => usePortfolioTotalValue({ evmAddress: Portfolio.ownerAddress }), {
       resolvers: portfolioResolvers,
     })
 
@@ -362,7 +362,7 @@ describe(usePortfolioTotalValue, () => {
         throw new Error('test')
       },
     })
-    const { result } = renderHook(() => usePortfolioTotalValue({ address: Portfolio.ownerAddress }), { resolvers })
+    const { result } = renderHook(() => usePortfolioTotalValue({ evmAddress: Portfolio.ownerAddress }), { resolvers })
 
     await waitFor(() => {
       expect(result.current).toEqual({
@@ -379,7 +379,7 @@ describe(usePortfolioTotalValue, () => {
     const { resolvers } = queryResolvers({
       portfolios: () => [],
     })
-    const { result } = renderHook(() => usePortfolioTotalValue({ address: Portfolio.ownerAddress }), { resolvers })
+    const { result } = renderHook(() => usePortfolioTotalValue({ evmAddress: Portfolio.ownerAddress }), { resolvers })
 
     expect(result.current.loading).toEqual(true)
 
@@ -395,7 +395,7 @@ describe(usePortfolioTotalValue, () => {
   })
 
   it('returns total value of all balances for the specified address', async () => {
-    const { result } = renderHook(() => usePortfolioTotalValue({ address: Portfolio.ownerAddress }), {
+    const { result } = renderHook(() => usePortfolioTotalValue({ evmAddress: Portfolio.ownerAddress }), {
       resolvers: portfolioResolvers,
     })
 
@@ -420,7 +420,7 @@ describe(useHighestBalanceNativeCurrencyId, () => {
     const { resolvers } = queryResolvers({
       portfolios: () => [portfolio({ tokenBalances: [daiTokenBalance] })],
     })
-    const { result } = renderHook(() => useHighestBalanceNativeCurrencyId(SAMPLE_SEED_ADDRESS_1), {
+    const { result } = renderHook(() => useHighestBalanceNativeCurrencyId({ evmAddress: SAMPLE_SEED_ADDRESS_1 }), {
       resolvers,
     })
 
@@ -430,7 +430,7 @@ describe(useHighestBalanceNativeCurrencyId, () => {
   })
 
   it('returns native currency id with the highest balance', async () => {
-    const { result } = renderHook(() => useHighestBalanceNativeCurrencyId(SAMPLE_SEED_ADDRESS_1), {
+    const { result } = renderHook(() => useHighestBalanceNativeCurrencyId({ evmAddress: SAMPLE_SEED_ADDRESS_1 }), {
       resolvers: portfolioResolvers,
     })
 
@@ -446,7 +446,7 @@ describe(useHighestBalanceNativeCurrencyId, () => {
       portfolios: () => [portfolio({ tokenBalances: [daiTokenBalance] })],
     })
     const { result } = renderHook(
-      () => useHighestBalanceNativeCurrencyId(SAMPLE_SEED_ADDRESS_1, UniverseChainId.Polygon),
+      () => useHighestBalanceNativeCurrencyId({ evmAddress: SAMPLE_SEED_ADDRESS_1, chainId: UniverseChainId.Polygon }),
       {
         resolvers,
       },
@@ -491,7 +491,7 @@ describe(useTokenBalancesGroupedByVisibility, () => {
 
 describe(useSortedPortfolioBalances, () => {
   it('returns loading set to true when data is being fetched', () => {
-    const { result } = renderHook(() => useSortedPortfolioBalances({ address: Portfolio.ownerAddress }))
+    const { result } = renderHook(() => useSortedPortfolioBalances({ evmAddress: Portfolio.ownerAddress }))
 
     expect(result.current).toEqual({
       data: {
@@ -505,7 +505,7 @@ describe(useSortedPortfolioBalances, () => {
   })
 
   it('returns balances grouped by visibility when data is fetched', async () => {
-    const { result } = renderHook(() => useSortedPortfolioBalances({ address: Portfolio.ownerAddress }), {
+    const { result } = renderHook(() => useSortedPortfolioBalances({ evmAddress: Portfolio.ownerAddress }), {
       resolvers: portfolioResolvers,
     })
 

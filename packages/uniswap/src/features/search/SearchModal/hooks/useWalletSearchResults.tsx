@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { OnchainItemListOptionType, WalletOption } from 'uniswap/src/components/lists/items/types'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
@@ -7,7 +8,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { SearchResultType, WalletSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 
@@ -16,7 +16,7 @@ export function useWalletSearchResults(
   query: string,
   selectedChain: UniverseChainId | null,
 ): {
-  wallets: WalletSearchResult[]
+  wallets: WalletOption[]
   loading: boolean
   exactENSMatch: boolean
   exactUnitagMatch: boolean
@@ -70,13 +70,13 @@ export function useWalletSearchResults(
   // Only consider queries with the .eth suffix as an exact ENS match
   const exactENSMatch = dotEthName?.toLowerCase() === query.toLowerCase() && query.includes(ENS_SUFFIX)
 
-  const results: WalletSearchResult[] = []
+  const results: WalletOption[] = []
 
   // Prioritize unitags
 
   if (unitagByName?.address?.address && unitagByName.username) {
     results.push({
-      type: SearchResultType.Unitag,
+      type: OnchainItemListOptionType.Unitag,
       address: unitagByName.address.address,
       unitag: unitagByName.username,
     })
@@ -95,7 +95,7 @@ export function useWalletSearchResults(
     !unitagByName?.address?.address && unitagByAddress?.address && unitagByAddress.username && addressOrNameMatch
   if (showUnitagByAddress) {
     results.push({
-      type: SearchResultType.Unitag,
+      type: OnchainItemListOptionType.Unitag,
       // Already checked that these aren't undefined but linter doesn't recognize it
       address: unitagByAddress.address ?? '',
       unitag: unitagByAddress.username ?? '',
@@ -106,7 +106,7 @@ export function useWalletSearchResults(
 
   if (!validAddress && ensAddress && ensName && !showUnitagByAddress) {
     results.push({
-      type: SearchResultType.ENSAddress,
+      type: OnchainItemListOptionType.ENSAddress,
       address: ensAddress,
       ensName,
       isRawName: !ensName.endsWith(ENS_SUFFIX), // Ensure raw name is used for subdomains only
@@ -123,7 +123,7 @@ export function useWalletSearchResults(
     dotEthAddress !== ensAddress
   ) {
     results.push({
-      type: SearchResultType.ENSAddress,
+      type: OnchainItemListOptionType.ENSAddress,
       address: dotEthAddress,
       ensName: dotEthName,
     })
@@ -132,7 +132,7 @@ export function useWalletSearchResults(
   // Do not show EOA address result if there is a Unitag result by address
   if (hasEOAResult && !showUnitagByAddress) {
     results.push({
-      type: SearchResultType.WalletByAddress,
+      type: OnchainItemListOptionType.WalletByAddress,
       address: validAddress,
     })
   }

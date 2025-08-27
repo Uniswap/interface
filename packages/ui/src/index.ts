@@ -77,6 +77,7 @@ export { IconButton, type IconButtonProps } from './components/buttons/IconButto
 export * from './components/buttons/PlusMinusButton'
 export * from './components/checkbox'
 export * from './components/dropdownMenuSheet/DropdownMenuSheetItem'
+export { getMenuItemColor } from './components/dropdownMenuSheet/utils'
 export type { GeneratedIcon, IconProps } from './components/factories/createIcon'
 export * from './components/input/utils'
 export { Flex, Inset, Separator, flexStyles, type FlexProps } from './components/layout'

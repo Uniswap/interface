@@ -70,6 +70,7 @@ interface LPPriceChartModelParams extends ChartModelParams<PriceChartData> {
   // These callbacks provide information to the parent component.
   setCrosshairCoordinates?: ({ x, y }: { x: number; y: number }) => void
   setBoundaryPrices?: (price: [number, number]) => void
+  onChartReady?: (chart: LPPriceChartModel) => void
   // Color of the price data line,
   color?: ColorTokens
   colors: ReturnType<typeof useSporeColors>
@@ -96,9 +97,11 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
   private positionRangeMin!: number
   private positionRangeMax!: number
   private bandIndicator?: BandsIndicator
+  private currentParams?: LPPriceChartModelParams
 
   constructor(chartDiv: HTMLDivElement, params: LPPriceChartModelParams) {
     super(chartDiv, params)
+    this.currentParams = params
 
     // Price history (primary series)
     this.series = this.api.addAreaSeries()
@@ -119,9 +122,17 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
     this.updateOptions(params)
     this.fitContent()
     this.overrideCrosshair(params)
+
+    // Notify parent that chart is ready
+    if (params.onChartReady) {
+      params.onChartReady(this)
+    }
   }
 
   updateOptions(params: LPPriceChartModelParams): void {
+    // Store current params for resetBoundaryPrices method
+    this.currentParams = params
+
     // Handle changes in data
     if (this.data !== params.data) {
       this.data = params.data
@@ -210,12 +221,16 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
 
     // Report the min/max price ticks of this chart to the parent
     requestAnimationFrame(() => {
-      if (params.setBoundaryPrices) {
-        const maxPrice = this.series.coordinateToPrice(0)
-        const minPrice = this.series.coordinateToPrice(params.height)
-        params.setBoundaryPrices([minPrice as number, maxPrice as number])
-      }
+      this.resetBoundaryPrices()
     })
+  }
+
+  public resetBoundaryPrices(): void {
+    if (this.currentParams?.setBoundaryPrices) {
+      const maxPrice = this.series.coordinateToPrice(0)
+      const minPrice = this.series.coordinateToPrice(this.currentParams.height)
+      this.currentParams.setBoundaryPrices([minPrice as number, maxPrice as number])
+    }
   }
 
   public static getPriceLineColor(

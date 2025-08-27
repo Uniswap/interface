@@ -694,18 +694,35 @@ const v88SchemaIntermediate = {
   },
 }
 delete v88SchemaIntermediate.appearanceSettings.hapticsEnabled
+
 export const v88Schema = v88SchemaIntermediate
 
 export const v89Schema = { ...v88Schema }
 
 export const v90Schema = { ...v89Schema }
 
-const v91Schema = {
+export const v91Schema = {
   ...v90Schema,
   pushNotifications: {
     generalUpdatesEnabled: v90Schema.pushNotifications.generalUpdatesEnabled,
   },
 }
+
+const v92SchemaIntermediate = {
+  ...v91Schema,
+  cloudBackup: undefined,
+  wallet: {
+    ...v91Schema.wallet,
+    androidCloudBackupEmail: null,
+  },
+}
+
+delete v92SchemaIntermediate.cloudBackup
+
+export const v92Schema = v92SchemaIntermediate
+
+const v93Schema = v92Schema
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v91Schema => v91Schema
+export const getSchema = (): typeof v93Schema => v93Schema

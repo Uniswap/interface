@@ -5,7 +5,7 @@ import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNati
 import { KeyAction } from 'utilities/src/device/keyboard/types'
 import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
 import { isInterface, isWeb } from 'utilities/src/platform'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 
 // Props for manually managing the focused row index of a list
 // i.e. via keyboard ArrowUp/ArrowDown navigation

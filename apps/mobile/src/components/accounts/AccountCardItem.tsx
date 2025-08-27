@@ -5,7 +5,6 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { NotificationBadge } from 'src/components/notifications/Badge'
-import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
@@ -21,6 +20,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { NumberType } from 'utilities/src/format/types'
+import { noop } from 'utilities/src/react/noop'
 import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -211,7 +211,7 @@ export function AccountCardItem({
         pb="$spacing12"
         pt="$spacing8"
         px="$spacing24"
-        onLongPress={disableOnPress}
+        onLongPress={noop}
         onPress={(): void => onPress(address)}
       >
         <Flex row alignItems="flex-start" gap="$spacing16" testID={`account-item/${address}`}>

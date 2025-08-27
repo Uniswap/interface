@@ -15,16 +15,8 @@ export function AnimatedTokenFlip({
   inputCurrencyInfo,
   outputCurrencyInfo,
 }: AnimatedTokenFlipProps): JSX.Element {
-  const [processingState, setProcessingState] = useState<'processing' | 'complete'>('processing')
+  const [processingState, setProcessingState] = useState<'processing' | 'complete'>('complete')
   const flipAnimation = useSharedValue(0)
-
-  useEffect(() => {
-    // Wait for the enter animation to almost complete (250ms)
-    const timer = setTimeout(() => {
-      setProcessingState('complete')
-    }, 250)
-    return () => clearTimeout(timer)
-  }, [])
 
   useEffect(() => {
     flipAnimation.value = withTiming(processingState === 'complete' ? 1 : 0, {

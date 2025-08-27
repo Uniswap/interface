@@ -123,7 +123,22 @@ function TDPSwapComponent() {
   // Other token to prefill the swap form with
   const initialInputCurrency = inputCurrency
   // If the initial input currency is the same as the TDP currency, then we are selling the TDP currency
-  const initialOutputCurrency = areCurrenciesEqual(initialInputCurrency, currency) ? outputCurrency : currency
+  const initialOutputCurrency = useMemo((): Currency | undefined => {
+    if (
+      areCurrenciesEqual(initialInputCurrency, currency) &&
+      // ensure the output is not equal to the input before setting
+      !areCurrenciesEqual(outputCurrency, initialInputCurrency)
+    ) {
+      return outputCurrency
+    }
+
+    // ensure the context currency is not equal to the input before setting
+    if (areCurrenciesEqual(currency, initialInputCurrency)) {
+      return undefined
+    }
+
+    return currency
+  }, [currency, initialInputCurrency, outputCurrency])
 
   const [prevTokens, setPrevTokens] = useState<CurrencyState>({
     inputCurrency: initialInputCurrency,

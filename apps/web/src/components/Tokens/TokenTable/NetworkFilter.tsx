@@ -36,6 +36,7 @@ const StyledDropdown = {
   maxHeight: 350,
   minWidth: 256,
   px: 0,
+  py: 0,
 } satisfies FlexProps
 
 export default function TableNetworkFilter({ showMultichainOption = true }: { showMultichainOption?: boolean }) {

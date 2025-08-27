@@ -2,8 +2,6 @@ import { useMemo } from 'react'
 import { useCurrentFlashblocksTransaction } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/hooks/useCurrentFlashblocksTransaction'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 
-import { isInterfaceTransaction, isWalletTransaction } from 'uniswap/src/features/transactions/types/utils'
-
 export function useActualCompletionTime(): number | undefined {
   // Get instant receipt fetch time from swap state
   const instantReceiptFetchTime = useSwapFormStore((s) => s.instantReceiptFetchTime)
@@ -28,11 +26,7 @@ export function useActualCompletionTime(): number | undefined {
 
     let confirmedTime: number | undefined
 
-    if (isInterfaceTransaction(transaction)) {
-      confirmedTime = transaction.confirmedTime
-    } else if (isWalletTransaction(transaction)) {
-      confirmedTime = transaction.receipt?.confirmedTime
-    }
+    confirmedTime = transaction.receipt?.confirmedTime
 
     if (!confirmedTime || (instantReceiptFetchTime && instantReceiptFetchTime < confirmedTime)) {
       confirmedTime = instantReceiptFetchTime

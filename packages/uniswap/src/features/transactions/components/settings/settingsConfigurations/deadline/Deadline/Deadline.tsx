@@ -1,3 +1,4 @@
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { type TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
@@ -7,6 +8,7 @@ import { PlatformSplitStubError } from 'utilities/src/errors'
  */
 export const Deadline: TransactionSettingConfig = {
   renderTitle: (t) => t('swap.deadline.settings.title.short'),
+  applicablePlatforms: [Platform.EVM],
   Control() {
     throw new PlatformSplitStubError('Deadline')
   },

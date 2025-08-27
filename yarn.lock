@@ -6621,9 +6621,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gorhom/bottom-sheet@npm:4.6.4":
-  version: 4.6.4
-  resolution: "@gorhom/bottom-sheet@npm:4.6.4"
+"@gorhom/bottom-sheet@npm:5.1.8":
+  version: 5.1.8
+  resolution: "@gorhom/bottom-sheet@npm:5.1.8"
   dependencies:
     "@gorhom/portal": 1.0.14
     invariant: ^2.2.4
@@ -6632,36 +6632,14 @@ __metadata:
     "@types/react-native": "*"
     react: "*"
     react-native: "*"
-    react-native-gesture-handler: ">=1.10.1"
-    react-native-reanimated: ">=2.2.0"
+    react-native-gesture-handler: ">=2.16.1"
+    react-native-reanimated: "*"
   peerDependenciesMeta:
     "@types/react":
       optional: true
     "@types/react-native":
       optional: true
-  checksum: 2cea033c4f321b93fdbf61470b507b5efd51425a8ab927b49d7aaa1d9f0568cbcfb188e385311389dbffbafe47b941dbd3e60f74b1d663a1a2d73262e2719f85
-  languageName: node
-  linkType: hard
-
-"@gorhom/bottom-sheet@patch:@gorhom/bottom-sheet@npm%3A4.6.4#./.yarn/patches/@gorhom-bottom-sheet-npm-4.6.4-5b2c27bb1f.patch::locator=universe%40workspace%3A.":
-  version: 4.6.4
-  resolution: "@gorhom/bottom-sheet@patch:@gorhom/bottom-sheet@npm%3A4.6.4#./.yarn/patches/@gorhom-bottom-sheet-npm-4.6.4-5b2c27bb1f.patch::version=4.6.4&hash=8cfadb&locator=universe%40workspace%3A."
-  dependencies:
-    "@gorhom/portal": 1.0.14
-    invariant: ^2.2.4
-  peerDependencies:
-    "@types/react": "*"
-    "@types/react-native": "*"
-    react: "*"
-    react-native: "*"
-    react-native-gesture-handler: ">=1.10.1"
-    react-native-reanimated: ">=2.2.0"
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    "@types/react-native":
-      optional: true
-  checksum: c28e0e28e4bd46d62001a366b132be40fd8c0af72c22c3b8cd40df467266c7bc0ece8c56c173f7a70119c5551b908007f6d24494a6835d8e136adbba61c2489c
+  checksum: de450ace52d8a4fac9faed0a900ae455f90289114e06c96c8378ba192102a8795a29f614245b450c4e2a29dbe2b93c2ccaaa39cb6a14561f200ea4dd2e372621
   languageName: node
   linkType: hard
 
@@ -17700,7 +17678,7 @@ __metadata:
     "@formatjs/intl-numberformat": 7.4.1
     "@formatjs/intl-pluralrules": 4.3.1
     "@formatjs/intl-relativetimeformat": 11.1.2
-    "@gorhom/bottom-sheet": 4.6.4
+    "@gorhom/bottom-sheet": 5.1.8
     "@react-native-async-storage/async-storage": 1.23.1
     "@react-native-community/datetimepicker": 8.2.0
     "@react-native-community/netinfo": 11.4.1
@@ -46740,7 +46718,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ui@workspace:packages/ui"
   dependencies:
-    "@gorhom/bottom-sheet": 4.6.4
+    "@gorhom/bottom-sheet": 5.1.8
     "@react-native-masked-view/masked-view": 0.3.2
     "@shopify/flash-list": 1.7.3
     "@shopify/react-native-skia": 1.12.4
@@ -47046,7 +47024,7 @@ __metadata:
     "@ethersproject/units": 5.7.0
     "@ethersproject/web": 5.7.1
     "@faker-js/faker": 7.6.0
-    "@gorhom/bottom-sheet": 4.6.4
+    "@gorhom/bottom-sheet": 5.1.8
     "@graphql-codegen/cli": 3.3.1
     "@graphql-codegen/client-preset": 3.0.1
     "@graphql-codegen/typescript": 3.0.4
@@ -47134,7 +47112,6 @@ __metadata:
     react-i18next: 14.1.0
     react-native: 0.77.2
     react-native-appsflyer: 6.13.1
-    react-native-context-menu-view: 1.15.0
     react-native-device-info: 10.11.0
     react-native-dotenv: 3.2.0
     react-native-fast-image: 8.6.3
@@ -48287,7 +48264,7 @@ __metadata:
     "@ethersproject/contracts": 5.7.0
     "@ethersproject/providers": 5.7.2
     "@faker-js/faker": 7.6.0
-    "@gorhom/bottom-sheet": 4.6.4
+    "@gorhom/bottom-sheet": 5.1.8
     "@react-navigation/core": 7.9.2
     "@redux-saga/core": 1.2.3
     "@reduxjs/toolkit": 1.9.3

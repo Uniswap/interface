@@ -109,11 +109,11 @@ export type PriceDifference = {
 export interface PriceRangeState {
   priceInverted: boolean
   fullRange: boolean
+  initialPrice: string
+  isInitialPriceDirty?: boolean
   // When these are undefined, LiquidityChartRangeInput will calculate and set reasonable default values.
   minPrice?: string
   maxPrice?: string
-  initialPrice: string
-  isInitialPriceDirty?: boolean
 }
 
 type BasePriceRangeInfo = {

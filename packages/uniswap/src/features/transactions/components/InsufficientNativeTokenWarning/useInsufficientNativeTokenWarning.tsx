@@ -100,25 +100,25 @@ export function useInsufficientNativeTokenWarning({
   const networkName = getChainLabel(supportedChainId)
 
   const getModalOrTooltipMainMessage = (): JSX.Element => {
+    // When the user doesn't have enough funds to cover the transaction's network cost.
+    const warningComponents = {
+      // TODO(WALL-3901): move this to `value` once the bug in i18next is fixed.
+      // We need to pass this as a `component` instead of a `value` because there seems to be a bug in i18next
+      // which causes the value `<$0.01` to be incorrectly escaped.
+      fiatTokenAmount: (
+        <Text color="$neutral2" variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}>
+          {gasAmountFiatFormatted}
+        </Text>
+      ),
+    }
+
+    const warningValues = {
+      networkName,
+      tokenSymbol: nativeCurrency.symbol,
+      tokenAmount: gasAmount ? gasAmount.toSignificant(2) : '',
+    }
+
     if (warning.type === WarningLabel.InsufficientGasFunds) {
-      // When the user doesn't have enough funds to cover the transaction's network cost.
-      const warningComponents = {
-        // TODO(WALL-3901): move this to `value` once the bug in i18next is fixed.
-        // We need to pass this as a `component` instead of a `value` because there seems to be a bug in i18next
-        // which causes the value `<$0.01` to be incorrectly escaped.
-        fiatTokenAmount: (
-          <Text color="$neutral2" variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}>
-            {gasAmountFiatFormatted}
-          </Text>
-        ),
-      }
-
-      const warningValues = {
-        networkName,
-        tokenSymbol: nativeCurrency.symbol,
-        tokenAmount: gasAmount?.toSignificant(2),
-      }
-
       if (isTestnetModeEnabled) {
         return (
           <Trans
@@ -152,7 +152,11 @@ export function useInsufficientNativeTokenWarning({
         )
       } else {
         return (
-          <Trans i18nKey="transaction.warning.insufficientGas.modal.messageSwapWithoutTokenAmount" values={values} />
+          <Trans
+            components={warningComponents}
+            i18nKey="transaction.warning.insufficientGas.modal.messageSwapWithoutTokenAmount"
+            values={warningValues}
+          />
         )
       }
     }

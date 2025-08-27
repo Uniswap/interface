@@ -37,7 +37,7 @@ describe(useCrossChainBalances, () => {
       const { result } = renderHook(
         () =>
           useCrossChainBalances({
-            address: SAMPLE_SEED_ADDRESS_1,
+            evmAddress: SAMPLE_SEED_ADDRESS_1,
             currencyId: SAMPLE_CURRENCY_ID_1,
             crossChainTokens: null,
           }),
@@ -64,7 +64,7 @@ describe(useCrossChainBalances, () => {
       const { result } = renderHook(
         () =>
           useCrossChainBalances({
-            address: SAMPLE_SEED_ADDRESS_1,
+            evmAddress: SAMPLE_SEED_ADDRESS_1,
             currencyId: currentChainBalance.currencyInfo.currencyId,
             crossChainTokens: null,
           }),
@@ -89,7 +89,7 @@ describe(useCrossChainBalances, () => {
       const { result } = renderHook(
         () =>
           useCrossChainBalances({
-            address: SAMPLE_SEED_ADDRESS_1,
+            evmAddress: SAMPLE_SEED_ADDRESS_1,
             currencyId: SAMPLE_CURRENCY_ID_1,
             crossChainTokens: null,
           }),
@@ -125,7 +125,7 @@ describe(useCrossChainBalances, () => {
       const { result } = renderHook(
         () =>
           useCrossChainBalances({
-            address: SAMPLE_SEED_ADDRESS_1,
+            evmAddress: SAMPLE_SEED_ADDRESS_1,
             currencyId: currentChainBalance!.currencyInfo.currencyId,
             crossChainTokens: bridgeInfo,
           }),

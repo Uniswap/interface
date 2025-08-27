@@ -46,11 +46,13 @@ export function RestoreMethodScreen({ navigation, route: { params } }: Props): J
       throw error
     }
 
-    navigation.navigate({
-      name: nav,
-      params: { ...params, importType, entryPoint },
-      merge: true,
-    })
+    if (nav !== OnboardingScreens.RestoreCloudBackup) {
+      navigation.navigate({
+        name: nav,
+        params: { ...params, importType, entryPoint },
+        merge: true,
+      })
+    }
   }
 
   const onViewPrivateKeys = (): void => {

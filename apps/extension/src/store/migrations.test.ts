@@ -27,6 +27,7 @@ import {
   v23Schema,
   v24Schema,
   v25Schema,
+  v26Schema,
   v2Schema,
   v3Schema,
   v4Schema,
@@ -47,7 +48,7 @@ import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
-import { testRemoveTHBFromCurrency } from 'uniswap/src/state/uniswapMigrationTests'
+import { testMigrateSearchHistory, testRemoveTHBFromCurrency } from 'uniswap/src/state/uniswapMigrationTests'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBatchedTransactionsState } from 'wallet/src/features/batchedTransactions/slice'
@@ -341,5 +342,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v25 to v26', () => {
     testMigrateLiquidityTransactionInfoRename(migrations[26], v25Schema)
+  })
+
+  it('migrates from v26 to v27', () => {
+    testMigrateSearchHistory(migrations[27], v26Schema)
   })
 })

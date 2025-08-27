@@ -1,4 +1,5 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
+import { BigNumber } from '@ethersproject/bignumber'
 import { Web3Provider } from '@ethersproject/providers'
 import { useQuery } from '@tanstack/react-query'
 import { permit2Address } from '@uniswap/permit2-sdk'
@@ -276,4 +277,39 @@ export function useCreateCancelTransactionRequest(
 
 export function isLimitCancellable(order: UniswapXOrderDetails) {
   return [UniswapXOrderStatus.OPEN, UniswapXOrderStatus.INSUFFICIENT_FUNDS].includes(order.status)
+}
+
+/**
+ * Extracts nonce from an Activity object.
+ *
+ * @param activity - The activity to extract nonce from
+ * @returns the nonce as BigNumber if available, undefined otherwise
+ */
+export function getActivityNonce(activity: Activity): BigNumber | undefined {
+  if (
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    activity.options?.request?.nonce !== undefined &&
+    // TODO(PORT-338): determine why nonce is being sent in as null value
+    // when creating a limit order (should be undefined or BigNumberish)
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    activity.options.request.nonce !== null
+  ) {
+    return BigNumber.from(activity.options.request.nonce)
+  }
+
+  return undefined
+}
+
+/**
+ * Checks if two activities have the same nonce for cancellation detection.
+ *
+ * @param activity1 - First activity
+ * @param activity2 - Second activity
+ * @returns true if both activities have the same nonce
+ */
+export function haveSameNonce(activity1: Activity, activity2: Activity): boolean {
+  const nonce1 = getActivityNonce(activity1)
+  const nonce2 = getActivityNonce(activity2)
+
+  return Boolean(nonce1 && nonce2 && nonce1.eq(nonce2))
 }

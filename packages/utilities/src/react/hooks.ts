@@ -41,10 +41,12 @@ export function useOnClickOutside<T extends HTMLElement>({
   node,
   handler,
   ignoredNodes = [],
+  event = 'mousedown',
 }: {
   node: RefObject<T | undefined>
   handler?: () => void
   ignoredNodes?: Array<RefObject<HTMLElement | undefined>>
+  event?: 'mousedown' | 'mouseup'
 }): void {
   const handlerRef = useRef<undefined | (() => void)>(handler)
 
@@ -69,12 +71,12 @@ export function useOnClickOutside<T extends HTMLElement>({
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener(event, handleClickOutside)
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener(event, handleClickOutside)
     }
-  }, [node, ignoredNodes])
+  }, [node, ignoredNodes, event])
 }
 
 /**

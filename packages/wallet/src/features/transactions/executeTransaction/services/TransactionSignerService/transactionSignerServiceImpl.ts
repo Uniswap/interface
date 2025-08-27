@@ -84,11 +84,11 @@ export function createTransactionSignerService(ctx: {
 }
 
 export function createBundledDelegationTransactionSignerService(ctx: {
+  delegationInfo: DelegationCheckResult
   getAccount: () => SignerMnemonicAccountMeta
   getProvider: () => Promise<Provider>
   getSignerManager: () => SignerManager
   getViemClient: () => Promise<PublicClient>
-  getDelegationInfo: () => Promise<DelegationCheckResult>
 }): TransactionSigner {
   const baseTransactionSignerService = createTransactionSignerService(ctx)
 
@@ -101,17 +101,16 @@ export function createBundledDelegationTransactionSignerService(ctx: {
 
   const signTransaction: TransactionSigner['signTransaction'] = async (input) => {
     const signer = await getSigner()
-    const delegationInfo = await ctx.getDelegationInfo()
     const account = await ctx.getAccount()
     const chainId = input.chainId
 
     if (!chainId) {
       throw new Error('Chain ID is required')
     }
-    if (!delegationInfo.contractAddress) {
+    if (!ctx.delegationInfo.contractAddress) {
       throw new Error('Delegation contract address is required')
     }
-    const delegationContractAddress = isAddress(delegationInfo.contractAddress)
+    const delegationContractAddress = isAddress(ctx.delegationInfo.contractAddress)
     if (!delegationContractAddress) {
       throw new Error('Delegation contract address is invalid')
     }

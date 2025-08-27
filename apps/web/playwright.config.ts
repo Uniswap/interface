@@ -24,6 +24,7 @@ Module._load = function (...args: any[]) {
 export default defineConfig({
   testDir: './src',
   testMatch: '**/*.e2e.test.ts',
+  globalTeardown: './src/playwright/anvil/global-teardown.ts',
   workers: 1, // this is manually configured in the github action depending on type of tests
   fullyParallel: true,
   maxFailures: IS_CI ? 10 : undefined,

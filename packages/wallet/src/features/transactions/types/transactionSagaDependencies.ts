@@ -34,11 +34,11 @@ export interface TransactionSagaDependencies {
     getSignerManager: () => SignerManager
   }) => TransactionSigner
   createBundledDelegationTransactionSignerService: (params: {
+    delegationInfo: DelegationCheckResult
     getAccount: () => SignerMnemonicAccountMeta
     getProvider: () => Promise<Provider>
     getViemClient: () => Promise<PublicClient>
     getSignerManager: () => SignerManager
-    getDelegationInfo: () => Promise<DelegationCheckResult>
   }) => TransactionSigner
   createTransactionService: (params: {
     transactionRepository: TransactionRepository

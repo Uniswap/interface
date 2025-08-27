@@ -8,6 +8,7 @@ import {
   useDappRequestQueueContext,
 } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { rejectAllRequests } from 'src/app/features/dappRequests/actions'
+import { TransactionConfirmationTrackerProvider } from 'src/app/features/dappRequests/context/TransactionConfirmationTracker'
 import { ConnectionRequestContent } from 'src/app/features/dappRequests/requestContent/Connection/ConnectionRequestContent'
 import { EthSendRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/EthSend'
 import { PersonalSignRequestContent } from 'src/app/features/dappRequests/requestContent/PersonalSign/PersonalSignRequestContent'
@@ -44,9 +45,11 @@ export function DappRequestQueue(): JSX.Element {
       padding="$none"
       zIndex={zIndexes.overlay}
     >
-      <DappRequestQueueProvider>
-        <DappRequestQueueContent />
-      </DappRequestQueueProvider>
+      <TransactionConfirmationTrackerProvider>
+        <DappRequestQueueProvider>
+          <DappRequestQueueContent />
+        </DappRequestQueueProvider>
+      </TransactionConfirmationTrackerProvider>
     </Modal>
   )
 }

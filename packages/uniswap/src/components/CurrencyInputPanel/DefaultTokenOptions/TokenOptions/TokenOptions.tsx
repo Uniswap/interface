@@ -14,10 +14,14 @@ const useCommonTokensOptionsInfo = (): {
   allCurrencyInfos: CurrencyInfo[]
   numberOfCommonTokenOptions: number
 } => {
-  const account = useWallet().evmAccount
+  const wallet = useWallet()
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
 
-  const { data: commonTokenOptions } = useCommonTokensOptionsWithFallback(account?.address, chainId)
+  const { data: commonTokenOptions } = useCommonTokensOptionsWithFallback({
+    evmAddress: wallet.evmAccount?.address,
+    svmAddress: wallet.svmAccount?.address,
+    chainFilter: chainId,
+  })
 
   const numberOfCommonTokenOptions = commonTokenOptions?.length ?? 0
 

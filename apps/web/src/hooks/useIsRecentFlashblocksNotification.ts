@@ -16,7 +16,8 @@ export function useIsRecentFlashblocksNotification({
     return false
   }
 
-  const { addedTime, confirmedTime } = transaction
+  const { addedTime } = transaction
+  const confirmedTime = transaction.receipt?.confirmedTime
   if (!addedTime) {
     return false
   }

@@ -24,7 +24,7 @@ import {
 import { useRecentlySearchedOptions } from 'uniswap/src/features/search/SearchModal/hooks/useRecentlySearchedOptions'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { isMobileApp, isWeb } from 'utilities/src/platform'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 
 function useSectionsForNoQuerySearch({
   chainFilter,

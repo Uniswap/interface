@@ -11,15 +11,22 @@ import {
 } from 'uniswap/src/features/dataApi/balances/balances'
 
 export function usePortfolioTokenOptions({
-  address,
+  evmAddress,
+  svmAddress,
   chainFilter,
   searchFilter,
 }: {
-  address: Address | undefined
+  evmAddress: Address | undefined
+  svmAddress: Address | undefined
   chainFilter: UniverseChainId | null
   searchFilter?: string
 }): GqlResult<TokenOption[] | undefined> {
-  const { data: portfolioBalancesById, error, refetch, loading } = usePortfolioBalancesForAddressById(address)
+  const {
+    data: portfolioBalancesById,
+    error,
+    refetch,
+    loading,
+  } = usePortfolioBalancesForAddressById({ evmAddress, svmAddress })
   const { isTestnetModeEnabled } = useEnabledChains()
 
   const { shownTokens } = useTokenBalancesGroupedByVisibility({

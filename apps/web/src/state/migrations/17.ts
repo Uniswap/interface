@@ -1,12 +1,35 @@
 import { PersistState } from 'redux-persist'
-import { SearchResult, SearchResultType } from 'uniswap/src/features/search/SearchResult'
-import { searchResultId } from 'uniswap/src/features/search/searchHistorySlice'
 import { tokenAddressOrNativeAddress } from 'uniswap/src/features/search/utils'
+import { PreV55SearchResult, PreV55SearchResultType, isPoolSearchResult } from 'uniswap/src/state/oldTypes'
 
 export type PersistAppStateV17 = {
   _persist: PersistState
   searchHistory?: {
-    results: SearchResult[]
+    results: PreV55SearchResult[]
+  }
+}
+
+// eslint-disable-next-line consistent-return
+function searchResultId(searchResult: PreV55SearchResult): string {
+  const { type } = searchResult
+  const address = isPoolSearchResult(searchResult) ? searchResult.poolId : searchResult.address
+  const normalizedAddress = address?.toLowerCase() ?? null
+
+  switch (type) {
+    case PreV55SearchResultType.Token:
+      return `token-${searchResult.chainId}-${normalizedAddress}`
+    case PreV55SearchResultType.ENSAddress:
+      return `ens-${normalizedAddress}`
+    case PreV55SearchResultType.Unitag:
+      return `unitag-${normalizedAddress}`
+    case PreV55SearchResultType.WalletByAddress:
+      return `wallet-${normalizedAddress}`
+    case PreV55SearchResultType.Etherscan:
+      return `etherscan-${normalizedAddress}`
+    case PreV55SearchResultType.NFTCollection:
+      return `nftCollection-${searchResult.chainId}-${normalizedAddress}`
+    case PreV55SearchResultType.Pool:
+      return `pool-${searchResult.chainId}-${normalizedAddress}-${searchResult.feeTier}`
   }
 }
 
@@ -22,8 +45,8 @@ export const migration17 = (state: PersistAppStateV17 | undefined) => {
 
   // amend existing recently searched native assets that were saved with
   // an address when they should not have been
-  newState.searchHistory.results.forEach((result: SearchResult) => {
-    if (result.type === SearchResultType.Token && result.address) {
+  newState.searchHistory.results.forEach((result: PreV55SearchResult) => {
+    if (result.type === PreV55SearchResultType.Token && result.address) {
       const nativeAddress = tokenAddressOrNativeAddress(result.address, result.chainId)
       if (result.address !== nativeAddress) {
         result.address = nativeAddress
@@ -35,7 +58,7 @@ export const migration17 = (state: PersistAppStateV17 | undefined) => {
   // dedupe search history
   const dedupedSearchHistory = newState.searchHistory.results.filter(
     // eslint-disable-next-line max-params
-    (result: SearchResult, index: number, self: SearchResult[]) =>
+    (result: PreV55SearchResult, index: number, self: PreV55SearchResult[]) =>
       self.findIndex((t) => t.searchId === result.searchId) === index,
   )
 

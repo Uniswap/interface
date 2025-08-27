@@ -10,10 +10,10 @@ import {
   TransactionDetails,
   TransactionNetworkFee,
   TransactionOptions,
-  TransactionReceipt,
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { receiptFromEthersReceipt } from 'uniswap/src/features/transactions/utils/receipt'
 
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,
@@ -55,24 +55,6 @@ export function getFinalizedTransactionStatus(
     return TransactionStatus.Canceled
   }
   return TransactionStatus.Success
-}
-
-export function receiptFromEthersReceipt(
-  ethersReceipt: providers.TransactionReceipt | undefined,
-): TransactionReceipt | undefined {
-  if (!ethersReceipt) {
-    return undefined
-  }
-
-  return {
-    blockHash: ethersReceipt.blockHash,
-    blockNumber: ethersReceipt.blockNumber,
-    transactionIndex: ethersReceipt.transactionIndex,
-    confirmations: ethersReceipt.confirmations,
-    confirmedTime: Date.now(),
-    gasUsed: ethersReceipt.gasUsed.toNumber(),
-    effectiveGasPrice: ethersReceipt.effectiveGasPrice.toNumber(),
-  }
 }
 
 export function isAmountGreaterThanZero({

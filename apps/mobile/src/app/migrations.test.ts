@@ -94,11 +94,12 @@ import {
   v89Schema,
   v8Schema,
   v90Schema,
+  v91Schema,
+  v92Schema,
   v9Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { initialBiometricsSettingsState } from 'src/features/biometricsSettings/slice'
-import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
 import { initialModalsState } from 'src/features/modals/modalSlice'
 import { initialPushNotificationsState } from 'src/features/notifications/slice'
@@ -117,7 +118,7 @@ import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
-import { testRemoveTHBFromCurrency } from 'uniswap/src/state/uniswapMigrationTests'
+import { testMigrateSearchHistory, testRemoveTHBFromCurrency } from 'uniswap/src/state/uniswapMigrationTests'
 import { transactionDetails } from 'uniswap/src/test/fixtures'
 import { DappRequestType } from 'uniswap/src/types/walletConnect'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
@@ -206,7 +207,6 @@ describe('Redux state migrations', () => {
           '42161': { isActive: true },
         },
       },
-      cloudBackup: initialCloudBackupState,
       ens: { ensForAddress: {} },
       favorites: initialFavoritesState,
       fiatCurrencySettings: { currentCurrency: FiatCurrency.UnitedStatesDollar },
@@ -1732,5 +1732,28 @@ describe('Redux state migrations', () => {
 
   it('migrates from v90 to v91', () => {
     testRemovePriceAlertsEnabledFromPushNotifications(migrations[91], v90Schema)
+  })
+
+  it('migrates from v91 to v92', () => {
+    const v91Stub = {
+      ...v91Schema,
+      wallet: {
+        ...v91Schema.wallet,
+        activeAccountAddress: '0xabc',
+      },
+      cloudBackup: {
+        backupsFound: [{ mnemonicId: '0xabc', email: 'test@test.com' }],
+      },
+    }
+    const activeAccountAddress = v91Stub.wallet.activeAccountAddress
+    const backups = v91Stub.cloudBackup.backupsFound
+    const androidCloudBackupEmail = backups.find((backup) => backup.mnemonicId === activeAccountAddress)?.email
+    const v92 = migrations[92](v91Stub)
+    expect(v92.cloudBackup).toBeUndefined()
+    expect(v92.wallet.androidCloudBackupEmail).toBe(androidCloudBackupEmail)
+  })
+
+  it('migrates from v92 to v93', () => {
+    testMigrateSearchHistory(migrations[93], v92Schema)
   })
 })

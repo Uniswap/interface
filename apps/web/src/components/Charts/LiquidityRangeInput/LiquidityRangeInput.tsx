@@ -27,6 +27,7 @@ import {
   TouchableAreaProps,
   useSporeColors,
 } from 'ui/src'
+import { Expand } from 'ui/src/components/icons/Expand'
 import { HorizontalDensityChart } from 'ui/src/components/icons/HorizontalDensityChart'
 import { LoadingPriceCurve } from 'ui/src/components/icons/LoadingPriceCurve'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -37,13 +38,13 @@ import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isMobileWeb } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 
 const MIN_DATA_POINTS = 5
 
-const PlusMinusButton = ({ children, ...props }: TouchableAreaProps) => {
+const ZoomOptionButton = ({ children, ...props }: TouchableAreaProps) => {
   return (
     <TouchableArea
-      {...props}
       animation="100ms"
       backgroundColor="$transparent"
       hoverStyle={{ backgroundColor: '$transparent', opacity: 0.8 }}
@@ -53,6 +54,7 @@ const PlusMinusButton = ({ children, ...props }: TouchableAreaProps) => {
       borderColor="$surface3"
       borderWidth="$spacing1"
       p="$spacing8"
+      {...props}
     >
       {children}
     </TouchableArea>
@@ -72,6 +74,7 @@ export function LiquidityRangeInput({
   tickSpacing,
   protocolVersion,
   poolId,
+  poolOrPairLoading,
   hook,
   midPrice: currentPrice,
   minPrice,
@@ -92,7 +95,8 @@ export function LiquidityRangeInput({
   tickSpacing?: number
   protocolVersion: ProtocolVersion
   hook?: string
-  poolId: string
+  poolId?: string
+  poolOrPairLoading?: boolean
   midPrice?: number
   minPrice?: number
   maxPrice?: number
@@ -154,7 +158,36 @@ export function LiquidityRangeInput({
     }
   }, [priceData.entries, currentPrice])
 
+  useEffect(() => {
+    if (chartModelRef.current && !boundaryPrices) {
+      chartModelRef.current.resetBoundaryPrices()
+    }
+  }, [boundaryPrices])
+
   const scrollIncrement = (dataMax - dataMin) / 10
+
+  const handleSnapRangeToView = useEvent(() => {
+    if (minPrice !== undefined && maxPrice !== undefined && minPrice >= 0 && maxPrice >= 0) {
+      // Center point of the selected range
+      const rangeCenter = (minPrice + maxPrice) / 2
+      // How wide the selected range is
+      const rangeSpan = maxPrice - minPrice
+      // How wide the chart is
+      const chartSpan = dataMax - dataMin
+
+      if (rangeSpan > 0 && chartSpan > 0) {
+        // Chart width / range width
+        const newZoomFactor = chartSpan / rangeSpan
+        // Center the chart on the selected range
+        setMidPrice(rangeCenter)
+        setZoomFactor(newZoomFactor)
+      } else {
+        setZoomFactor(1)
+      }
+    } else {
+      setZoomFactor(1)
+    }
+  })
 
   // Sets the min/max prices of the price axis manually, which is used to center the current price and zoom in/out.
   const { minVisiblePrice, maxVisiblePrice } = useMemo(() => {
@@ -177,6 +210,8 @@ export function LiquidityRangeInput({
     }
   }, [dataMax, dataMin, midPrice, currentPrice, priceData.entries, zoomFactor])
 
+  const chartModelRef = useRef<LPPriceChartModel>()
+
   const containerRef = useRef<HTMLDivElement>(null)
   const sizes = useRangeInputSizes(containerRef.current?.clientWidth)
 
@@ -194,6 +229,9 @@ export function LiquidityRangeInput({
       minVisiblePrice,
       maxVisiblePrice,
       setBoundaryPrices,
+      onChartReady: (chart: LPPriceChartModel) => {
+        chartModelRef.current = chart
+      },
       disableExtendedTimeScale: !isMobileWeb,
       allowScrollInteractions: false,
       priceScaleMargins: {
@@ -270,7 +308,7 @@ export function LiquidityRangeInput({
   const [createDropdownOpen, setCreateDropdownOpen] = useState(false)
 
   const showChartErrorView =
-    (!priceData.loading && priceData.entries.length < MIN_DATA_POINTS) ||
+    (!poolOrPairLoading && !priceData.loading && priceData.entries.length < MIN_DATA_POINTS) ||
     (!liquidityDataLoading && !sortedFormattedData) ||
     (!liquidityDataLoading && sortedFormattedData && sortedFormattedData.length < MIN_DATA_POINTS)
 
@@ -494,7 +532,7 @@ export function LiquidityRangeInput({
             />
           )}
           <Flex row centered borderRadius="$roundedFull">
-            <PlusMinusButton
+            <ZoomOptionButton
               borderTopLeftRadius="$roundedFull"
               borderBottomLeftRadius="$roundedFull"
               onPress={() => {
@@ -502,8 +540,16 @@ export function LiquidityRangeInput({
               }}
             >
               <SearchPlus size={16} color="$neutral1" />
-            </PlusMinusButton>
-            <PlusMinusButton
+            </ZoomOptionButton>
+            <ZoomOptionButton
+              borderRadius="$none"
+              borderLeftWidth={0}
+              borderRightWidth={0}
+              onPress={handleSnapRangeToView}
+            >
+              <Expand size={16} color="$neutral1" />
+            </ZoomOptionButton>
+            <ZoomOptionButton
               borderTopRightRadius="$roundedFull"
               borderBottomRightRadius="$roundedFull"
               onPress={() => {
@@ -511,7 +557,7 @@ export function LiquidityRangeInput({
               }}
             >
               <SearchMinus size={16} color="$neutral1" />
-            </PlusMinusButton>
+            </ZoomOptionButton>
           </Flex>
         </Flex>
         <Button
@@ -520,11 +566,10 @@ export function LiquidityRangeInput({
           fill={false}
           backgroundColor="$transparent"
           onPress={() => {
-            setSelectedHistoryDuration(HistoryDuration.Month)
             setZoomFactor(1)
-            setBoundaryPrices(undefined)
             setMinPrice(undefined)
             setMaxPrice(undefined)
+            setBoundaryPrices(undefined)
             setMidPrice(getEffectivePrice({ currentPrice, data: priceChartParams.data }))
           }}
           icon={isMobileWeb ? <RotateLeft /> : undefined}

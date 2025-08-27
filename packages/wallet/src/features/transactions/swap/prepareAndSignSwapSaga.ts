@@ -50,6 +50,7 @@ export function createPrepareAndSignSwapSaga(dependencies: TransactionSagaDepend
           chainId,
           submitViaPrivateRpc,
           includesDelegation,
+          request: 'txRequests' in swapTxContext ? swapTxContext.txRequests?.[0] : undefined,
         },
       )
 

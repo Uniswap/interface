@@ -36,6 +36,7 @@ describe(walletReducer, () => {
       settings: {
         swapProtection: SwapProtectionSetting.On,
       },
+      androidCloudBackupEmail: null,
     })
   })
 

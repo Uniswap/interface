@@ -99,7 +99,8 @@ export function ActivityRow({ activity }: { activity: Activity }) {
       return
     }
     // Do not allow FOR activity to be opened until confirmed on chain
-    if (activity.status === TransactionStatus.Pending && !isHash(hash)) {
+    // UniswapX orders may not have a hash, so we need to check for that
+    if (activity.status === TransactionStatus.Pending && (!hash || !isHash(hash))) {
       return
     }
 

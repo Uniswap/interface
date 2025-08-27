@@ -22,6 +22,7 @@ import {
   isBridgeTypeInfo,
 } from 'uniswap/src/features/transactions/types/utils'
 import { assert } from 'utilities/src/errors'
+import { isInterface } from 'utilities/src/platform'
 
 export interface TransactionsState {
   [address: Address]: ChainIdToTxIdToDetails
@@ -106,59 +107,30 @@ const slice = createSlice({
       state[from]![chainId]![id] = transaction
     },
     finalizeTransaction: (state, { payload: transaction }: PayloadAction<FinalizedTransactionDetails>) => {
-      const { chainId, id, status, receipt, from, hash, networkFee } = transaction
+      const { chainId, id, status, receipt, from, hash, networkFee, typeInfo } = transaction
 
-      const walletTransaction = getWalletTransactionFromState({
-        state,
-        address: from,
-        chainId,
-        id,
-        actionName: 'finalizeTransaction',
-      })
+      const tx = state[from]?.[chainId]?.[id]
 
-      assert(walletTransaction, `finalizeTransaction: Attempted to finalize a non-wallet transaction with id ${id}`)
+      assert(tx, `finalizeTransaction: Attempted to access a missing transaction with id ${id}`)
 
-      walletTransaction.status = status
-
-      // Set receipt and networkFee - these properties exist on wallet transaction types
+      tx.status = status
+      tx.typeInfo = typeInfo
       if (receipt) {
-        walletTransaction.receipt = receipt
+        tx.receipt = receipt
       }
-
       if (networkFee) {
-        walletTransaction.networkFee = networkFee
+        tx.networkFee = networkFee
       }
 
-      if (isUniswapX(transaction) && status === TransactionStatus.Success) {
-        assert(hash, `finalizeTransaction: Attempted to finalize an order without providing the fill tx hash`)
-        state[from]![chainId]![id]!.hash = hash
-      }
-    },
-    interfaceFinalizeTransaction(
-      state,
-      {
-        payload: { chainId, hash, address, status, info },
-      }: {
-        payload: {
-          chainId: UniverseChainId
-          hash: string
-          address: Address
-          status: TransactionStatus.Success | TransactionStatus.Failed | TransactionStatus.Pending
-          info?: TransactionTypeInfo
+      // TODO(PORT-41): update once interface uses the same logic for UniswapX orders
+      if (!isInterface) {
+        if (isUniswapX(transaction) && status === TransactionStatus.Success) {
+          assert(hash, `finalizeTransaction: Attempted to finalize an order without providing the fill tx hash`)
+          state[from]![chainId]![id]!.hash = hash
         }
-      },
-    ) {
-      const tx = state[address]?.[chainId]?.[hash]
-      if (!tx) {
-        return
-      }
-      state[address]![chainId]![hash] = {
-        ...tx,
-        status,
-        confirmedTime: Date.now(),
-        typeInfo: info ?? tx.typeInfo,
       }
     },
+
     deleteTransaction: (
       state,
       { payload: { chainId, id, address } }: PayloadAction<TransactionId & { address: string }>,
@@ -230,7 +202,7 @@ const slice = createSlice({
         typeInfo: { ...transaction.typeInfo },
       }
     },
-    interfaceCancelTransactionWithHash: (
+    interfaceCancelTransaction: (
       state,
       {
         payload: { chainId, id, address, cancelHash },
@@ -241,14 +213,13 @@ const slice = createSlice({
         address,
         chainId,
         id,
-        actionName: 'interfaceCancelTransactionWithHash',
+        actionName: 'interfaceCancelTransaction',
       })
-      delete state[address]![chainId]![id]
-      state[address]![chainId]![cancelHash] = {
+
+      state[address]![chainId]![id] = {
         ...interfaceTransaction,
-        id: cancelHash,
         hash: cancelHash,
-        cancelled: true,
+        status: TransactionStatus.Canceled,
       }
     },
     interfaceClearAllTransactions: (
@@ -259,28 +230,24 @@ const slice = createSlice({
         state[address]![chainId] = {}
       }
     },
-    interfaceCheckedTransaction: (
+    checkedTransaction: (
       state,
       {
         payload: { chainId, id, address, blockNumber },
       }: PayloadAction<{ chainId: UniverseChainId; id: string; address: string; blockNumber: number }>,
     ) => {
-      const interfaceTransaction = getInterfaceTransactionFromState({
-        state,
-        address,
-        chainId,
-        id,
-        actionName: 'interfaceCheckedTransaction',
-      })
+      const tx = state[address]?.[chainId]?.[id]
+      assert(tx, `checkedTransaction: Attempted to access a missing transaction with id ${id}`)
+
       assert(
-        interfaceTransaction.status === TransactionStatus.Pending,
-        `interfaceCheckedTransaction: Attempted to check a non-pending transaction with id ${id}`,
+        tx.status === TransactionStatus.Pending,
+        `checkedTransaction: Attempted to check a non-pending transaction with id ${id}`,
       )
 
-      if (!interfaceTransaction.lastCheckedBlockNumber) {
-        interfaceTransaction.lastCheckedBlockNumber = blockNumber
+      if (!tx.lastCheckedBlockNumber) {
+        tx.lastCheckedBlockNumber = blockNumber
       } else {
-        interfaceTransaction.lastCheckedBlockNumber = Math.max(blockNumber, interfaceTransaction.lastCheckedBlockNumber)
+        tx.lastCheckedBlockNumber = Math.max(blockNumber, tx.lastCheckedBlockNumber)
       }
     },
     interfaceConfirmBridgeDeposit: (
@@ -354,12 +321,11 @@ export const {
   updateTransaction,
   updateTransactionWithoutWatch,
   interfaceClearAllTransactions,
-  interfaceCheckedTransaction,
+  checkedTransaction,
   interfaceConfirmBridgeDeposit,
-  interfaceFinalizeTransaction,
   interfaceUpdateTransactionInfo,
   interfaceApplyTransactionHashToBatch,
-  interfaceCancelTransactionWithHash,
+  interfaceCancelTransaction,
 } = slice.actions
 
 export const { reducer: transactionReducer } = slice

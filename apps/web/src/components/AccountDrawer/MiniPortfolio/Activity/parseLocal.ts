@@ -51,6 +51,7 @@ import { isAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 type FormatNumberFunctionType = ReturnType<typeof useLocalizationContext>['formatNumberOrString']
 type FormatFiatPriceFunctionType = ReturnType<typeof useLocalizationContext>['convertFiatAmountFormatted']
@@ -389,15 +390,16 @@ export async function transactionToActivity({
   }
   const { chainId } = details
   try {
-    const defaultFields = {
+    const defaultFields: Activity = {
+      id: details.id,
       hash: details.hash,
       chainId,
-      nonce: details.nonce,
+      // Store transaction request in options.request for consistent nonce access
+      options: 'options' in details ? details.options : undefined,
       title: getActivityTitle({ type: details.typeInfo.type, status: details.status }),
       status: details.status,
-      timestamp: (isConfirmedTx(details) ? details.confirmedTime : details.addedTime) / 1000,
+      timestamp: (isConfirmedTx(details) ? details.receipt.confirmedTime : details.addedTime) / ONE_SECOND_MS,
       from: details.from,
-      cancelled: details.cancelled,
     }
 
     let additionalFields: Partial<Activity> = {}
@@ -474,7 +476,7 @@ export async function transactionToActivity({
     const activity = { ...defaultFields, ...additionalFields }
 
     const CancelledTransactionTitleTable = getCancelledTransactionTitleTable()
-    if (details.cancelled) {
+    if (details.status === TransactionStatus.Canceled) {
       activity.title = CancelledTransactionTitleTable[details.typeInfo.type]
       activity.status = TransactionStatus.Success
     }
@@ -558,6 +560,7 @@ async function forTransactionToActivity({
   }
 
   return {
+    id: transaction.externalSessionId,
     hash: transaction.externalSessionId,
     chainId,
     title,
@@ -609,6 +612,7 @@ export async function signatureToActivity(
       const statusMessage = orderTextTableEntry.getStatusMessage?.()
 
       return {
+        id: signature.id,
         hash: signature.orderHash,
         chainId: signature.chainId,
         title,
@@ -652,7 +656,7 @@ export function useLocalActivities(account: string): ActivityMap {
 
       return (await Promise.all([...transactions, ...signatures])).reduce((acc, activity) => {
         if (activity) {
-          acc[activity.hash] = activity
+          acc[activity.id] = activity
         }
         return acc
       }, {} as ActivityMap)

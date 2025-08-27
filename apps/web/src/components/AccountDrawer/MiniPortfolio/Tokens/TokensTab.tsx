@@ -4,7 +4,6 @@ import PortfolioRow, { PortfolioSkeleton } from 'components/AccountDrawer/MiniPo
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import Row from 'components/deprecated/Row'
-import { useAccount } from 'hooks/useAccount'
 import { useTokenContextMenu } from 'hooks/useTokenContextMenu'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useState } from 'react'
@@ -22,6 +21,7 @@ import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
@@ -29,12 +29,13 @@ import { getChainUrlParam } from 'utils/chainParams'
 
 export default function Tokens() {
   const accountDrawer = useAccountDrawer()
-  const account = useAccount()
+  const wallet = useWallet()
 
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
   const { data: sortedPortfolioBalances, loading } = useSortedPortfolioBalances({
-    address: account.address,
+    evmAddress: wallet.evmAccount?.address,
+    svmAddress: wallet.svmAccount?.address,
   })
 
   const isLoading = loading && !sortedPortfolioBalances

@@ -49,7 +49,7 @@ import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/as
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { isMobileWeb } from 'utilities/src/platform'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 import { isIFramed } from 'utils/isIFramed'
 
 export default function SwapPage() {

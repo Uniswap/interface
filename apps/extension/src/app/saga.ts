@@ -1,4 +1,10 @@
 import { initDappStore } from 'src/app/features/dapp/saga'
+import {
+  prepareAndSignDappTransactionActions,
+  prepareAndSignDappTransactionReducer,
+  prepareAndSignDappTransactionSaga,
+  prepareAndSignDappTransactionSagaName,
+} from 'src/app/features/dappRequests/configuredSagas'
 import { dappRequestApprovalWatcher } from 'src/app/features/dappRequests/dappRequestApprovalWatcherSaga'
 import { dappRequestWatcher } from 'src/app/features/dappRequests/saga'
 import { call, spawn } from 'typed-redux-saga'
@@ -94,6 +100,12 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     wrappedSaga: removeDelegationSaga,
     reducer: removeDelegationReducer,
     actions: removeDelegationActions,
+  },
+  [prepareAndSignDappTransactionSagaName]: {
+    name: prepareAndSignDappTransactionSagaName,
+    wrappedSaga: prepareAndSignDappTransactionSaga,
+    reducer: prepareAndSignDappTransactionReducer,
+    actions: prepareAndSignDappTransactionActions,
   },
 } as const
 

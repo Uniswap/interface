@@ -16,13 +16,15 @@ import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
 export function useTokenSectionsForSearchResults({
-  address,
+  evmAddress,
+  svmAddress,
   chainFilter,
   searchFilter,
   isBalancesOnlySearch,
   input,
 }: {
-  address?: string
+  evmAddress?: string
+  svmAddress?: string
   chainFilter: UniverseChainId | null
   searchFilter: string | null
   isBalancesOnlySearch: boolean
@@ -35,14 +37,14 @@ export function useTokenSectionsForSearchResults({
     error: portfolioBalancesByIdError,
     refetch: refetchPortfolioBalances,
     loading: portfolioBalancesByIdLoading,
-  } = usePortfolioBalancesForAddressById(address)
+  } = usePortfolioBalancesForAddressById({ evmAddress, svmAddress })
 
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
     loading: portfolioTokenOptionsLoading,
-  } = usePortfolioTokenOptions({ address, chainFilter, searchFilter: searchFilter ?? undefined })
+  } = usePortfolioTokenOptions({ evmAddress, svmAddress, chainFilter, searchFilter: searchFilter ?? undefined })
 
   // Bridging tokens are only shown if input is provided
   const {
@@ -50,7 +52,7 @@ export function useTokenSectionsForSearchResults({
     error: bridgingTokenOptionsError,
     refetch: refetchBridgingTokenOptions,
     loading: bridgingTokenOptionsLoading,
-  } = useBridgingTokensOptions({ oppositeSelectedToken: input, walletAddress: address, chainFilter })
+  } = useBridgingTokensOptions({ oppositeSelectedToken: input, evmAddress, svmAddress, chainFilter })
 
   // Only call search endpoint if isBalancesOnlySearch is false
   const {

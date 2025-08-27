@@ -549,11 +549,13 @@ export function* handleSendCalls({
   senderTabInfo: { id },
   dappInfo,
   transactionTypeInfo,
+  preSignedTransaction,
 }: {
   request: SendCallsRequest
   senderTabInfo: SenderTabInfo
   dappInfo: DappInfo
   transactionTypeInfo?: TransactionTypeInfo
+  preSignedTransaction?: SignedTransactionRequest
 }) {
   const isSendCallTransaction = transactionTypeInfo?.type === TransactionType.SendCalls
   if (!isSendCallTransaction || !transactionTypeInfo.encodedTransaction || !transactionTypeInfo.encodedRequestId) {
@@ -601,6 +603,7 @@ export function* handleSendCalls({
         request: encodedTransaction,
       },
       transactionOriginType: TransactionOriginType.External,
+      preSignedTransaction,
     }
 
     const { transactionHash } = yield* call(executeTransactionV2, sendTransactionParams)

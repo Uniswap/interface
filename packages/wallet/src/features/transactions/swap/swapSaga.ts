@@ -177,8 +177,7 @@ export function* approveAndSwap(params: SwapParams) {
         submitViaPrivateRpc,
         userSubmissionTimestampMs,
         includesDelegation: swapTxContext.includesDelegation,
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        isSmartWalletTransaction: swapTxContext.txRequests[0]?.to === account.address,
+        isSmartWalletTransaction: swapTxContext.txRequests[0].to.toLowerCase() === account.address.toLowerCase(),
       }
       const executeTransactionParams: ExecuteTransactionParams = {
         txId,

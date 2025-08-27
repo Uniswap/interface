@@ -1,9 +1,4 @@
 import { MobileState } from 'src/app/mobileReducer'
-import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
-
-export const selectCloudBackups = (state: MobileState): CloudStorageMnemonicBackup[] => {
-  return state.cloudBackup.backupsFound
-}
 
 export const selectPasswordAttempts = (state: MobileState): number => {
   return state.passwordLockout.passwordAttempts

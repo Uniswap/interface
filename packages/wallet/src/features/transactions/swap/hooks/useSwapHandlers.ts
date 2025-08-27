@@ -33,7 +33,7 @@ export function useSwapHandlers(): SwapHandlers | undefined {
   const trace = useTrace()
 
   const { data: portfolioData } = usePortfolioTotalValue({
-    address: useWallet().evmAccount?.address,
+    evmAddress: useWallet().evmAccount?.address,
     fetchPolicy: 'cache-first',
   })
 

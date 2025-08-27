@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.WritableMap
+import com.facebook.react.bridge.WritableArray
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -24,6 +25,9 @@ import java.io.FileNotFoundException
 import java.util.Date
 import javax.crypto.BadPaddingException
 import javax.crypto.IllegalBlockSizeException
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import java.util.Collections
 
 /**
  * Data class representing a mnemonic backup in cloud storage.
@@ -63,14 +67,6 @@ enum class Request(val value: Int) {
 }
 
 /**
- * Enum representing various types of events in iCloud manager.
- */
-
-enum class ICloudManagerEventType(val value: String) {
-  FOUND_CLOUD_BACKUP("FoundCloudBackup"),
-}
-
-/**
  * Class for managing cloud storage backups on android for React Native.
  *
  * @property reactContext The react application context.
@@ -83,33 +79,6 @@ class RNCloudStorageBackupsManager(private val reactContext: ReactApplicationCon
   private val rnEthersRS = RnEthersRs(reactContext)
 
   private val gson = Gson()
-
-  /**
-   * Sends FOUND_CLOUD_BACKUP event to react-native app.
-   *
-   * @param mnemonicId Id of backup mnemonic.
-   * @param createdAt Date of backup creation.
-   * @param googleDriveEmail Email address associated with the backup.
-   */
-  private fun sendFoundBackupEvent(mnemonicId: String, createdAt: String, googleDriveEmail: String?) {
-    val body: WritableMap = Arguments.createMap()
-    body.putString("mnemonicId", mnemonicId)
-    body.putString("createdAt", createdAt)
-    body.putString("googleDriveEmail", googleDriveEmail)
-    sendEvent(ICloudManagerEventType.FOUND_CLOUD_BACKUP.value, body)
-  }
-
-  /**
-   * Sends an event to react-native app with the given name and parameters.
-   *
-   * @param eventName Name of the event.
-   * @param params Parameters for the event, encapsulated into a WritableMap.
-   */
-  private fun sendEvent(eventName: String, params: WritableMap?) {
-    reactContext
-      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-      .emit(eventName, params)
-  }
 
   /**
    * Checks if cloud storage services (like Google Play Services) are available.
@@ -125,45 +94,44 @@ class RNCloudStorageBackupsManager(private val reactContext: ReactApplicationCon
   }
 
   /**
-   * Starts fetching cloud storage backups. Data is send back using to React-Native using [sendFoundBackupEvent] method.
+   * Fetches list of backups and returns it by resolving a promise promise.
    *
    * @param promise A promise to return the result of the operation.
    */
   @ReactMethod
-  fun startFetchingCloudStorageBackups(promise: Promise) {
+  fun getCloudBackupList(promise: Promise) {
     CoroutineScope(Dispatchers.Main).launch {
       try {
         GoogleDriveApiHelper.getGoogleDrive(reactContext).let { (drive) ->
           if (drive == null) return@launch
           GoogleDriveApiHelper.fetchCloudBackupFiles(drive).let { files ->
-            withContext(Dispatchers.IO) {
-              files.files.forEach { file ->
-                launch {
-                  val outputStream = ByteArrayOutputStream()
-                  drive.files()[file.id]
-                    .executeMediaAndDownloadTo(outputStream)
-                  val mnemonicsBackup: CloudStorageMnemonicBackup = gson.fromJson(outputStream.toString(), CloudStorageMnemonicBackup::class.java)
-                  sendFoundBackupEvent(mnemonicsBackup.mnemonicId, mnemonicsBackup.createdAt.toString(),mnemonicsBackup.googleDriveEmail)
-                }
+            val backupDeferreds = files.files.map { file ->
+              async(Dispatchers.IO) {
+                val outputStream = ByteArrayOutputStream()
+                drive.files()[file.id]
+                  .executeMediaAndDownloadTo(outputStream)
+                val mnemonicBackup: CloudStorageMnemonicBackup = gson.fromJson(outputStream.toString(), CloudStorageMnemonicBackup::class.java)
+                
+                val backup: WritableMap = Arguments.createMap()
+                backup.putString("mnemonicId", mnemonicBackup.mnemonicId)
+                backup.putString("createdAt", mnemonicBackup.createdAt.toString())
+                backup.putString("googleDriveEmail", mnemonicBackup.googleDriveEmail)
+                
+                backup
               }
             }
+            
+            val backups = backupDeferreds.awaitAll()
+            
+            val resultArray: WritableArray = Arguments.createArray()
+            backups.forEach { resultArray.pushMap(it) }
+            promise.resolve(resultArray)
           }
         }
-        promise.resolve(true)
       } catch (e: Exception) {
         promise.reject(CloudBackupError.CLOUD_ERROR.value, "Failed to fetch cloud backups")
       }
     }
-  }
-
-  /**
-   * Stops fetching cloud storage backups. It's empty because there is not need to stopping
-   * cloud fetch on android. Added just to meet native module interface
-   */
-  @ReactMethod
-  fun stopFetchingCloudStorageBackups() {
-    // No implementation needed for Android, as there is no ongoing fetch process to stop.
-    // This method is added to meet the native module interface.
   }
 
   /**
@@ -198,7 +166,6 @@ class RNCloudStorageBackupsManager(private val reactContext: ReactApplicationCon
           withContext(Dispatchers.IO) {
             GoogleDriveApiHelper.saveMnemonicToGoogleDrive(drive, mnemonicId, backup)
           }
-          sendFoundBackupEvent(mnemonicId, createdAt.toString(), acc?.email)
         }
         promise.resolve(true)
       } catch (e: Exception) {

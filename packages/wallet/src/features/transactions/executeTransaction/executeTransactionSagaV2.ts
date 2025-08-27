@@ -1,6 +1,7 @@
 import { SagaIterator } from 'redux-saga'
 import { call, select } from 'typed-redux-saga'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
@@ -9,6 +10,7 @@ import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import {
   TransactionOptions,
   TransactionOriginType,
+  TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger as loggerUtil } from 'utilities/src/logger/logger'
@@ -70,14 +72,14 @@ function* getTransactionSigner(input: {
   // Create the transaction signer
   const signerManager = yield* call(getSignerManager)
 
-  const delegationDetails = yield* call(input.getDelegationInfo)
-  if (delegationDetails.needsDelegation) {
+  const delegationInfo = yield* call(input.getDelegationInfo)
+  if (delegationInfo.needsDelegation) {
     const delegationBundledTransactionSigner = createBundledDelegationTransactionSignerService({
+      delegationInfo,
       getAccount: () => input.account,
       getProvider: input.getProvider,
       getViemClient: input.getViemClient,
       getSignerManager: () => signerManager,
-      getDelegationInfo: input.getDelegationInfo,
     })
     return delegationBundledTransactionSigner
   }
@@ -144,9 +146,21 @@ export function* executeTransactionV2(params: ExecuteTransactionParams): SagaIte
     return walletContextValue.viemClients.getViemClient(chainId)
   }
 
+  const isSelfTransaction = (): boolean => {
+    return options.request.to?.toLowerCase() === account.address.toLowerCase()
+  }
+
   const getDelegationInfo = async (): Promise<DelegationCheckResult> => {
-    // check redux for smart wallet consent
-    if (!activeAccount.smartWalletConsent) {
+    // Handle remove delegation transactions
+    if (typeInfo.type === TransactionType.RemoveDelegation) {
+      return {
+        needsDelegation: true,
+        contractAddress: DEFAULT_NATIVE_ADDRESS,
+      }
+    }
+
+    // Delegation only applies to self-transactions with smart wallet consent
+    if (!isSelfTransaction() || !activeAccount.smartWalletConsent) {
       return {
         needsDelegation: false,
       }

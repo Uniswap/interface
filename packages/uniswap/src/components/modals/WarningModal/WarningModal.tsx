@@ -1,9 +1,10 @@
 import { useContext, type PropsWithChildren, type ReactNode } from 'react'
 import type { ColorValue } from 'react-native'
-import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import type { ButtonProps } from 'ui/src/components/buttons/Button/types'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { opacify } from 'ui/src/theme'
+import { X } from 'ui/src/components/icons/X'
+import { opacify, zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -38,6 +39,7 @@ type WarningModalContentProps = {
   maxWidth?: number
   analyticsProperties?: Record<string, unknown>
   buttonSize?: ButtonProps['size']
+  showCloseButton?: boolean
 }
 
 export type WarningModalProps = {
@@ -106,6 +108,7 @@ export function WarningModalContent({
   backgroundIconColor,
   analyticsProperties,
   buttonSize: passedButtonSize,
+  showCloseButton = false,
 }: PropsWithChildren<WarningModalContentProps>): JSX.Element {
   const { headerText: alertHeaderTextColor } = getAlertColor(severity)
 
@@ -121,6 +124,12 @@ export function WarningModalContent({
       pt={hideHandlebar ? '$spacing24' : '$spacing12'}
       px={isWeb ? '$none' : '$spacing24'}
     >
+      {showCloseButton && onClose && (
+        <TouchableArea position="absolute" right={0} top={0} zIndex={zIndexes.default} onPress={onClose}>
+          <X color="$neutral2" size="$icon.24" />
+        </TouchableArea>
+      )}
+
       <WarningModalIcon
         hideIcon={hideIcon}
         icon={icon}

@@ -8,16 +8,21 @@ import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
-export function useCommonTokensOptions(
-  address: Address | undefined,
-  chainFilter: UniverseChainId | null,
-): GqlResult<TokenOption[] | undefined> {
+export function useCommonTokensOptions({
+  evmAddress,
+  svmAddress,
+  chainFilter,
+}: {
+  evmAddress: Address | undefined
+  svmAddress: Address | undefined
+  chainFilter: UniverseChainId | null
+}): GqlResult<TokenOption[] | undefined> {
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: portfolioBalancesByIdRefetch,
     loading: loadingPorfolioBalancesById,
-  } = usePortfolioBalancesForAddressById(address)
+  } = usePortfolioBalancesForAddressById({ evmAddress, svmAddress })
 
   const {
     data: commonBaseCurrencies,

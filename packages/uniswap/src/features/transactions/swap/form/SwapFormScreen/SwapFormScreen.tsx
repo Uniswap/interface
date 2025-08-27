@@ -2,9 +2,11 @@ import type { BottomSheetView } from '@gorhom/bottom-sheet'
 import type { ComponentProps } from 'react'
 import type { FlexProps } from 'ui/src'
 import { Flex } from 'ui/src'
+import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
+import { filterSettingsByPlatform } from 'uniswap/src/features/transactions/components/settings/utils'
 import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SwapFormSettings'
 import { TradeRoutingPreference } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/TradeRoutingPreference'
 import { Slippage } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
@@ -52,7 +54,9 @@ export function SwapFormScreen({
     hideSettings: s.hideSettings,
   }))
 
-  const { trade } = useSwapFormStoreDerivedSwapInfo((s) => s.trade)
+  const { trade, chainId } = useSwapFormStoreDerivedSwapInfo((s) => ({ trade: s.trade, chainId: s.chainId }))
+
+  const filteredSettings = filterSettingsByPlatform(settings, chainIdToPlatform(chainId))
 
   const showTokenSelector = !hideContent && !!selectingCurrencyField
   const isBridgeTrade = trade instanceof BridgeTrade
@@ -60,7 +64,7 @@ export function SwapFormScreen({
   return (
     <TransactionModalInnerContainer fullscreen bottomSheetViewStyles={bottomSheetViewStyles}>
       {!isInterface && <SwapFormHeader /> /* Interface renders its own header with multiple tabs */}
-      {!hideSettings && <SwapFormSettings settings={settings} isBridgeTrade={isBridgeTrade} />}
+      {!hideSettings && <SwapFormSettings settings={filteredSettings} isBridgeTrade={isBridgeTrade} />}
 
       {!hideContent && (
         <SwapFormScreenStoreContextProvider tokenColor={tokenColor}>

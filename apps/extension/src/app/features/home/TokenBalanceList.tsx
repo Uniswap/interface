@@ -8,19 +8,18 @@ import { AnimatePresence, Flex, Loader } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { InformationBanner } from 'uniswap/src/components/banners/InformationBanner'
+import { TokenBalanceItem } from 'uniswap/src/components/portfolio/TokenBalanceItem'
 import { isError, isNonPollingRequestInFlight } from 'uniswap/src/data/utils'
 import { PortfolioBalance, TokenList } from 'uniswap/src/features/dataApi/types'
+import {
+  TokenBalanceListContextProvider,
+  useTokenBalanceListContext,
+} from 'uniswap/src/features/portfolio/TokenBalanceListContext'
+import { TokenBalanceListRow, isHiddenTokenBalancesRow } from 'uniswap/src/features/portfolio/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { HiddenTokenInfoModal } from 'uniswap/src/features/transactions/modals/HiddenTokenInfoModal'
 import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
 import { PortfolioEmptyState } from 'wallet/src/features/portfolio/PortfolioEmptyState'
-import { TokenBalanceItem } from 'wallet/src/features/portfolio/TokenBalanceItem'
-import {
-  HIDDEN_TOKEN_BALANCES_ROW,
-  TokenBalanceListContextProvider,
-  TokenBalanceListRow,
-  useTokenBalanceListContext,
-} from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import { useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenContextMenu'
 
 const MIN_CONTEXT_MENU_WIDTH = 200
@@ -54,7 +53,7 @@ function TokenBalanceListInner(): JSX.Element {
     target.push(row)
     // do this after pushing so we keep our Hidden header row in the visible section
     // so users can see it when closed and re-open it
-    if (row === HIDDEN_TOKEN_BALANCES_ROW) {
+    if (isHiddenTokenBalancesRow(row)) {
       isHidden = true
     }
   }
@@ -149,7 +148,7 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
     setModalVisible(false)
   }
 
-  if (item === HIDDEN_TOKEN_BALANCES_ROW) {
+  if (isHiddenTokenBalancesRow(item)) {
     return (
       <>
         <ExpandoRow

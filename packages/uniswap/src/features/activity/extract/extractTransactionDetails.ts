@@ -99,7 +99,8 @@ export default function extractTransactionDetails(
           tokenSymbol: transaction.details.networkFee.tokenSymbol,
           // graphQL returns a null token address for native tokens like ETH
           tokenAddress: transaction.details.networkFee.tokenAddress ?? DEFAULT_NATIVE_ADDRESS_LEGACY,
-          chainId,
+          // Use the tokenChain from the networkFee response instead of the transaction's main chain
+          chainId: fromGraphQLChain(transaction.details.networkFee.tokenChain) ?? chainId,
         }
       : undefined
 

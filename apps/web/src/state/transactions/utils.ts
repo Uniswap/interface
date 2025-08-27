@@ -8,9 +8,11 @@ export function isPendingTx(
 ): tx is PendingTransactionDetails {
   const skipBridgeTx =
     skipDepositedBridgeTxs && tx.typeInfo.type === TransactionType.Bridge && tx.typeInfo.depositConfirmed
-  return tx.status === TransactionStatus.Pending && !tx.cancelled && !skipBridgeTx
+  return tx.status === TransactionStatus.Pending && !skipBridgeTx
 }
 
 export function isConfirmedTx(tx: InterfaceTransactionDetails): tx is ConfirmedTransactionDetails {
-  return tx.status === TransactionStatus.Success || tx.status === TransactionStatus.Failed
+  return (
+    (tx.status === TransactionStatus.Success || tx.status === TransactionStatus.Failed) && !!tx.receipt?.confirmedTime
+  )
 }

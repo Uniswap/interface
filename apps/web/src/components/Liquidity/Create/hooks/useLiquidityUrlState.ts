@@ -144,7 +144,7 @@ export function useLiquidityUrlState() {
       setReplaceState({
         currencyA: tokenAAddress,
         currencyB: tokenBAddress,
-        chain: data.currencyInputs.tokenA?.chainId,
+        chain: data.currencyInputs.tokenA?.chainId ?? data.currencyInputs.tokenB?.chainId,
         fee: data.positionState.fee,
         hook: hookAddress,
         priceRangeState: data.priceRangeState,

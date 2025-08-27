@@ -12,13 +12,15 @@ import {
 import { removeOutliers } from 'utils/prices'
 
 export type PDPChartQueryVars = {
-  addressOrId: string
+  addressOrId?: string
   chain: Chain
   duration: HistoryDuration
   isV2: boolean
   isV3: boolean
   isV4: boolean
 }
+
+type PDPChartQueryVarsWithAddressOrId = PDPChartQueryVars & { addressOrId: string }
 
 export function usePoolPriceChartData({
   variables,
@@ -27,7 +29,10 @@ export function usePoolPriceChartData({
   variables?: PDPChartQueryVars
   priceInverted: boolean
 }): ChartQueryResult<PriceChartData, ChartType.PRICE> {
-  const { data, loading } = usePoolPriceHistoryQuery({ variables, skip: !variables?.addressOrId })
+  const { data, loading } = usePoolPriceHistoryQuery({
+    variables: variables as PDPChartQueryVarsWithAddressOrId,
+    skip: !variables?.addressOrId,
+  })
   return useMemo(() => {
     const { priceHistory } = data?.v2Pair ?? data?.v3Pool ?? data?.v4Pool ?? {}
 

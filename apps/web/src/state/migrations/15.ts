@@ -1,6 +1,6 @@
 import { PersistState } from 'redux-persist'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { SearchResult, SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
+import { PreV55SearchResult, PreV55SearchResultType, TokenSearchResult } from 'uniswap/src/state/oldTypes'
 
 export type PersistAppStateV15 = {
   _persist: PersistState
@@ -9,7 +9,7 @@ export type PersistAppStateV15 = {
 const recentSearchAtomName = 'recentlySearchedAssetsV3'
 
 type TokenSearchResultWeb = Omit<TokenSearchResult, 'type'> & {
-  type: SearchResultType.Token | SearchResultType.NFTCollection
+  type: PreV55SearchResultType.Token | PreV55SearchResultType.NFTCollection
   address: string
   chain: Chain
   isNft?: boolean
@@ -17,10 +17,10 @@ type TokenSearchResultWeb = Omit<TokenSearchResult, 'type'> & {
   isNative?: boolean
 }
 
-function webResultToUniswapResult(webItem: TokenSearchResultWeb): SearchResult | null {
-  if (webItem.type === SearchResultType.Token) {
+function webResultToUniswapResult(webItem: TokenSearchResultWeb): PreV55SearchResult | null {
+  if (webItem.type === PreV55SearchResultType.Token) {
     return {
-      type: SearchResultType.Token,
+      type: PreV55SearchResultType.Token,
       chainId: webItem.chainId,
       symbol: webItem.symbol,
       address: webItem.address,
@@ -29,9 +29,9 @@ function webResultToUniswapResult(webItem: TokenSearchResultWeb): SearchResult |
       safetyInfo: webItem.safetyInfo,
     }
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  } else if (webItem.type === SearchResultType.NFTCollection) {
+  } else if (webItem.type === PreV55SearchResultType.NFTCollection) {
     return {
-      type: SearchResultType.NFTCollection,
+      type: PreV55SearchResultType.NFTCollection,
       chainId: webItem.chainId,
       address: webItem.address,
       name: webItem.name!,
@@ -57,9 +57,9 @@ export const migration15 = (state: PersistAppStateV15 | undefined) => {
   const webSearchHistory = JSON.parse(recentlySearchedAssetsAtomValue ?? '[]') as TokenSearchResultWeb[]
 
   // map old search items to new search items
-  const translatedResults: SearchResult[] = webSearchHistory
+  const translatedResults: PreV55SearchResult[] = webSearchHistory
     .map(webResultToUniswapResult)
-    .filter((r): r is SearchResult => r !== null)
+    .filter((r): r is PreV55SearchResult => r !== null)
 
   // set new state as this modified search history
   newState.searchHistory = { results: translatedResults }

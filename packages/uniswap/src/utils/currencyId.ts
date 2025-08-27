@@ -4,9 +4,11 @@ import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/defaults'
+import { DEFAULT_NATIVE_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 
@@ -100,6 +102,20 @@ export const isNativeCurrencyAddress = (chainId: UniverseChainId, address: Maybe
   }
 
   const nativeAddress = getNativeAddress(chainId)
+
+  if (isSVMChain(chainId)) {
+    return (
+      areAddressesEqual({
+        addressInput1: { address, platform },
+        addressInput2: { address: DEFAULT_NATIVE_ADDRESS_SOLANA, platform },
+      }) ||
+      areAddressesEqual({
+        addressInput1: { address, platform },
+        addressInput2: { address: nativeAddress, platform },
+      })
+    )
+  }
+
   // allow both native address formats until all backend endpoints return the new one
   if (nativeAddress === DEFAULT_NATIVE_ADDRESS_LEGACY) {
     return (
@@ -113,7 +129,6 @@ export const isNativeCurrencyAddress = (chainId: UniverseChainId, address: Maybe
       })
     )
   }
-
   return areAddressesEqual({
     addressInput1: { address, platform },
     addressInput2: { address: nativeAddress, platform },

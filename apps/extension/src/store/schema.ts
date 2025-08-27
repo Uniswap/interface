@@ -274,6 +274,8 @@ export const v24Schema = v24SchemaIntermediate
 
 export const v25Schema = { ...v24Schema }
 
-const v26Schema = { ...v25Schema }
+export const v26Schema = { ...v25Schema }
 
-export const getSchema = (): typeof v26Schema => v26Schema
+const v27Schema = { ...v26Schema }
+
+export const getSchema = (): typeof v27Schema => v27Schema

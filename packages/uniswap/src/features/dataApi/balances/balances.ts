@@ -25,7 +25,7 @@ import {
   useRestPortfolioCacheUpdater,
 } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { sortBalancesByName } from 'uniswap/src/features/dataApi/balances/utils'
-import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { BaseResult, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
@@ -38,14 +38,6 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
 import { logger } from 'utilities/src/logger/logger'
-
-interface BaseResult<T> {
-  data?: T
-  loading: boolean
-  networkStatus: NetworkStatus
-  refetch: () => void
-  error?: Error
-}
 
 export type PortfolioDataResult = BaseResult<Record<CurrencyId, PortfolioBalance>>
 export type PortfolioTotalValueResult = BaseResult<PortfolioTotalValue>
@@ -67,23 +59,26 @@ export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: Portfol
  * Factory hook that returns portfolio data based on the active data source (GraphQL or REST)
  */
 export function usePortfolioBalances({
-  address,
+  evmAddress,
+  svmAddress,
   ...queryOptions
 }: {
-  address?: Address
+  evmAddress?: Address
+  svmAddress?: Address
 } & QueryHookOptions<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>): PortfolioDataResult {
   const isRestEnabled = useFeatureFlag(FeatureFlags.GqlToRestBalances)
 
   const graphqlResult = useGraphQLPortfolioData({
-    address,
+    address: evmAddress,
     ...queryOptions,
     skip: isRestEnabled || queryOptions.skip,
   })
 
   const restResult = useRESTPortfolioData({
-    evmAddress: address || '',
+    evmAddress: evmAddress || '',
+    svmAddress: svmAddress || '',
     ...queryOptions,
-    skip: !address || !isRestEnabled || queryOptions.skip,
+    skip: !(evmAddress ?? svmAddress) || !isRestEnabled || queryOptions.skip,
   })
 
   const result = isRestEnabled ? restResult : graphqlResult
@@ -307,25 +302,28 @@ export function useGraphQLPortfolioTotalValue({
  * Factory hook that returns portfolio total value based on the active data source (GraphQL or REST)
  */
 export function usePortfolioTotalValue({
-  address,
+  evmAddress,
+  svmAddress,
   pollInterval,
   fetchPolicy,
 }: {
-  address?: Address
+  evmAddress?: Address
+  svmAddress?: Address
   pollInterval?: PollingInterval
   fetchPolicy?: WatchQueryFetchPolicy
 }): PortfolioTotalValueResult {
   const isRestEnabled = useFeatureFlag(FeatureFlags.GqlToRestBalances)
 
   const graphqlResult = useGraphQLPortfolioTotalValue({
-    address,
+    address: evmAddress, // GraphQL only supports EVM addresses
     pollInterval,
     fetchPolicy,
     enabled: !isRestEnabled,
   })
 
   const restResult = useRESTPortfolioTotalValue({
-    address,
+    evmAddress,
+    svmAddress,
     pollInterval,
     fetchPolicy,
     enabled: isRestEnabled,
@@ -382,14 +380,22 @@ export function usePortfolioValueModifiers(addresses?: Address | Address[]): Por
 /**
  * Returns NativeCurrency with highest balance.
  *
- * @param address to get portfolio balances for
+ * @param evmAddress to get portfolio balances for
  * @param chainId if present will only return the NativeCurrency with the highest balance for the given chainId
  * @returns CurrencyId of the NativeCurrency with highest balance, or the native address for the given chainId
  *          (or defaultChainId if no chainId is provided) when no highest balance is found
  *
  */
-export function useHighestBalanceNativeCurrencyId(address: Address, chainId?: UniverseChainId): CurrencyId {
-  const { data } = useSortedPortfolioBalances({ address })
+export function useHighestBalanceNativeCurrencyId({
+  evmAddress,
+  svmAddress,
+  chainId,
+}: {
+  evmAddress?: Address
+  svmAddress?: Address
+  chainId?: UniverseChainId
+}): CurrencyId {
+  const { data } = useSortedPortfolioBalances({ evmAddress, svmAddress })
   const { defaultChainId } = useEnabledChains()
   const highestBalance = data?.balances.find(
     (balance) =>
@@ -437,8 +443,8 @@ function shouldHideBalance({
       return false
     }
   } else {
+    const tokenVisibility = currencyIdToTokenVisibility[balance.currencyInfo.currencyId]
     if (balance.currencyInfo.currency.isNative) {
-      const tokenVisibility = currencyIdToTokenVisibility[balance.currencyInfo.currencyId]
       // Only hide native tokens that are manually hidden by user
       if ((tokenVisibility?.isVisible || !tokenVisibility) && !balance.isHidden) {
         return false
@@ -446,10 +452,13 @@ function shouldHideBalance({
         return true
       }
     } else {
-      if (balance.isHidden) {
+      if (tokenVisibility?.isVisible === false) {
         return true
-      } else {
+      } else if (tokenVisibility?.isVisible === true) {
         return false
+      } else {
+        // If no manual setting, fall back to API response
+        return !!balance.isHidden
       }
     }
   }
@@ -521,11 +530,13 @@ export function useTokenBalancesGroupedByVisibility({
  * @returns SortedPortfolioBalances object with `balances` and `hiddenBalances`
  */
 export function useSortedPortfolioBalances({
-  address,
+  evmAddress,
+  svmAddress,
   pollInterval,
   onCompleted,
 }: {
-  address?: Address
+  evmAddress?: Address
+  svmAddress?: Address
   pollInterval?: PollingInterval
   onCompleted?: () => void
 }): GqlResult<SortedPortfolioBalances> & { networkStatus: NetworkStatus } {
@@ -538,7 +549,8 @@ export function useSortedPortfolioBalances({
     networkStatus,
     refetch,
   } = usePortfolioBalances({
-    address,
+    evmAddress,
+    svmAddress,
     pollInterval,
     onCompleted,
     fetchPolicy: 'cache-and-network',
@@ -595,10 +607,10 @@ export function sortPortfolioBalances({
   ]
 }
 
-export function usePortfolioCacheUpdater(address: string): PortfolioCacheUpdater {
+export function usePortfolioCacheUpdater(evmAddress?: string, svmAddress?: string): PortfolioCacheUpdater {
   const isRestEnabled = useFeatureFlag(FeatureFlags.GqlToRestBalances)
-  const restUpdater = useRestPortfolioCacheUpdater(address)
-  const graphQLUpdater = useGraphQLPortfolioCacheUpdater(address)
+  const restUpdater = useRestPortfolioCacheUpdater(evmAddress, svmAddress)
+  const graphQLUpdater = useGraphQLPortfolioCacheUpdater(evmAddress ?? '') // ignore SVM for graphql
 
   return isRestEnabled ? restUpdater : graphQLUpdater
 }
@@ -608,10 +620,10 @@ export function usePortfolioCacheUpdater(address: string): PortfolioCacheUpdater
  * We manually modify the cache to avoid having to wait for the server's response,
  * so that the change is immediately reflected in the UI.
  *
- * @param address active wallet address
+ * @param evmAddress active EVM wallet address
  * @returns a `PortfolioCacheUpdater` function that will update the Apollo cache
  */
-function useGraphQLPortfolioCacheUpdater(address: string): PortfolioCacheUpdater {
+function useGraphQLPortfolioCacheUpdater(evmAddress: string): PortfolioCacheUpdater {
   const apolloClient = useApolloClient()
   const { gqlChains } = useEnabledChains()
 
@@ -624,7 +636,7 @@ function useGraphQLPortfolioCacheUpdater(address: string): PortfolioCacheUpdater
       const cachedPortfolio = apolloClient.readQuery<PortfolioBalancesQuery>({
         query: PortfolioBalancesDocument,
         variables: {
-          ownerAddress: address,
+          ownerAddress: evmAddress,
           chains: gqlChains,
         },
       })?.portfolios?.[0]
@@ -670,7 +682,7 @@ function useGraphQLPortfolioCacheUpdater(address: string): PortfolioCacheUpdater
         },
       })
     },
-    [apolloClient, address, gqlChains],
+    [apolloClient, evmAddress, gqlChains],
   )
 
   return updater

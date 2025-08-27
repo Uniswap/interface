@@ -201,6 +201,7 @@ type BaseSwapTransactionResultProperties = {
   chain_id: number
   chain_id_in?: number
   chain_id_out?: number
+  id: string
   hash: string
   batch_id?: string
   added_time?: number

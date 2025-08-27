@@ -1,10 +1,10 @@
-import { Z_INDEX } from 'theme/zIndex'
 import { Flex, styled } from 'ui/src'
+import { zIndexes } from 'ui/src/theme'
 
 const MOBILE_BAR_MAX_HEIGHT = 100 // ensure that it's translated out of view on scroll
 
 export const MobileBottomBar = styled(Flex, {
-  zIndex: Z_INDEX.dropdown,
+  zIndex: zIndexes.dropdown,
   position: 'fixed' as any,
   bottom: 0,
   right: 0,

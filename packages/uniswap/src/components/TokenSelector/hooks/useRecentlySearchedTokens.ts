@@ -5,7 +5,7 @@ import { currencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelecto
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
+import { SearchHistoryResultType, TokenSearchHistoryResult } from 'uniswap/src/features/search/SearchHistoryResult'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -18,7 +18,9 @@ export function useRecentlySearchedTokens(
 
   const searchHistoryCurrencyInfos = useSearchHistoryToCurrencyInfos(
     searchHistory
-      .filter((searchResult): searchResult is TokenSearchResult => searchResult.type === SearchResultType.Token)
+      .filter(
+        (searchResult): searchResult is TokenSearchHistoryResult => searchResult.type === SearchHistoryResultType.Token,
+      )
       .filter((searchResult) => (chainFilter ? searchResult.chainId === chainFilter : true))
       .slice(0, numberOfResults),
   )
@@ -28,8 +30,7 @@ export function useRecentlySearchedTokens(
   }, [searchHistoryCurrencyInfos])
 }
 
-// TODO(WEB-5131): Clean up searchHistory slice so that we only save chainId & address to redux
-function useSearchHistoryToCurrencyInfos(searchHistory: TokenSearchResult[]): Maybe<CurrencyInfo>[] {
+function useSearchHistoryToCurrencyInfos(searchHistory: TokenSearchHistoryResult[]): Maybe<CurrencyInfo>[] {
   const currencyIds = searchHistory.map((searchResult) => {
     return searchResult.address
       ? buildCurrencyId(searchResult.chainId, searchResult.address)

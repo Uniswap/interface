@@ -159,7 +159,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const debouncedTokenAmount = useDebounce(tokenAmount, DEFAULT_DELAY * 2)
 
   const activeAccount = useActiveAccountWithThrow()
-  const { data: balancesById } = usePortfolioBalances({ address: activeAccount.address })
+  const { data: balancesById } = usePortfolioBalances({ evmAddress: activeAccount.address })
   const portfolioBalance = quoteCurrency.currencyInfo && balancesById?.[quoteCurrency.currencyInfo.currencyId]
   const tokenMaxDecimals = Math.min(quoteCurrency.currencyInfo?.currency.decimals ?? 0, MAX_TOKEN_DECIMALS)
 

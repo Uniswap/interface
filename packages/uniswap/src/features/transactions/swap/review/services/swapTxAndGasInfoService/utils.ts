@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { providers } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import type {
@@ -23,7 +24,10 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'
 import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'uniswap/src/features/transactions/swap/analytics'
 import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
-import { UNKNOWN_SIM_ERROR } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
+import {
+  SlippageTooLowError,
+  UnknownSimulationError,
+} from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import type { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
@@ -181,11 +185,14 @@ export function getSimulationError({
     return !isExpectedErrorFromRevoke
   })
 
-  if (
-    validSimulationErrors?.includes(TransactionFailureReason.SIMULATION_ERROR) ||
-    validSimulationErrors?.includes(TransactionFailureReason.SLIPPAGE_TOO_LOW)
-  ) {
-    return new Error(UNKNOWN_SIM_ERROR)
+  // TODO(SWAP-415): review why we're only returning some errors and ignoring the rest.
+
+  if (validSimulationErrors?.includes(TransactionFailureReason.SLIPPAGE_TOO_LOW)) {
+    return new SlippageTooLowError()
+  }
+
+  if (validSimulationErrors?.includes(TransactionFailureReason.SIMULATION_ERROR)) {
+    return new UnknownSimulationError()
   }
 
   return null
@@ -220,7 +227,7 @@ export function createProcessSwapResponse({ gasStrategy }: { gasStrategy: GasStr
     // This is a case where simulation fails on backend, meaning txn is expected to fail
     const simulationError = getSimulationError({ swapQuote, isRevokeNeeded })
 
-    const gasEstimateError = simulationError ? new Error(UNKNOWN_SIM_ERROR) : error
+    const gasEstimateError = simulationError ?? error
 
     const gasFeeResult = {
       value: swapGasFee.value,
@@ -268,8 +275,9 @@ export function createLogSwapRequestErrors({ trace }: { trace: ITraceContext }) 
 
     const quoteId = 'quoteId' in quote.quote ? quote.quote.quoteId : undefined
 
+    // TODO(SWAP-415): review how we're logging these errors to avoid spamming the logs with things we don't need to log.
     if (gasFeeResult.error) {
-      logger.warn('utils', 'logSwapRequestErrors', UNKNOWN_SIM_ERROR, {
+      const extra = {
         ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, trace }),
         // we explicitly log it here to show on Datadog dashboard
         chainLabel: getChainLabel(derivedSwapInfo.chainId),
@@ -278,7 +286,25 @@ export function createLogSwapRequestErrors({ trace }: { trace: ITraceContext }) 
         error: gasFeeResult.error,
         simulationFailureReasons: isClassic(quote) ? quote.quote.txFailureReasons : undefined,
         txRequest,
-      })
+      }
+
+      if (gasFeeResult.error instanceof UnknownSimulationError || gasFeeResult.error instanceof SlippageTooLowError) {
+        logger.warn('utils', 'logSwapRequestErrors', gasFeeResult.error.message, extra)
+      } else {
+        const gasFeeResultError = new Error('Failed to get gas estimate')
+        gasFeeResultError.cause = gasFeeResult.error
+
+        logger.error(gasFeeResultError, {
+          tags: {
+            file: 'swapTxAndGasInfoService/utils.ts',
+            function: 'logSwapRequestErrors',
+          },
+          extra: {
+            errorMessage: gasFeeResult.error.message,
+            ...extra,
+          },
+        })
+      }
 
       if (!(isMobileApp || isExtension)) {
         sendAnalyticsEvent(SwapEventName.SwapEstimateGasCallFailed, {

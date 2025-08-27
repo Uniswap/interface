@@ -19,23 +19,24 @@ import { Button, Flex } from 'ui/src'
 export function LimitsMenu({ onClose, account }: { account: string; onClose: () => void }) {
   const { t } = useTranslation()
   const { openLimitOrders } = useOpenLimitOrders(account)
-  const [selectedOrdersByHash, setSelectedOrdersByHash] = useState<Record<string, UniswapXOrderDetails>>({})
+  const [selectedOrdersById, setSelectedOrdersById] = useState<Record<string, UniswapXOrderDetails>>({})
   const [cancelState, setCancelState] = useState(CancellationState.NOT_STARTED)
   const [cancelTxHash, setCancelTxHash] = useState<string | undefined>()
 
   const selectedOrders = useMemo(() => {
-    return Object.values(selectedOrdersByHash)
-  }, [selectedOrdersByHash])
+    return Object.values(selectedOrdersById)
+  }, [selectedOrdersById])
 
   const cancelOrders = useCancelMultipleOrdersCallback(selectedOrders)
 
   const toggleOrderSelection = (order: Activity) => {
-    setSelectedOrdersByHash((prevSelectedOrders) => {
+    setSelectedOrdersById((prevSelectedOrders) => {
       const newSelectedOrders = { ...prevSelectedOrders }
-      if (order.hash in prevSelectedOrders) {
-        delete newSelectedOrders[order.hash]
+      const orderKey = order.id
+      if (orderKey in prevSelectedOrders) {
+        delete newSelectedOrders[orderKey]
       } else if (order.offchainOrderDetails) {
-        newSelectedOrders[order.hash] = order.offchainOrderDetails
+        newSelectedOrders[orderKey] = order.offchainOrderDetails
       }
       return newSelectedOrders
     })
@@ -60,9 +61,9 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
       <Flex height="100%" data-testid="LimitsMenuContainer" gap="$gap16">
         {openLimitOrders.map((order) => (
           <LimitDetailActivityRow
-            key={order.hash}
+            key={order.id}
             order={order}
-            selected={order.hash in selectedOrdersByHash}
+            selected={order.id in selectedOrdersById}
             onToggleSelect={toggleOrderSelection}
           />
         ))}
@@ -86,7 +87,7 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
         onCancel={() => {
           // if the cancel was successful clear the selected orders
           if (cancelTxHash) {
-            setSelectedOrdersByHash({})
+            setSelectedOrdersById({})
           }
           setCancelState(CancellationState.NOT_STARTED)
         }}

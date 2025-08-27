@@ -2,7 +2,6 @@ import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { GenericPasskeyMenuModal, PasskeyMenuModalState } from 'components/AccountDrawer/PasskeyMenu/PasskeyMenuModal'
 import StatusIcon from 'components/Identicon/StatusIcon'
-import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
 import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
 import { Dispatch, SetStateAction, useState } from 'react'
@@ -14,6 +13,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { Authenticator, deleteAuthenticator, disconnectWallet } from 'uniswap/src/features/passkey/embeddedWallet'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { NumberType } from 'utilities/src/format/types'
 
 export function DeletePasskeyMenu({
@@ -34,8 +34,8 @@ export function DeletePasskeyMenu({
   const { t } = useTranslation()
   const disconnect = useDisconnect()
   const accountDrawer = useAccountDrawer()
-  const account = useAccount()
-  const { data: portfolioTotalValue } = usePortfolioTotalValue(account)
+  const evmAddress = useWallet().evmAccount?.address
+  const { data: portfolioTotalValue } = usePortfolioTotalValue({ evmAddress, svmAddress: undefined }) // Passkey account should be EVM-only
   const { balanceUSD } = portfolioTotalValue || {}
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const [acknowledged, setAcknowledged] = useState(false)
@@ -82,7 +82,7 @@ export function DeletePasskeyMenu({
             {t('account.passkey.delete.descriptionEmphasized')}
           </Text>
         </Flex>
-        {account.address && (
+        {evmAddress && (
           <Flex
             row
             gap="$gap12"
@@ -94,7 +94,7 @@ export function DeletePasskeyMenu({
             borderStyle="solid"
           >
             <StatusIcon size={24} showMiniIcons={false} />
-            <AddressDisplay enableCopyAddress={false} address={account.address} />
+            <AddressDisplay enableCopyAddress={false} address={evmAddress} />
             <Text variant="body3" color="$statusCritical" ml="auto" mr="0">
               {convertFiatAmountFormatted(balanceUSD, NumberType.FiatTokenPrice)}
             </Text>

@@ -58,7 +58,7 @@ export function TokenSelectorPanel({
     <>
       <Flex fill overflow="hidden">
         <TokenSelectorModal
-          activeAccountAddress={activeAccountAddress}
+          evmAddress={activeAccountAddress}
           currencyField={CurrencyField.INPUT}
           flow={TokenSelectorFlow.Send}
           isModalOpen={showTokenSelector}

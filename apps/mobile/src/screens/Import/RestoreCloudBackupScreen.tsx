@@ -3,7 +3,6 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
@@ -23,8 +22,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function RestoreCloudBackupScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
 
-  const backups = useCloudBackups()
-  const sortedBackups = backups.slice().sort((a, b) => b.createdAt - a.createdAt)
+  const sortedBackups = params.backups.slice().sort((a, b) => b.createdAt - a.createdAt)
 
   const onPressRestoreBackup = async (backup: CloudStorageMnemonicBackup): Promise<void> => {
     navigation.navigate({

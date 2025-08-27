@@ -151,43 +151,40 @@ export function createTransactionService(ctx: {
 
   /**
    * Calculate the next nonce for an account on a chain
+   * @param input - Configuration object for nonce calculation
+   * @param input.account - The account metadata to get nonce for
+   * @param input.chainId - The blockchain chain identifier
+   * @param input.submitViaPrivateRpc - Whether to use private RPC submission
+   * @returns Promise resolving to the calculated nonce information
+   * @throws {Error} When the nonce cannot be calculated due to network or validation issues
    */
   async function getNextNonce(input: {
     account: AccountMeta
     chainId: UniverseChainId
     submitViaPrivateRpc?: boolean
-  }): Promise<CalculatedNonce | undefined> {
+  }): Promise<CalculatedNonce> {
     const { account, chainId, submitViaPrivateRpc } = input
-    try {
-      const provider = await ctx.getProvider()
-      const usePrivate = ctx.configService.shouldUsePrivateRpc({ chainId, submitViaPrivateRpc })
+    const provider = await ctx.getProvider()
+    const usePrivate = ctx.configService.shouldUsePrivateRpc({ chainId, submitViaPrivateRpc })
 
-      // Get the transaction count from the provider
-      const nonce = await provider.getTransactionCount(account.address, 'pending')
+    // Get the transaction count from the provider
+    const nonce = await provider.getTransactionCount(account.address, 'pending')
 
-      // If using Flashbots with auth, it will already account for pending private transactions
-      // Otherwise, add the local pending private transactions
-      if (!usePrivate && isPrivateRpcSupportedOnChain(chainId)) {
-        const pendingPrivateTransactionCount = await transactionRepository.getPendingPrivateTransactionCount({
-          address: account.address,
-          chainId,
-        })
-
-        return {
-          nonce: nonce + pendingPrivateTransactionCount,
-          pendingPrivateTxCount: pendingPrivateTransactionCount,
-        }
-      }
-
-      return { nonce }
-    } catch (error) {
-      logger.error(error, {
-        tags: { file: 'TransactionService', function: 'getNextNonce' },
-        extra: { account, chainId },
+    // If using Flashbots with auth, it will already account for pending private transactions
+    // Otherwise, add the local pending private transactions
+    if (!usePrivate && isPrivateRpcSupportedOnChain(chainId)) {
+      const pendingPrivateTransactionCount = await transactionRepository.getPendingPrivateTransactionCount({
+        address: account.address,
+        chainId,
       })
 
-      return undefined
+      return {
+        nonce: nonce + pendingPrivateTransactionCount,
+        pendingPrivateTxCount: pendingPrivateTransactionCount,
+      }
     }
+
+    return { nonce }
   }
 
   /**
@@ -265,17 +262,21 @@ export function createTransactionService(ctx: {
 
     let nonce = request.nonce
     if (!nonce) {
-      const calculatedNonce = await getNextNonce({
-        account,
-        chainId,
-        submitViaPrivateRpc,
-      })
-
-      if (!calculatedNonce) {
-        throw new Error('Failed to calculate nonce for transaction request')
+      try {
+        const calculatedNonce = await getNextNonce({
+          account,
+          chainId,
+          submitViaPrivateRpc,
+        })
+        nonce = calculatedNonce.nonce
+      } catch (error) {
+        // If the nonce cannot be calculated, we proceed with the flow because while populating
+        // the transaction request, the nonce is calculated and set by the provider (without our custom logic).
+        logger.error(error, {
+          tags: { file: 'TransactionService', function: 'getNextNonce' },
+          extra: { account, chainId },
+        })
       }
-
-      nonce = calculatedNonce.nonce
     }
 
     const preparedTransaction = await ctx.transactionSigner.prepareTransaction({ request: { ...request, nonce } })

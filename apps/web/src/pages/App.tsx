@@ -1,6 +1,5 @@
 import ErrorBoundary from 'components/ErrorBoundary'
 import { useFeatureFlagUrlOverrides } from 'featureFlags/useFeatureFlagUrlOverrides'
-import { useAtom } from 'jotai'
 import { Body } from 'pages/App/Body'
 import { AppLayout } from 'pages/App/Layout'
 import { ResetPageScrollEffect } from 'pages/App/utils/ResetPageScroll'
@@ -9,8 +8,7 @@ import { findRouteByPath } from 'pages/RouteDefinitions'
 import { useDynamicMetatags } from 'pages/metatags'
 import { useEffect, useLayoutEffect } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
-import { Navigate, useLocation, useSearchParams } from 'react-router'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
+import { Navigate, useLocation } from 'react-router'
 import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
 import { useSporeColors } from 'ui/src'
 import { initializeScrollWatcher } from 'uniswap/src/components/modals/ScrollLock'
@@ -23,21 +21,11 @@ import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 const OVERRIDE_PAGE_LAYOUT = [EXTENSION_PASSKEY_AUTH_PATH]
 
 export default function App() {
-  const [, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
   const colors = useSporeColors()
 
   const location = useLocation()
   const { pathname } = location
   const currentPage = getCurrentPageFromLocation(pathname)
-
-  const [searchParams] = useSearchParams()
-  useEffect(() => {
-    if (searchParams.get('disableNFTs') === 'true') {
-      setShouldDisableNFTRoutes(true)
-    } else if (searchParams.get('disableNFTs') === 'false') {
-      setShouldDisableNFTRoutes(false)
-    }
-  }, [searchParams, setShouldDisableNFTRoutes])
 
   useFeatureFlagUrlOverrides()
 

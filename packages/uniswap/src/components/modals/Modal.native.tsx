@@ -112,8 +112,7 @@ function BottomSheetModalContents({
   hideHandlebar,
   backgroundColor,
   handlebarColor,
-  // defaults to true if snapPoints/fullScreen are not provided and false otherwise
-  enableDynamicSizing,
+  enableDynamicSizing = false,
   blurredBackground = false,
   dismissOnBackPress = true,
   isDismissible = true,
@@ -335,7 +334,7 @@ function BottomSheetModalContents({
           {overrideInnerContainer ? (
             children
           ) : (
-            <BottomSheetView style={bottomSheetViewStyles} focusHook={focusHook}>
+            <BottomSheetView style={[bottomSheetViewStyles]} focusHook={focusHook}>
               {children}
             </BottomSheetView>
           )}

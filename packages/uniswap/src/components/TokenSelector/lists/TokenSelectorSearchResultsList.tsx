@@ -10,7 +10,8 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 function _TokenSelectorSearchResultsList({
   onSelectCurrency: parentOnSelectCurrency,
-  activeAccountAddress,
+  evmAddress,
+  svmAddress,
   chainFilter,
   parsedChainFilter,
   searchFilter,
@@ -20,7 +21,8 @@ function _TokenSelectorSearchResultsList({
   input,
 }: {
   onSelectCurrency: OnSelectCurrency
-  activeAccountAddress?: string
+  evmAddress?: string
+  svmAddress?: string
   chainFilter: UniverseChainId | null
   parsedChainFilter: UniverseChainId | null
   searchFilter: string
@@ -37,7 +39,8 @@ function _TokenSelectorSearchResultsList({
     error,
     refetch,
   } = useTokenSectionsForSearchResults({
-    address: activeAccountAddress,
+    evmAddress,
+    svmAddress,
     chainFilter: chainFilter ?? parsedChainFilter,
     searchFilter: debouncedParsedSearchFilter ?? debouncedSearchFilter,
     isBalancesOnlySearch,

@@ -158,6 +158,7 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
       errorPhraseLength = strings.getString("errorPhraseLength") ?: "",
       errorWrongPhrase = strings.getString("errorWrongPhrase") ?: "",
       errorInvalidPhrase = strings.getString("errorInvalidPhrase") ?: "",
+      errorWordIsAddress = strings.getString("errorWordIsAddress") ?: "",
     )
   }
 

@@ -5,7 +5,6 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
-import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, TouchableArea, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
@@ -14,6 +13,7 @@ import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { removeWatchedAddress } from 'uniswap/src/features/favorites/slice'
 import { isIOS } from 'utilities/src/platform'
+import { noop } from 'utilities/src/react/noop'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export type FavoriteWalletCardProps = {
@@ -79,7 +79,7 @@ function FavoriteWalletCard({ address, isEditing, setIsEditing, ...rest }: Favor
         disabled={isEditing}
         m="$spacing4"
         testID="favorite-wallet-card"
-        onLongPress={disableOnPress}
+        onLongPress={noop}
         onPress={(): void => {
           navigate(address)
         }}

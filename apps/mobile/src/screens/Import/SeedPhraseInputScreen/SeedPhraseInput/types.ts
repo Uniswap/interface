@@ -9,6 +9,7 @@ export enum StringKey {
   ErrorPhraseLength = 'errorPhraseLength',
   ErrorWrongPhrase = 'errorWrongPhrase',
   ErrorInvalidPhrase = 'errorInvalidPhrase',
+  ErrorWordIsAddress = 'errorWordIsAddress',
 }
 
 type MnemonicStoredEvent = {

@@ -93,7 +93,7 @@ export function parseRestProtocolVersion(version: string | undefined): ProtocolV
  * Helps simplify REST endpoint interfaces that expect a walletAccount object instead
  * of simple address fields
  */
-export function createWalletAccount({ evmAddress, svmAddress }: { evmAddress?: string; svmAddress?: string }): {
+function createWalletAccount({ evmAddress, svmAddress }: { evmAddress?: string; svmAddress?: string }): {
   walletAccount: PlainMessage<WalletAccount>
 } {
   const platformAddresses: PlainMessage<PlatformAddress>[] = []
@@ -136,7 +136,7 @@ export function transformInput<T extends Record<string, unknown> & { walletAccou
   } = input
 
   return {
-    ...createWalletAccount({ evmAddress, svmAddress }),
     ...restInput,
+    ...createWalletAccount({ evmAddress, svmAddress }),
   }
 }

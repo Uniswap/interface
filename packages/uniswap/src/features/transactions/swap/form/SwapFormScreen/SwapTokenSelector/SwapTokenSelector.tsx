@@ -22,7 +22,9 @@ export function SwapTokenSelector({
     output: s.output,
   }))
 
-  const activeAccountAddress = useWallet().evmAccount?.address
+  const wallet = useWallet()
+  const activeEVMAccountAddress = wallet.evmAccount?.address
+  const activeSVMAccountAddress = wallet.svmAccount?.address
   const chainId = useChainId()
 
   const handleHideTokenSelector = useHideTokenSelector()
@@ -41,7 +43,8 @@ export function SwapTokenSelector({
   return (
     <TokenSelectorModal
       isModalOpen={isModalOpen}
-      activeAccountAddress={activeAccountAddress}
+      evmAddress={activeEVMAccountAddress}
+      svmAddress={activeSVMAccountAddress}
       chainId={chainId}
       input={input}
       output={output}

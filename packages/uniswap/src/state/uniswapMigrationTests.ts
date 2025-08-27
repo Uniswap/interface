@@ -1,26 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { removeThaiBahtFromFiatCurrency } from 'uniswap/src/state/uniswapMigrations'
+import { SearchHistoryResultType } from 'uniswap/src/features/search/SearchHistoryResult'
+import { PreV55SearchResultType } from 'uniswap/src/state/oldTypes'
 
 // Mobile: 89
 // Extension: 25
 // Web: 25
-it('removes THB from fiat currency', () => {
-  const state = {
-    userSettings: {
-      currentCurrency: 'THB',
-    },
-  }
-  const newState = removeThaiBahtFromFiatCurrency(state)
-  expect(newState.userSettings.currentCurrency).toEqual('USD')
-
-  const stateWithJPY = {
-    userSettings: {
-      currentCurrency: 'JPY',
-    },
-  }
-  const newStateWithJPY = removeThaiBahtFromFiatCurrency(stateWithJPY)
-  expect(newStateWithJPY.userSettings.currentCurrency).toEqual('JPY')
-})
 
 export function testRemoveTHBFromCurrency(migration: (state: any) => any, prevSchema: any): void {
   const result = migration(prevSchema)
@@ -29,5 +13,29 @@ export function testRemoveTHBFromCurrency(migration: (state: any) => any, prevSc
     expect(result.userSettings.currentCurrency).toEqual('USD')
   } else {
     expect(result.userSettings.currentCurrency).toEqual(prevSchema.userSettings.currentCurrency)
+  }
+}
+
+// Web: 55
+// Mobile: 93
+// Extension: 27
+
+export function testMigrateSearchHistory(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+
+  if (prevSchema.searchHistory.results) {
+    expect(result.searchHistory.results.length).toEqual(prevSchema.searchHistory.results.length)
+
+    for (const item of result.searchHistory.results) {
+      // Check that no result has type ENS or Unitag
+      expect(item.type).not.toBe(PreV55SearchResultType.ENSAddress)
+      expect(item.type).not.toBe(PreV55SearchResultType.Unitag)
+
+      // Check that token types do not contain name or symbol
+      if (item.type === SearchHistoryResultType.Token) {
+        expect(item).not.toHaveProperty('name')
+        expect(item).not.toHaveProperty('symbol')
+      }
+    }
   }
 }

@@ -79,11 +79,13 @@ export interface TransactionService {
    * Calculate the next nonce for an account on a chain
    * @param account The account metadata
    * @param chainId The blockchain chain ID
+   * @param submitViaPrivateRpc Whether to use private RPC submission
    * @returns The calculated nonce and optionally pending tx count
+   * @throws {Error} When the nonce cannot be calculated due to network or validation issues
    */
   getNextNonce(input: {
     account: AccountMeta
     chainId: UniverseChainId
     submitViaPrivateRpc?: boolean
-  }): Promise<CalculatedNonce | undefined>
+  }): Promise<CalculatedNonce>
 }

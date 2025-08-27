@@ -4,7 +4,6 @@ import { isAddress } from 'ethers/lib/utils'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GestureResponderEvent, StatusBar, StyleSheet } from 'react-native'
-import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
@@ -31,6 +30,8 @@ import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
+import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
+import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
@@ -40,7 +41,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, getChainLabel } from 'uniswap/src/features/chains/utils'
-import { useNFTContextMenu } from 'uniswap/src/features/nfts/useNftContextMenu'
+import { useNFTContextMenuItems } from 'uniswap/src/features/nfts/hooks/useNftContextMenuItems'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -53,6 +54,7 @@ import { setClipboard, setClipboardImage } from 'uniswap/src/utils/clipboard'
 import { useNearestThemeColorFromImageUri } from 'uniswap/src/utils/colors'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isAndroid, isIOS } from 'utilities/src/platform'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useAccounts, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const MAX_NFT_IMAGE_HEIGHT = 375
@@ -485,7 +487,9 @@ function RightElement({
 }): JSX.Element {
   const accounts = useAccounts()
 
-  const { menuActions, onContextMenuPress } = useNFTContextMenu({
+  const { value: contextMenuIsOpen, setFalse: closeContextMenu } = useBooleanState(false)
+
+  const menuItems = useNFTContextMenuItems({
     contractAddress,
     tokenId,
     owner,
@@ -497,13 +501,18 @@ function RightElement({
 
   return (
     <Flex alignItems="center" height={iconSizes.icon40} justifyContent="center" width={iconSizes.icon40}>
-      {menuActions.length > 0 ? (
-        <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
+      {menuItems.length > 0 && (
+        <ContextMenu
+          menuItems={menuItems}
+          triggerMode={ContextMenuTriggerMode.Primary}
+          isOpen={contextMenuIsOpen}
+          closeMenu={closeContextMenu}
+        >
           <TouchableArea p="$spacing16">
             <Ellipsis color="$neutral1" size="$icon.16" />
           </TouchableArea>
         </ContextMenu>
-      ) : undefined}
+      )}
     </Flex>
   )
 }

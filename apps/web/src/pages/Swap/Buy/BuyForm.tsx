@@ -40,6 +40,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { FiatOffRampEventName, FiatOnRampEventName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import useResizeObserver from 'use-resize-observer'
@@ -83,6 +84,7 @@ type BuyFormProps = {
 
 function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
   const account = useAccount()
+  const wallet = useWallet()
   const { t } = useTranslation()
   const { convertFiatAmount } = useLocalizationContext()
   const fiatCurrency = useAppFiatCurrency()
@@ -207,7 +209,10 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
     }
   }, [account.chainId, parsedQs, initialCurrency, setBuyFormState, supportedTokens])
 
-  const { data: balancesById } = usePortfolioBalances({ address: account.address })
+  const { data: balancesById } = usePortfolioBalances({
+    evmAddress: wallet.evmAccount?.address,
+    svmAddress: wallet.svmAccount?.address,
+  })
 
   // Tokens that have balance that aren't FOR supported
   const unsupportedCurrencies = useMemo(() => {

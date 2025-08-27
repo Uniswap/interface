@@ -13,6 +13,7 @@ import { EditWalletSettingsModalState } from 'src/components/Settings/EditWallet
 import { ManageWalletsModalState } from 'src/components/Settings/ManageWalletsModalState'
 import { BuyNativeTokenModalState } from 'src/components/TokenDetails/BuyNativeTokenModalState'
 import { UnitagsIntroModalState } from 'src/components/unitags/UnitagsIntroModalState'
+import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
 import { TestnetSwitchModalState } from 'src/features/testnetMode/TestnetSwitchModalState'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
@@ -136,7 +137,9 @@ export type OnboardingStackParamList = {
     mnemonicId: string
   } & OnboardingStackBaseParams
   [OnboardingScreens.RestoreCloudBackupLoading]: OnboardingStackBaseParams
-  [OnboardingScreens.RestoreCloudBackup]: OnboardingStackBaseParams
+  [OnboardingScreens.RestoreCloudBackup]: {
+    backups: CloudStorageMnemonicBackup[]
+  } & OnboardingStackBaseParams
   [OnboardingScreens.RestoreCloudBackupPassword]: {
     mnemonicId: string
   } & OnboardingStackBaseParams

@@ -7,7 +7,6 @@ import { TokenItemChart } from 'src/components/explore/TokenItemChart'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
-import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { spacing } from 'ui/src/theme'
@@ -23,6 +22,7 @@ import {
   currencyIdToChain,
 } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
+import { noop } from 'utilities/src/react/noop'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
 interface TokenItemProps {
@@ -108,7 +108,7 @@ export const TokenItem = memo(function _TokenItem({
 
   return (
     <ContextMenu actions={menuActions} previewBackgroundColor={colors.surface1.val} onPress={onContextMenuPress}>
-      <TouchableArea testID={`token-item-${name}`} onLongPress={disableOnPress} onPress={onPress}>
+      <TouchableArea testID={`token-item-${name}`} onLongPress={noop} onPress={onPress}>
         {overlay}
         <AnimatedFlex grow row alignItems="center" gap="$spacing12" px="$spacing24" py="$spacing8" {...containerProps}>
           <Flex centered row gap="$spacing4">

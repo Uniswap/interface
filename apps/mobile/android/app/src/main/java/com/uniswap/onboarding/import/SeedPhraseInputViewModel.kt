@@ -13,9 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import android.content.Context
-import android.view.inputmethod.InputMethodManager
-import android.view.View
 
 class SeedPhraseInputViewModel(
   private val ethersRs: RnEthersRs,
@@ -36,6 +33,7 @@ class SeedPhraseInputViewModel(
     object NotEnoughWords : MnemonicError
     object WrongRecoveryPhrase : MnemonicError
     object InvalidPhrase : MnemonicError
+    object WordIsAddress : MnemonicError
   }
 
   data class ReactNativeStrings(
@@ -45,6 +43,7 @@ class SeedPhraseInputViewModel(
     val errorPhraseLength: String,
     val errorWrongPhrase: String,
     val errorInvalidPhrase: String,
+    val errorWordIsAddress: String,
   )
 
   // Sourced externally from RN
@@ -57,6 +56,7 @@ class SeedPhraseInputViewModel(
       errorPhraseLength = "",
       errorWrongPhrase = "",
       errorInvalidPhrase = "",
+      errorWordIsAddress = "",
     )
   )
 
@@ -80,10 +80,11 @@ class SeedPhraseInputViewModel(
 
   fun handleInputChange(value: TextFieldValue) {
     input = value
-
     val normalized = normalizeInput(value)
+
     val skipLastWord = normalized.lastOrNull() != ' '
-    validateInput(normalized, skipLastWord)
+    val skipInvalidWord = skipLastWord && !isAddress(normalized)
+    validateInput(normalized, skipInvalidWord)
 
     validateLastWordJob?.cancel()
 
@@ -93,7 +94,7 @@ class SeedPhraseInputViewModel(
     }
   }
 
-  private fun validateInput(normalizedInput: String, skipLastWord: Boolean) {
+  private fun validateInput(normalizedInput: String, skipInvalidWord: Boolean) {
     val mnemonic = normalizedInput.trim()
     val words = mnemonic.split(" ")
 
@@ -104,10 +105,13 @@ class SeedPhraseInputViewModel(
 
     val isValidLength = words.size in MIN_LENGTH..MAX_LENGTH
     val firstInvalidWord = EthersRs.findInvalidWord(mnemonic)
-    status = if (firstInvalidWord == words.last() && skipLastWord) {
+
+    status = if (firstInvalidWord == words.last() && skipInvalidWord) {
       Status.None
     } else if (firstInvalidWord.isEmpty() && isValidLength) {
       Status.Valid
+    } else if (isAddress(mnemonic)) {
+      Status.Error(MnemonicError.WordIsAddress)
     } else if (firstInvalidWord.isNotEmpty()) {
       Status.Error(MnemonicError.InvalidWord(firstInvalidWord))
     } else {
@@ -121,7 +125,11 @@ class SeedPhraseInputViewModel(
   private fun normalizeInput(value: TextFieldValue) =
     value.text.replace("\\s+".toRegex(), " ").lowercase()
 
+  private fun isAddress(value: String) = value.startsWith("0x") && value.length == 42
+
   fun handleSubmit() {
+    validateLastWordJob?.cancel()
+
     try {
       val normalized = normalizeInput(input)
       val mnemonic = normalized.trim()

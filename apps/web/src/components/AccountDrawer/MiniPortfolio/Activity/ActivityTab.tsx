@@ -64,8 +64,7 @@ export function ActivityTab({ account }: { account: string }) {
               </ThemedText.SubHeader>
               <Flex data-testid={TestID.ActivityContent} width="100%">
                 {activityGroup.transactions.map(
-                  (activity) =>
-                    !(hideSpam && activity.isSpam) && <ActivityRow key={activity.hash} activity={activity} />,
+                  (activity) => !(hideSpam && activity.isSpam) && <ActivityRow key={activity.id} activity={activity} />,
                 )}
               </Flex>
             </ActivityGroupWrapper>

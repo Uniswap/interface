@@ -7,6 +7,7 @@ import { PortfolioValueModifier as RestPortfolioValueModifier } from '@uniswap/c
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { GetPortfolioInput, getPortfolioQuery, useGetPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
@@ -40,6 +41,7 @@ export type RestTokenOverrides = {
  */
 export function useRESTPortfolioData({
   evmAddress,
+  svmAddress,
   ...queryOptions
 }: {
   skip?: boolean
@@ -47,7 +49,9 @@ export function useRESTPortfolioData({
   fetchPolicy?: WatchQueryFetchPolicy
 } & GetPortfolioInput['input']): PortfolioDataResult {
   const { chains: chainIds } = useEnabledChains()
-  const modifier = useRestPortfolioValueModifier(evmAddress)
+
+  // TODO(SWAP-388): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
+  const modifier = useRestPortfolioValueModifier(evmAddress ?? svmAddress)
 
   const { pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
     fetchPolicy: queryOptions.fetchPolicy,
@@ -78,8 +82,8 @@ export function useRESTPortfolioData({
     error: restError,
     status: restStatus,
   } = useGetPortfolioQuery({
-    input: { evmAddress, chainIds, modifier },
-    enabled: !!evmAddress && !queryOptions.skip,
+    input: { evmAddress, svmAddress, chainIds, modifier },
+    enabled: !!(evmAddress ?? svmAddress) && !queryOptions.skip,
     refetchInterval: internalPollInterval,
     select: selectFormattedData,
   })
@@ -155,7 +159,8 @@ export function convertRestBalanceToPortfolioBalance(
     return undefined
   }
 
-  const { chainId, address: tokenAddress, decimals, symbol, name, metadata } = token
+  const { chainId, address: unnormalizedTokenAddress, decimals, symbol, name, metadata } = token
+  const tokenAddress = normalizeTokenAddressForCache(unnormalizedTokenAddress)
   const { logoUrl, protectionInfo } = metadata || {}
 
   const currency = buildCurrency({
@@ -172,8 +177,8 @@ export function convertRestBalanceToPortfolioBalance(
     return undefined
   }
 
-  const id = currencyId(currency).toLowerCase()
-  const tokenBalanceId = `${chainId}-${tokenAddress.toLowerCase()}-${address}`
+  const id = currencyId(currency)
+  const tokenBalanceId = `${chainId}-${tokenAddress}-${address}`
   const { isSpam, spamCodeValue, mappedSafetyLevel } = getRestTokenSafetyInfo(metadata)
 
   const currencyInfo = buildCurrencyInfo({
@@ -275,38 +280,41 @@ export const createPortfolioCacheUpdater =
     }
   }
 
-export function useRestPortfolioCacheUpdater(address: string): PortfolioCacheUpdater {
+export function useRestPortfolioCacheUpdater(evmAddress?: string, svmAddress?: string): PortfolioCacheUpdater {
   const { chains: chainIds } = useEnabledChains()
   const queryClient = useQueryClient()
-  const modifier = useRestPortfolioValueModifier(address)
 
-  const updater = useMemo(() => {
-    const cacheUpdater = createPortfolioCacheUpdater({
+  // TODO(SWAP-388): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
+  const modifier = useRestPortfolioValueModifier(evmAddress ?? svmAddress)
+
+  const cacheUpdater = useMemo(() => {
+    return createPortfolioCacheUpdater({
       getCurrentData: (input) => queryClient.getQueryData(getPortfolioQuery({ input }).queryKey),
       updateData: (input, dataUpdater) => {
         queryClient.setQueryData(getPortfolioQuery({ input }).queryKey, dataUpdater)
       },
     })
+  }, [queryClient])
 
-    return cacheUpdater({ evmAddress: address, chainIds, modifier })
-  }, [address, chainIds, queryClient, modifier])
-
-  return useEvent((hidden: boolean, portfolioBalance?: PortfolioBalance) => updater({ hidden, portfolioBalance }))
+  return useEvent((hidden: boolean, portfolioBalance?: PortfolioBalance) =>
+    cacheUpdater({ evmAddress, svmAddress, chainIds, modifier })({ hidden, portfolioBalance }),
+  )
 }
 
 export function useRESTPortfolioTotalValue({
-  address,
+  evmAddress,
+  svmAddress,
   pollInterval,
   fetchPolicy,
   enabled = true,
 }: {
-  address?: Address
+  evmAddress?: Address
+  svmAddress?: Address
   pollInterval?: PollingInterval
   fetchPolicy?: WatchQueryFetchPolicy
   enabled?: boolean
 }): PortfolioTotalValueResult {
   const { chains: chainIds } = useEnabledChains()
-  const modifier = useRestPortfolioValueModifier(enabled ? address : undefined)
 
   const { pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
     fetchPolicy,
@@ -327,6 +335,9 @@ export function useRESTPortfolioTotalValue({
     }
   })
 
+  // TODO(SWAP-388): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
+  const modifier = useRestPortfolioValueModifier(enabled ? evmAddress ?? svmAddress : undefined)
+
   const {
     data: formattedData,
     isFetching: loading,
@@ -334,8 +345,8 @@ export function useRESTPortfolioTotalValue({
     error: restError,
     status: restStatus,
   } = useGetPortfolioQuery({
-    input: { evmAddress: address, chainIds, modifier },
-    enabled: !!address && enabled,
+    input: { evmAddress, svmAddress, chainIds, modifier },
+    enabled: !!(evmAddress ?? svmAddress) && enabled,
     refetchInterval: internalPollInterval,
     select: selectFormattedData,
   })

@@ -1,11 +1,12 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency } from '@uniswap/sdk-core'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip, styled as tamaguiStyled } from 'ui/src'
 import { DotLine } from 'ui/src/components/icons/DotLine'
 import { zIndexes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -60,9 +61,12 @@ function Pool({
   const currency1CurrencyInfo = useCurrencyInfo(currencyToCurrencyId(currency1))
   const isDynamicFee = feeAmount === DYNAMIC_FEE_AMOUNT
 
+  const feePercent = feeAmount / BIPS_BASE
+  const tokenPair = `${currency0.symbol}/${currency1.symbol}`
+
   return (
     <Tooltip placement="top">
-      <Tooltip.Trigger>
+      <Tooltip.Trigger cursor="default">
         <OpaqueBadge>
           <Flex ml={2}>
             <SplitLogo
@@ -72,15 +76,12 @@ function Pool({
               size={priceUXEnabled ? 12 : 20}
             />
           </Flex>
-          {isDynamicFee ? <BadgeText>{t('common.dynamic')}</BadgeText> : <BadgeText>{feeAmount}%</BadgeText>}
+          <BadgeText>{isDynamicFee ? t('common.dynamic') : `${feePercent}%`}</BadgeText>
         </OpaqueBadge>
       </Tooltip.Trigger>
       <Tooltip.Content>
         <Text variant="body4">
-          <Trans
-            i18nKey="pool.percent"
-            values={{ pct: currency0.symbol + '/' + currency1.symbol + ' ' + feeAmount / 10000 }}
-          />
+          {tokenPair} {isDynamicFee ? t('pool.dynamic') : t('pool.percent', { pct: feePercent })}
         </Text>
         <Tooltip.Arrow />
       </Tooltip.Content>

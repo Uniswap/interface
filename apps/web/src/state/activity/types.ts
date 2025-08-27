@@ -11,7 +11,7 @@ interface BaseUpdate<T> {
 
 interface TransactionUpdate extends BaseUpdate<TransactionDetails> {
   type: 'transaction'
-  update: Required<Pick<ConfirmedTransactionDetails, 'status' | 'typeInfo'>> & { hash?: string }
+  update: Required<Pick<ConfirmedTransactionDetails, 'status' | 'typeInfo'>> & Partial<ConfirmedTransactionDetails>
 }
 
 export interface OrderUpdate extends BaseUpdate<SignatureDetails> {

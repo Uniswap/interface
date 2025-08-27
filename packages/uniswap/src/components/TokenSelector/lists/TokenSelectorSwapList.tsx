@@ -19,7 +19,8 @@ import { isMobileApp } from 'utilities/src/platform'
 
 // eslint-disable-next-line complexity
 function useTokenSectionsForSwap({
-  activeAccountAddress,
+  evmAddress,
+  svmAddress,
   chainFilter,
   oppositeSelectedToken,
 }: TokenSectionsHookProps): GqlResult<OnchainItemSection<TokenSelectorOption>[]> {
@@ -30,21 +31,21 @@ function useTokenSectionsForSwap({
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
     loading: portfolioTokenOptionsLoading,
-  } = usePortfolioTokenOptions({ address: activeAccountAddress, chainFilter })
+  } = usePortfolioTokenOptions({ evmAddress, svmAddress, chainFilter })
 
   const {
     data: trendingTokenOptions,
     error: trendingTokenOptionsError,
     refetch: refetchTrendingTokenOptions,
     loading: trendingTokenOptionsLoading,
-  } = useTrendingTokensOptions(activeAccountAddress, chainFilter)
+  } = useTrendingTokensOptions({ evmAddress, svmAddress, chainFilter })
 
   const {
     data: favoriteTokenOptions,
     error: favoriteTokenOptionsError,
     refetch: refetchFavoriteTokenOptions,
     loading: favoriteTokenOptionsLoading,
-  } = useFavoriteTokensOptions(activeAccountAddress, chainFilter)
+  } = useFavoriteTokensOptions({ evmAddress, svmAddress, chainFilter })
 
   const {
     data: commonTokenOptions,
@@ -52,10 +53,11 @@ function useTokenSectionsForSwap({
     refetch: refetchCommonTokenOptions,
     loading: commonTokenOptionsLoading,
     // if there is no chain filter, first check if the input token has a chainId, fallback to defaultChainId
-  } = useCommonTokensOptionsWithFallback(
-    activeAccountAddress,
-    chainFilter ?? oppositeSelectedToken?.chainId ?? defaultChainId,
-  )
+  } = useCommonTokensOptionsWithFallback({
+    evmAddress,
+    svmAddress,
+    chainFilter: chainFilter ?? oppositeSelectedToken?.chainId ?? defaultChainId,
+  })
 
   const {
     data: bridgingTokenOptions,
@@ -63,7 +65,7 @@ function useTokenSectionsForSwap({
     refetch: refetchBridgingTokenOptions,
     loading: bridgingTokenOptionsLoading,
     shouldNest: shouldNestBridgingTokens,
-  } = useBridgingTokensOptions({ oppositeSelectedToken, walletAddress: activeAccountAddress, chainFilter })
+  } = useBridgingTokensOptions({ oppositeSelectedToken, evmAddress, svmAddress, chainFilter })
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 
@@ -175,7 +177,8 @@ function useTokenSectionsForSwap({
 
 function _TokenSelectorSwapList({
   onSelectCurrency,
-  activeAccountAddress,
+  evmAddress,
+  svmAddress,
   chainFilter,
   oppositeSelectedToken,
 }: TokenSectionsHookProps & {
@@ -188,7 +191,8 @@ function _TokenSelectorSwapList({
     error,
     refetch,
   } = useTokenSectionsForSwap({
-    activeAccountAddress,
+    evmAddress,
+    svmAddress,
     chainFilter,
     oppositeSelectedToken,
   })

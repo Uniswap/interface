@@ -198,6 +198,7 @@ export function createExecuteSwapSaga(
         chainId,
         submitViaPrivateRpc,
         includesDelegation,
+        request: 'txRequests' in swapTxContext ? swapTxContext.txRequests?.[0] : undefined,
       })
 
       // Create base context for transaction factory

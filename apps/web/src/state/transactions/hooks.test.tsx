@@ -14,26 +14,23 @@ import { act } from 'test-utils/render'
 import { renderHookWithProviders } from 'test-utils/renderHookWithProviders'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ApproveTransactionInfo, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  ApproveTransactionInfo,
+  InterfaceTransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { vi } from 'vitest'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { useChainId } from 'wagmi'
 
 // Mock useAccount hook
 vi.mock('hooks/useAccount')
-vi.mock('wagmi', async () => {
-  const wagmi = await vi.importActual('wagmi')
-  return {
-    ...wagmi,
-    useChainId: vi.fn(),
-  }
-})
 vi.mock('uniswap/src/features/wallet/hooks/useWallet')
 
 describe('Transactions hooks', () => {
   const address = '0x0000000000000000000000000000000000000000'
   const transactionHash = '0x123'
+  const transactionId = transactionHash
 
   beforeEach(() => {
     mocked(useAccount).mockReturnValue({
@@ -41,8 +38,6 @@ describe('Transactions hooks', () => {
       address,
       status: 'connected',
     } as unknown as ReturnType<typeof useAccount>)
-
-    mocked(useChainId).mockReturnValue(UniverseChainId.Mainnet)
 
     mocked(useWallet).mockReturnValue({
       evmAccount: {
@@ -91,7 +86,7 @@ describe('Transactions hooks', () => {
       })
 
       const state = store.getState()
-      expect(state.transactions[address][UniverseChainId.Mainnet]?.[transactionHash]).toBeDefined()
+      expect(state.transactions[address][UniverseChainId.Mainnet]?.[transactionId]).toBeDefined()
     })
   })
 
@@ -110,11 +105,11 @@ describe('Transactions hooks', () => {
 
       // Then remove it
       act(() => {
-        remover.current(transactionHash)
+        remover.current(transactionId)
       })
 
       const state = store.getState()
-      expect(state.transactions[address][UniverseChainId.Mainnet]?.[transactionHash]).toBeUndefined()
+      expect(state.transactions[address][UniverseChainId.Mainnet]?.[transactionId]).toBeUndefined()
     })
   })
 
@@ -203,13 +198,22 @@ describe('Transactions hooks', () => {
       // Then finalize it to confirmed status using the correct action
       act(() => {
         store.dispatch({
-          type: 'transactions/interfaceFinalizeTransaction',
+          type: 'transactions/finalizeTransaction',
           payload: {
             chainId: UniverseChainId.Mainnet,
+            id: transactionId,
             hash: transactionHash,
-            address,
-            status: 'confirmed',
-            info: mockTransactionInfo,
+            from: address,
+            status: TransactionStatus.Success,
+            typeInfo: mockTransactionInfo,
+            receipt: {
+              transactionIndex: 0,
+              blockHash: '0x123',
+              blockNumber: 12345,
+              confirmedTime: Date.now(),
+              gasUsed: 21000,
+              effectiveGasPrice: 20000000000,
+            },
           },
         })
       })
@@ -334,13 +338,14 @@ describe('Transactions hooks', () => {
       // Then finalize it to confirmed status using the correct action
       act(() => {
         store.dispatch({
-          type: 'transactions/interfaceFinalizeTransaction',
+          type: 'transactions/finalizeTransaction',
           payload: {
             chainId: UniverseChainId.Mainnet,
             hash: transactionHash,
-            address,
-            status: 'confirmed',
-            info: mockTransactionInfo,
+            id: transactionId,
+            from: address,
+            status: TransactionStatus.Success,
+            typeInfo: mockTransactionInfo,
           },
         })
       })
@@ -391,18 +396,17 @@ describe('Transactions hooks', () => {
       // Then cancel it
       const cancelHash = '0x456'
       act(() => {
-        canceller.current(transactionHash, UniverseChainId.Mainnet, cancelHash)
+        canceller.current({ id: transactionId, chainId: UniverseChainId.Mainnet, cancelHash })
       })
 
       const state = store.getState()
-      // The original transaction should be deleted
-      expect(state.transactions[address][UniverseChainId.Mainnet]?.[transactionHash]).toBeUndefined()
-
-      // The cancelled transaction should exist with the cancel hash as the ID
-      const cancelledTransaction = state.transactions[address][UniverseChainId.Mainnet]?.[cancelHash]
+      // The original transaction should still exist under the same ID
+      const cancelledTransaction: InterfaceTransactionDetails =
+        state.transactions[address][UniverseChainId.Mainnet]?.[transactionId]
       expect(cancelledTransaction).toBeDefined()
-      expect((cancelledTransaction as any)?.cancelled).toBe(true)
-      expect(cancelledTransaction?.hash).toBe(cancelHash)
+      expect(cancelledTransaction.id).toBe(transactionId)
+      expect(cancelledTransaction.hash).toBe(cancelHash)
+      expect(cancelledTransaction.status).toBe(TransactionStatus.Canceled)
     })
   })
 })

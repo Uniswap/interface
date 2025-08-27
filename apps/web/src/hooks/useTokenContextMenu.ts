@@ -1,4 +1,3 @@
-import { useAccount } from 'hooks/useAccount'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -15,7 +14,9 @@ import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioCacheUpdater } from 'uniswap/src/features/dataApi/balances/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { useTokenVisibility } from 'uniswap/src/features/visibility/selectors'
 import { setTokenVisibility } from 'uniswap/src/features/visibility/slice'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
 import { getChainUrlParam } from 'utils/chainParams'
@@ -28,21 +29,21 @@ export function useTokenContextMenu({ tokenBalance }: TokenMenuParams): MenuOpti
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const account = useAccount()
+  const wallet = useWallet()
   const { isTestnetModeEnabled } = useEnabledChains()
 
   const [copied, setCopied] = useState(false)
 
   // Updating token visibility triggers a portfolio reload
   // To prevent an empty state during the fetch, we update the cache proactively
-  const updateCache = usePortfolioCacheUpdater(account.address!)
+  const updateCache = usePortfolioCacheUpdater(wallet.evmAccount?.address, wallet.svmAccount?.address)
   const onUpdateCache = useCallback(
     (isVisible: boolean, tokenBalance: PortfolioBalance) => {
-      if (account.address) {
+      if (wallet.evmAccount?.address || wallet.svmAccount?.address) {
         updateCache(isVisible, tokenBalance)
       }
     },
-    [account.address, updateCache],
+    [updateCache, wallet.evmAccount?.address, wallet.svmAccount?.address],
   )
 
   const { balanceUSD, quantity, isHidden, currencyInfo } = tokenBalance
@@ -50,7 +51,7 @@ export function useTokenContextMenu({ tokenBalance }: TokenMenuParams): MenuOpti
   const tokenAddress = isNative ? NATIVE_TOKEN_PLACEHOLDER : currencyInfo.currency.address
 
   const chainUrlParam = getChainUrlParam(chainId)
-  const isVisible = !isHidden
+  const isVisible = useTokenVisibility(currencyInfo.currencyId, isHidden)
 
   const hasTokenBalance = quantity > 0 && !!balanceUSD && balanceUSD > 0
 

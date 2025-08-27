@@ -5,16 +5,19 @@ import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { CurrencyId } from 'uniswap/src/types/currency'
 
 export function useBalances({
-  address,
+  evmAddress,
+  svmAddress,
   currencies,
   fetchPolicy = 'cache-and-network',
 }: {
-  address: Address
+  evmAddress?: Address
+  svmAddress?: Address
   currencies: CurrencyId[] | undefined
   fetchPolicy?: WatchQueryFetchPolicy
 }): PortfolioBalance[] | null {
   const { data: balances } = usePortfolioBalances({
-    address,
+    evmAddress,
+    svmAddress,
     fetchPolicy,
   })
 

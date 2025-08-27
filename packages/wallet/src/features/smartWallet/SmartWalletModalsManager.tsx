@@ -244,10 +244,11 @@ export function SmartWalletModalsManager({
           }
         }}
       />
-      {unavailableWalletDisplayName && (
+      {unavailableWalletDisplayName && selectedWallet && (
         <SmartWalletUnavailableModal
           isOpen={modalState === SmartWalletModalState.Unavailable}
           displayName={unavailableWalletDisplayName}
+          walletAddress={selectedWallet.walletAddress}
           onClose={() => closeModal(SmartWalletModalState.Unavailable)}
         />
       )}

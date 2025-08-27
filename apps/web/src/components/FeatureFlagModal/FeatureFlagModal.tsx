@@ -230,14 +230,9 @@ export default function FeatureFlagModal() {
               allowMultiple={false}
             />
           </FeatureFlagGroup>
-          <FeatureFlagGroup name="Search">
-            <FeatureFlagOption
-              flag={FeatureFlags.PoolSearch}
-              label="Enable pool search (turn on search_revamp as well to see)"
-            />
-          </FeatureFlagGroup>
           <FeatureFlagGroup name="Mini Portfolio">
             <FeatureFlagOption flag={FeatureFlags.GqlToRestBalances} label="Rest Token Balances" />
+            <FeatureFlagOption flag={FeatureFlags.GqlToRestTransactions} label="Rest Transactions" />
             <FeatureFlagOption
               flag={FeatureFlags.SharedPortfolioUI}
               label="Enable new mini portfolio UI shared across platforms"
@@ -246,6 +241,12 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption
               flag={FeatureFlags.DisableExtensionDeeplinks}
               label="Disable extension deeplinks for testing mini portfolio UI on web"
+            />
+          </FeatureFlagGroup>
+          <FeatureFlagGroup name="Search">
+            <FeatureFlagOption
+              flag={FeatureFlags.PoolSearch}
+              label="Enable pool search (turn on search_revamp as well to see)"
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="New Chains">

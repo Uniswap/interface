@@ -43,6 +43,7 @@ const mockOrderDetails: UniswapXOrderDetails = {
 }
 
 const mockOrder: Activity = {
+  id: '0x123',
   hash: '0x123',
   chainId: UniverseChainId.Mainnet,
   status: TransactionStatus.Pending,

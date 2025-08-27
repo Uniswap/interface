@@ -6,10 +6,11 @@ import { Text, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
+import { OnchainItemListOptionType } from 'uniswap/src/components/lists/items/types'
+import { extractDomain } from 'uniswap/src/components/lists/items/wallets/utils'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
-import { SearchResultType, extractDomain } from 'uniswap/src/features/search/SearchResult'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
@@ -88,7 +89,10 @@ interface RecipientProps {
 
 export const RecipientRow = memo(function RecipientRow({ recipient, onPress }: RecipientProps): JSX.Element {
   const domain = recipient.name
-    ? extractDomain(recipient.name, recipient.isUnitag ? SearchResultType.Unitag : SearchResultType.ENSAddress)
+    ? extractDomain(
+        recipient.name,
+        recipient.isUnitag ? OnchainItemListOptionType.Unitag : OnchainItemListOptionType.ENSAddress,
+      )
     : undefined
 
   const onPressWithAnalytics = (): void => {

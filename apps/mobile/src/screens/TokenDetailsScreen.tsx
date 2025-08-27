@@ -251,7 +251,7 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
 
   const { data: bridgingTokenWithHighestBalance, isLoading: isBridgingTokenLoading } =
     useBridgingTokenWithHighestBalance({
-      address: activeAddress,
+      evmAddress: activeAddress,
       currencyAddress: address,
       currencyChainId: chainId,
     })
@@ -375,7 +375,7 @@ const TokenBalancesWrapper = memo(function _TokenBalancesWrapper(): JSX.Element 
   }
 
   const { currentChainBalance, otherChainBalances } = useCrossChainBalances({
-    address: activeAddress,
+    evmAddress: activeAddress,
     currencyId,
     crossChainTokens,
   })

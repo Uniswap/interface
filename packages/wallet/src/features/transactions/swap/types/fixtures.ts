@@ -129,7 +129,7 @@ export const mockBridgeTrade: BridgeTrade = {
   slippageTolerance: 0.5,
 } as unknown as BridgeTrade
 
-const mockSwapTxRequest = {
+export const mockSwapTxRequest = {
   chainId: UniverseChainId.Mainnet,
   to: '0xSwapAddress',
   data: '0x0',

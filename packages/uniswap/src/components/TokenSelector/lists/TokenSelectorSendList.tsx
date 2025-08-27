@@ -12,7 +12,8 @@ import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { GqlResult } from 'uniswap/src/data/types'
 
 function useTokenSectionsForSend({
-  activeAccountAddress,
+  evmAddress,
+  svmAddress,
   chainFilter,
 }: TokenSectionsHookProps): GqlResult<OnchainItemSection<TokenOption>[]> {
   const {
@@ -20,7 +21,7 @@ function useTokenSectionsForSend({
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
     loading: portfolioTokenOptionsLoading,
-  } = usePortfolioTokenOptions({ address: activeAccountAddress, chainFilter })
+  } = usePortfolioTokenOptions({ evmAddress, svmAddress, chainFilter })
 
   const loading = portfolioTokenOptionsLoading
   const error = !portfolioTokenOptions && portfolioTokenOptionsError
@@ -62,7 +63,8 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress?: () => void }):
 }
 
 function _TokenSelectorSendList({
-  activeAccountAddress,
+  evmAddress,
+  svmAddress,
   chainFilter,
   onSelectCurrency,
   onEmptyActionPress,
@@ -76,7 +78,8 @@ function _TokenSelectorSendList({
     error,
     refetch,
   } = useTokenSectionsForSend({
-    activeAccountAddress,
+    evmAddress,
+    svmAddress,
     chainFilter,
   })
   const emptyElement = useMemo(() => <EmptyList onEmptyActionPress={onEmptyActionPress} />, [onEmptyActionPress])

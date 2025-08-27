@@ -6,7 +6,7 @@ import { NonfungiblePositionManagerCall } from 'src/app/features/dappRequests/ty
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { wrappedNativeCurrency } from 'uniswap/src/utils/currency'
 import methodHashToFunctionSignature from 'utilities/src/calldata/methodHashToFunctionSignature'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 
 interface GetCalldataInfoFromTransactionReturnValue {
   functionSignature?: string

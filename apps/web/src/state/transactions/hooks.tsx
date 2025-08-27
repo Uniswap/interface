@@ -12,11 +12,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { selectTransactions } from 'uniswap/src/features/transactions/selectors'
-import {
-  addTransaction,
-  deleteTransaction,
-  interfaceCancelTransactionWithHash,
-} from 'uniswap/src/features/transactions/slice'
+import { addTransaction, deleteTransaction, interfaceCancelTransaction } from 'uniswap/src/features/transactions/slice'
 import type {
   InterfaceTransactionDetails,
   TransactionDetails,
@@ -30,8 +26,6 @@ import {
 import { isInterfaceTransaction } from 'uniswap/src/features/transactions/types/utils'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { usePrevious } from 'utilities/src/react/hooks'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { useChainId } from 'wagmi'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
@@ -49,7 +43,7 @@ export function useTransactionAdder(): (
         return
       }
 
-      const { hash, nonce } = response
+      const { hash } = response
       if (!hash) {
         throw Error('No transaction hash found.')
       }
@@ -66,8 +60,8 @@ export function useTransactionAdder(): (
         transactionOriginType: TransactionOriginType.Internal,
         status: TransactionStatus.Pending,
         addedTime: Date.now(),
-        nonce,
         deadline,
+        ownerAddress: account.address,
         options: {
           request: {
             to: response.to,
@@ -115,15 +109,14 @@ export function useTransactionCanceller() {
   const dispatch = useAppDispatch()
 
   return useCallback(
-    // eslint-disable-next-line max-params
-    (hash: string, chainId: number, cancelHash: string) => {
+    ({ id, chainId, cancelHash }: { id: string; chainId: number; cancelHash: string }) => {
       if (!account.address) {
         return
       }
       dispatch(
-        interfaceCancelTransactionWithHash({
+        interfaceCancelTransaction({
           chainId,
-          id: hash,
+          id,
           cancelHash,
           address: account.address,
         }),
@@ -166,7 +159,7 @@ export function useMultichainTransactions(accountAddress?: string): [InterfaceTr
 // returns all the transactions for the current chains
 function useAllTransactionsByChain(): { [txHash: string]: InterfaceTransactionDetails } {
   const { evmAccount, svmAccount } = useWallet()
-  const evmChainId = useChainId()
+  const { chainId: evmChainId } = useAccount()
 
   const state = useAppSelector(selectTransactions)
 
@@ -175,7 +168,7 @@ function useAllTransactionsByChain(): { [txHash: string]: InterfaceTransactionDe
 
   return useMemo(() => {
     const transactions: { [txHash: string]: InterfaceTransactionDetails } = {}
-    if (evmAddress) {
+    if (evmAddress && evmChainId !== undefined) {
       Object.assign(transactions, state[evmAddress]?.[evmChainId] ?? {})
     }
     if (svmAddress) {

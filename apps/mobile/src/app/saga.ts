@@ -1,6 +1,5 @@
 import type { SagaIterator } from 'redux-saga'
 import { monitoredSagas } from 'src/app/monitoredSagas'
-import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { appRatingWatcherSaga } from 'src/features/appRating/saga'
 import { appStateSaga } from 'src/features/appState/appStateSaga'
 import { biometricsSaga } from 'src/features/biometrics/biometricsSaga'
@@ -26,7 +25,6 @@ const nonPersistedSagas = [appStateSaga, splashScreenSaga, biometricsSaga]
 const sagas = [
   lockScreenSaga,
   appRatingWatcherSaga,
-  cloudBackupsManagerSaga,
   deepLinkWatcher,
   firebaseDataWatcher,
   pushNotificationsWatcherSaga,

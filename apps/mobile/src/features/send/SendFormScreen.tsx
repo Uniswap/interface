@@ -194,7 +194,7 @@ function SendFormContent({
       {!!selectingCurrencyField && (
         <TokenSelectorModal
           isModalOpen
-          activeAccountAddress={activeAccountAddress}
+          evmAddress={activeAccountAddress}
           currencyField={CurrencyField.INPUT}
           flow={TokenSelectorFlow.Send}
           variation={TokenSelectorVariation.BalancesOnly}

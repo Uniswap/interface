@@ -5,7 +5,7 @@ import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useNftSearchResultsToNftCollectionOptions } from 'uniswap/src/components/lists/items/nfts/useNftSearchResultsToNftCollectionOptions'
 import { usePoolSearchResultsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolSearchResultsToPoolOptions'
-import { OnchainItemListOptionType, SearchModalOption, WalletOption } from 'uniswap/src/components/lists/items/types'
+import { SearchModalOption } from 'uniswap/src/components/lists/items/types'
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { useCollectionSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
@@ -17,10 +17,9 @@ import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/sear
 import { NUMBER_OF_RESULTS_SHORT } from 'uniswap/src/features/search/SearchModal/constants'
 import { useWalletSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useWalletSearchResults'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
-import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { isWeb } from 'utilities/src/platform'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 
 function useSectionsForSearchResults({
   chainFilter,
@@ -71,24 +70,10 @@ function useSectionsForSearchResults({
   })
 
   const skipWalletSearchQuery = isWeb || (activeTab !== SearchTab.Wallets && activeTab !== SearchTab.All)
-  const { wallets: walletSearchResults, loading: walletSearchResultsLoading } = useWalletSearchResults(
+  const { wallets: walletSearchOptions, loading: walletSearchResultsLoading } = useWalletSearchResults(
     skipWalletSearchQuery ? '' : searchFilter ?? '', // skip wallet search queries on web
     chainFilter,
   )
-  const walletSearchOptions = walletSearchResults.map((result): WalletOption => {
-    // For now, wallet's SearchResultTypes are 1:1 with WalletOption
-    // Legacy mobile search uses SearchResultType so we keep SearchResultType return type from useWalletSearchResults
-    // TODO(WEB-7595): After search revamp goes live, clean up here
-    switch (result.type) {
-      case SearchResultType.ENSAddress:
-        return { ...result, type: OnchainItemListOptionType.ENSAddress }
-      case SearchResultType.Unitag:
-        return { ...result, type: OnchainItemListOptionType.Unitag }
-      case SearchResultType.WalletByAddress:
-      default:
-        return { ...result, type: OnchainItemListOptionType.WalletByAddress }
-    }
-  })
   const walletSearchResultsSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.Wallets,
     options: walletSearchOptions,

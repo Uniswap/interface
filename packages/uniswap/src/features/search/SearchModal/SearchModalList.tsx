@@ -27,7 +27,7 @@ import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/ana
 import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/search/SearchModal/analytics/analytics'
 import { isHoverable, isWeb } from 'utilities/src/platform'
 import { usePrevious } from 'utilities/src/react/hooks'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 const OptionItemMoreButton = styled(TouchableArea, {

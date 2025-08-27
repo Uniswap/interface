@@ -27,7 +27,7 @@ export function useSwapCallback(): SwapCallback {
   const account = useWallet().evmAccount
 
   const { data: portfolioData } = usePortfolioTotalValue({
-    address: account?.address,
+    evmAddress: account?.address,
     fetchPolicy: 'cache-first',
   })
 

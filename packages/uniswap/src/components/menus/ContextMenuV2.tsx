@@ -9,6 +9,7 @@ export type MenuOptionItem = {
   Icon?: GeneratedIcon | ((props: IconProps) => JSX.Element)
   showDivider?: boolean
   disabled?: boolean
+  destructive?: boolean
   iconColor?: IconProps['color']
   textColor?: TextProps['color']
   closeDelay?: number

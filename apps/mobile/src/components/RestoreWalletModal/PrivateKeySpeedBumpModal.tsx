@@ -51,9 +51,9 @@ const PrivateKeySpeedBumpModalContent = ({
       <Text textAlign="center" variant="subheading1" pt="$spacing24">
         {t('privateKeys.export.modal.title')}
       </Text>
-      <Text textAlign="center" variant="body2" color="$neutral2" pt="$spacing8">
+      <Text textAlign="center" variant="body3" color="$neutral2" pt="$spacing8">
         {t('privateKeys.export.modal.subtitle')}
-        <Text variant="body2" color="$neutral1" ml="$spacing4" onPress={openLearnMore}>
+        <Text variant="buttonLabel3" color="$neutral1" ml="$spacing4" onPress={openLearnMore}>
           {SPACE_STRING + t('common.button.learn')}
         </Text>
       </Text>
@@ -65,7 +65,7 @@ const PrivateKeySpeedBumpModalContent = ({
             justifyContent: 'center',
           }}
           description={
-            <Text variant="body3" color="$neutral2">
+            <Text variant="body4" color="$neutral2">
               {t('privateKeys.export.modal.warning')}
             </Text>
           }

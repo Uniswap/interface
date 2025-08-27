@@ -70,6 +70,7 @@ export function* prepareTransactionServices(
     chainId: UniverseChainId
     submitViaPrivateRpc: boolean
     includesDelegation: boolean
+    request?: ValidatedTransactionRequest
   },
 ): SagaGenerator<{
   transactionService: TransactionService
@@ -81,14 +82,25 @@ export function* prepareTransactionServices(
     chainId: params.chainId,
     submitViaPrivateRpc: params.submitViaPrivateRpc,
     includesDelegation: params.includesDelegation,
+    request: params.request,
   })
 
   // Calculate nonce using TransactionService
-  const calculatedNonce = yield* call(transactionService.getNextNonce, {
-    account: params.account,
-    chainId: params.chainId,
-    submitViaPrivateRpc: params.submitViaPrivateRpc,
-  })
+  let calculatedNonce: CalculatedNonce | undefined
+  try {
+    calculatedNonce = yield* call(transactionService.getNextNonce, {
+      account: params.account,
+      chainId: params.chainId,
+      submitViaPrivateRpc: params.submitViaPrivateRpc,
+    })
+  } catch (error) {
+    // If the nonce cannot be calculated, we proceed with the flow because while populating
+    // the transaction request, the nonce is calculated and set by the provider (without our custom logic).
+    dependencies.logger.error(error, {
+      tags: { file: 'baseTransactionPreparationSaga', function: 'prepareTransactionServices' },
+      extra: { account: params.account, chainId: params.chainId },
+    })
+  }
 
   return { transactionService, transactionSigner, calculatedNonce }
 }

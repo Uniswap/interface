@@ -16,6 +16,7 @@ export interface WalletSliceState {
   accounts: Record<Address, Account>
   activeAccountAddress: Address | null
   finishedOnboarding?: boolean
+  androidCloudBackupEmail: string | null
   // Persisted UI configs set by the user through interaction with filters and settings
   settings: {
     swapProtection: SwapProtectionSetting
@@ -35,6 +36,7 @@ export const initialWalletState: WalletSliceState = {
     swapProtection: SwapProtectionSetting.On,
     tokensOrderBy: RankingType.Volume,
   },
+  androidCloudBackupEmail: null,
 }
 
 // TODO(WALL-7065): Update to support Solana
@@ -179,6 +181,9 @@ const slice = createSlice({
         account.smartWalletConsent = smartWalletConsent
       }
     },
+    setAndroidCloudBackupEmail: (state, action: PayloadAction<{ email: string }>) => {
+      state.androidCloudBackupEmail = action.payload.email
+    },
   },
 })
 
@@ -196,6 +201,7 @@ export const {
   setAppRating,
   setHasBalanceOrActivity,
   setSmartWalletConsent,
+  setAndroidCloudBackupEmail,
 } = slice.actions
 
 export const walletReducer = slice.reducer

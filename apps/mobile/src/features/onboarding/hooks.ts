@@ -11,7 +11,7 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
+import { setAndroidCloudBackupEmail, setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
 /**
  * Bundles various actions that should be performed to complete onboarding.
@@ -23,11 +23,12 @@ export function useCompleteOnboardingCallback({
   importType,
 }: OnboardingStackBaseParams): () => Promise<void> {
   const dispatch = useDispatch()
-  const { getAllOnboardingAccounts, finishOnboarding } = useOnboardingContext()
+  const { getAllOnboardingAccounts, finishOnboarding, getAndroidBackupEmail } = useOnboardingContext()
   const navigation = useOnboardingStackNavigation()
 
   const onboardingAccounts = getAllOnboardingAccounts()
   const onboardingAddresses = onboardingAccounts.map((account) => account.address)
+  const androidBackupEmail = getAndroidBackupEmail()
 
   return async () => {
     // Run all shared onboarding completion logic
@@ -53,6 +54,10 @@ export function useCompleteOnboardingCallback({
       onboardingAddresses.forEach((address: string) => {
         sendAnalyticsEvent(SharedEventName.TERMS_OF_SERVICE_ACCEPTED, { address })
       })
+    }
+
+    if (androidBackupEmail) {
+      dispatch(setAndroidCloudBackupEmail({ email: androidBackupEmail }))
     }
 
     // Exit flow

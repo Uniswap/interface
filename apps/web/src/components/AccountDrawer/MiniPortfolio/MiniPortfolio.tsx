@@ -3,25 +3,28 @@ import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activ
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import Column from 'components/deprecated/Column'
 import { AutoRow } from 'components/deprecated/Row'
-import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { atom, useAtom } from 'jotai'
 import styled, { useTheme } from 'lib/styled-components'
-import { Suspense, lazy, useEffect, useState } from 'react'
+import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { Loader } from 'ui/src/loading/Loader'
 import { breakpoints } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 
 const Tokens = lazy(() => import('components/AccountDrawer/MiniPortfolio/Tokens/TokensTab'))
 const NFTs = lazy(() => import('components/AccountDrawer/MiniPortfolio/NFTs/NFTTab'))
+const SharedNFTs = lazy(() => import('components/AccountDrawer/MiniPortfolio/NFTs/NftTabShared'))
 const Pools = lazy(() => import('components/AccountDrawer/MiniPortfolio/Pools/PoolsTab'))
 const ActivityTab = lazy(() =>
   import('components/AccountDrawer/MiniPortfolio/Activity/ActivityTab').then((module) => ({
     default: module.ActivityTab,
   })),
 )
+const ActivityTabShared = lazy(() => import('components/AccountDrawer/MiniPortfolio/Activity/ActivityTabShared'))
 
 const lastPageAtom = atom(0)
 
@@ -75,62 +78,66 @@ interface Page {
   loggingElementName: ElementName
 }
 
-const Pages: Array<Page> = [
-  {
-    title: 'common.tokens',
-    key: 'tokens',
-    component: () => (
-      <Suspense fallback={<Loader.Box />}>
-        <Tokens />
-      </Suspense>
-    ),
-    loggingElementName: ElementName.MiniPortfolioTokensTab,
-  },
-  {
-    title: 'common.nfts',
-    key: 'nfts',
-    component: ({ account }: { account: string }) => (
-      <Suspense fallback={<Loader.Box />}>
-        <NFTs account={account} />
-      </Suspense>
-    ),
-    loggingElementName: ElementName.MiniPortfolioNftTab,
-  },
-  {
-    title: 'common.pools',
-    key: 'pools',
-    component: ({ account }: { account: string }) => (
-      <Suspense fallback={<Loader.Box />}>
-        <Pools account={account} />
-      </Suspense>
-    ),
-    loggingElementName: ElementName.MiniPortfolioPoolsTab,
-  },
-  {
-    title: 'common.activity',
-    key: 'activity',
-    component: ({ account }: { account: string }) => (
-      <Suspense fallback={<Loader.Box />}>
-        <ActivityTab account={account} />
-      </Suspense>
-    ),
-    loggingElementName: ElementName.MiniPortfolioActivityTab,
-  },
-]
-
 export default function MiniPortfolio({ account }: { account: string }) {
   const { t } = useTranslation()
   const theme = useTheme()
-  const [lastPage, setLastPage] = useAtom(lastPageAtom)
+  const sharedPortfolioUIEnabled = useFeatureFlag(FeatureFlags.SharedPortfolioUI)
+
   // Resumes at the last viewed page
+  const [lastPage, setLastPage] = useAtom(lastPageAtom)
   const [currentPage, setCurrentPage] = useState(lastPage)
   useEffect(() => void setLastPage(currentPage), [currentPage, setLastPage])
 
-  const shouldDisableNFTRoutes = useDisableNFTRoutes()
+  const pages: Page[] = useMemo(
+    () => [
+      {
+        title: t('common.tokens'),
+        key: 'tokens',
+        component: () => (
+          <Suspense fallback={<Loader.Box />}>
+            <Tokens />
+          </Suspense>
+        ),
+        loggingElementName: ElementName.MiniPortfolioTokensTab,
+      },
+      {
+        title: t('common.nfts'),
+        key: 'nfts',
+        component: ({ account }: { account: string }) => (
+          <Suspense fallback={<Loader.Box />}>
+            {sharedPortfolioUIEnabled ? <SharedNFTs owner={account} /> : <NFTs account={account} />}
+          </Suspense>
+        ),
+        loggingElementName: ElementName.MiniPortfolioNftTab,
+      },
+      {
+        title: t('common.pools'),
+        key: 'pools',
+        component: ({ account }: { account: string }) => (
+          <Suspense fallback={<Loader.Box />}>
+            <Pools account={account} />
+          </Suspense>
+        ),
+        loggingElementName: ElementName.MiniPortfolioPoolsTab,
+      },
+      {
+        title: t('common.activity'),
+        key: 'activity',
+        component: ({ account }: { account: string }) => (
+          <Suspense fallback={<Loader.Box />}>
+            {sharedPortfolioUIEnabled ? <ActivityTabShared account={account} /> : <ActivityTab account={account} />}
+          </Suspense>
+        ),
+        loggingElementName: ElementName.MiniPortfolioActivityTab,
+      },
+    ],
+    [t, sharedPortfolioUIEnabled],
+  )
+
+  const { component: Page, key: currentKey } = pages[currentPage]
+
+  // Activity related fields
   const [activityUnread, setActivityUnread] = useState(false)
-
-  const { component: Page, key: currentKey } = Pages[currentPage]
-
   const { hasPendingActivity } = usePendingActivity()
 
   useEffect(() => {
@@ -143,10 +150,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
     <Trace section={SectionName.MiniPortfolio}>
       <Wrapper>
         <Nav data-testid="mini-portfolio-navbar">
-          {Pages.map(({ title, loggingElementName, key }, index) => {
-            if (shouldDisableNFTRoutes && loggingElementName.includes('nft')) {
-              return null
-            }
+          {pages.map(({ title, loggingElementName, key }, index) => {
             const isUnselectedActivity = key === 'activity' && currentKey !== 'activity'
             const showActivityIndicator = isUnselectedActivity && (hasPendingActivity || activityUnread)
             const handleNavItemClick = () => {
@@ -163,7 +167,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
                   key={key}
                   data-testid={loggingElementName}
                 >
-                  <span>{t(title)}</span>
+                  <span>{title}</span>
                   {showActivityIndicator && (
                     <>
                       &nbsp;

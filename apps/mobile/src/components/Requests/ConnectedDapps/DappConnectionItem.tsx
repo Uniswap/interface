@@ -6,9 +6,9 @@ import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { DappHeaderIcon } from 'src/components/Requests/DappHeaderIcon'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { disableOnPress } from 'src/utils/disableOnPress'
 import { AnimatedTouchableArea, Flex, Text } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { noop } from 'utilities/src/react/noop'
 
 export function DappConnectionItem({
   session,
@@ -64,7 +64,7 @@ export function DappConnectionItem({
               justifyContent="center"
               width={iconSizes.icon28}
               zIndex="$tooltip"
-              onLongPress={disableOnPress}
+              onLongPress={noop}
               onPress={onDisconnectSession}
             >
               <Flex backgroundColor="$surface1" borderRadius="$rounded12" height={2} width={14} />

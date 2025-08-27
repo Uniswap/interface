@@ -32,7 +32,10 @@ export enum TransactionOriginType  {
 }
 
 export interface TransactionDetailsCore extends TransactionId {
+  /** On-chain sender address */
   from: Address
+  /** Address of the wallet that owns this transaction */
+  ownerAddress?: Address
   transactionOriginType: TransactionOriginType
   typeInfo: TransactionTypeInfo
   status: TransactionStatus
@@ -40,38 +43,31 @@ export interface TransactionDetailsCore extends TransactionId {
   // Note: hash is mandatory for classic transactions and undefined for unfilled UniswapX orders
   // It may also become optional for classic if we start tracking txs before they're actually sent
   hash?: string
+  // Includes nonce and confirmed time used by all platforms. Wallets also needs to store receipt
+  // data for EIP-5792 batch transaction tracking
+  receipt?: TransactionReceipt
+  networkFee?: TransactionNetworkFee
+  /** Block number for polling optimization */
+  lastCheckedBlockNumber?: number
 }
 
 // Platform-specific extensions
 export interface InterfaceTransactionExtensions {
-  hash: string // TODO(PORT-41): remove this as a required field once we've migrated Web's UniswapX order handling.  UniswapX orders can exist without a hash initially, so that's why it's handled differently between wallet/interface currently.
-  /** Used for transaction replacement */
-  nonce?: number
   /** EIP-5792 batch transaction tracking */
   batchInfo?: { connectorId?: string; batchId: string; chainId: UniverseChainId }
-  /** Block number for polling optimization */
-  lastCheckedBlockNumber?: number
   /** Transaction deadline for cleanup */
   deadline?: number
-  /** Cancellation tracking */
-  cancelled?: boolean
-  /** Confirmation timestamp */
-  confirmedTime?: number
   /** Used to track if this transaction was a flashblock transaction within the instant threshold */
   isFlashblockTxWithinThreshold?: boolean
 }
 
 export interface WalletTransactionExtensions {
-  ownerAddress?: Address
-  // TODO(MOB-3679): receipt does not need to be persisted; remove from state
-  receipt?: TransactionReceipt
   // cancelRequest is the txRequest object to be submitted
   // in attempt to cancel the current transaction
   // it should contain all the appropriate gas details in order
   // to be mined first
   // TODO(MOB-3679): cancelRequest does not need to be persisted; remove from state
   cancelRequest?: providers.TransactionRequest
-  networkFee?: TransactionNetworkFee
 }
 
 // Platform-specific base types
@@ -217,7 +213,6 @@ export interface TransactionReceipt {
   blockHash: string
   blockNumber: number
   confirmedTime: number
-  confirmations: number
   gasUsed: number
   effectiveGasPrice: number
 }

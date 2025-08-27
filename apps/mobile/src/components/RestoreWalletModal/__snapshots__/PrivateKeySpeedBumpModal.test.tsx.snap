@@ -45,12 +45,14 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
   <View
     style={
       [
-        {
-          "backgroundColor": "#FFFFFF",
-        },
-        {
-          "paddingBottom": 0,
-        },
+        [
+          {
+            "backgroundColor": "#FFFFFF",
+          },
+          {
+            "paddingBottom": 0,
+          },
+        ],
       ]
     }
   >
@@ -241,19 +243,19 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
               },
             },
             "fontFamily": "Basel Grotesk",
-            "fontSize": 17,
+            "fontSize": 15,
             "fontWeight": "400",
-            "lineHeight": 22.1,
+            "lineHeight": 19.5,
             "paddingTop": 8,
             "textAlign": "center",
           }
         }
         suppressHighlighting={true}
       >
-        It looks like you’re not able to fully restore your wallet. To make sure you never lose access to your funds, write down your private key.
+        It looks like you’re not able to fully restore your wallet. To make sure you never lose access to your funds, copy your private key.
         <Text
           allowFontScaling={true}
-          maxFontSizeMultiplier={1.4}
+          maxFontSizeMultiplier={1.2}
           onBlur={[Function]}
           onClick={[Function]}
           onFocus={[Function]}
@@ -272,9 +274,9 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
                 },
               },
               "fontFamily": "Basel Grotesk",
-              "fontSize": 17,
-              "fontWeight": "400",
-              "lineHeight": 22.1,
+              "fontSize": 15,
+              "fontWeight": "500",
+              "lineHeight": 17.25,
               "marginLeft": 4,
             }
           }
@@ -416,9 +418,9 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
                       },
                     },
                     "fontFamily": "Basel Grotesk",
-                    "fontSize": 15,
+                    "fontSize": 13,
                     "fontWeight": "400",
-                    "lineHeight": 19.5,
+                    "lineHeight": 16,
                   }
                 }
                 suppressHighlighting={true}

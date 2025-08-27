@@ -1,10 +1,13 @@
 import { useSelectTransaction } from 'uniswap/src/features/transactions/hooks/useSelectTransaction'
 import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  InterfaceTransactionDetails,
+  TransactionDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 
-export function useCurrentFlashblocksTransaction(): TransactionDetails | undefined {
+export function useCurrentFlashblocksTransaction(): TransactionDetails | InterfaceTransactionDetails | undefined {
   const accountAddress = useWallet().evmAccount?.address
 
   const derivedSwapInfo = useSwapDependenciesStore((s) => s.derivedSwapInfo)
@@ -28,7 +31,6 @@ export function useCurrentFlashblocksTransaction(): TransactionDetails | undefin
     txId,
   })
 
-  // as of 8/1/2024, the interface uses the tx hash as the key while the wallet uses the tx id (uuid)
-  // we use a fallback to ensure this doesn't break on a refactor
+  // UniswapX transactions are stored by tx id while classic swaps are stored by tx hash
   return transactionFromStateByHash || transactionFromStateByTxId
 }

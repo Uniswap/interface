@@ -12,7 +12,7 @@ import {
   SwapTransactionStepAsync,
   SwapTransactionStepBatched,
 } from 'uniswap/src/features/transactions/swap/steps/swap'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 
 const SwapIcon = (): JSX.Element => (
   <Flex centered width="$spacing24" height="$spacing24" borderRadius="$roundedFull" backgroundColor="$DEP_blue400">

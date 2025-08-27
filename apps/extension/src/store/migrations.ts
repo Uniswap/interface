@@ -7,6 +7,7 @@ import {
   removeDappInfoToChromeLocalStorage,
 } from 'src/store/extensionMigrations'
 import {
+  migrateSearchHistory,
   removeThaiBahtFromFiatCurrency,
   unchecksumDismissedTokenWarningKeys,
 } from 'uniswap/src/state/uniswapMigrations'
@@ -63,6 +64,7 @@ export const migrations = {
   24: moveHapticsToUserSettings,
   25: removeThaiBahtFromFiatCurrency,
   26: migrateLiquidityTransactionInfo,
+  27: migrateSearchHistory,
 }
 
-export const EXTENSION_STATE_VERSION = 26
+export const EXTENSION_STATE_VERSION = 27

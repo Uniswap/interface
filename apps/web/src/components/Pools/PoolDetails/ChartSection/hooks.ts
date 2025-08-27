@@ -11,7 +11,7 @@ import {
 export function usePDPVolumeChartData({
   variables,
 }: {
-  variables: PDPChartQueryVars
+  variables: PDPChartQueryVars & { addressOrId: string }
 }): ChartQueryResult<SingleHistogramData, ChartType.VOLUME> {
   const { data, loading } = usePoolVolumeHistoryQuery({
     variables,

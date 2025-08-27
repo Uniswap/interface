@@ -1,6 +1,7 @@
 import { useMemo, type BaseSyntheticEvent } from 'react'
 import { I18nManager } from 'react-native'
 import { Spacer, type YStackProps } from 'tamagui'
+import { getMenuItemColor } from 'ui/src/components/dropdownMenuSheet/utils'
 import { CheckCircleFilled } from 'ui/src/components/icons'
 import { Flex, type FlexProps } from 'ui/src/components/layout'
 import { Text, type TextProps } from 'ui/src/components/text'
@@ -14,6 +15,7 @@ export type DropdownMenuSheetItemProps = {
   onPress: () => void
   handleCloseMenu?: () => void
   disabled?: boolean
+  destructive?: boolean
   closeDelay?: number
   textColor?: TextProps['color']
   variant: 'small' | 'medium'
@@ -26,6 +28,7 @@ export const DropdownMenuSheetItem = ({
   isSelected,
   onPress,
   disabled,
+  destructive,
   closeDelay,
   textColor,
   handleCloseMenu,
@@ -51,6 +54,11 @@ export const DropdownMenuSheetItem = ({
   const touchableAreaHoverStyle: YStackProps['hoverStyle'] = useMemo(
     () => (disabled ? undefined : { backgroundColor: '$surface1Hovered' }),
     [disabled],
+  )
+
+  const textColorValue = useMemo(
+    () => getMenuItemColor({ overrideColor: textColor, destructive, disabled }),
+    [destructive, textColor, disabled],
   )
 
   return (
@@ -82,8 +90,8 @@ export const DropdownMenuSheetItem = ({
           numberOfLines={1}
           ellipsizeMode="tail"
           variant={variant === 'small' ? 'buttonLabel3' : 'buttonLabel2'}
-          color={textColor ?? (disabled ? '$neutral2' : '$neutral1')}
-          $group-hover={{ color: disabled ? '$neutral2' : '$neutral1Hovered' }}
+          color={textColorValue}
+          $group-hover={destructive ? undefined : { color: disabled ? '$neutral2' : '$neutral1Hovered' }}
         >
           {label}
         </Text>

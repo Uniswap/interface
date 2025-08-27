@@ -27,7 +27,7 @@ import {
 } from 'uniswap/src/features/transactions/errors'
 import {
   addTransaction,
-  interfaceFinalizeTransaction,
+  finalizeTransaction,
   interfaceUpdateTransactionInfo,
 } from 'uniswap/src/features/transactions/slice'
 import type { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
@@ -63,7 +63,7 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 import { HexString, isValidHexString } from 'uniswap/src/utils/hex'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { isSameAddress } from 'utilities/src/addresses'
-import noop from 'utilities/src/react/noop'
+import { noop } from 'utilities/src/react/noop'
 import { signTypedData } from 'utils/signing'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import type { Transaction } from 'viem'
@@ -134,7 +134,7 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   const duplicativeTx = yield* findDuplicativeTx({ info, account, chainId, allowDuplicativeTx })
 
   const interfaceDuplicativeTx = duplicativeTx ? getInterfaceTransaction(duplicativeTx) : undefined
-  if (interfaceDuplicativeTx) {
+  if (interfaceDuplicativeTx && interfaceDuplicativeTx.hash) {
     if (interfaceDuplicativeTx.status === TransactionStatus.Success) {
       addTransactionBreadcrumb({
         step,
@@ -218,6 +218,10 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
 
   // If the transaction flow was interrupted while awaiting input, throw an error after input is received
   yield* call(throwIfInterrupted)
+
+  if (!transaction.hash) {
+    throw new TransactionStepFailedError({ message: `Transaction failed, no hash returned`, step })
+  }
 
   return yield* handleOnChainConfirmation(params, transaction.hash)
 }
@@ -476,10 +480,17 @@ export function* watchForInterruption(ignoreInterrupt = false) {
 }
 
 /** Returns when a transaction is confirmed in local state. Throws an error if the transaction fails. */
-function* waitForTransaction(hash: string, step: TransactionStep) {
+function* waitForTransaction(hash: string | undefined, step: TransactionStep) {
+  // If no hash is provided, there's nothing to wait for (e.g., cancelled/expired orders)
+  if (!hash) {
+    return
+  }
+
   while (true) {
-    const { payload } = yield* take<ReturnType<typeof interfaceFinalizeTransaction>>(interfaceFinalizeTransaction.type)
-    if (payload.hash === hash) {
+    const { payload } = yield* take<ReturnType<typeof finalizeTransaction>>(finalizeTransaction.type)
+    // Note: This function is only used for classic/bridge transactions that have immediate transaction hashes.
+    // UniswapX orders use a different flow (handleUniswapXSignatureStep) and don't call this function.
+    if (payload.id === hash) {
       if (payload.status === TransactionStatus.Success) {
         return
       } else {

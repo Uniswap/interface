@@ -137,6 +137,12 @@ fragment TransactionDetailsParts on TransactionDetails {
   hash
   nonce
   status: transactionStatus
+  networkFee {
+    quantity
+    tokenSymbol
+    tokenAddress
+    tokenChain
+  }
   assetChanges {
     __typename
     ... on TokenTransfer {

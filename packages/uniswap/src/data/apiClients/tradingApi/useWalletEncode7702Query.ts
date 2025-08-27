@@ -10,11 +10,17 @@ export type WalletEncode7702Params = {
   smartContractDelegationAddress: WalletEncode7702RequestBody['smartContractDelegationAddress']
 }
 
+// TODO: remove this once the API is updated
+// https://linear.app/uniswap/issue/API-1050/add-missing-walletaddress-field-to-api-endpoint-types-json
+export type Encode7702RequestBodyWithWalletAddress = WalletEncode7702RequestBody & {
+  walletAddress: string
+}
+
 export function useWalletEncode7702Query({
   params,
   ...rest
 }: UseQueryApiHelperHookArgs<
-  WalletEncode7702RequestBody,
+  Encode7702RequestBodyWithWalletAddress,
   Encode7702ResponseBody
 >): UseQueryResult<Encode7702ResponseBody> {
   const queryKey = walletEncode7702QueryKey(params)

@@ -1,7 +1,10 @@
 import { providers } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
+import * as matchers from 'redux-saga-test-plan/matchers'
 import { call } from 'redux-saga/effects'
-import { cancelTransaction, finalizeTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
+import { cancelTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
 import {
   fiatPurchaseTransactionInfo,
   getTxFixtures,
@@ -19,6 +22,7 @@ import {
   waitForSameNonceFinalized,
   watchTransaction,
 } from 'wallet/src/features/transactions/watcher/watchOnChainTransactionSaga'
+import { waitForReceiptWithSmartPolling } from 'wallet/src/features/transactions/watcher/watchTransactionSaga'
 import { getProvider } from 'wallet/src/features/wallet/context'
 
 let mockGates: Record<string, boolean> = {}
@@ -39,7 +43,6 @@ const ACTIVE_ACCOUNT_ADDRESS = '0x000000000000000000000000000000000000000001'
 const {
   ethersTxReceipt,
   txReceipt,
-  finalizedTxAction,
   txDetailsPending: originalTxDetailsPending,
 } = getTxFixtures(transactionDetailsFixture({ typeInfo: fiatPurchaseTransactionInfo(), from: ACTIVE_ACCOUNT_ADDRESS }))
 const txDetailsPending = { ...originalTxDetailsPending, from: ACTIVE_ACCOUNT_ADDRESS }
@@ -68,19 +71,35 @@ describe(watchTransaction, () => {
   const { chainId, id, from, options } = txDetailsPending
 
   it('Finalizes successful transaction', () => {
-    const successProvider = {
-      waitForTransaction: jest.fn(() => ethersTxReceipt),
+    const SUCCESS_RECEIPT: providers.TransactionReceipt = {
+      ...ethersTxReceipt,
+      status: 1, // indicate success
     }
-    return expectSaga(watchTransaction, {
-      transaction: txDetailsPending,
-      apolloClient: mockApolloClient,
-    })
+
+    const providerMock = {
+      getTransactionReceipt: jest.fn(async () => SUCCESS_RECEIPT),
+      getBlockNumber: jest.fn(async () => SUCCESS_RECEIPT.blockNumber),
+    } as unknown as providers.Provider
+
+    const pendingTx = {
+      ...txDetailsPending,
+      options: { ...txDetailsPending.options, rpcSubmissionTimestampMs: Date.now() },
+    }
+
+    // --- Act / Assert ------------------------------------------------------
+    return expectSaga(watchTransaction, { transaction: pendingTx, apolloClient: mockApolloClient })
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
         userSettings: { isTestnetModeEnabled: false },
       })
-      .provide([[call(getProvider, chainId), successProvider]])
-      .put(finalizeTransaction(finalizedTxAction.payload))
+      .provide([
+        [call(getProvider, chainId), providerMock],
+        // Stub smart-polling helper so the saga immediately receives the receipt
+        [matchers.call.fn(waitForReceiptWithSmartPolling), SUCCESS_RECEIPT],
+        // Downstream helper inside finalizeTransaction
+        [call(getEnabledChainIdsSaga, Platform.EVM), { chains: [] }],
+      ])
+      .put.like({ action: { type: transactionActions.finalizeTransaction.type } })
       .silentRun()
   })
 

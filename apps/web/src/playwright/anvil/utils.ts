@@ -1,20 +1,9 @@
 import { HexString, isValidHexString } from 'uniswap/src/utils/hex'
-import { Address, createTestClient, http } from 'viem'
-import { privateKeyToAccount } from 'viem/accounts'
-import { mainnet } from 'viem/chains'
+import { Address } from 'viem'
+
+import type { AnvilClient } from 'playwright/anvil/anvil-manager'
 import { concat, keccak256, pad, toHex } from 'viem/utils'
-
-const TEST_WALLET_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
-
 export const ONE_MILLION_USDT = 1_000_000_000_000n
-
-// This client must be in "anvil" mode:
-export const anvilClient = createTestClient({
-  account: privateKeyToAccount(TEST_WALLET_PRIVATE_KEY),
-  chain: mainnet,
-  mode: 'anvil',
-  transport: http('http://127.0.0.1:8545'),
-})
 
 /**
  * For a mapping(address => uint256) at slot `mappingSlot`,
@@ -47,7 +36,7 @@ async function setErc20BalanceViaStorage({
   newBalance,
   mappingSlot = 0,
 }: {
-  client: typeof anvilClient
+  client: AnvilClient
   erc20Address: Address
   user: Address
   newBalance: bigint
@@ -81,7 +70,7 @@ export async function setErc20BalanceWithMultipleSlots({
   user,
   newBalance,
 }: {
-  client: typeof anvilClient
+  client: AnvilClient
   erc20Address: Address
   user: Address
   newBalance: bigint

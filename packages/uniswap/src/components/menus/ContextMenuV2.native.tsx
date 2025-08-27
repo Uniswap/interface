@@ -154,7 +154,17 @@ export function ContextMenu({
   const menuSheetItems = useMemo(() => {
     return menuItems.map(
       (
-        { label, textColor, Icon, iconColor, disabled: itemDisabled, onPress: onPressAction, showDivider, closeDelay },
+        {
+          label,
+          textColor,
+          Icon,
+          iconColor,
+          disabled: itemDisabled,
+          onPress: onPressAction,
+          showDivider,
+          closeDelay,
+          destructive,
+        },
         index,
       ) => (
         <Fragment key={index}>
@@ -164,9 +174,10 @@ export function ContextMenu({
             variant="medium"
             label={label}
             textColor={textColor}
-            icon={Icon && <Icon size="$icon.24" color={iconColor} />}
+            icon={Icon && <Icon size="$icon.24" color={iconColor ?? (destructive ? '$statusCritical' : '$neutral2')} />}
             height={spacing.spacing40}
             disabled={itemDisabled}
+            destructive={destructive}
             closeDelay={(closeDelay ?? 0) + ANIMATION_TIME}
             handleCloseMenu={() => {
               closeMenu()

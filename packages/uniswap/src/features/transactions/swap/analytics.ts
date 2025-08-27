@@ -151,10 +151,13 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
 
   const quoteId = trade?.quote.requestId
 
-  const account = useWallet().evmAccount
+  const wallet = useWallet()
+  const evmAddress = wallet.evmAccount?.address
+  const svmAddress = wallet.svmAccount?.address
 
   const { data: portfolioData } = usePortfolioTotalValue({
-    address: account?.address,
+    evmAddress,
+    svmAddress,
     fetchPolicy: 'cache-first',
   })
 

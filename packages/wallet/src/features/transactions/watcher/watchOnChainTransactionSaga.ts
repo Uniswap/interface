@@ -32,7 +32,7 @@ import { waitForBridgingStatus } from 'wallet/src/features/transactions/watcher/
 import { watchForAppBackgrounded } from 'wallet/src/features/transactions/watcher/watchForAppBackgroundedSaga'
 import {
   updateTransactionStatusNetworkFee,
-  waitForReceipt,
+  waitForReceiptWithSmartPolling,
   waitForTransactionStatus,
 } from 'wallet/src/features/transactions/watcher/watchTransactionSaga'
 import { getProvider } from 'wallet/src/features/wallet/context'
@@ -137,7 +137,7 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     return { ...transaction, status }
   }
 
-  const ethersReceipt = yield* call(waitForReceipt, hash, provider)
+  const ethersReceipt = yield* call(waitForReceiptWithSmartPolling, { hash, provider, transaction })
 
   const updatedTransaction = processTransactionReceipt({
     ethersReceipt,

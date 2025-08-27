@@ -18,8 +18,10 @@ import { BuyNativeTokenButton } from 'uniswap/src/features/transactions/componen
 import { InsufficientNativeTokenBaseComponent } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenBaseComponent'
 import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
+import { Wallet } from 'uniswap/src/features/wallet/types/Wallet'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
+import { isExtension, isWeb } from 'utilities/src/platform'
 
 export function InsufficientNativeTokenWarning({
   warnings,
@@ -38,13 +40,13 @@ export function InsufficientNativeTokenWarning({
 
   const { nativeCurrency, nativeCurrencyInfo } = parsedInsufficientNativeTokenWarning ?? {}
 
-  const address = useWallet().evmAccount?.address
+  const wallet = useWallet()
 
   if (!parsedInsufficientNativeTokenWarning || !nativeCurrencyInfo || !nativeCurrency) {
     return null
   }
 
-  if (!address) {
+  if (!wallet.evmAccount && !wallet.svmAccount) {
     logger.error(new Error('Unexpected render of `InsufficientNativeTokenWarning` without an active address'), {
       tags: {
         file: 'InsufficientNativeTokenWarning.tsx',
@@ -56,7 +58,7 @@ export function InsufficientNativeTokenWarning({
 
   return (
     <InsufficientNativeTokenWarningContent
-      address={address}
+      wallet={wallet}
       parsedInsufficientNativeTokenWarning={parsedInsufficientNativeTokenWarning}
       nativeCurrencyInfo={nativeCurrencyInfo}
       nativeCurrency={nativeCurrency}
@@ -65,12 +67,12 @@ export function InsufficientNativeTokenWarning({
 }
 
 function InsufficientNativeTokenWarningContent({
-  address,
+  wallet,
   parsedInsufficientNativeTokenWarning,
   nativeCurrencyInfo,
   nativeCurrency,
 }: {
-  address: Address
+  wallet: Wallet
   parsedInsufficientNativeTokenWarning: NonNullable<ReturnType<typeof useInsufficientNativeTokenWarning>>
   nativeCurrencyInfo: CurrencyInfo
   nativeCurrency: Currency
@@ -84,7 +86,8 @@ function InsufficientNativeTokenWarningContent({
   const currencyAddress = currencyIdToAddress(nativeCurrencyInfo.currencyId)
 
   const { data: bridgingTokenWithHighestBalance } = useBridgingTokenWithHighestBalance({
-    address,
+    evmAddress: wallet.evmAccount?.address,
+    svmAddress: wallet.svmAccount?.address,
     currencyAddress,
     currencyChainId: nativeCurrencyInfo.currency.chainId,
   })
@@ -119,6 +122,7 @@ function InsufficientNativeTokenWarningContent({
                   tokenSymbol: nativeCurrency.symbol ?? '',
                 })
           }
+          showCloseButton={isExtension || isWeb}
           onClose={onClose}
         >
           <Text color="$neutral2" textAlign="center" variant="body3">

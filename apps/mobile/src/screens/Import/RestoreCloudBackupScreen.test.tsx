@@ -7,7 +7,19 @@ import { render } from 'src/test/test-utils'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
 const setOptionsSpy = jest.fn()
-const routeProp = { params: {} } as RouteProp<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
+
+const backups = [
+  {
+    mnemonicId: '123',
+    createdAt: 1700000000000,
+  },
+  {
+    mnemonicId: '456',
+    createdAt: 1700000001000,
+  },
+]
+
+const routeProp = { params: { backups } } as RouteProp<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
 
 describe(RestoreCloudBackupScreen, () => {
   it('renders correctly', () => {

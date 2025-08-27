@@ -693,7 +693,6 @@ describe('TransactionService', () => {
         status: 1,
         blockHash: '0xblock123',
         transactionIndex: 0,
-        confirmations: 1,
         from: mockAccount.address,
         to: '0xabcdef1234567890123456789012345678901234',
         logs: [],

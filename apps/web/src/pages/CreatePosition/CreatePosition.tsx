@@ -44,7 +44,7 @@ import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/c
 import { usePrevious } from 'utilities/src/react/hooks'
 
 const WIDTH = {
-  positionCard: 600,
+  positionCard: 720,
   sidebar: 360,
 }
 
@@ -120,8 +120,8 @@ function CreatePositionWrapper({ children }: { children: React.ReactNode }) {
       px="$spacing40"
       maxWidth={WIDTH.positionCard + WIDTH.sidebar + 80}
       $xl={{
-        px: '$spacing12',
-        maxWidth: WIDTH.positionCard,
+        px: '$spacing24',
+        maxWidth: '100%',
         mx: 'auto',
       }}
     >
@@ -147,7 +147,7 @@ function CreatePositionWrapper({ children }: { children: React.ReactNode }) {
       </Flex>
       <Flex row gap="$spacing20" justifyContent="space-between" width="100%">
         {!media.xl && <Sidebar />}
-        <Flex gap="$spacing24" flex={1} maxWidth={WIDTH.positionCard} mb="$spacing28">
+        <Flex gap="$spacing24" flex={1} maxWidth={WIDTH.positionCard} mb="$spacing28" $xl={{ maxWidth: '100%' }}>
           {children}
         </Flex>
       </Flex>

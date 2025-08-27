@@ -170,7 +170,7 @@ export function SettingsScreen(): JSX.Element {
     [navigation],
   )
 
-  const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
+  const sections: SettingsSection[] = useMemo(() => {
     const svgProps: IconProps = {
       color: colors.neutral2.get(),
       size: iconSizes.icon24,

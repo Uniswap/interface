@@ -46,7 +46,7 @@ export function useHomeScreenState(): {
   const fiatOnRampParams = useRestOnRampAuth(address)
 
   const { data: balancesById, loading: areBalancesLoading } = usePortfolioBalances({
-    address,
+    evmAddress: address,
     skip: hasUsedWalletFromCache,
   })
   const { data: nftData, loading: areNFTsLoading } = useNftsTabQuery({

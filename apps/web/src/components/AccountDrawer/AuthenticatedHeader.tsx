@@ -109,7 +109,8 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   } = useModalState(ModalName.Send)
 
   const { data, networkStatus, loading } = usePortfolioTotalValue({
-    address: account,
+    evmAddress: wallet.evmAccount?.address,
+    svmAddress: wallet.svmAccount?.address,
   })
 
   const { percentChange, absoluteChangeUSD, balanceUSD } = data || {}

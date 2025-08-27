@@ -28,6 +28,7 @@ export function ContextMenu({
   useOnClickOutside({
     node: containerRef,
     handler: closeMenu,
+    event: isLeftClick ? 'mouseup' : 'mousedown',
   })
 
   const onContextMenu = (e: React.MouseEvent<HTMLDivElement>): void => {

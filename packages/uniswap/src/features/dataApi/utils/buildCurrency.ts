@@ -57,7 +57,9 @@ export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency
   let result: Token | NativeCurrency | undefined
   if (chainId === UniverseChainId.Solana && address) {
     try {
-      result = new SolanaToken(chainId, address, decimals, symbol ?? undefined, name ?? undefined)
+      result = isNonNativeAddress(chainId, address)
+        ? new SolanaToken(chainId, address, decimals, symbol ?? undefined, name ?? undefined)
+        : nativeOnChain(chainId)
     } catch (error) {
       // TODO(SWAP-262): Investigate remaining source of lowercased SPL token addresses
       const isLowercasedAddress = address.toLowerCase() === address

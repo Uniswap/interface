@@ -310,16 +310,12 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
                 >
                   hayden
                 </div>
-                <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                >
-                  <img
-                    height="18"
-                    src="unitag-light-small.png"
-                    style="object-fit: contain; vertical-align: sub;"
-                    width="18"
-                  />
-                </div>
+                <img
+                  height="18"
+                  src="unitag-light-small.png"
+                  style="vertical-align: sub;"
+                  width="18"
+                />
               </div>
               <div
                 class="c11 css-obwv3p"

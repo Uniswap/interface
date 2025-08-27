@@ -7,6 +7,7 @@ import { makeSelectTransaction } from 'uniswap/src/features/transactions/selecto
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { POLLING_CONSTANTS, shouldCheckTransaction, withTimeout } from 'uniswap/src/utils/polling'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { buildNetworkFeeFromReceipt } from 'wallet/src/features/transactions/utils'
@@ -15,11 +16,76 @@ import {
   SWAP_STATUS_TO_TX_STATUS,
 } from 'wallet/src/features/transactions/watcher/transactionSagaUtils'
 
-function withTimeout<T>(promise: Promise<T>, opts: { timeoutMs: number; errorMsg: string }): Promise<T> {
-  return Promise.race([
-    promise,
-    new Promise<T>((_, reject) => setTimeout(() => reject(new Error(opts.errorMsg)), opts.timeoutMs)),
-  ])
+/**
+ * Smart polling version of waitForReceipt that uses lastCheckedBlockNumber optimization
+ * This is a saga generator function that can update the transaction state
+ */
+export function* waitForReceiptWithSmartPolling({
+  hash,
+  provider,
+  transaction,
+}: {
+  hash: string
+  provider: providers.Provider
+  transaction: TransactionDetails
+}): SagaGenerator<providers.TransactionReceipt> {
+  let elapsed = 0
+
+  while (elapsed < POLLING_CONSTANTS.MAX_POLLING_TIME) {
+    try {
+      // Get current block number for optimization
+      const currentBlockNumber = yield* call([provider, provider.getBlockNumber])
+
+      // Check if we should poll based on smart logic
+      if (!shouldCheckTransaction(currentBlockNumber, transaction)) {
+        // Wait a bit before checking again
+        yield* delay(POLLING_CONSTANTS.POLL_INTERVAL)
+        elapsed += POLLING_CONSTANTS.POLL_INTERVAL
+        continue
+      }
+
+      // Try to get the receipt
+      const receipt = yield* call([provider, provider.getTransactionReceipt], hash)
+
+      // Update lastCheckedBlockNumber in the transaction
+      yield* put(
+        transactionActions.checkedTransaction({
+          chainId: transaction.chainId,
+          id: transaction.id,
+          address: transaction.from,
+          blockNumber: currentBlockNumber,
+        }),
+      )
+
+      // Re-select the transaction from store to use the authoritative state
+      const selectTxById = yield* call(makeSelectTransaction)
+      const refreshed = yield* select(selectTxById, {
+        address: transaction.from,
+        chainId: transaction.chainId,
+        txId: transaction.id,
+      })
+
+      if (refreshed) {
+        transaction = refreshed
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (receipt?.blockNumber) {
+        logger.debug('watchOnChainTransactionSaga', 'waitForReceiptWithSmartPolling', 'Tx receipt received', hash)
+        return receipt
+      }
+    } catch (error) {
+      logger.debug('watchOnChainTransactionSaga', 'waitForReceiptWithSmartPolling', 'Error polling for receipt', {
+        hash,
+        error,
+      })
+    }
+
+    yield* delay(POLLING_CONSTANTS.POLL_INTERVAL)
+    elapsed += POLLING_CONSTANTS.POLL_INTERVAL
+  }
+
+  throw new Error('Timed out waiting for transaction receipt')
 }
 
 export async function waitForReceipt(
