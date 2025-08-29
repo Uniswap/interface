@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmR5qxJbPRNrpXMYsMARQ3eepsgrgPZLp37WELHtzNcEL6`
-- CIDv1: `bafybeibizaicwvxofvmqniavl5bpfejpxy5k56hjfc5mgqcjfk3i5kbvj4`
+- CIDv0: `QmTWHDsZKruRDBYFKy7CNNR17SLkhWdvhBoiW9YJtsozeT`
+- CIDv1: `bafybeicmyhzjca6zajf7jo55os5qyz3u2buruntuff6k3lmqlopa7eocoa`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,48 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeibizaicwvxofvmqniavl5bpfejpxy5k56hjfc5mgqcjfk3i5kbvj4.ipfs.dweb.link/
-- [ipfs://QmR5qxJbPRNrpXMYsMARQ3eepsgrgPZLp37WELHtzNcEL6/](ipfs://QmR5qxJbPRNrpXMYsMARQ3eepsgrgPZLp37WELHtzNcEL6/)
+- https://bafybeicmyhzjca6zajf7jo55os5qyz3u2buruntuff6k3lmqlopa7eocoa.ipfs.dweb.link/
+- [ipfs://QmTWHDsZKruRDBYFKy7CNNR17SLkhWdvhBoiW9YJtsozeT/](ipfs://QmTWHDsZKruRDBYFKy7CNNR17SLkhWdvhBoiW9YJtsozeT/)
 
-## 5.108.0 (2025-08-27)
-
-
-### Features
-
-* **web:** add shared activity tab behind feature flag (#22407) 2548221
-* **web:** add shared NFT tab behind feature flag (#21942) 0392e0e
-* **web:** create anvil mananger for e2e tests (#22797) 3cb6e0d
-* **web:** increase size of create flow form and improve loading states (#22728) 84345fc
-* **web:** snap to range (#22732) 2240f10
-* **web:** update mweb action buttons for positions page (#22810) 51b38a3
+### 5.108.1 (2025-08-29)
 
 
 ### Bug Fixes
 
-* **web:** account sidebar z-index - PORT-299 (#22770) 603fc15
-* **web:** Check if activity nonce is null (#22871) 45b27d4
-* **web:** do not set output to the same token as input (#22927) d54c71a
-* **web:** fix issue with changing chains on lp token selector (#22951) 730cef4
-* **web:** fix line chart icon on ios (#22922) 7e3d27c
-* **web:** fix unitag rendering (#22931) 1bf9eec
-* **web:** inputError should not be stringified (#22790) 6564aea
-* **web:** nft migration fixes (#22842) 42dea24
-* **web:** reset chart (#22769) 191b19b
-* **web:** reset min/max prices to sensible defaults on base currency change (#22768) 119c7ea
-* **web:** staging handle receipt in web bridge polling (#22936) b639ede
-* **web:** Update TWIT to TWIST (#22864) ac866c3
-
-
-### Continuous Integration
-
-* **web:** update sitemaps cc6a28a
-
-
-### Code Refactoring
-
-* **web:** add networkFee for web (#22317) 9099971
-* **web:** make InterfaceTransactionDetails hash optional (#22245) 1c8ba8f
-* **web:** store the transaction request and use that to get nonce (#22277) 636801f
-* **web:** used status to determine canceled status rather than using canceled field (#22336) 425aaf8
+* **web:** duplicate activities in mini portfolio (#23100) f5b4eab
 
 
