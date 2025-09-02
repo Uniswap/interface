@@ -35,7 +35,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build web app
-        run: yarn workspace @juiceswap/interface build:production
+        run: yarn web build:production
         env:
           NODE_ENV: production
 
