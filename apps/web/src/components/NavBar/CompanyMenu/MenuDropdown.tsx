@@ -8,7 +8,8 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { ExternalLink } from 'theme/components/Links'
-import { Flex, Separator, Text, styled } from 'ui/src'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { Anchor, Flex, Separator, Text, styled } from 'ui/src'
 import { TextVariantTokens } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -88,11 +89,49 @@ function Section({ title, items, closeMenu }: MenuSection) {
   )
 }
 
+function ProductSection({ items }: { items: MenuItem[] }) {
+  const { t } = useTranslation()
+  return (
+    <Flex gap="$gap12" data-testid={`menu-section-${t('common.products')}`}>
+      <Text variant="body4" color="$neutral2">
+        {t('common.products')}
+      </Text>
+      <Flex row gap="$gap16" flexWrap="wrap">
+        {items.map((item, index) => (
+          <Anchor
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            {...ClickableTamaguiStyle}
+            key={`${item.label}_${index}}`}
+            aria-label={item.label}
+          >
+            <Flex row gap="$gap8" minWidth={168}>
+              <Flex p="$padding6" borderRadius="$rounded8" backgroundColor="$accent2">
+                {item.icon}
+              </Flex>
+              <Flex>
+                <Text variant="body3">{item.label}</Text>
+                <Text fontSize={10} lineHeight={14} color="$neutral2">
+                  {item.body}
+                </Text>
+              </Flex>
+            </Flex>
+          </Anchor>
+        ))}
+      </Flex>
+    </Flex>
+  )
+}
+
 export function MenuDropdown({ close }: { close?: () => void }) {
   const { t } = useTranslation()
   const isConversionTrackingEnabled = useFeatureFlag(FeatureFlags.ConversionTracking)
   const menuContent = useMenuContent({
     keys: [MenuSectionTitle.Protocol, MenuSectionTitle.Company],
+  })
+  const productSection = useMenuContent({
+    keys: [MenuSectionTitle.Products],
   })
   const areTabsVisible = useTabsVisible()
   const tabs = useTabsContent()
@@ -111,6 +150,9 @@ export function MenuDropdown({ close }: { close?: () => void }) {
     <NavDropdown isOpen={false} dataTestId={TestID.NavCompanyDropdown}>
       <Container>
         <Flex gap="$spacing16">
+          {productSection[MenuSectionTitle.Products] && (
+            <ProductSection items={productSection[MenuSectionTitle.Products].items} />
+          )}
           {!areTabsVisible && <Section title={t('common.app')} items={tabsMenuItems} closeMenu={close} />}
           <Separator />
           <Flex row>

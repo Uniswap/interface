@@ -160,7 +160,7 @@ export function serializeSwapAddressesToURLParameters({
   chainId?: UniverseChainId | null
   outputChainId?: UniverseChainId | null
 }): string {
-  const chainIdOrDefault = chainId ?? UniverseChainId.Polygon
+  const chainIdOrDefault = chainId ?? UniverseChainId.Mainnet
 
   return (
     '?' +
@@ -230,7 +230,7 @@ export function useInitialCurrencyState(): {
     return queryParametersToCurrencyState(parsedQs)
   }, [parsedQs])
 
-  const supportedChainId = useSupportedChainId(parsedCurrencyState.chainId ?? defaultChainId) ?? UniverseChainId.Polygon
+  const supportedChainId = useSupportedChainId(parsedCurrencyState.chainId ?? defaultChainId) ?? UniverseChainId.Mainnet
   const supportedChainInfo = getChainInfo(supportedChainId)
   const isSupportedChainCompatible = isTestnetModeEnabled === !!supportedChainInfo.testnet
 

@@ -111,9 +111,9 @@ function usePDPChartState({
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const [chartType, setChartType] = useState<PoolsDetailsChartType>(ChartType.VOLUME)
 
-  const isV2 = false // V2 removed
+  const isV2 = protocolVersion === ProtocolVersion.V2
   const isV3 = protocolVersion === ProtocolVersion.V3
-  const isV4 = false // V4 removed
+  const isV4 = protocolVersion === ProtocolVersion.V4
   const variables = {
     addressOrId: poolData?.idOrAddress ?? '',
     chain,
@@ -237,7 +237,7 @@ export default function ChartSection(props: ChartSectionProps) {
     }
   }, [activeQuery.chartType, timePeriod, setTimePeriod])
 
-  const disabledChartOption = undefined // V2 removed, all charts available for V3
+  const disabledChartOption = props.poolData?.protocolVersion === ProtocolVersion.V2 ? ChartType.LIQUIDITY : undefined
 
   return (
     <Flex data-testid="pdp-chart-container">

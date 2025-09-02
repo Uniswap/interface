@@ -20,7 +20,7 @@ import { useNewChainIds } from 'uniswap/src/features/chains/hooks/useNewChainIds
 import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import type { UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isBackendSupportedChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { isBackendSupportedChainId, isTestnetChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -77,16 +77,15 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
           toggleOpen={toggleMenu}
           menuLabel={
             <NetworkLabel>
-              {/* Always show the specific chain logo - fallback to Sepolia if current chain is not supported */}
-              <ChainLogo
-                chainId={
-                  currentChainId === UniverseChainId.Sepolia || currentChainId === UniverseChainId.CitreaTestnet
-                    ? currentChainId
-                    : UniverseChainId.Sepolia
-                }
-                size={20}
-                testId={TestID.TokensNetworkFilterSelected}
-              />
+              {(!currentChainId || !isSupportedChainCallback(currentChainId)) && showMultichainOption ? (
+                <NetworkLogo chainId={null} />
+              ) : (
+                <ChainLogo
+                  chainId={currentChainId ?? UniverseChainId.Mainnet}
+                  size={20}
+                  testId={TestID.TokensNetworkFilterSelected}
+                />
+              )}
             </NetworkLabel>
           }
           buttonStyle={{ height: 40 }}
@@ -96,9 +95,23 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
           alignRight={!media.lg}
         >
           <ScrollView px="$spacing8">
-            {/* Show only Sepolia and Citrea Testnet - no "All Networks" option */}
+            {showMultichainOption && <TableNetworkItem chainInfo={null} toggleMenu={toggleMenu} tab={tab} />}
+            {/* non-testnet backend supported chains */}
             {enabledChainIds
-              .filter((chainId) => chainId === UniverseChainId.Sepolia || chainId === UniverseChainId.CitreaTestnet)
+              .filter(isBackendSupportedChainId)
+              .filter((c) => !isTestnetChain(c))
+              .map(tableNetworkItemRenderer)}
+            {/* Testnet backend supported chains */}
+            {isTestnetModeEnabled
+              ? enabledChainIds
+                  .filter(isBackendSupportedChainId)
+                  .filter(isTestnetChain)
+                  .filter((c) => c !== UniverseChainId.MonadTestnet)
+                  .map(tableNetworkItemRenderer)
+              : null}
+            {/* Unsupported non-testnet backend supported chains */}
+            {enabledChainIds
+              .filter((c) => !isBackendSupportedChainId(c) && !isTestnetChain(c))
               .map(tableNetworkItemRenderer)}
           </ScrollView>
         </DropdownSelector>
@@ -133,7 +146,7 @@ const TableNetworkItem = memo(function TableNetworkItem({
   const chainName = chainId ? toGraphQLChain(chainId) : 'All networks'
   const chainUrlParam = chainId ? getChainUrlParam(chainId) : ''
 
-  const isCurrentChain = currentChainInfo?.id === chainId
+  const isCurrentChain = isAllNetworks ? !currentChainInfo : currentChainInfo?.id === chainId && exploreParams.chainName
 
   return (
     <Trace

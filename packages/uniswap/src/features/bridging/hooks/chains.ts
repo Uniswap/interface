@@ -14,7 +14,7 @@ export function useNumBridgingChains(): number {
   const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({
     params: {
       tokenIn: NATIVE_ADDRESS_FOR_TRADING_API,
-      tokenInChainId: ChainId._137, // Use Polygon instead of Mainnet
+      tokenInChainId: ChainId._1,
     },
   })
 
@@ -28,7 +28,7 @@ export function useIsBridgingChain(chainId: UniverseChainId): boolean {
   const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({
     params: {
       tokenIn: NATIVE_ADDRESS_FOR_TRADING_API,
-      tokenInChainId: ChainId._137, // Use Polygon instead of Mainnet
+      tokenInChainId: ChainId._1,
     },
   })
 
@@ -42,7 +42,7 @@ export function useBridgingSupportedChainIds(): UniverseChainId[] {
   const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({
     params: {
       tokenIn: NATIVE_ADDRESS_FOR_TRADING_API,
-      tokenInChainId: ChainId._137, // Use Polygon instead of Mainnet
+      tokenInChainId: ChainId._1,
     },
   })
 

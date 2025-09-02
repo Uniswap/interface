@@ -1,6 +1,7 @@
 /* eslint-disable react/forbid-elements */
 import { ImageResponse } from '@vercel/og'
 
+import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import getPool from 'utils/getPool'
 import { WATERMARK_URL } from '../../../constants'
 import getFont from '../../../utils/getFont'
@@ -175,7 +176,7 @@ export const onRequest: PagesFunction = async ({ params, request, env }) => {
                   >
                     {data.name}
                   </div>
-                  {false && ( // V2 removed
+                  {data.poolData?.protocolVersion === ProtocolVersion.V2 && (
                     <div
                       style={{
                         fontFamily: 'Inter',

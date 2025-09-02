@@ -82,7 +82,7 @@ function PrivacyPolicy() {
         description: (
           <>
             {t('privacy.trm')}{' '}
-            <ExternalLink href="https://support.juiceswap.xyz/hc/en-us/articles/8671777747597-Address-Screening-Guide">
+            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8671777747597-Address-Screening-Guide">
               {t('common.button.learn')}
             </ExternalLink>
           </>
@@ -109,7 +109,7 @@ function PrivacyPolicy() {
       <AutoColumn gap="16px">
         <AutoColumn gap="sm" style={{ width: '100%' }}>
           <StyledExternalCard>
-            <ExternalLink href="https://juiceswap.xyz/terms-of-service">
+            <ExternalLink href="https://uniswap.org/terms-of-service">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
@@ -122,7 +122,7 @@ function PrivacyPolicy() {
             </ExternalLink>
           </StyledExternalCard>
           <StyledExternalCard>
-            <ExternalLink href="https://juiceswap.xyz/privacy-policy/">
+            <ExternalLink href="https://uniswap.org/privacy-policy/">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
@@ -152,7 +152,7 @@ function PrivacyPolicy() {
           ))}
           <ThemedText.DeprecatedBody fontSize={12}>
             <Row justify="center" marginBottom="1rem">
-              <ExternalLink href="https://help.juiceswap.xyz/en/articles/5675203-terms-of-service-faq">
+              <ExternalLink href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq">
                 {t('common.button.learn')}
               </ExternalLink>
             </Row>

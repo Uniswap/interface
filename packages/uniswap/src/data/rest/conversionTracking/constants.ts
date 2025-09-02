@@ -10,9 +10,9 @@ export const DEV_CONVERSION_PROXY_API_BASE_URL_DEPRECATED = 'https://erasld2vrf.
 export const STAGING_CONVERSION_PROXY_API_BASE_URL_DEPRECATED = 'https://x6ahx1oagk.execute-api.us-east-2.amazonaws.com'
 export const PROD_CONVERSION_PROXY_API_BASE_URL_DEPRECATED = 'https://8mr3mthjba.execute-api.us-east-2.amazonaws.com'
 
-export const DEV_CONVERSION_PROXY_API_BASE_URL = 'http://localhost:8080'
-export const STAGING_CONVERSION_PROXY_API_BASE_URL = 'http://localhost:8080'
-export const PROD_CONVERSION_PROXY_API_BASE_URL = 'http://localhost:8080'
+export const DEV_CONVERSION_PROXY_API_BASE_URL = 'https://entry-gateway.backend-dev.api.uniswap.org'
+export const STAGING_CONVERSION_PROXY_API_BASE_URL = 'https://entry-gateway.backend-staging.api.uniswap.org'
+export const PROD_CONVERSION_PROXY_API_BASE_URL = 'https://entry-gateway.backend-prod.api.uniswap.org'
 
 export const DEFAULT_HEADERS = [{ key: 'content-type', value: 'application/json' }]
 

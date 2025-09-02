@@ -86,7 +86,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       token1: getTokenOrZeroAddress(positionInfo.currency1Amount.currency),
       amount0: currencyAmounts.TOKEN0.quotient.toString(),
       amount1: currencyAmounts.TOKEN1.quotient.toString(),
-      generatePermitAsTransaction: undefined,
+      generatePermitAsTransaction:
+        positionInfo.version === ProtocolVersion.V4 ? generatePermitAsTransaction : undefined,
     }
   }, [positionInfo, account.address, currencyAmounts, generatePermitAsTransaction])
 
@@ -199,6 +200,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
           token1: token1.isNative ? ZERO_ADDRESS : token1.address,
           fee: positionInfo.feeTier?.feeAmount,
           tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
+          hooks: positionInfo.v4hook,
         },
       },
       slippageTolerance: customSlippageTolerance,

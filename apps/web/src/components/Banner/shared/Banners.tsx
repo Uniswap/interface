@@ -15,7 +15,7 @@ import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 export function Banners() {
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
-  const isLPIncentivesEnabled = false // Disabled LP incentives banner
+  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
   const isSolanaPromoEnabled = useFeatureFlag(FeatureFlags.SolanaPromo)
 
   const manualOutage = useAtomValue(manualChainOutageAtom)

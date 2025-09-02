@@ -90,7 +90,7 @@ export function OutageBanner({ chainId, version }: ChainOutageData) {
           <Text variant="body3" color={theme.neutral2}>
             <Trans i18nKey="outageBanner.message.sub" />
           </Text>
-          <ExternalLink href="https://support.juiceswap.xyz/hc/en-us/articles/23952001935373-Subgraph-downtime">
+          <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/23952001935373-Subgraph-downtime">
             <Text variant="body3" color={theme.accent1}>
               <Trans i18nKey="common.button.learn" />
             </Text>

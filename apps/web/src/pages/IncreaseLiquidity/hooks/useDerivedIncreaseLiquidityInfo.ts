@@ -1,3 +1,4 @@
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { useDepositInfo } from 'components/Liquidity/Create/hooks/useDepositInfo'
 import { getCurrencyWithOptionalUnwrap } from 'components/Liquidity/utils/currency'
 import { useAccount } from 'hooks/useAccount'
@@ -17,11 +18,11 @@ export function useDerivedIncreaseLiquidityInfo(
 
   const currency0 = getCurrencyWithOptionalUnwrap({
     currency: positionInfo.currency0Amount.currency,
-    shouldUnwrap: unwrapNativeCurrency,
+    shouldUnwrap: unwrapNativeCurrency && positionInfo.version !== ProtocolVersion.V4,
   })
   const currency1 = getCurrencyWithOptionalUnwrap({
     currency: positionInfo.currency1Amount.currency,
-    shouldUnwrap: unwrapNativeCurrency,
+    shouldUnwrap: unwrapNativeCurrency && positionInfo.version !== ProtocolVersion.V4,
   })
 
   const { tickLower, tickUpper } = positionInfo

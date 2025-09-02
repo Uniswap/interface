@@ -50,8 +50,8 @@ const createCustomWalletConnector = (overrides: Partial<WalletConnectorMeta> = {
   name: 'Test Custom Wallet',
   icon: 'test-icon',
   isInjected: false,
-  customConnectorId: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
-  analyticsWalletType: 'Wallet Connect',
+  customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
+  analyticsWalletType: 'Passkey',
   ...overrides,
 })
 
@@ -80,10 +80,10 @@ const DEFAULT_CONNECTORS: WalletConnectorMeta[] = [
     analyticsWalletType: 'binance',
   }),
   createCustomWalletConnector({
-    name: 'Uniswap Wallet',
-    customConnectorId: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+    name: 'Embedded Wallet',
+    customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
     isInjected: false,
-    analyticsWalletType: 'Wallet Connect',
+    analyticsWalletType: 'Passkey',
   }),
 ]
 
@@ -196,10 +196,10 @@ describe('useOrderedWalletConnectors', () => {
         analyticsWalletType: 'Coinbase Wallet',
       }),
       createCustomWalletConnector({
-        name: 'Uniswap Wallet',
-        customConnectorId: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+        name: 'Embedded Wallet',
+        customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
         isInjected: false,
-        analyticsWalletType: 'Wallet Connect',
+        analyticsWalletType: 'Passkey',
       }),
       // Add Binance injected connector to simulate Binance browser
       createWagmiWalletConnector({
@@ -249,10 +249,10 @@ describe('useOrderedWalletConnectors', () => {
         analyticsWalletType: 'Coinbase Wallet',
       }),
       createCustomWalletConnector({
-        name: 'Uniswap Wallet',
-        customConnectorId: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+        name: 'Embedded Wallet',
+        customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
         isInjected: false,
-        analyticsWalletType: 'Wallet Connect',
+        analyticsWalletType: 'Passkey',
       }),
       // Add Binance injected connector to simulate Binance browser
       createWagmiWalletConnector({
@@ -307,10 +307,10 @@ describe('useOrderedWalletConnectors', () => {
         analyticsWalletType: 'Coinbase Wallet',
       }),
       createCustomWalletConnector({
-        name: 'Uniswap Wallet',
-        customConnectorId: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+        name: 'Embedded Wallet',
+        customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
         isInjected: false,
-        analyticsWalletType: 'Wallet Connect',
+        analyticsWalletType: 'Passkey',
       }),
       // Add Binance injected connector to simulate Binance browser
       createWagmiWalletConnector({
@@ -379,7 +379,7 @@ describe('useOrderedWalletConnectors', () => {
 
       const expectedConnectors = [
         { wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' } },
-        { customConnectorId: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID },
+        { customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID },
       ]
 
       result.current.forEach((connector, index) => {
@@ -396,7 +396,7 @@ describe('useOrderedWalletConnectors', () => {
       const expectedConnectors = [
         { wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' } },
         { wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' } },
-        { customConnectorId: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID },
+        { customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID },
       ]
 
       result.current.forEach((connector, index) => {
@@ -467,7 +467,7 @@ describe('useOrderedWalletConnectors', () => {
         }),
         createCustomWalletConnector({
           name: 'Embedded Wallet',
-          customConnectorId: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+          customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
           isInjected: false,
         }),
         createWagmiWalletConnector({
@@ -479,7 +479,7 @@ describe('useOrderedWalletConnectors', () => {
       const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: true }))
 
       const expectedConnectors = [
-        { customConnectorId: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID },
+        { customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID },
         { wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' } },
         { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
         { wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' } },

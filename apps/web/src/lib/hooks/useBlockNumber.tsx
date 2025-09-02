@@ -84,16 +84,13 @@ export function BlockNumberProvider({ children }: PropsWithChildren) {
     }
     return undefined
   }, [provider, windowVisible, onChainBlock, multicallChainId])
-  // Poll once for the Polygon block number using the network provider.
+  // Poll once for the mainnet block number using the network provider.
   useEffect(() => {
-    // Only fetch Polygon block number since that's the only supported chain
-    if (RPC_PROVIDERS[UniverseChainId.Polygon]) {
-      RPC_PROVIDERS[UniverseChainId.Polygon]
-        .getBlockNumber()
-        .then((block) => onChainBlock(UniverseChainId.Polygon, block))
-        // swallow errors - it's ok if this fails, as we'll try again if we activate Polygon
-        .catch(() => undefined)
-    }
+    RPC_PROVIDERS[UniverseChainId.Mainnet]
+      .getBlockNumber()
+      .then((block) => onChainBlock(UniverseChainId.Mainnet, block))
+      // swallow errors - it's ok if this fails, as we'll try again if we activate mainnet
+      .catch(() => undefined)
   }, [onChainBlock])
   const value = useMemo(
     () => ({

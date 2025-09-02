@@ -34,10 +34,10 @@ export function walletTypeToAmplitudeWalletType(connectionType?: string): string
 export const WC_PARAMS = {
   projectId: WALLET_CONNECT_PROJECT_ID,
   metadata: {
-    name: 'JuiceSwap',
-    description: 'JuiceSwap Interface',
-    url: 'https://app.juiceswap.xyz',
-    icons: ['https://app.juiceswap.xyz/favicon.png'],
+    name: 'Uniswap',
+    description: 'Uniswap Interface',
+    url: 'https://app.uniswap.org',
+    icons: ['https://app.uniswap.org/favicon.png'],
   },
   qrModalOptions: {
     themeVariables: {

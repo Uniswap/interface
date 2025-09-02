@@ -52,6 +52,7 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
 interface WrappedNativeWarning {
   wrappedToken: Currency
   nativeToken: Currency
@@ -119,7 +120,7 @@ function isUnsupportedChain(chainId: UniverseChainId | undefined, protocolVersio
   }
 
   if (protocolVersion === ProtocolVersion.V4) {
-    return false // V4 has been removed, all chains support V3
+    return isV4UnsupportedChain(chainId)
   }
 
   return false
@@ -335,7 +336,7 @@ export function SelectTokensStep({
   const { chains } = useEnabledChains()
   const supportedChains = useMemo(() => {
     return protocolVersion === ProtocolVersion.V4
-      ? chains // V4 has been removed, all chains support V3
+      ? chains.filter((chain) => !isV4UnsupportedChain(chain))
       : protocolVersion === ProtocolVersion.V2
         ? chains.filter((chain) => SUPPORTED_V2POOL_CHAIN_IDS.includes(chain))
         : undefined

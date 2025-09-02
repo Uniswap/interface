@@ -65,8 +65,18 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const [steps, setSteps] = useState<TransactionStep[]>([])
 
-  const { version, poolId, currency0Amount, currency1Amount, feeTier, tickSpacing, tickLower, tickUpper, chainId } =
-    increaseLiquidityState.position ?? {}
+  const {
+    version,
+    poolId,
+    currency0Amount,
+    currency1Amount,
+    feeTier,
+    v4hook,
+    tickSpacing,
+    tickLower,
+    tickUpper,
+    chainId,
+  } = increaseLiquidityState.position ?? {}
 
   const currentPrice = increaseLiquidityState.position?.poolOrPair?.token1Price
   const poolTokenPercentage = useGetPoolTokenPercentage(increaseLiquidityState.position)
@@ -145,7 +155,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
             tickSpacing,
             tickLower,
             tickUpper,
-            hook: undefined, // V4 removed, no hooks in V3
+            hook: v4hook,
             version: version ?? ProtocolVersion.UNSPECIFIED,
             poolId,
             currency0: currencyAmounts.TOKEN0.currency,
