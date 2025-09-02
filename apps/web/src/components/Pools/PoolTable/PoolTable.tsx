@@ -38,12 +38,15 @@ import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { UNI } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { getChainUrlParam } from 'utils/chainParams'
 
@@ -245,7 +248,7 @@ export function PoolsTable({
   const filterString = useAtomValue(exploreSearchStringAtom)
   const { defaultChainId } = useEnabledChains()
   const { t } = useTranslation()
-  const isLPIncentivesEnabled = false // Disabled LP incentives
+  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
   const poolTableValues: PoolTableValues[] | undefined = useMemo(
     () =>
@@ -256,9 +259,14 @@ export function PoolsTable({
 
         const token0Address = pool.token0?.address || getNativeAddress(chainId)
         const token1Address = pool.token1?.address || getNativeAddress(chainId)
-        // V4 removed, no need for special handling
-        const currency0Id = undefined
-        const currency1Id = undefined
+        const currency0Id =
+          pool.protocolVersion === ProtocolVersion.V4 && token0Address
+            ? buildCurrencyId(chainId, token0Address)
+            : undefined
+        const currency1Id =
+          pool.protocolVersion === ProtocolVersion.V4 && token1Address
+            ? buildCurrencyId(chainId, token1Address)
+            : undefined
 
         return {
           index: poolSortRank,

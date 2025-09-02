@@ -107,12 +107,6 @@ export function getLanguageInfo(t: AppTFunction, language: Language): LanguageIn
       loggingName: 'French',
       locale: getLocale(Language.French),
     },
-    [Language.German]: {
-      displayName: t('German'),
-      originName: t('German', { lng: getLocale(Language.German) }),
-      loggingName: 'German',
-      locale: getLocale(Language.German),
-    },
     [Language.Greek]: {
       displayName: t('language.greek'),
       originName: t('language.greek', { lng: getLocale(Language.Greek) }),
@@ -204,9 +198,9 @@ export function getLanguageInfo(t: AppTFunction, language: Language): LanguageIn
       locale: getLocale(Language.Serbian),
     },
     [Language.SpanishSpain]: {
-      displayName: t('language.spanish'),
-      originName: t('language.spanish', { lng: getLocale(Language.SpanishSpain) }),
-      loggingName: 'Spanish',
+      displayName: t('language.spanishSpain'),
+      originName: t('language.spanishSpain', { lng: getLocale(Language.SpanishSpain) }),
+      loggingName: 'Spanish (Spain)',
       locale: getLocale(Language.SpanishSpain),
     },
     [Language.SpanishLatam]: {

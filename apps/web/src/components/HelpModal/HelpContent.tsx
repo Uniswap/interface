@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { Anchor, Flex, Text, TouchableArea } from 'ui/src'
 import { BookOpen } from 'ui/src/components/icons/BookOpen'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
+import { GraduationCap } from 'ui/src/components/icons/GraduationCap'
+import { SpeechBubbles } from 'ui/src/components/icons/SpeechBubbles'
 import { X } from 'ui/src/components/icons/X'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -51,9 +53,19 @@ export function HelpContent({ onClose }: HelpContentProps) {
         </TouchableArea>
       </Flex>
       <HelpItem
+        icon={<GraduationCap size="$icon.20" color="$neutral2" />}
+        title={t('settings.action.help')}
+        href={uniswapUrls.helpUrl}
+      />
+      <HelpItem
         icon={<BookOpen size="$icon.20" color="$neutral2" />}
         title={t('common.docs')}
         href={uniswapUrls.docsUrl}
+      />
+      <HelpItem
+        icon={<SpeechBubbles size="$icon.20" color="$neutral2" />}
+        title={t('common.contactUs.button')}
+        href={uniswapUrls.helpRequestUrl}
       />
     </Flex>
   )

@@ -9,8 +9,7 @@ import { createGetV4SwapEnabled, useV4SwapEnabled } from 'uniswap/src/features/t
 
 export const DEFAULT_PROTOCOL_OPTIONS = [
   // `as const` allows us to derive a type narrower than ProtocolItems, and the `...` spread removes readonly, allowing DEFAULT_PROTOCOL_OPTIONS to be passed around as an argument without `readonly`
-  // Only V3 protocol enabled
-  ...([ProtocolItems.V3] as const),
+  ...([ProtocolItems.UNISWAPX_V2, ProtocolItems.V4, ProtocolItems.V3, ProtocolItems.V2] as const),
 ]
 export type FrontendSupportedProtocol = (typeof DEFAULT_PROTOCOL_OPTIONS)[number]
 

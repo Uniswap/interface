@@ -1,7 +1,7 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import PROVIDE_LIQUIDITY from 'assets/images/provideLiquidity.svg'
+import PROVIDE_LIQUIDITY from 'assets/images/provideLiquidity.png'
 import tokenLogo from 'assets/images/token-logo.png'
-import V4_HOOK from 'assets/images/v4Hooks.svg'
+import V4_HOOK from 'assets/images/v4Hooks.png'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ExternalArrowLink } from 'components/Liquidity/ExternalArrowLink'
@@ -33,6 +33,8 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useGetPositionsInfiniteQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -242,7 +244,7 @@ export default function Pool() {
   const { t } = useTranslation()
   const { address, isConnected } = account
 
-  const isLPIncentivesEnabled = false // Disabled LP incentives
+  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives) && isConnected
 
   const [chainFilter, setChainFilter] = useAtom(chainFilterAtom)
   const { chains: currentModeChains } = useEnabledChains()

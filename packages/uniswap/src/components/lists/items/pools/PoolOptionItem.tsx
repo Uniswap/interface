@@ -12,7 +12,7 @@ import {
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { shortenAddress } from 'utilities/src/addresses'
+import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 interface PoolOptionItemProps {
@@ -55,7 +55,9 @@ function _PoolOptionItem({
       title={poolName}
       subtitle={
         <Text color="$neutral2" numberOfLines={1} variant="body3">
-          {shortenAddress(poolId)}
+          {protocolVersion !== ProtocolVersion.V4
+            ? shortenAddress(poolId)
+            : ellipseMiddle({ str: poolId, charsStart: 6 })}
         </Text>
       }
       badge={

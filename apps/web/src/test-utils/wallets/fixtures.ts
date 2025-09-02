@@ -10,6 +10,15 @@ export const WALLET_CONNECT_CONNECTOR: WalletConnectorMeta = {
   analyticsWalletType: 'Wallet Connect',
 }
 
+export const EMBEDDED_WALLET_CONNECTOR: WalletConnectorMeta = {
+  wagmi: { id: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID, type: 'embeddedUniswapWallet' },
+  name: CONNECTION_PROVIDER_NAMES.EMBEDDED_WALLET,
+  icon: CONNECTOR_ICON_OVERRIDE_MAP[CONNECTION_PROVIDER_NAMES.EMBEDDED_WALLET],
+  isInjected: false,
+  customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
+  analyticsWalletType: 'Passkey',
+}
+
 export const METAMASK_CONNECTOR: WalletConnectorMeta = {
   wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' },
   name: CONNECTION_PROVIDER_NAMES.METAMASK,

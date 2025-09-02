@@ -2,7 +2,7 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import { useAccount } from 'hooks/useAccount'
 import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
-import { useMeldFiatCurrencyInfo } from 'pages/Swap/Buy/hooks'
+import { useFiatOnRampSupportedTokens, useMeldFiatCurrencyInfo } from 'pages/Swap/Buy/hooks'
 import { formatFORErrorAmount, getOnRampInputAmount, parseAndFormatFiatOnRampFiatAmount } from 'pages/Swap/Buy/shared'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -119,9 +119,10 @@ function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
 
   const { meldSupportedFiatCurrency, notAvailableInThisRegion } = useMeldFiatCurrencyInfo(state.selectedCountry)
 
-  // OnRamp disabled - don't fetch country options
-  const { data: countryOptionsResult } = useFiatOnRampAggregatorCountryListQuery(skipToken)
-  const supportedTokens: FiatOnRampCurrency[] = [] // OnRamp disabled - no supported tokens
+  const { data: countryOptionsResult } = useFiatOnRampAggregatorCountryListQuery({
+    rampDirection: state.rampDirection,
+  })
+  const supportedTokens = useFiatOnRampSupportedTokens(meldSupportedFiatCurrency, state.selectedCountry?.countryCode)
   const onRampInputAmount = useMemo(
     () =>
       getOnRampInputAmount({
@@ -139,13 +140,29 @@ function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
       : [state.quoteCurrency?.meldCurrencyCode, meldSupportedFiatCurrency.code]
   }, [meldSupportedFiatCurrency, state.quoteCurrency, state.rampDirection])
 
-  // OnRamp disabled - always skip fetching
   const {
     data: quotes,
     isFetching: fetchingQuotes,
     error: quotesError,
   } = useFiatOnRampAggregatorCryptoQuoteQuery(
-    skipToken, // Always skip fetching
+    inputAmount &&
+      inputAmount !== '' &&
+      amountOut &&
+      amountOut !== '' &&
+      account.address &&
+      state.selectedCountry?.countryCode &&
+      sourceCurrencyCode &&
+      destinationCurrencyCode
+      ? {
+          sourceAmount: parseFloat(onRampInputAmount),
+          sourceCurrencyCode,
+          destinationCurrencyCode,
+          countryCode: state.selectedCountry.countryCode,
+          walletAddress: account.address,
+          state: state.selectedCountry.state,
+          rampDirection: state.rampDirection,
+        }
+      : skipToken,
     {
       refetchOnMountOrArgChange: true,
     },

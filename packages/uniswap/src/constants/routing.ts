@@ -1,13 +1,48 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, Token, WETH9 } from '@uniswap/sdk-core'
 import type { ImageSourcePropType } from 'react-native'
 import { CELO_LOGO, ETH_LOGO } from 'ui/src/assets'
 import {
+  ARB,
+  BUSD_BSC,
+  DAI,
+  DAI_ARBITRUM_ONE,
+  DAI_AVALANCHE,
+  DAI_BSC,
+  DAI_OPTIMISM,
   DAI_POLYGON,
+  ETH_BSC,
+  OP,
   PORTAL_ETH_CELO,
+  UNI,
+  USDC_ARBITRUM,
+  USDC_AVALANCHE,
+  USDC_BASE,
+  USDC_BSC,
+  USDC_CELO,
+  USDC_MAINNET,
+  USDC_OPTIMISM,
   USDC_POLYGON,
+  USDC_SEPOLIA,
+  USDC_SOLANA,
+  USDC_SONEIUM,
+  USDC_UNICHAIN,
+  USDC_WORLD_CHAIN,
+  USDC_ZKSYNC,
+  USDC_ZORA,
+  USDT,
+  USDT_ARBITRUM_ONE,
+  USDT_AVALANCHE,
+  USDT_BSC,
+  USDT_MONAD_TESTNET,
+  USDT_OPTIMISM,
   USDT_POLYGON,
+  WBTC,
+  WBTC_ARBITRUM_ONE,
+  WBTC_OPTIMISM,
   WBTC_POLYGON,
+  WETH_AVALANCHE,
   WETH_POLYGON,
+  WRAPPED_NATIVE_CURRENCY,
   nativeOnChain,
 } from 'uniswap/src/constants/tokens'
 import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -28,8 +63,6 @@ type ChainCurrencyList = {
  * This list is currently used as fallback list when Token GQL query fails for above list + for hardcoded tokens on testnet chains.
  */
 export const COMMON_BASES: ChainCurrencyList = {
-  // Only Polygon is enabled - all other chains are disabled
-  /*
   [UniverseChainId.Mainnet]: [
     nativeOnChain(UniverseChainId.Mainnet),
     DAI,
@@ -89,7 +122,6 @@ export const COMMON_BASES: ChainCurrencyList = {
     WBTC_OPTIMISM,
     WETH9[UniverseChainId.Optimism] as Token,
   ].map(buildPartialCurrencyInfo),
-  */
 
   [UniverseChainId.Polygon]: [
     nativeOnChain(UniverseChainId.Polygon),
@@ -100,7 +132,6 @@ export const COMMON_BASES: ChainCurrencyList = {
     WBTC_POLYGON,
   ].map(buildPartialCurrencyInfo),
 
-  /*
   [UniverseChainId.Sepolia]: [
     nativeOnChain(UniverseChainId.Sepolia),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Sepolia] as Token,
@@ -146,7 +177,6 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Zora] as Token,
     USDC_ZORA,
   ].map(buildPartialCurrencyInfo),
-  */
 }
 
 export function getCommonBase(chainId?: number, address?: string): CurrencyInfo | undefined {

@@ -94,7 +94,7 @@ export function usePoolTransactions({
       ...variables,
       poolId: address,
     },
-    skip: true, // V4 removed
+    skip: protocolVersion !== ProtocolVersion.V4,
   })
   const {
     loading: loadingV3,
@@ -118,16 +118,15 @@ export function usePoolTransactions({
       ...variables,
       address,
     },
-    skip: true, // V2 removed
+    skip: !chainId || protocolVersion !== ProtocolVersion.V2,
   })
   const loadingMore = useRef(false)
-  // Only V3 is supported now
-  const { transactions, loading, fetchMore, error } = {
-    transactions: dataV3?.v3Pool?.transactions,
-    loading: loadingV3,
-    fetchMore: fetchMoreV3,
-    error: errorV3,
-  }
+  const { transactions, loading, fetchMore, error } =
+    protocolVersion === ProtocolVersion.V4
+      ? { transactions: dataV4?.v4Pool?.transactions, loading: loadingV4, fetchMore: fetchMoreV4, error: errorV4 }
+      : protocolVersion === ProtocolVersion.V3
+        ? { transactions: dataV3?.v3Pool?.transactions, loading: loadingV3, fetchMore: fetchMoreV3, error: errorV3 }
+        : { transactions: dataV2?.v2Pair?.transactions, loading: loadingV2, fetchMore: fetchMoreV2, error: errorV2 }
 
   const loadMore = useCallback(
     ({ onComplete }: { onComplete?: () => void }) => {
@@ -145,35 +144,36 @@ export function usePoolTransactions({
             return prev
           }
           onComplete?.()
-          const mergedData = false // V4 removed
-            ? {
-                v4Pool: {
-                  ...fetchMoreResult.v4Pool,
-                  transactions: [
-                    ...((prev as V4PoolTransactionsQuery).v4Pool?.transactions ?? []),
-                    ...fetchMoreResult.v4Pool.transactions,
-                  ],
-                },
-              }
-            : protocolVersion === ProtocolVersion.V3
+          const mergedData =
+            protocolVersion === ProtocolVersion.V4
               ? {
-                  v3Pool: {
-                    ...fetchMoreResult.v3Pool,
+                  v4Pool: {
+                    ...fetchMoreResult.v4Pool,
                     transactions: [
-                      ...((prev as V3PoolTransactionsQuery).v3Pool?.transactions ?? []),
-                      ...fetchMoreResult.v3Pool.transactions,
+                      ...((prev as V4PoolTransactionsQuery).v4Pool?.transactions ?? []),
+                      ...fetchMoreResult.v4Pool.transactions,
                     ],
                   },
                 }
-              : {
-                  v2Pair: {
-                    ...fetchMoreResult.v2Pair,
-                    transactions: [
-                      ...((prev as V2PairTransactionsQuery).v2Pair?.transactions ?? []),
-                      ...fetchMoreResult.v2Pair.transactions,
-                    ],
-                  },
-                }
+              : protocolVersion === ProtocolVersion.V3
+                ? {
+                    v3Pool: {
+                      ...fetchMoreResult.v3Pool,
+                      transactions: [
+                        ...((prev as V3PoolTransactionsQuery).v3Pool?.transactions ?? []),
+                        ...fetchMoreResult.v3Pool.transactions,
+                      ],
+                    },
+                  }
+                : {
+                    v2Pair: {
+                      ...fetchMoreResult.v2Pair,
+                      transactions: [
+                        ...((prev as V2PairTransactionsQuery).v2Pair?.transactions ?? []),
+                        ...fetchMoreResult.v2Pair.transactions,
+                      ],
+                    },
+                  }
           loadingMore.current = false
           return mergedData
         },

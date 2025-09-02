@@ -22,8 +22,6 @@ if (WalletConnect) {
 }
 
 // adding these so webpack won't tree shake this away, sideEffects was giving trouble
-console.log('CLAUDE DEBUG: sideEffects.ts is running!')
 setupi18n()
-console.log('CLAUDE DEBUG: setupi18n() completed')
 setupWagmiAutoConnect()
 setupVitePreloadErrorHandler()
