@@ -23,7 +23,7 @@ export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
 export const UNISWAP_APP_URL = 'https://uniswap.org/app'
 export const UNISWAP_MOBILE_REDIRECT_URL = 'https://uniswap.org/mobile-redirect'
 
-const helpUrl = 'https://support.uniswap.org/hc/en-us'
+const helpUrl = 'https://support.juiceswap.xyz/hc/en-us'
 
 // The trading api uses custom builds for testing which may not use the v1 prefix
 const tradingApiVersionPrefix = config.tradingApiWebTestEnv === 'true' ? '' : '/v1'
@@ -96,50 +96,46 @@ export const uniswapUrls = {
     whatIsPrivateKey: createHelpArticleUrl('11306371824653-What-is-a-private-key'),
     wethExplainer: createHelpArticleUrl('16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH'),
   },
-  downloadWalletUrl: 'https://wallet.uniswap.org/',
-  tradingApiDocsUrl: 'https://hub.uniswap.org/',
+  downloadWalletUrl: 'https://wallet.juiceswap.xyz/',
+  tradingApiDocsUrl: 'https://hub.juiceswap.xyz/',
   unichainUrl: 'https://www.unichain.org/',
-  uniswapXUrl: 'https://x.uniswap.org/',
-  helpCenterUrl: 'https://help.uniswap.org/',
-  blogUrl: 'https://blog.uniswap.org/',
-  docsUrl: 'https://docs.uniswap.org/',
+  uniswapXUrl: 'https://x.juiceswap.xyz/',
+  helpCenterUrl: 'https://help.juiceswap.xyz/',
+  blogUrl: 'https://blog.juiceswap.xyz/',
+  docsUrl: 'https://docs.juiceswap.xyz/',
   voteUrl: 'https://vote.uniswapfoundation.org',
-  governanceUrl: 'https://uniswap.org/governance',
-  developersUrl: 'https://uniswap.org/developers',
-  aboutUrl: 'https://about.uniswap.org/',
-  careersUrl: 'https://careers.uniswap.org/',
+  governanceUrl: 'https://juiceswap.xyz/governance',
+  developersUrl: 'https://juiceswap.xyz/developers',
+  aboutUrl: 'https://about.juiceswap.xyz/',
+  careersUrl: 'https://careers.juiceswap.xyz/',
   social: {
-    x: 'https://x.com/Uniswap',
-    farcaster: 'https://farcaster.xyz/Uniswap',
-    linkedin: 'https://www.linkedin.com/company/uniswaporg',
-    tiktok: 'https://www.tiktok.com/@uniswap',
+    x: 'https://x.com/JuiceSwapXyz',
+    telegram: 'https://t.me/JuiceSwap',
   },
-  termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
-  privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
-  chromeExtension: 'http://uniswap.org/ext',
-  chromeExtensionUninstallUrl: `https://uniswap.org${CHROME_EXTENSION_UNINSTALL_URL_PATH}`,
+  termsOfServiceUrl: 'https://juiceswap.xyz/terms-of-service',
+  privacyPolicyUrl: 'https://juiceswap.xyz/privacy-policy',
+  chromeExtension: 'http://juiceswap.xyz/ext',
+  chromeExtensionUninstallUrl: `https://juiceswap.xyz${CHROME_EXTENSION_UNINSTALL_URL_PATH}`,
 
   // Download links
   appStoreDownloadUrl: 'https://apps.apple.com/us/app/uniswap-crypto-nft-wallet/id6443944476',
   playStoreDownloadUrl: 'https://play.google.com/store/apps/details?id=com.uniswap.mobile&pcampaignid=web_share',
 
-  // Core API Urls
-  apiOrigin: 'https://api.uniswap.org',
-  apiBaseUrl: config.apiBaseUrlOverride || getCloudflareApiBaseUrl(),
-  apiBaseUrlV2: config.apiBaseUrlV2Override || `${getCloudflareApiBaseUrl()}/v2`,
-  graphQLUrl: config.graphqlUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
+  // Core API Urls - Local API with Uniswap fallback
+  apiOrigin: 'http://localhost:8080',
+  apiBaseUrl: config.apiBaseUrlOverride || 'http://localhost:8080',
+  apiBaseUrlV2: config.apiBaseUrlV2Override || 'http://localhost:8080/v2',
+  graphQLUrl: config.graphqlUrlOverride || 'http://localhost:8080/v1/graphql',
 
-  // Proxies
-  amplitudeProxyUrl:
-    config.amplitudeProxyUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Metrics)}/v1/amplitude-proxy`,
-  statsigProxyUrl: config.statsigProxyUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Gating)}/v1/statsig-proxy`,
+  // Proxies - Now using local API
+  amplitudeProxyUrl: config.amplitudeProxyUrlOverride || 'http://localhost:8080/v1/amplitude-proxy',
+  statsigProxyUrl: config.statsigProxyUrlOverride || 'http://localhost:8080/v1/statsig-proxy',
 
-  // Feature service URL's
-  unitagsApiUrl: config.unitagsApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
-  scantasticApiUrl:
-    config.scantasticApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
-  forApiUrl: config.forApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/FOR.v1.FORService`,
-  tradingApiUrl: config.tradingApiUrlOverride || getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
+  // Feature service URL's - Now using local API
+  unitagsApiUrl: config.unitagsApiUrlOverride || 'http://localhost:8080/v2/unitags',
+  scantasticApiUrl: config.scantasticApiUrlOverride || 'http://localhost:8080/v2/scantastic',
+  forApiUrl: config.forApiUrlOverride || 'http://localhost:8080/v2/FOR.v1.FORService',
+  tradingApiUrl: config.tradingApiUrlOverride || 'http://localhost:8080',
 
   // Merkl Docs for LP Incentives
   merklDocsUrl: 'https://docs.merkl.xyz/earn-with-merkl/faq-earn#how-are-aprs-calculated',
@@ -202,7 +198,7 @@ export const uniswapUrls = {
   walletFeedbackForm:
     'https://docs.google.com/forms/d/e/1FAIpQLSepzL5aMuSfRhSgw0zDw_gVmc2aeVevfrb1UbOwn6WGJ--46w/viewform',
 
-  dataApiServiceUrl: `${getCloudflareApiBaseUrl()}/v2/data.v1.DataApiService`,
+  dataApiServiceUrl: 'http://localhost:8080/v2/data.v1.DataApiService',
   dataApiServicePaths: {
     report: '/SubmitReport',
   },

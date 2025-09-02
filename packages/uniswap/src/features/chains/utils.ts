@@ -2,7 +2,7 @@ import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { Token } from '@uniswap/sdk-core'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ALL_CHAIN_IDS, ORDERED_CHAINS, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { ALL_CHAIN_IDS, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { EnabledChainsInfo, GqlChainId, NetworkLayer, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 
@@ -218,42 +218,34 @@ export function getEnabledChains({
   connectedWalletChainIds?: UniverseChainId[]
   includeTestnets?: boolean
 }): EnabledChainsInfo {
-  const enabledChainInfos = ORDERED_CHAINS.filter((chainInfo) => {
-    // Filter by platform
-    if (platform !== undefined && platform !== chainInfo.platform) {
-      return false
-    }
+  // Only Polygon and Sepolia enabled
+  const enabledChains: UniverseChainId[] = []
+  const gqlChains: GqlChainId[] = []
 
-    // Filter by testnet mode
-    if (!includeTestnets && isTestnetModeEnabled !== isTestnetChain(chainInfo.id)) {
-      return false
-    }
-
-    // Filter by feature flags
-    if (!featureFlaggedChainIds.includes(chainInfo.id)) {
-      return false
-    }
-
-    // Filter by connected wallet chains if provided
-    if (connectedWalletChainIds && !connectedWalletChainIds.includes(chainInfo.id)) {
-      return false
-    }
-
-    return true
-  })
-
-  // Extract chain IDs and GQL chains from filtered results
-  const chains = enabledChainInfos.map((chainInfo) => chainInfo.id)
-  const gqlChains = enabledChainInfos.map((chainInfo) => chainInfo.backendChain.chain)
-
-  const result = {
-    chains,
-    gqlChains,
-    defaultChainId: getDefaultChainId({ platform, isTestnetModeEnabled }),
-    isTestnetModeEnabled,
+  // Always include Polygon (mainnet)
+  if (!isTestnetModeEnabled || includeTestnets) {
+    enabledChains.push(UniverseChainId.Polygon)
+    gqlChains.push(getChainInfo(UniverseChainId.Polygon).backendChain.chain)
   }
 
-  return result
+  // Include Sepolia and Citrea Testnet if testnet mode is enabled
+  if (isTestnetModeEnabled || includeTestnets) {
+    enabledChains.push(UniverseChainId.Sepolia)
+    gqlChains.push(getChainInfo(UniverseChainId.Sepolia).backendChain.chain)
+
+    enabledChains.push(UniverseChainId.CitreaTestnet)
+    // Note: Citrea is not yet supported in GraphQL backend, so we skip adding to gqlChains
+  }
+
+  // Default chain based on testnet mode
+  const defaultChainId = isTestnetModeEnabled ? UniverseChainId.Sepolia : UniverseChainId.Polygon
+
+  return {
+    chains: enabledChains,
+    gqlChains,
+    defaultChainId,
+    isTestnetModeEnabled,
+  }
 }
 
 function getDefaultChainId({
@@ -268,7 +260,8 @@ function getDefaultChainId({
     return UniverseChainId.Solana
   }
 
-  return isTestnetModeEnabled ? UniverseChainId.Sepolia : UniverseChainId.Mainnet
+  // Return Sepolia if testnet mode is enabled, otherwise Polygon
+  return isTestnetModeEnabled ? UniverseChainId.Sepolia : UniverseChainId.Polygon
 }
 
 /** Returns all stablecoins for a given chainId. */

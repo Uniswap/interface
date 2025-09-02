@@ -98,7 +98,7 @@ export type WrapQuoteResponse<T extends Routing.WRAP | Routing.UNWRAP> = QuoteRe
 }
 
 const TradingApiClient = createApiClient({
-  baseUrl: uniswapUrls.tradingApiUrl,
+  baseUrl: 'http://localhost:8080',
   additionalHeaders: {
     'x-api-key': config.tradingApiKey,
   },

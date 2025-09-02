@@ -26,8 +26,6 @@ import { Flex } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
@@ -102,10 +100,7 @@ function getUnwrappedPoolToken({
   chainId?: number
   protocolVersion?: ProtocolVersion
 }): [Token | undefined, Token | undefined] {
-  // for v4 pools can be created with ETH or WETH so we need to keep the original tokens
-  if (protocolVersion === ProtocolVersion.V4) {
-    return [poolData?.token0, poolData?.token1]
-  }
+  // V4 removed
 
   return poolData && chainId
     ? [unwrapToken(chainId, poolData.token0), unwrapToken(chainId, poolData.token1)]
@@ -125,7 +120,7 @@ export default function PoolDetailsPage() {
     protocolVersion: poolData?.protocolVersion,
   })
   const [token0, token1] = isReversed ? [unwrappedTokens[1], unwrappedTokens[0]] : unwrappedTokens
-  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
+  const isLPIncentivesEnabled = false // Disabled LP incentives
 
   const poolApr = useMemo(
     () =>
@@ -273,14 +268,13 @@ export default function PoolDetailsPage() {
                 <Trans i18nKey="common.links" />
               </TokenDetailsHeader>
               <LinksContainer>
-                {poolData?.protocolVersion !== ProtocolVersion.V4 && (
-                  <PoolDetailsLink
-                    address={poolAddress}
-                    chainId={chainInfo.id}
-                    tokens={[token0, token1]}
-                    loading={loading}
-                  />
-                )}
+                {/* V4 removed, always show pool details link */}
+                <PoolDetailsLink
+                  address={poolAddress}
+                  chainId={chainInfo.id}
+                  tokens={[token0, token1]}
+                  loading={loading}
+                />
                 <PoolDetailsLink address={token0?.address} chainId={chainInfo.id} tokens={[token0]} loading={loading} />
                 <PoolDetailsLink address={token1?.address} chainId={chainInfo.id} tokens={[token1]} loading={loading} />
               </LinksContainer>

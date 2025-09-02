@@ -72,7 +72,6 @@ import { buildCurrencyId, currencyId, currencyIdToAddress } from 'uniswap/src/ut
 import { NumberType } from 'utilities/src/format/types'
 import { isMobileWeb } from 'utilities/src/platform'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
-import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
 
 const BodyWrapper = styled(Main, {
   backgroundColor: '$surface1',
@@ -303,7 +302,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
     addressInput2: { address: account.address, chainId: supportedAccountChainId ?? positionInfo.chainId },
   })
 
-  const showV4UnsupportedTooltip = isV4UnsupportedChain(positionInfo.chainId)
+  const showV4UnsupportedTooltip = false // V4 removed, all chains support V3
 
   return (
     <Trace

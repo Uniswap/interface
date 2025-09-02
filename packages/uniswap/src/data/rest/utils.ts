@@ -78,12 +78,8 @@ export function parseProtectionInfo(protectionInfo?: ProtectionInfoProtobuf): Pr
 
 export function parseRestProtocolVersion(version: string | undefined): ProtocolVersion | undefined {
   switch (version?.toLowerCase()) {
-    case 'v2':
-      return ProtocolVersion.V2
     case 'v3':
       return ProtocolVersion.V3
-    case 'v4':
-      return ProtocolVersion.V4
     default:
       return undefined
   }

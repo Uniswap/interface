@@ -9,8 +9,10 @@ import { Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-export const exploreProtocolVersionFilterAtom = atom(ProtocolVersion.UNSPECIFIED)
-const PROTOCOL_VERSIONS = [ProtocolVersion.UNSPECIFIED, ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
+// Default to V3 only
+export const exploreProtocolVersionFilterAtom = atom(ProtocolVersion.V3)
+// Only show V3 pools
+const PROTOCOL_VERSIONS = [ProtocolVersion.V3]
 
 function ProtocolFilter() {
   const { t } = useTranslation()

@@ -1,4 +1,8 @@
 import ethereumLogo from 'assets/images/ethereum-logo.png'
+import bitcoinLogo from 'assets/images/coins/bitcoin.png'
+import citreaLogo from 'assets/images/coins/citrea.png'
+import citrusDollarLogo from 'assets/images/coins/citrus-dollar.png'
+import juiceswapLogo from 'assets/images/coins/juiceswap.png'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
@@ -21,31 +25,28 @@ export const approvedERC20: InteractiveToken[] = [
     logoUrl: ethereumLogo,
   },
   {
-    name: 'USDCoin',
-    symbol: 'USDC',
+    name: 'Citrus Dollar',
+    symbol: 'CUSD',
     address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
     chain: Chain.Ethereum,
-    color: '#2775CA',
-    logoUrl:
-      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+    color: '#ff8c00',
+    logoUrl: citrusDollarLogo,
   },
   {
-    name: 'Dai Stablecoin',
-    symbol: 'DAI',
+    name: 'Citrea',
+    symbol: 'CITREA',
     address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
     chain: Chain.Ethereum,
-    color: '#FFAA00',
-    logoUrl:
-      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+    color: '#d4d4d8',
+    logoUrl: citreaLogo,
   },
   {
-    name: 'Wrapped BTC',
-    symbol: 'WBTC',
+    name: 'JuiceSwap Token',
+    symbol: 'JUICE',
     address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
     chain: Chain.Ethereum,
-    color: '#F7931A',
-    logoUrl:
-      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png',
+    color: '#ff8c00',
+    logoUrl: juiceswapLogo,
   },
   {
     name: 'Euro Coin',
@@ -138,20 +139,18 @@ export const approvedERC20: InteractiveToken[] = [
     chain: Chain.Ethereum,
   },
   {
-    name: 'Pepe Token',
-    symbol: 'PEPE',
-    color: '#009E1E',
-    logoUrl:
-      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6982508145454Ce325dDbE47a25d4ec3d2311933/logo.png',
+    name: 'Citrea',
+    symbol: 'CITREA',
+    color: '#d4d4d8',
+    logoUrl: citreaLogo,
     address: '0x6982508145454ce325ddbe47a25d4ec3d2311933',
     chain: Chain.Ethereum,
   },
   {
-    name: 'Apecoin',
-    symbol: 'APE',
-    color: '#1046D5',
-    logoUrl:
-      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x4d224452801ACEd8B2F0aebE155379bb5D594381/logo.png',
+    name: 'JuiceSwap Token',
+    symbol: 'JUICE',
+    color: '#ff8c00',
+    logoUrl: juiceswapLogo,
     address: '0x4d224452801aced8b2f0aebe155379bb5d594381',
     chain: Chain.Ethereum,
   },
@@ -165,11 +164,10 @@ export const approvedERC20: InteractiveToken[] = [
     chain: Chain.Ethereum,
   },
   {
-    name: 'Tether',
-    symbol: 'USDT',
-    color: '#409192',
-    logoUrl:
-      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png',
+    name: 'Citrus Dollar',
+    symbol: 'CUSD',
+    color: '#ff8c00',
+    logoUrl: citrusDollarLogo,
     address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
     chain: Chain.Ethereum,
   },

@@ -10,15 +10,13 @@ import { Flex, useMedia } from 'ui/src'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const MAX_BOOSTED_POOLS = 3
 
 export function TopPools({ chainId }: { chainId: UniverseChainId | null }) {
   const account = useAccount()
   const { t } = useTranslation()
-  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
+  const isLPIncentivesEnabled = false // Disabled LP incentives
   const media = useMedia()
   const isBelowXlScreen = !media.xl
 

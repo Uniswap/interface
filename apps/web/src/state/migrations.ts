@@ -25,6 +25,7 @@ import { migration3 } from 'state/migrations/3'
 import { migration4 } from 'state/migrations/4'
 import { migration49 } from 'state/migrations/49'
 import { migration5 } from 'state/migrations/5'
+import { migration50 } from 'state/migrations/50'
 import { migration6 } from 'state/migrations/6'
 import { migration7 } from 'state/migrations/7'
 import { migration8 } from 'state/migrations/8'
@@ -93,9 +94,10 @@ export const migrations: MigrationManifest = {
   47: createLocalTransactionClearingMigration(47),
   48: createLocalTransactionClearingMigration(48),
   49: migration49,
+  50: migration50,
 } as const
 
-export const PERSIST_VERSION = 49
+export const PERSIST_VERSION = 50
 
 export const INDEXED_DB_REDUX_TABLE_NAME = 'redux'
 

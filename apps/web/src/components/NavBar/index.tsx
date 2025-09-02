@@ -1,6 +1,5 @@
+import { NavIcon } from 'components/Logo/NavIcon'
 import { ChainSelector } from 'components/NavBar/ChainSelector'
-import { CompanyMenu } from 'components/NavBar/CompanyMenu'
-import { NewUserCTAButton } from 'components/NavBar/DownloadApp/NewUserCTAButton'
 import { PreferenceMenu } from 'components/NavBar/PreferencesMenu'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { SearchBar } from 'components/NavBar/SearchBar'
@@ -11,11 +10,10 @@ import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import deprecatedStyled, { css } from 'lib/styled-components'
-import { Flex, Nav as TamaguiNav, styled, useMedia } from 'ui/src'
+import { Link } from 'react-router'
+import { Flex, Nav as TamaguiNav, Text, styled, useMedia } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT, breakpoints, zIndexes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 // Flex is position relative by default, we must unset the position on every Flex
 // between the body and search component
@@ -84,13 +82,21 @@ export default function Navbar() {
   const hideChainSelector = useShouldHideChainSelector()
 
   const { isTestnetModeEnabled } = useEnabledChains()
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   return (
     <Nav>
       <UnpositionedFlex row centered width="100%">
         <Left>
-          <CompanyMenu />
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <Flex row alignItems="center" gap="$gap4">
+              <NavIcon width={48} height={48} />
+              {!media.xl && (
+                <Text variant="subheading1" color="$accent1" userSelect="none">
+                  JuiceSwap
+                </Text>
+              )}
+            </Flex>
+          </Link>
           {areTabsVisible && <Tabs />}
         </Left>
 
@@ -98,11 +104,9 @@ export default function Navbar() {
 
         <Right>
           {collapseSearchBar && <SearchBar />}
-          {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
           {!account.isConnected && <PreferenceMenu />}
           {!hideChainSelector && <ChainSelector />}
           {isTestnetModeEnabled && <TestnetModeTooltip />}
-          {isEmbeddedWalletEnabled && !account.address && <NewUserCTAButton />}
           <Web3Status />
         </Right>
       </UnpositionedFlex>

@@ -14,7 +14,15 @@ function getStoreLocale(): Locale | undefined {
 
 function setupInitialLanguage() {
   const lngQuery = typeof window !== 'undefined' ? new URL(window.location.href).searchParams.get('lng') : ''
-  const initialLocale = parseLocale(lngQuery) ?? getStoreLocale() ?? navigatorLocale() ?? DEFAULT_LOCALE
+  console.log(`CLAUDE DEBUG: URL lng parameter: "${lngQuery}"`)
+  const parsedLocale = parseLocale(lngQuery)
+  console.log(`CLAUDE DEBUG: Parsed locale: ${parsedLocale}`)
+  const storeLocale = getStoreLocale()
+  console.log(`CLAUDE DEBUG: Store locale: ${storeLocale}`)
+  const navLocale = navigatorLocale()
+  console.log(`CLAUDE DEBUG: Navigator locale: ${navLocale}`)
+  const initialLocale = parsedLocale ?? storeLocale ?? navLocale ?? DEFAULT_LOCALE
+  console.log(`CLAUDE DEBUG: Final initial locale: ${initialLocale}`)
   changeLanguage(initialLocale)
 }
 

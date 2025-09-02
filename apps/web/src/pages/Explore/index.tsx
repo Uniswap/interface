@@ -12,7 +12,6 @@ import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useResetAtom } from 'jotai/utils'
 import ExploreStatsSection from 'pages/Explore/ExploreStatsSection'
-import ProtocolFilter from 'pages/Explore/ProtocolFilter'
 import { ExploreTab } from 'pages/Explore/constants'
 import { useExploreParams } from 'pages/Explore/redirects'
 import RecentTransactions from 'pages/Explore/tables/RecentTransactions'
@@ -150,7 +149,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
 
   const urlChainId = useChainIdFromUrlParam()
   const chainInfo = useMemo(() => {
-    return urlChainId ? getChainInfo(urlChainId) : undefined
+    // Always use Polygon if no chain is specified or if an unsupported chain is requested
+    return urlChainId ? getChainInfo(urlChainId) : getChainInfo(UniverseChainId.Polygon)
   }, [urlChainId])
   useEffect(() => {
     const tabIndex = Pages.findIndex((page) => page.key === tab)
@@ -233,7 +233,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               )}
               <TableNetworkFilter showMultichainOption={currentKey !== ExploreTab.Transactions} />
               {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />}
-              {currentKey === ExploreTab.Pools && <ProtocolFilter />}
+              {/* Protocol filter removed - only V3 pools shown */}
               <SearchBar tab={currentKey} />
             </Flex>
           </Flex>

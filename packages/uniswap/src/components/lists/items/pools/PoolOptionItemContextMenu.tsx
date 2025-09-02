@@ -69,14 +69,7 @@ function _PoolOptionItemContextMenu({
     const options: MenuOptionItem[] = []
 
     if (actions.includes(PoolContextMenuAction.CopyAddress)) {
-      const label =
-        protocolVersion === ProtocolVersion.V4
-          ? copiedAddress
-            ? t('notification.copied.poolId')
-            : t('common.copy.poolId')
-          : copiedAddress
-            ? t('notification.copied.address')
-            : t('common.copy.address')
+      const label = copiedAddress ? t('notification.copied.address') : t('common.copy.address')
       options.push({
         onPress: onCopyAddress,
         label,

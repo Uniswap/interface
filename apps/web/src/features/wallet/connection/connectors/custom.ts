@@ -3,34 +3,27 @@ import { CONNECTOR_ICON_OVERRIDE_MAP } from 'components/Web3Provider/constants'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { uniswapWalletConnect } from 'components/Web3Provider/walletConnect'
 import { WalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
-import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
 import { useAtom } from 'jotai'
 import { persistHideMobileAppPromoBannerAtom } from 'state/application/atoms'
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
 import { useEvent } from 'utilities/src/react/hooks'
 
-const CUSTOM_CONNECTOR_IDS = [
-  CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
-  CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
-] as const
+const CUSTOM_CONNECTOR_IDS = [CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID] as const
 
 /** Type for non-standard wallet connectors that require custom handling. */
 export type CustomConnectorId = (typeof CUSTOM_CONNECTOR_IDS)[number]
 
 /** Returns a map of custom connector IDs to their connection functions. */
 export function useConnectCustomWalletsMap(): Record<CustomConnectorId, () => Promise<void>> {
-  const connectEmbeddedWallet = useConnectEmbeddedWallet()
   const connectUniswapWallet = useConnectUniswapWallet()
 
   return {
     [CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID]: connectUniswapWallet,
-    [CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID]: connectEmbeddedWallet,
   }
 }
 
 const APPLY_CUSTOM_CONNECTOR_META_MAP = {
   [CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID]: applyUniswapWalletConnectorMeta,
-  [CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID]: applyEmbeddedWalletConnectorMeta,
 } as const
 
 /**
@@ -41,7 +34,6 @@ const APPLY_CUSTOM_CONNECTOR_META_MAP = {
  *
  * Current transformations:
  * - Uniswap Wallet: Adds a new connector to the array
- * - Embedded Wallet: Adds customConnectorId, needed to trigger specific behavior in connection flow.
  * - Icon overrides: Applies custom icons from CONNECTOR_ICON_OVERRIDE_MAP
  *
  */
@@ -88,32 +80,4 @@ const UNISWAP_WALLET_CONNECTOR_META = {
 /** Adds a WalletConnectorMeta for the Uniswap Wallet Connect connector. */
 function applyUniswapWalletConnectorMeta(walletConnectors: WalletConnectorMeta[]): WalletConnectorMeta[] {
   return [...walletConnectors, UNISWAP_WALLET_CONNECTOR_META]
-}
-
-// =========================================
-// Embedded Wallet - Custom Connector
-// =========================================
-// Requires custom authentication flow via passkey sign-in.
-// Unlike standard wagmi connectors that activate immediately,
-// this connector needs to complete the passkey flow before
-// updating wagmi's connection state.
-
-/** Adds a customConnectorId to the embedded wallet connector to ensure it is treated as a custom connector. */
-function applyEmbeddedWalletConnectorMeta(walletConnectors: WalletConnectorMeta[]): WalletConnectorMeta[] {
-  return walletConnectors.map((walletConnector) => {
-    if (walletConnector.wagmi?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
-      return { ...walletConnector, customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID }
-    }
-    return walletConnector
-  })
-}
-
-/** Returns a function that triggers the passkey sign-in flow and resolves after it has completed. */
-function useConnectEmbeddedWallet(): () => Promise<void> {
-  const { signInWithPasskeyAsync } = useSignInWithPasskey()
-
-  return useEvent(async () => {
-    // wraps to await but return void
-    await signInWithPasskeyAsync()
-  })
 }

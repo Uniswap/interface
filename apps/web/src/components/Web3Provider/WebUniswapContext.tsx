@@ -111,10 +111,8 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
   const getHasMismatch = useHasAccountMismatchCallback()
   const isPermitMismatchUxEnabled = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
   const getIsUniswapXSupported = useEvent((innerChainId?: UniverseChainId) => {
-    if (isPermitMismatchUxEnabled) {
-      return !getHasMismatch(innerChainId)
-    }
-    return true
+    // Disable UniswapX to avoid Trading API dependency
+    return false
   })
   const getCanSignPermits = useGetCanSignPermits()
 

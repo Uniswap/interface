@@ -73,9 +73,6 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
   const onExitPreferencesMenu = useCallback(() => changeView(PreferencesView.SETTINGS), [changeView])
   const { t } = useTranslation()
   const tabsContent = useTabsContent()
-  const productContent = useMenuContent({
-    keys: [MenuSectionTitle.Products],
-  })
   const menuContent = useMenuContent({
     keys: [MenuSectionTitle.Protocol, MenuSectionTitle.Company],
   })
@@ -114,20 +111,6 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
                   />
                 ))}
               </MenuSection>
-              {Object.values(productContent).map((sectionContent, index) => (
-                <MenuSection key={`${sectionContent.title}_${index}`} title={sectionContent.title} collapsible={false}>
-                  {sectionContent.items.map(({ label, href, internal, icon }, index) => (
-                    <MenuLink
-                      key={`${label}_${index}}`}
-                      label={label}
-                      href={href}
-                      internal={internal}
-                      closeMenu={closeMenu}
-                      icon={icon}
-                    />
-                  ))}
-                </MenuSection>
-              ))}
 
               <Separator backgroundColor="$surface3" />
 

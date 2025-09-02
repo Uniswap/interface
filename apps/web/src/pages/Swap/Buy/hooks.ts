@@ -64,7 +64,7 @@ export function useMeldFiatCurrencyInfo(selectedCountry?: FORCountry): FiatOnRam
 
   return {
     meldSupportedFiatCurrency,
-    notAvailableInThisRegion: supportedFiatCurrencies?.fiatCurrencies.length === 0,
+    notAvailableInThisRegion: true, // OnRamp disabled
   }
 }
 

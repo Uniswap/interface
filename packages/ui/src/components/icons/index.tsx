@@ -1,6 +1,7 @@
 export { BackArrow } from './BackArrow'
 export { AnimatedCaretChange } from './Caret'
 export { HeartWithFill } from './HeartWithFill'
+export { AnimatedJuiceSwapLogo, JuiceSwapLogo } from './JuiceSwapLogo'
 export { OSDynamicCloudIcon } from './OSDynamicCloudIcon'
 export { OnboardingUnicon } from './OnboardingUnicon'
 export { QuestionInCircleFilled } from './QuestionInCircleFilled'

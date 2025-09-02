@@ -28,8 +28,6 @@ import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-ap
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { getChainUrlParam } from 'utils/chainParams'
@@ -239,9 +237,8 @@ const PoolDetailsHeaderActions = ({
         alignRight
       >
         <>
-          {protocolVersion !== ProtocolVersion.V4 && (
-            <ContractsDropdownRow address={poolAddress} chainId={chainId} tokens={[token0, token1]} />
-          )}
+          {/* V4 removed, always show pool contract */}
+          <ContractsDropdownRow address={poolAddress} chainId={chainId} tokens={[token0, token1]} />
           <ContractsDropdownRow address={token0?.address} chainId={chainId} tokens={[token0]} />
           <ContractsDropdownRow address={token1?.address} chainId={chainId} tokens={[token1]} />
         </>
@@ -292,7 +289,7 @@ export function PoolDetailsHeader({
     () => (token0 && token1 ? [gqlToCurrency(token0), gqlToCurrency(token1)] : []),
     [token0, token1],
   )
-  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
+  const isLPIncentivesEnabled = false // Disabled LP incentives
   const showRewards = isLPIncentivesEnabled && rewardsApr && rewardsApr > 0
 
   if (loading) {
