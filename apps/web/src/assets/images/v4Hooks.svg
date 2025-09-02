@@ -1,0 +1,50 @@
+<svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient background -->
+  <defs>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF8934;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF6B1A;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bookGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f0f0f0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="72" height="72" rx="12" fill="url(#orangeGrad)"/>
+  
+  <!-- Subtle pattern -->
+  <defs>
+    <pattern id="grid" width="6" height="6" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="0.5" fill="rgba(255,255,255,0.1)"/>
+    </pattern>
+  </defs>
+  <rect width="72" height="72" fill="url(#grid)"/>
+  
+  <!-- Main book (centered) -->
+  <rect x="16" y="12" width="40" height="48" rx="3" fill="url(#bookGrad)" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+  
+  <!-- Book spine -->
+  <rect x="16" y="12" width="6" height="48" rx="3" fill="#FF8934"/>
+  
+  <!-- Book pages effect -->
+  <rect x="18" y="10" width="40" height="48" rx="3" fill="rgba(255,255,255,0.8)" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+  <rect x="20" y="8" width="40" height="48" rx="3" fill="rgba(255,255,255,0.6)" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+  
+  <!-- Book content lines -->
+  <line x1="26" y1="20" x2="52" y2="20" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>
+  <line x1="26" y1="26" x2="50" y2="26" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>
+  <line x1="26" y1="32" x2="52" y2="32" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>
+  <line x1="26" y1="38" x2="48" y2="38" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>
+  <line x1="26" y1="44" x2="52" y2="44" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>
+  <line x1="26" y1="50" x2="50" y2="50" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>
+  
+  <!-- V4 Badge on book (centered) -->
+  <rect x="28" y="14" width="24" height="12" rx="6" fill="#FF8934"/>
+  <text x="40" y="22" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="white" font-weight="bold">V4</text>
+  
+  <!-- Book bookmark -->
+  <rect x="50" y="12" width="4" height="18" fill="#FF6B1A"/>
+  <polygon points="50,30 52,28 54,30" fill="#FF6B1A"/>
+</svg>
