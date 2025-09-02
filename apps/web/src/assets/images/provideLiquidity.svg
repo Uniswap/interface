@@ -1,0 +1,46 @@
+<svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient background -->
+  <defs>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF8934;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF6B1A;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="72" height="72" rx="12" fill="url(#orangeGrad)"/>
+  
+  <!-- Subtle grid pattern -->
+  <defs>
+    <pattern id="grid" width="4" height="4" patternUnits="userSpaceOnUse">
+      <path d="M 4 0 L 0 0 0 4" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+  <rect width="72" height="72" fill="url(#grid)"/>
+  
+  <!-- Liquidity pool visualization -->
+  <!-- Pool 1 -->
+  <circle cx="24" cy="28" r="6" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+  <circle cx="24" cy="28" r="3" fill="#FF8934"/>
+  
+  <!-- Pool 2 -->
+  <circle cx="48" cy="28" r="6" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+  <circle cx="48" cy="28" r="3" fill="#FF8934"/>
+  
+  <!-- Central liquidity flow -->
+  <path d="M30 28 Q36 22 42 28" stroke="rgba(255,255,255,0.8)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M30 28 Q36 34 42 28" stroke="rgba(255,255,255,0.8)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  
+  <!-- Flow arrows -->
+  <path d="M38 24 L42 28 L38 32" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M34 32 L30 28 L34 24" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Yield/Growth indicators -->
+  <path d="M20 40 L24 36 L28 40" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M44 40 L48 36 L52 40" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Protocol diversity indicators -->
+  <rect x="12" y="56" width="12" height="3" rx="1.5" fill="rgba(255,255,255,0.7)"/>
+  <rect x="28" y="56" width="16" height="3" rx="1.5" fill="rgba(255,255,255,0.9)"/>
+  <rect x="48" y="56" width="12" height="3" rx="1.5" fill="rgba(255,255,255,0.7)"/>
+</svg>

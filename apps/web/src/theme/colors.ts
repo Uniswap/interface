@@ -34,8 +34,8 @@ export const colors = {
   pink700: '#55072A',
   pink800: '#350318',
   pink900: '#2B000B',
-  pinkBase: '#FC74FE',
-  pinkVibrant: '#F50DB4',
+  pinkBase: '#FF8934',
+  pinkVibrant: '#FF4D00',
   red50: '#FAECEA',
   red100: '#FED5CF',
   red200: '#FEA79B',
@@ -186,9 +186,9 @@ const commonTheme = {
   chain_56_background: colors.networkBsc,
   chain_81457: colors.networkBlast,
   chain_7777777: colors.neutral1_light,
-  promotional: colors.magenta300,
+  promotional: '#FF8934',
 
-  brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',
+  brandedGradient: 'linear-gradient(139.57deg, #FF8934 4.35%, #FFB8BC 96.44%);',
   promotionalGradient: colors.accent1_light,
 }
 
