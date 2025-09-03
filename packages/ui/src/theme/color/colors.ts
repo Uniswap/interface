@@ -166,6 +166,10 @@ export const networkColors = {
     light: '#3667F6',
     dark: '#3667F6',
   },
+  citrea: {
+    light: '#ff6f00',
+    dark: '#ff8f3c',
+  },
 }
 
 const sporeLight = {
@@ -346,6 +350,7 @@ export const colorsLight = {
   chain_11155111: networkColors.ethereum.light,
   chain_1301: networkColors.unichain.light,
   chain_10143: networkColors.monad.light,
+  chain_5115: networkColors.citrea.light,
 
   pinkThemed: colors.pinkLight,
 }
@@ -435,6 +440,7 @@ export const colorsDark = {
   chain_11155111: networkColors.ethereum.dark,
   chain_1301: networkColors.unichain.dark,
   chain_10143: networkColors.monad.dark,
+  chain_5115: networkColors.citrea.dark,
 
   pinkThemed: colors.pinkDark,
 }

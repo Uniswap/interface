@@ -45,6 +45,7 @@ export enum ElementName {
   ChainWorldChain = 'chain-world-chain',
   ChainZkSync = 'chain-zksync',
   ChainZora = 'chain-zora',
+  ChainCitreaTestnet = 'chain-citrea-testnet',
   ChooseInputToken = 'choose-input-token',
   ChooseOutputToken = 'choose-output-token',
   ClearPending = 'clear-pending',
