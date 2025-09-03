@@ -1,4 +1,3 @@
-import { CreditCardIcon } from 'components/Icons/CreditCard'
 import { Limit } from 'components/Icons/Limit'
 import { SwapV2 } from 'components/Icons/SwapV2'
 import { MenuItem } from 'components/NavBar/CompanyMenu/Content'
@@ -8,9 +7,6 @@ import { useLocation } from 'react-router'
 import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
 import { Compass } from 'ui/src/components/icons/Compass'
 import { Pools } from 'ui/src/components/icons/Pools'
-import { ReceiveAlt } from 'ui/src/components/icons/ReceiveAlt'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export type TabsSection = {
   title: string
@@ -29,7 +25,6 @@ export const useTabsContent = (): TabsSection[] => {
   const { t } = useTranslation()
   const { pathname } = useLocation()
   const theme = useTheme()
-  const isFiatOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
 
   return [
     {
@@ -50,22 +45,6 @@ export const useTabsContent = (): TabsSection[] => {
           href: '/limit',
           internal: true,
         },
-        {
-          label: t('common.buy.label'),
-          icon: <CreditCardIcon fill={theme.neutral2} />,
-          href: '/buy',
-          internal: true,
-        },
-        ...(isFiatOffRampEnabled
-          ? [
-              {
-                label: t('common.sell.label'),
-                icon: <ReceiveAlt fill={theme.neutral2} size={24} transform="rotate(180deg)" />,
-                href: '/sell',
-                internal: true,
-              },
-            ]
-          : []),
       ],
     },
     {
