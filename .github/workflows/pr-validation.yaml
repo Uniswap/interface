@@ -1,0 +1,37 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [develop]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Type checking
+        run: yarn g:typecheck
+
+      - name: Linting
+        run: yarn g:lint
+
+      - name: Run tests
+        run: yarn g:test
+
+      - name: Build production
+        run: yarn web build:production
+        env:
+          NODE_ENV: production
