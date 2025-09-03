@@ -8,6 +8,7 @@ import {
 import { useCallback, useMemo, useRef } from 'react'
 import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import {
+  Chain,
   useTopV2PairsQuery,
   useTopV3PoolsQuery,
   useTopV4PoolsQuery,
@@ -29,7 +30,9 @@ export function usePoolsFromTokenAddress({
   chainId: UniverseChainId
   isNative?: boolean
 }) {
-  const chain = toGraphQLChain(chainId)
+  const rawChain = toGraphQLChain(chainId)
+  const isValidChain = rawChain !== 'CITREA_TESTNET'
+  const chain = isValidChain ? rawChain as Chain : 'ETHEREUM' as Chain
   const {
     loading: loadingV4,
     error: errorV4,
@@ -41,6 +44,7 @@ export function usePoolsFromTokenAddress({
       tokenAddress: isNative ? DEFAULT_NATIVE_ADDRESS : tokenAddress,
       chain,
     },
+    skip: !isValidChain,
   })
 
   const {
@@ -54,6 +58,7 @@ export function usePoolsFromTokenAddress({
       tokenAddress,
       chain,
     },
+    skip: !isValidChain,
   })
 
   const {
@@ -67,7 +72,7 @@ export function usePoolsFromTokenAddress({
       tokenAddress,
       chain,
     },
-    skip: !chainId,
+    skip: !chainId || !isValidChain,
   })
   const loading = loadingV4 || loadingV3 || loadingV2
 

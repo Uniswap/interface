@@ -19,7 +19,7 @@ import { ClickableStyle } from 'theme/components/styles'
 import { Flex, Text, useMedia } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Token, Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -151,7 +151,7 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
         <StyledLink
           to={getTokenDetailsURL({
             address: unwrappedToken.address,
-            chain: toGraphQLChain(chainId ?? defaultChainId),
+            chain: toGraphQLChain(chainId ?? defaultChainId) !== 'CITREA_TESTNET' ? toGraphQLChain(chainId ?? defaultChainId) as Chain : 'ETHEREUM' as Chain,
           })}
         >
           {unwrappedToken.symbol}

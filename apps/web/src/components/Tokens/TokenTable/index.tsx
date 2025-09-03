@@ -37,6 +37,7 @@ import { Flex, Text, View, styled, useMedia } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -207,7 +208,7 @@ function TokenTable({
           ),
           link: getTokenDetailsURL({
             address: unwrappedToken.address,
-            chain: toGraphQLChain(chainId ?? defaultChainId),
+            chain: toGraphQLChain(chainId ?? defaultChainId) !== 'CITREA_TESTNET' ? toGraphQLChain(chainId ?? defaultChainId) as Chain : 'ETHEREUM' as Chain,
           }),
           analytics: {
             elementName: ElementName.TokensTableRow,

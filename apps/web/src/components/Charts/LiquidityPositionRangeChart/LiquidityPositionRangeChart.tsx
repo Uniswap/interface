@@ -31,7 +31,7 @@ import { LoadingPriceCurve } from 'ui/src/components/icons/LoadingPriceCurve'
 import { opacify } from 'ui/src/theme'
 import { zIndexes } from 'ui/src/theme/zIndexes'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { HistoryDuration, Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import useResizeObserver from 'use-resize-observer'
@@ -461,10 +461,12 @@ function LiquidityPositionRangeChart({
   const isV3 = version === ProtocolVersion.V3
   const isV4 = version === ProtocolVersion.V4
   const chainInfo = getChainInfo(chainId)
+  const rawChain = chainInfo.backendChain.chain
+  const chain = rawChain !== 'CITREA_TESTNET' ? rawChain as Chain : 'ETHEREUM' as Chain
   const variables = poolAddressOrId
     ? {
         addressOrId: poolAddressOrId,
-        chain: chainInfo.backendChain.chain,
+        chain,
         duration: duration ?? HistoryDuration.Month,
         isV4,
         isV3,

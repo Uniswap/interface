@@ -11,6 +11,7 @@ import { Flex, Text, TouchableArea } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
@@ -132,7 +133,7 @@ const OtherChainsBalanceSummary = ({
               navigate(
                 getTokenDetailsURL({
                   address: currency.isToken ? currency.address : undefined,
-                  chain: toGraphQLChain(chainId),
+                  chain: toGraphQLChain(chainId) !== 'CITREA_TESTNET' ? toGraphQLChain(chainId) as Chain : 'ETHEREUM' as Chain,
                 }),
               )
             }
