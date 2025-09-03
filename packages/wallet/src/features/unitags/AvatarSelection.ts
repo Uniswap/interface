@@ -1,6 +1,6 @@
 import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker'
 import { NUM_FIRST_NFTS } from 'uniswap/src/components/nfts/NftsList'
-import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { formatNftItems } from 'uniswap/src/features/nfts/utils'
 
@@ -41,7 +41,7 @@ export function useAvatarSelectionHandler({
       ownerAddress: address,
       first: NUM_FIRST_NFTS,
       filter: { filterSpam: false },
-      chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as any,
+      chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as Chain[],
     },
   })
   const nftItems = formatNftItems(nftsData)

@@ -5,6 +5,7 @@ import { View } from 'react-native'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
+  Chain,
   TransactionHistoryUpdaterQueryResult,
   TransactionListQuery,
   useTransactionHistoryUpdaterQuery,
@@ -46,14 +47,14 @@ export function TransactionHistoryUpdater(): JSX.Element | null {
 
   const activeAddresses = activeAccountAddress ?? []
   const { data: activeAccountData } = useTransactionHistoryUpdaterQuery({
-    variables: { addresses: activeAddresses, chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as any },
+    variables: { addresses: activeAddresses, chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as Chain[] },
     pollInterval: PollingInterval.KindaFast,
     fetchPolicy: 'network-only', // Ensure latest data.
     skip: activeAddresses.length === 0,
   })
 
   const { data: nonActiveAccountData } = useTransactionHistoryUpdaterQuery({
-    variables: { addresses: nonActiveAccountAddresses, chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as any },
+    variables: { addresses: nonActiveAccountAddresses, chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as Chain[] },
     pollInterval: PollingInterval.Normal,
     fetchPolicy: 'network-only', // Ensure latest data.
     skip: nonActiveAccountAddresses.length === 0,
@@ -190,7 +191,7 @@ export function useFetchAndDispatchReceiveNotification(): (
   ): Promise<void> => {
     // Fetch full transaction history for user address.
     const { data: fullTransactionData } = await fetchFullTransactionData({
-      variables: { address, chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as any },
+      variables: { address, chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as Chain[] },
       fetchPolicy: 'network-only', // Ensure latest data.
     })
 
