@@ -45,7 +45,7 @@ export const CITREA_TESTNET_INFO = {
   platform: Platform.EVM,
   assetRepoNetworkName: undefined,
   backendChain: {
-    chain: 'CITREA_TESTNET' as any, // Custom chain ID for backend
+    chain: 'CITREA_TESTNET' as const, // Custom chain ID for backend
     backendSupported: false,
     nativeTokenBackendAddress: undefined,
   },

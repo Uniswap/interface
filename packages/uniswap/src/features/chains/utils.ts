@@ -61,7 +61,7 @@ export function isMainnetChainId(chainId?: UniverseChainId): boolean {
   return chainId === UniverseChainId.Mainnet || chainId === UniverseChainId.Sepolia
 }
 
-export function toGraphQLChain(chainId: UniverseChainId): GqlChainId {
+export function toGraphQLChain(chainId: UniverseChainId): GqlChainId | 'CITREA_TESTNET' {
   return getChainInfo(chainId).backendChain.chain
 }
 
@@ -244,7 +244,9 @@ export function getEnabledChains({
 
   // Extract chain IDs and GQL chains from filtered results
   const chains = enabledChainInfos.map((chainInfo) => chainInfo.id)
-  const gqlChains = enabledChainInfos.map((chainInfo) => chainInfo.backendChain.chain)
+  const gqlChains = enabledChainInfos
+    .filter((chainInfo) => chainInfo.backendChain.backendSupported)
+    .map((chainInfo) => chainInfo.backendChain.chain)
 
   const result = {
     chains,

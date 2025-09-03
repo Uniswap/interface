@@ -15,7 +15,7 @@ import { WORLD_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/worldchai
 import { ZKSYNC_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/zksync'
 import { ZORA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/zora'
 import { SOLANA_CHAIN_INFO } from 'uniswap/src/features/chains/svm/info/solana'
-import { UniverseChainId, UniverseChainInfo } from 'uniswap/src/features/chains/types'
+import { GqlChainId, UniverseChainId, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getNonEmptyArrayOrThrow } from 'utilities/src/primitives/array'
 
@@ -96,10 +96,10 @@ export const UNIVERSE_CHAIN_INFO = {
   [UniverseChainId.Solana]: SOLANA_CHAIN_INFO,
 } as const satisfies AllChainsMap
 
-export const GQL_MAINNET_CHAINS = ORDERED_EVM_CHAINS.filter((chain) => !chain.testnet).map(
-  (chain) => chain.backendChain.chain,
-)
+export const GQL_MAINNET_CHAINS = ORDERED_EVM_CHAINS.filter((chain) => !chain.testnet)
+  .map((chain) => chain.backendChain.chain)
+  .filter((chain) => chain !== 'CITREA_TESTNET') as GqlChainId[]
 
-export const GQL_TESTNET_CHAINS = ORDERED_EVM_CHAINS.filter((chain) => chain.testnet).map(
-  (chain) => chain.backendChain.chain,
-)
+export const GQL_TESTNET_CHAINS = ORDERED_EVM_CHAINS.filter((chain) => chain.testnet)
+  .map((chain) => chain.backendChain.chain)
+  .filter((chain) => chain !== 'CITREA_TESTNET') as GqlChainId[]

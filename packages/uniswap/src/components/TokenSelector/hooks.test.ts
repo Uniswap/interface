@@ -72,7 +72,7 @@ const favoriteTokens = [eth, dai, usdc_base]
 const favoriteTokenBalances = [ethBalance, daiBalance, usdcBaseBalance]
 
 const favoriteCurrencyIds = favoriteTokens.map((t) =>
-  buildCurrencyId(fromGraphQLChain(t.chain) ?? UniverseChainId.Mainnet, t.address),
+  buildCurrencyId(fromGraphQLChain(t.chain!) ?? UniverseChainId.Mainnet, t.address!),
 )
 
 const preloadedState: PreloadedState<UniswapState> = {

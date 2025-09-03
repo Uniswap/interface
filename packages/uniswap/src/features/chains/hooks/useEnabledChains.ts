@@ -116,7 +116,7 @@ export function createGetEnabledChains(ctx: {
 // Note: can be used outside of Uniswap context
 export function useEnabledChainsWithConnector(connector?: Connector): {
   chains: UniverseChainId[]
-  gqlChains: GqlChainId[]
+  gqlChains: (GqlChainId | 'CITREA_TESTNET')[]
   defaultChainId: UniverseChainId
   isTestnetModeEnabled: boolean
 } {

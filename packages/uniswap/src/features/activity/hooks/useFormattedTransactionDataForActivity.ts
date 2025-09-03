@@ -104,7 +104,7 @@ export function useGraphQLFormattedTransactionDataForActivity({
     error: requestError,
   } = useTransactionListQuery({
     ...queryOptions,
-    variables: { address, chains: gqlChains, pageSize },
+    variables: { address, chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as any, pageSize },
     notifyOnNetworkStatusChange: true,
     // rely on TransactionHistoryUpdater for polling
     pollInterval: undefined,

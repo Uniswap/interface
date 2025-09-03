@@ -83,7 +83,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
       ownerAddress: owner,
       first: NUM_FIRST_NFTS,
       filter: { filterSpam: false },
-      chains: gqlChains,
+      chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as any,
     },
     notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
     errorPolicy: 'all', // Suppress non-null image.url fields from backend

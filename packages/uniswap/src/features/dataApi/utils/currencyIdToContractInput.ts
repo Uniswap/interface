@@ -8,8 +8,17 @@ import { currencyIdToChain, currencyIdToGraphQLAddress } from 'uniswap/src/utils
 
 // Converts CurrencyId to ContractInput format for GQL token queries
 export function currencyIdToContractInput(id: CurrencyId): ContractInput {
+  const chainId = currencyIdToChain(id) ?? UniverseChainId.Mainnet
+  const gqlChain = toGraphQLChain(chainId)
+  // Filter out unsupported chains for GraphQL queries
+  if (gqlChain === 'CITREA_TESTNET') {
+    return {
+      chain: toGraphQLChain(UniverseChainId.Mainnet) as any,
+      address: currencyIdToGraphQLAddress(id) ?? undefined,
+    }
+  }
   return {
-    chain: toGraphQLChain(currencyIdToChain(id) ?? UniverseChainId.Mainnet),
+    chain: gqlChain as any,
     address: currencyIdToGraphQLAddress(id) ?? undefined,
   }
 }

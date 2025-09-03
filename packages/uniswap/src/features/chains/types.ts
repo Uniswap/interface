@@ -39,7 +39,7 @@ export type SVMUniverseChainId = UniverseChainIdByPlatform<Platform.SVM>
 
 export interface EnabledChainsInfo {
   chains: UniverseChainId[]
-  gqlChains: GqlChainId[]
+  gqlChains: (GqlChainId | 'CITREA_TESTNET')[]
   defaultChainId: UniverseChainId
   isTestnetModeEnabled: boolean
 }
@@ -68,7 +68,7 @@ export interface RetryOptions {
 export type GqlChainId = Exclude<BackendChainId, BackendChainId.UnknownChain | BackendChainId.EthereumGoerli>
 
 export interface BackendChain {
-  chain: GqlChainId
+  chain: GqlChainId | 'CITREA_TESTNET'
   /**
    * Set to false if the chain is not available on Explore.
    */
