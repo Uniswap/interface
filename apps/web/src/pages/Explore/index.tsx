@@ -28,6 +28,7 @@ import { Plus } from 'ui/src/components/icons/Plus'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isBackendSupportedChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { getChainUrlParam, useChainIdFromUrlParam } from 'utils/chainParams'
@@ -166,7 +167,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   useOnGlobalChainSwitch(
     useCallback(
       (chain: UniverseChainId) => {
-        if (isBackendSupportedChain(toGraphQLChain(chain))) {
+        const rawChain = toGraphQLChain(chain)
+        if (rawChain !== 'CITREA_TESTNET' && isBackendSupportedChain(rawChain as Chain)) {
           navigate(getTokenExploreURL({ tab, chainUrlParam: getChainUrlParam(chain) }))
         }
       },

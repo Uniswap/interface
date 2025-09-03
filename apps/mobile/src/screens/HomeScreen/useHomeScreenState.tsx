@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useNftsTabQuery, Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormattedTransactionDataForActivity } from 'uniswap/src/features/activity/hooks/useFormattedTransactionDataForActivity'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
@@ -54,7 +54,7 @@ export function useHomeScreenState(): {
       ownerAddress: address,
       first: 1,
       filter: { filterSpam: true },
-      chains: gqlChains,
+      chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as Chain[],
     },
     pollInterval: EMPTY_WALLET_NFT_POLL_INTERVAL,
     notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore

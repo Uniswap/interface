@@ -9,6 +9,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { View } from 'ui/src'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { GqlChainId } from 'uniswap/src/features/chains/types'
 
 const AssetsContainer = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -33,7 +34,7 @@ export default function NFTs({ account }: { account: string }) {
     ownerAddress: account,
     first: DEFAULT_NFT_QUERY_AMOUNT,
     skip: !accountDrawer.isOpen,
-    chains: isTestnetModeEnabled ? gqlChains : [Chain.Ethereum, Chain.Zora],
+    chains: isTestnetModeEnabled ? gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as GqlChainId[] : [Chain.Ethereum, Chain.Zora],
   })
 
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()

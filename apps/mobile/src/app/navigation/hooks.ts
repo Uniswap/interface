@@ -8,6 +8,7 @@ import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { useTransactionListLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { GqlChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -56,7 +57,7 @@ function useGraphQLEagerExternalProfileNavigation(): EagerExternalProfileNavigat
 
   const preload = useCallback(
     async (address: string) => {
-      await load({ variables: { address, chains: gqlChains } })
+      await load({ variables: { address, chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as GqlChainId[] } })
     },
     [gqlChains, load],
   )
@@ -102,7 +103,7 @@ function useGraphQLEagerExternalProfileRootNavigation(): EagerExternalProfileRoo
       await load({
         variables: {
           address,
-          chains: gqlChains,
+          chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as GqlChainId[],
         },
       })
     },

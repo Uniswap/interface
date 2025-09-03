@@ -9,6 +9,7 @@ import {
   useActivityWebLazyQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { GqlChainId } from 'uniswap/src/features/chains/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useInterval } from 'utilities/src/time/timing'
 
@@ -32,7 +33,7 @@ function AssetActivityProviderInternal({ children }: PropsWithChildren) {
   const variables = useMemo(
     () => ({
       account: account.address ?? '',
-      chains: gqlChains,
+      chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as GqlChainId[],
       // Backend will return off-chain activities even if gqlChains are all testnets.
       includeOffChain: !isTestnetModeEnabled,
       // Include the externalsessionIDs of all FOR transactions in the local store,

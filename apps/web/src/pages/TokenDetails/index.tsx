@@ -17,9 +17,9 @@ import { useLocation, useNavigate, useParams } from 'react-router'
 import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
 import { useSporeColors } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useTokenWebQuery, Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId, GqlChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -126,14 +126,20 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   const currencyChainInfo = getChainInfo(useChainIdFromUrlParam() ?? UniverseChainId.Mainnet)
 
   const isNative = tokenAddress === NATIVE_CHAIN_ID
+  
+  const rawChain = currencyChainInfo.backendChain.chain
+  const isValidChain = rawChain !== 'CITREA_TESTNET'
+  const chain = isValidChain ? rawChain as Chain : 'ETHEREUM' as Chain
+  const gqlChain = isValidChain ? rawChain as GqlChainId : 'ETHEREUM' as GqlChainId
 
-  const tokenDBAddress = isNative ? getNativeTokenDBAddress(currencyChainInfo.backendChain.chain) : tokenAddress
+  const tokenDBAddress = isNative ? getNativeTokenDBAddress(chain) : tokenAddress
 
   const tokenQuery = useTokenWebQuery({
-    variables: { address: tokenDBAddress, chain: currencyChainInfo.backendChain.chain },
+    variables: { address: tokenDBAddress, chain },
     errorPolicy: 'all',
+    skip: !isValidChain,
   })
-  const chartState = useCreateTDPChartState(tokenDBAddress, currencyChainInfo.backendChain.chain)
+  const chartState = useCreateTDPChartState(tokenDBAddress, chain)
 
   const multiChainMap = useMultiChainMap(tokenQuery)
 
@@ -159,7 +165,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   return useMemo(() => {
     return {
       currency,
-      currencyChain: currencyChainInfo.backendChain.chain,
+      currencyChain: gqlChain,
       currencyChainId: currencyChainInfo.id,
       // `currency.address` is checksummed, whereas the `tokenAddress` url param may not be
       address: (currency?.isNative ? NATIVE_CHAIN_ID : currency?.address) ?? tokenAddress,

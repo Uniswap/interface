@@ -19,6 +19,7 @@ import { SerializedPair, SlippageTolerance } from 'state/user/types'
 import {
   TokenSortableField,
   useTopTokensQuery,
+  Chain,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useGetPositionsForPairs } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -160,15 +161,20 @@ export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useAccount()
   const { defaultChainId } = useEnabledChains()
   const supportedChainId = useSupportedChainId(chainId)
+  
+  const rawChain = toGraphQLChain(supportedChainId ?? defaultChainId)
+  const isValidChain = rawChain !== 'CITREA_TESTNET'
+  const chain = isValidChain ? rawChain as Chain : 'ETHEREUM' as Chain
 
   // TODO(WEB-4001): use an "all tokens" query for better LP detection
   const { data: popularTokens } = useTopTokensQuery({
     variables: {
-      chain: toGraphQLChain(supportedChainId ?? defaultChainId),
+      chain,
       orderBy: TokenSortableField.Popularity,
       page: 1,
       pageSize: 100,
     },
+    skip: !isValidChain,
   })
 
   // pinned pairs
