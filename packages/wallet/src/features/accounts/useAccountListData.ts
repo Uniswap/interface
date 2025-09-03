@@ -27,7 +27,7 @@ export function useAccountListData({
 
   const valueModifiers = usePortfolioValueModifiers(addresses)
   const { data, loading, networkStatus, refetch, startPolling, stopPolling } = useAccountListQuery({
-    variables: { addresses, valueModifiers, chains: gqlChains },
+    variables: { addresses, valueModifiers, chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as any },
     notifyOnNetworkStatusChange,
     fetchPolicy,
   })

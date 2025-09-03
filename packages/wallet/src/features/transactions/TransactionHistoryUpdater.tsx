@@ -46,14 +46,14 @@ export function TransactionHistoryUpdater(): JSX.Element | null {
 
   const activeAddresses = activeAccountAddress ?? []
   const { data: activeAccountData } = useTransactionHistoryUpdaterQuery({
-    variables: { addresses: activeAddresses, chains: gqlChains },
+    variables: { addresses: activeAddresses, chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as any },
     pollInterval: PollingInterval.KindaFast,
     fetchPolicy: 'network-only', // Ensure latest data.
     skip: activeAddresses.length === 0,
   })
 
   const { data: nonActiveAccountData } = useTransactionHistoryUpdaterQuery({
-    variables: { addresses: nonActiveAccountAddresses, chains: gqlChains },
+    variables: { addresses: nonActiveAccountAddresses, chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as any },
     pollInterval: PollingInterval.Normal,
     fetchPolicy: 'network-only', // Ensure latest data.
     skip: nonActiveAccountAddresses.length === 0,
@@ -190,7 +190,7 @@ export function useFetchAndDispatchReceiveNotification(): (
   ): Promise<void> => {
     // Fetch full transaction history for user address.
     const { data: fullTransactionData } = await fetchFullTransactionData({
-      variables: { address, chains: gqlChains },
+      variables: { address, chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as any },
       fetchPolicy: 'network-only', // Ensure latest data.
     })
 
