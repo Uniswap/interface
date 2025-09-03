@@ -6,6 +6,7 @@ import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
+  Chain,
   ContractInput,
   IAmount,
   PortfolioBalancesDocument,
@@ -131,7 +132,7 @@ export function useGraphQLPortfolioData({
       ? {
           ownerAddress: address,
           valueModifiers,
-          chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as any,
+          chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as Chain[],
         }
       : undefined,
     skip: !address || queryOptions.skip,
@@ -278,7 +279,7 @@ export function useGraphQLPortfolioTotalValue({
       ? {
           ownerAddress: address,
           valueModifiers,
-          chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as any,
+          chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as Chain[],
         }
       : undefined,
     skip: !address || !enabled,
@@ -637,7 +638,7 @@ function useGraphQLPortfolioCacheUpdater(address: string): PortfolioCacheUpdater
         query: PortfolioBalancesDocument,
         variables: {
           ownerAddress: address,
-          chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as any,
+          chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as Chain[],
         },
       })?.portfolios?.[0]
 
