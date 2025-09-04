@@ -1,0 +1,40 @@
+{
+  "position": {
+    "chainId": 1,
+    "protocolVersion": "PROTOCOL_VERSION_V3",
+    "v3Position": {
+      "tokenId": "1028438",
+      "tickLower": "-887220",
+      "tickUpper": "887220",
+      "liquidity": "19174256010",
+      "token0": {
+        "chainId": 1,
+        "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "symbol": "WETH",
+        "decimals": 18,
+        "name": "Wrapped Ether"
+      },
+      "token1": {
+        "chainId": 1,
+        "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        "symbol": "USDT",
+        "decimals": 6,
+        "name": "Tether USD"
+      },
+      "feeTier": "3000",
+      "currentTick": "-197193",
+      "currentPrice": "4141011630178333122154791",
+      "tickSpacing": "60",
+      "token0UncollectedFees": "1416885760909",
+      "token1UncollectedFees": "5168263267052416",
+      "amount0": "366852645421082",
+      "amount1": "1002179",
+      "poolId": "0x4e68Ccd3E89f51C3074ca5072bbAC773960dFa36",
+      "totalLiquidityUsd": "54337043.18544154252908319681483793",
+      "currentLiquidity": "4536242417127920644",
+      "apr": 39.32764615107966,
+      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+    },
+    "status": "POSITION_STATUS_IN_RANGE"
+  }
+}

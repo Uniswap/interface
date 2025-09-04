@@ -27,7 +27,6 @@ export enum UniverseChainId {
   WorldChain = UniswapSDKChainId.WORLDCHAIN,
   Zksync = UniswapSDKChainId.ZKSYNC,
   Zora = UniswapSDKChainId.ZORA,
-  CitreaTestnet = 5115,
   Solana = 501000101,
 }
 
@@ -39,7 +38,7 @@ export type SVMUniverseChainId = UniverseChainIdByPlatform<Platform.SVM>
 
 export interface EnabledChainsInfo {
   chains: UniverseChainId[]
-  gqlChains: (GqlChainId | 'CITREA_TESTNET')[]
+  gqlChains: GqlChainId[]
   defaultChainId: UniverseChainId
   isTestnetModeEnabled: boolean
 }
@@ -68,7 +67,7 @@ export interface RetryOptions {
 export type GqlChainId = Exclude<BackendChainId, BackendChainId.UnknownChain | BackendChainId.EthereumGoerli>
 
 export interface BackendChain {
-  chain: GqlChainId | 'CITREA_TESTNET'
+  chain: GqlChainId
   /**
    * Set to false if the chain is not available on Explore.
    */

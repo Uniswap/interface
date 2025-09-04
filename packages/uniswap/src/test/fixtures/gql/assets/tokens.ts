@@ -9,7 +9,6 @@ import {
   WRAPPED_NATIVE_CURRENCY,
 } from 'uniswap/src/constants/tokens'
 import {
-  Chain,
   Currency,
   HistoryDuration,
   PriceSource,
@@ -63,12 +62,7 @@ export const token = createFixture<Token, TokenOptions>({
   name: sdkToken?.name ?? faker.lorem.word(),
   symbol: sdkToken?.symbol ?? faker.lorem.word(),
   decimals: sdkToken?.decimals ?? faker.datatype.number({ min: 1, max: 18 }),
-  chain:
-    (sdkToken
-      ? toGraphQLChain(sdkToken.chainId) === 'CITREA_TESTNET'
-        ? randomChoice(GQL_CHAINS)
-        : (toGraphQLChain(sdkToken.chainId) as Chain)
-      : null) ?? randomChoice(GQL_CHAINS),
+  chain: (sdkToken ? toGraphQLChain(sdkToken.chainId) : null) ?? randomChoice(GQL_CHAINS),
   address: sdkToken?.address.toLocaleLowerCase() ?? faker.finance.ethereumAddress(),
   standard: sdkToken?.address ? TokenStandard.Erc20 : TokenStandard.Native,
   market,

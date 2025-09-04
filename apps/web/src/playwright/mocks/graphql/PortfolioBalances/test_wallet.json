@@ -1,0 +1,139 @@
+{
+  "data": {
+    "portfolios": [
+      {
+        "id": "UG9ydGZvbGlvOjB4ZjM5RmQ2ZTUxYWFkODhGNkY0Y2U2YUI4ODI3Mjc5Y2ZmRmI5MjI2Ng==",
+        "tokensTotalDenominatedValue": {
+          "value": 0.0005206671639846847,
+          "__typename": "Amount"
+        },
+        "tokensTotalDenominatedValueChange": {
+          "absolute": {
+            "value": -0.000012289760063009672,
+            "__typename": "Amount"
+          },
+          "percentage": {
+            "value": -2.3059574814548913,
+            "__typename": "Amount"
+          },
+          "__typename": "AmountChange"
+        },
+        "tokenBalances": [
+          {
+            "id": "VG9rZW5CYWxhbmNlOjB4ZjM5RmQ2ZTUxYWFkODhGNkY0Y2U2YUI4ODI3Mjc5Y2ZmRmI5MjI2Nl9WRzlyWlc0NlFrNUNYekI0WWpBMU5UYzVNRFpqTmpFM1pqQXdORGhCTnpBd056VTROakEyWmpZMFlqTXpSREJETkRGQk5nPT1fVVNE",
+            "quantity": 750000,
+            "__typename": "TokenBalance",
+            "denominatedValue": {
+              "currency": "USD",
+              "value": 10000,
+              "__typename": "Amount"
+            },
+            "tokenProjectMarket": {
+              "relativeChange24": {
+                "value": -2.223420853530078,
+                "__typename": "Amount"
+              },
+              "__typename": "TokenProjectMarket"
+            },
+            "isHidden": true,
+            "token": {
+              "id": "VG9rZW46Qk5CXzB4YjA1NTc5MDZjNjE3ZjAwNDhBNzAwNzU4NjA2ZjY0YjMzRDBDNDFBNg==",
+              "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+              "chain": "ETHEREUM",
+              "decimals": 18,
+              "name": "Tether USD",
+              "standard": "ERC20",
+              "symbol": "USDT",
+              "__typename": "Token",
+              "project": {
+                "id": "VG9rZW5Qcm9qZWN0OkJOQl8weGIwNTU3OTA2YzYxN2YwMDQ4YTcwMDc1ODYwNmY2NGIzM2QwYzQxYTZfWmVwZS5pbw==",
+                "isSpam": true,
+                "logoUrl": null,
+                "name": "Tether USD",
+                "safetyLevel": "VERIFIED",
+                "spamCode": 2,
+                "tokens": [
+                  {
+                    "chain": "ETHEREUM",
+                    "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+                    "__typename": "Token"
+                  }
+                ],
+                "__typename": "TokenProject"
+              },
+              "feeData": null,
+              "protectionInfo": {
+                "result": "BENIGN",
+                "attackTypes": [],
+                "blockaidFees": {
+                  "buy": null,
+                  "sell": null,
+                  "transfer": null,
+                  "__typename": "BlockaidFees"
+                },
+                "__typename": "ProtectionInfo"
+              }
+            }
+          },
+          {
+            "id": "VG9rZW5CYWxhbmNlOjB4ZjM5RmQ2ZTUxYWFkODhGNkY0Y2U2YUI4ODI3Mjc5Y2ZmRmI5MjI2Nl9WRzlyWlc0NlFrNUNYekI0WTJRMlFUVXhOVFU1TWpVME1ETXdZMEV6TUVNeVJrSXlZMkprWmpWak5Ea3laVGhEWVdZNVl3PT1fVVNE",
+            "quantity": 62000,
+            "__typename": "TokenBalance",
+            "denominatedValue": {
+              "currency": "USD",
+              "value": 2989.2574139867957,
+              "__typename": "Amount"
+            },
+            "tokenProjectMarket": {
+              "relativeChange24": {
+                "value": -1.9268810701759675,
+                "__typename": "Amount"
+              },
+              "__typename": "TokenProjectMarket"
+            },
+            "isHidden": true,
+            "token": {
+              "id": "VG9rZW46Qk5CXzB4Y2Q2QTUxNTU5MjU0MDMwY0EzMEMyRkIyY2JkZjVjNDkyZThDYWY5Yw==",
+              "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+              "chain": "ETHEREUM",
+              "decimals": 9,
+              "name": "Wrapped Bitcoin",
+              "standard": "ERC20",
+              "symbol": "WBTC",
+              "__typename": "Token",
+              "project": {
+                "id": "VG9rZW5Qcm9qZWN0OkJOQl8weGNkNmE1MTU1OTI1NDAzMGNhMzBjMmZiMmNiZGY1YzQ5MmU4Y2FmOWNfQk9PTQ==",
+                "isSpam": true,
+                "logoUrl": null,
+                "name": "Wrapped Bitcoin",
+                "safetyLevel": "VERIFIED",
+                "spamCode": 1,
+                "tokens": [
+                  {
+                    "chain": "ETHEREUM",
+                    "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+                    "__typename": "Token"
+                  }
+                ],
+                "__typename": "TokenProject"
+              },
+              "feeData": null,
+              "protectionInfo": {
+                "result": "BENIGN",
+                "attackTypes": [],
+                "blockaidFees": {
+                  "buy": null,
+                  "sell": null,
+                  "transfer": 0,
+                  "__typename": "BlockaidFees"
+                },
+                "__typename": "ProtectionInfo"
+              }
+            }
+          }
+        ],
+        "__typename": "Portfolio"
+      }
+    ]
+  }
+}

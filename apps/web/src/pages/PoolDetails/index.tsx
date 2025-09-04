@@ -26,7 +26,6 @@ import { Flex } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { GqlChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -118,9 +117,6 @@ export default function PoolDetailsPage() {
   const { poolAddress } = useParams<{ poolAddress: string }>()
   const urlChain = useChainIdFromUrlParam()
   const chainInfo = urlChain ? getChainInfo(urlChain) : undefined
-  const rawChain = chainInfo?.backendChain.chain
-  const isValidChain = rawChain !== 'CITREA_TESTNET'
-  const validChain = rawChain && isValidChain ? (rawChain as GqlChainId) : ('ETHEREUM' as GqlChainId)
   const { data: poolData, loading } = usePoolData(poolAddress?.toLowerCase() ?? '', chainInfo?.id)
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const unwrappedTokens = getUnwrappedPoolToken({
@@ -234,7 +230,12 @@ export default function PoolDetailsPage() {
                   loading={loading}
                 />
               </Column>
-              <ChartSection poolData={poolData} loading={loading} isReversed={isReversed} chain={validChain} />
+              <ChartSection
+                poolData={poolData}
+                loading={loading}
+                isReversed={isReversed}
+                chain={chainInfo.backendChain.chain}
+              />
             </Column>
             <HR />
             <PoolDetailsTableTab

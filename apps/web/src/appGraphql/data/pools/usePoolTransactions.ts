@@ -2,7 +2,6 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCallback, useMemo, useRef } from 'react'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import {
-  Chain,
   PoolTransactionType,
   ProtocolVersion,
   Token,
@@ -84,10 +83,7 @@ export function usePoolTransactions({
   first?: number
 }) {
   const { defaultChainId } = useEnabledChains()
-  const rawChain = toGraphQLChain(chainId ?? defaultChainId)
-  const isValidChain = rawChain !== 'CITREA_TESTNET'
-  const chain = isValidChain ? (rawChain as Chain) : ('ETHEREUM' as Chain)
-  const variables = { first, chain }
+  const variables = { first, chain: toGraphQLChain(chainId ?? defaultChainId) }
   const {
     loading: loadingV4,
     error: errorV4,
@@ -98,7 +94,7 @@ export function usePoolTransactions({
       ...variables,
       poolId: address,
     },
-    skip: protocolVersion !== ProtocolVersion.V4 || !isValidChain,
+    skip: protocolVersion !== ProtocolVersion.V4,
   })
   const {
     loading: loadingV3,
@@ -110,7 +106,7 @@ export function usePoolTransactions({
       ...variables,
       address,
     },
-    skip: protocolVersion !== ProtocolVersion.V3 || !isValidChain,
+    skip: protocolVersion !== ProtocolVersion.V3,
   })
   const {
     loading: loadingV2,
@@ -122,7 +118,7 @@ export function usePoolTransactions({
       ...variables,
       address,
     },
-    skip: !chainId || protocolVersion !== ProtocolVersion.V2 || !isValidChain,
+    skip: !chainId || protocolVersion !== ProtocolVersion.V2,
   })
   const loadingMore = useRef(false)
   const { transactions, loading, fetchMore, error } =

@@ -12,7 +12,6 @@ import { useSelector } from 'react-redux'
 import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { LoadingItem, isLoadingItem, isSectionHeader } from 'uniswap/src/components/activity/utils'
 import {
-  Chain,
   TransactionListQuery,
   TransactionListQueryVariables,
   useTransactionListQuery,
@@ -105,7 +104,7 @@ export function useGraphQLFormattedTransactionDataForActivity({
     error: requestError,
   } = useTransactionListQuery({
     ...queryOptions,
-    variables: { address, chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as Chain[], pageSize },
+    variables: { address, chains: gqlChains, pageSize },
     notifyOnNetworkStatusChange: true,
     // rely on TransactionHistoryUpdater for polling
     pollInterval: undefined,

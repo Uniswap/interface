@@ -4,7 +4,6 @@ import { PoolState, usePool } from 'hooks/usePools'
 import ms from 'ms'
 import { useMemo } from 'react'
 import {
-  Chain,
   useFeeTierDistributionQuery,
   useIsV3SubgraphStaleQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -97,9 +96,7 @@ export function useFeeTierDistribution(
 
 function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
   const { defaultChainId } = useEnabledChains()
-  const rawChain = toGraphQLChain(token0?.chainId ?? defaultChainId)
-  const isValidChain = rawChain !== 'CITREA_TESTNET'
-  const chain = isValidChain ? (rawChain as Chain) : (null as any)
+  const chain = toGraphQLChain(token0?.chainId ?? defaultChainId)
   const { loading, error, data } = useFeeTierDistributionQuery({
     variables: {
       chain,
@@ -107,13 +104,11 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
       token1: token1?.address ?? '',
     },
     pollInterval: ms(`30s`),
-    skip: !isValidChain,
   })
 
   const { data: isSubgraphStaleData, error: isSubgraphStaleError } = useIsV3SubgraphStaleQuery({
     variables: { chain },
     pollInterval: ms(`30s`),
-    skip: !isValidChain,
   })
 
   const { v3PoolsForTokenPair } = data ?? {}

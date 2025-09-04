@@ -6,7 +6,7 @@ import { useMemo, useRef } from 'react'
 import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { Chain, useTokenSpotPriceQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useTokenSpotPriceQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
@@ -131,9 +131,7 @@ export function useUSDPrice(
   const currency = currencyAmount?.currency ?? prefetchCurrency
   const chainId = useSupportedChainId(currency?.chainId)
   const { defaultChainId } = useEnabledChains()
-  const rawChain = toGraphQLChain(chainId ?? defaultChainId)
-  const isValidChain = rawChain !== 'CITREA_TESTNET'
-  const chain = isValidChain ? (rawChain as Chain) : (null as any)
+  const chain = toGraphQLChain(chainId ?? defaultChainId)
 
   // skip all pricing requests if the window is not focused
   const isWindowVisible = useIsWindowVisible()
@@ -143,7 +141,7 @@ export function useUSDPrice(
   const isTokenEthPriced = Boolean(tokenEthPrice || isTokenEthPriceLoading)
   const { data, networkStatus } = useTokenSpotPriceQuery({
     variables: { chain, address: getNativeTokenDBAddress(chain) },
-    skip: !isTokenEthPriced || !isWindowVisible || !isValidChain,
+    skip: !isTokenEthPriced || !isWindowVisible,
     pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'cache-first',

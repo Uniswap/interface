@@ -2,7 +2,6 @@ import { NetworkStatus, WatchQueryFetchPolicy } from '@apollo/client'
 import { useMemo } from 'react'
 import {
   AccountListQuery,
-  Chain,
   useAccountListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
@@ -28,11 +27,7 @@ export function useAccountListData({
 
   const valueModifiers = usePortfolioValueModifiers(addresses)
   const { data, loading, networkStatus, refetch, startPolling, stopPolling } = useAccountListQuery({
-    variables: {
-      addresses,
-      valueModifiers,
-      chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as Chain[],
-    },
+    variables: { addresses, valueModifiers, chains: gqlChains },
     notifyOnNetworkStatusChange,
     fetchPolicy,
   })
