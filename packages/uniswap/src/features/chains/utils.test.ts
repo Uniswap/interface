@@ -178,8 +178,13 @@ describe('getEnabledChains', () => {
         featureFlaggedChainIds: ALL_CHAIN_IDS,
       }),
     ).toEqual({
-      chains: [UniverseChainId.Sepolia, UniverseChainId.UnichainSepolia, UniverseChainId.MonadTestnet],
-      gqlChains: [Chain.EthereumSepolia, Chain.AstrochainSepolia, Chain.MonadTestnet],
+      chains: [
+        UniverseChainId.Sepolia,
+        UniverseChainId.CitreaTestnet,
+        UniverseChainId.UnichainSepolia,
+        UniverseChainId.MonadTestnet,
+      ],
+      gqlChains: [Chain.EthereumSepolia, Chain.Ethereum, Chain.AstrochainSepolia, Chain.MonadTestnet],
       defaultChainId: UniverseChainId.Sepolia,
       isTestnetModeEnabled: true,
     })
