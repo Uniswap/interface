@@ -59,18 +59,17 @@ describe('state', () => {
         trackedService.connect({ walletConnector: mockMeta })
       })
 
-      // Wait for the pending state
+      // Wait for the pending state and check meta property while pending
       await waitFor(
         () => {
           expect(result.current.status).toBe('pending')
+          if (result.current.status === 'pending') {
+            expect(result.current).toHaveProperty('meta')
+            expect(result.current.meta).toEqual(mockMeta)
+          }
         },
         { timeout: 500 },
       )
-
-      expect(result.current).toHaveProperty('meta')
-      if (result.current.status === 'pending') {
-        expect(result.current.meta).toEqual(mockMeta)
-      }
 
       // Wait for connection to complete
       await act(async () => {
