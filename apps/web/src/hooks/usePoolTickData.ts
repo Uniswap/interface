@@ -12,6 +12,7 @@ import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { PositionField } from 'types/position'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import {
+  Chain,
   useAllV3TicksQuery,
   useAllV4TicksQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -53,26 +54,29 @@ function usePaginatedTickQuery({
 }) {
   const { defaultChainId } = useEnabledChains()
   const supportedChainId = useSupportedChainId(chainId)
+  const rawChain = toGraphQLChain(supportedChainId ?? defaultChainId)
+  const isValidChain = rawChain !== 'CITREA_TESTNET'
+  const chain = isValidChain ? (rawChain as Chain) : (null as any)
 
   const v3Result = useAllV3TicksQuery({
     variables: {
       address: poolId?.toLowerCase() ?? '',
-      chain: toGraphQLChain(supportedChainId ?? defaultChainId),
+      chain,
       skip,
       first: MAX_TICK_FETCH_VALUE,
     },
-    skip: !poolId || version !== ProtocolVersion.V3,
+    skip: !poolId || version !== ProtocolVersion.V3 || !isValidChain,
     pollInterval: ms(`30s`),
   })
 
   const v4Result = useAllV4TicksQuery({
     variables: {
       poolId: poolId ?? '',
-      chain: toGraphQLChain(supportedChainId ?? defaultChainId),
+      chain,
       skip,
       first: MAX_TICK_FETCH_VALUE,
     },
-    skip: !poolId || version !== ProtocolVersion.V4,
+    skip: !poolId || version !== ProtocolVersion.V4 || !isValidChain,
     pollInterval: ms(`30s`),
   })
 

@@ -3,6 +3,7 @@ import ms from 'ms'
 import { useMemo } from 'react'
 import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import {
+  Chain,
   ProtocolVersion,
   Token,
   useV2PairQuery,
@@ -91,7 +92,9 @@ export function usePoolData(
   data?: PoolData
 } {
   const { defaultChainId } = useEnabledChains()
-  const chain = toGraphQLChain(chainId ?? defaultChainId)
+  const rawChain = toGraphQLChain(chainId ?? defaultChainId)
+  const isValidChain = rawChain !== 'CITREA_TESTNET'
+  const chain = isValidChain ? (rawChain as Chain) : ('ETHEREUM' as Chain)
   const {
     loading: loadingV4,
     error: errorV4,
@@ -99,6 +102,7 @@ export function usePoolData(
   } = useV4PoolQuery({
     variables: { chain, poolId: poolIdOrAddress },
     errorPolicy: 'all',
+    skip: !isValidChain,
   })
   const {
     loading: loadingV3,
@@ -107,6 +111,7 @@ export function usePoolData(
   } = useV3PoolQuery({
     variables: { chain, address: poolIdOrAddress },
     errorPolicy: 'all',
+    skip: !isValidChain,
   })
   const {
     loading: loadingV2,
@@ -114,7 +119,7 @@ export function usePoolData(
     data: dataV2,
   } = useV2PairQuery({
     variables: { chain, address: poolIdOrAddress },
-    skip: !chainId,
+    skip: !chainId || !isValidChain,
     errorPolicy: 'all',
   })
 

@@ -34,6 +34,7 @@ import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
 import { useTopTokens as useRestTopTokens } from 'state/explore/topTokens'
 import { TokenStat } from 'state/explore/types'
 import { Flex, Text, View, styled, useMedia } from 'ui/src'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -207,7 +208,10 @@ function TokenTable({
           ),
           link: getTokenDetailsURL({
             address: unwrappedToken.address,
-            chain: toGraphQLChain(chainId ?? defaultChainId),
+            chain:
+              toGraphQLChain(chainId ?? defaultChainId) !== 'CITREA_TESTNET'
+                ? (toGraphQLChain(chainId ?? defaultChainId) as Chain)
+                : ('ETHEREUM' as Chain),
           }),
           analytics: {
             elementName: ElementName.TokensTableRow,

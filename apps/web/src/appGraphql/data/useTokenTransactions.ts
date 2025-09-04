@@ -40,6 +40,9 @@ export function useTokenTransactions({
   chainId: UniverseChainId
   filter?: TokenTransactionType[]
 }) {
+  const rawChain = toGraphQLChain(chainId)
+  const isValidChain = rawChain !== 'CITREA_TESTNET'
+  const chain = isValidChain ? (rawChain as Chain) : ('ETHEREUM' as Chain)
   const {
     data: dataV4,
     loading: loadingV4,
@@ -48,9 +51,10 @@ export function useTokenTransactions({
   } = useV4TokenTransactionsQuery({
     variables: {
       address: normalizeTokenAddressForCache(address),
-      chain: toGraphQLChain(chainId),
+      chain,
       first: TokenTransactionDefaultQuerySize,
     },
+    skip: !isValidChain,
   })
   const {
     data: dataV3,
@@ -60,9 +64,10 @@ export function useTokenTransactions({
   } = useV3TokenTransactionsQuery({
     variables: {
       address: normalizeTokenAddressForCache(address),
-      chain: toGraphQLChain(chainId),
+      chain,
       first: TokenTransactionDefaultQuerySize,
     },
+    skip: !isValidChain,
   })
   const {
     data: dataV2,
@@ -73,8 +78,9 @@ export function useTokenTransactions({
     variables: {
       address: normalizeTokenAddressForCache(address),
       first: TokenTransactionDefaultQuerySize,
-      chain: toGraphQLChain(chainId),
+      chain,
     },
+    skip: !isValidChain,
   })
   const loadingMoreV4 = useRef(false)
   const loadingMoreV3 = useRef(false)

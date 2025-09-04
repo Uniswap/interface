@@ -25,6 +25,7 @@ import { ExploreContextProvider } from 'state/explore'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Button, Flex, Text, styled as tamaguiStyled, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isBackendSupportedChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -166,7 +167,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   useOnGlobalChainSwitch(
     useCallback(
       (chain: UniverseChainId) => {
-        if (isBackendSupportedChain(toGraphQLChain(chain))) {
+        const rawChain = toGraphQLChain(chain)
+        if (rawChain !== 'CITREA_TESTNET' && isBackendSupportedChain(rawChain as Chain)) {
           navigate(getTokenExploreURL({ tab, chainUrlParam: getChainUrlParam(chain) }))
         }
       },

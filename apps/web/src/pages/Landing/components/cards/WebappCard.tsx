@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Flex, Text, useMedia } from 'ui/src'
 import { MATIC_MAINNET, UNI, USDC_BASE } from 'uniswap/src/constants/tokens'
-import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -47,11 +47,15 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
     address,
     chainId,
   })
+  const rawChain = toGraphQLChain(chainId)
+  const isValidChain = rawChain !== 'CITREA_TESTNET'
+  const chain = isValidChain ? (rawChain as Chain) : ('ETHEREUM' as Chain)
   const tokenPromoQuery = useTokenPromoQuery({
     variables: {
       address: currency?.wrapped.address,
-      chain: toGraphQLChain(chainId),
+      chain,
     },
+    skip: !isValidChain,
   })
   const price = tokenPromoQuery.data?.token?.market?.price?.value ?? 0
   const pricePercentChange = tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
@@ -73,7 +77,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
         navigate(
           getTokenDetailsURL({
             address: address === 'ETH' ? NATIVE_CHAIN_ID : address,
-            chain: toGraphQLChain(chainId),
+            chain,
           }),
         )
       }}

@@ -64,7 +64,8 @@ export type PricePoint = { timestamp: number; value: number }
 
 export function toContractInput(currency: Currency, fallback: UniverseChainId): ContractInput {
   const supportedChainId = toSupportedChainId(currency.chainId)
-  const chain = toGraphQLChain(supportedChainId ?? fallback)
+  const rawChain = toGraphQLChain(supportedChainId ?? fallback)
+  const chain = rawChain !== 'CITREA_TESTNET' ? (rawChain as Chain) : ('ETHEREUM' as Chain)
   return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
 }
 

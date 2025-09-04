@@ -11,7 +11,7 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { ShowNFTModal } from 'uniswap/src/components/nfts/ShowNFTModal'
-import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { isError, isNonPollingRequestInFlight } from 'uniswap/src/data/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -83,7 +83,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
       ownerAddress: owner,
       first: NUM_FIRST_NFTS,
       filter: { filterSpam: false },
-      chains: gqlChains,
+      chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as Chain[],
     },
     notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
     errorPolicy: 'all', // Suppress non-null image.url fields from backend

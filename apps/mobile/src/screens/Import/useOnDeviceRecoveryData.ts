@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
-import { useMultiplePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  Chain,
+  useMultiplePortfolioBalancesQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances/balances'
@@ -101,7 +104,7 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
     variables: {
       ownerAddresses: addresses,
       valueModifiers,
-      chains: gqlChains,
+      chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as Chain[],
     },
     skip: !addresses.length,
   })
