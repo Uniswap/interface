@@ -144,7 +144,6 @@ function callsV4PositionManagerContract(assetActivity: TransactionActivity) {
 
   return (
     isEVMChain(supportedChain) &&
-    CHAIN_TO_ADDRESSES_MAP[supportedChain] &&
     isSameAddress(assetActivity.details.to, CHAIN_TO_ADDRESSES_MAP[supportedChain].v4PositionManagerAddress)
   )
 }

@@ -1,15 +1,7 @@
 import { ETHEREUM_LOGO, ETH_LOGO } from 'ui/src/assets'
-import {
-  DEFAULT_MS_BEFORE_WARNING,
-  DEFAULT_NATIVE_ADDRESS_LEGACY,
-} from 'uniswap/src/features/chains/evm/rpc'
+import { DEFAULT_MS_BEFORE_WARNING, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
-import {
-  GqlChainId,
-  NetworkLayer,
-  RPCType,
-  UniverseChainId,
-} from 'uniswap/src/features/chains/types'
+import { GqlChainId, NetworkLayer, RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildUSDC } from 'uniswap/src/features/tokens/stablecoin'

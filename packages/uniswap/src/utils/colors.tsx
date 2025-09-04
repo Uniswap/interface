@@ -15,7 +15,7 @@ export function useNetworkColors(chainId: UniverseChainId): {
   background: string
 } {
   const colors = useSporeColors()
-  
+
   // Handle unsupported chains by falling back to Ethereum mainnet color
   let colorKey: string
   if (chainId === UniverseChainId.CitreaTestnet) {
@@ -23,7 +23,7 @@ export function useNetworkColors(chainId: UniverseChainId): {
   } else {
     colorKey = getNetworkColorKey(chainId)
   }
-  
+
   const color = (colors as Record<string, { val: string }>)[colorKey]?.val
 
   const foreground = color
