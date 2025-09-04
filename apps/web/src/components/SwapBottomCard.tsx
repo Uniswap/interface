@@ -105,7 +105,7 @@ const CHAIN_THEME_LIGHT: Record<UniverseChainId, ChainTheme> = {
   [UniverseChainId.WorldChain]: { bgColor: 'rgba(0, 0, 0, 0.12)', textColor: '#000000' },
   [UniverseChainId.Zksync]: { bgColor: 'rgba(54, 103, 246, 0.12)', textColor: '#3667F6' },
   [UniverseChainId.Zora]: { bgColor: 'rgba(0, 0, 0, 0.12)', textColor: '#000000' },
-  [UniverseChainId.CitreaTestnet]: { bgColor: '#FF6F0033', textColor: '#FF6F00' },
+  [UniverseChainId.CitreaTestnet]: { bgColor: '#ff6f0033', textColor: '#ff6f00' },
 }
 
 const CHAIN_THEME_DARK: Record<UniverseChainId, ChainTheme> = {
@@ -116,7 +116,7 @@ const CHAIN_THEME_DARK: Record<UniverseChainId, ChainTheme> = {
   [UniverseChainId.WorldChain]: { bgColor: 'rgba(255, 255, 255, 0.12)', textColor: '#FFFFFF' },
   [UniverseChainId.Zksync]: { bgColor: 'rgba(97, 137, 255, 0.12)', textColor: '#6189FF' },
   [UniverseChainId.Zora]: { bgColor: 'rgba(255, 255, 255, 0.12)', textColor: '#FFFFFF' },
-  [UniverseChainId.CitreaTestnet]: { bgColor: '#FF8F3C33', textColor: '#FF8F3C' },
+  [UniverseChainId.CitreaTestnet]: { bgColor: '#ff8f3c33', textColor: '#ff8f3c' },
 }
 
 function useChainTheme(chainId: UniverseChainId): ChainTheme {
