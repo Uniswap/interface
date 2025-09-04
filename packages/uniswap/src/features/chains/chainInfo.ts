@@ -4,6 +4,7 @@ import { BASE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/base'
 import { BLAST_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/blast'
 import { BNB_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/bnb'
 import { CELO_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/celo'
+import { CITREA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/citrea'
 import { MAINNET_CHAIN_INFO, SEPOLIA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
 import { MONAD_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/monad'
 import { OPTIMISM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/optimism'
@@ -85,6 +86,7 @@ export const UNIVERSE_CHAIN_INFO = {
   [UniverseChainId.Zksync]: ZKSYNC_CHAIN_INFO,
 
   // TESTNET
+  [UniverseChainId.CitreaTestnet]: CITREA_CHAIN_INFO,
   [UniverseChainId.MonadTestnet]: MONAD_CHAIN_INFO,
   [UniverseChainId.Sepolia]: SEPOLIA_CHAIN_INFO,
   [UniverseChainId.UnichainSepolia]: UNICHAIN_SEPOLIA_CHAIN_INFO,
