@@ -172,11 +172,7 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
 
   // Wait for health with exponential backoff
   const waitForHealth = async (
-    options: {
-      maxAttempts?: number
-      initialDelay?: number
-      maxDelay?: number
-    } = {},
+    options: { maxAttempts?: number; initialDelay?: number; maxDelay?: number } = {},
   ): Promise<boolean> => {
     const { maxAttempts = 10, initialDelay = 1000, maxDelay = 10000 } = options
 

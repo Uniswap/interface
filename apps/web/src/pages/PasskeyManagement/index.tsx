@@ -1,5 +1,5 @@
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
 import { useModalState } from 'hooks/useModalState'

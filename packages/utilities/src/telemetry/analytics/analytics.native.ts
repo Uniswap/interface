@@ -1,4 +1,4 @@
-import { Identify, flush, getUserId, identify, init, setDeviceId, track } from '@amplitude/analytics-react-native'
+import { flush, getUserId, Identify, identify, init, setDeviceId, track } from '@amplitude/analytics-react-native'
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import {

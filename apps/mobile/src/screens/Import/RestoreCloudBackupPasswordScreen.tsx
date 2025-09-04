@@ -6,13 +6,13 @@ import { TextInput } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PasswordInput } from 'src/components/input/PasswordInput'
-import { restoreMnemonicFromCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import {
   incrementPasswordAttempts,
   resetLockoutEndTime,
   resetPasswordAttempts,
   setLockoutEndTime,
 } from 'src/features/CloudBackup/passwordLockoutSlice'
+import { restoreMnemonicFromCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { selectLockoutEndTime, selectPasswordAttempts } from 'src/features/CloudBackup/selectors'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'

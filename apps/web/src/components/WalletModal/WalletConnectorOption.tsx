@@ -19,8 +19,8 @@ import Badge, { BadgeVariant } from 'uniswap/src/components/badge/Badge'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isMobileWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { isIFramed } from 'utils/isIFramed'
@@ -150,7 +150,9 @@ export function WalletConnectorOption({ walletConnectorMeta }: { walletConnector
   const themeColors = useSporeColors()
   const icon = getIcon({ walletConnectorMeta, isEmbeddedWalletEnabled, themeColors })
   const text = getConnectorText({ walletConnectorMeta, t })
-  const isDetected = walletConnectorMeta.isInjected
+  // Porto is set as injected, but we don't want to show it in the wallet modal as a detected wallet
+  const isDetected =
+    walletConnectorMeta.isInjected && walletConnectorMeta.wagmi?.id !== CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
   const isDisabled = Boolean(isPendingConnection && !isIFramed())
 

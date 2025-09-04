@@ -2,13 +2,14 @@
  * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/stacked-bars-series/renderer.ts
  * Modifications are called out with comments.
  */
+
+import { roundRect } from 'components/Charts/utils'
 import {
   ColumnPosition,
   calculateColumnPositionsInPlace,
   isStackedHistogramData,
   positionsBox,
 } from 'components/Charts/VolumeChart/utils'
-import { roundRect } from 'components/Charts/utils'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   CustomData,

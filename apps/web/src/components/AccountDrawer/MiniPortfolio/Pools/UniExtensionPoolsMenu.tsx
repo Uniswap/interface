@@ -1,5 +1,5 @@
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
-import { Suspense, lazy } from 'react'
+import { lazy, Suspense } from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, Loader } from 'ui/src'
 

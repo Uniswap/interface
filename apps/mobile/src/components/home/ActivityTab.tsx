@@ -10,7 +10,6 @@ import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, useSporeColors } from 'ui/src'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -19,8 +18,6 @@ import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { isAndroid } from 'utilities/src/platform'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useActivityDataWallet } from 'wallet/src/features/activity/useActivityDataWallet'
-
-export const ACTIVITY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
 
 const ESTIMATED_ITEM_SIZE = 92
 

@@ -2,13 +2,13 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { ConnectError } from '@connectrpc/connect'
 import { useQuery } from '@connectrpc/connect-query'
 import { UseQueryResult } from '@tanstack/react-query'
-import { searchTokens } from '@uniswap/client-search/dist/search/v1/api-searchService_connectquery'
 import {
   Pool,
+  type Token as SearchToken,
   SearchTokensRequest,
   SearchTokensResponse,
-  type Token as SearchToken,
 } from '@uniswap/client-search/dist/search/v1/api_pb'
+import { searchTokens } from '@uniswap/client-search/dist/search/v1/api-searchService_connectquery'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
 import { parseProtectionInfo, parseRestProtocolVersion, parseSafetyLevel } from 'uniswap/src/data/rest/utils'

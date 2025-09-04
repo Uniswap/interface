@@ -9,15 +9,15 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import { CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
 import { TextInputProps } from 'uniswap/src/components/input/TextInput'
-import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { NFTTransfer } from 'uniswap/src/components/nfts/NFTTransfer'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
-  DecimalPadCalculateSpace,
   DecimalPadCalculatedSpaceId,
+  DecimalPadCalculateSpace,
   DecimalPadInput,
   DecimalPadInputRef,
 } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
@@ -124,7 +124,7 @@ export function SendTokenForm(): JSX.Element {
 
   // Decimal pad logic
   const decimalPadRef = useRef<DecimalPadInputRef>(null)
-  const maxDecimals = isFiatInput ? MAX_FIAT_INPUT_DECIMALS : currencyIn?.decimals ?? 0
+  const maxDecimals = isFiatInput ? MAX_FIAT_INPUT_DECIMALS : (currencyIn?.decimals ?? 0)
   const selectionRef = useRef<TextInputProps['selection']>()
 
   const onInputSelectionChange = useCallback(

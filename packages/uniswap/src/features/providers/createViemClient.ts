@@ -4,7 +4,7 @@ import { SignerInfo } from 'uniswap/src/features/providers/FlashbotsCommon'
 import { createFlashbotsRpcClient } from 'uniswap/src/features/providers/FlashbotsRpcClient'
 import { selectRpcUrl } from 'uniswap/src/features/providers/rpcUrlSelector'
 import { logger } from 'utilities/src/logger/logger'
-import { PublicClient, createPublicClient, defineChain, http, walletActions } from 'viem'
+import { createPublicClient, defineChain, http, PublicClient, walletActions } from 'viem'
 
 // Creates a viem PublicClient for the given chain
 // Supports Flashbots for private RPC providers when needed

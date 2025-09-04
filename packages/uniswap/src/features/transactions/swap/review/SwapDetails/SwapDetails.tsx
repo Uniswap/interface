@@ -5,11 +5,6 @@ import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import type { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
-import type {
-  FeeOnTransferFeeGroupProps,
-  TokenWarningProps,
-} from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/components/AcrossRoutingInfo'
 import { EstimatedBridgeTime } from 'uniswap/src/features/transactions/swap/components/EstimatedBridgeTime'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/MaxSlippageRow'
@@ -24,6 +19,11 @@ import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/typ
 import type { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
+import type {
+  FeeOnTransferFeeGroupProps,
+  TokenWarningProps,
+} from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isMobileApp, isMobileWeb } from 'utilities/src/platform'
 

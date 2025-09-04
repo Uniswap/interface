@@ -2,12 +2,12 @@ import { NavigationContainer } from '@react-navigation/native'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import {
-  render as RNRender,
-  renderHook as RNRenderHook,
   RenderHookOptions,
   RenderHookResult,
   RenderOptions,
   RenderResult,
+  render as RNRender,
+  renderHook as RNRenderHook,
 } from '@testing-library/react-native'
 import React, { PropsWithChildren } from 'react'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'

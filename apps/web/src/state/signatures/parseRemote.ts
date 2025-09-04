@@ -1,5 +1,5 @@
-import { TradeType } from '@uniswap/sdk-core'
 import { gqlToCurrency, supportedChainIdFromGQLChain } from 'appGraphql/data/util'
+import { TradeType } from '@uniswap/sdk-core'
 import { parseUnits } from 'ethers/lib/utils'
 import store from 'state'
 import { addSignature } from 'state/signatures/reducer'

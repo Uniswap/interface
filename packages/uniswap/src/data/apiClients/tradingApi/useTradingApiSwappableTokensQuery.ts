@@ -2,8 +2,8 @@ import {
   QueryClient,
   QueryFunction,
   QueryKey,
-  UseQueryResult,
   skipToken,
+  UseQueryResult,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'

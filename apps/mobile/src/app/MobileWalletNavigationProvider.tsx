@@ -24,6 +24,9 @@ import { logger } from 'utilities/src/logger/logger'
 import { noop } from 'utilities/src/react/noop'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
+  getNavigateToSendFlowArgsInitialState,
+  getNavigateToSwapFlowArgsInitialState,
+  isNavigateToSwapFlowArgsPartialState,
   NavigateToExternalProfileArgs,
   NavigateToFiatOnRampArgs,
   NavigateToNftCollectionArgs,
@@ -31,9 +34,6 @@ import {
   NavigateToSwapFlowArgs,
   ShareTokenArgs,
   WalletNavigationProvider,
-  getNavigateToSendFlowArgsInitialState,
-  getNavigateToSwapFlowArgsInitialState,
-  isNavigateToSwapFlowArgsPartialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
 
 export function MobileWalletNavigationProvider({ children }: PropsWithChildren): JSX.Element {
@@ -200,7 +200,7 @@ function useNavigateToNftDetails(): (args: NavigateToNftItemArgs) => void {
   const navigation = useAppStackNavigation()
 
   return useCallback(
-    ({ owner, address, tokenId, isSpam, fallbackData }: NavigateToNftItemArgs): void => {
+    ({ owner, contractAddress: address, tokenId, isSpam, fallbackData }: NavigateToNftItemArgs): void => {
       closeKeyboardBeforeCallback(() => {
         navigation.navigate(MobileScreens.NFTItem, {
           owner,

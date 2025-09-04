@@ -17,6 +17,10 @@ import { logger as loggerUtil } from 'utilities/src/logger/logger'
 import { PublicClient } from 'viem'
 import { DelegationCheckResult } from 'wallet/src/features/smartWallet/delegation/types'
 import { getAccountDelegationDetails } from 'wallet/src/features/smartWallet/delegation/utils'
+import { createAnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsServiceImpl'
+import { createFeatureFlagService } from 'wallet/src/features/transactions/executeTransaction/services/featureFlagServiceImpl'
+import type { Provider } from 'wallet/src/features/transactions/executeTransaction/services/providerService'
+import { createProviderService } from 'wallet/src/features/transactions/executeTransaction/services/providerServiceImpl'
 import { createTransactionRepositoryRedux } from 'wallet/src/features/transactions/executeTransaction/services/TransactionRepository/transactionRepositoryImplRedux'
 import { createTransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionServiceImpl'
 import { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
@@ -24,15 +28,12 @@ import {
   createBundledDelegationTransactionSignerService,
   createTransactionSignerService,
 } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerServiceImpl'
-import { createAnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsServiceImpl'
-import { createFeatureFlagService } from 'wallet/src/features/transactions/executeTransaction/services/featureFlagServiceImpl'
-import type { Provider } from 'wallet/src/features/transactions/executeTransaction/services/providerService'
-import { createProviderService } from 'wallet/src/features/transactions/executeTransaction/services/providerServiceImpl'
 import { createTransactionConfigService } from 'wallet/src/features/transactions/executeTransaction/services/transactionConfigServiceImpl'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { getSignerManager, walletContextValue } from 'wallet/src/features/wallet/context'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { runSagaEffect } from 'wallet/src/state'
+
 const logger = loggerUtil
 
 export interface ExecuteTransactionParams {

@@ -3,12 +3,12 @@ import { useEnabledChainsWithConnector } from 'uniswap/src/features/chains/hooks
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   Connector,
+  type Register,
+  type UseAccountReturnType as UseAccountReturnTypeWagmi,
   // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   useAccount as useAccountWagmi,
   // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   useChainId,
-  type Register,
-  type UseAccountReturnType as UseAccountReturnTypeWagmi,
 } from 'wagmi'
 
 type ReplaceChainId<T> = T extends { chainId: number }

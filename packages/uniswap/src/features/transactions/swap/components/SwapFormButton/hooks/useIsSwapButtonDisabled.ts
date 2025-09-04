@@ -1,4 +1,5 @@
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { useIsShowingWebFORNudge, useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useInterfaceWrap'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
@@ -41,6 +42,15 @@ export const useIsSwapButtonDisabled = (): boolean => {
   const activeAccount = useWallet().evmAccount
 
   const isViewOnlyWallet = activeAccount?.accountType === AccountType.Readonly
+
+  const isWebFORNudgeEnabled = useIsWebFORNudgeEnabled()
+  const isShowingWebFORNudge = useIsShowingWebFORNudge()
+
+  if (isWebFORNudgeEnabled && isShowingWebFORNudge) {
+    return true
+  } else if (isWebFORNudgeEnabled && !isShowingWebFORNudge) {
+    return false
+  }
 
   return !!activeAccount && isReviewButtonDisabled && !isViewOnlyWallet && !swapRedirectCallback
 }

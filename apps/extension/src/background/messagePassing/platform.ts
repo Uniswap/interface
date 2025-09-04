@@ -77,9 +77,11 @@ class ChromeMessageChannel {
         if (tab.id) {
           promises.push(
             // eslint-disable-next-line no-restricted-syntax
-            chrome.tabs.sendMessage(tab.id, { [this.channelName]: message }).catch(() => {
-              // Not logging error here because it is expected that inactive tabs will not be able to receive the message
-            }),
+            chrome.tabs
+              .sendMessage(tab.id, { [this.channelName]: message })
+              .catch(() => {
+                // Not logging error here because it is expected that inactive tabs will not be able to receive the message
+              }),
           )
         }
       })

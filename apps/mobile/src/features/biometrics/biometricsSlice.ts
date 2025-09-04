@@ -1,4 +1,4 @@
-import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit'
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AuthenticationType } from 'expo-local-authentication'
 import { BiometricAuthenticationStatus } from 'src/features/biometrics/biometrics-utils'
 

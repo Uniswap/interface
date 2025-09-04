@@ -8,9 +8,9 @@ import {
   TokenProject as TokenProjectType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
-  SAMPLE_CURRENCY_ID_1,
   getLatestPrice,
   priceHistory,
+  SAMPLE_CURRENCY_ID_1,
   timestampedAmount,
   token,
   tokenMarket,

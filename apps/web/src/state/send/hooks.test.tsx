@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
-import { SendState } from 'state/send/SendContext'
 import { useDerivedSendInfo } from 'state/send/hooks'
+import { SendState } from 'state/send/SendContext'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { useAddressFromEns, useENSName } from 'uniswap/src/features/ens/api'

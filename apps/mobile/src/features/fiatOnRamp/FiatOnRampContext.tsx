@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FORQuote, FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { FiatCurrencyInfo, FiatOnRampCurrency, FORFilters, FORQuote } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -40,6 +40,8 @@ interface FiatOnRampContextType {
   moonpayOnly: boolean
   setMoonpayOnly: (moonpayOnly: boolean) => void
   moonpayCurrencyCode?: string
+  setPaymentMethod: (paymentMethod: FORFilters | undefined) => void
+  paymentMethod?: FORFilters
 }
 
 const initialState: FiatOnRampContextType = {
@@ -65,6 +67,8 @@ const initialState: FiatOnRampContextType = {
   moonpayOnly: false,
   setMoonpayOnly: () => undefined,
   moonpayCurrencyCode: undefined,
+  setPaymentMethod: () => undefined,
+  paymentMethod: undefined,
 }
 
 const FiatOnRampContext = createContext<FiatOnRampContextType>(initialState)
@@ -106,6 +110,7 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const [quoteCurrency, setQuoteCurrency] = useState<FiatOnRampCurrency>(prefilledCurrency ?? defaultCurrency)
   const [isOffRamp, setIsOffRamp] = useState<boolean>(initialModalState?.isOfframp ?? false)
   const [moonpayOnly, setMoonpayOnly] = useState<boolean>(initialModalState?.moonpayOnly ?? false)
+  const [paymentMethod, setPaymentMethod] = useState<FORFilters | undefined>()
 
   useEffect(() => {
     if (prefilledCurrency || quoteCurrency.currencyInfo) {
@@ -145,6 +150,8 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
         moonpayOnly,
         setMoonpayOnly,
         moonpayCurrencyCode,
+        paymentMethod,
+        setPaymentMethod,
       }}
     >
       {children}

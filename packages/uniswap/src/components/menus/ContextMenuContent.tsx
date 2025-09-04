@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { DropdownMenuSheetItem, DropdownMenuSheetItemProps, Flex, Separator, getMenuItemColor } from 'ui/src'
+import { DropdownMenuSheetItem, DropdownMenuSheetItemProps, Flex, getMenuItemColor, Separator } from 'ui/src'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { isWeb } from 'utilities/src/platform'
 
@@ -34,6 +34,7 @@ export function MenuContent({ items, handleCloseMenu }: MenuContentProps): JSX.E
           <Fragment key={index}>
             {showDivider && <Separator my="$spacing6" />}
             <DropdownMenuSheetItem
+              role="none"
               variant={isWeb ? 'small' : 'medium'}
               label={label}
               icon={

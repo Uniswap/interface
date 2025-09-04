@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
-import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
+import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Text } from 'ui/src'
 import { Eye, GraduationCap } from 'ui/src/components/icons'
@@ -102,7 +102,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     (validAddress || resolvedAddress) ?? undefined,
     defaultChainId,
   )
-  const address = isSmartContractAddress ? (validAddress || resolvedAddress) ?? undefined : undefined
+  const address = isSmartContractAddress ? ((validAddress || resolvedAddress) ?? undefined) : undefined
   // Allow smart contracts with non-null balances
   const { data: balancesById } = usePortfolioBalances({
     evmAddress: address,

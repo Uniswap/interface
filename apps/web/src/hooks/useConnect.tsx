@@ -1,6 +1,6 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
-import { PropsWithChildren, createContext, useContext } from 'react'
+import { createContext, PropsWithChildren, useContext } from 'react'
 import { useLocation } from 'react-router'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'

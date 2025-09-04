@@ -1,0 +1,14 @@
+{
+  "extends": "//",
+  "files": {
+    "experimentalScannerIgnores": [
+      "dev/**"
+    ]
+  },
+  "formatter": {
+    "includes": [
+      "**",
+      "!dev"
+    ]
+  }
+}

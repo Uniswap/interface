@@ -3,8 +3,8 @@ import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { logger } from 'utilities/src/logger/logger'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 // WALL-6234
 export function useLogMissingMnemonic(): void {

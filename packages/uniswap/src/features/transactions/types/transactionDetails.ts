@@ -9,7 +9,9 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappRequestInfo, EthTransaction } from 'uniswap/src/types/walletConnect'
 
-export type ChainIdToTxIdToDetails = Partial<Record<UniverseChainId, { [txId: string]: TransactionDetails | InterfaceTransactionDetails }>>
+export type ChainIdToTxIdToDetails = Partial<
+  Record<UniverseChainId, { [txId: string]: TransactionDetails | InterfaceTransactionDetails }>
+>
 
 // Basic identifying info for a transaction
 export interface TransactionId {
@@ -26,7 +28,7 @@ export type TransactionListQueryResponse = NonNullable<
  * Marks if a transaction was initiated natively within app, or from external source.
  * External transactions are initiated from dapps, WC, uwulink, etc.
  */
-export enum TransactionOriginType  {
+export enum TransactionOriginType {
   Internal = 'internal',
   External = 'external',
 }
@@ -118,24 +120,28 @@ export interface BridgeTransactionExtension {
 }
 
 // Transaction types using intersection types for flexibility
-export type UniswapXOrderDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> = 
-  TBase & UniswapXOrderExtension
+export type UniswapXOrderDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> = TBase &
+  UniswapXOrderExtension
 
-export type ClassicTransactionDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> = 
-  TBase & ClassicTransactionExtension
+export type ClassicTransactionDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> = TBase &
+  ClassicTransactionExtension
 
-export type SolanaTransactionDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> = 
-  TBase & SolanaTransactionExtension
+export type SolanaTransactionDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> = TBase &
+  SolanaTransactionExtension
 
-export type BridgeTransactionDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> = 
-  TBase & BridgeTransactionExtension
+export type BridgeTransactionDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> = TBase &
+  BridgeTransactionExtension
 
 // Generic union types
-export type OnChainTransactionDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> = 
-  ClassicTransactionDetails<TBase> | BridgeTransactionDetails<TBase> | SolanaTransactionDetails<TBase>
+export type OnChainTransactionDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> =
+  | ClassicTransactionDetails<TBase>
+  | BridgeTransactionDetails<TBase>
+  | SolanaTransactionDetails<TBase>
 
-export type TransactionDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> = 
-  UniswapXOrderDetails<TBase> | OnChainTransactionDetails<TBase> | SolanaTransactionDetails<TBase>
+export type TransactionDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> =
+  | UniswapXOrderDetails<TBase>
+  | OnChainTransactionDetails<TBase>
+  | SolanaTransactionDetails<TBase>
 
 export enum TransactionStatus {
   Canceled = 'cancelled',
@@ -519,7 +525,10 @@ export type LiquidityDecreaseTransactionInfo = LiquidityTransactionInfoBase<Tran
 export type CreatePairTransactionInfo = LiquidityTransactionInfoBase<TransactionType.CreatePair>
 export type CreatePoolTransactionInfo = LiquidityTransactionInfoBase<TransactionType.CreatePool>
 export type MigrateV3LiquidityToV4TransactionInfo = LiquidityTransactionInfoBase<TransactionType.MigrateLiquidityV3ToV4>
-export type CollectFeesTransactionInfo = Optional<LiquidityTransactionInfoBase<TransactionType.CollectFees>, 'currency1AmountRaw' | 'currency1Id'>
+export type CollectFeesTransactionInfo = Optional<
+  LiquidityTransactionInfoBase<TransactionType.CollectFees>,
+  'currency1AmountRaw' | 'currency1Id'
+>
 
 export interface LpIncentivesClaimTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.LPIncentivesClaimRewards

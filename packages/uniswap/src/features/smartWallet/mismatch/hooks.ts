@@ -3,8 +3,8 @@ import { useEffect, useMemo, useRef } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useMismatchContext } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
 import {
-  MisMatchQueryOptions,
   getIsMismatchAccountQueryOptions,
+  MisMatchQueryOptions,
   type MisMatchQueryResult,
   type MismatchResult,
 } from 'uniswap/src/features/smartWallet/mismatch/queryOptions'

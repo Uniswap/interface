@@ -8,8 +8,8 @@ import {
   createSignedAuthorization,
   signAndSerializeEIP7702Transaction,
 } from 'wallet/src/features/transactions/executeTransaction/eip7702Utils'
-import type { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
 import type { Provider } from 'wallet/src/features/transactions/executeTransaction/services/providerService'
+import type { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
 import type { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 

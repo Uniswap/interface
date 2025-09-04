@@ -11,15 +11,15 @@ import { isInvalidRange, isOutOfRange } from 'components/Liquidity/utils/priceRa
 import { getProtocolItems } from 'components/Liquidity/utils/protocolVersion'
 import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import {
-  ReactNode,
   createContext,
+  type Dispatch,
+  type PropsWithChildren,
+  ReactNode,
+  type SetStateAction,
   useContext,
   useEffect,
   useMemo,
   useState,
-  type Dispatch,
-  type PropsWithChildren,
-  type SetStateAction,
 } from 'react'
 import { PositionField } from 'types/position'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -366,8 +366,8 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       address: account?.address,
       token0: TOKEN0,
       token1: TOKEN1,
-      tickLower: protocolVersion !== ProtocolVersion.V2 ? tickLower ?? undefined : undefined,
-      tickUpper: protocolVersion !== ProtocolVersion.V2 ? tickUpper ?? undefined : undefined,
+      tickLower: protocolVersion !== ProtocolVersion.V2 ? (tickLower ?? undefined) : undefined,
+      tickUpper: protocolVersion !== ProtocolVersion.V2 ? (tickUpper ?? undefined) : undefined,
       exactField,
       exactAmounts: depositState.exactAmounts,
       skipDependentAmount: protocolVersion === ProtocolVersion.V2 ? false : outOfRange || invalidRange,

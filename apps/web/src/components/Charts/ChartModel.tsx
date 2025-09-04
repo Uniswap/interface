@@ -8,20 +8,20 @@ import { DefaultTheme, useTheme } from 'lib/styled-components'
 import {
   BarPrice,
   CrosshairMode,
+  createChart,
   DeepPartial,
   IChartApi,
   ISeriesApi,
   LineStyle,
   Logical,
   TimeChartOptions,
-  createChart,
 } from 'lightweight-charts'
 import { ReactElement, TouchEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { ColorTokens, Flex, TamaguiElement, assertWebElement, styled, useMedia } from 'ui/src'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { assertWebElement, ColorTokens, Flex, styled, TamaguiElement, useMedia } from 'ui/src'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { v4 as uuidv4 } from 'uuid'
 

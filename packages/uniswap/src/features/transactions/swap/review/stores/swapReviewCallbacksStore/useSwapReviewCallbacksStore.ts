@@ -1,9 +1,9 @@
 import { useContext } from 'react'
-import { SwapReviewCallbacksStoreContext } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/SwapReviewCallbacksStoreContext'
 import type {
   SwapReviewCallbacksStoreState,
   UseSwapReviewCallbacksStore,
 } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/createSwapReviewCallbacksStore'
+import { SwapReviewCallbacksStoreContext } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/SwapReviewCallbacksStoreContext'
 import { useStore } from 'zustand'
 import { useShallow } from 'zustand/shallow'
 

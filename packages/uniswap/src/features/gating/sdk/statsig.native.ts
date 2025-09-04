@@ -5,16 +5,13 @@ import { LocalOverrideAdapterWrapper } from 'uniswap/src/features/gating/LocalOv
 
 export {
   StatsigClient,
+  StatsigContext,
   StatsigOptions,
+  StatsigProviderRN as StatsigProvider,
   StatsigUser,
+  Storage,
   StorageProvider,
   TypedReturn,
-} from '@statsig/react-native-bindings'
-
-export {
-  StatsigContext,
-  StatsigProviderRN as StatsigProvider,
-  Storage,
   useClientAsyncInitRN as useClientAsyncInit,
   useDynamicConfig,
   useExperiment,

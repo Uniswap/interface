@@ -5,12 +5,12 @@ import {
   PoolTransactionType,
   ProtocolVersion,
   Token,
-  V2PairTransactionsQuery,
-  V3PoolTransactionsQuery,
-  V4PoolTransactionsQuery,
   useV2PairTransactionsQuery,
   useV3PoolTransactionsQuery,
   useV4PoolTransactionsQuery,
+  V2PairTransactionsQuery,
+  V3PoolTransactionsQuery,
+  V4PoolTransactionsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -71,7 +71,7 @@ export function usePoolTransactions({
     PoolTableTransactionType.ADD,
   ],
   token0,
-  protocolVersion = ProtocolVersion.V3,
+  protocolVersion,
   first = PoolTransactionDefaultQuerySize,
 }: {
   address: string

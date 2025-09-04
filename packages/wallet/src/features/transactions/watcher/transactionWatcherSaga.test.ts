@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
-import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
+import { expectSaga } from 'redux-saga-test-plan'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { addTransaction, updateTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'

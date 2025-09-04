@@ -1,7 +1,5 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { MAX_RECENT_SEARCH_RESULTS } from 'uniswap/src/components/TokenSelector/constants'
-import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { usePoolSearchResultsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolSearchResultsToPoolOptions'
 import {
   NFTCollectionOption,
@@ -11,17 +9,19 @@ import {
   TokenOption,
   WalletByAddressOption,
 } from 'uniswap/src/components/lists/items/types'
+import { MAX_RECENT_SEARCH_RESULTS } from 'uniswap/src/components/TokenSelector/constants'
+import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
 import {
-  SearchHistoryResult,
   isEtherscanSearchHistoryResult,
   isNFTCollectionSearchHistoryResult,
   isPoolSearchHistoryResult,
   isTokenSearchHistoryResult,
   isWalletSearchHistoryResult,
+  SearchHistoryResult,
 } from 'uniswap/src/features/search/SearchHistoryResult'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'

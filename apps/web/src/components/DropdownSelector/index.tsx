@@ -1,7 +1,7 @@
 import { AdaptiveDropdown, SharedDropdownProps } from 'components/DropdownSelector/AdaptiveDropdown'
 import FilterButton from 'components/DropdownSelector/FilterButton'
 import { useMemo } from 'react'
-import { Flex, FlexProps, Text, styled } from 'ui/src'
+import { Flex, FlexProps, styled, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 

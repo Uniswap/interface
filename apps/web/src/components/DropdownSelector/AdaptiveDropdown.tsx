@@ -5,13 +5,13 @@ import {
   AnimatePresence,
   Flex,
   FlexProps,
-  Text,
-  VisuallyHidden,
-  WebBottomSheet,
   styled,
+  Text,
   useMedia,
   useScrollbarStyles,
   useShadowPropsMedium,
+  VisuallyHidden,
+  WebBottomSheet,
 } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 

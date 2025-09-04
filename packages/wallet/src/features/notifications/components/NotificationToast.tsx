@@ -6,7 +6,7 @@ import { useCallback, useEffect } from 'react'
 import { Directions, FlingGestureHandler, FlingGestureHandlerGestureEvent, State } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
-import { ElementAfterText, Flex, Text, TouchableArea, styled, useShadowPropsShort } from 'ui/src'
+import { ElementAfterText, Flex, styled, Text, TouchableArea, useShadowPropsShort } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, spacing } from 'ui/src/theme'
 import { useSelectAddressNotifications } from 'uniswap/src/features/notifications/hooks'
@@ -127,7 +127,7 @@ export function NotificationToast({
   }, [address, bannerOffset, dispatch, notifications, showOffset])
 
   // If there is another notification in the queue then hide the current one immediately
-  const delay = hasQueuedNotification ? 0 : hideDelay ?? DEFAULT_HIDE_DELAY
+  const delay = hasQueuedNotification ? 0 : (hideDelay ?? DEFAULT_HIDE_DELAY)
   const cancelDismiss = useTimeout(dismissLatest, delay)
 
   const onFling = ({ nativeEvent }: FlingGestureHandlerGestureEvent): void => {

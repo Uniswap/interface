@@ -11,10 +11,10 @@ import {
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { focusOrCreateDappRequestWindow, focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import {
-  DappBackgroundPortChannel,
   contentScriptToBackgroundMessageChannel,
   contentScriptUtilityMessageChannel,
   createBackgroundToSidePanelMessagePort,
+  DappBackgroundPortChannel,
   dappResponseMessageChannel,
 } from 'src/background/messagePassing/messageChannels'
 import {
@@ -32,8 +32,8 @@ import { WindowEthereumRequestProperties } from 'uniswap/src/features/telemetry/
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { getCapabilitiesCore } from 'wallet/src/features/batchedTransactions/utils'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
 
 // Request classification constants for determining which requests need user interaction
@@ -338,7 +338,7 @@ async function handleGetCapabilities({
     // Get enabled chains using the same logic as the saga
     const reduxState = await readReduxStateFromStorage()
     const hasSmartWalletConsent = reduxState ? selectHasSmartWalletConsent(reduxState, request.address) : false
-    const isTestnetModeEnabled = reduxState ? reduxState.userSettings.isTestnetModeEnabled ?? false : false
+    const isTestnetModeEnabled = reduxState ? (reduxState.userSettings.isTestnetModeEnabled ?? false) : false
     const featureFlaggedChainIds = getFeatureFlaggedChainIds()
     const { chains: enabledChains } = getEnabledChains({
       isTestnetModeEnabled,

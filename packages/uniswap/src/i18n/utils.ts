@@ -1,9 +1,9 @@
 import {
   Language,
   Locale,
-  PLATFORM_SUPPORTED_LANGUAGES,
   mapDeviceLanguageToLanguage,
   mapLocaleToLanguage,
+  PLATFORM_SUPPORTED_LANGUAGES,
 } from 'uniswap/src/features/language/constants'
 import { getLocale } from 'uniswap/src/features/language/hooks'
 import { getDeviceLocales } from 'utilities/src/device/locales'

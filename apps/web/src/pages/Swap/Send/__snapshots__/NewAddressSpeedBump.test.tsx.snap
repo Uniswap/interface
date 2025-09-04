@@ -4,6 +4,33 @@ exports[`NewAddressSpeedBumpModal > should not render identicon if account has n
 <body
   style="pointer-events: none;"
 >
+  <dialog
+    aria-closed="true"
+    aria-hidden="true"
+    aria-label="Porto Wallet"
+    data-aria-hidden="true"
+    data-porto=""
+    hidden="until-found"
+    role="dialog"
+    style="background: transparent; border: 0px; outline: 0; padding: 0px; position: fixed;"
+  >
+    <style>
+      
+        dialog[data-porto]::backdrop {
+          background: transparent!important;
+        }
+      
+    </style>
+    <iframe
+      allow="publickey-credentials-get https://id.porto.sh; publickey-credentials-create https://id.porto.sh; clipboard-write"
+      data-testid="porto"
+      sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+      src="https://id.porto.sh/dialog"
+      style="background-color: transparent; border: 0px; color-scheme: light dark; height: 100%; left: 0px; position: fixed; top: 0px; width: 100%;"
+      tabindex="0"
+      title="Porto"
+    />
+  </dialog>
   <div
     aria-hidden="true"
     data-aria-hidden="true"
@@ -101,8 +128,7 @@ exports[`NewAddressSpeedBumpModal > should not render identicon if account has n
                       </a>
                       <div
                         class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
-                        role="button"
-                        tabindex="0"
+                        role="none"
                       >
                         <div
                           class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"

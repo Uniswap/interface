@@ -1,4 +1,4 @@
-import { SagaGenerator, call, delay, select } from 'typed-redux-saga'
+import { call, delay, SagaGenerator, select } from 'typed-redux-saga'
 import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
 import { makeSelectTransaction } from 'uniswap/src/features/transactions/selectors'

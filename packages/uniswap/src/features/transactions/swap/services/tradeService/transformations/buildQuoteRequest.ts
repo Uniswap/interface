@@ -10,10 +10,10 @@ import type { UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/
 import {
   GetQuoteRoutingParams,
   GetQuoteSlippageParams,
+  getTokenAddressForApi,
   QuoteRoutingParamsResult,
   QuoteSlippageParamsResult,
   SWAP_GAS_URGENCY_OVERRIDE,
-  getTokenAddressForApi,
   toTradingApiSupportedChainId,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 

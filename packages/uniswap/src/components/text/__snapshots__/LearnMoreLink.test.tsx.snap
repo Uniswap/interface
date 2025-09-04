@@ -1,29 +1,67 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`LearnMoreLink renders without error 1`] = `
-<Text
-  allowFontScaling={true}
+<View
   cancelable={true}
+  collapsable={false}
   disabled={false}
+  focusVisibleStyle={{}}
   focusable={true}
-  maxFontSizeMultiplier={1.2}
+  forwardedRef={[Function]}
+  jestAnimatedStyle={
+    {
+      "value": {},
+    }
+  }
   minPressDuration={0}
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onLayout={[Function]}
   onMouseEnter={[Function]}
   onMouseLeave={[Function]}
   onPress={[Function]}
   onPressIn={[Function]}
   onPressOut={[Function]}
+  role="button"
   style={
     {
-      "color": "#FF37C7",
-      "fontFamily": "Basel Grotesk",
-      "fontSize": 17,
-      "fontWeight": "500",
-      "lineHeight": 19.549999999999997,
+      "backgroundColor": "transparent",
+      "borderBottomLeftRadius": 0,
+      "borderBottomRightRadius": 0,
+      "borderTopLeftRadius": 0,
+      "borderTopRightRadius": 0,
+      "flexDirection": "column",
+      "transform": [
+        {
+          "scale": 1,
+        },
+      ],
     }
   }
-  suppressHighlighting={true}
+  tabIndex={-1}
 >
-  Learn more
-</Text>
+  <Text
+    allowFontScaling={true}
+    href="https://example.com"
+    maxFontSizeMultiplier={1.2}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    role="link"
+    style={
+      {
+        "color": "#FF37C7",
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 17,
+        "fontWeight": "500",
+        "lineHeight": 19.549999999999997,
+        "textDecorationColor": "rgba(0,0,0,0)",
+        "textDecorationLine": "none",
+      }
+    }
+    suppressHighlighting={true}
+    target="_blank"
+  >
+    Learn more
+  </Text>
+</View>
 `;

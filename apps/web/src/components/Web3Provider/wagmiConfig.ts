@@ -2,6 +2,7 @@ import { getWagmiConnectorV2 } from '@binance/w3w-wagmi-connector-v2'
 import { PLAYWRIGHT_CONNECT_ADDRESS } from 'components/Web3Provider/constants'
 import { WC_PARAMS } from 'components/Web3Provider/walletConnect'
 import { embeddedWallet } from 'connection/EmbeddedWalletConnector'
+import { porto } from 'porto/wagmi'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { getChainInfo, ORDERED_EVM_CHAINS } from 'uniswap/src/features/chains/chainInfo'
@@ -35,6 +36,7 @@ function createWagmiConnectors(params: {
   const { includeMockConnector } = params
 
   const baseConnectors = [
+    porto(),
     // There are no unit tests that expect WalletConnect to be included here,
     // so we can disable it to reduce log noise.
     BinanceConnector({

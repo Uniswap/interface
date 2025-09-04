@@ -577,7 +577,9 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
             }
           }
           suppressHighlighting={true}
-        />
+        >
+          0xb568...0600
+        </Text>
         <RNSVGSvgView
           align="xMidYMid"
           bbHeight={16}
@@ -864,7 +866,9 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
             }
           }
           suppressHighlighting={true}
-        />
+        >
+          0xb568...0600
+        </Text>
         <RNSVGSvgView
           align="xMidYMid"
           bbHeight={16}

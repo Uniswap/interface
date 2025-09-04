@@ -1,5 +1,5 @@
-import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
+import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
 import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
 import { UniswapMobileWalletConnectorOption } from 'components/WalletModal/UniswapMobileWalletConnectorOption'

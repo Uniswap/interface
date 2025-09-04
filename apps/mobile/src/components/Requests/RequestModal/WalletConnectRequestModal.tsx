@@ -6,24 +6,24 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
 import { ActionCannotBeCompletedContent } from 'src/components/Requests/RequestModal/ActionCannotBeCompletedContent'
+import { useHasSufficientFunds } from 'src/components/Requests/RequestModal/hooks'
 import { KidSuperCheckinModal } from 'src/components/Requests/RequestModal/KidSuperCheckinModal'
 import { UwULinkErc20SendModal } from 'src/components/Requests/RequestModal/UwULinkErc20SendModal'
 import {
-  WalletConnectRequestModalContent,
   getDoesMethodCostGas,
+  WalletConnectRequestModalContent,
 } from 'src/components/Requests/RequestModal/WalletConnectRequestModalContent'
-import { useHasSufficientFunds } from 'src/components/Requests/RequestModal/hooks'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
-import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { signWcRequestActions } from 'src/features/walletConnect/signWcRequestSaga'
+import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
-  WalletConnectSigningRequest,
   isBatchedTransactionRequest,
   isTransactionRequest,
   setDidOpenFromDeepLink,
+  WalletConnectSigningRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { spacing } from 'ui/src/theme'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'

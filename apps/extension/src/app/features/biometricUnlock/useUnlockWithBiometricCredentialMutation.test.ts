@@ -1,5 +1,5 @@
-import { waitFor } from '@testing-library/react'
 import { webcrypto } from 'node:crypto'
+import { waitFor } from '@testing-library/react'
 import { BiometricUnlockStorage } from 'src/app/features/biometricUnlock/BiometricUnlockStorage'
 import { useUnlockWithBiometricCredentialMutation } from 'src/app/features/biometricUnlock/useUnlockWithBiometricCredentialMutation'
 import { renderHookWithProviders } from 'src/test/render'

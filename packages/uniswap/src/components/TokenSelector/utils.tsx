@@ -1,6 +1,6 @@
-import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
-import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { OnchainItemListOption, OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
+import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
 import { SafetyLevel as GqlSafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GetSwappableTokensResponse, SafetyLevel } from 'uniswap/src/data/tradingApi/__generated__'

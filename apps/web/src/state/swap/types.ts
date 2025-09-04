@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { Dispatch, ReactNode, SetStateAction, createContext } from 'react'
+import { createContext, Dispatch, ReactNode, SetStateAction } from 'react'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'

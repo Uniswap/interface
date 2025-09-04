@@ -41,6 +41,7 @@ export default function TopLevelModals() {
         {shouldShowDevFlags && <ModalRenderer modalName={ModalName.DevFlags} />}
         <ModalRenderer modalName={ModalName.Help} />
         <ModalRenderer modalName={ModalName.OffchainActivity} />
+        <ModalRenderer modalName={ModalName.ReceiveCryptoModal} />
       </>
     )
   }
@@ -68,6 +69,7 @@ export default function TopLevelModals() {
       <ModalRenderer modalName={ModalName.Help} />
       <ModalRenderer modalName={ModalName.DelegationMismatch} />
       <ModalRenderer modalName={ModalName.ReceiveCryptoModal} />
+      <ModalRenderer modalName={ModalName.Send} />
     </>
   )
 }

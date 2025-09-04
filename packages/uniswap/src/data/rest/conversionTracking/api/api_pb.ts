@@ -4,8 +4,15 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import type { BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialMessage, PlainMessage } from "@bufbuild/protobuf";
-import { Message, proto3 } from "@bufbuild/protobuf";
+import type {
+  BinaryReadOptions,
+  FieldList,
+  JsonReadOptions,
+  JsonValue,
+  PartialMessage,
+  PlainMessage,
+} from '@bufbuild/protobuf'
+import { Message, proto3 } from '@bufbuild/protobuf'
 
 /**
  * @generated from message conversionproxy.v1.Header
@@ -14,39 +21,39 @@ export class Header extends Message<Header> {
   /**
    * @generated from field: string key = 1;
    */
-  key = "";
+  key = ''
 
   /**
    * @generated from field: string value = 2;
    */
-  value = "";
+  value = ''
 
   constructor(data?: PartialMessage<Header>) {
-    super();
-    proto3.util.initPartial(data, this);
+    super()
+    proto3.util.initPartial(data, this)
   }
 
-  static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "conversionproxy.v1.Header";
+  static readonly runtime: typeof proto3 = proto3
+  static readonly typeName = 'conversionproxy.v1.Header'
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "key", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 2, name: "value", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-  ]);
+    { no: 1, name: 'key', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: 'value', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+  ])
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Header {
-    return new Header().fromBinary(bytes, options);
+    return new Header().fromBinary(bytes, options)
   }
 
   static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): Header {
-    return new Header().fromJson(jsonValue, options);
+    return new Header().fromJson(jsonValue, options)
   }
 
   static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): Header {
-    return new Header().fromJsonString(jsonString, options);
+    return new Header().fromJsonString(jsonString, options)
   }
 
   static equals(a: Header | PlainMessage<Header> | undefined, b: Header | PlainMessage<Header> | undefined): boolean {
-    return proto3.util.equals(Header, a, b);
+    return proto3.util.equals(Header, a, b)
   }
 }
 
@@ -57,63 +64,66 @@ export class ProxyRequest extends Message<ProxyRequest> {
   /**
    * @generated from field: string requestType = 1;
    */
-  requestType = "";
+  requestType = ''
 
   /**
    * @generated from field: string identifier = 2;
    */
-  identifier = "";
+  identifier = ''
 
   /**
    * @generated from field: string to = 3;
    */
-  to = "";
+  to = ''
 
   /**
    * @generated from field: string method = 4;
    */
-  method = "";
+  method = ''
 
   /**
    * @generated from field: optional string body = 5;
    */
-  body?: string;
+  body?: string
 
   /**
    * @generated from field: repeated conversionproxy.v1.Header headers = 6;
    */
-  headers: Header[] = [];
+  headers: Header[] = []
 
   constructor(data?: PartialMessage<ProxyRequest>) {
-    super();
-    proto3.util.initPartial(data, this);
+    super()
+    proto3.util.initPartial(data, this)
   }
 
-  static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "conversionproxy.v1.ProxyRequest";
+  static readonly runtime: typeof proto3 = proto3
+  static readonly typeName = 'conversionproxy.v1.ProxyRequest'
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "requestType", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 2, name: "identifier", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 3, name: "to", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 4, name: "method", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 5, name: "body", kind: "scalar", T: 9 /* ScalarType.STRING */, opt: true },
-    { no: 6, name: "headers", kind: "message", T: Header, repeated: true },
-  ]);
+    { no: 1, name: 'requestType', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: 'identifier', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: 'to', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 4, name: 'method', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 5, name: 'body', kind: 'scalar', T: 9 /* ScalarType.STRING */, opt: true },
+    { no: 6, name: 'headers', kind: 'message', T: Header, repeated: true },
+  ])
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ProxyRequest {
-    return new ProxyRequest().fromBinary(bytes, options);
+    return new ProxyRequest().fromBinary(bytes, options)
   }
 
   static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ProxyRequest {
-    return new ProxyRequest().fromJson(jsonValue, options);
+    return new ProxyRequest().fromJson(jsonValue, options)
   }
 
   static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ProxyRequest {
-    return new ProxyRequest().fromJsonString(jsonString, options);
+    return new ProxyRequest().fromJsonString(jsonString, options)
   }
 
-  static equals(a: ProxyRequest | PlainMessage<ProxyRequest> | undefined, b: ProxyRequest | PlainMessage<ProxyRequest> | undefined): boolean {
-    return proto3.util.equals(ProxyRequest, a, b);
+  static equals(
+    a: ProxyRequest | PlainMessage<ProxyRequest> | undefined,
+    b: ProxyRequest | PlainMessage<ProxyRequest> | undefined,
+  ): boolean {
+    return proto3.util.equals(ProxyRequest, a, b)
   }
 }
 
@@ -124,51 +134,53 @@ export class ProxyResponse extends Message<ProxyResponse> {
   /**
    * @generated from field: int32 status = 1;
    */
-  status = 0;
+  status = 0
 
   /**
    * @generated from field: string statusText = 2;
    */
-  statusText = "";
+  statusText = ''
 
   /**
    * @generated from field: string body = 3;
    */
-  body = "";
+  body = ''
 
   /**
    * @generated from field: repeated conversionproxy.v1.Header headers = 4;
    */
-  headers: Header[] = [];
+  headers: Header[] = []
 
   constructor(data?: PartialMessage<ProxyResponse>) {
-    super();
-    proto3.util.initPartial(data, this);
+    super()
+    proto3.util.initPartial(data, this)
   }
 
-  static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "conversionproxy.v1.ProxyResponse";
+  static readonly runtime: typeof proto3 = proto3
+  static readonly typeName = 'conversionproxy.v1.ProxyResponse'
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "status", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
-    { no: 2, name: "statusText", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 3, name: "body", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 4, name: "headers", kind: "message", T: Header, repeated: true },
-  ]);
+    { no: 1, name: 'status', kind: 'scalar', T: 5 /* ScalarType.INT32 */ },
+    { no: 2, name: 'statusText', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: 'body', kind: 'scalar', T: 9 /* ScalarType.STRING */ },
+    { no: 4, name: 'headers', kind: 'message', T: Header, repeated: true },
+  ])
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ProxyResponse {
-    return new ProxyResponse().fromBinary(bytes, options);
+    return new ProxyResponse().fromBinary(bytes, options)
   }
 
   static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ProxyResponse {
-    return new ProxyResponse().fromJson(jsonValue, options);
+    return new ProxyResponse().fromJson(jsonValue, options)
   }
 
   static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ProxyResponse {
-    return new ProxyResponse().fromJsonString(jsonString, options);
+    return new ProxyResponse().fromJsonString(jsonString, options)
   }
 
-  static equals(a: ProxyResponse | PlainMessage<ProxyResponse> | undefined, b: ProxyResponse | PlainMessage<ProxyResponse> | undefined): boolean {
-    return proto3.util.equals(ProxyResponse, a, b);
+  static equals(
+    a: ProxyResponse | PlainMessage<ProxyResponse> | undefined,
+    b: ProxyResponse | PlainMessage<ProxyResponse> | undefined,
+  ): boolean {
+    return proto3.util.equals(ProxyResponse, a, b)
   }
 }
-

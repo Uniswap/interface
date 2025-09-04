@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react'
-import { Flex, Text, Tooltip, useMedia, type PopperProps } from 'ui/src'
+import { Flex, type PopperProps, Text, Tooltip, useMedia } from 'ui/src'
 import { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
 import { isWeb } from 'utilities/src/platform'
 

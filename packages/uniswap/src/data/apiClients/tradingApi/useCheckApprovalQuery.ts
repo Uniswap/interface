@@ -1,4 +1,4 @@
-import { UseQueryResult, skipToken } from '@tanstack/react-query'
+import { skipToken, UseQueryResult } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClients/hooks/useQueryWithImmediateGarbageCollection'
 import { fetchCheckApproval } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'

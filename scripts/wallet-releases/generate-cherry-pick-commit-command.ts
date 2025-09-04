@@ -1,7 +1,7 @@
 /*
  * find-pr-commits.ts
  *
- * Usage: npx ts-node ./scripts/wallet-releases/find-pr-commits.ts
+ * Usage: bunx ts-node ./scripts/wallet-releases/find-pr-commits.ts
  *
  * This script interactively prompts for a list of GitHub PR links, extracts PR numbers, searches recent git commits for each PR, and outputs the mapping, missing PRs, and a cherry-pick command for found commits.
  *

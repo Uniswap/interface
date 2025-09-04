@@ -34,7 +34,7 @@ export const getTokenAddress = (currency: Currency) => (currency.isNative ? NATI
 
 export const formatPercentInBasisPointsNumber = (percent: Percent): number => parseFloat(percent.toFixed(2)) * 100
 
-export const formatPercentNumber = (percent: Percent): number => parseFloat(percent.toFixed(2))
+const formatPercentNumber = (percent: Percent): number => parseFloat(percent.toFixed(2))
 
 export const getPriceUpdateBasisPoints = (
   prevPrice: Price<Currency, Currency>,
@@ -103,7 +103,7 @@ export function formatCommonPropertiesForTrade({
         ? trade.quote.quote.blockNumber
         : undefined
       : isClassicTrade(trade)
-        ? trade.blockNumber ?? undefined
+        ? (trade.blockNumber ?? undefined)
         : undefined,
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),

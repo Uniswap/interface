@@ -6,13 +6,13 @@ import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/Breadcrumb
 import { WrappedLiquidityPositionRangeChart } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { BaseQuoteFiatAmount } from 'components/Liquidity/BaseQuoteFiatAmount'
+import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
 import { LiquidityPositionAmountRows } from 'components/Liquidity/LiquidityPositionAmountRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { LiquidityPositionStackedBars } from 'components/Liquidity/LiquidityPositionStackedBars'
 import { LoadingRow } from 'components/Liquidity/Loader'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
 import { PositionPageActionButtons } from 'components/Liquidity/PositionPageActionButtons'
-import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
 import type { PositionInfo } from 'components/Liquidity/types'
 import { getBaseAndQuoteCurrencies } from 'components/Liquidity/utils/currency'
 import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
@@ -39,9 +39,9 @@ import {
   Main,
   SegmentedControl,
   SegmentedControlOption,
+  styled,
   Text,
   TouchableArea,
-  styled,
   useSporeColors,
 } from 'ui/src'
 import { ExchangeHorizontal } from 'ui/src/components/icons/ExchangeHorizontal'
@@ -61,8 +61,8 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'

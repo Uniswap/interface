@@ -15,6 +15,7 @@ import { ensure0xHex } from 'uniswap/src/utils/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'
 import { TransactionRepository } from 'wallet/src/features/transactions/executeTransaction/services/TransactionRepository/transactionRepository'
 import {
   PrepareTransactionParams,
@@ -23,7 +24,6 @@ import {
 } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { createTransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionServiceImpl'
 import { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
-import { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'
 import { TransactionConfigService } from 'wallet/src/features/transactions/executeTransaction/services/transactionConfigService'
 
 // Mock external utilities

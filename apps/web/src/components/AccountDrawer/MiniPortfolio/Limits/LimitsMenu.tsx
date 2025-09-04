@@ -1,6 +1,6 @@
 import {
-  CancelOrdersDialog,
   CancellationState,
+  CancelOrdersDialog,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'

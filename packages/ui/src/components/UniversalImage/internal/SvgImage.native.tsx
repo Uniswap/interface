@@ -1,7 +1,7 @@
 import WebView from 'react-native-webview'
+import { Flex } from 'ui/src/components/layout/Flex'
 import { SvgImageProps } from 'ui/src/components/UniversalImage/types'
 import { useSvgData } from 'ui/src/components/UniversalImage/utils'
-import { Flex } from 'ui/src/components/layout/Flex'
 import { Loader } from 'ui/src/loading/Loader'
 import { isIOS } from 'utilities/src/platform'
 

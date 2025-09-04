@@ -2,12 +2,12 @@ import { Action, AuthenticationTypes } from '@uniswap/client-embeddedwallet/dist
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation } from 'react-router'
-import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsContext'
 import { usePasskeyImportContext } from 'src/app/features/onboarding/import/PasskeyImportContextProvider'
 import {
   InitiatePasskeyAuthLocationState,
   SelectImportMethodLocationState,
 } from 'src/app/features/onboarding/import/types'
+import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsContext'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { bringWindowToFront, closeWindow, openPopupWindow } from 'src/app/navigation/utils'

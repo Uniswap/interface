@@ -28,8 +28,8 @@ import { logger } from 'utilities/src/logger/logger'
 export {
   Action,
   Authenticator,
-  RegistrationOptions_AuthenticatorAttachment as AuthenticatorAttachment,
   AuthenticatorNameType,
+  RegistrationOptions_AuthenticatorAttachment as AuthenticatorAttachment,
 } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
 
 // Registration

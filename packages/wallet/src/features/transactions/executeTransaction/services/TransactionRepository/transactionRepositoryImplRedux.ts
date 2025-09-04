@@ -1,14 +1,14 @@
-import { put, select, type SagaGenerator } from 'typed-redux-saga'
 /* eslint-disable @jambit/typed-redux-saga/use-typed-effects -- typed-redux-saga doesn't export these correctly */
 import type { PutEffect, SelectEffect } from 'redux-saga/effects'
+import { put, type SagaGenerator, select } from 'typed-redux-saga'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { AddressTransactionsSelector } from 'uniswap/src/features/transactions/selectors'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
-  TransactionStatus,
   type OnChainTransactionDetails,
   type TransactionDetails,
+  TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { UniswapState } from 'uniswap/src/state/uniswapReducer'
 import { logger } from 'utilities/src/logger/logger'

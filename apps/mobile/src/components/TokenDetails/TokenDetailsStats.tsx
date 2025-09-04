@@ -14,9 +14,9 @@ import {
   useTokenProjectMarketsPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Language } from 'uniswap/src/features/language/constants'
 import { useCurrentLanguage, useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 

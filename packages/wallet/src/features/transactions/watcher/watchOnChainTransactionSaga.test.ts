@@ -1,7 +1,7 @@
 import { providers } from 'ethers'
+import { call } from 'redux-saga/effects'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
-import { call } from 'redux-saga/effects'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { cancelTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'

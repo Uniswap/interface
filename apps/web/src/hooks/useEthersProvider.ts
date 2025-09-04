@@ -42,7 +42,7 @@ export function useEthersProvider({ chainId }: { chainId?: number } = {}) {
   const { data: client } = useConnectorClient({ chainId })
   const disconnectedClient = useClient({ chainId })
   return useMemo(
-    () => clientToProvider(account.chainId !== chainId ? disconnectedClient : client ?? disconnectedClient, chainId),
+    () => clientToProvider(account.chainId !== chainId ? disconnectedClient : (client ?? disconnectedClient), chainId),
     [account.chainId, chainId, client, disconnectedClient],
   )
 }

@@ -1,5 +1,6 @@
 import { PopupContent } from 'components/Popups/types'
 import { toast } from 'sonner'
+
 type PopupListener = (content: PopupContent, key: string, removeAfterMs?: number) => string | number
 
 class PopupRegistry {

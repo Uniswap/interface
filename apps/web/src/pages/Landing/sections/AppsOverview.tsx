@@ -1,10 +1,10 @@
-import { H2 } from 'pages/Landing/components/Generics'
 import { DownloadWalletCard } from 'pages/Landing/components/cards/DownloadWalletCard'
 import { LiquidityCard } from 'pages/Landing/components/cards/LiquidityCard'
 import { TradingApiCard } from 'pages/Landing/components/cards/TradingApiCard'
 import { UnichainCard } from 'pages/Landing/components/cards/UnichainCard'
 import { UniswapXCard } from 'pages/Landing/components/cards/UniswapXCard'
 import { WebappCard } from 'pages/Landing/components/cards/WebappCard'
+import { H2 } from 'pages/Landing/components/Generics'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 

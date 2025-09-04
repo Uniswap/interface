@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardKey } from 'src/app/features/onboarding/KeyboardKey'
 import { MainContentWrapper } from 'src/app/features/onboarding/intro/MainContentWrapper'
+import { KeyboardKey } from 'src/app/features/onboarding/KeyboardKey'
 import { useFinishExtensionOnboarding } from 'src/app/features/onboarding/useFinishExtensionOnboarding'
 import { useOpeningKeyboardShortCut } from 'src/app/hooks/useOpeningKeyboardShortCut'
 import { getCurrentTabAndWindowId } from 'src/app/navigation/utils'

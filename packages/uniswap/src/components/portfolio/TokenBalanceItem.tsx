@@ -1,33 +1,24 @@
-import { memo, useMemo } from 'react'
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Shine, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { Flex, Shine, Text, useIsDarkMode } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
-import {
-  useTokenBalanceMainPartsFragment,
-  useTokenBalanceQuantityPartsFragment,
-} from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { useRestTokenBalanceMainParts, useRestTokenBalanceQuantityParts } from 'uniswap/src/data/rest/getPortfolio'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useTokenBalanceListContext } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { isWeb } from 'utilities/src/platform'
-import { noop } from 'utilities/src/react/noop'
 
 /**
  * IMPORTANT: if you modify the UI of this component, make sure to update the corresponding Skeleton component.
  */
 
 interface TokenBalanceItemProps {
-  portfolioBalanceId: string
   currencyInfo: CurrencyInfo
-  onPressToken?: (currencyId: CurrencyId) => void
   isLoading?: boolean
   padded?: boolean
   isHidden: boolean
@@ -38,9 +29,7 @@ interface TokenBalanceItemProps {
  * This component needs to be as fast as possible and shouldn't re-render often or else it causes performance issues.
  */
 export const TokenBalanceItem = memo(function _TokenBalanceItem({
-  portfolioBalanceId,
   currencyInfo,
-  onPressToken,
   isLoading,
   padded,
   isHidden,
@@ -51,21 +40,10 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   // Ensure items rerender when theme is switched
   useIsDarkMode()
 
-  // Only return a function if onPressToken is provided, otherwise onPress is always defined and this element will intercept all clicks.
-  const onPress = useMemo(() => {
-    if (!onPressToken) {
-      return undefined
-    }
-    return (): void => {
-      onPressToken(currencyInfo.currencyId)
-    }
-  }, [currencyInfo.currencyId, onPressToken])
-
   const shortenedSymbol = getSymbolDisplayText(currency.symbol)
 
   return (
-    <TouchableArea
-      hoverable
+    <Flex
       alignItems="flex-start"
       backgroundColor="$surface1"
       borderRadius="$rounded16"
@@ -73,8 +51,6 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       justifyContent="space-between"
       px={padded ? '$spacing24' : '$spacing8'}
       py="$spacing8"
-      onLongPress={noop}
-      onPress={onPress}
     >
       <Flex row shrink alignItems="center" gap="$spacing12" overflow="hidden">
         <TokenLogo
@@ -89,7 +65,6 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           </Text>
           <Flex row alignItems="center" gap="$spacing8" minHeight={20}>
             <TokenBalanceQuantity
-              portfolioBalanceId={portfolioBalanceId}
               shortenedSymbol={shortenedSymbol}
               currencyId={currencyInfo.currencyId}
               address={address}
@@ -99,40 +74,27 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       </Flex>
 
       {currencyInfo.isSpam === true && isHidden ? undefined : (
-        <TokenBalanceRightSideColumn
-          portfolioBalanceId={portfolioBalanceId}
-          isLoading={isLoading}
-          currencyId={currencyInfo.currencyId}
-          address={address}
-        />
+        <TokenBalanceRightSideColumn isLoading={isLoading} currencyId={currencyInfo.currencyId} address={address} />
       )}
-    </TouchableArea>
+    </Flex>
   )
 })
 
 function TokenBalanceQuantity({
-  portfolioBalanceId,
   shortenedSymbol,
   currencyId,
   address,
 }: {
-  portfolioBalanceId: string
   shortenedSymbol: Maybe<string>
   currencyId: CurrencyId
   address?: string
 }): JSX.Element {
   const { formatNumberOrString } = useLocalizationContext()
-  const isRestEnabled = useFeatureFlag(FeatureFlags.GqlToRestBalances)
 
   // By relying on this cached data we can avoid re-renders unless these specific fields change.
-  const gqlTokenBalance = useTokenBalanceQuantityPartsFragment({ id: portfolioBalanceId })
-  const restTokenBalance = useRestTokenBalanceQuantityParts({
-    currencyId,
-    address,
-    enabled: isRestEnabled,
-  })
+  const restTokenBalance = useRestTokenBalanceQuantityParts({ currencyId, address })
 
-  const tokenBalance = isRestEnabled ? restTokenBalance.data : gqlTokenBalance.data
+  const tokenBalance = restTokenBalance.data
 
   return (
     <Text color="$neutral2" numberOfLines={1} variant={isWeb ? 'body3' : 'body2'}>
@@ -142,12 +104,10 @@ function TokenBalanceQuantity({
 }
 
 function TokenBalanceRightSideColumn({
-  portfolioBalanceId,
   isLoading,
   currencyId,
   address,
 }: {
-  portfolioBalanceId: string
   isLoading?: boolean
   currencyId: CurrencyId
   address?: string
@@ -155,16 +115,10 @@ function TokenBalanceRightSideColumn({
   const { t } = useTranslation()
   const { isTestnetModeEnabled } = useEnabledChains()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const isRestEnabled = useFeatureFlag(FeatureFlags.GqlToRestBalances)
 
   // By relying on this cached data we can avoid re-renders unless these specific fields change.
-  const gqlTokenBalance = useTokenBalanceMainPartsFragment({ id: portfolioBalanceId })
-  const restTokenBalance = useRestTokenBalanceMainParts({
-    currencyId,
-    address,
-    enabled: isRestEnabled,
-  })
-  const tokenBalance = isRestEnabled ? restTokenBalance.data : gqlTokenBalance.data
+  const restTokenBalance = useRestTokenBalanceMainParts({ currencyId, address })
+  const tokenBalance = restTokenBalance.data
 
   const balanceUSD = tokenBalance?.denominatedValue?.value
   const relativeChange24 = tokenBalance?.tokenProjectMarket?.relativeChange24?.value

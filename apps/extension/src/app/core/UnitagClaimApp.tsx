@@ -2,7 +2,7 @@ import '@tamagui/core/reset.css'
 import 'src/app/Global.css'
 
 import { PropsWithChildren, useEffect } from 'react'
-import { Outlet, RouterProvider, createHashRouter, useSearchParams } from 'react-router'
+import { createHashRouter, Outlet, RouterProvider, useSearchParams } from 'react-router'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
 import { DatadogAppNameTag } from 'src/app/datadog'

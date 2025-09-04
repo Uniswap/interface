@@ -5,17 +5,14 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { Flex, useSporeColors } from 'ui/src'
-import { NftViewWithContextMenu } from 'uniswap/src/components/nfts/NftViewWithContextMenu'
 import { NftsList } from 'uniswap/src/components/nfts/NftsList'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { NftViewWithContextMenu } from 'uniswap/src/components/nfts/NftViewWithContextMenu'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-
-export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]
 
 export const NftsTab = memo(
   forwardRef<FlashList<unknown>, TabProps>(function _NftsTab(

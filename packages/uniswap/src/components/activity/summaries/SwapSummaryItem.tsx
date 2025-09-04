@@ -1,10 +1,10 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { useOnRetrySwap } from 'uniswap/src/components/activity/hooks/useOnRetrySwap'
 import { TransactionSummaryLayout } from 'uniswap/src/components/activity/summaries/TransactionSummaryLayout'
 import { SummaryItemProps } from 'uniswap/src/components/activity/types'
 import { TXN_HISTORY_ICON_SIZE } from 'uniswap/src/components/activity/utils'
+import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/utils/getAmountsFromTrade'
@@ -20,6 +20,7 @@ export function SwapSummaryItem({
   transaction,
   swapCallbacks,
   index,
+  customDetailsModalOpen,
 }: SummaryItemProps & {
   transaction: TransactionDetails & {
     typeInfo: ExactOutputSwapTransactionInfo | ExactInputSwapTransactionInfo
@@ -69,6 +70,13 @@ export function SwapSummaryItem({
   )
 
   return (
-    <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} onRetry={onRetry} />
+    <TransactionSummaryLayout
+      caption={caption}
+      icon={icon}
+      index={index}
+      transaction={transaction}
+      customDetailsModalOpen={customDetailsModalOpen}
+      onRetry={onRetry}
+    />
   )
 }

@@ -2,8 +2,9 @@
 import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/datadog/Datadog'
-import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
+import { LoggerErrorContext, LogLevel } from 'utilities/src/logger/types'
 import { isInterface, isMobileApp, isWeb } from 'utilities/src/platform'
+
 // weird temp fix: the web app is complaining about __DEV__ being global
 // i tried declaring it in a variety of places:
 //   - in web app env.d.ts and polyfills.ts files

@@ -1,10 +1,9 @@
 import { logger } from 'utilities/src/logger/logger'
-import { getReduxPersistor } from 'wallet/src/state/persistor'
-
 // This should be the only file that imports `restart`.
 // All other files should import `restartApp` instead.
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { restart } from 'wallet/src/components/ErrorBoundary/restart'
+import { getReduxPersistor } from 'wallet/src/state/persistor'
 
 export const restartApp = async (): Promise<void> => {
   try {

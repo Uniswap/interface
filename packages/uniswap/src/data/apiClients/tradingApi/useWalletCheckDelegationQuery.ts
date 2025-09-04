@@ -1,4 +1,4 @@
-import { QueryFunction, QueryKey, UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
+import { QueryFunction, QueryKey, skipToken, UseQueryResult, useQuery } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { checkWalletDelegation } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'

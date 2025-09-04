@@ -11,7 +11,7 @@ import {
 import { ETH_MAINNET, ETH_SEPOLIA } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { renderHook, waitFor } from 'test-utils/render'
-import { DAI, UNI, USDC_OPTIMISM, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { DAI, nativeOnChain, UNI, USDC_OPTIMISM } from 'uniswap/src/constants/tokens'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { GQL_MAINNET_CHAINS, GQL_TESTNET_CHAINS } from 'uniswap/src/features/chains/chainInfo'

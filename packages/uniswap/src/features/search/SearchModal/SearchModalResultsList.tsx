@@ -1,21 +1,21 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
-import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
-import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useNftSearchResultsToNftCollectionOptions } from 'uniswap/src/components/lists/items/nfts/useNftSearchResultsToNftCollectionOptions'
 import { usePoolSearchResultsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolSearchResultsToPoolOptions'
 import { SearchModalOption } from 'uniswap/src/components/lists/items/types'
+import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
+import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
+import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { useCollectionSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSearchPools } from 'uniswap/src/features/dataApi/searchPools'
 import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import { NUMBER_OF_RESULTS_SHORT } from 'uniswap/src/features/search/SearchModal/constants'
 import { useWalletSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useWalletSearchResults'
+import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { isWeb } from 'utilities/src/platform'
@@ -71,7 +71,7 @@ function useSectionsForSearchResults({
 
   const skipWalletSearchQuery = isWeb || (activeTab !== SearchTab.Wallets && activeTab !== SearchTab.All)
   const { wallets: walletSearchOptions, loading: walletSearchResultsLoading } = useWalletSearchResults(
-    skipWalletSearchQuery ? '' : searchFilter ?? '', // skip wallet search queries on web
+    skipWalletSearchQuery ? '' : (searchFilter ?? ''), // skip wallet search queries on web
     chainFilter,
   )
   const walletSearchResultsSection = useOnchainItemListSection({
@@ -202,7 +202,7 @@ function _SearchModalResultsList({
     refetch,
   } = useSectionsForSearchResults({
     // turn off parsed chainFilter for pools (to avoid "eth usdc" searches filtering by eth mainnet)
-    chainFilter: activeTab !== SearchTab.Pools ? chainFilter ?? parsedChainFilter : chainFilter,
+    chainFilter: activeTab !== SearchTab.Pools ? (chainFilter ?? parsedChainFilter) : chainFilter,
     searchFilter: debouncedParsedSearchFilter ?? debouncedSearchFilter,
     activeTab,
     shouldPrioritizePools: (debouncedParsedSearchFilter ?? debouncedSearchFilter)?.includes('/') ?? false,

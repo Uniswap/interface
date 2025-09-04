@@ -19,9 +19,9 @@ Icons and logos are placed in `ui/src/components/{icons|logos}`. These files are
 
 ```bash
 # Generate all icons
-yarn ui build:icons
+bun ui build:icons
 # Generate any icons that do not yet have an existing TS file
-yarn ui build:icons:missing
+bun ui build:icons:missing
 ```
 
 When adding an SVG, please ensure you replace color references as needed with `currentColor` to ensure the asset respects the color property when used.

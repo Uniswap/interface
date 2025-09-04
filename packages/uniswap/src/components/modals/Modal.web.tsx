@@ -33,6 +33,7 @@ export function Modal({
   flex,
   zIndex,
   isDismissible = true,
+  hideHandlebar,
 }: ModalProps): JSX.Element {
   const [fullyClosed, setFullyClosed] = useState(false)
 
@@ -76,6 +77,7 @@ export function Modal({
           maxHeight={maxHeight}
           gap={gap}
           zIndex={zIndex}
+          hideHandlebar={hideHandlebar}
           $sm={{
             p: padding ?? '$spacing12',
             ...(isInterface && {

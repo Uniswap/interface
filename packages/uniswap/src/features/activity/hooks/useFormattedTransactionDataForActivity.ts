@@ -6,7 +6,7 @@ import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
-import { LoadingItem, isLoadingItem, isSectionHeader } from 'uniswap/src/components/activity/utils'
+import { isLoadingItem, isSectionHeader, LoadingItem } from 'uniswap/src/components/activity/utils'
 import {
   TransactionListQuery,
   TransactionListQueryVariables,
@@ -47,7 +47,7 @@ export interface FormattedTransactionDataResult {
 }
 
 /**
- * Factory hook that returns transaction data based on the active data source (GraphQL or REST)
+ * Hook that returns transaction data using REST API
  */
 export function useFormattedTransactionDataForActivity({
   address,

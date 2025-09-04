@@ -1,8 +1,8 @@
 import React from 'react'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 
 export function OptionCard({

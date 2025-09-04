@@ -11,6 +11,7 @@ import {
   DAI_OPTIMISM,
   DAI_POLYGON,
   ETH_BSC,
+  nativeOnChain,
   OP,
   PORTAL_ETH_CELO,
   UNI,
@@ -43,7 +44,6 @@ import {
   WETH_AVALANCHE,
   WETH_POLYGON,
   WRAPPED_NATIVE_CURRENCY,
-  nativeOnChain,
 } from 'uniswap/src/constants/tokens'
 import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'

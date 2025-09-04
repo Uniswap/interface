@@ -1,4 +1,4 @@
-import { memo, type ComponentType } from 'react'
+import { type ComponentType, memo } from 'react'
 import type { AppStackParamList, AppStackScreenProp } from 'src/app/navigation/types'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import type { GetProps } from 'ui/src'

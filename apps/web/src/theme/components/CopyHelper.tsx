@@ -1,10 +1,10 @@
 import { ReactComponent as TooltipTriangle } from 'assets/svg/tooltip_triangle.svg'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import { PropsWithChildren, ReactNode, forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
+import { forwardRef, PropsWithChildren, ReactNode, useCallback, useImperativeHandle, useRef, useState } from 'react'
 import { CheckCircle, Copy, Icon } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
-import { Flex, Text, isTouchable } from 'ui/src'
+import { Flex, isTouchable, Text } from 'ui/src'
 
 const TOOLTIP_WIDTH = 60
 

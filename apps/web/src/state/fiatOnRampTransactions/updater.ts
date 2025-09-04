@@ -6,9 +6,9 @@ import { useEffect } from 'react'
 import { useFiatOnRampTransactions } from 'state/fiatOnRampTransactions/hooks'
 import { removeFiatOnRampTransaction, updateFiatOnRampTransaction } from 'state/fiatOnRampTransactions/reducer'
 import {
+  backendStatusToFiatOnRampStatus,
   FiatOnRampTransactionStatus,
   FiatOnRampTransactionType,
-  backendStatusToFiatOnRampStatus,
 } from 'state/fiatOnRampTransactions/types'
 import { statusToTransactionInfoStatus } from 'state/fiatOnRampTransactions/utils'
 import { useAppDispatch } from 'state/hooks'

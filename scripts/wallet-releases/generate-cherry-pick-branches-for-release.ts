@@ -2,7 +2,7 @@
 /*
  * generate-cherry-pick-branches-for-release.ts
  *
- * Usage: npx ts-node ./scripts/wallet-releases/generate-cherry-pick-branches-for-release.ts
+ * Usage: bunx ts-node ./scripts/wallet-releases/generate-cherry-pick-branches-for-release.ts
  *
  * This script interactively prompts for mobile and extension version numbers and a temp name, then automates the process of creating cherry-pick branches for release management.
  *

@@ -8,11 +8,11 @@ import {
 import { SagaIterator, Task } from 'redux-saga'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics/biometrics-utils'
 import {
-  TriggerAuthenticationPayload,
   setAuthenticationStatus,
   setDeviceSupportsBiometrics,
   setIsEnrolled,
   setSupportedAuthenticationTypes,
+  TriggerAuthenticationPayload,
   triggerAuthentication,
 } from 'src/features/biometrics/biometricsSlice'
 import { all, call, cancel, fork, put, take } from 'typed-redux-saga'

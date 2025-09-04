@@ -1,7 +1,7 @@
-import { routes } from 'pages/RouteDefinitions'
 import { getExploreTitle } from 'pages/getExploreTitle'
 import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
 import { paths } from 'pages/paths'
+import { routes } from 'pages/RouteDefinitions'
 import React from 'react'
 
 // Mock the actual components since they're not needed to test route definitions.

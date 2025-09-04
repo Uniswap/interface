@@ -1,7 +1,7 @@
 #!/bin/bash
 
 mv src/package.json src/ignore.json
-yarn run depcheck
+bun run depcheck
 result_status=$?
 mv src/ignore.json src/package.json
 

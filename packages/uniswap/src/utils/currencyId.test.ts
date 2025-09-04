@@ -4,7 +4,6 @@ import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { DEFAULT_NATIVE_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
-  NATIVE_ANALYTICS_ADDRESS_VALUE,
   areCurrencyIdsEqual,
   buildCurrencyId,
   buildNativeCurrencyId,
@@ -16,6 +15,7 @@ import {
   getCurrencyAddressForAnalytics,
   isCurrencyIdValid,
   isNativeCurrencyAddress,
+  NATIVE_ANALYTICS_ADDRESS_VALUE,
 } from 'uniswap/src/utils/currencyId'
 import { INVALID_ADDRESS_TOO_SHORT, INVALID_CHAIN_ID, VALID_ADDRESS, VALID_CHAIN_ID } from 'utilities/src/test/fixtures'
 

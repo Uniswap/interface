@@ -1,11 +1,11 @@
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import {
-  FeeAmount,
-  TICK_SPACINGS,
-  TickMath,
   encodeSqrtRatioX96,
+  FeeAmount,
   nearestUsableTick,
   priceToClosestTick,
+  TICK_SPACINGS,
+  TickMath,
 } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { convertScientificNotationToNumber } from 'utilities/src/format/convertScientificNotation'

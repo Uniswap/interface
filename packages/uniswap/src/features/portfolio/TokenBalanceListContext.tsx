@@ -1,10 +1,10 @@
 import { NetworkStatus } from '@apollo/client'
 import isEqual from 'lodash/isEqual'
 import {
+  createContext,
   Dispatch,
   PropsWithChildren,
   SetStateAction,
-  createContext,
   useContext,
   useMemo,
   useRef,

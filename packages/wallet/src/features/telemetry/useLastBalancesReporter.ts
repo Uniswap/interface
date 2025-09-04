@@ -1,17 +1,11 @@
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { calculateTotalBalancesUsdPerChainRest, useTotalBalancesUsdPerChain } from 'uniswap/src/data/balances/utils'
-import { reportBalancesForAnalytics } from 'uniswap/src/features/accounts/reportBalancesForAnalytics'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { usePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { calculateTotalBalancesUsdPerChainRest } from 'uniswap/src/data/balances/utils'
 import { useGetPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
+import { reportBalancesForAnalytics } from 'uniswap/src/features/accounts/reportBalancesForAnalytics'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances/balances'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/balancesRest'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { MobileAppsFlyerEvents } from 'uniswap/src/features/telemetry/constants'
 import { sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
@@ -53,27 +47,16 @@ export function useLastBalancesReporter({ isOnboarded }: { isOnboarded: boolean 
     fetchPolicy: 'cache-first',
   })
 
-  const { gqlChains, chains: chainIds } = useEnabledChains()
+  const { chains: chainIds } = useEnabledChains()
   const address = account?.address
-  const valueModifiers = usePortfolioValueModifiers(address)
   const modifier = useRestPortfolioValueModifier(address)
-  const isRestEnabled = useFeatureFlag(FeatureFlags.GqlToRestBalances)
-
-  const portfolioBalancesGraphQLQuery = usePortfolioBalancesQuery({
-    fetchPolicy: 'cache-first',
-    variables: account?.address ? { ownerAddress: account.address, chains: gqlChains, valueModifiers } : undefined,
-    skip: isRestEnabled || !account?.address,
-  })
 
   const { data: portfolioBalancesRestData } = useGetPortfolioQuery({
     input: { evmAddress: address, chainIds, modifier },
-    enabled: isRestEnabled && !!address,
+    enabled: !!address,
   })
 
-  const totalBalancesUsdPerChainGraphQL = useTotalBalancesUsdPerChain(portfolioBalancesGraphQLQuery)
-  const totalBalancesUsdPerChainREST = calculateTotalBalancesUsdPerChainRest(portfolioBalancesRestData)
-
-  const totalBalancesUsdPerChain = isRestEnabled ? totalBalancesUsdPerChainREST : totalBalancesUsdPerChainGraphQL
+  const totalBalancesUsdPerChain = calculateTotalBalancesUsdPerChainRest(portfolioBalancesRestData)
 
   useEffect(() => {
     if (!walletIsFunded && signerAccountsTotalBalance) {

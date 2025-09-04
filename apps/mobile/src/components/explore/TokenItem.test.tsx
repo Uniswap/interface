@@ -1,6 +1,6 @@
-import * as tokenDetailsHooks from 'src/components/TokenDetails/hooks'
-import { TokenItem } from 'src/components/explore/TokenItem'
 import * as exploreHooks from 'src/components/explore/hooks'
+import { TokenItem } from 'src/components/explore/TokenItem'
+import * as tokenDetailsHooks from 'src/components/TokenDetails/hooks'
 import { TOKEN_ITEM_DATA, tokenItemData } from 'src/test/fixtures'
 import { fireEvent, render, within } from 'src/test/test-utils'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'

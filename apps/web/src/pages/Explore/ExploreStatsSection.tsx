@@ -1,9 +1,9 @@
-import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
+import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { Fragment, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { use24hProtocolVolume, useDailyTVLWithChange } from 'state/explore/protocolStats'
-import { Flex, Popover, Text, isTouchable, useMedia, useShadowPropsMedium } from 'ui/src'
+import { Flex, isTouchable, Popover, Text, useMedia, useShadowPropsMedium } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
@@ -113,6 +113,7 @@ interface StatDisplayProps {
 
 const StatDisplay = memo(({ data, isLoading, isHoverable }: StatDisplayProps) => {
   const { formatPercent } = useLocalizationContext()
+  const { t } = useTranslation()
 
   return (
     <Flex group gap="$spacing4" animation="simple">
@@ -133,7 +134,7 @@ const StatDisplay = memo(({ data, isLoading, isHoverable }: StatDisplayProps) =>
           <Fragment>
             <DeltaArrow delta={data.change} formattedDelta={formatPercent(Math.abs(data.change))} size={12} />
             <Text variant="body4" color="$neutral1">
-              {formatPercent(Math.abs(data.change))}
+              {formatPercent(Math.abs(data.change))} {t('common.today').toLocaleLowerCase()}
             </Text>
           </Fragment>
         )}

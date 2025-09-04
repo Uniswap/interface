@@ -1,6 +1,6 @@
 import type { Middleware, PreloadedState } from '@reduxjs/toolkit'
 import { MMKV } from 'react-native-mmkv'
-import { Storage, persistReducer, persistStore } from 'redux-persist'
+import { persistReducer, persistStore, Storage } from 'redux-persist'
 import { MOBILE_STATE_VERSION, migrations } from 'src/app/migrations'
 import { MobileState, mobilePersistedStateList, mobileReducer } from 'src/app/mobileReducer'
 import { rootMobileSaga } from 'src/app/saga'

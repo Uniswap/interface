@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { useSelector } from 'react-redux'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
-import { Flex, Text, TouchableArea, flexStyles } from 'ui/src'
+import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
 import { CopyAlt } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'

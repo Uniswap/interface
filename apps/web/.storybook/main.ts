@@ -1,7 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-webpack5'
-import { DefinePlugin } from 'webpack'
-
 import { dirname, join, resolve } from 'path'
+import { DefinePlugin } from 'webpack'
 
 const isDev = process.env.NODE_ENV === 'development'
 

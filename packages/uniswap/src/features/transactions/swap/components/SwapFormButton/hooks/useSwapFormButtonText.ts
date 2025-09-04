@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useInterfaceWrap'
 import { useIsAmountSelectionInvalid } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsAmountSelectionInvalid'
@@ -33,11 +34,15 @@ export const useSwapFormButtonText = (): string => {
   const nativeCurrency = nativeOnChain(chainId)
 
   const isIndicative = useIsTradeIndicative()
-
+  const isWebFORNudgeEnabled = useIsWebFORNudgeEnabled()
   const activeAccount = useWallet().evmAccount
 
   if (swapRedirectCallback) {
     return t('common.getStarted')
+  }
+
+  if (isWebFORNudgeEnabled) {
+    return t('empty.swap.button.text')
   }
 
   if (isIndicative) {

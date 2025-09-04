@@ -6,26 +6,23 @@ import { DownloadGraduatedWalletCard } from 'components/AccountDrawer/DownloadGr
 import IconButton, { IconWithConfirmTextButton } from 'components/AccountDrawer/IconButton'
 import { EmptyWallet } from 'components/AccountDrawer/MiniPortfolio/EmptyWallet'
 import { ExtensionDeeplinks } from 'components/AccountDrawer/MiniPortfolio/ExtensionDeeplinks'
-import MiniPortfolio from 'components/AccountDrawer/MiniPortfolio/MiniPortfolio'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import MiniPortfolio from 'components/AccountDrawer/MiniPortfolio/MiniPortfolio'
 import { LimitedSupportBanner } from 'components/Banner/LimitedSupportBanner'
+import DelegationMismatchModal from 'components/delegation/DelegationMismatchModal'
 import { Power } from 'components/Icons/Power'
 import { Settings } from 'components/Icons/Settings'
 import StatusIcon from 'components/Identicon/StatusIcon'
-
 import { ReceiveModalState, receiveCryptoModalStateAtom } from 'components/ReceiveCryptoModal/state'
-import DelegationMismatchModal from 'components/delegation/DelegationMismatchModal'
 import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
-import { useIsUniExtensionConnected } from 'hooks/useIsUniExtensionConnected'
+import { useIsUniswapExtensionConnected } from 'hooks/useIsUniswapExtensionConnected'
 import { useModalState } from 'hooks/useModalState'
 import { useSignOutWithPasskey } from 'hooks/useSignOutWithPasskey'
 import { useAtom } from 'jotai'
-import { SendFormModal } from 'pages/Swap/Send/SendFormModal'
 import { useCallback, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
 import { CopyHelper } from 'theme/components/CopyHelper'
 import { Button, Flex, Text } from 'ui/src'
@@ -35,12 +32,14 @@ import { Shine } from 'ui/src/loading/Shine'
 import AnimatedNumber, {
   BALANCE_CHANGE_INDICATION_DURATION,
 } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
-import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
+import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balances'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -49,8 +48,8 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { useHasAccountMismatchOnAnyChain } from 'uniswap/src/features/smartWallet/mismatch/hooks'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -62,14 +61,11 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const disconnect = useDisconnect()
   const { data: ENSName } = useENSName(account)
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const wallet = useWallet()
 
   const [, setReceiveModalState] = useAtom(receiveCryptoModalStateAtom)
 
-  const isUniExtensionConnected = useIsUniExtensionConnected()
-  const isExtensionDeeplinkingDisabled = useFeatureFlag(FeatureFlags.DisableExtensionDeeplinks)
-  const shouldShowExtensionDeeplinks = isUniExtensionConnected && !isExtensionDeeplinkingDisabled
+  const shouldShowExtensionDeeplinks = useIsUniswapExtensionConnected()
 
   const { isTestnetModeEnabled } = useEnabledChains()
   const connectedAccount = useAccount()
@@ -94,19 +90,13 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     accountDrawer.close()
   }, [connectedWithEmbeddedWallet, dispatch, disconnect, accountDrawer, signOutWithPasskey])
 
-  const handleBuyCryptoClick = useCallback(() => {
-    accountDrawer.close()
-    navigate(`/buy`, { replace: true })
-  }, [accountDrawer, navigate])
-
-  const openAddressQRModal = useEvent(() => setReceiveModalState(ReceiveModalState.QR_CODE))
-  const openCEXTransferModal = useEvent(() => setReceiveModalState(ReceiveModalState.CEX_TRANSFER))
   const openReceiveCryptoModal = useEvent(() => setReceiveModalState(ReceiveModalState.DEFAULT))
-  const {
-    isOpen: isSendFormModalOpen,
-    openModal: openSendFormModal,
-    closeModal: closeSendFormModal,
-  } = useModalState(ModalName.Send)
+  const { navigateToSendFlow } = useUniswapContext()
+
+  const onPressSend = useEvent(() => {
+    navigateToSendFlow({ chainId: UniverseChainId.Mainnet })
+    accountDrawer.close()
+  })
 
   const { data, networkStatus, loading } = usePortfolioTotalValue({
     evmAddress: wallet.evmAccount?.address,
@@ -144,8 +134,8 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
 
   return (
     <>
-      <Flex flex={1} px="$padding16" py={isUniExtensionConnected ? '$spacing16' : '$spacing20'}>
-        <TestnetModeBanner mt={isUniExtensionConnected ? -16 : -20} mx={-24} mb="$spacing16" />
+      <Flex flex={1} px="$padding16" py={shouldShowExtensionDeeplinks ? '$spacing16' : '$spacing20'}>
+        <TestnetModeBanner mt={shouldShowExtensionDeeplinks ? -16 : -20} mx={-24} mb="$spacing16" />
         <Flex row justifyContent="space-between" alignItems="flex-start" mb="$spacing8">
           <StatusIcon size={48} />
           <Flex row gap="$spacing8">
@@ -215,11 +205,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           ) : (
             <>
               {isPortfolioZero ? (
-                <EmptyWallet
-                  handleBuyCryptoClick={handleBuyCryptoClick}
-                  handleReceiveCryptoClick={openAddressQRModal}
-                  handleCEXTransferClick={openCEXTransferModal}
-                />
+                <EmptyWallet />
               ) : (
                 <>
                   <Flex row gap="$gap8">
@@ -227,7 +213,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                       dataTestId={TestID.Send}
                       Icon={<SendAction size={24} color="$accent1" />}
                       name={t('common.send.button')}
-                      onClick={openSendFormModal}
+                      onClick={onPressSend}
                     />
                     <ActionTile
                       dataTestId={TestID.WalletReceiveCrypto}
@@ -254,7 +240,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           )}
         </Flex>
       </Flex>
-      {isSendFormModalOpen && <SendFormModal isModalOpen={isSendFormModalOpen} onClose={closeSendFormModal} />}
       {displayDelegationMismatchModal && (
         <DelegationMismatchModal onClose={() => setDisplayDelegationMismatchModal(false)} />
       )}

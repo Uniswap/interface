@@ -7,8 +7,6 @@ import { renderHook } from 'test-utils/render'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 
 vi.mock('@web3-react/core', () => ({
@@ -30,15 +28,6 @@ vi.mock('uniswap/src/features/dataApi/balances/balances', async () => {
   }
 })
 
-// Mock the feature flag hook
-vi.mock('uniswap/src/features/gating/hooks', async () => {
-  const actual = await vi.importActual('uniswap/src/features/gating/hooks')
-  return {
-    ...actual,
-    useFeatureFlag: vi.fn(() => false), // Default to GraphQL (false = REST disabled)
-  }
-})
-
 describe('useTokenBalances', () => {
   beforeEach(() => {
     // Reset mocks before each test
@@ -52,9 +41,6 @@ describe('useTokenBalances', () => {
       refetch: vi.fn(),
       error: undefined,
     })
-
-    // Default mock for useFeatureFlag - disable REST to use GraphQL
-    mocked(useFeatureFlag).mockReturnValue(false)
   })
 
   it('should return empty balances when loading', () => {
@@ -162,15 +148,7 @@ describe('useTokenBalances', () => {
     expect(loading).toEqual(false)
   })
 
-  it('should work with REST API when feature flag is enabled', () => {
-    // Enable REST API
-    mocked(useFeatureFlag).mockImplementation((flag) => {
-      if (flag === FeatureFlags.GqlToRestBalances) {
-        return true // Use REST
-      }
-      return false
-    })
-
+  it('should work with REST API', () => {
     const mockPortfolioBalances: Record<string, PortfolioBalance> = {
       [`1-${USDC.address}`]: {
         id: '3',

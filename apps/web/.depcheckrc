@@ -19,6 +19,7 @@ ignores: [
     'expo-crypto',
     # Dependencies that depcheck thinks are missing but are actually present or never used
     'stories',
+    'porto',
     ## package.json scripts
     'esbuild-register',
     ## GraphQL

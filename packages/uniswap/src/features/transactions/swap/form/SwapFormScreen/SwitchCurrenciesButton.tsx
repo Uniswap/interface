@@ -1,7 +1,7 @@
 import { Flex, useIsShortMobileDevice } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/components/SwapArrowButton'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'

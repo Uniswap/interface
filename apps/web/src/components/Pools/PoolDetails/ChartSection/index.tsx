@@ -1,8 +1,8 @@
+import { PoolData } from 'appGraphql/data/pools/usePoolData'
+import { gqlToCurrency, TimePeriod, toHistoryDuration } from 'appGraphql/data/util'
 import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { PoolData } from 'appGraphql/data/pools/usePoolData'
-import { TimePeriod, gqlToCurrency, toHistoryDuration } from 'appGraphql/data/util'
 import { TickTooltipContent } from 'components/Charts/ActiveLiquidityChart/TickTooltip'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, refitChartContentAtom } from 'components/Charts/ChartModel'
@@ -10,9 +10,9 @@ import { LiquidityBarChartModel, useLiquidityBarData } from 'components/Charts/L
 import { LiquidityBarData } from 'components/Charts/LiquidityChart/types'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { PriceChartData, PriceChartDelta, PriceChartModel } from 'components/Charts/PriceChart'
+import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { VolumeChart } from 'components/Charts/VolumeChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
-import { ChartType, PriceChartType } from 'components/Charts/utils'
 import ErrorBoundary from 'components/ErrorBoundary'
 import { getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
 import { usePDPVolumeChartData } from 'components/Pools/PoolDetails/ChartSection/hooks'
@@ -22,8 +22,8 @@ import { ChartQueryResult, DataQuality } from 'components/Tokens/TokenDetails/Ch
 import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import {
   DISPLAYS,
-  TimePeriodDisplay,
   getTimePeriodFromDisplay,
+  TimePeriodDisplay,
 } from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { useAtomValue } from 'jotai/utils'

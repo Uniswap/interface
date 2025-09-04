@@ -1,7 +1,7 @@
 import { ChartType } from 'components/Charts/utils'
-import { MissingDataIcon } from 'components/Table/icons'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
+import { MissingDataIcon } from 'components/Table/icons'
 import styled, { useTheme } from 'lib/styled-components'
 import { lighten } from 'polished'
 import { PropsWithChildren, ReactNode } from 'react'

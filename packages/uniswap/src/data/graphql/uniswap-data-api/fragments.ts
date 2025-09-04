@@ -1,19 +1,12 @@
 import { UseFragmentResult, useFragment } from '@apollo/client'
 import {
   Token,
-  TokenBalance,
-  TokenBalanceMainPartsFragment,
-  TokenBalanceMainPartsFragmentDoc,
-  TokenBalanceQuantityPartsFragment,
-  TokenBalanceQuantityPartsFragmentDoc,
   TokenBasicInfoPartsFragment,
   TokenBasicInfoPartsFragmentDoc,
   TokenBasicProjectPartsFragment,
   TokenBasicProjectPartsFragmentDoc,
   TokenMarketPartsFragment,
   TokenMarketPartsFragmentDoc,
-  TokenPartsFragment,
-  TokenPartsFragmentDoc,
   TokenProjectMarketsPartsFragment,
   TokenProjectMarketsPartsFragmentDoc,
   TokenProjectUrlsPartsFragment,
@@ -38,17 +31,6 @@ function currencyIdToGraphQLTokenVariables(currencyId: string): {
     address,
     chain: toGraphQLChain(chainId),
   }
-}
-
-export function useTokenPartsFragment({ currencyId }: { currencyId: string }): UseFragmentResult<TokenPartsFragment> {
-  return useFragment<TokenPartsFragment>({
-    fragment: TokenPartsFragmentDoc,
-    fragmentName: 'TokenParts',
-    from: {
-      __typename: 'Token' satisfies Token['__typename'],
-      ...currencyIdToGraphQLTokenVariables(currencyId),
-    },
-  })
 }
 
 export function useTokenBasicInfoPartsFragment({
@@ -122,36 +104,6 @@ export function useTokenProjectMarketsPartsFragment({
     from: {
       __typename: 'Token' satisfies Token['__typename'],
       ...currencyIdToGraphQLTokenVariables(currencyId),
-    },
-  })
-}
-
-export function useTokenBalanceMainPartsFragment({
-  id,
-}: {
-  id: string
-}): UseFragmentResult<TokenBalanceMainPartsFragment> {
-  return useFragment<TokenBalanceMainPartsFragment>({
-    fragment: TokenBalanceMainPartsFragmentDoc,
-    fragmentName: 'TokenBalanceMainParts',
-    from: {
-      __typename: 'TokenBalance' satisfies TokenBalance['__typename'],
-      id,
-    },
-  })
-}
-
-export function useTokenBalanceQuantityPartsFragment({
-  id,
-}: {
-  id: string
-}): UseFragmentResult<TokenBalanceQuantityPartsFragment> {
-  return useFragment<TokenBalanceQuantityPartsFragment>({
-    fragment: TokenBalanceQuantityPartsFragmentDoc,
-    fragmentName: 'TokenBalanceQuantityParts',
-    from: {
-      __typename: 'TokenBalance' satisfies TokenBalance['__typename'],
-      id,
     },
   })
 }

@@ -10,7 +10,7 @@ import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { arrayToSlices } from 'utils/arrays'
-import { CurrencyKey, buildCurrencyKey, currencyKey } from 'utils/currencyKey'
+import { buildCurrencyKey, CurrencyKey, currencyKey } from 'utils/currencyKey'
 
 type TokenMap = { [address: string]: Token | undefined }
 export type Call = { target: string; callData: string; gasLimit: number }

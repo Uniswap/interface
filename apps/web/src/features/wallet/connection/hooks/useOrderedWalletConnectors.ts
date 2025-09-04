@@ -23,6 +23,9 @@ function getInjectedConnectors({
     } else if (c.wagmi?.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS && !isEmbeddedWalletEnabled) {
       // Special-case: Ignore the Uniswap Extension injection here if it's being displayed separately. This logic is updated with Embedded Wallet support where the Uniswap Extension is displayed with other connectors
       return false
+    } else if (c.wagmi?.id === CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID) {
+      // Porto is also surfacing from the injected connectors list, but we don't want to show it in the wallet modal as a detected wallet
+      return false
     }
     return c.isInjected
   })
@@ -65,6 +68,7 @@ function buildSecondaryConnectorsList({
   coinbaseSdkConnector,
   embeddedWalletConnector,
   binanceWalletConnector,
+  portoWalletConnector,
   recentConnectorId,
 }: {
   isMobileWeb: boolean
@@ -73,6 +77,7 @@ function buildSecondaryConnectorsList({
   coinbaseSdkConnector: WalletConnectorMeta
   embeddedWalletConnector: WalletConnectorMeta | undefined // only undefined if embedded wallet is disabled
   binanceWalletConnector: WalletConnectorMeta | undefined // undefined if using injected connector from binance browser
+  portoWalletConnector?: WalletConnectorMeta
   recentConnectorId: string | undefined
 }): WalletConnectorMeta[] {
   const orderedConnectors: WalletConnectorMeta[] = []
@@ -82,10 +87,14 @@ function buildSecondaryConnectorsList({
     orderedConnectors.push(walletConnectConnector)
     orderedConnectors.push(coinbaseSdkConnector)
     binanceWalletConnector && orderedConnectors.push(binanceWalletConnector)
+    portoWalletConnector && orderedConnectors.push(portoWalletConnector)
   } else {
-    const secondaryConnectors = [walletConnectConnector, coinbaseSdkConnector, binanceWalletConnector].filter(
-      (c): c is WalletConnectorMeta => Boolean(c),
-    )
+    const secondaryConnectors = [
+      walletConnectConnector,
+      coinbaseSdkConnector,
+      binanceWalletConnector,
+      portoWalletConnector,
+    ].filter((c): c is WalletConnectorMeta => Boolean(c))
     // Recent connector should have already been shown on the primary page
     orderedConnectors.push(
       ...secondaryConnectors.filter((c) => !recentConnectorId || !isEqualWalletConnectorMetaId(c, recentConnectorId)),
@@ -102,6 +111,7 @@ function buildPrimaryConnectorsList({
   coinbaseSdkConnector,
   embeddedWalletConnector,
   binanceWalletConnector,
+  portoWalletConnector,
   recentConnectorId,
 }: {
   injectedConnectors: WalletConnectorMeta[]
@@ -110,6 +120,7 @@ function buildPrimaryConnectorsList({
   coinbaseSdkConnector: WalletConnectorMeta
   embeddedWalletConnector: WalletConnectorMeta | undefined // only undefined if embedded wallet is disabled
   binanceWalletConnector: WalletConnectorMeta | undefined // undefined if using injected connector from binance browser
+  portoWalletConnector?: WalletConnectorMeta
   recentConnectorId: string | undefined
 }): WalletConnectorMeta[] {
   const orderedConnectors: WalletConnectorMeta[] = []
@@ -126,11 +137,14 @@ function buildPrimaryConnectorsList({
       orderedConnectors.push(walletConnectConnector)
     } else if (recentConnectorId === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID && binanceWalletConnector) {
       orderedConnectors.push(binanceWalletConnector)
+    } else if (recentConnectorId === CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID && portoWalletConnector) {
+      orderedConnectors.push(portoWalletConnector)
     }
   } else {
     orderedConnectors.push(walletConnectConnector)
     orderedConnectors.push(coinbaseSdkConnector)
     binanceWalletConnector && orderedConnectors.push(binanceWalletConnector)
+    portoWalletConnector && orderedConnectors.push(portoWalletConnector)
   }
 
   return orderedConnectors
@@ -147,6 +161,7 @@ export function useOrderedWalletConnectors({
   showSecondaryConnectors: boolean
 }): WalletConnectorMeta[] {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  const isPortoWalletConnectorEnabled = useFeatureFlag(FeatureFlags.PortoWalletConnector)
 
   const connectors = useWalletConnectors()
   const recentConnectorId = useRecentConnectorId()
@@ -179,6 +194,12 @@ export function useOrderedWalletConnectors({
           connectors,
           id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID,
         })
+    const portoWalletConnector = isPortoWalletConnectorEnabled
+      ? getConnectorWithIdWithThrow({
+          connectors,
+          id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID,
+        })
+      : undefined
 
     if (isPlaywrightEnv()) {
       const mockConnector = getConnectorWithIdWithThrow({
@@ -208,6 +229,7 @@ export function useOrderedWalletConnectors({
         coinbaseSdkConnector,
         embeddedWalletConnector,
         binanceWalletConnector,
+        portoWalletConnector,
         recentConnectorId,
       })
     } else {
@@ -218,6 +240,7 @@ export function useOrderedWalletConnectors({
         coinbaseSdkConnector,
         embeddedWalletConnector,
         binanceWalletConnector,
+        portoWalletConnector,
         recentConnectorId,
       })
     }
@@ -226,5 +249,12 @@ export function useOrderedWalletConnectors({
     orderedConnectors.sort(sortByRecent)
 
     return orderedConnectors
-  }, [connectors, isEmbeddedWalletEnabled, recentConnectorId, showSecondaryConnectors, sortByRecent])
+  }, [
+    connectors,
+    isEmbeddedWalletEnabled,
+    isPortoWalletConnectorEnabled,
+    recentConnectorId,
+    showSecondaryConnectors,
+    sortByRecent,
+  ])
 }

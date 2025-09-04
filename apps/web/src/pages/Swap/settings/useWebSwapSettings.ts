@@ -8,8 +8,8 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { filterSettingsByPlatform } from 'uniswap/src/features/transactions/components/settings/utils'
-import { TradeRoutingPreference } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/TradeRoutingPreference'
 import { Slippage } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
+import { TradeRoutingPreference } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/TradeRoutingPreference'
 
 const DEFAULT_SETTINGS = [Slippage, DeadlineOverride, TradeRoutingPreference]
 

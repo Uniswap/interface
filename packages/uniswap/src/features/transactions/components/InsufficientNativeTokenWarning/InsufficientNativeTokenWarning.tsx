@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
@@ -62,6 +62,7 @@ export function InsufficientNativeTokenWarning({
       parsedInsufficientNativeTokenWarning={parsedInsufficientNativeTokenWarning}
       nativeCurrencyInfo={nativeCurrencyInfo}
       nativeCurrency={nativeCurrency}
+      gasFee={gasFee}
     />
   )
 }
@@ -71,11 +72,13 @@ function InsufficientNativeTokenWarningContent({
   parsedInsufficientNativeTokenWarning,
   nativeCurrencyInfo,
   nativeCurrency,
+  gasFee,
 }: {
   wallet: Wallet
   parsedInsufficientNativeTokenWarning: NonNullable<ReturnType<typeof useInsufficientNativeTokenWarning>>
   nativeCurrencyInfo: CurrencyInfo
   nativeCurrency: Currency
+  gasFee: GasFeeResult
 }): JSX.Element {
   const { t } = useTranslation()
   const [showModal, setShowModal] = useState(false)
@@ -103,6 +106,7 @@ function InsufficientNativeTokenWarningContent({
       <TouchableArea onPress={(): void => setShowModal(true)}>
         <InsufficientNativeTokenBaseComponent
           parsedInsufficientNativeTokenWarning={parsedInsufficientNativeTokenWarning}
+          gasFee={gasFee}
         />
       </TouchableArea>
 

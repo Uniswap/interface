@@ -1,11 +1,11 @@
 import { Token } from '@uniswap/sdk-core'
+import { OnchainItemListOptionType, type TokenOption } from 'uniswap/src/components/lists/items/types'
 import {
   ProcessedRow,
   ProcessedRowType,
   processSectionsToRows,
 } from 'uniswap/src/components/lists/OnchainItemList/processSectionsToRows'
-import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { OnchainItemListOptionType, type TokenOption } from 'uniswap/src/components/lists/items/types'
+import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { benignSafetyInfo } from 'uniswap/src/test/fixtures'
 

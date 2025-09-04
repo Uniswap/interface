@@ -1,0 +1,32 @@
+diff --git a/package.json b/package.json
+index 251da97dcf5a092c3d2d766e16fe9536b411b9a2..6789d1b70ce38c4573378f4aedfc09ac44bf75f6 100644
+--- a/package.json
++++ b/package.json
+@@ -15,24 +15,10 @@
+     "url": "https://github.com/sponsors/tannerlinsley"
+   },
+   "type": "module",
+-  "types": "build/legacy/index.d.ts",
+-  "main": "build/legacy/index.cjs",
+-  "module": "build/legacy/index.js",
++  "types": "build/modern/index.d.ts",
++  "main": "build/modern/index.cjs",
++  "module": "build/modern/index.js",
+   "react-native": "src/index.ts",
+-  "exports": {
+-    ".": {
+-      "@tanstack/custom-condition": "./src/index.ts",
+-      "import": {
+-        "types": "./build/modern/index.d.ts",
+-        "default": "./build/modern/index.js"
+-      },
+-      "require": {
+-        "types": "./build/modern/index.d.cts",
+-        "default": "./build/modern/index.cjs"
+-      }
+-    },
+-    "./package.json": "./package.json"
+-  },
+   "sideEffects": false,
+   "files": [
+     "build",

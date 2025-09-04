@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo } from 'react'
-import { Pressable, StyleSheet, type PressableProps, type StyleProp, type ViewStyle } from 'react-native'
+import { Pressable, type PressableProps, type StyleProp, StyleSheet, type ViewStyle } from 'react-native'
 import Animated, { Easing, interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { Check } from 'ui/src/components/icons'
 import {
@@ -34,7 +34,7 @@ export const Switch = memo(function Switch({
 }: CustomSwitchProps): JSX.Element {
   const colors = useSporeColors()
   const isBranded = variant === 'branded'
-  const progress = useSharedValue(checked ?? defaultChecked ? 1 : 0)
+  const progress = useSharedValue((checked ?? defaultChecked) ? 1 : 0)
 
   useEffect(() => {
     if (checked !== undefined && checked !== (progress.value === 1)) {

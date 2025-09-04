@@ -6,16 +6,26 @@ import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
 import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
 import { ProviderOption } from 'pages/Swap/Buy/ProviderOption'
 import { ContentWrapper, getOnRampInputAmount } from 'pages/Swap/Buy/shared'
-import { useMemo, useState } from 'react'
-import { Trans } from 'react-i18next'
-import { Flex, Separator, Text } from 'ui/src'
-import { TimePast } from 'ui/src/components/icons/TimePast'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Flex, Text } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
+import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { FORQuote, FORServiceProvider, RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
+import { EdgeFade } from 'uniswap/src/features/fiatOnRamp/EdgeFade/EdgeFade'
+import { PaymentMethodFilter } from 'uniswap/src/features/fiatOnRamp/PaymentMethodFilter/PaymentMethodFilter'
+import { FORFilters, FORQuote, FORServiceProvider, RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
+import { filterQuotesByPaymentMethod } from 'uniswap/src/features/fiatOnRamp/utils'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useIsForFiltersEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsForFiltersEnabled'
+import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
+import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useInterval } from 'utilities/src/time/timing'
+import { unwrappedToken } from 'utils/unwrappedToken'
 
 interface ChooseProviderModal {
   isOpen: boolean
@@ -23,11 +33,24 @@ interface ChooseProviderModal {
 }
 
 function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
-  const { derivedBuyFormInfo, buyFormState } = useBuyFormContext()
-  const { quoteCurrency, selectedCountry, inputAmount, inputInFiat, rampDirection, moonpayOnly } = buyFormState
+  const { derivedBuyFormInfo, buyFormState, setBuyFormState } = useBuyFormContext()
+  const { quoteCurrency, selectedCountry, inputAmount, inputInFiat, rampDirection, moonpayOnly, paymentMethod } =
+    buyFormState
   const { quotes, meldSupportedFiatCurrency, amountOut } = derivedBuyFormInfo
   const [errorProvider, setErrorProvider] = useState<FORServiceProvider>()
   const [connectedProvider, setConnectedProvider] = useState<FORServiceProvider>()
+  const [initialQuotesHeight, setInitialQuotesHeight] = useState<number | null>(null)
+  const quotesContainerRef = useRef<HTMLDivElement>(null)
+  const isFORFiltersEnabled = useIsForFiltersEnabled()
+  const { t } = useTranslation()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const unwrappedCurrency = quoteCurrency?.currencyInfo?.currency
+    ? unwrappedToken(quoteCurrency.currencyInfo.currency)
+    : undefined
+  const unwrappedCurrencyId = unwrappedCurrency
+    ? buildCurrencyId(unwrappedCurrency.chainId, currencyAddress(unwrappedCurrency))
+    : undefined
+  const unwrappedCurrencyInfo = useCurrencyInfo(unwrappedCurrencyId)
 
   const onRampInputAmount = useMemo(
     () => getOnRampInputAmount({ rampDirection, inputAmount, amountOut: amountOut ?? '0', inputInFiat }),
@@ -36,25 +59,37 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
 
   const account = useAccount()
 
-  const [mostRecentlyUsedProvider, otherProviders] = useMemo(() => {
-    if (!quotes || !quotes.quotes) {
-      return [undefined, []] as const
+  const sortedQuotes = useMemo(() => {
+    if (!quotes?.quotes) {
+      return undefined
     }
     if (moonpayOnly) {
       // Force moonpay when the user has arrived from an ad and there's a moonpay quote available
       if (quotes.quotes.some((q: FORQuote) => q.serviceProviderDetails.serviceProvider.toLowerCase() === 'moonpay')) {
-        return [
-          undefined,
-          quotes.quotes.filter((q: FORQuote) => q.serviceProviderDetails.serviceProvider.toLowerCase() === 'moonpay'),
-        ]
+        return quotes.quotes.filter(
+          (q: FORQuote) => q.serviceProviderDetails.serviceProvider.toLowerCase() === 'moonpay',
+        )
       }
     }
-    const mostRecent = quotes.quotes.find((q: FORQuote) => q.isMostRecentlyUsedProvider)
-    if (mostRecent) {
-      return [mostRecent, quotes.quotes.filter((q: FORQuote) => !q.isMostRecentlyUsedProvider)] as const
-    }
-    return [undefined, quotes.quotes] as const
+    return [...quotes.quotes].sort((a) => (a.isMostRecentlyUsedProvider ? -1 : 1))
   }, [moonpayOnly, quotes])
+
+  const filteredQuotes = useMemo(() => {
+    if (!quotes?.quotes) {
+      return undefined
+    }
+    return isFORFiltersEnabled ? filterQuotesByPaymentMethod(quotes.quotes, paymentMethod) : quotes.quotes
+  }, [quotes, paymentMethod, isFORFiltersEnabled])
+
+  // Provider modal should have a fixed height determined on pageload by number of quotes to prevent thrashing when filters are applied
+  useEffect(() => {
+    if (sortedQuotes && sortedQuotes.length > 0 && quotesContainerRef.current) {
+      const height = quotesContainerRef.current.scrollHeight
+      if (!initialQuotesHeight || Math.abs(sortedQuotes.length - (quotes?.quotes?.length || 0)) > 2) {
+        setInitialQuotesHeight(height)
+      }
+    }
+  }, [sortedQuotes, initialQuotesHeight, quotes?.quotes?.length])
 
   const onClose = () => {
     closeModal()
@@ -94,54 +129,66 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
     return <ProviderConnectedView closeModal={onClose} selectedServiceProvider={connectedProvider} />
   }
 
-  return (
-    <Flex gap="$spacing24" pb="$spacing8" $sm={{ px: '$spacing8', pb: '$spacing16' }} id="ChooseProviderModal">
-      <GetHelpHeader
-        title={
-          rampDirection === RampDirection.ONRAMP ? (
-            <Trans i18nKey="fiatOnRamp.checkout.title" />
-          ) : (
-            <Trans i18nKey="fiatOffRamp.checkout.title" />
-          )
-        }
-        link={uniswapUrls.helpArticleUrls.fiatOnRampHelp}
-        closeModal={closeModal}
-        closeDataTestId="ChooseProviderModal-close"
-      />
-      <Flex gap="16px">
-        {mostRecentlyUsedProvider && (
-          <Flex gap="$spacing12">
-            <Flex row alignItems="center" pb="$spacing12" pl="$spacing8">
-              <TimePast color="$neutral3" size="$icon.16" />
-              <Text color="$neutral2" pl="$spacing4" variant="body3">
-                <Trans i18nKey="fiatOnRamp.quote.type.recent" />
-              </Text>
-            </Flex>
-            <ProviderOption
-              key={mostRecentlyUsedProvider.serviceProviderDetails.serviceProvider}
-              quote={mostRecentlyUsedProvider}
-              selectedCountry={selectedCountry}
-              quoteCurrencyCode={quoteCurrencyCode}
-              inputAmount={onRampInputAmount}
-              meldSupportedFiatCurrency={meldSupportedFiatCurrency}
-              walletAddress={recipientAddress}
-              setConnectedProvider={setConnectedProvider}
-              setErrorProvider={setErrorProvider}
-              rampDirection={rampDirection}
-            />
-            {otherProviders.length > 0 && (
-              <Flex centered row gap="$spacing12" mt="$spacing12">
-                <Separator />
-                <Text color="$neutral3" variant="body3">
-                  <Trans i18nKey="fiatOnRamp.quote.type.other" />
-                </Text>
-                <Separator />
-              </Flex>
-            )}
-          </Flex>
-        )}
+  function setPaymentMethod(method?: FORFilters): void {
+    setBuyFormState((prev) => ({ ...prev, paymentMethod: method }))
+  }
 
-        {otherProviders.map((q: FORQuote) => {
+  const filterRowPadding = 24
+
+  const showFilter = isFORFiltersEnabled && !!quotes?.quotes?.length
+
+  return (
+    <Flex
+      gap="$spacing16"
+      pb="$spacing8"
+      $sm={{ px: '$spacing8', pb: '$spacing16' }}
+      id="ChooseProviderModal"
+      $platform-web={{
+        overflowX: 'hidden',
+      }}
+    >
+      <Flex gap="$spacing24">
+        <GetHelpHeader
+          link={uniswapUrls.helpArticleUrls.fiatOnRampHelp}
+          closeModal={closeModal}
+          closeDataTestId="ChooseProviderModal-close"
+        />
+        <Flex row alignItems="center" justifyContent="space-between">
+          <Text variant="subheading1" color="$neutral1">
+            {rampDirection === RampDirection.ONRAMP ? t('fiatOnRamp.checkout.title') : t('fiatOffRamp.checkout.title')}
+          </Text>
+          <Flex row gap="$spacing12" alignItems="center" pr="$spacing2">
+            <Text variant="body2" color="$neutral2">
+              {convertFiatAmountFormatted(onRampInputAmount, NumberType.FiatTokenPrice)}
+            </Text>
+            {unwrappedCurrencyInfo && <CurrencyLogo currencyInfo={unwrappedCurrencyInfo} size={iconSizes.icon24} />}
+          </Flex>
+        </Flex>
+      </Flex>
+      {/* The filter row extends into the Modal padding to show a scroll fade */}
+      <Flex
+        width={`calc(100% + ${2 * filterRowPadding}px)`}
+        ml={-filterRowPadding}
+        overflow="hidden"
+        display={showFilter ? 'flex' : 'none'}
+        position="relative"
+      >
+        <EdgeFade side="left" width={filterRowPadding} $sm={{ left: filterRowPadding / 2 }} />
+        <PaymentMethodFilter
+          quotes={quotes?.quotes}
+          paymentMethod={buyFormState.paymentMethod}
+          setPaymentMethod={setPaymentMethod}
+          isOffRamp={rampDirection === RampDirection.OFFRAMP}
+          px={filterRowPadding}
+        />
+        <EdgeFade side="right" width={filterRowPadding} $sm={{ right: filterRowPadding / 2 }} />
+      </Flex>
+      <Flex
+        ref={quotesContainerRef}
+        gap="$gap8"
+        style={initialQuotesHeight ? { height: initialQuotesHeight } : undefined}
+      >
+        {sortedQuotes?.map((q: FORQuote) => {
           return (
             <ProviderOption
               key={q.serviceProviderDetails.serviceProvider}
@@ -154,11 +201,13 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
               setConnectedProvider={setConnectedProvider}
               setErrorProvider={setErrorProvider}
               rampDirection={rampDirection}
+              paymentMethodFilter={buyFormState.paymentMethod}
+              hidden={!filteredQuotes?.includes(q)}
             />
           )
         })}
-        <Text variant="body3" textAlign="center" color="$neutral2">
-          <Trans i18nKey="fiatOnRamp.chooseProvider.description" />
+        <Text variant="body4" textAlign="center" color="$neutral2" px="$spacing16">
+          {t('fiatOnRamp.chooseProvider.description')}
         </Text>
       </Flex>
     </Flex>

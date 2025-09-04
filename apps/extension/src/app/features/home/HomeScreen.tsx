@@ -8,19 +8,19 @@ import { NftsTab } from 'src/app/components/tabs/NftsTab'
 import { useSmartWalletNudges } from 'src/app/context/SmartWalletNudgesContext'
 import AppRatingModal from 'src/app/features/appRating/AppRatingModal'
 import { useAppRating } from 'src/app/features/appRating/hooks/useAppRating'
+import { HomeIntroCardStack } from 'src/app/features/home/introCards/HomeIntroCardStack'
 import { PortfolioActionButtons } from 'src/app/features/home/PortfolioActionButtons'
 import { PortfolioHeader } from 'src/app/features/home/PortfolioHeader'
-import { TokenBalanceList } from 'src/app/features/home/TokenBalanceList'
-import { HomeIntroCardStack } from 'src/app/features/home/introCards/HomeIntroCardStack'
-import { PinReminder } from 'src/app/features/onboarding/PinReminder'
+import { ExtensionTokenBalanceList } from 'src/app/features/home/TokenBalanceList'
 import { selectAlertsState } from 'src/app/features/onboarding/alerts/selectors'
 import { AlertName, closeAlert } from 'src/app/features/onboarding/alerts/slice'
+import { PinReminder } from 'src/app/features/onboarding/PinReminder'
 import { useOptimizedSearchParams } from 'src/app/hooks/useOptimizedSearchParams'
 import { HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { Flex, Loader, Text, TouchableArea, styled } from 'ui/src'
+import { Flex, Loader, styled, Text, TouchableArea } from 'ui/src'
 import { SMART_WALLET_UPGRADE_VIDEO } from 'ui/src/assets'
-import { NFTS_TAB_DATA_DEPENDENCIES } from 'uniswap/src/components/nfts/NftsList'
+import { NFTS_TAB_DATA_DEPENDENCIES } from 'uniswap/src/components/nfts/constants'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
@@ -211,7 +211,7 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
                 {showTabs ? (
                   <>
                     <AnimatedTab hideLeft={selectedTab !== HomeTabs.Tokens} isActive={selectedTab === HomeTabs.Tokens}>
-                      <TokenBalanceList owner={address} />
+                      <ExtensionTokenBalanceList owner={address} />
                     </AnimatedTab>
 
                     <AnimatedTab

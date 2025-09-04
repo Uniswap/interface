@@ -2,8 +2,8 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { memo } from 'react'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import Badge from 'uniswap/src/components/badge/Badge'
+import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { FocusedRowControl, OptionItem } from 'uniswap/src/components/lists/items/OptionItem'
 import {
   PoolContextMenuAction,

@@ -1,15 +1,15 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CHART_WIDTH } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
+import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
+import { TextLoader } from 'components/Liquidity/Loader'
 import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
 import { LPIncentiveRewardsBadge } from 'components/Liquidity/LPIncentives/LPIncentiveRewardsBadge'
-import { TextLoader } from 'components/Liquidity/Loader'
-import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
 import { PriceOrdering } from 'components/Liquidity/types'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { Dispatch, SetStateAction } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Flex, Text, styled, useMedia } from 'ui/src'
+import { Flex, styled, Text, useMedia } from 'ui/src'
 import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -105,7 +105,7 @@ export function LiquidityPositionFeeStats({
   hasRewards,
 }: LiquidityPositionFeeStatsProps) {
   const { t } = useTranslation()
-  const earningsOrFees = hasRewards ? formattedLpIncentiveEarnings : formattedUsdFees ?? '-'
+  const earningsOrFees = hasRewards ? formattedLpIncentiveEarnings : (formattedUsdFees ?? '-')
 
   return (
     <Flex

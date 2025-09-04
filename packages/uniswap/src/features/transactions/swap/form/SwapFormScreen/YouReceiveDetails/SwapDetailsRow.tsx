@@ -5,13 +5,13 @@ import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, zIndexes } from 'ui/src/theme'
-import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { SwapFeeOnTransferTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/FeeDetailsTooltip'
 import { LargePriceDifferenceTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/LargePriceDifferenceTooltip'
 import { UsePriceDifferenceReturnType } from 'uniswap/src/features/transactions/swap/hooks/usePriceDifference'
+import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { isWeb } from 'utilities/src/platform'
 
 const Outer = ({ children }: { children: ReactNode }): JSX.Element => {
@@ -132,7 +132,7 @@ const ReceivingAmount = ({
   const priceDifferenceWarningColor = priceDifferenceWarning?.priceDifferenceColor
 
   const textColor =
-    isLoading || isLoadingIndicative ? '$neutral2' : priceDifferenceWarningColor ?? userReceivesOutputAmountColor
+    isLoading || isLoadingIndicative ? '$neutral2' : (priceDifferenceWarningColor ?? userReceivesOutputAmountColor)
 
   return (
     <WarningInfo

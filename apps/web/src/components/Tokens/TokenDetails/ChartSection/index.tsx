@@ -3,9 +3,9 @@ import { refitChartContentAtom } from 'components/Charts/ChartModel'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { PriceChart, PriceChartData } from 'components/Charts/PriceChart'
 import { LineChart, StackedLineData } from 'components/Charts/StackedLineChart'
+import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { VolumeChart } from 'components/Charts/VolumeChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
-import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { AdvancedPriceChartToggle } from 'components/Tokens/TokenDetails/ChartSection/AdvancedPriceChartToggle'
 import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
 import {
@@ -16,9 +16,9 @@ import {
 import { ChartQueryResult, DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import {
   DISPLAYS,
+  getTimePeriodFromDisplay,
   ORDERED_TIMES,
   TimePeriodDisplay,
-  getTimePeriodFromDisplay,
 } from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
 import { useAtomValue } from 'jotai/utils'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'

@@ -15,6 +15,7 @@ module.exports = {
     'webpack.config.js',
     'webpack.dev.config.js',
     'manifest.json',
+    '.nx',
   ],
   parserOptions: {
     project: 'tsconfig.eslint.json',

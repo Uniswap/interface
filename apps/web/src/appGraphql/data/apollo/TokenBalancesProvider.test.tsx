@@ -1,5 +1,5 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { PrefetchBalancesWrapper, useTokenBalancesQuery } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { useAccount } from 'hooks/useAccount'
 import { mocked } from 'test-utils/mocked'
 import { render, renderHook } from 'test-utils/render'

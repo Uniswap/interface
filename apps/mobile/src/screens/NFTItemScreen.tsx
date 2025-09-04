@@ -17,19 +17,19 @@ import { NFTTraitList } from 'src/features/nfts/item/traits'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import {
   Flex,
+  getTokenValue,
   MIN_COLOR_CONTRAST_THRESHOLD,
+  passesContrast,
   Text,
   Theme,
   TouchableArea,
-  getTokenValue,
-  passesContrast,
   useSporeColors,
 } from 'ui/src'
 import { CopyAlt, Ellipsis } from 'ui/src/components/icons'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
@@ -46,8 +46,8 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { setClipboard, setClipboardImage } from 'uniswap/src/utils/clipboard'
@@ -487,7 +487,7 @@ function RightElement({
 }): JSX.Element {
   const accounts = useAccounts()
 
-  const { value: contextMenuIsOpen, setFalse: closeContextMenu } = useBooleanState(false)
+  const { value: contextMenuIsOpen, setFalse: closeContextMenu, setTrue: openContextMenu } = useBooleanState(false)
 
   const menuItems = useNFTContextMenuItems({
     contractAddress,
@@ -507,8 +507,9 @@ function RightElement({
           triggerMode={ContextMenuTriggerMode.Primary}
           isOpen={contextMenuIsOpen}
           closeMenu={closeContextMenu}
+          openMenu={openContextMenu}
         >
-          <TouchableArea p="$spacing16">
+          <TouchableArea p="$spacing16" onPress={openContextMenu}>
             <Ellipsis color="$neutral1" size="$icon.16" />
           </TouchableArea>
         </ContextMenu>

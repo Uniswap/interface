@@ -1,11 +1,11 @@
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionModal } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
-import type { TransactionModalProps } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalProps'
 import {
   TransactionSettingsStoreContext,
   useGetTransactionSettingsContextValue,
 } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/TransactionSettingsStoreContext'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
+import { TransactionModal } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
+import type { TransactionModalProps } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalProps'
 import { CurrentScreen } from 'uniswap/src/features/transactions/swap/SwapFlow/CurrentScreen'
 import { SwapDependenciesStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/SwapDependenciesStoreContext'
 import { useSwapDependenciesStoreBase } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'

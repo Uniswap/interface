@@ -13,7 +13,7 @@ import {
 } from 'components/Liquidity/parsers/urlParsers'
 import type { DepositState } from 'components/Liquidity/types'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { MatchType, PageType, getIsBrowserPage } from 'hooks/useIsPage'
+import { getIsBrowserPage, MatchType, PageType } from 'hooks/useIsPage'
 import { parseAsBoolean, parseAsString, useQueryState, useQueryStates } from 'nuqs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
@@ -64,7 +64,6 @@ function getIsSyncing() {
 
 export function useLiquidityUrlState() {
   const { defaultChainId } = useEnabledChains()
-  const defaultInitialToken = nativeOnChain(defaultChainId)
   const [isMigrated, setIsMigrated] = useState(false)
 
   // Step uses push history for browser navigation
@@ -110,6 +109,7 @@ export function useLiquidityUrlState() {
 
   const parsedChainId = chain ?? undefined
   const supportedChainId = useSupportedChainId(parsedChainId) ?? defaultChainId
+  const defaultInitialToken = nativeOnChain(supportedChainId)
 
   // Handle currency validation and loading
   const {
@@ -119,6 +119,7 @@ export function useLiquidityUrlState() {
   } = useCurrencyValidation({
     currencyA,
     currencyB,
+    defaultInitialToken,
     chainId: supportedChainId,
   })
 
@@ -160,7 +161,7 @@ export function useLiquidityUrlState() {
     return {
       // Read state
       defaultInitialToken,
-      tokenA: currencyALoaded ?? defaultInitialToken,
+      tokenA: currencyALoaded,
       tokenB: currencyBLoaded,
       fee,
       hook,

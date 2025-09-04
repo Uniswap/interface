@@ -5,21 +5,21 @@ import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreenOnBlur'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
+import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
 import { SeedPhraseInput } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/SeedPhraseInput'
 import {
   NativeSeedPhraseInputProps,
   NativeSeedPhraseInputRef,
   StringKey,
 } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/types'
-import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
 import { useFunctionAfterNavigationTransitionEndWithDelay } from 'src/utils/hooks'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, MobileDeviceHeight, Text, TouchableArea, useIsShortMobileDevice } from 'ui/src'
 import { PapersText, QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'

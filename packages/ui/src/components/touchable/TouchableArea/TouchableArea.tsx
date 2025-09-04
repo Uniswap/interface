@@ -1,8 +1,8 @@
 import { BlurView, type BlurViewProps } from 'expo-blur'
-import { Children, cloneElement, forwardRef, isValidElement, memo, useMemo, type ReactNode } from 'react'
-import { StyleSheet, type GestureResponderEvent } from 'react-native'
+import { Children, cloneElement, forwardRef, isValidElement, memo, type ReactNode, useMemo } from 'react'
+import { type GestureResponderEvent, StyleSheet } from 'react-native'
 import type { ColorTokens } from 'tamagui'
-import { withStaticProperties, type TamaguiElement, type YStackProps } from 'tamagui'
+import { type TamaguiElement, withStaticProperties, type YStackProps } from 'tamagui'
 import { ThemedIcon } from 'ui/src/components/buttons/Button/components/ThemedIcon'
 import { withAnimated } from 'ui/src/components/factories/animated'
 import { Text, type TextProps } from 'ui/src/components/text'
@@ -123,8 +123,8 @@ const TouchableAreaComponentWithoutMemo = forwardRef<TamaguiElement, TouchableAr
     return finalStyle
   }, [scaleTo, activeOpacity, pressStyleProp])
 
-  const animation = isTestEnv() ? undefined : animationProp ?? DEFAULT_ANIMATION_PROPS.animation
-  const animateOnly = isTestEnv() ? undefined : animateOnlyProp ?? DEFAULT_ANIMATION_PROPS.animateOnly
+  const animation = isTestEnv() ? undefined : (animationProp ?? DEFAULT_ANIMATION_PROPS.animation)
+  const animateOnly = isTestEnv() ? undefined : (animateOnlyProp ?? DEFAULT_ANIMATION_PROPS.animateOnly)
 
   // Wrap onPress to stop propagation if needed
   const handlePress = useEvent((event: TouchableAreaEvent): void => {

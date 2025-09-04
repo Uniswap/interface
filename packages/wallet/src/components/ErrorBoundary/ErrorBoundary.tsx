@@ -7,8 +7,8 @@ import { Button, Flex, Text } from 'ui/src'
 import { DEAD_LUNI } from 'ui/src/assets'
 import { pushNotification, resetNotifications } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
-import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { isProdEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { restartApp } from 'wallet/src/components/ErrorBoundary/restartApp'
@@ -111,7 +111,7 @@ export function ErrorBoundary({
   return (
     <InternalErrorBoundary
       dispatch={dispatch}
-      notificationText={showNotification ? notificationText ?? t('common.error.somethingWrong') : undefined}
+      notificationText={showNotification ? (notificationText ?? t('common.error.somethingWrong')) : undefined}
       {...props}
     />
   )

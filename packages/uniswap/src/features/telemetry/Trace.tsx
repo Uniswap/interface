@@ -1,4 +1,4 @@
-import { PropsWithChildren, memo } from 'react'
+import { memo, PropsWithChildren } from 'react'
 import { ElementName, InterfacePageName, ModalNameType, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { ExtensionScreen } from 'uniswap/src/types/screens/extension'

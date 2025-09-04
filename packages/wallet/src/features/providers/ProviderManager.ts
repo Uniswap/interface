@@ -1,4 +1,4 @@
-import { Signer, providers as ethersProviders } from 'ethers'
+import { providers as ethersProviders, Signer } from 'ethers'
 import { Task } from 'redux-saga'
 import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'

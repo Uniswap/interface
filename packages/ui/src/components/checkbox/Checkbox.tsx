@@ -2,9 +2,9 @@ import { ReactElement, useMemo, useState } from 'react'
 import {
   AnimatePresence,
   GetThemeValueForKey,
+  getTokenValue,
   Checkbox as TamaguiCheckbox,
   CheckboxProps as TamaguiCheckboxPops,
-  getTokenValue,
 } from 'tamagui'
 import { Check } from 'ui/src/components/icons'
 import { Flex, FlexProps } from 'ui/src/components/layout'

@@ -14,8 +14,8 @@ import {
   interfaceConfirmBridgeDeposit,
   interfaceUpdateTransactionInfo,
   replaceTransaction,
-  transactionReducer,
   TransactionsState,
+  transactionReducer,
   updateTransaction,
 } from 'uniswap/src/features/transactions/slice'
 import {

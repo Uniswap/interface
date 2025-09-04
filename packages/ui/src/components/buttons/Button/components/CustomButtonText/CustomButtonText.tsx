@@ -1,5 +1,5 @@
 import type { GetProps } from 'tamagui'
-import { Text, styled } from 'tamagui'
+import { styled, Text } from 'tamagui'
 import { variantEmphasisHash } from 'ui/src/components/buttons/Button/components/CustomButtonText/variantEmphasisHash'
 import { buttonStyledContext, lineHeights } from 'ui/src/components/buttons/Button/constants'
 import type { ButtonEmphasis, ButtonVariantProps } from 'ui/src/components/buttons/Button/types'

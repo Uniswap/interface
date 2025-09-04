@@ -112,7 +112,8 @@ function BottomSheetModalContents({
   hideHandlebar,
   backgroundColor,
   handlebarColor,
-  enableDynamicSizing = false,
+  // defaults to true if snapPoints/fullScreen are not provided and false otherwise
+  enableDynamicSizing,
   blurredBackground = false,
   dismissOnBackPress = true,
   isDismissible = true,
@@ -162,7 +163,7 @@ function BottomSheetModalContents({
 
   const animatedPosition = providedAnimatedPosition ?? internalAnimatedPosition
 
-  const backgroundColorValue = blurredBackground ? colors.transparent.val : backgroundColor ?? colors.surface1.val
+  const backgroundColorValue = blurredBackground ? colors.transparent.val : (backgroundColor ?? colors.surface1.val)
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
@@ -334,7 +335,7 @@ function BottomSheetModalContents({
           {overrideInnerContainer ? (
             children
           ) : (
-            <BottomSheetView style={[bottomSheetViewStyles]} focusHook={focusHook}>
+            <BottomSheetView style={bottomSheetViewStyles} focusHook={focusHook}>
               {children}
             </BottomSheetView>
           )}

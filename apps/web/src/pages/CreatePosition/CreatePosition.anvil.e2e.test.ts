@@ -1,7 +1,7 @@
 import { V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { computePairAddress } from '@uniswap/v2-sdk'
 import { ONE_MILLION_USDT } from 'playwright/anvil/utils'
-import { Page, expect, getTest } from 'playwright/fixtures'
+import { expect, getTest, Page } from 'playwright/fixtures'
 import { DEFAULT_TEST_GAS_LIMIT, stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { Mocks } from 'playwright/mocks/mocks'
 import { USDT } from 'uniswap/src/constants/tokens'

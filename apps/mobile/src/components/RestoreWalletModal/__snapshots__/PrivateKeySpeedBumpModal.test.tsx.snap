@@ -45,14 +45,12 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
   <View
     style={
       [
-        [
-          {
-            "backgroundColor": "#FFFFFF",
-          },
-          {
-            "paddingBottom": 0,
-          },
-        ],
+        {
+          "backgroundColor": "#FFFFFF",
+        },
+        {
+          "paddingBottom": 0,
+        },
       ]
     }
   >

@@ -1,15 +1,15 @@
 import { memo, useCallback, useMemo, useRef } from 'react'
-import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
+import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
+import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { useCommonTokensOptionsWithFallback } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptionsWithFallback'
 import { useFavoriteTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteTokensOptions'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
 import { useRecentlySearchedTokens } from 'uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens'
 import { useTrendingTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensOptions'
+import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { OnSelectCurrency, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
 import { isSwapListLoading } from 'uniswap/src/components/TokenSelector/utils'
-import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
-import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { GqlResult } from 'uniswap/src/data/types'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -125,7 +125,7 @@ function useTokenSectionsForSwap({
     options: trendingTokenOptions,
   })
   const bridgingSectionTokenOptions: TokenSelectorOption[] = useMemo(
-    () => (shouldNestBridgingTokens ? [bridgingTokenOptions ?? []] : bridgingTokenOptions ?? []),
+    () => (shouldNestBridgingTokens ? [bridgingTokenOptions ?? []] : (bridgingTokenOptions ?? [])),
     [bridgingTokenOptions, shouldNestBridgingTokens],
   )
 
@@ -150,7 +150,7 @@ function useTokenSectionsForSwap({
       ...(recentSection ?? []),
       // TODO(WEB-3061): Favorited wallets/tokens
       // Extension & interface do not support favoriting but has a default list, so we can't rely on empty array check
-      ...(isMobileApp ? favoriteSection ?? [] : []),
+      ...(isMobileApp ? (favoriteSection ?? []) : []),
       ...(trendingSection ?? []),
     ]
   }, [

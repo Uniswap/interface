@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balances'
+import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -15,7 +15,7 @@ import {
   ExecuteSwapParams,
   SwapHandlers,
 } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
-import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { getEVMTxRequest, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { toStringish } from 'uniswap/src/utils/number'
@@ -60,6 +60,8 @@ export function useSwapHandlers(): SwapHandlers | undefined {
       } = params
 
       const { trade, gasFee } = swapTxContext
+      const txRequest = getEVMTxRequest(swapTxContext)
+      const isSmartWalletTransaction = txRequest?.to === executeAccount.address
 
       const analytics = getBaseTradeAnalyticsProperties({
         formatter,
@@ -70,6 +72,8 @@ export function useSwapHandlers(): SwapHandlers | undefined {
         preselectAsset,
         portfolioBalanceUsd: portfolioData?.balanceUSD,
         trace,
+        includesDelegation: swapTxContext.includesDelegation,
+        isSmartWalletTransaction,
       })
 
       // Get the best available signed transaction

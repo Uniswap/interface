@@ -2,7 +2,7 @@
   "name": "ui",
   "version": "0.0.0",
   "dependencies": {
-    "@gorhom/bottom-sheet": "5.1.8",
+    "@gorhom/bottom-sheet": "4.6.4",
     "@react-native-masked-view/masked-view": "0.3.2",
     "@shopify/flash-list": "1.7.3",
     "@shopify/react-native-skia": "1.12.4",
@@ -10,6 +10,7 @@
     "@tamagui/animations-react-native": "1.125.17",
     "@tamagui/font-inter": "1.125.17",
     "@tamagui/helpers-icon": "1.125.17",
+    "@tamagui/portal": "1.125.17",
     "@tamagui/react-native-media-driver": "1.125.17",
     "@tamagui/remove-scroll": "1.125.17",
     "@tamagui/theme-base": "1.125.17",
@@ -62,15 +63,15 @@
   "module:jsx": "src",
   "private": true,
   "scripts": {
-    "build:icons": "node -r esbuild-register ./src/scripts/componentize-icons.ts",
-    "build:icons:missing": "yarn build:icons --skip-existing",
+    "build:icons": "bunx tsx ./src/scripts/componentize-icons.ts && biome check --write --unsafe",
+    "build:icons:missing": "bun run build:icons --skip-existing",
     "check:deps:usage": "depcheck",
     "lint": "eslint src --max-warnings=0",
-    "format": "../../scripts/prettier.sh",
+    "format": "biome check . --linter-enabled=false",
     "lint:fix": "eslint src --fix",
     "test": "jest && echo 'ignoring'",
     "typecheck": "tsc -b",
-    "watch": "yarn build --watch"
+    "watch": "bun run build --watch"
   },
   "sideEffects": [
     "*.css"

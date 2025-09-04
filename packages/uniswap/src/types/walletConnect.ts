@@ -1,5 +1,5 @@
-import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { AuthTypes } from '@walletconnect/types'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 
 export enum WalletConnectEvent {
   Connected = 0,
@@ -33,7 +33,6 @@ export enum WCRequestOutcome {
   Reject = 'reject',
 }
 
-
 interface UwULinkRequestDappInfo {
   name?: string
   url?: string
@@ -41,7 +40,7 @@ interface UwULinkRequestDappInfo {
 }
 
 interface UwULinkBaseRequest {
-  method: | EthMethod.EthSendTransaction | EthMethod.PersonalSign | UwULinkMethod.Erc20Send
+  method: EthMethod.EthSendTransaction | EthMethod.PersonalSign | UwULinkMethod.Erc20Send
   chainId: number
   dapp?: UwULinkRequestDappInfo
   webhook?: string
@@ -69,19 +68,16 @@ export interface UwULinkErc20SendRequest extends UwULinkBaseRequest {
   isStablecoin: false
 }
 
-export type UwULinkRequest =
-  | UwULinkGenericTransactionRequest
-  | UwULinkErc20SendRequest
-  | UwULinkPersonalSignRequest
+export type UwULinkRequest = UwULinkGenericTransactionRequest | UwULinkErc20SendRequest | UwULinkPersonalSignRequest
 
-  export enum DappRequestType  {
-    WalletConnectSessionRequest = 'walletconnect-session-request',
-    WalletConnectAuthenticationRequest = 'walletconnect-authentication-request',
-    UwULink = 'uwulink',
-  }
+export enum DappRequestType {
+  WalletConnectSessionRequest = 'walletconnect-session-request',
+  WalletConnectAuthenticationRequest = 'walletconnect-authentication-request',
+  UwULink = 'uwulink',
+}
 
-  // Standard WC session request
-  export interface WalletConnectSessionRequestInfo {
+// Standard WC session request
+export interface WalletConnectSessionRequestInfo {
   requestType: DappRequestType.WalletConnectSessionRequest
   name: string
   url: string
@@ -90,7 +86,7 @@ export type UwULinkRequest =
 
 /**
  * Authentication requests for WC 1-Click Auth type sessions.
- * See https://docs.reown.com/advanced/api/sign/wallet-usage#approving-authentication-requests 
+ * See https://docs.reown.com/advanced/api/sign/wallet-usage#approving-authentication-requests
  */
 export interface WalletConnectAuthenticationRequestInfo {
   requestType: DappRequestType.WalletConnectAuthenticationRequest
@@ -109,7 +105,10 @@ export interface UwULinkRequestInfo {
   webhook?: string
 }
 
-export type DappRequestInfo =  WalletConnectAuthenticationRequestInfo | WalletConnectSessionRequestInfo | UwULinkRequestInfo
+export type DappRequestInfo =
+  | WalletConnectAuthenticationRequestInfo
+  | WalletConnectSessionRequestInfo
+  | UwULinkRequestInfo
 
 export interface EthTransaction {
   to?: string
@@ -138,9 +137,7 @@ export interface PermitMessage {
   }
 }
 
-export function isPrimaryTypePermit(
-  message: PermitMessage | Record<string, unknown>
-): message is PermitMessage {
+export function isPrimaryTypePermit(message: PermitMessage | Record<string, unknown>): message is PermitMessage {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return (message as PermitMessage).primaryType === 'Permit'
 }

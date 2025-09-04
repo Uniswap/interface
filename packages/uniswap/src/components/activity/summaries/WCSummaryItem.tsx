@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
-import { DappLogoWithWCBadge } from 'uniswap/src/components/CurrencyLogo/LogoWithTxStatus'
 import { TransactionSummaryLayout } from 'uniswap/src/components/activity/summaries/TransactionSummaryLayout'
 import { SummaryItemProps } from 'uniswap/src/components/activity/types'
 import { TXN_HISTORY_ICON_SIZE } from 'uniswap/src/components/activity/utils'
+import { DappLogoWithWCBadge } from 'uniswap/src/components/CurrencyLogo/LogoWithTxStatus'
 import { TransactionDetails, WCConfirmInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export function WCSummaryItem({

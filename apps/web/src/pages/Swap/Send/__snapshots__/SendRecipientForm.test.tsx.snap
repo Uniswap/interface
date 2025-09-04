@@ -101,22 +101,6 @@ exports[`SendCurrencyInputform > should render correctly with no verified recipi
 `;
 
 exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
-.c7 {
-  height: 36px;
-  width: 36px;
-}
-
-.c7 path {
-  stroke: rgba(19,19,19,0.35);
-  background: rgba(19,19,19,0.63);
-  fill: rgba(19,19,19,0.35);
-}
-
-.c8 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
-}
-
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -188,6 +172,22 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
+}
+
+.c7 {
+  height: 36px;
+  width: 36px;
+}
+
+.c7 path {
+  stroke: rgba(19,19,19,0.35);
+  background: rgba(19,19,19,0.63);
+  fill: rgba(19,19,19,0.35);
+}
+
+.c8 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
 }
 
 .c10 {
@@ -360,22 +360,6 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
 `;
 
 exports[`SendCurrencyInputform > should render correctly with verified recipient 1`] = `
-.c7 {
-  height: 36px;
-  width: 36px;
-}
-
-.c7 path {
-  stroke: rgba(19,19,19,0.35);
-  background: rgba(19,19,19,0.63);
-  fill: rgba(19,19,19,0.35);
-}
-
-.c8 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
-}
-
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -447,6 +431,22 @@ exports[`SendCurrencyInputform > should render correctly with verified recipient
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
+}
+
+.c7 {
+  height: 36px;
+  width: 36px;
+}
+
+.c7 path {
+  stroke: rgba(19,19,19,0.35);
+  background: rgba(19,19,19,0.63);
+  fill: rgba(19,19,19,0.35);
+}
+
+.c8 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
 }
 
 .c10 {

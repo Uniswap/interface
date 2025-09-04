@@ -159,6 +159,43 @@ export function getExplorerLink({
   }
 }
 
+export function getNftExplorerLink({
+  chainId,
+  fallbackChainId,
+  contractAddress,
+  tokenId,
+}: {
+  chainId?: UniverseChainId
+  fallbackChainId: UniverseChainId
+  contractAddress: string
+  tokenId: string
+}): string {
+  const targetChainId = chainId ?? fallbackChainId
+  return getExplorerLink({
+    chainId: targetChainId,
+    data: `${contractAddress}/${tokenId}`,
+    type: ExplorerDataType.NFT,
+  })
+}
+
+export function getOpenseaLink({
+  chainId,
+  contractAddress,
+  tokenId,
+}: {
+  chainId: UniverseChainId
+  contractAddress: string
+  tokenId: string
+}): string | null {
+  const chainInfo = getChainInfo(chainId)
+
+  if (!chainInfo.openseaName) {
+    return null
+  }
+
+  return `https://opensea.io/item/${chainInfo.openseaName}/${contractAddress}/${tokenId}`
+}
+
 /**
  * Return the token details URL for the given address and chain
  * @param address the address of the token

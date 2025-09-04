@@ -1,6 +1,6 @@
 import { createTamagui } from 'ui/src'
 import { animations } from 'ui/src/theme/animations'
-import { TamaguiGroupNames, configWithoutAnimations } from 'ui/src/theme/config'
+import { configWithoutAnimations, TamaguiGroupNames } from 'ui/src/theme/config'
 
 const {
   // web has specific settings (see below)

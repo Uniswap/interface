@@ -12,8 +12,8 @@ import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingC
 import { PasskeyImportLoading } from 'wallet/src/features/onboarding/PasskeyImportLoading'
 import { WelcomeSplash } from 'wallet/src/features/onboarding/WelcomeSplash'
 import { fetchSeedPhrase } from 'wallet/src/features/passkeys/passkeys'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.PasskeyImport>
 

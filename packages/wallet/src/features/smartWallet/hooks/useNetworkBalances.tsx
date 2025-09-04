@@ -4,10 +4,10 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/defaults'
 import { useStatsigClientStatus } from 'uniswap/src/features/gating/hooks'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
-import { NetworkInfo } from 'wallet/src/features/smartWallet/InsufficientFundsNetworkRow'
-import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import { useSmartWalletChains } from 'wallet/src/features/smartWallet/hooks/useSmartWalletChains'
+import { NetworkInfo } from 'wallet/src/features/smartWallet/InsufficientFundsNetworkRow'
 import { getRemoveDelegationTransaction } from 'wallet/src/features/smartWallet/sagas/removeDelegationSaga'
+import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 
 function hasEnoughNativeFunds(balance: bigint, gasFee?: { displayValue?: string }): boolean {
   const parsedGasFee = gasFee?.displayValue ? BigInt(gasFee.displayValue) : BigInt(0)

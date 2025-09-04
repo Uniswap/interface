@@ -1,5 +1,5 @@
 import { FieldFunctionOptions, InMemoryCache } from '@apollo/client'
-import { Reference, StoreObject, relayStylePagination } from '@apollo/client/utilities'
+import { Reference, relayStylePagination, StoreObject } from '@apollo/client/utilities'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { isTestEnv } from 'utilities/src/environment/env'

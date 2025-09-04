@@ -1,4 +1,4 @@
-import { TickMath, nearestUsableTick } from '@uniswap/v3-sdk'
+import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 import { Bound } from 'state/mint/v3/actions'
 

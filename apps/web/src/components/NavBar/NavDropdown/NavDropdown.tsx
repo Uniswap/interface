@@ -1,5 +1,5 @@
 import { ReactNode, RefObject } from 'react'
-import { Flex, Popover, WebBottomSheet, styled, useScrollbarStyles, useShadowPropsMedium } from 'ui/src'
+import { Flex, Popover, styled, useScrollbarStyles, useShadowPropsMedium, WebBottomSheet } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 
 const NavDropdownContent = styled(Flex, {

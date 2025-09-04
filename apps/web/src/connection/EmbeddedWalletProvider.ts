@@ -9,7 +9,7 @@ import {
 import { HexString, isValidHexString } from 'uniswap/src/utils/hex'
 import { isAddress } from 'utilities/src/addresses/index'
 import { logger } from 'utilities/src/logger/logger'
-import { Account, Hash, SignableMessage, createPublicClient, fallback, http } from 'viem'
+import { Account, createPublicClient, fallback, Hash, http, SignableMessage } from 'viem'
 
 export type Listener = (payload: any) => void
 

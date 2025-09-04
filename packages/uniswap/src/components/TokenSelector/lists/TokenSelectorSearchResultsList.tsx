@@ -1,10 +1,10 @@
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
+import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
 import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hooks/useAddToSearchHistory'
 import { useTokenSectionsForSearchResults } from 'uniswap/src/components/TokenSelector/hooks/useTokenSectionsForSearchResults'
+import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
-import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 

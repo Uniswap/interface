@@ -1,4 +1,4 @@
-import { MutationKey, QueryKey, hashKey as originalHashKey } from '@tanstack/react-query'
+import { MutationKey, hashKey as originalHashKey, QueryKey } from '@tanstack/react-query'
 
 /**
  * Enhanced hash key for React Query that ensures stable keys even with arrays.

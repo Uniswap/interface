@@ -2,7 +2,7 @@ import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { Token } from '@uniswap/sdk-core'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ALL_CHAIN_IDS, ORDERED_CHAINS, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { ALL_CHAIN_IDS, getChainInfo, ORDERED_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { EnabledChainsInfo, GqlChainId, NetworkLayer, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 
@@ -194,9 +194,11 @@ export function toUniswapWebAppLink(chainId: UniverseChainId): string | null {
   }
 }
 
-export function filterChainIdsByFeatureFlag(featureFlaggedChainIds: {
-  [key in UniverseChainId]?: boolean
-}): UniverseChainId[] {
+export function filterChainIdsByFeatureFlag(
+  featureFlaggedChainIds: {
+    [key in UniverseChainId]?: boolean
+  },
+): UniverseChainId[] {
   return ALL_CHAIN_IDS.filter((chainId) => {
     return featureFlaggedChainIds[chainId] ?? true
   })

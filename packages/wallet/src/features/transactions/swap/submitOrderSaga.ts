@@ -24,7 +24,7 @@ import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { waitForTransactionConfirmation } from 'wallet/src/features/transactions/swap/confirmation'
-import { SignedPermit, isSignedPermit } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
+import { isSignedPermit, SignedPermit } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
 import { getSignerManager } from 'wallet/src/features/wallet/context'
 
 // If the app is closed during the waiting period and then reopened, the saga will resume;

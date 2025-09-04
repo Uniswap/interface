@@ -9,7 +9,7 @@ import { useUpdateAtom } from 'jotai/utils'
 import { useOneClickSwapSetting } from 'pages/Swap/settings/OneClickSwap'
 import React, { PropsWithChildren, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { serializeSwapAddressesToURLParameters } from 'state/swap/hooks'
 import { useIsAtomicBatchingSupportedByChainIdCallback } from 'state/walletCapabilities/hooks/useIsAtomicBatchingSupportedByChain'
 import { useHasMismatchCallback, useShowMismatchToast } from 'state/walletCapabilities/hooks/useMismatchAccount'
@@ -23,8 +23,8 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
 import { useSetActiveChainId } from 'uniswap/src/features/smartWallet/delegation/hooks/useSetActiveChainId'
 import { DelegatedState } from 'uniswap/src/features/smartWallet/delegation/types'
-import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
 import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
+import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useGetCanSignPermits } from 'uniswap/src/features/transactions/hooks/useGetCanSignPermits'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
@@ -50,11 +50,13 @@ export function WebUniswapProvider({ children }: PropsWithChildren): JSX.Element
 function WebUniswapProviderInner({ children }: PropsWithChildren) {
   const { connector } = useAccount()
   const signer = useEthersSigner()
+  const location = useLocation()
   const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()
   const navigateToFiatOnRamp = useCallback(() => navigate(`/buy`, { replace: true }), [navigate])
 
   const { closeModal: closeSearchModal } = useModalState(ModalName.Search)
+  const { openModal: openSendModal } = useModalState(ModalName.Send)
 
   const navigateToSwapFlow = useCallback(
     ({ inputCurrencyId, outputCurrencyId }: { inputCurrencyId?: string; outputCurrencyId?: string }) => {
@@ -66,8 +68,9 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       })
       navigate(`/swap${queryParams}`, { replace: true })
       closeSearchModal()
+      accountDrawer.close()
     },
-    [navigate, closeSearchModal],
+    [navigate, closeSearchModal, accountDrawer],
   )
 
   const navigateToPoolDetails = useCallback(
@@ -82,10 +85,17 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
   const navigateToSendFlow = useCallback(
     ({ chainId, currencyAddress }: { chainId: UniverseChainId; currencyAddress?: Address }) => {
       const chainUrlParam = getChainInfo(chainId).urlParam
-      navigate(`/send?chain=${chainUrlParam}&inputCurrency=${currencyAddress}`, { replace: true })
+      openSendModal()
       closeSearchModal()
+      accountDrawer.close()
+
+      const newPathname = location.pathname === '/' ? '/send' : location.pathname
+      const currencyAddressParam = currencyAddress ? `&sendCurrency=${currencyAddress}` : ''
+      navigate(`${newPathname}?sendChain=${chainUrlParam}${currencyAddressParam}`, {
+        replace: true,
+      })
     },
-    [navigate, closeSearchModal],
+    [openSendModal, closeSearchModal, accountDrawer, navigate, location],
   )
 
   const setReceiveModalState = useUpdateAtom(receiveCryptoModalStateAtom)
@@ -104,8 +114,9 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       })
       navigate(url)
       closeSearchModal()
+      accountDrawer.close()
     },
-    [navigate, closeSearchModal],
+    [navigate, closeSearchModal, accountDrawer],
   )
 
   const getHasMismatch = useHasAccountMismatchCallback()
@@ -163,6 +174,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       showSwitchNetworkNotification({ chainId, outputChainId, prevChainId, action: SwitchNetworkAction.Swap })
     },
   )
+
   const navigateToNftDetails = useNavigateToNftExplorerLink()
 
   useAccountChainIdEffect()

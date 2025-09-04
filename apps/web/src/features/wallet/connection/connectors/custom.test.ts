@@ -1,15 +1,14 @@
 import { renderHook } from '@testing-library/react'
+// Import mocked modules to get references to their functions
+import { connect } from '@wagmi/core'
 import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
 import { applyCustomConnectorMeta, useConnectCustomWalletsMap } from 'features/wallet/connection/connectors/custom'
 import type { WalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
-import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { COINBASE_WALLET_CONNECTOR, METAMASK_CONNECTOR, UNISWAP_WALLET_CONNECTOR } from 'test-utils/wallets/fixtures'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import PASSKEY_ICON from 'ui/src/assets/icons/passkey.svg'
-
-// Import mocked modules to get references to their functions
-import { connect } from '@wagmi/core'
-import { COINBASE_WALLET_CONNECTOR, METAMASK_CONNECTOR, UNISWAP_WALLET_CONNECTOR } from 'test-utils/wallets/fixtures'
+import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mockConnect = vi.mocked(connect)
 

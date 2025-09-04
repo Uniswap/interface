@@ -2,8 +2,8 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { DeadlineControl } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/deadline/DeadlineControl'
 import { DeadlineWarning } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/deadline/DeadlineWarning'
 import {
-  TransactionSettingId,
   type TransactionSettingConfig,
+  TransactionSettingId,
 } from 'uniswap/src/features/transactions/components/settings/types'
 
 /**

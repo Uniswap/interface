@@ -26,7 +26,9 @@ export function TestnetModeModal({
     <InfoLinkModal
       title={unsupported ? t('common.notSupported') : t('settings.setting.wallet.testnetMode.title')}
       description={
-        descriptionCopy ?? unsupported ? t('testnet.unsupported') : t('settings.setting.wallet.testnetMode.description')
+        (descriptionCopy ?? unsupported)
+          ? t('testnet.unsupported')
+          : t('settings.setting.wallet.testnetMode.description')
       }
       isOpen={isOpen}
       buttonText={t('common.button.close')}

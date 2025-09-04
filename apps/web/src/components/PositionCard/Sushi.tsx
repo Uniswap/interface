@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
-import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { CardNoise } from 'components/earn/styled'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { useColor } from 'hooks/useColor'
 import { transparentize } from 'polished'
 import { Trans } from 'react-i18next'

@@ -1,5 +1,5 @@
 import { ExploreTab } from 'pages/Explore/constants'
-import { Suspense, lazy } from 'react'
+import { lazy, Suspense } from 'react'
 import { Navigate, useLocation, useParams } from 'react-router'
 import { Loader } from 'ui/src/loading/Loader'
 

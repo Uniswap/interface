@@ -117,15 +117,18 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
       {},
     )
 
-    const dataMap: AddressTo<AddressWithBalanceAndName> = addressesArray.reduce((map, address) => {
-      const entry = {
-        address,
-        balance: balancesByAddress[address],
-        unitag: unitagsByAddress[address]?.username,
-      }
-      map[entry.address] = entry
-      return map
-    }, {} as AddressTo<AddressWithBalanceAndName>)
+    const dataMap: AddressTo<AddressWithBalanceAndName> = addressesArray.reduce(
+      (map, address) => {
+        const entry = {
+          address,
+          balance: balancesByAddress[address],
+          unitag: unitagsByAddress[address]?.username,
+        }
+        map[entry.address] = entry
+        return map
+      },
+      {} as AddressTo<AddressWithBalanceAndName>,
+    )
 
     return dataMap
 

@@ -3,7 +3,7 @@ import { setContext } from '@apollo/client/link/context'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { logger } from 'utilities/src/logger/logger'
-import { ON_RAMP_AUTH_MAX_LIMIT, createOnRampTransactionsAuth } from 'wallet/src/data/utils'
+import { createOnRampTransactionsAuth, ON_RAMP_AUTH_MAX_LIMIT } from 'wallet/src/data/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 

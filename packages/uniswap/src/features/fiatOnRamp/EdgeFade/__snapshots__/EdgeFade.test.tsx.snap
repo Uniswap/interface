@@ -1,0 +1,112 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EdgeFade Mobile Implementation renders mobile implementation correctly with left side 1`] = `
+<View
+  pointerEvents="none"
+  style={
+    {
+      "bottom": 0,
+      "flexDirection": "column",
+      "left": 0,
+      "overflow": "hidden",
+      "position": "absolute",
+      "top": 0,
+      "zIndex": 1,
+    }
+  }
+>
+  ExpoLinearGradient
+</View>
+`;
+
+exports[`EdgeFade Mobile Implementation renders mobile implementation correctly with right side 1`] = `
+<View
+  pointerEvents="none"
+  style={
+    {
+      "bottom": 0,
+      "flexDirection": "column",
+      "overflow": "hidden",
+      "position": "absolute",
+      "right": 0,
+      "top": 0,
+      "zIndex": 1,
+    }
+  }
+>
+  ExpoLinearGradient
+</View>
+`;
+
+exports[`EdgeFade Mobile Implementation renders with additional flex props 1`] = `
+<View
+  pointerEvents="none"
+  style={
+    {
+      "bottom": 0,
+      "flexDirection": "column",
+      "left": 0,
+      "overflow": "hidden",
+      "position": "absolute",
+      "top": 0,
+      "width": 24,
+      "zIndex": 1,
+    }
+  }
+>
+  ExpoLinearGradient
+</View>
+`;
+
+exports[`EdgeFade Web Implementation renders web implementation correctly with left side 1`] = `
+<View
+  pointerEvents="none"
+  style={
+    {
+      "background": "linear-gradient(90deg, #131313e6 0%, #13131300 100%)",
+      "bottom": 0,
+      "flexDirection": "column",
+      "left": 0,
+      "position": "absolute",
+      "top": 0,
+      "zIndex": 1,
+    }
+  }
+/>
+`;
+
+exports[`EdgeFade Web Implementation renders web implementation correctly with right side 1`] = `
+<View
+  pointerEvents="none"
+  style={
+    {
+      "background": "linear-gradient(270deg, #131313e6 0%, #13131300 100%)",
+      "bottom": 0,
+      "flexDirection": "column",
+      "position": "absolute",
+      "right": 0,
+      "top": 0,
+      "zIndex": 1,
+    }
+  }
+/>
+`;
+
+exports[`EdgeFade Web Implementation renders with additional flex props 1`] = `
+<View
+  pointerEvents="none"
+  style={
+    {
+      "background": "linear-gradient(90deg, #131313e6 0%, #13131300 100%)",
+      "bottom": 0,
+      "flexDirection": "column",
+      "left": 0,
+      "position": "absolute",
+      "top": 0,
+      "width": 24,
+      "zIndex": 1,
+    }
+  }
+  testID="web-edge-fade"
+/>
+`;

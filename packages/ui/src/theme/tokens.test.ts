@@ -4,8 +4,8 @@ import {
   getIsTokenFormat,
   getIsValidSporeColor,
   getMaybeHoverColor,
-  validColor,
   validateColorValue,
+  validColor,
 } from 'ui/src/theme/tokens'
 
 // Mock the process.env.NODE_ENV for testing validColor behavior

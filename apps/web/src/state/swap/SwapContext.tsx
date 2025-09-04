@@ -1,5 +1,5 @@
-import { Currency } from '@uniswap/sdk-core'
 import { useReportTotalBalancesUsdForAnalytics } from 'appGraphql/data/apollo/useReportTotalBalancesUsdForAnalytics'
+import { Currency } from '@uniswap/sdk-core'
 import usePrevious from 'hooks/usePrevious'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'

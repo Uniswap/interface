@@ -1,4 +1,4 @@
-import { useQuery, UseQueryResult } from '@tanstack/react-query'
+import { UseQueryResult, useQuery } from '@tanstack/react-query'
 import { useTradeService } from 'uniswap/src/features/services'
 import { createIndicativeTradeServiceQueryOptions } from 'uniswap/src/features/transactions/swap/hooks/useTrade/useIndicativeTradeServiceQueryOptions'
 import { IndicativeTrade, type UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'

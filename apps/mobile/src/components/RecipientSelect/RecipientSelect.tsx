@@ -9,9 +9,9 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
+import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
 import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
 import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
-import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
 import { SearchBar } from 'wallet/src/features/search/SearchBar'
 
 interface RecipientSelectProps {

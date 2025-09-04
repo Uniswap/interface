@@ -1,14 +1,14 @@
 import type { MutableRefObject, RefObject } from 'react'
 import { useMemo, useState } from 'react'
 import type { LayoutChangeEvent, TextInputProps } from 'react-native'
-import { Flex, type ButtonProps, type FlexProps } from 'ui/src'
+import { type ButtonProps, Flex, type FlexProps } from 'ui/src'
 import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import type { DecimalPadInputRef } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
 import {
-  DecimalPadCalculateSpace,
   DecimalPadCalculatedSpaceId,
+  DecimalPadCalculateSpace,
   DecimalPadInput,
 } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
 import { useDecimalPadControlledField } from 'uniswap/src/features/transactions/swap/form/hooks/useDecimalPadControlledField'
@@ -83,7 +83,7 @@ function SwapFormDecimalPadContent({
     const currentIsFiatMode = isFiatMode && decimalPadControlledField === exactCurrencyField
     const currentMaxDecimals = currentIsFiatMode
       ? MAX_FIAT_INPUT_DECIMALS
-      : currencies[decimalPadControlledField]?.currency.decimals ?? 0
+      : (currencies[decimalPadControlledField]?.currency.decimals ?? 0)
 
     // We disable the `DecimalPad` when the input reaches the max number of decimals,
     // but we still need to truncate in case the user moves the cursor and adds a decimal separator in the middle of the input.
@@ -114,7 +114,7 @@ function SwapFormDecimalPadContent({
 
   const maxDecimals = isFiatMode
     ? MAX_FIAT_INPUT_DECIMALS
-    : currencies[decimalPadControlledField]?.currency.decimals ?? 0
+    : (currencies[decimalPadControlledField]?.currency.decimals ?? 0)
 
   const [additionalElementsHeight, setAdditionalElementsHeight] = useState<number | null>(null)
 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, useEvent } from 'tamagui'
+import { useEvent, View } from 'tamagui'
 
 export const WidthAnimator = View.styleable<{ open?: boolean; height: number }>((props, ref) => {
   const { open = true, height, children, ...rest } = props

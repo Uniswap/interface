@@ -1,13 +1,13 @@
 import { TimePeriod, toHistoryDuration } from 'appGraphql/data/util'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModelParams } from 'components/Charts/ChartModel'
+import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import {
   CustomVolumeChartModel,
   CustomVolumeChartModelParams,
 } from 'components/Charts/VolumeChart/CustomVolumeChartModel'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { getCumulativeVolume } from 'components/Charts/VolumeChart/utils'
-import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import { TFunction } from 'i18next'
 import { useTheme } from 'lib/styled-components'
 import { useMemo } from 'react'

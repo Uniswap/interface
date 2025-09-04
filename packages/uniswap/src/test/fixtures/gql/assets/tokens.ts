@@ -29,7 +29,7 @@ import { amounts } from 'uniswap/src/test/fixtures/gql/amounts'
 import { get24hPriceChange, getLatestPrice, priceHistory } from 'uniswap/src/test/fixtures/gql/history'
 import { GQL_CHAINS, image } from 'uniswap/src/test/fixtures/gql/misc'
 import { ETH } from 'uniswap/src/test/fixtures/lib'
-import { MAX_FIXTURE_TIMESTAMP, faker } from 'uniswap/src/test/shared'
+import { faker, MAX_FIXTURE_TIMESTAMP } from 'uniswap/src/test/shared'
 import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
 
 const benignProtectionInfo: ProtectionInfo = {

@@ -1,0 +1,18 @@
+{
+  "extends": "//",
+  "files": {
+    "experimentalScannerIgnores": [
+      "ios/**",
+      "android/**",
+      ".storybook/storybook.requires.ts"
+    ]
+  },
+  "formatter": {
+    "includes": [
+      "**",
+      "!ios",
+      "!android",
+      "!.storybook/storybook.requires.ts"
+    ]
+  }
+}

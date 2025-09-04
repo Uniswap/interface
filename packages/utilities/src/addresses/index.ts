@@ -20,6 +20,20 @@ export function isSameAddress(a?: string, b?: string): boolean {
   return a === b || a?.toLowerCase() === b?.toLowerCase() // Lazy-lowercases the addresses
 }
 
+function getShortenParams(chars: number, charsEnd?: number): { start: number; end: number } {
+  if (charsEnd === undefined) {
+    charsEnd = chars
+  }
+
+  if (chars <= 0 && charsEnd <= 0) {
+    logger.warn('utilities/src/addresses/index.ts', 'getShortenParams', 'chars and charsEnd must be positive integers')
+    chars = 4
+    charsEnd = 4
+  }
+
+  return { start: chars, end: charsEnd }
+}
+
 /**
  * Shortens an Ethereum address. If the address is not valid, it returns an empty string.
  *
@@ -34,17 +48,28 @@ export function shortenAddress(address = '', chars = 4, charsEnd?: number): stri
   if (!parsed) {
     return ''
   }
-  if (charsEnd === undefined) {
-    charsEnd = chars
+
+  const { start, end } = getShortenParams(chars, charsEnd)
+
+  return ellipseAddressAdd0x(parsed, start, end)
+}
+
+/**
+ * Shortens a hash in the same way as shortenAddress without validating the input
+ *
+ * @param hash - The hash to shorten
+ * @param chars - The number of characters to show at the beginning after the 0x and end.
+ * @param charsEnd - (Optional) The number of characters to show at the end if different from chars.
+ */
+// eslint-disable-next-line max-params
+export function shortenHash(hash = '', chars = 4, charsEnd?: number): string {
+  if (!hash) {
+    return ''
   }
 
-  if (chars <= 0 && charsEnd <= 0) {
-    logger.warn('utilities/src/addresses/index.ts', 'shortenAddress', 'chars and charsEnd must be positive integers')
-    chars = 4
-    charsEnd = 4
-  }
+  const { start, end } = getShortenParams(chars, charsEnd)
 
-  return ellipseAddressAdd0x(parsed, chars, charsEnd)
+  return ellipseAddressAdd0x(hash, start, end)
 }
 
 /**
@@ -55,7 +80,7 @@ export function shortenAddress(address = '', chars = 4, charsEnd?: number): stri
  * @returns formatted string
  */
 // eslint-disable-next-line max-params
-function ellipseAddressAdd0x(address: string, charsStart = 4, charsEnd = 4): string {
+function ellipseAddressAdd0x(address: string, charsStart: number, charsEnd: number): string {
   const hasPrefix = address.startsWith('0x')
   const prefix = hasPrefix ? '' : '0x'
   const wholeAddress = prefix + address

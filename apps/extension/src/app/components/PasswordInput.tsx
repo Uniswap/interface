@@ -5,7 +5,7 @@ import { Input, InputProps } from 'src/app/components/Input'
 import { useShouldShowBiometricUnlock } from 'src/app/features/biometricUnlock/useShouldShowBiometricUnlock'
 import { Flex, FlexProps, IconProps, Text, TouchableArea } from 'ui/src'
 import { Eye, EyeOff, Fingerprint } from 'ui/src/components/icons'
-import { PasswordStrength, getPasswordStrengthTextAndColor } from 'wallet/src/utils/password'
+import { getPasswordStrengthTextAndColor, PasswordStrength } from 'wallet/src/utils/password'
 
 export const PADDING_STRENGTH_INDICATOR = 76
 

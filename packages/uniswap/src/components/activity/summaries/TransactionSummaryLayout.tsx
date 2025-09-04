@@ -47,6 +47,7 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
   index,
   onRetry,
   isQueued,
+  customDetailsModalOpen,
 }: TransactionSummaryLayoutProps & { isQueued: boolean }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -74,7 +75,11 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
     if (readonly) {
       await openTransactionLink(hash, chainId)
     } else {
-      setShowDetailsModal(true)
+      if (customDetailsModalOpen) {
+        customDetailsModalOpen()
+      } else {
+        setShowDetailsModal(true)
+      }
     }
   }
 

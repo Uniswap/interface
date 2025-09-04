@@ -1,6 +1,6 @@
-import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import Column from 'components/deprecated/Column'
 import { RowBetween, RowFixed } from 'components/deprecated/Row'
+import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import styled from 'lib/styled-components'
 import { Trans } from 'react-i18next'
 import { RouterPreference } from 'state/routing/types'

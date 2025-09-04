@@ -4,24 +4,23 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ProxyRequest, ProxyResponse } from "./api_pb.js";
-import { MethodKind } from "@bufbuild/protobuf";
+import { MethodKind } from '@bufbuild/protobuf'
+import { ProxyRequest, ProxyResponse } from './api_pb.js'
 
 /**
  * @generated from service conversionproxy.v1.ConversionProxyService
  */
 export const ConversionProxyService = {
-  typeName: "conversionproxy.v1.ConversionProxyService",
+  typeName: 'conversionproxy.v1.ConversionProxyService',
   methods: {
     /**
      * @generated from rpc conversionproxy.v1.ConversionProxyService.Proxy
      */
     proxy: {
-      name: "Proxy",
+      name: 'Proxy',
       I: ProxyRequest,
       O: ProxyResponse,
       kind: MethodKind.Unary,
     },
-  }
-} as const;
-
+  },
+} as const

@@ -17,17 +17,17 @@ import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { borderRadii, fonts, iconSizes } from 'ui/src/theme'
-import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { InfoRow } from 'uniswap/src/components/activity/details/InfoRow'
 import { TransactionParticipantRow } from 'uniswap/src/components/activity/details/TransactionParticipantRow'
 import { SwapTypeTransactionInfo } from 'uniswap/src/components/activity/details/types'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useNetworkFee } from 'uniswap/src/features/activity/hooks/useNetworkFee'
 import { getFormattedSwapRatio, hasInterfaceFees } from 'uniswap/src/features/activity/utils/swapInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FORMAT_DATE_TIME_MEDIUM, useFormattedDateTime } from 'uniswap/src/features/language/localizedDayjs'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/utils/getAmountsFromTrade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -41,7 +41,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, openTransactionLink, openUri } from 'uniswap/src/utils/linking'
-import { shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress, shortenHash } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 
 const UNISWAP_FEE = 0.0025
@@ -257,7 +257,7 @@ function TransactionHashRow({ transactionDetails }: { transactionDetails: Transa
         justifyContent="center"
         onPress={() => openTransactionLink(hash, chainId)}
       >
-        <Text variant="body3">{shortenAddress(hash)}</Text>
+        <Text variant="body3">{shortenHash(hash)}</Text>
         <ExternalLink color="$neutral3" size="$icon.16" />
       </TouchableArea>
     </InfoRow>

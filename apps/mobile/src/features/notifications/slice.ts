@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { NotifSettingType } from 'src/features/notifications/constants'
 
 // eslint-disable-next-line import/no-unused-modules

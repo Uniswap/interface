@@ -1,5 +1,5 @@
-import { PricePoint, fiatOnRampToCurrency, gqlToCurrency } from 'appGraphql/data/util'
-import { COMMON_BASES, buildPartialCurrencyInfo } from 'uniswap/src/constants/routing'
+import { fiatOnRampToCurrency, gqlToCurrency, PricePoint } from 'appGraphql/data/util'
+import { buildPartialCurrencyInfo, COMMON_BASES } from 'uniswap/src/constants/routing'
 import { USDC_OPTIMISM } from 'uniswap/src/constants/tokens'
 import {
   Token as GqlToken,

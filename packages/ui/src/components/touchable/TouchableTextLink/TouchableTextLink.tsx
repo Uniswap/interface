@@ -2,7 +2,7 @@ import type { ForwardedRef } from 'react'
 import { forwardRef, memo, useMemo, useRef } from 'react'
 import type { GestureResponderEvent } from 'react-native'
 import { Linking } from 'react-native'
-import { styled, type ColorTokens, type TamaguiElement } from 'tamagui'
+import { type ColorTokens, styled, type TamaguiElement } from 'tamagui'
 import { Text, type TextProps } from 'ui/src/components/text'
 import { TouchableAreaFrame } from 'ui/src/components/touchable/TouchableArea/TouchableAreaFrame'
 import type { TouchableAreaProps } from 'ui/src/components/touchable/TouchableArea/types'
@@ -16,7 +16,10 @@ type PropsFromText = Pick<
   'textTransform' | 'allowFontScaling' | 'adjustsFontSizeToFit' | 'textAlign' | 'flex' | 'flexGrow' | 'flexShrink'
 >
 
-type PropsFromTouchableArea = Pick<TouchableAreaProps, 'onPress' | 'disabled' | 'disabledStyle' | 'forceStyle'>
+type PropsFromTouchableArea = Pick<
+  TouchableAreaProps,
+  'onPress' | 'disabled' | 'disabledStyle' | 'forceStyle' | 'display'
+>
 
 type OwnProps = {
   children: string
@@ -62,6 +65,7 @@ const TouchableTextLink_ = forwardRef<TamaguiElement, TouchableTextLinkProps>(fu
     disabledStyle,
     forceStyle,
     onlyUseText,
+    display,
     ...textProps
   },
   ref,
@@ -121,6 +125,7 @@ const TouchableTextLink_ = forwardRef<TamaguiElement, TouchableTextLinkProps>(fu
     return (
       <Text
         ref={ref ?? textRef}
+        display={display}
         aria-disabled={disabled}
         disabled={disabled}
         focusStyle={focusVisibleStyle}
@@ -150,6 +155,7 @@ const TouchableTextLink_ = forwardRef<TamaguiElement, TouchableTextLinkProps>(fu
       disabledStyle={disabledStyle}
       forceStyle={forceStyle}
       aria-disabled={disabled}
+      display={display}
       onPress={handleOnPressWithLink}
     >
       <Text

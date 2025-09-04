@@ -20,8 +20,8 @@ import { iconSizes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { authenticateWithPasskeyForSeedPhraseExport } from 'uniswap/src/features/passkey/embeddedWallet'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -91,8 +91,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
       setIsLoadingPasskey(false)
       return
     }
-
-    if (nav === OnboardingScreens.SeedPhraseInput) {
+    if (nav === OnboardingScreens.SeedPhraseInput || nav === OnboardingScreens.WatchWallet) {
       navigation.navigate({
         name: nav,
         params: { importType, entryPoint },

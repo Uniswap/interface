@@ -2,11 +2,11 @@ import { LiquidityBarSeriesRenderer } from 'components/Charts/LiquidityChart/ren
 import { LiquidityBarData, LiquidityBarProps, LiquidityBarSeriesOptions } from 'components/Charts/LiquidityChart/types'
 import {
   CustomSeriesPricePlotValues,
+  customSeriesDefaultOptions,
   ICustomSeriesPaneView,
   PaneRendererCustomData,
   Time,
   WhitespaceData,
-  customSeriesDefaultOptions,
 } from 'lightweight-charts'
 
 export class LiquidityBarSeries<TData extends LiquidityBarData>

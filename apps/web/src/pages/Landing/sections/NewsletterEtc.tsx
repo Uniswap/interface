@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Anchor, Flex, Text, styled } from 'ui/src'
+import { Anchor, Flex, styled, Text } from 'ui/src'
 import { ArrowUpRight } from 'ui/src/components/icons/ArrowUpRight'
 import { BookOpen } from 'ui/src/components/icons/BookOpen'
 import { GraduationCap } from 'ui/src/components/icons/GraduationCap'

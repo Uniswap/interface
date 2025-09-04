@@ -9,7 +9,7 @@ import type {
   WagmiWalletConnectorMeta,
 } from 'features/wallet/connection/types/WalletConnectorMeta'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { Mock, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest'
 
 const createMockCustomWalletConnectorMeta = (overrides = {}): CustomWalletConnectorMeta => ({
   name: 'Custom Wallet',

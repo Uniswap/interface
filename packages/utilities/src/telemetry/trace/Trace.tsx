@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
-import React, { PropsWithChildren, ReactNode, memo, useEffect, useId, useMemo } from 'react'
+import React, { memo, PropsWithChildren, ReactNode, useEffect, useId, useMemo } from 'react'
 import { isWeb } from 'utilities/src/platform'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'

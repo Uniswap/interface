@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "check:deps:usage": "depcheck",
-    "format": "../../scripts/prettier.sh",
+    "format": "biome check . --linter-enabled=false",
     "lint": "eslint . --ext ts,tsx --max-warnings=0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "test": "jest",
@@ -18,7 +18,7 @@
     "@ethersproject/constants": "5.7.0",
     "@ethersproject/contracts": "5.7.0",
     "@ethersproject/providers": "5.7.2",
-    "@gorhom/bottom-sheet": "5.1.8",
+    "@gorhom/bottom-sheet": "4.6.4",
     "@react-navigation/core": "7.9.2",
     "@redux-saga/core": "1.2.3",
     "@reduxjs/toolkit": "1.9.3",

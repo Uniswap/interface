@@ -4,10 +4,10 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, UniswapXText } from 'ui/src'
 import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
 import { zIndexes } from 'ui/src/theme'
-import { RouterLabel } from 'uniswap/src/components/RouterLabel/RouterLabel'
-import RoutingDiagram from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
-import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
+import { RouterLabel } from 'uniswap/src/components/RouterLabel/RouterLabel'
+import { RoutingDiagram } from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
@@ -22,8 +22,8 @@ import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import getRoutingDiagramEntries from 'uniswap/src/utils/getRoutingDiagramEntries'
 import { openUri } from 'uniswap/src/utils/linking'
+import { useRoutingEntries } from 'uniswap/src/utils/routingDiagram/routingRegistry'
 import { NumberType } from 'utilities/src/format/types'
 import { isWeb } from 'utilities/src/platform'
 
@@ -42,7 +42,7 @@ export function RoutingInfo({
   const gasFeeFormatted =
     gasFeeUSD !== undefined ? convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice) : undefined
 
-  const routes = useMemo(() => (trade && isClassic(trade) ? getRoutingDiagramEntries(trade) : []), [trade])
+  const routes = useRoutingEntries({ trade })
 
   const v4SwapEnabled = useV4SwapEnabled(chainId)
   const isMaybeV4 = trade && v4SwapEnabled && isClassic(trade)
@@ -72,7 +72,7 @@ export function RoutingInfo({
       )
     }
 
-    if (isClassic(trade)) {
+    if (routes) {
       return (
         <Flex gap="$spacing12">
           {isWeb && (
@@ -130,9 +130,19 @@ export function RoutingInfo({
         }}
         tooltipProps={{
           text:
-            priceUxEnabled && trade ? isUniswapX(trade) ? <BestRouteUniswapXTooltip /> : <BestRouteTooltip /> : caption,
+            priceUxEnabled && trade ? (
+              isUniswapX(trade) ? (
+                <BestRouteUniswapXTooltip />
+              ) : routes ? (
+                <BestRouteTooltip />
+              ) : (
+                caption
+              )
+            ) : (
+              caption
+            ),
           placement: 'top',
-          maxWidth: priceUxEnabled ? 300 : trade && isClassic(trade) ? 400 : undefined,
+          maxWidth: priceUxEnabled ? 300 : routes ? 400 : undefined,
         }}
         analyticsTitle="Order routing"
       >

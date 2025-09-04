@@ -8,9 +8,9 @@ import { BuyFormContextProvider, useBuyFormContext } from 'pages/Swap/Buy/BuyFor
 import { ChooseProviderModal } from 'pages/Swap/Buy/ChooseProviderModal'
 import { CountryListModal } from 'pages/Swap/Buy/CountryListModal'
 import { FiatOnRampCurrencyModal } from 'pages/Swap/Buy/FiatOnRampCurrencyModal'
+import { fallbackCurrencyInfo, useOffRampTransferDetailsRequest } from 'pages/Swap/Buy/hooks'
 import { OffRampConfirmTransferModal } from 'pages/Swap/Buy/OffRampConfirmTransferModal'
 import { PredefinedAmount } from 'pages/Swap/Buy/PredefinedAmount'
-import { fallbackCurrencyInfo, useOffRampTransferDetailsRequest } from 'pages/Swap/Buy/hooks'
 import { formatFiatOnRampFiatAmount } from 'pages/Swap/Buy/shared'
 import { AlternateCurrencyDisplay } from 'pages/Swap/common/AlternateCurrencyDisplay'
 import { SelectTokenPanel } from 'pages/Swap/common/SelectTokenPanel'
@@ -24,7 +24,7 @@ import {
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
-import { Flex, Text, styled } from 'ui/src'
+import { Flex, styled, Text } from 'ui/src'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
@@ -32,14 +32,14 @@ import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
-import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
-import UnsupportedTokenModal from 'uniswap/src/features/fiatOnRamp/UnsupportedTokenModal'
 import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { FiatOnRampCurrency, RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
+import UnsupportedTokenModal from 'uniswap/src/features/fiatOnRamp/UnsupportedTokenModal'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { FiatOffRampEventName, FiatOnRampEventName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -290,7 +290,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
                 maxDecimals={
                   inputInFiat
                     ? DEFAULT_FIAT_DECIMALS
-                    : quoteCurrency?.currencyInfo?.currency.decimals ?? DEFAULT_FIAT_DECIMALS
+                    : (quoteCurrency?.currencyInfo?.currency.decimals ?? DEFAULT_FIAT_DECIMALS)
                 }
                 testId={TestID.BuyFormAmountInput}
               />
@@ -431,7 +431,9 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
       {providerModalOpen && (
         <ChooseProviderModal
           isOpen={true}
-          closeModal={() => setBuyFormState((prev) => ({ ...prev, providerModalOpen: false }))}
+          closeModal={() =>
+            setBuyFormState((prev) => ({ ...prev, providerModalOpen: false, paymentMethod: undefined }))
+          }
         />
       )}
       {offRampRequest && (

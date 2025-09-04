@@ -6,9 +6,9 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
+import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
 import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
 import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
-import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 
 type RecipientPanelProps = {

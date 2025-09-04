@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from 'react'
 import { useEffect, useState } from 'react'
-import { SwapReviewStoreContext } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/SwapReviewContext'
 import { createSwapReviewStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/createSwapReviewStore'
+import { SwapReviewStoreContext } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/SwapReviewContext'
 import { useHasValueChanged } from 'utilities/src/react/useHasValueChanged'
 
 type InitialState = Parameters<typeof createSwapReviewStore>[0]
