@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
