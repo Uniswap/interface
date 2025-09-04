@@ -42,7 +42,7 @@ export function useTokenTransactions({
 }) {
   const rawChain = toGraphQLChain(chainId)
   const isValidChain = rawChain !== 'CITREA_TESTNET'
-  const chain = isValidChain ? rawChain as Chain : 'ETHEREUM' as Chain
+  const chain = isValidChain ? (rawChain as Chain) : ('ETHEREUM' as Chain)
   const {
     data: dataV4,
     loading: loadingV4,

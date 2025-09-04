@@ -1,7 +1,6 @@
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { getChainIdFromBackendChain, getChainIdFromChainUrlParam, getChainUrlParam } from 'utils/chainParams'
-import { GqlChainId } from 'uniswap/src/features/chains/types'
 
 describe('getChainFromChainUrlParam', () => {
   it('should return true for valid chain slug', () => {
@@ -43,8 +42,6 @@ describe('getChainIdFromBackendChain', () => {
 
   it('should return url param for unichain sepolia', () => {
     const chain = toGraphQLChain(UniverseChainId.UnichainSepolia) as GqlChainId
-    expect(getChainIdFromBackendChain(chain)).toBe(
-      UniverseChainId.UnichainSepolia,
-    )
+    expect(getChainIdFromBackendChain(chain)).toBe(UniverseChainId.UnichainSepolia)
   })
 })

@@ -2,10 +2,10 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCallback, useMemo, useRef } from 'react'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import {
+  Chain,
   PoolTransactionType,
   ProtocolVersion,
   Token,
-  Chain,
   V2PairTransactionsQuery,
   V3PoolTransactionsQuery,
   V4PoolTransactionsQuery,
@@ -86,7 +86,7 @@ export function usePoolTransactions({
   const { defaultChainId } = useEnabledChains()
   const rawChain = toGraphQLChain(chainId ?? defaultChainId)
   const isValidChain = rawChain !== 'CITREA_TESTNET'
-  const chain = isValidChain ? rawChain as Chain : 'ETHEREUM' as Chain
+  const chain = isValidChain ? (rawChain as Chain) : ('ETHEREUM' as Chain)
   const variables = { first, chain }
   const {
     loading: loadingV4,

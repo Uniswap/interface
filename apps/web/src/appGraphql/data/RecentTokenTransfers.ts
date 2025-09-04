@@ -13,7 +13,7 @@ export function useRecentTokenTransfers(address?: string) {
   const { data, loading } = useRecentTokenTransfersQuery({
     variables: {
       address: address ?? '',
-      chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as GqlChainId[],
+      chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as GqlChainId[],
     },
     skip: !address,
   })

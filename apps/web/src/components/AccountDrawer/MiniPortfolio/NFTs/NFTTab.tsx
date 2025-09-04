@@ -34,7 +34,9 @@ export default function NFTs({ account }: { account: string }) {
     ownerAddress: account,
     first: DEFAULT_NFT_QUERY_AMOUNT,
     skip: !accountDrawer.isOpen,
-    chains: isTestnetModeEnabled ? gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as GqlChainId[] : [Chain.Ethereum, Chain.Zora],
+    chains: isTestnetModeEnabled
+      ? (gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as GqlChainId[])
+      : [Chain.Ethereum, Chain.Zora],
   })
 
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()

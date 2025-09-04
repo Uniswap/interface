@@ -120,7 +120,7 @@ export default function PoolDetailsPage() {
   const chainInfo = urlChain ? getChainInfo(urlChain) : undefined
   const rawChain = chainInfo?.backendChain.chain
   const isValidChain = rawChain !== 'CITREA_TESTNET'
-  const validChain = rawChain && isValidChain ? rawChain as GqlChainId : 'ETHEREUM' as GqlChainId
+  const validChain = rawChain && isValidChain ? (rawChain as GqlChainId) : ('ETHEREUM' as GqlChainId)
   const { data: poolData, loading } = usePoolData(poolAddress?.toLowerCase() ?? '', chainInfo?.id)
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const unwrappedTokens = getUnwrappedPoolToken({
@@ -234,12 +234,7 @@ export default function PoolDetailsPage() {
                   loading={loading}
                 />
               </Column>
-              <ChartSection
-                poolData={poolData}
-                loading={loading}
-                isReversed={isReversed}
-                chain={validChain}
-              />
+              <ChartSection poolData={poolData} loading={loading} isReversed={isReversed} chain={validChain} />
             </Column>
             <HR />
             <PoolDetailsTableTab

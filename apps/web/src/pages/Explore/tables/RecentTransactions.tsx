@@ -25,11 +25,11 @@ import { memo, useMemo, useReducer, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text, styled, useMedia } from 'ui/src'
 import {
+  Chain,
   PoolTransaction,
   PoolTransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -56,11 +56,11 @@ const RecentTransactions = memo(function RecentTransactions() {
   ])
   const chainInfo = getChainInfo(useChainIdFromUrlParam() ?? UniverseChainId.Mainnet)
   const { t } = useTranslation()
-  
+
   const rawChain = chainInfo.backendChain.chain
   const isValidChain = rawChain !== 'CITREA_TESTNET'
-  const validChain = isValidChain ? rawChain as Chain : 'ETHEREUM' as Chain
-  
+  const validChain = isValidChain ? (rawChain as Chain) : ('ETHEREUM' as Chain)
+
   const { transactions, loading, loadMore, errorV2, errorV3 } = useAllTransactions(validChain, filter)
   const filteredTransactions = useFilteredTransactions(transactions)
 

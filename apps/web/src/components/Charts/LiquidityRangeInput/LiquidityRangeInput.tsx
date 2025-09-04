@@ -34,7 +34,7 @@ import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { SearchMinus } from 'ui/src/components/icons/SearchMinus'
 import { SearchPlus } from 'ui/src/components/icons/SearchPlus'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { HistoryDuration, Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isMobileWeb } from 'utilities/src/platform'
 
@@ -108,7 +108,7 @@ export function LiquidityRangeInput({
   const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<HistoryDuration>(HistoryDuration.Month)
 
   const rawChain = chainInfo.backendChain.chain
-  const chain = rawChain !== 'CITREA_TESTNET' ? rawChain as Chain : 'ETHEREUM' as Chain
+  const chain = rawChain !== 'CITREA_TESTNET' ? (rawChain as Chain) : ('ETHEREUM' as Chain)
   const priceData = usePoolPriceChartData({
     // If the Pool doesn't exist, the poolId is undefined and we skip this query.
     variables: {

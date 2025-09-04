@@ -17,9 +17,9 @@ import { useLocation, useNavigate, useParams } from 'react-router'
 import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
 import { useSporeColors } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { useTokenWebQuery, Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId, GqlChainId } from 'uniswap/src/features/chains/types'
+import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -126,11 +126,11 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   const currencyChainInfo = getChainInfo(useChainIdFromUrlParam() ?? UniverseChainId.Mainnet)
 
   const isNative = tokenAddress === NATIVE_CHAIN_ID
-  
+
   const rawChain = currencyChainInfo.backendChain.chain
   const isValidChain = rawChain !== 'CITREA_TESTNET'
-  const chain = isValidChain ? rawChain as Chain : 'ETHEREUM' as Chain
-  const gqlChain = isValidChain ? rawChain as GqlChainId : 'ETHEREUM' as GqlChainId
+  const chain = isValidChain ? (rawChain as Chain) : ('ETHEREUM' as Chain)
+  const gqlChain = isValidChain ? (rawChain as GqlChainId) : ('ETHEREUM' as GqlChainId)
 
   const tokenDBAddress = isNative ? getNativeTokenDBAddress(chain) : tokenAddress
 

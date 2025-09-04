@@ -4,6 +4,7 @@ import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { NetworkLayer, RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { buildUSDC } from 'uniswap/src/features/tokens/stablecoin'
 import { isInterface } from 'utilities/src/platform'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { defineChain } from 'viem'
@@ -36,12 +37,7 @@ export const citreaTestnet = defineChain({
 const tokens = buildChainTokens({
   stables: {
     // Placeholder stablecoin for Citrea Testnet - will be updated with actual token addresses
-    usdc: {
-      name: 'USD Coin (Testnet)',
-      symbol: 'USDC',
-      decimals: 6,
-      address: '0x0000000000000000000000000000000000000001', // Placeholder address
-    },
+    USDC: buildUSDC('0x0000000000000000000000000000000000000001', UniverseChainId.CitreaTestnet),
   },
 })
 

@@ -12,9 +12,9 @@ import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { PositionField } from 'types/position'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import {
+  Chain,
   useAllV3TicksQuery,
   useAllV4TicksQuery,
-  Chain,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -56,7 +56,7 @@ function usePaginatedTickQuery({
   const supportedChainId = useSupportedChainId(chainId)
   const rawChain = toGraphQLChain(supportedChainId ?? defaultChainId)
   const isValidChain = rawChain !== 'CITREA_TESTNET'
-  const chain = isValidChain ? rawChain as Chain : null as any
+  const chain = isValidChain ? (rawChain as Chain) : (null as any)
 
   const v3Result = useAllV3TicksQuery({
     variables: {

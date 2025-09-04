@@ -32,7 +32,7 @@ export function usePoolsFromTokenAddress({
 }) {
   const rawChain = toGraphQLChain(chainId)
   const isValidChain = rawChain !== 'CITREA_TESTNET'
-  const chain = isValidChain ? rawChain as Chain : 'ETHEREUM' as Chain
+  const chain = isValidChain ? (rawChain as Chain) : ('ETHEREUM' as Chain)
   const {
     loading: loadingV4,
     error: errorV4,
