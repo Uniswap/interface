@@ -24,7 +24,7 @@ import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Shine, Text, TouchableArea, styled as tamaguiStyled, useIsTouchDevice, useMedia } from 'ui/src'
-import { Chain, ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -93,15 +93,14 @@ const PoolDetailsTitle = ({
 }) => {
   const theme = useTheme()
   const { defaultChainId } = useEnabledChains()
-  const rawChain = toGraphQLChain(chainId ?? defaultChainId)
-  const chain = rawChain !== 'CITREA_TESTNET' ? (rawChain as Chain) : ('ETHEREUM' as Chain)
+  const graphQLChain = toGraphQLChain(chainId ?? defaultChainId)
   return (
     <Flex row gap="$spacing12" alignItems="center" width="max-content">
       <Flex row>
         <StyledLink
           to={getTokenDetailsURL({
             address: token0?.address,
-            chain,
+            chain: graphQLChain,
           })}
         >
           <Text variant="heading1" fontSize={24} $md={{ variant: 'subheading1' }}>
@@ -111,7 +110,7 @@ const PoolDetailsTitle = ({
         <StyledLink
           to={getTokenDetailsURL({
             address: token1?.address,
-            chain,
+            chain: graphQLChain,
           })}
         >
           <Text variant="heading1" fontSize={24} $md={{ variant: 'subheading1' }}>

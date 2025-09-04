@@ -137,14 +137,13 @@ function callsV4PositionManagerContract(assetActivity: TransactionActivity) {
     return false
   }
 
-  // monad testnet and citrea testnet do not have v4 support
-  if (supportedChain === UniverseChainId.MonadTestnet || supportedChain === UniverseChainId.CitreaTestnet) {
+  // monad testnet does not have v4 support
+  if (supportedChain === UniverseChainId.MonadTestnet) {
     return false
   }
 
   return (
     isEVMChain(supportedChain) &&
-    supportedChain in CHAIN_TO_ADDRESSES_MAP &&
     isSameAddress(assetActivity.details.to, CHAIN_TO_ADDRESSES_MAP[supportedChain].v4PositionManagerAddress)
   )
 }

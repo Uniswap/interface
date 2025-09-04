@@ -5,10 +5,7 @@ import { useAccount } from 'hooks/useAccount'
 import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
 import { useWatchTransactionsCallback } from 'state/sagas/transactions/watcherSaga'
 import { usePendingTransactions } from 'state/transactions/hooks'
-import {
-  Chain,
-  usePortfolioBalancesLazyQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { usePortfolioBalancesLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances/balances'
@@ -77,7 +74,7 @@ function TokenBalancesProviderInternal({ children }: PropsWithChildren) {
     lazyFetch({
       variables: {
         ownerAddress: account.address,
-        chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as Chain[],
+        chains: gqlChains,
         valueModifiers,
       },
     })

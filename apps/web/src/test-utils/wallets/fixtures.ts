@@ -27,6 +27,14 @@ export const METAMASK_CONNECTOR: WalletConnectorMeta = {
   analyticsWalletType: 'Browser Extension',
 }
 
+export const COINBASE_WALLET_CONNECTOR: WalletConnectorMeta = {
+  wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' },
+  name: 'Coinbase Wallet',
+  icon: CONNECTOR_ICON_OVERRIDE_MAP[CONNECTION_PROVIDER_NAMES.COINBASE_SDK],
+  isInjected: false,
+  analyticsWalletType: 'Coinbase Wallet',
+}
+
 export const UNISWAP_EXTENSION_CONNECTOR: WalletConnectorMeta = {
   wagmi: { id: CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS, type: 'injected' },
   name: CONNECTION_PROVIDER_NAMES.UNISWAP_EXTENSION,

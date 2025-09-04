@@ -24,7 +24,6 @@ import { CurrencyState } from 'state/swap/types'
 import { Flex, useIsTouchDevice, useMedia } from 'ui/src'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isUniverseChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
@@ -173,14 +172,10 @@ function TDPSwapComponent() {
         address: newDefaultToken.wrapped.address,
         chainId: newDefaultToken.chainId,
       })
-      const rawChain = toGraphQLChain(
-        isUniverseChainId(newDefaultToken.chainId) ? newDefaultToken.chainId : currencyChainId,
-      )
-      const chain = rawChain !== 'CITREA_TESTNET' ? (rawChain as Chain) : ('ETHEREUM' as Chain)
       const url = getTokenDetailsURL({
         // The function falls back to "NATIVE" if the address is null
         address: newDefaultToken.isNative ? null : newDefaultToken.address,
-        chain,
+        chain: toGraphQLChain(isUniverseChainId(newDefaultToken.chainId) ? newDefaultToken.chainId : currencyChainId),
         inputAddress: inputCurrencyURLAddress,
         outputAddress: outputCurrencyURLAddress,
       })

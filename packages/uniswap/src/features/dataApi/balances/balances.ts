@@ -6,7 +6,6 @@ import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
-  Chain,
   ContractInput,
   IAmount,
   PortfolioBalancesDocument,
@@ -128,13 +127,7 @@ export function useGraphQLPortfolioData({
     fetchPolicy: internalFetchPolicy,
     notifyOnNetworkStatusChange: true,
     pollInterval: internalPollInterval,
-    variables: address
-      ? {
-          ownerAddress: address,
-          valueModifiers,
-          chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as Chain[],
-        }
-      : undefined,
+    variables: address ? { ownerAddress: address, valueModifiers, chains: gqlChains } : undefined,
     skip: !address || queryOptions.skip,
     // Prevents wiping out the cache with partial data on error.
     errorPolicy: 'none',
@@ -275,13 +268,7 @@ export function useGraphQLPortfolioTotalValue({
     fetchPolicy: internalFetchPolicy,
     notifyOnNetworkStatusChange: true,
     pollInterval: internalPollInterval,
-    variables: address
-      ? {
-          ownerAddress: address,
-          valueModifiers,
-          chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as Chain[],
-        }
-      : undefined,
+    variables: address ? { ownerAddress: address, valueModifiers, chains: gqlChains } : undefined,
     skip: !address || !enabled,
     // Prevents wiping out the cache with partial data on error.
     errorPolicy: 'none',
@@ -638,7 +625,7 @@ function useGraphQLPortfolioCacheUpdater(address: string): PortfolioCacheUpdater
         query: PortfolioBalancesDocument,
         variables: {
           ownerAddress: address,
-          chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as Chain[],
+          chains: gqlChains,
         },
       })?.portfolios?.[0]
 

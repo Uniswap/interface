@@ -1,0 +1,580 @@
+{
+  "data": {
+    "portfolios": [
+      {
+        "id": "UG9ydGZvbGlvOjB4ZjM5RmQ2ZTUxYWFkODhGNkY0Y2U2YUI4ODI3Mjc5Y2ZmRmI5MjI2Ng==",
+        "assetActivities": [
+          {
+            "id": "QXNzZXRBY3Rpdml0eTpWSEpoYm5OaFkzUnBiMjQ2TUhnM09EQm1NamcwTURSak1qRXpPRGd6TVRVM00yRXdOakJtTVRaaE1UQTNaV0ZtTW1Jd01qazFZbUZqTmpjNU5tUm1ZamN5TW1WbVl6VmpPVE5tTmpRM1h6QjRaak01Wm1RMlpUVXhZV0ZrT0RobU5tWTBZMlUyWVdJNE9ESTNNamM1WTJabVptSTVNakkyTmw4d2VEQXdNREF3TURBek1HWTBPV0ptTW1Vd01ESmxOakJqTm1Wa01UWTJNV1ppTWpNME5tUTRPREk9",
+            "timestamp": 1684364195,
+            "chain": "ETHEREUM",
+            "details": {
+              "__typename": "TransactionDetails",
+              "id": "VHJhbnNhY3Rpb246MHg3ODBmMjg0MDRjMjEzODgzMTU3M2EwNjBmMTZhMTA3ZWFmMmIwMjk1YmFjNjc5NmRmYjcyMmVmYzVjOTNmNjQ3XzB4ZjM5ZmQ2ZTUxYWFkODhmNmY0Y2U2YWI4ODI3Mjc5Y2ZmZmI5MjI2Nl8weDAwMDAwMDAzMGY0OWJmMmUwMDJlNjBjNmVkMTY2MWZiMjM0NmQ4ODI=",
+              "type": "UNKNOWN",
+              "blockNumber": 17282434,
+              "hash": "0x780f28404c2138831573a060f16a107eaf2b0295bac6796dfb722efc5c93f647",
+              "status": "CONFIRMED",
+              "to": "0x000000030f49bf2e002e60c6ed1661fb2346d882",
+              "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "nonce": 465,
+              "assetChanges": []
+            },
+            "__typename": "AssetActivity"
+          },
+          {
+            "id": "QXNzZXRBY3Rpdml0eTpWSEpoYm5OaFkzUnBiMjQ2TUhobFl6QTROMkpoTjJJMk4yUTFPVEEwTVdNMU5XTXdObU16TkdNNVlXVmhPVEUxTkRreVpUYzRNRFl4WldRd016TTBNMlprWmprMU1qa3dPR1U0WTJSa1h6QjRaR0psWmpNM05HWmtaamhrTnpNMVpUYzFPRGxoT1dFNVpUSmpOV0V3T1RGbFlqSmtZbVUxTjE4d2VHWXpPV1prTm1VMU1XRmhaRGc0WmpabU5HTmxObUZpT0RneU56STNPV05tWm1aaU9USXlOalk9",
+            "timestamp": 1684364135,
+            "chain": "ETHEREUM",
+            "details": {
+              "__typename": "TransactionDetails",
+              "id": "VHJhbnNhY3Rpb246MHhlYzA4N2JhN2I2N2Q1OTA0MWM1NWMwNmMzNGM5YWVhOTE1NDkyZTc4MDYxZWQwMzM0M2ZkZjk1MjkwOGU4Y2RkXzB4ZGJlZjM3NGZkZjhkNzM1ZTc1ODlhOWE5ZTJjNWEwOTFlYjJkYmU1N18weGYzOWZkNmU1MWFhZDg4ZjZmNGNlNmFiODgyNzI3OWNmZmZiOTIyNjY=",
+              "type": "RECEIVE",
+              "blockNumber": 17282429,
+              "hash": "0xec087ba7b67d59041c55c06c34c9aea915492e78061ed03343fdf952908e8cdd",
+              "status": "CONFIRMED",
+              "to": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "from": "0xdbef374fdf8d735e7589a9a9e2c5a091eb2dbe57",
+              "nonce": 66,
+              "assetChanges": [
+                {
+                  "__typename": "TokenTransfer",
+                  "id": "VG9rZW5UcmFuc2ZlcjoweGRiZWYzNzRmZGY4ZDczNWU3NTg5YTlhOWUyYzVhMDkxZWIyZGJlNTdfMHhmMzlmZDZlNTFhYWQ4OGY2ZjRjZTZhYjg4MjcyNzljZmZmYjkyMjY2XzB4ZWMwODdiYTdiNjdkNTkwNDFjNTVjMDZjMzRjOWFlYTkxNTQ5MmU3ODA2MWVkMDMzNDNmZGY5NTI5MDhlOGNkZA==",
+                  "asset": {
+                    "id": "VG9rZW46RVRIRVJFVU1fbnVsbA==",
+                    "name": "Ether",
+                    "symbol": "ETH",
+                    "address": null,
+                    "decimals": 18,
+                    "chain": "ETHEREUM",
+                    "standard": null,
+                    "project": {
+                      "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNX251bGw=",
+                      "isSpam": false,
+                      "logo": {
+                        "id": "SW1hZ2U6aHR0cHM6Ly90b2tlbi1pY29ucy5zMy5hbWF6b25hd3MuY29tL2V0aC5wbmc=",
+                        "url": "https://token-icons.s3.amazonaws.com/eth.png",
+                        "__typename": "Image"
+                      },
+                      "__typename": "TokenProject"
+                    },
+                    "__typename": "Token"
+                  },
+                  "tokenStandard": "NATIVE",
+                  "quantity": "0.001",
+                  "sender": "0xdbef374fdf8d735e7589a9a9e2c5a091eb2dbe57",
+                  "recipient": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                  "direction": "IN",
+                  "transactedValue": {
+                    "id": "QW1vdW50OjEuODI5NjcwMDAwMDAwMDAwMV9VU0Q=",
+                    "currency": "USD",
+                    "value": 1.8296700000000001,
+                    "__typename": "Amount"
+                  }
+                }
+              ]
+            },
+            "__typename": "AssetActivity"
+          },
+          {
+            "id": "QXNzZXRBY3Rpdml0eTpWSEpoYm5OaFkzUnBiMjQ2TUhoaE9URXdPVFEwT1Rka01UVmpNelpsWWprd1pXUXpZVEkwWW1Wa09ESTBOalpqWmpKaU9URXpNV1l4WkRVMk1EUmlNelppWW1aallqRTBOMkUzTURnNFh6QjRaV1JoTldVeE9ERXhORFppTVdZNVlUZG1OREJtT0RWak1HUmhNek0wT1RNNE5ESXdaRFV4TkY4d2VHWXpPV1prTm1VMU1XRmhaRGc0WmpabU5HTmxObUZpT0RneU56STNPV05tWm1aaU9USXlOalk9",
+            "timestamp": 1684319903,
+            "chain": "ETHEREUM",
+            "details": {
+              "id": "VHJhbnNhY3Rpb246MHhhOTEwOTQ0OTdkMTVjMzZlYjkwZWQzYTI0YmVkODI0NjZjZjJiOTEzMWYxZDU2MDRiMzZiYmZjYjE0N2E3MDg4XzB4ZWRhNWUxODExNDZiMWY5YTdmNDBmODVjMGRhMzM0OTM4NDIwZDUxNF8weGYzOWZkNmU1MWFhZDg4ZjZmNGNlNmFiODgyNzI3OWNmZmZiOTIyNjY=",
+              "type": "RECEIVE",
+              "blockNumber": 17278819,
+              "hash": "0xa91094497d15c36eb90ed3a24bed82466cf2b9131f1d5604b36bbfcb147a7088",
+              "status": "CONFIRMED",
+              "to": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "from": "0xeda5e181146b1f9a7f40f85c0da334938420d514",
+              "nonce": 5,
+              "__typename": "TransactionDetails",
+              "assetChanges": [
+                {
+                  "__typename": "TokenTransfer",
+                  "id": "VG9rZW5UcmFuc2ZlcjoweGVkYTVlMTgxMTQ2YjFmOWE3ZjQwZjg1YzBkYTMzNDkzODQyMGQ1MTRfMHhmMzlmZDZlNTFhYWQ4OGY2ZjRjZTZhYjg4MjcyNzljZmZmYjkyMjY2XzB4YTkxMDk0NDk3ZDE1YzM2ZWI5MGVkM2EyNGJlZDgyNDY2Y2YyYjkxMzFmMWQ1NjA0YjM2YmJmY2IxNDdhNzA4OA==",
+                  "asset": {
+                    "id": "VG9rZW46RVRIRVJFVU1fbnVsbA==",
+                    "name": "Ether",
+                    "symbol": "ETH",
+                    "address": null,
+                    "decimals": 18,
+                    "chain": "ETHEREUM",
+                    "standard": null,
+                    "project": {
+                      "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNX251bGw=",
+                      "isSpam": false,
+                      "logo": {
+                        "id": "SW1hZ2U6aHR0cHM6Ly90b2tlbi1pY29ucy5zMy5hbWF6b25hd3MuY29tL2V0aC5wbmc=",
+                        "url": "https://token-icons.s3.amazonaws.com/eth.png",
+                        "__typename": "Image"
+                      },
+                      "__typename": "TokenProject"
+                    },
+                    "__typename": "Token"
+                  },
+                  "tokenStandard": "NATIVE",
+                  "quantity": "0.15",
+                  "sender": "0xeda5e181146b1f9a7f40f85c0da334938420d514",
+                  "recipient": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                  "direction": "IN",
+                  "transactedValue": {
+                    "id": "QW1vdW50OjI3NC40NTA1X1VTRA==",
+                    "currency": "USD",
+                    "value": 274.4505,
+                    "__typename": "Amount"
+                  }
+                }
+              ]
+            },
+            "__typename": "AssetActivity"
+          },
+          {
+            "id": "QXNzZXRBY3Rpdml0eTpWSEpoYm5OaFkzUnBiMjQ2TUhnMFkyUm1Nell6T0dRME1ERXdOV1U1WkRZMVlUZGxObUV6WVdFMlpHTXpNREZpWVRNNVpHTXlNV1ppT0dGaE5USTBNVFppT1ROaE5tWXhOVEUwTWpReVh6QjRaak01Wm1RMlpUVXhZV0ZrT0RobU5tWTBZMlUyWVdJNE9ESTNNamM1WTJabVptSTVNakkyTmw4d2VHUmxOR1F6WVRJME5XUXlZall4WW1WaE1tTmlaREl4TmpVNE1XVXlaR1ZrTmpWbFl6azFNRFE9",
+            "timestamp": 1684319903,
+            "chain": "ETHEREUM",
+            "details": {
+              "id": "VHJhbnNhY3Rpb246MHg0Y2RmMzYzOGQ0MDEwNWU5ZDY1YTdlNmEzYWE2ZGMzMDFiYTM5ZGMyMWZiOGFhNTI0MTZiOTNhNmYxNTE0MjQyXzB4ZjM5ZmQ2ZTUxYWFkODhmNmY0Y2U2YWI4ODI3Mjc5Y2ZmZmI5MjI2Nl8weGRlNGQzYTI0NWQyYjYxYmVhMmNiZDIxNjU4MWUyZGVkNjVlYzk1MDQ=",
+              "type": "SEND",
+              "blockNumber": 17278819,
+              "hash": "0x4cdf3638d40105e9d65a7e6a3aa6dc301ba39dc21fb8aa52416b93a6f1514242",
+              "status": "CONFIRMED",
+              "to": "0xde4d3a245d2b61bea2cbd216581e2ded65ec9504",
+              "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "nonce": 464,
+              "__typename": "TransactionDetails",
+              "assetChanges": [
+                {
+                  "__typename": "TokenTransfer",
+                  "id": "VG9rZW5UcmFuc2ZlcjoweGYzOWZkNmU1MWFhZDg4ZjZmNGNlNmFiODgyNzI3OWNmZmZiOTIyNjZfMHhkZTRkM2EyNDVkMmI2MWJlYTJjYmQyMTY1ODFlMmRlZDY1ZWM5NTA0XzB4NGNkZjM2MzhkNDAxMDVlOWQ2NWE3ZTZhM2FhNmRjMzAxYmEzOWRjMjFmYjhhYTUyNDE2YjkzYTZmMTUxNDI0Mg==",
+                  "asset": {
+                    "id": "VG9rZW46RVRIRVJFVU1fbnVsbA==",
+                    "name": "Ether",
+                    "symbol": "ETH",
+                    "address": null,
+                    "decimals": 18,
+                    "chain": "ETHEREUM",
+                    "standard": null,
+                    "project": {
+                      "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNX251bGw=",
+                      "isSpam": false,
+                      "logo": {
+                        "id": "SW1hZ2U6aHR0cHM6Ly90b2tlbi1pY29ucy5zMy5hbWF6b25hd3MuY29tL2V0aC5wbmc=",
+                        "url": "https://token-icons.s3.amazonaws.com/eth.png",
+                        "__typename": "Image"
+                      },
+                      "__typename": "TokenProject"
+                    },
+                    "__typename": "Token"
+                  },
+                  "tokenStandard": "NATIVE",
+                  "quantity": "0.00134999999999999",
+                  "sender": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                  "recipient": "0xde4d3a245d2b61bea2cbd216581e2ded65ec9504",
+                  "direction": "OUT",
+                  "transactedValue": {
+                    "id": "QW1vdW50OjIuNDcwMDU0NDk5OTk5OTgyX1VTRA==",
+                    "currency": "USD",
+                    "value": 2.470054499999982,
+                    "__typename": "Amount"
+                  }
+                }
+              ]
+            },
+            "__typename": "AssetActivity"
+          },
+          {
+            "id": "QXNzZXRBY3Rpdml0eTpWSEpoYm5OaFkzUnBiMjQ2TUhnM04yRXhPVGRoWmpjek9EUXpNRFk0WVRCaVlqUmlaV1V6WWpabFptWmxaakpsTkdZMFptTXlNR1UxWVRGbVltSTBOak14WXpoak1UQTROMk15WWpjM1h6QjRaak01Wm1RMlpUVXhZV0ZrT0RobU5tWTBZMlUyWVdJNE9ESTNNamM1WTJabVptSTVNakkyTmw4d2VHWTFZekZoTnpCbU5qY3pPV0k1TW1ZNU4yTmtOVE5qTXpFMk1ETTJNbU14TXpBMVpUa3hZVGc9",
+            "timestamp": 1684202579,
+            "chain": "ETHEREUM",
+            "details": {
+              "id": "VHJhbnNhY3Rpb246MHg3N2ExOTdhZjczODQzMDY4YTBiYjRiZWUzYjZlZmZlZjJlNGY0ZmMyMGU1YTFmYmI0NjMxYzhjMTA4N2MyYjc3XzB4ZjM5ZmQ2ZTUxYWFkODhmNmY0Y2U2YWI4ODI3Mjc5Y2ZmZmI5MjI2Nl8weGY1YzFhNzBmNjczOWI5MmY5N2NkNTNjMzE2MDM2MmMxMzA1ZTkxYTg=",
+              "type": "SEND",
+              "blockNumber": 17269191,
+              "hash": "0x77a197af73843068a0bb4bee3b6effef2e4f4fc20e5a1fbb4631c8c1087c2b77",
+              "status": "CONFIRMED",
+              "to": "0xf5c1a70f6739b92f97cd53c3160362c1305e91a8",
+              "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "nonce": 463,
+              "__typename": "TransactionDetails",
+              "assetChanges": [
+                {
+                  "__typename": "TokenTransfer",
+                  "id": "VG9rZW5UcmFuc2ZlcjoweGYzOWZkNmU1MWFhZDg4ZjZmNGNlNmFiODgyNzI3OWNmZmZiOTIyNjZfMHhmNWMxYTcwZjY3MzliOTJmOTdjZDUzYzMxNjAzNjJjMTMwNWU5MWE4XzB4NzdhMTk3YWY3Mzg0MzA2OGEwYmI0YmVlM2I2ZWZmZWYyZTRmNGZjMjBlNWExZmJiNDYzMWM4YzEwODdjMmI3Nw==",
+                  "asset": {
+                    "id": "VG9rZW46RVRIRVJFVU1fbnVsbA==",
+                    "name": "Ether",
+                    "symbol": "ETH",
+                    "address": null,
+                    "decimals": 18,
+                    "chain": "ETHEREUM",
+                    "standard": null,
+                    "project": {
+                      "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNX251bGw=",
+                      "isSpam": false,
+                      "logo": {
+                        "id": "SW1hZ2U6aHR0cHM6Ly90b2tlbi1pY29ucy5zMy5hbWF6b25hd3MuY29tL2V0aC5wbmc=",
+                        "url": "https://token-icons.s3.amazonaws.com/eth.png",
+                        "__typename": "Image"
+                      },
+                      "__typename": "TokenProject"
+                    },
+                    "__typename": "Token"
+                  },
+                  "tokenStandard": "NATIVE",
+                  "quantity": "0.001216034894406018",
+                  "sender": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                  "recipient": "0xf5c1a70f6739b92f97cd53c3160362c1305e91a8",
+                  "direction": "OUT",
+                  "transactedValue": {
+                    "id": "QW1vdW50OjIuMjI0OTQyNTY1MjQ3ODU5X1VTRA==",
+                    "currency": "USD",
+                    "value": 2.224942565247859,
+                    "__typename": "Amount"
+                  }
+                }
+              ]
+            },
+            "__typename": "AssetActivity"
+          },
+          {
+            "id": "QXNzZXRBY3Rpdml0eTpWSEpoYm5OaFkzUnBiMjQ2TUhnMlpXSmtZbVJrTVRZMk0yVmxNV1ZrT0RVeE16TXlZelUyWmpkall6YzJaV1ZqTVROaE5qTm1PVEkxTldOa1ltWXlZVEUxWWpReFl6azBPVGhrWW1Wa1h6QjROREZpTXpBNU1qTTJZemczWWpGaVl6Wm1ZVGhsWWpnMk5UZ3pNMlUwTkRFMU9HWmhPVGt4WVY4d2VHWXpPV1prTm1VMU1XRmhaRGc0WmpabU5HTmxObUZpT0RneU56STNPV05tWm1aaU9USXlOalk9",
+            "timestamp": 1684202579,
+            "chain": "ETHEREUM",
+            "details": {
+              "id": "VHJhbnNhY3Rpb246MHg2ZWJkYmRkMTY2M2VlMWVkODUxMzMyYzU2ZjdjYzc2ZWVjMTNhNjNmOTI1NWNkYmYyYTE1YjQxYzk0OThkYmVkXzB4NDFiMzA5MjM2Yzg3YjFiYzZmYThlYjg2NTgzM2U0NDE1OGZhOTkxYV8weGYzOWZkNmU1MWFhZDg4ZjZmNGNlNmFiODgyNzI3OWNmZmZiOTIyNjY=",
+              "type": "RECEIVE",
+              "blockNumber": 17269191,
+              "hash": "0x6ebdbdd1663ee1ed851332c56f7cc76eec13a63f9255cdbf2a15b41c9498dbed",
+              "status": "CONFIRMED",
+              "to": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "from": "0x41b309236c87b1bc6fa8eb865833e44158fa991a",
+              "nonce": 111266,
+              "__typename": "TransactionDetails",
+              "assetChanges": [
+                {
+                  "__typename": "TokenTransfer",
+                  "id": "VG9rZW5UcmFuc2ZlcjoweDQxYjMwOTIzNmM4N2IxYmM2ZmE4ZWI4NjU4MzNlNDQxNThmYTk5MWFfMHhmMzlmZDZlNTFhYWQ4OGY2ZjRjZTZhYjg4MjcyNzljZmZmYjkyMjY2XzB4NmViZGJkZDE2NjNlZTFlZDg1MTMzMmM1NmY3Y2M3NmVlYzEzYTYzZjkyNTVjZGJmMmExNWI0MWM5NDk4ZGJlZA==",
+                  "asset": {
+                    "id": "VG9rZW46RVRIRVJFVU1fbnVsbA==",
+                    "name": "Ether",
+                    "symbol": "ETH",
+                    "address": null,
+                    "decimals": 18,
+                    "chain": "ETHEREUM",
+                    "standard": null,
+                    "project": {
+                      "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNX251bGw=",
+                      "isSpam": false,
+                      "logo": {
+                        "id": "SW1hZ2U6aHR0cHM6Ly90b2tlbi1pY29ucy5zMy5hbWF6b25hd3MuY29tL2V0aC5wbmc=",
+                        "url": "https://token-icons.s3.amazonaws.com/eth.png",
+                        "__typename": "Image"
+                      },
+                      "__typename": "TokenProject"
+                    },
+                    "__typename": "Token"
+                  },
+                  "tokenStandard": "NATIVE",
+                  "quantity": "0.00275365",
+                  "sender": "0x41b309236c87b1bc6fa8eb865833e44158fa991a",
+                  "recipient": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                  "direction": "IN",
+                  "transactedValue": {
+                    "id": "QW1vdW50OjUuMDM4MjcwNzk1NV9VU0Q=",
+                    "currency": "USD",
+                    "value": 5.0382707955,
+                    "__typename": "Amount"
+                  }
+                }
+              ]
+            },
+            "__typename": "AssetActivity"
+          },
+          {
+            "id": "QXNzZXRBY3Rpdml0eTpWSEpoYm5OaFkzUnBiMjQ2TUhnNU5EUmlNR00wTVROa1l6QmpNekU0TUdFelkyTTNZakUyT1RCbVlqZzBNRFExWm1FME9UTXpObUV5WmprNE16VmpORFpqTURsak1UY3lObUUzTm1aalh6QjRaak01Wm1RMlpUVXhZV0ZrT0RobU5tWTBZMlUyWVdJNE9ESTNNamM1WTJabVptSTVNakkyTmw4d2VEWXlNakJsTURoak9XUTJNMkZpTjJKaE1tVTFOalk0TXpsbU5ESTVaV1ZsWm1VeE9UbGlOMlU9",
+            "timestamp": 1684171943,
+            "chain": "ETHEREUM",
+            "details": {
+              "id": "VHJhbnNhY3Rpb246MHg5NDRiMGM0MTNkYzBjMzE4MGEzY2M3YjE2OTBmYjg0MDQ1ZmE0OTMzNmEyZjk4MzVjNDZjMDljMTcyNmE3NmZjXzB4ZjM5ZmQ2ZTUxYWFkODhmNmY0Y2U2YWI4ODI3Mjc5Y2ZmZmI5MjI2Nl8weDYyMjBlMDhjOWQ2M2FiN2JhMmU1NjY4MzlmNDI5ZWVlZmUxOTliN2U=",
+              "type": "SEND",
+              "blockNumber": 17266680,
+              "hash": "0x944b0c413dc0c3180a3cc7b1690fb84045fa49336a2f9835c46c09c1726a76fc",
+              "status": "CONFIRMED",
+              "to": "0x6220e08c9d63ab7ba2e566839f429eeefe199b7e",
+              "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "nonce": 462,
+              "__typename": "TransactionDetails",
+              "assetChanges": [
+                {
+                  "__typename": "TokenTransfer",
+                  "id": "VG9rZW5UcmFuc2ZlcjoweGYzOWZkNmU1MWFhZDg4ZjZmNGNlNmFiODgyNzI3OWNmZmZiOTIyNjZfMHg2MjIwZTA4YzlkNjNhYjdiYTJlNTY2ODM5ZjQyOWVlZWZlMTk5YjdlXzB4OTQ0YjBjNDEzZGMwYzMxODBhM2NjN2IxNjkwZmI4NDA0NWZhNDkzMzZhMmY5ODM1YzQ2YzA5YzE3MjZhNzZmYw==",
+                  "asset": {
+                    "id": "VG9rZW46RVRIRVJFVU1fbnVsbA==",
+                    "name": "Ether",
+                    "symbol": "ETH",
+                    "address": null,
+                    "decimals": 18,
+                    "chain": "ETHEREUM",
+                    "standard": null,
+                    "project": {
+                      "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNX251bGw=",
+                      "isSpam": false,
+                      "logo": {
+                        "id": "SW1hZ2U6aHR0cHM6Ly90b2tlbi1pY29ucy5zMy5hbWF6b25hd3MuY29tL2V0aC5wbmc=",
+                        "url": "https://token-icons.s3.amazonaws.com/eth.png",
+                        "__typename": "Image"
+                      },
+                      "__typename": "TokenProject"
+                    },
+                    "__typename": "Token"
+                  },
+                  "tokenStandard": "NATIVE",
+                  "quantity": "0.003476850926189204",
+                  "sender": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                  "recipient": "0x6220e08c9d63ab7ba2e566839f429eeefe199b7e",
+                  "direction": "OUT",
+                  "transactedValue": {
+                    "id": "QW1vdW50OjYuMzYxNDg5ODM0MTIwNjAxX1VTRA==",
+                    "currency": "USD",
+                    "value": 6.361489834120601,
+                    "__typename": "Amount"
+                  }
+                }
+              ]
+            },
+            "__typename": "AssetActivity"
+          },
+          {
+            "id": "QXNzZXRBY3Rpdml0eTpWSEpoYm5OaFkzUnBiMjQ2TUhneE0yRTRNRGxsT1RZd05USmhOVGxrWlRjNU56WXhObVZrTlRjME1qTTVNakV3WkRJMVpUY3hNRGhqTkRjek9EbG1NbVJoTnpjeU5qTXhZbVZpTUdZMlh6QjRaak01Wm1RMlpUVXhZV0ZrT0RobU5tWTBZMlUyWVdJNE9ESTNNamM1WTJabVptSTVNakkyTmw4d2VEWXlNakJsTURoak9XUTJNMkZpTjJKaE1tVTFOalk0TXpsbU5ESTVaV1ZsWm1VeE9UbGlOMlU9",
+            "timestamp": 1684171943,
+            "chain": "ETHEREUM",
+            "details": {
+              "id": "VHJhbnNhY3Rpb246MHgxM2E4MDllOTYwNTJhNTlkZTc5NzYxNmVkNTc0MjM5MjEwZDI1ZTcxMDhjNDczODlmMmRhNzcyNjMxYmViMGY2XzB4ZjM5ZmQ2ZTUxYWFkODhmNmY0Y2U2YWI4ODI3Mjc5Y2ZmZmI5MjI2Nl8weDYyMjBlMDhjOWQ2M2FiN2JhMmU1NjY4MzlmNDI5ZWVlZmUxOTliN2U=",
+              "type": "SEND",
+              "blockNumber": 17266680,
+              "hash": "0x13a809e96052a59de797616ed574239210d25e7108c47389f2da772631beb0f6",
+              "status": "CONFIRMED",
+              "to": "0x6220e08c9d63ab7ba2e566839f429eeefe199b7e",
+              "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "nonce": 461,
+              "__typename": "TransactionDetails",
+              "assetChanges": [
+                {
+                  "__typename": "TokenTransfer",
+                  "id": "VG9rZW5UcmFuc2ZlcjoweGYzOWZkNmU1MWFhZDg4ZjZmNGNlNmFiODgyNzI3OWNmZmZiOTIyNjZfMHg2MjIwZTA4YzlkNjNhYjdiYTJlNTY2ODM5ZjQyOWVlZWZlMTk5YjdlXzB4MTNhODA5ZTk2MDUyYTU5ZGU3OTc2MTZlZDU3NDIzOTIxMGQyNWU3MTA4YzQ3Mzg5ZjJkYTc3MjYzMWJlYjBmNg==",
+                  "asset": {
+                    "id": "VG9rZW46RVRIRVJFVU1fbnVsbA==",
+                    "name": "Ether",
+                    "symbol": "ETH",
+                    "address": null,
+                    "decimals": 18,
+                    "chain": "ETHEREUM",
+                    "standard": null,
+                    "project": {
+                      "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNX251bGw=",
+                      "isSpam": false,
+                      "logo": {
+                        "id": "SW1hZ2U6aHR0cHM6Ly90b2tlbi1pY29ucy5zMy5hbWF6b25hd3MuY29tL2V0aC5wbmc=",
+                        "url": "https://token-icons.s3.amazonaws.com/eth.png",
+                        "__typename": "Image"
+                      },
+                      "__typename": "TokenProject"
+                    },
+                    "__typename": "Token"
+                  },
+                  "tokenStandard": "NATIVE",
+                  "quantity": "0.000900000000000318",
+                  "sender": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                  "recipient": "0x6220e08c9d63ab7ba2e566839f429eeefe199b7e",
+                  "direction": "OUT",
+                  "transactedValue": {
+                    "id": "QW1vdW50OjEuNjQ2NzAzMDAwMDAwNTgxOF9VU0Q=",
+                    "currency": "USD",
+                    "value": 1.6467030000005818,
+                    "__typename": "Amount"
+                  }
+                }
+              ]
+            },
+            "__typename": "AssetActivity"
+          },
+          {
+            "id": "QXNzZXRBY3Rpdml0eTpWSEpoYm5OaFkzUnBiMjQ2TUhobFkyRTJNVEZrTlRVME1EZGxPVGt6WlRFM1lqWmtaVGhpWVRJMFlqWXlOREpqWVRSbFlXWTBORGN3TkRKbFpHRmtNRFE0TTJNNFptSTJabUU0WkRJNVh6QjROekU0WVRVeE5ESXhNR0kwTnpWaU9USXhOVGd6WldGaU5ERXlaV0ptTUdaaVlXUm1NMkl6T1Y4d2VHWXpPV1prTm1VMU1XRmhaRGc0WmpabU5HTmxObUZpT0RneU56STNPV05tWm1aaU9USXlOalk9",
+            "timestamp": 1684171931,
+            "chain": "ETHEREUM",
+            "details": {
+              "id": "VHJhbnNhY3Rpb246MHhlY2E2MTFkNTU0MDdlOTkzZTE3YjZkZThiYTI0YjYyNDJjYTRlYWY0NDcwNDJlZGFkMDQ4M2M4ZmI2ZmE4ZDI5XzB4NzE4YTUxNDIxMGI0NzViOTIxNTgzZWFiNDEyZWJmMGZiYWRmM2IzOV8weGYzOWZkNmU1MWFhZDg4ZjZmNGNlNmFiODgyNzI3OWNmZmZiOTIyNjY=",
+              "type": "RECEIVE",
+              "blockNumber": 17266679,
+              "hash": "0xeca611d55407e993e17b6de8ba24b6242ca4eaf447042edad0483c8fb6fa8d29",
+              "status": "CONFIRMED",
+              "to": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "from": "0x718a514210b475b921583eab412ebf0fbadf3b39",
+              "nonce": 92,
+              "__typename": "TransactionDetails",
+              "assetChanges": [
+                {
+                  "__typename": "TokenTransfer",
+                  "id": "VG9rZW5UcmFuc2ZlcjoweDcxOGE1MTQyMTBiNDc1YjkyMTU4M2VhYjQxMmViZjBmYmFkZjNiMzlfMHhmMzlmZDZlNTFhYWQ4OGY2ZjRjZTZhYjg4MjcyNzljZmZmYjkyMjY2XzB4ZWNhNjExZDU1NDA3ZTk5M2UxN2I2ZGU4YmEyNGI2MjQyY2E0ZWFmNDQ3MDQyZWRhZDA0ODNjOGZiNmZhOGQyOQ==",
+                  "asset": {
+                    "id": "VG9rZW46RVRIRVJFVU1fbnVsbA==",
+                    "name": "Ether",
+                    "symbol": "ETH",
+                    "address": null,
+                    "decimals": 18,
+                    "chain": "ETHEREUM",
+                    "standard": null,
+                    "project": {
+                      "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNX251bGw=",
+                      "isSpam": false,
+                      "logo": {
+                        "id": "SW1hZ2U6aHR0cHM6Ly90b2tlbi1pY29ucy5zMy5hbWF6b25hd3MuY29tL2V0aC5wbmc=",
+                        "url": "https://token-icons.s3.amazonaws.com/eth.png",
+                        "__typename": "Image"
+                      },
+                      "__typename": "TokenProject"
+                    },
+                    "__typename": "Token"
+                  },
+                  "tokenStandard": "NATIVE",
+                  "quantity": "0.01",
+                  "sender": "0x718a514210b475b921583eab412ebf0fbadf3b39",
+                  "recipient": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                  "direction": "IN",
+                  "transactedValue": {
+                    "id": "QW1vdW50OjE4LjI5NjdfVVNE",
+                    "currency": "USD",
+                    "value": 18.2967,
+                    "__typename": "Amount"
+                  }
+                }
+              ]
+            },
+            "__typename": "AssetActivity"
+          },
+          {
+            "id": "QXNzZXRBY3Rpdml0eTpWSEpoYm5OaFkzUnBiMjQ2TUhnMllqTTJNelEwT1daaU1HWTROems0TkRnM1pqWmlOREkwTkRjMFkySXdNbVF5WlRVNE1EZ3dPVEpoWVRneE1EVm1ObUU0T1dOalpHTTBORGRsTURSa1h6QjRaak01Wm1RMlpUVXhZV0ZrT0RobU5tWTBZMlUyWVdJNE9ESTNNamM1WTJabVptSTVNakkyTmw4d2VEQXdNREF3TURBek1HWTBPV0ptTW1Vd01ESmxOakJqTm1Wa01UWTJNV1ppTWpNME5tUTRPREk9",
+            "timestamp": 1684085063,
+            "chain": "ETHEREUM",
+            "details": {
+              "id": "VHJhbnNhY3Rpb246MHg2YjM2MzQ0OWZiMGY4Nzk4NDg3ZjZiNDI0NDc0Y2IwMmQyZTU4MDgwOTJhYTgxMDVmNmE4OWNjZGM0NDdlMDRkXzB4ZjM5ZmQ2ZTUxYWFkODhmNmY0Y2U2YWI4ODI3Mjc5Y2ZmZmI5MjI2Nl8weDAwMDAwMDAzMGY0OWJmMmUwMDJlNjBjNmVkMTY2MWZiMjM0NmQ4ODI=",
+              "type": "UNKNOWN",
+              "blockNumber": 17259555,
+              "hash": "0x6b363449fb0f8798487f6b424474cb02d2e5808092aa8105f6a89ccdc447e04d",
+              "status": "CONFIRMED",
+              "to": "0x000000030f49bf2e002e60c6ed1661fb2346d882",
+              "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "nonce": 460,
+              "__typename": "TransactionDetails",
+              "assetChanges": []
+            },
+            "__typename": "AssetActivity"
+          },
+          {
+            "id": "QXNzZXRBY3Rpdml0eTpWSEpoYm5OaFkzUnBiMjQ2TUhnNFlXRTVNVFJqTkRjeU5qWTNNVGxqWkRFeE1EYzNOMkprTnpZek0yVTFOV1kyWkdWbVpXRmpPVEV4TlRjd09EZzNZVEEyWXpNNE5UTmxaV0kyTldZeVh6QjRaR0V4TTJRMk5HVmpPVFZqWkRZM056VXlPVEZpTVdNek1qRXdNamN4TWpGaVpUSXdPV1JtTUY4d2VHWXpPV1prTm1VMU1XRmhaRGc0WmpabU5HTmxObUZpT0RneU56STNPV05tWm1aaU9USXlOalk9",
+            "timestamp": 1684085051,
+            "chain": "ETHEREUM",
+            "details": {
+              "id": "VHJhbnNhY3Rpb246MHg4YWE5MTRjNDcyNjY3MTljZDExMDc3N2JkNzYzM2U1NWY2ZGVmZWFjOTExNTcwODg3YTA2YzM4NTNlZWI2NWYyXzB4ZGExM2Q2NGVjOTVjZDY3NzUyOTFiMWMzMjEwMjcxMjFiZTIwOWRmMF8weGYzOWZkNmU1MWFhZDg4ZjZmNGNlNmFiODgyNzI3OWNmZmZiOTIyNjY=",
+              "type": "RECEIVE",
+              "blockNumber": 17259554,
+              "hash": "0x8aa914c47266719cd110777bd7633e55f6defeac911570887a06c3853eeb65f2",
+              "status": "CONFIRMED",
+              "to": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "from": "0xda13d64ec95cd6775291b1c321027121be209df0",
+              "nonce": 832,
+              "__typename": "TransactionDetails",
+              "assetChanges": [
+                {
+                  "__typename": "TokenTransfer",
+                  "id": "VG9rZW5UcmFuc2ZlcjoweGRhMTNkNjRlYzk1Y2Q2Nzc1MjkxYjFjMzIxMDI3MTIxYmUyMDlkZjBfMHhmMzlmZDZlNTFhYWQ4OGY2ZjRjZTZhYjg4MjcyNzljZmZmYjkyMjY2XzB4OGFhOTE0YzQ3MjY2NzE5Y2QxMTA3NzdiZDc2MzNlNTVmNmRlZmVhYzkxMTU3MDg4N2EwNmMzODUzZWViNjVmMg==",
+                  "asset": {
+                    "id": "VG9rZW46RVRIRVJFVU1fbnVsbA==",
+                    "name": "Ether",
+                    "symbol": "ETH",
+                    "address": null,
+                    "decimals": 18,
+                    "chain": "ETHEREUM",
+                    "standard": null,
+                    "project": {
+                      "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNX251bGw=",
+                      "isSpam": false,
+                      "logo": {
+                        "id": "SW1hZ2U6aHR0cHM6Ly90b2tlbi1pY29ucy5zMy5hbWF6b25hd3MuY29tL2V0aC5wbmc=",
+                        "url": "https://token-icons.s3.amazonaws.com/eth.png",
+                        "__typename": "Image"
+                      },
+                      "__typename": "TokenProject"
+                    },
+                    "__typename": "Token"
+                  },
+                  "tokenStandard": "NATIVE",
+                  "quantity": "0.00129866",
+                  "sender": "0xda13d64ec95cd6775291b1c321027121be209df0",
+                  "recipient": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                  "direction": "IN",
+                  "transactedValue": {
+                    "id": "QW1vdW50OjIuMzc2MTE5MjQyMl9VU0Q=",
+                    "currency": "USD",
+                    "value": 2.3761192422,
+                    "__typename": "Amount"
+                  }
+                }
+              ]
+            },
+            "__typename": "AssetActivity"
+          },
+          {
+            "id": "QXNzZXRBY3Rpdml0eTpWSEpoYm5OaFkzUnBiMjQ2TUhnM00yTXdZMlJpTnpReU9UVTJZVFUxWXpZd016YzBOemd6TkRRNVpUSmpNbVZtTURnM1lqUTVPRFl4TVdGak5EZ3dZalJrTVRFMU1UbGhZemRpTXpZNVh6QjRaak01Wm1RMlpUVXhZV0ZrT0RobU5tWTBZMlUyWVdJNE9ESTNNamM1WTJabVptSTVNakkyTmw4d2VHUXpaR1UwTkRneE5qTXlNakl5TURVME9UazJZVE0yTlRsaE5UTXlNR0k1TWpWbU5qUXhNR1k9",
+            "timestamp": 1684006019,
+            "chain": "ETHEREUM",
+            "details": {
+              "id": "VHJhbnNhY3Rpb246MHg3M2MwY2RiNzQyOTU2YTU1YzYwMzc0NzgzNDQ5ZTJjMmVmMDg3YjQ5ODYxMWFjNDgwYjRkMTE1MTlhYzdiMzY5XzB4ZjM5ZmQ2ZTUxYWFkODhmNmY0Y2U2YWI4ODI3Mjc5Y2ZmZmI5MjI2Nl8weGQzZGU0NDgxNjMyMjIyMDU0OTk2YTM2NTlhNTMyMGI5MjVmNjQxMGY=",
+              "type": "SEND",
+              "blockNumber": 17253116,
+              "hash": "0x73c0cdb742956a55c60374783449e2c2ef087b498611ac480b4d11519ac7b369",
+              "status": "CONFIRMED",
+              "to": "0xd3de4481632222054996a3659a5320b925f6410f",
+              "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "nonce": 459,
+              "__typename": "TransactionDetails",
+              "assetChanges": [
+                {
+                  "__typename": "TokenTransfer",
+                  "id": "VG9rZW5UcmFuc2ZlcjoweGYzOWZkNmU1MWFhZDg4ZjZmNGNlNmFiODgyNzI3OWNmZmZiOTIyNjZfMHhiZTgyODI1NjRlYzJiNzAwMDlmMmQ2ODk1NDAxMmViMDlmNDhiYzhkXzB4NzNjMGNkYjc0Mjk1NmE1NWM2MDM3NDc4MzQ0OWUyYzJlZjA4N2I0OTg2MTFhYzQ4MGI0ZDExNTE5YWM3YjM2OQ==",
+                  "asset": {
+                    "id": "VG9rZW46RVRIRVJFVU1fMHhkM2RlNDQ4MTYzMjIyMjA1NDk5NmEzNjU5YTUzMjBiOTI1ZjY0MTBm",
+                    "name": "EL CHAPO",
+                    "symbol": "CHAPO",
+                    "address": "0xd3de4481632222054996a3659a5320b925f6410f",
+                    "decimals": 18,
+                    "chain": "ETHEREUM",
+                    "standard": null,
+                    "project": {
+                      "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4ZDNkZTQ0ODE2MzIyMjIwNTQ5OTZhMzY1OWE1MzIwYjkyNWY2NDEwZg==",
+                      "isSpam": true,
+                      "logo": null,
+                      "__typename": "TokenProject"
+                    },
+                    "__typename": "Token"
+                  },
+                  "tokenStandard": "ERC20",
+                  "quantity": "50000000000000.002683081102196736",
+                  "sender": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                  "recipient": "0xbe8282564ec2b70009f2d68954012eb09f48bc8d",
+                  "direction": "OUT",
+                  "transactedValue": null
+                }
+              ]
+            },
+            "__typename": "AssetActivity"
+          }
+        ],
+        "__typename": "Portfolio"
+      }
+    ]
+  },
+  "errors": []
+}

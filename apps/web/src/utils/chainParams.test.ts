@@ -1,4 +1,4 @@
-import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { getChainIdFromBackendChain, getChainIdFromChainUrlParam, getChainUrlParam } from 'utils/chainParams'
 
@@ -36,12 +36,12 @@ describe('getChainUrlParam', () => {
 
 describe('getChainIdFromBackendChain', () => {
   it('should return url param for ethereum', () => {
-    const chain = toGraphQLChain(UniverseChainId.Mainnet) as GqlChainId
-    expect(getChainIdFromBackendChain(chain)).toBe(UniverseChainId.Mainnet)
+    expect(getChainIdFromBackendChain(toGraphQLChain(UniverseChainId.Mainnet))).toBe(UniverseChainId.Mainnet)
   })
 
   it('should return url param for unichain sepolia', () => {
-    const chain = toGraphQLChain(UniverseChainId.UnichainSepolia) as GqlChainId
-    expect(getChainIdFromBackendChain(chain)).toBe(UniverseChainId.UnichainSepolia)
+    expect(getChainIdFromBackendChain(toGraphQLChain(UniverseChainId.UnichainSepolia))).toBe(
+      UniverseChainId.UnichainSepolia,
+    )
   })
 })

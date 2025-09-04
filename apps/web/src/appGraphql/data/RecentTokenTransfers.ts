@@ -6,14 +6,13 @@ import {
   useRecentTokenTransfersQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { GqlChainId } from 'uniswap/src/features/chains/types'
 
 export function useRecentTokenTransfers(address?: string) {
   const { gqlChains } = useEnabledChains()
   const { data, loading } = useRecentTokenTransfersQuery({
     variables: {
       address: address ?? '',
-      chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as GqlChainId[],
+      chains: gqlChains,
     },
     skip: !address,
   })

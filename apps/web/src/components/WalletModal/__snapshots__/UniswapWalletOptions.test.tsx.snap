@@ -48,7 +48,7 @@ exports[`UniswapWalletOptions Test > Download wallet option should be visible if
                   class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
                   data-disable-theme="true"
                 >
-                  common.getUniswapWallet
+                  Get Uniswap Wallet
                 </span>
                 <span
                   class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
@@ -87,7 +87,7 @@ exports[`UniswapWalletOptions Test > Download wallet option should be visible if
                 class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
                 data-disable-theme="true"
               >
-                JuiceSwap Mobile
+                Uniswap Mobile
               </span>
               <span
                 class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
@@ -145,7 +145,7 @@ exports[`UniswapWalletOptions Test > Extension connecter should be shown if dete
               class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
               data-disable-theme="true"
             >
-              JuiceSwap Extension
+              Uniswap Extension
             </span>
           </div>
           <div
@@ -186,7 +186,7 @@ exports[`UniswapWalletOptions Test > Extension connecter should be shown if dete
                 class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
                 data-disable-theme="true"
               >
-                JuiceSwap Mobile
+                Uniswap Mobile
               </span>
               <span
                 class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
