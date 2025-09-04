@@ -41,6 +41,7 @@ const tokens = buildChainTokens({
   },
 })
 
+// Complete Citrea Testnet configuration for JuiceSwap
 export const CITREA_TESTNET_INFO = {
   ...citreaTestnet,
   id: UniverseChainId.CitreaTestnet,
