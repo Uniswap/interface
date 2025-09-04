@@ -1,10 +1,13 @@
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { calculateTotalBalancesUsdPerChainRest, useTotalBalancesUsdPerChain } from 'uniswap/src/data/balances/utils'
-import { reportBalancesForAnalytics } from 'uniswap/src/features/accounts/reportBalancesForAnalytics'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { Chain, usePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  Chain,
+  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
+  usePortfolioBalancesQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useGetPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
+import { reportBalancesForAnalytics } from 'uniswap/src/features/accounts/reportBalancesForAnalytics'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
@@ -61,7 +64,13 @@ export function useLastBalancesReporter({ isOnboarded }: { isOnboarded: boolean 
 
   const portfolioBalancesGraphQLQuery = usePortfolioBalancesQuery({
     fetchPolicy: 'cache-first',
-    variables: account?.address ? { ownerAddress: account.address, chains: gqlChains.filter(chain => chain !== 'CITREA_TESTNET') as Chain[], valueModifiers } : undefined,
+    variables: account?.address
+      ? {
+          ownerAddress: account.address,
+          chains: gqlChains.filter((chain) => chain !== 'CITREA_TESTNET') as Chain[],
+          valueModifiers,
+        }
+      : undefined,
     skip: isRestEnabled || !account?.address,
   })
 
