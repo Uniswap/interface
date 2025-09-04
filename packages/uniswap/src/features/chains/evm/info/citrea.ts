@@ -1,20 +1,24 @@
+import { ETHEREUM_LOGO, ETH_LOGO } from 'ui/src/assets'
 import {
   DEFAULT_MS_BEFORE_WARNING,
   DEFAULT_NATIVE_ADDRESS_LEGACY,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
+  GqlChainId,
   NetworkLayer,
   RPCType,
   UniverseChainId,
 } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { buildUSDC } from 'uniswap/src/features/tokens/stablecoin'
 import { isInterface } from 'utilities/src/platform'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { defineChain } from 'viem'
 
 const CITREA_TESTNET_RPC = 'https://rpc.testnet.citrea.xyz'
+const CITREA_RPC_URLS = [CITREA_TESTNET_RPC]
 
 export const citreaTestnet = defineChain({
   id: UniverseChainId.CitreaTestnet,
@@ -40,7 +44,8 @@ export const citreaTestnet = defineChain({
 
 const tokens = buildChainTokens({
   stables: {
-    // Citrea testnet tokens will be added later
+    // Placeholder stablecoin for Citrea Testnet - will be updated with actual token addresses
+    USDC: buildUSDC('0x0000000000000000000000000000000000000001', UniverseChainId.CitreaTestnet),
   },
 })
 
@@ -50,7 +55,7 @@ export const CITREA_TESTNET_INFO = {
   platform: Platform.EVM,
   assetRepoNetworkName: undefined,
   backendChain: {
-    chain: 'CITREA_TESTNET' as any, // Custom chain ID for backend (not in GQL schema yet)
+    chain: 'ETHEREUM' as GqlChainId, // Fallback to Ethereum until CITREA_TESTNET is supported in backend
     backendSupported: false,
     nativeTokenBackendAddress: undefined,
   },
@@ -63,24 +68,26 @@ export const CITREA_TESTNET_INFO = {
   elementName: ElementName.ChainCitreaTestnet,
   explorer: {
     name: 'Citrea Explorer',
-    url: 'https://explorer.testnet.citrea.xyz',
+    url: 'https://explorer.testnet.citrea.xyz/',
     apiURL: 'https://explorer.testnet.citrea.xyz/api',
   },
   helpCenterUrl: 'https://docs.citrea.xyz',
   infoLink: 'https://citrea.xyz',
   interfaceName: 'citrea-testnet',
   label: 'Citrea Testnet',
-  logo: '/images/landing_page/citrea-logo.png',
+  logo: ETHEREUM_LOGO, // Placeholder logo, use Ethereum until Citrea logo is available
   nativeCurrency: {
     name: 'Citrea Bitcoin',
     symbol: 'cBTC',
     decimals: 18,
     address: DEFAULT_NATIVE_ADDRESS_LEGACY,
+    logo: ETH_LOGO, // Placeholder logo
   },
   networkLayer: NetworkLayer.L2,
   rpcUrls: {
-    [RPCType.Interface]: { http: [CITREA_TESTNET_RPC] },
-    [RPCType.Public]: { http: [CITREA_TESTNET_RPC] },
+    default: { http: CITREA_RPC_URLS },
+    [RPCType.Interface]: { http: CITREA_RPC_URLS },
+    [RPCType.Public]: { http: CITREA_RPC_URLS },
   },
   spotPriceStablecoinAmount: undefined,
   stablecoins: tokens.stablecoins,
@@ -97,7 +104,5 @@ export const CITREA_TESTNET_INFO = {
   testnet: true,
   tradingApiPollingIntervalMs: 500,
   urlParam: 'citrea-testnet',
-  pendingTransactionsRetryOptions: {
-    retryOptions: { retries: 3 },
-  },
+  pendingTransactionsRetryOptions: undefined,
 } as const
