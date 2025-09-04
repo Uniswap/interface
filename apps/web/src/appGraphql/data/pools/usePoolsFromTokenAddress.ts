@@ -72,7 +72,7 @@ export function usePoolsFromTokenAddress({
       tokenAddress,
       chain,
     },
-    skip: !chainId || !isValidChain,
+    skip: !isValidChain,
   })
   const loading = loadingV4 || loadingV3 || loadingV2
 

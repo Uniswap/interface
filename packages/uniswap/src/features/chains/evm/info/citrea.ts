@@ -35,7 +35,13 @@ export const citreaTestnet = defineChain({
 
 const tokens = buildChainTokens({
   stables: {
-    // Citrea testnet tokens will be added later
+    // Placeholder stablecoin for Citrea Testnet - will be updated with actual token addresses
+    usdc: {
+      name: 'USD Coin (Testnet)',
+      symbol: 'USDC',
+      decimals: 6,
+      address: '0x0000000000000000000000000000000000000001', // Placeholder address
+    },
   },
 })
 

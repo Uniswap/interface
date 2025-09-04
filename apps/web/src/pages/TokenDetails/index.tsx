@@ -177,7 +177,6 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     }
   }, [
     currency,
-    currencyChainInfo.backendChain.chain,
     currencyChainInfo.id,
     tokenAddress,
     currencyWasFetchedOnChain,
@@ -185,6 +184,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     chartState,
     multiChainMap,
     tokenColor,
+    gqlChain,
   ])
 }
 
