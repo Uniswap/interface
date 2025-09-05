@@ -5,16 +5,31 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     pool: 'threads',
+    poolOptions: {
+      threads: {
+        // Reduce threads in CI environment to prevent memory issues
+        maxThreads: process.env.CI ? 2 : undefined,
+        minThreads: process.env.CI ? 1 : undefined,
+      },
+    },
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.ts', './vite/mockAssets.tsx'],
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     exclude: ['e2e', '**/*.e2e.test.ts', '**/*.e2e.test.tsx', '**/e2e/**', 'node_modules', 'dist', '.next', '.turbo'],
-    testTimeout: 15000,
+    // Increase timeout in CI environments
+    testTimeout: process.env.CI ? 30000 : 15000,
+    // Prevent memory leaks in CI
+    teardownTimeout: process.env.CI ? 10000 : 5000,
     deps: {
       inline: [/packages\/ui/, /packages\/utilities/, /packages\/uniswap/],
     },
-    reporters: ['verbose'],
+    reporters: process.env.CI ? [['default', { summary: false }]] : ['verbose'],
+    // Reduce memory usage in CI
+    maxConcurrency: process.env.CI ? 5 : 50,
+    // Force garbage collection after each file in CI - removed due to config issues
+    // Enable file parallelization but limit in CI
+    fileParallelism: process.env.CI ? false : true,
     coverage: {
       include: ['src/**/*.ts*'],
       exclude: [
