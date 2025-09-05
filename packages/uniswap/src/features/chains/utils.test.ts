@@ -180,11 +180,11 @@ describe('getEnabledChains', () => {
     ).toEqual({
       chains: [
         UniverseChainId.Sepolia,
-        UniverseChainId.CitreaTestnet,
         UniverseChainId.UnichainSepolia,
         UniverseChainId.MonadTestnet,
+        UniverseChainId.CitreaTestnet,
       ],
-      gqlChains: [Chain.EthereumSepolia, Chain.Ethereum, Chain.AstrochainSepolia, Chain.MonadTestnet],
+      gqlChains: [Chain.EthereumSepolia, Chain.AstrochainSepolia, Chain.MonadTestnet],
       defaultChainId: UniverseChainId.Sepolia,
       isTestnetModeEnabled: true,
     })

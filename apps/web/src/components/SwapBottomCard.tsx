@@ -94,7 +94,7 @@ const CHAIN_THEME_LIGHT: Record<UniverseChainId, ChainTheme> = {
   [UniverseChainId.Blast]: { bgColor: 'rgba(252, 252, 3, 0.16)', textColor: 'rgba(17, 20, 12, 1)' },
   [UniverseChainId.Bnb]: { bgColor: '#EAB20033', textColor: '#EAB200' },
   [UniverseChainId.Celo]: { bgColor: '#FCFF5233', textColor: '#FCFF52' },
-  [UniverseChainId.CitreaTestnet]: { bgColor: '#ff6f0033', textColor: '#ff6f00' },
+  [UniverseChainId.CitreaTestnet]: { bgColor: '#FF893433', textColor: '#FF8934' }, // Orange citrus theme
   [UniverseChainId.MonadTestnet]: { bgColor: '#200052', textColor: '#836EF9' },
   [UniverseChainId.Optimism]: { bgColor: '#FF042033', textColor: '#FF0420' },
   [UniverseChainId.Polygon]: { bgColor: '#9558FF33', textColor: '#9558FF' },

@@ -1,0 +1,117 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [develop]
+
+jobs:
+  lint-and-typecheck:
+    name: Lint and Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Generate GraphQL types
+        run: yarn workspace uniswap graphql:generate
+
+      - name: Generate Trading API types
+        run: |
+          yarn workspace uniswap tradingapi:generate:openapi
+          yarn workspace uniswap tradingapi:add-local-types
+
+      - name: Generate AJV validators
+        run: yarn workspace @uniswap/interface ajv
+
+      - name: Type checking
+        run: yarn g:typecheck
+
+      - name: Linting
+        run: yarn g:lint
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    strategy:
+      fail-fast: false
+      matrix:
+        chunk:
+          - { name: "Components", cmd: "yarn web test:set1", timeout: 10 }
+          - { name: "Pages & State", cmd: "yarn web test:set2", timeout: 8 }
+          - { name: "Hooks & Utils", cmd: "yarn web test:set3", timeout: 9 }
+          - { name: "Integration", cmd: "yarn web test:set4", timeout: 7 }
+    
+    timeout-minutes: ${{ matrix.chunk.timeout }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Generate GraphQL types
+        run: yarn workspace uniswap graphql:generate
+
+      - name: Generate Trading API types
+        run: |
+          yarn workspace uniswap tradingapi:generate:openapi
+          yarn workspace uniswap tradingapi:add-local-types
+
+      - name: Generate AJV validators
+        run: yarn workspace @uniswap/interface ajv
+
+      - name: Run ${{ matrix.chunk.name }} Tests
+        run: ${{ matrix.chunk.cmd }}
+
+  build:
+    name: Build Production
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, test]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Generate GraphQL types
+        run: yarn workspace uniswap graphql:generate
+
+      - name: Generate Trading API types
+        run: |
+          yarn workspace uniswap tradingapi:generate:openapi
+          yarn workspace uniswap tradingapi:add-local-types
+
+      - name: Generate AJV validators
+        run: yarn workspace @uniswap/interface ajv
+
+      - name: Build production
+        run: yarn web build:production
+        env:
+          NODE_ENV: production
