@@ -60,7 +60,7 @@ export const CITREA_CHAIN_INFO = {
   },
   wrappedNativeCurrency: {
     name: 'Wrapped Bitcoin',
-    symbol: 'WcBTC', 
+    symbol: 'WcBTC',
     decimals: 18,
     // TODO: Replace with actual wrapped Bitcoin contract address on Citrea Testnet
     address: '0x0000000000000000000000000000000000000000',
