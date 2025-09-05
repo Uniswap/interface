@@ -137,8 +137,8 @@ function callsV4PositionManagerContract(assetActivity: TransactionActivity) {
     return false
   }
 
-  // monad testnet does not have v4 support
-  if (supportedChain === UniverseChainId.MonadTestnet) {
+  // monad testnet and citrea testnet do not have v4 support
+  if (supportedChain === UniverseChainId.MonadTestnet || supportedChain === UniverseChainId.CitreaTestnet) {
     return false
   }
 

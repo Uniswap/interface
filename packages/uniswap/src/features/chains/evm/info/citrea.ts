@@ -15,6 +15,7 @@ import { buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
 
 const tokens = buildChainTokens({
   stables: {
+    // TODO: Replace with actual USDT contract address on Citrea Testnet
     USDT: buildUSDT('0x0000000000000000000000000000000000000000', UniverseChainId.CitreaTestnet),
   },
 })
@@ -59,8 +60,9 @@ export const CITREA_CHAIN_INFO = {
   },
   wrappedNativeCurrency: {
     name: 'Wrapped Bitcoin',
-    symbol: 'WcBTC',
+    symbol: 'WcBTC', 
     decimals: 18,
+    // TODO: Replace with actual wrapped Bitcoin contract address on Citrea Testnet
     address: '0x0000000000000000000000000000000000000000',
   },
   blockPerMainnetEpochForChainId: 1,
@@ -69,6 +71,7 @@ export const CITREA_CHAIN_INFO = {
   explorer: {
     name: 'Citrea Explorer',
     url: 'https://explorer.testnet.citrea.xyz/',
+    // TODO: Add API URL if available: apiURL: 'https://api.explorer.testnet.citrea.xyz',
   },
   interfaceName: 'citrea',
   tokens,

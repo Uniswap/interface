@@ -41,6 +41,7 @@ export const ORDERED_CHAINS = [
   ZKSYNC_CHAIN_INFO,
   SEPOLIA_CHAIN_INFO,
   UNICHAIN_SEPOLIA_CHAIN_INFO,
+  CITREA_CHAIN_INFO,
   MONAD_CHAIN_INFO,
 ] as const satisfies UniverseChainInfo[]
 
