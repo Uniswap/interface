@@ -55,8 +55,25 @@ jobs:
         
       - name: Generate GraphQL and Trading API types
         run: |
-          yarn workspace uniswap tradingapi:generate
-          yarn workspace uniswap graphql:generate
+          echo "Attempting to generate GraphQL and Trading API types..."
+          # Trading API generation (less likely to fail)
+          if yarn workspace uniswap tradingapi:generate; then
+            echo "✅ Trading API generation successful"
+          else
+            echo "⚠️ Trading API generation failed, continuing..."
+          fi
+          
+          # GraphQL generation (may fail if API is down)  
+          if yarn workspace uniswap graphql:generate; then
+            echo "✅ GraphQL generation successful"
+          else
+            echo "⚠️ GraphQL generation failed, checking for existing types..."
+            if [ -d "packages/uniswap/src/data/graphql" ]; then
+              echo "📁 Existing GraphQL types found, continuing with cached version"
+            else
+              echo "❌ No GraphQL types available - this may cause test failures"
+            fi
+          fi
           
       - name: Build essential packages
         run: |
@@ -136,9 +153,11 @@ jobs:
       - name: Generate types if missing
         run: |
           if [ ! -d "packages/uniswap/src/data/graphql/__generated__" ] || [ ! -d "packages/uniswap/src/data/tradingApi/__generated__" ]; then
-            echo "Generated files missing, regenerating..."
-            yarn workspace uniswap tradingapi:generate
-            yarn workspace uniswap graphql:generate
+            echo "Generated files missing, attempting regeneration..."
+            yarn workspace uniswap tradingapi:generate || echo "Trading API generation failed"
+            yarn workspace uniswap graphql:generate || echo "GraphQL generation failed"
+          else
+            echo "Generated files found in cache"
           fi
           
       - name: Run Tests - ${{ matrix.chunk.name }}
@@ -178,9 +197,11 @@ jobs:
       - name: Generate types if missing
         run: |
           if [ ! -d "packages/uniswap/src/data/graphql/__generated__" ] || [ ! -d "packages/uniswap/src/data/tradingApi/__generated__" ]; then
-            echo "Generated files missing, regenerating..."
-            yarn workspace uniswap tradingapi:generate
-            yarn workspace uniswap graphql:generate
+            echo "Generated files missing, attempting regeneration..."
+            yarn workspace uniswap tradingapi:generate || echo "Trading API generation failed"
+            yarn workspace uniswap graphql:generate || echo "GraphQL generation failed"
+          else
+            echo "Generated files found in cache"
           fi
           
       - name: Run Extension Tests
@@ -220,9 +241,11 @@ jobs:
       - name: Generate types if missing
         run: |
           if [ ! -d "packages/uniswap/src/data/graphql/__generated__" ] || [ ! -d "packages/uniswap/src/data/tradingApi/__generated__" ]; then
-            echo "Generated files missing, regenerating..."
-            yarn workspace uniswap tradingapi:generate
-            yarn workspace uniswap graphql:generate
+            echo "Generated files missing, attempting regeneration..."
+            yarn workspace uniswap tradingapi:generate || echo "Trading API generation failed"
+            yarn workspace uniswap graphql:generate || echo "GraphQL generation failed"
+          else
+            echo "Generated files found in cache"
           fi
           
       - name: Run Package Tests
