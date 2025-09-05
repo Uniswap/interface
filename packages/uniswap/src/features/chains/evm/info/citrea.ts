@@ -36,7 +36,7 @@ export const citreaTestnet = defineChain({
 
 const tokens = buildChainTokens({
   stables: {
-    // Placeholder stablecoin for Citrea Testnet - will be updated with actual token addresses
+    // Placeholder stablecoin for Citrea Testnet - will be updated with actual token addresses when available
     USDC: buildUSDC('0x0000000000000000000000000000000000000001', UniverseChainId.CitreaTestnet),
   },
 })
@@ -92,7 +92,7 @@ export const CITREA_TESTNET_INFO = {
     name: 'Wrapped Citrea Bitcoin',
     symbol: 'WcBTC',
     decimals: 18,
-    address: '0x0000000000000000000000000000000000000000', // Placeholder address
+    address: '0x0000000000000000000000000000000000000001', // Placeholder address - will be updated when WcBTC is deployed
   },
   testnet: true,
   tradingApiPollingIntervalMs: 500,
