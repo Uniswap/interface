@@ -41,6 +41,8 @@ jobs:
             ~/.cache/yarn
             **/dist
             **/build
+            packages/uniswap/src/data/graphql/**/__generated__
+            packages/uniswap/src/data/tradingApi/__generated__
           key: ${{ steps.cache-keys.outputs.cache-key }}
           restore-keys: |
             deps-
@@ -51,6 +53,11 @@ jobs:
           yarn install --immutable
           echo "Dependencies installed successfully"
         
+      - name: Generate GraphQL and Trading API types
+        run: |
+          yarn workspace uniswap tradingapi:generate
+          yarn workspace uniswap graphql:generate
+          
       - name: Build essential packages
         run: |
           yarn workspace uniswap build
@@ -79,6 +86,8 @@ jobs:
             ~/.cache/yarn
             **/dist
             **/build
+            packages/uniswap/src/data/graphql/**/__generated__
+            packages/uniswap/src/data/tradingApi/__generated__
           key: ${{ needs.setup.outputs.cache-key }}
           
       - name: Lint & TypeCheck
@@ -120,7 +129,17 @@ jobs:
             ~/.cache/yarn
             **/dist
             **/build
+            packages/uniswap/src/data/graphql/**/__generated__
+            packages/uniswap/src/data/tradingApi/__generated__
           key: ${{ needs.setup.outputs.cache-key }}
+          
+      - name: Generate types if missing
+        run: |
+          if [ ! -d "packages/uniswap/src/data/graphql/__generated__" ] || [ ! -d "packages/uniswap/src/data/tradingApi/__generated__" ]; then
+            echo "Generated files missing, regenerating..."
+            yarn workspace uniswap tradingapi:generate
+            yarn workspace uniswap graphql:generate
+          fi
           
       - name: Run Tests - ${{ matrix.chunk.name }}
         env:
@@ -152,7 +171,17 @@ jobs:
             ~/.cache/yarn
             **/dist
             **/build
+            packages/uniswap/src/data/graphql/**/__generated__
+            packages/uniswap/src/data/tradingApi/__generated__
           key: ${{ needs.setup.outputs.cache-key }}
+          
+      - name: Generate types if missing
+        run: |
+          if [ ! -d "packages/uniswap/src/data/graphql/__generated__" ] || [ ! -d "packages/uniswap/src/data/tradingApi/__generated__" ]; then
+            echo "Generated files missing, regenerating..."
+            yarn workspace uniswap tradingapi:generate
+            yarn workspace uniswap graphql:generate
+          fi
           
       - name: Run Extension Tests
         env:
@@ -184,7 +213,17 @@ jobs:
             ~/.cache/yarn
             **/dist
             **/build
+            packages/uniswap/src/data/graphql/**/__generated__
+            packages/uniswap/src/data/tradingApi/__generated__
           key: ${{ needs.setup.outputs.cache-key }}
+          
+      - name: Generate types if missing
+        run: |
+          if [ ! -d "packages/uniswap/src/data/graphql/__generated__" ] || [ ! -d "packages/uniswap/src/data/tradingApi/__generated__" ]; then
+            echo "Generated files missing, regenerating..."
+            yarn workspace uniswap tradingapi:generate
+            yarn workspace uniswap graphql:generate
+          fi
           
       - name: Run Package Tests
         env:
