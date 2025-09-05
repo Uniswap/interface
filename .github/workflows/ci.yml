@@ -6,8 +6,9 @@ on:
   pull_request:
     branches: [main, develop]
 
+# Cancel any previous runs for the same branch/PR
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -45,7 +46,10 @@ jobs:
             deps-
             
       - name: Install dependencies
-        run: yarn install --immutable --immutable-cache
+        run: |
+          echo "Installing dependencies..."
+          yarn install --immutable
+          echo "Dependencies installed successfully"
         
       - name: Build essential packages
         run: |
