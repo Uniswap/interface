@@ -117,6 +117,7 @@ vi.mock('ui/src/assets', () => ({
   UNITAGS_SPENCER_DARK: 'unitags-spencer-dark.png',
   SMART_WALLET_UPGRADE_VIDEO: 'smart-wallet-upgrade-video.mp4',
   SMART_WALLET_UPGRADE_FALLBACK: 'smart-wallet-upgrade-fallback.png',
+  CITREA_LOGO: 'citrea-logo.svg',
 }))
 
 vi.mock('nft/components/iconExports', () => ({
