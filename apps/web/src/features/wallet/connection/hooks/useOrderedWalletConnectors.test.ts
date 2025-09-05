@@ -50,8 +50,8 @@ const createCustomWalletConnector = (overrides: Partial<WalletConnectorMeta> = {
   name: 'Test Custom Wallet',
   icon: 'test-icon',
   isInjected: false,
-  customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
-  analyticsWalletType: 'Passkey',
+  customConnectorId: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+  analyticsWalletType: 'Wallet Connect',
   ...overrides,
 })
 

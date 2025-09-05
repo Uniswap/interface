@@ -49,7 +49,6 @@ describe('ConnectWalletService', () => {
     mockConnectWagmiWallet = vi.fn().mockResolvedValue(undefined)
     mockConnectCustomWalletsMap = {
       [CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID]: vi.fn().mockResolvedValue(undefined),
-      [CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID]: vi.fn().mockResolvedValue(undefined),
     }
 
     connectWalletService = createConnectWalletService({
@@ -117,26 +116,6 @@ describe('ConnectWalletService', () => {
       expect(mockConnectWagmiWallet).not.toHaveBeenCalled()
     })
 
-    it('should connect embedded wallet when embedded wallet connector ID is provided', async () => {
-      // Arrange
-      const embeddedWalletConnector = createMockCustomWalletConnectorMeta({
-        customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
-      })
-      const expectedEmbeddedConnector = {
-        ...embeddedWalletConnector,
-        customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
-      }
-
-      // Act
-      await connectWalletService.connect({ walletConnector: embeddedWalletConnector })
-
-      // Assert
-      expect(mockConnectCustomWalletsMap[CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID]).toHaveBeenCalledWith(
-        expectedEmbeddedConnector,
-      )
-      expect(mockConnectWagmiWallet).not.toHaveBeenCalled()
-      expect(mockConnectSolanaWallet).not.toHaveBeenCalled()
-    })
 
     it('should handle custom wallet connection errors gracefully', async () => {
       // Arrange
