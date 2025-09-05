@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version-file: '.nvmrc'
           cache: 'yarn'
           
       - name: Generate cache key
@@ -45,10 +45,12 @@ jobs:
             deps-
             
       - name: Install dependencies
-        run: yarn install --frozen-lockfile --prefer-offline
+        run: yarn install --immutable --immutable-cache
         
-      - name: Build packages
-        run: yarn g:build
+      - name: Build essential packages
+        run: |
+          yarn workspace uniswap build
+          yarn workspace utilities build
 
   lint-and-typecheck:
     name: Lint & TypeCheck
@@ -61,7 +63,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version-file: '.nvmrc'
           cache: 'yarn'
           
       - name: Restore cache
@@ -102,7 +104,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version-file: '.nvmrc'
           cache: 'yarn'
           
       - name: Restore cache
@@ -134,7 +136,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version-file: '.nvmrc'
           cache: 'yarn'
           
       - name: Restore cache
@@ -166,7 +168,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version-file: '.nvmrc'
           cache: 'yarn'
           
       - name: Restore cache
