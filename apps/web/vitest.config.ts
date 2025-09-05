@@ -26,10 +26,11 @@ export default defineConfig({
     },
     reporters: process.env.CI ? [['default', { summary: false }]] : ['verbose'],
     // Reduce memory usage in CI
-    maxConcurrency: process.env.CI ? 5 : 50,
-    // Force garbage collection after each file in CI - removed due to config issues
-    // Enable file parallelization but limit in CI
+    maxConcurrency: process.env.CI ? 3 : 50,
+    // Disable file parallelism in CI for stability
     fileParallelism: process.env.CI ? false : true,
+    // Force cleanup after each test file in CI
+    isolate: process.env.CI ? true : false,
     coverage: {
       include: ['src/**/*.ts*'],
       exclude: [

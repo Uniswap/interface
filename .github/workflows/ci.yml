@@ -1,0 +1,210 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop, feature/*]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  setup:
+    name: Setup & Cache
+    runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.cache-keys.outputs.cache-key }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+          
+      - name: Generate cache key
+        id: cache-keys
+        run: |
+          echo "cache-key=deps-${{ hashFiles('**/yarn.lock', '**/package.json') }}" >> $GITHUB_OUTPUT
+          
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            */node_modules
+            ~/.cache/yarn
+            **/dist
+            **/build
+          key: ${{ steps.cache-keys.outputs.cache-key }}
+          restore-keys: |
+            deps-
+            
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --prefer-offline
+        
+      - name: Build packages
+        run: yarn g:build
+
+  lint-and-typecheck:
+    name: Lint & TypeCheck
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+          
+      - name: Restore cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            */node_modules
+            ~/.cache/yarn
+            **/dist
+            **/build
+          key: ${{ needs.setup.outputs.cache-key }}
+          
+      - name: Lint & TypeCheck
+        run: |
+          yarn g:lint --max-warnings=0 &
+          yarn g:typecheck &
+          wait
+
+  test-matrix:
+    name: Tests (${{ matrix.chunk.name }})
+    runs-on: ubuntu-latest
+    needs: setup
+    strategy:
+      fail-fast: false
+      matrix:
+        chunk:
+          - { name: "Components", cmd: "set1", timeout: 10 }
+          - { name: "Pages & State", cmd: "set2", timeout: 8 }
+          - { name: "Hooks & Utils", cmd: "set3", timeout: 9 }
+          - { name: "Integration", cmd: "set4", timeout: 7 }
+    timeout-minutes: ${{ matrix.chunk.timeout }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+          
+      - name: Restore cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            */node_modules
+            ~/.cache/yarn
+            **/dist
+            **/build
+          key: ${{ needs.setup.outputs.cache-key }}
+          
+      - name: Run Tests - ${{ matrix.chunk.name }}
+        env:
+          CI: true
+          NODE_OPTIONS: "--max-old-space-size=4096 --max-semi-space-size=512"
+        run: yarn workspace @uniswap/interface test:${{ matrix.chunk.cmd }}
+
+  test-extension:
+    name: Extension Tests
+    runs-on: ubuntu-latest
+    needs: setup
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+          
+      - name: Restore cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            */node_modules
+            ~/.cache/yarn
+            **/dist
+            **/build
+          key: ${{ needs.setup.outputs.cache-key }}
+          
+      - name: Run Extension Tests
+        env:
+          CI: true
+          NODE_OPTIONS: "--max-old-space-size=3072"
+        run: yarn workspace @uniswap/extension test
+
+  test-packages:
+    name: Core Packages
+    runs-on: ubuntu-latest  
+    needs: setup
+    timeout-minutes: 6
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+          
+      - name: Restore cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            */node_modules
+            ~/.cache/yarn
+            **/dist
+            **/build
+          key: ${{ needs.setup.outputs.cache-key }}
+          
+      - name: Run Package Tests
+        env:
+          CI: true
+          NODE_OPTIONS: "--max-old-space-size=2048"
+        run: |
+          yarn workspace uniswap test &
+          yarn workspace utilities test &
+          yarn workspace ui test &
+          wait
+
+  summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, test-matrix, test-extension, test-packages]
+    if: always()
+    steps:
+      - name: Check Results
+        run: |
+          if [[ "${{ needs.lint-and-typecheck.result }}" == "success" && 
+                "${{ needs.test-matrix.result }}" == "success" && 
+                "${{ needs.test-extension.result }}" == "success" && 
+                "${{ needs.test-packages.result }}" == "success" ]]; then
+            echo "All tests passed!"
+            exit 0
+          else
+            echo "Some tests failed"
+            exit 1
+          fi
