@@ -30,6 +30,7 @@ const BLOCK_EXPLORER_LOGOS_LIGHT: Record<UniverseChainId, GeneratedIcon> = {
   [UniverseChainId.Blast]: BlockExplorer,
   [UniverseChainId.Bnb]: EtherscanLogoLight,
   [UniverseChainId.Celo]: BlockExplorer,
+  [UniverseChainId.CitreaTestnet]: BlockExplorer, // TODO: Add Citrea Explorer logo when available
   [UniverseChainId.MonadTestnet]: BlockExplorer,
   [UniverseChainId.Optimism]: OpEtherscanLogoLight,
   [UniverseChainId.Polygon]: PolygonscanLogoLight,

@@ -10,7 +10,6 @@ export const WALLET_CONNECT_CONNECTOR: WalletConnectorMeta = {
   analyticsWalletType: 'Wallet Connect',
 }
 
-
 export const METAMASK_CONNECTOR: WalletConnectorMeta = {
   wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' },
   name: CONNECTION_PROVIDER_NAMES.METAMASK,

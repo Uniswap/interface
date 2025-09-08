@@ -73,7 +73,6 @@ describe('custom connectors', () => {
       expect(mockConnect).toHaveBeenCalledWith({}, { connector: { id: 'uniswap-wallet-connect' } })
     })
 
-
     it('should handle errors when uniswap wallet connection fails', async () => {
       // Arrange
       const { result } = renderHook(() => useConnectCustomWalletsMap())
@@ -85,7 +84,6 @@ describe('custom connectors', () => {
         'Connection failed',
       )
     })
-
   })
 
   describe('applyCustomConnectorMeta', () => {

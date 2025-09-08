@@ -116,7 +116,6 @@ describe('ConnectWalletService', () => {
       expect(mockConnectWagmiWallet).not.toHaveBeenCalled()
     })
 
-
     it('should handle custom wallet connection errors gracefully', async () => {
       // Arrange
       const error = new Error('Custom wallet connection failed')

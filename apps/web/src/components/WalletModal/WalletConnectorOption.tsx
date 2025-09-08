@@ -34,7 +34,6 @@ function RecentBadge() {
   )
 }
 
-
 function UniswapMobileIcon({ iconSize }: { iconSize: number }) {
   return isMobileWeb ? (
     <Image height={iconSize} source={UNISWAP_LOGO} width={iconSize} />
