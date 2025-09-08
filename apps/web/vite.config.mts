@@ -230,7 +230,7 @@ export default defineConfig(({ mode }) => {
     },
 
     server: {
-      port: 3000,
+      port: 3001,
     },
 
     build: {
@@ -257,7 +257,7 @@ export default defineConfig(({ mode }) => {
     envPrefix: [],
 
     preview: {
-      port: 3000,
+      port: 3001,
     },
   }
 })
