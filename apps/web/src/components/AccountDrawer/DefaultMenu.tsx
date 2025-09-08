@@ -4,7 +4,7 @@ import LocalCurrencyMenu from 'components/AccountDrawer/LocalCurrencyMenu'
 import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitsMenu'
 import { UniExtensionPoolsMenu } from 'components/AccountDrawer/MiniPortfolio/Pools/UniExtensionPoolsMenu'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import PasskeyMenu from 'components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+// PasskeyMenu removed as passkey functionality was removed
 import PortfolioBalanceMenu from 'components/AccountDrawer/PortfolioBalanceMenu'
 import SettingsMenu from 'components/AccountDrawer/SettingsMenu'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
@@ -30,7 +30,7 @@ function DefaultMenu() {
   const openPortfolioBalanceSettings = useCallback(() => setMenu(MenuState.PORTFOLIO_BALANCE), [setMenu])
   const closeLimitsMenu = useCallback(() => setMenu(MenuState.DEFAULT), [setMenu])
   const { isOpen: drawerOpen } = useAccountDrawer()
-  const openPasskeySettings = useCallback(() => setMenu(MenuState.PASSKEYS), [setMenu])
+  // openPasskeySettings removed as passkey functionality was removed
 
   const prevMenu = usePrevious(menu)
 
@@ -94,7 +94,7 @@ function DefaultMenu() {
             onClose={closeSettings}
             openLanguageSettings={openLanguageSettings}
             openLocalCurrencySettings={openLocalCurrencySettings}
-            openPasskeySettings={openPasskeySettings}
+            // openPasskeySettings removed
             openPortfolioBalanceSettings={openPortfolioBalanceSettings}
           />
         )
@@ -110,7 +110,7 @@ function DefaultMenu() {
       case MenuState.POOLS:
         return account.address ? <UniExtensionPoolsMenu account={account.address} onClose={closeLimitsMenu} /> : null
       case MenuState.PASSKEYS:
-        return <PasskeyMenu onClose={openSettings} />
+        return null // PasskeyMenu removed
     }
   }, [
     account.address,
@@ -120,7 +120,7 @@ function DefaultMenu() {
     openLanguageSettings,
     openLocalCurrencySettings,
     openPortfolioBalanceSettings,
-    openPasskeySettings,
+    // openPasskeySettings removed
     openSettings,
   ])
 

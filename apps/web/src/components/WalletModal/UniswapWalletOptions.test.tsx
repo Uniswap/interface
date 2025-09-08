@@ -3,7 +3,6 @@ import { useWalletConnectors } from 'features/wallet/connection/hooks/useWalletC
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 import {
-  EMBEDDED_WALLET_CONNECTOR,
   METAMASK_CONNECTOR,
   UNISWAP_EXTENSION_CONNECTOR,
   UNISWAP_WALLET_CONNECTOR,
@@ -24,7 +23,6 @@ describe('UniswapWalletOptions Test', () => {
   beforeEach(() => {
     mocked(useWalletConnectors).mockImplementation(() => [
       WALLET_CONNECT_CONNECTOR,
-      EMBEDDED_WALLET_CONNECTOR,
       METAMASK_CONNECTOR,
       UNISWAP_EXTENSION_CONNECTOR,
       UNISWAP_WALLET_CONNECTOR,
@@ -33,7 +31,6 @@ describe('UniswapWalletOptions Test', () => {
   it('Download wallet option should be visible if extension is not detected', () => {
     mocked(useWalletConnectors).mockImplementation(() => [
       WALLET_CONNECT_CONNECTOR,
-      EMBEDDED_WALLET_CONNECTOR,
       METAMASK_CONNECTOR,
       UNISWAP_WALLET_CONNECTOR,
     ])
