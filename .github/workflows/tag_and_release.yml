@@ -1,8 +1,6 @@
 name: "Tag and release"
 on:
-  push:
-    branches:
-      - 'main'
+  workflow_dispatch:
 
 jobs:
   deploy-to-prod:

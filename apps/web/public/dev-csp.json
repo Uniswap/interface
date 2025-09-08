@@ -3,7 +3,7 @@
     "http://127.0.0.1:8545",
     "http://127.0.0.1:8546",
     "http://localhost:3000",
-    "https://dev.bapp.juiceswap.xyz",
-    "https://bapp.juiceswap.xyz"
+    "https://dev.api.bapp.juiceswap.xyz",
+    "https://api.bapp.juiceswap.xyz"
   ]
 }

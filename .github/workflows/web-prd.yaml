@@ -49,9 +49,3 @@ jobs:
         with:
           inlineScript: |
             az storage blob upload-batch --account-name ${{ env.AZURE_ACCOUNT_NAME }} -d '$web' -s ./apps/web/build --overwrite
-
-      - name: Purge Azure CDN
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            az cdn endpoint purge --profile-name ${{ env.AZURE_CDN_PROFILE }} --name ${{ env.AZURE_CDN_ENDPOINT }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --content-paths "/*"
