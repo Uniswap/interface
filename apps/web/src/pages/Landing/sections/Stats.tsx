@@ -168,11 +168,15 @@ const RightBottom = styled(Flex, {
 function Cards({ inView }: { inView: boolean }) {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
-  const { totalVolume } = use24hProtocolVolume()
-  const { totalTVL } = useDailyTVLWithChange()
+  const { totalVolume, isLoading: volumeLoading } = use24hProtocolVolume()
+  const { totalTVL, isLoading: tvlLoading } = useDailyTVLWithChange()
   // Currently hardcoded, BE task [DAT-1435] to make this data available
   const allTimeVolume = 3.3 * 10 ** 12
   const allTimeSwappers = 119 * 10 ** 6
+
+  // Validate data before passing to StatCard
+  const validTotalVolume = !volumeLoading && totalVolume && !isNaN(totalVolume) ? totalVolume : undefined
+  const validTotalTVL = !tvlLoading && totalTVL && !isNaN(totalTVL) ? totalTVL : undefined
 
   return (
     <GridArea>
@@ -187,7 +191,7 @@ function Cards({ inView }: { inView: boolean }) {
       <RightTop>
         <StatCard
           title={t('stats.tvl')}
-          value={convertFiatAmountFormatted(totalTVL, NumberType.FiatTokenStats)}
+          value={convertFiatAmountFormatted(validTotalTVL, NumberType.FiatTokenStats)}
           delay={0.2}
           inView={inView}
         />
@@ -206,7 +210,7 @@ function Cards({ inView }: { inView: boolean }) {
       <RightBottom>
         <StatCard
           title={t('stats.24swapVolume')}
-          value={convertFiatAmountFormatted(totalVolume, NumberType.FiatTokenStats)}
+          value={convertFiatAmountFormatted(validTotalVolume, NumberType.FiatTokenStats)}
           live
           delay={0.6}
           inView={inView}
