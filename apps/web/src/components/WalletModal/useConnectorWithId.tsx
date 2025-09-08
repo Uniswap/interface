@@ -25,9 +25,9 @@ function getConnectorWithId(
 }
 
 /** Returns a wagmi `Connector` with the given id. If `shouldThrow` is passed, an error will be thrown if the connector is not found. */
-export function useConnectorWithId(id: ConnectorID, options: { shouldThrow: true }): Connector
-export function useConnectorWithId(id: ConnectorID): Connector | undefined
-export function useConnectorWithId(id: ConnectorID, options?: { shouldThrow: true }): Connector | undefined {
+function useConnectorWithId(id: ConnectorID, options: { shouldThrow: true }): Connector
+function useConnectorWithId(id: ConnectorID): Connector | undefined
+function useConnectorWithId(id: ConnectorID, options?: { shouldThrow: true }): Connector | undefined {
   const { connectors } = useConnect()
   return useMemo(
     () => (options?.shouldThrow ? getConnectorWithId(connectors, id, options) : getConnectorWithId(connectors, id)),
