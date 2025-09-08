@@ -10,7 +10,7 @@ export function getDeviceLocales(): DeviceLocale[] {
   } catch (e) {
     logger.error(e, {
       level: 'warn',
-      tags: { file: 'utils.ts', function: 'getDeviceLocales' },
+      tags: { file: 'locales.web.ts', function: 'getDeviceLocales' },
     })
   }
   return [
