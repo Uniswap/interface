@@ -56,6 +56,7 @@ const mapLocaleToSupportedDayjsLocale: Record<Locale, string> = {
   [Locale.EnglishUnitedStates]: 'en-us',
   [Locale.FinnishFinland]: 'fi',
   [Locale.FrenchFrance]: 'fr',
+  [Locale.GermanGermany]: 'de',
   [Locale.GreekGreece]: 'el',
   [Locale.HebrewIsrael]: 'he',
   [Locale.HindiIndia]: 'hi',

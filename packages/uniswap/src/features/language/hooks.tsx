@@ -107,6 +107,12 @@ export function getLanguageInfo(t: AppTFunction, language: Language): LanguageIn
       loggingName: 'French',
       locale: getLocale(Language.French),
     },
+    [Language.German]: {
+      displayName: t('German'),
+      originName: t('German', { lng: getLocale(Language.German) }),
+      loggingName: 'German',
+      locale: getLocale(Language.German),
+    },
     [Language.Greek]: {
       displayName: t('language.greek'),
       originName: t('language.greek', { lng: getLocale(Language.Greek) }),
