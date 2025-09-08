@@ -94,7 +94,6 @@ function DefaultMenu() {
             onClose={closeSettings}
             openLanguageSettings={openLanguageSettings}
             openLocalCurrencySettings={openLocalCurrencySettings}
-            // openPasskeySettings removed
             openPortfolioBalanceSettings={openPortfolioBalanceSettings}
           />
         )

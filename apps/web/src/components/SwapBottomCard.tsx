@@ -86,7 +86,7 @@ interface ChainTheme {
   textColor: string
 }
 
-const CHAIN_THEME_LIGHT: Record<UniverseChainId, ChainTheme> = {
+const CHAIN_THEME_LIGHT: Partial<Record<UniverseChainId, ChainTheme>> = {
   [UniverseChainId.Mainnet]: { bgColor: '#6B8AFF33', textColor: '#6B8AFF' },
   [UniverseChainId.ArbitrumOne]: { bgColor: '#00A3FF33', textColor: '#00A3FF' },
   [UniverseChainId.Avalanche]: { bgColor: '#E8414233', textColor: '#E84142' },
@@ -107,7 +107,7 @@ const CHAIN_THEME_LIGHT: Record<UniverseChainId, ChainTheme> = {
   [UniverseChainId.Zora]: { bgColor: 'rgba(0, 0, 0, 0.12)', textColor: '#000000' },
 }
 
-const CHAIN_THEME_DARK: Record<UniverseChainId, ChainTheme> = {
+const CHAIN_THEME_DARK: Partial<Record<UniverseChainId, ChainTheme>> = {
   ...CHAIN_THEME_LIGHT,
   [UniverseChainId.Blast]: { bgColor: 'rgba(252, 252, 3, 0.12)', textColor: 'rgba(252, 252, 3, 1) ' },
   [UniverseChainId.Celo]: { bgColor: '#FCFF5299', textColor: '#655947' },
@@ -119,7 +119,9 @@ const CHAIN_THEME_DARK: Record<UniverseChainId, ChainTheme> = {
 
 function useChainTheme(chainId: UniverseChainId): ChainTheme {
   const isDarkMode = useIsDarkMode()
-  return isDarkMode ? CHAIN_THEME_LIGHT[chainId] : CHAIN_THEME_DARK[chainId]
+  const theme = isDarkMode ? CHAIN_THEME_LIGHT[chainId] : CHAIN_THEME_DARK[chainId]
+  // Fallback for unsupported chains
+  return theme ?? { bgColor: '#6B8AFF33', textColor: '#6B8AFF' }
 }
 
 function MaybeExternalBridgeCard({ chainId }: { chainId: UniverseChainId }) {
