@@ -4,7 +4,7 @@ import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { TestnetsToggle } from 'components/AccountDrawer/TestnetsToggle'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { useAccount } from 'hooks/useAccount'
+// useAccount import removed - no longer needed
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
@@ -12,7 +12,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import ThemeToggle from 'theme/components/ThemeToggle'
 import { Flex, Text } from 'ui/src'
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+// CONNECTION_PROVIDER_IDS import removed - no longer needed
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -57,21 +57,18 @@ export default function SettingsMenu({
   onClose,
   openLanguageSettings,
   openLocalCurrencySettings,
-  openPasskeySettings,
   openPortfolioBalanceSettings,
 }: {
   onClose: () => void
   openLanguageSettings: () => void
   openLocalCurrencySettings: () => void
-  openPasskeySettings: () => void
   openPortfolioBalanceSettings: () => void
 }) {
   const { t } = useTranslation()
   const activeLanguage = useCurrentLanguage()
   const activeLocalCurrency = useAppFiatCurrency()
   const languageInfo = useLanguageInfo(activeLanguage)
-  const connectedWithEmbeddedWallet =
-    useAccount().connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
+  // connectedWithEmbeddedWallet removed - embedded wallet functionality was removed
 
   return (
     <SlideOutMenu title={<Trans i18nKey="common.settings" />} onClose={onClose} versionComponent={<AppVersionRow />}>
@@ -96,7 +93,7 @@ export default function SettingsMenu({
             onClick={openPortfolioBalanceSettings}
             testId="portfolio-balance-settings-button"
           />
-          {connectedWithEmbeddedWallet && <SettingsButton title={t('common.passkeys')} onClick={openPasskeySettings} />}
+          {/* Passkey settings removed - embedded wallet functionality was removed */}
         </Flex>
         <TestnetsToggle />
         <AnalyticsToggle />

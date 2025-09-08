@@ -25,7 +25,8 @@ export function ChooseUnitagModal({
   const onContinue = useCallback(
     (unitag: string) => {
       setUnitag(unitag)
-      setPage(Page.PasskeyGeneration)
+      // Navigate back to GetApp page since PasskeyGeneration was removed
+      setPage(Page.GetApp)
     },
     [setPage, setUnitag],
   )

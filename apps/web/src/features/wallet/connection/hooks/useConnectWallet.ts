@@ -10,7 +10,6 @@ import {
 } from 'features/wallet/connection/services/ConnectWalletService'
 import { WalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
 import { useMemo } from 'react'
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WalletConnectionResult } from 'uniswap/src/features/telemetry/types'
@@ -41,12 +40,8 @@ function createWrapConnectWalletServiceWithUIUpdates(accountDrawer: ReturnType<t
       connect: async (params: { walletConnector: WalletConnectorMeta }) => {
         await service.connect(params)
 
-        // Open the drawer if the user is connecting an embedded wallet, otherwise close
-        if (params.walletConnector.customConnectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
-          accountDrawer.open()
-        } else {
-          accountDrawer.close()
-        }
+        // Close the account drawer after successful wallet connection
+        accountDrawer.close()
 
         return
       },

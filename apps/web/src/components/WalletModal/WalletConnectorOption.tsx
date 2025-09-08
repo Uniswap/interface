@@ -10,7 +10,6 @@ import { ThemedText } from 'theme/components'
 import { Flex, Image, Text, useSporeColors } from 'ui/src'
 import { BINANCE_WALLET_ICON, UNISWAP_LOGO } from 'ui/src/assets'
 import { Chevron } from 'ui/src/components/icons/Chevron'
-import { Passkey } from 'ui/src/components/icons/Passkey'
 import { ScanQr } from 'ui/src/components/icons/ScanQr'
 import { WalletFilled } from 'ui/src/components/icons/WalletFilled'
 import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
@@ -32,14 +31,6 @@ function RecentBadge() {
         <Trans i18nKey="common.recent" />
       </ThemedText.LabelMicro>
     </Badge>
-  )
-}
-
-function EmbeddedWalletIcon() {
-  return (
-    <Flex p="$spacing6" backgroundColor="$accent2" borderRadius="$rounded8">
-      <Passkey color="$accent1" size="$icon.20" />
-    </Flex>
   )
 }
 
@@ -78,9 +69,7 @@ function getIcon({
 }) {
   const iconSize = isEmbeddedWalletEnabled ? iconSizes.icon32 : iconSizes.icon40
 
-  if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
-    return <EmbeddedWalletIcon />
-  } else if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
+  if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
     return <UniswapMobileIcon iconSize={iconSize} />
   } else if (walletConnectorMeta.wagmi?.id === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID) {
     return <BinanceWalletIcon iconSize={iconSize} />
@@ -110,8 +99,6 @@ function getConnectorText({
 }) {
   if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
     return t('common.uniswapMobile')
-  } else if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
-    return t('account.passkey.log.in.title')
   } else {
     return walletConnectorMeta.name
   }

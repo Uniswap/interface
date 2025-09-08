@@ -2,26 +2,13 @@ import { ModalRenderer } from 'components/TopLevelModals/modalRegistry'
 import { useAccount } from 'hooks/useAccount'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import { PasskeysHelpModalTypeAtom } from 'hooks/usePasskeyAuthWithHelpModal'
-import { useAtomValue } from 'jotai/utils'
-import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { shortenAddress } from 'utilities/src/addresses'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 
 export default function TopLevelModals() {
   const isLandingPage = useIsPage(PageType.LANDING)
   const account = useAccount()
-  const { data: unitag } = useUnitagsAddressQuery({
-    params: account.address ? { address: account.address } : undefined,
-  })
-  const accountName = unitag?.username
-    ? unitag.username + '.uni.eth'
-    : account.address
-      ? shortenAddress(account.address)
-      : undefined
   useAccountRiskCheck(account.address)
-  const passkeysHelpModalType = useAtomValue(PasskeysHelpModalTypeAtom)
 
   const shouldShowDevFlags = isDevEnv() || isBetaEnv()
 
@@ -65,7 +52,6 @@ export default function TopLevelModals() {
       <ModalRenderer modalName={ModalName.AddLiquidity} />
       <ModalRenderer modalName={ModalName.RemoveLiquidity} />
       <ModalRenderer modalName={ModalName.ClaimFee} />
-      <ModalRenderer modalName={ModalName.PasskeysHelp} componentProps={{ type: passkeysHelpModalType, accountName }} />
       <ModalRenderer modalName={ModalName.Help} />
       <ModalRenderer modalName={ModalName.DelegationMismatch} />
       <ModalRenderer modalName={ModalName.ReceiveCryptoModal} />

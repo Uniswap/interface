@@ -159,7 +159,7 @@ export function useV4NFTPositionManagerContract(
     // monad testnet and citrea testnet do not have v4 support
     address:
       chainIdToUse && chainIdToUse !== UniverseChainId.MonadTestnet && chainIdToUse !== UniverseChainId.CitreaTestnet
-        ? CHAIN_TO_ADDRESSES_MAP[chainIdToUse].v4PositionManagerAddress
+        ? (CHAIN_TO_ADDRESSES_MAP as any)[chainIdToUse]?.v4PositionManagerAddress
         : undefined,
     ABI: NFTPositionManagerABI,
     withSignerIfPossible,
