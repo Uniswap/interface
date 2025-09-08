@@ -7,6 +7,7 @@
     "ajv": "node scripts/compile-ajv-validators.js",
     "anvil:mainnet": "dotenv -- bash -c 'RUST_LOG=debug anvil --print-traces --fork-url https://${REACT_APP_QUICKNODE_ENDPOINT_NAME}.quiknode.pro/${REACT_APP_QUICKNODE_ENDPOINT_TOKEN} --hardfork prague'",
     "anvil:base": "dotenv -- bash -c 'RUST_LOG=debug anvil --print-traces --fork-url https://${REACT_APP_QUICKNODE_ENDPOINT_NAME}.base-mainnet.quiknode.pro/${REACT_APP_QUICKNODE_ENDPOINT_TOKEN} --hardfork prague --port 8546'",
+    "anvil:citrea": "anvil --fork-url https://rpc.citrea.xyz --chain-id 62298 --port 8547",
     "check:deps:usage": "depcheck",
     "check:circular": "concurrently \"../../scripts/check-circular-imports.sh ./src/pages/App.tsx 2\" \"../../scripts/check-circular-imports.sh ./src/setupTests.ts 0\"",
     "sitemap:generate": "node scripts/generate-sitemap.js",

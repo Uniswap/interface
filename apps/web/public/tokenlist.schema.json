@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://uniswap.org/tokenlist.schema.json",
-  "title": "Uniswap Token List",
-  "description": "Schema for lists of tokens compatible with the Uniswap Interface",
+  "title": "JuiceSwap Token List",
+  "description": "Schema for lists of tokens compatible with the JuiceSwap Interface",
   "definitions": {
     "Version": {
       "type": "object",
