@@ -104,6 +104,14 @@ const TradingApiClient = createApiClient({
   },
 })
 
+// Custom quote client for selective endpoint override
+const CustomQuoteApiClient = createApiClient({
+  baseUrl: process.env.REACT_APP_CUSTOM_QUOTE_API_URL || uniswapUrls.tradingApiUrl,
+  additionalHeaders: {
+    'x-api-key': config.tradingApiKey,
+  },
+})
+
 const V4_HEADERS = {
   'x-universal-router-version': UniversalRouterVersion._2_0,
 }
@@ -124,7 +132,7 @@ export async function fetchQuote({
   isUSDQuote: _isUSDQuote,
   ...params
 }: QuoteRequest & { isUSDQuote?: boolean }): Promise<DiscriminatedQuoteResponse> {
-  return await TradingApiClient.post<DiscriminatedQuoteResponse>(uniswapUrls.tradingApiPaths.quote, {
+  return await CustomQuoteApiClient.post<DiscriminatedQuoteResponse>(uniswapUrls.tradingApiPaths.quote, {
     body: JSON.stringify(params),
     headers: {
       ...V4_HEADERS,
