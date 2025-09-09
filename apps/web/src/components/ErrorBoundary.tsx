@@ -5,11 +5,9 @@ import { PropsWithChildren, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { CopyToClipboard } from 'theme/components/CopyHelper'
-import { ExternalLink } from 'theme/components/Links'
 import { Button, Flex, TouchableArea } from 'ui/src'
 import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const Code = styled.code`
   font-weight: 485;
@@ -50,18 +48,6 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
               {t('common.reload.label')}
             </Button>
           </Flex>
-          <ExternalLink
-            style={{ flexGrow: 1, flexBasis: 0 }}
-            id="get-support-on-discord"
-            href={uniswapUrls.helpRequestUrl}
-            target="_blank"
-          >
-            <Flex row>
-              <Button emphasis="secondary" size="small" variant="branded">
-                {t('common.getSupport.button')}
-              </Button>
-            </Flex>
-          </ExternalLink>
         </Flex>
       </Flex>
     </Flex>
