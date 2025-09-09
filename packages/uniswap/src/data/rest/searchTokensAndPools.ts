@@ -11,7 +11,6 @@ import {
   SearchTokensResponse,
   SpamCode,
 } from '@uniswap/client-search/dist/search/v1/api_pb'
-import { Contract } from '@ethersproject/contracts'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
