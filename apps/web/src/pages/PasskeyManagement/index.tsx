@@ -7,9 +7,7 @@ import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
 import { useAtom } from 'jotai'
 import Swap from 'pages/Swap'
 import { useEffect, useMemo, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
-import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -19,7 +17,6 @@ type PasskeyManagementEffectDependencies = {
     address?: string
   }
   embeddedWalletAddress?: string | null
-  dispatch: ReturnType<typeof useDispatch>
   signInWithPasskey: () => void
   accountDrawerHasBeenOpenedRef: React.MutableRefObject<boolean>
   passkeyConnectionAttemptedRef: React.MutableRefObject<boolean>
@@ -34,7 +31,6 @@ type PasskeyManagementEffectDependencies = {
 export function handleRouteToPasskeyManagement({
   account,
   embeddedWalletAddress,
-  dispatch,
   signInWithPasskey,
   accountDrawerHasBeenOpenedRef,
   passkeyConnectionAttemptedRef,
@@ -60,7 +56,8 @@ export function handleRouteToPasskeyManagement({
       navigate('/swap')
       return
     }
-    dispatch(setIsTestnetModeEnabled(false))
+    // Testnet mode is always enabled
+    // dispatch(setIsTestnetModeEnabled(false))
     disconnect()
     return
   }
@@ -101,7 +98,6 @@ export default function PasskeyManagement() {
   const { walletAddress: embeddedWalletAddress } = useParams()
   const disconnect = useDisconnect()
   const accountDrawer = useAccountDrawer()
-  const dispatch = useDispatch()
   const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
   const accountDrawerHasBeenOpenedRef = useRef<boolean>(accountDrawer.isOpen)
   const passkeyConnectionAttemptedRef = useRef<boolean>(false)
@@ -125,7 +121,6 @@ export default function PasskeyManagement() {
       handleRouteToPasskeyManagement({
         account,
         embeddedWalletAddress,
-        dispatch,
         signInWithPasskey,
         accountDrawerHasBeenOpenedRef,
         passkeyConnectionAttemptedRef,
@@ -138,7 +133,6 @@ export default function PasskeyManagement() {
     [
       account,
       embeddedWalletAddress,
-      dispatch,
       signInWithPasskey,
       navigate,
       closeRecentlyConnectedModal,

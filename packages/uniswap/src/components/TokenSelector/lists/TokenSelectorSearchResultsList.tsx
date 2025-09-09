@@ -17,7 +17,7 @@ function _TokenSelectorSearchResultsList({
   debouncedSearchFilter,
   debouncedParsedSearchFilter,
   isBalancesOnlySearch,
-  input,
+  input: _input,
 }: {
   onSelectCurrency: OnSelectCurrency
   activeAccountAddress?: string
@@ -41,7 +41,6 @@ function _TokenSelectorSearchResultsList({
     chainFilter: chainFilter ?? parsedChainFilter,
     searchFilter: debouncedParsedSearchFilter ?? debouncedSearchFilter,
     isBalancesOnlySearch,
-    input,
   })
 
   // eslint-disable-next-line max-params

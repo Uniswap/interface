@@ -1,6 +1,7 @@
 import { PartialMessage } from '@bufbuild/protobuf'
 import { ConnectError } from '@connectrpc/connect'
 import { useQuery } from '@connectrpc/connect-query'
+import { Contract } from '@ethersproject/contracts'
 import { UseQueryResult } from '@tanstack/react-query'
 import { searchTokens } from '@uniswap/client-search/dist/search/v1/api-searchService_connectquery'
 import {

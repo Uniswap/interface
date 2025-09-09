@@ -1,41 +1,58 @@
+import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useCommonTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptions'
-import { useCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useCurrencies'
-import {
-  currencyInfosToTokenOptions,
-  useCurrencyInfosToTokenOptions,
-} from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
+import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
-import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { currencyId } from 'uniswap/src/utils/currencyId'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
+import { Address } from 'viem'
+
+const hardcodedCommonBaseCurrencies: CurrencyInfo[] = [
+  {
+    currency: buildCurrency({
+      chainId: UniverseChainId.Sepolia,
+      address: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
+      decimals: 18,
+      symbol: 'USDC',
+      name: 'USDC',
+    }) as Currency,
+    currencyId: `${UniverseChainId.Sepolia}-0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`,
+    logoUrl: 'https://assets.coingecko.com/coins/images/957/large/usd-coin.png?1547042194',
+  },
+  {
+    currency: buildCurrency({
+      chainId: UniverseChainId.Sepolia,
+      address: '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',
+      decimals: 18,
+      symbol: 'WETH',
+      name: 'WETH',
+    }) as Currency,
+    currencyId: `${UniverseChainId.Sepolia}-0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14`,
+    logoUrl: 'https://assets.coingecko.com/coins/images/2518/large/weth.png?1696501628',
+  },
+]
 
 export function useCommonTokensOptionsWithFallback(
   address: Address | undefined,
   chainFilter: UniverseChainId | null,
 ): GqlResult<TokenOption[] | undefined> {
-  const { data, error, refetch, loading } = useCommonTokensOptions(address, chainFilter)
-  const commonBases = chainFilter ? currencyInfosToTokenOptions(COMMON_BASES[chainFilter]) : undefined
-  const commonBasesCurrencyIds = useMemo(
-    () => commonBases?.map((token) => currencyId(token.currencyInfo.currency)).filter(Boolean) ?? [],
-    [commonBases],
-  )
-  const { data: commonBasesCurrencies } = useCurrencies(commonBasesCurrencyIds)
+  const { refetch, loading } = useCommonTokensOptions(address, chainFilter)
+
+  const commonOrDefault = hardcodedCommonBaseCurrencies
   const commonBasesTokenOptions = useCurrencyInfosToTokenOptions({
-    currencyInfos: commonBasesCurrencies,
+    currencyInfos: commonOrDefault,
     portfolioBalancesById: {},
   })
 
-  const shouldFallback = data?.length === 0 && commonBases?.length
-
   return useMemo(
     () => ({
-      data: shouldFallback ? commonBasesTokenOptions : data,
-      error: shouldFallback ? undefined : error,
+      data: commonBasesTokenOptions?.map((token) => ({ ...token, quantity: 0 })),
+      error: undefined,
       refetch,
       loading,
     }),
-    [commonBasesTokenOptions, data, error, loading, refetch, shouldFallback],
+    [commonBasesTokenOptions, refetch, loading],
   )
 }

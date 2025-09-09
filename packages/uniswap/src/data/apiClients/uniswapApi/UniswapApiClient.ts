@@ -136,8 +136,6 @@ export type ScreenRequest = {
   address: string
 }
 
-export async function fetchTrmScreen(params: ScreenRequest): Promise<ScreenResponse> {
-  return await UniswapApiClient.post<ScreenResponse>(uniswapUrls.trmPath, {
-    body: JSON.stringify(params),
-  })
+export async function fetchTrmScreen(_params: ScreenRequest): Promise<ScreenResponse> {
+  return { block: false }
 }

@@ -41,7 +41,7 @@ test.describe('Token Details', () => {
     await page.goto('/explore/tokens/ethereum/NATIVE')
     await page.getByTestId(TestID.Web3StatusConnected).click()
     await page.getByTestId(TestID.WalletSettings).click()
-    await page.getByTestId(TestID.TestnetsToggle).click()
+    // Testnet mode is now always enabled, no toggle needed
     await expect(page.getByText('Ethereum').first()).toBeVisible()
   })
 

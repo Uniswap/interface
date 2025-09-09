@@ -24,7 +24,6 @@ import { useAtom } from 'jotai'
 import { SendFormModal } from 'pages/Swap/Send/SendFormModal'
 import { useCallback, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
 import { CopyHelper } from 'theme/components/CopyHelper'
@@ -47,7 +46,6 @@ import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { useHasAccountMismatchOnAnyChain } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -83,16 +81,16 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const { toggleModal: toggleClaimModal } = useModalState(ModalName.AddressClaim)
 
   const accountDrawer = useAccountDrawer()
-  const dispatch = useDispatch()
 
   const handleDisconnect = useCallback(async () => {
     if (connectedWithEmbeddedWallet) {
       await signOutWithPasskey()
     }
-    dispatch(setIsTestnetModeEnabled(false))
+    // Testnet mode is always enabled
+    // dispatch(setIsTestnetModeEnabled(false))
     disconnect()
     accountDrawer.close()
-  }, [connectedWithEmbeddedWallet, dispatch, disconnect, accountDrawer, signOutWithPasskey])
+  }, [connectedWithEmbeddedWallet, disconnect, accountDrawer, signOutWithPasskey])
 
   const handleBuyCryptoClick = useCallback(() => {
     accountDrawer.close()

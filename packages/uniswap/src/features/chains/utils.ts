@@ -206,6 +206,7 @@ export function getEnabledChains({
   platform,
   /**
    * When `true`, it will return all enabled chains, including testnets.
+   * Note: Currently ignored as we always show only testnets.
    */
   includeTestnets = false,
   isTestnetModeEnabled,
@@ -218,14 +219,18 @@ export function getEnabledChains({
   connectedWalletChainIds?: UniverseChainId[]
   includeTestnets?: boolean
 }): EnabledChainsInfo {
+  // Kept for API compatibility but currently unused as we always show testnets
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _unused1 = includeTestnets
   const enabledChainInfos = ORDERED_CHAINS.filter((chainInfo) => {
     // Filter by platform
     if (platform !== undefined && platform !== chainInfo.platform) {
       return false
     }
 
-    // Filter by testnet mode
-    if (!includeTestnets && isTestnetModeEnabled !== isTestnetChain(chainInfo.id)) {
+    // ALWAYS filter to only show testnets, regardless of settings
+    // This ensures mainnet chains are never available
+    if (!isTestnetChain(chainInfo.id)) {
       return false
     }
 
@@ -263,12 +268,16 @@ function getDefaultChainId({
   platform?: Platform
   isTestnetModeEnabled: boolean
 }): UniverseChainId {
+  // Kept for API compatibility but currently unused as we always return Sepolia
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _unused2 = isTestnetModeEnabled
   if (platform === Platform.SVM) {
     // TODO(Solana): is there a Solana testnet we can return here?
     return UniverseChainId.Solana
   }
 
-  return isTestnetModeEnabled ? UniverseChainId.Sepolia : UniverseChainId.Mainnet
+  // Always return Sepolia as default chain since we only support testnets
+  return UniverseChainId.Sepolia
 }
 
 /** Returns all stablecoins for a given chainId. */

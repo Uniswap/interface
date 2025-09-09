@@ -1,7 +1,6 @@
 import { AnalyticsToggle } from 'components/AccountDrawer/AnalyticsToggle'
 import { AppVersionRow } from 'components/AccountDrawer/AppVersionRow'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
-import { TestnetsToggle } from 'components/AccountDrawer/TestnetsToggle'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
@@ -98,7 +97,6 @@ export default function SettingsMenu({
           />
           {connectedWithEmbeddedWallet && <SettingsButton title={t('common.passkeys')} onClick={openPasskeySettings} />}
         </Flex>
-        <TestnetsToggle />
         <AnalyticsToggle />
       </Container>
     </SlideOutMenu>

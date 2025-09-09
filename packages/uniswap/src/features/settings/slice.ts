@@ -21,7 +21,7 @@ export const initialUserSettingsState: UserSettingsState = {
   currentCurrency: FiatCurrency.UnitedStatesDollar,
   hideSmallBalances: true,
   hideSpamTokens: true,
-  isTestnetModeEnabled: false,
+  isTestnetModeEnabled: true,
   hapticsEnabled: true,
 }
 
@@ -42,11 +42,12 @@ const slice = createSlice({
       state.currentCurrency = action.payload
     },
     /**
-     * IMPORTANT: minimize and thoroughly vet every usage of this action so that testnets are **never** unintentionally toggled on
+     * IMPORTANT: Testnet mode is now always enabled and cannot be toggled off
      */
-    setIsTestnetModeEnabled: (state, { payload }: PayloadAction<boolean>) => {
-      state.isTestnetModeEnabled = payload
-      analytics.setTestnetMode(payload, WALLET_TESTNET_CONFIG)
+    setIsTestnetModeEnabled: (state) => {
+      // Always keep testnet mode enabled
+      state.isTestnetModeEnabled = true
+      analytics.setTestnetMode(true, WALLET_TESTNET_CONFIG)
     },
     setHapticsEnabled: (state, { payload }: PayloadAction<boolean>) => {
       state.hapticsEnabled = payload

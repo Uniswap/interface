@@ -61,7 +61,7 @@ export function createEmptyBalanceOption(currencyInfo: CurrencyInfo): TokenOptio
 
 export function useCurrencyInfosToTokenOptions({
   currencyInfos,
-  portfolioBalancesById,
+  portfolioBalancesById: _portfolioBalancesById,
   sortAlphabetically,
 }: {
   currencyInfos?: CurrencyInfo[]
@@ -84,10 +84,7 @@ export function useCurrencyInfosToTokenOptions({
       : currencyInfos
 
     return sortedCurrencyInfos.map((currencyInfo) => {
-      const portfolioBalance = portfolioBalancesById?.[currencyInfo.currencyId.toLowerCase()]
-      return portfolioBalance
-        ? { type: OnchainItemListOptionType.Token, ...portfolioBalance }
-        : createEmptyBalanceOption(currencyInfo)
+      return createEmptyBalanceOption(currencyInfo)
     })
-  }, [currencyInfos, portfolioBalancesById, sortAlphabetically])
+  }, [currencyInfos, sortAlphabetically])
 }

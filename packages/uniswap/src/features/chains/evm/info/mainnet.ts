@@ -144,11 +144,11 @@ export const SEPOLIA_CHAIN_INFO = {
       http: [getQuicknodeEndpointUrl(UniverseChainId.Sepolia)],
     },
     [RPCType.Default]: {
-      http: ['https://rpc.sepolia.org/'],
+      http: ['https://eth-sepolia.g.alchemy.com/v2/D41tT-VNane_JyxuXN6lI'],
     },
     [RPCType.Fallback]: {
       http: [
-        'https://rpc.sepolia.org/',
+        'https://eth-sepolia.g.alchemy.com/v2/D41tT-VNane_JyxuXN6lI',
         'https://rpc2.sepolia.org/',
         'https://rpc.sepolia.online/',
         'https://www.sepoliarpc.space/',
