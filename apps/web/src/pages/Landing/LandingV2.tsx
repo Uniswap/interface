@@ -7,8 +7,6 @@ import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 // Annotating it with webpackPreload allows it to be ready when requested.
 const Fold = lazy(() => import(/* webpackPreload: true */ './Fold'))
 
-const Rive = lazy(() => import(/* webpackPreload: true */ 'setupRive'))
-
 const Grain = styled(Flex, {
   position: 'absolute',
   inset: 0,
@@ -39,7 +37,6 @@ function LandingV2({ transition }: { transition?: boolean }) {
       <Grain />
       <Hero scrollToRef={scrollToRef} transition={transition} />
       <Suspense>
-        <Rive />
         <Fold ref={scrollAnchor} />
       </Suspense>
     </Flex>

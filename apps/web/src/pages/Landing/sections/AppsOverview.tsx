@@ -1,5 +1,4 @@
 import { H2 } from 'pages/Landing/components/Generics'
-import { DownloadWalletCard } from 'pages/Landing/components/cards/DownloadWalletCard'
 import { LiquidityCard } from 'pages/Landing/components/cards/LiquidityCard'
 import { TradingApiCard } from 'pages/Landing/components/cards/TradingApiCard'
 import { UnichainCard } from 'pages/Landing/components/cards/UnichainCard'
@@ -17,14 +16,13 @@ export function AppsOverview() {
         <Flex gap="$gap16">
           <Flex row flexWrap="wrap" height="auto" flex={1} gap="$gap16" $md={{ flexDirection: 'column' }}>
             <WebappCard />
-            <DownloadWalletCard />
-          </Flex>
-          <Flex row flexWrap="wrap" height="auto" flex={1} gap="$gap16" $md={{ flexDirection: 'column' }}>
             <UniswapXCard />
-            <LiquidityCard />
           </Flex>
           <Flex row flexWrap="wrap" height="auto" flex={1} gap="$gap16" $md={{ flexDirection: 'column' }}>
+            <LiquidityCard />
             <TradingApiCard />
+          </Flex>
+          <Flex row flexWrap="wrap" height="auto" flex={1} gap="$gap16" $md={{ flexDirection: 'column' }}>
             <UnichainCard />
           </Flex>
         </Flex>
