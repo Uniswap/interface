@@ -1,0 +1,51 @@
+name: JuiceSwap Web PRODUCTION CI/CD
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/web/**'
+      - 'packages/**'
+      - 'yarn.lock'
+      - 'package.json'
+  workflow_dispatch:
+
+env:
+  AZURE_ACCOUNT_NAME: 'stjswappprd'
+  AZURE_CDN_PROFILE: 'afd-dfx-api-prd'
+  AZURE_CDN_ENDPOINT: 'fde-jsw-swp-prd'
+  AZURE_RESOURCE_GROUP: 'rg-dfx-api-prd'
+
+jobs:
+  build-and-deploy:
+    name: Build and deploy Web App to PRODUCTION
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13.1'
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build web app
+        run: yarn web build:production
+        env:
+          NODE_ENV: production
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_PRD_CREDENTIALS }}
+
+      - name: Upload to Azure Storage
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            az storage blob upload-batch --account-name ${{ env.AZURE_ACCOUNT_NAME }} -d '$web' -s ./apps/web/build --overwrite

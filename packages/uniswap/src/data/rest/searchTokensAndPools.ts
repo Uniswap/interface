@@ -5,16 +5,21 @@ import { UseQueryResult } from '@tanstack/react-query'
 import { searchTokens } from '@uniswap/client-search/dist/search/v1/api-searchService_connectquery'
 import {
   Pool,
+  Token as SearchToken,
   SearchTokensRequest,
   SearchTokensResponse,
-  type Token as SearchToken,
+  SpamCode,
 } from '@uniswap/client-search/dist/search/v1/api_pb'
+import { Contract } from '@ethersproject/contracts'
+import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
 import { parseProtectionInfo, parseRestProtocolVersion, parseSafetyLevel } from 'uniswap/src/data/rest/utils'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
+import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { PoolSearchResult, SearchResultType } from 'uniswap/src/features/search/SearchResult'
 import { buildCurrencyId, currencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 
@@ -85,5 +90,49 @@ export function searchPoolToPoolSearchResult(pool: Pool): PoolSearchResult | und
     feeTier: pool.feeTier,
     token0CurrencyId: buildCurrencyId(pool.chainId, token0Address),
     token1CurrencyId: buildCurrencyId(pool.chainId, token1Address),
+  }
+}
+
+/**
+ * Direct blockchain token data fetching function that bypasses useQuery
+ * Fetches token data directly from the blockchain using ethers
+ * @param tokenAddress - The token contract address
+ * @param chainId - The chain ID to fetch from
+ * @returns Promise with token data matching the SearchToken format
+ */
+export async function fetchTokenDataDirectly(
+  tokenAddress: string,
+  chainId: UniverseChainId,
+): Promise<SearchToken | null> {
+  try {
+    const provider = createEthersProvider({ chainId })
+    if (!provider) {
+      throw new Error(`Failed to create provider for chain ${chainId}`)
+    }
+
+    const contract = new Contract(tokenAddress, ERC20_ABI, provider)
+
+    const [name, symbol, decimals] = await Promise.all([contract.name(), contract.symbol(), contract.decimals()])
+
+    const decimalsNumber = Number(decimals)
+
+    const tokenData = new SearchToken({
+      address: tokenAddress,
+      chainId,
+      decimals: decimalsNumber,
+      isSpam: 'FALSE',
+      name,
+      projectName: name,
+      safetyLevel: 'STRONG_WARNING',
+      standard: 'ERC20',
+      logoUrl: `https://ethereum-optimism.github.io/data/${name}/logo.png`,
+      symbol,
+      tokenId: `${chainId}_${tokenAddress}`,
+      spamCode: SpamCode.NOT_SPAM,
+    })
+
+    return tokenData
+  } catch (error) {
+    return null
   }
 }
