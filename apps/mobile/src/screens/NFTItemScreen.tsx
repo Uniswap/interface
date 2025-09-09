@@ -487,7 +487,7 @@ function RightElement({
 }): JSX.Element {
   const accounts = useAccounts()
 
-  const { value: contextMenuIsOpen, setFalse: closeContextMenu, setTrue: openContextMenu } = useBooleanState(false)
+  const { value: contextMenuIsOpen, setFalse: closeContextMenu } = useBooleanState(false)
 
   const menuItems = useNFTContextMenuItems({
     contractAddress,
@@ -507,9 +507,8 @@ function RightElement({
           triggerMode={ContextMenuTriggerMode.Primary}
           isOpen={contextMenuIsOpen}
           closeMenu={closeContextMenu}
-          openMenu={openContextMenu}
         >
-          <TouchableArea p="$spacing16" onPress={openContextMenu}>
+          <TouchableArea p="$spacing16">
             <Ellipsis color="$neutral1" size="$icon.16" />
           </TouchableArea>
         </ContextMenu>

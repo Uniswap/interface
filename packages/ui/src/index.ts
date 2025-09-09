@@ -1,4 +1,3 @@
-export { PortalProvider } from '@tamagui/portal'
 export { RemoveScroll } from '@tamagui/remove-scroll'
 export {
   Accordion,

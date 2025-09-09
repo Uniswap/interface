@@ -21,16 +21,20 @@ import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/ho
 export function EditUnitagProfileScreen({ enableBack = false }: { enableBack?: boolean }): JSX.Element {
   const { t } = useTranslation()
   const address = useAccountAddressFromUrlWithThrow()
-  const { data: retrievedUnitag, isLoading } = useUnitagsAddressQuery({
+  const {
+    data: retrievedUnitag,
+    isPending,
+    isFetching,
+  } = useUnitagsAddressQuery({
     params: address ? { address } : undefined,
   })
   const unitag = retrievedUnitag?.username
 
   useEffect(() => {
-    if (!isLoading && !unitag) {
+    if (!isPending && !isFetching && !unitag) {
       navigate(`/${UnitagClaimRoutes.ClaimIntro}`)
     }
-  }, [unitag, isLoading])
+  }, [unitag, isPending, isFetching])
 
   const { goToPreviousStep } = useOnboardingSteps()
 

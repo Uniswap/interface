@@ -91,7 +91,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
       setIsLoadingPasskey(false)
       return
     }
-    if (nav === OnboardingScreens.SeedPhraseInput || nav === OnboardingScreens.WatchWallet) {
+
+    if (nav === OnboardingScreens.SeedPhraseInput) {
       navigation.navigate({
         name: nav,
         params: { importType, entryPoint },

@@ -4,4 +4,5 @@ Flashblocks on Unichain: This infra upgrade brings 200ms blocktimes to the netwo
 
 Other changes: 
 
+- Unified context menu UI across platforms on the NFT and activity tabs
 - Various bug fixes and performance improvements

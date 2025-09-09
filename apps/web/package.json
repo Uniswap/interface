@@ -183,6 +183,7 @@
     "@solana/web3.js": "1.92.0",
     "@svgr/webpack": "8.0.1",
     "@tamagui/core": "1.125.17",
+    "@tamagui/portal": "1.125.17",
     "@tamagui/react-native-svg": "1.125.17",
     "@tamagui/vite-plugin": "1.125.17",
     "@tanstack/query-sync-storage-persister": "5.75.0",

@@ -48,7 +48,7 @@ import {
 import { initDynamicIntlPolyfills } from 'src/polyfills/intl-delayed'
 import { useDatadogUserAttributesTracking } from 'src/screens/HomeScreen/useDatadogUserAttributesTracking'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import { PortalProvider, flexStyles, useIsDarkMode } from 'ui/src'
+import { flexStyles, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { config } from 'uniswap/src/config'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
@@ -254,15 +254,13 @@ function AppOuter(): JSX.Element | null {
                     <MobileWalletNavigationProvider>
                       <NativeWalletProvider>
                         <WalletUniswapProvider>
-                          <PortalProvider>
-                            <DataUpdaters />
-                            <BottomSheetModalProvider>
-                              <AppModals />
-                              <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                <AppInner />
-                              </PerformanceProfiler>
-                            </BottomSheetModalProvider>
-                          </PortalProvider>
+                          <DataUpdaters />
+                          <BottomSheetModalProvider>
+                            <AppModals />
+                            <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                              <AppInner />
+                            </PerformanceProfiler>
+                          </BottomSheetModalProvider>
                         </WalletUniswapProvider>
                       </NativeWalletProvider>
                       <NotificationToastWrapper />
