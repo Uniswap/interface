@@ -51,9 +51,9 @@ test.describe('Mini Portfolio settings', () => {
     await expect(page.getByText('Uniswap está disponible en:')).toBeVisible()
   })
 
-  test('toggles testnet', async ({ page }) => {
-    await page.getByTestId(TestID.TestnetsToggle).click()
-    await expect(page.getByTestId(TestID.TestnetsToggle)).toHaveAttribute('aria-checked', 'true')
+  test('testnet always enabled', async ({ page }) => {
+    // Testnet mode is now always enabled, no toggle needed
+    // Just verify testnet is active
     await expect(page.getByText('Swapping on Sepolia')).toBeVisible()
   })
 
