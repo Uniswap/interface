@@ -1,32 +1,40 @@
-import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
+// import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
 
 import { Wallet } from 'pages/Landing/components/Icons'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
 import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
 import { Trans, useTranslation } from 'react-i18next'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { Flex, useSporeColors } from 'ui/src'
+import { useSporeColors } from 'ui/src'
 import { Star } from 'ui/src/components/icons/Star'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 export function DownloadWalletCard() {
   const theme = useSporeColors()
-  const isDarkMode = useIsDarkMode()
+  // const isDarkMode = useIsDarkMode()
   const { t } = useTranslation()
 
-  const { rive: lightAnimation, RiveComponent: LightAnimation } = useRive({
-    src: '/rive/landing-page.riv',
-    artboard: 'Mobile-Light',
-    stateMachines: 'Animation',
-    layout: new Layout({ fit: Fit.Contain, alignment: Alignment.BottomCenter }),
-  })
+  // Temporarily disable Rive animations due to hooks error
+  // const [isClient, setIsClient] = useState(false)
 
-  const { rive: darkAnimation, RiveComponent: DarkAnimation } = useRive({
-    src: '/rive/landing-page.riv',
-    artboard: 'Mobile-Dark',
-    stateMachines: 'Animation',
-    layout: new Layout({ fit: Fit.Contain, alignment: Alignment.BottomCenter }),
-  })
+  // useEffect(() => {
+  //   setIsClient(true)
+  // }, [])
+
+  // const { rive: lightAnimation, RiveComponent: LightAnimation } = useRive({
+  //   src: '/rive/landing-page.riv',
+  //   artboard: 'Mobile-Light',
+  //   stateMachines: 'Animation',
+  //   layout: new Layout({ fit: Fit.Contain, alignment: Alignment.BottomCenter }),
+  //   autoplay: isClient,
+  // })
+
+  // const { rive: darkAnimation, RiveComponent: DarkAnimation } = useRive({
+  //   src: '/rive/landing-page.riv',
+  //   artboard: 'Mobile-Dark',
+  //   stateMachines: 'Animation',
+  //   layout: new Layout({ fit: Fit.Contain, alignment: Alignment.BottomCenter }),
+  //   autoplay: isClient,
+  // })
 
   return (
     <ValuePropCard
@@ -64,13 +72,14 @@ export function DownloadWalletCard() {
         minHeight: 540,
       }}
     >
-      <Flex width="100%" height="60%" position="absolute" m="auto" bottom={0} zIndex={1}>
+      {/* Temporarily disabled due to Rive hooks error */}
+      {/* <Flex width="100%" height="60%" position="absolute" m="auto" bottom={0} zIndex={1}>
         {isDarkMode ? (
           <DarkAnimation onMouseEnter={() => darkAnimation?.play()} />
         ) : (
           <LightAnimation onMouseEnter={() => lightAnimation?.play()} />
         )}
-      </Flex>
+      </Flex> */}
     </ValuePropCard>
   )
 }
