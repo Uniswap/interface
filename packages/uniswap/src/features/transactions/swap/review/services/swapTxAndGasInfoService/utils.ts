@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { providers } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import type {
@@ -212,9 +213,21 @@ export function createProcessSwapResponse({ gasStrategy }: { gasStrategy: GasStr
     permitsDontNeedSignature?: boolean
   }): TransactionRequestInfo {
     // We use the gasFee estimate from quote, as its more accurate
-    const swapGasFee = {
+    // If quote doesn't have gasFee, we'll need to estimate it separately
+    let swapGasFee = {
       value: swapQuote?.gasFee,
       displayValue: convertGasFeeToDisplayValue(swapQuote?.gasFee, gasStrategy),
+    }
+
+    // If swapQuote doesn't have gasFee, we need to estimate it
+    if (!swapQuote?.gasFee && response?.transactions[0]) {
+      // Use a reasonable fallback gas fee for swaps
+      // This should be replaced with proper gas estimation in the future
+      const fallbackSwapGasFee = '100000000000000' // 0.0001 ETH fallback
+      swapGasFee = {
+        value: fallbackSwapGasFee,
+        displayValue: convertGasFeeToDisplayValue(fallbackSwapGasFee, gasStrategy),
+      }
     }
 
     // This is a case where simulation fails on backend, meaning txn is expected to fail

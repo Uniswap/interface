@@ -287,7 +287,7 @@ function* submitTransactionAsync(params: HandleOnChainStepParams): SagaGenerator
 
   try {
     const response = yield* call([signer.provider, 'send'], 'eth_sendTransaction', [
-      { from: account.address, ...step.txRequest },
+      { ...step.txRequest, from: account.address },
     ])
 
     if (!isValidHexString(response)) {

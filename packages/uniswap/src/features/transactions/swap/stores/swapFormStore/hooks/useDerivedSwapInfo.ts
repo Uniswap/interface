@@ -37,10 +37,9 @@ export function useDerivedSwapInfo({
 
   const { defaultChainId } = useEnabledChains()
 
-  const { customSlippageTolerance, selectedProtocols, isV4HookPoolsEnabled } = useTransactionSettingsStore((s) => ({
+  const { customSlippageTolerance, selectedProtocols } = useTransactionSettingsStore((s) => ({
     customSlippageTolerance: s.customSlippageTolerance,
     selectedProtocols: s.selectedProtocols,
-    isV4HookPoolsEnabled: s.isV4HookPoolsEnabled,
   }))
 
   const currencyInInfo = useCurrencyInfo(
@@ -106,7 +105,7 @@ export function useDerivedSwapInfo({
     sendPortionEnabled,
     isDebouncing,
     generatePermitAsTransaction,
-    isV4HookPoolsEnabled,
+    isV4HookPoolsEnabled: false,
   })
 
   const displayableTrade = trade.trade ?? trade.indicativeTrade

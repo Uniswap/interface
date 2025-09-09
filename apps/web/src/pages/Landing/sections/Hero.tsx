@@ -12,6 +12,7 @@ import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { Flex, Text, useMedia } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 
 interface HeroProps {
@@ -23,8 +24,20 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
   const media = useMedia()
   const { height: scrollPosition } = useScroll({ enabled: !media.sm })
   const { defaultChainId } = useEnabledChains()
+  // Use WETH on Sepolia as default input currency
   const initialInputCurrency = useCurrency({
-    address: 'ETH',
+    address:
+      defaultChainId === UniverseChainId.Sepolia
+        ? '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14' // WETH on Sepolia
+        : 'ETH',
+    chainId: defaultChainId,
+  })
+  // Use USDC on Sepolia as default output currency
+  const initialOutputCurrency = useCurrency({
+    address:
+      defaultChainId === UniverseChainId.Sepolia
+        ? '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238' // USDC on Sepolia
+        : undefined,
     chainId: defaultChainId,
   })
   const navigate = useNavigate()
@@ -128,6 +141,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
               syncTabToUrl={false}
               chainId={defaultChainId}
               initialInputCurrency={initialInputCurrency}
+              initialOutputCurrency={initialOutputCurrency}
               swapRedirectCallback={swapRedirectCallback}
               usePersistedFilteredChainIds
             />

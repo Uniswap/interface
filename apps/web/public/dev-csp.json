@@ -4,6 +4,9 @@
     "http://127.0.0.1:8546",
     "http://localhost:3000",
     "https://dev.api.juiceswap.xyz",
-    "https://api.juiceswap.xyz"
+    "https://api.juiceswap.xyz",
+    "https://trading-api-labs.gateway.uniswap.org",
+    "https://dev.bapp.juiceswap.xyz/api",
+    "https://bapp.juiceswap.xyz/api"
   ]
 }
