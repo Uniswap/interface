@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
-import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { getCommonBase } from 'uniswap/src/constants/routing'
 import { useTokenQuery, useTokensQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fetchTokenDataDirectly } from 'uniswap/src/data/rest/searchTokensAndPools'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils/gqlTokenToCurrencyInfo'
 import {
@@ -25,7 +25,6 @@ function useCurrencyInfoQuery(
     fetchPolicy: options?.refetch ? 'cache-and-network' : 'cache-first',
   })
 
-  
   let variables: { tokenAddress: string; chainId: UniverseChainId } | undefined
   try {
     variables = {
@@ -39,7 +38,10 @@ function useCurrencyInfoQuery(
   const tokenData = useQuery({
     queryKey: ['searchTokens-custom', variables],
     queryFn: async () => {
-      const token = await fetchTokenDataDirectly(variables?.tokenAddress ?? '', variables?.chainId ?? UniverseChainId.Mainnet)
+      const token = await fetchTokenDataDirectly(
+        variables?.tokenAddress ?? '',
+        variables?.chainId ?? UniverseChainId.Mainnet,
+      )
       return token
     },
     enabled: variables !== undefined || options?.skip,
@@ -73,29 +75,28 @@ function useCurrencyInfoQuery(
     }
 
     if (tokenData.data) {
-      const customCurrency: Currency = {
+      const currency = buildCurrency({
         chainId: tokenData.data.chainId,
         address: tokenData.data.address,
         decimals: tokenData.data.decimals,
         symbol: tokenData.data.symbol,
         name: tokenData.data.name,
-        isNative: false,
-        isToken: true,
-        equals: () => false,
-        sortsBefore: () => false,
-        wrapped: () => customCurrency,
+      })
+
+      if (!currency) {
+        return undefined
       }
 
-      return {
+      return buildCurrencyInfo({
+        currency,
         currencyId: _currencyId,
-        currency: customCurrency,
         logoUrl: tokenData.data.logoUrl,
-      }
+      })
     }
 
     return queryResult.data?.token && gqlTokenToCurrencyInfo(queryResult.data.token)
   }, [_currencyId, queryResult.data?.token, tokenData.data])
-  
+
   return {
     currencyInfo,
     loading: queryResult.loading,

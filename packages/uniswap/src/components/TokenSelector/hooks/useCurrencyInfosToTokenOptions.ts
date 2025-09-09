@@ -61,7 +61,7 @@ export function createEmptyBalanceOption(currencyInfo: CurrencyInfo): TokenOptio
 
 export function useCurrencyInfosToTokenOptions({
   currencyInfos,
-  portfolioBalancesById,
+  portfolioBalancesById: _portfolioBalancesById,
   sortAlphabetically,
 }: {
   currencyInfos?: CurrencyInfo[]

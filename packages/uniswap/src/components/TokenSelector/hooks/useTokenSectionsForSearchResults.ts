@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
@@ -7,7 +6,6 @@ import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/com
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { GqlResult } from 'uniswap/src/data/types'
-import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -23,21 +21,13 @@ export function useTokenSectionsForSearchResults({
   searchFilter: string | null
   isBalancesOnlySearch: boolean
 }): GqlResult<OnchainItemSection<TokenOption>[]> {
+  const { refetch: refetchPortfolioBalances } = usePortfolioBalancesForAddressById(address) // Bypass this
 
-  const {
-    data: portfolioBalancesById,
-    error: portfolioBalancesByIdError,
-    refetch: refetchPortfolioBalances,
-    loading: portfolioBalancesByIdLoading,
-  } = usePortfolioBalancesForAddressById(address) // Bypass this
-
-  const {
-    data: portfolioTokenOptions,
-    error: portfolioTokenOptionsError,
-    refetch: refetchPortfolioTokenOptions,
-    loading: portfolioTokenOptionsLoading,
-  } = usePortfolioTokenOptions({ address, chainFilter, searchFilter: searchFilter ?? undefined }) // Bypass this
-
+  const { refetch: refetchPortfolioTokenOptions } = usePortfolioTokenOptions({
+    address,
+    chainFilter,
+    searchFilter: searchFilter ?? undefined,
+  }) // Bypass this
 
   // Only call search endpoint if isBalancesOnlySearch is false
   const {
@@ -65,7 +55,7 @@ export function useTokenSectionsForSearchResults({
     currencyInfos: selectedNetworkResults,
   })
 
-  const loading = (!isBalancesOnlySearch && searchTokensLoading)
+  const loading = !isBalancesOnlySearch && searchTokensLoading
 
   const searchResultsSections = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.SearchResults,
@@ -73,8 +63,7 @@ export function useTokenSectionsForSearchResults({
     options: searchResults,
   })
 
-
-  const error = (!isBalancesOnlySearch && !searchResults && searchTokensError)
+  const error = !isBalancesOnlySearch && !searchResults && searchTokensError
 
   const refetchAll = useCallback(() => {
     refetchPortfolioBalances?.()

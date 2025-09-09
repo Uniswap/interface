@@ -1,6 +1,7 @@
 import { PartialMessage } from '@bufbuild/protobuf'
 import { ConnectError } from '@connectrpc/connect'
 import { useQuery } from '@connectrpc/connect-query'
+import { Contract } from '@ethersproject/contracts'
 import { UseQueryResult } from '@tanstack/react-query'
 import { searchTokens } from '@uniswap/client-search/dist/search/v1/api-searchService_connectquery'
 import {
@@ -10,7 +11,6 @@ import {
   SearchTokensResponse,
   SpamCode,
 } from '@uniswap/client-search/dist/search/v1/api_pb'
-import { Contract } from '@ethersproject/contracts'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
