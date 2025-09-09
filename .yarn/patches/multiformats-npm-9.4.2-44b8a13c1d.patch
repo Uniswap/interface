@@ -1,0 +1,14 @@
+diff --git a/basics b/basics
+deleted file mode 100644
+index 1a79016a006c6efd5e4cee071f134128d0ffd100..0000000000000000000000000000000000000000
+--- a/basics
++++ /dev/null
+@@ -1 +0,0 @@
+-module.exports = require('./cjs/src/basics.js')
+diff --git a/basics.js b/basics.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..1a79016a006c6efd5e4cee071f134128d0ffd100
+--- /dev/null
++++ b/basics.js
+@@ -0,0 +1 @@
++module.exports = require('./cjs/src/basics.js')

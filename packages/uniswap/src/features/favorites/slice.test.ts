@@ -1,8 +1,8 @@
 import { createStore, Store } from '@reduxjs/toolkit'
 import {
   addFavoriteToken,
-  FavoritesState,
   favoritesReducer,
+  FavoritesState,
   removeFavoriteToken,
 } from 'uniswap/src/features/favorites/slice'
 

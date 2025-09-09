@@ -2,10 +2,10 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
 import { LiquidityRangeInput } from 'components/Charts/LiquidityRangeInput/LiquidityRangeInput'
 import { BaseQuoteFiatAmount } from 'components/Liquidity/BaseQuoteFiatAmount'
-import { useDefaultInitialPrice } from 'components/Liquidity/Create/hooks/useDefaultInitialPrice'
-import { useTokenControlOptions } from 'components/Liquidity/Create/hooks/useTokenControlOptions'
 import { PoolOutOfSyncError } from 'components/Liquidity/Create/PoolOutOfSyncError'
 import { PositionOutOfRangeError } from 'components/Liquidity/Create/PositionOutOfRangeError'
+import { useDefaultInitialPrice } from 'components/Liquidity/Create/hooks/useDefaultInitialPrice'
+import { useTokenControlOptions } from 'components/Liquidity/Create/hooks/useTokenControlOptions'
 import { PriceRangeState } from 'components/Liquidity/Create/types'
 import { PositionInfo } from 'components/Liquidity/types'
 import { getBaseAndQuoteCurrencies } from 'components/Liquidity/utils/currency'
@@ -579,8 +579,8 @@ export const SelectPriceRangeStep = ({
     }
 
     return [
-      ticksAtLimit[0] ? '0' : (pricesAtTicks[0]?.toSignificant(8) ?? ''),
-      ticksAtLimit[1] ? '∞' : (pricesAtTicks[1]?.toSignificant(8) ?? ''),
+      ticksAtLimit[0] ? '0' : pricesAtTicks[0]?.toSignificant(8) ?? '',
+      ticksAtLimit[1] ? '∞' : pricesAtTicks[1]?.toSignificant(8) ?? '',
     ]
   }, [pricesAtTicks, ticksAtLimit, initialPosition])
 

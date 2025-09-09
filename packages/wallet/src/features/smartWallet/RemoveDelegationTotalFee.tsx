@@ -25,7 +25,7 @@ export function RemoveDelegationTotalFee({ gasFees, setIsLoading }: RemoveDelega
     setGasFeeUpdateCount((count) => count + 1)
   }, [gasFees])
 
-  const logoChainId = gasFees.length === 1 ? (gasFees[0]?.chainId ?? null) : null
+  const logoChainId = gasFees.length === 1 ? gasFees[0]?.chainId ?? null : null
 
   const { totalFiatAmount, isLoading, hasError, onFetched, onError } = useFiatGasFees(gasFees)
 

@@ -1,9 +1,8 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { memo, useCallback } from 'react'
 import { Flex } from 'ui/src'
-// This is intentionally imported from the native file as only the web app requires a web specific implementation
-import { NftsList } from 'uniswap/src/components/nfts/NftsList.native'
 import { NftViewWithContextMenu } from 'uniswap/src/components/nfts/NftViewWithContextMenu'
+import { NftsList } from 'uniswap/src/components/nfts/NftsList'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

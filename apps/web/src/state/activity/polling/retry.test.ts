@@ -1,4 +1,4 @@
-import { CanceledError, RetryableError, retry } from 'state/activity/polling/retry'
+import { CanceledError, retry, RetryableError } from 'state/activity/polling/retry'
 
 describe('retry', () => {
   // eslint-disable-next-line max-params

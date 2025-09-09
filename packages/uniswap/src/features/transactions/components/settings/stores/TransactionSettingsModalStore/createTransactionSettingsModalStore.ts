@@ -71,13 +71,10 @@ export const createTransactionSettingsModalStore = <T extends TransactionSetting
           ...modalIds,
         ]
 
-        const modals = allModalIds.reduce(
-          (acc, next) => {
-            acc[next] = createModalState(next, set)
-            return acc
-          },
-          {} as Modals<T>,
-        )
+        const modals = allModalIds.reduce((acc, next) => {
+          acc[next] = createModalState(next, set)
+          return acc
+        }, {} as Modals<T>)
 
         return {
           modals,

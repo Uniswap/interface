@@ -1,5 +1,5 @@
-import { PoolTableTransactionType, usePoolTransactions } from 'appGraphql/data/pools/usePoolTransactions'
 import { ApolloError } from '@apollo/client'
+import { PoolTableTransactionType, usePoolTransactions } from 'appGraphql/data/pools/usePoolTransactions'
 import { PoolDetailsTransactionsTable } from 'components/Pools/PoolDetails/PoolDetailsTransactionsTable'
 import { useAbbreviatedTimeString } from 'components/Table/utils'
 import { useParams } from 'react-router'

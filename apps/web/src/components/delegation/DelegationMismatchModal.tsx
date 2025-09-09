@@ -9,9 +9,9 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { Blocked } from 'ui/src/components/icons/Blocked'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
-import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
 
 interface DelegationMismatchModalProps {

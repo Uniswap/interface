@@ -21,6 +21,7 @@ import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAccountBalances } from 'wallet/src/features/accounts/useAccountListData'
 import { useGatingUserPropertyUsernames } from 'wallet/src/features/gating/userPropertyHooks'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import {
@@ -29,7 +30,6 @@ import {
   useSwapProtectionSetting,
   useViewOnlyAccounts,
 } from 'wallet/src/features/wallet/hooks'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
 /** Component that tracks UserProperties during the lifetime of the app */

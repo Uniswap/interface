@@ -1,5 +1,5 @@
 import Row from 'components/deprecated/Row'
-import styled, { css, DefaultTheme } from 'lib/styled-components'
+import styled, { DefaultTheme, css } from 'lib/styled-components'
 import React, { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 import { Icon } from 'react-feather'
 import { TRANSITION_DURATIONS } from 'theme/styles'
@@ -35,10 +35,10 @@ const IconStyles = css<{ hideHorizontal?: boolean }>`
   :hover {
     background-color: ${({ theme }) => theme.surface2};
     transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `${duration.fast} background-color ${timing.in},`}
+        theme: {
+          transition: { duration, timing },
+        },
+      }) => `${duration.fast} background-color ${timing.in},`}
       ${getWidthTransition};
 
     ${IconHoverText} {

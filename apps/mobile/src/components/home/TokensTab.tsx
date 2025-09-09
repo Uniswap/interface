@@ -4,23 +4,25 @@ import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { TabProps } from 'src/components/layout/TabHelpers'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
+import { TabProps } from 'src/components/layout/TabHelpers'
 import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex } from 'ui/src'
 import { NoTokens } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { PortfolioEmptyState } from 'uniswap/src/components/portfolio/PortfolioEmptyState'
+import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TokenBalanceListRow } from 'uniswap/src/features/portfolio/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { usePortfolioEmptyStateBackground } from 'wallet/src/components/portfolio/empty'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
+import { PortfolioEmptyState } from 'wallet/src/features/portfolio/PortfolioEmptyState'
+
+export const TOKENS_TAB_DATA_DEPENDENCIES = [GQLQueries.PortfolioBalances]
 
 // ignore ref type
 
@@ -44,7 +46,6 @@ export const TokensTab = memo(
     const tokenDetailsNavigation = useTokenDetailsNavigation()
     const startProfilerTimer = useStartProfiler()
     const onPressReceive = useOpenReceiveModal()
-    const backgroundImageWrapperCallback = usePortfolioEmptyStateBackground()
 
     const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
 
@@ -86,22 +87,16 @@ export const TokensTab = memo(
           />
         </Flex>
       ) : (
-        <PortfolioEmptyState
-          backgroundImageWrapperCallback={backgroundImageWrapperCallback}
-          onPressBuy={onPressBuy}
-          onPressImport={onPressImport}
-          onPressReceive={onPressReceive}
-        />
+        <PortfolioEmptyState onPressBuy={onPressBuy} onPressImport={onPressImport} onPressReceive={onPressReceive} />
       )
     }, [
       isExternalProfile,
-      containerProps?.emptyComponentStyle,
-      t,
       onPressAction,
       onPressBuy,
       onPressImport,
       onPressReceive,
-      backgroundImageWrapperCallback,
+      containerProps?.emptyComponentStyle,
+      t,
     ])
 
     return (

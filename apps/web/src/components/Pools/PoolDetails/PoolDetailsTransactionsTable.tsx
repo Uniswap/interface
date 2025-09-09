@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-
+import { createColumnHelper } from '@tanstack/react-table'
 import {
-  getPoolTableTransactionTypeTranslation,
   PoolTableTransaction,
   PoolTableTransactionType,
+  getPoolTableTransactionTypeTranslation,
   usePoolTransactions,
 } from 'appGraphql/data/pools/usePoolTransactions'
 import { supportedChainIdFromGQLChain } from 'appGraphql/data/util'
-import { createColumnHelper } from '@tanstack/react-table'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'

@@ -9,8 +9,8 @@ import { transitions } from 'theme/styles'
 import { Flex, IconButton, Input, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { zIndexes } from 'ui/src/theme'
-import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 
 export default function SearchBar({ tab }: { tab?: string }) {
   const { t } = useTranslation()

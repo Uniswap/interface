@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import {
-  CancellationState,
   CancelOrdersDialog,
+  CancellationState,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
 import {
   OffchainOrderLineItem,
@@ -12,11 +12,11 @@ import {
   isLimitCancellable,
   useCancelMultipleOrdersCallback,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
-import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
+import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import Column, { AutoColumn } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { SwapModalHeaderAmount } from 'components/swap/SwapModalHeaderAmount'
 import { useCurrency } from 'hooks/Tokens'

@@ -26,12 +26,12 @@ import {
 } from 'src/features/walletConnect/utils'
 import { initializeWeb3Wallet, wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
+  SignRequest,
   addPendingSession,
   addRequest,
   addSession,
   removeSession,
   replaceSession,
-  SignRequest,
   setHasPendingSessionError,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, fork, put, select, take } from 'typed-redux-saga'
@@ -230,7 +230,7 @@ export function* handleSessionProposal(proposal: ProposalTypes.Struct & { verify
           verifyStatus,
           dappRequestInfo: {
             name: dapp.name,
-            url: proposal.verifyContext?.verified.origin ?? dapp.url,
+            url: dapp.url,
             icon: dapp.icons[0] ?? null,
             requestType: DappRequestType.WalletConnectSessionRequest,
           },

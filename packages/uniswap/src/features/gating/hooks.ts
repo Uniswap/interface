@@ -4,8 +4,8 @@ import { DynamicConfigKeys } from 'uniswap/src/features/gating/configs'
 import { ExperimentProperties, Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import {
-  getStatsigClient,
   TypedReturn,
+  getStatsigClient,
   useDynamicConfig,
   useExperiment,
   useFeatureGate,

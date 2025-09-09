@@ -1,10 +1,10 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
-import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
-import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
+import { CurrencyAmount, Currency } from "@uniswap/sdk-core"
+import { PresetPercentage } from "uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types"
+import { TransactionStep } from "uniswap/src/features/transactions/steps/types"
+import { SetCurrentStepFn } from "uniswap/src/features/transactions/swap/types/swapCallback"
+import { ValidatedSwapTxContext } from "uniswap/src/features/transactions/swap/types/swapTxAndGasInfo"
+import { WrapType } from "uniswap/src/features/transactions/types/wrap"
+import { SignerMnemonicAccountDetails } from "uniswap/src/features/wallet/types/AccountDetails"
 
 /**
  * Parameters needed for transaction preparation

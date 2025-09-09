@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { getNonEmptyArrayOrThrow, NonEmptyArray } from 'utilities/src/primitives/array'
+import { NonEmptyArray, getNonEmptyArrayOrThrow } from 'utilities/src/primitives/array'
 import { Prettify } from 'viem'
 
 function sortStablecoins(stables: Record<string, Token>): Token[] {

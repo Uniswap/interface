@@ -11,10 +11,10 @@ import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { GetPortfolioInput, getPortfolioQuery, useGetPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
-  buildPortfolioBalance,
   PortfolioCacheUpdater,
   PortfolioDataResult,
   PortfolioTotalValueResult,
+  buildPortfolioBalance,
 } from 'uniswap/src/features/dataApi/balances/balances'
 import { mapRestStatusToNetworkStatus, matchesCurrency } from 'uniswap/src/features/dataApi/balances/utils'
 import { PortfolioBalance, RestContract } from 'uniswap/src/features/dataApi/types'
@@ -39,7 +39,7 @@ export type RestTokenOverrides = {
 /**
  * REST implementation for fetching portfolio balances
  */
-export function usePortfolioData({
+export function useRESTPortfolioData({
   evmAddress,
   svmAddress,
   ...queryOptions
@@ -280,7 +280,7 @@ export const createPortfolioCacheUpdater =
     }
   }
 
-export function usePortfolioCacheUpdater(evmAddress?: string, svmAddress?: string): PortfolioCacheUpdater {
+export function useRestPortfolioCacheUpdater(evmAddress?: string, svmAddress?: string): PortfolioCacheUpdater {
   const { chains: chainIds } = useEnabledChains()
   const queryClient = useQueryClient()
 
@@ -301,7 +301,7 @@ export function usePortfolioCacheUpdater(evmAddress?: string, svmAddress?: strin
   )
 }
 
-export function usePortfolioTotalValue({
+export function useRESTPortfolioTotalValue({
   evmAddress,
   svmAddress,
   pollInterval,
@@ -336,7 +336,7 @@ export function usePortfolioTotalValue({
   })
 
   // TODO(SWAP-388): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
-  const modifier = useRestPortfolioValueModifier(enabled ? (evmAddress ?? svmAddress) : undefined)
+  const modifier = useRestPortfolioValueModifier(enabled ? evmAddress ?? svmAddress : undefined)
 
   const {
     data: formattedData,

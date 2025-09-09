@@ -24,7 +24,7 @@ import { InterfaceUserPropertyName, setUserProperty } from 'uniswap/src/features
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
-import { getWalletMeta, WalletType } from 'utils/walletMeta'
+import { WalletType, getWalletMeta } from 'utils/walletMeta'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useAccount as useAccountWagmi } from 'wagmi'
 

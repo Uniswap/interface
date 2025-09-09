@@ -66,7 +66,7 @@ export function StepRowSkeleton(props: StepRowSkeletonProps): JSX.Element {
               outputCurrencyInfo={currency1Info}
             />
           ) : (
-            (icon ?? <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon24} />)
+            icon ?? <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon24} />
           )}
         </StepIconWrapper>
         <Flex>

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* helpful when dealing with deeply nested state objects */
-import { createAction, createSlice, Draft, PayloadAction } from '@reduxjs/toolkit'
+import { Draft, PayloadAction, createAction, createSlice } from '@reduxjs/toolkit'
 import { providers } from 'ethers/lib/ethers'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'

@@ -48,7 +48,6 @@ export const ARBITRUM_CHAIN_INFO = {
     url: 'https://arbiscan.io/',
     apiURL: 'https://api.arbiscan.io',
   },
-  openseaName: 'arbitrum',
   interfaceName: 'arbitrum',
   label: 'Arbitrum',
   logo: ARBITRUM_LOGO,

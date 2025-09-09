@@ -1,10 +1,10 @@
 import { PartialMessage } from '@bufbuild/protobuf'
 import { createPromiseClient } from '@connectrpc/connect'
-import { queryOptions, UseQueryResult, useQuery } from '@tanstack/react-query'
+import { UseQueryResult, queryOptions, useQuery } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import { ListTransactionsRequest, ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
-import { transformInput, WithoutWalletAccount } from 'uniswap/src/data/rest/utils'
+import { WithoutWalletAccount, transformInput } from 'uniswap/src/data/rest/utils'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import type { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 

@@ -1,14 +1,14 @@
-import { EmbeddedWalletProvider, embeddedWalletProvider, Listener } from 'connection/EmbeddedWalletProvider'
+import { EmbeddedWalletProvider, Listener, embeddedWalletProvider } from 'connection/EmbeddedWalletProvider'
 import { getEmbeddedWalletState } from 'state/embeddedWallet/store'
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
 import { HexString } from 'uniswap/src/utils/hex'
 import {
-  getAddress,
   ProviderConnectInfo,
   ResourceUnavailableRpcError,
   RpcError,
   SwitchChainError,
   UserRejectedRequestError,
+  getAddress,
 } from 'viem'
 import { ChainNotConfiguredError, createConnector } from 'wagmi'
 

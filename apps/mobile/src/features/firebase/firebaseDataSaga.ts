@@ -13,8 +13,8 @@ import { logger } from 'utilities/src/logger/logger'
 import { getKeys } from 'utilities/src/primitives/objects'
 import {
   EditAccountAction,
-  editAccountActions,
   TogglePushNotificationParams,
+  editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { makeSelectAccountNotificationSetting, selectAccounts } from 'wallet/src/features/wallet/selectors'

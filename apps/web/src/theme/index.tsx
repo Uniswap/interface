@@ -1,6 +1,6 @@
-import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'lib/styled-components'
+import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'lib/styled-components'
 import { PropsWithChildren, useMemo } from 'react'
-import { darkTheme, lightTheme, ThemeColors } from 'theme/colors'
+import { ThemeColors, darkTheme, lightTheme } from 'theme/colors'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { darkDeprecatedTheme, lightDeprecatedTheme } from 'theme/deprecatedColors'
 import { getAccent2, getNeutralContrast } from 'theme/utils'
@@ -110,16 +110,13 @@ function applyOverriddenColors(defaultColors: ThemeColors, overriddenColors?: Pa
   }
 
   // Remove any undefined values from the object such that no theme values are overridden by undefined
-  const definedOverriddenColors = Object.keys(overriddenColors).reduce(
-    (acc, curr) => {
-      const key = curr as keyof ThemeColors
-      if (overriddenColors[key] !== undefined) {
-        acc[key] = overriddenColors[key]
-      }
-      return acc
-    },
-    {} as Partial<ThemeColors>,
-  )
+  const definedOverriddenColors = Object.keys(overriddenColors).reduce((acc, curr) => {
+    const key = curr as keyof ThemeColors
+    if (overriddenColors[key] !== undefined) {
+      acc[key] = overriddenColors[key]
+    }
+    return acc
+  }, {} as Partial<ThemeColors>)
 
   const mergedColors = { ...defaultColors, ...definedOverriddenColors }
 

@@ -63,15 +63,15 @@
   "module:jsx": "src",
   "private": true,
   "scripts": {
-    "build:icons": "bunx tsx ./src/scripts/componentize-icons.ts && biome check --write --unsafe",
-    "build:icons:missing": "bun run build:icons --skip-existing",
+    "build:icons": "node -r esbuild-register ./src/scripts/componentize-icons.ts",
+    "build:icons:missing": "yarn build:icons --skip-existing",
     "check:deps:usage": "depcheck",
     "lint": "eslint src --max-warnings=0",
-    "format": "biome check . --linter-enabled=false",
+    "format": "../../scripts/prettier.sh",
     "lint:fix": "eslint src --fix",
     "test": "jest && echo 'ignoring'",
     "typecheck": "tsc -b",
-    "watch": "bun run build --watch"
+    "watch": "yarn build --watch"
   },
   "sideEffects": [
     "*.css"

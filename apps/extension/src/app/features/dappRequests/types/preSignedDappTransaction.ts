@@ -1,7 +1,7 @@
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
+import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 
 export interface PrepareAndSignDappTransactionParams {
   /** The dapp request with gas estimates already applied */

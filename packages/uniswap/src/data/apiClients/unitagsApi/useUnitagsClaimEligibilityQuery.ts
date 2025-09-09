@@ -1,4 +1,4 @@
-import { skipToken, UseQueryResult, useQuery } from '@tanstack/react-query'
+import { UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { fetchClaimEligibility } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { UnitagClaimEligibilityRequest, UnitagClaimEligibilityResponse } from 'uniswap/src/features/unitags/types'

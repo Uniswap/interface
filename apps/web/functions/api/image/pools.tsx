@@ -1,11 +1,11 @@
 /* eslint-disable react/forbid-elements */
-
-import { ImageResponse } from '@vercel/og'
 import { WATERMARK_URL } from 'functions/constants'
 import getFont from 'functions/utils/getFont'
 import getNetworkLogoUrl from 'functions/utils/getNetworkLogoURL'
 import getPool from 'functions/utils/getPool'
 import { getRequest } from 'functions/utils/getRequest'
+
+import { ImageResponse } from '@vercel/og'
 import { Context } from 'hono'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
@@ -115,111 +115,113 @@ export async function poolImageHandler(c: Context) {
     const networkLogo = getNetworkLogoUrl(networkName.toUpperCase(), origin)
 
     return new ImageResponse(
-      <div
-        style={{
-          backgroundColor: '#1B1B1B',
-          display: 'flex',
-          width: '1200px',
-          height: '630px',
-        }}
-      >
+      (
         <div
           style={{
+            backgroundColor: '#1B1B1B',
             display: 'flex',
-            backgroundColor: `#1B1B1B`,
-            alignItems: 'center',
-            height: '100%',
-            padding: '96px',
+            width: '1200px',
+            height: '630px',
           }}
         >
           <div
             style={{
               display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              width: '100%',
+              backgroundColor: `#1B1B1B`,
+              alignItems: 'center',
               height: '100%',
-              color: 'white',
-              gap: '54px',
+              padding: '96px',
             }}
           >
-            <PoolImage
-              token0ImageUrl={data.poolData?.token0Image}
-              token1ImageUrl={data.poolData?.token1Image}
-              tokenSymbol0={data.poolData?.token0Symbol}
-              tokenSymbol1={data.poolData?.token1Symbol}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                width: '100%',
+                height: '100%',
+                color: 'white',
+                gap: '54px',
+              }}
             >
-              {networkLogo != '' && (
-                <img
-                  src={networkLogo}
-                  width="48px"
-                  height="48px"
-                  style={{
-                    position: 'absolute',
-                    right: '2px',
-                    bottom: '0px',
-                  }}
-                />
-              )}
-            </PoolImage>
-            <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
-              <div style={{ display: 'flex', flexDirection: 'row', gap: '24px' }}>
-                <div
-                  style={{
-                    fontFamily: 'Inter',
-                    fontSize: '100px',
-                    lineHeight: '120px',
-                  }}
-                >
-                  {data.name}
-                </div>
-                {data.poolData?.protocolVersion === ProtocolVersion.V2 && (
+              <PoolImage
+                token0ImageUrl={data.poolData?.token0Image}
+                token1ImageUrl={data.poolData?.token1Image}
+                tokenSymbol0={data.poolData?.token0Symbol}
+                tokenSymbol1={data.poolData?.token1Symbol}
+              >
+                {networkLogo != '' && (
+                  <img
+                    src={networkLogo}
+                    width="48px"
+                    height="48px"
+                    style={{
+                      position: 'absolute',
+                      right: '2px',
+                      bottom: '0px',
+                    }}
+                  />
+                )}
+              </PoolImage>
+              <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', gap: '24px' }}>
                   <div
                     style={{
                       fontFamily: 'Inter',
-                      fontSize: '48px',
-                      lineHeight: '48px',
-                      backgroundColor: '#FFFFFF12',
-                      borderRadius: '24px',
-                      padding: '12px 20px',
-                      color: '#9B9B9B',
-                      alignSelf: 'center',
+                      fontSize: '100px',
+                      lineHeight: '120px',
                     }}
                   >
-                    {data.poolData?.protocolVersion}
+                    {data.name}
                   </div>
-                )}
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-end',
-                  width: '100%',
-                }}
-              >
+                  {data.poolData?.protocolVersion === ProtocolVersion.V2 && (
+                    <div
+                      style={{
+                        fontFamily: 'Inter',
+                        fontSize: '48px',
+                        lineHeight: '48px',
+                        backgroundColor: '#FFFFFF12',
+                        borderRadius: '24px',
+                        padding: '12px 20px',
+                        color: '#9B9B9B',
+                        alignSelf: 'center',
+                      }}
+                    >
+                      {data.poolData?.protocolVersion}
+                    </div>
+                  )}
+                </div>
                 <div
                   style={{
-                    fontFamily: 'Inter',
-                    fontSize: '72px',
-                    lineHeight: '72px',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-end',
                     width: '100%',
-                    color: '#9B9B9B',
                   }}
                 >
-                  {data.poolData?.feeTier}
+                  <div
+                    style={{
+                      fontFamily: 'Inter',
+                      fontSize: '72px',
+                      lineHeight: '72px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      width: '100%',
+                      color: '#9B9B9B',
+                    }}
+                  >
+                    {data.poolData?.feeTier}
+                  </div>
+                  <img src={WATERMARK_URL} alt="Uniswap" height="72px" width="324px" />
                 </div>
-                <img src={WATERMARK_URL} alt="Uniswap" height="72px" width="324px" />
               </div>
             </div>
           </div>
         </div>
-      </div>,
+      ),
       {
         width: 1200,
         height: 630,

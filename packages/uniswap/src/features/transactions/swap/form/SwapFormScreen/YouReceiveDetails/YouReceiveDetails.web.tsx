@@ -11,6 +11,7 @@ import type { WarningWithStyle } from 'uniswap/src/components/modals/WarningModa
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import type { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/useSlippageSettings'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { AcrossRoutingInfoTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/AcrossRoutingTooltip'
@@ -34,11 +35,9 @@ import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/ho
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import type { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
-import { useRoutingProvider } from 'uniswap/src/utils/routingDiagram/routingRegistry'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
@@ -243,10 +242,6 @@ function RouteDisplay({
   loading: boolean
 }): JSX.Element {
   const { t } = useTranslation()
-  const trade = useSwapTxStore((s) => s.trade)
-
-  const routingProvider = useRoutingProvider({ routing: trade?.routing })
-
   const tooltip = isBridge ? (
     <AcrossRoutingInfoTooltip />
   ) : isUniswapXContext ? (
@@ -271,10 +266,7 @@ function RouteDisplay({
           </UniswapXText>
         </Flex>
       ) : (
-        <Flex row gap="$spacing6" alignItems="center">
-          {routingProvider?.icon && <routingProvider.icon size="$icon.16" color={routingProvider.iconColor} />}
-          <SwapDetailsRow.ValueLabel color={loading ? '$neutral2' : '$neutral1'} value={routingProvider?.name ?? ''} />
-        </Flex>
+        <SwapDetailsRow.ValueLabel color={loading ? '$neutral2' : '$neutral1'} value="Uniswap API" />
       )}
     </SwapDetailsRow.Outer>
   )

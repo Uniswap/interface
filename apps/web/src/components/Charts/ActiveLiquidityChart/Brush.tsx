@@ -1,5 +1,5 @@
-import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from 'components/Charts/LiquidityRangeInput/svg'
-import { BrushBehavior, brushY, D3BrushEvent, ScaleLinear, select } from 'd3'
+import { OffScreenHandle, brushHandleAccentPath, brushHandlePath } from 'components/Charts/LiquidityRangeInput/svg'
+import { BrushBehavior, D3BrushEvent, ScaleLinear, brushY, select } from 'd3'
 import usePrevious from 'hooks/usePrevious'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'

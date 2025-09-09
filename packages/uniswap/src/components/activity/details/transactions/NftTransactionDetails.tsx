@@ -3,6 +3,7 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
 import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   NFTApproveTransactionInfo,
@@ -53,14 +54,16 @@ export function NftTransactionContent({
   nftSummaryInfo: NFTSummaryInfo
   onClose: () => void
 }): JSX.Element {
-  const { navigateToNftCollection, navigateToNftDetails } = useUniswapContext()
+  const { navigateToNftCollection } = useUniswapContext()
+  const { navigateToNftDetails } = useUniswapContext()
+  const { defaultChainId } = useEnabledChains()
 
   const onPressNft = (): void => {
     navigateToNftDetails({
-      contractAddress: nftSummaryInfo.address,
+      address: nftSummaryInfo.address,
       tokenId: nftSummaryInfo.tokenId,
       chainId,
-      fallbackChainId: chainId,
+      fallbackChainId: defaultChainId,
     })
     onClose()
   }

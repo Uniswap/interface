@@ -2,7 +2,13 @@
 
 exports[`TokenDescription > no description or social buttons shown when not available 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c1 {
+  color: rgba(19,19,19,0.35);
+  font-weight: 485;
+  font-size: 16px;
+}
+
+.c0 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -19,12 +25,6 @@ exports[`TokenDescription > no description or social buttons shown when not avai
 
 .c0:active {
   opacity: 0.4;
-}
-
-.c1 {
-  color: rgba(19,19,19,0.35);
-  font-weight: 485;
-  font-size: 16px;
 }
 
 <span

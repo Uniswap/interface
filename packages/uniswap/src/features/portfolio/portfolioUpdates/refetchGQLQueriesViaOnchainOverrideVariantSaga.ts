@@ -135,7 +135,7 @@ function* modifyLocalCache({
         tokenBalancesRefs.forEach((tokenBalanceRef) => {
           const tokenRef = readField<Reference>('token', tokenBalanceRef)
           const chainId = fromGraphQLChain(readField('chain', tokenRef))
-          const tokenAddress = chainId ? (readField<Address>('address', tokenRef) ?? getNativeAddress(chainId)) : null
+          const tokenAddress = chainId ? readField<Address>('address', tokenRef) ?? getNativeAddress(chainId) : null
 
           if (!tokenRef || !chainId || !tokenAddress) {
             logger.error(new Error('Missing required value: `tokenRef`, `chainId` or `tokenAddress`'), {

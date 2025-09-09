@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useEvent, View } from 'tamagui'
+import { View, useEvent } from 'tamagui'
 import { FlexProps } from 'ui/src/components/layout'
 
 export interface HeightAnimatorProps {

@@ -254,7 +254,7 @@ export function ActiveLiquidityChart({
               yValue={yAccessor}
               brushDomain={brushDomain}
               containerHeight={height}
-              fill={opacify(10, brushDomain ? colors.neutral1.val : (barColor ?? colors.accent1.val))}
+              fill={opacify(10, brushDomain ? colors.neutral1.val : barColor ?? colors.accent1.val)}
               selectedFill={opacify(10, barColor ?? colors.accent1.val)}
               containerWidth={width - axisLabelPaneWidth}
             />

@@ -1,7 +1,7 @@
 import { TransactionRequest } from '@ethersproject/providers'
 import { Currency } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
-import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
+import { ReactNode, createContext, useCallback, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ParsedWarnings, WarningAction } from 'uniswap/src/components/modals/WarningModal/types'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'

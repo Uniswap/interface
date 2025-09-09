@@ -14,9 +14,7 @@ export function getInitialLogoUrl({
   chainId?: number | null
   backupImg?: string | null
 }) {
-  const networkName = isUniverseChainId(chainId)
-    ? (getChainInfo(chainId).assetRepoNetworkName ?? 'ethereum')
-    : 'ethereum'
+  const networkName = isUniverseChainId(chainId) ? getChainInfo(chainId).assetRepoNetworkName ?? 'ethereum' : 'ethereum'
   const checksummedAddress = isAddress(address)
 
   if (chainId === UniverseChainId.Celo && address === nativeOnChain(chainId).wrapped.address) {

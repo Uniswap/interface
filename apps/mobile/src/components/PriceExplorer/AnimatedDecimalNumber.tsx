@@ -5,7 +5,7 @@ import { ValueAndFormatted } from 'src/components/PriceExplorer/usePrice'
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { Flex, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { fonts, TextVariantTokens } from 'ui/src/theme'
+import { TextVariantTokens, fonts } from 'ui/src/theme'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 
 type AnimatedDecimalNumberProps = {

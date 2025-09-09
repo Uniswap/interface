@@ -1,5 +1,5 @@
 import { lighten } from 'polished'
-import { FlexProps, Shine, useSporeColors, View } from 'ui/src'
+import { FlexProps, Shine, View, useSporeColors } from 'ui/src'
 
 export const LoadingBubble = ({
   containerWidth,

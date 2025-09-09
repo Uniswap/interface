@@ -10,7 +10,7 @@ import {
   DutchOrder,
   getCancelMultipleParams,
 } from '@uniswap/uniswapx-sdk'
-import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { ContractTransaction } from 'ethers/lib/ethers'
 import { useAccount } from 'hooks/useAccount'
@@ -286,14 +286,8 @@ export function isLimitCancellable(order: UniswapXOrderDetails) {
  * @returns the nonce as BigNumber if available, undefined otherwise
  */
 export function getActivityNonce(activity: Activity): BigNumber | undefined {
-  if (
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    activity.options?.request?.nonce !== undefined &&
-    // TODO(PORT-338): determine why nonce is being sent in as null value
-    // when creating a limit order (should be undefined or BigNumberish)
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    activity.options.request.nonce !== null
-  ) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (activity.options?.request?.nonce !== undefined) {
     return BigNumber.from(activity.options.request.nonce)
   }
 
@@ -312,38 +306,4 @@ export function haveSameNonce(activity1: Activity, activity2: Activity): boolean
   const nonce2 = getActivityNonce(activity2)
 
   return Boolean(nonce1 && nonce2 && nonce1.eq(nonce2))
-}
-
-/**
- * Creates an ActivityMap from an array of activities, using the transaction hash as the key.
- *
- * This centralized function ensures consistent behavior between local and remote activity parsing,
- * preventing divergence in how activities are keyed in the map.
- *
- * Note: All activity types set a hash value:
- * - Regular transactions: use their transaction hash
- * - Fiat on/off ramps: set hash = id in the parser
- * - UniswapX orders: set hash = orderHash
- *
- * @param activities Array of activities to map
- * @returns ActivityMap keyed by transaction hash
- */
-export function createActivityMapByHash(activities: (Activity | undefined)[]): ActivityMap {
-  return activities.reduce<ActivityMap>((acc, activity) => {
-    if (!activity) {
-      return acc
-    }
-
-    if (!activity.hash) {
-      // This should not happen as all activity parsers set a hash value
-      logger.warn('utils', 'createActivityMapByHash', 'Activity without hash skipped', {
-        activityId: activity.id,
-        activityType: activity.type,
-      })
-      return acc
-    }
-
-    acc[activity.hash] = activity
-    return acc
-  }, {})
 }

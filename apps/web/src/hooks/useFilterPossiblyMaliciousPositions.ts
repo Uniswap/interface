@@ -1,7 +1,7 @@
+import { useQueries } from '@tanstack/react-query'
 import { apolloClient } from 'appGraphql/data/apollo/client'
 import { gqlTokenToCurrencyInfo } from 'appGraphql/data/types'
 import { apolloQueryOptions } from 'appGraphql/data/util'
-import { useQueries } from '@tanstack/react-query'
 import { useAccount } from 'hooks/useAccount'
 import { useTokenContractsConstant } from 'hooks/useTokenContractsConstant'
 import { useMemo } from 'react'

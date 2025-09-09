@@ -15,8 +15,8 @@ import { logger } from 'utilities/src/logger/logger'
 import { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { waitForTransactionConfirmation } from 'wallet/src/features/transactions/swap/confirmation'
 import {
-  createTransactionExecutor,
   TransactionExecutor,
+  createTransactionExecutor,
 } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
 import { TransactionStep, TransactionStepType } from 'wallet/src/features/transactions/swap/types/transactionExecutor'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'

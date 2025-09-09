@@ -1,5 +1,5 @@
-import { getTokenDetailsURL } from 'appGraphql/data/util'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { getTokenDetailsURL } from 'appGraphql/data/util'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { ClickableTamaguiStyle } from 'theme/components/styles'

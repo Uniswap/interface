@@ -12,7 +12,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 /**
@@ -73,7 +73,7 @@ export function isRestTokenSpam(spamCode?: RestSpamCode): boolean {
  * @returns parsed USD value as a number if currency is of type USD
  */
 export function parseUSDValueFromAssetChange(transactedValue: Maybe<Partial<Amount>>): number | undefined {
-  return transactedValue?.currency === Currency.Usd ? (transactedValue.value ?? undefined) : undefined
+  return transactedValue?.currency === Currency.Usd ? transactedValue.value ?? undefined : undefined
 }
 
 /**

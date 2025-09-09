@@ -1,4 +1,4 @@
-import { ETH_LOGO, ETHEREUM_LOGO, UNICHAIN_LOGO, UNICHAIN_SEPOLIA_LOGO } from 'ui/src/assets'
+import { ETHEREUM_LOGO, ETH_LOGO, UNICHAIN_LOGO, UNICHAIN_SEPOLIA_LOGO } from 'ui/src/assets'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
@@ -40,7 +40,6 @@ export const UNICHAIN_CHAIN_INFO = {
     name: 'Unichain Explorer',
     url: 'https://uniscan.xyz/',
   },
-  openseaName: 'unichain',
   interfaceName: 'unichain',
   label: 'Unichain',
   logo: UNICHAIN_LOGO,

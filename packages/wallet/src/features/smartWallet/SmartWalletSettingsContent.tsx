@@ -14,14 +14,14 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { SmartWalletEducationalModal } from 'wallet/src/components/smartWallet/modals/SmartWalletEducationalModal'
 import { setIsAllSmartWalletNudgesDisabled } from 'wallet/src/features/behaviorHistory/slice'
-import { useSmartWalletData } from 'wallet/src/features/smartWallet/hooks/useSmartWalletData'
-import { useTranslateSmartWalletStatus } from 'wallet/src/features/smartWallet/hooks/useTranslateSmartWalletStatus'
 import {
   SmartWalletModalsManager,
   useSmartWalletModals,
 } from 'wallet/src/features/smartWallet/SmartWalletModalsManager'
-import { SmartWalletModalState, WalletData, WalletStatus } from 'wallet/src/features/smartWallet/types'
 import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
+import { useSmartWalletData } from 'wallet/src/features/smartWallet/hooks/useSmartWalletData'
+import { useTranslateSmartWalletStatus } from 'wallet/src/features/smartWallet/hooks/useTranslateSmartWalletStatus'
+import { SmartWalletModalState, WalletData, WalletStatus } from 'wallet/src/features/smartWallet/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
 

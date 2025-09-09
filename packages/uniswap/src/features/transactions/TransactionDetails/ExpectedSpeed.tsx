@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useIsUnichainFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { EstimatedTime } from 'uniswap/src/features/transactions/TransactionDetails/EstimatedTime'
+import { useIsUnichainFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 
 interface ExpectedSpeedProps {
   chainId: UniverseChainId

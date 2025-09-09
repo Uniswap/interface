@@ -10,7 +10,7 @@ import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDevic
 import { useOsBiometricAuthEnabled } from 'src/features/biometrics/useOsBiometricAuthEnabled'
 import { useBiometricName, useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { useLockScreenState } from 'src/features/lockScreen/hooks/useLockScreenState'
-import { Button, Flex, flexStyles, TouchableArea, useIsDarkMode } from 'ui/src'
+import { Button, Flex, TouchableArea, flexStyles, useIsDarkMode } from 'ui/src'
 import { UNISWAP_MONO_LOGO_LARGE } from 'ui/src/assets'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'

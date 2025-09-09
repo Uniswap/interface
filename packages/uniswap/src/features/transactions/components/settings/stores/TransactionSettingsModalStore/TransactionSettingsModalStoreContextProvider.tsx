@@ -1,11 +1,11 @@
-import { type ReactNode, useState } from 'react'
+import { useState, type ReactNode } from 'react'
+import { TransactionSettingsModalStoreContext } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/TransactionSettingsModalStoreContext'
 import type {
   ModalId,
   TransactionSettingsModalId,
   TransactionSettingsModalState,
 } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/createTransactionSettingsModalStore'
 import { createTransactionSettingsModalStore } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/createTransactionSettingsModalStore'
-import { TransactionSettingsModalStoreContext } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/TransactionSettingsModalStoreContext'
 import type { StoreApi } from 'zustand/vanilla'
 
 // Create the provider component

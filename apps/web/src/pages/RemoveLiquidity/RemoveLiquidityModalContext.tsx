@@ -1,7 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { getCurrencyWithOptionalUnwrap } from 'components/Liquidity/utils/currency'
-import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useMemo, useState } from 'react'
+import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
 import { LiquidityModalInitialState } from 'state/application/reducer'
 import { useAppSelector } from 'state/hooks'
 import { PositionField } from 'types/position'

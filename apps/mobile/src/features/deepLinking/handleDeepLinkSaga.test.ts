@@ -1,17 +1,16 @@
 /* eslint-disable max-lines */
-
-import { call, delay } from 'redux-saga/effects'
 import { expectSaga } from 'redux-saga-test-plan'
+import { call, delay } from 'redux-saga/effects'
 import { navigationRef } from 'src/app/navigation/navigationRef'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { DeepLinkAction } from 'src/features/deepLinking/deepLinkUtils'
 import {
+  LinkSource,
+  ONRAMP_DEEPLINK_DELAY,
   handleDeepLink,
   handleGoToTokenDetailsDeepLink,
   handleUniswapAppDeepLink,
   handleWalletConnectDeepLink,
-  LinkSource,
-  ONRAMP_DEEPLINK_DELAY,
   parseAndValidateUserAddress,
 } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'

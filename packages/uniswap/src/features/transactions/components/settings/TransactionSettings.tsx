@@ -3,16 +3,16 @@ import { Flex, Popover, TouchableArea } from 'ui/src'
 import { Settings } from 'ui/src/components/icons/Settings'
 import type { IconSizeTokens } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { TransactionSettingsButton } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsButton'
+import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
+import { ViewOnlyButton } from 'uniswap/src/features/transactions/components/settings/ViewOnlyButton'
 import { TransactionSettingsModalId } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/createTransactionSettingsModalStore'
 import {
   useModalHide,
   useModalShow,
   useModalVisibility,
 } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/useTransactionSettingsModalStore'
-import { TransactionSettingsButton } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsButton'
-import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
-import { ViewOnlyButton } from 'uniswap/src/features/transactions/components/settings/ViewOnlyButton'
 import { ViewOnlyModal } from 'uniswap/src/features/transactions/modals/ViewOnlyModal'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'

@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { ImpactFeedbackStyle, impactAsync, NotificationFeedbackType, notificationAsync } from 'expo-haptics'
+import { ImpactFeedbackStyle, NotificationFeedbackType, impactAsync, notificationAsync } from 'expo-haptics'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setHapticsEnabled } from 'uniswap/src/features/settings/slice'

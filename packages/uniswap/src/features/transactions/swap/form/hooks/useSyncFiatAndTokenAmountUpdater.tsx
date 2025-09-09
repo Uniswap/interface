@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import {
   useSwapFormStore,
@@ -34,7 +34,7 @@ export function useSyncFiatAndTokenAmountUpdater({ skip = false }: { skip?: bool
   const currencies = useSwapFormStoreDerivedSwapInfo((s) => s.currencies)
   const exactCurrency = currencies[exactCurrencyField]
 
-  const { price: usdPriceOfCurrency } = useUSDCPrice(skip ? undefined : (exactCurrency?.currency ?? undefined))
+  const { price: usdPriceOfCurrency } = useUSDCPrice(skip ? undefined : exactCurrency?.currency ?? undefined)
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
   const chainId = currencyIdToChain(exactCurrency?.currencyId ?? '')

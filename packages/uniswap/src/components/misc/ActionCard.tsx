@@ -1,6 +1,6 @@
-import { Flex, FlexProps, Text, TouchableArea, useShadowPropsShort } from 'ui/src'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
 export interface ActionCardItem {
   title: string
@@ -11,10 +11,8 @@ export interface ActionCardItem {
   containerProps?: FlexProps
   hoverStyle?: FlexProps
   leftAlign?: boolean
-  borderRadius?: FlexProps['borderRadius']
   onPress?: () => void
-  backgroundImageWrapperCallback?: React.FC<{ children: React.ReactNode }>
-  shadowProps?: ReturnType<typeof useShadowPropsShort>
+  BackgroundImageWrapperCallback?: React.FC<{ children: React.ReactNode }>
 }
 
 export const ActionCard = ({
@@ -26,22 +24,19 @@ export const ActionCard = ({
   containerProps,
   hoverStyle,
   leftAlign = false,
-  backgroundImageWrapperCallback,
-  borderRadius,
-  shadowProps,
+  BackgroundImageWrapperCallback,
 }: ActionCardItem): JSX.Element => (
   <Trace logPress element={elementName}>
     <TouchableArea
-      backgroundColor={backgroundImageWrapperCallback ? undefined : '$surface1'}
+      backgroundColor={BackgroundImageWrapperCallback ? undefined : '$surface1'}
       borderColor="$surface3"
-      borderRadius={borderRadius ?? '$rounded24'}
+      borderRadius="$rounded24"
       borderWidth="$spacing1"
       overflow="hidden"
       hoverStyle={hoverStyle}
       onPress={onPress}
-      {...shadowProps}
     >
-      <BackgroundWrapper BackgroundImageWrapper={backgroundImageWrapperCallback}>
+      <BackgroundWrapper BackgroundImageWrapper={BackgroundImageWrapperCallback}>
         <Flex
           shrink
           centered={!leftAlign}
@@ -52,7 +47,7 @@ export const ActionCard = ({
           {...containerProps}
         >
           {icon}
-          <Flex shrink centered={!leftAlign} alignContent={leftAlign ? 'flex-start' : 'center'} gap="$spacing4">
+          <Flex shrink centered={!leftAlign} alignContent={leftAlign ? 'flex-start' : 'center'}>
             <Text textAlign={leftAlign ? 'left' : 'center'} variant="buttonLabel2">
               {title}
             </Text>

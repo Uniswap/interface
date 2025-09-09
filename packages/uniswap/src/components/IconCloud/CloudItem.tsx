@@ -1,5 +1,5 @@
 import { startTransition, useEffect, useState } from 'react'
-import { Flex, type FlexProps, styled } from 'ui/src'
+import { Flex, styled, type FlexProps } from 'ui/src'
 import { validColor } from 'ui/src/theme'
 import { ItemData, ItemPoint } from 'uniswap/src/components/IconCloud/IconCloud'
 import { randomChoice } from 'uniswap/src/components/IconCloud/utils'

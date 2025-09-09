@@ -3,8 +3,8 @@ import { Button, Flex } from 'ui/src'
 import { validColor } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 
 export function BridgeTokenButton({

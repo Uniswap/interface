@@ -5,7 +5,6 @@ import { Mutable } from 'types/mutable'
 import { DAI, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useCreateTransferTransaction } from 'utils/transfer'
-
 describe('useCreateTransfer', () => {
   const wallet = '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826'
 

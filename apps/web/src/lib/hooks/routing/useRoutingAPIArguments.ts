@@ -2,8 +2,8 @@ import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { useIsUniswapXSupportedChain } from 'hooks/useIsUniswapXSupportedChain'
 import {
   createGetRoutingAPIArguments,
-  type RoutingAPIInput,
   validateRoutingAPIInput,
+  type RoutingAPIInput,
 } from 'lib/hooks/routing/createGetRoutingAPIArguments'
 import { useMemo } from 'react'
 import { GetQuoteArgs } from 'state/routing/types'

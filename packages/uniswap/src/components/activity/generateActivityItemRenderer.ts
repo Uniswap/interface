@@ -14,19 +14,11 @@ import { UnknownSummaryItem } from 'uniswap/src/components/activity/summaries/Un
 import { WCSummaryItem } from 'uniswap/src/components/activity/summaries/WCSummaryItem'
 import { WrapSummaryItem } from 'uniswap/src/components/activity/summaries/WrapSummaryItem'
 import { SummaryItemProps, SwapSummaryCallbacks } from 'uniswap/src/components/activity/types'
-import { isLoadingItem, isSectionHeader, LoadingItem, SectionHeader } from 'uniswap/src/components/activity/utils'
+import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from 'uniswap/src/components/activity/utils'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export type ActivityItem = TransactionDetails | SectionHeader | LoadingItem
-export type ActivityItemRenderer = ({
-  item,
-  index,
-  customDetailsModalOpen,
-}: {
-  item: ActivityItem
-  index: number
-  customDetailsModalOpen?: () => void
-}) => JSX.Element
+export type ActivityItemRenderer = ({ item, index }: { item: ActivityItem; index: number }) => JSX.Element
 
 export function generateActivityItemRenderer({
   loadingItem,
@@ -40,15 +32,7 @@ export function generateActivityItemRenderer({
   authTrigger: ((args: { successCallback: () => void; failureCallback: () => void }) => Promise<void>) | undefined
 }): ActivityItemRenderer {
   // eslint-disable-next-line complexity
-  return function ActivityItemComponent({
-    item,
-    index,
-    customDetailsModalOpen,
-  }: {
-    item: ActivityItem
-    index: number
-    customDetailsModalOpen?: () => void
-  }): JSX.Element {
+  return function ActivityItemComponent({ item, index }: { item: ActivityItem; index: number }): JSX.Element {
     // if it's a loading item, render the loading placeholder
     if (isLoadingItem(item)) {
       return loadingItem
@@ -115,7 +99,6 @@ export function generateActivityItemRenderer({
       transaction: item,
       swapCallbacks,
       index,
-      customDetailsModalOpen,
     })
   }
 }

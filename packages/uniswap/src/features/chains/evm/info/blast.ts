@@ -45,7 +45,6 @@ export const BLAST_CHAIN_INFO = {
     url: 'https://blastscan.io/',
     apiURL: 'https://api.blastscan.io',
   },
-  openseaName: 'blast',
   interfaceName: 'blast',
   label: 'Blast',
   logo: BLAST_LOGO,

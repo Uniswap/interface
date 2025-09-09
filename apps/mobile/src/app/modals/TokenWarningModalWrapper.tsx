@@ -3,8 +3,8 @@ import { useReactNavigationModal } from 'src/components/modals/useReactNavigatio
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
+import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 

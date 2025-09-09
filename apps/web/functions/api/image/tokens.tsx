@@ -1,12 +1,12 @@
 /* eslint-disable react/forbid-elements */
-
-import { ImageResponse } from '@vercel/og'
 import { WATERMARK_URL } from 'functions/constants'
 import getFont from 'functions/utils/getFont'
 import getNetworkLogoUrl from 'functions/utils/getNetworkLogoURL'
-import { getRequest } from 'functions/utils/getRequest'
 import { getRGBColor } from 'functions/utils/getRGBColor'
+import { getRequest } from 'functions/utils/getRequest'
 import getToken from 'functions/utils/getToken'
+
+import { ImageResponse } from '@vercel/og'
 import { Context } from 'hono'
 
 export async function tokenImageHandler(c: Context) {
@@ -35,124 +35,126 @@ export async function tokenImageHandler(c: Context) {
     const ogImage = data.ogImage?.includes('.webp') ? undefined : data.ogImage
 
     return new ImageResponse(
-      <div
-        style={{
-          backgroundColor: 'black',
-          display: 'flex',
-          width: '1200px',
-          height: '630px',
-        }}
-      >
+      (
         <div
           style={{
+            backgroundColor: 'black',
             display: 'flex',
-            backgroundColor: `rgba(${palette.red}, ${palette.green}, ${palette.blue})`,
-            alignItems: 'center',
-            height: '100%',
-            padding: '72px',
+            width: '1200px',
+            height: '630px',
           }}
         >
           <div
             style={{
               display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              width: '100%',
+              backgroundColor: `rgba(${palette.red}, ${palette.green}, ${palette.blue})`,
+              alignItems: 'center',
               height: '100%',
-              color: 'white',
+              padding: '72px',
             }}
           >
-            {ogImage ? (
-              <img src={ogImage} width="144px" height="144px" style={{ borderRadius: '100%' }}>
-                {networkLogo != '' && (
-                  <img
-                    src={networkLogo}
-                    width="48px"
-                    height="48px"
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                width: '100%',
+                height: '100%',
+                color: 'white',
+              }}
+            >
+              {ogImage ? (
+                <img src={ogImage} width="144px" height="144px" style={{ borderRadius: '100%' }}>
+                  {networkLogo != '' && (
+                    <img
+                      src={networkLogo}
+                      width="48px"
+                      height="48px"
+                      style={{
+                        position: 'absolute',
+                        right: '2px',
+                        bottom: '0px',
+                      }}
+                    />
+                  )}
+                </img>
+              ) : (
+                <div
+                  style={{
+                    width: '144px',
+                    height: '144px',
+                    borderRadius: '100%',
+                    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <div
                     style={{
-                      position: 'absolute',
-                      right: '2px',
-                      bottom: '0px',
+                      fontFamily: 'Inter',
+                      fontSize: '48px',
+                      lineHeight: '58px',
+                      color: 'white',
                     }}
-                  />
-                )}
-              </img>
-            ) : (
+                  >
+                    {data.name?.slice(0, 3).toUpperCase()}
+                  </div>
+                  {networkLogo != '' && (
+                    <img
+                      src={networkLogo}
+                      width="48px"
+                      height="48px"
+                      style={{
+                        position: 'absolute',
+                        right: '2px',
+                        bottom: '0px',
+                      }}
+                    />
+                  )}
+                </div>
+              )}
               <div
                 style={{
-                  width: '144px',
-                  height: '144px',
-                  borderRadius: '100%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                  fontFamily: 'Inter',
+                  fontSize: '72px',
+                  lineHeight: '72px',
+                  marginLeft: '-5px',
+                  marginTop: '24px',
+                }}
+              >
+                {data.name}
+              </div>
+              <div
+                style={{
                   display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-end',
+                  width: '100%',
                 }}
               >
                 <div
                   style={{
                     fontFamily: 'Inter',
-                    fontSize: '48px',
-                    lineHeight: '58px',
-                    color: 'white',
+                    fontSize: '168px',
+                    lineHeight: '133px',
+                    marginLeft: '-13px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    width: '100%',
                   }}
                 >
-                  {data.name?.slice(0, 3).toUpperCase()}
+                  {data.tokenData?.symbol}
                 </div>
-                {networkLogo != '' && (
-                  <img
-                    src={networkLogo}
-                    width="48px"
-                    height="48px"
-                    style={{
-                      position: 'absolute',
-                      right: '2px',
-                      bottom: '0px',
-                    }}
-                  />
-                )}
+                <img src={WATERMARK_URL} alt="Uniswap" height="72px" width="324px" />
               </div>
-            )}
-            <div
-              style={{
-                fontFamily: 'Inter',
-                fontSize: '72px',
-                lineHeight: '72px',
-                marginLeft: '-5px',
-                marginTop: '24px',
-              }}
-            >
-              {data.name}
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'flex-end',
-                width: '100%',
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: 'Inter',
-                  fontSize: '168px',
-                  lineHeight: '133px',
-                  marginLeft: '-13px',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  width: '100%',
-                }}
-              >
-                {data.tokenData?.symbol}
-              </div>
-              <img src={WATERMARK_URL} alt="Uniswap" height="72px" width="324px" />
             </div>
           </div>
         </div>
-      </div>,
+      ),
       {
         width: 1200,
         height: 630,

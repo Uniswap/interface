@@ -1,15 +1,4 @@
-import {
-  BridgeTransactionInfo,
-  ConfirmedSwapTransactionInfo,
-  FINAL_STATUSES,
-  FinalizedTransactionDetails,
-  FinalizedTransactionStatus,
-  InterfaceTransactionDetails,
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-  TransactionTypeInfo,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, FINAL_STATUSES, TransactionDetails, InterfaceTransactionDetails, BridgeTransactionInfo, ConfirmedSwapTransactionInfo, FinalizedTransactionDetails, FinalizedTransactionStatus, TransactionType, TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is ConfirmedSwapTransactionInfo {
   return Boolean(
@@ -26,9 +15,7 @@ export function isFinalizedTxStatus(status: TransactionStatus): status is Finali
   return FINAL_STATUSES.some((finalStatus) => finalStatus === status)
 }
 
-export function isFinalizedTx(
-  tx: TransactionDetails | InterfaceTransactionDetails | FinalizedTransactionDetails,
-): tx is FinalizedTransactionDetails {
+export function isFinalizedTx(tx: TransactionDetails | InterfaceTransactionDetails | FinalizedTransactionDetails): tx is FinalizedTransactionDetails {
   const validateFinalizedTx = (): FinalizedTransactionDetails | undefined => {
     const { status, hash } = tx
     if (status === TransactionStatus.Success) {
@@ -51,7 +38,9 @@ export function isWalletTransaction(
   transaction: TransactionDetails | InterfaceTransactionDetails,
 ): transaction is TransactionDetails {
   // Wallet transactions have these optional fields that interface transactions don't have.  We can't rely on this alone because it's possible none of these fields are present.
-  const hasWalletOptionalFields = 'cancelRequest' in transaction || 'networkFee' in transaction
+  const hasWalletOptionalFields =
+    'cancelRequest' in transaction ||
+    'networkFee' in transaction
 
   if (hasWalletOptionalFields) {
     return true
@@ -64,7 +53,7 @@ export function isWalletTransaction(
     'deadline' in transaction ||
     'cancelled' in transaction
 
-  return !hasInterfaceOptionalFields
+    return !hasInterfaceOptionalFields
 }
 
 // Function that returns the transaction typed as TransactionDetails when it's a wallet transaction
@@ -78,6 +67,7 @@ export function getWalletTransaction(
 export function isInterfaceTransaction(
   transaction: TransactionDetails | InterfaceTransactionDetails,
 ): transaction is InterfaceTransactionDetails {
+
   // Interface transactions have these optional fields that wallet transactions don't have.  We can't rely on this alone because it's possible none of these fields are present.
   const hasInterfaceOptionalFields =
     'batchInfo' in transaction ||
@@ -93,7 +83,9 @@ export function isInterfaceTransaction(
   // - receipt
   // - cancelRequest
   // - networkFee
-  const hasWalletOptionalFields = 'cancelRequest' in transaction || 'networkFee' in transaction
+  const hasWalletOptionalFields =
+    'cancelRequest' in transaction ||
+    'networkFee' in transaction
 
   return !hasWalletOptionalFields
 }

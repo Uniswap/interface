@@ -1,7 +1,7 @@
 import Popover, { PopoverProps } from 'components/Popover'
 import styled from 'lib/styled-components'
 import { transparentize } from 'polished'
-import { Fragment, memo, PropsWithChildren, ReactNode, useCallback, useEffect, useState } from 'react'
+import { Fragment, PropsWithChildren, ReactNode, memo, useCallback, useEffect, useState } from 'react'
 import { Flex } from 'ui/src'
 import { noop } from 'utilities/src/react/noop'
 

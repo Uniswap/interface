@@ -1,6 +1,6 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { AdaptiveTokenBalancesProvider } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { apolloClient } from 'appGraphql/data/apollo/client'
-import { useQueryClient } from '@tanstack/react-query'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccount } from 'hooks/useAccount'
 import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'

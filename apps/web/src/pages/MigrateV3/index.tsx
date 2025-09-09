@@ -2,18 +2,18 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { ErrorCallout } from 'components/ErrorCallout'
-import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { Container } from 'components/Liquidity/Create/Container'
 import { EditSelectTokensStep } from 'components/Liquidity/Create/EditStep'
-import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
-import { useLPSlippageValue } from 'components/Liquidity/Create/hooks/useLPSlippageValues'
 import { SelectPriceRangeStep } from 'components/Liquidity/Create/RangeSelectionStep'
 import { SelectTokensStep } from 'components/Liquidity/Create/SelectTokenStep'
+import { useLPSlippageValue } from 'components/Liquidity/Create/hooks/useLPSlippageValues'
+import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'components/Liquidity/Create/types'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
 import { LoadingRow } from 'components/Liquidity/Loader'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import type { PositionInfo } from 'components/Liquidity/types'
 import { getCurrencyForProtocol } from 'components/Liquidity/utils/currency'
 import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
@@ -28,8 +28,8 @@ import {
   useCreateLiquidityContext,
 } from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import { SharedCreateModals } from 'pages/CreatePosition/CreatePosition'
-import useInitialPosition from 'pages/MigrateV3/hooks/useInitialPosition'
 import { MigrateV3PositionTxContextProvider, useMigrateV3TxContext } from 'pages/MigrateV3/MigrateV3LiquidityTxContext'
+import useInitialPosition from 'pages/MigrateV3/hooks/useInitialPosition'
 import type { Dispatch, SetStateAction } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
@@ -38,15 +38,16 @@ import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
-import { Button, Flex, Main, styled, Text, useMedia } from 'ui/src'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { Button, Flex, Main, Text, styled, useMedia } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme/heights'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
-import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
@@ -200,7 +201,7 @@ function MigrateV3Inner({
 
   return (
     <>
-      <Flex mt="$spacing48" gap="$gap36" $md={{ mt: '$spacing24', gap: '$none' }}>
+      <Flex mt="$spacing48" gap="$gap36">
         <BreadcrumbNavContainer aria-label="breadcrumb-nav">
           <BreadcrumbNavLink to="/positions">
             <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
@@ -209,22 +210,20 @@ function MigrateV3Inner({
             {currency0Amount.currency.symbol} / {currency1Amount.currency.symbol} <ChevronRight size={14} />
           </BreadcrumbNavLink>
         </BreadcrumbNavContainer>
-        <Flex
-          row
-          alignItems="center"
-          gap="$gap20"
-          width="100%"
-          justifyContent="space-between"
-          $md={{ flexDirection: 'column', alignItems: 'flex-start', mb: '$spacing24' }}
-        >
-          <Text variant="heading2">
+        <Flex row justifyContent="space-between" alignItems="center" gap="$gap20" width="100%">
+          <Text width="100%" variant="heading2">
             <Trans i18nKey="common.migrate.position" />
           </Text>
-          <Button
-            size="small"
-            emphasis="tertiary"
-            fill={false}
-            icon={<RotateLeft />}
+          <Flex
+            row
+            backgroundColor="$surface2"
+            borderRadius="$rounded12"
+            alignItems="center"
+            justifyContent="center"
+            gap="$gap4"
+            py="$padding8"
+            px="$padding12"
+            {...ClickableTamaguiStyle}
             onPress={() => {
               setPositionState({
                 ...DEFAULT_POSITION_STATE,
@@ -240,8 +239,11 @@ function MigrateV3Inner({
               setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
             }}
           >
-            <Trans i18nKey="common.button.reset" />
-          </Button>
+            <RotateLeft color="$neutral1" size={16} />
+            <Text variant="buttonLabel4" color="$neutral2">
+              <Trans i18nKey="common.button.reset" />
+            </Text>
+          </Flex>
         </Flex>
         <Flex row gap={32} width="100%">
           {!media.xl && (

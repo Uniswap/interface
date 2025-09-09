@@ -1,9 +1,9 @@
 import { parseUri } from '@walletconnect/utils'
 import {
+  UWULINK_PREFIX,
   isUwULinkDirectLink,
   isUwuLinkUniswapDeepLink,
   parseUwuLinkDataFromDeeplink,
-  UWULINK_PREFIX,
 } from 'src/components/Requests/Uwulink/utils'
 import {
   UNISWAP_URL_SCHEME,

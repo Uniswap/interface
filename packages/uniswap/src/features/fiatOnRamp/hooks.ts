@@ -18,11 +18,11 @@ import {
   useFiatOnRampAggregatorSupportedTokensQuery,
 } from 'uniswap/src/features/fiatOnRamp/api'
 import {
-  FiatCurrencyInfo,
-  FiatOnRampCurrency,
   FORQuote,
   FORSupportedFiatCurrency,
   FORSupportedToken,
+  FiatCurrencyInfo,
+  FiatOnRampCurrency,
   RampDirection,
 } from 'uniswap/src/features/fiatOnRamp/types'
 import {

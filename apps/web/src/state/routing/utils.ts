@@ -24,7 +24,6 @@ import {
   GetQuickQuoteArgs,
   GetQuoteArgs,
   InterfaceTrade,
-  isClassicQuoteResponse,
   LimitOrderTrade,
   OffchainOrderType,
   PoolType,
@@ -49,6 +48,7 @@ import {
   V2PoolInRoute,
   V3DutchOrderTrade,
   V3PoolInRoute,
+  isClassicQuoteResponse,
 } from 'state/routing/types'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'

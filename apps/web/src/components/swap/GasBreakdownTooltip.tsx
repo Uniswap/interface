@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
+import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
 import { AutoColumn } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'

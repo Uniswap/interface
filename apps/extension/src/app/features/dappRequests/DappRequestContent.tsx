@@ -18,10 +18,10 @@ import {
   Button,
   Flex,
   GetThemeValueForKey,
-  styled,
   Text,
   UniversalImage,
   UniversalImageResizeMode,
+  styled,
 } from 'ui/src'
 import { Verified } from 'ui/src/components/icons'
 import { borderRadii, iconSizes } from 'ui/src/theme'

@@ -11,8 +11,8 @@ import {
   selectShouldShowPostSwapNudge,
 } from 'wallet/src/features/behaviorHistory/selectors'
 import { DEFAULT_HIDE_DELAY } from 'wallet/src/features/notifications/components/NotificationToast'
-import { useSmartWalletChains } from 'wallet/src/features/smartWallet/hooks/useSmartWalletChains'
 import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
+import { useSmartWalletChains } from 'wallet/src/features/smartWallet/hooks/useSmartWalletChains'
 import { useActiveAccount, useHasSmartWalletConsent, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { WalletState } from 'wallet/src/state/walletReducer'
 

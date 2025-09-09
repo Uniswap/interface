@@ -5,13 +5,13 @@ import { useTranslation } from 'react-i18next'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { Flex, Loader, Text } from 'ui/src'
 import { NoTransactions } from 'ui/src/components/icons/NoTransactions'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import {
   ActivityItem,
   ActivityItemRenderer,
   generateActivityItemRenderer,
 } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { SwapSummaryCallbacks } from 'uniswap/src/components/activity/types'
-import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useFormattedTransactionDataForActivity } from 'uniswap/src/features/activity/hooks/useFormattedTransactionDataForActivity'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
@@ -27,7 +27,6 @@ export type UseActivityDataProps = {
   emptyComponentStyle?: StyleProp<ViewStyle>
   onPressEmptyState?: () => void
   skip?: boolean
-  extraTransactions?: ActivityItem[]
 }
 
 export type ActivityRenderData = {
@@ -46,7 +45,6 @@ export function useActivityData({
   swapCallbacks,
   fiatOnRampParams,
   skip,
-  extraTransactions,
 }: UseActivityDataProps): ActivityRenderData {
   const { t } = useTranslation()
 
@@ -69,14 +67,6 @@ export function useActivityData({
     hideSpamTokens,
     skip,
   })
-
-  const sectionDataWithExtra: ActivityItem[] | undefined = useMemo(() => {
-    if (extraTransactions?.length) {
-      return [...extraTransactions, ...(sectionData ?? [])]
-    } else {
-      return sectionData
-    }
-  }, [extraTransactions, sectionData])
 
   const errorCard = useMemo(
     () => (
@@ -111,12 +101,12 @@ export function useActivityData({
   )
 
   // We check `sectionData` instead of `hasData` because `sectionData` has either transactions or a loading skeleton.
-  const maybeEmptyComponent = sectionDataWithExtra?.length ? null : isError ? errorCard : emptyListView
+  const maybeEmptyComponent = sectionData?.length ? null : isError ? errorCard : emptyListView
 
   return {
     maybeEmptyComponent,
     renderActivityItem,
-    sectionData: sectionDataWithExtra,
+    sectionData,
     keyExtractor,
   }
 }

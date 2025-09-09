@@ -2,17 +2,18 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import { useMemo } from 'react'
 import { useAddFiatOnRampTransaction } from 'state/fiatOnRampTransactions/hooks'
 import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from 'state/fiatOnRampTransactions/types'
+import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
+import { FORQuoteItem } from 'uniswap/src/features/fiatOnRamp/FORQuoteItem'
+
 import {
   useFiatOnRampAggregatorOffRampWidgetQuery,
   useFiatOnRampAggregatorWidgetQuery,
 } from 'uniswap/src/features/fiatOnRamp/api'
-import { FORQuoteItem } from 'uniswap/src/features/fiatOnRamp/FORQuoteItem'
 import {
-  FiatCurrencyInfo,
   FORCountry,
-  FORFilters,
   FORQuote,
   FORServiceProvider,
+  FiatCurrencyInfo,
   RampDirection,
 } from 'uniswap/src/features/fiatOnRamp/types'
 import { createOnRampTransactionId } from 'uniswap/src/features/fiatOnRamp/utils'
@@ -29,8 +30,6 @@ interface ProviderOptionProps {
   setConnectedProvider: (provider: FORServiceProvider) => void
   setErrorProvider: (provider: FORServiceProvider) => void
   rampDirection: RampDirection
-  paymentMethodFilter?: FORFilters
-  hidden?: boolean
 }
 
 export function ProviderOption({
@@ -43,8 +42,6 @@ export function ProviderOption({
   setConnectedProvider,
   setErrorProvider,
   rampDirection,
-  paymentMethodFilter,
-  hidden = false,
 }: ProviderOptionProps) {
   const addFiatOnRampTransaction = useAddFiatOnRampTransaction()
   const externalSessionId = useMemo(
@@ -122,10 +119,8 @@ export function ProviderOption({
     <FORQuoteItem
       key={quote.serviceProviderDetails.serviceProvider}
       serviceProvider={quote.serviceProviderDetails}
+      hoverIcon={<ExternalLink position="absolute" right="$spacing12" size={20} />}
       isLoading={isLoading}
-      showPaymentMethods={!paymentMethodFilter}
-      isRecent={quote.isMostRecentlyUsedProvider}
-      hidden={hidden}
       onPress={async () => {
         if (data) {
           window.open(data.widgetUrl, '_blank')
@@ -153,7 +148,6 @@ export function ProviderOption({
               externalTransactionId: externalSessionId,
               fiatCurrency: meldSupportedFiatCurrency.code,
               serviceProvider: quote.serviceProviderDetails.serviceProvider,
-              paymentMethodFilter,
             },
           )
         } else if (error) {

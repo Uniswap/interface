@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,

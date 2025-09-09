@@ -73,3 +73,4 @@ export interface WalletAsset {
   marketplaces?: ListingMarket[]
   chain?: Chain
 }
+

@@ -1,4 +1,4 @@
-import { getBrowser, SharedEventName } from '@uniswap/analytics-events'
+import { SharedEventName, getBrowser } from '@uniswap/analytics-events'
 import { useEffect } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { useRouterPreference } from 'state/user/hooks'
@@ -6,7 +6,7 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
-import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
+import { Metric, getCLS, getFCP, getFID, getLCP } from 'web-vitals'
 
 export function UserPropertyUpdater() {
   const isDarkMode = useIsDarkMode()

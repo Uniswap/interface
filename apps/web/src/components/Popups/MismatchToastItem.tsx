@@ -6,9 +6,9 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export const MismatchToastItem = React.memo((props: { onDismiss: () => void }): JSX.Element => {

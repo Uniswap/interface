@@ -52,7 +52,7 @@ export function NftView({ item, onPress, index, openContextMenu }: NftViewProps)
   }
 
   return (
-    <Flex {...baseFlexProps} cursor="pointer" onPress={onPress} onLongPress={openContextMenu}>
+    <Flex {...baseFlexProps} onPress={onPress} onLongPress={openContextMenu}>
       {nftView}
     </Flex>
   )

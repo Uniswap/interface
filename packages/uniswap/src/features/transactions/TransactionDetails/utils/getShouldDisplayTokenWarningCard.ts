@@ -1,6 +1,6 @@
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { getIsFeeRelatedWarning, TokenProtectionWarning } from 'uniswap/src/features/tokens/safetyUtils'
+import { TokenProtectionWarning, getIsFeeRelatedWarning } from 'uniswap/src/features/tokens/safetyUtils'
 import {
   FeeOnTransferFeeGroupProps,
   FoTFeeType,

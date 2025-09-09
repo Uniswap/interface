@@ -2,6 +2,7 @@
 import '@testing-library/jest-dom' // jest custom assertions
 import 'jest-styled-components' // adds style diffs to snapshot tests
 import 'polyfills' // add polyfills
+import { setupi18n } from 'uniswap/src/i18n/i18n-setup-interface'
 
 import { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
@@ -14,7 +15,6 @@ import { toBeVisible } from 'test-utils/matchers'
 import { mocked } from 'test-utils/mocked'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { setupi18n } from 'uniswap/src/i18n/i18n-setup-interface'
 import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { TextDecoder, TextEncoder } from 'util'
 

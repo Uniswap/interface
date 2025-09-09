@@ -1,5 +1,5 @@
-import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import {
   LimitCustomMarketPriceButton,
   LimitPresetPriceButton,
@@ -8,11 +8,11 @@ import { LimitPriceInputLabel } from 'components/CurrencyInputPanel/LimitPriceIn
 import { useCurrentPriceAdjustment } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import { InputPanel } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { formatCurrencySymbol } from 'components/CurrencyInputPanel/utils'
-import Row from 'components/deprecated/Row'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
 import { SwitchNetworkAction } from 'components/Popups/types'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import Row from 'components/deprecated/Row'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import styled from 'lib/styled-components'

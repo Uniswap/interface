@@ -1,8 +1,8 @@
-import { providers, Signer } from 'ethers'
+import { Signer, providers } from 'ethers'
 import { AccountType, SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
-import { Provider } from 'wallet/src/features/transactions/executeTransaction/services/providerService'
 import { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
 import { createTransactionSignerService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerServiceImpl'
+import { Provider } from 'wallet/src/features/transactions/executeTransaction/services/providerService'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
 describe('TransactionSignerService', () => {

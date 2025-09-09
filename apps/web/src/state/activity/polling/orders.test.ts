@@ -1,12 +1,12 @@
 import { TradeType } from '@uniswap/sdk-core'
 import ms from 'ms'
 import {
-  getQuickPollingInterval,
   QUICK_POLL_INITIAL_INTERVAL,
   QUICK_POLL_INITIAL_PHASE,
   QUICK_POLL_MAX_INTERVAL,
   QUICK_POLL_MEDIUM_INTERVAL,
   QUICK_POLL_MEDIUM_PHASE,
+  getQuickPollingInterval,
   usePollPendingOrders,
 } from 'state/activity/polling/orders'
 import * as hooks from 'state/signatures/hooks'

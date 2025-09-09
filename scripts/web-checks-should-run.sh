@@ -2,15 +2,16 @@
 
 # This script controls whether the web quality checks run in Github
 
-# Check if @uniswap/interface is affected by changes
-bun nx show projects --affected --base=HEAD^ --head=HEAD | grep -q "@uniswap/interface"
+# see: https://github.com/vercel/turbo/blob/main/packages/turbo-ignore/README.md
+npx turbo-ignore @uniswap/interface --fallback=HEAD^
 
-# grep returns 0 if match found (project is affected), 1 if no match
+# we get exit 1 if, in the diff of the current branch vs main,
+# there was a change in web (or a sub-dependency of web)
 exit_status=$?
 
-echo "" # separate from the nx output
+echo "" # separate from the turbo output
 
-if [[ "$exit_status" == 0 ]] ; then
+if [[ "$exit_status" == 1 ]] ; then
   echo "✅ - Proceed"
   echo "CONCLUSION=success" >> "$GITHUB_OUTPUT"
 else

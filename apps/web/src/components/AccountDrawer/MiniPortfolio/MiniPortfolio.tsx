@@ -1,19 +1,21 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
+import Column from 'components/deprecated/Column'
+import { AutoRow } from 'components/deprecated/Row'
 import { atom, useAtom } from 'jotai'
-import { useTheme } from 'lib/styled-components'
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import styled, { useTheme } from 'lib/styled-components'
+import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { ThemedText } from 'theme/components'
 import { Loader } from 'ui/src/loading/Loader'
+import { breakpoints } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 
 const Tokens = lazy(() => import('components/AccountDrawer/MiniPortfolio/Tokens/TokensTab'))
-const SharedTokens = lazy(() => import('components/AccountDrawer/MiniPortfolio/Tokens/TokensTabShared'))
 const NFTs = lazy(() => import('components/AccountDrawer/MiniPortfolio/NFTs/NFTTab'))
 const SharedNFTs = lazy(() => import('components/AccountDrawer/MiniPortfolio/NFTs/NftTabShared'))
 const Pools = lazy(() => import('components/AccountDrawer/MiniPortfolio/Pools/PoolsTab'))
@@ -25,6 +27,49 @@ const ActivityTab = lazy(() =>
 const ActivityTabShared = lazy(() => import('components/AccountDrawer/MiniPortfolio/Activity/ActivityTabShared'))
 
 const lastPageAtom = atom(0)
+
+const Wrapper = styled(Column)`
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 12px;
+
+  @media screen and (max-width: ${breakpoints.md}px) {
+    margin-bottom: 48px;
+  }
+
+  .portfolio-row-wrapper {
+    &:hover {
+      background: ${({ theme }) => theme.deprecated_hoverDefault};
+    }
+  }
+`
+
+const Nav = styled(AutoRow)`
+  gap: 20px;
+`
+
+const NavItem = styled(ThemedText.SubHeader)<{ active?: boolean }>`
+  align-items: center;
+  color: ${({ theme, active }) => (active ? theme.neutral1 : theme.neutral2)};
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} color`};
+
+  &:hover {
+    color: ${({ theme, active }) => (active ? theme.neutral1Hovered : theme.neutral2Hovered)};
+  }
+`
+
+const PageWrapper = styled.div`
+  border-radius: 12px;
+  margin-right: -16px;
+  margin-left: -16px;
+  width: calc(100% + 32px);
+  flex: 1;
+`
 
 interface Page {
   title: string
@@ -48,9 +93,9 @@ export default function MiniPortfolio({ account }: { account: string }) {
       {
         title: t('common.tokens'),
         key: 'tokens',
-        component: ({ account }: { account: string }) => (
+        component: () => (
           <Suspense fallback={<Loader.Box />}>
-            {sharedPortfolioUIEnabled ? <SharedTokens owner={account} /> : <Tokens />}
+            <Tokens />
           </Suspense>
         ),
         loggingElementName: ElementName.MiniPortfolioTokensTab,
@@ -103,8 +148,8 @@ export default function MiniPortfolio({ account }: { account: string }) {
 
   return (
     <Trace section={SectionName.MiniPortfolio}>
-      <Flex mt="$spacing28" gap="$spacing12" height="100%">
-        <Flex row gap="$spacing20" data-testid="mini-portfolio-navbar" $md={{ mb: '$spacing48' }}>
+      <Wrapper>
+        <Nav data-testid="mini-portfolio-navbar">
           {pages.map(({ title, loggingElementName, key }, index) => {
             const isUnselectedActivity = key === 'activity' && currentKey !== 'activity'
             const showActivityIndicator = isUnselectedActivity && (hasPendingActivity || activityUnread)
@@ -114,47 +159,36 @@ export default function MiniPortfolio({ account }: { account: string }) {
                 setActivityUnread(false)
               }
             }
-
-            const active = currentPage === index
-
             return (
               <Trace logPress eventOnTrigger={SharedEventName.NAVBAR_CLICKED} element={loggingElementName} key={index}>
-                <TouchableArea
-                  alignItems="center"
-                  shouldAutomaticallyInjectColors={false}
-                  justifyContent="space-between"
-                  onPress={handleNavItemClick}
+                <NavItem
+                  onClick={handleNavItemClick}
+                  active={currentPage === index}
                   key={key}
                   data-testid={loggingElementName}
                 >
-                  <Flex row gap="$spacing4" alignItems="center" justifyContent="center">
-                    <Text
-                      color={active ? '$neutral1' : '$neutral2'}
-                      variant="subheading2"
-                      hoverStyle={active ? { color: '$neutral1Hovered' } : { color: '$neutral2Hovered' }}
-                    >
-                      {title}
-                    </Text>
-                    {showActivityIndicator && hasPendingActivity && (
-                      <Flex>
+                  <span>{title}</span>
+                  {showActivityIndicator && (
+                    <>
+                      &nbsp;
+                      {hasPendingActivity ? (
                         <LoaderV2 />
-                      </Flex>
-                    )}
-                    {showActivityIndicator && !hasPendingActivity && (
-                      <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="4" cy="4" r="4" fill={theme.accent1} />
-                      </svg>
-                    )}
-                  </Flex>
-                </TouchableArea>
+                      ) : (
+                        <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="4" cy="4" r="4" fill={theme.accent1} />
+                        </svg>
+                      )}
+                    </>
+                  )}
+                </NavItem>
               </Trace>
             )
           })}
-        </Flex>
-        <Flex borderRadius="$rounded12" mx={-16} width="calc(100% + 32px)" data-testid="mini-portfolio-page">
+        </Nav>
+        <PageWrapper data-testid="mini-portfolio-page">
           <Page account={account} />
-        </Flex>
-      </Flex>
+        </PageWrapper>
+      </Wrapper>
     </Trace>
   )
 }

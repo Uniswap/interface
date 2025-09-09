@@ -4,17 +4,19 @@ import { Trans, useTranslation } from 'react-i18next'
 import { AnimateTransition, Flex, LabeledCheckbox, Text, useSporeColors } from 'ui/src'
 import { BlockaidLogo } from 'ui/src/components/logos/BlockaidLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { WarningModalContent } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { WarningModalContent } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TokenWarningFlagsTable } from 'uniswap/src/features/tokens/TokenWarningFlagsTable'
 import { useBlockaidFeeComparisonAnalytics } from 'uniswap/src/features/tokens/hooks/useBlockaidFeeComparisonAnalytics'
 import {
+  TokenProtectionWarning,
   getCurrencyFeeOnTransfer,
   getFeeWarning,
   getIsFeeRelatedWarning,
@@ -23,12 +25,10 @@ import {
   getTokenProtectionFeeOnTransfer,
   getTokenProtectionWarning,
   getTokenWarningSeverity,
-  TokenProtectionWarning,
   useModalHeaderText,
   useModalSubtitleText,
 } from 'uniswap/src/features/tokens/safetyUtils'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
-import { TokenWarningFlagsTable } from 'uniswap/src/features/tokens/TokenWarningFlagsTable'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { isMobileApp } from 'utilities/src/platform'
 

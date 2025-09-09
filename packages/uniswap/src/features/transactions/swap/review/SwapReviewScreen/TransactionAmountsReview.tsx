@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, type FlexProps, Loader, ModalCloseIcon, Text, useMedia } from 'ui/src'
+import { Flex, Loader, ModalCloseIcon, Text, useMedia, type FlexProps } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { iconSizes, validColor } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'

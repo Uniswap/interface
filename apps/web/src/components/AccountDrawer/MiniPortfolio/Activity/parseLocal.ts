@@ -7,7 +7,6 @@ import StaticRouteIcon from 'assets/svg/static_route.svg'
 import { getCurrencyFromCurrencyId } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import { getBridgeDescriptor } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
 import type { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
-import { createActivityMapByHash } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import {
   getActivityTitle,
   getCancelledTransactionTitleTable,
@@ -279,7 +278,6 @@ async function parseCurrencyInfoForLP({
 }
 
 type GenericLiquidityInfo = Omit<LiquidityIncreaseTransactionInfo | LiquidityDecreaseTransactionInfo, 'type'>
-
 async function parseLiquidity({
   lp,
   formatNumber,
@@ -656,8 +654,12 @@ export function useLocalActivities(account: string): ActivityMap {
         .filter((signature) => signature.offerer === account)
         .map((signature) => signatureToActivity(signature, formatNumberOrString))
 
-      const allActivities = await Promise.all([...transactions, ...signatures])
-      return createActivityMapByHash(allActivities)
+      return (await Promise.all([...transactions, ...signatures])).reduce((acc, activity) => {
+        if (activity) {
+          acc[activity.id] = activity
+        }
+        return acc
+      }, {} as ActivityMap)
     },
   })
 

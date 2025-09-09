@@ -36,12 +36,6 @@ const sharedRules = {
         'Use the wrapper hooks `usePortfolioTotalValue`, `useAccountListData` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly.',
     },
     {
-      name: 'uniswap/src/features/dataApi/balances/balancesRest',
-      importNames: ['useRESTPortfolioTotalValue'],
-      message:
-        'Use the wrapper hooks `usePortfolioTotalValue`, `useAccountListData` or `usePortfolioBalances` instead of `useRESTPortfolioTotalValue` directly.',
-    },
-    {
       name: 'i18next',
       importNames: ['t'],
       message: 'Please avoid direct imports of t, using `useTranslation` and `i18n.t` when absolutely needed outside of a React context',

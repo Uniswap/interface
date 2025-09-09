@@ -6,8 +6,8 @@ import { useCallback, useMemo, useState } from 'react'
 import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useMedia, useSporeColors } from 'ui/src'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export const exploreProtocolVersionFilterAtom = atom(ProtocolVersion.UNSPECIFIED)
 const PROTOCOL_VERSIONS = [ProtocolVersion.UNSPECIFIED, ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]

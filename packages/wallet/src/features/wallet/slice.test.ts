@@ -4,10 +4,10 @@ import { Account } from 'wallet/src/features/wallet/accounts/types'
 import {
   addAccount,
   removeAccounts,
-  SwapProtectionSetting,
   setAccountAsActive,
-  WalletSliceState,
+  SwapProtectionSetting,
   walletReducer,
+  WalletSliceState,
 } from 'wallet/src/features/wallet/slice'
 
 const TEST_IMPORT_TIME_MS = 12345678912345

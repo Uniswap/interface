@@ -1,6 +1,6 @@
-import Row from 'components/deprecated/Row'
 import Expand from 'components/Expand'
 import QuestionHelper from 'components/QuestionHelper'
+import Row from 'components/deprecated/Row'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import ms from 'ms'
 import { Input, InputContainer } from 'pages/MigrateV2/Settings/Input'

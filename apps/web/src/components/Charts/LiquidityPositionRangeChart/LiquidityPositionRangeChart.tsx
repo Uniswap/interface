@@ -16,7 +16,7 @@ import {
 import { getCrosshairProps, priceToNumber } from 'components/Charts/LiquidityPositionRangeChart/utils'
 import { useDensityChartData } from 'components/Charts/LiquidityRangeInput/hooks'
 import { PriceChartData } from 'components/Charts/PriceChart'
-import { formatTickMarks, PriceChartType } from 'components/Charts/utils'
+import { PriceChartType, formatTickMarks } from 'components/Charts/utils'
 import ErrorBoundary from 'components/ErrorBoundary'
 import { getBaseAndQuoteCurrencies } from 'components/Liquidity/utils/currency'
 import { getPoolIdOrAddressFromCreatePositionInfo } from 'components/Liquidity/utils/getPoolIdOrAddressFromCreatePositionInfo'

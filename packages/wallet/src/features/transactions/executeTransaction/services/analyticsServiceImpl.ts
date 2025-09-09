@@ -2,8 +2,8 @@ import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { SwapTradeBaseProperties, UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import {
-  type OnChainTransactionDetails,
   TransactionOriginType,
+  type OnChainTransactionDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger as loggerUtil } from 'utilities/src/logger/logger'
 import type { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'

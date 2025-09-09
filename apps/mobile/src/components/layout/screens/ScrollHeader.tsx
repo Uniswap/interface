@@ -1,7 +1,7 @@
 import { useScrollToTop } from '@react-navigation/native'
 import React, { ReactElement, useMemo } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
-import Animated, { Extrapolate, interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, { Extrapolate, SharedValue, interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
 import { ColorTokens, Flex } from 'ui/src'

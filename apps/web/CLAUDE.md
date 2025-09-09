@@ -12,46 +12,46 @@ This is the Uniswap Web Interface - a React-based decentralized exchange applica
 
 ```bash
 # Start development server
-bun dev
+yarn dev
 
 # Run type checking
-bun typecheck
+yarn typecheck
 
 # Run linting
-bun lint
-bun lint:fix
+yarn lint
+yarn lint:fix
 
 # Run tests
-bun run test                    # Run all tests
-bun run test:watch             # Watch mode
-bun run test:set1              # Components only
-bun run test:set2              # Pages and state
-bun run test:set3              # Hooks, NFT, utils
-bun run test:set4              # Remaining tests
+yarn test                    # Run all tests
+yarn test:watch             # Watch mode
+yarn test:set1              # Components only
+yarn test:set2              # Pages and state
+yarn test:set3              # Hooks, NFT, utils
+yarn test:set4              # Remaining tests
 
 # Run E2E tests
-bun playwright:test
+yarn playwright:test
 
 # Build for production
-bun build:production
+yarn build:production
 ```
 
 ### Monorepo Commands (from root)
 
 ```bash
 # Initial setup
-bun lfg                    # Full setup with env vars
+yarn lfg                    # Full setup with env vars
 
 # Global checks (all packages)
-bun g:typecheck
-bun g:lint
-bun g:test
-bun g:build
+yarn g:typecheck
+yarn g:lint
+yarn g:test
+yarn g:build
 
 # Quick checks (changed files only)
-bun g:lint:changed
-bun g:typecheck:changed
-bun g:format:changed
+yarn g:lint:changed
+yarn g:typecheck:changed
+yarn g:format:changed
 ```
 
 ## Architecture & Code Organization
@@ -97,7 +97,7 @@ apps/web/src/
 
 ### Important Development Notes
 
-1. **Environment Variables**: Managed via 1Password CLI - run `bun lfg` for setup
+1. **Environment Variables**: Managed via 1Password CLI - run `yarn lfg` for setup
 2. **Node Version**: Must use Node at the version specified in @.nvmrc
 3. **Imports**: Use absolute imports within the app (enforced by ESLint)
 4. **TestIDs**: Use the TestID enum instead of string literals for test selectors
@@ -117,18 +117,18 @@ apps/web/src/
 
 ```bash
 # Start local Ethereum fork
-bun anvil:mainnet
+yarn anvil:mainnet
 
 # Start local Base fork
-bun anvil:base
+yarn anvil:base
 ```
 
 **Working with translations:**
 
 ```bash
-bun i18n:extract      # Extract new strings
-bun i18n:upload       # Upload to Crowdin
-bun i18n:download     # Download translations
+yarn i18n:extract      # Extract new strings
+yarn i18n:upload       # Upload to Crowdin
+yarn i18n:download     # Download translations
 ```
 
 ### Code Style Guidelines

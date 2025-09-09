@@ -1,6 +1,6 @@
 import { gqlTokenToCurrencyInfo } from 'appGraphql/data/types'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { DAI, nativeOnChain, USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { DAI, USDC_MAINNET, nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   Chain,
   ProtectionResult,

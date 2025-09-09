@@ -18,7 +18,7 @@ In most cases, a [core](https://eslint.org/docs/latest/rules/) or community rule
 6. Add your shiny new rule to [`native.js`](./native.js), [`base.js`](./base.js), and – if it's a react lint rule - [`react.js`](./react.js)
 7. **Test, test, test**; cover all your bases
    - remember that this rule will checked against nearly every single LOC in the codebase
-8. Profile with `TIMING=1 bun g:lint` and ensure your rule is **performant**
+8. Profile with `TIMING=1 yarn g:lint` and ensure your rule is **performant**
    - rules should generally not exceed 25 ms (~1%) for each package
 
 ### Tips and resources

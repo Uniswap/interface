@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Accordion, Flex, Text } from 'ui/src'
+import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import {
   useTransactionSettingsAutoSlippageToleranceStore,
   useTransactionSettingsStore,
@@ -15,7 +16,6 @@ import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Element | null {

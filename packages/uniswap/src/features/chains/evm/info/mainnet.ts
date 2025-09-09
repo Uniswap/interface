@@ -1,5 +1,5 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { ETH_LOGO, ETHEREUM_LOGO } from 'ui/src/assets'
+import { ETHEREUM_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
@@ -54,7 +54,6 @@ export const MAINNET_CHAIN_INFO = {
     url: 'https://etherscan.io/',
     apiURL: 'https://api.etherscan.io',
   },
-  openseaName: 'ethereum',
   interfaceName: 'mainnet',
   label: 'Ethereum',
   logo: ETHEREUM_LOGO,

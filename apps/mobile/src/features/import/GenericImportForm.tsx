@@ -5,8 +5,8 @@ import InputWithSuffix from 'src/features/import/InputWithSuffix'
 import { ColorTokens, Flex, Text, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
-import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { SectionName } from 'uniswap/src/features/telemetry/constants'
 
 interface Props {
   value: string | undefined

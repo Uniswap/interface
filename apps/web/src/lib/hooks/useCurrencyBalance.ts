@@ -3,7 +3,7 @@ import { useAccount } from 'hooks/useAccount'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { isAddress } from 'utilities/src/addresses'
 import { currencyKey } from 'utils/currencyKey'
 import { assume0xAddress } from 'utils/wagmi'
@@ -27,7 +27,7 @@ export function useRpcTokenBalancesWithLoadingIndicator({
     () =>
       skip
         ? []
-        : (tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false && t?.chainId === chainId) ?? []),
+        : tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false && t?.chainId === chainId) ?? [],
     [chainId, tokens, skip],
   )
 

@@ -4,7 +4,7 @@ import { parseToRgb } from 'polished'
 import { useTranslation } from 'react-i18next'
 import { use24hProtocolVolume, useDailyTVLWithChange } from 'state/explore/protocolStats'
 import { ExternalLink } from 'theme/components/Links'
-import { Flex, styled, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, styled, useSporeColors } from 'ui/src'
 import { RightArrow } from 'ui/src/components/icons/RightArrow'
 
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'

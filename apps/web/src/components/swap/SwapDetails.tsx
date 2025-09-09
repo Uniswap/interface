@@ -12,15 +12,16 @@ import styled from 'lib/styled-components'
 import { PropsWithChildren, ReactNode, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { InterfaceTrade, LimitOrderTrade, RouterPreference } from 'state/routing/types'
-import { isLimitTrade } from 'state/routing/utils'
+import { isClassicTrade, isLimitTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { Button, Flex, Separator, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
 
 const DetailsContainer = styled(Column)`
@@ -93,10 +94,6 @@ export function DropdownController({
   )
 }
 
-/**
- * IMPORTANT: This legacy component is only used for web LIMIT orders and assumes `trade` is a `LimitOrderTrade`,
- *            even though there are some `isLimitTrade` calls. This should eventually be cleaned up or deprecated.
- */
 export function SwapDetails({
   trade,
   inputCurrency,
@@ -129,6 +126,7 @@ export function SwapDetails({
   const { t } = useTranslation()
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [routerPreference] = useRouterPreference()
+  const routes = isClassicTrade(trade) ? getRoutingDiagramEntries(trade) : undefined
 
   const analyticsContext = useTrace()
 
@@ -188,6 +186,7 @@ export function SwapDetails({
                 allowedSlippage,
                 isAutoSlippage,
                 isAutoRouterApi: routerPreference === RouterPreference.API,
+                routes,
                 fiatValueInput: fiatValueInput.data,
                 fiatValueOutput: fiatValueOutput.data,
               }),

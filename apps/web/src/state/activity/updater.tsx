@@ -86,20 +86,12 @@ function useOnActivityUpdate(): OnActivityUpdate {
           return
         }
 
-        // Bridge transactions that have been confirmed on the deposit side are finalized differently
-        // They complete cross-chain and don't have traditional receipts when successful
-        const isBridgeWithDepositConfirmed =
-          original.typeInfo.type === TransactionType.Bridge && original.typeInfo.depositConfirmed
-
-        // For successful bridge transactions with deposit confirmed, we don't require a receipt
-        // For all other transactions (including failed bridges), we need a receipt to finalize
-        const receipt = update.receipt
-        const canFinalizeWithoutReceipt = isBridgeWithDepositConfirmed && update.status === TransactionStatus.Success
-
-        if (!receipt && !canFinalizeWithoutReceipt) {
-          // We should not finalize a transaction without a confirmed receipt (except for successful bridge transactions)
+        if (!('receipt' in update) || !update.receipt) {
+          // We should not finalize a transaction without a confirmed receipt
           return
         }
+
+        const receipt = update.receipt
 
         const updatedTransaction: InterfaceTransactionDetails = {
           ...original,

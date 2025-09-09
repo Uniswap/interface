@@ -3,8 +3,8 @@ import {
   initialUserSettingsState,
   setHideSmallBalances,
   setHideSpamTokens,
-  UserSettingsState,
   userSettingsReducer,
+  UserSettingsState,
 } from 'uniswap/src/features/settings/slice'
 
 describe(userSettingsReducer, () => {

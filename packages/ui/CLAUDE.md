@@ -16,22 +16,22 @@ This is the **UI package** within the Universe monorepo - a cross-platform compo
 
 ```bash
 # Build icon components from SVG files
-bun ui build:icons
+yarn ui build:icons
 
 # Build only missing icon components
-bun ui build:icons:missing
+yarn ui build:icons:missing
 
 # Run linting (ESLint with max warnings = 0)
-bun ui lint
+yarn ui lint
 
 # Run tests
-bun ui test
+yarn ui test
 
 # Type checking
-bun ui typecheck
+yarn ui typecheck
 
 # Format code
-bun ui format
+yarn ui format
 ```
 
 ## Component Development
@@ -112,7 +112,7 @@ Available breakpoints:
 ### Adding New Icons
 
 1. Place SVG file in `src/assets/icons/`
-2. Run `bun ui build:icons`
+2. Run `yarn ui build:icons`
 3. Import from `ui/src/components/icons`
 
 Icons are automatically generated with:

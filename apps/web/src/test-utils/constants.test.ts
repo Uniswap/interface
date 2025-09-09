@@ -22,7 +22,6 @@ import {
   TEST_TRADE_EXACT_OUTPUT,
   TEST_TRADE_FEE_ON_BUY,
   TEST_TRADE_FEE_ON_SELL,
-  toCurrencyAmount,
   US,
   USDC_ARBITRUM_INFO,
   USDC_INFO,
@@ -30,6 +29,7 @@ import {
   USE_DISCONNECTED_ACCOUNT,
   WBTC_INFO,
   WETH_INFO,
+  toCurrencyAmount,
 } from 'test-utils/constants'
 
 describe('test-utils/constants', () => {

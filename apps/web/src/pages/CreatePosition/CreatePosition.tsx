@@ -2,19 +2,19 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { DropdownSelector } from 'components/DropdownSelector'
+import { LPSettings } from 'components/LPSettings'
 import { Container } from 'components/Liquidity/Create/Container'
 import { DynamicFeeTierSpeedbump } from 'components/Liquidity/Create/DynamicFeeTierSpeedbump'
 import { EditSelectTokensStep } from 'components/Liquidity/Create/EditStep'
-import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
-import { useLPSlippageValue } from 'components/Liquidity/Create/hooks/useLPSlippageValues'
 import { SelectPriceRangeStep } from 'components/Liquidity/Create/RangeSelectionStep'
 import ResetCreatePositionFormModal from 'components/Liquidity/Create/ResetCreatePositionsFormModal'
 import { SelectTokensStep } from 'components/Liquidity/Create/SelectTokenStep'
+import { useLPSlippageValue } from 'components/Liquidity/Create/hooks/useLPSlippageValues'
+import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'components/Liquidity/Create/types'
 import { DepositStep } from 'components/Liquidity/Deposit'
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
-import { LPSettings } from 'components/LPSettings'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
 import {
   CreateLiquidityContextProvider,
@@ -30,13 +30,13 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { Button, Flex, styled, Text, TouchableArea, useMedia } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, styled, useMedia } from 'ui/src'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { parseRestProtocolVersion } from 'uniswap/src/data/rest/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { Deadline } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/deadline/Deadline/Deadline'
 import { Slippage } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/Slippage/Slippage'
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
@@ -346,7 +346,7 @@ const Toolbar = () => {
           buttonStyle={{ py: '$spacing8', px: '$spacing12' }}
           dropdownStyle={{ width: 200, borderRadius: '$rounded16' }}
           menuLabel={
-            <Text variant="buttonLabel3" lineHeight="16px" whiteSpace="nowrap">
+            <Text variant="buttonLabel3" lineHeight="16px">
               {t('position.protocol', { protocol: getProtocolVersionLabel(protocolVersion) })}
             </Text>
           }
@@ -406,7 +406,7 @@ function CreatePositionContent({
 
   return (
     <Trace logImpression page={InterfacePageName.CreatePosition}>
-      <MultichainContextProvider initialChainId={initialInputs.chainId}>
+      <MultichainContextProvider initialChainId={initialInputs.tokenA.chainId}>
         <LPTransactionSettingsStoreContextProvider autoSlippageTolerance={autoSlippageTolerance}>
           <CreateLiquidityContextProvider
             currencyInputs={currencyInputs}

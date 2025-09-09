@@ -2,7 +2,7 @@ import type { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-si
 import { _TypedDataEncoder } from '@ethersproject/hash'
 import type { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
 import { logger } from 'utilities/src/logger/logger'
-import { getWalletMeta, WalletType } from 'utils/walletMeta'
+import { WalletType, getWalletMeta } from 'utils/walletMeta'
 
 // These are WalletConnect peers which do not implement eth_signTypedData_v4, but *do* implement eth_signTypedData.
 // They are special-cased so that signing will still use EIP-712 (which is safer for the user).

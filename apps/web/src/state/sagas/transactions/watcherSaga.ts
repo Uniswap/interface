@@ -6,7 +6,7 @@ import { createUniverseTransaction } from 'state/sagas/utils/transaction'
 import { PendingTransactionDetails } from 'state/transactions/types'
 import { call } from 'typed-redux-saga'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { refetchQueries } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesSaga'
+import { refetchGQLQueries } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesSaga'
 
 import { createSaga } from 'uniswap/src/utils/saga'
 
@@ -21,12 +21,12 @@ type WatchTransactionsCallbackParams = {
 type WatchTransactionsCallback = (params: WatchTransactionsCallbackParams) => void
 
 function* watchTransactions(params: WatchTransactionsCallbackParams) {
-  const { address, chainId, pendingDiff, apolloClient } = params
+  const { address, chainId, pendingDiff, apolloClient, queryClient } = params
 
   const info = pendingDiff[0].typeInfo
   const transaction = createUniverseTransaction({ info, chainId, address })
 
-  yield call(refetchQueries, { transaction, apolloClient, activeAddress: address })
+  yield call(refetchGQLQueries, { transaction, apolloClient, activeAddress: address, queryClient })
 }
 
 export const watchTransactionsSaga = createSaga(watchTransactions, 'watchTransactions')

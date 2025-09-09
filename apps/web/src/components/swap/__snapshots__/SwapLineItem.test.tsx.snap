@@ -2,7 +2,20 @@
 
 exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
 <DocumentFragment>
-  .c5 {
+  .c4 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c2 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c5 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -50,19 +63,6 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
   width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
-}
-
-.c4 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c2 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c0 {
@@ -232,7 +232,20 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
 
 exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
 <DocumentFragment>
-  .c5 {
+  .c4 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c2 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c5 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -280,19 +293,6 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
   width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
-}
-
-.c4 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c2 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c0 {
@@ -462,7 +462,20 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
 
 exports[`SwapLineItem.tsx > exact input 1`] = `
 <DocumentFragment>
-  .c5 {
+  .c4 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c2 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c5 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -510,19 +523,6 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
   width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
-}
-
-.c4 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c2 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c0 {
@@ -666,7 +666,20 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
 
 exports[`SwapLineItem.tsx > exact input api 1`] = `
 <DocumentFragment>
-  .c5 {
+  .c4 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c2 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c5 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -714,19 +727,6 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
   width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
-}
-
-.c4 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c2 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c0 {
@@ -870,7 +870,20 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
 
 exports[`SwapLineItem.tsx > exact output 1`] = `
 <DocumentFragment>
-  .c5 {
+  .c4 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c2 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c5 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -918,19 +931,6 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
   width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
-}
-
-.c4 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c2 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c0 {
@@ -1074,7 +1074,20 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
 
 exports[`SwapLineItem.tsx > fee on buy 1`] = `
 <DocumentFragment>
-  .c5 {
+  .c4 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c2 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c5 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -1122,19 +1135,6 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
   width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
-}
-
-.c4 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c2 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c0 {
@@ -1278,7 +1278,20 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
 
 exports[`SwapLineItem.tsx > fee on sell 1`] = `
 <DocumentFragment>
-  .c5 {
+  .c4 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c2 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c5 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -1326,19 +1339,6 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
   width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
-}
-
-.c4 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c2 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c0 {

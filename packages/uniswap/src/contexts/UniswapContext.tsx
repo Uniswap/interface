@@ -12,7 +12,7 @@ import { Connector } from 'wagmi'
 
 export type NavigateToNftItemArgs = {
   owner?: Address
-  contractAddress: Address
+  address: Address
   tokenId: string
   fallbackChainId: UniverseChainId
   chainId?: UniverseChainId

@@ -1,12 +1,12 @@
 import { DeepPartial } from '@apollo/client/utilities'
-import { DataTag, DefaultError, QueryKey, queryOptions, UndefinedInitialDataOptions } from '@tanstack/react-query'
+import { DataTag, DefaultError, QueryKey, UndefinedInitialDataOptions, queryOptions } from '@tanstack/react-query'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import ms from 'ms'
 import { ExploreTab } from 'pages/Explore/constants'
 import { TokenStat } from 'state/explore/types'
 import { ColorTokens } from 'ui/src'
-import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
+import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   Chain,
   ContractInput,
@@ -110,7 +110,7 @@ export function fiatOnRampToCurrency(forCurrency: FORSupportedToken): Currency |
 export function supportedChainIdFromGQLChain(chain: GqlChainId): UniverseChainId
 export function supportedChainIdFromGQLChain(chain: Chain): UniverseChainId | undefined
 export function supportedChainIdFromGQLChain(chain: Chain): UniverseChainId | undefined {
-  return isBackendSupportedChain(chain) ? (fromGraphQLChain(chain) ?? undefined) : undefined
+  return isBackendSupportedChain(chain) ? fromGraphQLChain(chain) ?? undefined : undefined
 }
 
 export function getTokenExploreURL({ tab, chainUrlParam }: { tab: ExploreTab; chainUrlParam?: string }) {

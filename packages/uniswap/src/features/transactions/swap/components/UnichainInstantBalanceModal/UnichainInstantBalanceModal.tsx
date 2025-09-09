@@ -4,6 +4,7 @@ import { Button, Flex, ModalCloseIcon, Text, useExtractedTokenColor, useSporeCol
 import { zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { UnichainPoweredMessage } from 'uniswap/src/features/transactions/TransactionDetails/UnichainPoweredMessage'
 import {
   TransactionScreen,
   useTransactionModalContext,
@@ -16,7 +17,6 @@ import { useBackgroundColor } from 'uniswap/src/features/transactions/swap/compo
 import { useClearFlashblocksSwapNotifications } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/hooks/useClearFlashblocksSwapNotifications'
 import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { UnichainPoweredMessage } from 'uniswap/src/features/transactions/TransactionDetails/UnichainPoweredMessage'
 import { isInterface, isInterfaceDesktop, isWeb } from 'utilities/src/platform'
 
 export function UnichainInstantBalanceModal(): JSX.Element | null {

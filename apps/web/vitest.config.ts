@@ -9,17 +9,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.ts', './vite/mockAssets.tsx'],
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
-    exclude: [
-      'e2e',
-      '**/*.e2e.test.ts',
-      '**/*.e2e.test.tsx',
-      '**/e2e/**',
-      'node_modules',
-      'dist',
-      '.next',
-      '.turbo',
-      '.nx',
-    ],
+    exclude: ['e2e', '**/*.e2e.test.ts', '**/*.e2e.test.tsx', '**/e2e/**', 'node_modules', 'dist', '.next', '.turbo'],
     testTimeout: 15000,
     deps: {
       inline: [/packages\/ui/, /packages\/utilities/, /packages\/uniswap/],

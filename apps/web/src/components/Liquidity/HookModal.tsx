@@ -1,4 +1,4 @@
-import { FlagWarning, getFlagsFromContractAddress, getFlagWarning } from 'components/Liquidity/utils/getFlagWarnings'
+import { FlagWarning, getFlagWarning, getFlagsFromContractAddress } from 'components/Liquidity/utils/getFlagWarnings'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,8 +12,8 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'utilities/src/addresses'
 
 function HookWarnings({ flags, hasDangerous }: { flags: FlagWarning[]; hasDangerous: boolean }) {

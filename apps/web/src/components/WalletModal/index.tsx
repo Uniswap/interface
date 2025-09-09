@@ -1,6 +1,6 @@
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { downloadAppModalPageAtom, Page } from 'components/NavBar/DownloadApp/Modal'
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
+import { Page, downloadAppModalPageAtom } from 'components/NavBar/DownloadApp/Modal'
 import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
 import { DownloadWalletRow } from 'components/WalletModal/DownloadWalletRow'
 import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'

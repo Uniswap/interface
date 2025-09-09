@@ -1,13 +1,13 @@
 import { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
-import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea, flexStyles } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SearchModalNoQueryList } from 'uniswap/src/features/search/SearchModal/SearchModalNoQueryList'
 import { SearchModalResultsList } from 'uniswap/src/features/search/SearchModal/SearchModalResultsList'
 import { MOBILE_SEARCH_TABS, SearchTab } from 'uniswap/src/features/search/SearchModal/types'
-import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { useDebounce } from 'utilities/src/time/timing'
 
 export const ExploreScreenSearchResultsList = memo(function _ExploreScreenSearchResultsList({

@@ -79,12 +79,6 @@ const DEFAULT_CONNECTORS: WalletConnectorMeta[] = [
     isInjected: false,
     analyticsWalletType: 'binance',
   }),
-  createWagmiWalletConnector({
-    name: 'Porto',
-    wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' },
-    isInjected: true,
-    analyticsWalletType: 'Porto',
-  }),
   createCustomWalletConnector({
     name: 'Embedded Wallet',
     customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
@@ -104,9 +98,6 @@ describe('useOrderedWalletConnectors', () => {
       if (flag === FeatureFlags.Solana) {
         return false
       }
-      if (flag === FeatureFlags.PortoWalletConnector) {
-        return true
-      }
       return false
     })
     mocked(useRecentConnectorId).mockReturnValue(undefined)
@@ -120,7 +111,6 @@ describe('useOrderedWalletConnectors', () => {
       { wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' } },
       { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
       { wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' } },
-      { wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' } },
     ]
 
     result.current.forEach((connector, index) => {
@@ -153,7 +143,6 @@ describe('useOrderedWalletConnectors', () => {
       { wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' } },
       { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
       { wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' } },
-      { wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' } },
     ]
 
     result.current.forEach((connector, index) => {
@@ -218,12 +207,6 @@ describe('useOrderedWalletConnectors', () => {
         wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS, type: 'injected' },
         isInjected: true,
       }),
-      createWagmiWalletConnector({
-        name: 'Porto',
-        wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' },
-        isInjected: true,
-        analyticsWalletType: 'Porto',
-      }),
     ])
 
     // Should not throw error and should include multiple connectors
@@ -276,12 +259,6 @@ describe('useOrderedWalletConnectors', () => {
         name: 'Binance Injected',
         wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS, type: 'injected' },
         isInjected: true,
-      }),
-      createWagmiWalletConnector({
-        name: 'Porto',
-        wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' },
-        isInjected: true,
-        analyticsWalletType: 'Porto',
       }),
     ])
 
@@ -341,12 +318,6 @@ describe('useOrderedWalletConnectors', () => {
         wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS, type: 'injected' },
         isInjected: true,
       }),
-      createWagmiWalletConnector({
-        name: 'Porto',
-        wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' },
-        isInjected: true,
-        analyticsWalletType: 'Porto',
-      }),
     ])
 
     const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: true }))
@@ -355,7 +326,6 @@ describe('useOrderedWalletConnectors', () => {
     const expectedConnectors = [
       { wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' } },
       { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
-      { wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' } },
     ]
 
     expectedConnectors.forEach((expected, index) => {
@@ -382,7 +352,6 @@ describe('useOrderedWalletConnectors', () => {
       { wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' } },
       { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
       { wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' } },
-      { wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' } },
     ]
 
     result.current.forEach((connector, index) => {
@@ -396,9 +365,6 @@ describe('useOrderedWalletConnectors', () => {
     beforeEach(() => {
       mocked(useFeatureFlag).mockImplementation((flag) => {
         if (flag === FeatureFlags.EmbeddedWallet) {
-          return true
-        }
-        if (flag === FeatureFlags.PortoWalletConnector) {
           return true
         }
         if (flag === FeatureFlags.Solana) {
@@ -447,9 +413,6 @@ describe('useOrderedWalletConnectors', () => {
         if (flag === FeatureFlags.EmbeddedWallet) {
           return true
         }
-        if (flag === FeatureFlags.PortoWalletConnector) {
-          return true
-        }
         if (flag === FeatureFlags.Solana) {
           return false
         }
@@ -464,7 +427,6 @@ describe('useOrderedWalletConnectors', () => {
       const expectedConnectors = [
         { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
         { wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' } },
-        { wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' } },
       ]
 
       result.current.forEach((connector, index) => {
@@ -481,7 +443,6 @@ describe('useOrderedWalletConnectors', () => {
         { wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' } },
         { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
         { wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' } },
-        { wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' } },
       ]
 
       result.current.forEach((connector, index) => {
@@ -514,11 +475,6 @@ describe('useOrderedWalletConnectors', () => {
           wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' },
           isInjected: false,
         }),
-        createWagmiWalletConnector({
-          name: 'Porto',
-          wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' },
-          isInjected: true,
-        }),
       ])
       const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: true }))
 
@@ -527,7 +483,6 @@ describe('useOrderedWalletConnectors', () => {
         { wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' } },
         { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
         { wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' } },
-        { wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' } },
       ]
 
       result.current.forEach((connector, index) => {

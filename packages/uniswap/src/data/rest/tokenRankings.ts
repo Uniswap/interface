@@ -2,12 +2,12 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { ConnectError } from '@connectrpc/connect'
 import { useQuery } from '@connectrpc/connect-query'
 import { UseQueryResult } from '@tanstack/react-query'
+import { tokenRankings } from '@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery'
 import {
   TokenRankingsRequest,
   TokenRankingsResponse,
   TokenRankingsStat,
 } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { tokenRankings } from '@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery'
 
 import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
 import { parseProtectionInfo, parseSafetyLevel } from 'uniswap/src/data/rest/utils'

@@ -2,6 +2,7 @@ import {
   SAMPLE_PASSWORD,
   SAMPLE_SEED,
   SAMPLE_SEED_ADDRESS_1,
+  SAMPLE_SEED_ADDRESS_10,
   SAMPLE_SEED_ADDRESS_2,
   SAMPLE_SEED_ADDRESS_3,
   SAMPLE_SEED_ADDRESS_4,
@@ -10,7 +11,6 @@ import {
   SAMPLE_SEED_ADDRESS_7,
   SAMPLE_SEED_ADDRESS_8,
   SAMPLE_SEED_ADDRESS_9,
-  SAMPLE_SEED_ADDRESS_10,
 } from 'uniswap/src/test/fixtures'
 import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
 import { WebKeyring } from 'wallet/src/features/wallet/Keyring/Keyring.web'

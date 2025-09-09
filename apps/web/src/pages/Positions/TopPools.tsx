@@ -1,6 +1,6 @@
+import { ExploreStatsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { PoolSortFields } from 'appGraphql/data/pools/useTopPools'
 import { OrderDirection } from 'appGraphql/data/util'
-import { ExploreStatsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ExternalArrowLink } from 'components/Liquidity/ExternalArrowLink'
 import { useAccount } from 'hooks/useAccount'
 import { TopPoolsSection } from 'pages/Positions/TopPoolsSection'

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import dayjs from 'dayjs'
-import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
+import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -20,12 +20,12 @@ import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { setBackupReminderLastSeenTs, setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
 import { createImportedAccounts } from 'wallet/src/features/onboarding/createImportedAccounts'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { Account, BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 
@@ -426,7 +426,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     extensionOnboardingFlow?: ExtensionOnboardingFlow
   }): Promise<void> => {
     const isWatchFlow = importType === ImportType.Watch
-    const onboardingAccounts = isWatchFlow ? [] : (accounts ?? getAllOnboardingAccounts())
+    const onboardingAccounts = isWatchFlow ? [] : accounts ?? getAllOnboardingAccounts()
     const onboardingAddresses = onboardingAccounts.map((a) => a.address)
 
     // Activate all pending accounts

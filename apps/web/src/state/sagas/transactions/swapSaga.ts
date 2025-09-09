@@ -13,9 +13,9 @@ import { useGetOnPressRetry } from 'state/sagas/transactions/retry'
 import { jupiterSwap } from 'state/sagas/transactions/solana'
 import { handleUniswapXSignatureStep } from 'state/sagas/transactions/uniswapx'
 import {
+  HandleOnChainStepParams,
   getDisplayableError,
   getSwapTransactionInfo,
-  HandleOnChainStepParams,
   handleApprovalTransactionStep,
   handleOnChainStep,
   handlePermitTransactionStep,
@@ -54,12 +54,12 @@ import { PermitMethod, ValidatedSwapTxContext } from 'uniswap/src/features/trans
 import { BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { generateSwapTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateSwapTransactionSteps'
-import { isClassic, isJupiter, UNISWAPX_ROUTING_VARIANTS } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { UNISWAPX_ROUTING_VARIANTS, isClassic, isJupiter } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import {
-  isSignerMnemonicAccountDetails,
   SignerMnemonicAccountDetails,
+  isSignerMnemonicAccountDetails,
 } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'

@@ -12,9 +12,9 @@ import {
   useFiatOnRampAggregatorSupportedTokensQuery,
 } from 'uniswap/src/features/fiatOnRamp/api'
 import {
+  FORCountry,
   FiatCurrencyInfo,
   FiatOnRampCurrency,
-  FORCountry,
   OffRampTransferDetailsRequest,
 } from 'uniswap/src/features/fiatOnRamp/types'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports

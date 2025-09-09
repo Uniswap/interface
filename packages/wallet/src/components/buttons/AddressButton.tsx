@@ -1,4 +1,4 @@
-import { iconSizes, TextVariantTokens } from 'ui/src/theme'
+import { TextVariantTokens, iconSizes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useENSName } from 'uniswap/src/features/ens/api'

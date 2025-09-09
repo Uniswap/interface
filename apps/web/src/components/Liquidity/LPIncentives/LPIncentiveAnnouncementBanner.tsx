@@ -206,7 +206,12 @@ function LpIncentiveBannerContent({ handleClose }: { handleClose: () => void }) 
         }}
       >
         <Trace logPress eventOnTrigger={UniswapEventName.LpIncentiveLearnMoreCtaClicked}>
-          <LearnMoreLink textVariant="body4" textColor="$neutral2" url={uniswapUrls.helpArticleUrls.lpIncentiveInfo} />
+          <LearnMoreLink
+            textVariant="body4"
+            textColor="$neutral2"
+            url={uniswapUrls.helpArticleUrls.lpIncentiveInfo}
+            hoverStyle={{ color: '$neutral3' }}
+          />
         </Trace>
         <Button size="small" emphasis="primary" maxWidth="fit-content" onPress={onClickViewMore}>
           {t('pool.viewPools')}

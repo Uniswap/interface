@@ -3,7 +3,7 @@ import { onError } from '@apollo/client/link/error'
 import { RestLink } from 'apollo-link-rest'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { getVersionHeader, REQUEST_SOURCE } from 'uniswap/src/data/constants'
+import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
 

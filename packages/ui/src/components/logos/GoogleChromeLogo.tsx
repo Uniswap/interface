@@ -1,4 +1,4 @@
-import { Circle as _Circle, Defs, LinearGradient, Path, Stop, Svg } from 'react-native-svg'
+import { Defs, LinearGradient, Path, Stop, Svg, Circle as _Circle } from 'react-native-svg'
 
 // eslint-disable-next-line no-relative-import-paths/no-relative-import-paths
 import { createIcon } from '../factories/createIcon'

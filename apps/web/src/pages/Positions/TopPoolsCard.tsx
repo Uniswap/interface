@@ -1,6 +1,6 @@
 import { gqlToCurrency, supportedChainIdFromGQLChain, unwrapToken } from 'appGraphql/data/util'
-import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { LPIncentiveRewardsBadge } from 'components/Liquidity/LPIncentives/LPIncentiveRewardsBadge'
+import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { Trans } from 'react-i18next'
 import { useNavigate } from 'react-router'

@@ -1,4 +1,3 @@
-import { EmptyWalletCards } from 'components/emptyWallet/EmptyWalletCards'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import { useMemo } from 'react'
 import { ArrowUpRight } from 'react-feather'
@@ -7,15 +6,7 @@ import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { ExternalLink } from 'theme/components/Links'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import {
-  AnimatePresence,
-  ElementAfterText,
-  Flex,
-  Text,
-  TouchableArea,
-  TouchableAreaEvent,
-  useSporeColors,
-} from 'ui/src'
+import { ElementAfterText, Flex, Text, TouchableArea, TouchableAreaEvent, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { opacify } from 'ui/src/theme'
 import { CardImage } from 'uniswap/src/components/cards/image'
@@ -25,8 +16,6 @@ import { useIsBridgingChain } from 'uniswap/src/features/bridging/hooks/chains'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useIsShowingWebFORNudge } from 'uniswap/src/features/providers/webForNudgeProvider'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
 export function SwapBottomCard() {
   const { chainId: oldFlowChainId } = useMultichainContext()
@@ -39,26 +28,12 @@ export function SwapBottomCard() {
 
   const isSwapPage = useIsPage(PageType.SWAP)
   const isSendPage = useIsPage(PageType.SEND)
-  const shouldShowWebFORNudge = useIsShowingWebFORNudge() && isSwapPage
 
-  const hideCard = !isSupportedChain || !(isSwapPage || isSendPage || shouldShowWebFORNudge)
+  const hideCard = !isSupportedChain || !(isSwapPage || isSendPage)
 
   const card = useMemo(() => {
     if (hideCard) {
       return null
-    }
-
-    if (shouldShowWebFORNudge) {
-      return (
-        <AnimatePresence>
-          <EmptyWalletCards
-            horizontalLayout
-            buyElementName={ElementName.ForEmptyStateBuy}
-            receiveElementName={ElementName.ForEmptyStateReceive}
-            cexTransferElementName={ElementName.ForEmptyStateCEXTransfer}
-          />
-        </AnimatePresence>
-      )
     }
 
     if (!isBridgingSupportedChain) {
@@ -66,7 +41,7 @@ export function SwapBottomCard() {
     } else {
       return null
     }
-  }, [chainId, hideCard, isBridgingSupportedChain, shouldShowWebFORNudge])
+  }, [chainId, hideCard, isBridgingSupportedChain])
 
   return <>{card}</>
 }

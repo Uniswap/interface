@@ -4,15 +4,15 @@
 
 ### Environment variables
 
-Before running the extension, you need to get the environment variables from 1password in order to get full functionality. Run the command `bun extension env:local:download` to copy them to your root folder.
+Before running the extension, you need to get the environment variables from 1password in order to get full functionality. Run the command `yarn extension env:local:download` to copy them to your root folder.
 
 ### Running the extension locally
 
 To run the extension, run the following from the top level of the monorepo:
 
 ```bash
-bun install
-bun extension start
+yarn
+yarn extension start
 ```
 
 Then, load the extension into Chrome:
@@ -31,15 +31,15 @@ To run the extension, run the following from the top level of the monorepo:
 Mac:
 
 ```bash
-bun
-bun extension start:absolute
+yarn
+yarn extension start:absolute
 ```
 
 Windows:
 
 ```bash
-bun
-bun extension start:absolute:windows
+yarn
+yarn extension start:absolute:windows
 ```
 
 1. Go to **chrome://extensions**

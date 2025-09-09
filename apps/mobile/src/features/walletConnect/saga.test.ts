@@ -3,9 +3,8 @@ import { ProposalTypes, Verify } from '@walletconnect/types'
 import { buildApprovedNamespaces, populateAuthPayload } from '@walletconnect/utils'
 import { expectSaga } from 'redux-saga-test-plan'
 import { handleSessionAuthenticate, handleSessionProposal } from 'src/features/walletConnect/saga'
-import { parseVerifyStatus } from 'src/features/walletConnect/utils'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
-import { addPendingSession, WalletConnectVerifyStatus } from 'src/features/walletConnect/walletConnectSlice'
+import { WalletConnectVerifyStatus, addPendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappRequestInfo, DappRequestType, EthEvent } from 'uniswap/src/types/walletConnect'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
@@ -16,7 +15,7 @@ jest.mock('@walletconnect/utils', () => ({
   buildApprovedNamespaces: jest.fn(),
   getSdkError: jest.fn(() => 'mocked-error'),
   populateAuthPayload: jest.fn(),
-  parseVerifyStatus: jest.fn(),
+  parseVerifyStatus: jest.fn(() => 'VERIFIED'),
 }))
 
 // Mock dependencies
@@ -38,199 +37,8 @@ jest.mock('uniswap/src/i18n', () => ({
   t: jest.fn((key) => key),
 }))
 
-// Mock parseVerifyStatus from utils
-jest.mock('src/features/walletConnect/utils', () => ({
-  ...jest.requireActual('src/features/walletConnect/utils'),
-  parseVerifyStatus: jest.fn(),
-}))
-
 describe('WalletConnect Saga', () => {
   describe('handleSessionProposal', () => {
-    it('uses verifyContext.verified.origin as URL when available', () => {
-      // Create a mock verification context with origin URL different from dapp URL
-      const mockVerifyContext: Verify.Context = {
-        verified: {
-          verifyUrl: 'https://verify.walletconnect.com',
-          validation: 'VALID',
-          origin: 'https://verified-origin.com', // Different from dapp.url
-        },
-      }
-
-      // Create a valid proposal with eip155 namespace
-      const mockProposal = {
-        id: 789,
-        proposer: {
-          publicKey: 'test-public-key',
-          metadata: {
-            name: 'Test Dapp',
-            description: 'Test Dapp Description',
-            url: 'https://original-dapp.com', // This should NOT be used when verified origin is available
-            icons: ['https://original-dapp.com/icon.png'],
-          },
-        },
-        relays: [],
-        optionalNamespaces: {
-          eip155: {
-            chains: ['eip155:1'],
-            methods: ['eth_signTransaction'],
-            events: [],
-          },
-        },
-        pairingTopic: 'test-pairing-topic',
-        expiryTimestamp: Date.now() + 1000 * 60 * 5,
-        verifyContext: mockVerifyContext,
-      } as unknown as ProposalTypes.Struct & { verifyContext?: Verify.Context }
-
-      const activeAccountAddress = '0x1234567890abcdef'
-
-      // Mock namespaces that would be returned by buildApprovedNamespaces
-      const mockNamespaces = {
-        eip155: {
-          accounts: [`eip155:1:${activeAccountAddress}`],
-          chains: ['eip155:1'],
-          methods: ['eth_signTransaction'],
-          events: [EthEvent.AccountsChanged, EthEvent.ChainChanged],
-        },
-      }
-
-      // Mock the buildApprovedNamespaces function to return our mock namespaces
-      const buildApprovedNamespacesMock = buildApprovedNamespaces as jest.Mock
-      buildApprovedNamespacesMock.mockReturnValue(mockNamespaces)
-
-      // Mock parseVerifyStatus to return VERIFIED for this test
-      const parseVerifyStatusMock = parseVerifyStatus as jest.Mock
-      parseVerifyStatusMock.mockReturnValue('VERIFIED')
-
-      // Create properly typed dappRequestInfo
-      const dappRequestInfo: DappRequestInfo = {
-        name: 'Test Dapp',
-        url: 'https://verified-origin.com', // Should use verified origin, NOT dapp.url
-        icon: 'https://original-dapp.com/icon.png',
-        requestType: DappRequestType.WalletConnectSessionRequest,
-      }
-
-      const expectedPendingSession = {
-        wcSession: {
-          id: '789',
-          proposalNamespaces: mockNamespaces,
-          chains: [UniverseChainId.Mainnet],
-          dappRequestInfo,
-          verifyStatus: 'VERIFIED' as WalletConnectVerifyStatus,
-        },
-      }
-
-      return expectSaga(handleSessionProposal, mockProposal)
-        .provide({
-          select({ selector }, next) {
-            if (selector === selectActiveAccountAddress) {
-              return activeAccountAddress
-            }
-            return next()
-          },
-        })
-        .withState({
-          userSettings: {},
-          wallet: {
-            accounts: {
-              [activeAccountAddress]: { address: activeAccountAddress },
-            },
-          },
-        })
-        .put(addPendingSession(expectedPendingSession))
-        .run()
-    })
-
-    it('falls back to dapp.url when verifyContext.verified.origin is not available', () => {
-      // Create a proposal without verified origin (null origin falls back to dapp.url)
-      const mockVerifyContext: Verify.Context = {
-        verified: {
-          verifyUrl: 'https://verify.walletconnect.com',
-          validation: 'INVALID',
-          origin: null as unknown as string, // null origin should fallback to dapp.url
-        },
-      }
-
-      const mockProposal = {
-        id: 890,
-        proposer: {
-          publicKey: 'test-public-key',
-          metadata: {
-            name: 'Fallback Dapp',
-            description: 'Fallback Dapp Description',
-            url: 'https://fallback-dapp.com', // This should be used when verified origin is empty
-            icons: ['https://fallback-dapp.com/icon.png'],
-          },
-        },
-        relays: [],
-        optionalNamespaces: {
-          eip155: {
-            chains: ['eip155:1'],
-            methods: ['eth_signTransaction'],
-            events: [],
-          },
-        },
-        pairingTopic: 'fallback-pairing-topic',
-        expiryTimestamp: Date.now() + 1000 * 60 * 5,
-        verifyContext: mockVerifyContext,
-      } as unknown as ProposalTypes.Struct & { verifyContext?: Verify.Context }
-
-      const activeAccountAddress = '0x1234567890abcdef'
-
-      // Mock namespaces
-      const mockNamespaces = {
-        eip155: {
-          accounts: [`eip155:1:${activeAccountAddress}`],
-          chains: ['eip155:1'],
-          methods: ['eth_signTransaction'],
-          events: [EthEvent.AccountsChanged, EthEvent.ChainChanged],
-        },
-      }
-
-      const buildApprovedNamespacesMock = buildApprovedNamespaces as jest.Mock
-      buildApprovedNamespacesMock.mockReturnValue(mockNamespaces)
-
-      // Mock parseVerifyStatus to return INVALID for this test
-      const parseVerifyStatusMock = parseVerifyStatus as jest.Mock
-      parseVerifyStatusMock.mockReturnValue('INVALID')
-
-      const dappRequestInfo: DappRequestInfo = {
-        name: 'Fallback Dapp',
-        url: 'https://fallback-dapp.com', // Should use dapp.url when verified origin is null
-        icon: 'https://fallback-dapp.com/icon.png',
-        requestType: DappRequestType.WalletConnectSessionRequest,
-      }
-
-      const expectedPendingSession = {
-        wcSession: {
-          id: '890',
-          proposalNamespaces: mockNamespaces,
-          chains: [UniverseChainId.Mainnet],
-          dappRequestInfo,
-          verifyStatus: 'INVALID' as WalletConnectVerifyStatus,
-        },
-      }
-
-      return expectSaga(handleSessionProposal, mockProposal)
-        .provide({
-          select({ selector }, next) {
-            if (selector === selectActiveAccountAddress) {
-              return activeAccountAddress
-            }
-            return next()
-          },
-        })
-        .withState({
-          userSettings: {},
-          wallet: {
-            accounts: {
-              [activeAccountAddress]: { address: activeAccountAddress },
-            },
-          },
-        })
-        .put(addPendingSession(expectedPendingSession))
-        .run()
-    })
-
     it('dispatches addPendingSession with correct parameters for valid proposal', () => {
       // Create a mock verification context for the verified status
       const mockVerifyContext: Verify.Context = {
@@ -281,10 +89,6 @@ describe('WalletConnect Saga', () => {
       // Mock the buildApprovedNamespaces function to return our mock namespaces
       const buildApprovedNamespacesMock = buildApprovedNamespaces as jest.Mock
       buildApprovedNamespacesMock.mockReturnValue(mockNamespaces)
-
-      // Mock parseVerifyStatus to return VERIFIED for this test
-      const parseVerifyStatusMock = parseVerifyStatus as jest.Mock
-      parseVerifyStatusMock.mockReturnValue('VERIFIED')
 
       // Create properly typed dappRequestInfo
       const dappRequestInfo: DappRequestInfo = {

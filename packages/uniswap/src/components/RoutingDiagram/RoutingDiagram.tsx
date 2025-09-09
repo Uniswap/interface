@@ -1,5 +1,5 @@
+import { Protocol } from '@uniswap/router-sdk'
 import { Currency } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip, styled as tamaguiStyled } from 'ui/src'
 import { DotLine } from 'ui/src/components/icons/DotLine'
@@ -7,11 +7,12 @@ import { zIndexes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
+import { DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
-import { currencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import type { RoutingDiagramEntry, RoutingHop } from 'uniswap/src/utils/routingDiagram/types'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { RoutingDiagramEntry } from 'uniswap/src/utils/getRoutingDiagramEntries'
 
 const PoolBadge = tamaguiStyled(Flex, {
   row: true,
@@ -39,48 +40,29 @@ const BadgeText = tamaguiStyled(Text, {
   },
 })
 
-function useHopBadgeContent({ hop, tokenPair }: { hop: RoutingHop; tokenPair: string }): {
-  badgeText: string
-  tooltipText: string
-} {
-  const { t } = useTranslation()
-
-  // Disabling this rule so that it elint warns us when we add a new hop type and it's properly handled.
-  // eslint-disable-next-line consistent-return
-  return useMemo(() => {
-    switch (hop.type) {
-      case 'uniswapPool': {
-        const feePercent = hop.fee / BIPS_BASE
-        const poolFeeText = hop.isDynamic ? t('pool.dynamic') : t('pool.percent', { pct: feePercent })
-
-        return {
-          badgeText: hop.isDynamic ? t('common.dynamic') : `${feePercent}%`,
-          tooltipText: `${tokenPair} ${poolFeeText}`,
-        }
-      }
-
-      case 'genericHop': {
-        return {
-          badgeText: hop.name,
-          tooltipText: t('pool.via', { tokenPair, dex: hop.name }),
-        }
-      }
-    }
-  }, [hop, tokenPair, t])
+const currencyToCurrencyId = (currency: Currency): string => {
+  return 'address' in currency
+    ? buildCurrencyId(currency.chainId, currency.address)
+    : buildNativeCurrencyId(currency.chainId)
 }
 
-function HopBadge({ hop }: { hop: RoutingHop }): JSX.Element {
+function Pool({
+  currency0,
+  currency1,
+  feeAmount,
+}: {
+  currency0: Currency
+  currency1: Currency
+  feeAmount: number
+}): JSX.Element {
+  const { t } = useTranslation()
   const priceUXEnabled = usePriceUXEnabled()
-  const inputCurrencyInfo = useCurrencyInfo(hop.inputCurrencyId)
-  const outputCurrencyInfo = useCurrencyInfo(hop.outputCurrencyId)
+  const currency0CurrencyInfo = useCurrencyInfo(currencyToCurrencyId(currency0))
+  const currency1CurrencyInfo = useCurrencyInfo(currencyToCurrencyId(currency1))
+  const isDynamicFee = feeAmount === DYNAMIC_FEE_AMOUNT
 
-  const inputSymbol = inputCurrencyInfo?.currency.symbol ?? '-'
-  const outputSymbol = outputCurrencyInfo?.currency.symbol ?? '-'
-  const tokenPair = `${inputSymbol}/${outputSymbol}`
-
-  const chainId = inputCurrencyInfo?.currency.chainId ?? currencyIdToChain(hop.inputCurrencyId)
-
-  const { badgeText, tooltipText } = useHopBadgeContent({ hop, tokenPair })
+  const feePercent = feeAmount / BIPS_BASE
+  const tokenPair = `${currency0.symbol}/${currency1.symbol}`
 
   return (
     <Tooltip placement="top">
@@ -88,24 +70,26 @@ function HopBadge({ hop }: { hop: RoutingHop }): JSX.Element {
         <OpaqueBadge>
           <Flex ml={2}>
             <SplitLogo
-              chainId={chainId}
-              inputCurrencyInfo={inputCurrencyInfo}
-              outputCurrencyInfo={outputCurrencyInfo}
+              chainId={currency0.chainId}
+              inputCurrencyInfo={currency0CurrencyInfo}
+              outputCurrencyInfo={currency1CurrencyInfo}
               size={priceUXEnabled ? 12 : 20}
             />
           </Flex>
-          <BadgeText>{badgeText}</BadgeText>
+          <BadgeText>{isDynamicFee ? t('common.dynamic') : `${feePercent}%`}</BadgeText>
         </OpaqueBadge>
       </Tooltip.Trigger>
       <Tooltip.Content>
-        <Text variant="body4">{tooltipText}</Text>
+        <Text variant="body4">
+          {tokenPair} {isDynamicFee ? t('pool.dynamic') : t('pool.percent', { pct: feePercent })}
+        </Text>
         <Tooltip.Arrow />
       </Tooltip.Content>
     </Tooltip>
   )
 }
 
-export function RoutingDiagram({
+export default function RoutingDiagram({
   currencyIn,
   currencyOut,
   routes,
@@ -114,8 +98,8 @@ export function RoutingDiagram({
   currencyOut: Currency
   routes: RoutingDiagramEntry[]
 }): JSX.Element {
-  const currencyInCurrencyInfo = useCurrencyInfo(currencyId(currencyIn))
-  const currencyOutCurrencyInfo = useCurrencyInfo(currencyId(currencyOut))
+  const currencyInCurrencyInfo = useCurrencyInfo(currencyToCurrencyId(currencyIn))
+  const currencyOutCurrencyInfo = useCurrencyInfo(currencyToCurrencyId(currencyOut))
 
   return (
     <Flex>
@@ -180,7 +164,18 @@ function RouteRow({
   )
 }
 
-function Route({ entry, showBadge = true }: { entry: RoutingDiagramEntry; showBadge?: boolean }): JSX.Element {
+function Route({
+  entry: { percent, path, protocol },
+  showBadge = true,
+}: {
+  entry: RoutingDiagramEntry
+  showBadge?: boolean
+}): JSX.Element {
+  const badgeText =
+    protocol === Protocol.MIXED
+      ? [...new Set(path.map(([, , , p]) => p.toUpperCase()))].sort().join(' + ')
+      : protocol.toUpperCase()
+
   return (
     <Flex row justifyContent="space-evenly" flex={1} position="relative" width="auto" py="$spacing4">
       <Flex
@@ -198,14 +193,14 @@ function Route({ entry, showBadge = true }: { entry: RoutingDiagramEntry; showBa
 
       {showBadge && (
         <OpaqueBadge>
-          <BadgeText>{entry.protocolLabel}</BadgeText>
-          <BadgeText style={{ minWidth: 'auto' }}>{entry.percent.toSignificant(2)}%</BadgeText>
+          <BadgeText>{badgeText}</BadgeText>
+          <BadgeText style={{ minWidth: 'auto' }}>{percent.toSignificant(2)}%</BadgeText>
         </OpaqueBadge>
       )}
 
       <Flex row gap="$spacing4" width="auto" zIndex={2} flex={1} justifyContent="space-evenly" alignItems="center">
-        {entry.path.map((hop, index) => (
-          <HopBadge key={index} hop={hop} />
+        {path.map(([currency0, currency1, feeAmount], index) => (
+          <Pool key={index} currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
         ))}
       </Flex>
     </Flex>

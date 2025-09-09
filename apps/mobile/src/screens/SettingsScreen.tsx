@@ -4,12 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { OnboardingStackNavigationProp, SettingsStackNavigationProp } from 'src/app/navigation/types'
-import { ScreenWithHeader } from 'src/components/layout/screens/ScreenWithHeader'
-import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { WalletRestoreType } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
 import { FooterSettings } from 'src/components/Settings/FooterSettings'
-import { SettingsList } from 'src/components/Settings/lists/SettingsList'
-import { SectionData } from 'src/components/Settings/lists/types'
 import { OnboardingRow } from 'src/components/Settings/OnboardingRow'
 import { ResetBehaviorHistoryRow } from 'src/components/Settings/ResetBehaviorHistoryRow'
 import {
@@ -19,6 +15,10 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { WalletSettings } from 'src/components/Settings/WalletSettings'
+import { SettingsList } from 'src/components/Settings/lists/SettingsList'
+import { SectionData } from 'src/components/Settings/lists/types'
+import { ScreenWithHeader } from 'src/components/layout/screens/ScreenWithHeader'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { useBiometricsState } from 'src/features/biometrics/useBiometricsState'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
 import { useBiometricName } from 'src/features/biometricsSettings/hooks'
@@ -440,10 +440,7 @@ export function SettingsScreen(): JSX.Element {
   ])
 
   return (
-    <ScreenWithHeader
-      centerElement={<Text variant="body1">{t('settings.title')}</Text>}
-      edges={isAndroid ? ['top', 'left', 'right', 'bottom'] : undefined}
-    >
+    <ScreenWithHeader centerElement={<Text variant="body1">{t('settings.title')}</Text>}>
       <SettingsList
         keyExtractor={keyExtractor}
         sections={sections}

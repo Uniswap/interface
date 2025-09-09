@@ -1,9 +1,9 @@
 import { useContext } from 'react'
+import { TransactionSettingsModalStoreContext } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/TransactionSettingsModalStoreContext'
 import type {
   ModalId,
   TransactionSettingsModalId,
 } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/createTransactionSettingsModalStore'
-import { TransactionSettingsModalStoreContext } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/TransactionSettingsModalStoreContext'
 import { useStore } from 'zustand'
 import { useShallow } from 'zustand/shallow'
 

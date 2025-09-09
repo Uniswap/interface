@@ -33,7 +33,7 @@ import {
   createAccountsSaga,
   createAccountsSagaName,
 } from 'wallet/src/features/wallet/create/createAccountsSaga'
-import { getMonitoredSagaReducers, MonitoredSaga } from 'wallet/src/state/saga'
+import { MonitoredSaga, getMonitoredSagaReducers } from 'wallet/src/state/saga'
 
 // All monitored sagas must be included here
 export const monitoredSagas: Record<string, MonitoredSaga> = {

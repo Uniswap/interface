@@ -2,7 +2,11 @@
 
 exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c12 {
+  color: #E10F0F;
+}
+
+.c0 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -37,10 +41,6 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-}
-
-.c12 {
-  color: #E10F0F;
 }
 
 .c4 {
@@ -413,7 +413,11 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
 
 exports[`PoolDetailsStats > renders stats text correctly 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c14 {
+  color: #E10F0F;
+}
+
+.c0 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -448,10 +452,6 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-}
-
-.c14 {
-  color: #E10F0F;
 }
 
 .c4 {

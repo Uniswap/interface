@@ -3,12 +3,12 @@ import { InMemoryCache, Resolvers } from '@apollo/client'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import {
+  render as RNRender,
+  renderHook as RNRenderHook,
   RenderHookOptions,
   RenderHookResult,
   RenderOptions,
   RenderResult,
-  render as RNRender,
-  renderHook as RNRenderHook,
 } from '@testing-library/react-native'
 import { ParsedQs } from 'qs'
 import { PropsWithChildren } from 'react'

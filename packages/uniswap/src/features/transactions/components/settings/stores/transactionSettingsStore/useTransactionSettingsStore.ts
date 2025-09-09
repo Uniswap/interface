@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react'
+import { TransactionSettingsStoreContext } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/TransactionSettingsStoreContext'
 import type { TransactionSettingsAutoSlippageToleranceState } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/createTransactionSettingsAutoSlippageToleranceStore'
 import type { TransactionSettingsStoreState } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/createTransactionSettingsStore'
-import { TransactionSettingsStoreContext } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/TransactionSettingsStoreContext'
 import type { TransactionSettingsState } from 'uniswap/src/features/transactions/components/settings/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import type { StoreApi } from 'zustand'

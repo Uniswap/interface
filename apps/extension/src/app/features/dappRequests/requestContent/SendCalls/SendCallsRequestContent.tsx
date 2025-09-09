@@ -8,9 +8,9 @@ import { SwapRequestContent } from 'src/app/features/dappRequests/requestContent
 import { DappRequestStoreItemForSendCallsTxn } from 'src/app/features/dappRequests/slice'
 import {
   EthSendTransactionRPCActions,
-  isBatchedSwapRequest,
   ParsedCall,
   SendCallsRequest,
+  isBatchedSwapRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { TransactionType, TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'

@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
-import { computePoolAddress, Pool, Position } from '@uniswap/v3-sdk'
+import { Pool, Position, computePoolAddress } from '@uniswap/v3-sdk'
 import {
   PositionInfo,
   useCachedPositions,

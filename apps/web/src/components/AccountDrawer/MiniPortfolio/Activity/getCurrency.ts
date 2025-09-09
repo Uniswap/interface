@@ -1,6 +1,6 @@
+import { Currency } from '@uniswap/sdk-core'
 import { apolloClient } from 'appGraphql/data/apollo/client'
 import { gqlTokenToCurrencyInfo } from 'appGraphql/data/types'
-import { Currency } from '@uniswap/sdk-core'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {

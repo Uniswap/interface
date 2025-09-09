@@ -1,5 +1,5 @@
 import { ApolloCache, ApolloLink, NormalizedCacheObject } from '@apollo/client'
-import { asyncMap, Reference } from '@apollo/client/utilities'
+import { Reference, asyncMap } from '@apollo/client/utilities'
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore'
 import { Buffer } from 'buffer'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'

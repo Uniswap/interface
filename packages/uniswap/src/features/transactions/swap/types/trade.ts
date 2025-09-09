@@ -1,28 +1,13 @@
 /* eslint-disable max-lines */
 import { MixedRouteSDK, Trade as RouterSDKTrade, ZERO_PERCENT } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sdk-core'
-import {
-  PriorityOrderTrade as IPriorityOrderTrade,
-  UnsignedPriorityOrderInfo,
-  UnsignedV2DutchOrderInfo,
-  UnsignedV3DutchOrderInfo,
-  V2DutchOrderTrade,
-  V3DutchOrderTrade,
-} from '@uniswap/uniswapx-sdk'
+import { UnsignedV2DutchOrderInfo, V2DutchOrderTrade, PriorityOrderTrade as IPriorityOrderTrade, UnsignedPriorityOrderInfo, V3DutchOrderTrade, UnsignedV3DutchOrderInfo } from '@uniswap/uniswapx-sdk'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { Route as V4RouteSDK } from '@uniswap/v4-sdk'
+import { BridgeQuoteResponse, ClassicQuoteResponse, DutchQuoteResponse, DutchV3QuoteResponse, PriorityQuoteResponse, WrapQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { BigNumber, providers } from 'ethers/lib/ethers'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
-import {
-  BridgeQuoteResponse,
-  ClassicQuoteResponse,
-  DutchQuoteResponse,
-  DutchV3QuoteResponse,
-  PriorityQuoteResponse,
-  WrapQuoteResponse,
-} from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
   ClassicInput,
   ClassicOutput,
@@ -32,19 +17,16 @@ import {
   QuoteResponse,
   Routing,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { getSwapFee } from 'uniswap/src/features/transactions/swap/types/getSwapFee'
+import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
+import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
-import { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 
-type QuoteResponseWithAggregatedOutputs =
-  | ClassicQuoteResponse
-  | DutchQuoteResponse
-  | DutchV3QuoteResponse
-  | PriorityQuoteResponse
+type QuoteResponseWithAggregatedOutputs = ClassicQuoteResponse | DutchQuoteResponse | DutchV3QuoteResponse | PriorityQuoteResponse
 
 /**
  * Calculates the total output amount from a quote by summing all aggregated outputs.
@@ -57,20 +39,12 @@ type QuoteResponseWithAggregatedOutputs =
  * const quote = { quote: { aggregatedOutputs: [{ amount: '100' }, { amount: '200' }] } }
  * const amount = getQuoteOutputAmount(quote, USDC) // Returns 300 USDC
  */
-function getQuoteOutputAmount<T extends QuoteResponseWithAggregatedOutputs>(
-  quote: T | undefined,
-  outputCurrency: Currency,
-): CurrencyAmount<Currency> {
+function getQuoteOutputAmount<T extends QuoteResponseWithAggregatedOutputs>(quote: T | undefined, outputCurrency: Currency): CurrencyAmount<Currency> {
   if (!quote) {
     return CurrencyAmount.fromRawAmount(outputCurrency, '0')
   }
 
-  return (
-    quote.quote.aggregatedOutputs?.reduce(
-      (acc, output) => acc.add(CurrencyAmount.fromRawAmount(outputCurrency, output.amount ?? '0')),
-      CurrencyAmount.fromRawAmount(outputCurrency, '0'),
-    ) ?? CurrencyAmount.fromRawAmount(outputCurrency, '0')
-  )
+  return quote.quote.aggregatedOutputs?.reduce((acc, output) => acc.add(CurrencyAmount.fromRawAmount(outputCurrency, output.amount ?? '0')), CurrencyAmount.fromRawAmount(outputCurrency, '0')) ?? CurrencyAmount.fromRawAmount(outputCurrency, '0')
 }
 
 /**
@@ -102,9 +76,7 @@ function getQuoteOutputAmountUserWillReceive<T extends QuoteResponseWithAggregat
   }
 
   const output = quote.quote.aggregatedOutputs?.find((out) => out.recipient === recipient)
-  return output
-    ? CurrencyAmount.fromRawAmount(outputCurrency, output.minAmount ?? '0')
-    : CurrencyAmount.fromRawAmount(outputCurrency, '0')
+  return output ? CurrencyAmount.fromRawAmount(outputCurrency, output.minAmount ?? '0') : CurrencyAmount.fromRawAmount(outputCurrency, '0')
 }
 
 export type UniswapXTrade = UniswapXV2Trade | UniswapXV3Trade | PriorityOrderTrade
@@ -134,6 +106,7 @@ export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, Trade
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
     this.swapFee = getSwapFee(quote)
+
 
     // TODO(SWAP-235): Cleanup redundancy
     this.maxAmountIn = this.maximumAmountIn()
@@ -197,8 +170,8 @@ export class UniswapXV3Trade extends V3DutchOrderTrade<Currency, Currency, Trade
     tradeType: TradeType
   }) {
     const orderInfo = transformToV3DutchOrderInfo(quote.quote.orderInfo)
-    const { expectedAmountIn, expectedAmountOut } = quote.quote
-    const expectedAmounts = expectedAmountIn && expectedAmountOut ? { expectedAmountIn, expectedAmountOut } : undefined
+    const { expectedAmountIn, expectedAmountOut} = quote.quote
+    const expectedAmounts = expectedAmountIn && expectedAmountOut ? { expectedAmountIn, expectedAmountOut  } : undefined
 
     super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType, expectedAmounts })
 
@@ -268,8 +241,8 @@ export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, 
     tradeType: TradeType
   }) {
     const orderInfo = transformToPriorityOrderInfo(quote.quote.orderInfo)
-    const { expectedAmountIn, expectedAmountOut } = quote.quote
-    const expectedAmounts = expectedAmountIn && expectedAmountOut ? { expectedAmountIn, expectedAmountOut } : undefined
+    const { expectedAmountIn, expectedAmountOut} = quote.quote
+    const expectedAmounts = expectedAmountIn && expectedAmountOut ? { expectedAmountIn, expectedAmountOut  } : undefined
 
     super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType, expectedAmounts })
 
@@ -389,9 +362,7 @@ export class ClassicTrade<
   public get priceImpact(): Percent {
     if (!this._cachedPriceImpact) {
       const quotePriceImpact = this.quote.quote.priceImpact
-      this._cachedPriceImpact = quotePriceImpact
-        ? new Percent(Math.round(quotePriceImpact * 100), 10000)
-        : super.priceImpact
+      this._cachedPriceImpact = quotePriceImpact ? new Percent(Math.round(quotePriceImpact * 100), 10000) : super.priceImpact
     }
     return this._cachedPriceImpact
   }
@@ -470,20 +441,19 @@ export enum ApprovalAction {
 
 export type TokenApprovalInfo =
   | {
-      action: ApprovalAction.None | ApprovalAction.Unknown
-      txRequest: null
-      cancelTxRequest: null
+    action: ApprovalAction.None | ApprovalAction.Unknown
+    txRequest: null
+    cancelTxRequest: null
     }
   | {
-      action: ApprovalAction.Permit2Approve
-      txRequest: providers.TransactionRequest
-      cancelTxRequest: null
-    }
-  | {
-      action: ApprovalAction.RevokeAndPermit2Approve
-      txRequest: providers.TransactionRequest
-      cancelTxRequest: providers.TransactionRequest
-    }
+    action: ApprovalAction.Permit2Approve
+    txRequest: providers.TransactionRequest
+    cancelTxRequest: null
+  } | {
+    action: ApprovalAction.RevokeAndPermit2Approve
+    txRequest: providers.TransactionRequest
+    cancelTxRequest: providers.TransactionRequest
+  }
 
 // Converts from BE type to SDK type
 function transformToV2DutchOrderInfo(orderInfo: DutchOrderInfoV2): UnsignedV2DutchOrderInfo {
@@ -548,18 +518,19 @@ function transformToPriorityOrderInfo(orderInfo: PriorityOrderInfo): UnsignedPri
     input: {
       token: orderInfo.input.token,
       amount: BigNumber.from(orderInfo.input.amount),
-      mpsPerPriorityFeeWei: BigNumber.from(orderInfo.input.mpsPerPriorityFeeWei),
+      mpsPerPriorityFeeWei:  BigNumber.from(orderInfo.input.mpsPerPriorityFeeWei),
     },
     outputs: orderInfo.outputs.map((output) => ({
       token: output.token,
       amount: BigNumber.from(output.amount),
-      mpsPerPriorityFeeWei: BigNumber.from(output.mpsPerPriorityFeeWei),
+      mpsPerPriorityFeeWei:  BigNumber.from(output.mpsPerPriorityFeeWei),
       recipient: output.recipient,
     })),
     baselinePriorityFeeWei: BigNumber.from(orderInfo.baselinePriorityFeeWei),
     auctionStartBlock: BigNumber.from(orderInfo.auctionStartBlock),
   }
 }
+
 
 export type ValidatedIndicativeQuoteResponse = QuoteResponse & {
   input: Required<ClassicInput>
@@ -573,12 +544,8 @@ export function validateIndicativeQuoteResponse(response: QuoteResponse): Valida
     if (!input || !output) {
       return undefined
     }
-    if (input.amount && input.token && output.amount && output.token && output.recipient) {
-      return {
-        ...response,
-        input: { amount: input.amount, token: input.token },
-        output: { amount: output.amount, token: output.token, recipient: output.recipient },
-      }
+    if (input.amount  && input.token && output.amount  && output.token && output.recipient)  {
+      return { ...response, input:  { amount: input.amount, token: input.token }, output: { amount: output.amount, token: output.token, recipient: output.recipient }}
     }
   }
   return undefined
@@ -595,29 +562,11 @@ export class IndicativeTrade {
   slippageTolerance?: number
   readonly indicative = true
 
-  constructor({
-    quote,
-    currencyIn,
-    currencyOut,
-    slippageTolerance,
-  }: {
-    quote: ValidatedIndicativeQuoteResponse
-    currencyIn: Currency
-    currencyOut: Currency
-    slippageTolerance?: number
-  }) {
+  constructor({ quote, currencyIn, currencyOut, slippageTolerance }: { quote: ValidatedIndicativeQuoteResponse, currencyIn: Currency, currencyOut: Currency, slippageTolerance?: number }) {
     this.quote = quote
 
-    const inputAmount = getCurrencyAmount({
-      value: this.quote.input.amount,
-      valueType: ValueType.Raw,
-      currency: currencyIn,
-    })
-    const outputAmount = getCurrencyAmount({
-      value: this.quote.output.amount,
-      valueType: ValueType.Raw,
-      currency: currencyOut,
-    })
+    const inputAmount = getCurrencyAmount({ value: this.quote.input.amount, valueType: ValueType.Raw, currency: currencyIn })
+    const outputAmount = getCurrencyAmount({ value: this.quote.output.amount, valueType: ValueType.Raw, currency: currencyOut })
 
     if (!inputAmount || !outputAmount) {
       throw new Error('Error parsing indicative quote currency amounts')
@@ -656,12 +605,7 @@ export class BridgeTrade {
   readonly priceImpact: undefined
   readonly deadline: undefined
 
-  constructor({
-    quote,
-    currencyIn,
-    currencyOut,
-    tradeType,
-  }: { quote: BridgeQuoteResponse; currencyIn: Currency; currencyOut: Currency; tradeType: TradeType }) {
+  constructor({ quote, currencyIn, currencyOut, tradeType }: { quote: BridgeQuoteResponse, currencyIn: Currency, currencyOut: Currency, tradeType: TradeType }) {
     this.quote = quote
     this.swapFee = getSwapFee(quote)
 
@@ -672,11 +616,7 @@ export class BridgeTrade {
     }
 
     const inputAmount = getCurrencyAmount({ value: quoteInputAmount, valueType: ValueType.Raw, currency: currencyIn })
-    const outputAmount = getCurrencyAmount({
-      value: quoteOutputAmount,
-      valueType: ValueType.Raw,
-      currency: currencyOut,
-    })
+    const outputAmount = getCurrencyAmount({ value: quoteOutputAmount, valueType: ValueType.Raw, currency: currencyOut })
     if (!inputAmount || !outputAmount) {
       throw new Error('Error parsing bridge quote currency amounts')
     }
@@ -696,13 +636,7 @@ export class BridgeTrade {
   }
 
   public get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
-    const swapFeeAmount = this.swapFee
-      ? getCurrencyAmount({
-          value: this.swapFee.amount,
-          valueType: ValueType.Raw,
-          currency: this.outputAmount.currency,
-        })
-      : undefined
+    const swapFeeAmount = this.swapFee ? getCurrencyAmount({ value: this.swapFee.amount, valueType: ValueType.Raw, currency: this.outputAmount.currency }) : undefined
 
     if (swapFeeAmount) {
       return this.outputAmount.add(swapFeeAmount)
@@ -728,12 +662,7 @@ abstract class BaseWrapTrade<TWrapType extends Routing.WRAP | Routing.UNWRAP> {
   readonly slippageTolerance = 0
   readonly priceImpact: undefined
   readonly deadline: undefined
-  constructor({
-    quote,
-    currencyIn,
-    currencyOut,
-    tradeType,
-  }: { quote: WrapQuoteResponse<TWrapType>; currencyIn: Currency; currencyOut: Currency; tradeType: TradeType }) {
+  constructor({ quote, currencyIn, currencyOut, tradeType }: { quote: WrapQuoteResponse<TWrapType>, currencyIn: Currency, currencyOut: Currency, tradeType: TradeType}) {
     this.quote = quote
     const quoteInputAmount = quote.quote.input?.amount
     const quoteOutputAmount = quote.quote.output?.amount
@@ -741,11 +670,7 @@ abstract class BaseWrapTrade<TWrapType extends Routing.WRAP | Routing.UNWRAP> {
       throw new Error('Error parsing wrap/unwrap quote currency amounts')
     }
     const inputAmount = getCurrencyAmount({ value: quoteInputAmount, valueType: ValueType.Raw, currency: currencyIn })
-    const outputAmount = getCurrencyAmount({
-      value: quoteOutputAmount,
-      valueType: ValueType.Raw,
-      currency: currencyOut,
-    })
+    const outputAmount = getCurrencyAmount({ value: quoteOutputAmount, valueType: ValueType.Raw, currency: currencyOut })
     if (!inputAmount || !outputAmount) {
       throw new Error('Error parsing wrap/unwrap quote currency amounts')
     }
@@ -773,3 +698,4 @@ export class WrapTrade extends BaseWrapTrade<Routing.WRAP> {
 export class UnwrapTrade extends BaseWrapTrade<Routing.UNWRAP> {
   readonly routing = Routing.UNWRAP
 }
+

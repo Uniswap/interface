@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-
-import {
-  getTokenTransactionTypeTranslation,
-  TokenTransactionType,
-  useTokenTransactions,
-} from 'appGraphql/data/useTokenTransactions'
-import { unwrapToken } from 'appGraphql/data/util'
-import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { Token } from '@uniswap/sdk-core'
+import {
+  TokenTransactionType,
+  getTokenTransactionTypeTranslation,
+  useTokenTransactions,
+} from 'appGraphql/data/useTokenTransactions'
+import { unwrapToken } from 'appGraphql/data/util'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
@@ -23,9 +21,10 @@ import {
   TimestampCell,
   TokenLinkCell,
 } from 'components/Table/styled'
+import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { Flex, styled, Text, useMedia } from 'ui/src'
+import { Flex, Text, styled, useMedia } from 'ui/src'
 import { Token as GQLToken } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'

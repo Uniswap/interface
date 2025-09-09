@@ -1,9 +1,10 @@
 import defaultTokenList from '@uniswap/default-token-list'
+import createFetchMock from 'vitest-fetch-mock'
+
 import fetchTokenList from 'lib/hooks/useTokenList/fetchTokenList'
 import contenthashToUri from 'lib/utils/contenthashToUri'
 import { mocked } from 'test-utils/mocked'
 import { logger } from 'utilities/src/logger/logger'
-import createFetchMock from 'vitest-fetch-mock'
 
 vi.mock('lib/utils/contenthashToUri', () => ({
   default: vi.fn(),

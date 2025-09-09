@@ -20,7 +20,7 @@ const UnreadIndicator = () => {
   const theme = useTheme()
 
   return (
-    <Flex position="absolute" left="60%">
+    <Flex position="absolute" left="28px" top="14px">
       <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="4" cy="4" r="4" fill={theme.accent1} stroke={theme.surface1} strokeWidth="2px" />
       </svg>

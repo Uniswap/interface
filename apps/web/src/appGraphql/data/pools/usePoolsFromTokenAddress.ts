@@ -1,9 +1,9 @@
 import {
+  PoolTableSortState,
+  TablePool,
   calculate1DVolOverTvl,
   calculateApr,
-  PoolTableSortState,
   sortPools,
-  TablePool,
 } from 'appGraphql/data/pools/useTopPools'
 import { useCallback, useMemo, useRef } from 'react'
 import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'

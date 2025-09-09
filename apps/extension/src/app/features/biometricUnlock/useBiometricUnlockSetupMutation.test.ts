@@ -1,5 +1,5 @@
-import { webcrypto } from 'node:crypto'
 import { waitFor } from '@testing-library/react'
+import { webcrypto } from 'node:crypto'
 import { BiometricUnlockStorage } from 'src/app/features/biometricUnlock/BiometricUnlockStorage'
 import { useBiometricUnlockSetupMutation } from 'src/app/features/biometricUnlock/useBiometricUnlockSetupMutation'
 import { isUserVerifyingPlatformAuthenticatorAvailable } from 'src/app/utils/device/builtInBiometricCapabilitiesQuery'

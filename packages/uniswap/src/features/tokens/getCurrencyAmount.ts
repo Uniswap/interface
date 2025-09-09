@@ -8,8 +8,8 @@ import { logger } from 'utilities/src/logger/logger'
 const ALL_NUMBERS_OR_SEPARATOR_REGEX = /^\d*\.?,?\d*$/
 
 export enum ValueType {
-  Raw = 'uint256', // integer format (the "raw" uint256) - usually used in smart contracts / how data is stored on-chain
-  Exact = 'float', // float format (the "exact" human readable number) - the typical way to display token amounts to users
+  'Raw' = 'uint256', // integer format (the "raw" uint256) - usually used in smart contracts / how data is stored on-chain
+  'Exact' = 'float', // float format (the "exact" human readable number) - the typical way to display token amounts to users
 }
 
 /**

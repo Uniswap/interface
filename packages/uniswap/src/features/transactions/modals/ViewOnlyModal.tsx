@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Eye } from 'ui/src/components/icons/Eye'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 type ViewOnlyModalProps = {

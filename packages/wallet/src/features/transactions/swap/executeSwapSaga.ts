@@ -36,8 +36,8 @@ import {
 } from 'wallet/src/features/transactions/swap/services/transactionParamsFactory'
 import { submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
 import {
-  isUniswapXPreSignedSwapTransaction,
   PreSignedSwapTransaction,
+  isUniswapXPreSignedSwapTransaction,
 } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
 import {
   BaseTransactionContext,

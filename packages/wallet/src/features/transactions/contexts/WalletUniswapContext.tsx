@@ -7,8 +7,8 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useUpdateDelegatedState } from 'uniswap/src/features/smartWallet/delegation/hooks/useUpdateDelegateState'
-import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
+import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import type {
   HasMismatchInput,
   HasMismatchResult,
@@ -21,8 +21,8 @@ import { getLogger, logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import {
-  useGetSwapDelegationInfoForActiveAccount,
   WalletDelegationProvider,
+  useGetSwapDelegationInfoForActiveAccount,
 } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/hooks/useShowSwapNetworkNotification'
 import { useProvider, useWalletSigners } from 'wallet/src/features/wallet/context'

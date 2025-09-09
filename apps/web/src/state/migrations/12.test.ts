@@ -1,5 +1,8 @@
 import { createMigrate } from 'redux-persist'
 import { migration1 } from 'state/migrations/1'
+import { migration10 } from 'state/migrations/10'
+import { migration11 } from 'state/migrations/11'
+import { NewTransactionState, OldTransactionState, PersistAppStateV12, migration12 } from 'state/migrations/12'
 import { migration2 } from 'state/migrations/2'
 import { migration3 } from 'state/migrations/3'
 import { migration4 } from 'state/migrations/4'
@@ -8,9 +11,6 @@ import { migration6 } from 'state/migrations/6'
 import { migration7 } from 'state/migrations/7'
 import { migration8 } from 'state/migrations/8'
 import { migration9 } from 'state/migrations/9'
-import { migration10 } from 'state/migrations/10'
-import { migration11 } from 'state/migrations/11'
-import { migration12, NewTransactionState, OldTransactionState, PersistAppStateV12 } from 'state/migrations/12'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 const oldTransactionState: OldTransactionState = {

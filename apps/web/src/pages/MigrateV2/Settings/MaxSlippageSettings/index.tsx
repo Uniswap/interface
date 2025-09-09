@@ -1,7 +1,7 @@
 import { Percent } from '@uniswap/sdk-core'
-import Row, { RowBetween } from 'components/deprecated/Row'
 import Expand from 'components/Expand'
 import QuestionHelper from 'components/QuestionHelper'
+import Row, { RowBetween } from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { Input, InputContainer } from 'pages/MigrateV2/Settings/Input'
 import { useState } from 'react'

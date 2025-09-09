@@ -1,16 +1,16 @@
-import { getSdkError, INTERNAL_ERRORS } from '@walletconnect/utils'
+import { INTERNAL_ERRORS, getSdkError } from '@walletconnect/utils'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { DappConnectionItem } from 'src/components/Requests/ConnectedDapps/DappConnectionItem'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { openModal } from 'src/features/modals/modalSlice'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
+  WalletConnectSession,
   removePendingSession,
   removeSession,
-  WalletConnectSession,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { Scan } from 'ui/src/components/icons'

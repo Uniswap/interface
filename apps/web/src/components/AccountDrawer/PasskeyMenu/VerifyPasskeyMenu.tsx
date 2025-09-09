@@ -2,8 +2,8 @@ import { GenericPasskeyMenuModal } from 'components/AccountDrawer/PasskeyMenu/Pa
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
 import { ShieldCheck } from 'ui/src/components/icons/ShieldCheck'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function VerifyPasskeyMenu({
   show,

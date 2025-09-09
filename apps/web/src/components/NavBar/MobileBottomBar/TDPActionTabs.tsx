@@ -53,7 +53,7 @@ export function TDPActionTabs() {
       ...(account.isConnected
         ? [
             {
-              href: `/send?sendChain=${chainUrlParam}&sendCurrency=${addressUrlParam}`,
+              href: `/send?chain=${chainUrlParam}&inputCurrency=${addressUrlParam}`,
               icon: <Send fill="currentColor" />,
             },
           ]

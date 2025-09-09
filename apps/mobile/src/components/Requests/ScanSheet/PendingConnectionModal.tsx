@@ -8,16 +8,16 @@ import { DappHeaderIcon } from 'src/components/Requests/DappHeaderIcon'
 import { ModalWithOverlay, ModalWithOverlayProps } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
 import { AccountSelectPopover } from 'src/components/Requests/ScanSheet/AccountSelectPopover'
 import { SitePermissions } from 'src/components/Requests/ScanSheet/SitePermissions'
+import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { getSessionNamespaces } from 'src/features/walletConnect/utils'
-import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
+  WalletConnectPendingSession,
+  WalletConnectVerifyStatus,
   addSession,
   removePendingSession,
   setDidOpenFromDeepLink,
-  WalletConnectPendingSession,
-  WalletConnectVerifyStatus,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons'
@@ -26,7 +26,7 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { DappRequestType, WalletConnectEvent, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
+import { DappRequestType, WCEventType, WCRequestOutcome, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { formatDappURL } from 'utilities/src/format/urls'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'

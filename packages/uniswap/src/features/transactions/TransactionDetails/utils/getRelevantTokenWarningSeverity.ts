@@ -3,8 +3,8 @@ import {
   getSeverityFromTokenProtectionWarning,
   getTokenProtectionWarning,
 } from 'uniswap/src/features/tokens/safetyUtils'
-import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { TokenWarningProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 
 export function getRelevantTokenWarningSeverity(
   acceptedDerivedSwapInfo?: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>,

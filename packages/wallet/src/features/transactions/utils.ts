@@ -3,7 +3,7 @@ import { BigNumber, providers } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId, UniverseChainInfo } from 'uniswap/src/features/chains/types'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { isBridge, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   FinalizedTransactionStatus,
@@ -19,7 +19,8 @@ export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,
   chainId?: UniverseChainId,
 ): providers.TransactionRequest {
-  const { to, from, nonce, gasLimit, data, gasPrice, value, maxPriorityFeePerGas, maxFeePerGas, type } = request
+  // prettier-ignore
+  const { to, from, nonce, gasLimit, gasPrice, data, value, maxPriorityFeePerGas, maxFeePerGas, type } = request
   // Manually restructure the txParams to ensure values going into store are serializable
   return {
     chainId,

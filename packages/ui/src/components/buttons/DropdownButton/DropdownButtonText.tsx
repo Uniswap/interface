@@ -1,9 +1,9 @@
 import { styled } from 'tamagui'
 import { CustomButtonText } from 'ui/src/components/buttons/Button/components/CustomButtonText/CustomButtonText'
 import {
-  dropdownButtonStyledContext,
   EXPANDED_COLOR,
   EXPANDED_HOVER_COLOR,
+  dropdownButtonStyledContext,
 } from 'ui/src/components/buttons/DropdownButton/constants'
 
 export const DropdownButtonText = styled(CustomButtonText, {

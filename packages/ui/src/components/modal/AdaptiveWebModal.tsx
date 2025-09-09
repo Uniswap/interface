@@ -1,7 +1,7 @@
 import { RemoveScroll } from '@tamagui/remove-scroll'
 import { PropsWithChildren, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { DimensionValue } from 'react-native'
-import { Adapt, Dialog, GetProps, Sheet, styled, useIsTouchDevice, useMedia, View, VisuallyHidden } from 'tamagui'
+import { Adapt, Dialog, GetProps, Sheet, View, VisuallyHidden, styled, useIsTouchDevice, useMedia } from 'tamagui'
 import { CloseIconProps, CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { Flex, FlexProps } from 'ui/src/components/layout'
 import { useScrollbarStyles } from 'ui/src/styles/ScrollbarStyles'
@@ -42,14 +42,7 @@ const useIncrementTouchDeviceSheetKey = ({
   return sheetKey
 }
 
-export function WebBottomSheet({
-  isOpen,
-  onClose,
-  children,
-  gap,
-  hideHandlebar,
-  ...rest
-}: ModalProps): JSX.Element | null {
+export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: ModalProps): JSX.Element | null {
   const isTouchDevice = useIsTouchDevice()
   const [isHandlePressed, setHandlePressed] = useState(false)
 
@@ -117,20 +110,18 @@ export function WebBottomSheet({
           {...sheetOverrideStyles}
           {...sheetHeightStyles}
         >
-          {!hideHandlebar && (
-            <Sheet.Handle
-              justifyContent="center"
-              m={0}
-              pb="$spacing16"
-              pt="$spacing8"
-              width="100%"
-              backgroundColor="$transparent"
-              onMouseDown={() => setHandlePressed(true)}
-              onMouseUp={() => setHandlePressed(false)}
-            >
-              <Flex backgroundColor="$neutral3" height="$spacing4" width="$spacing32" borderRadius="$roundedFull" />
-            </Sheet.Handle>
-          )}
+          <Sheet.Handle
+            justifyContent="center"
+            m={0}
+            pb="$spacing16"
+            pt="$spacing8"
+            width="100%"
+            backgroundColor="$transparent"
+            onMouseDown={() => setHandlePressed(true)}
+            onMouseUp={() => setHandlePressed(false)}
+          >
+            <Flex backgroundColor="$neutral3" height="$spacing4" width="$spacing32" borderRadius="$roundedFull" />
+          </Sheet.Handle>
           <Flex gap={gap} $platform-web={{ overflow: 'auto' }} {...sheetHeightStyles}>
             {children}
           </Flex>
@@ -163,7 +154,6 @@ type ModalProps = GetProps<typeof View> &
     onClose?: () => void
     adaptToSheet?: boolean
     alignment?: 'center' | 'top'
-    hideHandlebar?: boolean
   }>
 
 /**
@@ -183,7 +173,6 @@ export function AdaptiveWebModal({
   py,
   p,
   zIndex,
-  hideHandlebar,
   ...rest
 }: ModalProps): JSX.Element {
   const filteredRest = Object.fromEntries(Object.entries(rest).filter(([_, v]) => v !== undefined)) // Filter out undefined properties from rest
@@ -221,7 +210,6 @@ export function AdaptiveWebModal({
               px={px ?? p ?? '$spacing24'}
               py={py ?? p ?? '$spacing16'}
               style={style}
-              hideHandlebar={hideHandlebar}
               onClose={onClose}
               {...filteredRest}
             >
@@ -288,7 +276,6 @@ export function WebModalWithBottomAttachment({
   backgroundColor = '$surface1',
   gap,
   zIndex,
-  hideHandlebar,
   ...rest
 }: ModalProps & { bottomAttachment?: ReactNode }): JSX.Element {
   const shadowProps = useShadowPropsShort()
@@ -314,13 +301,7 @@ export function WebModalWithBottomAttachment({
       {adaptToSheet &&
         !isTopAligned && ( // Tamagui Sheets always animate in from the bottom, so we cannot use Sheets on top aligned modals
           <Adapt when="sm">
-            <WebBottomSheet
-              isOpen={isOpen}
-              style={style}
-              hideHandlebar={hideHandlebar}
-              onClose={onClose}
-              {...filteredRest}
-            >
+            <WebBottomSheet isOpen={isOpen} style={style} onClose={onClose} {...filteredRest}>
               <Adapt.Contents />
             </WebBottomSheet>
           </Adapt>

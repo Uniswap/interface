@@ -1,4 +1,4 @@
-import { QueryClient, QueryKey, skipToken, UseQueryResult, useQuery } from '@tanstack/react-query'
+import { QueryClient, QueryKey, UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { is404Error } from 'uniswap/src/data/apiClients/FetchError'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'

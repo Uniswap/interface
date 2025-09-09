@@ -1,20 +1,19 @@
-import { NetworkStatus } from '@apollo/client'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import {
-  portfolio,
-  portfolioBalances,
   SAMPLE_CURRENCY_ID_1,
   SAMPLE_SEED_ADDRESS_1,
+  portfolio,
+  portfolioBalances,
   tokenBalance,
   usdcArbitrumToken,
   usdcBaseToken,
 } from 'uniswap/src/test/fixtures'
+import { queryResolvers } from 'uniswap/src/test/utils'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { portfolioBalancesById } from 'uniswap/src/utils/balances'
 
 const mockedNavigation = {
   navigate: jest.fn(),
@@ -32,36 +31,7 @@ jest.mock('@react-navigation/native', () => {
   }
 })
 
-jest.mock('uniswap/src/features/dataApi/balances/balances', () => {
-  const actual = jest.requireActual('uniswap/src/features/dataApi/balances/balances')
-  const { NetworkStatus: MockNetworkStatus } = jest.requireActual('@apollo/client')
-  return {
-    ...actual,
-    usePortfolioBalances: jest.fn(() => ({
-      data: undefined,
-      loading: false,
-      networkStatus: MockNetworkStatus.ready,
-      refetch: jest.fn(),
-      error: undefined,
-    })),
-  }
-})
-
-const mockUsePortfolioBalances = usePortfolioBalances as jest.MockedFunction<typeof usePortfolioBalances>
-
 describe(useCrossChainBalances, () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-    // Reset mock to default state
-    mockUsePortfolioBalances.mockReturnValue({
-      data: undefined,
-      loading: false,
-      networkStatus: NetworkStatus.ready,
-      refetch: jest.fn(),
-      error: undefined,
-    })
-  })
-
   describe('currentChainBalance', () => {
     it('returns null if there are no balances for the specified currency', async () => {
       const { result } = renderHook(
@@ -87,18 +57,10 @@ describe(useCrossChainBalances, () => {
 
     it('returns balance if there is at least one for the specified currency', async () => {
       const Portfolio = portfolio()
-      const testPortfolioBalances = portfolioBalances({ portfolio: Portfolio })
-      const currentChainBalance = testPortfolioBalances[0]!
-
-      const portfolioBalancesByIdData = portfolioBalancesById(testPortfolioBalances)
-      mockUsePortfolioBalances.mockReturnValue({
-        data: portfolioBalancesByIdData,
-        loading: false,
-        networkStatus: NetworkStatus.ready,
-        refetch: jest.fn(),
-        error: undefined,
+      const currentChainBalance = portfolioBalances({ portfolio: Portfolio })[0]!
+      const { resolvers } = queryResolvers({
+        portfolios: () => [Portfolio],
       })
-
       const { result } = renderHook(
         () =>
           useCrossChainBalances({
@@ -108,6 +70,7 @@ describe(useCrossChainBalances, () => {
           }),
         {
           preloadedState: preloadedMobileState(),
+          resolvers,
         },
       )
 
@@ -152,18 +115,11 @@ describe(useCrossChainBalances, () => {
         address: balance.token.address,
       }))
       const Portfolio = portfolio({ tokenBalances })
-      const testPortfolioBalances = portfolioBalances({
+      const [currentChainBalance, ...otherChainBalances] = portfolioBalances({
         portfolio: Portfolio,
       })
-      const [currentChainBalance, ...otherChainBalances] = testPortfolioBalances
-
-      const portfolioBalancesByIdData = portfolioBalancesById(testPortfolioBalances)
-      mockUsePortfolioBalances.mockReturnValue({
-        data: portfolioBalancesByIdData,
-        loading: false,
-        networkStatus: NetworkStatus.ready,
-        refetch: jest.fn(),
-        error: undefined,
+      const { resolvers } = queryResolvers({
+        portfolios: () => [Portfolio],
       })
 
       const { result } = renderHook(
@@ -175,6 +131,7 @@ describe(useCrossChainBalances, () => {
           }),
         {
           preloadedState: preloadedMobileState(),
+          resolvers,
         },
       )
 
@@ -201,10 +158,18 @@ describe(useTokenDetailsNavigation, () => {
   })
 
   it('preloads token details when preload function is called', async () => {
-    const { result } = renderHook(() => useTokenDetailsNavigation())
+    const queryResolver = jest.fn()
+    const { resolvers } = queryResolvers({
+      token: queryResolver,
+    })
+    const { result } = renderHook(() => useTokenDetailsNavigation(), {
+      resolvers,
+    })
 
     await act(() => result.current.preload(SAMPLE_CURRENCY_ID_1))
-    expect(result.current.preload).toBeDefined()
+
+    expect(queryResolver).toHaveBeenCalledTimes(1)
+    expect(queryResolver.mock.calls[0][1]).toEqual(currencyIdToContractInput(SAMPLE_CURRENCY_ID_1))
   })
 
   it('navigates to token details when navigate function is called', async () => {

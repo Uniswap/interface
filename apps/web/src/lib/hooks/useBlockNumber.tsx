@@ -6,7 +6,7 @@ import { useEthersProvider } from 'hooks/useEthersProvider'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 // MulticallUpdater is outside of the SwapAndLimitContext but we still want to use the swap context chainId for swap-related multicalls

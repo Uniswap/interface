@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 import { OptionCard } from 'src/app/components/buttons/OptionCard'
+import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import {
   InitiatePasskeyAuthLocationState,
   SelectImportMethodLocationState,
 } from 'src/app/features/onboarding/import/types'
-import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { Flex, Square, Text } from 'ui/src'

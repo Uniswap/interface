@@ -5,9 +5,9 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { ClientDetails, PermitInfo } from 'src/components/Requests/RequestModal/ClientDetails'
 import { RequestDetails } from 'src/components/Requests/RequestModal/RequestDetails'
 import {
+  WalletConnectSigningRequest,
   isBatchedTransactionRequest,
   isTransactionRequest,
-  WalletConnectSigningRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'

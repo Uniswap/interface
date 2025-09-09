@@ -1,7 +1,7 @@
 import { AccountList } from 'src/components/accounts/AccountList'
 import { cleanup, fireEvent, render, screen } from 'src/test/test-utils'
 import { Locale } from 'uniswap/src/features/language/constants'
-import { amounts, ON_PRESS_EVENT_PAYLOAD, portfolio } from 'uniswap/src/test/fixtures'
+import { ON_PRESS_EVENT_PAYLOAD, amounts, portfolio } from 'uniswap/src/test/fixtures'
 import { mockLocalizedFormatter } from 'uniswap/src/test/mocks'
 import { createArray, queryResolvers } from 'uniswap/src/test/utils'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'

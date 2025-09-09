@@ -10,8 +10,8 @@ import { SendFormScreen } from 'src/features/send/SendFormScreen'
 import { SendRecipientSelectFullScreen } from 'src/features/send/SendRecipientSelectFullScreen'
 import { SendReviewScreen } from 'src/features/send/SendReviewScreen'
 import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
-import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionModal } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import {
   TransactionScreen,

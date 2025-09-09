@@ -8,8 +8,8 @@ import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
 import { getCurrenciesWithExpectedUpdates } from 'uniswap/src/features/portfolio/portfolioUpdates/getCurrenciesWithExpectedUpdates'
 import {
-  fetchOnChainBalancesRest,
   OnChainMapRest,
+  fetchOnChainBalancesRest,
 } from 'uniswap/src/features/portfolio/portfolioUpdates/rest/fetchOnChainBalancesRest'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'

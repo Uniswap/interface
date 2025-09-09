@@ -3,15 +3,15 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Separator, Text, UniswapXText, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Gas } from 'ui/src/components/icons/Gas'
-import { fonts, NATIVE_LINE_HEIGHT_SCALE, zIndexes } from 'ui/src/theme'
+import { NATIVE_LINE_HEIGHT_SCALE, fonts, zIndexes } from 'ui/src/theme'
 import {
   NetworkCostTooltipClassic,
   NetworkCostTooltipSmartWallet,
   NetworkCostTooltipUniswapX,
 } from 'uniswap/src/components/gas/NetworkCostTooltip'
 import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
 import { uniswapUrls } from 'uniswap/src/constants/urls'

@@ -1,6 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
-import { DAI, nativeOnChain, USDC } from 'uniswap/src/constants/tokens'
+import { DAI, USDC, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TokenList } from 'uniswap/src/features/dataApi/types'

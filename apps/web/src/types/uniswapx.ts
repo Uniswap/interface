@@ -35,7 +35,7 @@ interface BaseUniswapXBackendOrder {
       startAmount: string
       endAmount: string
       token: string
-    },
+    }
   ]
   createdAt?: number
   // QuoteId field is defined when the order has a quote associated with it.
@@ -72,7 +72,7 @@ interface FilledUniswapXBackendOrder extends BaseUniswapXBackendOrder {
       amountIn: string
       tokenOut: string
       amountOut: string
-    },
+    }
   ]
 }
 

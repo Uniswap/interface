@@ -12,15 +12,13 @@ export interface BaseTransactionContext {
   analytics: SwapTradeBaseProperties
 }
 
-export type TransactionExecutionResult =
-  | {
-      hash: string
-      success: true
-    }
-  | {
-      error: unknown
-      success: false
-    }
+export type TransactionExecutionResult = {
+  hash: string
+  success: true
+} | {
+  error: unknown
+  success: false
+}
 
 export type TransactionExecutionSyncResultSuccess = {
   transaction: TransactionDetails

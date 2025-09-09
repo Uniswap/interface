@@ -160,6 +160,29 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
   height: inherit;
 }
 
+.c9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 485;
+  gap: 12px;
+  height: 40px;
+  color: #131313;
+  cursor: pointer;
+}
+
+.c9:hover {
+  background-color: #98A1C01a;
+}
+
 .c0 {
   box-sizing: border-box;
   margin: 0;
@@ -211,29 +234,6 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
-}
-
-.c9 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  padding: 8px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 485;
-  gap: 12px;
-  height: 40px;
-  color: #131313;
-  cursor: pointer;
-}
-
-.c9:hover {
-  background-color: #98A1C01a;
 }
 
 .c6 {

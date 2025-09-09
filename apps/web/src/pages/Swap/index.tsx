@@ -1,5 +1,5 @@
-import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import type { Currency } from '@uniswap/sdk-core'
+import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { SwapBottomCard } from 'components/SwapBottomCard'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -17,11 +17,11 @@ import { useLocation, useNavigate } from 'react-router'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { useSwapCallback } from 'state/sagas/transactions/swapSaga'
 import { useWrapCallback } from 'state/sagas/transactions/wrapSaga'
-import { useInitialCurrencyState } from 'state/swap/hooks'
 import { SwapAndLimitContextProvider } from 'state/swap/SwapContext'
+import { useInitialCurrencyState } from 'state/swap/hooks'
 import type { CurrencyState } from 'state/swap/types'
 import type { SegmentedControlOption } from 'ui/src'
-import { Flex, SegmentedControl, styled, Text, Tooltip } from 'ui/src'
+import { Flex, SegmentedControl, Text, Tooltip, styled } from 'ui/src'
 import type { AppTFunction } from 'ui/src/i18n/types'
 import { zIndexes } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -31,17 +31,16 @@ import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
-import { WebFORNudgeProvider } from 'uniswap/src/features/providers/webForNudgeProvider'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfaceEventName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { SwapTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/SwapTransactionSettingsStoreContextProvider'
 import type {
   PasskeyAuthStatus,
   SwapRedirectFn,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
+import { SwapTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/SwapTransactionSettingsStoreContextProvider'
 import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow/SwapFlow'
+import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
 import { SwapDependenciesStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/SwapDependenciesStoreContextProvider'
 import { SwapFormStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContextProvider'
@@ -80,17 +79,15 @@ export default function SwapPage() {
   return (
     <Trace logImpression page={InterfacePageName.SwapPage}>
       <PageWrapper>
-        <WebFORNudgeProvider>
-          <Swap
-            chainId={initialChainId}
-            initialInputCurrency={initialInputCurrency}
-            initialOutputCurrency={initialOutputCurrency}
-            initialTypedValue={initialTypedValue}
-            initialIndependentField={initialField}
-            syncTabToUrl={true}
-            usePersistedFilteredChainIds
-          />
-        </WebFORNudgeProvider>
+        <Swap
+          chainId={initialChainId}
+          initialInputCurrency={initialInputCurrency}
+          initialOutputCurrency={initialOutputCurrency}
+          initialTypedValue={initialTypedValue}
+          initialIndependentField={initialField}
+          syncTabToUrl={true}
+          usePersistedFilteredChainIds
+        />
       </PageWrapper>
       {location.pathname === '/swap' && <SwitchLocaleLink />}
     </Trace>
@@ -198,6 +195,7 @@ const TAB_TYPE_TO_LABEL = {
 
 const PATHNAME_TO_TAB: { [key: string]: SwapTab } = {
   '/swap': SwapTab.Swap,
+  '/send': SwapTab.Send,
   '/limit': SwapTab.Limit,
   '/buy': SwapTab.Buy,
   '/sell': SwapTab.Sell,

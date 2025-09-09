@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
-
-import path, { join } from 'node:path'
+/* eslint-disable no-useless-escape */
 import camelcase from 'camelcase'
 import { load } from 'cheerio'
-import { ensureDirSync, existsSync, readdirSync, readFileSync, writeFileSync } from 'fs-extra'
+import { ensureDirSync, existsSync, readFileSync, readdirSync, writeFileSync } from 'fs-extra'
+import path, { join } from 'path'
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
+// @ts-ignore
 import uppercamelcase from 'uppercamelcase'
 
 // Types
@@ -60,19 +61,29 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): 
       continue
     }
 
-    // Generate and write file (without formatting)
+    // Generate and write file
     const svg = readFileSync(inputPath, 'utf-8')
-    const element = generateSVGComponentString(svg, fileName)
+    const element = await generateSVGComponent(svg, fileName)
     if (element) {
       console.log(`🦄 ${fileName}`)
       writeFileSync(outputPath, element, 'utf-8')
     }
   }
 
-  // Write index file (without formatting)
+  // Format and write index file
   console.log('Writing index file...')
-  const indexPath = join(dirs.output, 'exported.ts')
-  writeFileSync(indexPath, indexFile, 'utf-8')
+  const formattedIndex = await prettierFormat(indexFile)
+  writeFileSync(join(dirs.output, 'exported.ts'), formattedIndex, 'utf-8')
+}
+
+async function generateSVGComponent(svg: string, fileName: string): Promise<string | undefined> {
+  try {
+    const element = generateSVGComponentString(svg, fileName)
+    return await prettierFormat(element)
+  } catch (err) {
+    console.log(`Error converting icon: ${fileName}: ${(err as any).message}`)
+    return undefined
+  }
 }
 
 // Core SVG File Generation
@@ -122,45 +133,45 @@ function generateSVGComponentString(svg: string, fileName: string): string {
 
   const parsedSvgToReact = $('svg')
     .toString()
-    .replace(/ class="[^"]+"/g, '')
-    .replace(/ version="[^"]+"/g, '')
+    .replace(/ class=\"[^\"]+\"/g, '')
+    .replace(/ version=\"[^\"]+\"/g, '')
     .replace(/width="[0-9]+"/, '')
     .replace(/height="[0-9]+"/, '')
     .replace('<svg', '<Svg')
     .replace('</svg', '</Svg')
-    .replace(/<circle/g, '<_Circle')
-    .replace(/<\/circle/g, '</_Circle')
-    .replace(/<ellipse/g, '<Ellipse')
-    .replace(/<\/ellipse/g, '</Ellipse')
-    .replace(/<g/g, '<G')
-    .replace(/<\/g/g, '</G')
-    .replace(/<linear-gradient/g, '<LinearGradient')
-    .replace(/<\/linear-gradient/g, '</LinearGradient')
-    .replace(/<radial-gradient/g, '<RadialGradient')
-    .replace(/<\/radial-gradient/g, '</RadialGradient')
-    .replace(/<path/g, '<Path')
-    .replace(/<\/path/g, '</Path')
-    .replace(/<line/g, '<Line')
-    .replace(/<\/line/g, '</Line')
-    .replace(/<polygon/g, '<Polygon')
-    .replace(/<\/polygon/g, '</Polygon')
-    .replace(/<polyline/g, '<Polyline')
-    .replace(/<\/polyline/g, '</Polyline')
-    .replace(/<rect/g, '<Rect')
-    .replace(/<\/rect/g, '</Rect')
-    .replace(/<symbol/g, '<Symbol')
-    .replace(/<\/symbol/g, '</Symbol')
-    .replace(/<text/g, '<_Text')
-    .replace(/<\/text/g, '</_Text')
-    .replace(/<use/g, '<Use')
-    .replace(/<\/use/g, '</Use')
-    .replace(/<defs/g, '<Defs')
-    .replace(/<\/defs/g, '</Defs')
-    .replace(/<stop/g, '<Stop')
-    .replace(/<\/stop/g, '</Stop')
-    .replace(/<clipPath/g, '<ClipPath')
-    .replace(/<\/clipPath/g, '</ClipPath')
-    .replace(/px/g, '')
+    .replace(new RegExp('<circle', 'g'), '<_Circle')
+    .replace(new RegExp('</circle', 'g'), '</_Circle')
+    .replace(new RegExp('<ellipse', 'g'), '<Ellipse')
+    .replace(new RegExp('</ellipse', 'g'), '</Ellipse')
+    .replace(new RegExp('<g', 'g'), '<G')
+    .replace(new RegExp('</g', 'g'), '</G')
+    .replace(new RegExp('<linear-gradient', 'g'), '<LinearGradient')
+    .replace(new RegExp('</linear-gradient', 'g'), '</LinearGradient')
+    .replace(new RegExp('<radial-gradient', 'g'), '<RadialGradient')
+    .replace(new RegExp('</radial-gradient', 'g'), '</RadialGradient')
+    .replace(new RegExp('<path', 'g'), '<Path')
+    .replace(new RegExp('</path', 'g'), '</Path')
+    .replace(new RegExp('<line', 'g'), '<Line')
+    .replace(new RegExp('</line', 'g'), '</Line')
+    .replace(new RegExp('<polygon', 'g'), '<Polygon')
+    .replace(new RegExp('</polygon', 'g'), '</Polygon')
+    .replace(new RegExp('<polyline', 'g'), '<Polyline')
+    .replace(new RegExp('</polyline', 'g'), '</Polyline')
+    .replace(new RegExp('<rect', 'g'), '<Rect')
+    .replace(new RegExp('</rect', 'g'), '</Rect')
+    .replace(new RegExp('<symbol', 'g'), '<Symbol')
+    .replace(new RegExp('</symbol', 'g'), '</Symbol')
+    .replace(new RegExp('<text', 'g'), '<_Text')
+    .replace(new RegExp('</text', 'g'), '</_Text')
+    .replace(new RegExp('<use', 'g'), '<Use')
+    .replace(new RegExp('</use', 'g'), '</Use')
+    .replace(new RegExp('<defs', 'g'), '<Defs')
+    .replace(new RegExp('</defs', 'g'), '</Defs')
+    .replace(new RegExp('<stop', 'g'), '<Stop')
+    .replace(new RegExp('</stop', 'g'), '</Stop')
+    .replace(new RegExp('<clipPath', 'g'), '<ClipPath')
+    .replace(new RegExp('</clipPath', 'g'), '</ClipPath')
+    .replace(new RegExp('px', 'g'), '')
 
   const foundFills = Array.from(parsedSvgToReact.matchAll(/fill="(#[a-z0-9]+)"/gi)).flat()
   const defaultFill = foundFills[1]
@@ -184,7 +195,7 @@ Symbol,
 Use,
 Defs,
 Stop,
-ClipPath,
+ClipPath
 Text as _Text,
 Circle as _Circle,
 } from 'react-native-svg'
@@ -209,6 +220,30 @@ ${defaultFill ? `defaultFill: '${defaultFill}'` : ''}
 
 function generateClassName(fileName: string): string {
   return uppercamelcase(path.basename(fileName, '.svg')) as string
+}
+
+// Formatting
+
+import fs from 'fs'
+import { format } from 'prettier'
+
+const configPath = path.resolve(__dirname, '../../../../.prettierrc')
+const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
+
+// it was removing needed imports for some reason
+
+async function prettierFormat(source: string): Promise<string> {
+  // lol for some reason it removes imports it shouldnt it you run it in one pass
+  // running this in two passes with the second organizing imports fixes it...
+  const formattedOnce = await format(source, {
+    ...config,
+    organizeImportsSkipDestructiveCodeActions: true,
+    parser: 'typescript',
+  })
+  return await format(formattedOnce, {
+    ...config,
+    parser: 'typescript',
+  })
 }
 
 // This must be at the end to run all code

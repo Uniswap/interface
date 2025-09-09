@@ -1,3 +1,4 @@
+import { isAndroid } from '@walletconnect/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { getCloudBackupList } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
@@ -14,6 +15,12 @@ type UseCloudBackupOptions = {
   autoFetch?: boolean
 }
 
+/**
+ * Workaround for Android GDrive backup. There are many UXs depending on the API and
+ * at the moment we are only e2e testing seed phrase input.
+ */
+const ANDROID_E2E_WORKAROUND = config.isE2ETest && isAndroid
+
 export const useCloudBackups = (options?: UseCloudBackupOptions): UseCloudBackup => {
   const [backups, setBackups] = useState<CloudStorageMnemonicBackup[]>([])
   const [isLoading, setIsLoading] = useState<boolean | null>(null)
@@ -25,8 +32,7 @@ export const useCloudBackups = (options?: UseCloudBackupOptions): UseCloudBackup
     // delays native oauth consent screen to avoid UI freezes
     setTimeout(async () => {
       try {
-        if (config.isE2ETest) {
-          setIsLoading(false)
+        if (ANDROID_E2E_WORKAROUND) {
           setIsError(false)
           return
         }

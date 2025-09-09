@@ -4,48 +4,51 @@
   "description": "Uniswap Interface",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "prepare": "bun ajv",
-    "ajv": "bun run scripts/compile-ajv-validators.js",
-    "graphql:generate": "echo 'GraphQL generation handled by uniswap package'",
+    "ajv": "node scripts/compile-ajv-validators.js",
     "anvil:mainnet": "dotenv -- bash -c 'RUST_LOG=debug anvil --print-traces --fork-url https://${REACT_APP_QUICKNODE_ENDPOINT_NAME}.quiknode.pro/${REACT_APP_QUICKNODE_ENDPOINT_TOKEN} --hardfork prague --no-rate-limit'",
     "anvil:base": "dotenv -- bash -c 'RUST_LOG=debug anvil --print-traces --fork-url https://${REACT_APP_QUICKNODE_ENDPOINT_NAME}.base-mainnet.quiknode.pro/${REACT_APP_QUICKNODE_ENDPOINT_TOKEN} --hardfork prague --port 8546'",
     "check:deps:usage": "depcheck",
     "check:circular": "concurrently \"../../scripts/check-circular-imports.sh ./src/pages/App.tsx 2\" \"../../scripts/check-circular-imports.sh ./src/setupTests.ts 0\"",
-    "sitemap:generate": "bun run scripts/generate-sitemap.js",
+    "sitemap:generate": "node scripts/generate-sitemap.js",
     "start": "ROLLDOWN_OPTIONS_VALIDATION=loose vite dev",
     "dev": "ROLLDOWN_OPTIONS_VALIDATION=loose vite dev",
     "build:production": "CLOUDFLARE_ENV=production ROLLDOWN_OPTIONS_VALIDATION=loose vite build",
     "build:staging": "CLOUDFLARE_ENV=staging ROLLDOWN_OPTIONS_VALIDATION=loose vite build --mode staging",
     "preview": "ROLLDOWN_OPTIONS_VALIDATION=loose vite preview",
     "analyze": "source-map-explorer 'build/assets/*.js' --no-border-checks --gzip",
-    "format": "biome check . --linter-enabled=false",
-    "lint": "eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ --max-warnings=0 .",
-    "lint:fix": "eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ . --fix",
+    "format": "../../scripts/prettier.sh",
+    "lint": "yarn eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ --max-warnings=0 .",
+    "lint:fix": "yarn eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ . --fix",
     "playwright:test": "playwright test",
     "playwright:test:anvil": "playwright test --grep '\\.anvil\\.'",
     "playwright:test:no-anvil": "playwright test --grep-invert '\\.anvil\\.'",
-    "typecheck": "tsc && bun run typecheck:cloud",
+    "typecheck": "tsc && yarn typecheck:cloud",
     "typecheck:cloud": "tsc -p functions/tsconfig.json",
     "find:unused": "bash scripts/delete-unused-assets.sh",
-    "test": "NODE_OPTIONS='--no-deprecation' vitest run src",
+    "test": "NODE_OPTIONS='--no-deprecation' vitest run",
     "test:set1": "NODE_OPTIONS='--no-deprecation' vitest run src/components",
-    "test:set2": "NODE_OPTIONS='--no-deprecation' vitest run src/pages src/state",
-    "test:set3": "NODE_OPTIONS='--no-deprecation' vitest run src/hooks src/nft src/utils",
-    "test:set4": "NODE_OPTIONS='--no-deprecation' vitest run src --exclude 'src/components/**' --exclude 'src/pages/**' --exclude 'src/state/**' --exclude 'src/hooks/**' --exclude 'src/nft/**' --exclude 'src/utils/**'",
+    "test:set2": "NODE_OPTIONS='--no-deprecation' vitest run src/(pages|state)",
+    "test:set3": "NODE_OPTIONS='--no-deprecation' vitest run src/(hooks|nft|utils)",
+    "test:set4": "NODE_OPTIONS='--no-deprecation' vitest run src/!(components|pages|state|hooks|nft|utils)/**",
     "test:watch": "NODE_OPTIONS='--no-deprecation' vitest watch",
-    "test:bundle": "bun run -r esbuild-register ./src/test-utils/bundle-size-test.ts",
+    "test:bundle": "node -r esbuild-register ./src/test-utils/bundle-size-test.ts",
     "snapshots": "NODE_OPTIONS='--no-deprecation' vitest run -u",
     "test:cloud": "NODE_OPTIONS='--no-deprecation' vitest run functions --config functions/vitest.config.ts",
-    "deduplicate": "echo 'Bun automatically deduplicates dependencies'",
+    "deduplicate": "yarn-deduplicate --strategy=highest",
     "storybook:run": "storybook dev -p 6006",
-    "storybook:run:with-tests": "concurrently -s second -n \"SB RUN,SB TEST WATCH\" -c \"magenta,blue\" \"bun run storybook:run --quiet\" \"wait-on tcp:127.0.0.1:6006 -t 600000 && bun run storybook:test --watch\"",
+    "storybook:run:with-tests": "concurrently -s second -n \"SB RUN,SB TEST WATCH\" -c \"magenta,blue\" \"yarn storybook:run --quiet\" \"wait-on tcp:127.0.0.1:6006 -t 600000 && yarn storybook:test --watch\"",
     "storybook:build": "storybook build",
     "storybook:test": "test-storybook --excludeTags=\"no-tests\" --testTimeout 60000",
-    "storybook:test:standalone": "concurrently -k -s first -n \"SB BUILD,SB TEST\" -c \"magenta,blue\" \"bun run storybook:build && http-server storybook-static --port 6006 --silent\" \"wait-on --timeout 600000 tcp:127.0.0.1:6006 && bun run storybook:test --maxWorkers=2\""
+    "storybook:test:standalone": "concurrently -k -s first -n \"SB BUILD,SB TEST\" -c \"magenta,blue\" \"yarn storybook:build && http-server storybook-static --port 6006 --silent\" \"wait-on --timeout 600000 tcp:127.0.0.1:6006 && yarn storybook:test --maxWorkers=2\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
-    "bun.lock": [
-      "echo 'Bun automatically deduplicates dependencies'"
+    "yarn.lock": [
+      "yarn deduplicate"
     ]
   },
   "browserslist": {
@@ -119,6 +122,7 @@
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-storybook": "0.8.0",
     "http-server": "14.1.1",
+    "husky": "8.0.3",
     "jest-extended": "4.0.2",
     "jest-fail-on-console": "3.3.0",
     "jest-styled-components": "7.2.0",
@@ -128,7 +132,7 @@
     "postinstall-postinstall": "2.1.0",
     "process": "0.11.10",
     "prop-types": "15.8.1",
-    "react-compiler-runtime": "19.1.0-rc.3",
+    "react-compiler-runtime": "rc",
     "react-scripts": "5.0.1",
     "resize-observer-polyfill": "1.5.1",
     "source-map-explorer": "2.5.3",
@@ -150,7 +154,8 @@
     "vitest-fetch-mock": "0.4.5",
     "wait-on": "8.0.2",
     "webpack": "5.90.0",
-    "wrangler": "4.28.0"
+    "wrangler": "4.28.0",
+    "yarn-deduplicate": "6.0.0"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "1.12.1",
@@ -237,7 +242,6 @@
     "png-ts": "0.0.3",
     "polished": "3.3.2",
     "polyfill-object.fromentries": "1.0.1",
-    "porto": "0.0.80",
     "qs": "6.11.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -277,13 +281,13 @@
     "zod": "3.22.4"
   },
   "engines": {
-    "npm": "please-use-bun",
+    "npm": "please-use-yarn",
     "node": "=22.13.1",
-    "bun": ">=1.2.0"
+    "yarn": ">=3.2.3"
   },
   "sideEffects": [
     "*.css",
-    "src/sideEffects.ts",
-    "src/tracing/index.ts"
+    "**/sideEffects.ts",
+    "**/tracing/index.ts"
   ]
 }

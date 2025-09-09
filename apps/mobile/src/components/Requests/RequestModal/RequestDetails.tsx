@@ -5,10 +5,10 @@ import { StyleProp, ViewStyle } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { PermitInfo } from 'src/components/Requests/RequestModal/ClientDetails'
 import {
-  isBatchedTransactionRequest,
-  isTransactionRequest,
   SignRequest,
   WalletConnectSigningRequest,
+  isBatchedTransactionRequest,
+  isTransactionRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text } from 'ui/src'
 import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'

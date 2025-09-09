@@ -1,4 +1,4 @@
-import { ApolloClient, from, HttpLink } from '@apollo/client'
+import { ApolloClient, HttpLink, from } from '@apollo/client'
 import { setupSharedApolloCache } from 'uniswap/src/data/cache'
 import { getDatadogApolloLink } from 'utilities/src/logger/datadog/datadogLink'
 

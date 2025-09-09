@@ -1,5 +1,5 @@
 import { providers } from 'ethers'
-import { call, delay, put, SagaGenerator, select } from 'typed-redux-saga'
+import { SagaGenerator, call, delay, put, select } from 'typed-redux-saga'
 import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'

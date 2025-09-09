@@ -5,7 +5,7 @@ import { useAtomValue } from 'jotai/utils'
 import { X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { hideMobileAppPromoBannerAtom, persistHideMobileAppPromoBannerAtom } from 'state/application/atoms'
-import { Anchor, Flex, styled, Text, useSporeColors } from 'ui/src'
+import { Anchor, Flex, Text, styled, useSporeColors } from 'ui/src'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { getWalletMeta } from 'utils/walletMeta'
 

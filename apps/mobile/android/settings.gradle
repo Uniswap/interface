@@ -1,6 +1,6 @@
 pluginManagement { includeBuild("../../../node_modules/@react-native/gradle-plugin") }
 plugins { id("com.facebook.react.settings") }
-extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand(['bunx', 'rnef', 'config', '-p', 'android']) }
+extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand(['npx', 'rnef', 'config', '-p', 'android']) }
 rootProject.name = 'Uniswap'
 include ':app'
 includeBuild('../../../node_modules/@react-native/gradle-plugin')

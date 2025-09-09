@@ -15,8 +15,8 @@ import { Button, Flex, Image, ImageProps, Text, TouchableArea, useMedia } from '
 import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { ElementName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
 
 type Props = {

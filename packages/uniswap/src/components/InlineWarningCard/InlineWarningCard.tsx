@@ -120,7 +120,7 @@ export function InlineWarningCard({
       }
       heading={
         heading && (
-          <Text color={textColor} variant="buttonLabel3" testID={headingTestId} mt="$spacing1">
+          <Text color={textColor} variant="body3" testID={headingTestId}>
             {heading}
           </Text>
         )

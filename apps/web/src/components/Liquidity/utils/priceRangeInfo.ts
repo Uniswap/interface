@@ -2,14 +2,14 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import {
-  encodeSqrtRatioX96,
   FeeAmount,
-  nearestUsableTick,
-  priceToClosestTick as priceToClosestV3Tick,
   TickMath,
   Pool as V3Pool,
+  encodeSqrtRatioX96,
+  nearestUsableTick,
+  priceToClosestTick as priceToClosestV3Tick,
 } from '@uniswap/v3-sdk'
-import { priceToClosestTick as priceToClosestV4Tick, Pool as V4Pool } from '@uniswap/v4-sdk'
+import { Pool as V4Pool, priceToClosestTick as priceToClosestV4Tick } from '@uniswap/v4-sdk'
 import {
   CreatePositionInfo,
   CreateV2PositionInfo,

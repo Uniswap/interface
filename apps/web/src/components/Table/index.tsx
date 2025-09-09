@@ -3,17 +3,18 @@ import {
   Cell,
   CellContext,
   ColumnDef,
-  flexRender,
-  getCoreRowModel,
   Row,
   RowData,
   Table as TanstackTable,
+  flexRender,
+  getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import { useParentSize } from '@visx/responsive'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ErrorModal } from 'components/Table/ErrorBox'
 import { ScrollButton, ScrollButtonProps } from 'components/Table/ScrollButton'
+import { TableSizeProvider, useTableSize } from 'components/Table/TableSizeProvider'
 import {
   CellContainer,
   DataRow,
@@ -29,7 +30,6 @@ import {
   TableRowLink,
   TableScrollMask,
 } from 'components/Table/styled'
-import { TableSizeProvider, useTableSize } from 'components/Table/TableSizeProvider'
 import { getCommonPinningStyles } from 'components/Table/utils'
 import useDebounce from 'hooks/useDebounce'
 import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -39,9 +39,9 @@ import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
 import { UseSporeColorsReturn, useSporeColors } from 'ui/src/hooks/useSporeColors'
-import { breakpoints, INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { INTERFACE_NAV_HEIGHT, breakpoints, zIndexes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const ROW_HEIGHT_DESKTOP = 56

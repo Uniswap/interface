@@ -1,38 +1,63 @@
-import { NetworkStatus } from '@apollo/client'
+/* eslint-disable max-lines */
+import { ApolloError, NetworkStatus } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
+import { setupSharedApolloCache } from 'uniswap/src/data/cache'
+import {
+  Chain,
+  PortfolioBalancesDocument,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { filterChainIdsByFeatureFlag, getEnabledChains } from 'uniswap/src/features/chains/utils'
 import {
   sortPortfolioBalances,
+  useHighestBalanceNativeCurrencyId,
   usePortfolioBalances,
+  usePortfolioCacheUpdater,
+  usePortfolioTotalValue,
   // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   usePortfolioValueModifiers,
   useSortedPortfolioBalances,
   useTokenBalancesGroupedByVisibility,
 } from 'uniswap/src/features/dataApi/balances/balances'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { initialUserSettingsState, UserSettingsState } from 'uniswap/src/features/settings/slice'
-import { CurrencyIdToVisibility, initialVisibilityState, VisibilityState } from 'uniswap/src/features/visibility/slice'
+import { UserSettingsState, initialUserSettingsState } from 'uniswap/src/features/settings/slice'
+import { CurrencyIdToVisibility, VisibilityState, initialVisibilityState } from 'uniswap/src/features/visibility/slice'
 import {
   ARBITRUM_CURRENCY,
   BASE_CURRENCY,
-  currencyInfo,
-  daiToken,
-  ethToken,
   MAINNET_CURRENCY,
   OPTIMISM_CURRENCY,
   POLYGON_CURRENCY,
-  portfolioBalance,
+  SAMPLE_CURRENCY_ID_1,
+  SAMPLE_CURRENCY_ID_2,
   SAMPLE_SEED_ADDRESS_1,
   SAMPLE_SEED_ADDRESS_2,
+  currencyInfo,
+  daiToken,
+  ethToken,
+  portfolio,
+  portfolioBalance,
   tokenBalance,
 } from 'uniswap/src/test/fixtures'
 import { createArray } from 'uniswap/src/test/utils'
-import { renderHook } from 'wallet/src/test/test-utils'
+import { queryResolvers } from 'uniswap/src/test/utils/resolvers'
+import { currencyId } from 'uniswap/src/utils/currencyId'
+import { initialWalletState } from 'wallet/src/features/wallet/slice'
+import { ACCOUNT, ACCOUNT2 } from 'wallet/src/test/fixtures'
+import { act, renderHook, waitFor } from 'wallet/src/test/test-utils'
 
 const daiTokenBalance = tokenBalance({ token: daiToken(), isHidden: true })
 const ethTokenBalance = tokenBalance({ token: ethToken(), isHidden: false })
 const daiPortfolioBalance = portfolioBalance({ fromBalance: daiTokenBalance })
 const ethPortfolioBalance = portfolioBalance({ fromBalance: ethTokenBalance })
+const Portfolio = portfolio({ tokenBalances: [daiTokenBalance, ethTokenBalance] })
+const daiCurrencyId = daiPortfolioBalance.currencyInfo.currencyId
+const ethCurrencyId = ethPortfolioBalance.currencyInfo.currencyId
+
+const { resolvers: portfolioResolvers } = queryResolvers({
+  portfolios: () => [Portfolio],
+})
 
 describe(usePortfolioValueModifiers, () => {
   const sharedModifier = {
@@ -139,6 +164,56 @@ describe(usePortfolioValueModifiers, () => {
         },
       ])
     })
+
+    it('includes token overrides in the result if tokensVisibility contains addresses visibility settings', () => {
+      const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
+        preloadedState: {
+          wallet: {
+            ...initialWalletState,
+            accounts: { [SAMPLE_SEED_ADDRESS_1]: ACCOUNT, [SAMPLE_SEED_ADDRESS_2]: ACCOUNT2 },
+          },
+          visibility: mockVisibilityState({
+            [SAMPLE_CURRENCY_ID_1]: { isVisible: false },
+            [SAMPLE_CURRENCY_ID_2]: { isVisible: true },
+          }),
+        },
+      })
+
+      expect(result.current).toEqual([
+        {
+          ...sharedModifier,
+          ownerAddress: SAMPLE_SEED_ADDRESS_1,
+          tokenIncludeOverrides: [
+            {
+              chain: Chain.Ethereum,
+              address: SAMPLE_CURRENCY_ID_2.replace('1-', '').toLocaleLowerCase(),
+            },
+          ],
+          tokenExcludeOverrides: [
+            {
+              chain: Chain.Ethereum,
+              address: SAMPLE_CURRENCY_ID_1.replace('1-', '').toLocaleLowerCase(),
+            },
+          ],
+        },
+        {
+          ...sharedModifier,
+          ownerAddress: SAMPLE_SEED_ADDRESS_2,
+          tokenIncludeOverrides: [
+            {
+              chain: Chain.Ethereum,
+              address: SAMPLE_CURRENCY_ID_2.replace('1-', '').toLocaleLowerCase(),
+            },
+          ],
+          tokenExcludeOverrides: [
+            {
+              chain: Chain.Ethereum,
+              address: SAMPLE_CURRENCY_ID_1.replace('1-', '').toLocaleLowerCase(),
+            },
+          ],
+        },
+      ])
+    })
   })
 })
 
@@ -149,9 +224,103 @@ describe(usePortfolioBalances, () => {
     expect(result.current).toEqual({
       data: undefined,
       loading: false,
-      networkStatus: NetworkStatus.loading, // TanStack Query initial state
+      networkStatus: NetworkStatus.ready,
       refetch: expect.any(Function),
       error: undefined,
+    })
+  })
+
+  it('returns loading set to true when data is being fetched', async () => {
+    const { result } = renderHook(() => usePortfolioBalances({ evmAddress: Portfolio.ownerAddress }), {
+      resolvers: portfolioResolvers,
+    })
+
+    expect(result.current).toEqual({
+      data: undefined,
+      loading: true,
+      networkStatus: NetworkStatus.loading,
+      refetch: expect.any(Function),
+      error: undefined,
+    })
+
+    await act(() => undefined)
+  })
+
+  it('returns error when query fails', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => undefined)
+
+    const { resolvers } = queryResolvers({
+      portfolios: () => {
+        throw new Error('test')
+      },
+    })
+    const { result } = renderHook(() => usePortfolioBalances({ evmAddress: Portfolio.ownerAddress }), {
+      resolvers,
+    })
+
+    await waitFor(() => {
+      expect(result.current).toEqual({
+        data: undefined,
+        loading: false,
+        networkStatus: NetworkStatus.error,
+        refetch: expect.any(Function),
+        error: new ApolloError({ errorMessage: 'test' }),
+      })
+    })
+  })
+
+  it('returns undefined when no balances for the specified address are found', async () => {
+    const { resolvers } = queryResolvers({
+      portfolios: () => [],
+    })
+    const { result } = renderHook(() => usePortfolioBalances({ evmAddress: Portfolio.ownerAddress }), {
+      resolvers,
+    })
+
+    expect(result.current.loading).toEqual(true)
+
+    await waitFor(() => {
+      expect(result.current).toEqual({
+        data: undefined,
+        loading: false,
+        networkStatus: NetworkStatus.ready,
+        refetch: expect.any(Function),
+        error: undefined,
+      })
+    })
+  })
+
+  it('returns balances grouped by currencyId', async () => {
+    const { result } = renderHook(() => usePortfolioBalances({ evmAddress: Portfolio.ownerAddress }), {
+      resolvers: portfolioResolvers,
+    })
+
+    await waitFor(() => {
+      expect(result.current).toEqual({
+        data: {
+          [daiCurrencyId]: daiPortfolioBalance,
+          [ethCurrencyId]: ethPortfolioBalance,
+        },
+        loading: false,
+        networkStatus: NetworkStatus.ready,
+        refetch: expect.any(Function),
+        error: undefined,
+      })
+    })
+  })
+
+  it('calls onCompleted callback when query completes', async () => {
+    const onCompleted = jest.fn()
+    const { result } = renderHook(() => usePortfolioBalances({ evmAddress: daiCurrencyId, onCompleted }), {
+      resolvers: portfolioResolvers,
+    })
+
+    expect(result.current.loading).toEqual(true)
+    expect(onCompleted).not.toHaveBeenCalled()
+
+    await waitFor(() => {
+      expect(result.current.loading).toEqual(false)
+      expect(onCompleted).toHaveBeenCalledTimes(1)
     })
   })
 })
@@ -163,10 +332,130 @@ describe(usePortfolioTotalValue, () => {
     expect(result.current).toEqual({
       data: undefined,
       loading: false,
-      networkStatus: NetworkStatus.loading, // TanStack Query initial state
+      networkStatus: NetworkStatus.ready,
       refetch: expect.any(Function),
       error: undefined,
     })
+  })
+
+  it('returns loading set to true when data is being fetched', async () => {
+    const { result } = renderHook(() => usePortfolioTotalValue({ evmAddress: Portfolio.ownerAddress }), {
+      resolvers: portfolioResolvers,
+    })
+
+    expect(result.current).toEqual({
+      data: undefined,
+      loading: true,
+      networkStatus: NetworkStatus.loading,
+      refetch: expect.any(Function),
+      error: undefined,
+    })
+
+    await act(() => undefined)
+  })
+
+  it('returns error when query fails', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => undefined)
+
+    const { resolvers } = queryResolvers({
+      portfolios: () => {
+        throw new Error('test')
+      },
+    })
+    const { result } = renderHook(() => usePortfolioTotalValue({ evmAddress: Portfolio.ownerAddress }), { resolvers })
+
+    await waitFor(() => {
+      expect(result.current).toEqual({
+        data: undefined,
+        loading: false,
+        networkStatus: NetworkStatus.error,
+        refetch: expect.any(Function),
+        error: new ApolloError({ errorMessage: 'test' }),
+      })
+    })
+  })
+
+  it('returns undefined when no balances for the specified address are found', async () => {
+    const { resolvers } = queryResolvers({
+      portfolios: () => [],
+    })
+    const { result } = renderHook(() => usePortfolioTotalValue({ evmAddress: Portfolio.ownerAddress }), { resolvers })
+
+    expect(result.current.loading).toEqual(true)
+
+    await waitFor(() => {
+      expect(result.current).toEqual({
+        data: undefined,
+        loading: false,
+        networkStatus: NetworkStatus.ready,
+        refetch: expect.any(Function),
+        error: undefined,
+      })
+    })
+  })
+
+  it('returns total value of all balances for the specified address', async () => {
+    const { result } = renderHook(() => usePortfolioTotalValue({ evmAddress: Portfolio.ownerAddress }), {
+      resolvers: portfolioResolvers,
+    })
+
+    await waitFor(() => {
+      expect(result.current).toEqual({
+        data: {
+          balanceUSD: Portfolio.tokensTotalDenominatedValue?.value,
+          percentChange: Portfolio.tokensTotalDenominatedValueChange?.percentage.value,
+          absoluteChangeUSD: Portfolio.tokensTotalDenominatedValueChange?.absolute.value,
+        },
+        loading: false,
+        networkStatus: NetworkStatus.ready,
+        refetch: expect.any(Function),
+        error: undefined,
+      })
+    })
+  })
+})
+
+describe(useHighestBalanceNativeCurrencyId, () => {
+  it('returns ETH if there is no native currency with highest balance', async () => {
+    const { resolvers } = queryResolvers({
+      portfolios: () => [portfolio({ tokenBalances: [daiTokenBalance] })],
+    })
+    const { result } = renderHook(() => useHighestBalanceNativeCurrencyId({ evmAddress: SAMPLE_SEED_ADDRESS_1 }), {
+      resolvers,
+    })
+
+    await act(() => undefined) // wait for query to complete
+
+    expect(result.current).toEqual(ethCurrencyId)
+  })
+
+  it('returns native currency id with the highest balance', async () => {
+    const { result } = renderHook(() => useHighestBalanceNativeCurrencyId({ evmAddress: SAMPLE_SEED_ADDRESS_1 }), {
+      resolvers: portfolioResolvers,
+    })
+
+    await act(() => undefined) // wait for query to complete
+
+    await waitFor(() => {
+      expect(result.current).toEqual(ethCurrencyId) // ETH currency is native
+    })
+  })
+
+  it('returns specific chain native currency when chainId is provided and no balance found', async () => {
+    const { resolvers } = queryResolvers({
+      portfolios: () => [portfolio({ tokenBalances: [daiTokenBalance] })],
+    })
+    const { result } = renderHook(
+      () => useHighestBalanceNativeCurrencyId({ evmAddress: SAMPLE_SEED_ADDRESS_1, chainId: UniverseChainId.Polygon }),
+      {
+        resolvers,
+      },
+    )
+
+    await act(() => undefined) // wait for query to complete
+
+    const polygonNativeId = currencyId(POLYGON_CURRENCY)
+    expect(result.current).toEqual(polygonNativeId)
   })
 })
 
@@ -202,7 +491,7 @@ describe(useTokenBalancesGroupedByVisibility, () => {
 
 describe(useSortedPortfolioBalances, () => {
   it('returns loading set to true when data is being fetched', () => {
-    const { result } = renderHook(() => useSortedPortfolioBalances({ evmAddress: SAMPLE_SEED_ADDRESS_1 }))
+    const { result } = renderHook(() => useSortedPortfolioBalances({ evmAddress: Portfolio.ownerAddress }))
 
     expect(result.current).toEqual({
       data: {
@@ -212,6 +501,24 @@ describe(useSortedPortfolioBalances, () => {
       loading: true,
       networkStatus: NetworkStatus.loading,
       refetch: expect.any(Function),
+    })
+  })
+
+  it('returns balances grouped by visibility when data is fetched', async () => {
+    const { result } = renderHook(() => useSortedPortfolioBalances({ evmAddress: Portfolio.ownerAddress }), {
+      resolvers: portfolioResolvers,
+    })
+
+    await waitFor(() => {
+      expect(result.current).toEqual({
+        data: {
+          balances: [ethPortfolioBalance],
+          hiddenBalances: [daiPortfolioBalance],
+        },
+        loading: false,
+        networkStatus: NetworkStatus.ready,
+        refetch: expect.any(Function),
+      })
     })
   })
 })
@@ -362,5 +669,69 @@ describe(sortPortfolioBalances, () => {
     })
 
     expect(result).toEqual([tokenBalances[0], namelessTokenBalance])
+  })
+})
+
+describe(usePortfolioCacheUpdater, () => {
+  const cache = setupSharedApolloCache()
+  const modifyMock = jest.spyOn(cache, 'modify')
+  const balance = portfolioBalance()
+
+  beforeEach(async () => {
+    await cache.reset()
+    modifyMock.mockClear()
+
+    const enabledChains = getEnabledChains({
+      isTestnetModeEnabled: false,
+      connectedWalletChainIds: ALL_CHAIN_IDS,
+      // Doesn't include feature flagged chains
+      featureFlaggedChainIds: filterChainIdsByFeatureFlag({
+        [UniverseChainId.Soneium]: false,
+        // Solana isn't supported by portfolio cache updater.
+        [UniverseChainId.Solana]: false,
+      }),
+    })
+
+    cache.writeQuery({
+      query: PortfolioBalancesDocument,
+      data: { portfolios: [Portfolio] },
+      variables: {
+        ownerAddress: SAMPLE_SEED_ADDRESS_1,
+        chains: enabledChains.gqlChains,
+      },
+    })
+  })
+
+  it('updates the isHidden field in the cache', () => {
+    const { result } = renderHook(() => usePortfolioCacheUpdater(SAMPLE_SEED_ADDRESS_1), {
+      cache,
+      resolvers: portfolioResolvers,
+    })
+
+    result.current(true, balance)
+
+    expect(modifyMock).toHaveBeenCalledWith({
+      id: balance.cacheId,
+      fields: {
+        isHidden: expect.any(Function),
+      },
+    })
+  })
+
+  it('updates the tokensTotalDenominatedValue field in the cache', () => {
+    const { result } = renderHook(() => usePortfolioCacheUpdater(SAMPLE_SEED_ADDRESS_1), {
+      cache,
+      resolvers: portfolioResolvers,
+    })
+
+    result.current(true, balance)
+
+    expect(modifyMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        fields: {
+          tokensTotalDenominatedValue: expect.any(Function),
+        },
+      }),
+    )
   })
 })

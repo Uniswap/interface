@@ -5,8 +5,8 @@ import {
   LogoContainer,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
-import { slideInAnimation, slideOutAnimation } from 'components/ConfirmSwapModal/animations'
 import { TradeSummary } from 'components/ConfirmSwapModal/TradeSummary'
+import { slideInAnimation, slideOutAnimation } from 'components/ConfirmSwapModal/animations'
 import Column, { ColumnCenter } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'

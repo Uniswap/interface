@@ -11,9 +11,9 @@ This is the **public** repository for Uniswap Labs’ front-end interfaces, incl
 
 ```bash
 git clone git@github.com:Uniswap/interface.git
-bun install
-bun lfg
-bun web start
+yarn
+yarn lfg
+yarn web start
 ```
 
 For instructions per application or package, see the README published for each application:

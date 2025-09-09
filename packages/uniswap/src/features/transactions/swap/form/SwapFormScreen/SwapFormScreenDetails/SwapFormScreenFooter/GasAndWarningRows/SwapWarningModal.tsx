@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { ParsedWarnings } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { ParsedWarnings } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function SwapWarningModal({

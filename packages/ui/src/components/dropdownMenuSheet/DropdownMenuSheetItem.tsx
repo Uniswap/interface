@@ -1,5 +1,5 @@
-import { type BaseSyntheticEvent, useMemo } from 'react'
-import { I18nManager, type Role } from 'react-native'
+import { useMemo, type BaseSyntheticEvent } from 'react'
+import { I18nManager } from 'react-native'
 import { Spacer, type YStackProps } from 'tamagui'
 import { getMenuItemColor } from 'ui/src/components/dropdownMenuSheet/utils'
 import { CheckCircleFilled } from 'ui/src/components/icons'
@@ -20,7 +20,6 @@ export type DropdownMenuSheetItemProps = {
   textColor?: TextProps['color']
   variant: 'small' | 'medium'
   height?: number
-  role?: Role
 }
 
 export const DropdownMenuSheetItem = ({
@@ -35,7 +34,6 @@ export const DropdownMenuSheetItem = ({
   handleCloseMenu,
   variant,
   height,
-  role = 'button',
 }: DropdownMenuSheetItemProps): JSX.Element => {
   const handlePress = useEvent((e: BaseSyntheticEvent) => {
     e.stopPropagation()
@@ -78,7 +76,6 @@ export const DropdownMenuSheetItem = ({
       borderRadius="$rounded12"
       width="100%"
       userSelect="none"
-      role={role}
       cursor={disabled ? 'default' : 'pointer'}
       backgroundColor="$background"
       height={height}

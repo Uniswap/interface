@@ -1,5 +1,5 @@
-export type { UniformAspectRatio } from './collection'
 export { UniformAspectRatios } from './collection'
-export type { GenieAsset, GenieCollection } from './common'
 export { Markets } from './common'
+export type { UniformAspectRatio } from './collection'
+export type { GenieAsset, GenieCollection } from './common'
 export type { WalletAsset } from './sell'

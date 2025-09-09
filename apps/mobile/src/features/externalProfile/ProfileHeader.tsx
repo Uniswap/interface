@@ -10,12 +10,12 @@ import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextM
 import { openModal } from 'src/features/modals/modalSlice'
 import {
   Flex,
-  getUniconColors,
   Image,
   LinearGradient,
   ScrollView,
   Text,
   TouchableArea,
+  getUniconColors,
   useExtractedColors,
   useIsDarkMode,
   useSporeColors,

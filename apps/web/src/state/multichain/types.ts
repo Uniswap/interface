@@ -1,4 +1,4 @@
-import { createContext, Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, createContext } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 type MultichainContextType = {

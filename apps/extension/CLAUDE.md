@@ -12,56 +12,56 @@ This is the Uniswap Browser Extension, part of the Universe monorepo. The extens
 
 ```bash
 # Install dependencies (from repo root)
-bun install
+yarn install
 
 # Start development server (from apps/extension)
-bun start
+yarn start
 
 # Start with absolute paths (required for Scantastic API testing)
-bun start:absolute
+yarn start:absolute
 
 # Build production bundle
-bun build:production
+yarn build:production
 ```
 
 ### Testing & Code Quality
 
 ```bash
 # Run tests
-bun run test
+yarn test
 
 # Update snapshots
-bun snapshots
+yarn snapshots
 
 # Type checking
-bun typecheck
+yarn typecheck
 
 # Linting
-bun lint
-bun lint:fix
+yarn lint
+yarn lint:fix
 
 # Format code
-bun format
+yarn format
 
 # Check for circular dependencies
-bun check:circular
+yarn check:circular
 ```
 
 ### Environment Setup
 
 ```bash
 # Download environment variables from 1password
-bun env:local:download
+yarn env:local:download
 
 # Upload environment variables to 1password
-bun env:local:upload
+yarn env:local:upload
 ```
 
 ## Architecture Overview
 
 ### Monorepo Structure
 
-This extension is part of the Universe monorepo using bun workspaces and NX:
+This extension is part of the Universe monorepo using yarn workspaces and Turborepo:
 
 - `/apps/extension/` - This browser extension
 - `/apps/mobile/` - React Native mobile app
@@ -127,7 +127,7 @@ When modifying Redux state structure:
 ### Environment Variables
 
 - Development env vars are stored in 1password
-- Use `bun env:local:download` to fetch them
+- Use `yarn env:local:download` to fetch them
 - Never commit `.env` files
 - API URLs can be overridden in `.env` for testing
 
@@ -137,7 +137,7 @@ When testing Scantastic features:
 
 ```bash
 # Must use absolute paths
-bun start:absolute
+yarn start:absolute
 ```
 
 ### Chrome Extension Specifics

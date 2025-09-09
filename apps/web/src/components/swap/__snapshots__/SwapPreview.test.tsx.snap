@@ -38,6 +38,11 @@ exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
   grid-row-gap: 8px;
 }
 
+.c9 {
+  display: inline-block;
+  height: inherit;
+}
+
 .c3 {
   box-sizing: border-box;
   margin: 0;
@@ -60,11 +65,6 @@ exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
   -ms-flex-pack: justify;
   justify-content: space-between;
   gap: 12px;
-}
-
-.c9 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c6 {
@@ -228,6 +228,11 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swa
   grid-row-gap: 8px;
 }
 
+.c9 {
+  display: inline-block;
+  height: inherit;
+}
+
 .c3 {
   box-sizing: border-box;
   margin: 0;
@@ -250,11 +255,6 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swa
   -ms-flex-pack: justify;
   justify-content: space-between;
   gap: 12px;
-}
-
-.c9 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c6 {
@@ -437,6 +437,11 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 
   grid-row-gap: 8px;
 }
 
+.c9 {
+  display: inline-block;
+  height: inherit;
+}
+
 .c3 {
   box-sizing: border-box;
   margin: 0;
@@ -459,11 +464,6 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 
   -ms-flex-pack: justify;
   justify-content: space-between;
   gap: 12px;
-}
-
-.c9 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c6 {
@@ -646,6 +646,11 @@ exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
   grid-row-gap: 8px;
 }
 
+.c9 {
+  display: inline-block;
+  height: inherit;
+}
+
 .c3 {
   box-sizing: border-box;
   margin: 0;
@@ -668,11 +673,6 @@ exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
   -ms-flex-pack: justify;
   justify-content: space-between;
   gap: 12px;
-}
-
-.c9 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c6 {
@@ -836,6 +836,11 @@ exports[`SwapPreview.tsx > test trade exact output, no recipient 1`] = `
   grid-row-gap: 8px;
 }
 
+.c9 {
+  display: inline-block;
+  height: inherit;
+}
+
 .c3 {
   box-sizing: border-box;
   margin: 0;
@@ -858,11 +863,6 @@ exports[`SwapPreview.tsx > test trade exact output, no recipient 1`] = `
   -ms-flex-pack: justify;
   justify-content: space-between;
   gap: 12px;
-}
-
-.c9 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c6 {

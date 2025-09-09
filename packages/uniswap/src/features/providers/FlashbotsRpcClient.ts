@@ -1,19 +1,19 @@
 import {
-  buildFlashbotsUrl,
   FLASHBOTS_DEFAULT_REFUND_PERCENT,
   FLASHBOTS_SIGNATURE_HEADER,
   SignerInfo,
+  buildFlashbotsUrl,
 } from 'uniswap/src/features/providers/FlashbotsCommon'
 import {
   Chain,
   ClientConfig,
-  createPublicClient,
   EIP1193RequestFn,
-  hashMessage,
-  http,
   PublicClient,
   Transport,
   TransportConfig,
+  createPublicClient,
+  hashMessage,
+  http,
   walletActions,
 } from 'viem'
 

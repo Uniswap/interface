@@ -59,7 +59,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
 
   // If userInput is *not* an address, do a forward lookup
   // (ENS → address). Otherwise skip.
-  const forwardLookupInput = !isRecipientAnAddress ? (userInput ?? null) : null
+  const forwardLookupInput = !isRecipientAnAddress ? userInput ?? null : null
   const { data: forwardLookupAddress } = useAddressFromEns(forwardLookupInput)
 
   // Check Unitag by name and see if it yields an address

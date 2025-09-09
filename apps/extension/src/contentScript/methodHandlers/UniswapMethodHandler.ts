@@ -3,15 +3,15 @@ import {
   contentScriptToBackgroundMessageChannel,
   dappResponseMessageChannel,
 } from 'src/background/messagePassing/messageChannels'
+import {
+  UniswapOpenSidebarRequest,
+  UniswapOpenSidebarRequestSchema,
+} from 'src/contentScript/WindowEthereumRequestTypes'
 import { BaseMethodHandler } from 'src/contentScript/methodHandlers/BaseMethodHandler'
 import { UniswapMethods } from 'src/contentScript/methodHandlers/requestMethods'
 import { PendingResponseInfo } from 'src/contentScript/methodHandlers/types'
 import { getPendingResponseInfo } from 'src/contentScript/methodHandlers/utils'
 import { WindowEthereumRequest } from 'src/contentScript/types'
-import {
-  UniswapOpenSidebarRequest,
-  UniswapOpenSidebarRequestSchema,
-} from 'src/contentScript/WindowEthereumRequestTypes'
 import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { logger } from 'utilities/src/logger/logger'
 

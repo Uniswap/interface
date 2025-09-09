@@ -4,12 +4,12 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AttackType, CurrencyInfo, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import {
+  TokenProtectionWarning,
   getFeeColor,
   getFeeWarning,
   getShouldHaveCombinedPluralTreatment,
   getTokenProtectionWarning,
   getTokenWarningSeverity,
-  TokenProtectionWarning,
   useCardHeaderText,
   useCardSubtitleText,
   useModalHeaderText,

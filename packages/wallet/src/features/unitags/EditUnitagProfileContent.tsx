@@ -4,11 +4,11 @@ import { useDispatch } from 'react-redux'
 import {
   Button,
   Flex,
-  getUniconColors,
   InputProps,
   LinearGradient,
   ScrollView,
   Text,
+  getUniconColors,
   useExtractedColors,
   useIsDarkMode,
   useSporeColors,
@@ -40,8 +40,8 @@ import { useAvatarSelectionHandler } from 'wallet/src/features/unitags/AvatarSel
 import { extensionNftModalProps } from 'wallet/src/features/unitags/ChooseNftModal'
 import { ChoosePhotoOptionsModal } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
 import { HeaderRadial, solidHeaderProps } from 'wallet/src/features/unitags/HeaderRadial'
-import { useAvatarUploadCredsWithRefresh } from 'wallet/src/features/unitags/hooks/useAvatarUploadCredsWithRefresh'
 import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
+import { useAvatarUploadCredsWithRefresh } from 'wallet/src/features/unitags/hooks/useAvatarUploadCredsWithRefresh'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'

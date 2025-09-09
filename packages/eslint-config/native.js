@@ -40,7 +40,7 @@ module.exports = {
     'max-lines': ['error', 500], // cap file length
     complexity: ['error', 20], // restrict cyclomatic complexity (number of linearly independent paths)
 
-    // disable prettier linting, as we format with biome:
+    // disable prettier linting and linting that we leave to prettier:
     'prettier/prettier': 0,
     semi: 0,
     quotes: 0,

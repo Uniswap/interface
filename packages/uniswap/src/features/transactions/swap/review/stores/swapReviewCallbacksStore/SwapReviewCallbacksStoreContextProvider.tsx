@@ -1,10 +1,10 @@
-import { type ReactNode, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { AuthTrigger } from 'uniswap/src/features/auth/types'
 import type { TransactionScreen } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { useCreateSwapReviewCallbacks } from 'uniswap/src/features/transactions/swap/review/hooks/useCreateSwapReviewCallbacks'
-import { createSwapReviewCallbacksStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/createSwapReviewCallbacksStore'
 import { SwapReviewCallbacksStoreContext } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/SwapReviewCallbacksStoreContext'
+import { createSwapReviewCallbacksStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/createSwapReviewCallbacksStore'
 import { useSwapReviewActions } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/useSwapReviewStore'
 import {
   useSwapReviewWarningStateActions,

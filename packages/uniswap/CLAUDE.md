@@ -12,54 +12,54 @@ This is the `packages/uniswap` directory within the Uniswap Universe monorepo. I
 
 ```bash
 # Build the package
-bun build
+yarn build
 # Run tests in watch mode
 # Run tests in watch mode
-bun run test --watch  # Using Jest's watch flag
+yarn test --watch  # Using Jest's watch flag
 # Type checking
-bun typecheck
+yarn typecheck
 
 # Linting
-bun lint
-bun lint:fix
+yarn lint
+yarn lint:fix
 
 # Testing
-bun run test
-bun run test --testPathPattern=ComponentName  # Run specific test
-bun snapshots  # Update Jest snapshots
+yarn test
+yarn test --testPathPattern=ComponentName  # Run specific test
+yarn snapshots  # Update Jest snapshots
 
 # GraphQL code generation
-bun graphql:generate
+yarn graphql:generate
 
 # Contract types generation
-bun contracts
+yarn contracts
 ```
 
 ### Monorepo Commands (run from root)
 
 ```bash
 # Install dependencies
-bun install
+yarn install
 
 # Run development checks
-bun local:check
+yarn local:check
 
 # Initial setup for local development
-bun lfg
+yarn lfg
 
 # Run specific app
-bun mobile ios
-bun web start
-bun extension start
+yarn mobile ios
+yarn web start
+yarn extension start
 
 # Run all checks
-bun g:run-all-checks
+yarn g:run-all-checks
 
 # Type check changed files only
-bun g:typecheck:changed
+yarn g:typecheck:changed
 
 # Lint changed files only
-bun g:lint:changed
+yarn g:lint:changed
 ```
 
 ## Architecture Overview
@@ -96,7 +96,7 @@ This package supports multiple platforms through conditional file extensions:
 - Jest with React Native preset
 - Test files use `.test.ts(x)` pattern
 - Snapshot testing for components
-- Run single test: `bun run test --testPathPattern=ComponentName`
+- Run single test: `yarn test --testPathPattern=ComponentName`
 
 ### Code Generation
 
@@ -110,14 +110,14 @@ The package uses several code generation tools:
 
 1. **Multi-platform Support**: Always consider platform differences when modifying code. Use platform-specific files when necessary.
 
-2. **Type Safety**: This package enforces strict TypeScript. Always run `bun typecheck` before committing.
+2. **Type Safety**: This package enforces strict TypeScript. Always run `yarn typecheck` before committing.
 
 3. **State Management**: Redux state is shared across platforms. Changes to reducers affect all apps.
 
 4. **Generated Files**: Don't manually edit files in:
-   - `src/abis/types/` (run `bun contracts`)
-   - `src/data/graphql/__generated__/` (run `bun graphql:generate`)
-   - `src/data/tradingApi/__generated__/` (run `bun tradingapi:generate`)
+   - `src/abis/types/` (run `yarn contracts`)
+   - `src/data/graphql/__generated__/` (run `yarn graphql:generate`)
+   - `src/data/tradingApi/__generated__/` (run `yarn tradingapi:generate`)
 
 5. **Testing**: When adding new components or features, include tests. The package uses Jest with React Native preset.
 

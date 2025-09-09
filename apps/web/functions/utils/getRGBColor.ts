@@ -1,7 +1,7 @@
 import JPEG from 'jpeg-js'
 import PNG from 'png-ts'
 import { parseToRgb } from 'polished'
-import { RgbaColor, RgbColor } from 'polished/lib/types/color'
+import { RgbColor, RgbaColor } from 'polished/lib/types/color'
 import { SPECIAL_CASE_TOKEN_COLORS } from 'ui/src/utils/colors/specialCaseTokens'
 
 const DEFAULT_COLOR = { red: 35, green: 43, blue: 43 }

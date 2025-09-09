@@ -24,8 +24,8 @@ import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import { getRouteAnalyticsData, tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
 import { isNonInstantFlashblockTransactionType } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/utils'
 import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
-import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
+import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   FinalizedTransactionDetails,
   SendTokenTransactionInfo,
@@ -347,7 +347,7 @@ function maybeLogGasEstimateAccuracy(transaction: TransactionDetails): void {
     max_priority_fee_per_gas:
       gasEstimate && 'maxPriorityFeePerGas' in gasEstimate ? gasEstimate.maxPriorityFeePerGas : undefined,
     out_of_gas,
-    private_rpc: isClassic(transaction) ? (transaction.options.submitViaPrivateRpc ?? false) : false,
+    private_rpc: isClassic(transaction) ? transaction.options.submitViaPrivateRpc ?? false : false,
     is_shadow: false,
     name: localGasStrategy?.conditions.name,
     display_limit_inflation_factor: localGasStrategy?.strategy.displayLimitInflationFactor,

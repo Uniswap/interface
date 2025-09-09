@@ -12,8 +12,8 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionModal } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import {
   TransactionScreen,
@@ -29,11 +29,11 @@ type SendFormModalProps = {
 } & SendFormProps
 
 export function SendFormModal(props: SendFormModalProps) {
-  const { onClose, isModalOpen } = props
+  const { isModalOpen, onClose } = props
   const [searchParams] = useSearchParams()
-  const chainParam = searchParams.get('sendChain') ?? undefined
+  const chainParam = searchParams.get('chain') ?? undefined
   const chainId = getChainIdFromChainUrlParam(chainParam)
-  const inputCurrencyParam = searchParams.get('sendCurrency') ?? undefined
+  const inputCurrencyParam = searchParams.get('inputCurrency') ?? undefined
   const parsedInputCurrency = useCurrency({ address: inputCurrencyParam, chainId })
   const inputCurrency = useMemo(
     () => parsedInputCurrency ?? nativeOnChain(UniverseChainId.Mainnet),

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { SpinnerSVG } from 'theme/components/icons/spinner'
-import { Flex, styled, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, styled, useSporeColors } from 'ui/src'
 
 const LoadingButtonSpinner = (props: React.ComponentPropsWithoutRef<'svg'>) => (
   <SpinnerSVG width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" {...props}>

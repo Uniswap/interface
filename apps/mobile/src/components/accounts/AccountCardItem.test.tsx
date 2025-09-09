@@ -1,6 +1,6 @@
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
 import { fireEvent, render, screen, waitFor } from 'src/test/test-utils'
-import { amount, ON_PRESS_EVENT_PAYLOAD, portfolio, SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
+import { ON_PRESS_EVENT_PAYLOAD, SAMPLE_SEED_ADDRESS_1, amount, portfolio } from 'uniswap/src/test/fixtures'
 import { queryResolvers } from 'uniswap/src/test/utils'
 import * as hooks from 'wallet/src/features/accounts/useAccountListData'
 

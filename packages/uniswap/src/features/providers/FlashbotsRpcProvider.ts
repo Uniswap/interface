@@ -5,9 +5,9 @@ import { resolveProperties } from '@ethersproject/properties'
 import { BlockTag, JsonRpcProvider, Networkish } from '@ethersproject/providers'
 import { ConnectionInfo, fetchJson } from '@ethersproject/web'
 import {
-  buildFlashbotsUrl,
   FLASHBOTS_SIGNATURE_HEADER,
   SignerInfo,
+  buildFlashbotsUrl,
 } from 'uniswap/src/features/providers/FlashbotsCommon'
 
 /**

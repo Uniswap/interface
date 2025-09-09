@@ -4,11 +4,11 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import {
   ARBITRUM_DAI_CURRENCY_INFO,
   BASE_CURRENCY,
-  currencyInfo,
   ETH_CURRENCY_INFO,
   OPTIMISM_CURRENCY,
   POLYGON_CURRENCY,
   SAMPLE_SEED_ADDRESS_1,
+  currencyInfo,
 } from 'uniswap/src/test/fixtures'
 import { render } from 'uniswap/src/test/test-utils'
 

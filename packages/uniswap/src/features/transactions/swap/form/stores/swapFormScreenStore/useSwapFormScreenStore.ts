@@ -1,9 +1,9 @@
 import { useContext } from 'react'
-import type {
-  createSwapFormScreenStore,
-  SwapFormScreenStoreState,
-} from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/createSwapFormScreenStore'
 import { SwapFormScreenStoreContext } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/SwapFormScreenStoreContext'
+import type {
+  SwapFormScreenStoreState,
+  createSwapFormScreenStore,
+} from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/createSwapFormScreenStore'
 import { useStore } from 'zustand'
 import { useShallow } from 'zustand/shallow'
 

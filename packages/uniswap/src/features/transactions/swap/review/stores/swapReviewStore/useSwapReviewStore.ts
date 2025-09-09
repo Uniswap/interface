@@ -1,10 +1,10 @@
 import { useContext } from 'react'
+import { SwapReviewStoreContext } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/SwapReviewContext'
 import type {
   SwapReviewState,
   SwapReviewStore,
 } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/createSwapReviewStore'
 import { EMPTY_STEPS } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/createSwapReviewStore'
-import { SwapReviewStoreContext } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/SwapReviewContext'
 import { isInterface } from 'utilities/src/platform'
 import { useStore } from 'zustand'
 import { useShallow } from 'zustand/shallow'

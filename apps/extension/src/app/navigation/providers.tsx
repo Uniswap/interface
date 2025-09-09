@@ -4,9 +4,9 @@ import { navigateToInterfaceFiatOnRamp } from 'src/app/features/for/utils'
 import { AppRoutes, HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import {
+  SidebarLocationState,
   focusOrCreateTokensExploreTab,
   focusOrCreateUniswapInterfaceTab,
-  SidebarLocationState,
 } from 'src/app/navigation/utils'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -22,14 +22,14 @@ import { escapeRegExp } from 'utilities/src/primitives/string'
 import { noop } from 'utilities/src/react/noop'
 import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboard'
 import {
-  getNavigateToSendFlowArgsInitialState,
-  getNavigateToSwapFlowArgsInitialState,
   NavigateToFiatOnRampArgs,
   NavigateToSendFlowArgs,
   NavigateToSwapFlowArgs,
   ShareTokenArgs,
   WalletNavigationContextState,
   WalletNavigationProvider,
+  getNavigateToSendFlowArgsInitialState,
+  getNavigateToSwapFlowArgsInitialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
 
 export function OnboardingNavigationProvider({ children }: PropsWithChildren): JSX.Element {

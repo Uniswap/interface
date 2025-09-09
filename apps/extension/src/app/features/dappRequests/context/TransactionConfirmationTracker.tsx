@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useCallback, useContext, useState } from 'react'
+import { PropsWithChildren, createContext, useCallback, useContext, useState } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 interface TransactionConfirmationState {

@@ -9,16 +9,17 @@ import Animated, { FadeIn, interpolateColor, useAnimatedStyle, useDerivedValue }
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { Video } from 'react-native-video'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHomeScreenCustomAndroidBackButton } from 'src/app/navigation/hooks'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
+import { useHomeScreenCustomAndroidBackButton } from 'src/app/navigation/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AppStackScreenProp } from 'src/app/navigation/types'
+import TraceTabView from 'src/components/Trace/TraceTabView'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
-import { ActivityTab } from 'src/components/home/ActivityTab'
+import { ACTIVITY_TAB_DATA_DEPENDENCIES, ActivityTab } from 'src/components/home/ActivityTab'
 import { HomeExploreTab } from 'src/components/home/HomeExploreTab'
+import { NFTS_TAB_DATA_DEPENDENCIES, NftsTab } from 'src/components/home/NftsTab'
+import { TOKENS_TAB_DATA_DEPENDENCIES, TokensTab } from 'src/components/home/TokensTab'
 import { OnboardingIntroCardStack } from 'src/components/home/introCards/OnboardingIntroCardStack'
-import { NftsTab } from 'src/components/home/NftsTab'
-import { TokensTab } from 'src/components/home/TokensTab'
 import { Screen } from 'src/components/layout/Screen'
 import {
   HeaderConfig,
@@ -31,7 +32,6 @@ import {
   TabLabelProps,
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
-import TraceTabView from 'src/components/Trace/TraceTabView'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
@@ -47,13 +47,12 @@ import { SMART_WALLET_UPGRADE_FALLBACK, SMART_WALLET_UPGRADE_VIDEO } from 'ui/sr
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
-import { NFTS_TAB_DATA_DEPENDENCIES } from 'uniswap/src/components/nfts/constants'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
 import { getListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { getFeatureFlag, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -415,18 +414,32 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const onRefreshHomeData = useCallback(async () => {
     setRefreshing(true)
 
+    const isRestBalancesEnabled = getFeatureFlag(FeatureFlags.GqlToRestBalances)
+    const isRestTransactionsEnabled = getFeatureFlag(FeatureFlags.GqlToRestTransactions)
     const activeAccountAddress = activeAccount.address
 
-    const restQueriesToInvalidate = [
-      SharedQueryClient.invalidateQueries({
-        queryKey: getPortfolioQuery({ input: { evmAddress: activeAccountAddress } }).queryKey,
-      }),
-      // Always invalidate transactions since we use REST for transactions
-      SharedQueryClient.invalidateQueries({
-        queryKey: getListTransactionsQuery({ input: { evmAddress: activeAccountAddress } }).queryKey,
-      }),
-    ]
+    const restQueriesToInvalidate = []
     const gqlQueriesToRefetch = [...NFTS_TAB_DATA_DEPENDENCIES]
+
+    if (isRestBalancesEnabled) {
+      restQueriesToInvalidate.push(
+        SharedQueryClient.invalidateQueries({
+          queryKey: getPortfolioQuery({ input: { evmAddress: activeAccountAddress } }).queryKey,
+        }),
+      )
+    } else {
+      gqlQueriesToRefetch.push(...TOKENS_TAB_DATA_DEPENDENCIES)
+    }
+
+    if (isRestTransactionsEnabled) {
+      restQueriesToInvalidate.push(
+        SharedQueryClient.invalidateQueries({
+          queryKey: getListTransactionsQuery({ input: { evmAddress: activeAccountAddress } }).queryKey,
+        }),
+      )
+    } else {
+      gqlQueriesToRefetch.push(...ACTIVITY_TAB_DATA_DEPENDENCIES)
+    }
 
     await Promise.all([
       ...restQueriesToInvalidate,

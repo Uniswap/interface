@@ -1,9 +1,9 @@
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { JupiterApiClient } from 'uniswap/src/data/apiClients/jupiterApi/JupiterApiClient'
 import {
   JupiterExecuteResponse,
   jupiterExecuteResponseSchema,
 } from 'uniswap/src/data/apiClients/jupiterApi/execute/types'
-import { JupiterApiClient } from 'uniswap/src/data/apiClients/jupiterApi/JupiterApiClient'
 
 export async function execute(params: {
   signedTransaction: string

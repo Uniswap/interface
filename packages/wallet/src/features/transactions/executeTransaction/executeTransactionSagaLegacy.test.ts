@@ -1,7 +1,7 @@
 import { BigNumber, providers } from 'ethers'
-import { call } from 'redux-saga/effects'
 import { expectSaga } from 'redux-saga-test-plan'
 import { throwError } from 'redux-saga-test-plan/providers'
+import { call } from 'redux-saga/effects'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Experiments } from 'uniswap/src/features/gating/experiments'

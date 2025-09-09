@@ -1,6 +1,7 @@
+import { renderHook } from 'test-utils/render'
+
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { PoolState, useComputePoolState } from 'hooks/usePools'
-import { renderHook } from 'test-utils/render'
 import { USDC, USDT } from 'uniswap/src/constants/tokens'
 
 describe('useComputePoolState', () => {

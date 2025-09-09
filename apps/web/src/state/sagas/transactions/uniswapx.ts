@@ -4,8 +4,8 @@ import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import {
   addTransactionBreadcrumb,
   getSwapTransactionInfo,
-  HandleSignatureStepParams,
   handleSignatureStep,
+  HandleSignatureStepParams,
 } from 'state/sagas/transactions/utils'
 import { addSignature } from 'state/signatures/reducer'
 import { SignatureType, UnfilledUniswapXOrderDetails } from 'state/signatures/types'

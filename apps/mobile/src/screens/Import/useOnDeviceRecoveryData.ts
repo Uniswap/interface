@@ -7,12 +7,12 @@ import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balance
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
+import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'
 import {
   AddressWithBalanceAndName,
   hasBalanceOrName,
   useAddressesEnsNames,
 } from 'wallet/src/features/onboarding/hooks/useImportableAccounts'
-import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 export interface RecoveryWalletInfo extends AddressWithBalanceAndName {

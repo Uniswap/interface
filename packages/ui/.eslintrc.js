@@ -14,7 +14,6 @@ module.exports = {
     '**/*.test.tsx',
     'jest.config.js',
     'babel.config.js',
-    '.nx',
   ],
   parserOptions: {
     project: 'tsconfig.json',

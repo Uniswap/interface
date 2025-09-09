@@ -18,7 +18,6 @@ export enum FiatOffRampEventName {
   FiatOffRampWidgetOpened = 'Fiat OffRamp Widget Opened',
   FiatOffRampWidgetCompleted = 'Fiat OffRamp Widget Completed',
   FiatOffRampFundsSent = 'Fiat OffRamp Funds Sent',
-  FiatOffRampPaymentMethodFilterSelected = 'Fiat OffRamp Payment Method Filter Selected',
 }
 
 export enum FiatOnRampEventName {
@@ -27,7 +26,6 @@ export enum FiatOnRampEventName {
   FiatOnRampTokenSelected = 'Fiat OnRamp Token Selected',
   FiatOnRampWidgetOpened = 'Fiat OnRamp Widget Opened',
   FiatOnRampTransferWidgetOpened = 'Fiat OnRamp Transfer Widget Opened',
-  FiatOnRampPaymentMethodFilterSelected = 'Fiat OnRamp Payment Method Filter Selected',
 }
 
 export enum SwapEventName {

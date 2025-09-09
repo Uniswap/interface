@@ -1,5 +1,4 @@
 import { Flex } from 'ui/src/components/layout'
-
 const pulseKeyframe = `
   @keyframes pulse {
     0% {

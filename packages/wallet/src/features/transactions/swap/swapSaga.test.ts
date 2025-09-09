@@ -7,7 +7,7 @@ import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/unive
 import JSBI from 'jsbi'
 import { expectSaga, testSaga } from 'redux-saga-test-plan'
 import { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
-import { DAI, nativeOnChain, USDC } from 'uniswap/src/constants/tokens'
+import { DAI, USDC, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
@@ -31,9 +31,9 @@ import { tryGetNonce } from 'wallet/src/features/transactions/executeTransaction
 import { getShouldWaitBetweenTransactions } from 'wallet/src/features/transactions/swap/confirmation'
 import { SubmitUniswapXOrderParams, submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
 import {
+  SwapParams,
   approveAndSwap,
   handleTransactionSpacing,
-  SwapParams,
   shouldSubmitViaPrivateRpc,
 } from 'wallet/src/features/transactions/swap/swapSaga'
 import { getProvider } from 'wallet/src/features/wallet/context'

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { AccountType, DisplayName, DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { useOnchainDisplayName, WalletDisplayNameOptions } from 'uniswap/src/features/accounts/useOnchainDisplayName'
+import { WalletDisplayNameOptions, useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'

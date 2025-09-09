@@ -39,7 +39,6 @@ export const ZORA_CHAIN_INFO = {
     name: 'Zora Explorer',
     url: 'https://explorer.zora.energy/',
   },
-  openseaName: 'zora',
   interfaceName: 'zora',
   label: 'Zora Network',
   logo: ZORA_LOGO,

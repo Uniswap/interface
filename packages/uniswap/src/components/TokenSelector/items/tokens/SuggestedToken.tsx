@@ -2,10 +2,10 @@ import { memo } from 'react'
 import { TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { TokenOption } from 'uniswap/src/components/lists/items/types'
-import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { Pill } from 'uniswap/src/components/pill/Pill'
 import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
+import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
+import { Pill } from 'uniswap/src/components/pill/Pill'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 function _TokenPill({

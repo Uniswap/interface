@@ -1,11 +1,11 @@
 import AccountDrawer, { MODAL_WIDTH } from 'components/AccountDrawer'
-import { useIsUniswapExtensionConnected } from 'hooks/useIsUniswapExtensionConnected'
-import { mocked } from 'test-utils/mocked'
+import { useIsUniExtensionConnected } from 'hooks/useIsUniExtensionConnected'
 import mockMediaSize from 'test-utils/mockMediaSize'
+import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 
-vi.mock('hooks/useIsUniswapExtensionConnected', () => ({
-  useIsUniswapExtensionConnected: vi.fn(),
+vi.mock('hooks/useIsUniExtensionConnected', () => ({
+  useIsUniExtensionConnected: vi.fn(),
 }))
 
 vi.mock('tamagui', async () => {
@@ -29,7 +29,7 @@ vi.mock('uniswap/src/components/AnimatedNumber/AnimatedNumber', () => {
 
 describe('AccountDrawer tests', () => {
   it('AccountDrawer default styles', () => {
-    mocked(useIsUniswapExtensionConnected).mockReturnValue(true)
+    mocked(useIsUniExtensionConnected).mockReturnValue(true)
     mockMediaSize('xxl')
 
     render(<AccountDrawer />)

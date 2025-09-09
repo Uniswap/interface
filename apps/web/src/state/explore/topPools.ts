@@ -1,12 +1,12 @@
-import {
-  calculate1DVolOverTvl,
-  calculateApr,
-  PoolSortFields,
-  PoolTableSortState,
-} from 'appGraphql/data/pools/useTopPools'
-import { OrderDirection } from 'appGraphql/data/util'
 import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import {
+  PoolSortFields,
+  PoolTableSortState,
+  calculate1DVolOverTvl,
+  calculateApr,
+} from 'appGraphql/data/pools/useTopPools'
+import { OrderDirection } from 'appGraphql/data/util'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { useAtomValue } from 'jotai/utils'
 import { useContext, useMemo } from 'react'

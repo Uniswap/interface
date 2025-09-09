@@ -1,10 +1,10 @@
-import { ExtensionOnboardingFlow, ExtensionScreens } from 'uniswap/src/types/screens/extension'
+import { ExtensionOnboardingFlow, ExtensionScreens } from "uniswap/src/types/screens/extension";
 
 export enum MobileScreens {
   Dev = 'Dev',
   Storybook = 'Storybook',
   Education = 'Education',
-  ConnectionsDappListModal = 'connections-dapp-list-modal',
+  ConnectionsDappListModal= 'connections-dapp-list-modal',
   Explore = 'Explore',
   Home = 'Home',
   NFTItem = 'NFTItem',
@@ -68,18 +68,18 @@ export enum UnitagScreens {
 }
 
 export type UnitagEntryPoint =
-  | OnboardingScreens.Landing
-  | MobileScreens.Home
-  | MobileScreens.Settings
-  | ExtensionOnboardingFlow.New
-  | ExtensionScreens.Home
+  OnboardingScreens.Landing |
+  MobileScreens.Home |
+  MobileScreens.Settings |
+  ExtensionOnboardingFlow.New |
+  ExtensionScreens.Home
 
 export type UnitagStackParamList = SharedUnitagScreenParams & {
   [UnitagScreens.UnitagConfirmation]: {
     unitag: string
     address: Address
     profilePictureUri?: string
-  }
+  };
   [UnitagScreens.EditProfile]: {
     address: Address
     unitag: string
@@ -91,7 +91,7 @@ export type SharedUnitagScreenParams = {
   [UnitagScreens.ClaimUnitag]: {
     entryPoint: UnitagEntryPoint
     address?: Address
-  }
+  };
   [UnitagScreens.ChooseProfilePicture]: {
     entryPoint: UnitagEntryPoint
     unitag: string

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { createHashRouter, Location, NavigationType, Router } from 'react-router'
+import { Location, NavigationType, Router, createHashRouter } from 'react-router'
 
 interface RouterState {
   historyAction: NavigationType

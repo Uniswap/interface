@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import { computePairAddress, Pair } from '@uniswap/v2-sdk'
+import { Pair, computePairAddress } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
 import { assume0xAddress } from 'utils/wagmi'
 import { useReadContracts } from 'wagmi'

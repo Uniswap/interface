@@ -6,7 +6,7 @@ import {
 } from 'components/Charts/PriceChart/RoundedCandlestickSeries/rounded-candles-series'
 import { getCandlestickPriceBounds } from 'components/Charts/PriceChart/utils'
 import { PriceChartType } from 'components/Charts/utils'
-import { calculateDelta, DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
+import { DeltaArrow, DeltaText, calculateDelta } from 'components/Tokens/TokenDetails/Delta'
 import {
   AreaData,
   AreaSeriesPartialOptions,
@@ -21,7 +21,7 @@ import {
 } from 'lightweight-charts'
 import { useMemo } from 'react'
 import { Trans } from 'react-i18next'
-import { Flex, styled, Text } from 'ui/src'
+import { Flex, Text, styled } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'

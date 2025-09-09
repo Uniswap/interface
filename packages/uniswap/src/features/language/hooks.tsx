@@ -7,8 +7,8 @@ import { ForceUpgradeTranslations } from 'uniswap/src/features/gating/configs'
 import {
   Language,
   Locale,
-  mapLanguageToLocale,
   PLATFORM_SUPPORTED_LANGUAGES,
+  mapLanguageToLocale,
 } from 'uniswap/src/features/language/constants'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
 import { isInterface } from 'utilities/src/platform'

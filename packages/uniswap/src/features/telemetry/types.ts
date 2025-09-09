@@ -33,10 +33,10 @@ import {
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/safetyUtils'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { UnitagClaimContext } from 'uniswap/src/features/unitags/types'
+import { RenderPassReport } from 'uniswap/src/types/RenderPassReport'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { ImportType } from 'uniswap/src/types/onboarding'
-import { RenderPassReport } from 'uniswap/src/types/RenderPassReport'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -433,11 +433,6 @@ export type FORWidgetOpenedProperties = ITraceContext & {
   chainId?: number
   currencyAmount?: number
   amountUSD?: number
-  paymentMethodFilter?: string
-}
-
-export type FORPaymentMethodFilterSelectedProperties = ITraceContext & {
-  paymentMethodFilter: string
 }
 
 type DappRequestCardEventProperties = ITraceContext & {
@@ -505,14 +500,12 @@ export type UniverseEventProperties = {
   [FiatOffRampEventName.FiatOffRampUnsupportedTokenBack]: FORUnsupportedTokenSelectedProperties
   [FiatOffRampEventName.FiatOffRampUnsupportedTokenSwap]: FORUnsupportedTokenSelectedProperties
   [FiatOffRampEventName.FiatOffRampWidgetOpened]: FORWidgetOpenedProperties
-  [FiatOffRampEventName.FiatOffRampPaymentMethodFilterSelected]: FORPaymentMethodFilterSelectedProperties
   [FiatOffRampEventName.FiatOffRampWidgetCompleted]: OfframpSendTransactionProperties
   [FiatOffRampEventName.FiatOffRampFundsSent]: OfframpSendTransactionProperties
   [FiatOnRampEventName.FiatOnRampAmountEntered]: FORAmountEnteredProperties
   [FiatOnRampEventName.FiatOnRampTokenSelected]: FORTokenSelectedProperties
   [FiatOnRampEventName.FiatOnRampTransactionUpdated]: FORTransactionUpdatedProperties
   [FiatOnRampEventName.FiatOnRampWidgetOpened]: FORWidgetOpenedProperties
-  [FiatOnRampEventName.FiatOnRampPaymentMethodFilterSelected]: FORPaymentMethodFilterSelectedProperties
   [FiatOnRampEventName.FiatOnRampTransferWidgetOpened]: ITraceContext & {
     externalTransactionId: string
     serviceProvider: string

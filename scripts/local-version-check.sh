@@ -7,9 +7,9 @@ check() {
   fi
 }
 
-# Check bun version
-localBunVersion="$(bun --version)"
-check "bun" $localBunVersion "1.2"
+# Check yarn version
+localYarnVersion="$(yarn -v)"
+check "yarn" $localYarnVersion "3.2.3"
 
 # Check Xcode version
 localXcodeOutput="$(/usr/bin/xcodebuild -version)"

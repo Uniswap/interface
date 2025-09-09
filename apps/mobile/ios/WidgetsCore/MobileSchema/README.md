@@ -8,7 +8,7 @@ They run automatically as part of WidgetsCore build phases.
 
 If you encounter build errors after updating the GraphQL schema:
 
-1. **Missing file references**: If Xcode complains about missing files, run `bun mobile ios:prebuild` again to ensure all files are properly added to the project.
+1. **Missing file references**: If Xcode complains about missing files, run `yarn mobile ios:prebuild` again to ensure all files are properly added to the project.
 
 2. **Script failures**: If the automatic file addition fails, you may see a warning. In this case, try running the script manually:
 

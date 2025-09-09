@@ -1,20 +1,20 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { PasswordInput } from 'src/app/components/PasswordInput'
+import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { removeAllDappConnectionsFromExtension } from 'src/app/features/dapp/actions'
 import { SettingsRecoveryPhrase } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/SettingsRecoveryPhrase'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
-import { Flex, inputStyles, LabeledCheckbox, Text } from 'ui/src'
+import { Flex, LabeledCheckbox, Text, inputStyles } from 'ui/src'
 import { TrashFilled } from 'ui/src/components/icons'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 export function RemoveRecoveryPhraseVerify(): JSX.Element {
   const { t } = useTranslation()

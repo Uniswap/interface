@@ -1,14 +1,14 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import {
-  getLiquidityRangeChartProps,
   WrappedLiquidityPositionRangeChart,
+  getLiquidityRangeChartProps,
 } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { ErrorCallout } from 'components/ErrorCallout'
-import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { BaseQuoteFiatAmount } from 'components/Liquidity/BaseQuoteFiatAmount'
 import { PoolOutOfSyncError } from 'components/Liquidity/Create/PoolOutOfSyncError'
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { getPoolIdOrAddressFromCreatePositionInfo } from 'components/Liquidity/utils/getPoolIdOrAddressFromCreatePositionInfo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'

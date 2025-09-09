@@ -6,23 +6,23 @@ import type {
   TradeRepository,
 } from 'uniswap/src/features/transactions/swap/services/tradeService/tradeRepository'
 import {
+  UNCONNECTED_ADDRESS,
   createBuildQuoteRequest,
   flattenQuoteRequestResult,
   parseTradeInputForQuote,
-  UNCONNECTED_ADDRESS,
-  type ValidatedTradeInput,
   validateParsedInput,
+  type ValidatedTradeInput,
 } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/buildQuoteRequest'
 import { transformQuoteToTrade } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/transformQuoteToTrade'
 import {
   IndicativeTrade,
   Trade,
-  type UseTradeArgs,
   validateIndicativeQuoteResponse,
+  type UseTradeArgs,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
-  createGetProtocolsForChain,
   DEFAULT_PROTOCOL_OPTIONS,
+  createGetProtocolsForChain,
 } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import {
   createGetQuoteRoutingParams,

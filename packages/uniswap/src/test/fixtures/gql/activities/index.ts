@@ -14,10 +14,9 @@ import {
 } from 'uniswap/src/test/fixtures/gql/activities/tokens'
 import { GQL_CHAINS } from 'uniswap/src/test/fixtures/gql/misc'
 import { gqlTransaction, gqlTransactionDetails } from 'uniswap/src/test/fixtures/gql/transactions'
-import { faker, MAX_FIXTURE_TIMESTAMP } from 'uniswap/src/test/shared'
+import { MAX_FIXTURE_TIMESTAMP, faker } from 'uniswap/src/test/shared'
 import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-
 export * from './nfts'
 export * from './swap'
 export * from './tokens'

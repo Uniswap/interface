@@ -1,8 +1,8 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
-import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
-import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
+import { CurrencyAmount, Currency } from "@uniswap/sdk-core"
+import type { PresetPercentage } from "uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types";
+import { TransactionStep } from "uniswap/src/features/transactions/steps/types";
+import { ValidatedSwapTxContext } from "uniswap/src/features/transactions/swap/types/swapTxAndGasInfo"
+import { SignerMnemonicAccountDetails } from "uniswap/src/features/wallet/types/AccountDetails";
 
 export type SetCurrentStepFn = (args: { step: TransactionStep; accepted: boolean }) => void
 

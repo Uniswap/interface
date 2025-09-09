@@ -7,12 +7,12 @@ import {
   CandlestickSeriesOptions,
   CustomSeriesOptions,
   CustomSeriesPricePlotValues,
-  customSeriesDefaultOptions,
   ICustomSeriesPaneView,
   PaneRendererCustomData,
   Time,
   UTCTimestamp,
   WhitespaceData,
+  customSeriesDefaultOptions,
 } from 'lightweight-charts'
 
 export interface RoundedCandleSeriesOptions

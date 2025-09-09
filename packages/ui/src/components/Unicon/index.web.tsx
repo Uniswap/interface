@@ -1,7 +1,7 @@
-import React, { lazy, Suspense } from 'react'
-import { Flex } from 'ui/src/components/layout/Flex'
+import React, { Suspense, lazy } from 'react'
 import { UniconProps } from 'ui/src/components/Unicon/types'
 import { getUniconColors, getUniconsDeterministicHash } from 'ui/src/components/Unicon/utils'
+import { Flex } from 'ui/src/components/layout/Flex'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { isAddress } from 'utilities/src/addresses'
 

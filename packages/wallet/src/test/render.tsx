@@ -3,12 +3,12 @@ import { InMemoryCache } from '@apollo/client'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import {
+  render as RNRender,
+  renderHook as RNRenderHook,
   RenderHookOptions,
   RenderHookResult,
   RenderOptions,
   RenderResult,
-  render as RNRender,
-  renderHook as RNRenderHook,
 } from '@testing-library/react-native'
 import React, { PropsWithChildren } from 'react'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'

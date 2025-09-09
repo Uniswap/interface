@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { TextInput } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { useAnimatedRef } from 'react-native-reanimated'
-import { Edge } from 'react-native-safe-area-context'
 import { ExploreSections } from 'src/components/explore/ExploreSections'
 import { ExploreScreenSearchResultsList } from 'src/components/explore/search/ExploreScreenSearchResultsList'
 import { Screen } from 'src/components/layout/Screen'
@@ -19,7 +18,6 @@ import { CancelBehaviorType, SearchTextInput } from 'uniswap/src/features/search
 import { MobileEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { isAndroid } from 'utilities/src/platform'
 
 // From design to avoid layout thrash as icons show and hide
 const MIN_SEARCH_INPUT_HEIGHT = 52
@@ -59,10 +57,8 @@ export function ExploreScreen(): JSX.Element {
     setIsSearchMode(false)
   }
 
-  const androidBottomInset: Edge[] = isAndroid ? ['bottom'] : []
-
   return (
-    <Screen backgroundColor="$surface1" edges={['top', ...androidBottomInset]}>
+    <Screen backgroundColor="$surface1" edges={['top']}>
       <HandleBar backgroundColor="none" />
       <Flex p="$spacing16">
         <SearchTextInput

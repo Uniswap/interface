@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
-import { providers, Signer, UnsignedTransaction, utils } from 'ethers'
+import { Signer, UnsignedTransaction, providers, utils } from 'ethers'
 import { Bytes } from 'ethers/lib/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'

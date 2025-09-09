@@ -15,16 +15,17 @@ type ResolverReturnType<T> = T extends (...args: any[]) => infer TResult
     ? TResult
     : never
 
-type ResolverParameters<T extends Resolver<any, any, any, any>> = T extends ResolverWithResolve<
-  infer TResult, // only result type is needed to filter selected fields
-  any,
-  any,
-  any
->
-  ? Parameters<ResolverFn<TResult, any, any, any>>
-  : T extends ResolverFn<infer TResult, any, any, any>
+type ResolverParameters<T extends Resolver<any, any, any, any>> =
+  T extends ResolverWithResolve<
+    infer TResult, // only result type is needed to filter selected fields
+    any,
+    any,
+    any
+  >
     ? Parameters<ResolverFn<TResult, any, any, any>>
-    : never
+    : T extends ResolverFn<infer TResult, any, any, any>
+      ? Parameters<ResolverFn<TResult, any, any, any>>
+      : never
 
 type ResolverResponses<T extends QueryResolvers> = {
   [K in keyof T]: Promise<ResolverReturnType<T[K]>>

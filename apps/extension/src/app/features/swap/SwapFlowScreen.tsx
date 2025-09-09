@@ -6,7 +6,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances/balances'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
-import { prepareSwapFormState, TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import { TransactionState, prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
 import { WalletSwapFlow } from 'wallet/src/features/transactions/swap/WalletSwapFlow'

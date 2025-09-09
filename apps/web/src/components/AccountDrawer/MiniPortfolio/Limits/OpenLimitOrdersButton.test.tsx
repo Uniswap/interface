@@ -1,7 +1,7 @@
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
 import { mocked } from 'test-utils/mocked'
-import { fireEvent, render, screen } from 'test-utils/render'
+import { act, fireEvent, render, screen } from 'test-utils/render'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
@@ -44,12 +44,10 @@ describe('OpenLimitOrdersButton', () => {
       loading: false,
     })
     const clickCallback = vi.fn()
-    render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={clickCallback} />)
-
-    // Find and click the button element
-    const button = screen.getByRole('button')
-    fireEvent.click(button)
-
+    const { container } = render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={clickCallback} />)
+    act(() => {
+      fireEvent.click(container.firstChild?.firstChild as HTMLElement)
+    })
     expect(clickCallback).toHaveBeenCalled()
   })
   it('should have a warning when the limit is reached', () => {

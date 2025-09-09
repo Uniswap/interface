@@ -12,8 +12,8 @@ import { useLocation, useNavigate } from 'react-router'
 import { ExploreContextProvider } from 'state/explore'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import { useConversionTracking } from 'uniswap/src/data/rest/conversionTracking/useConversionTracking'
-import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 
 const privacySharingOptOutAtom = atomWithStorage<boolean>(PRIVACY_SHARING_OPT_OUT_STORAGE_KEY, false)
 

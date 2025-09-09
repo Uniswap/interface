@@ -7,9 +7,9 @@ import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceh
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useCloseIfConsented } from 'wallet/src/components/smartWallet/modals/hooks/useCloseIfConsented'
-import { SmartWalletModal } from 'wallet/src/components/smartWallet/modals/SmartWalletModal'
 import { SmartWalletIcon } from 'wallet/src/components/smartWallet/SmartWalletIcon'
+import { SmartWalletModal } from 'wallet/src/components/smartWallet/modals/SmartWalletModal'
+import { useCloseIfConsented } from 'wallet/src/components/smartWallet/modals/hooks/useCloseIfConsented'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 const IMAGE_SIZE: number = 48

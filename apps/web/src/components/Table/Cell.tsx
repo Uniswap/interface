@@ -1,5 +1,5 @@
 import { LoadingBubble } from 'components/Tokens/loading'
-import { ForwardedRef, forwardRef, PropsWithChildren } from 'react'
+import { ForwardedRef, PropsWithChildren, forwardRef } from 'react'
 import { Flex, FlexProps, TamaguiElement, useMedia } from 'ui/src'
 
 export const Cell = forwardRef(

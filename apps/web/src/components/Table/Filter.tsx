@@ -3,7 +3,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import deprecatedStyled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { RefObject, useCallback, useRef } from 'react'
-import { Checkbox, Flex, styled, Text, useMedia } from 'ui/src'
+import { Checkbox, Flex, Text, styled, useMedia } from 'ui/src'
 
 const StyledDropdownIcon = deprecatedStyled(DropdownIcon)`
   position: relative;

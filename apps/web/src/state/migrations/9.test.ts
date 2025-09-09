@@ -7,7 +7,7 @@ import { migration5 } from 'state/migrations/5'
 import { migration6 } from 'state/migrations/6'
 import { migration7 } from 'state/migrations/7'
 import { migration8 } from 'state/migrations/8'
-import { migration9, PersistAppStateV9 } from 'state/migrations/9'
+import { PersistAppStateV9, migration9 } from 'state/migrations/9'
 
 const COINGECKO_AVAX_LIST = 'https://tokens.coingecko.com/avalanche/all.json'
 

@@ -3,7 +3,7 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Web3StatusRef } from 'components/Web3Status'
 import { useAccount } from 'hooks/useAccount'
 import useDisableScrolling from 'hooks/useDisableScrolling'
-import { useIsUniswapExtensionConnected } from 'hooks/useIsUniswapExtensionConnected'
+import { useIsUniExtensionConnected } from 'hooks/useIsUniExtensionConnected'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
 import { useAtom } from 'jotai'
@@ -13,17 +13,17 @@ import {
   AnimatePresence,
   Flex,
   FlexProps,
-  styled,
   TouchableArea,
+  WebBottomSheet,
+  styled,
   useMedia,
   useScrollbarStyles,
   useShadowPropsMedium,
   useSporeColors,
-  WebBottomSheet,
 } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
-import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const DRAWER_SPECS = {
@@ -200,7 +200,7 @@ function AccountSideDrawer({ isOpen, onClose, children }: AccountDrawerProps) {
 
 function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
   const accountDrawer = useAccountDrawer()
-  const isUniExtensionConnected = useIsUniswapExtensionConnected()
+  const isUniExtensionConnected = useIsUniExtensionConnected()
   const media = useMedia()
   const isAccountConnected = useAccount().isConnected
 

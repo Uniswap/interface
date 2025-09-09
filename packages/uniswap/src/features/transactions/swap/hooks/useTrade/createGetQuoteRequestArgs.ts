@@ -3,9 +3,9 @@ import type { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import {
   createBuildQuoteRequest,
   flattenQuoteRequestResult,
-  type ParsedTradeInput,
   parseTradeInputForQuote,
   validateParsedInput,
+  type ParsedTradeInput,
 } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/buildQuoteRequest'
 import { UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
 import {

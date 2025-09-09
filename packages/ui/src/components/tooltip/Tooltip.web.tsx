@@ -1,4 +1,4 @@
-import { styled, Tooltip as TamaguiTooltip, withStaticProperties } from 'tamagui'
+import { Tooltip as TamaguiTooltip, styled, withStaticProperties } from 'tamagui'
 import { TooltipContentProps } from 'ui/src/components/tooltip/Tooltip'
 
 export type { TooltipProps } from 'tamagui'

@@ -1,16 +1,16 @@
 import { getExploreDescription, getExploreTitle } from 'pages/getExploreTitle'
 import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
+import { ReactNode, Suspense, lazy, useMemo } from 'react'
+import { Navigate, Route, Routes, matchPath, useLocation } from 'react-router'
+import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
+import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from 'pages/Landing'
 import Swap from 'pages/Swap'
-import { lazy, ReactNode, Suspense, useMemo } from 'react'
-import { matchPath, Navigate, Route, Routes, useLocation } from 'react-router'
 import { CHROME_EXTENSION_UNINSTALL_URL_PATH } from 'uniswap/src/constants/urls'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
 import i18n from 'uniswap/src/i18n'
-import { isBrowserRouterEnabled } from 'utils/env'
 
 const CreatePosition = lazy(() => import('pages/CreatePosition/CreatePosition'))
 const AddLiquidityV3WithTokenRedirects = lazy(() => import('pages/AddLiquidityV3/redirects'))

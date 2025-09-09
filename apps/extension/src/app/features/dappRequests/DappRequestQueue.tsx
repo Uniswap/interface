@@ -1,14 +1,14 @@
 import { memo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import { rejectAllRequests } from 'src/app/features/dappRequests/actions'
-import { TransactionConfirmationTrackerProvider } from 'src/app/features/dappRequests/context/TransactionConfirmationTracker'
 import { AnimatedPane, DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { DappRequestCards } from 'src/app/features/dappRequests/DappRequestQueueCards'
 import {
   DappRequestQueueProvider,
   useDappRequestQueueContext,
 } from 'src/app/features/dappRequests/DappRequestQueueContext'
+import { rejectAllRequests } from 'src/app/features/dappRequests/actions'
+import { TransactionConfirmationTrackerProvider } from 'src/app/features/dappRequests/context/TransactionConfirmationTracker'
 import { ConnectionRequestContent } from 'src/app/features/dappRequests/requestContent/Connection/ConnectionRequestContent'
 import { EthSendRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/EthSend'
 import { PersonalSignRequestContent } from 'src/app/features/dappRequests/requestContent/PersonalSign/PersonalSignRequestContent'

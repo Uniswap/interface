@@ -1,6 +1,6 @@
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
-import { getVersionHeader, REQUEST_SOURCE } from 'uniswap/src/data/constants'
+import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
 import { isMobileApp } from 'utilities/src/platform'
 
 export const BASE_UNISWAP_HEADERS = {

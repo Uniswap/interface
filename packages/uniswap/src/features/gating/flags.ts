@@ -11,6 +11,8 @@ export enum FeatureFlags {
   ArbitrumDutchV3,
   BlockaidFotLogging,
   DisableSwap7702,
+  GqlToRestBalances,
+  GqlToRestTransactions,
   EmbeddedWallet,
   FiatOffRamp,
   InstantTokenBalanceUpdate,
@@ -71,7 +73,6 @@ export enum FeatureFlags {
   TwitterConversionTracking,
   UniversalSwap,
   BatchedSwaps,
-  PortoWalletConnector,
 }
 /* eslint-enable @typescript-eslint/prefer-enum-initializers */
 
@@ -86,6 +87,8 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.FiatOffRamp, 'fiat_offramp_web'],
   [FeatureFlags.ForceDisableWalletGetCapabilities, 'force_disable_wallet_get_capabilities'],
   [FeatureFlags.ForcePermitTransactions, 'force_permit_transactions'],
+  [FeatureFlags.GqlToRestBalances, 'gql-to-rest-balances'],
+  [FeatureFlags.GqlToRestTransactions, 'gql-to-rest-transactions'],
   [FeatureFlags.InstantTokenBalanceUpdate, 'instant-token-balance-update'],
   [FeatureFlags.PortionFields, 'portion-fields'],
   [FeatureFlags.SelfReportSpamNFTs, 'self-report-spam-nfts'],
@@ -120,7 +123,6 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.LpIncentives, 'lp_incentives'],
   [FeatureFlags.MigrateV2, 'migrate_v2'],
   [FeatureFlags.PoolSearch, 'pool_search'],
-  [FeatureFlags.PortoWalletConnector, 'porto_wallet_connector'],
   [FeatureFlags.PriceRangeInputV2, 'price_range_input_v2'],
   [FeatureFlags.SharedPortfolioUI, 'shared_portfolio_ui'],
   [FeatureFlags.SolanaPromo, 'solana_promo'],

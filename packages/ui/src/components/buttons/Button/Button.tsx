@@ -1,5 +1,5 @@
 import { forwardRef } from 'react'
-import { type TamaguiElement, withStaticProperties } from 'tamagui'
+import { withStaticProperties, type TamaguiElement } from 'tamagui'
 import { useLayoutAnimationOnChange } from 'ui/src/animations'
 import { CustomButtonFrame } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/CustomButtonFrame'
 import { CustomButtonText } from 'ui/src/components/buttons/Button/components/CustomButtonText/CustomButtonText'

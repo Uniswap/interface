@@ -1,4 +1,4 @@
-import type { providers, TypedDataDomain, TypedDataField } from 'ethers'
+import type { TypedDataDomain, TypedDataField, providers } from 'ethers'
 import { HexString } from 'uniswap/src/utils/hex'
 
 // these are tied to the ethers.js types,

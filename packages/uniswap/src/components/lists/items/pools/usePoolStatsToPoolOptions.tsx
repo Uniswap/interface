@@ -95,7 +95,7 @@ export function usePoolStatsToPoolOptions(poolStats: PoolStats[] | undefined): P
           chainId: poolChain,
           protocolVersion,
           hookAddress: pool.hook?.address,
-          feeTier: protocolVersion === ProtocolVersion.V2 ? V2_DEFAULT_FEE_TIER : (pool.feeTier ?? V2_DEFAULT_FEE_TIER),
+          feeTier: protocolVersion === ProtocolVersion.V2 ? V2_DEFAULT_FEE_TIER : pool.feeTier ?? V2_DEFAULT_FEE_TIER,
           token0CurrencyInfo,
           token1CurrencyInfo,
         }

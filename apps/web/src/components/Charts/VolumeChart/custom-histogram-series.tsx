@@ -11,11 +11,11 @@ import {
 import { getCumulativeSum } from 'components/Charts/VolumeChart/utils'
 import {
   CustomSeriesPricePlotValues,
-  customSeriesDefaultOptions,
   ICustomSeriesPaneView,
   PaneRendererCustomData,
   Time,
   WhitespaceData,
+  customSeriesDefaultOptions,
 } from 'lightweight-charts'
 
 export class CustomHistogramSeries<TData extends CustomHistogramData>

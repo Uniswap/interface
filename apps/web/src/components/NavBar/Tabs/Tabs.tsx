@@ -2,7 +2,7 @@ import { NavDropdown, NavDropdownTabWrapper } from 'components/NavBar/NavDropdow
 import { TabsItem, TabsSection, useTabsContent } from 'components/NavBar/Tabs/TabsContent'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { NavLink, useLocation } from 'react-router'
-import { Flex, Popover, styled, Text } from 'ui/src'
+import { Flex, Popover, Text, styled } from 'ui/src'
 
 const TabText = styled(Text, {
   justifyContent: 'center',

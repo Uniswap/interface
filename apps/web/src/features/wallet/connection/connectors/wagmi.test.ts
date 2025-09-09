@@ -1,8 +1,9 @@
 import { renderHook } from '@testing-library/react'
-// Import mocked modules to get references to their functions
-import { Connector, CreateConnectorFn, connect, getConnectors } from '@wagmi/core'
 import { connectWagmiWallet, useWagmiWalletConnectors } from 'features/wallet/connection/connectors/wagmi'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+// Import mocked modules to get references to their functions
+import { Connector, CreateConnectorFn, connect, getConnectors } from '@wagmi/core'
 import { useConnectors } from 'wagmi'
 
 const mockConnect = vi.mocked(connect)

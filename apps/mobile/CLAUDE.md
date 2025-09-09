@@ -8,76 +8,76 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # Install dependencies (run from mobile directory)
-bun install
+yarn
 
 # Install iOS pods
-bun pod
+yarn pod
 
 # Run iOS app (development)
-bun ios
+yarn ios
 
 # Run iOS app with specific configuration
-bun ios:dev:release    # Dev release build
-bun ios:beta           # Beta debug build
-bun ios:release        # Release build
+yarn ios:dev:release    # Dev release build
+yarn ios:beta           # Beta debug build
+yarn ios:release        # Release build
 
 # Run Android app (development)
-bun android
+yarn android
 
 # Run Android app with specific variant
-bun android:release    # Dev release build
-bun android:build:release  # Dev release build
-bun android:prod       # Production debug build
+yarn android:release    # Dev release build
+yarn android:build:release  # Dev release build
+yarn android:prod       # Production debug build
 
 # Start Metro bundler (usually starts automatically)
-bun start
+yarn start
 ```
 
 ### Testing
 
 ```bash
 # Run all tests
-bun run test
+yarn test
 
 # Run tests for a specific file/pattern
-bun run test path/to/test.ts
+yarn test path/to/test.ts
 
 # Update snapshots
-bun snapshots
+yarn snapshots
 
 # Type checking
-bun typecheck
+yarn typecheck
 
 # Linting
-bun lint
-bun lint:fix
+yarn lint
+yarn lint:fix
 
 # Format code
-bun format
+yarn format
 ```
 
 ### iOS-Specific Commands
 
 ```bash
 # Interactive iOS build selector
-bun ios:interactive
+yarn ios:interactive
 
 # Build iOS bundle for production
-bun ios:bundle
+yarn ios:bundle
 
 # Update pods
-bun pod:update
+yarn pod:update
 ```
 
 ### Environment Setup
 
 ```bash
 # Download environment variables (requires 1password CLI)
-bun env:local:download
+yarn env:local:download
 
 # Reset development environment
-bun softreset    # Soft reset
-bun hardreset    # Full reset including node_modules
+yarn softreset    # Soft reset
+yarn hardreset    # Full reset including node_modules
 ```
 
 ## Architecture Overview

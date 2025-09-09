@@ -5,8 +5,8 @@ import { Flex, Text } from 'ui/src'
 import { Flag } from 'ui/src/components/icons/Flag'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { getFeeColor, TokenProtectionWarning } from 'uniswap/src/features/tokens/safetyUtils'
 import { WarningModalInfoContainer } from 'uniswap/src/features/tokens/WarningInfoModalContainer'
+import { TokenProtectionWarning, getFeeColor } from 'uniswap/src/features/tokens/safetyUtils'
 
 function getWarningFlags({
   currencyInfo,

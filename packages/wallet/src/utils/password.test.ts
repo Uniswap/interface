@@ -1,9 +1,9 @@
 import i18n from 'uniswap/src/i18n'
 import {
+  PasswordStrength,
   getPasswordStrength,
   getPasswordStrengthTextAndColor,
   isPasswordStrongEnough,
-  PasswordStrength,
 } from 'wallet/src/utils/password'
 
 describe(isPasswordStrongEnough, () => {

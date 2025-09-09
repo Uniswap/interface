@@ -1,5 +1,5 @@
 import { providerErrors, serializeError } from '@metamask/rpc-errors'
-import { createContext, PropsWithChildren, useContext, useEffect, useRef, useState } from 'react'
+import { PropsWithChildren, createContext, useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { confirmRequest, confirmRequestNoDappInfo, rejectRequest } from 'src/app/features/dappRequests/actions'
 import { useTransactionConfirmationTracker } from 'src/app/features/dappRequests/context/TransactionConfirmationTracker'
@@ -16,7 +16,6 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-
 interface DappRequestQueueContextValue {
   forwards: boolean // direction of sliding animation
   increasing: boolean // direction of number increasing animation

@@ -1,66 +1,7 @@
-IPFS hash of the deployment:
-- CIDv0: `QmaaVMC6GCdf1aWGJY4n6D2DXCLbHkQR3fytd9dGQesUem`
-- CIDv1: `bafybeifv27ffnci2km6rbtl3pp57ma6zdqrko2f27eyp4by2kbvrd7apti`
+We are back with some new updates! Here’s the latest
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Flashblocks on Unichain: This infra upgrade brings 200ms blocktimes to the network, making swaps lightning fast. Feel the difference by swapping on Unichain. 
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Other changes: 
 
-IPFS gateways:
-- https://bafybeifv27ffnci2km6rbtl3pp57ma6zdqrko2f27eyp4by2kbvrd7apti.ipfs.dweb.link/
-- [ipfs://QmaaVMC6GCdf1aWGJY4n6D2DXCLbHkQR3fytd9dGQesUem/](ipfs://QmaaVMC6GCdf1aWGJY4n6D2DXCLbHkQR3fytd9dGQesUem/)
-
-## 5.109.0 (2025-09-04)
-
-
-### Features
-
-* **web:** add ability to filter FOR providers by payment method (#22853) 5fc0334
-* **web:** add payment method filter buttons (#22858) cdd9d9f
-* **web:** add warning when local port changes to a different port when running multiple server instances (#22914) dc7654c
-* **web:** adding info for for buy options (#22833) 039ed83
-* **web:** adding porto as a connector (#23049) dda4f7d
-* **web:** initial shared tokens tab (#22788) 681eeb1
-* **web:** Log FiatOnRampTransferWidgetOpened on web (#21204) 1f42ad5
-* **web:** remove TURBO env vars (#22949) 65bd503
-* **web:** web for nudge experiment (#22801) 2e4ef73
-
-
-### Bug Fixes
-
-* **web:** [lp] handle undefined currencyA in url sync (#23202) 418a0b1
-* **web:** add wait-on timeout for CI workflows (#22941) a5e08cd
-* **web:** blocking bugs and fixes for portfolio unification (#23197) 07e5ec2
-* **web:** bun command for vercel ignore step (#23008) 9d627ec
-* **web:** bun warning about web sideEffects (#22756) 6db7e39
-* **web:** disable sourcemaps in the staging build deployed to CF (#23128) 8537819
-* **web:** do not set output to the same token as input (#22924) 74b603f
-* **web:** don't fail bun version check in vercel builds (#23016) 6e3de07
-* **web:** don't use nx for web-vercel-ignore, just use git (#23044) 236a72f
-* **web:** duplicate activities - PORT-361 (#23094) c781f0d
-* **web:** enable receive modal on landing page (#22654) d2c72d9
-* **web:** fix deeplinking navigation issues with override flag enabled (#22971) 9135fb4
-* **web:** fix issue with changing chains on lp token selector (#22948) 0534af8
-* **web:** fix line chart icon on ios - PORT-305 (#22804) 1d1adb8
-* **web:** fix mweb layout for the migrate screen (#22862) 44a397a
-* **web:** fix send and swap context menu selection actions + send flow oddities (#23052) b7902af
-* **web:** fix type error in storybook (#22755) 2dfa8fe
-* **web:** fix unitag rendering (#22929) aff181e
-* **web:** handle receipt in web polling - APPS-8638 (#22928) b7bbd52
-* **web:** pin react-compiler-runtime (#23093) b0e5358
-* **web:** polish styling and remove styled components (#23031) 1ad93dc
-* **web:** position activity dot in top right (#22835) 4520ea8
-* **web:** prevent redundant calls on the pool details pages (#22869) fa89372
-* **web:** remove line break on create flow for mweb (#23009) 3479dc3
-* **web:** respect  on mWeb (#23027) 932f89a
-* **web:** split NFT list component to avoid crash on interface (#23102) 0d21bf3
-
-
-### Continuous Integration
-
-* **web:** update sitemaps c8de020
-
-
+- Various bug fixes and performance improvements

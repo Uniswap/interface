@@ -6,8 +6,8 @@ import { iconSizes } from 'ui/src/theme'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
 import { logger } from 'utilities/src/logger/logger'
 import { resetWalletBehaviorHistory } from 'wallet/src/features/behaviorHistory/slice'
-import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
 export function OnboardingRow({ iconProps }: { iconProps: IconProps }): JSX.Element {

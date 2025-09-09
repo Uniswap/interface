@@ -2,10 +2,12 @@
 /* eslint-disable max-lines */
 import { HDKey } from '@scure/bip32'
 import { Buffer } from 'buffer'
-import { Signature, utils, Wallet } from 'ethers'
-import { defaultPath, joinSignature, SigningKey } from 'ethers/lib/utils'
+import { Signature, Wallet, utils } from 'ethers'
+import { SigningKey, defaultPath, joinSignature } from 'ethers/lib/utils'
 import { logger } from 'utilities/src/logger/logger'
+import { IKeyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import {
+  SecretPayload,
   addEncryptedCiphertextToSecretPayload,
   convertBase64SeedToCryptoKey,
   createEmptySecretPayload,
@@ -13,9 +15,7 @@ import {
   decrypt,
   exportKey,
   getEncryptionKeyFromPassword,
-  SecretPayload,
 } from 'wallet/src/features/wallet/Keyring/crypto'
-import { IKeyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { ENCRYPTION_KEY_STORAGE_KEY, PersistedStorage, prefix } from 'wallet/src/utils/persistedStorage'
 
 const mnemonicPrefix = '.mnemonic.'

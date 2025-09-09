@@ -1,7 +1,7 @@
 import Animated, {
   Extrapolate,
-  interpolate,
   SharedValue,
+  interpolate,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'

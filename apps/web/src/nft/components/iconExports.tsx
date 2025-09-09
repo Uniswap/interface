@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import type { SVGProps } from 'nft/components/icons'
-import React, { forwardRef, Suspense } from 'react'
+import React, { Suspense, forwardRef } from 'react'
 
 const LazyIconWrapper = forwardRef<SVGSVGElement, { children: React.ReactElement<SVGProps> }>(({ children }, ref) => (
   <Suspense fallback={null}>{React.cloneElement(children, { ref })}</Suspense>

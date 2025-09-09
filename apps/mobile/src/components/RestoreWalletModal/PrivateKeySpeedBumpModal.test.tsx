@@ -1,6 +1,6 @@
 import React from 'react'
-import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { PrivateKeySpeedBumpModal } from 'src/components/RestoreWalletModal/PrivateKeySpeedBumpModal'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { fireEvent, render } from 'src/test/test-utils'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'

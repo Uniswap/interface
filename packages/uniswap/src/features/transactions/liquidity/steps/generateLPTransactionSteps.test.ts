@@ -1,5 +1,8 @@
-import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { USDC, USDT } from 'uniswap/src/constants/tokens'
+
+import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
+
+import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { IndependentToken, ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { generateLPTransactionSteps } from 'uniswap/src/features/transactions/liquidity/steps/generateLPTransactionSteps'
 import {
@@ -7,7 +10,6 @@ import {
   LiquidityTransactionType,
   LiquidityTxAndGasInfo,
 } from 'uniswap/src/features/transactions/liquidity/types'
-import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { createMockCurrencyAmount } from 'uniswap/src/test/fixtures/transactions/swap'
 
 const mockTxRequest = {

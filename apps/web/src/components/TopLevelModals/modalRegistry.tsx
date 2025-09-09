@@ -1,6 +1,6 @@
 import { ModalRegistry, ModalWrapperProps } from 'components/TopLevelModals/types'
 import { useModalState } from 'hooks/useModalState'
-import { memo, Suspense } from 'react'
+import { Suspense, memo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { createLazy } from 'utils/lazyWithRetry'
@@ -66,10 +66,6 @@ const HelpModal = createLazy(() =>
 
 const ReceiveCryptoModal = createLazy(() =>
   import('components/ReceiveCryptoModal').then((module) => ({ default: module.ReceiveCryptoModal })),
-)
-
-const SendModal = createLazy(() =>
-  import('pages/Swap/Send/SendFormModal').then((module) => ({ default: module.SendFormModal })),
 )
 
 const ModalLoadingFallback = memo(() => null)
@@ -171,10 +167,6 @@ export const modalRegistry: ModalRegistry = {
   [ModalName.ReceiveCryptoModal]: {
     component: ReceiveCryptoModal,
     shouldMount: () => true,
-  },
-  [ModalName.Send]: {
-    component: SendModal,
-    shouldMount: (state) => state.application.openModal?.name === ModalName.Send,
   },
 } as const
 

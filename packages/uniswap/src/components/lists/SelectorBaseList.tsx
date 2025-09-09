@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { AnimateTransition, Flex, Loader, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
-import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
+import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
 import {
   ItemRowInfo,
   OnchainItemList,
@@ -12,7 +11,8 @@ import {
 } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { SectionHeader, SectionHeaderProps } from 'uniswap/src/components/lists/SectionHeader'
-import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
+import { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
+import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 function EmptyResults(): JSX.Element {

@@ -19,7 +19,7 @@ import { PairState } from 'hooks/useV2Pairs'
 import JSBI from 'jsbi'
 import { ETH_MAINNET } from 'test-utils/constants'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { DAI, nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
+import { DAI, USDT, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 

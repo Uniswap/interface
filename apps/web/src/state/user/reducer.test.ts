@@ -3,12 +3,12 @@ import { RouterPreference } from 'state/routing/types'
 import reducer, {
   addSerializedPair,
   initialState,
-  UserState,
   updateHideClosedPositions,
   updateIsEmbeddedWalletBackedUp,
   updateUserDeadline,
   updateUserRouterPreference,
   updateUserSlippageTolerance,
+  UserState,
 } from 'state/user/reducer'
 
 function buildSerializedPair({

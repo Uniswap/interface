@@ -1,15 +1,12 @@
 import { StatsigClient } from '@statsig/react-bindings'
 import { LocalOverrideAdapterWrapper } from 'uniswap/src/features/gating/LocalOverrideAdapterWrapper'
 
+export { StatsigClient, StatsigOptions, StatsigUser, StorageProvider, TypedReturn } from '@statsig/react-bindings'
+
 export {
-  StatsigClient,
   StatsigContext,
-  StatsigOptions,
   StatsigProvider,
-  StatsigUser,
   Storage,
-  StorageProvider,
-  TypedReturn,
   useClientAsyncInit,
   useDynamicConfig,
   useExperiment,
@@ -26,7 +23,7 @@ export {
 const statsigApiKey =
   process.env.NODE_ENV === 'test'
     ? 'dummy-test-key'
-    : (process.env.REACT_APP_STATSIG_API_KEY ?? process.env.STATSIG_API_KEY)
+    : process.env.REACT_APP_STATSIG_API_KEY ?? process.env.STATSIG_API_KEY
 
 if (!statsigApiKey) {
   throw new Error('STATSIG_API_KEY is not set')

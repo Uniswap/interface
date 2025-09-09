@@ -1,6 +1,6 @@
 import Loader from 'components/Icons/LoadingSpinner'
 import { RouteDefinition, routes, useRouterConfig } from 'pages/RouteDefinitions'
-import { lazy, memo, Suspense } from 'react'
+import { Suspense, lazy, memo } from 'react'
 import { Route, Routes } from 'react-router'
 
 // The Chrome is always loaded, but is lazy-loaded because it is not needed without user interaction.

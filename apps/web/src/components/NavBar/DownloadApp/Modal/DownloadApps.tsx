@@ -2,13 +2,13 @@ import AppStoreBadge from 'assets/images/app-store-badge.png'
 import ExtensionIllustration from 'assets/images/extensionIllustration.png'
 import PlayStoreBadge from 'assets/images/play-store-badge.png'
 import WalletIllustration from 'assets/images/walletIllustration.png'
-import { Wiggle } from 'components/animations/Wiggle'
-import Column from 'components/deprecated/Column'
 import { AndroidLogo } from 'components/Icons/AndroidLogo'
 import { AppleLogo } from 'components/Icons/AppleLogo'
+import { Wiggle } from 'components/animations/Wiggle'
+import Column from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
 import deprecatedStyled from 'lib/styled-components'
-import { lazy, PropsWithChildren, ReactNode, Suspense, useState } from 'react'
+import { PropsWithChildren, ReactNode, Suspense, lazy, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { updateDownloadGraduatedWalletCardsDismissed } from 'state/application/reducer'
@@ -20,9 +20,9 @@ import {
   Image,
   Loader,
   ModalCloseIcon,
-  styled,
   Text,
   TouchableArea,
+  styled,
   useSporeColors,
 } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
@@ -30,8 +30,8 @@ import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { GoogleChromeLogo } from 'ui/src/components/logos/GoogleChromeLogo'
 import { iconSizes, zIndexes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 
 const LazyWalletOneLinkQR = lazy(async () => {

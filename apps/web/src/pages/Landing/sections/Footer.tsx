@@ -1,10 +1,10 @@
-import { Wiggle } from 'components/animations/Wiggle'
 import { MenuItem, MenuSectionTitle, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
 import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
+import { Wiggle } from 'components/animations/Wiggle'
 import { useModalState } from 'hooks/useModalState'
 import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
 import { useTranslation } from 'react-i18next'
-import { Anchor, Flex, Separator, styled, Text } from 'ui/src'
+import { Anchor, Flex, Separator, Text, styled } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 

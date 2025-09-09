@@ -33,7 +33,7 @@ export const getTokenPageDescription = (currency?: Currency, chainId?: UniverseC
   const tokenPageName =
     currency?.name && currency.symbol
       ? `${currency.name} (${currency.symbol})`
-      : (currency?.name ?? currency?.symbol ?? 'tokens')
+      : currency?.name ?? currency?.symbol ?? 'tokens'
   const chainSuffix = chainId && chainId !== UniverseChainId.Mainnet ? ` on ${getChainLabel(chainId)}` : ''
 
   return `Buy, sell, and swap ${tokenPageName}${chainSuffix}. Real-time prices, charts, transaction data, and more.`

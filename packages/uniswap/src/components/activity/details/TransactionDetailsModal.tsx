@@ -41,7 +41,7 @@ import {
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
-import { isExtension, isWeb } from 'utilities/src/platform'
+import { isWeb } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 type TransactionDetailsModalProps = {
@@ -211,12 +211,7 @@ export function TransactionDetailsModal({
 
   return (
     <>
-      <Modal
-        isDismissible
-        alignment={isExtension ? 'top' : 'center'}
-        name={ModalName.TransactionDetails}
-        onClose={onClose}
-      >
+      <Modal isDismissible alignment="top" name={ModalName.TransactionDetails} onClose={onClose}>
         <Flex gap="$spacing12" pb={isWeb ? '$none' : '$spacing12'} px={isWeb ? '$none' : '$spacing24'}>
           <TransactionDetailsHeader transactionActions={menuItems} transactionDetails={transactionDetails} />
           {!hideTopSeparator && <Separator />}

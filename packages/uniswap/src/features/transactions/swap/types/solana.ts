@@ -9,7 +9,7 @@ export interface SolanaTrade {
   inputAmount: CurrencyAmount<Currency>
   outputAmount: CurrencyAmount<Currency>
   executionPrice: Price<Currency, Currency>
-  quote: { routing: Routing.JUPITER; quote: JupiterOrderResponse; requestId: string; permitData: null }
+  quote: { routing: Routing.JUPITER, quote: JupiterOrderResponse, requestId: string, permitData: null }
   tradeType: TradeType
   routing: Routing.JUPITER
   readonly indicative: boolean
@@ -25,15 +25,7 @@ export interface SolanaTrade {
   get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency>
 }
 
-function getQuoteCurrencyAmounts({
-  quote,
-  inputToken,
-  outputToken,
-}: {
-  quote: JupiterOrderResponse
-  inputToken: Currency
-  outputToken: Currency
-}): {
+function getQuoteCurrencyAmounts({ quote, inputToken, outputToken }: { quote: JupiterOrderResponse, inputToken: Currency, outputToken: Currency }): {
   inputAmount: CurrencyAmount<Currency>
   outputAmount: CurrencyAmount<Currency>
   minAmountOut: CurrencyAmount<Currency>
@@ -55,20 +47,9 @@ function getQuoteCurrencyAmounts({
   }
 }
 
-export function createSolanaTrade({
-  quote,
-  inputToken,
-  outputToken,
-}: {
-  quote: JupiterOrderResponse
-  inputToken: Currency
-  outputToken: Currency
-}): SolanaTrade {
-  const { inputAmount, outputAmount, minAmountOut, maxAmountIn } = getQuoteCurrencyAmounts({
-    quote,
-    inputToken,
-    outputToken,
-  })
+
+export function createSolanaTrade({ quote, inputToken, outputToken }: { quote: JupiterOrderResponse, inputToken: Currency, outputToken: Currency }): SolanaTrade {
+  const { inputAmount, outputAmount, minAmountOut, maxAmountIn } = getQuoteCurrencyAmounts({ quote, inputToken, outputToken })
 
   const executionPrice = new Price(inputToken, outputToken, inputAmount.quotient, outputAmount.quotient)
 

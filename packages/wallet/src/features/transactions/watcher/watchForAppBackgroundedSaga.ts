@@ -1,6 +1,6 @@
 import { AppState, AppStateStatus } from 'react-native'
 import { EventChannel, eventChannel } from 'redux-saga'
-import { call, SagaGenerator, take } from 'typed-redux-saga'
+import { SagaGenerator, call, take } from 'typed-redux-saga'
 
 function createAppStateChannel(): EventChannel<AppStateStatus> {
   return eventChannel<AppStateStatus>((emit) => {

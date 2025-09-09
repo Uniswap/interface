@@ -7,8 +7,8 @@ import { erc20RecentReceiveAssetActivity, erc20StaleReceiveAssetActivity, portfo
 import { queryResolvers } from 'uniswap/src/test/utils'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import {
-  getReceiveNotificationFromData,
   TransactionHistoryUpdater,
+  getReceiveNotificationFromData,
 } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'

@@ -1,9 +1,9 @@
 import { Percent } from '@uniswap/sdk-core'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import {
+  TokenProtectionWarning,
   getFeeWarning,
   getSeverityFromTokenProtectionWarning,
-  TokenProtectionWarning,
 } from 'uniswap/src/features/tokens/safetyUtils'
 import {
   FeeOnTransferFeeGroupProps,

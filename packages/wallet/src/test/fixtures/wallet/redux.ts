@@ -1,7 +1,7 @@
 import { PreloadedState } from 'redux'
 import { createFixture } from 'uniswap/src/test/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { initialWalletState, WalletSliceState } from 'wallet/src/features/wallet/slice'
+import { WalletSliceState, initialWalletState } from 'wallet/src/features/wallet/slice'
 import { WalletState as WalletPackageState } from 'wallet/src/state/walletReducer'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures/wallet/accounts'
 

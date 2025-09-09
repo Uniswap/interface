@@ -1,12 +1,9 @@
-import type { SectionListData } from 'react-native'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
-  FiatOnRampCurrency,
   FORCurrencyOrBalance,
-  FORFilters,
-  FORFiltersMap,
   FORLogo,
   FORQuote,
+  FiatOnRampCurrency,
   InitialQuoteSelection,
 } from 'uniswap/src/features/fiatOnRamp/types'
 import { isAndroid, isIOS } from 'utilities/src/platform'
@@ -176,43 +173,4 @@ export function getUnsupportedFORTokensWithBalance(
   return Object.values(balancesById || {}).filter(
     (balance) => !offRampCurrencyIds.includes(balance.currencyInfo.currencyId),
   )
-}
-
-export function filterQuotesByPaymentMethod(quotes: Maybe<FORQuote[]>, paymentFilter?: FORFilters): Maybe<FORQuote[]> {
-  if (!quotes || !paymentFilter) {
-    return quotes
-  }
-
-  return quotes.filter((quote) => {
-    return quote.serviceProviderDetails.paymentMethods.some((paymentMethod) => {
-      const mappedFilter = FORFiltersMap[paymentMethod]
-      return mappedFilter === paymentFilter
-    })
-  })
-}
-
-type OrganizedQuoteSections = {
-  sections: SectionListData<FORQuote>[]
-  initialQuote: FORQuote
-}
-
-export function organizeQuotesIntoSections(quotes: Maybe<FORQuote[]>): OrganizedQuoteSections | undefined {
-  if (!quotes) {
-    return undefined
-  }
-
-  const { quote, type } = selectInitialQuote(quotes)
-  if (!quote) {
-    return undefined
-  }
-
-  let sections: SectionListData<FORQuote>[]
-  if (type === InitialQuoteSelection.MostRecent) {
-    const otherQuotes = quotes.filter((item) => item !== quote)
-    sections = [{ data: [quote], type }, ...(otherQuotes.length ? [{ data: otherQuotes }] : [])]
-  } else {
-    sections = [{ data: quotes, type }]
-  }
-
-  return { sections, initialQuote: quote }
 }

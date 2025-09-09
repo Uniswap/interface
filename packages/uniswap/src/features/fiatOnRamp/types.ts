@@ -87,48 +87,6 @@ export type FORServiceProvider = {
   supportUrl?: string
 }
 
-export enum FORFilters {
-  ApplePay = 'Apple Pay',
-  GooglePay = 'Google Pay',
-  Bank = 'Bank',
-  Debit = 'Debit',
-  PayPal = 'PayPal',
-  Venmo = 'Venmo',
-}
-
-// TODO[GROW-560]: Replace this mapping with TYPE field from BE
-export const FORFiltersMap: Record<string, FORFilters> = {
-  'Apple Pay': FORFilters.ApplePay,
-  'Google Pay': FORFilters.GooglePay,
-  'Same Day ACH': FORFilters.Bank,
-  ACH: FORFilters.Bank,
-  'Debit Card': FORFilters.Debit,
-  'Payout via Debit Card': FORFilters.Debit,
-  PayPal: FORFilters.PayPal,
-  Venmo: FORFilters.Venmo,
-  'Local Manual Bank Transfer': FORFilters.Bank,
-  Fast: FORFilters.Bank,
-  FPX: FORFilters.Bank,
-  iDeal: FORFilters.Bank,
-  IMPS: FORFilters.Bank,
-  Khipu: FORFilters.Bank,
-  'Instant Bank Transfer - Open Banking': FORFilters.Bank,
-  'Instant Bank Transfer': FORFilters.Bank,
-  PIX: FORFilters.Bank,
-  PromptPay: FORFilters.Bank,
-  PSE: FORFilters.Bank,
-  'Revolut Pay': FORFilters.Bank,
-  SEPA: FORFilters.Bank,
-  'SEPA Instant': FORFilters.Bank,
-  SPEI: FORFilters.Bank,
-  STP: FORFilters.Bank,
-  SWIFT: FORFilters.Bank,
-  'Thai QR Payments': FORFilters.Bank,
-  'UK Faster Payments': FORFilters.Bank,
-  UPI: FORFilters.Bank,
-  VietQR: FORFilters.Bank,
-}
-
 export type FORServiceProvidersResponse = {
   serviceProviders: FORServiceProvider[]
 }
