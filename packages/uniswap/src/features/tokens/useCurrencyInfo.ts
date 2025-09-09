@@ -1,6 +1,9 @@
+import { useQuery } from '@tanstack/react-query'
+import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { getCommonBase } from 'uniswap/src/constants/routing'
 import { useTokenQuery, useTokensQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { fetchTokenDataDirectly } from 'uniswap/src/data/rest/searchTokensAndPools'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
@@ -20,6 +23,26 @@ function useCurrencyInfoQuery(
     variables: currencyIdToContractInput(_currencyId ?? ''),
     skip: !_currencyId || options?.skip,
     fetchPolicy: options?.refetch ? 'cache-and-network' : 'cache-first',
+  })
+
+  
+  let variables: { tokenAddress: string; chainId: UniverseChainId } | undefined
+  try {
+    variables = {
+      tokenAddress: currencyIdToAddress(_currencyId ?? ''),
+      chainId: currencyIdToChain(_currencyId ?? '') as UniverseChainId,
+    }
+  } catch (error) {
+    variables = undefined
+  }
+
+  const tokenData = useQuery({
+    queryKey: ['searchTokens-custom', variables],
+    queryFn: async () => {
+      const token = await fetchTokenDataDirectly(variables?.tokenAddress ?? '', variables?.chainId ?? UniverseChainId.Mainnet)
+      return token
+    },
+    enabled: variables !== undefined || options?.skip,
   })
 
   const currencyInfo = useMemo(() => {
@@ -49,9 +72,30 @@ function useCurrencyInfoQuery(
       }
     }
 
-    return queryResult.data?.token && gqlTokenToCurrencyInfo(queryResult.data.token)
-  }, [_currencyId, queryResult.data?.token])
+    if (tokenData.data) {
+      const customCurrency: Currency = {
+        chainId: tokenData.data.chainId,
+        address: tokenData.data.address,
+        decimals: tokenData.data.decimals,
+        symbol: tokenData.data.symbol,
+        name: tokenData.data.name,
+        isNative: false,
+        isToken: true,
+        equals: () => false,
+        sortsBefore: () => false,
+        wrapped: () => customCurrency,
+      }
 
+      return {
+        currencyId: _currencyId,
+        currency: customCurrency,
+        logoUrl: tokenData.data.logoUrl,
+      }
+    }
+
+    return queryResult.data?.token && gqlTokenToCurrencyInfo(queryResult.data.token)
+  }, [_currencyId, queryResult.data?.token, tokenData.data])
+  
   return {
     currencyInfo,
     loading: queryResult.loading,
