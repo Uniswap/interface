@@ -132,7 +132,7 @@ export function SettingsScreen(): JSX.Element {
         navigation.navigate(ModalName.TestnetMode, {})
       }
 
-      dispatch(setIsTestnetModeEnabled(newIsTestnetMode))
+      dispatch(setIsTestnetModeEnabled())
 
       // trigger after toggling off (ie enabling analytics)
       if (!newIsTestnetMode) {

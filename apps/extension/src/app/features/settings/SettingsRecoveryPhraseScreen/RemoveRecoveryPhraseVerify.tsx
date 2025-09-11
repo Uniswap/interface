@@ -59,7 +59,7 @@ export function RemoveRecoveryPhraseVerify(): JSX.Element {
     await Keyring.removePassword()
 
     await removeAllDappConnectionsFromExtension()
-    await dispatch(setIsTestnetModeEnabled(false))
+    await dispatch(setIsTestnetModeEnabled())
 
     await dispatch(
       editAccountActions.trigger({

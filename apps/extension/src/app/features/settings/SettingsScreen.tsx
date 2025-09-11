@@ -112,7 +112,7 @@ export function SettingsScreen(): JSX.Element {
       await fireAnalytic()
     }
 
-    dispatch(setIsTestnetModeEnabled(isChecked))
+    dispatch(setIsTestnetModeEnabled())
     setIsTestnetModalOpen(isChecked)
 
     // trigger after toggling off (ie enabling analytics)

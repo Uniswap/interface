@@ -19,7 +19,7 @@ export function TestnetSwitchModal({ route }: AppStackScreenProp<typeof ModalNam
 
   const onToggleTestnetMode = (): void => {
     onClose()
-    dispatch(setIsTestnetModeEnabled(switchToMode === 'testnet'))
+    dispatch(setIsTestnetModeEnabled())
 
     sendAnalyticsEvent(WalletEventName.TestnetModeToggled, {
       enabled: switchToMode === 'testnet',

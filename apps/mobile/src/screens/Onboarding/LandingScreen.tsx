@@ -45,7 +45,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   // Disables testnet mode on mount if enabled (eg upon removing a wallet)
   useEffect(() => {
     if (isTestnetModeEnabled) {
-      dispatch(setIsTestnetModeEnabled(false))
+      dispatch(setIsTestnetModeEnabled())
     }
   }, [dispatch, isTestnetModeEnabled])
 
