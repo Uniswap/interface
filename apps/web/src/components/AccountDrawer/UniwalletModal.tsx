@@ -19,7 +19,7 @@ export default function UniwalletModal() {
   const [uri, setUri] = useState<string>()
   const connection = useConnectionState()
 
-  // Displays the modal if not on iOS/Android, a Uniswap Wallet Connection is pending, & qrcode URI is available
+  // Displays the modal if not on iOS/Android, a JuiceSwap Wallet Connection is pending, & qrcode URI is available
   const onLaunchedMobilePlatform = isWebIOS || isWebAndroid
   const open = !onLaunchedMobilePlatform && !!uri && connection.status === ConnectionStatus.Pending
 

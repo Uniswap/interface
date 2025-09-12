@@ -32,7 +32,7 @@ test.describe('Token details', () => {
     // Info section should have description of token & relevant links
     await expect(page.getByTestId('token-details-info-section')).toBeVisible()
     await expect(page.getByTestId('token-description-truncated')).toContainText(
-      'UNI is the governance token for Uniswap',
+      'UNI is the governance token for JuiceSwap',
     )
 
     // Check links

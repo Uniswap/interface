@@ -40,7 +40,7 @@ const StyledButton = styled(Anchor, {
  * - The user is on a mobile device our app supports
  * - The user is not using Safari (since we don't want to conflict with the Safari-native Smart App Banner)
  * - The user has not dismissed the banner during this session
- * - The user has not clicked the Uniswap wallet or Get Uniswap Wallet buttons in wallet options
+ * - The user has not clicked the JuiceSwap wallet or Get JuiceSwap Wallet buttons in wallet options
  */
 export function useMobileAppPromoBannerEligible(): boolean {
   const hideMobileAppPromoBanner = useAtomValue(hideMobileAppPromoBannerAtom)

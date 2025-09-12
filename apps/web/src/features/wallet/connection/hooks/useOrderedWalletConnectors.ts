@@ -21,7 +21,7 @@ function getInjectedConnectors({
       // Special-case: Ignore coinbase eip6963-injected connector; coinbase connection is handled via the SDK connector.
       return false
     } else if (c.wagmi?.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS && !isEmbeddedWalletEnabled) {
-      // Special-case: Ignore the Uniswap Extension injection here if it's being displayed separately. This logic is updated with Embedded Wallet support where the Uniswap Extension is displayed with other connectors
+      // Special-case: Ignore the JuiceSwap Extension injection here if it's being displayed separately. This logic is updated with Embedded Wallet support where the JuiceSwap Extension is displayed with other connectors
       return false
     }
     return c.isInjected
@@ -137,7 +137,7 @@ function buildPrimaryConnectorsList({
 }
 
 /**
- * These connectors do not include Uniswap Wallets because those are
+ * These connectors do not include JuiceSwap Wallets because those are
  * handled separately unless the embedded wallet is enabled. See <UniswapWalletOptions />
  * Primary connectors are displayed on the first page of the modal, this included injected connectors and recent connectors
  */

@@ -45,10 +45,10 @@ test.describe('Mini Portfolio settings', () => {
   test('changes language', async ({ page }) => {
     await page.getByTestId(TestID.LanguageSettingsButton).click()
     await page.getByRole('link', { name: 'Spanish (Spain)' }).click()
-    await expect(page.getByText('Uniswap está disponible en:')).toBeVisible()
+    await expect(page.getByText('JuiceSwap está disponible en:')).toBeVisible()
     await page.reload()
     await expect(page.url()).toContain('lng=es-ES')
-    await expect(page.getByText('Uniswap está disponible en:')).toBeVisible()
+    await expect(page.getByText('JuiceSwap está disponible en:')).toBeVisible()
   })
 
   test('testnet always enabled', async ({ page }) => {

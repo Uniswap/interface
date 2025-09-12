@@ -37,7 +37,7 @@ function useMarketPrice(baseCurrency?: Currency, quoteCurrency?: Currency) {
 }
 
 /**
- * In Uniswap v3, the current price is quoted as the exchange from token0 to token1. However, depending
+ * In JuiceSwap v3, the current price is quoted as the exchange from token0 to token1. However, depending
  * on liquidity conditions, the price in a particular pool can diverge from the rest of the market (i.e. other pools).
  * This hook computes the market exchange rate between two currencies and compares it to the given pool price.
  * If these prices diverge by more than WARNING_THRESHOLD, return true. Otherwise, return false.

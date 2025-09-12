@@ -46,7 +46,7 @@ export default function App() {
   }, [])
 
   const metaTags = useDynamicMetatags()
-  const staticTitle = findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'
+  const staticTitle = findRouteByPath(pathname)?.getTitle(pathname) ?? 'JuiceSwap Interface'
   const staticDescription = findRouteByPath(pathname)?.getDescription(pathname)
 
   // redirect address to landing pages until implemented

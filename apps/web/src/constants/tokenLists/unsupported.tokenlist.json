@@ -303,7 +303,7 @@
       "chainId": 1,
       "address": "0x36A00FF9072570eF4B9292117850B8FE08d96cce",
       "symbol": "iUNI",
-      "name": "Synth Inverse Uniswap",
+      "name": "Synth Inverse JuiceSwap",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/iUNI.svg",
       "tags": ["inverse", "synth"]
@@ -672,7 +672,7 @@
       "chainId": 1,
       "address": "0x30635297E450b930f8693297eBa160D9e6c8eBcf",
       "symbol": "sUNI",
-      "name": "Synth Uniswap",
+      "name": "Synth JuiceSwap",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/Synthetixio/synthetix-assets/v2.0.10/synths/sUNI.svg",
       "tags": ["synth"]

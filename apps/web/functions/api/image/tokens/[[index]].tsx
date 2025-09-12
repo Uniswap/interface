@@ -150,7 +150,7 @@ export const onRequest: PagesFunction = async ({ params, request, env }) => {
                 >
                   {data.tokenData?.symbol}
                 </div>
-                <img src={WATERMARK_URL} alt="Uniswap" height="72px" width="324px" />
+                <img src={WATERMARK_URL} alt="JuiceSwap" height="72px" width="324px" />
               </div>
             </div>
           </div>

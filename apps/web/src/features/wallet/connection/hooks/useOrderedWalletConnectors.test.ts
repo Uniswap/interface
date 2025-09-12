@@ -340,7 +340,7 @@ describe('useOrderedWalletConnectors', () => {
     mocked(useWalletConnectors).mockReturnValue([
       ...DEFAULT_CONNECTORS,
       createWagmiWalletConnector({
-        name: 'Uniswap Extension',
+        name: 'JuiceSwap Extension',
         wagmi: { id: CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS, type: 'injected' },
         isInjected: true,
       }),

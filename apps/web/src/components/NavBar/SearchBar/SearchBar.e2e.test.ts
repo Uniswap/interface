@@ -8,7 +8,7 @@ test.describe('Search', () => {
     await page.goto('/')
     await page.getByTestId(TestID.NavSearchInput).click()
     await page.getByTestId(TestID.ExploreSearchInput).click()
-    await page.getByTestId(TestID.ExploreSearchInput).fill('Uniswap')
+    await page.getByTestId(TestID.ExploreSearchInput).fill('JuiceSwap')
     await page.getByRole('button', { name: 'Uniswap UNI 0x1f98...F984' }).click()
   })
 

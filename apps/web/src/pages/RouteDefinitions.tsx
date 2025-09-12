@@ -359,7 +359,7 @@ export const routes: RouteDefinition[] = [
     getTitle: () => StaticTitlesAndDescriptions.PasskeyManagementTitle,
     enabled: (args) => args.isEmbeddedWalletEnabled ?? false,
   }),
-  // Uniswap Extension Uninstall Page
+  // JuiceSwap Extension Uninstall Page
   createRouteDefinition({
     path: CHROME_EXTENSION_UNINSTALL_URL_PATH,
     getElement: () => <ExtensionUninstall />,

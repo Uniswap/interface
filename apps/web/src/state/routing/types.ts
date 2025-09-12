@@ -257,7 +257,7 @@ export function isClassicQuoteResponse(data: URAQuoteResponse): data is URAClass
 }
 
 export enum TradeFillType {
-  Classic = 'classic', // Uniswap V1, V2, and V3 trades with on-chain routes
+  Classic = 'classic', // JuiceSwap V1, V2, and V3 trades with on-chain routes
   UniswapX = 'uniswap_x', // off-chain trades, no routes
   UniswapXv2 = 'uniswap_x_v2',
   UniswapXv3 = 'uniswap_x_v3',

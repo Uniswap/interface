@@ -211,7 +211,7 @@ describe('parseRestPosition', () => {
     address: '0xb2839134B8151964f19f6f3c7D59C70ae52852F5',
     symbol: 'UNI-V2',
     decimals: 18,
-    name: 'Uniswap V2',
+    name: 'JuiceSwap V2',
   }
   const liquidityToken = new Token(
     liquidityTokenRest.chainId,

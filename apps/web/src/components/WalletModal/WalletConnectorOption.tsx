@@ -64,7 +64,7 @@ function OtherWalletsIcon() {
 }
 
 /**
- * We have custom icons for certain Uniswap Connectors.
+ * We have custom icons for certain JuiceSwap Connectors.
  * This function returns the correct icon for the connector.
  */
 function getIcon({

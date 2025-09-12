@@ -40,7 +40,7 @@ const APPLY_CUSTOM_CONNECTOR_META_MAP = {
  * connectors that need special handling beyond standard configuration.
  *
  * Current transformations:
- * - Uniswap Wallet: Adds a new connector to the array
+ * - JuiceSwap Wallet: Adds a new connector to the array
  * - Embedded Wallet: Adds customConnectorId, needed to trigger specific behavior in connection flow.
  * - Icon overrides: Applies custom icons from CONNECTOR_ICON_OVERRIDE_MAP
  *
@@ -60,7 +60,7 @@ export function applyCustomConnectorMeta(walletConnectors: WalletConnectorMeta[]
 // CUSTOM CONNECTOR FUNCTIONS
 
 // =========================================
-// Uniswap Wallet Connect
+// JuiceSwap Wallet Connect
 // =========================================
 // Lazy-initialized on connection to prevent socket conflicts.
 // Standard wagmi initialization creates persistent WebSocket connections
@@ -71,7 +71,7 @@ function useConnectUniswapWallet(): () => Promise<void> {
   return useEvent(async () => {
     setPersistHideMobileAppPromoBanner(true)
 
-    // Initialize Uniswap Wallet on click instead of in wagmi config
+    // Initialize JuiceSwap Wallet on click instead of in wagmi config
     // to avoid multiple wallet connect sockets being opened
     // and causing issues with messages getting dropped
     await connect(wagmiConfig, { connector: uniswapWalletConnect() })
@@ -85,7 +85,7 @@ const UNISWAP_WALLET_CONNECTOR_META = {
   isInjected: false,
   analyticsWalletType: 'Wallet Connect',
 }
-/** Adds a WalletConnectorMeta for the Uniswap Wallet Connect connector. */
+/** Adds a WalletConnectorMeta for the JuiceSwap Wallet Connect connector. */
 function applyUniswapWalletConnectorMeta(walletConnectors: WalletConnectorMeta[]): WalletConnectorMeta[] {
   return [...walletConnectors, UNISWAP_WALLET_CONNECTOR_META]
 }

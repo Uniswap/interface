@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is the Uniswap Web Interface - a React-based decentralized exchange application that's part of the Uniswap Universe monorepo. The web app enables users to swap tokens, provide liquidity, and interact with the Uniswap protocol across multiple blockchain networks.
+This is the JuiceSwap Web Interface - a React-based decentralized exchange application that's part of the JuiceSwap Universe monorepo. The web app enables users to swap tokens, provide liquidity, and interact with the JuiceSwap protocol across multiple blockchain networks.
 
 ## Essential Development Commands
 

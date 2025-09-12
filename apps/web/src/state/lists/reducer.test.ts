@@ -377,7 +377,7 @@ describe('list reducer', () => {
       it('each of those initialized lists is empty', () => {
         const byUrl = store.getState().byUrl
         Object.entries(byUrl)
-          // We don't expect the Uniswap default list to be prepopulated
+          // We don't expect the JuiceSwap default list to be prepopulated
           .filter(
             ([url]) => url !== 'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json',
           )

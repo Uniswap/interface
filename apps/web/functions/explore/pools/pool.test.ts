@@ -23,7 +23,7 @@ test.each(pools)('should inject metadata for valid pools', async (pool) => {
   const url = 'http://127.0.0.1:3000/explore/pools/' + pool.network + '/' + pool.address
   const body = await fetch(new Request(url)).then((res) => res.text())
   expect(body).toMatchSnapshot()
-  expect(body).toContain(`<meta property="og:title" content="${pool.name} on Uniswap" data-rh="true">`)
+  expect(body).toContain(`<meta property="og:title" content="${pool.name} on JuiceSwap" data-rh="true">`)
   expect(body).not.toContain(`<meta property="og:description"`)
   expect(body).not.toContain(`<meta name="description"`)
   expect(body).toContain(`<meta property="og:image" content="${pool.image}" data-rh="true">`)
@@ -31,11 +31,11 @@ test.each(pools)('should inject metadata for valid pools', async (pool) => {
   expect(body).toContain(`<meta property="og:image:height" content="630" data-rh="true">`)
   expect(body).toContain(`<meta property="og:type" content="website" data-rh="true">`)
   expect(body).toContain(`<meta property="og:url" content="${url}" data-rh="true">`)
-  expect(body).toContain(`<meta property="og:image:alt" content="${pool.name} on Uniswap" data-rh="true">`)
+  expect(body).toContain(`<meta property="og:image:alt" content="${pool.name} on JuiceSwap" data-rh="true">`)
   expect(body).toContain(`<meta property="twitter:card" content="summary_large_image" data-rh="true">`)
-  expect(body).toContain(`<meta property="twitter:title" content="${pool.name} on Uniswap" data-rh="true">`)
+  expect(body).toContain(`<meta property="twitter:title" content="${pool.name} on JuiceSwap" data-rh="true">`)
   expect(body).toContain(`<meta property="twitter:image" content="${pool.image}" data-rh="true">`)
-  expect(body).toContain(`<meta property="twitter:image:alt" content="${pool.name} on Uniswap" data-rh="true">`)
+  expect(body).toContain(`<meta property="twitter:image:alt" content="${pool.name} on JuiceSwap" data-rh="true">`)
 })
 
 const invalidPools = [

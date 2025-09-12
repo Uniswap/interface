@@ -10,7 +10,7 @@ describe('useConnectedWallets', () => {
   it('should add a wallet', () => {
     const { result } = renderHook(() => useConnectedWallets())
     const wallet: Wallet = {
-      walletName: 'Uniswap Extension',
+      walletName: 'JuiceSwap Extension',
       account: '0x123',
     }
     act(() => {

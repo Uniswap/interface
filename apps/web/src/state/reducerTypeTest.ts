@@ -70,7 +70,7 @@ type ExpectedAppState = CombinedState<{
   readonly logs: LogsState
   readonly [routingApi.reducerPath]: ReturnType<typeof routingApi.reducer>
 
-  // Uniswap State
+  // JuiceSwap State
   readonly [fiatOnRampAggregatorApi.reducerPath]: ReturnType<typeof fiatOnRampAggregatorApi.reducer>
   readonly uniswapBehaviorHistory: UniswapBehaviorHistoryState
   readonly favorites: FavoritesState

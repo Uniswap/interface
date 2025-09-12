@@ -7,10 +7,10 @@ export type MetaTagInjectorInput = {
 
 export function formatTokenMetatagTitleName(symbol: string | undefined, name: string | undefined) {
   if (symbol) {
-    return 'Get ' + symbol + ' on Uniswap'
+    return 'Get ' + symbol + ' on JuiceSwap'
   }
   if (name) {
-    return 'Get ' + name + ' on Uniswap'
+    return 'Get ' + name + ' on JuiceSwap'
   }
-  return 'View Token on Uniswap'
+  return 'View Token on JuiceSwap'
 }
