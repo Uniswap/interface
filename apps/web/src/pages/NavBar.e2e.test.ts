@@ -1,29 +1,30 @@
 import { expect, test } from 'playwright/fixtures'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const companyMenu = [
   {
     label: 'Products',
     items: [
-      { label: 'Wallet', href: 'https://wallet.uniswap.org/' },
-      { label: 'UniswapX', href: 'https://x.uniswap.org/' },
-      { label: 'API', href: 'https://hub.uniswap.org/' },
+      { label: 'Wallet', href: uniswapUrls.downloadWalletUrl },
+      { label: 'UniswapX', href: uniswapUrls.uniswapXUrl },
+      { label: 'API', href: uniswapUrls.tradingApiDocsUrl },
       { label: 'Unichain', href: 'https://www.unichain.org/' },
     ],
   },
   {
     label: 'Protocol',
     items: [
-      { label: 'Governance', href: 'https://uniswap.org/governance' },
-      { label: 'Developers', href: 'https://uniswap.org/developers' },
+      { label: 'Governance', href: uniswapUrls.governanceUrl },
+      { label: 'Developers', href: uniswapUrls.developersUrl },
       { label: 'Vote', href: 'https://vote.uniswapfoundation.org' },
     ],
   },
   {
     label: 'Company',
     items: [
-      { label: 'Careers', href: 'https://careers.uniswap.org/' },
-      { label: 'Blog', href: 'https://blog.uniswap.org/' },
+      { label: 'Careers', href: uniswapUrls.careersUrl },
+      { label: 'Blog', href: uniswapUrls.blogUrl },
     ],
   },
 ]
@@ -105,7 +106,7 @@ test.describe('Navigation', () => {
       await expect(page.getByText('Terms of Service')).toBeVisible()
 
       await expect(
-        page.getByTestId(TestID.NavCompanyDropdown).locator('a[href="https://uniswap.org/terms-of-service"]'),
+        page.getByTestId(TestID.NavCompanyDropdown).locator(`a[href="${uniswapUrls.termsOfServiceUrl}"]`),
       ).toBeVisible()
     })
   })
@@ -151,11 +152,11 @@ test.describe('Navigation', () => {
     await expect(page.getByTestId(TestID.HelpModal).getByText('Contact us')).toBeVisible()
 
     await expect(
-      page.getByTestId(TestID.HelpModal).locator('a[href="https://support.uniswap.org/hc/en-us"]'),
+      page.getByTestId(TestID.HelpModal).locator(`a[href="${uniswapUrls.helpUrl}"]`),
     ).toBeVisible()
-    await expect(page.getByTestId(TestID.HelpModal).locator('a[href="https://docs.uniswap.org/"]')).toBeVisible()
+    await expect(page.getByTestId(TestID.HelpModal).locator(`a[href="${uniswapUrls.docsUrl}"]`)).toBeVisible()
     await expect(
-      page.getByTestId(TestID.HelpModal).locator('a[href="https://support.uniswap.org/hc/en-us/requests/new"]'),
+      page.getByTestId(TestID.HelpModal).locator(`a[href="${uniswapUrls.helpUrl}/requests/new"]`),
     ).toBeVisible()
   })
 })
@@ -212,7 +213,7 @@ test.describe('Mobile navigation', () => {
     await expect(drawer.getByText('Privacy Policy')).toBeVisible()
     await expect(drawer.getByText('Terms of Service')).toBeVisible()
 
-    await expect(drawer.locator('a[href="https://uniswap.org/terms-of-service"]')).toBeVisible()
+    await expect(drawer.locator(`a[href="${uniswapUrls.termsOfServiceUrl}"]`)).toBeVisible()
   })
 
   test('help modal displays appropriate content when clicked', async ({ page }) => {
@@ -224,11 +225,11 @@ test.describe('Mobile navigation', () => {
     await expect(page.getByTestId(TestID.HelpModal).getByText('Contact us')).toBeVisible()
 
     await expect(
-      page.getByTestId(TestID.HelpModal).locator('a[href="https://support.uniswap.org/hc/en-us"]'),
+      page.getByTestId(TestID.HelpModal).locator(`a[href="${uniswapUrls.helpUrl}"]`),
     ).toBeVisible()
-    await expect(page.getByTestId(TestID.HelpModal).locator('a[href="https://docs.uniswap.org/"]')).toBeVisible()
+    await expect(page.getByTestId(TestID.HelpModal).locator(`a[href="${uniswapUrls.docsUrl}"]`)).toBeVisible()
     await expect(
-      page.getByTestId(TestID.HelpModal).locator('a[href="https://support.uniswap.org/hc/en-us/requests/new"]'),
+      page.getByTestId(TestID.HelpModal).locator(`a[href="${uniswapUrls.helpUrl}/requests/new"]`),
     ).toBeVisible()
   })
 })

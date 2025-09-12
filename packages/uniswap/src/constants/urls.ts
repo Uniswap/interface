@@ -21,9 +21,9 @@ const EMBEDDED_WALLET_HOSTNAME = isPlaywrightEnv() || isDevEnv() ? 'staging.ew.u
 
 export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
 export const UNISWAP_APP_URL = 'https://uniswap.org/app'
+export const UNISWAP_SUPPORT_URL = 'https://support.juiceswap.xyz/hc/en-us'
 export const UNISWAP_MOBILE_REDIRECT_URL = 'https://uniswap.org/mobile-redirect'
 
-const helpUrl = 'https://support.juiceswap.xyz/hc/en-us'
 
 // The trading api uses custom builds for testing which may not use the v1 prefix
 const tradingApiVersionPrefix = config.tradingApiWebTestEnv === 'true' ? '' : '/v1'
@@ -32,8 +32,8 @@ export const CHROME_EXTENSION_UNINSTALL_URL_PATH = '/extension/uninstall'
 
 export const uniswapUrls = {
   // Help and web articles/items
-  helpUrl,
-  helpRequestUrl: `${helpUrl}/requests/new`,
+  helpUrl: UNISWAP_SUPPORT_URL,
+  helpRequestUrl: `${UNISWAP_SUPPORT_URL}/requests/new`,
   helpArticleUrls: {
     acrossRoutingInfo: createHelpArticleUrl('30677918339341'),
     approvalsExplainer: createHelpArticleUrl('8120520483085-What-is-an-approval-transaction'),
@@ -245,5 +245,5 @@ function getCloudflareApiBaseUrl(flow?: TrafficFlows): string {
 
 function createHelpArticleUrl(resourceId: string, path: string = 'articles'): string {
   const product = isMobileApp ? 'mobileApp' : isExtension ? 'extension' : 'web'
-  return `${helpUrl}/${path}/${resourceId}?product_link=${product}`
+  return `${UNISWAP_SUPPORT_URL}/${path}/${resourceId}?product_link=${product}`
 }

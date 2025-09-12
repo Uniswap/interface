@@ -65,7 +65,7 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): 
     const svg = readFileSync(inputPath, 'utf-8')
     const element = await generateSVGComponent(svg, fileName)
     if (element) {
-      console.log(`🦄 ${fileName}`)
+      console.log(`🧃 ${fileName}`)
       writeFileSync(outputPath, element, 'utf-8')
     }
   }

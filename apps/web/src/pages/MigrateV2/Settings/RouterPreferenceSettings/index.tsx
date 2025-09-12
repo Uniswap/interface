@@ -8,6 +8,7 @@ import { useRouterPreference } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { Switch } from 'ui/src'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const InlineLink = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.accent1};
@@ -30,7 +31,7 @@ export default function RouterPreferenceSettings() {
           </ThemedText.BodySecondary>
           <ThemedText.BodySmall color="neutral2">
             <Trans i18nKey="routing.aggregateLiquidity" />{' '}
-            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
+            <ExternalLink href={`${uniswapUrls.helpUrl}/articles/17515415311501`}>
               <InlineLink>Learn more</InlineLink>
             </ExternalLink>
           </ThemedText.BodySmall>

@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { MetaTagInjectorInput } from 'shared-cloud/metatags'
+import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import i18n from 'uniswap/src/i18n'
 
 const DEFAULT_METATAGS: MetaTagInjectorInput = {
   title: i18n.t('interface.metatags.title'),
   description: i18n.t('interface.metatags.description'),
   image: `https://app.uniswap.com/images/1200x630_Rich_Link_Preview_Image.png`,
-  url: 'https://app.uniswap.com',
+  url: UNISWAP_WEB_URL,
 }
 
 type MetatagAttributes = { property?: string; name?: string; content: string }

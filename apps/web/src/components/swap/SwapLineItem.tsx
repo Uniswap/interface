@@ -15,6 +15,7 @@ import { InterfaceTrade, SubmittableTrade } from 'state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import { ExternalLink } from 'theme/components/Links'
 import { Flex } from 'ui/src'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -39,7 +40,7 @@ function BaseTooltipContent({ children, url }: { children: ReactNode; url: strin
 
 export function FOTTooltipContent() {
   return (
-    <BaseTooltipContent url="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-">
+    <BaseTooltipContent url={`${uniswapUrls.helpUrl}/articles/18673568523789-What-is-a-token-fee-`}>
       <Trans i18nKey="swap.tokenOwnFees" />
     </BaseTooltipContent>
   )
@@ -48,7 +49,7 @@ export function FOTTooltipContent() {
 function SwapFeeTooltipContent({ hasFee }: { hasFee: boolean }) {
   const message = hasFee ? <Trans i18nKey="swap.fees.experience" /> : <Trans i18nKey="swap.fees.noFee" />
   return (
-    <BaseTooltipContent url="https://support.uniswap.org/hc/en-us/articles/20131678274957">
+    <BaseTooltipContent url={`${uniswapUrls.helpUrl}/articles/20131678274957`}>
       {message}
     </BaseTooltipContent>
   )
@@ -56,7 +57,7 @@ function SwapFeeTooltipContent({ hasFee }: { hasFee: boolean }) {
 
 export function SlippageTooltipContent() {
   return (
-    <BaseTooltipContent url="https://support.uniswap.org/hc/en-us/articles/20131678274957">
+    <BaseTooltipContent url={`${uniswapUrls.helpUrl}/articles/20131678274957`}>
       <Trans i18nKey="swap.slippage.tooltip" />
     </BaseTooltipContent>
   )
