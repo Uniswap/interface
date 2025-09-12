@@ -73,10 +73,10 @@ function useShouldHideChainSelector() {
 }
 
 export default function Navbar() {
-  const isLandingPage = useIsPage(PageType.LANDING)
+  // const isLandingPage = useIsPage(PageType.LANDING)
 
   const media = useMedia()
-  const isSmallScreen = media.md
+  // const isSmallScreen = media.md
   const areTabsVisible = useTabsVisible()
   const collapseSearchBar = media.xl
   const account = useAccount()
@@ -98,7 +98,7 @@ export default function Navbar() {
 
         <Right>
           {collapseSearchBar && <SearchBar />}
-          {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
+          {/* {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />} */}
           {!account.isConnected && <PreferenceMenu />}
           {!hideChainSelector && <ChainSelector />}
           {isTestnetModeEnabled && <TestnetModeTooltip />}

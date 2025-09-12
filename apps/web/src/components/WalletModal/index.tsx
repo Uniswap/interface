@@ -5,7 +5,6 @@ import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
 import { DownloadWalletRow } from 'components/WalletModal/DownloadWalletRow'
 import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
 import { UniswapMobileWalletConnectorOption } from 'components/WalletModal/UniswapMobileWalletConnectorOption'
-import { UniswapWalletOptions } from 'components/WalletModal/UniswapWalletOptions'
 import { OtherWalletsOption, WalletConnectorOption } from 'components/WalletModal/WalletConnectorOption'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useOrderedWalletConnectors } from 'features/wallet/connection/hooks/useOrderedWalletConnectors'
@@ -13,12 +12,8 @@ import { useModalState } from 'hooks/useModalState'
 import { useAtom } from 'jotai'
 import { Fragment, useReducer } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { transitions } from 'theme/styles'
 import { Flex, Separator, Text } from 'ui/src'
-import { DoubleChevron } from 'ui/src/components/icons/DoubleChevron'
-import { DoubleChevronInverted } from 'ui/src/components/icons/DoubleChevronInverted'
-import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -30,7 +25,7 @@ export default function WalletModal() {
   const { t } = useTranslation()
   const showMoonpayText = useShowMoonpayText()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const [expandMoreWallets, toggleExpandMoreWallets] = useReducer((s) => !s, true)
+  const [expandMoreWallets, _toggleExpandMoreWallets] = useReducer((s) => !s, true)
   const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
 
   const connectors = useOrderedWalletConnectors({ showSecondaryConnectors: isMobileWeb })
@@ -78,7 +73,8 @@ export default function WalletModal() {
           {isEmbeddedWalletEnabled ? t('nav.logInOrConnect.title') : t('common.connectAWallet.button')}
         </Text>
       </Flex>
-      {isEmbeddedWalletEnabled ? (
+      {/* Disable Uniswap embedded wallet entirely for JuiceSwap */}
+      {/* {isEmbeddedWalletEnabled ? (
         <Flex justifyContent="center" alignItems="center" py={8}>
           <UniswapLogo size={48} color="$accent1" />
         </Flex>
@@ -107,7 +103,7 @@ export default function WalletModal() {
           </Flex>
           <Separator />
         </Flex>
-      )}
+      )} */}
       <Flex gap="$gap12">
         <Flex row alignItems="flex-start">
           <Flex

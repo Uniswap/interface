@@ -16,14 +16,14 @@ const FLOWS_USING_BETA = [TrafficFlows.FOR]
 
 const isDevOrBeta = isPlaywrightEnv() ? false : isDevEnv() || isBetaEnv()
 
-export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
+export const UNISWAP_WEB_HOSTNAME = 'bapp.juiceswap.xyz'
 const EMBEDDED_WALLET_HOSTNAME = isPlaywrightEnv() || isDevEnv() ? 'staging.ew.unihq.org' : UNISWAP_WEB_HOSTNAME
 
 export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
 export const UNISWAP_APP_URL = 'https://uniswap.org/app'
 export const UNISWAP_MOBILE_REDIRECT_URL = 'https://uniswap.org/mobile-redirect'
 
-const helpUrl = 'https://support.uniswap.org/hc/en-us'
+const helpUrl = 'https://support.juiceswap.xyz/hc/en-us'
 
 // The trading api uses custom builds for testing which may not use the v1 prefix
 const tradingApiVersionPrefix = config.tradingApiWebTestEnv === 'true' ? '' : '/v1'
@@ -96,28 +96,27 @@ export const uniswapUrls = {
     whatIsPrivateKey: createHelpArticleUrl('11306371824653-What-is-a-private-key'),
     wethExplainer: createHelpArticleUrl('16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH'),
   },
-  downloadWalletUrl: 'https://wallet.uniswap.org/',
-  tradingApiDocsUrl: 'https://hub.uniswap.org/',
+  downloadWalletUrl: 'https://wallet.juiceswap.xyz/',
+  tradingApiDocsUrl: 'https://hub.juiceswap.xyz/',
   unichainUrl: 'https://www.unichain.org/',
-  uniswapXUrl: 'https://x.uniswap.org/',
-  helpCenterUrl: 'https://help.uniswap.org/',
-  blogUrl: 'https://blog.uniswap.org/',
-  docsUrl: 'https://docs.uniswap.org/',
-  voteUrl: 'https://vote.uniswapfoundation.org',
-  governanceUrl: 'https://uniswap.org/governance',
-  developersUrl: 'https://uniswap.org/developers',
-  aboutUrl: 'https://about.uniswap.org/',
-  careersUrl: 'https://careers.uniswap.org/',
+  uniswapXUrl: 'https://x.juiceswap.xyz/',
+  helpCenterUrl: 'https://help.juiceswap.xyz/',
+  blogUrl: 'https://blog.juiceswap.xyz/',
+  docsUrl: 'https://docs.juiceswap.xyz/',
+  voteUrl: 'https://vote.juiceswapfoundation.org',
+  governanceUrl: 'https://juiceswap.xyz/governance',
+  developersUrl: 'https://juiceswap.xyz/developers',
+  aboutUrl: 'https://about.juiceswap.xyz/',
+  careersUrl: 'https://careers.juiceswap.xyz/',
   social: {
-    x: 'https://x.com/Uniswap',
-    farcaster: 'https://farcaster.xyz/Uniswap',
-    linkedin: 'https://www.linkedin.com/company/uniswaporg',
-    tiktok: 'https://www.tiktok.com/@uniswap',
+    x: 'https://x.com/JuiceSwapXyz',
+    telegram: 'https://t.me/JuiceSwap',
+    github: 'https://github.com/JuiceSwapxyz',
   },
-  termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
-  privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
-  chromeExtension: 'http://uniswap.org/ext',
-  chromeExtensionUninstallUrl: `https://uniswap.org${CHROME_EXTENSION_UNINSTALL_URL_PATH}`,
+  termsOfServiceUrl: 'https://juiceswap.xyz/terms-of-service',
+  privacyPolicyUrl: 'https://juiceswap.xyz/privacy-policy',
+  chromeExtension: 'http://juiceswap.xyz/ext',
+  chromeExtensionUninstallUrl: `https://juiceswap.xyz${CHROME_EXTENSION_UNINSTALL_URL_PATH}`,
 
   // Download links
   appStoreDownloadUrl: 'https://apps.apple.com/us/app/uniswap-crypto-nft-wallet/id6443944476',

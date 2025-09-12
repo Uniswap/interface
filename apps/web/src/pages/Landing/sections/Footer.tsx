@@ -2,10 +2,11 @@ import { MenuItem, MenuSectionTitle, useMenuContent } from 'components/NavBar/Co
 import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
 import { Wiggle } from 'components/animations/Wiggle'
 import { useModalState } from 'hooks/useModalState'
-import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
+import { Github, Telegram, Twitter } from 'pages/Landing/components/Icons'
 import { useTranslation } from 'react-i18next'
 import { Anchor, Flex, Separator, Text, styled } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const SOCIAL_ICONS_SIZE = `${iconSizes.icon32}px`
@@ -27,18 +28,18 @@ export function Socials({ iconSize }: { iconSize?: string }) {
   return (
     <Flex row gap="$spacing24" maxHeight={iconSize} alignItems="flex-start">
       <SocialIcon iconColor="#00C32B">
-        <Anchor href="https://github.com/Uniswap" target="_blank">
+        <Anchor href={uniswapUrls.social.github} target="_blank">
           <Github size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
       <SocialIcon iconColor="#20BAFF">
-        <Anchor href="https://x.com/Uniswap" target="_blank">
+        <Anchor href={uniswapUrls.social.x} target="_blank">
           <Twitter size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
-      <SocialIcon iconColor="#5F51FF">
-        <Anchor href="https://discord.com/invite/uniswap" target="_blank">
-          <Discord size={iconSize} fill="inherit" />
+      <SocialIcon iconColor="#2AABEE">
+        <Anchor href={uniswapUrls.social.telegram} target="_blank">
+          <Telegram size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
     </Flex>
@@ -75,7 +76,7 @@ export function Footer() {
   const needHelpSection = sectionContent[MenuSectionTitle.NeedHelp]
   const brandAssets = {
     label: t('common.brandAssets'),
-    href: 'https://github.com/Uniswap/brand-assets/raw/main/Uniswap%20Brand%20Assets.zip',
+    href: 'https://github.com/JuiceSwapxyz/documentation/tree/main/media_kit',
     internal: false,
   }
   const currentYear = new Date().getFullYear()
@@ -115,9 +116,9 @@ export function Footer() {
         <Text variant="body3">© {currentYear} - JuiceSwap Labs</Text>
         <Flex row alignItems="center" gap="$spacing16">
           <PolicyLink onPress={togglePrivacyPolicy}>{t('common.privacyPolicy')}</PolicyLink>
-          <Anchor textDecorationLine="none" href="https://uniswap.org/trademark" target="_blank">
+          {/* <Anchor textDecorationLine="none" href="https://uniswap.org/trademark" target="_blank">
             <PolicyLink>{t('common.trademarkPolicy')}</PolicyLink>
-          </Anchor>
+          </Anchor> */}
         </Flex>
       </Flex>
     </Flex>

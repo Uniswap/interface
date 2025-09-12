@@ -54,6 +54,7 @@ function MenuSection({
   )
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; closeMenu: () => void }) {
   const [openSections, setOpenSections] = useState<string[]>()
   const [settingsView, setSettingsView] = useState<PreferencesView>(PreferencesView.SETTINGS)

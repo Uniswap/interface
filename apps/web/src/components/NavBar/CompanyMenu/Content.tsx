@@ -54,22 +54,10 @@ export const useMenuContent = (args?: {
             body: t('nav.products.wallet'),
           },
           {
-            label: t('common.uniswapX'),
-            href: uniswapUrls.uniswapXUrl,
-            icon: MENU_ICONS.uniswapX,
-            body: t('nav.products.uniswapX'),
-          },
-          {
             label: t('landing.api'),
             href: uniswapUrls.tradingApiDocsUrl,
             icon: MENU_ICONS.tradingApi,
             body: t('nav.products.tradingApi'),
-          },
-          {
-            label: t('common.unichain'),
-            href: uniswapUrls.unichainUrl,
-            icon: MENU_ICONS.unichain,
-            body: t('nav.products.unichain'),
           },
         ],
       },
@@ -86,16 +74,15 @@ export const useMenuContent = (args?: {
         items: [
           { label: t('settings.section.about'), href: uniswapUrls.aboutUrl },
           { label: t('common.careers'), href: uniswapUrls.careersUrl },
-          { label: t('common.blog'), href: uniswapUrls.blogUrl },
         ],
       },
-      [MenuSectionTitle.NeedHelp]: {
-        title: t('common.needHelp'),
-        items: [
-          { label: t('common.helpCenter'), href: uniswapUrls.helpCenterUrl },
-          { label: t('common.contactUs.button'), href: uniswapUrls.helpRequestUrl },
-        ],
-      },
+      // [MenuSectionTitle.NeedHelp]: {
+      //   title: t('common.needHelp'),
+      //   items: [
+      //     { label: t('common.helpCenter'), href: uniswapUrls.helpCenterUrl },
+      //     { label: t('common.contactUs.button'), href: uniswapUrls.helpRequestUrl },
+      //   ],
+      // },
     }
 
     if (keys) {

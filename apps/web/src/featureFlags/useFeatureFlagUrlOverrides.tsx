@@ -26,6 +26,11 @@ export function useFeatureFlagUrlOverrides() {
     const layerOverrides = typeof parsedQs.layerOverride === 'string' ? parsedQs.layerOverride.split(',') : []
     const layerOverridesOff = typeof parsedQs.layerOverrideOff === 'string' ? parsedQs.layerOverrideOff.split(',') : []
 
+    // JuiceSwap: Disable Uniswap embedded wallet for all environments
+    if (!isStatsigUninitialized) {
+      getOverrideAdapter().overrideGate('embedded_wallet', false)
+    }
+
     if (!isStatsigUninitialized && !isProduction) {
       featureFlagOverrides.forEach((gate) => getOverrideAdapter().overrideGate(gate, true))
       featureFlagOverridesOff.forEach((gate) => getOverrideAdapter().overrideGate(gate, false))

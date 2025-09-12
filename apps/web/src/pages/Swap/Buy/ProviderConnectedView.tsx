@@ -3,6 +3,7 @@ import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
 import { Trans, useTranslation } from 'react-i18next'
 import { ExternalLink } from 'theme/components/Links'
 import { Flex, Text, useIsDarkMode } from 'ui/src'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
@@ -52,12 +53,12 @@ export function ProviderConnectedView({ closeModal, selectedServiceProvider }: P
             }}
             components={{
               tosLink: (
-                <StyledLink color={theme.neutral3} href="https://uniswap.org/terms-of-service/">
+                <StyledLink color={theme.neutral3} href={uniswapUrls.termsOfServiceUrl}>
                   {t('common.termsOfService')}
                 </StyledLink>
               ),
               privacyLink: (
-                <StyledLink color={theme.neutral3} href="https://uniswap.org/privacy-policy">
+                <StyledLink color={theme.neutral3} href={uniswapUrls.privacyPolicyUrl}>
                   {t('common.privacyPolicy')}
                 </StyledLink>
               ),

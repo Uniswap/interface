@@ -11,6 +11,7 @@ import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { ModalCloseIcon } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isMobileWeb } from 'utilities/src/platform'
@@ -109,7 +110,7 @@ function PrivacyPolicy() {
       <AutoColumn gap="16px">
         <AutoColumn gap="sm" style={{ width: '100%' }}>
           <StyledExternalCard>
-            <ExternalLink href="https://uniswap.org/terms-of-service">
+            <ExternalLink href={uniswapUrls.termsOfServiceUrl}>
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
@@ -122,7 +123,7 @@ function PrivacyPolicy() {
             </ExternalLink>
           </StyledExternalCard>
           <StyledExternalCard>
-            <ExternalLink href="https://uniswap.org/privacy-policy/">
+            <ExternalLink href={uniswapUrls.privacyPolicyUrl}>
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />

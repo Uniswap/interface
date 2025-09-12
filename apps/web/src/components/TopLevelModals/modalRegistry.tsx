@@ -37,7 +37,7 @@ const SolanaPromoModal = createLazy(() =>
     default: module.SolanaPromoModal,
   })),
 )
-const DevFlagsBox = createLazy(() => import('dev/DevFlagsBox'))
+// const DevFlagsBox = createLazy(() => import('dev/DevFlagsBox'))
 const TokenNotFoundModal = createLazy(() => import('components/NotFoundModal/TokenNotFoundModal'))
 const PoolNotFoundModal = createLazy(() => import('components/NotFoundModal/PoolNotFoundModal'))
 const IncreaseLiquidityModal = createLazy(() =>
@@ -60,9 +60,10 @@ const DelegationMismatchModal = createLazy(() =>
     default: module.default,
   })),
 )
-const HelpModal = createLazy(() =>
-  import('components/HelpModal/HelpModal').then((module) => ({ default: module.HelpModal })),
-)
+
+// const HelpModal = createLazy(() =>
+//   import('components/HelpModal/HelpModal').then((module) => ({ default: module.HelpModal })),
+// )
 
 const ReceiveCryptoModal = createLazy(() =>
   import('components/ReceiveCryptoModal').then((module) => ({ default: module.ReceiveCryptoModal })),
@@ -148,10 +149,10 @@ export const modalRegistry: ModalRegistry = {
     component: PoolNotFoundModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.PoolNotFound,
   },
-  [ModalName.DevFlags]: {
-    component: DevFlagsBox,
-    shouldMount: () => true,
-  },
+  // [ModalName.DevFlags]: {
+  //   component: DevFlagsBox,
+  //   shouldMount: () => true,
+  // },
   [ModalName.PasskeysHelp]: {
     component: PasskeysHelpModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.PasskeysHelp,
@@ -160,10 +161,10 @@ export const modalRegistry: ModalRegistry = {
     component: DelegationMismatchModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.DelegationMismatch,
   },
-  [ModalName.Help]: {
-    component: HelpModal,
-    shouldMount: () => true,
-  },
+  // [ModalName.Help]: {
+  //   component: HelpModal,
+  //   shouldMount: () => true,
+  // },
   [ModalName.ReceiveCryptoModal]: {
     component: ReceiveCryptoModal,
     shouldMount: () => true,
