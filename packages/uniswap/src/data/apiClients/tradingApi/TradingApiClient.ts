@@ -181,9 +181,9 @@ export async function fetchIndicativeQuote(params: IndicativeQuoteRequest): Prom
 
 export async function fetchSwap({ ...params }: CreateSwapRequest): Promise<CreateSwapResponse> {
   const quote = params.quote
-  const route = (quote as ClassicQuote).route?.[0]?.[0]
-  const tokenIn = route?.tokenIn
-  const tokenOut = route?.tokenOut
+  const route = (quote as ClassicQuote).route?.[0]
+  const tokenIn = route?.[0]?.tokenIn
+  const tokenOut = route?.[route.length - 1]?.tokenOut
   const connectedWallet = quote.swapper
 
   const body = {
