@@ -1,7 +1,7 @@
 import { WETH9 } from '@uniswap/sdk-core'
 import {
-  CancelOrdersDialog,
   CancellationState,
+  CancelOrdersDialog,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'

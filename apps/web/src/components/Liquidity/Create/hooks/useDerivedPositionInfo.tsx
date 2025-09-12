@@ -122,7 +122,7 @@ export function useDerivedPositionInfo(
     currencyB: sortedCurrencies.TOKEN1?.wrapped,
     feeAmount: state.fee.feeAmount,
   })
-  const v3Pool = protocolVersion === ProtocolVersion.V3 ? v3PoolResult[1] ?? undefined : undefined
+  const v3Pool = protocolVersion === ProtocolVersion.V3 ? (v3PoolResult[1] ?? undefined) : undefined
 
   const v4Pool = useMemo(() => {
     return protocolVersion === ProtocolVersion.V4

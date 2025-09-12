@@ -1,8 +1,8 @@
 import 'test-utils/tokens/mocks'
 
-import { ApolloError } from '@apollo/client'
-import { Percent, Token, type Currency } from '@uniswap/sdk-core'
 import { usePoolsFromTokenAddress } from 'appGraphql/data/pools/usePoolsFromTokenAddress'
+import { ApolloError } from '@apollo/client'
+import { type Currency, Percent, Token } from '@uniswap/sdk-core'
 import { TokenDetailsPoolsTable } from 'components/Tokens/TokenDetails/tables/TokenDetailsPoolsTable'
 import { mocked } from 'test-utils/mocked'
 import { validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'

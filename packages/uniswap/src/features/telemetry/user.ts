@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { UserPropertyValue, analytics } from 'utilities/src/telemetry/analytics/analytics'
+import { analytics, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
 
 /**
  * User properties tied to user rather than events

@@ -80,12 +80,18 @@ function calc24HVolChange(historicalVolume?: (VolumeChange | undefined)[]) {
  * Queries v4, v3, and v2 for pool data
  * @param poolIdOrAddress
  * @param chainId
+ * @param isPoolAddress v2 and v3 pools use an address as an identifier and v4 uses a tokenID. Prevent redundant queries based on whether or not the pool identifier is an address.
  * @returns
  */
-export function usePoolData(
-  poolIdOrAddress: string,
-  chainId?: UniverseChainId,
-): {
+export function usePoolData({
+  poolIdOrAddress,
+  chainId,
+  isPoolAddress,
+}: {
+  poolIdOrAddress: string
+  chainId?: UniverseChainId
+  isPoolAddress: boolean
+}): {
   loading: boolean
   error: boolean
   data?: PoolData
@@ -99,6 +105,7 @@ export function usePoolData(
   } = useV4PoolQuery({
     variables: { chain, poolId: poolIdOrAddress },
     errorPolicy: 'all',
+    skip: isPoolAddress,
   })
   const {
     loading: loadingV3,
@@ -107,6 +114,7 @@ export function usePoolData(
   } = useV3PoolQuery({
     variables: { chain, address: poolIdOrAddress },
     errorPolicy: 'all',
+    skip: !isPoolAddress,
   })
   const {
     loading: loadingV2,
@@ -114,7 +122,7 @@ export function usePoolData(
     data: dataV2,
   } = useV2PairQuery({
     variables: { chain, address: poolIdOrAddress },
-    skip: !chainId,
+    skip: !chainId || !isPoolAddress,
     errorPolicy: 'all',
   })
 

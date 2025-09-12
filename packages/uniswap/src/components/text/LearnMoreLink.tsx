@@ -1,8 +1,9 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Text, TextProps, TouchableArea, TouchableAreaProps } from 'ui/src'
+import type { TextProps, TouchableAreaProps, TouchableTextLinkProps } from 'ui/src'
+import { Button, TouchableTextLink } from 'ui/src'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isMobileApp, isWeb } from 'utilities/src/platform'
+import { isWeb } from 'utilities/src/platform'
 
 const onPressLearnMore = (uri: string): Promise<void> => openUri({ uri })
 
@@ -13,7 +14,6 @@ export const LearnMoreLink = ({
   centered = false,
   display,
   componentType = 'TouchableArea',
-  hoverStyle,
 }: {
   url: string
   textVariant?: TextProps['variant']
@@ -21,7 +21,6 @@ export const LearnMoreLink = ({
   centered?: boolean
   display?: TouchableAreaProps['display']
   componentType?: 'Button' | 'TouchableArea'
-  hoverStyle?: TextProps['hoverStyle']
 }): JSX.Element => {
   const { t } = useTranslation()
 
@@ -29,21 +28,22 @@ export const LearnMoreLink = ({
 
   if (componentType === 'Button') {
     return (
-      <Button size={isWeb ? 'medium' : 'large'} emphasis="text-only" onPress={handleOnPress}>
+      <Button display={display} size={isWeb ? 'medium' : 'large'} emphasis="text-only" onPress={handleOnPress}>
         <Button.Text color={textColor}>{t('common.button.learn')}</Button.Text>
       </Button>
     )
   }
 
-  return isMobileApp ? (
-    <Text color={textColor} variant={textVariant} textAlign={centered ? 'center' : undefined} onPress={handleOnPress}>
+  return (
+    <TouchableTextLink
+      color={textColor as TouchableTextLinkProps['color']}
+      link={url}
+      textAlign={centered ? 'center' : undefined}
+      variant={textVariant as TouchableTextLinkProps['variant']}
+      display={display}
+      onPress={handleOnPress}
+    >
       {t('common.button.learn')}
-    </Text>
-  ) : (
-    <TouchableArea display={display} style={{ textAlign: centered ? 'center' : 'left' }} onPress={handleOnPress}>
-      <Text color={textColor} variant={textVariant} hoverStyle={hoverStyle}>
-        {t('common.button.learn')}
-      </Text>
-    </TouchableArea>
+    </TouchableTextLink>
   )
 }

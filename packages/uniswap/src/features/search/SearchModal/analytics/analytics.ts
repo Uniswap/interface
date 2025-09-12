@@ -1,7 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { OnchainItemListOptionType, SearchModalOption } from 'uniswap/src/components/lists/items/types'
 import { extractDomain } from 'uniswap/src/components/lists/items/wallets/utils'
+import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { SearchContext, SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { InterfaceEventName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

@@ -1,5 +1,5 @@
 import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker'
-import { NUM_FIRST_NFTS } from 'uniswap/src/components/nfts/NftsList'
+import { NUM_FIRST_NFTS } from 'uniswap/src/components/nfts/constants'
 import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { formatNftItems } from 'uniswap/src/features/nfts/utils'

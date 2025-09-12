@@ -3,7 +3,7 @@ import {
   Currency,
   TimestampedAmount,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { MAX_FIXTURE_TIMESTAMP, faker } from 'uniswap/src/test/shared'
+import { faker, MAX_FIXTURE_TIMESTAMP } from 'uniswap/src/test/shared'
 import { createFixture, randomEnumValue } from 'uniswap/src/test/utils'
 
 export const amount = createFixture<Amount>()(() => ({

@@ -4,8 +4,8 @@ import { validColor } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 
 export function BuyNativeTokenButton({

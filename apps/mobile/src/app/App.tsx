@@ -20,12 +20,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import { AppModals } from 'src/app/modals/AppModals'
-import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
+import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { AppStackNavigator } from 'src/app/navigation/navigation'
 import { store } from 'src/app/store'
-import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
+import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import { initAppsFlyer } from 'src/features/analytics/appsflyer'
 import { useLogMissingMnemonic } from 'src/features/analytics/useLogMissingMnemonic'
 import {
@@ -33,9 +33,9 @@ import {
   MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE,
 } from 'src/features/datadog/DatadogProviderWrapper'
 import { setDatadogUserWithUniqueId } from 'src/features/datadog/user'
+import { OneSignalUserTagField } from 'src/features/notifications/constants'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
-import { OneSignalUserTagField } from 'src/features/notifications/constants'
 import { statsigMMKVStorageProvider } from 'src/features/statsig/statsigMMKVStorageProvider'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
@@ -48,25 +48,25 @@ import {
 import { initDynamicIntlPolyfills } from 'src/polyfills/intl-delayed'
 import { useDatadogUserAttributesTracking } from 'src/screens/HomeScreen/useDatadogUserAttributesTracking'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import { flexStyles, useIsDarkMode } from 'ui/src'
+import { flexStyles, PortalProvider, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { config } from 'uniswap/src/config'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import { DatadogSessionSampleRateKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { StatsigUser, Storage, getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
-import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
+import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
+import { getStatsigClient, StatsigUser, Storage } from 'uniswap/src/features/gating/sdk/statsig'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
+import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import i18n from 'uniswap/src/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { datadogEnabledBuild } from 'utilities/src/environment/constants'
@@ -85,8 +85,8 @@ import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 import { useHeartbeatReporter } from 'wallet/src/features/telemetry/useHeartbeatReporter'
 import { useLastBalancesReporter } from 'wallet/src/features/telemetry/useLastBalancesReporter'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
-import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
+import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
@@ -254,13 +254,15 @@ function AppOuter(): JSX.Element | null {
                     <MobileWalletNavigationProvider>
                       <NativeWalletProvider>
                         <WalletUniswapProvider>
-                          <DataUpdaters />
-                          <BottomSheetModalProvider>
-                            <AppModals />
-                            <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                              <AppInner />
-                            </PerformanceProfiler>
-                          </BottomSheetModalProvider>
+                          <PortalProvider>
+                            <DataUpdaters />
+                            <BottomSheetModalProvider>
+                              <AppModals />
+                              <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                                <AppInner />
+                              </PerformanceProfiler>
+                            </BottomSheetModalProvider>
+                          </PortalProvider>
                         </WalletUniswapProvider>
                       </NativeWalletProvider>
                       <NotificationToastWrapper />

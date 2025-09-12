@@ -33,6 +33,9 @@ yarn-error.log*
 # turbo
 .turbo
 
+# nx
+.nx/
+
 # .yarn files
 .yarn/cache
 .yarn/versions
@@ -68,3 +71,13 @@ CLAUDE.local.md
 # cursor
 .cursor/mcp.json
 .cursor/rules/local-workflow.mdc
+
+# lefthook
+.lefthook/
+
+
+
+.nx/cache
+.nx/workspace-data
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md

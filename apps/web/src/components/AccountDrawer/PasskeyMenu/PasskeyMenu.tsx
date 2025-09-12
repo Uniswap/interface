@@ -29,8 +29,8 @@ import {
   authenticateWithPasskey,
   listAuthenticators,
 } from 'uniswap/src/features/passkey/embeddedWallet'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isMobileWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 

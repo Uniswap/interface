@@ -2,6 +2,31 @@
 
 exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
 <body>
+  <dialog
+    aria-closed="true"
+    aria-label="Porto Wallet"
+    data-porto=""
+    hidden="until-found"
+    role="dialog"
+    style="background: transparent; border: 0px; outline: 0; padding: 0px; position: fixed;"
+  >
+    <style>
+      
+        dialog[data-porto]::backdrop {
+          background: transparent!important;
+        }
+      
+    </style>
+    <iframe
+      allow="publickey-credentials-get https://id.porto.sh; publickey-credentials-create https://id.porto.sh; clipboard-write"
+      data-testid="porto"
+      sandbox="allow-forms allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+      src="https://id.porto.sh/dialog"
+      style="background-color: transparent; border: 0px; color-scheme: light dark; height: 100%; left: 0px; position: fixed; top: 0px; width: 100%;"
+      tabindex="0"
+      title="Porto"
+    />
+  </dialog>
   <div>
     <span
       class=""

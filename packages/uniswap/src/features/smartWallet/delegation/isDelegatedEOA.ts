@@ -1,4 +1,4 @@
-import { HexString, ensure0xHex } from 'uniswap/src/utils/hex'
+import { ensure0xHex, HexString } from 'uniswap/src/utils/hex'
 
 const DELEGATE_PREFIX = 'ef0100'
 const DELEGATE_LENGTH = 46 // 23 bytes

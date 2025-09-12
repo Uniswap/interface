@@ -1,6 +1,6 @@
 import { Trans } from 'react-i18next'
 import { ExternalLink } from 'theme/components/Links'
-import { Flex, FlexProps, Text, styled } from 'ui/src'
+import { Flex, FlexProps, styled, Text } from 'ui/src'
 
 const DisclaimerText = styled(Text, {
   variant: 'body4',

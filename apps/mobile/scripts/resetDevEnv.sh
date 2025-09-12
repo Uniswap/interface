@@ -1,6 +1,6 @@
 #!/bin/bash
 
-yarn env:local:download 
+bun run env:local:download 
 
 if [ "$1" = "--hard" ]; then
 
@@ -50,9 +50,9 @@ if [ "$1" = "--hard" ]; then
 fi
 
 echo "🔄 Running soft reset..."
-yarn 
-yarn g:prepare 
-yarn pod:update 
+bun install 
+bun run g:prepare 
+bun run pod:update 
 
 if [ "$1" = "--hard" ]; then
     echo "🗑️  Restoring project.pbxproj..."
@@ -61,8 +61,8 @@ fi
 
 
 echo "🚇 Starting metro bundler"
-yarn start --reset-cache 
+bun run start --reset-cache 
 
 
-echo "🔧 You may want to run 'yarn ios'/'yarn mobile ios' to start the iOS app"
+echo "🔧 You may want to run 'bun run ios'/'bun run mobile ios' to start the iOS app"
 echo "✨ Soft reset complete!"

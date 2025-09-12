@@ -31,8 +31,8 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import {
   CollectFeesTxAndGasInfo,
-  LiquidityTransactionType,
   isValidLiquidityTxContext,
+  LiquidityTransactionType,
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'

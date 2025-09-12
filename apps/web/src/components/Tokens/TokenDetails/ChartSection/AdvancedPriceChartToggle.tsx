@@ -35,7 +35,7 @@ export const AdvancedPriceChartToggle = ({
   const options = [
     {
       value: PriceChartType.LINE,
-      display: <LineChartIcon color={iconColor} width="$spacing.18" height="$spacing.18" />,
+      display: <LineChartIcon color={iconColor} width={18} height={18} />,
     },
     {
       value: PriceChartType.CANDLESTICK,

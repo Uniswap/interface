@@ -2,8 +2,8 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { JupiterApiClient } from 'uniswap/src/data/apiClients/jupiterApi/JupiterApiClient'
 import {
   JupiterOrderResponse,
-  jupiterOrderResponseSchema,
   JupiterOrderUrlParams,
+  jupiterOrderResponseSchema,
 } from 'uniswap/src/data/apiClients/jupiterApi/order/types'
 
 export async function fetchOrder(params: JupiterOrderUrlParams): Promise<JupiterOrderResponse> {

@@ -1,6 +1,6 @@
 import { PersistState } from 'redux-persist'
 import { tokenAddressOrNativeAddress } from 'uniswap/src/features/search/utils'
-import { PreV55SearchResult, PreV55SearchResultType, isPoolSearchResult } from 'uniswap/src/state/oldTypes'
+import { isPoolSearchResult, PreV55SearchResult, PreV55SearchResultType } from 'uniswap/src/state/oldTypes'
 
 export type PersistAppStateV17 = {
   _persist: PersistState

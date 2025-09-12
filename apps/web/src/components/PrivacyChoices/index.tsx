@@ -8,8 +8,8 @@ import { Anchor, Button, Checkbox, Flex, ModalCloseIcon, Text } from 'ui/src'
 import { Lock } from 'ui/src/components/icons/Lock'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 
 export function PrivacyChoicesModal() {
   const { isOpen, closeModal } = useModalState(ModalName.PrivacyChoices)

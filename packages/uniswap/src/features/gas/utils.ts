@@ -9,7 +9,7 @@ import {
   GasStrategyWithConditions,
 } from 'uniswap/src/features/gating/configs'
 import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 
 // The default "Urgent" strategy that was previously hardcoded in the gas service
 export const DEFAULT_GAS_STRATEGY: GasStrategy = {
@@ -17,10 +17,10 @@ export const DEFAULT_GAS_STRATEGY: GasStrategy = {
   displayLimitInflationFactor: 1,
   priceInflationFactor: 1.5,
   percentileThresholdFor1559Fee: 75,
-  thresholdToInflateLastBlockBaseFee: 0,
-  baseFeeMultiplier: 1.05,
-  baseFeeHistoryWindow: 100,
-  minPriorityFeeRatioOfBaseFee: undefined,
+  thresholdToInflateLastBlockBaseFee: 0.75,
+  baseFeeMultiplier: 1,
+  baseFeeHistoryWindow: 20,
+  minPriorityFeeRatioOfBaseFee: 0.2,
   minPriorityFeeGwei: 2,
   maxPriorityFeeGwei: 9,
 }

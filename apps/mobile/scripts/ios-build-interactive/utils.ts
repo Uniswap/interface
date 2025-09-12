@@ -18,16 +18,16 @@ export const CONSTANTS = {
   COMMANDS: {
     XCODE_VERSION: 'xcodebuild -version',
     NODE_VERSION: 'node --version',
-    YARN_VERSION: 'yarn --version',
+    BUN_VERSION: 'bun --version',
     POD_VERSION: 'pod --version',
     LIST_SIMULATORS: 'xcrun simctl list devices',
     LIST_SIMULATORS_JSON: 'xcrun simctl list devices --json',
     LIST_DEVICES_NEW: 'xcrun devicectl list devices',
     LIST_DEVICES_OLD: 'xcrun instruments -s devices',
     CHECK_PORT: 'lsof -i :',
-    START_METRO: ['yarn', 'start'],
+    START_METRO: ['bun', 'run', 'start'],
     CLEAN_BUILD: 'rm -rf',
-    POD_INSTALL: 'yarn pod',
+    POD_INSTALL: 'bun run pod',
   },
   TIMEOUTS: {
     METRO_START: 3000,
@@ -53,7 +53,7 @@ export const CONSTANTS = {
       WRONG_DIR: 'Please run this script from the apps/mobile directory',
       ENV_MISSING: 'Environment file missing!',
       ENV_DOWNLOAD:
-        'yarn env:local:download (from apps/mobile) OR yarn mobile env:local:download (from workspace root)',
+        'bun run env:local:download (from apps/mobile) OR bun run mobile env:local:download (from workspace root)',
       BUILD_FAILED: 'Build failed with exit code',
       PREFLIGHT_FAILED: 'Pre-flight check failed:',
     },
@@ -177,7 +177,7 @@ export const printHelp = (): void => {
   log.info('• Metro bundler management')
   log.info('• Build cleaning and cache reset options')
   log.info('')
-  log.info('Usage: yarn ios:interactive')
+  log.info('Usage: bun run ios:interactive')
 }
 
 // Prompt configurations

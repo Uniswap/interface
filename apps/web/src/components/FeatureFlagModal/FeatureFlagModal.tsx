@@ -3,8 +3,8 @@ import styledDep from 'lib/styled-components'
 import { useExternallyConnectableExtensionId } from 'pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
 import type { ChangeEvent, PropsWithChildren } from 'react'
 import { useCallback } from 'react'
-import { Button, Flex, ModalCloseIcon, Text, styled } from 'ui/src'
-import { LayerRow } from 'uniswap/src/components/gating/Rows'
+import { Button, Flex, ModalCloseIcon, styled, Text } from 'ui/src'
+import { ExperimentRow, LayerRow } from 'uniswap/src/components/gating/Rows'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import type { DynamicConfigKeys } from 'uniswap/src/features/gating/configs'
 import {
@@ -12,7 +12,7 @@ import {
   ExternallyConnectableExtensionConfigKey,
   NetworkRequestsConfigKey,
 } from 'uniswap/src/features/gating/configs'
-import { Layers } from 'uniswap/src/features/gating/experiments'
+import { Experiments, Layers } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { getOverrideAdapter } from 'uniswap/src/features/gating/sdk/statsig'
@@ -231,8 +231,6 @@ export default function FeatureFlagModal() {
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Mini Portfolio">
-            <FeatureFlagOption flag={FeatureFlags.GqlToRestBalances} label="Rest Token Balances" />
-            <FeatureFlagOption flag={FeatureFlags.GqlToRestTransactions} label="Rest Transactions" />
             <FeatureFlagOption
               flag={FeatureFlags.SharedPortfolioUI}
               label="Enable new mini portfolio UI shared across platforms"
@@ -267,9 +265,15 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.AATestWeb} label="A/A Test for Web" />
             {isPlaywrightEnv() && <FeatureFlagOption flag={FeatureFlags.DummyFlagTest} label="Dummy Flag Test" />}
           </FeatureFlagGroup>
+          <FeatureFlagGroup name="New Wallet Connectors">
+            <FeatureFlagOption flag={FeatureFlags.PortoWalletConnector} label="Enable Porto Wallet Connector" />
+          </FeatureFlagGroup>
           <FeatureFlagGroup name="Misc"></FeatureFlagGroup>
           <FeatureFlagGroup name="Experiments">
-            <Flex ml="$padding8">{/* add `ExperimentRow`s here */}</Flex>
+            <Flex ml="$padding8">
+              <ExperimentRow value={Experiments.ForFilters} />
+              <ExperimentRow value={Experiments.WebFORNudges} />
+            </Flex>
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Layers">
             <Flex ml="$padding8">

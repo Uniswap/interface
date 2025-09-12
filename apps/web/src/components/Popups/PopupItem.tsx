@@ -1,7 +1,7 @@
 import { MismatchToastItem } from 'components/Popups/MismatchToastItem'
 import {
-  FORTransactionPopupContent,
   FailedNetworkSwitchPopup,
+  FORTransactionPopupContent,
   TransactionPopupContent,
   UniswapXOrderPopupContent,
 } from 'components/Popups/PopupContent'

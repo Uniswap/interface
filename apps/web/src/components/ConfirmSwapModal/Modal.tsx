@@ -2,8 +2,8 @@ import { AutoColumn } from 'components/deprecated/Column'
 import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 
 const Content = styled(AutoColumn)`
   background-color: ${({ theme }) => theme.surface1};

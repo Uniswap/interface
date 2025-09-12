@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { AppStackScreenProp } from 'src/app/navigation/types'
-import { ReceiveButton } from 'src/components/TokenDetails/ReceiveButton'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { ReceiveButton } from 'src/components/TokenDetails/ReceiveButton'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'

@@ -1,4 +1,4 @@
-import { GetProps, XStack, styled } from 'tamagui'
+import { GetProps, styled, XStack } from 'tamagui'
 import { FOCUS_SCALE } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/constants'
 import { withCommonPressStyle } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/utils'
 import { variantEmphasisHash } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/variantEmphasisHash'

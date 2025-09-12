@@ -7,6 +7,7 @@ declare module 'react-native' {
     ScantasticEncryption: ScantasticEncryption
   }
 }
+
 import { NativeModules } from 'react-native'
 
 const { ScantasticEncryption } = NativeModules

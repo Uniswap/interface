@@ -7,10 +7,10 @@ import {
   selectTokensVisibility,
 } from 'uniswap/src/features/visibility/selectors'
 import {
-  VisibilityState,
   setNftVisibility,
   setTokenVisibility,
   togglePositionVisibility,
+  VisibilityState,
   visibilityReducer,
 } from 'uniswap/src/features/visibility/slice'
 import { getUniquePositionId } from 'uniswap/src/features/visibility/utils'

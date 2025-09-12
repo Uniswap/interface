@@ -1,6 +1,6 @@
 import { TokenQueryData } from 'appGraphql/data/Token'
-import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable'
 import { TokenSortMethod } from 'components/Tokens/state'
+import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'

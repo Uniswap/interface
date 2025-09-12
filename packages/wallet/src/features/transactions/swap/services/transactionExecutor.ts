@@ -1,4 +1,4 @@
-import { SagaGenerator, call } from 'typed-redux-saga'
+import { call, SagaGenerator } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { waitForTransactionConfirmation } from 'wallet/src/features/transactions/swap/confirmation'

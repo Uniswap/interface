@@ -6,7 +6,7 @@ import { isTestEnv } from 'utilities/src/environment/env'
 import { NotImplementedError } from 'utilities/src/errors'
 import { ReduxEnhancerConfig } from 'utilities/src/logger/datadog/Datadog'
 import { handleReduxAction } from 'utilities/src/logger/datadog/reduxUtils'
-import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
+import { LoggerErrorContext, LogLevel } from 'utilities/src/logger/types'
 import { isExtension, isInterface } from 'utilities/src/platform'
 
 export function logToDatadog(

@@ -5,13 +5,13 @@ import {
   DynamicConfigDropdown,
   DynamicConfigDropdownBoolean,
 } from 'uniswap/src/components/gating/DynamicConfigDropdown'
-import { GatingButton } from 'uniswap/src/components/gating/GatingButton'
-import { ExperimentRow, LayerRow } from 'uniswap/src/components/gating/Rows'
 import {
   EMBEDDED_WALLET_BASE_URL_OPTIONS,
   FORCE_UPGRADE_STATUS_OPTIONS,
   FORCE_UPGRADE_TRANSLATIONS_OPTIONS,
 } from 'uniswap/src/components/gating/dynamicConfigOverrides'
+import { GatingButton } from 'uniswap/src/components/gating/GatingButton'
+import { ExperimentRow, LayerRow } from 'uniswap/src/components/gating/Rows'
 import { useForceUpgradeStatus } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeStatus'
 import { useForceUpgradeTranslations } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeTranslations'
 import {
@@ -21,7 +21,7 @@ import {
   ForceUpgradeConfigKey,
 } from 'uniswap/src/features/gating/configs'
 import { Experiments, Layers } from 'uniswap/src/features/gating/experiments'
-import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { FeatureFlags, getFeatureFlagName, WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { getOverrideAdapter } from 'uniswap/src/features/gating/sdk/statsig'
 import { useEmbeddedWalletBaseUrl } from 'uniswap/src/features/passkey/hooks/useEmbeddedWalletBaseUrl'
@@ -221,7 +221,7 @@ export function AccordionHeader({ title, testId }: { title: React.ReactNode; tes
 function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
   const status = useFeatureFlagWithExposureLoggingDisabled(flag)
   const name = getFeatureFlagName(flag)
-  const onChackedChange = useCallback(
+  const onCheckedChange = useCallback(
     (newValue: boolean): void => {
       getOverrideAdapter().overrideGate(name, newValue)
     },
@@ -236,7 +236,7 @@ function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
         </Text>
       </Flex>
       <Flex minWidth={52}>
-        <Switch checked={status} variant="branded" onCheckedChange={onChackedChange} />
+        <Switch checked={status} variant="branded" onCheckedChange={onCheckedChange} />
       </Flex>
     </Flex>
   )

@@ -8,8 +8,8 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { FOR_MODAL_SNAP_POINTS } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 
 interface Props {
   onSelectCurrency: (currency: FiatOnRampCurrency) => void

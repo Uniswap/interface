@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 
 // Hook for individual chain fee calculation

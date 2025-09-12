@@ -1,5 +1,5 @@
-import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType } from 'components/Charts/utils'
+import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartQueryResult, checkDataQuality, withUTCTimestamp } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { PDPChartQueryVars } from 'hooks/usePoolPriceChartData'
 import { useMemo } from 'react'

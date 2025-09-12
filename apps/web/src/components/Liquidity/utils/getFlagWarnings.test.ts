@@ -1,4 +1,4 @@
-import { HookFlag, getFlagsFromContractAddress } from 'components/Liquidity/utils/getFlagWarnings'
+import { getFlagsFromContractAddress, HookFlag } from 'components/Liquidity/utils/getFlagWarnings'
 
 describe('getFlagsFromContractAddress', () => {
   it('should return an empty array for an address with no flags', () => {

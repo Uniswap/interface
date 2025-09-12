@@ -7,6 +7,14 @@ import {
   dappResponseMessageChannel,
 } from 'src/background/messagePassing/messageChannels'
 import getCalldataInfoFromTransaction from 'src/background/utils/getCalldataInfoFromTransaction'
+import { BaseMethodHandler } from 'src/contentScript/methodHandlers/BaseMethodHandler'
+import { PendingResponseInfo } from 'src/contentScript/methodHandlers/types'
+import {
+  getPendingResponseInfo,
+  postUnauthorizedError,
+  rejectSelfCallWithData,
+} from 'src/contentScript/methodHandlers/utils'
+import { WindowEthereumRequest } from 'src/contentScript/types'
 import {
   EthAccountsRequest,
   EthAccountsRequestSchema,
@@ -35,14 +43,6 @@ import {
   WalletSwitchEthereumChainRequest,
   WalletSwitchEthereumChainRequestSchema,
 } from 'src/contentScript/WindowEthereumRequestTypes'
-import { BaseMethodHandler } from 'src/contentScript/methodHandlers/BaseMethodHandler'
-import { PendingResponseInfo } from 'src/contentScript/methodHandlers/types'
-import {
-  getPendingResponseInfo,
-  postUnauthorizedError,
-  rejectSelfCallWithData,
-} from 'src/contentScript/methodHandlers/utils'
-import { WindowEthereumRequest } from 'src/contentScript/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType, EthMethod } from 'uniswap/src/features/dappRequests/types'

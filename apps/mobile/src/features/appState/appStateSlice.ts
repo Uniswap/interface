@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AppState, AppStateStatus } from 'react-native'
 
 //------------------------------------------------------------------------------------------------

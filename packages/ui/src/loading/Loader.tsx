@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react'
-import { SpaceTokens, getToken } from 'tamagui'
+import { getToken, SpaceTokens } from 'tamagui'
 import { Flex, Separator } from 'ui/src/components/layout'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions/useDeviceDimensions'
 import { FlexLoader, FlexLoaderProps } from 'ui/src/loading/FlexLoader'

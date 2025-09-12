@@ -8,7 +8,7 @@ import {
 } from 'components/Liquidity/utils/currency'
 import { ETH_MAINNET } from 'test-utils/constants'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { USDT, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const nativeCurrency = nativeOnChain(UniverseChainId.Mainnet)

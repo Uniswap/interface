@@ -16,9 +16,9 @@ import {
 } from 'uniswap/src/features/transactions/liquidity/steps/migrate'
 import { orderMigrateLiquiditySteps } from 'uniswap/src/features/transactions/liquidity/steps/migrationSteps'
 import {
+  isValidLiquidityTxContext,
   LiquidityTransactionType,
   LiquidityTxAndGasInfo,
-  isValidLiquidityTxContext,
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { createApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import { createPermit2SignatureStep } from 'uniswap/src/features/transactions/steps/permit2Signature'

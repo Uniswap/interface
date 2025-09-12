@@ -33,7 +33,7 @@ import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   BridgeTrade,

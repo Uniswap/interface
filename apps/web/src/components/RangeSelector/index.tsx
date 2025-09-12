@@ -43,7 +43,7 @@ export default function RangeSelector({
     <Flex gap="$gap8" width="100%">
       <StepCounter
         width="100%"
-        value={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? '0' : leftPrice?.toSignificant(8) ?? ''}
+        value={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? '0' : (leftPrice?.toSignificant(8) ?? '')}
         onUserInput={onLeftRangeInput}
         decrement={isSorted ? getDecrementLower : getIncrementUpper}
         increment={isSorted ? getIncrementLower : getDecrementUpper}
@@ -57,7 +57,7 @@ export default function RangeSelector({
       />
       <StepCounter
         width="100%"
-        value={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? '∞' : rightPrice?.toSignificant(8) ?? ''}
+        value={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? '∞' : (rightPrice?.toSignificant(8) ?? '')}
         onUserInput={onRightRangeInput}
         decrement={isSorted ? getDecrementUpper : getIncrementLower}
         increment={isSorted ? getIncrementUpper : getDecrementLower}

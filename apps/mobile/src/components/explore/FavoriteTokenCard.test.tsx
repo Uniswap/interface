@@ -5,10 +5,10 @@ import { act, cleanup, fireEvent, render, waitFor } from 'src/test/test-utils'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import {
-  ON_PRESS_EVENT_PAYLOAD,
-  SAMPLE_CURRENCY_ID_1,
   amount,
   ethToken,
+  ON_PRESS_EVENT_PAYLOAD,
+  SAMPLE_CURRENCY_ID_1,
   tokenMarket,
   tokenProject,
   tokenProjectMarket,

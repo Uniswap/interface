@@ -24,8 +24,8 @@ Currently, there are 2 types of cloudflare functions developed
 
 Testing is done utilizing a custom jest environment as well as Cloudflare's local tester: `wrangler`. Wrangler enables testing locally by running a proxy ("Miniflare") to wrap `localhost`. Tests run against a proxy server, so you'll need to start it before running tests:
 
-- Run `yarn dev` to use wrangler and run the Functions code
-- Run unit tests with `yarn test:cloud`
+- Run `bun run dev` to use wrangler and run the Functions code
+- Run unit tests with `bun run test:cloud`
 
 TODO(WEB-5914): as of 12/19/24, tests pass locally but fail on CI. Notes on investigation in issue
 
@@ -39,7 +39,7 @@ Functions will be deployed to Cloudflare where they will be ran automatically wh
 
 ## Scripts
 
-- `yarn dev` script to start local wrangler environment
+- `bun run dev` script to start local wrangler environment
   - `wrangler-vite-worker.jsonc` is the Wrangler config file
 
   ## Additional Documents

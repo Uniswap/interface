@@ -1,9 +1,9 @@
+import Row, { RowFixed } from 'components/deprecated/Row'
 import { Gas } from 'components/Icons/Gas'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { UniswapXGradient, UniswapXRouterIcon } from 'components/RouterLabel/UniswapXRouterLabel'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import Row, { RowFixed } from 'components/deprecated/Row'
 import { GasBreakdownTooltip } from 'components/swap/GasBreakdownTooltip'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import styled from 'lib/styled-components'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { SubmittableTrade } from 'state/routing/types'
@@ -13,6 +13,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NumberType } from 'utilities/src/format/types'
+
 const StyledGasIcon = styled(Gas)`
   height: 16px;
   width: 16px;

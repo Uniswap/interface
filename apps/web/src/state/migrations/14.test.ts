@@ -1,10 +1,5 @@
 import { createMigrate } from 'redux-persist'
 import { migration1 } from 'state/migrations/1'
-import { migration10 } from 'state/migrations/10'
-import { migration11 } from 'state/migrations/11'
-import { migration12 } from 'state/migrations/12'
-import { PersistAppStateV13, migration13 } from 'state/migrations/13'
-import { hideSmallBalancesAtomName, hideSpamBalancesAtomName, migration14 } from 'state/migrations/14'
 import { migration2 } from 'state/migrations/2'
 import { migration3 } from 'state/migrations/3'
 import { migration4 } from 'state/migrations/4'
@@ -13,6 +8,11 @@ import { migration6 } from 'state/migrations/6'
 import { migration7 } from 'state/migrations/7'
 import { migration8 } from 'state/migrations/8'
 import { migration9 } from 'state/migrations/9'
+import { migration10 } from 'state/migrations/10'
+import { migration11 } from 'state/migrations/11'
+import { migration12 } from 'state/migrations/12'
+import { migration13, PersistAppStateV13 } from 'state/migrations/13'
+import { hideSmallBalancesAtomName, hideSpamBalancesAtomName, migration14 } from 'state/migrations/14'
 
 const previousState: PersistAppStateV13 = {
   _persist: {

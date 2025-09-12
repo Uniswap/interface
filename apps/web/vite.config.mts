@@ -7,7 +7,7 @@ import fs from 'fs'
 import path from 'path'
 import process from 'process'
 import { fileURLToPath } from 'url'
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig, loadEnv, type ViteDevServer } from 'vite'
 import bundlesize from 'vite-plugin-bundlesize'
 import commonjs from 'vite-plugin-commonjs'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
@@ -23,6 +23,9 @@ const ReactCompilerConfig = {
   target: '18', // '17' | '18' | '19'
 }
 const DEPLOY_TARGET = process.env.DEPLOY_TARGET || 'cloudflare'
+const VITE_DISABLE_SOURCEMAP = process.env.VITE_DISABLE_SOURCEMAP === 'true'
+
+const DEFAULT_PORT = 3000
 
 const reactPlugin = () =>
   ENABLE_REACT_COMPILER
@@ -32,6 +35,40 @@ const reactPlugin = () =>
         },
       })
     : reactOxc()
+
+// Prints a warning if server automatically switches to a different port when `DEFAULT_PORT` is already in use
+const portWarningPlugin = (isProduction: boolean) =>
+  isProduction
+    ? undefined
+    : {
+        name: 'port-warning',
+        configureServer(server: ViteDevServer) {
+          server.httpServer?.once('listening', () => {
+            const address = server.httpServer?.address()
+            if (address && typeof address === 'object' && address.port !== DEFAULT_PORT) {
+              setTimeout(() => {
+                console.log('\n')
+                console.log('\x1b[41m\x1b[37m' + '═'.repeat(80) + '\x1b[0m')
+                console.log('\x1b[41m\x1b[37m' + ' '.repeat(80) + '\x1b[0m')
+                console.log('\x1b[41m\x1b[37m' + '  ⚠️  WARNING: Port 3000 is already in use!'.padEnd(80) + '\x1b[0m')
+                console.log('\x1b[41m\x1b[37m' + ' '.repeat(80) + '\x1b[0m')
+                console.log(
+                  '\x1b[41m\x1b[37m' + '  You may have another server instance running.'.padEnd(80) + '\x1b[0m',
+                )
+                console.log('\x1b[41m\x1b[37m' + ' '.repeat(80) + '\x1b[0m')
+                console.log(
+                  '\x1b[41m\x1b[37m' +
+                    `  The server is running on port ${address.port} instead.`.padEnd(80) +
+                    '\x1b[0m',
+                )
+                console.log('\x1b[41m\x1b[37m' + ' '.repeat(80) + '\x1b[0m')
+                console.log('\x1b[41m\x1b[37m' + '═'.repeat(80) + '\x1b[0m')
+                console.log('\n')
+              }, 100) // Small delay to ensure it appears after Vite's messages
+            }
+          })
+        },
+      }
 
 // Get git commit hash
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
@@ -99,6 +136,7 @@ export default defineConfig(({ mode }) => {
     },
 
     plugins: [
+      portWarningPlugin(isProduction),
       reactPlugin(),
       isProduction
         ? tamaguiPlugin({
@@ -166,20 +204,20 @@ export default defineConfig(({ mode }) => {
           loose: false,
         },
       }),
-      isProduction
+      isProduction || VITE_DISABLE_SOURCEMAP
         ? undefined
         : bundlesize({
             limits: [
-              { name: 'assets/index-*.js', limit: '800 kB', mode: 'uncompressed' },
+              { name: 'assets/index-*.js', limit: '2.2 MB', mode: 'gzip' },
               { name: '**/*', limit: Infinity, mode: 'uncompressed' },
             ],
           }),
       {
-        name: 'copy-twit-config',
+        name: 'copy-twist-config',
         writeBundle() {
           const configMode = isProduction ? 'production' : 'staging'
-          const sourceFile = path.resolve(__dirname, `twit-configs/twit.${configMode}.json`)
-          const targetFile = path.resolve(__dirname, `build/.well-known/twit.json`)
+          const sourceFile = path.resolve(__dirname, `twist-configs/twist.${configMode}.json`)
+          const targetFile = path.resolve(__dirname, `build/.well-known/twist.json`)
 
           if (fs.existsSync(sourceFile)) {
             // Ensure the .well-known directory exists in build output
@@ -190,9 +228,9 @@ export default defineConfig(({ mode }) => {
 
             // Copy the file directly to the build output
             fs.copyFileSync(sourceFile, targetFile)
-            console.log(`Copied ${configMode} TWIT config to build output for env ${mode}`)
+            console.log(`Copied ${configMode} TWIST config to build output for env ${mode}`)
           } else {
-            console.warn(`${configMode} TWIT config not found for env ${mode}`)
+            console.warn(`${configMode} TWIST config not found for env ${mode}`)
           }
         },
       },
@@ -246,12 +284,12 @@ export default defineConfig(({ mode }) => {
     },
 
     server: {
-      port: 3000,
+      port: DEFAULT_PORT,
     },
 
     build: {
       outDir: 'build',
-      sourcemap: isProduction ? false : 'hidden',
+      sourcemap: isProduction || VITE_DISABLE_SOURCEMAP ? false : 'hidden',
       minify: isProduction ? 'esbuild' : undefined,
       rollupOptions: {
         external: [/\.stories\.[tj]sx?$/, /\.mdx$/, /expo-clipboard\/build\/ClipboardPasteButton\.js/],

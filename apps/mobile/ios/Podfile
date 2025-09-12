@@ -27,7 +27,7 @@ target 'Uniswap' do
     end
   end
   use_expo_modules!(exclude: ['expo-constants','expo-file-system', 'expo-font', 'expo-keep-awake', 'expo-error-recovery'])
-  config = use_native_modules!(['npx', 'rnef', 'config', '-p', 'ios'])
+  config = use_native_modules!(['bunx', 'rnef', 'config', '-p', 'ios'])
 
   use_react_native!(
     :path => config[:reactNativePath],

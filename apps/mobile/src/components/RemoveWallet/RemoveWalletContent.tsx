@@ -15,9 +15,9 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useAccounts, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
 type RemoveWalletContentProps = {

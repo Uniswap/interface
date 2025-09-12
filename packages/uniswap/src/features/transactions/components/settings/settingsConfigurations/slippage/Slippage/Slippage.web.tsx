@@ -2,8 +2,8 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SlippageControl } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/SlippageControl/SlippageControl.web'
 import { SlippageWarning } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/SlippageWarning'
 import {
-  TransactionSettingId,
   type TransactionSettingConfig,
+  TransactionSettingId,
 } from 'uniswap/src/features/transactions/components/settings/types'
 
 export const Slippage: TransactionSettingConfig = {

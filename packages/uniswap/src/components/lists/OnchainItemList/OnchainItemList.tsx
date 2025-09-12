@@ -1,8 +1,8 @@
 import { EffectCallback, MutableRefObject } from 'react'
-import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { SectionHeaderProps } from 'uniswap/src/components/lists/SectionHeader'
 import { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
 import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
+import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { SectionHeaderProps } from 'uniswap/src/components/lists/SectionHeader'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
 export interface OnchainItemListRef {

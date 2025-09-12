@@ -12,7 +12,7 @@ An interactive CLI tool for building iOS apps with various configurations.
 From the `apps/mobile` directory:
 
 ```bash
-yarn ios:interactive
+bun ios:interactive
 ```
 
 ## Features
@@ -28,7 +28,7 @@ yarn ios:interactive
 
 - Xcode
 - Node.js
-- Yarn
+- Bun
 - CocoaPods
 - iOS Simulator (for simulator builds)
 - Connected iOS device (for device builds)

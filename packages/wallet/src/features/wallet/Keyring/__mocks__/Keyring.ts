@@ -2,6 +2,7 @@
 import { faker } from '@faker-js/faker'
 import { providers, utils, Wallet } from 'ethers'
 import { IKeyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+
 const pathFromIndex = (index: number): string => `m/44'/60'/0'/0/${index}`
 
 const mnemonics: { [id: string]: string } = {}

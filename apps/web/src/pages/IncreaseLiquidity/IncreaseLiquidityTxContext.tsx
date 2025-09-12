@@ -7,14 +7,14 @@ import { getProtocolItems } from 'components/Liquidity/utils/protocolVersion'
 import { useAccount } from 'hooks/useAccount'
 import { useIncreaseLiquidityContext } from 'pages/IncreaseLiquidity/IncreaseLiquidityContext'
 import {
-  Dispatch,
-  SetStateAction,
   createContext,
+  Dispatch,
+  type PropsWithChildren,
+  SetStateAction,
   useContext,
   useEffect,
   useMemo,
   useState,
-  type PropsWithChildren,
 } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { PositionField } from 'types/position'
@@ -23,9 +23,9 @@ import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useIncreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useIncreaseLpPositionCalldataQuery'
 import {
-  IndependentToken,
   type CheckApprovalLPRequest,
   type IncreaseLPPositionRequest,
+  IndependentToken,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -35,8 +35,8 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import {
-  LiquidityTransactionType,
   type IncreasePositionTxAndGasInfo,
+  LiquidityTransactionType,
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
@@ -45,6 +45,7 @@ import { validatePermit, validateTransactionRequest } from 'uniswap/src/features
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+
 interface IncreasePositionContextType {
   txInfo?: IncreasePositionTxAndGasInfo
   gasFeeEstimateUSD?: CurrencyAmount<Currency>

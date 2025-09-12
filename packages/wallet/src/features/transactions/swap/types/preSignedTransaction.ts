@@ -1,6 +1,9 @@
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ValidatedSwapTxContext, ValidatedUniswapXSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import {
+  ValidatedSwapTxContext,
+  ValidatedUniswapXSwapTxAndGasInfo,
+} from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ValidatedPermit } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 
@@ -9,7 +12,9 @@ export interface SignedPermit {
   signedData: string
 }
 
-export function isSignedPermit(signedTx: SignedTransactionRequest | SignedPermit | ValidatedPermit): signedTx is SignedPermit {
+export function isSignedPermit(
+  signedTx: SignedTransactionRequest | SignedPermit | ValidatedPermit,
+): signedTx is SignedPermit {
   return 'permit' in signedTx && 'signedData' in signedTx
 }
 

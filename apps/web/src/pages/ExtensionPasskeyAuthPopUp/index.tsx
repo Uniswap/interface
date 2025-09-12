@@ -17,8 +17,8 @@ import {
   PasskeySignInFlowOpened,
 } from 'uniswap/src/extension/messagePassing/types/requests'
 import { authenticatePasskey } from 'uniswap/src/features/passkey/passkey'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { getChromeRuntime, getChromeRuntimeWithThrow } from 'utilities/src/chrome/chrome'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'

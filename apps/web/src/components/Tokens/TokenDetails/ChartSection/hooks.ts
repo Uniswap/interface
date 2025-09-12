@@ -1,11 +1,11 @@
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { StackedLineData } from 'components/Charts/StackedLineChart'
-import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
+import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import {
   ChartQueryResult,
-  DataQuality,
   checkDataQuality,
+  DataQuality,
   withUTCTimestamp,
 } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { UTCTimestamp } from 'lightweight-charts'

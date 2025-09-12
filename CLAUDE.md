@@ -16,54 +16,54 @@ Uniswap Universe is a monorepo containing all Uniswap front-end interfaces:
 
 ```bash
 # Initial setup (requires 1Password CLI)
-yarn install
-yarn local:check
-yarn lfg  # Sets up mobile and extension
+bun install
+bun local:check
+bun lfg  # Sets up mobile and extension
 ```
 
 ### Development Servers
 
 ```bash
-yarn web dev        # Web with Vite
-yarn mobile ios          # iOS app
-yarn mobile android      # Android app
-yarn extension start     # Extension
+bun web dev        # Web with Vite
+bun mobile ios          # iOS app
+bun mobile android      # Android app
+bun extension start     # Extension
 ```
 
 ### Building
 
 ```bash
-yarn g:build                      # Build all packages
-yarn web build:production    # Web production build
-yarn mobile ios:bundle            # iOS bundle
-yarn mobile android:release       # Android release
-yarn extension build:production   # Extension production
+bun g:build                      # Build all packages
+bun web build:production    # Web production build
+bun mobile ios:bundle            # iOS bundle
+bun mobile android:release       # Android release
+bun extension build:production   # Extension production
 ```
 
 ### Testing
 
 ```bash
-yarn g:test                      # Run all tests
-yarn g:test:coverage             # With coverage
-yarn web playwright:test         # Web E2E tests
-yarn mobile e2e                  # Mobile E2E tests
+bun g:test                      # Run all tests
+bun g:test:coverage             # With coverage
+bun web playwright:test         # Web E2E tests
+bun mobile e2e                  # Mobile E2E tests
 ```
 
 ### Code Quality
 
 ```bash
-yarn g:lint:fix                  # Fix linting issues
-yarn g:typecheck                 # Type check all packages
-yarn g:format:fix                # Fix formatting
-yarn g:fix                       # Run both lint and format fix
+bun g:lint:fix                  # Fix linting issues
+bun g:typecheck                 # Type check all packages
+bun g:format:fix                # Fix formatting
+bun g:fix                       # Run both lint and format fix
 ```
 
 ## Architecture Overview
 
 ### Monorepo Structure
 
-- **Turborepo** for build orchestration
-- **Yarn workspaces** for package management
+- **NX** for build orchestration
+- **Bun workspaces** for package management
 - Shared code in `packages/` directory
 - App-specific code in `apps/` directory
 
@@ -80,9 +80,9 @@ yarn g:fix                       # Run both lint and format fix
 
 #### Styling
 
-- **ALWAYS** use `styled` from `ui/src` (never styled-components or direct Tamagui)
+- **ALWAYS** use `styled` from `ui/src` (never styled-components or direct Tamagui); UI components may use inline styling where appropriate
 - Use theme tokens instead of hardcoded values
-- Platform-specific files: `Component.ios.tsx`, `Component.android.tsx`
+- Platform-specific files: `Component.ios.tsx`, `Component.android.tsx`, `Component.web.tsx`, `Component.native.tsx` (with stub files for platforms where specific implementation isn't needed)
 
 #### State Management
 
@@ -118,9 +118,9 @@ yarn g:fix                       # Run both lint and format fix
 ## Critical Development Notes
 
 1. **Environment Variables**: Override URLs in `.env.defaults.local` (mobile) or `.env` (extension)
-2. **Pre-commit Hooks**: Use `--no-verify` to skip or set `export HUSKY=0` to disable
+2. **Pre-commit Hooks**: Use `--no-verify` to skip or set `export LEFTHOOK=0` to disable
 3. **Python Setup**: Run `brew install python-setuptools` if you encounter Python module errors
-4. **Mobile Development**: Always run `yarn mobile pod` after dependency changes
+4. **Mobile Development**: Always run `bun mobile pod` after dependency changes
 5. **Bundle Size**: Monitor bundle size impacts when adding dependencies
 
 ## Package Dependencies
@@ -135,7 +135,7 @@ Core shared packages:
 ## Blockchain Integration
 
 - Support for multiple chains (Ethereum, Arbitrum, Optimism, etc.)
-- Uniswap Protocol v2, v3, and v4 support
+- Uniswap Protocol v2, v3, v4, and UniswapX support
 - Multiple wallet providers (WalletConnect, Metamask, etc.)
 - Transaction building and gas estimation
 

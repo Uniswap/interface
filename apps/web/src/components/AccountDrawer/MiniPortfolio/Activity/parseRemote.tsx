@@ -1,4 +1,6 @@
 /* eslint-disable max-params */
+
+import { gqlToCurrency, supportedChainIdFromGQLChain } from 'appGraphql/data/util'
 import { BigNumber } from '@ethersproject/bignumber'
 import type { Currency } from '@uniswap/sdk-core'
 import {
@@ -7,15 +9,17 @@ import {
   TradeType,
   UNI_ADDRESSES,
 } from '@uniswap/sdk-core'
-import { gqlToCurrency, supportedChainIdFromGQLChain } from 'appGraphql/data/util'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import type { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
-import { convertGQLTransactionStatus } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import {
-  MOONPAY_SENDER_ADDRESSES,
+  convertGQLTransactionStatus,
+  createActivityMapByHash,
+} from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import {
   getLimitOrderTextTable,
   getOrderTextTable,
+  MOONPAY_SENDER_ADDRESSES,
 } from 'components/AccountDrawer/MiniPortfolio/constants'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
@@ -25,7 +29,7 @@ import { parseRemote as parseRemoteSignature } from 'state/signatures/parseRemot
 import type { OrderActivity, UniswapXOrderDetails } from 'state/signatures/types'
 import { SignatureType } from 'state/signatures/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { Flex, Text, styled } from 'ui/src'
+import { Flex, styled, Text } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -112,6 +116,7 @@ const COMMON_CONTRACTS: { [key: string]: Partial<Activity> | undefined } = {
 }
 
 const SPAMMABLE_ACTIVITY_TYPES = [TransactionType.Receive, TransactionType.Mint, TransactionType.Unknown]
+
 function isSpam(
   { NftTransfer, TokenTransfer }: TransactionChanges,
   details: TransactionDetailsPartsFragment,
@@ -147,6 +152,7 @@ function callsV4PositionManagerContract(assetActivity: TransactionActivity) {
     isSameAddress(assetActivity.details.to, CHAIN_TO_ADDRESSES_MAP[supportedChain].v4PositionManagerAddress)
   )
 }
+
 function callsPositionManagerContract(assetActivity: TransactionActivity) {
   return callsV3PositionManagerContract(assetActivity) || callsV4PositionManagerContract(assetActivity)
 }
@@ -924,13 +930,15 @@ export function parseRemoteActivities(
   account: string,
   formatNumberOrString: FormatNumberOrStringFunctionType,
 ) {
-  return assetActivities?.reduce((acc: { [id: string]: Activity }, assetActivity) => {
-    const activity = parseRemoteActivity(assetActivity, account, formatNumberOrString)
-    if (activity) {
-      acc[activity.id] = activity
-    }
-    return acc
-  }, {})
+  if (!assetActivities) {
+    return undefined
+  }
+
+  const activities = assetActivities.map((assetActivity) =>
+    parseRemoteActivity(assetActivity, account, formatNumberOrString),
+  )
+
+  return createActivityMapByHash(activities)
 }
 
 const getTimeSince = (timestamp: number) => {

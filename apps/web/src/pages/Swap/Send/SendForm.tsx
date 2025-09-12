@@ -17,8 +17,8 @@ import { CurrencyState } from 'state/swap/types'
 import { Button, Flex } from 'ui/src'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import {
   TransactionScreen,
   useTransactionModalContext,

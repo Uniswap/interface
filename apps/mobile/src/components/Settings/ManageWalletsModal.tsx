@@ -8,6 +8,7 @@ import {
   OnboardingStackNavigationProp,
   SettingsStackNavigationProp,
 } from 'src/app/navigation/types'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { RemoveWalletContent } from 'src/components/RemoveWallet/RemoveWalletContent'
 import {
   SettingsRow,
@@ -15,7 +16,6 @@ import {
   SettingsSectionItem,
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
-import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { Button, Flex, IconProps, useSporeColors } from 'ui/src'

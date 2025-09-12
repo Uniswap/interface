@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { useSporeColors } from 'ui/src'
 import { Settings } from 'ui/src/components/icons/Settings'
 import { zIndexes } from 'ui/src/theme'
-import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -11,10 +11,10 @@ import { SlippageInfoCaption } from 'uniswap/src/features/transactions/swap/comp
 import type { SlippageInfoProps } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/types'
 import { MaxSlippageTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/MaxSlippageTooltip'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
-import { isMobileApp } from 'utilities/src/platform'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
+import { isMobileApp } from 'utilities/src/platform'
 
 export function SlippageInfo({
   children,

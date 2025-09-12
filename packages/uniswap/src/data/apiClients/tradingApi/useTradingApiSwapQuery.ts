@@ -1,14 +1,14 @@
-import { UseQueryResult, skipToken } from '@tanstack/react-query'
+import { skipToken, UseQueryResult } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClients/hooks/useQueryWithImmediateGarbageCollection'
 import { fetchSwap, fetchSwap5792, fetchSwap7702 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryWithImmediateGarbageCollectionApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { CreateSwapRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import {
-  SwapData,
   convertSwap5792ResponseToSwapData,
   convertSwap7702ResponseToSwapData,
   convertSwapResponseToSwapData,
+  SwapData,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 

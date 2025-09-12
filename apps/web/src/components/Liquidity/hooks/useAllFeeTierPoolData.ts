@@ -4,9 +4,9 @@ import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeTierData } from 'components/Liquidity/types'
 import { getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
 import {
-  MAX_FEE_TIER_DECIMALS,
   getDefaultFeeTiersForChainWithDynamicFeeTier,
   getFeeTierKey,
+  MAX_FEE_TIER_DECIMALS,
   mergeFeeTiers,
 } from 'components/Liquidity/utils/feeTiers'
 import { useMemo } from 'react'

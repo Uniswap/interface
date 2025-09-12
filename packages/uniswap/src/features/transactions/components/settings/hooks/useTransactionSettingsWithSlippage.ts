@@ -1,6 +1,6 @@
 import {
-  TransactionSettingsModalId,
   type ModalIdWithSlippage,
+  TransactionSettingsModalId,
 } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/createTransactionSettingsModalStore'
 import {
   useModalHide,

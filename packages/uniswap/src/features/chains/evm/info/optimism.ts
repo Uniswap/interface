@@ -48,6 +48,7 @@ export const OPTIMISM_CHAIN_INFO = {
     url: 'https://optimistic.etherscan.io/',
     apiURL: 'https://api-optimistic.etherscan.io',
   },
+  openseaName: 'optimism',
   interfaceName: 'optimism',
   label: 'OP Mainnet',
   logo: OPTIMISM_LOGO,

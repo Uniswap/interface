@@ -3,17 +3,17 @@ import { ConnectError } from '@connectrpc/connect'
 import { createQueryOptions, useInfiniteQuery, useQuery } from '@connectrpc/connect-query'
 import {
   InfiniteData,
+  keepPreviousData,
   UseInfiniteQueryResult,
   UseQueryResult,
-  keepPreviousData,
   useQueries,
 } from '@tanstack/react-query'
-import { getPosition, listPositions } from '@uniswap/client-pools/dist/pools/v1/api-PoolsService_connectquery'
 import {
   GetPositionResponse,
   ListPositionsRequest,
   ListPositionsResponse,
 } from '@uniswap/client-pools/dist/pools/v1/api_pb'
+import { getPosition, listPositions } from '@uniswap/client-pools/dist/pools/v1/api-PoolsService_connectquery'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Pair } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'

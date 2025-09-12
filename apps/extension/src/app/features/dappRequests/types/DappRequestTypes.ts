@@ -1,16 +1,20 @@
 /* eslint-disable import/no-unused-modules */
 import { EthereumRpcErrorSchema } from 'src/app/features/dappRequests/types/ErrorTypes'
-import { BatchIdSchema, CallSchema, CapabilitySchema, GetCallsStatusResultSchema, SendCallsResultSchema } from 'wallet/src/features/dappRequests/types'
-import {
-  EthersTransactionRequestSchema,
-} from 'src/app/features/dappRequests/types/EthersTypes'
+import { EthersTransactionRequestSchema } from 'src/app/features/dappRequests/types/EthersTypes'
 import { NonfungiblePositionManagerCallSchema } from 'src/app/features/dappRequests/types/NonfungiblePositionManagerTypes'
 import { UniversalRouterCallSchema } from 'src/app/features/dappRequests/types/UniversalRouterTypes'
 import { HomeTabs } from 'src/app/navigation/constants'
-import { MessageSchema } from 'uniswap/src/extension/messagePassing/messageTypes'
 import { PermissionRequestSchema, PermissionSchema } from 'src/contentScript/WindowEthereumRequestTypes'
-import { z } from 'zod'
+import { MessageSchema } from 'uniswap/src/extension/messagePassing/messageTypes'
 import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
+import {
+  BatchIdSchema,
+  CallSchema,
+  CapabilitySchema,
+  GetCallsStatusResultSchema,
+  SendCallsResultSchema,
+} from 'wallet/src/features/dappRequests/types'
+import { z } from 'zod'
 
 // SCHEMAS + TYPES
 
@@ -88,7 +92,6 @@ const SwapSendTransactionRequestSchema = BaseSendTransactionRequestSchema.extend
   parsedCalldata: UniversalRouterCallSchema,
 })
 export type SwapSendTransactionRequest = z.infer<typeof SwapSendTransactionRequestSchema>
-
 
 const WrapSendTransactionRequestSchema = BaseSendTransactionRequestSchema.extend({
   contractInteractions: z.literal(EthSendTransactionRPCActions.Wrap),
@@ -258,13 +261,13 @@ export type GetCallsStatusRequest = z.infer<typeof GetCallsStatusRequestSchema>
 
 export const SendCallsResponseSchema = BaseDappResponseSchema.extend({
   type: z.literal(DappResponseType.SendCallsResponse),
-  response: SendCallsResultSchema
+  response: SendCallsResultSchema,
 })
 export type SendCallsResponse = z.infer<typeof SendCallsResponseSchema>
 
 export const GetCallsStatusResponseSchema = BaseDappResponseSchema.extend({
   type: z.literal(DappResponseType.GetCallsStatusResponse),
-  response: GetCallsStatusResultSchema
+  response: GetCallsStatusResultSchema,
 })
 export type GetCallsStatusResponse = z.infer<typeof GetCallsStatusResponseSchema>
 
@@ -281,16 +284,18 @@ export const GetCapabilitiesResponseSchema = BaseDappResponseSchema.extend({
 })
 export type GetCapabilitiesResponse = z.infer<typeof GetCapabilitiesResponseSchema>
 
-
 const BatchedSwapSendTransactionRequestSchema = SendCallsRequestSchema.extend({
   calls: z.array(ParsedCallSchema).refine(
-    (calls) => calls.filter(call => {
-      const parsedCallResult = ParsedCallSchema.safeParse(call);
-      return parsedCallResult.success && parsedCallResult.data.contractInteractions === EthSendTransactionRPCActions.Swap;
-    }).length === 1,
+    (calls) =>
+      calls.filter((call) => {
+        const parsedCallResult = ParsedCallSchema.safeParse(call)
+        return (
+          parsedCallResult.success && parsedCallResult.data.contractInteractions === EthSendTransactionRPCActions.Swap
+        )
+      }).length === 1,
     {
-      message: "Exactly one call must have contractInteractions set to Swap"
-    }
+      message: 'Exactly one call must have contractInteractions set to Swap',
+    },
   ),
 })
 export type BatchedSwapSendTransactionRequest = z.infer<typeof BatchedSwapSendTransactionRequestSchema>
@@ -387,7 +392,9 @@ export function isApproveRequest(request: SendTransactionRequest): request is Ap
   return ApproveSendTransactionRequestSchema.safeParse(request).success
 }
 
-export function isPermit2ApproveRequest(request: SendTransactionRequest): request is Permit2ApproveSendTransactionRequest {
+export function isPermit2ApproveRequest(
+  request: SendTransactionRequest,
+): request is Permit2ApproveSendTransactionRequest {
   return Permit2ApproveSendTransactionRequestSchema.safeParse(request).success
 }
 
@@ -432,11 +439,7 @@ export function isRequestPermissionsRequest(request: DappRequest): request is Re
 }
 
 export function isConnectionRequest(request: DappRequest): boolean {
-  return (
-    isGetAccountRequest(request) ||
-    isRequestAccountRequest(request) ||
-    isRequestPermissionsRequest(request)
-  )
+  return isGetAccountRequest(request) || isRequestAccountRequest(request) || isRequestPermissionsRequest(request)
 }
 
 export function isWrapRequest(request: SendTransactionRequest): request is WrapSendTransactionRequest {

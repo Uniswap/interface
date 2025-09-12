@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 export const createImportedAccounts = async (
   mnemonicId: string,

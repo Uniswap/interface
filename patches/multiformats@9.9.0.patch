@@ -1,0 +1,13 @@
+diff --git a/basics b/basics
+index 1a79016a006c6efd5e4cee071f134128d0ffd100..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 100644
+--- a/basics
++++ b/basics
+@@ -1 +0,0 @@
+-module.exports = require('./cjs/src/basics.js')
+diff --git a/node_modules/multiformats/basics.js b/basics.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..1a79016a006c6efd5e4cee071f134128d0ffd100
+--- /dev/null
++++ b/basics.js
+@@ -0,0 +1 @@
++module.exports = require('./cjs/src/basics.js')

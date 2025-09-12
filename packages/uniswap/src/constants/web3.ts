@@ -10,6 +10,7 @@ export const CONNECTION_PROVIDER_IDS = {
   EMBEDDED_WALLET_CONNECTOR_ID: 'embeddedUniswapWalletConnector',
   BINANCE_WALLET_CONNECTOR_ID: 'wallet.binance.com',
   BINANCE_WALLET_RDNS: 'com.binance.wallet',
+  PORTO_CONNECTOR_ID: 'xyz.ithaca.porto',
   MOCK_CONNECTOR_ID: 'mock',
 } as const
 

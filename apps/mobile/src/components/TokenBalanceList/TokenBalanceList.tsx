@@ -6,28 +6,31 @@ import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'rea
 import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { TokenBalanceItemContextMenu } from 'src/components/TokenBalanceList/TokenBalanceItemContextMenu'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TAB_VIEW_SCROLL_THROTTLE, TabProps } from 'src/components/layout/TabHelpers'
 import { Flex, Loader, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { zIndexes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
-import { InformationBanner } from 'uniswap/src/components/banners/InformationBanner'
+import { EmptyTokensList } from 'uniswap/src/components/portfolio/EmptyTokensList'
+import { HiddenTokensRow } from 'uniswap/src/components/portfolio/HiddenTokensRow'
 import { TokenBalanceItem } from 'uniswap/src/components/portfolio/TokenBalanceItem'
-import { isError, isNonPollingRequestInFlight } from 'uniswap/src/data/utils'
+import { TokenBalanceItemContextMenu } from 'uniswap/src/components/portfolio/TokenBalanceItemContextMenu'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import {
   TokenBalanceListContextProvider,
   useTokenBalanceListContext,
 } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
-import { TokenBalanceListRow, isHiddenTokenBalancesRow } from 'uniswap/src/features/portfolio/types'
+import { isHiddenTokenBalancesRow, TokenBalanceListRow } from 'uniswap/src/features/portfolio/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { isAndroid } from 'utilities/src/platform'
@@ -122,7 +125,17 @@ const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, TokenBal
     const keyExtractor = useCallback((item: TokenBalanceListRow): string => item, [])
 
     const ListEmptyComponent = useMemo(() => {
-      return <EmptyComponent renderEmpty={empty} />
+      return (
+        <EmptyTokensList
+          emptyTokensComponent={
+            <Flex grow px="$spacing24">
+              {empty}
+            </Flex>
+          }
+          emptyCondition={!!empty}
+          errorCardContainerStyle={{ pt: '$spacing24' }}
+        />
+      )
     }, [empty])
 
     const ListHeaderComponent = useMemo(() => {
@@ -197,49 +210,29 @@ const HeaderComponent = memo(function _HeaderComponent(): JSX.Element | null {
   ) : null
 })
 
-const EmptyComponent = memo(function _EmptyComponent({
-  renderEmpty,
-}: {
-  renderEmpty?: JSX.Element | null
-}): JSX.Element {
-  const { t } = useTranslation()
-  const { balancesById, networkStatus, refetch } = useTokenBalanceListContext()
-
-  const isLoadingWithoutCachedValues = !balancesById && isNonPollingRequestInFlight(networkStatus)
-  const hasErrorWithoutCachedValues = isError(networkStatus, !!balancesById)
-
-  if (isLoadingWithoutCachedValues) {
-    return (
-      <Flex px="$spacing24">
-        <Loader.Token withPrice repeat={6} />
-      </Flex>
-    )
-  }
-
-  if (hasErrorWithoutCachedValues) {
-    return (
-      <Flex pt="$spacing24">
-        <BaseCard.ErrorState
-          retryButtonLabel={t('common.button.retry')}
-          title={t('home.tokens.error.load')}
-          onRetry={(): void | undefined => refetch?.()}
-        />
-      </Flex>
-    )
-  }
-
-  return (
-    <Flex grow px="$spacing24">
-      {renderEmpty}
-    </Flex>
-  )
-})
-
 const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: TokenBalanceListRow }) {
+  const dispatch = useDispatch()
   const { balancesById, isWarmLoading, onPressToken } = useTokenBalanceListContext()
+
+  const handlePressLearnMore = useCallback((): void => {
+    navigate(ModalName.HiddenTokenInfoModal)
+  }, [])
 
   const portfolioBalance = balancesById?.[item]
   const hasPortfolioBalance = !!portfolioBalance
+
+  const copyAddressToClipboard = useCallback(
+    async (address: string): Promise<void> => {
+      await setClipboard(address)
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.Copied,
+          copyType: CopyNotificationType.ContractAddress,
+        }),
+      )
+    },
+    [dispatch],
+  )
 
   const tokenBalanceItem = useMemo(() => {
     if (!hasPortfolioBalance) {
@@ -250,23 +243,21 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
       <TokenBalanceItem
         padded
         isHidden={portfolioBalance.isHidden ?? false}
-        portfolioBalanceId={portfolioBalance.id}
         isLoading={isWarmLoading}
         currencyInfo={portfolioBalance.currencyInfo}
-        onPressToken={onPressToken}
       />
     )
-  }, [
-    hasPortfolioBalance,
-    portfolioBalance?.id,
-    portfolioBalance?.isHidden,
-    portfolioBalance?.currencyInfo,
-    isWarmLoading,
-    onPressToken,
-  ])
+  }, [hasPortfolioBalance, portfolioBalance?.isHidden, portfolioBalance?.currencyInfo, isWarmLoading])
+
+  const handlePressToken = useCallback((): void => {
+    const currencyId = portfolioBalance?.currencyInfo.currencyId
+    if (currencyId && onPressToken) {
+      onPressToken(currencyId)
+    }
+  }, [onPressToken, portfolioBalance?.currencyInfo.currencyId])
 
   if (isHiddenTokenBalancesRow(item)) {
-    return <HiddenTokensRowWrapper />
+    return <HiddenTokensRow onPressLearnMore={handlePressLearnMore} />
   }
 
   if (!portfolioBalance) {
@@ -281,34 +272,12 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
   }
 
   return (
-    <TokenBalanceItemContextMenu portfolioBalance={portfolioBalance}>{tokenBalanceItem}</TokenBalanceItemContextMenu>
-  )
-})
-
-const HiddenTokensRowWrapper = memo(function HiddenTokensRowWrapper(): JSX.Element {
-  const { t } = useTranslation()
-
-  const { hiddenTokensCount, hiddenTokensExpanded, setHiddenTokensExpanded } = useTokenBalanceListContext()
-
-  const handlePressToken = useCallback((): void => {
-    navigate(ModalName.HiddenTokenInfoModal)
-  }, [])
-
-  return (
-    <Flex grow>
-      <ExpandoRow
-        isExpanded={hiddenTokensExpanded}
-        label={t('hidden.tokens.info.text.button', { numHidden: hiddenTokensCount })}
-        mx="$spacing16"
-        onPress={(): void => {
-          setHiddenTokensExpanded(!hiddenTokensExpanded)
-        }}
-      />
-      {hiddenTokensExpanded && (
-        <Flex mx="$spacing12">
-          <InformationBanner infoText={t('hidden.tokens.info.banner.text')} onPress={handlePressToken} />
-        </Flex>
-      )}
-    </Flex>
+    <TokenBalanceItemContextMenu
+      portfolioBalance={portfolioBalance}
+      copyAddressToClipboard={copyAddressToClipboard}
+      onPressToken={handlePressToken}
+    >
+      {tokenBalanceItem}
+    </TokenBalanceItemContextMenu>
   )
 })

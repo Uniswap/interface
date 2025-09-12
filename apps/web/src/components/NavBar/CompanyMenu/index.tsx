@@ -5,7 +5,7 @@ import { MobileMenuDrawer } from 'components/NavBar/CompanyMenu/MobileMenuDrawer
 import { useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router'
-import { Flex, Popover, Text, styled, useIsTouchDevice, useMedia } from 'ui/src'
+import { Flex, Popover, styled, Text, useIsTouchDevice, useMedia } from 'ui/src'
 import { Hamburger } from 'ui/src/components/icons/Hamburger'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 

@@ -1,11 +1,11 @@
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { createApiClient } from 'uniswap/src/data/apiClients/createApiClient'
-import { SignedRequestParams, createSignedRequestBody, createSignedRequestParams } from 'uniswap/src/data/utils'
+import { createSignedRequestBody, createSignedRequestParams, SignedRequestParams } from 'uniswap/src/data/utils'
 import {
-  UnitagAddressRequest,
-  UnitagAddressResponse,
   UnitagAddressesRequest,
   UnitagAddressesResponse,
+  UnitagAddressRequest,
+  UnitagAddressResponse,
   UnitagChangeUsernameRequestBody,
   UnitagClaimEligibilityRequest,
   UnitagClaimEligibilityResponse,

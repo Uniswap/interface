@@ -1,6 +1,6 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/utils/getAmountsFromTrade'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'

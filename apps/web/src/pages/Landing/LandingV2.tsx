@@ -1,5 +1,5 @@
 import { Hero } from 'pages/Landing/sections/Hero'
-import { Suspense, lazy, memo, useRef } from 'react'
+import { lazy, memo, Suspense, useRef } from 'react'
 import { Flex, styled } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 

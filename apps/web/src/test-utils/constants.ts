@@ -14,11 +14,11 @@ import {
 import {
   DAI,
   DAI_ARBITRUM_ONE,
+  nativeOnChain,
   USDC_ARBITRUM,
   USDC_MAINNET,
   USDT,
   WBTC,
-  nativeOnChain,
 } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'

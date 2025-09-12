@@ -11,8 +11,9 @@ import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { SendAction } from 'ui/src/components/icons/SendAction'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { usePortfolioCacheUpdater } from 'uniswap/src/features/dataApi/balances/balances'
+import { usePortfolioCacheUpdater } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useTokenVisibility } from 'uniswap/src/features/visibility/selectors'
 import { setTokenVisibility } from 'uniswap/src/features/visibility/slice'
@@ -31,6 +32,7 @@ export function useTokenContextMenu({ tokenBalance }: TokenMenuParams): MenuOpti
   const navigate = useNavigate()
   const wallet = useWallet()
   const { isTestnetModeEnabled } = useEnabledChains()
+  const { navigateToSendFlow } = useUniswapContext()
 
   const [copied, setCopied] = useState(false)
 
@@ -65,8 +67,8 @@ export function useTokenContextMenu({ tokenBalance }: TokenMenuParams): MenuOpti
   }, [tokenAddress])
 
   const onNavigateToSend = useCallback(() => {
-    navigate(`/send?chain=${chainUrlParam}&inputCurrency=${tokenAddress}`)
-  }, [navigate, tokenAddress, chainUrlParam])
+    navigateToSendFlow({ chainId, currencyAddress: tokenAddress })
+  }, [navigateToSendFlow, chainId, tokenAddress])
 
   const onNavigateToSwap = useCallback(() => {
     navigate(`/swap?chain=${chainUrlParam}&inputCurrency=${tokenAddress}`)

@@ -1,4 +1,4 @@
-import { queryOptions, useQuery, UseQueryResult } from '@tanstack/react-query'
+import { queryOptions, UseQueryResult, useQuery } from '@tanstack/react-query'
 import { Camera, PermissionResponse } from 'expo-camera'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 

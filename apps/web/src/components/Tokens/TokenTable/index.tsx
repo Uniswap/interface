@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
+
+import { SparklineMap } from 'appGraphql/data/types'
+import { getTokenDetailsURL, OrderDirection, unwrapToken } from 'appGraphql/data/util'
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
-import { SparklineMap } from 'appGraphql/data/types'
-import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'appGraphql/data/util'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { Table } from 'components/Table'
@@ -15,25 +16,25 @@ import {
   HeaderSortText,
   TableText,
 } from 'components/Table/styled'
-import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import {
-  TokenSortMethod,
   exploreSearchStringAtom,
   filterTimeAtom,
   sortAscendingAtom,
   sortMethodAtom,
+  TokenSortMethod,
   useSetSortMethod,
 } from 'components/Tokens/state'
+import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtomValue } from 'jotai/utils'
-import { ReactElement, ReactNode, memo, useMemo } from 'react'
+import { memo, ReactElement, ReactNode, useMemo } from 'react'
 import { Trans } from 'react-i18next'
-import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
+import { giveExploreStatDefaultValue, TABLE_PAGE_SIZE } from 'state/explore'
 import { useTopTokens as useRestTopTokens } from 'state/explore/topTokens'
 import { TokenStat } from 'state/explore/types'
-import { Flex, Text, View, styled, useMedia } from 'ui/src'
+import { Flex, styled, Text, useMedia, View } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'

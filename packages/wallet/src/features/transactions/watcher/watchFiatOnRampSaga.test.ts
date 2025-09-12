@@ -1,6 +1,6 @@
+import { call, delay } from 'redux-saga/effects'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
-import { call, delay } from 'redux-saga/effects'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { forceFetchFiatOnRampTransactions, transactionActions } from 'uniswap/src/features/transactions/slice'

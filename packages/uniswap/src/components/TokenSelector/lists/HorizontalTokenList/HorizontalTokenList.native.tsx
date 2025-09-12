@@ -2,9 +2,9 @@ import { memo } from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import { Flex } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { TokenPill } from 'uniswap/src/components/TokenSelector/items/tokens/SuggestedToken'
 import { HorizontalTokenListProps } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
-import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { useEvent, useMemoCompare } from 'utilities/src/react/hooks'
 
 const CONTENT_CONTAINER_STYLE = {

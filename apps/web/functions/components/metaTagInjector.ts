@@ -1,11 +1,10 @@
-import { MetaTagInjectorInput } from 'shared-cloud/metatags'
-
 import { Data } from 'functions/utils/cache'
 import getPool from 'functions/utils/getPool'
 import { getRequest } from 'functions/utils/getRequest'
 import getToken from 'functions/utils/getToken'
 import { Context, Next } from 'hono'
 import { encode } from 'html-entities'
+import { MetaTagInjectorInput } from 'shared-cloud/metatags'
 import { paths } from 'src/pages/paths'
 
 function doesMatchPath(path: string): boolean {

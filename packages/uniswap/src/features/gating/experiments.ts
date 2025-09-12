@@ -9,6 +9,8 @@ export enum Experiments {
   NativeTokenPercentageBuffer = 'lp_native_buffer',
   SwapConfirmation = 'swap-confirmation',
   UnichainFlashblocksModal = 'unichain_flashblocks_modal',
+  WebFORNudges = 'web_for_nudge',
+  ForFilters = 'for_filters',
 }
 
 export enum Layers {
@@ -49,12 +51,22 @@ export enum UnichainFlashblocksProperties {
   FlashblocksModalEnabled = 'flashblocksModalEnabled',
 }
 
+export enum ForFiltersProperties {
+  ForFiltersEnabled = 'forFiltersEnabled',
+}
+
+export enum WebFORNudgesProperties {
+  NudgeEnabled = 'nudgeEnabled',
+}
+
 export type ExperimentProperties = {
   [Experiments.PriceUxUpdate]: PriceUxUpdateProperties
   [Experiments.PrivateRpc]: PrivateRpcProperties
   [Experiments.NativeTokenPercentageBuffer]: NativeTokenPercentageBufferProperties
   [Experiments.SwapConfirmation]: SwapConfirmationProperties
   [Experiments.UnichainFlashblocksModal]: UnichainFlashblocksProperties
+  [Experiments.ForFilters]: ForFiltersProperties
+  [Experiments.WebFORNudges]: WebFORNudgesProperties
 }
 
 // will be a spread of all experiment properties in that layer

@@ -5,9 +5,9 @@ import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { Eye } from 'ui/src/components/icons/Eye'
 import { EyeOff } from 'ui/src/components/icons/EyeOff'
 import { Flag } from 'ui/src/components/icons/Flag'
+import { Opensea } from 'ui/src/components/icons/Opensea'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
-import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { TokenReportEventType, submitTokenReport } from 'uniswap/src/data/apiClients/dataApi/DataApiClient'
+import { submitTokenReport, TokenReportEventType } from 'uniswap/src/data/apiClients/dataApi/DataApiClient'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useBlockExplorerLogo } from 'uniswap/src/features/chains/logos'
@@ -15,6 +15,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainExplorerName } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
 import { getIsNftHidden, getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
@@ -24,9 +25,8 @@ import { selectNftsVisibility } from 'uniswap/src/features/visibility/selectors'
 import { setNftVisibility } from 'uniswap/src/features/visibility/slice'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
+import { getOpenseaLink, openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { isWeb } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 interface NFTMenuParams {
@@ -51,13 +51,12 @@ export function useNFTContextMenuItems({
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const { defaultChainId } = useEnabledChains()
+  const navigateToNftExplorerLink = useNavigateToNftExplorerLink()
   const isSelfReportSpamNFTEnabled = useFeatureFlag(FeatureFlags.SelfReportSpamNFTs)
   const { evmAccount } = useWallet()
   const isViewOnlyOwner = evmAccount && owner === evmAccount.address && evmAccount.accountType === AccountType.Readonly
   const ownedByUser = owner && walletAddresses.includes(owner)
   const showReportSpamOption = isSelfReportSpamNFTEnabled && ownedByUser && !isViewOnlyOwner && !isSpam
-
-  const { navigateToNftDetails } = useUniswapContext()
 
   const nftVisibility = useSelector(selectNftsVisibility)
   const nftKey = contractAddress && tokenId ? getNFTAssetKey(contractAddress, tokenId) : undefined
@@ -140,12 +139,6 @@ export function useNFTContextMenuItems({
     }
   }, [nftKey, tokenId, chainId, contractAddress, isSpam, isVisible, dispatch, showNotification])
 
-  const onPressNavigateToExplorer = useCallback(() => {
-    if (contractAddress && tokenId && chainId) {
-      navigateToNftDetails({ address: contractAddress, tokenId, chainId, fallbackChainId: defaultChainId })
-    }
-  }, [contractAddress, tokenId, chainId, navigateToNftDetails, defaultChainId])
-
   const onPressCopyAddress = useCallback(async (): Promise<void> => {
     if (!contractAddress) {
       return
@@ -159,79 +152,96 @@ export function useNFTContextMenuItems({
     )
   }, [contractAddress, dispatch])
 
-  const openExplorerLink = useCallback(async (): Promise<void> => {
-    if (!chainId || !contractAddress) {
-      return
+  const openseaUri = useMemo(() => {
+    if (chainId && contractAddress && tokenId) {
+      return getOpenseaLink({ chainId, contractAddress, tokenId })
     }
-    await openUri({
-      uri: getExplorerLink({ chainId, data: contractAddress, type: ExplorerDataType.ADDRESS }),
-    })
-  }, [chainId, contractAddress])
+    return null
+  }, [chainId, contractAddress, tokenId])
+
+  const openOpenseaLink = useCallback(async () => {
+    if (openseaUri) {
+      await openUri({ uri: openseaUri })
+    }
+  }, [openseaUri])
+
+  const openExplorerLink = useCallback(async () => {
+    if (chainId && contractAddress && tokenId) {
+      navigateToNftExplorerLink({ chainId, contractAddress, tokenId, fallbackChainId: defaultChainId })
+    }
+  }, [chainId, contractAddress, tokenId, navigateToNftExplorerLink, defaultChainId])
 
   const ExplorerLogo = useBlockExplorerLogo(chainId)
 
-  const menuActions = useMemo(
-    () =>
-      nftKey
-        ? [
-            ...(chainId
-              ? [
-                  {
-                    label: t('tokens.nfts.action.viewOnExplorer', {
-                      blockExplorerName: getChainExplorerName(chainId),
-                    }),
-                    onPress: isWeb ? onPressNavigateToExplorer : openExplorerLink,
-                    Icon: ExplorerLogo,
-                  },
-                ]
-              : []),
-            ...(contractAddress
-              ? [
-                  {
-                    label: t('common.copy.address'),
-                    Icon: CopySheets,
-                    onPress: onPressCopyAddress,
-                  },
-                ]
-              : []),
-            ...(ownedByUser
-              ? [
-                  {
-                    label: isVisible ? t('tokens.nfts.hidden.action.hide') : t('tokens.nfts.hidden.action.unhide'),
-                    Icon: isVisible ? EyeOff : Eye,
-                    destructive: isVisible,
-                    onPress: onPressHiddenStatus,
-                  },
-                ]
-              : []),
-            ...(showReportSpamOption
-              ? [
-                  {
-                    label: t('nft.reportSpam'),
-                    Icon: Flag,
-                    destructive: true,
-                    onPress: onPressReport,
-                  },
-                ]
-              : []),
-          ]
-        : [],
-    [
-      nftKey,
-      chainId,
-      t,
-      onPressNavigateToExplorer,
-      ExplorerLogo,
-      openExplorerLink,
-      contractAddress,
-      onPressCopyAddress,
-      showReportSpamOption,
-      onPressReport,
-      ownedByUser,
-      isVisible,
-      onPressHiddenStatus,
-    ],
-  )
+  const menuActions: MenuOptionItem[] = useMemo(() => {
+    const actions: MenuOptionItem[] = []
+
+    if (!nftKey) {
+      return actions
+    }
+
+    if (chainId && contractAddress && tokenId) {
+      actions.push({
+        label: t('tokens.nfts.action.viewOnExplorer', {
+          blockExplorerName: getChainExplorerName(chainId),
+        }),
+        onPress: openExplorerLink,
+        Icon: ExplorerLogo,
+      })
+    }
+
+    if (chainId && openseaUri) {
+      actions.push({
+        label: t('common.opensea.link'),
+        onPress: openOpenseaLink,
+        Icon: Opensea,
+      })
+    }
+
+    if (contractAddress) {
+      actions.push({
+        label: t('common.copy.address'),
+        Icon: CopySheets,
+        onPress: onPressCopyAddress,
+      })
+    }
+
+    if (ownedByUser) {
+      actions.push({
+        label: isVisible ? t('tokens.nfts.hidden.action.hide') : t('tokens.nfts.hidden.action.unhide'),
+        Icon: isVisible ? EyeOff : Eye,
+        destructive: isVisible,
+        onPress: onPressHiddenStatus,
+      })
+    }
+
+    if (showReportSpamOption) {
+      actions.push({
+        label: t('nft.reportSpam'),
+        Icon: Flag,
+        destructive: true,
+        onPress: onPressReport,
+      })
+    }
+
+    return actions
+  }, [
+    nftKey,
+    chainId,
+    contractAddress,
+    tokenId,
+    openseaUri,
+    ownedByUser,
+    showReportSpamOption,
+    t,
+    openExplorerLink,
+    ExplorerLogo,
+    openOpenseaLink,
+    onPressCopyAddress,
+    isVisible,
+    onPressHiddenStatus,
+    onPressReport,
+  ])
 
   return menuActions
 }

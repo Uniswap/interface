@@ -12,7 +12,9 @@ import { useReadContract } from 'wagmi'
  */
 export default function useCurrentBlockTimestamp({
   refetchInterval = ms('3min'),
-}: { refetchInterval?: number | false } = {}): bigint | undefined {
+}: {
+  refetchInterval?: number | false
+} = {}): bigint | undefined {
   const account = useAccount()
 
   return useReadContract({

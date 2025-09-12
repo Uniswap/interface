@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
+import { useAddFiatOnRampTransaction } from 'state/fiatOnRampTransactions/hooks'
 import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from 'state/fiatOnRampTransactions/types'
-import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
+import { useFiatOnRampAggregatorTransferWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { FORQuoteItem } from 'uniswap/src/features/fiatOnRamp/FORQuoteItem'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
+import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { v4 as uuid } from 'uuid'
-
-import { useAddFiatOnRampTransaction } from 'state/fiatOnRampTransactions/hooks'
-import { useFiatOnRampAggregatorTransferWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
 
 interface ProviderOptionProps {
   serviceProvider: FORServiceProvider
@@ -41,7 +41,6 @@ export function ProviderOption({
     <FORQuoteItem
       key={serviceProvider.name}
       serviceProvider={serviceProvider}
-      hoverIcon={<ExternalLink position="absolute" right="$spacing12" size={20} color="$neutral2" />}
       isLoading={isLoading}
       onPress={async () => {
         if (data) {
@@ -56,6 +55,10 @@ export function ProviderOption({
             type: FiatOnRampTransactionType.TRANSFER,
             syncedWithBackend: false,
             provider: serviceProvider.serviceProvider,
+          })
+          sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampTransferWidgetOpened, {
+            externalTransactionId,
+            serviceProvider: serviceProvider.serviceProvider,
           })
         } else if (error) {
           setErrorProvider(serviceProvider)

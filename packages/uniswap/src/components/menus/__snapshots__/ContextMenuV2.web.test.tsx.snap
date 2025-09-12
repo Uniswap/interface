@@ -184,7 +184,7 @@ exports[`ContextMenu renders without error 1`] = `
               onPress={[Function]}
               onPressIn={[Function]}
               onPressOut={[Function]}
-              role="button"
+              role="none"
               selectable={false}
               style={
                 {
@@ -288,7 +288,7 @@ exports[`ContextMenu renders without error 1`] = `
               onPress={[Function]}
               onPressIn={[Function]}
               onPressOut={[Function]}
-              role="button"
+              role="none"
               selectable={false}
               style={
                 {

@@ -12,7 +12,7 @@ module.exports = {
     },
   },
   rules: {
-    // let prettier do things:
+    // let biome do things:
     semi: 0,
     quotes: 0,
     'comma-dangle': 0,

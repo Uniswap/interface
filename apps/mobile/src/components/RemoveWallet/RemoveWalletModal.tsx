@@ -1,6 +1,6 @@
 import { AppStackScreenProp } from 'src/app/navigation/types'
-import { RemoveWalletContent } from 'src/components/RemoveWallet/RemoveWalletContent'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { RemoveWalletContent } from 'src/components/RemoveWallet/RemoveWalletContent'
 import { useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'

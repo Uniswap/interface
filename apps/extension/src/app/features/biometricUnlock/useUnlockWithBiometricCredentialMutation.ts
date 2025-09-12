@@ -10,13 +10,13 @@ import { useUnlockWithPassword } from 'src/app/features/lockScreen/useUnlockWith
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import {
   convertBytesToCryptoKey,
   decodeFromStorage,
   decrypt,
   generateNew256BitRandomBuffer,
 } from 'wallet/src/features/wallet/Keyring/crypto'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 export function useUnlockWithBiometricCredentialMutation(): UseMutationResult<void, Error, void> {
   const unlockWithPassword = useUnlockWithPassword()

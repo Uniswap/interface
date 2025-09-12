@@ -6,18 +6,18 @@ import { useTranslation } from 'react-i18next'
 import { Flex, ModalCloseIcon, Text, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { spacing, zIndexes } from 'ui/src/theme'
+import PasteButton from 'uniswap/src/components/buttons/PasteButton'
+import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
+import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { TokenSelectorEmptySearchList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorEmptySearchList'
 import { TokenSelectorSearchResultsList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSearchResultsList'
 import { TokenSelectorSendList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSendList'
 import { TokenSelectorSwapList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapList'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { flowToModalName } from 'uniswap/src/components/TokenSelector/utils'
-import PasteButton from 'uniswap/src/components/buttons/PasteButton'
-import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
-import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
-import { Modal } from 'uniswap/src/components/modals/Modal'
-import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -26,7 +26,6 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SearchContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import {
   ElementName,
   InterfaceEventName,
@@ -35,6 +34,7 @@ import {
   UniswapEventName,
 } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getClipboard } from 'uniswap/src/utils/clipboard'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
@@ -154,7 +154,7 @@ export function TokenSelectorContent({
 
       // log event that a currency was selected
       const tokenOption = section.data[index]
-      const balanceUSD = Array.isArray(tokenOption) ? undefined : tokenOption?.balanceUSD ?? undefined
+      const balanceUSD = Array.isArray(tokenOption) ? undefined : (tokenOption?.balanceUSD ?? undefined)
       sendAnalyticsEvent(UniswapEventName.TokenSelected, {
         name: currencyInfo.currency.name,
         address: currencyAddress(currencyInfo.currency),

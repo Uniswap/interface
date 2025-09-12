@@ -1,6 +1,6 @@
 import { DYNAMIC_FEE_DATA } from 'components/Liquidity/Create/types'
 import ms from 'ms'
-import { Page, expect, getTest } from 'playwright/fixtures'
+import { expect, getTest, Page } from 'playwright/fixtures'
 import { DAI, USDC_UNICHAIN, USDT } from 'uniswap/src/constants/tokens'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'

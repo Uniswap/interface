@@ -4,7 +4,7 @@ import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import { useFiatOnRampSupportedTokens, useMeldFiatCurrencyInfo } from 'pages/Swap/Buy/hooks'
 import { formatFORErrorAmount, getOnRampInputAmount, parseAndFormatFiatOnRampFiatAmount } from 'pages/Swap/Buy/shared'
-import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
+import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { buildPartialCurrencyInfo } from 'uniswap/src/constants/routing'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
@@ -14,11 +14,12 @@ import {
   useFiatOnRampAggregatorCryptoQuoteQuery,
 } from 'uniswap/src/features/fiatOnRamp/api'
 import {
-  FORCountry,
-  FORQuoteResponse,
-  FORSupportedCountriesResponse,
   FiatCurrencyInfo,
   FiatOnRampCurrency,
+  FORCountry,
+  FORFilters,
+  FORQuoteResponse,
+  FORSupportedCountriesResponse,
   RampDirection,
 } from 'uniswap/src/features/fiatOnRamp/types'
 import {
@@ -51,6 +52,7 @@ type BuyFormState = {
   readonly rampDirection: RampDirection
   readonly selectedUnsupportedCurrency?: FiatOnRampCurrency
   readonly moonpayOnly?: boolean
+  readonly paymentMethod?: FORFilters
 }
 
 type BuyInfo = {
@@ -83,6 +85,7 @@ const DEFAULT_BUY_FORM_STATE: BuyFormState = {
   rampDirection: RampDirection.ONRAMP,
   selectedUnsupportedCurrency: undefined,
   moonpayOnly: false,
+  paymentMethod: undefined,
 }
 
 export const BuyFormContext = createContext<BuyFormContextType>({

@@ -3,6 +3,10 @@ import { GeneratedIcon, IconProps, TextProps } from 'ui/src'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
+export type MenuOptionItemWithId = MenuOptionItem & {
+  id: string
+}
+
 export type MenuOptionItem = {
   label: string
   onPress: () => void

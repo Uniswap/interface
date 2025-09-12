@@ -1,4 +1,5 @@
-import { useColorsFromTokenColor, type ButtonProps, type ColorTokens } from 'ui/src'
+import { type ButtonProps, type ColorTokens, useColorsFromTokenColor } from 'ui/src'
+import { useIsShowingWebFORNudge, useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useIsBlockingWithCustomMessage } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockingWithCustomMessage'
 import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsSwapButtonDisabled'
@@ -14,25 +15,49 @@ export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
   const isBlockingWithCustomMessage = useIsBlockingWithCustomMessage()
   const activeAccount = useWallet().evmAccount
   const isSubmitting = useSwapFormStore((s) => s.isSubmitting)
+  const isShowingWebFORNudge = useIsShowingWebFORNudge()
   const { validTokenColor, lightTokenColor } = useColorsFromTokenColor(tokenColor)
   const { swapRedirectCallback } = useTransactionModalContext()
+  const promptWebFORNudge = useIsWebFORNudgeEnabled() && !swapRedirectCallback && !isShowingWebFORNudge
 
   const isBlockingOrDisabledWithoutSwapRedirect = (isBlockingWithCustomMessage || disabled) && !swapRedirectCallback
   const isInactiveAccountOrSubmitting = !activeAccount || isSubmitting
 
   // If disabled, use defaults for background color
+  // Checks if web for nudge is enabled and uses accent2 if it is
   // Otherwise, we'll try and use the color from the token (i.e. swapping on Web > TDP)
-  const buttonBackgroundColor = disabled ? undefined : isInactiveAccountOrSubmitting ? lightTokenColor : validTokenColor
+  const buttonBackgroundColor = ((): ColorTokens | undefined => {
+    if (disabled) {
+      return undefined
+    }
 
-  const buttonVariant: ButtonProps['variant'] = !activeAccount
-    ? 'branded'
-    : isBlockingOrDisabledWithoutSwapRedirect
-      ? 'default'
-      : 'branded'
+    if (isInactiveAccountOrSubmitting) {
+      return lightTokenColor
+    }
+
+    if (promptWebFORNudge) {
+      return '$accent2'
+    }
+
+    return validTokenColor
+  })()
+
+  const buttonVariant: ButtonProps['variant'] =
+    !activeAccount || promptWebFORNudge ? 'branded' : isBlockingOrDisabledWithoutSwapRedirect ? 'default' : 'branded'
   const buttonEmphasis: ButtonProps['emphasis'] =
     isInactiveAccountOrSubmitting || isBlockingOrDisabledWithoutSwapRedirect ? 'secondary' : 'primary'
 
-  const buttonTextColor = !activeAccount ? validTokenColor : undefined
+  const buttonTextColor = ((): ColorTokens | undefined => {
+    if (promptWebFORNudge) {
+      return '$accent1'
+    }
+
+    if (!activeAccount) {
+      return validTokenColor
+    }
+
+    return undefined
+  })()
 
   return {
     backgroundColor: buttonBackgroundColor,

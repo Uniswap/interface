@@ -53,13 +53,29 @@ function findCancelTx({
 }
 
 /** Deduplicates local and remote activities */
-function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = {}): Array<Activity> {
+export function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = {}): Array<Activity> {
   const activityIds = [...new Set([...Object.keys(localMap), ...Object.keys(remoteMap)])]
 
   return activityIds.reduce((acc: Array<Activity>, id) => {
-    const localActivity = (localMap[id] ?? {}) as Activity
-    const remoteActivity = (remoteMap[id] ?? {}) as Activity
+    const localActivity = localMap[id]
+    const remoteActivity = remoteMap[id]
 
+    // Skip if both activities are undefined
+    if (!localActivity && !remoteActivity) {
+      return acc
+    }
+
+    // If only one exists, use that one
+    if (!localActivity) {
+      acc.push(remoteActivity as Activity)
+      return acc
+    }
+    if (!remoteActivity) {
+      acc.push(localActivity)
+      return acc
+    }
+
+    // Both exist - apply merging logic
     if (localActivity.status === TransactionStatus.Canceled) {
       // Hides misleading activities caused by cross-chain nonce collisions previously being incorrectly labelled as cancelled txs in redux
       // If there is no remote activity fallback to local activity

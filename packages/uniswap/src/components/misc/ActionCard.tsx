@@ -1,6 +1,6 @@
-import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
-import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Flex, FlexProps, Text, TouchableArea, useShadowPropsShort } from 'ui/src'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 
 export interface ActionCardItem {
   title: string
@@ -11,8 +11,10 @@ export interface ActionCardItem {
   containerProps?: FlexProps
   hoverStyle?: FlexProps
   leftAlign?: boolean
+  borderRadius?: FlexProps['borderRadius']
   onPress?: () => void
-  BackgroundImageWrapperCallback?: React.FC<{ children: React.ReactNode }>
+  backgroundImageWrapperCallback?: React.FC<{ children: React.ReactNode }>
+  shadowProps?: ReturnType<typeof useShadowPropsShort>
 }
 
 export const ActionCard = ({
@@ -24,19 +26,22 @@ export const ActionCard = ({
   containerProps,
   hoverStyle,
   leftAlign = false,
-  BackgroundImageWrapperCallback,
+  backgroundImageWrapperCallback,
+  borderRadius,
+  shadowProps,
 }: ActionCardItem): JSX.Element => (
   <Trace logPress element={elementName}>
     <TouchableArea
-      backgroundColor={BackgroundImageWrapperCallback ? undefined : '$surface1'}
+      backgroundColor={backgroundImageWrapperCallback ? undefined : '$surface1'}
       borderColor="$surface3"
-      borderRadius="$rounded24"
+      borderRadius={borderRadius ?? '$rounded24'}
       borderWidth="$spacing1"
       overflow="hidden"
       hoverStyle={hoverStyle}
       onPress={onPress}
+      {...shadowProps}
     >
-      <BackgroundWrapper BackgroundImageWrapper={BackgroundImageWrapperCallback}>
+      <BackgroundWrapper BackgroundImageWrapper={backgroundImageWrapperCallback}>
         <Flex
           shrink
           centered={!leftAlign}
@@ -47,7 +52,7 @@ export const ActionCard = ({
           {...containerProps}
         >
           {icon}
-          <Flex shrink centered={!leftAlign} alignContent={leftAlign ? 'flex-start' : 'center'}>
+          <Flex shrink centered={!leftAlign} alignContent={leftAlign ? 'flex-start' : 'center'} gap="$spacing4">
             <Text textAlign={leftAlign ? 'left' : 'center'} variant="buttonLabel2">
               {title}
             </Text>

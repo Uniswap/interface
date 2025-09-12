@@ -1,4 +1,5 @@
 import * as matchers from 'jest-extended'
+
 expect.extend(matchers)
 
 import Cache, { Data } from 'functions/utils/cache'

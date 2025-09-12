@@ -1,5 +1,5 @@
-import { CurrencyAmount, Percent, type Currency } from '@uniswap/sdk-core'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { type Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'

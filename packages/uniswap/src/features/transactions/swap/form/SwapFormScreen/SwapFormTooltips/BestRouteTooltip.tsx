@@ -1,23 +1,23 @@
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
+import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
 import { ShieldCheck } from 'ui/src/components/icons/ShieldCheck'
-import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
-import RoutingDiagram from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
+import { RoutingDiagram } from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
 import { TransactionDetailsTooltip as Tooltip } from 'uniswap/src/components/TransactionDetailsTooltip'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
-import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
-import getRoutingDiagramEntries from 'uniswap/src/utils/getRoutingDiagramEntries'
+import { useRoutingEntries, useRoutingProvider } from 'uniswap/src/utils/routingDiagram/routingRegistry'
 
 export function BestRouteTooltip(): JSX.Element | null {
   const { t } = useTranslation()
   const trade = useSwapTxStore((s) => s.trade)
 
-  const routes = useMemo(() => (trade && isClassic(trade) ? getRoutingDiagramEntries(trade) : []), [trade])
+  const routingProvider = useRoutingProvider({ routing: trade?.routing })
 
-  if (!trade || !isClassic(trade)) {
+  const routes = useRoutingEntries({ trade })
+
+  if (!trade || !routes || !routingProvider) {
     return null
   }
 
@@ -27,10 +27,10 @@ export function BestRouteTooltip(): JSX.Element | null {
     <Tooltip.Outer>
       <Tooltip.Header
         title={{
-          title: t('common.bestRoute.with', { provider: 'Uniswap API' }),
+          title: t('common.bestRoute.with', { provider: routingProvider.name }),
         }}
-        Icon={UniswapLogo}
-        iconColor="$accent1"
+        Icon={routingProvider.icon ?? OrderRouting}
+        iconColor={routingProvider.iconColor || '$neutral1'}
       />
       <Tooltip.Content>
         <Tooltip.Row>
@@ -40,7 +40,12 @@ export function BestRouteTooltip(): JSX.Element | null {
         </Tooltip.Row>
       </Tooltip.Content>
       <Tooltip.Separator />
-      <Tooltip.Description learnMoreUrl={uniswapUrls.helpArticleUrls.routingSettings} text={t('swap.autoRouter')} />
+      {routingProvider.getDescription && (
+        <Tooltip.Description
+          learnMoreUrl={uniswapUrls.helpArticleUrls.routingSettings}
+          text={routingProvider.getDescription(t)}
+        />
+      )}
     </Tooltip.Outer>
   )
 }

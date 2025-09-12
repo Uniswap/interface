@@ -1,10 +1,13 @@
+import { useCallback } from 'react'
 import { Flex } from 'ui/src'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { NftView, NftViewProps } from 'uniswap/src/components/nfts/NftView'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useNFTContextMenuItems } from 'uniswap/src/features/nfts/hooks/useNftContextMenuItems'
+import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { isWeb } from 'utilities/src/platform'
+import { noop } from 'utilities/src/react/noop'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export type NftViewWithContextMenuProps = NftViewProps & {
@@ -14,6 +17,7 @@ export type NftViewWithContextMenuProps = NftViewProps & {
 export function NftViewWithContextMenu(props: NftViewWithContextMenuProps): JSX.Element {
   const { value: contextMenuIsOpen, setFalse: closeContextMenu, setTrue: openContextMenu } = useBooleanState(false)
   const { item, owner, walletAddresses } = props
+  const { hapticFeedback } = useHapticFeedback()
 
   const menuItems = useNFTContextMenuItems({
     contractAddress: item.contractAddress,
@@ -25,6 +29,11 @@ export function NftViewWithContextMenu(props: NftViewWithContextMenuProps): JSX.
     chainId: fromGraphQLChain(item.chain) ?? undefined,
   })
 
+  const openContextMenuWithHaptics = useCallback(async () => {
+    await hapticFeedback.light().catch(noop)
+    openContextMenu()
+  }, [hapticFeedback, openContextMenu])
+
   return (
     <Flex>
       <ContextMenu
@@ -33,7 +42,7 @@ export function NftViewWithContextMenu(props: NftViewWithContextMenuProps): JSX.
         isOpen={contextMenuIsOpen}
         closeMenu={closeContextMenu}
       >
-        <NftView {...props} openContextMenu={openContextMenu} />
+        <NftView {...props} openContextMenu={openContextMenuWithHaptics} />
       </ContextMenu>
     </Flex>
   )

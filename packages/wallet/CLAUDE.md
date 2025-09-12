@@ -10,29 +10,29 @@ The `wallet` package is a core shared package in the Uniswap Universe monorepo t
 
 ```bash
 # Install dependencies (from monorepo root)
-yarn install
+bun install
 
 # Run tests
-yarn test
+bun run test
 
 # Run tests with coverage
-yarn test --coverage
+bun run test --coverage
 
 # Update test snapshots
-yarn snapshots
+bun snapshots
 
 # Type checking
-yarn typecheck
+bun typecheck
 
 # Linting
-yarn lint
-yarn lint:fix
+bun lint
+bun lint:fix
 
 # Format code
-yarn format
+bun format
 
 # Check dependency usage
-yarn check:deps:usage
+bun check:deps:usage
 ```
 
 ## Architecture Overview

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceState } from 'state/webReducer'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Flex, Text, styled } from 'ui/src'
+import { Flex, styled, Text } from 'ui/src'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const BannerWrapper = styled(Flex, {

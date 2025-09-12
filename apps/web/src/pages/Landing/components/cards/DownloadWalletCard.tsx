@@ -1,8 +1,7 @@
 import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
-
-import { Wallet } from 'pages/Landing/components/Icons'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
 import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
+import { Wallet } from 'pages/Landing/components/Icons'
 import { Trans, useTranslation } from 'react-i18next'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { Flex, useSporeColors } from 'ui/src'

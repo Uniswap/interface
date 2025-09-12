@@ -4,8 +4,8 @@ import 'wallet/jest-package-mocks'
 import 'ui/jest-package-mocks'
 
 import { chrome } from 'jest-chrome'
-import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
 import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'
+import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
 
 process.env.IS_UNISWAP_EXTENSION = true
 

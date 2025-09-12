@@ -1,43 +1,26 @@
-/* eslint-disable max-lines */
-import { NetworkStatus, Reference, WatchQueryFetchPolicy, useApolloClient } from '@apollo/client'
+import { NetworkStatus } from '@apollo/client'
 import { QueryHookOptions } from '@apollo/client/react/types/types'
 import isEqual from 'lodash/isEqual'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   ContractInput,
-  IAmount,
-  PortfolioBalancesDocument,
   PortfolioBalancesQuery,
   PortfolioBalancesQueryVariables,
   PortfolioValueModifier,
-  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-  usePortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult, SpamCode } from 'uniswap/src/data/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import {
-  useRESTPortfolioData,
-  useRESTPortfolioTotalValue,
-  useRestPortfolioCacheUpdater,
-} from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { usePortfolioData } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { sortBalancesByName } from 'uniswap/src/features/dataApi/balances/utils'
 import { BaseResult, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
-import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
-import { usePersistedError } from 'uniswap/src/features/dataApi/utils/usePersistedError'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
-import { logger } from 'utilities/src/logger/logger'
 
 export type PortfolioDataResult = BaseResult<Record<CurrencyId, PortfolioBalance>>
 export type PortfolioTotalValueResult = BaseResult<PortfolioTotalValue>
@@ -56,7 +39,7 @@ export type PortfolioTotalValue = {
 export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: PortfolioBalance) => void
 
 /**
- * Factory hook that returns portfolio data based on the active data source (GraphQL or REST)
+ * Hook that returns portfolio data using REST API
  */
 export function usePortfolioBalances({
   evmAddress,
@@ -66,24 +49,12 @@ export function usePortfolioBalances({
   evmAddress?: Address
   svmAddress?: Address
 } & QueryHookOptions<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>): PortfolioDataResult {
-  const isRestEnabled = useFeatureFlag(FeatureFlags.GqlToRestBalances)
-
-  const graphqlResult = useGraphQLPortfolioData({
-    address: evmAddress,
-    ...queryOptions,
-    skip: isRestEnabled || queryOptions.skip,
-  })
-
-  const restResult = useRESTPortfolioData({
+  return usePortfolioData({
     evmAddress: evmAddress || '',
     svmAddress: svmAddress || '',
     ...queryOptions,
-    skip: !(evmAddress ?? svmAddress) || !isRestEnabled || queryOptions.skip,
+    skip: !(evmAddress ?? svmAddress) || queryOptions.skip,
   })
-
-  const result = isRestEnabled ? restResult : graphqlResult
-
-  return result
 }
 /**
  * Returns all balances indexed by checksummed currencyId for a given address
@@ -97,124 +68,6 @@ export function usePortfolioBalances({
  *  we don't need to duplicate the polling interval when token selector is open
  * @param queryOptions - QueryHookOptions type for usePortfolioBalancesQuery to be set if not already set internally.
  */
-export function useGraphQLPortfolioData({
-  address,
-  ...queryOptions
-}: {
-  address?: Address
-} & QueryHookOptions<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>): PortfolioDataResult {
-  const { fetchPolicy: internalFetchPolicy, pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
-    fetchPolicy: queryOptions.fetchPolicy,
-    pollInterval: queryOptions.pollInterval,
-  })
-
-  const valueModifiers = usePortfolioValueModifiers(address)
-  const { gqlChains } = useEnabledChains()
-
-  const {
-    data: balancesData,
-    loading,
-    networkStatus,
-    refetch,
-    error,
-  } = usePortfolioBalancesQuery({
-    ...queryOptions,
-    fetchPolicy: internalFetchPolicy,
-    notifyOnNetworkStatusChange: true,
-    pollInterval: internalPollInterval,
-    variables: address ? { ownerAddress: address, valueModifiers, chains: gqlChains } : undefined,
-    skip: !address || queryOptions.skip,
-    // Prevents wiping out the cache with partial data on error.
-    errorPolicy: 'none',
-  })
-
-  const persistedError = usePersistedError(loading, error)
-  const balancesForAddress = balancesData?.portfolios?.[0]?.tokenBalances
-
-  const formattedData = useMemo(() => {
-    if (!balancesForAddress) {
-      return undefined
-    }
-
-    const byId: Record<CurrencyId, PortfolioBalance> = {}
-    balancesForAddress.forEach((balance) => {
-      if (!balance) {
-        return
-      }
-
-      const {
-        __typename: tokenBalanceType,
-        id: tokenBalanceId,
-        denominatedValue,
-        token,
-        tokenProjectMarket,
-        quantity,
-        isHidden,
-      } = balance
-
-      // require all of these fields to be defined
-      if (!quantity || !token) {
-        return
-      }
-
-      const { name, address: tokenAddress, chain, decimals, symbol, project, feeData, protectionInfo } = token
-      const { logoUrl, isSpam, safetyLevel, spamCode } = project || {}
-      const chainId = fromGraphQLChain(chain)
-
-      const currency = buildCurrency({
-        chainId,
-        address: tokenAddress,
-        decimals,
-        symbol,
-        name,
-        buyFeeBps: feeData?.buyFeeBps,
-        sellFeeBps: feeData?.sellFeeBps,
-      })
-
-      if (!currency) {
-        return
-      }
-
-      const id = currencyId(currency)
-
-      const currencyInfo = buildCurrencyInfo({
-        currency,
-        currencyId: id,
-        logoUrl,
-        isSpam,
-        safetyInfo: getCurrencySafetyInfo(safetyLevel, protectionInfo),
-        spamCode,
-      })
-
-      const portfolioBalance = buildPortfolioBalance({
-        id: tokenBalanceId,
-        cacheId: `${tokenBalanceType}:${tokenBalanceId}`,
-        quantity,
-        balanceUSD: denominatedValue?.value,
-        currencyInfo,
-        relativeChange24: tokenProjectMarket?.relativeChange24?.value,
-        isHidden,
-      })
-
-      byId[id] = portfolioBalance
-    })
-
-    return byId
-  }, [balancesForAddress])
-
-  const retry = useCallback(
-    () => refetch({ ownerAddress: address, valueModifiers }),
-    [address, valueModifiers, refetch],
-  )
-
-  return {
-    data: formattedData,
-    loading,
-    networkStatus,
-    refetch: retry,
-    error: persistedError,
-  }
-}
 
 const PORTFOLIO_BALANCE_CACHE = new Map<string, PortfolioBalance>()
 
@@ -228,108 +81,6 @@ export function buildPortfolioBalance(args: PortfolioBalance): PortfolioBalance 
 
   PORTFOLIO_BALANCE_CACHE.set(args.cacheId, args)
   return args
-}
-
-/**
- * GraphQL implementation for fetching portfolio total value
- * @deprecated - TODO(WALL-6790): remove once rest migration is complete
- */
-export function useGraphQLPortfolioTotalValue({
-  address,
-  pollInterval,
-  fetchPolicy,
-  enabled = true,
-}: {
-  address?: Address
-  pollInterval?: PollingInterval
-  fetchPolicy?: WatchQueryFetchPolicy
-  enabled?: boolean
-}): PortfolioTotalValueResult {
-  const { fetchPolicy: internalFetchPolicy, pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
-    fetchPolicy,
-    pollInterval,
-  })
-
-  const valueModifiers = usePortfolioValueModifiers(address)
-  const { gqlChains } = useEnabledChains()
-
-  const {
-    data: balancesData,
-    loading,
-    networkStatus,
-    refetch,
-    error,
-  } = usePortfolioBalancesQuery({
-    fetchPolicy: internalFetchPolicy,
-    notifyOnNetworkStatusChange: true,
-    pollInterval: internalPollInterval,
-    variables: address ? { ownerAddress: address, valueModifiers, chains: gqlChains } : undefined,
-    skip: !address || !enabled,
-    // Prevents wiping out the cache with partial data on error.
-    errorPolicy: 'none',
-  })
-
-  const persistedError = usePersistedError(loading, error)
-  const portfolioForAddress = balancesData?.portfolios?.[0]
-
-  const formattedData = useMemo(() => {
-    if (!portfolioForAddress) {
-      return undefined
-    }
-
-    return {
-      balanceUSD: portfolioForAddress.tokensTotalDenominatedValue?.value,
-      percentChange: portfolioForAddress.tokensTotalDenominatedValueChange?.percentage?.value,
-      absoluteChangeUSD: portfolioForAddress.tokensTotalDenominatedValueChange?.absolute?.value,
-    }
-  }, [portfolioForAddress])
-
-  const retry = useCallback(
-    () => refetch({ ownerAddress: address, valueModifiers }),
-    [address, valueModifiers, refetch],
-  )
-
-  return {
-    data: formattedData,
-    loading,
-    networkStatus,
-    refetch: retry,
-    error: persistedError,
-  }
-}
-
-/**
- * Factory hook that returns portfolio total value based on the active data source (GraphQL or REST)
- */
-export function usePortfolioTotalValue({
-  evmAddress,
-  svmAddress,
-  pollInterval,
-  fetchPolicy,
-}: {
-  evmAddress?: Address
-  svmAddress?: Address
-  pollInterval?: PollingInterval
-  fetchPolicy?: WatchQueryFetchPolicy
-}): PortfolioTotalValueResult {
-  const isRestEnabled = useFeatureFlag(FeatureFlags.GqlToRestBalances)
-
-  const graphqlResult = useGraphQLPortfolioTotalValue({
-    address: evmAddress, // GraphQL only supports EVM addresses
-    pollInterval,
-    fetchPolicy,
-    enabled: !isRestEnabled,
-  })
-
-  const restResult = useRESTPortfolioTotalValue({
-    evmAddress,
-    svmAddress,
-    pollInterval,
-    fetchPolicy,
-    enabled: isRestEnabled,
-  })
-
-  return isRestEnabled ? restResult : graphqlResult
 }
 
 interface TokenOverrides {
@@ -605,85 +356,4 @@ export function sortPortfolioBalances({
     }),
     ...sortBalancesByName(balancesWithoutUSDValue),
   ]
-}
-
-export function usePortfolioCacheUpdater(evmAddress?: string, svmAddress?: string): PortfolioCacheUpdater {
-  const isRestEnabled = useFeatureFlag(FeatureFlags.GqlToRestBalances)
-  const restUpdater = useRestPortfolioCacheUpdater(evmAddress, svmAddress)
-  const graphQLUpdater = useGraphQLPortfolioCacheUpdater(evmAddress ?? '') // ignore SVM for graphql
-
-  return isRestEnabled ? restUpdater : graphQLUpdater
-}
-
-/**
- * Creates a function to update the Apollo cache when a token is shown or hidden.
- * We manually modify the cache to avoid having to wait for the server's response,
- * so that the change is immediately reflected in the UI.
- *
- * @param evmAddress active EVM wallet address
- * @returns a `PortfolioCacheUpdater` function that will update the Apollo cache
- */
-function useGraphQLPortfolioCacheUpdater(evmAddress: string): PortfolioCacheUpdater {
-  const apolloClient = useApolloClient()
-  const { gqlChains } = useEnabledChains()
-
-  const updater = useCallback(
-    (hidden: boolean, portfolioBalance?: PortfolioBalance) => {
-      if (!portfolioBalance) {
-        return
-      }
-
-      const cachedPortfolio = apolloClient.readQuery<PortfolioBalancesQuery>({
-        query: PortfolioBalancesDocument,
-        variables: {
-          ownerAddress: evmAddress,
-          chains: gqlChains,
-        },
-      })?.portfolios?.[0]
-
-      if (!cachedPortfolio) {
-        return
-      }
-
-      apolloClient.cache.modify({
-        id: portfolioBalance.cacheId,
-        fields: {
-          isHidden() {
-            return hidden
-          },
-        },
-      })
-
-      apolloClient.cache.modify({
-        id: apolloClient.cache.identify(cachedPortfolio),
-        fields: {
-          tokensTotalDenominatedValue(amount: Reference | IAmount, { isReference }) {
-            if (isReference(amount)) {
-              // I don't think this should ever happen, but this is required to keep TS happy after upgrading to @apollo/client > 3.8.
-              logger.error(new Error('Unable to modify cache for `tokensTotalDenominatedValue`'), {
-                tags: {
-                  file: 'balances.ts',
-                  function: 'usePortfolioCacheUpdater',
-                },
-                extra: {
-                  portfolioId: apolloClient.cache.identify(cachedPortfolio),
-                },
-              })
-              return amount
-            }
-
-            const newValue = portfolioBalance.balanceUSD
-              ? hidden
-                ? amount.value - portfolioBalance.balanceUSD
-                : amount.value + portfolioBalance.balanceUSD
-              : amount.value
-            return { ...amount, value: newValue }
-          },
-        },
-      })
-    },
-    [apolloClient, evmAddress, gqlChains],
-  )
-
-  return updater
 }

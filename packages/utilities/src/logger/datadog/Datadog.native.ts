@@ -5,7 +5,7 @@ import { Action, AnyAction, PreloadedState, Reducer, StoreEnhancerStoreCreator }
 import { ReduxEnhancerConfig } from 'utilities/src/logger/datadog/Datadog'
 import { handleReduxAction } from 'utilities/src/logger/datadog/reduxUtils'
 import { addErrorExtras } from 'utilities/src/logger/logger'
-import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
+import { LoggerErrorContext, LogLevel } from 'utilities/src/logger/types'
 
 let reduxState: Record<string, unknown> | undefined
 

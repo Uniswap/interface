@@ -9,8 +9,8 @@ or visit [app.uniswap.org](https://app.uniswap.org).
 ## Running the interface locally
 
 ```bash
-yarn
-yarn web start
+bun install
+bun web start
 ```
 
 ## Translations
@@ -24,13 +24,13 @@ eval $(op signin)
 Sign into 1Password, then:
 
 ```
-yarn mobile env:local:download
+bun mobile env:local:download
 ```
 
 Which downs a `.env.defaults.local` file at the root. Finally:
 
 ```
-yarn web i18n:download
+bun web i18n:download
 ```
 
 Which will download the translations to `./apps/web/src/i18n/locales/translations`.

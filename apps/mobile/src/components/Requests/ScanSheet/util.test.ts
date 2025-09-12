@@ -1,5 +1,5 @@
 import * as wcUtils from '@walletconnect/utils'
-import { CUSTOM_UNI_QR_CODE_PREFIX, URIType, getSupportedURI } from 'src/components/Requests/ScanSheet/util'
+import { CUSTOM_UNI_QR_CODE_PREFIX, getSupportedURI, URIType } from 'src/components/Requests/ScanSheet/util'
 import {
   wcAsParamInUniwapScheme,
   wcInUniwapScheme,

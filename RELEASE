@@ -1,8 +1,23 @@
-We are back with some new updates! Here’s the latest
+IPFS hash of the deployment:
+- CIDv0: `QmR7JRjMRixz21dunQwJqd5ADorN1f1PAre4SQatK6w9qg`
+- CIDv1: `bafybeibje6j3fyelltmfjxyyirxukb3r4d7ittuhluh4s463jjw6d4r5m4`
 
-Flashblocks on Unichain: This infra upgrade brings 200ms blocktimes to the network, making swaps lightning fast. Feel the difference by swapping on Unichain. 
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Other changes: 
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-- Unified context menu UI across platforms on the NFT and activity tabs
-- Various bug fixes and performance improvements
+IPFS gateways:
+- https://bafybeibje6j3fyelltmfjxyyirxukb3r4d7ittuhluh4s463jjw6d4r5m4.ipfs.dweb.link/
+- [ipfs://QmR7JRjMRixz21dunQwJqd5ADorN1f1PAre4SQatK6w9qg/](ipfs://QmR7JRjMRixz21dunQwJqd5ADorN1f1PAre4SQatK6w9qg/)
+
+### 5.109.1 (2025-09-12)
+
+
+### Bug Fixes
+
+* **web:** remove receipt req for batch txs in updater production pick (#23436) 439c6cd
+
+

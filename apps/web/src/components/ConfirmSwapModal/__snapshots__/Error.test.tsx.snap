@@ -118,17 +118,19 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
           </div>
         </div>
         <div
-          class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
+          class="is_TouchableTextLink _transform-0active-scale11281 _containerType-_platformweb_normal _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _cursor-pointer _outlineStyle-none _borderTopLeftRadius-t-radius-no3511 _borderTopRightRadius-t-radius-no3511 _borderBottomRightRadius-t-radius-no3511 _borderBottomLeftRadius-t-radius-no3511 t_group_item"
           role="button"
-          style="text-align: center;"
-          tabindex="0"
+          tabindex="-1"
         >
-          <span
-            class="font_button _color-_grouptrue-hover_accent1Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+          <a
+            class="font_button _color-0focus-accent1Hove112785 _textDecorationColor-0focus-accent1Hove112785 _textDecorationLine-0focus-underline _textDecorationDistance-0focus-1px _color-_groupitem-focusVisible_accent1Hove112785 _textDecorationColor-_groupitem-focusVisible_accent1Hove112785 _textDecorationLine-_groupitem-focusVisible_underline _textDecorationDistance-_groupitem-focusVisible_1px _color-_groupitem-hover_accent1Hove112785 _textUnderlinePosition-_platformweb_from-font _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textDecorationLine-none _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _outlineStyle-none _textAlign-center"
             data-disable-theme="true"
+            href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction?product_link=web"
+            role="link"
+            target="_blank"
           >
             Learn more
-          </span>
+          </a>
         </div>
       </div>
       <button
@@ -268,17 +270,19 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
           </div>
         </div>
         <div
-          class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
+          class="is_TouchableTextLink _transform-0active-scale11281 _containerType-_platformweb_normal _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _cursor-pointer _outlineStyle-none _borderTopLeftRadius-t-radius-no3511 _borderTopRightRadius-t-radius-no3511 _borderBottomRightRadius-t-radius-no3511 _borderBottomLeftRadius-t-radius-no3511 t_group_item"
           role="button"
-          style="text-align: center;"
-          tabindex="0"
+          tabindex="-1"
         >
-          <span
-            class="font_button _color-_grouptrue-hover_accent1Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+          <a
+            class="font_button _color-0focus-accent1Hove112785 _textDecorationColor-0focus-accent1Hove112785 _textDecorationLine-0focus-underline _textDecorationDistance-0focus-1px _color-_groupitem-focusVisible_accent1Hove112785 _textDecorationColor-_groupitem-focusVisible_accent1Hove112785 _textDecorationLine-_groupitem-focusVisible_underline _textDecorationDistance-_groupitem-focusVisible_1px _color-_groupitem-hover_accent1Hove112785 _textUnderlinePosition-_platformweb_from-font _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textDecorationLine-none _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _outlineStyle-none _textAlign-center"
             data-disable-theme="true"
+            href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction?product_link=web"
+            role="link"
+            target="_blank"
           >
             Learn more
-          </span>
+          </a>
         </div>
       </div>
       <button
@@ -418,17 +422,19 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
           </div>
         </div>
         <div
-          class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
+          class="is_TouchableTextLink _transform-0active-scale11281 _containerType-_platformweb_normal _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _cursor-pointer _outlineStyle-none _borderTopLeftRadius-t-radius-no3511 _borderTopRightRadius-t-radius-no3511 _borderBottomRightRadius-t-radius-no3511 _borderBottomLeftRadius-t-radius-no3511 t_group_item"
           role="button"
-          style="text-align: center;"
-          tabindex="0"
+          tabindex="-1"
         >
-          <span
-            class="font_button _color-_grouptrue-hover_accent1Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+          <a
+            class="font_button _color-0focus-accent1Hove112785 _textDecorationColor-0focus-accent1Hove112785 _textDecorationLine-0focus-underline _textDecorationDistance-0focus-1px _color-_groupitem-focusVisible_accent1Hove112785 _textDecorationColor-_groupitem-focusVisible_accent1Hove112785 _textDecorationLine-_groupitem-focusVisible_underline _textDecorationDistance-_groupitem-focusVisible_1px _color-_groupitem-hover_accent1Hove112785 _textUnderlinePosition-_platformweb_from-font _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textDecorationLine-none _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _outlineStyle-none _textAlign-center"
             data-disable-theme="true"
+            href="https://support.uniswap.org/hc/en-us/articles/8643975058829-Why-did-my-transaction-fail-?product_link=web"
+            role="link"
+            target="_blank"
           >
             Learn more
-          </span>
+          </a>
         </div>
       </div>
       <button
@@ -568,17 +574,19 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
           </div>
         </div>
         <div
-          class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
+          class="is_TouchableTextLink _transform-0active-scale11281 _containerType-_platformweb_normal _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _cursor-pointer _outlineStyle-none _borderTopLeftRadius-t-radius-no3511 _borderTopRightRadius-t-radius-no3511 _borderBottomRightRadius-t-radius-no3511 _borderBottomLeftRadius-t-radius-no3511 t_group_item"
           role="button"
-          style="text-align: center;"
-          tabindex="0"
+          tabindex="-1"
         >
-          <span
-            class="font_button _color-_grouptrue-hover_accent1Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+          <a
+            class="font_button _color-0focus-accent1Hove112785 _textDecorationColor-0focus-accent1Hove112785 _textDecorationLine-0focus-underline _textDecorationDistance-0focus-1px _color-_groupitem-focusVisible_accent1Hove112785 _textDecorationColor-_groupitem-focusVisible_accent1Hove112785 _textDecorationLine-_groupitem-focusVisible_underline _textDecorationDistance-_groupitem-focusVisible_1px _color-_groupitem-hover_accent1Hove112785 _textUnderlinePosition-_platformweb_from-font _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textDecorationLine-none _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _outlineStyle-none _textAlign-center"
             data-disable-theme="true"
+            href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH?product_link=web"
+            role="link"
+            target="_blank"
           >
             Learn more
-          </span>
+          </a>
         </div>
       </div>
       <button
@@ -754,17 +762,19 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p limit ord
           </div>
         </div>
         <div
-          class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
+          class="is_TouchableTextLink _transform-0active-scale11281 _containerType-_platformweb_normal _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _cursor-pointer _outlineStyle-none _borderTopLeftRadius-t-radius-no3511 _borderTopRightRadius-t-radius-no3511 _borderBottomRightRadius-t-radius-no3511 _borderBottomLeftRadius-t-radius-no3511 t_group_item"
           role="button"
-          style="text-align: center;"
-          tabindex="0"
+          tabindex="-1"
         >
-          <span
-            class="font_button _color-_grouptrue-hover_accent1Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+          <a
+            class="font_button _color-0focus-accent1Hove112785 _textDecorationColor-0focus-accent1Hove112785 _textDecorationLine-0focus-underline _textDecorationDistance-0focus-1px _color-_groupitem-focusVisible_accent1Hove112785 _textDecorationColor-_groupitem-focusVisible_accent1Hove112785 _textDecorationLine-_groupitem-focusVisible_underline _textDecorationDistance-_groupitem-focusVisible_1px _color-_groupitem-hover_accent1Hove112785 _textUnderlinePosition-_platformweb_from-font _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textDecorationLine-none _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _outlineStyle-none _textAlign-center"
             data-disable-theme="true"
+            href="https://support.uniswap.org/hc/en-us/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute?product_link=web"
+            role="link"
+            target="_blank"
           >
             Learn more
-          </span>
+          </a>
         </div>
       </div>
       <button
@@ -942,17 +952,19 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p limit ord
           </div>
         </div>
         <div
-          class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
+          class="is_TouchableTextLink _transform-0active-scale11281 _containerType-_platformweb_normal _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _cursor-pointer _outlineStyle-none _borderTopLeftRadius-t-radius-no3511 _borderTopRightRadius-t-radius-no3511 _borderBottomRightRadius-t-radius-no3511 _borderBottomLeftRadius-t-radius-no3511 t_group_item"
           role="button"
-          style="text-align: center;"
-          tabindex="0"
+          tabindex="-1"
         >
-          <span
-            class="font_button _color-_grouptrue-hover_accent1Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+          <a
+            class="font_button _color-0focus-accent1Hove112785 _textDecorationColor-0focus-accent1Hove112785 _textDecorationLine-0focus-underline _textDecorationDistance-0focus-1px _color-_groupitem-focusVisible_accent1Hove112785 _textDecorationColor-_groupitem-focusVisible_accent1Hove112785 _textDecorationLine-_groupitem-focusVisible_underline _textDecorationDistance-_groupitem-focusVisible_1px _color-_groupitem-hover_accent1Hove112785 _textUnderlinePosition-_platformweb_from-font _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textDecorationLine-none _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _outlineStyle-none _textAlign-center"
             data-disable-theme="true"
+            href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH?product_link=web"
+            role="link"
+            target="_blank"
           >
             Learn more
-          </span>
+          </a>
         </div>
       </div>
       <button

@@ -1,6 +1,6 @@
 import { ColorTokens, Flex, Text } from 'ui/src'
 import { Caret } from 'ui/src/components/icons/Caret'
-import { IconSizeTokens, fonts } from 'ui/src/theme'
+import { fonts, IconSizeTokens } from 'ui/src/theme'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'

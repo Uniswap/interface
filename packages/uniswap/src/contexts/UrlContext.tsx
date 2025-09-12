@@ -1,5 +1,5 @@
 import { ParsedQs } from 'qs'
-import { ReactNode, createContext } from 'react'
+import { createContext, ReactNode } from 'react'
 
 export interface UrlContext {
   useParsedQueryString: () => ParsedQs

@@ -22,10 +22,8 @@ import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { PillMultiToggle } from 'uniswap/src/components/pill/PillMultiToggle'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
-import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
-import { TokenSelectorBalanceDisplay } from 'uniswap/src/features/fiatOnRamp/TokenSelectorBalanceDisplay'
-import UnsupportedTokenModal from 'uniswap/src/features/fiatOnRamp/UnsupportedTokenModal'
 import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import {
   useFiatOnRampQuotes,
   useFiatOnRampSupportedTokens,
@@ -33,18 +31,19 @@ import {
   useMeldFiatCurrencySupportInfo,
   useParseFiatOnRampError,
 } from 'uniswap/src/features/fiatOnRamp/hooks'
+import { TokenSelectorBalanceDisplay } from 'uniswap/src/features/fiatOnRamp/TokenSelectorBalanceDisplay'
 import {
+  FiatOnRampCurrency,
   FORCurrencyOrBalance,
   FORServiceProvider,
-  FiatOnRampCurrency,
-  InitialQuoteSelection,
   RampDirection,
   RampToggle,
 } from 'uniswap/src/features/fiatOnRamp/types'
+import UnsupportedTokenModal from 'uniswap/src/features/fiatOnRamp/UnsupportedTokenModal'
 import {
   getServiceProviderLogo,
   isSupportedFORCurrency,
-  selectInitialQuote,
+  organizeQuotesIntoSections,
 } from 'uniswap/src/features/fiatOnRamp/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
@@ -52,8 +51,8 @@ import { FiatOffRampEventName, FiatOnRampEventName } from 'uniswap/src/features/
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { FORAmountEnteredProperties } from 'uniswap/src/features/telemetry/types'
 import {
-  DecimalPadCalculateSpace,
   DecimalPadCalculatedSpaceId,
+  DecimalPadCalculateSpace,
   DecimalPadInput,
   DecimalPadInputRef,
 } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
@@ -123,7 +122,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const amountUpdatedTimeRef = useRef<number>(0)
 
   // Initialize value state with prefilled amount if available
-  const initialValue = isTokenInputMode ? tokenAmount?.toString() ?? '' : fiatAmount?.toString() ?? ''
+  const initialValue = isTokenInputMode ? (tokenAmount?.toString() ?? '') : (fiatAmount?.toString() ?? '')
   const [value, setValue] = useState(initialValue)
   const valueRef = useRef<string>(initialValue)
 
@@ -262,19 +261,13 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const prevQuotes = usePrevious(filteredQuotes)
   useEffect(() => {
     if (filteredQuotes && (!selectedQuote || prevQuotes !== filteredQuotes)) {
-      const { quote, type } = selectInitialQuote(filteredQuotes)
-      if (!quote) {
-        return
+      const organizedQuotes = organizeQuotesIntoSections(filteredQuotes)
+      if (organizedQuotes) {
+        setQuotesSections(organizedQuotes.sections)
+        setSelectedQuote(organizedQuotes.initialQuote)
       }
-      if (type === InitialQuoteSelection.MostRecent) {
-        const otherQuotes = filteredQuotes.filter((item) => item !== quote)
-        setQuotesSections([{ data: [quote], type }, ...(otherQuotes.length ? [{ data: otherQuotes }] : [])])
-      } else {
-        setQuotesSections([{ data: filteredQuotes, type }])
-      }
-      setSelectedQuote(quote)
     }
-  }, [prevQuotes, filteredQuotes, selectedQuote, setQuotesSections, setSelectedQuote, t])
+  }, [prevQuotes, filteredQuotes, selectedQuote, setQuotesSections, setSelectedQuote])
 
   useEffect(() => {
     if (!filteredQuotes && (quotesError || !fiatAmount)) {

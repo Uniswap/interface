@@ -1,11 +1,11 @@
 import { addWindowMessageListener } from 'src/background/messagePassing/messageUtils'
-import { WindowEthereumProxy } from 'src/contentScript/WindowEthereumProxy'
 import {
   ETH_PROVIDER_CONFIG,
-  WindowEthereumConfigResponse,
   isValidContentScriptToProxyEmission,
   isValidWindowEthereumConfigResponse,
+  WindowEthereumConfigResponse,
 } from 'src/contentScript/types'
+import { WindowEthereumProxy } from 'src/contentScript/WindowEthereumProxy'
 import { logger } from 'utilities/src/logger/logger'
 import { v4 as uuid } from 'uuid'
 

@@ -1,9 +1,9 @@
 import { Canvas, Circle, Group, Path } from '@shopify/react-native-skia'
 import { memo } from 'react'
-import { IconPaths, Icons } from 'ui/src/components/Unicon/UniconSVGs'
-import { UniconProps } from 'ui/src/components/Unicon/types'
-import { getUniconColors, getUniconsDeterministicHash } from 'ui/src/components/Unicon/utils'
 import { Flex } from 'ui/src/components/layout'
+import { UniconProps } from 'ui/src/components/Unicon/types'
+import { IconPaths, Icons } from 'ui/src/components/Unicon/UniconSVGs'
+import { getUniconColors, getUniconsDeterministicHash } from 'ui/src/components/Unicon/utils'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { isAddress } from 'utilities/src/addresses'
 

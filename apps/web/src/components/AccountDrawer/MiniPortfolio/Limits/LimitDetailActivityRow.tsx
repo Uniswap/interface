@@ -4,8 +4,8 @@ import {
   useOrderAmounts,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
-import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { FormatType, formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
+import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { parseUnits } from 'ethers/lib/utils'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useMemo, useState } from 'react'

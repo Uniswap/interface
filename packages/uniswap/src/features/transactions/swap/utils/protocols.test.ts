@@ -5,10 +5,10 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { createGetV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import {
-  FrontendSupportedProtocol,
   createGetProtocolsForChain,
   createGetUniswapXPriorityOrderFlag,
   createProtocolFilter,
+  FrontendSupportedProtocol,
 } from 'uniswap/src/features/transactions/swap/utils/protocols'
 
 jest.mock('uniswap/src/features/gating/hooks', () => ({

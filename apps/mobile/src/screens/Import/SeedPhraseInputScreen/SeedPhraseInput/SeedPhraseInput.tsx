@@ -1,6 +1,6 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
-import { StyleSheet, UIManager, findNodeHandle } from 'react-native'
+import { findNodeHandle, StyleSheet, UIManager } from 'react-native'
 import { useNativeComponentKey } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { NativeSeedPhraseInput } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/NativeSeedPhraseInput'

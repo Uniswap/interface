@@ -7,14 +7,14 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'
 import { Flex, useWindowDimensions } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
-import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
+import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import {
   ItemRowInfo,
   OnchainItemListProps,
   SectionRowInfo,
 } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
+import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
 import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
 

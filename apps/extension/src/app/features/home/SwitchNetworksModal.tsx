@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { useDappContext } from 'src/app/features/dapp/DappContext'
 import { saveDappChain } from 'src/app/features/dapp/actions'
+import { useDappContext } from 'src/app/features/dapp/DappContext'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { Flex, Popover, Text, TouchableArea } from 'ui/src'
 import { CheckCircleFilled, RotatableChevron } from 'ui/src/components/icons'

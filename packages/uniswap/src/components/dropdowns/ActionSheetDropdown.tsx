@@ -1,4 +1,4 @@
-import { PropsWithChildren, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { View } from 'react-native'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { GestureResponderEvent } from 'react-native'
@@ -9,8 +9,8 @@ import {
   FlexProps,
   OverKeyboardContent,
   Portal,
-  TouchableArea,
   styled,
+  TouchableArea,
   useIsDarkMode,
 } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'

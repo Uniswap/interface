@@ -1,4 +1,5 @@
 import { Flex, Text } from 'ui/src'
+
 const SHADOW_OFFSET = { width: 0, height: 7 }
 const MAC_OS_COMMAND_SYMBOL = '⌘'
 const KEY_HEIGHT = 70

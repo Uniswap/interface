@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
+import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
-import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { GqlResult } from 'uniswap/src/data/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'

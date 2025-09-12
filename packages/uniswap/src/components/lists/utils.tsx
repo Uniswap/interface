@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
-import { isTokenOptionArray } from 'uniswap/src/components/TokenSelector/utils'
-import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
+import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { isTokenOptionArray } from 'uniswap/src/components/TokenSelector/utils'
 
 export function useOnchainItemListSection<T extends OnchainItemListOption>({
   sectionKey,

@@ -1,13 +1,13 @@
 import { providers, utils } from 'ethers'
-import { HexString, ensure0xHex, isValidHexString } from 'uniswap/src/utils/hex'
+import { ensure0xHex, HexString, isValidHexString } from 'uniswap/src/utils/hex'
 import { logger } from 'utilities/src/logger/logger'
 import {
   Address,
+  parseSignature,
   SignedAuthorization,
+  serializeTransaction,
   TransactionSerializable,
   TransactionSerializableEIP7702,
-  parseSignature,
-  serializeTransaction,
 } from 'viem'
 import { hashAuthorization, recoverAuthorizationAddress, verifyAuthorization } from 'viem/utils'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'

@@ -7,23 +7,23 @@ import { homedir } from 'os'
 import { join } from 'path'
 // eslint-disable-next-line no-relative-import-paths/no-relative-import-paths
 import {
+  type BuildConfig,
+  type BuildType,
   CONSTANTS,
-  PROMPT_CONFIGS,
+  type Configuration,
   log,
+  type PhysicalDevice,
+  PROMPT_CONFIGS,
+  type PreflightCheck,
   parseDeviceFromLine,
   printBuildInfo,
   printHelp,
   printTroubleshootingTips,
   runCommand,
-  sleep,
-  spawnProcess,
-  type BuildConfig,
-  type BuildType,
-  type Configuration,
-  type PhysicalDevice,
-  type PreflightCheck,
   type Scheme,
   type SimulatorDevice,
+  sleep,
+  spawnProcess,
 } from './utils'
 
 // Pre-flight checks
@@ -33,7 +33,7 @@ const checkPreflightRequirements = async (): Promise<void> => {
   const checks: PreflightCheck[] = [
     { name: 'Xcode', command: CONSTANTS.COMMANDS.XCODE_VERSION },
     { name: 'Node.js', command: CONSTANTS.COMMANDS.NODE_VERSION },
-    { name: 'Yarn', command: CONSTANTS.COMMANDS.YARN_VERSION },
+    { name: 'Bun', command: CONSTANTS.COMMANDS.BUN_VERSION },
     { name: 'CocoaPods', command: CONSTANTS.COMMANDS.POD_VERSION },
     { name: 'iOS Simulator', command: CONSTANTS.COMMANDS.LIST_SIMULATORS },
   ]
@@ -191,7 +191,7 @@ const resetMetroCache = async (): Promise<void> => {
   log.info(`${CONSTANTS.MESSAGES.EMOJIS.TRASH} Resetting Metro cache...`)
   try {
     // Use spawn with detached option to properly run the reset command
-    const resetProcess = spawn('yarn', ['start', '--reset-cache'], {
+    const resetProcess = spawn('bun', ['run', 'start', '--reset-cache'], {
       stdio: 'ignore',
       detached: true,
     })
@@ -226,10 +226,10 @@ const buildForSimulator = async (config: BuildConfig): Promise<void> => {
     args.push(`--device="${simulatorName}"`)
   }
 
-  log.info(`Command: yarn ${args.join(' ')}\n`)
+  log.info(`Command: bun run ${args.join(' ')}\n`)
 
   try {
-    await spawnProcess('yarn', args)
+    await spawnProcess('bun', ['run', ...args])
     log.success('\nBuild completed successfully!')
   } catch (error) {
     printTroubleshootingTips(false)
@@ -255,10 +255,10 @@ const buildForDevice = async (config: BuildConfig): Promise<void> => {
     args.push('--archive')
   }
 
-  log.info(`Command: yarn ${args.join(' ')}\n`)
+  log.info(`Command: bun run ${args.join(' ')}\n`)
 
   try {
-    await spawnProcess('yarn', args)
+    await spawnProcess('bun', ['run', ...args])
     log.success('\nBuild completed successfully!')
   } catch (error) {
     printTroubleshootingTips(true)

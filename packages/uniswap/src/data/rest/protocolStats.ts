@@ -2,8 +2,8 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { ConnectError } from '@connectrpc/connect'
 import { useQuery } from '@connectrpc/connect-query'
 import { UseQueryResult } from '@tanstack/react-query'
-import { protocolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery'
 import { ProtocolStatsRequest, ProtocolStatsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { protocolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery'
 import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
 
 /**

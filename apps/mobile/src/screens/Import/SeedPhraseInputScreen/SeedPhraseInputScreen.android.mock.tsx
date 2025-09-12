@@ -11,15 +11,15 @@ import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import {
   MnemonicValidationError,
   translateMnemonicErrorMessage,

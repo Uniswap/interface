@@ -11,12 +11,12 @@ import {
   RouterPreference,
   RoutingConfig,
   TradeResult,
-  URAQuoteResponse,
-  URAQuoteType,
   UniswapXConfig,
   UniswapXPriorityOrdersConfig,
   UniswapXv2Config,
   UniswapXv3Config,
+  URAQuoteResponse,
+  URAQuoteType,
 } from 'state/routing/types'
 import { isExactInput, transformQuoteToTrade } from 'state/routing/utils'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'

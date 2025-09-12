@@ -1,5 +1,6 @@
 import { Tooltip as TamaguiTooltip, TooltipProps, withStaticProperties } from 'tamagui'
 import { PlatformSplitStubError } from 'utilities/src/errors'
+
 export type { TooltipProps } from 'tamagui'
 
 type TriggerProps = React.ComponentProps<typeof TamaguiTooltip.Trigger>

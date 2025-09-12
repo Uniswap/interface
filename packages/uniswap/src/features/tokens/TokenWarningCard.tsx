@@ -3,15 +3,15 @@ import { TouchableArea } from 'ui/src'
 import { InlineWarningCard } from 'uniswap/src/components/InlineWarningCard/InlineWarningCard'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useBlockaidFeeComparisonAnalytics } from 'uniswap/src/features/tokens/hooks/useBlockaidFeeComparisonAnalytics'
 import {
-  TokenProtectionWarning,
   getSeverityFromTokenProtectionWarning,
   getTokenProtectionFeeOnTransfer,
   getTokenProtectionWarning,
   getTokenWarningSeverity,
+  TokenProtectionWarning,
   useCardHeaderText,
   useCardSubtitleText,
   useTokenWarningCardText,

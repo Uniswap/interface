@@ -1,5 +1,4 @@
 import { colorsLight } from 'ui/src/theme'
-
 import { hex } from 'wcag-contrast'
 
 /*

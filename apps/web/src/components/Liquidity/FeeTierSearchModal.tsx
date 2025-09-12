@@ -1,10 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks/useAllFeeTierPoolData'
 import {
-  MAX_FEE_TIER_DECIMALS,
   calculateTickSpacingFromFeeAmount,
   getFeeTierKey,
   isDynamicFeeTier,
+  MAX_FEE_TIER_DECIMALS,
   validateFeeTier,
 } from 'components/Liquidity/utils/feeTiers'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
@@ -15,7 +15,6 @@ import { NumericalInputMimic, NumericalInputSymbolContainer } from 'pages/Swap/c
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import styled from 'styled-components'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
@@ -28,6 +27,7 @@ import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { numericInputRegex } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'

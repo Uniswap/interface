@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react'
 import { Flex } from 'ui/src/components/layout'
 import { SWIPEABLE_CARD_Y_OFFSET } from 'ui/src/components/swipeablecards/BaseCard'
-import { SwipeableCard } from 'ui/src/components/swipeablecards/SwipeableCard'
 import { PickedCardProps, SwipeableCardStackProps } from 'ui/src/components/swipeablecards/props'
+import { SwipeableCard } from 'ui/src/components/swipeablecards/SwipeableCard'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 export function BaseSwipeableCardStack<T extends PickedCardProps>({

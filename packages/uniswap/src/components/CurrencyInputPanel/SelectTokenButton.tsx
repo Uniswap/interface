@@ -1,6 +1,6 @@
 import { ComponentProps, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea, getContrastPassingTextColor, getHoverCssFilter, useIsDarkMode } from 'ui/src'
+import { Flex, getContrastPassingTextColor, getHoverCssFilter, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { PRESS_SCALE } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/constants'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes, spacing, validColor } from 'ui/src/theme'
@@ -28,7 +28,7 @@ export const SelectTokenButton = memo(function _SelectTokenButton({
   const validTokenColor = validColor(tokenColor)
   const hoverStyle: { backgroundColor: ComponentProps<typeof Flex>['backgroundColor'] } = useMemo(
     () => ({
-      backgroundColor: selectedCurrencyInfo ? '$surface1Hovered' : validTokenColor ?? '$accent1Hovered',
+      backgroundColor: selectedCurrencyInfo ? '$surface1Hovered' : (validTokenColor ?? '$accent1Hovered'),
       filter: validTokenColor ? getHoverCssFilter({ isDarkMode }) : undefined,
     }),
     [selectedCurrencyInfo, validTokenColor, isDarkMode],
@@ -52,7 +52,7 @@ export const SelectTokenButton = memo(function _SelectTokenButton({
 
   return (
     <TouchableArea
-      backgroundColor={selectedCurrencyInfo ? '$surface1' : validTokenColor ?? '$accent1'}
+      backgroundColor={selectedCurrencyInfo ? '$surface1' : (validTokenColor ?? '$accent1')}
       borderRadius="$roundedFull"
       testID={testID}
       borderColor="$surface3Solid"

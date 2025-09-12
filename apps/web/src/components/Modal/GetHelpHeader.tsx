@@ -57,7 +57,7 @@ export function GetHelpHeader({ title, goBack, link, closeModal, closeDataTestId
       )}
       <Flex row fill justifyContent="flex-end" alignItems="center" gap="10px">
         <GetHelpButton url={link} />
-        <ModalCloseIcon testId={closeDataTestId} onClose={closeModal} />
+        <ModalCloseIcon testId={closeDataTestId} onClose={closeModal} role="none" />
       </Flex>
     </Flex>
   )

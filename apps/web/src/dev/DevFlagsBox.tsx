@@ -1,5 +1,5 @@
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { RowBetween } from 'components/deprecated/Row'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useModalState } from 'hooks/useModalState'
 import { useContext, useState } from 'react'
 import { Flag, Settings } from 'react-feather'

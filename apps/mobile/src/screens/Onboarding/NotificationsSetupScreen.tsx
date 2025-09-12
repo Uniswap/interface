@@ -7,15 +7,16 @@ import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricApp
 import { useBiometricsState } from 'src/features/biometrics/useBiometricsState'
 import { usePromptPushPermission } from 'src/features/notifications/hooks/usePromptPushPermission'
 import { showNotificationSettingsAlert } from 'src/features/notifications/showNotificationSettingsAlert'
-import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
+import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { Button, Flex } from 'ui/src'
 import { BellOn } from 'ui/src/components/icons'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
+
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Notifications>
 
 export function NotificationsSetupScreen({ navigation, route: { params } }: Props): JSX.Element {

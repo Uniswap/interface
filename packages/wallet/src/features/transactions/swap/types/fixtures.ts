@@ -1,28 +1,37 @@
 import { MaxUint256, TradeType } from '@uniswap/sdk-core'
-import { transactionActions } from 'uniswap/src/features/transactions/slice'
+import { BigNumber } from 'ethers'
+import JSBI from 'jsbi'
+import { USDC } from 'uniswap/src/constants/tokens'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { BridgeTrade, ClassicTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { ValidatedSwapTxContext, ValidatedUniswapXSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { USDC } from 'uniswap/src/constants/tokens'
+import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import { transactionActions } from 'uniswap/src/features/transactions/slice'
+import {
+  ValidatedSwapTxContext,
+  ValidatedUniswapXSwapTxAndGasInfo,
+} from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { BridgeTrade, ClassicTrade, UniswapXTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ETH, WETH } from 'uniswap/src/test/fixtures'
-import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
+import { mockPermit } from 'uniswap/src/test/fixtures/permit'
+import { createFixture } from 'uniswap/src/test/utils'
 import { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
-import { PrepareAndSignSwapSagaParams } from 'wallet/src/features/transactions/swap/prepareAndSignSwapSaga'
-import { SwapParams } from 'wallet/src/features/transactions/swap/executeSwapSaga'
-import { TransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
-import { SwapTransactionData, TransactionParamsFactory, UniswapXOrderTransactionData } from 'wallet/src/features/transactions/swap/services/transactionParamsFactory'
-import { PreSignedSwapTransaction, UniswapXPreSignedSwapTransaction } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
-import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
-import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { BigNumber } from 'ethers'
-import { createFixture } from 'uniswap/src/test/utils'
-import { mockPermit } from 'uniswap/src/test/fixtures/permit'
-import JSBI from 'jsbi'
-import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { SwapParams } from 'wallet/src/features/transactions/swap/executeSwapSaga'
+import { PrepareAndSignSwapSagaParams } from 'wallet/src/features/transactions/swap/prepareAndSignSwapSaga'
+import { TransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
+import {
+  SwapTransactionData,
+  TransactionParamsFactory,
+  UniswapXOrderTransactionData,
+} from 'wallet/src/features/transactions/swap/services/transactionParamsFactory'
+import {
+  PreSignedSwapTransaction,
+  UniswapXPreSignedSwapTransaction,
+} from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
 import { TransactionSagaDependencies } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
+import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 export const mockTransactionService: jest.Mocked<TransactionService> = {
   getNextNonce: jest.fn(),
@@ -55,7 +64,9 @@ export const mockTransactionParamsFactory: jest.Mocked<TransactionParamsFactory>
     typeInfo: { type: TransactionType.Permit2Approve },
   }),
   createSwapParams: jest.fn().mockImplementation((data: SwapTransactionData) => ({
-    typeInfo: { type: data.swapTxContext.trade.routing === Routing.BRIDGE ? TransactionType.Bridge : TransactionType.Swap },
+    typeInfo: {
+      type: data.swapTxContext.trade.routing === Routing.BRIDGE ? TransactionType.Bridge : TransactionType.Swap,
+    },
   })),
   createWrapParams: jest.fn().mockReturnValue({
     typeInfo: { type: TransactionType.Wrap },
@@ -184,17 +195,17 @@ export const mockAnalytics: SwapTradeBaseProperties = {
 }
 
 export const prepareSwapTxContext = createFixture<ValidatedSwapTxContext>()(() => ({
-    routing: Routing.CLASSIC,
-    trade: mockClassicTrade,
-    txRequests: [mockSwapTxRequest],
-    approveTxRequest: undefined,
-    permit: undefined,
-    gasFee: { value: '5', isLoading: false, error: null },
-    gasFeeEstimation: {},
-    swapRequestArgs: { quote: mockClassicTrade.quote.quote },
-    revocationTxRequest: undefined,
-    includesDelegation: false,
-    unsigned: false,
+  routing: Routing.CLASSIC,
+  trade: mockClassicTrade,
+  txRequests: [mockSwapTxRequest],
+  approveTxRequest: undefined,
+  permit: undefined,
+  gasFee: { value: '5', isLoading: false, error: null },
+  gasFeeEstimation: {},
+  swapRequestArgs: { quote: mockClassicTrade.quote.quote },
+  revocationTxRequest: undefined,
+  includesDelegation: false,
+  unsigned: false,
 }))
 
 export const prepareUniswapXSwapTxContext = createFixture<ValidatedUniswapXSwapTxAndGasInfo>()(() => ({

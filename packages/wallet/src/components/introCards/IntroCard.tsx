@@ -8,9 +8,9 @@ import {
   GeneratedIcon,
   IconProps,
   Text,
-  View,
   useIsDarkMode,
   useShadowPropsShort,
+  View,
 } from 'ui/src'
 import { X } from 'ui/src/components/icons'
 import { CardImage, CardImageGraphicSizeInfo } from 'uniswap/src/components/cards/image'

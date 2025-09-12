@@ -1,6 +1,6 @@
 import { useContext } from 'react'
-import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
 import type { SwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/createSwapFormStore'
+import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
 import type { SwapFormStoreState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { useEvent } from 'utilities/src/react/hooks'

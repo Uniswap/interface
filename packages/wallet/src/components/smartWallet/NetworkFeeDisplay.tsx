@@ -4,7 +4,7 @@ import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { NumberType } from 'utilities/src/format/types'
 import { GroupedGasFee } from 'wallet/src/features/smartWallet/utils/gasFeeUtils'
 

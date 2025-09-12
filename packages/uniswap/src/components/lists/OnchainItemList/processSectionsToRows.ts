@@ -1,7 +1,7 @@
+import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import type { ItemRowInfo, SectionRowInfo } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
 import { type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import type { SectionHeaderProps } from 'uniswap/src/components/lists/SectionHeader'
-import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 
 export enum ProcessedRowType {
   Header = 'header',

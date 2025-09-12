@@ -1,6 +1,8 @@
 import { PoolData, usePoolData } from 'appGraphql/data/pools/usePoolData'
 import { calculateApr } from 'appGraphql/data/pools/useTopPools'
 import { gqlToCurrency, unwrapToken } from 'appGraphql/data/util'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { LpIncentivesPoolDetailsRewardsDistribution } from 'components/LpIncentives/LpIncentivesPoolDetailsRewardsDistribution'
 import ChartSection from 'components/Pools/PoolDetails/ChartSection'
 import { PoolDetailsApr } from 'components/Pools/PoolDetails/PoolDetailsApr'
@@ -9,13 +11,11 @@ import { PoolDetailsLink } from 'components/Pools/PoolDetails/PoolDetailsLink'
 import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
 import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetailsStatsButtons'
 import { PoolDetailsTableTab } from 'components/Pools/PoolDetails/PoolDetailsTable'
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
 import { useColor } from 'hooks/useColor'
 import styled, { useTheme } from 'lib/styled-components'
 import { ExploreTab } from 'pages/Explore/constants'
-import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
 import { useDynamicMetatags } from 'pages/metatags'
+import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
 import { useEffect, useMemo, useReducer } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
@@ -28,8 +28,9 @@ import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-ap
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { isAddress } from 'utilities/src/addresses'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 const PageWrapper = styled(Row)`
@@ -117,7 +118,11 @@ export default function PoolDetailsPage() {
   const { poolAddress } = useParams<{ poolAddress: string }>()
   const urlChain = useChainIdFromUrlParam()
   const chainInfo = urlChain ? getChainInfo(urlChain) : undefined
-  const { data: poolData, loading } = usePoolData(poolAddress?.toLowerCase() ?? '', chainInfo?.id)
+  const { data: poolData, loading } = usePoolData({
+    poolIdOrAddress: poolAddress?.toLowerCase() ?? '',
+    chainId: chainInfo?.id,
+    isPoolAddress: Boolean(isAddress(poolAddress)),
+  })
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const unwrappedTokens = getUnwrappedPoolToken({
     poolData,

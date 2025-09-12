@@ -1,5 +1,5 @@
-import { Currency } from '@uniswap/sdk-core'
 import { getTokenDetailsURL } from 'appGraphql/data/util'
+import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import { MobileBottomBar, TDPActionTabs } from 'components/NavBar/MobileBottomBar'
 import { ActivitySection } from 'components/Tokens/TokenDetails/ActivitySection'
@@ -7,9 +7,9 @@ import BalanceSummary, { PageChainBalanceSummary } from 'components/Tokens/Token
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
 import { LeftPanel, RightPanel, TokenDetailsLayout } from 'components/Tokens/TokenDetails/Skeleton'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
+import { Hr } from 'components/Tokens/TokenDetails/shared'
 import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescription'
 import { TokenDetailsHeader } from 'components/Tokens/TokenDetails/TokenDetailsHeader'
-import { Hr } from 'components/Tokens/TokenDetails/shared'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
@@ -25,8 +25,8 @@ import { Flex, useIsTouchDevice, useMedia } from 'ui/src'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { isUniverseChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -123,7 +123,22 @@ function TDPSwapComponent() {
   // Other token to prefill the swap form with
   const initialInputCurrency = inputCurrency
   // If the initial input currency is the same as the TDP currency, then we are selling the TDP currency
-  const initialOutputCurrency = areCurrenciesEqual(initialInputCurrency, currency) ? outputCurrency : currency
+  const initialOutputCurrency = useMemo((): Currency | undefined => {
+    if (
+      areCurrenciesEqual(initialInputCurrency, currency) &&
+      // ensure the output is not equal to the input before setting
+      !areCurrenciesEqual(outputCurrency, initialInputCurrency)
+    ) {
+      return outputCurrency
+    }
+
+    // ensure the context currency is not equal to the input before setting
+    if (areCurrenciesEqual(currency, initialInputCurrency)) {
+      return undefined
+    }
+
+    return currency
+  }, [currency, initialInputCurrency, outputCurrency])
 
   const [prevTokens, setPrevTokens] = useState<CurrencyState>({
     inputCurrency: initialInputCurrency,

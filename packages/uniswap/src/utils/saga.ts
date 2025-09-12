@@ -1,5 +1,5 @@
 import { createAction, type PayloadActionCreator } from '@reduxjs/toolkit'
-import { REHYDRATE, type PersistState } from 'redux-persist'
+import { type PersistState, REHYDRATE } from 'redux-persist'
 import type { SagaIterator } from 'redux-saga'
 import { call, select, take } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'

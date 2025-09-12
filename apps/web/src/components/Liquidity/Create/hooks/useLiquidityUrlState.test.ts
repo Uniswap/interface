@@ -7,7 +7,7 @@ import { useQueryState, useQueryStates } from 'nuqs'
 import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
 import { PositionField } from 'types/position'
-import { USDC, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { nativeOnChain, USDC, USDC_UNICHAIN } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { vi } from 'vitest'
 
@@ -59,7 +59,10 @@ describe('useLiquidityUrlState', () => {
 
     useCurrencyWithLoadingMock.mockImplementation(({ address, chainId }: { address?: string; chainId?: number }) => {
       // Handle native token: 'ETH'
-      if (typeof address === 'string' && address.toUpperCase() === 'ETH') {
+      if (
+        (typeof address === 'string' && address.toUpperCase() === NATIVE_CHAIN_ID) ||
+        (typeof address === 'string' && address.toUpperCase() === 'ETH')
+      ) {
         return { currency: defaultInitialToken, loading: false }
       }
       if (address === USDC.address) {
@@ -115,6 +118,19 @@ describe('useLiquidityUrlState', () => {
     const { result } = renderHook(() => useLiquidityUrlState())
     expect(result.current.tokenA).toEqual(USDC)
     expect(result.current.tokenB).toEqual(WETH9[defaultChainId])
+  })
+
+  it('defaults to native token when currencyA is for a different chain', () => {
+    useQueryStatesMock.mockReturnValue([
+      {
+        currencyA: USDC_UNICHAIN.address,
+        currencyB: '',
+      },
+      vi.fn(),
+    ])
+    const { result } = renderHook(() => useLiquidityUrlState())
+    expect(result.current.tokenA).toEqual(defaultInitialToken)
+    expect(result.current.tokenB).toBeUndefined()
   })
 
   it('prevents duplicate tokens', () => {

@@ -11,8 +11,8 @@ import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import {
-  ENSElement,
   EmojiElement,
+  ENSElement,
   FroggyElement,
   HeartElement,
   OpenseaElement,

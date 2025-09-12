@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Flex, FlexProps, Text, TouchableArea, TouchableAreaProps, useSporeColors } from 'ui/src'
 import { ExternalLink } from 'ui/src/components/icons'
-import { TextVariantTokens, iconSizes } from 'ui/src/theme'
+import { iconSizes, TextVariantTokens } from 'ui/src/theme'
 import { openUri } from 'uniswap/src/utils/linking'
 
 interface LinkButtonProps extends Omit<TouchableAreaProps, 'onPress' | 'children' | 'variant'> {

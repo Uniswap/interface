@@ -6,8 +6,8 @@ import { usePrepareAndSignDappTransaction } from 'src/app/features/dappRequests/
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
-  ValidatedTransactionRequest,
   isValidTransactionRequest,
+  ValidatedTransactionRequest,
 } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { logger } from 'utilities/src/logger/logger'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'

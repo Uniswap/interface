@@ -16,9 +16,9 @@ import {
   ExtensionToDappRequestType,
 } from 'src/background/messagePassing/types/requests'
 import { ExtensionEthMethodHandler } from 'src/contentScript/methodHandlers/ExtensionEthMethodHandler'
+import { emitAccountsChanged, emitChainChanged } from 'src/contentScript/methodHandlers/emitUtils'
 import { ProviderDirectMethodHandler } from 'src/contentScript/methodHandlers/ProviderDirectMethodHandler'
 import { UniswapMethodHandler } from 'src/contentScript/methodHandlers/UniswapMethodHandler'
-import { emitAccountsChanged, emitChainChanged } from 'src/contentScript/methodHandlers/emitUtils'
 import {
   isDeprecatedMethod,
   isExtensionEthMethod,
@@ -31,10 +31,10 @@ import {
 } from 'src/contentScript/methodHandlers/utils'
 import {
   ETH_PROVIDER_CONFIG,
-  WindowEthereumConfigRequest,
-  WindowEthereumRequest,
   isValidWindowEthereumConfigRequest,
   isValidWindowEthereumRequest,
+  WindowEthereumConfigRequest,
+  WindowEthereumRequest,
 } from 'src/contentScript/types'
 import { logContentScriptError } from 'src/contentScript/utils'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'

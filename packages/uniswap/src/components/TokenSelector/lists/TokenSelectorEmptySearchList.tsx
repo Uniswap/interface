@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { useTokenSectionsForEmptySearch } from 'uniswap/src/components/TokenSelector/hooks/useTokenSectionsForEmptySearch'
+import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 

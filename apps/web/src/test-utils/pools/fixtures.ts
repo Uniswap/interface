@@ -1,7 +1,7 @@
+import { PoolData } from 'appGraphql/data/pools/usePoolData'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
-import { PoolData } from 'appGraphql/data/pools/usePoolData'
 import { PoolStat } from 'state/explore/types'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'

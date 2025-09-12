@@ -1,16 +1,16 @@
 import { Currency, CurrencyAmount, Price, Rounding, Token } from '@uniswap/sdk-core'
 import {
+  encodeSqrtRatioX96,
   FeeAmount,
+  nearestUsableTick,
   Position,
+  priceToClosestTick,
   TICK_SPACINGS,
   TickMath,
-  Pool as V3Pool,
-  encodeSqrtRatioX96,
-  nearestUsableTick,
-  priceToClosestTick,
   tickToPrice as tickToPriceV3,
+  Pool as V3Pool,
 } from '@uniswap/v3-sdk'
-import { Pool as V4Pool, tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
+import { tickToPrice as tickToPriceV4, Pool as V4Pool } from '@uniswap/v4-sdk'
 import { FeeData } from 'components/Liquidity/Create/types'
 import { BIG_INT_ZERO } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'

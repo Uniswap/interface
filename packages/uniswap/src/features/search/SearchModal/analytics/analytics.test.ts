@@ -1,5 +1,4 @@
 import { Token } from '@uniswap/sdk-core'
-import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import {
   NFTCollectionOption,
   OnchainItemListOptionType,
@@ -7,8 +6,9 @@ import {
   UnitagOption,
   WalletOption,
 } from 'uniswap/src/components/lists/items/types'
-import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
+import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/search/SearchModal/analytics/analytics'
+import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { InterfaceEventName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

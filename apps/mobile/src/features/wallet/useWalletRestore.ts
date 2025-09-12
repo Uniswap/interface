@@ -6,8 +6,8 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 type Props = {
   /**

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balances'
+import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'

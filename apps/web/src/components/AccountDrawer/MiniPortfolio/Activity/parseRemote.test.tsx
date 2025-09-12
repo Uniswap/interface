@@ -52,73 +52,73 @@ describe('parseRemote', () => {
     })
     it('should parse expired UniswapX order', () => {
       const result = parseRemoteActivities([MockExpiredUniswapXOrder], '', vi.fn())
-      expect(result?.['someId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse filledUniswapX order', () => {
       const result = parseRemoteActivities([MockFilledUniswapXOrder], '', vi.fn())
-      expect(result?.['someId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse NFT approval', () => {
       const result = parseRemoteActivities([MockNFTApproval], '', vi.fn())
-      expect(result?.['activityId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse NFT approval for all', () => {
       const result = parseRemoteActivities([MockNFTApprovalForAll], '', vi.fn())
-      expect(result?.['activityId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse NFT Mint', () => {
       const result = parseRemoteActivities([MockMint], '', vi.fn())
-      expect(result?.['activityId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should mark spam when tx does not come from user and contains spam', () => {
       const resultFromExternal = parseRemoteActivities([MockSpamMint], '', vi.fn())
-      expect(resultFromExternal?.['activityId'].isSpam).toBeTruthy()
+      expect(resultFromExternal?.['someHash']?.isSpam).toBeTruthy()
       const resultFromUser = parseRemoteActivities([MockSpamMint], MockSenderAddress, vi.fn())
-      expect(resultFromUser?.['activityId'].isSpam).toBeFalsy()
+      expect(resultFromUser?.['someHash']?.isSpam).toBeFalsy()
     })
     it('should parse swap', () => {
       const result = parseRemoteActivities([MockSwap], '', vi.fn().mockReturnValue('100'))
-      expect(result?.['activityId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should not mark swaps for spam tokens as spam', () => {
       const result = parseRemoteActivities([MockSpamSwap], '', vi.fn().mockReturnValue('100'))
-      expect(result?.['activityId'].isSpam).toBeFalsy()
+      expect(result?.['someHash']?.isSpam).toBeFalsy()
     })
     it('should parse nft purchase', () => {
       const result = parseRemoteActivities([MockNFTPurchase], '', vi.fn().mockReturnValue('100'))
-      expect(result?.['activityId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse token approval', () => {
       const result = parseRemoteActivities([MockTokenApproval], '', vi.fn())
-      expect(result?.['activityId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse send', () => {
       const result = parseRemoteActivities([MockTokenSend], '', vi.fn().mockReturnValue(100))
-      expect(result?.['activityId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse receive', () => {
       const result = parseRemoteActivities([MockTokenReceive], '', vi.fn().mockReturnValue(100))
-      expect(result?.['activityId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse NFT receive', () => {
       const result = parseRemoteActivities([MockNFTReceive], '', vi.fn().mockReturnValue(100))
-      expect(result?.['activityId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse remove liquidity', () => {
       const result = parseRemoteActivities([MockRemoveLiquidity], '', vi.fn().mockReturnValue(100))
-      expect(result?.['activityId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse moonpay purchase', () => {
       const result = parseRemoteActivities([MockMoonpayPurchase], '', vi.fn().mockReturnValue(100))
-      expect(result?.['activityId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse swap order', () => {
       const result = parseRemoteActivities([MockSwapOrder], '', vi.fn().mockReturnValue(100))
-      expect(result?.['activityId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse eth wrap', () => {
       const result = parseRemoteActivities([MockWrap], '', vi.fn().mockReturnValue(100))
-      expect(result?.['activityId']).toMatchSnapshot()
+      expect(result?.['someHash']).toMatchSnapshot()
     })
   })
 

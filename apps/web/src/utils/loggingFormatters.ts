@@ -2,7 +2,6 @@ import { Currency, Percent } from '@uniswap/sdk-core'
 import { SwapResult } from 'hooks/useSwapCallback'
 import {
   formatPercentInBasisPointsNumber,
-  formatPercentNumber,
   formatToDecimal,
   getDurationUntilTimestampSeconds,
   getTokenAddress,
@@ -11,39 +10,7 @@ import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { SwapPriceUpdateUserResponse } from 'uniswap/src/features/telemetry/types'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { RoutingDiagramEntry } from 'uniswap/src/utils/getRoutingDiagramEntries'
 import { computeRealizedPriceImpact } from 'utils/prices'
-
-const formatRoutesEventProperties = (routes?: RoutingDiagramEntry[]) => {
-  if (!routes) {
-    return {}
-  }
-
-  const routesEventProperties: Record<string, any[]> = {
-    routes_percentages: [],
-    routes_protocols: [],
-  }
-
-  routes.forEach((route, index) => {
-    routesEventProperties['routes_percentages'].push(formatPercentNumber(route.percent))
-    routesEventProperties['routes_protocols'].push(route.protocol)
-    routesEventProperties[`route_${index}_input_currency_symbols`] = route.path.map(
-      (pathStep) => pathStep[0].symbol ?? '',
-    )
-    routesEventProperties[`route_${index}_output_currency_symbols`] = route.path.map(
-      (pathStep) => pathStep[1].symbol ?? '',
-    )
-    routesEventProperties[`route_${index}_input_currency_addresses`] = route.path.map((pathStep) =>
-      getTokenAddress(pathStep[0]),
-    )
-    routesEventProperties[`route_${index}_output_currency_addresses`] = route.path.map((pathStep) =>
-      getTokenAddress(pathStep[1]),
-    )
-    routesEventProperties[`route_${index}_fee_amounts_hundredths_of_bps`] = route.path.map((pathStep) => pathStep[2])
-  })
-
-  return routesEventProperties
-}
 
 export function formatSwapPriceUpdatedEventProperties({
   trade,
@@ -74,7 +41,6 @@ interface AnalyticsEventProps {
   transactionDeadlineSecondsSinceEpoch?: number
   isAutoSlippage: boolean
   isAutoRouterApi: boolean
-  routes?: RoutingDiagramEntry[]
   fiatValueInput?: number
   fiatValueOutput?: number
 }
@@ -87,7 +53,6 @@ export const formatSwapButtonClickEventProperties = ({
   transactionDeadlineSecondsSinceEpoch,
   isAutoSlippage,
   isAutoRouterApi,
-  routes,
   fiatValueInput,
   fiatValueOutput,
 }: AnalyticsEventProps) => {
@@ -119,7 +84,6 @@ export const formatSwapButtonClickEventProperties = ({
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
         ? trade.inputAmount.currency.chainId
         : undefined,
-    swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber ?? undefined : undefined,
-    ...formatRoutesEventProperties(routes),
+    swap_quote_block_number: isClassicTrade(trade) ? (trade.blockNumber ?? undefined) : undefined,
   }
 }

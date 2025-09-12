@@ -49,7 +49,7 @@ const SettingsPageLayout = ({
   const { t } = useTranslation()
   const media = useMedia()
 
-  const title = SelectedSetting ? SelectedSetting.renderTitle(t) : defaultTitle ?? t('swap.settings.title')
+  const title = SelectedSetting ? SelectedSetting.renderTitle(t) : (defaultTitle ?? t('swap.settings.title'))
 
   // For selected settings, show title on all platforms unless it is explicitly hidden via hideTitle.
   // For top level settings (not selected), show title on mobile + small screen web only.

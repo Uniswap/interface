@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "check:deps:usage": "depcheck",
-    "format": "../../scripts/prettier.sh",
+    "format": "biome check . --linter-enabled=false",
     "lint": "eslint . --ext ts,tsx --max-warnings=0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "test": "jest",

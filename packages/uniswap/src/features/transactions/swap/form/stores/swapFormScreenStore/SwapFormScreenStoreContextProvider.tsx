@@ -12,11 +12,11 @@ import {
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useDecimalPadControlledField } from 'uniswap/src/features/transactions/swap/form/hooks/useDecimalPadControlledField'
 import { useSyncFiatAndTokenAmountUpdater } from 'uniswap/src/features/transactions/swap/form/hooks/useSyncFiatAndTokenAmountUpdater'
-import { SwapFormScreenStoreContext } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/SwapFormScreenStoreContext'
 import { createSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/createSwapFormScreenStore'
 import { useSwapNetworkChangeEffect } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/hooks/useSwapNetworkChangeEffect'
 import { useTemporaryFoTWarning } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/hooks/useTemporaryFoTWarning'
 import { useUpdateSwapFormOnMountIfExactOutputWillFail } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/hooks/useUpdateSwapFormOnMountIfExactOutputWillFail'
+import { SwapFormScreenStoreContext } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/SwapFormScreenStoreContext'
 import { useSwapFormScreenCallbacks } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenCallbacks'
 
 import {

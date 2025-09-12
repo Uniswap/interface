@@ -1,9 +1,9 @@
 import { useContext } from 'react'
-import { SwapTxStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/SwapTxStoreContext'
 import type {
   SwapTxStore,
   SwapTxStoreState,
 } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/createSwapTxStore'
+import { SwapTxStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/SwapTxStoreContext'
 import { useStore } from 'zustand'
 import { useShallow } from 'zustand/shallow'
 

@@ -167,7 +167,7 @@ const RollNumber = ({
   }, [animatedDigit, shouldAnimate])
 
   const animatedWrapperStyle = useAnimatedStyle(() => {
-    const digitWidth = animatedDigit.value !== undefined ? NUMBER_WIDTH_ARRAY[animatedDigit.value] ?? 0 : 0
+    const digitWidth = animatedDigit.value !== undefined ? (NUMBER_WIDTH_ARRAY[animatedDigit.value] ?? 0) : 0
     const rowWidth = digitWidth + ADDITIONAL_WIDTH_FOR_ANIMATIONS - 7
 
     return {

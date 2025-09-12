@@ -10,23 +10,23 @@ This is the `utilities` package within the Uniswap Universe monorepo. It provide
 
 ```bash
 # Build the package
-yarn build
+bun build
 
 # Run tests
-yarn test
+bun run test
 
 # Type checking
-yarn typecheck
+bun typecheck
 
 # Linting
-yarn lint          # Check for lint errors
-yarn lint:fix      # Auto-fix lint errors
+bun lint          # Check for lint errors
+bun lint:fix      # Auto-fix lint errors
 
 # Check formatting
-yarn format
+bun format
 
 # Check for unused dependencies
-yarn check:deps:usage
+bun check:deps:usage
 ```
 
 ## Architecture

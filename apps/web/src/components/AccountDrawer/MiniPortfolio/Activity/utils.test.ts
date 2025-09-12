@@ -1,9 +1,24 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
-import { createGroups, getActivityNonce, haveSameNonce } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import {
+  createActivityMapByHash,
+  createGroups,
+  getActivityNonce,
+  haveSameNonce,
+} from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { vi } from 'vitest'
 
 const nowTimestampMs = 1749832099000
+
+vi.mock('utilities/src/logger/logger', () => ({
+  logger: {
+    debug: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+  },
+}))
 
 describe('createGroups', () => {
   beforeEach(() => {
@@ -120,6 +135,47 @@ describe('Nonce storage and extraction', () => {
       },
     }
     expect(getActivityNonce(activity)).toEqual(BigNumber.from(10))
+  })
+
+  it('should return undefined if nonce is null', () => {
+    const activity: Activity = {
+      id: '0x123',
+      hash: '0x123',
+      chainId: 1,
+      status: TransactionStatus.Pending,
+      timestamp: 1234567890,
+      title: 'Test',
+      from: '0xabc',
+      options: {
+        request: {
+          // @ts-ignore
+          nonce: null,
+          to: '0xdef',
+          from: '0xabc',
+        },
+      },
+    }
+    expect(getActivityNonce(activity)).toEqual(undefined)
+  })
+
+  it('should return if nonce is 0', () => {
+    const activity: Activity = {
+      id: '0x123',
+      hash: '0x123',
+      chainId: 1,
+      status: TransactionStatus.Pending,
+      timestamp: 1234567890,
+      title: 'Test',
+      from: '0xabc',
+      options: {
+        request: {
+          nonce: 0,
+          to: '0xdef',
+          from: '0xabc',
+        },
+      },
+    }
+    expect(getActivityNonce(activity)).toEqual(BigNumber.from(0))
   })
 
   it('should return false when one activity has no nonce', () => {
@@ -257,5 +313,139 @@ describe('Nonce storage and extraction', () => {
       },
     }
     expect(haveSameNonce(activity1, activity2)).toBe(true)
+  })
+})
+
+describe('activityMapping utilities', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  describe('createActivityMapByHash', () => {
+    it('should create a map keyed by hash', () => {
+      const activities: Activity[] = [
+        {
+          id: 'id-1',
+          hash: '0xhash1',
+          chainId: UniverseChainId.Mainnet,
+          status: TransactionStatus.Success,
+          timestamp: 1000,
+          from: '0x123',
+          title: 'Activity 1',
+        },
+        {
+          id: 'id-2',
+          hash: '0xhash2',
+          chainId: UniverseChainId.Mainnet,
+          status: TransactionStatus.Pending,
+          timestamp: 2000,
+          from: '0x123',
+          title: 'Activity 2',
+        },
+      ]
+
+      const map = createActivityMapByHash(activities)
+
+      expect(Object.keys(map)).toHaveLength(2)
+      expect(map['0xhash1']).toBeDefined()
+      expect(map['0xhash1']?.id).toBe('id-1')
+      expect(map['0xhash2']).toBeDefined()
+      expect(map['0xhash2']?.id).toBe('id-2')
+    })
+
+    it('should handle undefined activities in the array', () => {
+      const activities: (Activity | undefined)[] = [
+        {
+          id: 'id-1',
+          hash: '0xhash1',
+          chainId: UniverseChainId.Mainnet,
+          status: TransactionStatus.Success,
+          timestamp: 1000,
+          from: '0x123',
+          title: 'Activity 1',
+        },
+        undefined,
+        {
+          id: 'id-2',
+          hash: '0xhash2',
+          chainId: UniverseChainId.Mainnet,
+          status: TransactionStatus.Pending,
+          timestamp: 2000,
+          from: '0x123',
+          title: 'Activity 2',
+        },
+      ]
+
+      const map = createActivityMapByHash(activities)
+
+      expect(Object.keys(map)).toHaveLength(2)
+      expect(map['0xhash1']).toBeDefined()
+      expect(map['0xhash2']).toBeDefined()
+    })
+
+    it('should handle empty array', () => {
+      const map = createActivityMapByHash([])
+      expect(Object.keys(map)).toHaveLength(0)
+    })
+
+    it('should handle fiat on-ramp activities that set hash = id', () => {
+      const activities: Activity[] = [
+        {
+          id: 'fiat-onramp-id-123',
+          hash: 'fiat-onramp-id-123', // Fiat on-ramp sets hash = id
+          chainId: UniverseChainId.Mainnet,
+          status: TransactionStatus.Success,
+          timestamp: 1000,
+          from: '0x123',
+          title: 'Purchased on MoonPay',
+        },
+        {
+          id: 'fiat-offramp-id-456',
+          hash: 'fiat-offramp-id-456', // Fiat off-ramp sets hash = id
+          chainId: UniverseChainId.Mainnet,
+          status: TransactionStatus.Success,
+          timestamp: 2000,
+          from: '0x123',
+          title: 'Sold on Coinbase',
+        },
+      ]
+
+      const map = createActivityMapByHash(activities)
+
+      expect(Object.keys(map)).toHaveLength(2)
+      expect(map['fiat-onramp-id-123']).toBeDefined()
+      expect(map['fiat-onramp-id-123']?.title).toBe('Purchased on MoonPay')
+      expect(map['fiat-offramp-id-456']).toBeDefined()
+      expect(map['fiat-offramp-id-456']?.title).toBe('Sold on Coinbase')
+    })
+
+    it('should overwrite duplicate hashes with the last activity', () => {
+      const activities: Activity[] = [
+        {
+          id: 'id-1',
+          hash: '0xduplicatehash',
+          chainId: UniverseChainId.Mainnet,
+          status: TransactionStatus.Pending,
+          timestamp: 1000,
+          from: '0x123',
+          title: 'First activity',
+        },
+        {
+          id: 'id-2',
+          hash: '0xduplicatehash',
+          chainId: UniverseChainId.Mainnet,
+          status: TransactionStatus.Success,
+          timestamp: 2000,
+          from: '0x123',
+          title: 'Second activity',
+        },
+      ]
+
+      const map = createActivityMapByHash(activities)
+
+      expect(Object.keys(map)).toHaveLength(1)
+      expect(map['0xduplicatehash']?.id).toBe('id-2')
+      expect(map['0xduplicatehash']?.status).toBe(TransactionStatus.Success)
+    })
   })
 })

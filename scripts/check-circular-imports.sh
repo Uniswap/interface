@@ -3,7 +3,7 @@
 entry=$1
 expected=$2
 
-out=$(npx madge -c $entry 2>&1)
+out=$(bunx madge -c $entry 2>&1)
 
 if [[ "$expected" == "0" ]]; then
     if [[ "$out" == *"No circular dependency found"* ]]; then

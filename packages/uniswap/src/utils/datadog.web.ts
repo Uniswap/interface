@@ -1,5 +1,5 @@
 import { datadogLogs } from '@datadog/browser-logs'
-import { RumEvent, RumEventDomainContext, RumFetchResourceEventDomainContext, datadogRum } from '@datadog/browser-rum'
+import { datadogRum, RumEvent, RumEventDomainContext, RumFetchResourceEventDomainContext } from '@datadog/browser-rum'
 import { config } from 'uniswap/src/config'
 import {
   DatadogIgnoredErrorsConfigKey,

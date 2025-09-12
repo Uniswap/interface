@@ -1,4 +1,4 @@
-import { Selector, createSelector } from '@reduxjs/toolkit'
+import { createSelector, Selector } from '@reduxjs/toolkit'
 import { PortfolioState, TokenBalanceOverride } from 'uniswap/src/features/portfolio/slice/slice'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
 

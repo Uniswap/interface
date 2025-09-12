@@ -2,12 +2,12 @@
 import { CurrencyAmount, Token, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import type { ImageSourcePropType } from 'react-native'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { type UNIVERSE_CHAIN_INFO } from 'uniswap/src/features/chains/chainInfo'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { NonEmptyArray } from 'utilities/src/primitives/array'
 import { Chain as WagmiChain } from 'wagmi/chains'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { type UNIVERSE_CHAIN_INFO } from 'uniswap/src/features/chains/chainInfo'
 
 export enum UniverseChainId {
   Mainnet = UniswapSDKChainId.MAINNET,
@@ -94,6 +94,7 @@ export interface UniverseChainInfo extends WagmiChain {
     url: `${string}/`
     apiURL?: string
   }
+  readonly openseaName?: string
   readonly rpcUrls: {
     [RPCType.Default]: ChainRPCUrls
     [RPCType.Private]?: ChainRPCUrls

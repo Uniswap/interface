@@ -14,11 +14,11 @@ import { SmartWalletEnabledModal } from 'wallet/src/components/smartWallet/modal
 import { SmartWalletInsufficientFundsOnNetworkModal } from 'wallet/src/components/smartWallet/modals/SmartWalletInsufficientFundsOnNetworkModal'
 import { SmartWalletUnavailableModal } from 'wallet/src/components/smartWallet/modals/SmartWalletUnavailableModal'
 import { setIsAllSmartWalletNudgesDisabled } from 'wallet/src/features/behaviorHistory/slice'
-import { SmartWalletDisableModal } from 'wallet/src/features/smartWallet/SmartWalletDisableModal'
-import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import { useNetworkBalances } from 'wallet/src/features/smartWallet/hooks/useNetworkBalances'
+import { SmartWalletDisableModal } from 'wallet/src/features/smartWallet/SmartWalletDisableModal'
 import { removeDelegationActions } from 'wallet/src/features/smartWallet/sagas/removeDelegationSaga'
 import { SmartWalletModalState, WalletData } from 'wallet/src/features/smartWallet/types'
+import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import {
   useActiveAccountAddressWithThrow,
   useActiveAccountWithThrow,

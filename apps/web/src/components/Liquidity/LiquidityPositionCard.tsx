@@ -6,13 +6,13 @@ import {
   WrappedLiquidityPositionRangeChart,
 } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { AdaptiveDropdown } from 'components/DropdownSelector/AdaptiveDropdown'
+import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
 import {
   LiquidityPositionFeeStats,
   LiquidityPositionFeeStatsLoader,
   MinMaxRange,
 } from 'components/Liquidity/LiquidityPositionFeeStats'
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/Liquidity/LiquidityPositionInfo'
-import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
 import { PositionInfo, PriceOrdering } from 'components/Liquidity/types'
 import { getBaseAndQuoteCurrencies } from 'components/Liquidity/utils/currency'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -26,7 +26,7 @@ import { useNavigate } from 'react-router'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Flex, FlexProps, Shine, Text, TouchableArea, styled, useIsTouchDevice, useMedia } from 'ui/src'
+import { Flex, FlexProps, Shine, styled, Text, TouchableArea, useIsTouchDevice, useMedia } from 'ui/src'
 import { ArrowsLeftRight } from 'ui/src/components/icons/ArrowsLeftRight'
 import { Dollar } from 'ui/src/components/icons/Dollar'
 import { Eye } from 'ui/src/components/icons/Eye'

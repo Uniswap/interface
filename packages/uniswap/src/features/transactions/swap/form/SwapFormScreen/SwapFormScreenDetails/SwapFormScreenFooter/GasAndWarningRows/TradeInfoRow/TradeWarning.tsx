@@ -2,8 +2,8 @@ import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function TradeWarning({ children, warning }: PropsWithChildren<{ warning: Warning }>): JSX.Element {
