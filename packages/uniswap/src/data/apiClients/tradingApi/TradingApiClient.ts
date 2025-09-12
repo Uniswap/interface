@@ -502,7 +502,7 @@ export async function claimLpFees(params: ClaimLPFeesRequest): Promise<ClaimLPFe
 }
 
 export async function fetchSwaps(params: { txHashes: TransactionHash[]; chainId: ChainId }): Promise<GetSwapsResponse> {
-  return await TradingApiClient.get<GetSwapsResponse>(uniswapUrls.tradingApiPaths.swaps, {
+  return await CustomQuoteApiClient.get<GetSwapsResponse>(uniswapUrls.tradingApiPaths.swaps, {
     params: {
       txHashes: params.txHashes.join(','),
       chainId: params.chainId,
