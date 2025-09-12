@@ -165,7 +165,7 @@ function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<Stat
   const locale = useCurrentLocale()
 
   // For Arabic locales, use simple Text component instead of animated sprites
-  const isArabic = locale.startsWith('ar')
+  const isArabic = locale?.startsWith('ar') ?? false
   if (isArabic) {
     return (
       <Text variant="heading2" color={live ? theme.success : theme.neutral1} allowFontScaling={false}>
