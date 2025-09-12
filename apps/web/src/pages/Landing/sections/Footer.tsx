@@ -27,17 +27,17 @@ const PolicyLink = styled(Text, {
 export function Socials({ iconSize }: { iconSize?: string }) {
   return (
     <Flex row gap="$spacing24" maxHeight={iconSize} alignItems="flex-start">
-      <SocialIcon iconColor="#00C32B">
+      <SocialIcon iconColor="#F7911A">
         <Anchor href={uniswapUrls.social.github} target="_blank">
           <Github size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
-      <SocialIcon iconColor="#20BAFF">
+      <SocialIcon iconColor="#F7911A">
         <Anchor href={uniswapUrls.social.x} target="_blank">
           <Twitter size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
-      <SocialIcon iconColor="#2AABEE">
+      <SocialIcon iconColor="#F7911A">
         <Anchor href={uniswapUrls.social.telegram} target="_blank">
           <Telegram size={iconSize} fill="inherit" />
         </Anchor>
