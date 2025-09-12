@@ -32,6 +32,17 @@ const hardcodedCommonBaseCurrencies: CurrencyInfo[] = [
     currencyId: `${UniverseChainId.Sepolia}-0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14`,
     logoUrl: 'https://assets.coingecko.com/coins/images/2518/large/weth.png?1696501628',
   },
+  {
+    currency: buildCurrency({
+      chainId: UniverseChainId.Sepolia,
+      address: '0x14ADf6B87096Ef750a956756BA191fc6BE94e473',
+      decimals: 18,
+      symbol: 'TFC',
+      name: 'TaprootFreakCoin',
+    }) as Currency,
+    currencyId: `${UniverseChainId.Sepolia}-0x14ADf6B87096Ef750a956756BA191fc6BE94e473`,
+    logoUrl: '',
+  },
 ]
 
 export function useCommonTokensOptionsWithFallback(
