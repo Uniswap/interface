@@ -1,41 +1,22 @@
-import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
 import { NavIcon } from 'components/Logo/NavIcon'
-import { MenuDropdown } from 'components/NavBar/CompanyMenu/MenuDropdown'
-import { MobileMenuDrawer } from 'components/NavBar/CompanyMenu/MobileMenuDrawer'
-import { useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router'
-import { Flex, Popover, Text, styled, useIsTouchDevice, useMedia } from 'ui/src'
-import { Hamburger } from 'ui/src/components/icons/Hamburger'
+import { Flex, Popover, Text, useMedia } from 'ui/src'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-
-const ArrowDownWrapper = styled(Text, {
-  color: '$neutral2',
-  '$group-hover': { color: '$neutral1' },
-  variants: {
-    open: {
-      true: { color: '$neutral1' },
-    },
-  },
-})
 
 export function CompanyMenu() {
   const popoverRef = useRef<Popover>(null)
   const media = useMedia()
-  const isMobileDrawer = useIsMobileDrawer()
   const isLargeScreen = !media.xxl
   const location = useLocation()
-  const [isOpen, setIsOpen] = useState(false)
 
   const closeMenu = useCallback(() => {
     popoverRef.current?.close()
   }, [popoverRef])
   useEffect(() => closeMenu(), [location, closeMenu])
 
-  const isTouchDevice = useIsTouchDevice()
-
   return (
-    <Popover ref={popoverRef} placement="bottom" hoverable stayInFrame allowFlip onOpenChange={setIsOpen}>
+    <Popover ref={popoverRef} placement="bottom" hoverable stayInFrame allowFlip>
       <Popover.Trigger data-testid={TestID.NavCompanyMenu}>
         <Flex
           row
@@ -56,15 +37,8 @@ export function CompanyMenu() {
               )}
             </Flex>
           </Link>
-          {(media.md || isTouchDevice) && <Hamburger size={22} color="$neutral2" cursor="pointer" ml="16px" />}
-          {!media.md && !isTouchDevice && (
-            <ArrowDownWrapper open={isOpen}>
-              <ArrowChangeDown width="12px" height="12px" />
-            </ArrowDownWrapper>
-          )}
         </Flex>
       </Popover.Trigger>
-      {isMobileDrawer ? <MobileMenuDrawer isOpen={isOpen} closeMenu={closeMenu} /> : <MenuDropdown close={closeMenu} />}
     </Popover>
   )
 }
