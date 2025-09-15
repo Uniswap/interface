@@ -12,7 +12,6 @@ import { Field as FieldV3 } from 'state/mint/v3/actions'
 import { FullRange, MintState as MintV3State } from 'state/mint/v3/reducer'
 import { routingApi } from 'state/routing/slice'
 import { RouterPreference } from 'state/routing/types'
-import { SignatureState } from 'state/signatures/reducer'
 import { UserState } from 'state/user/reducer'
 import { SerializedPair, SlippageTolerance } from 'state/user/types'
 import { WalletCapabilitiesState } from 'state/walletCapabilities/types'
@@ -60,7 +59,6 @@ import { VisibilityState } from 'uniswap/src/features/visibility/slice'
 type ExpectedAppState = CombinedState<{
   // Web State
   readonly user: UserState
-  readonly signatures: SignatureState
   readonly fiatOnRampTransactions: FiatOnRampTransactionsState
   readonly lists: ListsState
   readonly application: ApplicationState

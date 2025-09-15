@@ -94,6 +94,13 @@ export interface UniswapXOrderExtension {
 
   // Used to track status of the order before it is submitted
   queueStatus?: QueuedOrderStatus
+
+  // Contains the serialized/encoded UniswapX order data that gets submitted to the UniswapX system for execution.
+  encodedOrder?: string
+
+  // The Unix timestamp when the UniswapX order expires and can no longer be filled
+  // TODO(PORT-344): Unify `expiry` field with wallet
+  expiry?: number
 }
 
 export interface ClassicTransactionExtension {

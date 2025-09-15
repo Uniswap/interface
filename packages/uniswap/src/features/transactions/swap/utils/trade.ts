@@ -13,6 +13,7 @@ import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionType,
+  TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
   PopulatedTransactionRequestArray,
@@ -94,6 +95,7 @@ function isNewTradePriceOutsideThreshold(oldTrade: Trade, newTrade: Trade): bool
 
 // any price movement below ACCEPT_NEW_TRADE_THRESHOLD is auto-accepted for the user
 const ACCEPT_NEW_TRADE_THRESHOLD = new Percent(1, 100)
+
 /** Returns true if `newTrade` differs from `oldTrade` enough to require explicit user acceptance. */
 export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Trade>): boolean {
   if (!oldTrade || !newTrade) {
@@ -206,6 +208,7 @@ export function validateTransactionRequest(
   }
   return undefined
 }
+
 export function validateTransactionRequests(
   requests?: providers.TransactionRequest[] | null,
 ): PopulatedTransactionRequestArray | undefined {
@@ -232,10 +235,17 @@ type RemoveUndefined<T> = {
 }
 
 export type ValidatedPermit = RemoveUndefined<Permit>
+
 export function validatePermit(permit: NullablePermit | undefined): ValidatedPermit | undefined {
   const { domain, types, values } = permit ?? {}
   if (domain && types && values) {
     return { domain, types, values }
   }
   return undefined
+}
+
+export function hasTradeType(
+  typeInfo: TransactionTypeInfo,
+): typeInfo is ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
+  return 'tradeType' in typeInfo && typeInfo.tradeType !== undefined
 }

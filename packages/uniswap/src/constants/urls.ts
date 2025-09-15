@@ -35,6 +35,7 @@ export const uniswapUrls = {
   helpUrl,
   helpRequestUrl: `${helpUrl}/requests/new`,
   helpArticleUrls: {
+    bridgedAssets: createHelpArticleUrl('39264728322317'),
     acrossRoutingInfo: createHelpArticleUrl('30677918339341'),
     approvalsExplainer: createHelpArticleUrl('8120520483085-What-is-an-approval-transaction'),
     batchedSwaps: createHelpArticleUrl('36393697148045'),
@@ -183,6 +184,8 @@ export const uniswapUrls = {
     order: '/order',
     execute: '/execute',
   },
+
+  wormholeUrl: 'https://portalbridge.com/',
 
   // App and Redirect URL's
   appBaseUrl: UNISWAP_APP_URL,

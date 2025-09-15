@@ -10,16 +10,17 @@ import { DetailLineItem } from 'components/swap/DetailLineItem'
 import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
-import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -60,7 +61,7 @@ function useCancelOrdersDialogContent(
     case CancellationState.REVIEWING_CANCELLATION:
       return {
         title:
-          orders.length === 1 && orders[0].type === SignatureType.SIGN_LIMIT ? (
+          orders.length === 1 && orders[0].routing === Routing.DUTCH_LIMIT ? (
             <Trans i18nKey="common.limit.cancel_one" />
           ) : (
             <Trans i18nKey="common.cancelOrder" />

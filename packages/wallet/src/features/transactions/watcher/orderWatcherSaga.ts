@@ -1,5 +1,5 @@
 import { call, delay, fork, select, take } from 'typed-redux-saga'
-import { OrderStatus, UniswapXOrder } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { UniswapXOrder } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { makeSelectUniswapXOrder } from 'uniswap/src/features/transactions/selectors'
 import { updateTransaction } from 'uniswap/src/features/transactions/slice'
 import { getOrders } from 'uniswap/src/features/transactions/swap/orders'
@@ -10,18 +10,9 @@ import {
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTxStatus } from 'uniswap/src/features/transactions/types/utils'
+import { convertOrderStatusToTransactionStatus } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-
-const ORDER_STATUS_TO_TX_STATUS: { [key in OrderStatus]: TransactionStatus } = {
-  [OrderStatus.CANCELLED]: TransactionStatus.Canceled,
-  [OrderStatus.ERROR]: TransactionStatus.Failed,
-  [OrderStatus.EXPIRED]: TransactionStatus.Expired,
-  [OrderStatus.FILLED]: TransactionStatus.Success,
-  [OrderStatus.INSUFFICIENT_FUNDS]: TransactionStatus.InsufficientFunds,
-  [OrderStatus.OPEN]: TransactionStatus.Pending,
-  [OrderStatus.UNVERIFIED]: TransactionStatus.Unknown,
-}
 
 // If the backend cannot provide a status for an order, we can assume after a certain threshold the submission failed.
 const ORDER_TIMEOUT_BUFFER = 20 * ONE_SECOND_MS
@@ -89,7 +80,7 @@ export class OrderWatcher {
           continue
         }
 
-        const updatedStatus = ORDER_STATUS_TO_TX_STATUS[remoteOrder.orderStatus]
+        const updatedStatus = convertOrderStatusToTransactionStatus(remoteOrder.orderStatus)
 
         const isUnchanged = updatedStatus === localOrder.status
         const isFinal = isFinalizedTxStatus(updatedStatus)

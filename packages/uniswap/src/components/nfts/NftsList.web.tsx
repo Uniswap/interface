@@ -14,14 +14,19 @@ import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { isExtension } from 'utilities/src/platform'
 
-const AssetsContainer = ({ children }: { children: React.ReactNode }): JSX.Element => {
+const AssetsContainer = ({ children, useGrid }: { children: React.ReactNode; useGrid: boolean }): JSX.Element => {
   return (
     <View
-      $platform-web={{
-        display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
-      }}
+      $platform-web={
+        useGrid
+          ? {
+              display: 'grid',
+              gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
+            }
+          : {}
+      }
       width="100%"
       gap="$spacing2"
     >
@@ -130,7 +135,7 @@ export function NftsList({ owner, errorStateStyle, emptyStateStyle, renderNFTIte
     () => (
       <Flex centered pt="$spacing48" px="$spacing36" style={emptyStateStyle}>
         <BaseCard.EmptyState
-          buttonLabel={t('tokens.nfts.list.none.button')}
+          buttonLabel={isExtension ? t('tokens.nfts.list.none.button') : undefined}
           description={t('tokens.nfts.list.none.description.default')}
           icon={<NoNfts color="$neutral3" size="$icon.100" />}
           title={t('tokens.nfts.list.none.title')}
@@ -154,8 +159,10 @@ export function NftsList({ owner, errorStateStyle, emptyStateStyle, renderNFTIte
     [errorStateStyle, onRetry, t],
   )
 
+  const isLoadingState = isNonPollingRequestInFlight(networkStatus)
+
   const listContent = useMemo(() => {
-    if (isNonPollingRequestInFlight(networkStatus)) {
+    if (isLoadingState) {
       return loadingState
     }
 
@@ -168,7 +175,7 @@ export function NftsList({ owner, errorStateStyle, emptyStateStyle, renderNFTIte
     }
 
     return itemsToRender.map(renderItem)
-  }, [networkStatus, nfts.length, itemsToRender, renderItem, errorState, emptyState, loadingState, isErrorState])
+  }, [isLoadingState, nfts.length, itemsToRender, renderItem, errorState, emptyState, loadingState, isErrorState])
 
   return (
     <>
@@ -180,7 +187,7 @@ export function NftsList({ owner, errorStateStyle, emptyStateStyle, renderNFTIte
         style={{ overflow: 'unset' }}
         scrollableTarget="wallet-dropdown-scroll-wrapper"
       >
-        <AssetsContainer>{listContent}</AssetsContainer>
+        <AssetsContainer useGrid={isLoadingState || nfts.length > 0}>{listContent}</AssetsContainer>
       </InfiniteScroll>
     </>
   )

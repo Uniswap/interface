@@ -8,7 +8,7 @@ import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
+import { useENSName } from 'uniswap/src/features/ens/api'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
@@ -55,7 +55,6 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
   const validated = getValidAddress({ address, platform: Platform.EVM })
   const displayName = useDisplayName(address, { includeUnitagSuffix: true })
   const ensDisplayName = useENSName(validated ?? undefined)
-  const { data: ensAvatar } = useENSAvatar(validated)
 
   return (
     <Modal name={ModalName.NewAddressWarning} onClose={onClose}>
@@ -100,7 +99,7 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
               leftText={t('send.warning.newAddress.details.ENS')}
               rightChild={
                 <Flex shrink row alignItems="center" gap="$spacing4">
-                  <AccountIcon address={address} avatarUri={ensAvatar} size={imageSizes.image16} />
+                  <AccountIcon address={address} size={imageSizes.image16} />
                   <Text
                     adjustsFontSizeToFit
                     allowFontScaling

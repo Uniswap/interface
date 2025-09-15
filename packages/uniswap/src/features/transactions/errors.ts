@@ -39,7 +39,7 @@ export class TransactionStepFailedError extends TransactionError {
     isBackendRejection?: boolean
     originalError?: Error
   }) {
-    super(message)
+    super(message, { cause: originalError })
     this.name = 'TransactionStepFailedError'
     this.step = step
     this.isBackendRejection = isBackendRejection

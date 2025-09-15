@@ -14,6 +14,7 @@ import {
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
+import { isLimitOrder } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { selectTokensVisibility } from 'uniswap/src/features/visibility/selectors'
 import { CurrencyIdToVisibility } from 'uniswap/src/features/visibility/slice'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
@@ -56,6 +57,10 @@ export const makeSelectAddressTransactions = (): AddressTransactionsSelector =>
         // Remove dummy local FOR transactions from TransactionList, notification badge, etc.
         // this is what prevents the local transactions from actually appearing in the activity tab.
         if (tx.typeInfo.type === TransactionType.LocalOnRamp || tx.typeInfo.type === TransactionType.LocalOffRamp) {
+          return false
+        }
+        // Remove limit orders from the main activity list (they appear in their own menu)
+        if (isLimitOrder(tx)) {
           return false
         }
         /*
@@ -218,4 +223,24 @@ export const selectIncompleteTransactions = (state: UniswapState): TransactionDe
       .filter((tx) => !isFinalizedTx(tx))
     return [...accum, ...pendingTxs]
   }, [])
+}
+
+interface SelectTransactionParams {
+  address: string
+  chainId: UniverseChainId
+  txId: string
+}
+
+/**
+ * Selector to get a specific transaction from the store
+ * Returns the transaction if it exists, undefined otherwise
+ */
+export const selectTransaction = (
+  state: UniswapState,
+  params: SelectTransactionParams,
+): TransactionDetails | InterfaceTransactionDetails | undefined => {
+  const transactions = selectTransactions(state)
+  const { address, chainId, txId } = params
+
+  return transactions[address]?.[chainId]?.[txId]
 }

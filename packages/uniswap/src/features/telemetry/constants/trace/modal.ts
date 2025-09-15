@@ -18,6 +18,8 @@ export const ModalName = {
   BiometricsModal: 'biometrics-modal',
   BlockedAccount: 'blocked-account',
   BlockedAddress: 'blocked-address',
+  BridgedAsset: 'bridged-asset-modal',
+  BridgedAssetNav: 'bridged-asset-nav-modal',
   BridgingWarning: 'bridging-warning-modal',
   BuyNativeToken: 'buy-native-token-modal',
   CancelOrders: 'cancel-orders-modal',
@@ -27,6 +29,7 @@ export const ModalName = {
   ClaimFee: 'claim-fee-modal',
   ClaimPopup: 'claim-popup',
   CloudBackupInfo: 'cloud-backup-info-modal',
+  CompatibleAddressWarning: 'compatible-address-warning-modal',
   ConfirmCreatePosition: 'confirm-create-position-modal',
   ConfirmSwap: 'confirm-swap-modal',
   ConnectionError: 'connection-error-modal',
@@ -198,6 +201,7 @@ export const ModalName = {
   WCPendingConnection: 'wc-pending-connection-modal',
   WCSignRequest: 'wc-sign-request-modal',
   WCViewOnlyWarning: 'wc-view-only-warning-modal',
+  Wormhole: 'wormhole-modal',
   // alphabetize additional values.
 } as const
 

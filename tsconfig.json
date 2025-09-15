@@ -1,0 +1,29 @@
+{
+  "__comment": "NX's entrypoint for establishing the project graph",
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./packages/utilities"
+    },
+    {
+      "path": "./packages/uniswap"
+    },
+    {
+      "path": "./packages/wallet"
+    },
+    {
+      "path": "./packages/ui"
+    },
+    {
+      "path": "./apps/web"
+    },
+    {
+      "path": "./packages/api"
+    },
+    {
+      "path": "./apps/extension"
+    }
+  ]
+}

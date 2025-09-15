@@ -13,7 +13,12 @@ export const useBridgingModalActions = ({
 } => {
   const handleBridgingOnContinue = useCallback(() => {
     handleHideBridgingWarningModal()
-    onReviewPress({ skipBridgingWarning: true, skipMaxTransferWarning: false, skipTokenProtectionWarning: true })
+    onReviewPress({
+      skipBridgingWarning: true,
+      skipMaxTransferWarning: false,
+      skipTokenProtectionWarning: true,
+      skipBridgedAssetWarning: true,
+    })
   }, [onReviewPress, handleHideBridgingWarningModal])
 
   return {

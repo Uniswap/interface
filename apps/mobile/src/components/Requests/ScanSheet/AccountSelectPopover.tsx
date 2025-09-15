@@ -4,6 +4,7 @@ import { Checkbox, Flex, Popover, Text, TouchableArea, useSporeColors } from 'ui
 import { DoubleChevronInverted } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
+import { UniswapContext, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 import { OverlappingAccountIcons } from 'wallet/src/components/accounts/OverlappingAccountIcons'
@@ -22,6 +23,7 @@ export const AccountSelectPopover = ({
 }: SwitchAccountProps): JSX.Element => {
   const { t } = useTranslation()
   const signerAccounts = useSignerAccounts()
+  const walletUniswapContextValue = useUniswapContext()
   const accountIsSwitchable = signerAccounts.length > 1
   const [isOpen, setIsOpen] = useState(false)
   const colors = useSporeColors()
@@ -68,42 +70,45 @@ export const AccountSelectPopover = ({
         p="$spacing16"
         gap="$gap20"
       >
-        {allAccountAddresses.map((address) => {
-          const isChecked = selectedAccountAddresses.includes(address)
+        {/* Bridge the Uniswap context into the popover so that the AddressDisplay component can use it */}
+        <UniswapContext.Provider value={walletUniswapContextValue}>
+          {allAccountAddresses.map((address) => {
+            const isChecked = selectedAccountAddresses.includes(address)
 
-          return (
-            <Flex
-              key={address}
-              row
-              justifyContent="space-between"
-              gap="$gap32"
-              alignItems="center"
-              borderRadius="$rounded12"
-              px="$spacing8"
-              py="$spacing4"
-              pressStyle={{ backgroundColor: '$surface2' }}
-              onPress={() => handleAccountSelect(address)}
-            >
-              <AddressDisplay
-                showAccountIcon
-                address={address}
-                hideAddressInSubtitle={false}
-                size={iconSizes.icon24}
-                textColor="$neutral1"
-                variant="buttonLabel3"
-                captionVariant="body4"
-              />
-              <Checkbox
-                checked={isChecked}
-                size="$icon.16"
-                disabled={disableDeselect}
-                pointerEvents="none"
-                onCheckedChange={() => handleAccountSelect(address)}
-              />
-            </Flex>
-          )
-        })}
-        <Popover.Arrow backgroundColor={colors.surface1.val} borderColor={colors.surface3.val} />
+            return (
+              <Flex
+                key={address}
+                row
+                justifyContent="space-between"
+                gap="$gap32"
+                alignItems="center"
+                borderRadius="$rounded12"
+                px="$spacing8"
+                py="$spacing4"
+                pressStyle={{ backgroundColor: '$surface2' }}
+                onPress={() => handleAccountSelect(address)}
+              >
+                <AddressDisplay
+                  showAccountIcon
+                  address={address}
+                  hideAddressInSubtitle={false}
+                  size={iconSizes.icon24}
+                  textColor="$neutral1"
+                  variant="buttonLabel3"
+                  captionVariant="body4"
+                />
+                <Checkbox
+                  checked={isChecked}
+                  size="$icon.16"
+                  disabled={disableDeselect}
+                  pointerEvents="none"
+                  onCheckedChange={() => handleAccountSelect(address)}
+                />
+              </Flex>
+            )
+          })}
+          <Popover.Arrow backgroundColor={colors.surface1.val} borderColor={colors.surface3.val} />
+        </UniswapContext.Provider>
       </Popover.Content>
     </Popover>
   )

@@ -7,14 +7,14 @@ import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import {
   isLimitCancellable,
   useCancelMultipleOrdersCallback,
-} from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+} from 'components/AccountDrawer/MiniPortfolio/Activity/utils/cancel'
 import { LimitDetailActivityRow } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitDetailActivityRow'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { useCallback, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { UniswapXOrderDetails } from 'state/signatures/types'
 import { Button, Flex } from 'ui/src'
+import { UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export function LimitsMenu({ onClose, account }: { account: string; onClose: () => void }) {
   const { t } = useTranslation()

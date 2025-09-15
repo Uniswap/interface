@@ -15,7 +15,7 @@ import { ThemedText } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
 import { ClickableStyle } from 'theme/components/styles'
 import { capitalize } from 'tsafe'
-import { Flex, Popover, Text, Tooltip } from 'ui/src'
+import { Flex, Popover, Text, Tooltip, styled as UIStyled } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useENSName } from 'uniswap/src/features/ens/api'
@@ -35,22 +35,31 @@ const StyledCloseIcon = styled(X)`
   ${ClickableStyle}
 `
 
-const RecipientWrapper = styled(Column)<{ $disabled?: boolean; $isFocused?: boolean }>`
-  position: relative;
-  background-color: ${({ theme }) => theme.surface2};
-  border-radius: 16px;
-  padding: 12px 16px;
-  gap: 4px;
-  opacity: ${({ $disabled }) => (!$disabled ? 1 : 0.4)};
-  pointer-events: ${({ $disabled }) => (!$disabled ? 'initial' : 'none')};
-  border: 1px solid transparent;
-  ${({ $isFocused }) =>
-    $isFocused &&
-    css`
-      border: 1px solid ${({ theme }) => theme.surface3};
-      background-color: ${({ theme }) => theme.surface1};
-    `}
-`
+const RecipientWrapper = UIStyled(Flex, {
+  position: 'relative',
+  backgroundColor: '$surface2',
+  borderRadius: '$rounded16',
+  padding: '$spacing16',
+  gap: '$spacing4',
+  opacity: 1,
+  borderColor: '$transparent',
+  borderWidth: '$spacing1',
+
+  variants: {
+    isDisabled: {
+      true: {
+        opacity: 0.4,
+        pointerEvents: 'none',
+      },
+    },
+    isFocused: {
+      true: {
+        borderColor: '$surface3',
+        backgroundColor: '$surface1',
+      },
+    },
+  } as const,
+})
 
 const StyledRecipientInput = styled.input`
   background: none;
@@ -322,7 +331,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
   const showInputField = !recipientData || isFocusing || isForcingFocus
 
   return (
-    <RecipientWrapper $disabled={disabled} $isFocused={isFocusing}>
+    <RecipientWrapper isDisabled={disabled} isFocused={isFocusing}>
       <Popover open={isFocusing} placement="bottom-start" offset={{ crossAxis: -16 }}>
         <Popover.Trigger>
           {showInputField ? (

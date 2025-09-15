@@ -261,25 +261,44 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
     <div>
       <View
         cancelable={true}
+        collapsable={false}
         disabled={false}
+        focusVisibleStyle={{}}
         focusable={true}
+        forwardedRef={[Function]}
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
         minPressDuration={0}
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onLayout={[Function]}
         onMouseEnter={[Function]}
         onMouseLeave={[Function]}
         onPress={[Function]}
         onPressIn={[Function]}
         onPressOut={[Function]}
+        role="button"
         style={
           {
+            "backgroundColor": "transparent",
             "borderBottomLeftRadius": 999999,
             "borderBottomRightRadius": 999999,
             "borderTopLeftRadius": 999999,
             "borderTopRightRadius": 999999,
             "flexDirection": "column",
+            "opacity": 1,
             "paddingBottom": 4,
             "paddingLeft": 4,
             "paddingRight": 4,
             "paddingTop": 4,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
           }
         }
       >

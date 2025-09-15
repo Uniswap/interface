@@ -1,7 +1,7 @@
 import { type PropsWithChildren, type ReactNode, useContext } from 'react'
 import type { ColorValue } from 'react-native'
-import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import type { ButtonProps } from 'ui/src/components/buttons/Button/types'
+import { Button, Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
+import type { ButtonEmphasis, ButtonProps } from 'ui/src/components/buttons/Button/types'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { X } from 'ui/src/components/icons/X'
 import { opacify, zIndexes } from 'ui/src/theme'
@@ -40,7 +40,9 @@ type WarningModalContentProps = {
   analyticsProperties?: Record<string, unknown>
   buttonSize?: ButtonProps['size']
   showCloseButton?: boolean
-}
+  acknowledgeButtonEmphasis?: ButtonEmphasis
+  closeHeaderComponent?: ReactNode
+} & FlexProps
 
 export type WarningModalProps = {
   isOpen: boolean
@@ -109,6 +111,9 @@ export function WarningModalContent({
   analyticsProperties,
   buttonSize: passedButtonSize,
   showCloseButton = false,
+  acknowledgeButtonEmphasis = 'primary',
+  closeHeaderComponent,
+  ...props
 }: PropsWithChildren<WarningModalContentProps>): JSX.Element {
   const { headerText: alertHeaderTextColor } = getAlertColor(severity)
 
@@ -123,12 +128,15 @@ export function WarningModalContent({
       pb={isWeb ? '$none' : '$spacing12'}
       pt={hideHandlebar ? '$spacing24' : '$spacing12'}
       px={isWeb ? '$none' : '$spacing24'}
+      {...props}
     >
-      {showCloseButton && onClose && (
+      {showCloseButton && onClose && !closeHeaderComponent && (
         <TouchableArea position="absolute" right={0} top={0} zIndex={zIndexes.default} onPress={onClose}>
           <X color="$neutral2" size="$icon.24" />
         </TouchableArea>
       )}
+
+      {closeHeaderComponent}
 
       <WarningModalIcon
         hideIcon={hideIcon}
@@ -160,7 +168,12 @@ export function WarningModalContent({
           )}
           {acknowledgeText && (
             <Trace logPress element={ElementName.Confirm} modal={modalName} properties={analyticsProperties}>
-              <Button size={buttonSize} testID={TestID.Confirm} onPress={onAcknowledge}>
+              <Button
+                size={buttonSize}
+                emphasis={acknowledgeButtonEmphasis}
+                testID={TestID.Confirm}
+                onPress={onAcknowledge}
+              >
                 {acknowledgeText}
               </Button>
             </Trace>

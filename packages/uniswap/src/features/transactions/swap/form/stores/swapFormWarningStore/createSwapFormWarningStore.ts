@@ -8,6 +8,7 @@ export type SwapFormWarningStoreState = {
   isBridgingWarningModalVisible: boolean
   isMaxNativeTransferModalVisible: boolean
   isViewOnlyModalVisible: boolean
+  isBridgedAssetModalVisible: boolean
   actions: {
     handleShowTokenWarningModal: () => void
     handleHideTokenWarningModal: () => void
@@ -15,6 +16,8 @@ export type SwapFormWarningStoreState = {
     handleHideBridgingWarningModal: () => void
     handleShowMaxNativeTransferModal: () => void
     handleHideMaxNativeTransferModal: () => void
+    handleShowBridgedAssetModal: () => void
+    handleHideBridgedAssetModal: () => void
     handleShowViewOnlyModal: () => void
     handleHideViewOnlyModal: () => void
   }
@@ -30,6 +33,7 @@ export const createSwapFormWarningStore = (): SwapFormWarningStore =>
         isBridgingWarningModalVisible: false,
         isMaxNativeTransferModalVisible: false,
         isViewOnlyModalVisible: false,
+        isBridgedAssetModalVisible: false,
         actions: {
           handleShowTokenWarningModal: (): void => set({ isTokenWarningModalVisible: true }),
           handleHideTokenWarningModal: (): void => set({ isTokenWarningModalVisible: false }),
@@ -39,6 +43,8 @@ export const createSwapFormWarningStore = (): SwapFormWarningStore =>
           handleHideMaxNativeTransferModal: (): void => set({ isMaxNativeTransferModalVisible: false }),
           handleShowViewOnlyModal: (): void => set({ isViewOnlyModalVisible: true }),
           handleHideViewOnlyModal: (): void => set({ isViewOnlyModalVisible: false }),
+          handleShowBridgedAssetModal: (): void => set({ isBridgedAssetModalVisible: true }),
+          handleHideBridgedAssetModal: (): void => set({ isBridgedAssetModalVisible: false }),
         },
       }),
       {

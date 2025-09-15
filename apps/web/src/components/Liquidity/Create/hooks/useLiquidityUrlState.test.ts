@@ -58,7 +58,7 @@ describe('useLiquidityUrlState', () => {
     ])
 
     useCurrencyWithLoadingMock.mockImplementation(({ address, chainId }: { address?: string; chainId?: number }) => {
-      // Handle native token: 'ETH'
+      // Handle native token: 'ETH' or 'NATIVE'
       if (
         (typeof address === 'string' && address.toUpperCase() === NATIVE_CHAIN_ID) ||
         (typeof address === 'string' && address.toUpperCase() === 'ETH')

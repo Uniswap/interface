@@ -4,10 +4,14 @@ import {
   createActivityMapByHash,
   createGroups,
   getActivityNonce,
+  getCurrencyAddress,
   haveSameNonce,
+  parseTokenAmount,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import { Chain, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { vi } from 'vitest'
 
 const nowTimestampMs = 1749832099000
@@ -447,5 +451,85 @@ describe('activityMapping utilities', () => {
       expect(map['0xduplicatehash']?.id).toBe('id-2')
       expect(map['0xduplicatehash']?.status).toBe(TransactionStatus.Success)
     })
+  })
+})
+
+describe('getCurrencyAddress', () => {
+  it('should return token address when available', () => {
+    const token = {
+      id: 'token-id',
+      address: '0x1234567890123456789012345678901234567890',
+      chain: Chain.Ethereum,
+      symbol: 'TEST',
+      decimals: 18,
+      standard: TokenStandard.Erc20,
+    } as any
+
+    const result = getCurrencyAddress(token, UniverseChainId.Mainnet)
+    expect(result).toBe('0x1234567890123456789012345678901234567890')
+  })
+
+  it('should return native address when token address is null', () => {
+    const token = {
+      id: 'token-id',
+      address: null,
+      chain: Chain.Ethereum,
+      symbol: 'ETH',
+      decimals: 18,
+      standard: TokenStandard.Native,
+    } as any
+
+    const result = getCurrencyAddress(token, UniverseChainId.Mainnet)
+    // getNativeAddress for mainnet returns the NATIVE_ADDRESS constant
+    expect(result).toBeTruthy()
+    expect(result).not.toBe('')
+  })
+
+  it('should return native address when token address is undefined', () => {
+    const token = {
+      id: 'token-id',
+      address: undefined,
+      chain: Chain.Ethereum,
+      symbol: 'ETH',
+      decimals: 18,
+      standard: TokenStandard.Native,
+    } as any
+
+    const result = getCurrencyAddress(token, UniverseChainId.Mainnet)
+    expect(result).toBeTruthy()
+    expect(result).not.toBe('')
+  })
+})
+
+describe('parseTokenAmount', () => {
+  it('should parse amount with provided decimals', () => {
+    const result = parseTokenAmount('1000', 6)
+    // parseUnits('1000', 6) should return BigNumber equivalent to 1000 * 10^6
+    expect(result).toBe('1000000000')
+  })
+
+  it('should use DEFAULT_ERC20_DECIMALS when decimals is null', () => {
+    const result = parseTokenAmount('1', null)
+    // parseUnits('1', 18) should return BigNumber equivalent to 1 * 10^18
+    expect(result).toBe('1000000000000000000')
+    expect(DEFAULT_ERC20_DECIMALS).toBe(18)
+  })
+
+  it('should use DEFAULT_ERC20_DECIMALS when decimals is undefined', () => {
+    const result = parseTokenAmount('1', undefined)
+    // parseUnits('1', 18) should return BigNumber equivalent to 1 * 10^18
+    expect(result).toBe('1000000000000000000')
+  })
+
+  it('should handle zero decimals', () => {
+    const result = parseTokenAmount('100', 0)
+    // parseUnits('100', 0) should return BigNumber equivalent to 100
+    expect(result).toBe('100')
+  })
+
+  it('should handle decimal values in quantity', () => {
+    const result = parseTokenAmount('1.5', 6)
+    // parseUnits('1.5', 6) should return BigNumber equivalent to 1.5 * 10^6
+    expect(result).toBe('1500000')
   })
 })

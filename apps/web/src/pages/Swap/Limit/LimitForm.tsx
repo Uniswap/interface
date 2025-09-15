@@ -47,6 +47,9 @@ import { useIsMismatchAccountQuery } from 'uniswap/src/features/smartWallet/mism
 import { ElementName, InterfacePageName, SectionName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
+// We need to import this directly so we can format with `en-US` locale.
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { formatCurrencyAmount as formatCurrencyAmountRaw } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
@@ -118,24 +121,25 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       return
     }
 
-    const marketPriceString = formatCurrencyAmount({
-      value: (() => {
-        if (limitState.limitPriceInverted) {
-          return marketPrice.invert().quote(CurrencyAmount.fromRawAmount(outputCurrency, 10 ** outputCurrency.decimals))
-        } else {
-          return marketPrice.quote(CurrencyAmount.fromRawAmount(inputCurrency, 10 ** inputCurrency.decimals))
-        }
-      })(),
+    const amount = limitState.limitPriceInverted
+      ? marketPrice.invert().quote(CurrencyAmount.fromRawAmount(outputCurrency, 10 ** outputCurrency.decimals))
+      : marketPrice.quote(CurrencyAmount.fromRawAmount(inputCurrency, 10 ** inputCurrency.decimals))
+
+    // This is being formatted to reduce the number of decimal places.
+    // The value will be used for the internal state, so we want to always use `.` as decimal separator.
+    // When displaying the value to the user, we wil then call `formatCurrencyAmount` with the user's locale.
+    const normalizedMarketPrice = formatCurrencyAmountRaw({
+      amount,
+      locale: 'en-US',
       type: NumberType.SwapTradeAmount,
       placeholder: '',
     })
 
     setLimitState((prev) => ({
       ...prev,
-      limitPrice: marketPriceString,
+      limitPrice: normalizedMarketPrice,
     }))
   }, [
-    formatCurrencyAmount,
     inputCurrency,
     limitState.limitPriceEdited,
     limitState.limitPriceInverted,

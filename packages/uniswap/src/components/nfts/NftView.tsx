@@ -33,6 +33,9 @@ export function NftView({ item, onPress, index, openContextMenu }: NftViewProps)
     borderRadius: '$rounded12',
     overflow: 'hidden',
     width: '100%',
+    shadowColor: '$shadowColor',
+    shadowRadius: '$spacing12',
+    hoverStyle: { transform: 'scale(1.02)' },
   }
 
   if (isAndroid) {

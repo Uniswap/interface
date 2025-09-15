@@ -13,6 +13,9 @@ export const Cell = forwardRef(
     ref: ForwardedRef<TamaguiElement>,
   ) => {
     const media = useMedia()
+    const paddingY = rest.py ?? (media.lg ? '$spacing12' : '$spacing16')
+    // Calculate loading bubble height based on cell padding to ensure consistent dimensions
+    const loadingBubbleHeight = media.lg ? '$spacing32' : '$spacing16'
 
     return (
       <Flex
@@ -23,13 +26,17 @@ export const Cell = forwardRef(
         }}
         data-testid={testId}
         justifyContent={rest.justifyContent ?? 'flex-end'}
-        px={rest.px ?? 12}
-        py={rest.py ?? (media.lg ? 12 : 16)}
+        px={rest.px ?? '$spacing12'}
+        py={paddingY}
         alignItems={rest.alignItems ?? 'center'}
         ref={ref}
         {...rest}
       >
-        {loading ? <LoadingBubble height={16} width="75%" data-testid="cell-loading-bubble" /> : children}
+        {loading ? (
+          <LoadingBubble height={loadingBubbleHeight} width="75%" data-testid="cell-loading-bubble" />
+        ) : (
+          children
+        )}
       </Flex>
     )
   },

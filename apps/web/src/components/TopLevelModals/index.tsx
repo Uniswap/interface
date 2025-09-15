@@ -4,6 +4,8 @@ import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import { PasskeysHelpModalTypeAtom } from 'hooks/usePasskeyAuthWithHelpModal'
 import { useAtomValue } from 'jotai/utils'
+import { BridgedAssetModalAtom } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
+import { WormholeModalAtom } from 'uniswap/src/components/BridgedAsset/WormholeModal'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -22,6 +24,8 @@ export default function TopLevelModals() {
       : undefined
   useAccountRiskCheck(account.address)
   const passkeysHelpModalType = useAtomValue(PasskeysHelpModalTypeAtom)
+  const bridgedAssetModalProps = useAtomValue(BridgedAssetModalAtom)
+  const wormholeModalProps = useAtomValue(WormholeModalAtom)
 
   const shouldShowDevFlags = isDevEnv() || isBetaEnv()
 
@@ -70,6 +74,8 @@ export default function TopLevelModals() {
       <ModalRenderer modalName={ModalName.DelegationMismatch} />
       <ModalRenderer modalName={ModalName.ReceiveCryptoModal} />
       <ModalRenderer modalName={ModalName.Send} />
+      <ModalRenderer modalName={ModalName.BridgedAsset} componentProps={bridgedAssetModalProps} />
+      <ModalRenderer modalName={ModalName.Wormhole} componentProps={wormholeModalProps} />
     </>
   )
 }

@@ -6,6 +6,7 @@ import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { getSolanaParsedTokenAccountsByOwnerQueryOptions } from 'uniswap/src/data/solanaConnection/getSolanaParsedTokenAccountsByOwnerQueryOptions'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -17,7 +18,7 @@ import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { getSolanaConnection } from 'uniswap/src/features/providers/getSolanaConnection'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { currencyId, currencyAddress as getCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { currencyAddress as getCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
@@ -28,8 +29,25 @@ export type BalanceLookupParams = {
   accountAddress: string
 }
 
-/** Custom fetcher that uses an ethers provider to fetch. */
-export async function getOnChainBalancesFetch(params: BalanceLookupParams): Promise<{ balance?: string }> {
+type OnchainBalanceReactQueryResponse = {
+  balance?: string
+}
+
+function getOnchainBalanceReactQueryKey({
+  accountAddress,
+  chainId,
+  currencyAddress,
+}: {
+  accountAddress: string
+  chainId: UniverseChainId
+  currencyAddress: string
+}): Array<string | number> {
+  return [ReactQueryCacheKey.OnchainBalances, accountAddress, chainId, normalizeTokenAddressForCache(currencyAddress)]
+}
+
+async function fetchOnChainCurrencyBalanceInternal(
+  params: BalanceLookupParams,
+): Promise<OnchainBalanceReactQueryResponse> {
   switch (chainIdToPlatform(params.chainId)) {
     case Platform.EVM:
       return getOnChainBalancesFetchEVM(params)
@@ -45,7 +63,7 @@ export async function getOnChainBalancesFetch(params: BalanceLookupParams): Prom
   }
 }
 
-async function getOnChainBalancesFetchEVM(params: BalanceLookupParams): Promise<{ balance?: string }> {
+async function getOnChainBalancesFetchEVM(params: BalanceLookupParams): Promise<OnchainBalanceReactQueryResponse> {
   const { currencyAddress, chainId, currencyIsNative, accountAddress } = params
 
   const defaultSyncChainIds: UniverseChainId[] = []
@@ -82,7 +100,9 @@ async function getOnChainBalancesFetchEVM(params: BalanceLookupParams): Promise<
  * Used for on-chain balance checking on Unichain.
  * TODO(APPS-8519): consolidate this with existing instant balance fetcher
  */
-export async function getOnChainBalancesFetchWithPending(params: BalanceLookupParams): Promise<{ balance?: string }> {
+export async function getOnChainBalancesFetchWithPending(
+  params: BalanceLookupParams,
+): Promise<OnchainBalanceReactQueryResponse> {
   const { currencyAddress, chainId, currencyIsNative, accountAddress } = params
   if (!currencyAddress || !accountAddress) {
     return { balance: undefined }
@@ -115,7 +135,7 @@ export async function getOnChainBalancesFetchWithPending(params: BalanceLookupPa
   return { balance: decodedBalance.toString() }
 }
 
-async function getOnChainBalancesFetchSVM(params: BalanceLookupParams): Promise<{ balance?: string }> {
+async function getOnChainBalancesFetchSVM(params: BalanceLookupParams): Promise<OnchainBalanceReactQueryResponse> {
   const { currencyAddress, chainId, accountAddress } = params
 
   try {
@@ -141,24 +161,68 @@ async function getOnChainBalancesFetchSVM(params: BalanceLookupParams): Promise<
   }
 }
 
+/**
+ * Equivalent to `useOnChainCurrencyBalance`, to be used when hooks aren't an option.
+ */
+export async function fetchOnChainCurrencyBalance({
+  currencyAddress,
+  chainId,
+  currencyIsNative,
+  accountAddress,
+}: BalanceLookupParams): Promise<OnchainBalanceReactQueryResponse> {
+  const queryKey = getOnchainBalanceReactQueryKey({
+    accountAddress,
+    chainId,
+    currencyAddress,
+  })
+
+  return SharedQueryClient.fetchQuery({
+    queryKey,
+    queryFn: async (): Promise<OnchainBalanceReactQueryResponse> =>
+      // IMPORTANT: This API call must match the `useOnChainCurrencyBalance` implementation,
+      //            given that they share the same cache.
+      await fetchOnChainCurrencyBalanceInternal({
+        currencyAddress,
+        chainId,
+        currencyIsNative,
+        accountAddress,
+      }),
+  })
+}
+
 export function useOnChainCurrencyBalance(
   currency?: Currency | null,
   accountAddress?: Address,
 ): { balance: CurrencyAmount<Currency> | undefined; isLoading: boolean; error: unknown } {
   const refetchInterval = getPollingIntervalByBlocktime(currency?.chainId)
 
-  const { data, error } = useQuery<{ balance?: string }>({
-    queryKey: [ReactQueryCacheKey.OnchainBalances, accountAddress, currencyId(currency)],
-    queryFn:
-      currency && accountAddress
-        ? async (): ReturnType<typeof getOnChainBalancesFetch> =>
-            await getOnChainBalancesFetch({
-              currencyAddress: getCurrencyAddress(currency),
-              chainId: currency.chainId,
-              currencyIsNative: currency.isNative,
-              accountAddress,
-            })
-        : skipToken,
+  const shouldSkip = !currency || !accountAddress
+
+  const queryKey = useMemo(
+    () =>
+      shouldSkip
+        ? []
+        : getOnchainBalanceReactQueryKey({
+            accountAddress,
+            chainId: currency.chainId,
+            currencyAddress: getCurrencyAddress(currency),
+          }),
+    [shouldSkip, accountAddress, currency],
+  )
+
+  const { data, error } = useQuery<OnchainBalanceReactQueryResponse>({
+    queryKey,
+    queryFn: shouldSkip
+      ? skipToken
+      : async (): Promise<OnchainBalanceReactQueryResponse> =>
+          // IMPORTANT: This API call must match the `fetchOnChainCurrencyBalance` implementation,
+          //            given that they share the same cache.
+          await fetchOnChainCurrencyBalanceInternal({
+            currencyAddress: getCurrencyAddress(currency),
+            chainId: currency.chainId,
+            currencyIsNative: currency.isNative,
+            accountAddress,
+          }),
     staleTime: refetchInterval,
     refetchInterval,
     gcTime: refetchInterval * 2,

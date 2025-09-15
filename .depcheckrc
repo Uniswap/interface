@@ -14,6 +14,9 @@ ignores: [
     'semver',
     'typanion',
     '@biomejs/biome',
+    "@nx/js",
+    "@nx/workspace",
+    "@swc/helpers",
     # needed for ci
     'dd-trace',
   ]

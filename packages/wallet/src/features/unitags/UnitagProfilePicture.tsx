@@ -2,7 +2,6 @@ import { Flex, useSporeColors } from 'ui/src'
 import { ImageUri } from 'uniswap/src/components/nfts/images/ImageUri'
 import { RemoteImage } from 'uniswap/src/components/nfts/images/RemoteImage'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { useENSAvatar } from 'uniswap/src/features/ens/api'
 import { isSVGUri } from 'utilities/src/format/urls'
 
 export function UnitagProfilePicture({
@@ -15,7 +14,6 @@ export function UnitagProfilePicture({
   unitagAvatarUri?: string
 }): JSX.Element {
   const colors = useSporeColors()
-  const { data: ensAvatar } = useENSAvatar(address)
 
   return unitagAvatarUri ? (
     <Flex
@@ -38,6 +36,6 @@ export function UnitagProfilePicture({
       )}
     </Flex>
   ) : (
-    <AccountIcon address={address} avatarUri={ensAvatar} showBackground={true} showBorder={true} size={size} />
+    <AccountIcon address={address} showBackground={true} showBorder={true} size={size} />
   )
 }

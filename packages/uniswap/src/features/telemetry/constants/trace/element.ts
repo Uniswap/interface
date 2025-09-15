@@ -22,6 +22,7 @@ export enum ElementName {
   AutorouterVisualizationRow = 'expandable-autorouter-visualization-row',
   BackButton = 'back-button',
   BlogLink = 'blog-link',
+  BridgedAssetTDPSection = 'bridged-asset-tdp-section',
   BridgeNativeTokenButton = 'bridge-native-token-button',
   Buy = 'buy',
   BuyNativeTokenButton = 'buy-native-token-button',

@@ -9,9 +9,34 @@ if (!IS_CI) {
   dotenv.config({ path: path.resolve(__dirname, '.env.local') })
 }
 
-// Handle asset files that Node.js can't parse
+// Handle asset files and platform-specific imports for Node.js
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Module = require('module')
+
+// Override module resolution to handle platform-specific files like Vite does
+const originalResolveFilename = Module._resolveFilename
+Module._resolveFilename = function (request, parent) {
+  // For getConfig imports, try .web variant first (mimics Vite behavior)
+  // Use precise matching to avoid false positives with modules containing 'getConfig' as substring
+  if (request.endsWith('/getConfig') || request.endsWith('\\getConfig') || request === 'getConfig') {
+    // Try different .web patterns to match how Vite resolves extensions
+    const webVariants = [
+      `${request}.web`,
+      request.endsWith('.js') ? request.replace(/\.js$/, '.web.js') : `${request}.web.js`,
+    ]
+
+    for (const webVariant of webVariants) {
+      try {
+        return originalResolveFilename.call(this, webVariant, parent)
+      } catch {
+        // Continue trying other variants
+      }
+    }
+  }
+
+  return originalResolveFilename.call(this, request, parent)
+}
+
 const originalLoad = Module._load
 Module._load = function (...args: any[]) {
   const [request] = args

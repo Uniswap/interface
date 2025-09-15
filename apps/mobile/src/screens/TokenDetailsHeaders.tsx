@@ -4,19 +4,25 @@ import { FadeIn } from 'react-native-reanimated'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDetailsFavoriteButton'
 import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/useTokenDetailsCurrentChainBalance'
-import { Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { Ellipsis } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { TokenBalanceItemContextMenu } from 'uniswap/src/components/portfolio/TokenBalanceItemContextMenu'
+import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
+import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { TokenMenuActionType } from 'uniswap/src/features/portfolio/balances/hooks/useTokenContextMenuOptions'
+import { TokenList } from 'uniswap/src/features/dataApi/types'
+import {
+  TokenMenuActionType,
+  useTokenContextMenuOptions,
+} from 'uniswap/src/features/portfolio/balances/hooks/useTokenContextMenuOptions'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Element {
   const { t } = useTranslation()
@@ -52,41 +58,39 @@ export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Elemen
 const EXCLUDED_ACTIONS = [TokenMenuActionType.Swap, TokenMenuActionType.Send, TokenMenuActionType.Receive]
 
 export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Element {
-  const colors = useSporeColors()
-  const isDarkMode = useIsDarkMode()
-
   const { currencyId, currencyInfo, openContractAddressExplainerModal, copyAddressToClipboard } =
     useTokenDetailsContext()
-
   const currentChainBalance = useTokenDetailsCurrentChainBalance()
 
-  // Should be the same color as heart icon in not favorited state next to it
-  const ellipsisColor = isDarkMode ? colors.neutral2.get() : colors.neutral2.get()
-
-  const ellipsisElement = (
-    <Flex
-      hitSlop={{ right: 5, left: 20, top: 20, bottom: 20 }}
-      style={{ padding: spacing.spacing8 }}
-      testID={TestID.TokenDetailsMoreButton}
-    >
-      <Ellipsis color={ellipsisColor} size="$icon.16" />
-    </Flex>
-  )
+  const { value: isOpen, setTrue: openMenu, setFalse: closeMenu } = useBooleanState(false)
+  const menuActions = useTokenContextMenuOptions({
+    excludedActions: EXCLUDED_ACTIONS,
+    currencyId,
+    isBlocked: currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked,
+    tokenSymbolForNotification: currencyInfo?.currency.symbol,
+    portfolioBalance: currentChainBalance,
+    openContractAddressExplainerModal,
+    copyAddressToClipboard,
+    closeMenu: () => {},
+  })
 
   return (
     <AnimatedFlex row alignItems="center" entering={FadeIn} gap="$spacing12">
-      {currentChainBalance ? (
-        <TokenBalanceItemContextMenu
-          portfolioBalance={currentChainBalance}
-          excludedActions={EXCLUDED_ACTIONS}
-          openContractAddressExplainerModal={openContractAddressExplainerModal}
-          copyAddressToClipboard={copyAddressToClipboard}
+      <ContextMenu
+        menuItems={menuActions}
+        triggerMode={ContextMenuTriggerMode.Primary}
+        isOpen={isOpen}
+        openMenu={openMenu}
+        closeMenu={closeMenu}
+      >
+        <Flex
+          hitSlop={{ right: 5, left: 20, top: 20, bottom: 20 }}
+          style={{ padding: spacing.spacing8 }}
+          testID={TestID.TokenDetailsMoreButton}
         >
-          {ellipsisElement}
-        </TokenBalanceItemContextMenu>
-      ) : (
-        ellipsisElement
-      )}
+          <Ellipsis color="neutral2" size="$icon.16" />
+        </Flex>
+      </ContextMenu>
       <TokenDetailsFavoriteButton currencyId={currencyId} tokenName={currencyInfo?.currency.name} />
     </AnimatedFlex>
   )

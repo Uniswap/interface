@@ -3,6 +3,7 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useInterfaceWrap'
 import { useSwapFormWarningStoreActions } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/useSwapFormWarningStore'
+import { useNeedsBridgedAssetWarning } from 'uniswap/src/features/transactions/swap/hooks/useNeedsBridgedAssetWarning'
 import { useNeedsBridgingWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useNeedsBridgingWarning'
 import { useNeedsLowNativeBalanceWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useNeedsLowNativeBalanceWarning'
 import { usePrefilledNeedsTokenProtectionWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/usePrefilledNeedsTokenProtectionWarning'
@@ -24,6 +25,7 @@ export function usePrepareSwap(ctx: { warningService: WarningService }): () => v
     handleShowBridgingWarningModal,
     handleShowMaxNativeTransferModal,
     handleShowViewOnlyModal,
+    handleShowBridgedAssetModal,
   } = useSwapFormWarningStoreActions()
   const { isInterfaceWrap, onInterfaceWrap } = useInterfaceWrap()
   const { derivedSwapInfo, updateSwapForm, exactAmountToken, prefilledCurrencies, isMax } = useSwapFormStore((s) => ({
@@ -45,6 +47,8 @@ export function usePrepareSwap(ctx: { warningService: WarningService }): () => v
 
   const needsBridgingWarning = useNeedsBridgingWarning(derivedSwapInfo)
 
+  const { needsBridgedAssetWarning } = useNeedsBridgedAssetWarning(derivedSwapInfo, prefilledCurrencies)
+
   const isViewOnlyWallet = getIsViewOnlyWallet(activeAccount)
 
   return useEvent(
@@ -60,11 +64,13 @@ export function usePrepareSwap(ctx: { warningService: WarningService }): () => v
       needsTokenProtectionWarning,
       needsBridgingWarning,
       needsLowNativeBalanceWarning,
+      needsBridgedAssetWarning,
       // handleEventAction
       handleShowViewOnlyModal,
       handleShowTokenWarningModal,
       handleShowBridgingWarningModal,
       handleShowMaxNativeTransferModal,
+      handleShowBridgedAssetModal,
       onInterfaceWrap,
       updateSwapForm,
       setScreen,

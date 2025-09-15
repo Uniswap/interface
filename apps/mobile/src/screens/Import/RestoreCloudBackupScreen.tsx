@@ -11,7 +11,6 @@ import { DownloadAlt, RotatableChevron, Unitag } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { FORMAT_DATE_TIME_SHORT, useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
@@ -62,7 +61,6 @@ const BackupListItem = ({
   const isDarkMode = useIsDarkMode()
   const localizedDayjs = useLocalizedDayjs()
   const displayName = useDisplayName(mnemonicId)
-  const { avatar } = useAvatar(mnemonicId)
   const isUnitag = displayName?.type === DisplayNameType.Unitag
 
   return (
@@ -77,7 +75,7 @@ const BackupListItem = ({
       onPress={(): Promise<void> => onPressRestoreBackup(backup)}
     >
       <Flex row alignItems="center" gap="$spacing12">
-        <AccountIcon avatarUri={avatar} address={mnemonicId} size={iconSizes.icon36} />
+        <AccountIcon address={mnemonicId} size={iconSizes.icon36} />
         <Flex flex={1}>
           <Flex row>
             <Text adjustsFontSizeToFit variant="subheading1">

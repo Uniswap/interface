@@ -91,7 +91,7 @@ function EmptyState({
     <Flex centered gap="$spacing16" width="100%">
       <Flex centered gap="$spacing8">
         {icon}
-        <Flex centered gap="$spacing8">
+        <Flex centered gap="$spacing8" mt="$spacing8">
           {title && (
             <Text textAlign="center" variant="buttonLabel2">
               {title}

@@ -9,11 +9,11 @@ import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import styled from 'lib/styled-components'
 import { useCallback } from 'react'
-import { SignatureType } from 'state/signatures/types'
 import { ThemedText } from 'theme/components'
 import { EllipsisStyle } from 'theme/components/styles'
 import { BridgeIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { TransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -22,18 +22,17 @@ import { logger } from 'utilities/src/logger/logger'
 import { isHash } from 'viem'
 
 const ActivityRowDescriptor = styled(ThemedText.BodySmall)`
-  color: ${({ theme }) => theme.neutral2};
-  ${EllipsisStyle}
-  max-width: 100%;
+    color: ${({ theme }) => theme.neutral2};
+    ${EllipsisStyle}
+    max-width: 100%;
 `
 
 const StyledTimestamp = styled(ThemedText.BodySmall)`
-  color: ${({ theme }) => theme.neutral2};
-  line-height: 24px;
-  font-variant: small;
-  padding-right: 8px;
-  font-feature-settings:
-    'tnum' on,
+    color: ${({ theme }) => theme.neutral2};
+    line-height: 24px;
+    font-variant: small;
+    padding-right: 8px;
+    font-feature-settings: 'tnum' on,
     'lnum' on,
     'ss02' on;
 `
@@ -47,13 +46,15 @@ function StatusIndicator({
 
   switch (status) {
     case TransactionStatus.Pending:
-      if (offchainOrderDetails?.type === SignatureType.SIGN_LIMIT) {
+      if (offchainOrderDetails?.routing === Routing.DUTCH_LIMIT) {
         return null
       }
       return <LoaderV2 />
     case TransactionStatus.Success:
+    case TransactionStatus.Expired:
       return <StyledTimestamp>{timeSince}</StyledTimestamp>
     case TransactionStatus.Failed:
+    case TransactionStatus.FailedCancel:
       return <AlertTriangleFilled />
     default:
       logger.error(new Error(`Unhandled web transaction status`), {

@@ -50,7 +50,7 @@ const buildRedditProxyRequest = ({
       {
         click_id: lead.id,
         // Note: Reddit refuses requests that are more than 5m in the future
-        event_at: new Date(new Date().valueOf() + ms('5m')),
+        event_at: new Date(new Date().valueOf() + ms('4m')),
         event_metadata: { currency: 'USD', value_decimal: 1 },
         event_type: {
           tracking_type: eventId,

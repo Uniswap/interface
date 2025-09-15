@@ -1,8 +1,4 @@
-import {
-  SwapOrderStatus,
-  SwapOrderType,
-  TokenStandard,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { SwapOrderType, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { deriveCurrencyAmountFromAssetResponse } from 'uniswap/src/features/activity/utils/remote'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -13,9 +9,9 @@ import {
   TransactionDetailsType,
   TransactionListQueryResponse,
   TransactionOriginType,
-  TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { remoteOrderStatusToLocalTxStatus } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
 export function extractUniswapXOrderDetails(transaction: TransactionListQueryResponse): TransactionDetails | null {
@@ -42,24 +38,6 @@ export function extractUniswapXOrderDetails(transaction: TransactionListQueryRes
     orderHash: transaction.details.hash,
     typeInfo,
     transactionOriginType: TransactionOriginType.Internal,
-  }
-}
-
-// eslint-disable-next-line consistent-return
-function remoteOrderStatusToLocalTxStatus(orderStatus: SwapOrderStatus): TransactionStatus {
-  switch (orderStatus) {
-    case SwapOrderStatus.Open:
-      return TransactionStatus.Pending
-    case SwapOrderStatus.Expired:
-      return TransactionStatus.Expired
-    case SwapOrderStatus.Error:
-      return TransactionStatus.Failed
-    case SwapOrderStatus.InsufficientFunds:
-      return TransactionStatus.InsufficientFunds
-    case SwapOrderStatus.Filled:
-      return TransactionStatus.Success
-    case SwapOrderStatus.Cancelled:
-      return TransactionStatus.Canceled
   }
 }
 

@@ -1,0 +1,60 @@
+{
+  "name": "@universe/api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/api/src",
+  "projectType": "library",
+  "tags": [
+    "scope:shared",
+    "type:data",
+    "universe:package"
+  ],
+  "targets": {
+    "typecheck": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "tsConfig": "packages/api/tsconfig.json",
+        "main": "packages/api/src/index.ts",
+        "outputPath": "packages/api/dist/"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint . --ext ts,tsx --max-warnings=0",
+        "cwd": "packages/api"
+      }
+    },
+    "lint:fix": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint . --ext ts,tsx --fix",
+        "cwd": "packages/api"
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "biome check . --linter-enabled=false",
+        "cwd": "packages/api"
+      },
+      "inputs": [
+        "sourceFiles"
+      ]
+    },
+    "check:deps:usage": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "depcheck"
+      },
+      "inputs": [
+        "dependencies"
+      ]
+    },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'No preparation needed yet'"
+      }
+    }
+  }
+}

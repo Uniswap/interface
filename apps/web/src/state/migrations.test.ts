@@ -4,7 +4,6 @@ import { createDefaultStore } from 'state'
 import { initialState as initialListsState } from 'state/lists/reducer'
 import { PERSIST_VERSION } from 'state/migrations'
 import { RouterPreference } from 'state/routing/types'
-import { initialState as initialSignaturesState } from 'state/signatures/reducer'
 import { initialState as initialUserState } from 'state/user/reducer'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 
@@ -79,7 +78,6 @@ describe('redux migrations', () => {
     expect(localStorage.getItem('redux_localstorage_simple_transactions')).toBeNull()
     expect(localStorage.getItem('redux_localstorage_simple_user')).toBeNull()
     expect(localStorage.getItem('redux_localstorage_simple_lists')).toBeNull()
-    expect(localStorage.getItem('redux_localstorage_simple_signatures')).toBeNull()
 
     const state = store.getState()
     expect(state).toMatchObject({
@@ -92,8 +90,6 @@ describe('redux migrations', () => {
         test: 'user',
         userRouterPreference: RouterPreference.X,
       },
-      // this is cleared in a future migration
-      signatures: {},
     })
   })
 
@@ -106,7 +102,6 @@ describe('redux migrations', () => {
         localWebTransactions: { test: 'localWebTransactions' },
         transactions: initialTransactionsState,
         lists: initialListsState,
-        signatures: initialSignaturesState,
         _persist: { version: -1 },
       }),
     )
@@ -137,7 +132,6 @@ describe('redux migrations', () => {
         user: { ...initialUserState, test: 'user' },
         transactions: initialTransactionsState,
         lists: initialListsState,
-        signatures: initialSignaturesState,
         _persist: { version: -1 },
       }),
     )

@@ -1,7 +1,9 @@
+import { BridgedAssetModal } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
 import { ViewOnlyModal } from 'uniswap/src/features/transactions/modals/ViewOnlyModal'
 import { useBridgingModalActions } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useBridgingModalActions'
+import { useCurrenciesWithBridgingWarnings } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useCurrenciesWithBridgingWarnings'
 import { useCurrenciesWithProtectionWarnings } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useCurrenciesWithProtectionWarnings'
 import { useOnReviewPress } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useOnReviewPress'
 import { BridgingModal } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormWarningModals/BridgingModal'
@@ -80,6 +82,24 @@ const LocalTokenWarningModal = (): JSX.Element | null => {
   )
 }
 
+const LocalBridgedAssetModal = (): JSX.Element => {
+  const isBridgedAssetModalVisible = useSwapFormWarningStore((s) => s.isBridgedAssetModalVisible)
+  const { handleHideBridgedAssetModal } = useSwapFormWarningStoreActions()
+
+  const { currencyInfo0, currencyInfo1 } = useCurrenciesWithBridgingWarnings()
+  const { handleOnAcknowledgeBridgedAssetPress } = useOnReviewPress()
+
+  return (
+    <BridgedAssetModal
+      currencyInfo0={currencyInfo0}
+      currencyInfo1={currencyInfo1}
+      isOpen={isBridgedAssetModalVisible}
+      onClose={handleHideBridgedAssetModal}
+      onContinue={handleOnAcknowledgeBridgedAssetPress}
+    />
+  )
+}
+
 export const SwapFormWarningModals = (): JSX.Element => {
   return (
     <>
@@ -87,6 +107,7 @@ export const SwapFormWarningModals = (): JSX.Element => {
       <LocalViewOnlyModal />
       <LocalBridgingModal />
       <LocalTokenWarningModal />
+      <LocalBridgedAssetModal />
     </>
   )
 }

@@ -2,18 +2,27 @@ import { getTokenDetailsURL } from 'appGraphql/data/util'
 import { Currency } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { useAccount } from 'hooks/useAccount'
+import { useModalState } from 'hooks/useModalState'
+import { useAtom } from 'jotai'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, TouchableArea } from 'ui/src'
+import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
+import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
+import { WormholeModalAtom } from 'uniswap/src/components/BridgedAsset/WormholeModal'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
+import { useEvent } from 'utilities/src/react/hooks'
 
 interface BalanceProps {
   currency?: Currency
@@ -143,6 +152,35 @@ const OtherChainsBalanceSummary = ({
   )
 }
 
+function BridgedAssetWithdrawButton(): JSX.Element | null {
+  const { t } = useTranslation()
+  const { currencyChainId, address } = useTDPContext()
+  const currencyInfo = useCurrencyInfo(buildCurrencyId(currencyChainId, address))
+  const { openModal } = useModalState(ModalName.Wormhole)
+  const [, setWormholeModalCurrencyInfo] = useAtom(WormholeModalAtom)
+  const handlePress = useEvent(() => {
+    if (currencyInfo) {
+      setWormholeModalCurrencyInfo({ currencyInfo })
+      openModal()
+    }
+  })
+
+  const isBridgedAsset = currencyInfo && checkIsBridgedAsset(currencyInfo)
+  if (!isBridgedAsset) {
+    return null
+  }
+  return (
+    <TouchableArea onPress={handlePress} hoverStyle={{ opacity: 0.8 }}>
+      <Flex row gap="$spacing8">
+        <Text variant="buttonLabel3" color="$neutral2">
+          {t('bridgedAsset.wormhole.withdrawToHyperEVM')}
+        </Text>
+        <ExternalLink color="$neutral3" size="$icon.16" />
+      </Flex>
+    </TouchableArea>
+  )
+}
+
 export default function BalanceSummary() {
   const account = useAccount()
   const { currencyChain, multiChainMap } = useTDPContext()
@@ -168,6 +206,7 @@ export default function BalanceSummary() {
     <Flex flexDirection="column" gap="$gap24" height="fit-content" width="100%">
       <PageChainBalanceSummary pageChainBalance={pageChainBalance} />
       <OtherChainsBalanceSummary otherChainBalances={otherChainBalances} hasPageChainBalance={!!pageChainBalance} />
+      <BridgedAssetWithdrawButton />
     </Flex>
   )
 }

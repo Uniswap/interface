@@ -5,7 +5,6 @@ import CreatingPoolInfo from 'components/CreatingPoolInfo/CreatingPoolInfo'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { AddHook } from 'components/Liquidity/Create/AddHook'
 import { AdvancedButton } from 'components/Liquidity/Create/AdvancedButton'
-import { Container } from 'components/Liquidity/Create/Container'
 import type { FeeData } from 'components/Liquidity/Create/types'
 import { DEFAULT_POSITION_STATE } from 'components/Liquidity/Create/types'
 import { HookModal } from 'components/Liquidity/HookModal'
@@ -438,7 +437,7 @@ export function SelectTokensStep({
         />
       )}
       <PrefetchBalancesWrapper>
-        <Container {...rest}>
+        <Flex gap="$spacing32" {...rest}>
           <Flex gap="$spacing16">
             <Flex gap="$spacing12">
               <Flex>
@@ -671,7 +670,7 @@ export function SelectTokensStep({
               fotToken={undefined}
             />
           )}
-        </Container>
+        </Flex>
 
         <CurrencySearchModal
           isOpen={currencySearchInputState !== undefined}

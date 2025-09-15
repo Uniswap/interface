@@ -1,4 +1,3 @@
-import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
@@ -263,39 +262,39 @@ interface OrderTextTableEntry {
 }
 
 export const getOrderTextTable = (): {
-  [status in UniswapXOrderStatus]: OrderTextTableEntry
+  [status in TransactionStatus]?: OrderTextTableEntry
 } => {
   const TransactionTitleTable = getTransactionTitleTable()
   const SwapTitleTable = TransactionTitleTable[TransactionType.Swap]
 
   return {
-    [UniswapXOrderStatus.OPEN]: {
+    [TransactionStatus.Pending]: {
       getTitle: () => SwapTitleTable[TransactionStatus.Pending],
       status: TransactionStatus.Pending,
     },
-    [UniswapXOrderStatus.FILLED]: {
+    [TransactionStatus.Success]: {
       getTitle: () => SwapTitleTable[TransactionStatus.Success],
       status: TransactionStatus.Success,
     },
-    [UniswapXOrderStatus.EXPIRED]: {
+    [TransactionStatus.Expired]: {
       getTitle: () => i18n.t('common.swap.expired'),
       getStatusMessage: () => i18n.t('common.your.swap.could.not.be.fulfilled'),
       status: TransactionStatus.Failed,
     },
-    [UniswapXOrderStatus.ERROR]: {
+    [TransactionStatus.Failed]: {
       getTitle: () => SwapTitleTable[TransactionStatus.Failed],
       status: TransactionStatus.Failed,
     },
-    [UniswapXOrderStatus.INSUFFICIENT_FUNDS]: {
+    [TransactionStatus.InsufficientFunds]: {
       getTitle: () => i18n.t('common.insufficient.funds'),
       getStatusMessage: () => i18n.t('common.your.account.had.insufficient.funds'),
       status: TransactionStatus.Failed,
     },
-    [UniswapXOrderStatus.PENDING_CANCELLATION]: {
+    [TransactionStatus.Cancelling]: {
       getTitle: () => i18n.t('common.pending.cancellation'),
       status: TransactionStatus.Pending,
     },
-    [UniswapXOrderStatus.CANCELLED]: {
+    [TransactionStatus.Canceled]: {
       getTitle: () => i18n.t('transaction.status.swap.canceled'),
       status: TransactionStatus.Failed,
     },
@@ -303,35 +302,35 @@ export const getOrderTextTable = (): {
 }
 
 export const getLimitOrderTextTable = (): {
-  [status in UniswapXOrderStatus]: OrderTextTableEntry
+  [status in TransactionStatus]?: OrderTextTableEntry
 } => ({
-  [UniswapXOrderStatus.OPEN]: {
+  [TransactionStatus.Pending]: {
     getTitle: () => i18n.t('common.limit.opened'),
     status: TransactionStatus.Pending,
   },
-  [UniswapXOrderStatus.FILLED]: {
+  [TransactionStatus.Success]: {
     getTitle: () => i18n.t('common.limit.executed'),
     status: TransactionStatus.Success,
   },
-  [UniswapXOrderStatus.EXPIRED]: {
+  [TransactionStatus.Expired]: {
     getTitle: () => i18n.t('common.limit.expired'),
     getStatusMessage: () => i18n.t('common.your.limit.could.not.be.fulfilled'),
     status: TransactionStatus.Failed,
   },
-  [UniswapXOrderStatus.ERROR]: {
+  [TransactionStatus.Failed]: {
     getTitle: () => i18n.t('common.limit.failed'),
     status: TransactionStatus.Failed,
   },
-  [UniswapXOrderStatus.INSUFFICIENT_FUNDS]: {
+  [TransactionStatus.InsufficientFunds]: {
     getTitle: () => i18n.t('common.limit.opened'),
     getStatusMessage: () => i18n.t('common.your.account.has.insufficient.funds'),
     status: TransactionStatus.Pending,
   },
-  [UniswapXOrderStatus.PENDING_CANCELLATION]: {
+  [TransactionStatus.Cancelling]: {
     getTitle: () => i18n.t('common.pending.cancellation'),
     status: TransactionStatus.Pending,
   },
-  [UniswapXOrderStatus.CANCELLED]: {
+  [TransactionStatus.Canceled]: {
     getTitle: () => i18n.t('common.limit.canceled'),
     status: TransactionStatus.Failed,
   },

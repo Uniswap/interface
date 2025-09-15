@@ -1,14 +1,11 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import type { Currency } from '@uniswap/sdk-core'
-import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
+import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
-import { Container } from 'components/Liquidity/Create/Container'
-import { EditSelectTokensStep } from 'components/Liquidity/Create/EditStep'
+import { FormStepsWrapper, FormWrapper } from 'components/Liquidity/Create/FormWrapper'
 import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
 import { useLPSlippageValue } from 'components/Liquidity/Create/hooks/useLPSlippageValues'
-import { SelectPriceRangeStep } from 'components/Liquidity/Create/RangeSelectionStep'
-import { SelectTokensStep } from 'components/Liquidity/Create/SelectTokenStep'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'components/Liquidity/Create/types'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
@@ -18,7 +15,6 @@ import type { PositionInfo } from 'components/Liquidity/types'
 import { getCurrencyForProtocol } from 'components/Liquidity/utils/currency'
 import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
 import { LoadingRows } from 'components/Loader/styled'
-import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import {
@@ -38,14 +34,13 @@ import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
-import { Button, Flex, Main, styled, Text, useMedia } from 'ui/src'
+import { Button, Flex, Main, styled, Text } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme/heights'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
-import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { InterfacePageName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
@@ -72,37 +67,18 @@ const BodyWrapper = styled(Main, {
 })
 
 function MigrateV3Inner({
-  initialPosition,
   positionInfo,
   currencyInputs,
   setCurrencyInputs,
 }: {
-  initialPosition:
-    | {
-        tickLower: number
-        tickUpper: number
-        isOutOfRange: boolean
-      }
-    | undefined
   positionInfo: PositionInfo
   currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
 }) {
-  const { chainName, tokenId } = useParams<{ tokenId: string; chainName: string }>()
   const trace = useTrace()
   const { t } = useTranslation()
 
-  const {
-    positionState,
-    setPositionState,
-    setStep,
-    setPriceRangeState,
-    setDepositState,
-    step,
-    currentTransactionStep,
-    setCurrentTransactionStep,
-  } = useCreateLiquidityContext()
-  const { protocolVersion } = positionState
+  const { setStep, currentTransactionStep, setCurrentTransactionStep } = useCreateLiquidityContext()
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
   const selectChain = useSelectChain()
@@ -111,7 +87,6 @@ function MigrateV3Inner({
   const account = useWallet().evmAccount
   const dispatch = useDispatch()
   const { txInfo, transactionError, refetch, setTransactionError } = useMigrateV3TxContext()
-  const media = useMedia()
   const navigate = useNavigate()
 
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
@@ -198,105 +173,41 @@ function MigrateV3Inner({
     currency1Amount.currency,
   ])
 
+  const priceRangeProps = useMemo(() => {
+    return {
+      positionInfo,
+      disableContinue: !txInfo || Boolean(transactionError),
+      onContinue: () => {
+        setIsReviewModalOpen(true)
+      },
+    }
+  }, [txInfo, transactionError, positionInfo, setIsReviewModalOpen])
+
   return (
     <>
-      <Flex mt="$spacing48" gap="$gap36" $md={{ mt: '$spacing24', gap: '$none' }}>
-        <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-          <BreadcrumbNavLink to="/positions">
-            <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
-          </BreadcrumbNavLink>
-          <BreadcrumbNavLink to={`/positions/v3/${chainName}/${tokenId}`}>
-            {currency0Amount.currency.symbol} / {currency1Amount.currency.symbol} <ChevronRight size={14} />
-          </BreadcrumbNavLink>
-        </BreadcrumbNavContainer>
-        <Flex
-          row
-          alignItems="center"
-          gap="$gap20"
-          width="100%"
-          justifyContent="space-between"
-          $md={{ flexDirection: 'column', alignItems: 'flex-start', mb: '$spacing24' }}
-        >
-          <Text variant="heading2">
-            <Trans i18nKey="common.migrate.position" />
-          </Text>
-          <Button
-            size="small"
-            emphasis="tertiary"
-            fill={false}
-            icon={<RotateLeft />}
-            onPress={() => {
-              setPositionState({
-                ...DEFAULT_POSITION_STATE,
-                initialPosition,
-                protocolVersion,
-              })
-              setCurrencyInputs({
-                tokenA: getCurrencyForProtocol(currency0Amount.currency, protocolVersion),
-                tokenB: getCurrencyForProtocol(currency1Amount.currency, protocolVersion),
-              })
-              setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
-              setDepositState(DEFAULT_DEPOSIT_STATE)
-              setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-            }}
-          >
-            <Trans i18nKey="common.button.reset" />
-          </Button>
-        </Flex>
-        <Flex row gap={32} width="100%">
-          {!media.xl && (
-            <Flex
-              width={360}
-              alignSelf="flex-start"
-              $platform-web={{ position: 'sticky', top: INTERFACE_NAV_HEIGHT + 25 }}
-            >
-              <PoolProgressIndicator
-                steps={[
-                  { label: t('migrate.selectFeeTier'), active: step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER },
-                  { label: t('migrate.setRange'), active: step === PositionFlowStep.PRICE_RANGE },
-                ]}
-              />
-            </Flex>
-          )}
-          <Flex gap="$gap16" maxWidth="calc(min(580px, 90vw))">
-            <LiquidityPositionCard liquidityPosition={positionInfo} disabled />
-            <Flex justifyContent="center" alignItems="center">
-              <Flex shrink backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
-                <ArrowDown size={20} color="$neutral1" />
-              </Flex>
-            </Flex>
-            {step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER ? (
-              <SelectTokensStep
-                width="100%"
-                maxWidth="unset"
-                tokensLocked
-                currencyInputs={currencyInputs}
-                setCurrencyInputs={setCurrencyInputs}
-                onContinue={() => {
-                  setStep(PositionFlowStep.PRICE_RANGE)
-                }}
-              />
-            ) : (
-              <EditSelectTokensStep width="100%" maxWidth="unset" />
-            )}
-            {step === PositionFlowStep.PRICE_RANGE && (
-              <>
-                <Container width="100%" maxWidth="unset">
-                  <SelectPriceRangeStep
-                    positionInfo={positionInfo}
-                    onDisableContinue={!txInfo || Boolean(transactionError)}
-                    onContinue={() => setIsReviewModalOpen(true)}
-                  />
-                </Container>
-                {!isReviewModalOpen && (
-                  <Flex mb="$spacing20">
-                    <ErrorCallout errorMessage={transactionError} onPress={refetch} />
-                  </Flex>
-                )}
-              </>
-            )}
+      <Flex gap="$gap16">
+        <LiquidityPositionCard liquidityPosition={positionInfo} disabled />
+        <Flex justifyContent="center" alignItems="center">
+          <Flex shrink backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
+            <ArrowDown size={20} color="$neutral1" />
           </Flex>
         </Flex>
+        <FormStepsWrapper
+          isMigration
+          currencyInputs={currencyInputs}
+          setCurrencyInputs={setCurrencyInputs}
+          selectSectionName={SectionName.MigrateSelectTokensStep}
+          priceRangeSectionName={SectionName.MigratePriceRangeStep}
+          priceRangeProps={priceRangeProps}
+          onSelectTokensContinue={() => {
+            setStep(PositionFlowStep.PRICE_RANGE)
+          }}
+        />
+        {!isReviewModalOpen && (
+          <Flex mb="$spacing20">
+            <ErrorCallout errorMessage={transactionError} onPress={refetch} />
+          </Flex>
+        )}
       </Flex>
 
       <Modal
@@ -349,11 +260,73 @@ function getCurrencyInputs(positionInfo?: PositionInfo) {
   }
 }
 
+function Toolbar({
+  initialPosition,
+  currency0Amount,
+  currency1Amount,
+  setCurrencyInputs,
+}: {
+  initialPosition: { tickLower: number; tickUpper: number; isOutOfRange: boolean } | undefined
+  currency0Amount: CurrencyAmount<Currency>
+  currency1Amount: CurrencyAmount<Currency>
+  setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
+}) {
+  const { positionState, priceRangeState, setPositionState, setStep, setPriceRangeState, setDepositState } =
+    useCreateLiquidityContext()
+  const { protocolVersion, fee, hook } = positionState
+
+  const isFormUnchanged = useMemo(() => {
+    const isRangeUnchanged = initialPosition?.isOutOfRange
+      ? true
+      : priceRangeState.fullRange === DEFAULT_PRICE_RANGE_STATE.fullRange &&
+        priceRangeState.maxPrice === DEFAULT_PRICE_RANGE_STATE.maxPrice &&
+        priceRangeState.minPrice === DEFAULT_PRICE_RANGE_STATE.minPrice
+
+    return (
+      fee.feeAmount === DEFAULT_POSITION_STATE.fee.feeAmount &&
+      fee.tickSpacing === DEFAULT_POSITION_STATE.fee.tickSpacing &&
+      fee.isDynamic === DEFAULT_POSITION_STATE.fee.isDynamic &&
+      hook === DEFAULT_POSITION_STATE.hook &&
+      priceRangeState.initialPrice === DEFAULT_PRICE_RANGE_STATE.initialPrice &&
+      isRangeUnchanged
+    )
+  }, [fee, hook, priceRangeState, initialPosition?.isOutOfRange])
+
+  return (
+    <Flex>
+      <Button
+        size="small"
+        emphasis="tertiary"
+        fill={false}
+        icon={<RotateLeft />}
+        isDisabled={isFormUnchanged}
+        onPress={() => {
+          setPositionState({
+            ...DEFAULT_POSITION_STATE,
+            initialPosition,
+            protocolVersion,
+          })
+          setCurrencyInputs({
+            tokenA: getCurrencyForProtocol(currency0Amount.currency, protocolVersion),
+            tokenB: getCurrencyForProtocol(currency1Amount.currency, protocolVersion),
+          })
+          setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
+          setDepositState(DEFAULT_DEPOSIT_STATE)
+          setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
+        }}
+      >
+        <Trans i18nKey="common.button.reset" />
+      </Button>
+    </Flex>
+  )
+}
+
 /**
  * The page for migrating any v3 LP position to v4.
  */
 export default function MigrateV3() {
-  const { tokenId } = useParams<{ tokenId: string }>()
+  const { t } = useTranslation()
+  const { chainName, tokenId } = useParams<{ tokenId: string; chainName: string }>()
   const { pairAddress } = useParams<{ pairAddress: string }>()
 
   const chainId = useChainIdFromUrlParam()
@@ -438,12 +411,29 @@ export default function MigrateV3() {
             initialFlowStep={urlState.flowStep}
           >
             <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
-              <MigrateV3Inner
-                initialPosition={initialPosition}
-                positionInfo={positionInfo}
-                currencyInputs={currencyInputs}
-                setCurrencyInputs={setCurrencyInputs}
-              />
+              <FormWrapper
+                isMigration
+                title={t('common.migrate.position')}
+                currentBreadcrumb={
+                  <BreadcrumbNavLink to={`/positions/v3/${chainName}/${tokenId}`}>
+                    {currency0Amount.currency.symbol} / {currency1Amount.currency.symbol} <ChevronRight size={14} />
+                  </BreadcrumbNavLink>
+                }
+                toolbar={
+                  <Toolbar
+                    initialPosition={initialPosition}
+                    currency0Amount={currency0Amount}
+                    currency1Amount={currency1Amount}
+                    setCurrencyInputs={setCurrencyInputs}
+                  />
+                }
+              >
+                <MigrateV3Inner
+                  positionInfo={positionInfo}
+                  currencyInputs={currencyInputs}
+                  setCurrencyInputs={setCurrencyInputs}
+                />
+              </FormWrapper>
             </MigrateV3PositionTxContextProvider>
             <SharedCreateModals />
           </CreateLiquidityContextProvider>

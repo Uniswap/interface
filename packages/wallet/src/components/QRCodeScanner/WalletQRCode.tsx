@@ -4,7 +4,6 @@ import { spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { useAddressColorProps } from 'uniswap/src/features/address/color'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -12,7 +11,6 @@ import { isWeb } from 'utilities/src/platform'
 
 export function WalletQRCode({ address }: { address: Address }): JSX.Element | null {
   const colors = useSporeColors()
-  const { avatar } = useAvatar(address)
   const { t } = useTranslation()
   const media = useMedia()
   const addressColor = useAddressColorProps(address)
@@ -54,7 +52,6 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
       >
         <AccountIcon
           address={address}
-          avatarUri={avatar}
           borderColor="$surface1"
           borderWidth="$spacing4"
           showBackground={true}

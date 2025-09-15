@@ -1,6 +1,6 @@
 import { datadogRum } from '@datadog/browser-rum'
 import { useEffect } from 'react'
-import { useColorScheme } from 'react-native'
+import { useIsDarkMode } from 'ui/src'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -19,7 +19,7 @@ import {
 
 /** Component that tracks UserProperties during the lifetime of the app */
 export function TraceUserProperties(): null {
-  const colorScheme = useColorScheme()
+  const isDarkMode = useIsDarkMode()
   const viewOnlyAccounts = useViewOnlyAccounts()
   const activeAccount = useActiveAccount()
   const signerAccounts = useSignerAccounts()
@@ -48,8 +48,8 @@ export function TraceUserProperties(): null {
   }, [])
 
   useEffect(() => {
-    setUserProperty(ExtensionUserPropertyName.DarkMode, colorScheme === 'dark')
-  }, [colorScheme])
+    setUserProperty(ExtensionUserPropertyName.DarkMode, isDarkMode)
+  }, [isDarkMode])
 
   useEffect(() => {
     setUserProperty(ExtensionUserPropertyName.WalletSignerCount, signerAccounts.length)

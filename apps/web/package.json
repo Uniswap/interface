@@ -27,7 +27,7 @@
     "typecheck": "tsc && bun run typecheck:cloud",
     "typecheck:cloud": "tsc -p functions/tsconfig.json",
     "find:unused": "bash scripts/delete-unused-assets.sh",
-    "test": "NODE_OPTIONS='--no-deprecation' vitest run src",
+    "test": "NODE_OPTIONS='--no-deprecation' vitest run",
     "test:set1": "NODE_OPTIONS='--no-deprecation' vitest run src/components",
     "test:set2": "NODE_OPTIONS='--no-deprecation' vitest run src/pages src/state",
     "test:set3": "NODE_OPTIONS='--no-deprecation' vitest run src/hooks src/nft src/utils",
@@ -274,7 +274,8 @@
     "wcag-contrast": "3.0.0",
     "web-vitals": "2.1.4",
     "xml2js": "0.6.2",
-    "zod": "3.22.4"
+    "zod": "3.22.4",
+    "zustand": "5.0.6"
   },
   "engines": {
     "npm": "please-use-bun",

@@ -1,6 +1,7 @@
-import { useColorScheme } from 'react-native'
 import { useSelector } from 'react-redux'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
+import { ColorScheme } from 'wallet/src/features/appearance/types'
+import { useColorScheme } from 'wallet/src/features/appearance/useColorScheme'
 import { WalletState } from 'wallet/src/state/walletReducer'
 
 export function useCurrentAppearanceSetting(): AppearanceSettingType {
@@ -8,7 +9,7 @@ export function useCurrentAppearanceSetting(): AppearanceSettingType {
   return selectedAppearanceSettings
 }
 
-export function useSelectedColorScheme(): 'light' | 'dark' {
+export function useSelectedColorScheme(): ColorScheme {
   const currentAppearanceSetting = useCurrentAppearanceSetting()
   const isDarkMode = useColorScheme() === 'dark'
   if (currentAppearanceSetting !== AppearanceSettingType.System) {

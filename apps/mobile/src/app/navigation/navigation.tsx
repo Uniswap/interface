@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 import { AccountSwitcherModal } from 'src/app/modals/AccountSwitcherModal'
 import { BackupReminderModal } from 'src/app/modals/BackupReminderModal'
 import { BackupWarningModal } from 'src/app/modals/BackupWarningModal'
+import { BridgedAssetWarningWrapper } from 'src/app/modals/BridgedAssetWarningWrapper'
 import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
 import { ExploreModal } from 'src/app/modals/ExploreModal'
 import { KoreaCexTransferInfoModal } from 'src/app/modals/KoreaCexTransferInfoModal'
@@ -31,6 +32,7 @@ import {
 import { FundWalletModal } from 'src/components/home/introCards/FundWalletModal'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { AdvancedSettingsModal } from 'src/components/modals/ReactNavigationModals/AdvancedSettingsModal'
+import { BridgedAssetModalScreen } from 'src/components/modals/ReactNavigationModals/BridgedAssetModal'
 import { HiddenTokenInfoModalScreen } from 'src/components/modals/ReactNavigationModals/HiddenTokenInfoModalScreen'
 import { LanguageSettingsScreen } from 'src/components/modals/ReactNavigationModals/LanguageSettingsScreen'
 import { PasskeyHelpModalScreen } from 'src/components/modals/ReactNavigationModals/PasskeyHelpModalScreen'
@@ -40,6 +42,7 @@ import { PortfolioBalanceSettingsScreen } from 'src/components/modals/ReactNavig
 import { SmartWalletEnabledModalScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletEnabledModalScreen'
 import { SmartWalletNudgeScreen } from 'src/components/modals/ReactNavigationModals/SmartWalletNudgeScreen'
 import { TestnetModeModalScreen } from 'src/components/modals/ReactNavigationModals/TestnetModeModalScreen'
+import { WormholeModalScreen } from 'src/components/modals/ReactNavigationModals/WormholeModal'
 import { RemoveWalletModal } from 'src/components/RemoveWallet/RemoveWalletModal'
 import { PrivateKeySpeedBumpModal } from 'src/components/RestoreWalletModal/PrivateKeySpeedBumpModal'
 import { RestoreWalletModal } from 'src/components/RestoreWalletModal/RestoreWalletModal'
@@ -405,6 +408,7 @@ export function AppStackNavigator(): JSX.Element {
         <AppStack.Screen component={ExchangeTransferModal} name={ModalName.ExchangeTransferModal} />
         <AppStack.Screen component={TestnetSwitchModal} name={ModalName.TestnetSwitchModal} />
         <AppStack.Screen component={TokenWarningModalWrapper} name={ModalName.TokenWarning} />
+        <AppStack.Screen component={BridgedAssetWarningWrapper} name={ModalName.BridgedAssetNav} />
         <AppStack.Screen component={ViewOnlyExplainerModal} name={ModalName.ViewOnlyExplainer} />
         <AppStack.Screen component={UnitagsIntroModal} name={ModalName.UnitagsIntro} />
         <AppStack.Screen component={RestoreWalletModal} name={ModalName.RestoreWallet} />
@@ -434,6 +438,8 @@ export function AppStackNavigator(): JSX.Element {
         <AppStack.Screen component={PortfolioBalanceSettingsScreen} name={ModalName.PortfolioBalanceModal} />
         <AppStack.Screen component={LanguageSettingsScreen} name={ModalName.LanguageSelector} />
         <AppStack.Screen component={SmartWalletNudgeScreen} name={ModalName.SmartWalletNudge} />
+        <AppStack.Screen component={BridgedAssetModalScreen} name={ModalName.BridgedAsset} />
+        <AppStack.Screen component={WormholeModalScreen} name={ModalName.Wormhole} />
         {enabledInEnvOrDev &&
           ((): JSX.Element => {
             return <AppStack.Screen component={ExperimentsModal} name={ModalName.Experiments} />

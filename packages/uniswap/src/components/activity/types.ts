@@ -11,8 +11,6 @@ export interface TransactionSummaryLayoutProps {
   icon?: JSX.Element
   index?: number
   onRetry?: () => void
-  // TODO(PORT-343): remove once there's no uniswapX signature slice separation
-  customDetailsModalOpen?: () => void
 }
 
 export interface SummaryItemProps {
@@ -20,8 +18,6 @@ export interface SummaryItemProps {
   transaction: TransactionDetails
   swapCallbacks?: SwapSummaryCallbacks
   index?: number
-  // TODO(PORT-343): remove once there's no uniswapX signature slice separation
-  customDetailsModalOpen?: () => void
 }
 
 export interface SwapSummaryCallbacks {

@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
-.c4 {
+.c1 {
   color: #131313;
   pointer-events: auto;
   width: 0;
@@ -22,67 +22,36 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
   text-align: right;
 }
 
-.c4::-webkit-search-decoration {
+.c1::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-.c4 [type='number'] {
+.c1 [type='number'] {
   -moz-appearance: textfield;
 }
 
-.c4::-webkit-outer-spin-button,
-.c4::-webkit-inner-spin-button {
+.c1::-webkit-outer-spin-button,
+.c1::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-.c4::-webkit-input-placeholder {
+.c1::-webkit-input-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c4::-moz-placeholder {
+.c1::-moz-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c4:-ms-input-placeholder {
+.c1:-ms-input-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c4::placeholder {
+.c1::placeholder {
   color: rgba(19,19,19,0.35);
-}
-
-.c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
 }
 
 .c2 {
-  position: relative;
-  max-width: 100%;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
-
-.c5 {
   max-height: 84px;
   max-width: calc(100% - 43px);
   width: 43px;
@@ -93,23 +62,23 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
   line-height: 60px;
 }
 
-.c5::-webkit-input-placeholder {
+.c2::-webkit-input-placeholder {
   opacity: 1;
 }
 
-.c5::-moz-placeholder {
+.c2::-moz-placeholder {
   opacity: 1;
 }
 
-.c5:-ms-input-placeholder {
+.c2:-ms-input-placeholder {
   opacity: 1;
 }
 
-.c5::placeholder {
+.c2::placeholder {
   opacity: 1;
 }
 
-.c6 {
+.c3 {
   position: absolute;
   visibility: hidden;
   bottom: 0px;
@@ -120,7 +89,7 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
   line-height: 60px;
 }
 
-.c3 {
+.c0 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -132,7 +101,7 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
   line-height: 60px;
 }
 
-.c7 {
+.c4 {
   color: #131313;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -145,68 +114,82 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
   style="display: contents;"
 >
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1 _gap-1px"
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
   >
     <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface2 _pr-t-space-gap1569 _pl-t-space-gap1569 _pb-60px _height-256px _alignItems-center _justifyContent-flex-end _gap-t-space-gap52 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface1 _alignItems-center _justifyContent-flex-end _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     >
       <div
-        class="c0 c1 c2"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
       >
         <span
-          class="c3"
-          style="line-height: 84px; font-size: 70px;"
-        >
-          $
-        </span>
-        <input
-          autocomplete="off"
-          autocorrect="off"
-          class="c4 c5"
-          inputmode="decimal"
-          maxlength="79"
-          minlength="1"
-          pattern="^[0-9]*[.,]?[0-9]*$"
-          placeholder="0"
-          spellcheck="false"
-          style="line-height: 84px;"
-          type="text"
-          value="1000"
-        />
-        <span
-          class="c6"
-          style="line-height: 84px; font-size: 70px;"
-        >
-          1000
-        </span>
-        <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _opacity-0 _width-10037 _height-20px _zIndex--1"
-        />
-      </div>
-      <div
-        class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
-        style="transition: 100ms;"
-      >
-        <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
           data-disable-theme="true"
         >
-          100.00 DAI
+          You’re sending
         </span>
-        <svg
-          fill="none"
-          height="20"
-          viewBox="0 3 24 24"
-          width="20"
-          xmlns="http://www.w3.org/2000/svg"
-        />
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360333927 _pb-t-space-spa1360333927 _gap-t-space-spa1360334076 _maxWidth-10037"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _maxWidth-10037 _position-relative _width-max-content"
+        >
+          <span
+            class="c0"
+            style="line-height: 84px; font-size: 70px;"
+          >
+            $
+          </span>
+          <input
+            autocomplete="off"
+            autocorrect="off"
+            class="c1 c2"
+            inputmode="decimal"
+            maxlength="79"
+            minlength="1"
+            pattern="^[0-9]*[.,]?[0-9]*$"
+            placeholder="0"
+            spellcheck="false"
+            style="line-height: 84px;"
+            type="text"
+            value="1000"
+          />
+          <span
+            class="c3"
+            style="line-height: 84px; font-size: 70px;"
+          >
+            1000
+          </span>
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _opacity-0 _width-10037 _height-20px _zIndex--1"
+          />
+        </div>
+        <div
+          class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
+          style="transition: 100ms;"
+        >
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+            data-disable-theme="true"
+          >
+            100.00 DAI
+          </span>
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 3 24 24"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          />
+        </div>
       </div>
     </div>
     <div
       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface2 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _height-64px _justifyContent-center _position-relative"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _height-64px _justifyContent-center _position-relative _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
       >
         <div
           class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _cursor-pointer"
@@ -252,7 +235,7 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
                   <div
-                    class="c7 css-n8z49y"
+                    class="c4 css-n8z49y"
                   >
                     DAI
                   </div>
@@ -293,7 +276,7 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
       <h2
         class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
         data-disable-theme="true"
-        id="title-:r1o:"
+        id="title-:r1u:"
         role="heading"
       />
     </span>
@@ -305,7 +288,7 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
 `;
 
 exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
-.c3 {
+.c0 {
   color: #131313;
   pointer-events: auto;
   width: 0;
@@ -326,67 +309,36 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
   text-align: right;
 }
 
-.c3::-webkit-search-decoration {
+.c0::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-.c3 [type='number'] {
+.c0 [type='number'] {
   -moz-appearance: textfield;
 }
 
-.c3::-webkit-outer-spin-button,
-.c3::-webkit-inner-spin-button {
+.c0::-webkit-outer-spin-button,
+.c0::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-.c3::-webkit-input-placeholder {
+.c0::-webkit-input-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c3::-moz-placeholder {
+.c0::-moz-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c3:-ms-input-placeholder {
+.c0:-ms-input-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c3::placeholder {
+.c0::placeholder {
   color: rgba(19,19,19,0.35);
-}
-
-.c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
 }
 
 .c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c2 {
-  position: relative;
-  max-width: 100%;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
-
-.c4 {
   max-height: 84px;
   max-width: 100%;
   width: 43px;
@@ -397,23 +349,23 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
   line-height: 60px;
 }
 
-.c4::-webkit-input-placeholder {
+.c1::-webkit-input-placeholder {
   opacity: 1;
 }
 
-.c4::-moz-placeholder {
+.c1::-moz-placeholder {
   opacity: 1;
 }
 
-.c4:-ms-input-placeholder {
+.c1:-ms-input-placeholder {
   opacity: 1;
 }
 
-.c4::placeholder {
+.c1::placeholder {
   opacity: 1;
 }
 
-.c5 {
+.c2 {
   position: absolute;
   visibility: hidden;
   bottom: 0px;
@@ -424,7 +376,7 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
   line-height: 60px;
 }
 
-.c6 {
+.c3 {
   color: #131313;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -437,62 +389,76 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
   style="display: contents;"
 >
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1 _gap-1px"
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
   >
     <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface2 _pr-t-space-gap1569 _pl-t-space-gap1569 _pb-60px _height-256px _alignItems-center _justifyContent-flex-end _gap-t-space-gap52 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface1 _alignItems-center _justifyContent-flex-end _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     >
       <div
-        class="c0 c1 c2"
-      >
-        <input
-          autocomplete="off"
-          autocorrect="off"
-          class="c3 c4"
-          inputmode="decimal"
-          maxlength="79"
-          minlength="1"
-          pattern="^[0-9]*[.,]?[0-9]*$"
-          placeholder="0"
-          spellcheck="false"
-          style="line-height: 84px;"
-          type="text"
-          value="1"
-        />
-        <span
-          class="c5"
-          style="line-height: 84px; font-size: 70px;"
-        >
-          1
-        </span>
-        <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _opacity-0 _width-10037 _height-20px _zIndex--1"
-        />
-      </div>
-      <div
-        class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
-        style="transition: 100ms;"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
       >
         <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
           data-disable-theme="true"
         >
-          $100.00
+          You’re sending
         </span>
-        <svg
-          fill="none"
-          height="20"
-          viewBox="0 3 24 24"
-          width="20"
-          xmlns="http://www.w3.org/2000/svg"
-        />
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360333927 _pb-t-space-spa1360333927 _gap-t-space-spa1360334076 _maxWidth-10037"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _maxWidth-10037 _position-relative _width-max-content"
+        >
+          <input
+            autocomplete="off"
+            autocorrect="off"
+            class="c0 c1"
+            inputmode="decimal"
+            maxlength="79"
+            minlength="1"
+            pattern="^[0-9]*[.,]?[0-9]*$"
+            placeholder="0"
+            spellcheck="false"
+            style="line-height: 84px;"
+            type="text"
+            value="1"
+          />
+          <span
+            class="c2"
+            style="line-height: 84px; font-size: 70px;"
+          >
+            1
+          </span>
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _opacity-0 _width-10037 _height-20px _zIndex--1"
+          />
+        </div>
+        <div
+          class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
+          style="transition: 100ms;"
+        >
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+            data-disable-theme="true"
+          >
+            $100.00
+          </span>
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 3 24 24"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          />
+        </div>
       </div>
     </div>
     <div
       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface2 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _height-64px _justifyContent-center _position-relative"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _height-64px _justifyContent-center _position-relative _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
       >
         <div
           class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _cursor-pointer"
@@ -538,7 +504,7 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
                   <div
-                    class="c6 css-n8z49y"
+                    class="c3 css-n8z49y"
                   >
                     DAI
                   </div>
@@ -579,7 +545,7 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
       <h2
         class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
         data-disable-theme="true"
-        id="title-:r2m:"
+        id="title-:r2v:"
         role="heading"
       />
     </span>
@@ -591,7 +557,7 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
 `;
 
 exports[`SendCurrencyInputform > should render placeholder values 1`] = `
-.c4 {
+.c1 {
   color: #131313;
   pointer-events: auto;
   width: 0;
@@ -612,67 +578,36 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
   text-align: right;
 }
 
-.c4::-webkit-search-decoration {
+.c1::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-.c4 [type='number'] {
+.c1 [type='number'] {
   -moz-appearance: textfield;
 }
 
-.c4::-webkit-outer-spin-button,
-.c4::-webkit-inner-spin-button {
+.c1::-webkit-outer-spin-button,
+.c1::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-.c4::-webkit-input-placeholder {
+.c1::-webkit-input-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c4::-moz-placeholder {
+.c1::-moz-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c4:-ms-input-placeholder {
+.c1:-ms-input-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c4::placeholder {
+.c1::placeholder {
   color: rgba(19,19,19,0.35);
-}
-
-.c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
 }
 
 .c2 {
-  position: relative;
-  max-width: 100%;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
-
-.c5 {
   max-height: 84px;
   max-width: calc(100% - 43px);
   width: 43px;
@@ -683,23 +618,23 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
   line-height: 60px;
 }
 
-.c5::-webkit-input-placeholder {
+.c2::-webkit-input-placeholder {
   opacity: 1;
 }
 
-.c5::-moz-placeholder {
+.c2::-moz-placeholder {
   opacity: 1;
 }
 
-.c5:-ms-input-placeholder {
+.c2:-ms-input-placeholder {
   opacity: 1;
 }
 
-.c5::placeholder {
+.c2::placeholder {
   opacity: 1;
 }
 
-.c6 {
+.c3 {
   position: absolute;
   visibility: hidden;
   bottom: 0px;
@@ -710,7 +645,7 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
   line-height: 60px;
 }
 
-.c3 {
+.c0 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -723,7 +658,7 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
   color: rgba(19,19,19,0.35);
 }
 
-.c7 {
+.c4 {
   color: #131313;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -736,66 +671,80 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
   style="display: contents;"
 >
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1 _gap-1px"
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
   >
     <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface2 _pr-t-space-gap1569 _pl-t-space-gap1569 _pb-60px _height-256px _alignItems-center _justifyContent-flex-end _gap-t-space-gap52 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface1 _alignItems-center _justifyContent-flex-end _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     >
       <div
-        class="c0 c1 c2"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
       >
         <span
-          class="c3"
-          style="line-height: 84px; font-size: 70px;"
-        >
-          $
-        </span>
-        <input
-          autocomplete="off"
-          autocorrect="off"
-          class="c4 c5"
-          inputmode="decimal"
-          maxlength="79"
-          minlength="1"
-          pattern="^[0-9]*[.,]?[0-9]*$"
-          placeholder="0"
-          spellcheck="false"
-          style="line-height: 84px;"
-          type="text"
-          value=""
-        />
-        <span
-          class="c6"
-          style="line-height: 84px; font-size: 70px;"
-        />
-        <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _opacity-0 _width-10037 _height-20px _zIndex--1"
-        />
-      </div>
-      <div
-        class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
-        style="transition: 100ms;"
-      >
-        <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
           data-disable-theme="true"
         >
-          0 DAI
+          You’re sending
         </span>
-        <svg
-          fill="none"
-          height="20"
-          viewBox="0 3 24 24"
-          width="20"
-          xmlns="http://www.w3.org/2000/svg"
-        />
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360333927 _pb-t-space-spa1360333927 _gap-t-space-spa1360334076 _maxWidth-10037"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _maxWidth-10037 _position-relative _width-max-content"
+        >
+          <span
+            class="c0"
+            style="line-height: 84px; font-size: 70px;"
+          >
+            $
+          </span>
+          <input
+            autocomplete="off"
+            autocorrect="off"
+            class="c1 c2"
+            inputmode="decimal"
+            maxlength="79"
+            minlength="1"
+            pattern="^[0-9]*[.,]?[0-9]*$"
+            placeholder="0"
+            spellcheck="false"
+            style="line-height: 84px;"
+            type="text"
+            value=""
+          />
+          <span
+            class="c3"
+            style="line-height: 84px; font-size: 70px;"
+          />
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _opacity-0 _width-10037 _height-20px _zIndex--1"
+          />
+        </div>
+        <div
+          class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
+          style="transition: 100ms;"
+        >
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+            data-disable-theme="true"
+          >
+            0 DAI
+          </span>
+          <svg
+            fill="none"
+            height="20"
+            viewBox="0 3 24 24"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
+          />
+        </div>
       </div>
     </div>
     <div
       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface2 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _height-64px _justifyContent-center _position-relative"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _height-64px _justifyContent-center _position-relative _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
       >
         <div
           class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _cursor-pointer"
@@ -841,7 +790,7 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
                   <div
-                    class="c7 css-n8z49y"
+                    class="c4 css-n8z49y"
                   >
                     DAI
                   </div>
@@ -882,7 +831,7 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
       <h2
         class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
         data-disable-theme="true"
-        id="title-:rq:"
+        id="title-:rt:"
         role="heading"
       />
     </span>

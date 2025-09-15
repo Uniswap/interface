@@ -5,7 +5,7 @@ import { animations } from 'ui/src/theme/animations'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 type TransitionDirection = 'forward' | 'backward' | 'up' | 'down'
-type AnimationType = 'fade' | TransitionDirection
+export type AnimationType = 'fade' | TransitionDirection
 
 type AnimationKey = keyof (typeof animations)['animations']
 type AnimationTransitionType = 'unset' | AnimationKey | null | undefined

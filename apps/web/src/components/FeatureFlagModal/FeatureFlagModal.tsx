@@ -212,6 +212,7 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.ArbitrumDutchV3} label="Enable Dutch V3 on Arbitrum" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="LP">
+            <FeatureFlagOption flag={FeatureFlags.D3LiquidityRangeChart} label="Enable new D3 liquidity range chart" />
             <FeatureFlagOption flag={FeatureFlags.LpIncentives} label="Enable LP Incentives" />
             <FeatureFlagOption flag={FeatureFlags.MigrateV2} label="Enable new Migrate V2 flow" />
           </FeatureFlagGroup>
@@ -268,7 +269,9 @@ export default function FeatureFlagModal() {
           <FeatureFlagGroup name="New Wallet Connectors">
             <FeatureFlagOption flag={FeatureFlags.PortoWalletConnector} label="Enable Porto Wallet Connector" />
           </FeatureFlagGroup>
-          <FeatureFlagGroup name="Misc"></FeatureFlagGroup>
+          <FeatureFlagGroup name="Misc">
+            <FeatureFlagOption flag={FeatureFlags.PortfolioPage} label="Enable Portfolio page" />
+          </FeatureFlagGroup>
           <FeatureFlagGroup name="Experiments">
             <Flex ml="$padding8">
               <ExperimentRow value={Experiments.ForFilters} />

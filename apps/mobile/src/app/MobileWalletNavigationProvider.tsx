@@ -1,3 +1,4 @@
+import { StackActions } from '@react-navigation/native'
 import { PropsWithChildren, useCallback } from 'react'
 import { Share } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -15,6 +16,7 @@ import {
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -132,9 +134,62 @@ function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
   )
 }
 
+// Helper function for when coming from BridgedAsset modal (skip BridgedAsset step)
+function navigateToSwapWithTokenWarning({
+  navigation,
+  currencyId,
+  swapInitialState,
+}: {
+  navigation: ReturnType<typeof useAppStackNavigation>
+  currencyId: string
+  swapInitialState?: TransactionState
+}): void {
+  navigation.dispatch(
+    StackActions.replace(ModalName.TokenWarning, {
+      initialState: {
+        currencyId,
+        onAcknowledge: () => {
+          navigation.dispatch(StackActions.replace(ModalName.Swap, swapInitialState))
+        },
+      },
+    }),
+  )
+}
+
+// Helper function for full flow: TokenWarning -> BridgedAsset -> Swap
+function navigateToSwapWithFullFlow({
+  navigation,
+  currencyId,
+  swapInitialState,
+}: {
+  navigation: ReturnType<typeof useAppStackNavigation>
+  currencyId: string
+  swapInitialState?: TransactionState
+}): void {
+  navigation.navigate(ModalName.TokenWarning, {
+    initialState: {
+      currencyId,
+      onAcknowledge: () => {
+        navigation.dispatch(
+          // Then replace TokenWarning with BridgedAsset
+          StackActions.replace(ModalName.BridgedAssetNav, {
+            initialState: {
+              currencyId,
+              onAcknowledge: () => {
+                // Then replace BridgedAsset with Swap
+                navigation.dispatch(StackActions.replace(ModalName.Swap, swapInitialState))
+              },
+            },
+          }),
+        )
+      },
+    },
+  })
+}
+
 function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
   const { defaultChainId } = useEnabledChains()
-  const { navigate } = useAppStackNavigation()
+  const navigation = useAppStackNavigation()
   const { onClose } = useReactNavigationModal()
 
   return useCallback(
@@ -145,24 +200,23 @@ function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
         // If no prefilled token, go directly to swap
         if (!isNavigateToSwapFlowArgsPartialState(args)) {
           onClose()
-          navigate(ModalName.Swap, initialState)
+          navigation.navigate(ModalName.Swap, initialState)
           return
         }
 
-        // Show warning modal for prefilled tokens, which will handle token safety checks
         const currencyId = buildCurrencyId(args.currencyChainId, args.currencyAddress)
-        navigate(ModalName.TokenWarning, {
-          initialState: {
-            currencyId,
-            onAcknowledge: () => {
-              onClose()
-              navigate(ModalName.Swap, initialState)
-            },
-          },
-        })
+
+        // Show warning modal for prefilled tokens, which will handle token safety and bridged asset checks
+        // The happy path is we first show the token warning modal, then the bridged asset modal, then the swap modal
+        // However, if we are coming from BridgedAssetModal then we do not need to show it later
+        if (args.origin === ModalName.BridgedAsset) {
+          navigateToSwapWithTokenWarning({ navigation, currencyId, swapInitialState: initialState })
+        } else {
+          navigateToSwapWithFullFlow({ navigation, currencyId, swapInitialState: initialState })
+        }
       })
     },
-    [defaultChainId, navigate, onClose],
+    [defaultChainId, navigation, onClose],
   )
 }
 

@@ -2,7 +2,7 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import { TokenDocument } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getOnChainBalancesFetch } from 'uniswap/src/features/portfolio/api'
+import { fetchOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { fetchOnChainBalancesRest } from 'uniswap/src/features/portfolio/portfolioUpdates/rest/fetchOnChainBalancesRest'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
@@ -30,10 +30,12 @@ jest.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQu
 }))
 
 jest.mock('uniswap/src/features/portfolio/api', () => ({
-  getOnChainBalancesFetch: jest.fn(),
+  fetchOnChainCurrencyBalance: jest.fn(),
 }))
 
-const mockGetOnChainBalancesFetch = getOnChainBalancesFetch as jest.MockedFunction<typeof getOnChainBalancesFetch>
+const mockGetOnChainBalancesFetch = fetchOnChainCurrencyBalance as jest.MockedFunction<
+  typeof fetchOnChainCurrencyBalance
+>
 
 const TEST_ACCOUNT = '0x1234567890123456789012345678901234567890'
 const TEST_TOKEN_ADDRESS = '0xabcdef0123456789abcdef0123456789abcdef01'

@@ -1,6 +1,6 @@
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
-import type { OnActivityUpdate } from 'state/activity/types'
+import { ActivityUpdateTransactionType, type OnActivityUpdate } from 'state/activity/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
 import type { ConfirmedTransactionDetails, TransactionDetails } from 'state/transactions/types'
 import { isPendingTx } from 'state/transactions/utils'
@@ -18,11 +18,13 @@ import { logger } from 'utilities/src/logger/logger'
 const MIN_BRIDGE_WAIT_TIME = ms('2s')
 
 type BridgeTransactionDetails = TransactionDetails & { typeInfo: BridgeTransactionInfo }
+
 function isBridgeTransactionDetails(tx: InterfaceTransactionDetails): tx is BridgeTransactionDetails {
   return tx.typeInfo.type === TransactionType.Bridge
 }
 
 type BridgeTransactionDetailsWithChainId = BridgeTransactionDetails & { chainId: UniverseChainId }
+
 function usePendingDepositedBridgeTransactions(): BridgeTransactionDetailsWithChainId[] {
   const multichainTransactions = useMultichainTransactions()
 
@@ -76,7 +78,7 @@ export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpd
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (txHash && updatedStatus && fullTxDetails) {
               onActivityUpdate({
-                type: 'transaction',
+                type: ActivityUpdateTransactionType.BaseTransaction,
                 chainId,
                 update: { ...fullTxDetails, status: updatedStatus },
                 original: fullTxDetails,

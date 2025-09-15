@@ -6,7 +6,7 @@ describe('injected', () => {
     Object.defineProperty(document, 'head', { value: undefined, writable: true })
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const injected = require('./injected')
+    const injected = require('../entrypoints/injected.content')
     expect(injected).toBeTruthy()
   })
 })

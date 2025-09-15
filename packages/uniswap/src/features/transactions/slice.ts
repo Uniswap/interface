@@ -15,6 +15,7 @@ import {
   TransactionStatus,
   TransactionType,
   TransactionTypeInfo,
+  type UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
   getInterfaceTransaction,
@@ -22,7 +23,6 @@ import {
   isBridgeTypeInfo,
 } from 'uniswap/src/features/transactions/types/utils'
 import { assert } from 'utilities/src/errors'
-import { isInterface } from 'utilities/src/platform'
 
 export interface TransactionsState {
   [address: Address]: ChainIdToTxIdToDetails
@@ -78,7 +78,7 @@ const slice = createSlice({
   reducers: {
     addTransaction: (
       state,
-      { payload: transaction }: PayloadAction<TransactionDetails | InterfaceTransactionDetails>,
+      { payload: transaction }: PayloadAction<TransactionDetails | InterfaceTransactionDetails | UniswapXOrderDetails>,
     ) => {
       const { chainId, id, from } = transaction
       assert(!state[from]?.[chainId]?.[id], `addTransaction: Attempted to overwrite tx with id ${id}`)
@@ -89,7 +89,7 @@ const slice = createSlice({
     },
     updateTransaction: (
       state,
-      { payload: transaction }: PayloadAction<TransactionDetails | InterfaceTransactionDetails>,
+      { payload: transaction }: PayloadAction<TransactionDetails | InterfaceTransactionDetails | UniswapXOrderDetails>,
     ) => {
       const { chainId, id, from } = transaction
       assert(state[from]?.[chainId]?.[id], `updateTransaction: Attempted to update a missing tx with id ${id}`)
@@ -122,12 +122,10 @@ const slice = createSlice({
         tx.networkFee = networkFee
       }
 
-      // TODO(PORT-41): update once interface uses the same logic for UniswapX orders
-      if (!isInterface) {
-        if (isUniswapX(transaction) && status === TransactionStatus.Success) {
-          assert(hash, `finalizeTransaction: Attempted to finalize an order without providing the fill tx hash`)
-          state[from]![chainId]![id]!.hash = hash
-        }
+      // Update hash for successful UniswapX orders
+      if (isUniswapX(transaction) && status === TransactionStatus.Success) {
+        assert(hash, `finalizeTransaction: Attempted to finalize an order without providing the fill tx hash`)
+        state[from]![chainId]![id]!.hash = hash
       }
     },
 

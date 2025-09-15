@@ -1,5 +1,6 @@
 import { ColorTokens, Flex, FlexProps, Unicon, UniversalImage, UniversalImageResizeMode } from 'ui/src'
 import { Eye } from 'ui/src/components/icons/Eye'
+import { useAvatar } from 'uniswap/src/features/address/avatar'
 
 // Determines view only icon size in relation to Account Icon size
 const EYE_ICON_SCALING_FACTOR = 0.4
@@ -8,7 +9,7 @@ interface AccountIconProps {
   size: number
   showViewOnlyBadge?: boolean
   address: string
-  avatarUri?: string | null
+  avatarUriOverride?: string | null
   showBackground?: boolean // Display images with solid background.
   showBorder?: boolean // Display border stroke around image
   borderWidth?: FlexProps['borderWidth']
@@ -19,16 +20,19 @@ export function AccountIcon({
   size,
   showViewOnlyBadge,
   address,
-  avatarUri,
+  avatarUriOverride,
   showBackground,
   showBorder,
   borderColor = '$surface1',
   borderWidth = '$spacing2',
 }: AccountIconProps): JSX.Element {
+  const { avatar } = useAvatar(address)
   // scale eye icon to be a portion of container size
   const eyeIconSize = size * EYE_ICON_SCALING_FACTOR
 
   const uniconImage = <Unicon address={address} size={size} />
+
+  const avatarUri = avatarUriOverride || avatar
 
   return (
     <Flex

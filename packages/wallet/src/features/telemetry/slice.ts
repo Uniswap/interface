@@ -3,9 +3,6 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-
-const balanceReportFrequency = ONE_MINUTE_MS * 5
 
 export interface TelemetryState {
   // if the user has opted in/out of analytics
@@ -68,26 +65,6 @@ export const slice = createSlice({
     },
   },
 })
-
-export function shouldReportBalances({
-  lastBalancesReport,
-  lastBalancesReportValue,
-  signerAccountAddresses,
-  signerAccountValues,
-  signerAccountsTotalBalance,
-}: {
-  lastBalancesReport?: number
-  lastBalancesReportValue?: number
-  signerAccountAddresses: string[]
-  signerAccountValues: number[]
-  signerAccountsTotalBalance: number
-}): boolean {
-  const didWalletGetFunded = signerAccountsTotalBalance > 0 && lastBalancesReportValue === 0
-  const balanceReportDue = (lastBalancesReport ?? 0) + balanceReportFrequency < Date.now()
-  const validAccountInfo = signerAccountAddresses.length === signerAccountValues.length
-
-  return validAccountInfo && (didWalletGetFunded || balanceReportDue)
-}
 
 export const { recordHeartbeat, recordBalancesReport, recordWalletFunded, setAllowAnalytics } = slice.actions
 export const { reducer: telemetryReducer } = slice

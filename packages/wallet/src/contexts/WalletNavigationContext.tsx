@@ -5,6 +5,7 @@ import { NavigateToNftItemArgs } from 'uniswap/src/contexts/UniswapContext'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { getSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -18,6 +19,7 @@ type NavigateToSwapFlowPartialState = {
   currencyField: CurrencyField
   currencyAddress: Address
   currencyChainId: UniverseChainId
+  origin?: ModalNameType
 }
 
 type NavigateToSwapFlowWithActions = {

@@ -13,7 +13,6 @@ import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { useENSAvatar } from 'uniswap/src/features/ens/api'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -47,7 +46,6 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
   const isRightToLeft = i18next.dir() === 'rtl'
 
   const walletName = useDisplayName(onboardingAccountAddress)
-  const { data: avatar } = useENSAvatar(onboardingAccountAddress)
 
   const onPressNext = (): void => {
     navigation.navigate({
@@ -74,7 +72,6 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
           ) : (
             <AccountIcon
               address={onboardingAccountAddress ?? ''}
-              avatarUri={avatar}
               showBackground={true}
               showBorder={false}
               showViewOnlyBadge={false}

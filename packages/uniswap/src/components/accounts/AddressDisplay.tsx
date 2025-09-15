@@ -9,7 +9,6 @@ import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -101,7 +100,6 @@ export function AddressDisplay({
   const dispatch = useDispatch()
   const { useWalletDisplayName } = useUniswapContext()
   const displayName = useWalletDisplayName(address, { includeUnitagSuffix, overrideDisplayName })
-  const { avatar } = useAvatar(address)
   const [wrapperWidth, setWrapperWidth] = useState<number | undefined>()
 
   const showAddressAsSubtitle = !hideAddressInSubtitle && displayName?.type !== DisplayNameType.Address
@@ -131,14 +129,13 @@ export function AddressDisplay({
     return (
       <AccountIcon
         address={address}
-        avatarUri={avatar}
         showBackground={showIconBackground}
         showBorder={showIconBorder}
         showViewOnlyBadge={showViewOnlyBadge}
         size={size}
       />
     )
-  }, [address, avatar, showIconBackground, showIconBorder, showViewOnlyBadge, size])
+  }, [address, showIconBackground, showIconBorder, showViewOnlyBadge, size])
 
   return (
     <Flex

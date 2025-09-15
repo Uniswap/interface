@@ -1,45 +1,50 @@
-import { TransactionRequest } from '@ethersproject/abstract-provider'
+import { gqlToCurrency } from 'appGraphql/data/util'
 import { BigNumber } from '@ethersproject/bignumber'
-import { Web3Provider } from '@ethersproject/providers'
-import { useQuery } from '@tanstack/react-query'
-import { permit2Address } from '@uniswap/permit2-sdk'
-import {
-  CosignedPriorityOrder,
-  CosignedV2DutchOrder,
-  CosignedV3DutchOrder,
-  DutchOrder,
-  getCancelMultipleParams,
-} from '@uniswap/uniswapx-sdk'
+import { TradeType } from '@uniswap/sdk-core'
 import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
-import { ContractTransaction } from 'ethers/lib/ethers'
-import { useAccount } from 'hooks/useAccount'
-import { useContract } from 'hooks/useContract'
-import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
-import useSelectChain from 'hooks/useSelectChain'
-import { useCallback } from 'react'
-import store from 'state'
-import { updateSignature } from 'state/signatures/reducer'
-import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
-import { UniswapXOrderStatus } from 'types/uniswapx'
-import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
-import { Permit2 } from 'uniswap/src/abis/types'
-import { TransactionStatus as TransactionStatusGQL } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { parseUnits } from 'ethers/lib/utils'
+import { OrderActivity } from 'state/activity/types'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import {
+  type TokenAssetPartsFragment,
+  TransactionStatus as TransactionStatusGQL,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  ExactInputSwapTransactionInfo,
+  InterfaceTransactionDetails,
+  QueuedOrderStatus,
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { convertSwapOrderTypeToRouting } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import i18n from 'uniswap/src/i18n'
-import { getContract } from 'utilities/src/contracts/getContract'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { queryWithoutCache } from 'utilities/src/reactQuery/queryOptions'
-import { WrongChainError } from 'utils/errors'
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 
 interface ActivityGroup {
   title: string
   transactions: Array<Activity>
+}
+
+/**
+ * Helper function to get currency address with proper fallback for native tokens
+ */
+export function getCurrencyAddress(token: TokenAssetPartsFragment, chainId: UniverseChainId): string {
+  return token.address || getNativeAddress(chainId) || ''
+}
+
+/**
+ * Helper function to parse token amount with decimal fallback
+ */
+export function parseTokenAmount(quantity: string, decimals?: number | null): string {
+  return parseUnits(quantity, decimals ?? DEFAULT_ERC20_DECIMALS).toString()
 }
 
 const sortActivities = (a: Activity, b: Activity) => b.timestamp - a.timestamp
@@ -55,6 +60,59 @@ export function convertGQLTransactionStatus(status: TransactionStatusGQL): Trans
     default:
       throw new Error(`Unknown transaction status: ${status}`)
   }
+}
+
+/**
+ * Converts an UniswapX OrderActivity (from GraphQL) into an InterfaceTransactionDetails
+ * for dispatch to the Redux store
+ */
+export function uniswapXActivityToTransactionDetails(
+  activity: OrderActivity,
+  chainId: UniverseChainId,
+): InterfaceTransactionDetails | undefined {
+  const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity, swapOrderType } = activity.details
+
+  const inputCurrency = gqlToCurrency(inputToken)
+  const outputCurrency = gqlToCurrency(outputToken)
+
+  if (!inputCurrency || !outputCurrency) {
+    return undefined
+  }
+
+  // Convert GraphQL order to transaction using ExactInputSwapTransactionInfo shape
+  const typeInfo: ExactInputSwapTransactionInfo = {
+    type: TransactionType.Swap,
+    tradeType: TradeType.EXACT_INPUT,
+    inputCurrencyId: buildCurrencyId(
+      chainId,
+      inputCurrency.isNative ? getNativeAddress(chainId) : inputCurrency.address,
+    ),
+    outputCurrencyId: buildCurrencyId(
+      chainId,
+      outputCurrency.isNative ? getNativeAddress(chainId) : outputCurrency.address,
+    ),
+    inputCurrencyAmountRaw: parseUnits(inputTokenQuantity, inputCurrency.decimals).toString(),
+    expectedOutputCurrencyAmountRaw: parseUnits(outputTokenQuantity, outputCurrency.decimals).toString(),
+    minimumOutputCurrencyAmountRaw: '0', // Will be populated when order details are available
+  }
+
+  const transaction: InterfaceTransactionDetails = {
+    // Using hash as ID prevents duplicates by making sure local + remote orders match IDs
+    id: activity.details.hash,
+    orderHash: activity.details.hash,
+    routing: convertSwapOrderTypeToRouting(swapOrderType),
+    chainId,
+    from: activity.details.offerer,
+    typeInfo,
+    status: TransactionStatus.Pending,
+    queueStatus: QueuedOrderStatus.Submitted,
+    transactionOriginType: TransactionOriginType.External,
+    addedTime: activity.timestamp * ONE_SECOND_MS, // GraphQL returns seconds, we need milliseconds
+    encodedOrder: activity.details.encodedOrder,
+    expiry: activity.details.expiry,
+  }
+
+  return transaction
 }
 
 export const createGroups = (activities: Array<Activity> = [], hideSpam = false) => {
@@ -76,14 +134,12 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
       return
     }
 
-    const addedTime = activity.timestamp * 1000
+    const addedTime = activity.timestamp * ONE_SECOND_MS
     if (activity.status === TransactionStatus.Pending) {
-      switch (activity.offchainOrderDetails?.type) {
-        case SignatureType.SIGN_LIMIT:
-          // limit orders are only displayed in their own pane
-          break
-        default:
-          pending.push(activity)
+      if (activity.offchainOrderDetails?.routing === Routing.DUTCH_LIMIT) {
+        // limit orders are only displayed in their own pane
+      } else {
+        pending.push(activity)
       }
     } else if (isSameDay(now, addedTime)) {
       today.push(activity)
@@ -120,163 +176,13 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
   return transactionGroups.filter(({ transactions }) => transactions.length > 0)
 }
 
-function getCancelMultipleUniswapXOrdersParams(
-  orders: Array<{ encodedOrder: string; type: SignatureType }>,
-  chainId: UniverseChainId,
-) {
-  const nonces = orders
-    .map(({ encodedOrder, type }) => {
-      switch (type) {
-        case SignatureType.SIGN_UNISWAPX_V2_ORDER:
-          return CosignedV2DutchOrder.parse(encodedOrder, chainId)
-        case SignatureType.SIGN_UNISWAPX_V3_ORDER:
-          return CosignedV3DutchOrder.parse(encodedOrder, chainId)
-        case SignatureType.SIGN_PRIORITY_ORDER:
-          return CosignedPriorityOrder.parse(encodedOrder, chainId)
-        default:
-          return DutchOrder.parse(encodedOrder, chainId)
-      }
-    })
-    .map((order) => order.info.nonce)
-  return getCancelMultipleParams(nonces)
-}
-
-export function useCancelMultipleOrdersCallback(
-  orders?: Array<UniswapXOrderDetails>,
-): () => Promise<ContractTransaction[] | undefined> {
-  const provider = useEthersWeb3Provider({ chainId: orders?.[0]?.chainId })
-  const account = useAccount()
-  const selectChain = useSelectChain()
-
-  return useCallback(async () => {
-    if (!orders || orders.length === 0) {
-      return undefined
-    }
-
-    sendAnalyticsEvent(InterfaceEventName.UniswapXOrderCancelInitiated, {
-      orders: orders.map((order) => order.orderHash),
-    })
-
-    return cancelMultipleUniswapXOrders({
-      orders: orders.map((order) => {
-        return { encodedOrder: order.encodedOrder as string, type: order.type as SignatureType }
-      }),
-      signer: account.address,
-      provider,
-      chainId: orders[0].chainId,
-      selectChain,
-    }).then((result) => {
-      orders.forEach((order) => {
-        if (order.status === UniswapXOrderStatus.FILLED) {
-          return
-        }
-        store.dispatch(updateSignature({ ...order, status: UniswapXOrderStatus.PENDING_CANCELLATION }))
-      })
-      return result
-    })
-  }, [orders, account.address, provider, selectChain])
-}
-
-async function cancelMultipleUniswapXOrders({
-  orders,
-  chainId,
-  signer,
-  provider,
-  selectChain,
-}: {
-  orders: Array<{ encodedOrder: string; type: SignatureType }>
-  chainId: UniverseChainId
-  signer?: string
-  provider?: Web3Provider
-  selectChain: (targetChain: UniverseChainId) => Promise<boolean>
-}) {
-  const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
-  const permit2 =
-    provider && getContract({ address: permit2Address(chainId), ABI: PERMIT2_ABI, provider, account: signer })
-  if (!permit2) {
-    return undefined
-  }
-  try {
-    const switchChainResult = await selectChain(chainId)
-    if (!switchChainResult) {
-      throw new WrongChainError()
-    }
-    const transactions: ContractTransaction[] = []
-    for (const params of cancelParams) {
-      const tx = await permit2.invalidateUnorderedNonces(params.word, params.mask)
-      transactions.push(tx)
-    }
-    return transactions
-  } catch (error) {
-    if (!didUserReject(error)) {
-      logger.debug('utils', 'cancelMultipleUniswapXOrders', 'Failed to cancel multiple orders', { error, orders })
-    }
-    return undefined
-  }
-}
-
-async function getCancelMultipleUniswapXOrdersTransaction({
-  orders,
-  chainId,
-  permit2,
-}: {
-  orders: Array<{ encodedOrder: string; type: SignatureType }>
-  chainId: UniverseChainId
-  permit2: Permit2
-}): Promise<TransactionRequest | undefined> {
-  const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
-  if (cancelParams.length === 0) {
-    return undefined
-  }
-  try {
-    const tx = await permit2.populateTransaction.invalidateUnorderedNonces(cancelParams[0].word, cancelParams[0].mask)
-    return {
-      ...tx,
-      chainId,
-    }
-  } catch (error) {
-    const wrappedError = new Error('could not populate cancel transaction', { cause: error })
-    logger.debug('utils', 'getCancelMultipleUniswapXOrdersTransaction', wrappedError.message, {
-      error: wrappedError,
-      orders,
-    })
-    return undefined
-  }
-}
-
-export function useCreateCancelTransactionRequest(
-  params:
-    | {
-        orders: Array<{ encodedOrder: string; type: SignatureType }>
-        chainId: UniverseChainId
-      }
-    | undefined,
-): Maybe<TransactionRequest> {
-  const permit2 = useContract<Permit2>({
-    address: permit2Address(params?.chainId),
-    ABI: PERMIT2_ABI,
-  })
-  const transactionFetcher = useCallback(() => {
-    if (!params || params.orders.filter(({ encodedOrder }) => Boolean(encodedOrder)).length === 0 || !permit2) {
-      return null
-    }
-    return getCancelMultipleUniswapXOrdersTransaction({
-      orders: params.orders,
-      chainId: params.chainId,
-      permit2,
-    })
-  }, [params, permit2])
-
-  return useQuery(
-    queryWithoutCache({
-      queryKey: [ReactQueryCacheKey.CancelTransactionRequest, params],
-      queryFn: transactionFetcher,
-    }),
-  ).data
-}
-
-export function isLimitCancellable(order: UniswapXOrderDetails) {
-  return [UniswapXOrderStatus.OPEN, UniswapXOrderStatus.INSUFFICIENT_FUNDS].includes(order.status)
+/**
+ * Type guard to check if a UniswapX order has the encoded order data needed for cancellation.
+ * Orders that have been filled won't have encodedOrder, and it's only present for orders
+ * that haven't been submitted yet or are still pending.
+ */
+export function hasEncodedOrder(order: UniswapXOrderDetails): order is UniswapXOrderDetails & { encodedOrder: string } {
+  return 'encodedOrder' in order && typeof order.encodedOrder === 'string'
 }
 
 /**
@@ -334,8 +240,11 @@ export function createActivityMapByHash(activities: (Activity | undefined)[]): A
       return acc
     }
 
-    if (!activity.hash) {
-      // This should not happen as all activity parsers set a hash value
+    // Unfilled UniswapX orders will not have a hash, use the orderHash instead
+    const activityHash = activity.hash ?? activity.offchainOrderDetails?.orderHash
+
+    if (!activityHash) {
+      // This should not happen as all activity parsers set a hash or orderHash value
       logger.warn('utils', 'createActivityMapByHash', 'Activity without hash skipped', {
         activityId: activity.id,
         activityType: activity.type,
@@ -343,7 +252,7 @@ export function createActivityMapByHash(activities: (Activity | undefined)[]): A
       return acc
     }
 
-    acc[activity.hash] = activity
+    acc[activityHash] = activity
     return acc
   }, {})
 }

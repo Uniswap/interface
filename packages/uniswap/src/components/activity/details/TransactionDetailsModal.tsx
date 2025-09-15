@@ -87,9 +87,9 @@ export function TransactionDetailsHeader({
           isOpen={isContextMenuOpen}
           closeMenu={closeContextMenu}
         >
-          <Flex borderRadius="$roundedFull" p="$spacing4" onPress={openContextMenu}>
+          <TouchableArea borderRadius="$roundedFull" p="$spacing4" onPress={openContextMenu}>
             <Ellipsis color="$neutral2" size="$icon.20" />
-          </Flex>
+          </TouchableArea>
         </ContextMenu>
       )}
     </Flex>

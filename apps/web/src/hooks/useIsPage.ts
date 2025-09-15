@@ -4,7 +4,7 @@ function createGetIsPage(ctx: {
   getPathname: () => string
 }): (page: PageType, matchTypeOverride?: MatchType) => boolean {
   return function getIsPage(page: PageType, matchTypeOverride?: MatchType) {
-    const pathname = ctx.getPathname()
+    const pathname = ensureCleanedPathname(ctx.getPathname())
 
     // Determine the match type: override or default from the mapping
     const matchType = matchTypeOverride ?? pageMatchDefaults[page]
@@ -22,6 +22,11 @@ function createGetIsPage(ctx: {
         return pathname === page
     }
   }
+}
+
+function ensureCleanedPathname(pathname: string) {
+  // Trim trailing slashes, except for the root path
+  return pathname !== '/' ? pathname.replace(/\/+$/, '') : pathname
 }
 
 export enum PageType {

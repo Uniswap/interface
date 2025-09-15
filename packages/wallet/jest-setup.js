@@ -15,6 +15,39 @@ jest.mock('uniswap/src/features/gas/hooks', () => ({
   }),
 }))
 
+// Mock getConfig to return test-safe native values
+jest.mock('uniswap/src/config', () => ({
+  config: {
+    alchemyApiKey: 'test-alchemy-key',
+    amplitudeProxyUrlOverride: '',
+    apiBaseUrlOverride: '',
+    apiBaseUrlV2Override: '',
+    appsflyerApiKey: 'test-appsflyer-key',
+    appsflyerAppId: 'test-appsflyer-id',
+    datadogClientToken: 'test-datadog-token',
+    datadogProjectId: 'test-datadog-project',
+    isE2ETest: false,
+    forApiUrlOverride: '',
+    graphqlUrlOverride: '',
+    includePrototypeFeatures: '',
+    infuraKey: 'test-infura-key',
+    onesignalAppId: 'test-onesignal-id',
+    quicknodeEndpointName: '',
+    quicknodeEndpointToken: '',
+    scantasticApiUrlOverride: '',
+    statsigApiKey: 'test-statsig-key',
+    statsigProxyUrlOverride: '',
+    tradingApiKey: 'test-trading-key',
+    tradingApiUrlOverride: '',
+    tradingApiWebTestEnv: '',
+    uniswapApiKey: 'test-uniswap-key',
+    unitagsApiUrlOverride: '',
+    walletConnectProjectId: 'test-wallet-connect-id',
+    walletConnectProjectIdBeta: 'test-wallet-connect-beta',
+    walletConnectProjectIdDev: 'test-wallet-connect-dev',
+  },
+}))
+
 // Use web unicon
 jest.mock('ui/src/components/Unicon', () => {
   return jest.requireActual('ui/src/components/Unicon/index.web.tsx')

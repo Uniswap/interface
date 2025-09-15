@@ -1,16 +1,13 @@
-import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useCurrency } from 'hooks/Tokens'
-import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { SendForm, SendFormProps } from 'pages/Swap/Send/SendForm'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 import { SendContextProvider } from 'state/send/SendContext'
 import { SwapAndLimitContext } from 'state/swap/types'
-import { Flex } from 'ui/src'
+import { Flex, ModalCloseIcon, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -58,9 +55,7 @@ export function SendFormModal(props: SendFormModalProps) {
               isModalOpen={isModalOpen}
               onClose={onClose}
               maxWidth={420}
-              paddingX="$padding8"
-              pb="$padding8"
-              pt="$padding12"
+              padding="$padding16"
             >
               <SendFormModalInner {...props} />
             </Modal>
@@ -74,22 +69,20 @@ export function SendFormModal(props: SendFormModalProps) {
 const SendFormModalInner = (props: SendFormModalProps) => {
   const { isModalOpen: _isModalOpen, onClose, ...rest } = props
   const { t } = useTranslation()
-  const { setScreen, screen } = useTransactionModalContext()
-  const goBack = useCallback(() => {
-    setScreen(TransactionScreen.Form)
-  }, [setScreen])
+  const { screen } = useTransactionModalContext()
+  const title = screen === TransactionScreen.Review ? t('sendReviewModal.title') : t('title.sendCrypto')
 
   return (
-    <ContentWrapper>
-      <GetHelpHeader
-        link={uniswapUrls.helpArticleUrls.transferCryptoHelp}
-        title={screen === TransactionScreen.Review ? t('sendReviewModal.title') : t('title.sendCrypto')}
-        closeModal={onClose}
-        goBack={screen === TransactionScreen.Review ? goBack : undefined}
-      />
-      <Flex mt="$spacing12">
+    <Flex backgroundColor="$surface1" width="100%" flex={1} position="relative" gap="$spacing24">
+      <Flex row justifyContent="center" alignItems="center">
+        <Text variant="body2">{title}</Text>
+        <Flex row position="absolute" right="0" justifyContent="flex-end" alignItems="center" gap="10px">
+          <ModalCloseIcon onClose={onClose} role="none" />
+        </Flex>
+      </Flex>
+      <Flex>
         <SendForm {...rest} />
       </Flex>
-    </ContentWrapper>
+    </Flex>
   )
 }

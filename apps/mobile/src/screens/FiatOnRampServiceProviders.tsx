@@ -34,7 +34,7 @@ function Footer(): JSX.Element {
   const { t } = useTranslation()
   return (
     <>
-      <Text color="$neutral2" px="$spacing24" textAlign="center" variant="body3">
+      <Text color="$neutral2" px="$spacing24" textAlign="center" variant="body4">
         {t('fiatOnRamp.quote.advice')}
       </Text>
       <Inset all="$spacing8" />
@@ -82,6 +82,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
   }, [quotesSections])
 
   const renderItem = ({ item }: ListRenderItemInfo<FORQuote>): JSX.Element => {
+    const isHidden = !filteredQuotes?.includes(item)
     const onPress = (): void => {
       setSelectedQuote(item)
       if (baseCurrencyInfo && quoteCurrency.currencyInfo) {
@@ -101,13 +102,13 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
       navigation.navigate(FiatOnRampScreens.Connecting)
     }
     return (
-      <Flex px="$spacing8" py="$spacing8">
+      <Flex px="$spacing8" py={isHidden ? 0 : '$spacing8'}>
         {baseCurrencyInfo && (
           <FORQuoteItem
             serviceProvider={item.serviceProviderDetails}
             showPaymentMethods={!paymentMethod}
             isRecent={item.isMostRecentlyUsedProvider}
-            hidden={!filteredQuotes?.includes(item)}
+            hidden={isHidden}
             onPress={onPress}
           />
         )}
@@ -147,8 +148,8 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
             <EdgeFade side="right" width={24} />
           </Flex>
         )}
-        <Flex grow gap="$spacing16" px="$spacing16">
-          <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} pb="$spacing24" pt="$spacing4">
+        <Flex grow px="$spacing16">
+          <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} pb="$spacing24">
             <BottomSheetSectionList
               bounces
               ListEmptyComponent={<Flex />}

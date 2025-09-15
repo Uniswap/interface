@@ -25,6 +25,7 @@ import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { CompatibleAddressModal } from 'uniswap/src/features/transactions/modals/CompatibleAddressModal'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
@@ -57,6 +58,7 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
   const { showRecipientSelector, recipient, derivedSendInfo, updateSendForm } = useSendContext()
   const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
   const [showMaxTransferModal, setShowMaxTransferModal] = useState(false)
+  const [showCompatibleAddressModal, setShowCompatibleAddressModal] = useState(false)
 
   const onSelectRecipient = useCallback(
     (newRecipient: string) => {
@@ -76,6 +78,10 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
   const hideViewOnlyModal = useCallback(() => {
     setShowViewOnlyModal(false)
   }, [setShowViewOnlyModal])
+
+  const hideCompatibleAddressModal = useCallback(() => {
+    setShowCompatibleAddressModal(false)
+  }, [setShowCompatibleAddressModal])
 
   const goToReviewScreen = useGoToReviewScreen()
 
@@ -114,8 +120,10 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
             <SendFormContent
               showLowNetworkTokenWarning={showMaxTransferModal}
               showViewOnlyModal={showViewOnlyModal}
+              showCompatibleAddressModal={showCompatibleAddressModal}
               hideLowNetworkTokenWarning={hideLowNetworkTokenWarning}
               hideViewOnlyModal={hideViewOnlyModal}
+              hideCompatibleAddressModal={hideCompatibleAddressModal}
             />
           </>
         )}
@@ -125,6 +133,7 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
           goToReviewScreen={goToReviewScreen}
           setShowViewOnlyModal={setShowViewOnlyModal}
           setShowMaxTransferModal={setShowMaxTransferModal}
+          setShowCompatibleAddressModal={setShowCompatibleAddressModal}
         />
       </TransactionModalFooterContainer>
     </>
@@ -136,13 +145,20 @@ function SendFormContent({
   hideViewOnlyModal,
   showLowNetworkTokenWarning,
   hideLowNetworkTokenWarning,
+  showCompatibleAddressModal,
+  hideCompatibleAddressModal,
 }: {
   showViewOnlyModal: boolean
   hideViewOnlyModal: () => void
   showLowNetworkTokenWarning: boolean
   hideLowNetworkTokenWarning: () => void
+  showCompatibleAddressModal: boolean
+  hideCompatibleAddressModal: () => void
 }): JSX.Element {
   const { t } = useTranslation()
+  const {
+    derivedSendInfo: { currencyInInfo },
+  } = useSendContext()
 
   const goToReviewScreen = useGoToReviewScreen()
 
@@ -164,6 +180,15 @@ function SendFormContent({
     goToReviewScreen()
   }, [hideLowNetworkTokenWarning, goToReviewScreen])
 
+  const onCloseCompatibleAddressWarning = useCallback(() => {
+    hideCompatibleAddressModal()
+  }, [hideCompatibleAddressModal])
+
+  const onAcknowledgeCompatibleAddressWarning = useCallback(() => {
+    hideCompatibleAddressModal()
+    goToReviewScreen()
+  }, [hideCompatibleAddressModal, goToReviewScreen])
+
   return (
     <>
       <WarningModal
@@ -183,6 +208,15 @@ function SendFormContent({
         onClose={onCloseLowNativeBalanceWarning}
         onAcknowledge={onAcknowledgeLowNativeBalanceWarning}
       />
+
+      {currencyInInfo && (
+        <CompatibleAddressModal
+          currencyInfo={currencyInInfo}
+          isOpen={showCompatibleAddressModal}
+          onClose={onCloseCompatibleAddressWarning}
+          onAcknowledge={onAcknowledgeCompatibleAddressWarning}
+        />
+      )}
 
       <TouchableWithoutFeedback>
         <Flex fill>

@@ -2,7 +2,7 @@ import { Web3Provider } from '@ethersproject/providers'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useEffect, useMemo } from 'react'
-import { OnActivityUpdate } from 'state/activity/types'
+import { ActivityUpdateTransactionType, OnActivityUpdate } from 'state/activity/types'
 import { usePendingTransactions } from 'state/transactions/hooks'
 import { PendingTransactionDetails } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -11,6 +11,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 
 type PendingBatchDetails = Required<Pick<PendingTransactionDetails, 'batchInfo'>> & PendingTransactionDetails
+
 function usePendingBatches(): PendingBatchDetails[] {
   const transactions = usePendingTransactions()
   const account = useAccount()
@@ -47,7 +48,7 @@ function finalizeBatch(params: {
 }) {
   const { transaction, onActivityUpdate, hash, status } = params
   onActivityUpdate({
-    type: 'transaction',
+    type: ActivityUpdateTransactionType.BaseTransaction,
     chainId: transaction.batchInfo.chainId,
     update: { ...transaction, status, hash },
     original: transaction,

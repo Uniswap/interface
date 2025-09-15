@@ -5,7 +5,7 @@ import { OptionItemProps } from 'uniswap/src/components/lists/items/OptionItem'
 import { ENSAddressOption } from 'uniswap/src/components/lists/items/types'
 import { WalletBaseOptionItem } from 'uniswap/src/components/lists/items/wallets/WalletBaseOptionItem'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
+import { useENSName } from 'uniswap/src/features/ens/api'
 import { getCompletedENSName } from 'uniswap/src/features/ens/useENS'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -42,12 +42,10 @@ export function ENSAddressOptionItem({ ensAddressOption, onPress }: ENSAddressOp
   const showOwnedBy = !isFetchingPrimaryENSName && !isPrimaryENSName
   const showAddress = !showOwnedBy
 
-  const { data: avatar } = useENSAvatar(address)
-
   return (
     <WalletBaseOptionItem
       option={ensAddressOption}
-      image={<AccountIcon address={address} avatarUri={avatar} size={iconSizes.icon40} />}
+      image={<AccountIcon address={address} size={iconSizes.icon40} />}
       title={(completedENSName || formattedAddress) ?? ''}
       subtitle={
         <Text color="$neutral2" ellipsizeMode="tail" numberOfLines={1} variant="subheading2">

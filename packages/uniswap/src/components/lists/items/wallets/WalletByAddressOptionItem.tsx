@@ -12,7 +12,6 @@ import { WalletBaseOptionItem } from 'uniswap/src/components/lists/items/wallets
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 
 type WalletByAddressOptionItemProps = {
@@ -25,7 +24,6 @@ export function WalletByAddressOptionItem({
   onPress,
 }: WalletByAddressOptionItemProps): JSX.Element {
   const { address } = walletByAddressOption
-  const { avatar } = useAvatar(address)
 
   // Since we only save address in search history, we should check if the associated wallet actually has an ENS/Unitag name, and display accordingly
   const displayName = useOnchainDisplayName(address)
@@ -49,7 +47,7 @@ export function WalletByAddressOptionItem({
   return (
     <WalletBaseOptionItem
       option={walletByAddressOption}
-      image={<AccountIcon address={address} avatarUri={avatar} size={iconSizes.icon40} />}
+      image={<AccountIcon address={address} size={iconSizes.icon40} />}
       title={displayName?.name ?? ''}
       onPress={onPress}
     />

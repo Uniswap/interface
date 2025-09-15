@@ -15,7 +15,6 @@ import { borderRadii, iconSizes } from 'ui/src/theme'
 import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceholder'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
@@ -99,7 +98,6 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
   const dispatch = useDispatch()
 
   const displayName = useDisplayName(address)
-  const { avatar } = useAvatar(address)
   const walletHasName = displayName && displayName.type !== DisplayNameType.Address
   const formattedAddress = sanitizeAddressText(shortenAddress(address))
   const { isOpen: isPopupOpen } = useSelector(selectPopupState(PopupName.Connect))
@@ -156,7 +154,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
         <TouchableArea pressStyle={{ scale: 0.95 }} onPress={onPressAccount}>
           <Flex group row alignItems="center" gap="$spacing4">
             <Flex $group-hover={{ opacity: 0.6 }}>
-              <AccountIcon address={address} avatarUri={avatar} size={iconSizes.icon48} />
+              <AccountIcon address={address} size={iconSizes.icon48} />
             </Flex>
             <Flex $group-hover={{ opacity: 1 }} opacity={0}>
               <RotatableChevron color="$neutral3" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />

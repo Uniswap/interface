@@ -28,7 +28,7 @@ export function WelcomeSplash({
           <Animated.View entering={FadeInDown.duration(300)}>
             <AccountIcon
               address={address}
-              avatarUri={unitag?.metadata?.avatar}
+              avatarUriOverride={unitag?.metadata?.avatar}
               showBackground={true}
               size={iconSizes.icon70}
             />

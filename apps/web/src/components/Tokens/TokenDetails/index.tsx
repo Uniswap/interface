@@ -4,6 +4,7 @@ import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from
 import { MobileBottomBar, TDPActionTabs } from 'components/NavBar/MobileBottomBar'
 import { ActivitySection } from 'components/Tokens/TokenDetails/ActivitySection'
 import BalanceSummary, { PageChainBalanceSummary } from 'components/Tokens/TokenDetails/BalanceSummary'
+import { BridgedAssetSection } from 'components/Tokens/TokenDetails/BridgedAssetSection'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
 import { LeftPanel, RightPanel, TokenDetailsLayout } from 'components/Tokens/TokenDetails/Skeleton'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
@@ -262,8 +263,9 @@ export default function TokenDetails() {
           <TokenDetailsHeader />
           <ChartSection />
           {!showRightPanel && !!pageChainBalance && (
-            <Flex mt="$spacing40">
+            <Flex mt="$spacing40" gap="$gap24">
               <PageChainBalanceSummary pageChainBalance={pageChainBalance} alignLeft />
+              <BridgedAssetSection />
             </Flex>
           )}
           <StatsSection tokenQueryData={tokenQueryData} />
@@ -275,6 +277,7 @@ export default function TokenDetails() {
           <Flex display={showRightPanel ? 'flex' : 'none'} gap="$gap24">
             <TDPSwapComponent />
             <BalanceSummary />
+            <BridgedAssetSection />
           </Flex>
           <TokenDescription />
         </RightPanel>

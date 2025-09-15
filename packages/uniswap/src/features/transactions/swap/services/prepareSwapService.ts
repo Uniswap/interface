@@ -23,6 +23,7 @@ export function createPrepareSwap(
         skipBridgingWarning: ctx.warningService.getSkipBridgingWarning(),
         skipMaxTransferWarning: ctx.warningService.getSkipMaxTransferWarning(),
         skipTokenProtectionWarning: ctx.warningService.getSkipTokenProtectionWarning(),
+        skipBridgedAssetWarning: ctx.warningService.getSkipBridgedAssetWarning(),
       })
 
       handleEventAction(action)
@@ -53,6 +54,7 @@ interface GetActionContext {
   needsTokenProtectionWarning: boolean
   needsBridgingWarning: boolean
   needsLowNativeBalanceWarning: boolean
+  needsBridgedAssetWarning: boolean
 }
 
 const ReviewActionType = {
@@ -64,6 +66,7 @@ const ReviewActionType = {
   SHOW_BRIDGING_WARNING: 'SHOW_BRIDGING_WARNING' as const,
   SHOW_LOW_BALANCE: 'SHOW_LOW_BALANCE' as const,
   PROCEED_TO_REVIEW: 'PROCEED_TO_REVIEW' as const,
+  SHOW_BRIDGED_ASSET_WARNING: 'SHOW_BRIDGED_ASSET_WARNING' as const,
 }
 
 type RedirectActionPayload = Parameters<SwapRedirectFn>[0]
@@ -81,8 +84,12 @@ type ReviewAction =
   | { type: typeof ReviewActionType.SHOW_BRIDGING_WARNING }
   | { type: typeof ReviewActionType.SHOW_LOW_BALANCE; payload: LowBalanceActionPayload }
   | { type: typeof ReviewActionType.PROCEED_TO_REVIEW }
+  | { type: typeof ReviewActionType.SHOW_BRIDGED_ASSET_WARNING }
 
-type CallbackArgs = Record<'skipBridgingWarning' | 'skipTokenProtectionWarning' | 'skipMaxTransferWarning', boolean>
+type CallbackArgs = Record<
+  'skipBridgingWarning' | 'skipTokenProtectionWarning' | 'skipMaxTransferWarning' | 'skipBridgedAssetWarning',
+  boolean
+>
 
 function createGetAction(ctx: GetActionContext): (args: CallbackArgs) => ReviewAction {
   const {
@@ -98,6 +105,7 @@ function createGetAction(ctx: GetActionContext): (args: CallbackArgs) => ReviewA
     needsTokenProtectionWarning,
     needsBridgingWarning,
     needsLowNativeBalanceWarning,
+    needsBridgedAssetWarning,
   } = ctx
   function getAction(args: CallbackArgs): ReviewAction {
     if (swapRedirectCallback) {
@@ -128,6 +136,8 @@ function createGetAction(ctx: GetActionContext): (args: CallbackArgs) => ReviewA
         type: ReviewActionType.SHOW_LOW_BALANCE,
         payload: lowBalancePayload,
       }
+    } else if (needsBridgedAssetWarning && !args.skipBridgedAssetWarning) {
+      return { type: ReviewActionType.SHOW_BRIDGED_ASSET_WARNING }
     }
     return { type: ReviewActionType.PROCEED_TO_REVIEW }
   }
@@ -140,6 +150,7 @@ interface HandleEventActionContext {
   handleShowTokenWarningModal: () => void
   handleShowBridgingWarningModal: () => void
   handleShowMaxNativeTransferModal: () => void
+  handleShowBridgedAssetModal: () => void
   swapRedirectCallback?: SwapRedirectFn
   onConnectWallet?: () => void
   onInterfaceWrap?: () => void
@@ -153,6 +164,7 @@ function createHandleEventAction(ctx: HandleEventActionContext): (action: Review
     handleShowTokenWarningModal,
     handleShowBridgingWarningModal,
     handleShowMaxNativeTransferModal,
+    handleShowBridgedAssetModal,
     swapRedirectCallback,
     onConnectWallet,
     onInterfaceWrap,
@@ -182,6 +194,9 @@ function createHandleEventAction(ctx: HandleEventActionContext): (action: Review
       case ReviewActionType.SHOW_LOW_BALANCE:
         handleShowMaxNativeTransferModal()
         sendAnalyticsEvent(UniswapEventName.LowNetworkTokenInfoModalOpened, action.payload)
+        break
+      case ReviewActionType.SHOW_BRIDGED_ASSET_WARNING:
+        handleShowBridgedAssetModal()
         break
       case ReviewActionType.PROCEED_TO_REVIEW:
         updateSwapForm({ txId: createTransactionId() })

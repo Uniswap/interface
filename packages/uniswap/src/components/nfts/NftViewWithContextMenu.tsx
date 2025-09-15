@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Flex } from 'ui/src'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
@@ -34,6 +34,21 @@ export function NftViewWithContextMenu(props: NftViewWithContextMenuProps): JSX.
     openContextMenu()
   }, [hapticFeedback, openContextMenu])
 
+  const onOpenContextMenu = useCallback(async (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }, [])
+
+  const nftViewWithTriggers = useMemo(() => {
+    const nftView = <NftView {...props} openContextMenu={openContextMenuWithHaptics} />
+    return isWeb ? (
+      // eslint-disable-next-line react/forbid-elements
+      <div onContextMenu={onOpenContextMenu}>{nftView}</div>
+    ) : (
+      nftView
+    )
+  }, [onOpenContextMenu, openContextMenuWithHaptics, props])
+
   return (
     <Flex>
       <ContextMenu
@@ -42,7 +57,7 @@ export function NftViewWithContextMenu(props: NftViewWithContextMenuProps): JSX.
         isOpen={contextMenuIsOpen}
         closeMenu={closeContextMenu}
       >
-        <NftView {...props} openContextMenu={openContextMenuWithHaptics} />
+        {nftViewWithTriggers}
       </ContextMenu>
     </Flex>
   )

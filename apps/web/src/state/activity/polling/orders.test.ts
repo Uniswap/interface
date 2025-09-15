@@ -9,21 +9,42 @@ import {
   QUICK_POLL_MEDIUM_PHASE,
   usePollPendingOrders,
 } from 'state/activity/polling/orders'
-import * as hooks from 'state/signatures/hooks'
-import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
+import * as hooks from 'state/transactions/hooks'
 import { act, renderHook } from 'test-utils/render'
-import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
+import { OrderStatus, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { updateTransaction } from 'uniswap/src/features/transactions/slice'
+import {
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import type { Mock } from 'vitest'
 
-vi.mock('state/signatures/hooks', async () => {
-  const actual = await vi.importActual('state/signatures/hooks')
+vi.mock('state/transactions/hooks', async () => {
+  const actual = await vi.importActual('state/transactions/hooks')
   return {
     ...actual,
-    usePendingOrders: vi.fn(),
+    usePendingUniswapXOrders: vi.fn(),
+  }
+})
+
+vi.mock('state/hooks', async () => {
+  const actual = await vi.importActual('state/hooks')
+  return {
+    ...actual,
+    useAppDispatch: () => vi.fn(),
+  }
+})
+
+vi.mock('uniswap/src/features/transactions/slice', async () => {
+  const actual = await vi.importActual('uniswap/src/features/transactions/slice')
+  return {
+    ...actual,
+    updateTransaction: vi.fn((tx: any) => ({ type: 'transactions/updateTransaction', payload: tx })),
   }
 })
 
@@ -43,14 +64,15 @@ vi.mock('hooks/useAccount', async () => {
 })
 
 const mockL1Order: UniswapXOrderDetails = {
-  type: SignatureType.SIGN_UNISWAPX_ORDER,
+  routing: Routing.DUTCH_V2,
   orderHash: '0xa9dd6f05ad6d6c79bee654c31ede4d0d2392862711be0f3bc4a9124af24a6a19',
-  status: UniswapXOrderStatus.OPEN,
+  status: TransactionStatus.Pending,
   id: '1',
   addedTime: 1686339087000, // from createdAt in openStatusResponse
   chainId: UniverseChainId.Mainnet,
-  offerer: '0x80becb808bfade4143183e58d18f2080e84e57a1',
-  swapInfo: {
+  from: '0x80becb808bfade4143183e58d18f2080e84e57a1',
+  transactionOriginType: TransactionOriginType.Internal,
+  typeInfo: {
     isUniswapXOrder: true,
     type: TransactionType.Swap,
     inputCurrencyAmountRaw: '100000000',
@@ -128,7 +150,7 @@ describe('useStandardPolling', () => {
 
   it('should not poll when no orders exist', () => {
     const onActivityUpdate = vi.fn()
-    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
+    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([])
 
     renderHook(() => usePollPendingOrders(onActivityUpdate))
 
@@ -141,8 +163,8 @@ describe('useStandardPolling', () => {
 
   it('should poll L1 orders with exponential backoff', async () => {
     const onActivityUpdate = vi.fn()
-    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([mockL1Order])
-    const mockResponse = { orders: [{ ...mockL1Order, orderStatus: UniswapXOrderStatus.OPEN }] }
+    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([mockL1Order])
+    const mockResponse = { orders: [{ orderHash: mockL1Order.orderHash, orderStatus: OrderStatus.OPEN }] }
     ;(global.fetch as Mock).mockImplementation(() =>
       Promise.resolve({
         json: () => Promise.resolve(mockResponse),
@@ -181,13 +203,13 @@ describe('useStandardPolling', () => {
     const mockOrder = { ...mockL1Order }
 
     // Start with returning the open order
-    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([mockOrder])
+    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([mockOrder])
     ;(global.fetch as Mock)
       .mockImplementationOnce(() =>
         Promise.resolve({
           json: () =>
             Promise.resolve({
-              orders: [{ ...mockOrder, orderStatus: UniswapXOrderStatus.OPEN }],
+              orders: [{ orderHash: mockOrder.orderHash, orderStatus: OrderStatus.OPEN }],
             }),
         }),
       )
@@ -195,7 +217,7 @@ describe('useStandardPolling', () => {
         Promise.resolve({
           json: () =>
             Promise.resolve({
-              orders: [{ ...mockOrder, orderStatus: UniswapXOrderStatus.FILLED }],
+              orders: [{ orderHash: mockOrder.orderHash, orderStatus: OrderStatus.FILLED, txHash: '0xfilled123' }],
             }),
         }),
       )
@@ -204,8 +226,14 @@ describe('useStandardPolling', () => {
 
     // After the second poll returns FILLED, update the mock to return no pending orders
     setTimeout(() => {
-      vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
+      vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([])
     }, 3500)
+
+    // Mock the updateTransaction to avoid errors
+    vi.mocked(updateTransaction).mockImplementation((tx: any) => ({
+      type: 'transactions/updateTransaction',
+      payload: tx,
+    }))
 
     // First poll - order is open
     await act(async () => {
@@ -240,7 +268,7 @@ describe('useQuickPolling', () => {
 
   it('should not poll when no orders exist', () => {
     const onActivityUpdate = vi.fn()
-    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
+    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([])
 
     renderHook(() => usePollPendingOrders(onActivityUpdate))
 
@@ -261,10 +289,10 @@ describe('useQuickPolling', () => {
       addedTime: now,
     }
 
-    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([recentOrder])
+    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([recentOrder])
     ;(global.fetch as Mock).mockImplementation(() =>
       Promise.resolve({
-        json: () => Promise.resolve({ orders: [{ ...recentOrder, orderStatus: 'open' }] }),
+        json: () => Promise.resolve({ orders: [{ ...recentOrder, orderStatus: OrderStatus.OPEN }] }),
       }),
     )
 

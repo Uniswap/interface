@@ -1,9 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "NextJS",
-  "extends": "./base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2019",
     "lib": [
       "dom",
       "dom.iterable",
@@ -12,19 +12,7 @@
     "paths": {
       "react-native": [
         "react-native-web"
-      ],
-      "ui/*": [
-        "../../packages/ui/*"
-      ],
-      "uniswap/*": [
-        "../../packages/uniswap/*"
-      ],
-      "utilities/*": [
-        "../../packages/utilities/*"
-      ],
-      "wallet/*": [
-        "../../packages/wallet/*"
-      ],
+      ]
     },
     "allowJs": true,
     "resolveJsonModule": true,

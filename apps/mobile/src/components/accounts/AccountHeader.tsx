@@ -10,7 +10,6 @@ import { Flex, Text, TouchableArea } from 'ui/src'
 import { CopyAlt, ScanHome, SettingsHome } from 'ui/src/components/icons'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { AccountType, DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -77,7 +76,6 @@ export function AccountHeader(): JSX.Element {
   const account = useActiveAccount()
   const dispatch = useDispatch()
 
-  const { avatar } = useAvatar(activeAddress)
   const displayName = useDisplayName(activeAddress)
 
   // Log ENS and Unitag ownership for user usage stats
@@ -148,7 +146,6 @@ export function AccountHeader(): JSX.Element {
                 <AccountIcon
                   showBorder
                   address={activeAddress}
-                  avatarUri={avatar}
                   showBackground={true}
                   showViewOnlyBadge={account?.type === AccountType.Readonly}
                   size={iconSize}

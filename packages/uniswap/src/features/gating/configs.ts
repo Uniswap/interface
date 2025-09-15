@@ -1,4 +1,5 @@
 import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import type { Locale } from 'uniswap/src/features/language/constants'
 
 /**
  * Dynamic Configs

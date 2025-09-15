@@ -2,6 +2,8 @@ import { type ComponentType, memo } from 'react'
 import type { AppStackParamList, AppStackScreenProp } from 'src/app/navigation/types'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import type { GetProps } from 'ui/src'
+import { BridgedAssetModal } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
+import { WormholeModal } from 'uniswap/src/components/BridgedAsset/WormholeModal'
 import { PasskeyManagementModal } from 'uniswap/src/features/passkey/PasskeyManagementModal'
 import { PasskeysHelpModal } from 'uniswap/src/features/passkey/PasskeysHelpModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -27,6 +29,8 @@ type ValidModalNames = keyof Pick<
   | typeof ModalName.PermissionsModal
   | typeof ModalName.PortfolioBalanceModal
   | typeof ModalName.LanguageSelector
+  | typeof ModalName.BridgedAsset
+  | typeof ModalName.Wormhole
 >
 
 type ModalNameWithComponentProps = {
@@ -40,6 +44,8 @@ type ModalNameWithComponentProps = {
   [ModalName.PermissionsModal]: GetProps<typeof PermissionsModal>
   [ModalName.PortfolioBalanceModal]: GetProps<typeof PortfolioBalanceModal>
   [ModalName.LanguageSelector]: GetProps<typeof SettingsLanguageModal>
+  [ModalName.BridgedAsset]: GetProps<typeof BridgedAssetModal>
+  [ModalName.Wormhole]: GetProps<typeof WormholeModal>
 }
 
 type NavigationModalProps<ModalName extends ValidModalNames> = {

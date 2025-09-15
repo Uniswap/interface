@@ -29,6 +29,7 @@ exports[`EmptyState renders without error 1`] = `
           "flexDirection": "column",
           "gap": 8,
           "justifyContent": "center",
+          "marginTop": 8,
         }
       }
     >

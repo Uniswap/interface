@@ -10,7 +10,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils/gqlTokenToCurrencyInfo'
-import { getOnChainBalancesFetch } from 'uniswap/src/features/portfolio/api'
+import { fetchOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import {
   DenominatedValue,
   fetchIndicativeQuote,
@@ -53,7 +53,7 @@ export async function fetchOnChainBalancesRest({
       }
 
       try {
-        const { balance: onchainBalance } = await getOnChainBalancesFetch({
+        const { balance: onchainBalance } = await fetchOnChainCurrencyBalance({
           currencyAddress,
           chainId,
           currencyIsNative: isNativeCurrencyAddress(chainId, currencyAddress),

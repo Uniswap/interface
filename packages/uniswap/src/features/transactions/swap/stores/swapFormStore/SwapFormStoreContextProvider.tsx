@@ -63,30 +63,49 @@ const useCalculatedInitialDerivedSwapInfo = (
   })
 }
 
-export const SwapFormStoreContextProvider = ({
+// Initializer component: computes initial derived swap info using heavy hook (`useCalculatedInitialDerivedSwapInfo`) once,
+// then passes it to the base provider and unmounts
+function SwapFormStoreContextProviderInitializer({
+  initialState,
+  onReady,
+}: {
+  initialState: SwapFormState
+  onReady: (d: DerivedSwapInfo) => void
+}): JSX.Element | null {
+  const initialDerived = useCalculatedInitialDerivedSwapInfo({
+    exactAmountFiat: initialState.exactAmountFiat ?? INITIAL_SWAP_FORM_STATE.exactAmountFiat,
+    exactAmountToken: initialState.exactAmountToken ?? INITIAL_SWAP_FORM_STATE.exactAmountToken,
+    exactCurrencyField: initialState.exactCurrencyField,
+    focusOnCurrencyField: initialState.focusOnCurrencyField ?? INITIAL_SWAP_FORM_STATE.focusOnCurrencyField,
+    input: initialState.input ?? INITIAL_SWAP_FORM_STATE.input,
+    output: initialState.output ?? INITIAL_SWAP_FORM_STATE.output,
+    selectingCurrencyField: initialState.selectingCurrencyField ?? INITIAL_SWAP_FORM_STATE.selectingCurrencyField,
+    txId: initialState.txId ?? INITIAL_SWAP_FORM_STATE.txId,
+  })
+
+  useEffect(() => {
+    onReady(initialDerived)
+  }, [initialDerived, onReady])
+
+  return null
+}
+
+// Base provider: assumes initialDerivedSwapInfo is provided and creates the store with it
+function SwapFormStoreContextProviderBase({
   children,
   hideFooter,
   hideSettings,
   prefilledState,
+  initialStateToUse,
+  initialDerivedSwapInfo,
 }: PropsWithChildren<{
   hideFooter?: boolean
   hideSettings?: boolean
   prefilledState?: SwapFormState
-}>): JSX.Element => {
+  initialStateToUse: SwapFormState
+  initialDerivedSwapInfo: DerivedSwapInfo
+}>): JSX.Element {
   const dispatch = useDispatch()
-
-  // Get default state for store initialization
-  const defaultState = useDefaultSwapFormState()
-
-  const initialStateToUse = useMemo(() => {
-    return prefilledState ?? defaultState
-  }, [prefilledState, defaultState])
-
-  // We need this to be able to set `derivedSwapInfo` to a valid value when we actually create the store
-  const initialDerivedSwapInfo = useCalculatedInitialDerivedSwapInfo({
-    ...INITIAL_SWAP_FORM_STATE,
-    ...initialStateToUse,
-  })
 
   // Create store with default state and prefilled state
   const [{ store, cleanup }] = useState(() =>
@@ -274,4 +293,43 @@ export const SwapFormStoreContextProvider = ({
   }, [derivedState, setSwapFormState])
 
   return <SwapFormStoreContext.Provider value={store}>{children}</SwapFormStoreContext.Provider>
+}
+
+// Orchestrator: computes initial state, bootstraps initial derived swap info, then renders the base provider
+export const SwapFormStoreContextProvider = ({
+  children,
+  hideFooter,
+  hideSettings,
+  prefilledState,
+}: PropsWithChildren<{
+  hideFooter?: boolean
+  hideSettings?: boolean
+  prefilledState?: SwapFormState
+}>): JSX.Element => {
+  // Get default state for store initialization
+  const defaultState = useDefaultSwapFormState()
+
+  const initialStateToUse = useMemo(() => {
+    return prefilledState ?? defaultState
+  }, [prefilledState, defaultState])
+
+  const [initialDerivedSwapInfo, setInitialDerivedSwapInfo] = useState<DerivedSwapInfo | null>(null)
+
+  if (!initialDerivedSwapInfo) {
+    return (
+      <SwapFormStoreContextProviderInitializer initialState={initialStateToUse} onReady={setInitialDerivedSwapInfo} />
+    )
+  }
+
+  return (
+    <SwapFormStoreContextProviderBase
+      hideFooter={hideFooter}
+      hideSettings={hideSettings}
+      prefilledState={prefilledState}
+      initialStateToUse={initialStateToUse}
+      initialDerivedSwapInfo={initialDerivedSwapInfo}
+    >
+      {children}
+    </SwapFormStoreContextProviderBase>
+  )
 }

@@ -9,7 +9,7 @@ import { useUnlockWithBiometricCredentialMutation } from 'src/app/features/biome
 import { useUnlockWithPassword } from 'src/app/features/lockScreen/useUnlockWithPassword'
 import { useSagaStatus } from 'src/app/hooks/useSagaStatus'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
-import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
+import { focusOrCreateOnboardingTab } from 'src/app/navigation/focusOrCreateOnboardingTab'
 import { Button, Flex, InputProps, Text } from 'ui/src'
 import { AlertTriangleFilled, Lock } from 'ui/src/components/icons'
 import { spacing, zIndexes } from 'ui/src/theme'

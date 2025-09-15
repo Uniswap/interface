@@ -336,5 +336,22 @@
       "buildable": false
     }
   },
-  "cacheDirectory": ".nx/cache"
+  "cacheDirectory": ".nx/cache",
+  "plugins": [
+    {
+      "plugin": "@nx/workspace"
+    },
+    {
+      "plugin": "@nx/js/typescript",
+      "options": {
+        "typecheck": {
+          "targetName": "typecheck"
+        },
+        "build": {
+          "targetName": "build",
+          "configName": "tsconfig.json"
+        }
+      }
+    }
+  ]
 }

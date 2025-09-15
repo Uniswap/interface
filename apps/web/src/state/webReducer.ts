@@ -6,7 +6,6 @@ import logs from 'state/logs/slice'
 import mint from 'state/mint/reducer'
 import mintV3 from 'state/mint/v3/reducer'
 import { routingApi } from 'state/routing/slice'
-import signatures from 'state/signatures/reducer'
 import user from 'state/user/reducer'
 import walletCapabilities from 'state/walletCapabilities/reducer'
 import wallets from 'state/wallets/reducer'
@@ -15,7 +14,6 @@ import { uniswapPersistedStateList, uniswapReducers } from 'uniswap/src/state/un
 const interfaceReducers = {
   ...uniswapReducers,
   user,
-  signatures,
   lists,
   fiatOnRampTransactions,
   application,
@@ -32,7 +30,6 @@ export const interfaceReducer = combineReducers(interfaceReducers)
 export const interfacePersistedStateList: Array<keyof typeof interfaceReducers> = [
   ...uniswapPersistedStateList,
   'user',
-  'signatures',
   'lists',
   'fiatOnRampTransactions',
   'walletCapabilities',

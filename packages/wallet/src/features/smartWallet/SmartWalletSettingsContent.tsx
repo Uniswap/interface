@@ -7,7 +7,6 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { fonts, iconSizes, zIndexes } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -63,7 +62,6 @@ function WalletItem({ wallet, onPress }: { wallet: WalletData; onPress: (wallet:
     return <RotatableChevron color="$neutral3" direction="right" height={iconSizes.icon20} width={iconSizes.icon20} />
   }, [isInactive, isUnavailable, onPressCallback, t])
 
-  const { avatar } = useAvatar(wallet.walletAddress)
   const displayName = useDisplayName(wallet.walletAddress)
 
   return (
@@ -100,7 +98,7 @@ function WalletItem({ wallet, onPress }: { wallet: WalletData; onPress: (wallet:
             width={iconSizes.icon40}
             overflow="hidden"
           >
-            <AccountIcon avatarUri={avatar} address={wallet.walletAddress} size={iconSizes.icon40} />
+            <AccountIcon address={wallet.walletAddress} size={iconSizes.icon40} />
           </Flex>
         </Flex>
         <Flex shrink minWidth={0}>

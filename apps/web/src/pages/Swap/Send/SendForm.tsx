@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import Column from 'components/deprecated/Column'
+import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useAccount } from 'hooks/useAccount'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useModalState } from 'hooks/useModalState'
@@ -15,14 +15,20 @@ import { useTranslation } from 'react-i18next'
 import { useSendContext } from 'state/send/SendContext'
 import { CurrencyState } from 'state/swap/types'
 import { Button, Flex } from 'ui/src'
+import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { ElementName, InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useDismissedCompatibleAddressWarnings } from 'uniswap/src/features/tokens/slice/hooks'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { CompatibleAddressModal } from 'uniswap/src/features/transactions/modals/CompatibleAddressModal'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 
 export type SendFormProps = {
   onCurrencyChange?: (selected: CurrencyState) => void
@@ -68,11 +74,13 @@ enum SendFormModalState {
   None = 'None',
   SMART_CONTRACT_SPEED_BUMP = 'SMART_CONTRACT_SPEED_BUMP',
   NEW_ADDRESS_SPEED_BUMP = 'NEW_ADDRESS_SPEED_BUMP',
+  COMPATIBLE_ADDRESS = 'COMPATIBLE_ADDRESS',
 }
 
 enum SendSpeedBump {
   SMART_CONTRACT_SPEED_BUMP = 'SMART_CONTRACT_SPEED_BUMP',
   NEW_ADDRESS_SPEED_BUMP = 'NEW_ADDRESS_SPEED_BUMP',
+  COMPATIBLE_ADDRESS = 'COMPATIBLE_ADDRESS',
 }
 
 function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFormProps) {
@@ -87,9 +95,16 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
   const [sendFormSpeedBumpState, setSendFormSpeedBumpState] = useState({
     [SendSpeedBump.NEW_ADDRESS_SPEED_BUMP]: false,
     [SendSpeedBump.SMART_CONTRACT_SPEED_BUMP]: false,
+    [SendSpeedBump.COMPATIBLE_ADDRESS]: false,
   })
   const { sendState, derivedSendInfo } = useSendContext()
   const { inputError, recipientData } = derivedSendInfo
+  const inputCurrencyId = currencyId(sendState.inputCurrency)
+  const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
+  const { tokenWarningDismissed: isCompatibleAddressDismissed } = useDismissedCompatibleAddressWarnings(
+    inputCurrencyInfo?.currency,
+  )
+  const isUnichainBridgedAsset = checkIsBridgedAsset(inputCurrencyInfo ?? undefined) && !isCompatibleAddressDismissed
 
   const { isSmartContractAddress, loading: loadingSmartContractAddress } = useIsSmartContractAddress(
     recipientData?.address,
@@ -115,8 +130,9 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     setSendFormSpeedBumpState(() => ({
       [SendSpeedBump.SMART_CONTRACT_SPEED_BUMP]: isSmartContractAddress,
       [SendSpeedBump.NEW_ADDRESS_SPEED_BUMP]: !isRecentAddress,
+      [SendSpeedBump.COMPATIBLE_ADDRESS]: isUnichainBridgedAsset,
     }))
-  }, [isRecentAddress, isSmartContractAddress, recipientData?.address])
+  }, [isRecentAddress, isSmartContractAddress, recipientData?.address, isUnichainBridgedAsset])
 
   const handleSendButton = useCallback(
     (prevSpeedBump?: SendSpeedBump) => {
@@ -136,6 +152,14 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
         return
       }
 
+      if (
+        prevSpeedBump !== SendSpeedBump.COMPATIBLE_ADDRESS &&
+        sendFormSpeedBumpState[SendSpeedBump.COMPATIBLE_ADDRESS]
+      ) {
+        handleModalState(SendFormModalState.COMPATIBLE_ADDRESS)
+        return
+      }
+
       setScreen(TransactionScreen.Review)
     },
     [handleModalState, sendFormSpeedBumpState, setScreen],
@@ -149,6 +173,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     handleModalState(SendFormModalState.None)
     handleSendButton(SendSpeedBump.SMART_CONTRACT_SPEED_BUMP)
   }, [handleModalState, handleSendButton])
+
   const handleCancelSmartContractSpeedBump = useCallback(
     () => handleModalState(SendFormModalState.None),
     [handleModalState],
@@ -162,7 +187,22 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     handleModalState(SendFormModalState.None)
     handleSendButton(SendSpeedBump.NEW_ADDRESS_SPEED_BUMP)
   }, [handleModalState, handleSendButton])
+
   const handleCancelNewAddressSpeedBump = useCallback(
+    () => handleModalState(SendFormModalState.None),
+    [handleModalState],
+  )
+
+  const handleConfirmCompatibleAddressSpeedBump = useCallback(() => {
+    setSendFormSpeedBumpState((prev) => ({
+      ...prev,
+      [SendSpeedBump.COMPATIBLE_ADDRESS]: false,
+    }))
+    handleModalState(SendFormModalState.None)
+    handleSendButton(SendSpeedBump.COMPATIBLE_ADDRESS)
+  }, [handleModalState, handleSendButton])
+
+  const handleCancelCompatibleAddressSpeedBump = useCallback(
     () => handleModalState(SendFormModalState.None),
     [handleModalState],
   )
@@ -171,7 +211,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
 
   return (
     <>
-      <Column gap="xs">
+      <Flex gap="$spacing8">
         <SendCurrencyInputForm disabled={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
         <SendRecipientForm disabled={disableTokenInputs} />
         {account.isDisconnected ? (
@@ -202,7 +242,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
             </Flex>
           </Trace>
         )}
-      </Column>
+      </Flex>
       <SmartContractSpeedBumpModal
         isOpen={sendFormModalState === SendFormModalState.SMART_CONTRACT_SPEED_BUMP}
         onConfirm={handleConfirmSmartContractSpeedBump}
@@ -213,6 +253,21 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
         onConfirm={handleConfirmNewAddressSpeedBump}
         onDismiss={handleCancelNewAddressSpeedBump}
       />
+      {inputCurrencyInfo && (
+        <CompatibleAddressModal
+          isOpen={sendFormModalState === SendFormModalState.COMPATIBLE_ADDRESS}
+          onClose={handleCancelCompatibleAddressSpeedBump}
+          onAcknowledge={handleConfirmCompatibleAddressSpeedBump}
+          currencyInfo={inputCurrencyInfo}
+          closeHeaderComponent={
+            <GetHelpHeader
+              closeModal={handleCancelCompatibleAddressSpeedBump}
+              link={uniswapUrls.helpArticleUrls.bridgedAssets}
+              mb="$spacing12"
+            />
+          }
+        />
+      )}
     </>
   )
 }

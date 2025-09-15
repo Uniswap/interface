@@ -6,7 +6,6 @@
   
   // Assets configuration (applies to all environments)
   "assets": {
-    "directory": "./build",
     "run_worker_first": true,
     "not_found_handling": "single-page-application",
     "binding": "ASSETS"

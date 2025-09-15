@@ -2,7 +2,7 @@ import { EnvelopeHeartIcon } from 'components/Icons/EnvelopeHeart'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import { Flex, ModalCloseIcon, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, ModalCloseIcon, TouchableArea, useSporeColors } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { Text } from 'ui/src/components/text/Text'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -33,18 +33,34 @@ function GetHelpButton({ url }: { url?: string }) {
   )
 }
 
-interface GetHelpHeaderProps {
+type GetHelpHeaderProps = {
   closeModal: () => void
   link?: string
   title?: ReactNode
   goBack?: () => void
   closeDataTestId?: string
   className?: string
-}
+} & FlexProps
 
-export function GetHelpHeader({ title, goBack, link, closeModal, closeDataTestId, className }: GetHelpHeaderProps) {
+export function GetHelpHeader({
+  title,
+  goBack,
+  link,
+  closeModal,
+  closeDataTestId,
+  className,
+  ...props
+}: GetHelpHeaderProps) {
   return (
-    <Flex row justifyContent="space-between" alignItems="center" gap="$spacing4" width="100%" className={className}>
+    <Flex
+      row
+      justifyContent="space-between"
+      alignItems="center"
+      gap="$spacing4"
+      width="100%"
+      className={className}
+      {...props}
+    >
       {goBack && (
         <TouchableArea onPress={goBack}>
           <BackArrow size="$icon.24" color="$neutral2" hoverColor="$neutral2Hovered" />

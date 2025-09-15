@@ -72,6 +72,18 @@ const SendModal = createLazy(() =>
   import('pages/Swap/Send/SendFormModal').then((module) => ({ default: module.SendFormModal })),
 )
 
+const BridgedAssetModal = createLazy(() =>
+  import('uniswap/src/components/BridgedAsset/BridgedAssetModal').then((module) => ({
+    default: module.BridgedAssetModal,
+  })),
+)
+
+const WormholeModal = createLazy(() =>
+  import('uniswap/src/components/BridgedAsset/WormholeModal').then((module) => ({
+    default: module.WormholeModal,
+  })),
+)
+
 const ModalLoadingFallback = memo(() => null)
 ModalLoadingFallback.displayName = 'ModalLoadingFallback'
 
@@ -175,6 +187,14 @@ export const modalRegistry: ModalRegistry = {
   [ModalName.Send]: {
     component: SendModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.Send,
+  },
+  [ModalName.BridgedAsset]: {
+    component: BridgedAssetModal,
+    shouldMount: (state) => state.application.openModal?.name === ModalName.BridgedAsset,
+  },
+  [ModalName.Wormhole]: {
+    component: WormholeModal,
+    shouldMount: (state) => state.application.openModal?.name === ModalName.Wormhole,
   },
 } as const
 

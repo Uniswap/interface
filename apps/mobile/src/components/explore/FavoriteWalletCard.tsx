@@ -10,7 +10,6 @@ import { borderRadii, iconSizes } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { removeWatchedAddress } from 'uniswap/src/features/favorites/slice'
 import { isIOS } from 'utilities/src/platform'
 import { noop } from 'utilities/src/react/noop'
@@ -31,11 +30,10 @@ function FavoriteWalletCard({ address, isEditing, setIsEditing, ...rest }: Favor
   const { preload, navigate } = useEagerExternalProfileNavigation()
 
   const displayName = useDisplayName(address)
-  const { avatar } = useAvatar(address)
 
   const icon = useMemo(() => {
-    return <AccountIcon address={address} avatarUri={avatar} size={iconSizes.icon20} />
-  }, [address, avatar])
+    return <AccountIcon address={address} size={iconSizes.icon20} />
+  }, [address])
 
   const onRemove = useCallback(() => {
     dispatch(removeWatchedAddress({ address }))

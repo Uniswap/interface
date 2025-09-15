@@ -20,7 +20,6 @@ export function SwapSummaryItem({
   transaction,
   swapCallbacks,
   index,
-  customDetailsModalOpen,
 }: SummaryItemProps & {
   transaction: TransactionDetails & {
     typeInfo: ExactOutputSwapTransactionInfo | ExactInputSwapTransactionInfo
@@ -70,13 +69,6 @@ export function SwapSummaryItem({
   )
 
   return (
-    <TransactionSummaryLayout
-      caption={caption}
-      icon={icon}
-      index={index}
-      transaction={transaction}
-      customDetailsModalOpen={customDetailsModalOpen}
-      onRetry={onRetry}
-    />
+    <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} onRetry={onRetry} />
   )
 }

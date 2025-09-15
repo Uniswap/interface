@@ -11,6 +11,8 @@ describe('useIsPage', () => {
     [PageType.MIGRATE_V3, '/migrate/v3/info'],
     [PageType.CREATE_POSITION, '/positions/create'],
     [PageType.SEND, '/path/to/send'],
+    [PageType.SWAP, '/swap/'],
+    [PageType.SWAP, '/swap//'],
   ])('matches default behavior for %s based on path %s', (pageType, path) => {
     window.history.pushState({}, '', path)
     const { result } = renderHook(() => useIsPage(pageType), {

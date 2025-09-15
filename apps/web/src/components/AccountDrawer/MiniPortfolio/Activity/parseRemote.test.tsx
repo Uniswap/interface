@@ -1,11 +1,14 @@
 import { act, renderHook } from '@testing-library/react'
 import {
+  MockExpiredUniswapXOrder,
+  MockFilledUniswapXOrder,
   MockMint,
   MockMoonpayPurchase,
   MockNFTApproval,
   MockNFTApprovalForAll,
   MockNFTPurchase,
   MockNFTReceive,
+  MockOpenUniswapXOrder,
   MockRemoveLiquidity,
   MockSenderAddress,
   MockSpamMint,
@@ -27,10 +30,14 @@ import {
   useTimeSince,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
 import ms from 'ms'
-import { MockExpiredUniswapXOrder, MockFilledUniswapXOrder, MockOpenUniswapXOrder } from 'state/signatures/fixtures'
 import { DAI } from 'uniswap/src/constants/tokens'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 
 const swapOrderTokenChanges = {
@@ -52,11 +59,11 @@ describe('parseRemote', () => {
     })
     it('should parse expired UniswapX order', () => {
       const result = parseRemoteActivities([MockExpiredUniswapXOrder], '', vi.fn())
-      expect(result?.['someHash']).toMatchSnapshot()
+      expect(result?.['0xUniswapXHash']).toMatchSnapshot()
     })
-    it('should parse filledUniswapX order', () => {
+    it('should parse filled UniswapX order', () => {
       const result = parseRemoteActivities([MockFilledUniswapXOrder], '', vi.fn())
-      expect(result?.['someHash']).toMatchSnapshot()
+      expect(result?.['0xUniswapXHash']).toMatchSnapshot()
     })
     it('should parse NFT approval', () => {
       const result = parseRemoteActivities([MockNFTApproval], '', vi.fn())
@@ -210,13 +217,17 @@ describe('parseRemote', () => {
         swapOrderTokenChanges,
         vi.fn().mockReturnValue('100'),
       )
-      expect(result).toEqual({
+      expect(result).toMatchObject({
         chainId: UniverseChainId.Mainnet,
-        status: 'filled',
+        status: TransactionStatus.Success,
         id: 'tx123',
-        offerer: '0xSenderAddress',
+        from: '0xSenderAddress',
+        hash: '0xHashValue',
         orderHash: '0xHashValue',
-        swapInfo: {
+        addedTime: 10000,
+        routing: Routing.DUTCH_V2,
+        transactionOriginType: TransactionOriginType.External,
+        typeInfo: {
           expectedOutputCurrencyAmountRaw: '100000000000000000000',
           inputCurrencyAmountRaw: '100000000000000000000',
           inputCurrencyId: currencyId(DAI),
@@ -227,8 +238,6 @@ describe('parseRemote', () => {
           tradeType: 0,
           type: TransactionType.Swap,
         },
-        txHash: '0xHashValue',
-        addedTime: 10000,
       })
     })
   })

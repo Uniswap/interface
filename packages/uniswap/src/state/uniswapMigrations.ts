@@ -146,3 +146,21 @@ export function migrateSearchHistory(state: any): any {
 
   return newState
 }
+
+// Mobile: 94
+// Extension: 28
+// Web: 57
+// Ensure new token warning maps exist in persisted state after introducing them
+export function addDismissedBridgedAndCompatibleWarnings(state: any): any {
+  if (!state?.tokens) {
+    return state
+  }
+  return {
+    ...state,
+    tokens: {
+      ...state.tokens,
+      dismissedBridgedAssetWarnings: state.tokens.dismissedBridgedAssetWarnings ?? {},
+      dismissedCompatibleAddressWarnings: state.tokens.dismissedCompatibleAddressWarnings ?? {},
+    },
+  }
+}

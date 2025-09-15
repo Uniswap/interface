@@ -2,12 +2,18 @@ import { TradeType } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import ms from 'ms'
 import { useEffect, useRef, useState } from 'react'
-import { OnActivityUpdate, OrderUpdate } from 'state/activity/types'
-import { isFinalizedOrder, usePendingOrders } from 'state/signatures/hooks'
-import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
-import { OrderQueryResponse, UniswapXBackendOrder, UniswapXOrderStatus } from 'types/uniswapx'
+import { ActivityUpdateTransactionType, OnActivityUpdate } from 'state/activity/types'
+import { usePendingUniswapXOrders } from 'state/transactions/hooks'
+import { OrderQueryResponse, UniswapXBackendOrder } from 'types/uniswapx'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
-import { ExactInputSwapTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  ExactInputSwapTransactionInfo,
+  TransactionStatus,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isFinalizedTxStatus } from 'uniswap/src/features/transactions/types/utils'
+import { convertOrderStatusToTransactionStatus } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { logger } from 'utilities/src/logger/logger'
 
 const STANDARD_POLLING_INITIAL_INTERVAL = ms(`2s`)
@@ -55,12 +61,12 @@ async function fetchStatuses({
 }
 
 async function fetchLimitStatuses(account: string, orders: UniswapXOrderDetails[]): Promise<UniswapXBackendOrder[]> {
-  const limitOrders = orders.filter((order) => order.type === SignatureType.SIGN_LIMIT)
+  const limitOrders = orders.filter((order) => order.routing === Routing.DUTCH_LIMIT)
   return fetchStatuses({ endpoint: 'limit-orders', orders: limitOrders, swapper: account })
 }
 
 async function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[]): Promise<UniswapXBackendOrder[]> {
-  const uniswapXOrders = orders.filter((order) => order.type !== SignatureType.SIGN_LIMIT)
+  const uniswapXOrders = orders.filter((order) => order.routing !== Routing.DUTCH_LIMIT)
   return fetchStatuses({ endpoint: 'orders', orders: uniswapXOrders, swapper: account })
 }
 
@@ -79,33 +85,50 @@ function updateOrders({
       return
     }
 
-    const update: OrderUpdate['update'] = {
-      ...(updatedOrder.orderStatus === UniswapXOrderStatus.FILLED
-        ? {
-            status: updatedOrder.orderStatus,
-            txHash: updatedOrder.txHash,
-          }
-        : {
-            status: updatedOrder.orderStatus,
-            txHash: undefined,
-          }),
-      swapInfo: { ...pendingOrder.swapInfo },
+    const transactionStatus = convertOrderStatusToTransactionStatus(updatedOrder.orderStatus)
+
+    // Skip update if status hasn't changed
+    if (pendingOrder.status === transactionStatus) {
+      return
     }
-    if (updatedOrder.orderStatus === UniswapXOrderStatus.FILLED) {
-      if (pendingOrder.swapInfo.tradeType === TradeType.EXACT_INPUT) {
-        const exactInputSwapInfo = update.swapInfo as ExactInputSwapTransactionInfo
-        exactInputSwapInfo.settledOutputCurrencyAmountRaw = updatedOrder.settledAmounts?.[0]?.amountOut
+
+    // Guard against downgrading from Cancelling to Pending
+    // This prevents the poller from overwriting user-initiated cancellation status
+    // Orders in "Cancelling" state should only transition to Success, Failed, or remain Cancelling
+    if (pendingOrder.status === TransactionStatus.Cancelling && transactionStatus === TransactionStatus.Pending) {
+      return
+    }
+
+    const updatedTransaction: UniswapXOrderDetails = {
+      ...pendingOrder,
+      status: transactionStatus,
+      hash:
+        transactionStatus === TransactionStatus.Success && 'txHash' in updatedOrder
+          ? updatedOrder.txHash
+          : pendingOrder.hash,
+      typeInfo: { ...pendingOrder.typeInfo },
+    }
+
+    if (
+      transactionStatus === TransactionStatus.Success &&
+      'settledAmounts' in updatedOrder &&
+      updatedOrder.settledAmounts?.[0]?.amountOut
+    ) {
+      // UniswapX orders always have swap typeInfo with tradeType
+      if ('tradeType' in pendingOrder.typeInfo && pendingOrder.typeInfo.tradeType === TradeType.EXACT_INPUT) {
+        const exactInputTypeInfo = updatedTransaction.typeInfo as ExactInputSwapTransactionInfo
+        exactInputTypeInfo.settledOutputCurrencyAmountRaw = updatedOrder.settledAmounts[0].amountOut
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      } else if (pendingOrder.swapInfo.tradeType === TradeType.EXACT_OUTPUT) {
+      } else if ('tradeType' in pendingOrder.typeInfo && pendingOrder.typeInfo.tradeType === TradeType.EXACT_OUTPUT) {
         // TODO(WEB-3962): Handle settled EXACT_OUTPUT amounts
       }
     }
 
     onActivityUpdate({
-      type: 'signature',
+      type: ActivityUpdateTransactionType.UniswapXOrder,
       chainId: pendingOrder.chainId,
       original: pendingOrder,
-      update,
+      update: updatedTransaction,
     })
   })
 }
@@ -139,7 +162,7 @@ function useQuickPolling({
         return
       }
 
-      if (l2Orders.every((order) => isFinalizedOrder(order))) {
+      if (l2Orders.every((order) => isFinalizedTxStatus(order.status))) {
         clearTimeout(timeout)
         return
       }
@@ -148,7 +171,7 @@ function useQuickPolling({
         const statuses = await fetchOrderStatuses(account.address, l2Orders)
         updateOrders({ pendingOrders, statuses, onActivityUpdate })
 
-        const earliestOrder = l2Orders.find((order) => !isFinalizedOrder(order))
+        const earliestOrder = l2Orders.find((order) => !isFinalizedTxStatus(order.status))
         if (earliestOrder) {
           const newDelay = getQuickPollingInterval(earliestOrder.addedTime)
           setDelay(newDelay)
@@ -193,7 +216,7 @@ function useStandardPolling({
         return
       }
 
-      if (mainnetOrders.every((order) => isFinalizedOrder(order))) {
+      if (mainnetOrders.every((order) => isFinalizedTxStatus(order.status))) {
         clearTimeout(timeout)
         return
       }
@@ -221,7 +244,7 @@ function useStandardPolling({
 
 export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
   const account = useAccount()
-  const pendingOrders = usePendingOrders()
+  const pendingOrders = usePendingUniswapXOrders()
 
   useQuickPolling({ account, pendingOrders, onActivityUpdate })
   useStandardPolling({ account, pendingOrders, onActivityUpdate })

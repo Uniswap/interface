@@ -217,18 +217,26 @@ export default defineConfig(({ mode }) => {
         writeBundle() {
           const configMode = isProduction ? 'production' : 'staging'
           const sourceFile = path.resolve(__dirname, `twist-configs/twist.${configMode}.json`)
-          const targetFile = path.resolve(__dirname, `build/.well-known/twist.json`)
+          const targetFileRoot = path.resolve(__dirname, `build/.well-known/twist.json`)
+          const targetFileClient = path.resolve(__dirname, `build/client/.well-known/twist.json`)
 
           if (fs.existsSync(sourceFile)) {
             // Ensure the .well-known directory exists in build output
-            const targetDir = path.dirname(targetFile)
-            if (!fs.existsSync(targetDir)) {
-              fs.mkdirSync(targetDir, { recursive: true })
+            const targetDirRoot = path.dirname(targetFileRoot)
+            if (!fs.existsSync(targetDirRoot)) {
+              fs.mkdirSync(targetDirRoot, { recursive: true })
+            }
+
+            // Ensure the .well-known directory also exists under build/client
+            const targetDirClient = path.dirname(targetFileClient)
+            if (!fs.existsSync(targetDirClient)) {
+              fs.mkdirSync(targetDirClient, { recursive: true })
             }
 
             // Copy the file directly to the build output
-            fs.copyFileSync(sourceFile, targetFile)
-            console.log(`Copied ${configMode} TWIST config to build output for env ${mode}`)
+            fs.copyFileSync(sourceFile, targetFileRoot)
+            fs.copyFileSync(sourceFile, targetFileClient)
+            console.log(`Copied ${configMode} TWIST config to build output (root and client) for env ${mode}`)
           } else {
             console.warn(`${configMode} TWIST config not found for env ${mode}`)
           }

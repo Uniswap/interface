@@ -7,6 +7,7 @@ import {
   removeDappInfoToChromeLocalStorage,
 } from 'src/store/extensionMigrations'
 import {
+  addDismissedBridgedAndCompatibleWarnings,
   migrateSearchHistory,
   removeThaiBahtFromFiatCurrency,
   unchecksumDismissedTokenWarningKeys,
@@ -65,6 +66,7 @@ export const migrations = {
   25: removeThaiBahtFromFiatCurrency,
   26: migrateLiquidityTransactionInfo,
   27: migrateSearchHistory,
+  28: addDismissedBridgedAndCompatibleWarnings,
 }
 
-export const EXTENSION_STATE_VERSION = 27
+export const EXTENSION_STATE_VERSION = 28

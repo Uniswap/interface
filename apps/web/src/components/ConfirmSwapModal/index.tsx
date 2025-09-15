@@ -16,10 +16,9 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useSuppressPopups } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTradeType } from 'state/routing/utils'
-import { useOrder } from 'state/signatures/hooks'
+import { useUniswapXOrderByOrderHash } from 'state/transactions/hooks'
 import { ThemeProvider } from 'theme'
 import { FadePresence } from 'theme/components/FadePresence'
-import { UniswapXOrderStatus } from 'types/uniswapx'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { ADAPTIVE_MODAL_ANIMATION_DURATION } from 'ui/src/components/modal/AdaptiveWebModal'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
@@ -102,13 +101,15 @@ export function ConfirmSwapModal({
 
   // Get status depending on swap type
   const swapStatus = useSwapTransactionStatus(swapResult)
-  const uniswapXOrder = useOrder(isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : '')
+  const uniswapXOrder = useUniswapXOrderByOrderHash(
+    isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : '',
+  )
 
   // Has the transaction been confirmed onchain?
-  const swapConfirmed = swapStatus === TransactionStatus.Success || uniswapXOrder?.status === UniswapXOrderStatus.FILLED
+  const swapConfirmed = swapStatus === TransactionStatus.Success || uniswapXOrder?.status === TransactionStatus.Success
 
   // Has a limit order been submitted?
-  const limitPlaced = isLimitTrade(trade) && uniswapXOrder?.status === UniswapXOrderStatus.OPEN
+  const limitPlaced = isLimitTrade(trade) && uniswapXOrder?.status === TransactionStatus.Pending
 
   // Has the transaction failed locally (i.e. before network or submission), or has it been reverted onchain?
   const localSwapFailure = Boolean(swapError) && !didUserReject(swapError)

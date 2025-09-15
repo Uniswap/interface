@@ -223,27 +223,37 @@ exports[`ContextMenu renders without error 1`] = `
                   }
                 }
               >
-                <Text
-                  allowFontScaling={true}
-                  ellipsizeMode="tail"
-                  maxFontSizeMultiplier={1.2}
-                  numberOfLines={1}
+                <View
                   onBlur={[Function]}
                   onFocus={[Function]}
                   style={
                     {
-                      "color": "#FFFFFF",
-                      "flexShrink": 1,
-                      "fontFamily": "Basel Grotesk",
-                      "fontSize": 17,
-                      "fontWeight": "500",
-                      "lineHeight": 19.549999999999997,
+                      "flexDirection": "column",
                     }
                   }
-                  suppressHighlighting={true}
                 >
-                  Option 1
-                </Text>
+                  <Text
+                    allowFontScaling={true}
+                    ellipsizeMode="tail"
+                    maxFontSizeMultiplier={1.2}
+                    numberOfLines={1}
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    style={
+                      {
+                        "color": "#FFFFFF",
+                        "flexShrink": 1,
+                        "fontFamily": "Basel Grotesk",
+                        "fontSize": 17,
+                        "fontWeight": "500",
+                        "lineHeight": 19.549999999999997,
+                      }
+                    }
+                    suppressHighlighting={true}
+                  >
+                    Option 1
+                  </Text>
+                </View>
               </View>
             </View>
             <View
@@ -327,27 +337,37 @@ exports[`ContextMenu renders without error 1`] = `
                   }
                 }
               >
-                <Text
-                  allowFontScaling={true}
-                  ellipsizeMode="tail"
-                  maxFontSizeMultiplier={1.2}
-                  numberOfLines={1}
+                <View
                   onBlur={[Function]}
                   onFocus={[Function]}
                   style={
                     {
-                      "color": "#FFFFFF",
-                      "flexShrink": 1,
-                      "fontFamily": "Basel Grotesk",
-                      "fontSize": 17,
-                      "fontWeight": "500",
-                      "lineHeight": 19.549999999999997,
+                      "flexDirection": "column",
                     }
                   }
-                  suppressHighlighting={true}
                 >
-                  Option 2
-                </Text>
+                  <Text
+                    allowFontScaling={true}
+                    ellipsizeMode="tail"
+                    maxFontSizeMultiplier={1.2}
+                    numberOfLines={1}
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    style={
+                      {
+                        "color": "#FFFFFF",
+                        "flexShrink": 1,
+                        "fontFamily": "Basel Grotesk",
+                        "fontSize": 17,
+                        "fontWeight": "500",
+                        "lineHeight": 19.549999999999997,
+                      }
+                    }
+                    suppressHighlighting={true}
+                  >
+                    Option 2
+                  </Text>
+                </View>
               </View>
             </View>
           </div>

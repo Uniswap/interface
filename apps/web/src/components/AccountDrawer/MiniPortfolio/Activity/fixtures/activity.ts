@@ -511,3 +511,64 @@ export const MockWrap = {
     assetChanges: [mockNativeTokenTransferOutPartsFragment, mockWrappedEthTransferInPartsFragment],
   },
 } as AssetActivityPartsFragment
+
+// UniswapX Order fixtures
+const mockSwapOrderDetails = {
+  __typename: 'SwapOrderDetails' as const,
+  id: 'uniswapx123',
+  offerer: MockSenderAddress,
+  hash: '0xUniswapXHash',
+  expiry: 1700000000, // Fixed timestamp for testing
+  swapOrderType: 'DUTCH' as const,
+  encodedOrder: '0xencodedOrder123',
+  inputTokenQuantity: '100',
+  outputTokenQuantity: '200',
+  inputToken: {
+    __typename: 'Token' as const,
+    id: 'dai',
+    address: DAI.address,
+    chain: Chain.Ethereum,
+    symbol: 'DAI',
+    name: 'Dai Stablecoin',
+    decimals: 18,
+    standard: TokenStandard.Erc20,
+  },
+  outputToken: {
+    __typename: 'Token' as const,
+    id: 'weth',
+    address: WETH9[UniverseChainId.Mainnet].address,
+    chain: Chain.Ethereum,
+    symbol: 'WETH',
+    name: 'Wrapped Ether',
+    decimals: 18,
+    standard: TokenStandard.Erc20,
+  },
+}
+
+export const MockOpenUniswapXOrder = {
+  ...mockAssetActivityPartsFragment,
+  id: 'openOrder',
+  details: {
+    ...mockSwapOrderDetails,
+    orderStatus: SwapOrderStatus.Open,
+  },
+} as AssetActivityPartsFragment
+
+export const MockExpiredUniswapXOrder = {
+  ...mockAssetActivityPartsFragment,
+  id: 'expiredOrder',
+  details: {
+    ...mockSwapOrderDetails,
+    orderStatus: SwapOrderStatus.Expired,
+    expiry: 1699996400, // Fixed timestamp - 1 hour before the base expiry
+  },
+} as AssetActivityPartsFragment
+
+export const MockFilledUniswapXOrder = {
+  ...mockAssetActivityPartsFragment,
+  id: 'filledOrder',
+  details: {
+    ...mockSwapOrderDetails,
+    orderStatus: SwapOrderStatus.Filled,
+  },
+} as AssetActivityPartsFragment

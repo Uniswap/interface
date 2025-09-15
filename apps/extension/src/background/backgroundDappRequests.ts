@@ -9,7 +9,8 @@ import {
   GetCapabilitiesRequest,
   RevokePermissionsRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { focusOrCreateDappRequestWindow, focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
+import { focusOrCreateOnboardingTab } from 'src/app/navigation/focusOrCreateOnboardingTab'
+import { focusOrCreateDappRequestWindow } from 'src/app/navigation/utils'
 import {
   contentScriptToBackgroundMessageChannel,
   contentScriptUtilityMessageChannel,

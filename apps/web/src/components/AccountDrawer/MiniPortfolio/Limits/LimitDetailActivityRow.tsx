@@ -12,9 +12,9 @@ import { useMemo, useState } from 'react'
 import { ArrowRight } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
-import { UniswapXOrderStatus } from 'types/uniswapx'
 import { Checkbox, Flex, Image, Text, useMedia, useSporeColors } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { NumberType } from 'utilities/src/format/types'
 
 interface LimitDetailActivityRowProps {
@@ -56,7 +56,8 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
   const inputLogo = logos?.[0] ?? inputCurrencyInfo?.logoUrl
   const outputLogo = logos?.[1] ?? outputCurrencyInfo?.logoUrl
 
-  const cancelling = offchainOrderDetails.status === UniswapXOrderStatus.PENDING_CANCELLATION
+  const cancelling = offchainOrderDetails.status === TransactionStatus.Cancelling
+  const expiry = offchainOrderDetails.expiry
 
   return (
     <Flex row alignItems="center" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
@@ -71,13 +72,13 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
             <Text variant="body4" color="$neutral2">
               <Trans i18nKey="common.pending.cancellation" />
             </Text>
-          ) : offchainOrderDetails.expiry ? (
+          ) : expiry ? (
             <Text variant="body4" color="$neutral2">
               <Trans
                 i18nKey="common.limits.expires"
                 values={{
                   timestamp: formatTimestamp({
-                    timestamp: offchainOrderDetails.expiry * 1000,
+                    timestamp: expiry * 1000,
                     includeYear: true,
                     type: FormatType.Short,
                   }),

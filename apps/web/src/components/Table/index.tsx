@@ -109,12 +109,17 @@ type TableBodyProps<T extends RowData = unknown> = {
 
 const TableBody = forwardRef<HTMLDivElement, TableBodyProps<RowData>>(({ table, loading, error }, ref) => {
   const rows = table.getRowModel().rows
+  const { width: tableWidth } = useTableSize()
+  const skeletonRowHeight = useMemo(
+    () => (tableWidth <= breakpoints.lg ? ROW_HEIGHT_MOBILE_WEB : ROW_HEIGHT_DESKTOP),
+    [tableWidth],
+  )
 
   if (loading || error) {
     return (
       <>
         {Array.from({ length: 20 }, (_, rowIndex) => (
-          <DataRow key={`skeleton-row-${rowIndex}`}>
+          <DataRow key={`skeleton-row-${rowIndex}`} height={skeletonRowHeight}>
             {table.getAllColumns().map((column, columnIndex) => (
               <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>
                 {flexRender(column.columnDef.cell, {} as CellContext<RowData, any>)}

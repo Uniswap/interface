@@ -26,6 +26,9 @@ import { ClickableStyle } from 'theme/components/styles'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+// We need to import this directly so we can format with `en-US` locale.
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { formatCurrencyAmount as formatCurrencyAmountRaw } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
 
 const Container = styled(InputPanel)`
@@ -158,15 +161,17 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
       )
       const marketOutputAmount = adjustedPrice?.quote(oneUnitOfBaseCurrency)
       changeLimitPrice(
-        formatCurrencyAmount({
-          value: marketOutputAmount,
+        formatCurrencyAmountRaw({
+          // Always use `.` as decimal separator for the internal state
+          locale: 'en-US',
+          amount: marketOutputAmount,
           type: NumberType.SwapTradeAmount,
           placeholder: limitPrice,
         }),
       )
       sendAnalyticsEvent(InterfaceEventName.LimitPresetRateSelected, { value: adjustmentPercentage })
     },
-    [baseCurrency, limitPrice, changeLimitPrice, formatCurrencyAmount],
+    [baseCurrency, limitPrice, changeLimitPrice],
   )
 
   const { currentPriceAdjustment } = useCurrentPriceAdjustment({
@@ -180,8 +185,10 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
   const onInvertLimitPrices = useCallback(() => {
     if (baseCurrency && marketPrice && quoteCurrency) {
       changeLimitPrice(
-        formatCurrencyAmount({
-          value: marketPrice
+        formatCurrencyAmountRaw({
+          // Always use `.` as decimal separator for the internal state
+          locale: 'en-US',
+          amount: marketPrice
             .invert()
             .quote(CurrencyAmount.fromRawAmount(quoteCurrency, JSBI.BigInt(parseUnits('1', quoteCurrency.decimals)))),
           type: NumberType.SwapTradeAmount,
@@ -191,7 +198,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
     }
     setLimitState((prev) => ({ ...prev, limitPriceInverted: !prev.limitPriceInverted, limitPriceEdited: true }))
     sendAnalyticsEvent(InterfaceEventName.LimitPriceReversed)
-  }, [baseCurrency, marketPrice, quoteCurrency, changeLimitPrice, setLimitState, formatCurrencyAmount])
+  }, [baseCurrency, marketPrice, quoteCurrency, changeLimitPrice, setLimitState])
 
   const presets = limitPriceInverted ? INVERTED_PRICE_ADJUSTMENT_PRESETS : PRICE_ADJUSTMENT_PRESETS
 

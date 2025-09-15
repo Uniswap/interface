@@ -21,6 +21,8 @@ export type DropdownMenuSheetItemProps = {
   variant: 'small' | 'medium'
   height?: number
   role?: Role
+  subheader?: string
+  rightIcon?: React.ReactNode
 }
 
 export const DropdownMenuSheetItem = ({
@@ -36,6 +38,8 @@ export const DropdownMenuSheetItem = ({
   variant,
   height,
   role = 'button',
+  subheader,
+  rightIcon,
 }: DropdownMenuSheetItemProps): JSX.Element => {
   const handlePress = useEvent((e: BaseSyntheticEvent) => {
     e.stopPropagation()
@@ -88,16 +92,29 @@ export const DropdownMenuSheetItem = ({
       <Flex shrink flexDirection={flexDirection} alignItems="center">
         {icon && <Flex flexShrink={0}>{icon}</Flex>}
         {icon && <Spacer size="$spacing8" />}
-        <Text
-          flexShrink={1}
-          numberOfLines={1}
-          ellipsizeMode="tail"
-          variant={variant === 'small' ? 'buttonLabel3' : 'buttonLabel2'}
-          color={textColorValue}
-          $group-hover={destructive ? undefined : { color: disabled ? '$neutral2' : '$neutral1Hovered' }}
-        >
-          {label}
-        </Text>
+        <Flex>
+          <Text
+            flexShrink={1}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            variant={variant === 'small' ? 'buttonLabel3' : 'buttonLabel2'}
+            color={textColorValue}
+            $group-hover={destructive ? undefined : { color: disabled ? '$neutral2' : '$neutral1Hovered' }}
+          >
+            {label}
+          </Text>
+          {subheader && (
+            <Text numberOfLines={1} ellipsizeMode="tail" variant="body4" color="$neutral2">
+              {subheader}
+            </Text>
+          )}
+        </Flex>
+        {rightIcon && (
+          <Flex row alignItems="center">
+            <Spacer size="$spacing40" />
+            {rightIcon}
+          </Flex>
+        )}
       </Flex>
       {isSelected !== undefined && (
         <Flex flexShrink={0}>{isSelected ? <CheckCircleFilled size="$icon.20" /> : <Spacer size="$spacing20" />}</Flex>

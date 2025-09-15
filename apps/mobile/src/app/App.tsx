@@ -48,7 +48,7 @@ import {
 import { initDynamicIntlPolyfills } from 'src/polyfills/intl-delayed'
 import { useDatadogUserAttributesTracking } from 'src/screens/HomeScreen/useDatadogUserAttributesTracking'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import { flexStyles, PortalProvider, useIsDarkMode } from 'ui/src'
+import { flexStyles, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { config } from 'uniswap/src/config'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
@@ -81,9 +81,9 @@ import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
+import { useHeartbeatReporter } from 'wallet/src/features/telemetry/hooks/useHeartbeatReporter'
+import { useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks/useLastBalancesReporter'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
-import { useHeartbeatReporter } from 'wallet/src/features/telemetry/useHeartbeatReporter'
-import { useLastBalancesReporter } from 'wallet/src/features/telemetry/useLastBalancesReporter'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
@@ -254,15 +254,13 @@ function AppOuter(): JSX.Element | null {
                     <MobileWalletNavigationProvider>
                       <NativeWalletProvider>
                         <WalletUniswapProvider>
-                          <PortalProvider>
-                            <DataUpdaters />
-                            <BottomSheetModalProvider>
-                              <AppModals />
-                              <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                <AppInner />
-                              </PerformanceProfiler>
-                            </BottomSheetModalProvider>
-                          </PortalProvider>
+                          <DataUpdaters />
+                          <BottomSheetModalProvider>
+                            <AppModals />
+                            <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                              <AppInner />
+                            </PerformanceProfiler>
+                          </BottomSheetModalProvider>
                         </WalletUniswapProvider>
                       </NativeWalletProvider>
                       <NotificationToastWrapper />

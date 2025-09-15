@@ -3,7 +3,10 @@ import { usePrepareSwap } from 'uniswap/src/features/transactions/swap/services/
 import { useWarningService } from 'uniswap/src/features/transactions/swap/services/hooks/useWarningService'
 import { useEvent } from 'utilities/src/react/hooks'
 
-type CallbackArgs = Record<'skipBridgingWarning' | 'skipTokenProtectionWarning' | 'skipMaxTransferWarning', boolean>
+type CallbackArgs = Record<
+  'skipBridgingWarning' | 'skipTokenProtectionWarning' | 'skipMaxTransferWarning' | 'skipBridgedAssetWarning',
+  boolean
+>
 
 export type OnReviewPress = (options: CallbackArgs) => void
 
@@ -14,6 +17,7 @@ type UseOnReviewPress = () => {
   handleOnReviewPress: PressHandler
   handleOnAcknowledgeTokenWarningPress: PressHandler
   handleOnAcknowledgeLowNativeBalancePress: PressHandler
+  handleOnAcknowledgeBridgedAssetPress: PressHandler
 }
 
 /**
@@ -28,17 +32,19 @@ type UseOnReviewPress = () => {
  * (eg if you skip bridging warning, you should also skip token protection warning)
  */
 export const useOnReviewPress: UseOnReviewPress = () => {
-  const { handleHideTokenWarningModal, handleHideMaxNativeTransferModal } = useSwapFormWarningStoreActions()
+  const { handleHideTokenWarningModal, handleHideMaxNativeTransferModal, handleHideBridgedAssetModal } =
+    useSwapFormWarningStoreActions()
 
   const warningService = useWarningService()
 
   const prepareSwap = usePrepareSwap({ warningService })
 
   const onReviewPress: OnReviewPress = useEvent(
-    ({ skipBridgingWarning, skipTokenProtectionWarning, skipMaxTransferWarning }) => {
+    ({ skipBridgingWarning, skipTokenProtectionWarning, skipMaxTransferWarning, skipBridgedAssetWarning }) => {
       warningService.setSkipBridgingWarning(skipBridgingWarning)
       warningService.setSkipMaxTransferWarning(skipMaxTransferWarning)
       warningService.setSkipTokenProtectionWarning(skipTokenProtectionWarning)
+      warningService.setSkipBridgedAssetWarning(skipBridgedAssetWarning)
       prepareSwap()
     },
   )
@@ -48,6 +54,7 @@ export const useOnReviewPress: UseOnReviewPress = () => {
       skipBridgingWarning: false,
       skipMaxTransferWarning: false,
       skipTokenProtectionWarning: false,
+      skipBridgedAssetWarning: false,
     })
   })
 
@@ -57,6 +64,7 @@ export const useOnReviewPress: UseOnReviewPress = () => {
       skipBridgingWarning: false,
       skipMaxTransferWarning: false,
       skipTokenProtectionWarning: true,
+      skipBridgedAssetWarning: false,
     })
   })
 
@@ -66,6 +74,18 @@ export const useOnReviewPress: UseOnReviewPress = () => {
       skipBridgingWarning: true,
       skipMaxTransferWarning: true,
       skipTokenProtectionWarning: true,
+      skipBridgedAssetWarning: false,
+    })
+  })
+
+  // Note: these warnings are ordered so we can skip everything but the bridged asset warning
+  const handleOnAcknowledgeBridgedAssetPress: PressHandler = useEvent(() => {
+    handleHideBridgedAssetModal()
+    onReviewPress({
+      skipBridgingWarning: true,
+      skipMaxTransferWarning: true,
+      skipTokenProtectionWarning: true,
+      skipBridgedAssetWarning: true,
     })
   })
 
@@ -74,5 +94,6 @@ export const useOnReviewPress: UseOnReviewPress = () => {
     handleOnReviewPress,
     handleOnAcknowledgeTokenWarningPress,
     handleOnAcknowledgeLowNativeBalancePress,
+    handleOnAcknowledgeBridgedAssetPress,
   }
 }

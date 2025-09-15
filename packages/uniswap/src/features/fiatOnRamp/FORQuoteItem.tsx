@@ -46,6 +46,7 @@ export function FORQuoteItem({
       opacity={hidden ? 0 : 1}
       height={hidden ? 0 : 'unset'}
       animation="200ms"
+      position={hidden ? 'absolute' : 'relative'}
       onPress={isLoading || hidden ? undefined : onPress}
     >
       <Flex
@@ -59,7 +60,7 @@ export function FORQuoteItem({
       >
         <Flex row alignItems="center" justifyContent="space-between">
           <Flex row alignItems="center" gap="$spacing12" width="100%">
-            <Flex>
+            <Flex opacity={hidden ? 0 : 1} animation="100ms">
               {logoUrl ? (
                 <UniversalImage
                   fallback={<LogoLoader />}

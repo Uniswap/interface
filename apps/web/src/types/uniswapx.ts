@@ -1,14 +1,5 @@
 import { OffchainOrderType } from 'state/routing/types'
-
-export enum UniswapXOrderStatus {
-  FILLED = 'filled',
-  OPEN = 'open',
-  EXPIRED = 'expired',
-  ERROR = 'error',
-  CANCELLED = 'cancelled',
-  PENDING_CANCELLATION = 'pending-cancellation',
-  INSUFFICIENT_FUNDS = 'insufficient-funds',
-}
+import { OrderStatus } from 'uniswap/src/data/tradingApi/__generated__/index'
 
 // Mirrors UniswapXOrderEntity type at https://github.com/Uniswap/uniswapx-service/blob/main/lib/entities/Order.ts
 interface BaseUniswapXBackendOrder {
@@ -17,7 +8,7 @@ interface BaseUniswapXBackendOrder {
   signature: string
   nonce: string
   orderHash: string
-  orderStatus: UniswapXOrderStatus
+  orderStatus: OrderStatus
   chainId: number
   swapper: string
   reactor: string
@@ -52,15 +43,15 @@ interface BaseUniswapXBackendOrder {
 
 interface NonfilledUniswapXBackendOrder extends BaseUniswapXBackendOrder {
   orderStatus:
-    | UniswapXOrderStatus.OPEN
-    | UniswapXOrderStatus.EXPIRED
-    | UniswapXOrderStatus.ERROR
-    | UniswapXOrderStatus.CANCELLED
-    | UniswapXOrderStatus.INSUFFICIENT_FUNDS
+    | OrderStatus.OPEN
+    | OrderStatus.EXPIRED
+    | OrderStatus.ERROR
+    | OrderStatus.CANCELLED
+    | OrderStatus.INSUFFICIENT_FUNDS
 }
 
 interface FilledUniswapXBackendOrder extends BaseUniswapXBackendOrder {
-  orderStatus: UniswapXOrderStatus.FILLED
+  orderStatus: OrderStatus.FILLED
   // Filler field is defined when the order has been filled and the status tracking function has recorded the filler address.
   filler?: string
   // TxHash field is defined when the order has been filled and there is a txHash associated with the fill.

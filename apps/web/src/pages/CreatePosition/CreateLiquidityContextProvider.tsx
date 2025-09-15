@@ -13,7 +13,7 @@ import {
 } from 'components/Liquidity/Create/types'
 import type { DepositState } from 'components/Liquidity/types'
 import { getPriceRangeInfo } from 'components/Liquidity/utils/priceRangeInfo'
-import { createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -57,7 +57,7 @@ interface BaseCreateLiquidityState {
   ticksAtLimit: [boolean, boolean]
 
   // From CreatePositionContext
-  areTokensUnchanged: boolean
+  isNativeTokenAOnly: boolean
   positionState: PositionState
   step: PositionFlowStep
   currentTransactionStep?: { step: TransactionStep; accepted: boolean }
@@ -149,9 +149,6 @@ export function CreateLiquidityContextProvider({
   initialDepositState?: Partial<DepositState>
   initialFlowStep: PositionFlowStep
 }) {
-  // Combined state from all 4 providers
-  const initialCurrencyInputs = useRef(currencyInputs).current
-
   const [positionState, setPositionState] = useState<PositionState>(() => ({
     ...DEFAULT_POSITION_STATE,
     ...initialPositionState,
@@ -277,6 +274,8 @@ export function CreateLiquidityContextProvider({
     }
   }, [derivedPositionInfo.protocolVersion, poolOrPair, derivedPositionInfo.currencies])
 
+  const isNativeTokenAOnly = Boolean(currencyInputs.tokenA?.isNative && !currencyInputs.tokenB)
+
   const value: CreateLiquidityContextType = {
     // State
     ...protocolSpecificValues,
@@ -296,7 +295,7 @@ export function CreateLiquidityContextProvider({
       derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2
         ? [undefined, undefined]
         : derivedPriceRangeInfo.pricesAtTicks,
-    areTokensUnchanged: currencyInputs.tokenA === initialCurrencyInputs.tokenA && !currencyInputs.tokenB,
+    isNativeTokenAOnly,
     positionState,
     step,
     currentTransactionStep,

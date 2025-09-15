@@ -49,6 +49,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       borderRadius="$rounded16"
       flexDirection="row"
       justifyContent="space-between"
+      hoverStyle={{ backgroundColor: '$surface2' }}
       px={padded ? '$spacing24' : '$spacing8'}
       py="$spacing8"
     >

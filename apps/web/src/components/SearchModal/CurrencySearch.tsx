@@ -24,6 +24,7 @@ interface CurrencySearchProps {
   onCurrencySelect: (currency: Currency) => void
   onDismiss: () => void
   chainIds?: UniverseChainId[]
+  variation?: TokenSelectorVariation
 }
 
 export function CurrencySearch({
@@ -32,6 +33,7 @@ export function CurrencySearch({
   onCurrencySelect,
   onDismiss,
   chainIds,
+  variation,
 }: CurrencySearchProps) {
   const wallet = useWallet()
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, isMultichainContext } =
@@ -80,7 +82,10 @@ export function CurrencySearch({
           flow={TokenSelectorFlow.Swap}
           isSurfaceReady={true}
           variation={
-            currencyField === CurrencyField.INPUT ? TokenSelectorVariation.SwapInput : TokenSelectorVariation.SwapOutput
+            variation ??
+            (currencyField === CurrencyField.INPUT
+              ? TokenSelectorVariation.SwapInput
+              : TokenSelectorVariation.SwapOutput)
           }
           onClose={onDismiss}
           onSelectCurrency={handleCurrencySelectTokenSelectorCallback}

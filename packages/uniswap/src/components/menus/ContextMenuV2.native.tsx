@@ -164,6 +164,9 @@ export function ContextMenu({
           showDivider,
           closeDelay,
           destructive,
+          rightIcon,
+          subheader,
+          height,
         },
         index,
       ) => (
@@ -175,7 +178,9 @@ export function ContextMenu({
             label={label}
             textColor={textColor}
             icon={Icon && <Icon size="$icon.24" color={iconColor ?? (destructive ? '$statusCritical' : '$neutral2')} />}
-            height={spacing.spacing40}
+            subheader={subheader}
+            rightIcon={rightIcon}
+            height={height ?? spacing.spacing40}
             disabled={itemDisabled}
             destructive={destructive}
             closeDelay={(closeDelay ?? 0) + ANIMATION_TIME}

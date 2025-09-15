@@ -69,6 +69,13 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import type { Transaction } from 'viem'
 import { getConnectorClient, getTransaction } from 'wagmi/actions'
 
+export enum TransactionBreadcrumbStatus {
+  Initiated = 'initiated',
+  Complete = 'complete',
+  InProgress = 'in progress',
+  Interrupted = 'interrupted',
+}
+
 export interface HandleSignatureStepParams<T extends SignatureTransactionStep = SignatureTransactionStep> {
   account: AccountDetails
   step: T
@@ -96,7 +103,7 @@ export function* handleSignatureStep({ setCurrentStep, step, ignoreInterrupt, ac
   // If the transaction flow was interrupted, throw an error after the step has completed
   yield* call(throwIfInterrupted)
 
-  addTransactionBreadcrumb({ step, data: { signature }, status: 'complete' })
+  addTransactionBreadcrumb({ step, data: { signature }, status: TransactionBreadcrumbStatus.Complete })
 
   return signature
 }
@@ -139,14 +146,14 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
       addTransactionBreadcrumb({
         step,
         data: { duplicativeTx: true, hash: interfaceDuplicativeTx.hash },
-        status: 'complete',
+        status: TransactionBreadcrumbStatus.Complete,
       })
       return interfaceDuplicativeTx.hash
     } else {
       addTransactionBreadcrumb({
         step,
         data: { duplicativeTx: true, hash: interfaceDuplicativeTx.hash },
-        status: 'in progress',
+        status: TransactionBreadcrumbStatus.InProgress,
       })
       setCurrentStep({ step, accepted: true })
       return yield* handleOnChainConfirmation(params, interfaceDuplicativeTx.hash)
@@ -248,7 +255,7 @@ function* handleOnChainConfirmation(params: HandleOnChainStepParams, hash: strin
     throw new HandledTransactionInterrupt('Transaction flow was interrupted')
   }
 
-  addTransactionBreadcrumb({ step, data: { txHash: hash }, status: 'complete' })
+  addTransactionBreadcrumb({ step, data: { txHash: hash }, status: TransactionBreadcrumbStatus.Complete })
 
   return hash
 }
@@ -559,13 +566,13 @@ export function getSwapTransactionInfo(
 export function addTransactionBreadcrumb({
   step,
   data = {},
-  status = 'initiated',
+  status = TransactionBreadcrumbStatus.Initiated,
 }: {
   step: TransactionStep
   data?: {
     [key: string]: string | number | boolean | undefined | object | null
   }
-  status?: 'initiated' | 'complete' | 'in progress' | 'interrupted'
+  status?: TransactionBreadcrumbStatus
 }) {
   datadogRum.addAction('Transaction Action', {
     message: `${step.type} ${status}`,
@@ -589,7 +596,11 @@ export function getDisplayableError({
   if (userRejected || error instanceof HandledTransactionInterrupt) {
     const loggableMessage = userRejected ? 'user rejected request' : error.message // for user rejections, avoid logging redundant/long message
     if (step) {
-      addTransactionBreadcrumb({ step, status: 'interrupted', data: { message: loggableMessage } })
+      addTransactionBreadcrumb({
+        step,
+        status: TransactionBreadcrumbStatus.Interrupted,
+        data: { message: loggableMessage },
+      })
     }
     return undefined
   } else if (error instanceof TransactionError) {

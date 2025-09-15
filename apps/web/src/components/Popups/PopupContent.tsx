@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query'
 import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import {
   getFORTransactionToActivityQueryOptions,
-  getSignatureToActivityQueryOptions,
   getTransactionToActivityQueryOptions,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -13,8 +12,7 @@ import { POPUP_MAX_WIDTH } from 'components/Popups/constants'
 import { ToastRegularSimple } from 'components/Popups/ToastRegularSimple'
 import { useIsRecentFlashblocksNotification } from 'hooks/useIsRecentFlashblocksNotification'
 import { useTranslation } from 'react-i18next'
-import { useOrder } from 'state/signatures/hooks'
-import { useTransaction } from 'state/transactions/hooks'
+import { useTransaction, useUniswapXOrderByOrderHash } from 'state/transactions/hooks'
 import { isPendingTx } from 'state/transactions/utils'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -59,6 +57,7 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: Univer
 }
 
 type ActivityPopupContentProps = { activity: Activity; onClick?: () => void; onClose: () => void }
+
 function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupContentProps) {
   const success = activity.status === TransactionStatus.Success
   const pending = activity.status === TransactionStatus.Pending
@@ -172,11 +171,14 @@ export function TransactionPopupContent({ hash, onClose }: { hash: string; onClo
 }
 
 export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: string; onClose: () => void }) {
-  const order = useOrder(orderHash)
+  const order = useUniswapXOrderByOrderHash(orderHash)
   const openOffchainActivityModal = useOpenOffchainActivityModal()
 
   const { formatNumberOrString } = useLocalizationContext()
-  const { data: activity } = useQuery(getSignatureToActivityQueryOptions(order, formatNumberOrString))
+
+  const { data: activity } = useQuery(
+    getTransactionToActivityQueryOptions({ transaction: order, formatNumber: formatNumberOrString }),
+  )
 
   if (!activity || !order) {
     return null

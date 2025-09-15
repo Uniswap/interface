@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
-
 import { gqlToCurrency, supportedChainIdFromGQLChain } from 'appGraphql/data/util'
 import { BigNumber } from '@ethersproject/bignumber'
+import { parseUnits } from '@ethersproject/units'
 import type { Currency } from '@uniswap/sdk-core'
 import {
   CHAIN_TO_ADDRESSES_MAP,
@@ -15,6 +15,9 @@ import type { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/t
 import {
   convertGQLTransactionStatus,
   createActivityMapByHash,
+  getCurrencyAddress,
+  parseTokenAmount,
+  uniswapXActivityToTransactionDetails,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import {
   getLimitOrderTextTable,
@@ -22,42 +25,49 @@ import {
   MOONPAY_SENDER_ADDRESSES,
 } from 'components/AccountDrawer/MiniPortfolio/constants'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { formatUnits } from 'ethers/lib/utils'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
-import { parseRemote as parseRemoteSignature } from 'state/signatures/parseRemote'
-import type { OrderActivity, UniswapXOrderDetails } from 'state/signatures/types'
-import { SignatureType } from 'state/signatures/types'
-import { UniswapXOrderStatus } from 'types/uniswapx'
+import store from 'state'
+import type { FiatOffRampActivity, FiatOnRampActivity, OrderActivity, TransactionActivity } from 'state/activity/types'
+import { isExistingTransaction } from 'state/transactions/utils'
 import { Flex, styled, Text } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import type {
-  AssetActivityPartsFragment,
-  NftApprovalPartsFragment,
-  NftApproveForAllPartsFragment,
-  NftTransferPartsFragment,
-  OffRampTransactionDetailsPartsFragment,
-  OnRampTransactionDetailsPartsFragment,
-  OnRampTransferPartsFragment,
-  TokenApprovalPartsFragment,
-  TokenAssetPartsFragment,
-  TokenTransferPartsFragment,
-  TransactionDetailsPartsFragment,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
+  type AssetActivityPartsFragment,
   Currency as GQLCurrency,
+  type NftApprovalPartsFragment,
+  type NftApproveForAllPartsFragment,
+  type NftTransferPartsFragment,
+  type OnRampTransferPartsFragment,
+  SwapOrderType,
+  type TokenApprovalPartsFragment,
+  type TokenAssetPartsFragment,
+  type TokenTransferPartsFragment,
+  type TransactionDetailsPartsFragment,
   TransactionDirection,
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
-import { TransactionType as UniswapTransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { addTransaction } from 'uniswap/src/features/transactions/slice'
+import {
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType as UniswapTransactionType,
+  type UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  convertSwapOrderTypeToRouting,
+  remoteOrderStatusToLocalTxStatus,
+} from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import i18n from 'uniswap/src/i18n'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
@@ -425,6 +435,66 @@ function parseLend(changes: TransactionChanges, formatNumberOrString: FormatNumb
   return { title: i18n.t('common.unknownLend') }
 }
 
+/**
+ * Creates a UniswapXOrderDetails object from various activity types.
+ * Shared factory function to reduce duplication between parseUniswapXOrder
+ * and offchainOrderDetailsFromGraphQLTransactionActivity.
+ */
+function createUniswapXOrderDetails({
+  activityHash,
+  activityId,
+  from,
+  chainId,
+  status,
+  timestamp,
+  routing,
+  encodedOrder,
+  expiry,
+  inputCurrencyAddress,
+  outputCurrencyAddress,
+  inputAmountRaw,
+  outputAmountRaw,
+}: {
+  activityHash: string
+  activityId: string
+  from: string
+  chainId: UniverseChainId
+  status: TransactionStatus
+  timestamp: number
+  routing: Routing.DUTCH_V3 | Routing.DUTCH_V2 | Routing.DUTCH_LIMIT | Routing.PRIORITY
+  inputCurrencyAddress: string
+  outputCurrencyAddress: string
+  inputAmountRaw: string
+  outputAmountRaw: string
+  encodedOrder?: string
+  expiry?: number
+}): UniswapXOrderDetails {
+  return {
+    id: activityId,
+    orderHash: activityHash,
+    hash: activityHash,
+    from,
+    chainId,
+    status,
+    addedTime: timestamp,
+    routing,
+    transactionOriginType: TransactionOriginType.External,
+    ...(encodedOrder !== undefined && { encodedOrder }),
+    ...(expiry !== undefined && { expiry }),
+    typeInfo: {
+      type: UniswapTransactionType.Swap,
+      tradeType: TradeType.EXACT_INPUT,
+      inputCurrencyId: buildCurrencyId(chainId, inputCurrencyAddress),
+      outputCurrencyId: buildCurrencyId(chainId, outputCurrencyAddress),
+      inputCurrencyAmountRaw: inputAmountRaw,
+      expectedOutputCurrencyAmountRaw: outputAmountRaw,
+      minimumOutputCurrencyAmountRaw: outputAmountRaw,
+      settledOutputCurrencyAmountRaw: outputAmountRaw,
+      isUniswapXOrder: true,
+    },
+  }
+}
+
 function parseSwapOrder(
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType,
@@ -442,8 +512,14 @@ function parseSwapOrder(
   }
 }
 
+/**
+ * Creates UniswapXOrderDetails for filled orders from GraphQL TransactionActivity.
+ * These orders do NOT have encodedOrder as they're already executed on-chain.
+ * Note: We can't determine the exact routing type from TransactionActivity,
+ * so we default to DUTCH_V2 for non-limit orders.
+ */
 export function offchainOrderDetailsFromGraphQLTransactionActivity(
-  activity: AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment },
+  activity: TransactionActivity,
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType,
 ): UniswapXOrderDetails | undefined {
@@ -463,26 +539,21 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
 
   const { inputCurrencyAddress, outputCurrencyAddress, inputAmountRaw, outputAmountRaw } = swapAmounts
 
-  return {
-    orderHash: activity.details.hash,
-    id: activity.details.id,
-    offerer: activity.details.from,
-    txHash: activity.details.hash,
+  return createUniswapXOrderDetails({
+    activityHash: activity.details.hash,
+    activityId: activity.details.id,
+    from: activity.details.from,
     chainId,
-    status: UniswapXOrderStatus.FILLED,
-    addedTime: activity.timestamp,
-    swapInfo: {
-      isUniswapXOrder: true,
-      type: UniswapTransactionType.Swap,
-      tradeType: TradeType.EXACT_INPUT,
-      inputCurrencyId: buildCurrencyId(chainId, inputCurrencyAddress),
-      outputCurrencyId: buildCurrencyId(chainId, outputCurrencyAddress),
-      inputCurrencyAmountRaw: inputAmountRaw,
-      expectedOutputCurrencyAmountRaw: outputAmountRaw,
-      minimumOutputCurrencyAmountRaw: outputAmountRaw,
-      settledOutputCurrencyAmountRaw: outputAmountRaw,
-    },
-  }
+    status: TransactionStatus.Success,
+    timestamp: activity.timestamp,
+    // TransactionActivity doesn't have swapOrderType, so we can't determine exact routing
+    // Default for filled orders where we don't know the original type
+    routing: Routing.DUTCH_V2,
+    inputCurrencyAddress,
+    outputCurrencyAddress,
+    inputAmountRaw,
+    outputAmountRaw,
+  })
 }
 
 function parseApprove(changes: TransactionChanges) {
@@ -512,10 +583,6 @@ function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: For
     currencies: [gqlToCurrency(poolTokenA.asset), gqlToCurrency(poolTokenB.asset)],
   }
 }
-
-type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
-type FiatOnRampActivity = AssetActivityPartsFragment & { details: OnRampTransactionDetailsPartsFragment }
-type FiatOffRampActivity = AssetActivityPartsFragment & { details: OffRampTransactionDetailsPartsFragment }
 
 function parseSendReceive(
   changes: TransactionChanges,
@@ -657,31 +724,77 @@ function getLogoSrcs(changes: TransactionChanges): Array<string | undefined> {
   return Array.from(logoSet)
 }
 
+/**
+ * Creates UniswapXOrderDetails for pending orders from GraphQL OrderActivity.
+ * These orders have encodedOrder available for cancellation.
+ */
 function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
-  const signature = parseRemoteSignature(activity)
-
-  // If the order is open, do not render it.
-  if (signature.status === UniswapXOrderStatus.OPEN) {
+  const chainId = supportedChainIdFromGQLChain(activity.chain)
+  if (!chainId) {
     return undefined
   }
 
-  const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity } = activity.details
+  const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity, orderStatus, swapOrderType } =
+    activity.details
 
-  const OrderTextTable = getOrderTextTable()
-  const LimitOrderTextTable = getLimitOrderTextTable()
+  const transactionStatus = remoteOrderStatusToLocalTxStatus(orderStatus)
 
-  const orderTextTableEntry =
-    signature.type === SignatureType.SIGN_LIMIT
-      ? LimitOrderTextTable[signature.status]
-      : OrderTextTable[signature.status]
+  // Add open orders to transaction state
+  if (transactionStatus === TransactionStatus.Pending) {
+    const transaction = uniswapXActivityToTransactionDetails(activity, chainId)
+
+    if (transaction) {
+      // Check if transaction already exists before dispatching
+      if (!isExistingTransaction({ from: transaction.from, chainId: transaction.chainId, id: transaction.id })) {
+        store.dispatch(addTransaction(transaction))
+      }
+    }
+    return undefined
+  }
+
+  const orderTextTable = getOrderTextTable()
+  const limitOrderTextTable = getLimitOrderTextTable()
+
+  // Determine if it's a limit order based on swapOrderType
+  const isLimitOrder = swapOrderType === SwapOrderType.Limit
+  const orderTextTableEntry = isLimitOrder ? limitOrderTextTable[transactionStatus] : orderTextTable[transactionStatus]
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (!orderTextTableEntry) {
+    return undefined
+  }
 
   const title = orderTextTableEntry.getTitle()
+  // Determine routing from swapOrderType
+  const routing = convertSwapOrderTypeToRouting(swapOrderType)
+
+  // Parse currency addresses
+  const inputCurrencyAddress = getCurrencyAddress(inputToken, chainId)
+  const outputCurrencyAddress = getCurrencyAddress(outputToken, chainId)
+  const inputAmountRaw = parseTokenAmount(inputTokenQuantity, inputToken.decimals)
+  const outputAmountRaw = parseTokenAmount(outputTokenQuantity, outputToken.decimals)
+
+  // Create offchainOrderDetails with shared factory
+  const offchainOrderDetails = createUniswapXOrderDetails({
+    activityHash: activity.details.hash,
+    activityId: activity.details.id,
+    from: activity.details.offerer,
+    chainId,
+    status: transactionStatus,
+    timestamp: activity.timestamp,
+    routing,
+    encodedOrder: activity.details.encodedOrder,
+    expiry: activity.details.expiry,
+    inputCurrencyAddress,
+    outputCurrencyAddress,
+    inputAmountRaw,
+    outputAmountRaw,
+  })
 
   return {
-    id: signature.id,
-    hash: signature.orderHash,
-    chainId: signature.chainId,
-    offchainOrderDetails: signature,
+    id: activity.details.hash,
+    hash: activity.details.hash,
+    chainId,
     timestamp: activity.timestamp,
     logos: [inputToken.project?.logo?.url, outputToken.project?.logo?.url],
     currencies: [gqlToCurrency(inputToken), gqlToCurrency(outputToken)],
@@ -691,10 +804,11 @@ function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
       tokenOut: outputToken,
       outputAmount: outputTokenQuantity,
     }),
-    from: signature.offerer,
+    from: activity.details.offerer,
     prefixIconSrc: UniswapXBolt,
     title,
-    status: orderTextTableEntry.status,
+    status: transactionStatus,
+    offchainOrderDetails,
   }
 }
 

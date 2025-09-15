@@ -14,11 +14,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InterfaceTrade } from 'state/routing/types'
 import { isLimitTrade, isUniswapXSwapTrade, isUniswapXTradeType } from 'state/routing/utils'
-import { useOrder } from 'state/signatures/hooks'
-import { useIsTransactionConfirmed } from 'state/transactions/hooks'
+import { useIsTransactionConfirmed, useUniswapXOrderByOrderHash } from 'state/transactions/hooks'
 import { colors } from 'theme/colors'
 import { Divider } from 'theme/components/Dividers'
-import { UniswapXOrderStatus } from 'types/uniswapx'
 import { Flex } from 'ui/src'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -79,9 +77,11 @@ export default function ProgressIndicator({
   }, [blockConfirmationTime, estimatedTransactionTime])
 
   const swapStatus = useSwapTransactionStatus(swapResult)
-  const uniswapXOrder = useOrder(isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : '')
+  const uniswapXOrder = useUniswapXOrderByOrderHash(
+    isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : '',
+  )
 
-  const swapConfirmed = swapStatus === TransactionStatus.Success || uniswapXOrder?.status === UniswapXOrderStatus.FILLED
+  const swapConfirmed = swapStatus === TransactionStatus.Success || uniswapXOrder?.status === TransactionStatus.Success
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
 
   const swapPending = swapResult !== undefined && !swapConfirmed

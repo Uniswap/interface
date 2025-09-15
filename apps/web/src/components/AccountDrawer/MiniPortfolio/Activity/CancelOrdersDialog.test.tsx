@@ -3,19 +3,23 @@ import {
   CancellationState,
   CancelOrdersDialog,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
-import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
-import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 const mockOrderDetails: UniswapXOrderDetails = {
-  type: SignatureType.SIGN_UNISWAPX_ORDER,
+  routing: Routing.DUTCH_V2,
   orderHash: '0x1234',
-  status: UniswapXOrderStatus.OPEN,
-  swapInfo: {
+  status: TransactionStatus.Pending,
+  typeInfo: {
     isUniswapXOrder: true,
     type: TransactionType.Swap,
     tradeType: 0,
@@ -31,7 +35,8 @@ const mockOrderDetails: UniswapXOrderDetails = {
   addedTime: 3,
   chainId: UniverseChainId.Mainnet,
   expiry: 4,
-  offerer: '0x1234',
+  from: '0x1234',
+  transactionOriginType: TransactionOriginType.Internal,
 }
 
 vi.mock('hooks/useTransactionGasFee', async () => {
@@ -42,8 +47,9 @@ vi.mock('hooks/useTransactionGasFee', async () => {
   }
 })
 
-vi.mock('components/AccountDrawer/MiniPortfolio/Activity/utils', () => ({
+vi.mock('components/AccountDrawer/MiniPortfolio/Activity/cancel.utils', () => ({
   useCreateCancelTransactionRequest: vi.fn(),
+  hasEncodedOrder: vi.fn((order) => 'encodedOrder' in order && typeof order.encodedOrder === 'string'),
 }))
 
 vi.mock('utilities/src/logger/logger', async () => {
@@ -90,7 +96,7 @@ describe('CancelOrdersDialog', () => {
         onCancel={mockOnCancel}
         onConfirm={mockOnConfirm}
         isVisible={true}
-        orders={[{ ...mockOrderDetails, type: SignatureType.SIGN_LIMIT }]}
+        orders={[{ ...mockOrderDetails, routing: Routing.DUTCH_LIMIT }]}
         cancelState={CancellationState.REVIEWING_CANCELLATION}
       />,
     )

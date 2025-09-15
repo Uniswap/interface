@@ -47,6 +47,9 @@ export const isSafari: boolean = typeof navigator !== 'undefined' && /Safari/.te
 export const isMobileWebSafari: boolean = isTouchable && isSafari
 export const isMobileWebAndroid: boolean = isTouchable && isWebAndroid
 
+// Environment
+export const isBrowser: boolean = typeof window !== 'undefined'
+
 // App
 export const isExtension: boolean = process.env.IS_UNISWAP_EXTENSION === 'true'
 export const isMobileApp: boolean = false

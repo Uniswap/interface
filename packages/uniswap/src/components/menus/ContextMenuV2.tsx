@@ -17,6 +17,9 @@ export type MenuOptionItem = {
   iconColor?: IconProps['color']
   textColor?: TextProps['color']
   closeDelay?: number
+  subheader?: string
+  rightIcon?: React.ReactNode
+  height?: number
 }
 
 /**

@@ -15,7 +15,6 @@ import { WarningModal } from 'uniswap/src/components/modals/WarningModal/Warning
 import { NFTTransfer } from 'uniswap/src/components/nfts/NFTTransfer'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -66,8 +65,6 @@ export function SendReviewDetails({
   const { setScreen } = useTransactionModalContext()
   const { derivedSendInfo, warnings, txRequest, gasFee, isFiatInput, fiatOffRampMetaData } = useSendContext()
   const { txId, chainId, recipient, currencyInInfo, currencyAmounts, nftIn, exactAmountFiat } = derivedSendInfo
-
-  const { avatar } = useAvatar(recipient)
 
   const currency = useAppFiatCurrencyInfo()
   const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
@@ -291,11 +288,7 @@ export function SendReviewDetails({
             ) : (
               <AddressDisplay address={recipient} captionVariant="body3" showAccountIcon={false} variant="heading3" />
             )}
-            <AccountIcon
-              address={recipient}
-              avatarUri={fiatOffRampMetaData?.logoUrl || avatar}
-              size={iconSizes.icon40}
-            />
+            <AccountIcon address={recipient} avatarUriOverride={fiatOffRampMetaData?.logoUrl} size={iconSizes.icon40} />
           </Flex>
         )}
       </Flex>

@@ -1,6 +1,8 @@
 import { memo, useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Text } from 'ui/src'
+import { BridgedAssetModal } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
+import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import {
   TokenOptionItem as BaseTokenOptionItem,
   TokenContextMenuVariant,
@@ -17,7 +19,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
-import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
+import { useDismissedBridgedAssetWarnings, useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -75,12 +77,57 @@ const TokenOptionItem = memo(function _TokenOptionItem({
   const [showWarningModal, setShowWarningModal] = useState(false)
   const { tokenWarningDismissed } = useDismissedTokenWarnings(currencyInfo.currency)
   const isBlocked = severity === WarningSeverity.Blocked
-  const shouldShowWarningModalOnPress = isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed)
+  const shouldShowWarningModalOnPress =
+    showWarnings && (isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed))
+
+  const isBridgedAsset = checkIsBridgedAsset(currencyInfo)
+  const [showBridgedAssetWarningModal, setShowBridgedAssetWarningModal] = useState(false)
+  const { tokenWarningDismissed: bridgedAssetTokenWarningDismissed } = useDismissedBridgedAssetWarnings(
+    currencyInfo.currency,
+  )
+  const shouldShowBridgedAssetWarningModalOnPress = showWarnings && isBridgedAsset && !bridgedAssetTokenWarningDismissed
+  const hasWarningModals = shouldShowWarningModalOnPress || shouldShowBridgedAssetWarningModalOnPress
+
+  const setWarningModalVisible = useCallback(
+    (visible: boolean) => {
+      // Handle token warning modal visibility as first priority
+      if (shouldShowWarningModalOnPress) {
+        setShowWarningModal(visible)
+        return
+      }
+
+      // Handle bridged asset warning modal visibility
+      setShowBridgedAssetWarningModal(visible)
+    },
+    [shouldShowWarningModalOnPress, setShowWarningModal, setShowBridgedAssetWarningModal],
+  )
 
   const onAcceptTokenWarning = useCallback(() => {
-    setShowWarningModal(false)
+    // Handle token warning modal dismissal
+    if (showWarningModal) {
+      setShowWarningModal(false)
+
+      // If the bridged asset warning modal should not be shown, proceed to the next step
+      if (!shouldShowBridgedAssetWarningModalOnPress) {
+        onPress()
+      } else {
+        setShowBridgedAssetWarningModal(true)
+      }
+
+      return
+    }
+
+    // Handle bridged asset warning modal dismissal
+    if (showBridgedAssetWarningModal) {
+      setShowBridgedAssetWarningModal(false)
+      onPress()
+
+      return
+    }
+
+    // No modals showing - proceed with action
     onPress()
-  }, [onPress])
+  }, [onPress, showWarningModal, showBridgedAssetWarningModal, shouldShowBridgedAssetWarningModalOnPress])
 
   return (
     <BaseTokenOptionItem
@@ -101,7 +148,14 @@ const TokenOptionItem = memo(function _TokenOptionItem({
       }
       showDisabled={Boolean((showWarnings && isBlocked) || tokenOption.isUnsupported)}
       modalInfo={{
-        modal: (
+        modal: showBridgedAssetWarningModal ? (
+          <BridgedAssetModal
+            currencyInfo0={currencyInfo}
+            isOpen={showBridgedAssetWarningModal}
+            onClose={(): void => setShowBridgedAssetWarningModal(false)}
+            onContinue={onAcceptTokenWarning}
+          />
+        ) : (
           <TokenWarningModal
             currencyInfo0={currencyInfo}
             isVisible={showWarningModal}
@@ -109,8 +163,8 @@ const TokenOptionItem = memo(function _TokenOptionItem({
             onAcknowledge={onAcceptTokenWarning}
           />
         ),
-        modalShouldShow: showWarnings && shouldShowWarningModalOnPress,
-        modalSetIsOpen: setShowWarningModal,
+        modalShouldShow: hasWarningModals,
+        modalSetIsOpen: setWarningModalVisible,
       }}
       onPress={onPressTokenOption}
     />

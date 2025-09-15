@@ -398,3 +398,12 @@ export function nativeOnChain(chainId: number): NativeCurrencyImpl | Token {
   cachedNativeCurrency[chainId] = result
   return result
 }
+
+// TODO[DAT-1513]: Replace with metadata field from backend
+export const UNICHAIN_BRIDGED_ASSETS: readonly string[] = [
+  '0xbde8a5331e8ac4831cf8ea9e42e229219eafab97', // SOL
+  '0xbe51A5e8FA434F09663e8fB4CCe79d0B2381Afad', // JUP
+  '0x97Fadb3D000b953360FD011e173F12cDDB5d70Fa', // WIF
+  '0x15d0e0c55a3e7ee67152ad7e89acf164253ff68d', // HYPE
+  '0xBbE97f3522101e5B6976cBf77376047097BA837F', // BONK
+]

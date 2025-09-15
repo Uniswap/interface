@@ -1,25 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { config } from 'uniswap/src/config'
+import { makeStatsigUser } from 'src/app/core/initStatSigForBrowserScripts'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
-import { StatsigClient, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
-import { statsigBaseConfig } from 'uniswap/src/features/gating/statsigBaseConfig'
+import { StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import { initializeDatadog } from 'uniswap/src/utils/datadog'
-import { getUniqueId } from 'utilities/src/device/uniqueId'
 import { uniqueIdQuery } from 'utilities/src/device/uniqueIdQuery'
-import { logger } from 'utilities/src/logger/logger'
-
-function makeStatsigUser(userID: string): StatsigUser {
-  return {
-    userID,
-    appVersion: process.env.VERSION,
-    custom: {
-      app: StatsigCustomAppValue.Extension,
-    },
-  }
-}
 
 export function ExtensionStatsigProvider({
   children,
@@ -54,14 +41,4 @@ export function ExtensionStatsigProvider({
       {children}
     </StatsigProviderWrapper>
   )
-}
-
-export async function initStatSigForBrowserScripts(): Promise<void> {
-  const uniqueId = await getUniqueId()
-  const statsigClient = new StatsigClient(config.statsigApiKey, makeStatsigUser(uniqueId), statsigBaseConfig)
-  await statsigClient.initializeAsync().catch((error) => {
-    logger.error(error, {
-      tags: { file: 'StatsigProvider.tsx', function: 'initStatSigForBrowserScripts' },
-    })
-  })
 }

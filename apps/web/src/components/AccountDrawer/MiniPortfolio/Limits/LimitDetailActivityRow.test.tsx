@@ -3,12 +3,16 @@ import 'test-utils/tokens/mocks'
 import { WETH9 } from '@uniswap/sdk-core'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { LimitDetailActivityRow } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitDetailActivityRow'
-import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
-import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 vi.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', async () => {
@@ -20,10 +24,10 @@ vi.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', async () => {
 })
 
 const mockOrderDetails: UniswapXOrderDetails = {
-  type: SignatureType.SIGN_LIMIT,
+  routing: Routing.DUTCH_LIMIT,
   orderHash: '0x1234',
-  status: UniswapXOrderStatus.OPEN,
-  swapInfo: {
+  status: TransactionStatus.Pending,
+  typeInfo: {
     isUniswapXOrder: true,
     type: TransactionType.Swap,
     tradeType: 0,
@@ -39,7 +43,8 @@ const mockOrderDetails: UniswapXOrderDetails = {
   addedTime: 3,
   chainId: UniverseChainId.Mainnet,
   expiry: 4,
-  offerer: '0x1234',
+  from: '0x1234',
+  transactionOriginType: TransactionOriginType.Internal,
 }
 
 const mockOrder: Activity = {

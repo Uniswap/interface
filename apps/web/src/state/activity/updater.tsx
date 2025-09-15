@@ -1,21 +1,17 @@
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
+import { useHandleUniswapXActivityUpdate } from 'hooks/useHandleUniswapXActivityUpdate'
 import { useCallback } from 'react'
 import { usePollPendingBatchTransactions } from 'state/activity/polling/batch'
 import { usePollPendingBridgeTransactions } from 'state/activity/polling/bridge'
 import { usePollPendingOrders } from 'state/activity/polling/orders'
 import { usePollPendingTransactions } from 'state/activity/polling/transactions'
-import type { ActivityUpdate, OnActivityUpdate } from 'state/activity/types'
-import { getRoutingForUniswapXOrder } from 'state/activity/utils'
+import { type ActivityUpdate, ActivityUpdateTransactionType, type OnActivityUpdate } from 'state/activity/types'
 import { useAppDispatch } from 'state/hooks'
-import { updateSignature } from 'state/signatures/reducer'
-import { SignatureType } from 'state/signatures/types'
-import { logSwapFinalized, logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
-import { UniswapXOrderStatus } from 'types/uniswapx'
+import { logSwapFinalized } from 'tracing/swapFlowLoggers'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import {
-  addTransaction,
   finalizeTransaction,
   interfaceApplyTransactionHashToBatch,
   interfaceConfirmBridgeDeposit,
@@ -24,8 +20,7 @@ import {
 import { isNonInstantFlashblockTransactionType } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/utils'
 import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import {
-  InterfaceTransactionDetails,
-  TransactionOriginType,
+  type InterfaceTransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -55,21 +50,24 @@ function PollingActivityStateUpdater({ onActivityUpdate }: { onActivityUpdate: O
 function useOnActivityUpdate(): OnActivityUpdate {
   const dispatch = useAppDispatch()
   const analyticsContext = useTrace()
+  const handleUniswapXActivityUpdate = useHandleUniswapXActivityUpdate()
 
   return useCallback(
     (activity: ActivityUpdate) => {
       const popupDismissalTime = isL2ChainId(activity.chainId) ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS
-      if (activity.type === 'transaction') {
-        const { chainId, original, update } = activity
+      const { chainId } = activity
+
+      if (activity.type === ActivityUpdateTransactionType.BaseTransaction) {
+        const { original, update } = activity
 
         // TODO(WEB-7631): Make batch handling explicit
-        if (activity.original.batchInfo && update.hash) {
+        if (original.batchInfo && update.hash) {
           dispatch(
             interfaceApplyTransactionHashToBatch({
-              batchId: activity.original.batchInfo.batchId,
+              batchId: original.batchInfo.batchId,
               chainId,
               hash: update.hash,
-              address: activity.original.from,
+              address: original.from,
             }),
           )
         }
@@ -174,73 +172,13 @@ function useOnActivityUpdate(): OnActivityUpdate {
         if (shouldShowPopup && hash) {
           popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
         }
+        // TransactionType can only be UniswapXOrder here
+        // This check is in place in case more types get added in the future
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      } else if (activity.type === 'signature') {
-        const { chainId, original, update } = activity
-
-        // Return early if the order is already filled
-        if (original.status === UniswapXOrderStatus.FILLED) {
-          return
-        }
-
-        const updatedOrder = { ...original, ...update }
-        dispatch(updateSignature(updatedOrder))
-
-        // SignatureDetails.type should not be typed as optional, but this will be fixed when we merge activity for uniswap. The default value appeases the typechecker.
-        const signatureType = updatedOrder.type ?? SignatureType.SIGN_UNISWAPX_V2_ORDER
-
-        if (updatedOrder.status === UniswapXOrderStatus.FILLED) {
-          const hash = updatedOrder.txHash
-          const from = original.offerer
-
-          const transaction: InterfaceTransactionDetails = {
-            chainId,
-            from,
-            id: hash,
-            hash,
-            typeInfo: updatedOrder.swapInfo,
-            routing: getRoutingForUniswapXOrder(updatedOrder),
-            transactionOriginType: TransactionOriginType.Internal,
-            status: TransactionStatus.Success,
-            addedTime: Date.now(),
-            options: { request: {} }, // Not used in web currently
-          }
-          dispatch(addTransaction(transaction))
-          popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
-
-          // Only track swap success for non-limit orders; limit order fill-time will throw off time tracking analytics
-          if (original.type !== SignatureType.SIGN_LIMIT) {
-            logUniswapXSwapFinalized({
-              id: original.id,
-              hash,
-              orderHash: updatedOrder.orderHash,
-              chainId,
-              analyticsContext,
-              signatureType,
-              status: UniswapXOrderStatus.FILLED,
-            })
-          }
-        } else if (original.status !== updatedOrder.status) {
-          const orderHash = original.orderHash
-          popupRegistry.addPopup({ type: PopupType.Order, orderHash }, orderHash, popupDismissalTime)
-
-          if (
-            updatedOrder.status === UniswapXOrderStatus.CANCELLED ||
-            updatedOrder.status === UniswapXOrderStatus.EXPIRED
-          ) {
-            logUniswapXSwapFinalized({
-              id: original.id,
-              hash: undefined,
-              orderHash: updatedOrder.orderHash,
-              chainId,
-              analyticsContext,
-              signatureType,
-              status: updatedOrder.status,
-            })
-          }
-        }
+      } else if (activity.type === ActivityUpdateTransactionType.UniswapXOrder) {
+        handleUniswapXActivityUpdate({ activity, popupDismissalTime })
       }
     },
-    [analyticsContext, dispatch],
+    [analyticsContext, dispatch, handleUniswapXActivityUpdate],
   )
 }

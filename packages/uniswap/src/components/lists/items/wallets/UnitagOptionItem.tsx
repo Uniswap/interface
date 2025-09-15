@@ -4,7 +4,6 @@ import { OptionItemProps } from 'uniswap/src/components/lists/items/OptionItem'
 import { UnitagOption } from 'uniswap/src/components/lists/items/types'
 import { WalletBaseOptionItem } from 'uniswap/src/components/lists/items/wallets/WalletBaseOptionItem'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -16,12 +15,11 @@ type UnitagOptionItemProps = {
 
 export function UnitagOptionItem({ unitagOption, onPress }: UnitagOptionItemProps): JSX.Element {
   const { address, unitag } = unitagOption
-  const { avatar } = useAvatar(address)
 
   return (
     <WalletBaseOptionItem
       option={unitagOption}
-      image={<AccountIcon address={address} avatarUri={avatar} size={iconSizes.icon40} />}
+      image={<AccountIcon address={address} size={iconSizes.icon40} />}
       title={
         <UnitagName
           displayUnitagSuffix

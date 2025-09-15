@@ -116,20 +116,20 @@ const StatDisplay = memo(({ data, isLoading, isHoverable }: StatDisplayProps) =>
   const { t } = useTranslation()
 
   return (
-    <Flex group gap="$spacing4" animation="simple">
+    <Flex group gap="$spacing4" animation="simple" minHeight="$spacing60">
       <Text variant="body4" color="$neutral2" $group-hover={{ color: isHoverable ? '$neutral2Hovered' : '$neutral2' }}>
         {data.label}
       </Text>
       {isLoading ? (
-        <LoadingBubble height="20px" width="52px" />
+        <LoadingBubble height="24px" width="80px" />
       ) : (
         <Text variant="subheading1" color="$neutral1">
           {data.value}
         </Text>
       )}
-      <Flex row alignItems="center" gap="$spacing2" style={{ fontSize: 12 }}>
+      <Flex row alignItems="center" gap="$spacing2" style={{ fontSize: 12 }} minHeight="$spacing16">
         {isLoading ? (
-          <LoadingBubble height="12px" width="30px" />
+          <LoadingBubble height="12px" width="60px" />
         ) : (
           <Fragment>
             <DeltaArrow delta={data.change} formattedDelta={formatPercent(Math.abs(data.change))} size={12} />

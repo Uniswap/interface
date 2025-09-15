@@ -19,6 +19,8 @@ import { TestnetSwitchModalState } from 'src/features/testnetMode/TestnetSwitchM
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { ViewPrivateKeysScreenState } from 'src/screens/ViewPrivateKeys/ViewPrivateKeysScreenState'
+import { BridgedAssetModalProps } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
+import { WormholeModalProps } from 'uniswap/src/components/BridgedAsset/WormholeModal'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { PasskeyManagementModalState } from 'uniswap/src/features/passkey/PasskeyManagementModal'
@@ -179,6 +181,7 @@ export type AppStackParamList = {
   [ModalName.Experiments]: undefined
   [ModalName.TestnetSwitchModal]: TestnetSwitchModalState
   [ModalName.TokenWarning]: { initialState?: TokenWarningModalState }
+  [ModalName.BridgedAssetNav]: { initialState?: TokenWarningModalState }
   [ModalName.ViewOnlyExplainer]: undefined
   [ModalName.UnitagsIntro]: UnitagsIntroModalState
   [ModalName.RestoreWallet]: RestoreWalletModalState
@@ -210,6 +213,8 @@ export type AppStackParamList = {
   [ModalName.LanguageSelector]: undefined
   [ModalName.SmartWalletInfoModal]: undefined
   [ModalName.ConfirmDisableSmartWalletScreen]: undefined
+  [ModalName.BridgedAsset]: BridgedAssetModalProps
+  [ModalName.Wormhole]: WormholeModalProps
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>

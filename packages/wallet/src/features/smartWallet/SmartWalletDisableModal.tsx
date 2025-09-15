@@ -10,7 +10,6 @@ import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningI
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isMobileApp, isWeb } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
@@ -46,8 +45,6 @@ export function SmartWalletDisableModal({
     collapseActiveNetworks()
   }, [collapseActiveNetworks, wallet])
 
-  const { avatar } = useAvatar(wallet.walletAddress)
-
   const activeDelegations = useEnabledActiveNetworkDelegations(wallet.activeDelegationNetworkToAddress)
 
   const { walletAddress } = wallet
@@ -73,7 +70,7 @@ export function SmartWalletDisableModal({
         {...(isWeb && { flex: 1, overflowY: 'hidden' })}
       >
         <Flex row alignItems="center" gap="$spacing12">
-          <AccountIcon avatarUri={avatar} address={walletAddress} size={iconSizes.icon40} />
+          <AccountIcon address={walletAddress} size={iconSizes.icon40} />
           <Flex>
             <Text variant="body2">{t('settings.setting.smartWallet.action.smartWallet')}</Text>
             <Text variant="body3" color="$accent1">
@@ -147,7 +144,7 @@ export function SmartWalletDisableModal({
             {t('common.wallet.label')}
           </Text>
           <Flex row alignItems="center" gap="$spacing4">
-            <AccountIcon avatarUri={avatar} address={walletAddress} size={iconSizes.icon16} />
+            <AccountIcon address={walletAddress} size={iconSizes.icon16} />
             <DisplayNameText
               gap="$spacing4"
               displayName={displayName}

@@ -2,31 +2,6 @@
 
 exports[`SendCurrencyInputform > should render correctly with no verified recipient 1`] = `
 .c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c1 {
-  position: relative;
-  background-color: #F9F9F9;
-  border-radius: 16px;
-  padding: 12px 16px;
-  gap: 4px;
-  opacity: 1;
-  pointer-events: initial;
-  border: 1px solid transparent;
-}
-
-.c2 {
   background: none;
   width: 100%;
   color: #131313;
@@ -37,19 +12,19 @@ exports[`SendCurrencyInputform > should render correctly with no verified recipi
   line-height: 24px;
 }
 
-.c2::-webkit-input-placeholder {
+.c0::-webkit-input-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c2::-moz-placeholder {
+.c0::-moz-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c2:-ms-input-placeholder {
+.c0:-ms-input-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c2::placeholder {
+.c0::placeholder {
   color: rgba(19,19,19,0.35);
 }
 
@@ -58,7 +33,7 @@ exports[`SendCurrencyInputform > should render correctly with no verified recipi
   style="display: contents;"
 >
   <div
-    class="c0 c1"
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-spa94665589 _opacity-1 _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
   >
     <div
       aria-expanded="false"
@@ -83,7 +58,7 @@ exports[`SendCurrencyInputform > should render correctly with no verified recipi
             autocapitalize="off"
             autocomplete="off"
             autocorrect="off"
-            class="c2"
+            class="c0"
             pattern="^(0x[a-fA-F0-9]{40})$"
             placeholder="Wallet address or ENS name"
             spellcheck="false"
@@ -101,7 +76,7 @@ exports[`SendCurrencyInputform > should render correctly with no verified recipi
 `;
 
 exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
-.c0 {
+.c7 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -115,10 +90,27 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
   justify-content: flex-start;
 }
 
-.c2 {
+.c0 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c3 {
@@ -136,27 +128,10 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-}
-
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
   gap: 12px;
 }
 
-.c9 {
+.c8 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -174,23 +149,23 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
   gap: 4px;
 }
 
-.c7 {
+.c5 {
   height: 36px;
   width: 36px;
 }
 
-.c7 path {
+.c5 path {
   stroke: rgba(19,19,19,0.35);
   background: rgba(19,19,19,0.63);
   fill: rgba(19,19,19,0.35);
 }
 
-.c8 {
+.c6 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
 }
 
-.c10 {
+.c9 {
   color: #131313;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -198,7 +173,7 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c11 {
+.c10 {
   color: rgba(19,19,19,0.63);
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -206,7 +181,7 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c4 {
+.c2 {
   padding: 6px 0px;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -214,7 +189,7 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
   justify-content: space-between;
 }
 
-.c6 {
+.c4 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -222,15 +197,15 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
   transition-duration: 125ms;
 }
 
-.c6:hover {
+.c4:hover {
   opacity: 0.6;
 }
 
-.c6:active {
+.c4:active {
   opacity: 0.4;
 }
 
-.c12 {
+.c11 {
   color: rgba(19,19,19,0.35);
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -239,23 +214,12 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
   transition-duration: 125ms;
 }
 
-.c12:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c12:active {
+.c11:active {
   opacity: 0.4;
-}
-
-.c1 {
-  position: relative;
-  background-color: #F9F9F9;
-  border-radius: 16px;
-  padding: 12px 16px;
-  gap: 4px;
-  opacity: 1;
-  pointer-events: initial;
-  border: 1px solid transparent;
 }
 
 <span
@@ -263,7 +227,7 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
   style="display: contents;"
 >
   <div
-    class="c0 c1"
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-spa94665589 _opacity-1 _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
   >
     <div
       aria-expanded="false"
@@ -276,13 +240,13 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
         data-state="closed"
       >
         <div
-          class="c2 c3 c4"
+          class="c0 c1 c2"
         >
           <div
-            class="c2 c5 c6"
+            class="c0 c3 c4"
           >
             <svg
-              class="c7 c8"
+              class="c5 c6"
               data-testid="IdenticonLoader"
               fill="rgba(19, 19, 19, 0.35)"
               stroke="rgba(19, 19, 19, 0.35)"
@@ -300,13 +264,13 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
               />
             </svg>
             <div
-              class="c0"
+              class="c7"
             >
               <div
-                class="c2 c9"
+                class="c0 c8"
               >
                 <div
-                  class="c10 css-n8z49y"
+                  class="c9 css-n8z49y"
                 >
                   hayden
                 </div>
@@ -318,14 +282,14 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
                 />
               </div>
               <div
-                class="c11 css-obwv3p"
+                class="c10 css-obwv3p"
               >
                 0x9984...9103
               </div>
             </div>
           </div>
           <svg
-            class="c12"
+            class="c11"
             fill="none"
             height="20"
             stroke="currentColor"
@@ -360,7 +324,7 @@ exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
 `;
 
 exports[`SendCurrencyInputform > should render correctly with verified recipient 1`] = `
-.c0 {
+.c7 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -374,10 +338,27 @@ exports[`SendCurrencyInputform > should render correctly with verified recipient
   justify-content: flex-start;
 }
 
-.c2 {
+.c0 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c3 {
@@ -395,27 +376,10 @@ exports[`SendCurrencyInputform > should render correctly with verified recipient
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-}
-
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
   gap: 12px;
 }
 
-.c9 {
+.c8 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -433,23 +397,23 @@ exports[`SendCurrencyInputform > should render correctly with verified recipient
   gap: 4px;
 }
 
-.c7 {
+.c5 {
   height: 36px;
   width: 36px;
 }
 
-.c7 path {
+.c5 path {
   stroke: rgba(19,19,19,0.35);
   background: rgba(19,19,19,0.63);
   fill: rgba(19,19,19,0.35);
 }
 
-.c8 {
+.c6 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
 }
 
-.c10 {
+.c9 {
   color: #131313;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -457,7 +421,7 @@ exports[`SendCurrencyInputform > should render correctly with verified recipient
   letter-spacing: -0.01em;
 }
 
-.c11 {
+.c10 {
   color: rgba(19,19,19,0.63);
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -465,7 +429,7 @@ exports[`SendCurrencyInputform > should render correctly with verified recipient
   letter-spacing: -0.01em;
 }
 
-.c4 {
+.c2 {
   padding: 6px 0px;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -473,7 +437,7 @@ exports[`SendCurrencyInputform > should render correctly with verified recipient
   justify-content: space-between;
 }
 
-.c6 {
+.c4 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -481,15 +445,15 @@ exports[`SendCurrencyInputform > should render correctly with verified recipient
   transition-duration: 125ms;
 }
 
-.c6:hover {
+.c4:hover {
   opacity: 0.6;
 }
 
-.c6:active {
+.c4:active {
   opacity: 0.4;
 }
 
-.c12 {
+.c11 {
   color: rgba(19,19,19,0.35);
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -498,23 +462,12 @@ exports[`SendCurrencyInputform > should render correctly with verified recipient
   transition-duration: 125ms;
 }
 
-.c12:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c12:active {
+.c11:active {
   opacity: 0.4;
-}
-
-.c1 {
-  position: relative;
-  background-color: #F9F9F9;
-  border-radius: 16px;
-  padding: 12px 16px;
-  gap: 4px;
-  opacity: 1;
-  pointer-events: initial;
-  border: 1px solid transparent;
 }
 
 <span
@@ -522,7 +475,7 @@ exports[`SendCurrencyInputform > should render correctly with verified recipient
   style="display: contents;"
 >
   <div
-    class="c0 c1"
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-spa94665589 _opacity-1 _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
   >
     <div
       aria-expanded="false"
@@ -535,13 +488,13 @@ exports[`SendCurrencyInputform > should render correctly with verified recipient
         data-state="closed"
       >
         <div
-          class="c2 c3 c4"
+          class="c0 c1 c2"
         >
           <div
-            class="c2 c5 c6"
+            class="c0 c3 c4"
           >
             <svg
-              class="c7 c8"
+              class="c5 c6"
               data-testid="IdenticonLoader"
               fill="rgba(19, 19, 19, 0.35)"
               stroke="rgba(19, 19, 19, 0.35)"
@@ -559,26 +512,26 @@ exports[`SendCurrencyInputform > should render correctly with verified recipient
               />
             </svg>
             <div
-              class="c0"
+              class="c7"
             >
               <div
-                class="c2 c9"
+                class="c0 c8"
               >
                 <div
-                  class="c10 css-n8z49y"
+                  class="c9 css-n8z49y"
                 >
                   hayden.eth
                 </div>
               </div>
               <div
-                class="c11 css-obwv3p"
+                class="c10 css-obwv3p"
               >
                 0x9984...9103
               </div>
             </div>
           </div>
           <svg
-            class="c12"
+            class="c11"
             fill="none"
             height="20"
             stroke="currentColor"
@@ -614,31 +567,6 @@ exports[`SendCurrencyInputform > should render correctly with verified recipient
 
 exports[`SendCurrencyInputform > should render placeholder values 1`] = `
 .c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c1 {
-  position: relative;
-  background-color: #F9F9F9;
-  border-radius: 16px;
-  padding: 12px 16px;
-  gap: 4px;
-  opacity: 1;
-  pointer-events: initial;
-  border: 1px solid transparent;
-}
-
-.c2 {
   background: none;
   width: 100%;
   color: #131313;
@@ -649,19 +577,19 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
   line-height: 24px;
 }
 
-.c2::-webkit-input-placeholder {
+.c0::-webkit-input-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c2::-moz-placeholder {
+.c0::-moz-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c2:-ms-input-placeholder {
+.c0:-ms-input-placeholder {
   color: rgba(19,19,19,0.35);
 }
 
-.c2::placeholder {
+.c0::placeholder {
   color: rgba(19,19,19,0.35);
 }
 
@@ -670,7 +598,7 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
   style="display: contents;"
 >
   <div
-    class="c0 c1"
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-spa94665589 _opacity-1 _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
   >
     <div
       aria-expanded="false"
@@ -695,7 +623,7 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
             autocapitalize="off"
             autocomplete="off"
             autocorrect="off"
-            class="c2"
+            class="c0"
             pattern="^(0x[a-fA-F0-9]{40})$"
             placeholder="Wallet address or ENS name"
             spellcheck="false"

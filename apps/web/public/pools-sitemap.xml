@@ -12515,4 +12515,34 @@
     <lastmod>2025-08-29T21:30:57.823Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/ethereum/0x5ae13baaef0620fdae1d355495dc51a17adb4082</loc>
+    <lastmod>2025-09-05T19:48:33.559Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0xdea629c5587037d0925ff85f1961d95db62bedd6</loc>
+    <lastmod>2025-09-05T19:48:33.559Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/bnb/0xba51d338a319f5e1b5da46065946576149874acf</loc>
+    <lastmod>2025-09-05T19:48:33.559Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/bnb/0xe47727f8c9256ab31dd97d431dfe9a5d9c098238</loc>
+    <lastmod>2025-09-05T19:48:33.559Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/avalanche/0xafe235b62d5d7fe6335428d52df1a6204de002b8</loc>
+    <lastmod>2025-09-05T19:48:33.559Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/soneium/0x76c54e356ccf357882e5632127983d6c975d7573</loc>
+    <lastmod>2025-09-05T19:48:33.559Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

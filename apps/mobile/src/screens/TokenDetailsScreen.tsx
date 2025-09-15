@@ -11,6 +11,7 @@ import { PriceExplorer } from 'src/components/PriceExplorer/PriceExplorer'
 import { ContractAddressExplainerModal } from 'src/components/TokenDetails/ContractAddressExplainerModal'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDetailsActionButtons'
+import { TokenDetailsBridgedAssetSection } from 'src/components/TokenDetails/TokenDetailsBridgedAssetSection'
 import { TokenDetailsContextProvider, useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks'
@@ -20,9 +21,10 @@ import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/
 import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetailsHeaders'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
 import { Flex, Separator } from 'ui/src'
-import { ArrowDownCircle, ArrowUpCircle, Bank, SendRoundedAirplane } from 'ui/src/components/icons'
+import { ArrowDownCircle, ArrowUpCircle, Bank, ExternalLink, SendRoundedAirplane } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import type { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
@@ -126,6 +128,8 @@ const TokenDetails = memo(function _TokenDetails(): JSX.Element {
             <TokenWarningCardWrapper />
 
             <TokenBalancesWrapper />
+
+            <TokenDetailsBridgedAssetSection />
 
             <Separator />
           </Flex>
@@ -285,6 +289,16 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     navigateToSend({ currencyAddress: address, chainId })
   }, [address, chainId, navigateToSend])
 
+  const onPressWithdraw = useCallback(() => {
+    setTimeout(() => {
+      navigate(ModalName.Wormhole, {
+        currencyInfo,
+      })
+    }, 300) // delay is needed to prevent menu from not closing properly
+  }, [currencyInfo])
+
+  const isBridgedAsset = currencyInfo && checkIsBridgedAsset(currencyInfo)
+
   const isScreenNavigationReady = useIsScreenNavigationReady({ navigation })
 
   const getCTAVariant = useTokenDetailsCTAVariant({
@@ -305,13 +319,42 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
       ...(fiatOnRampCurrency
         ? [{ label: t('common.button.buy'), Icon: Bank, onPress: () => onPressBuyFiatOnRamp() }]
         : []),
+      ...(isBridgedAsset && hasTokenBalance
+        ? [
+            {
+              label: t('common.withdraw'),
+              Icon: ArrowUpCircle,
+              onPress: () => onPressWithdraw(),
+              subheader: t('bridgedAsset.wormhole.toHyperEVM'),
+              rightIcon: <ExternalLink size="$icon.20" color="$neutral2" />,
+              height: 56,
+            },
+          ]
+        : []),
       ...(hasTokenBalance && fiatOnRampCurrency
         ? [{ label: t('common.button.sell'), Icon: ArrowUpCircle, onPress: () => onPressBuyFiatOnRamp(true) }]
         : []),
-      ...(hasTokenBalance ? [{ label: t('common.button.send'), Icon: SendRoundedAirplane, onPress: onPressSend }] : []),
+      ...(hasTokenBalance
+        ? [
+            {
+              label: t('common.button.send'),
+              Icon: SendRoundedAirplane,
+              onPress: onPressSend,
+            },
+          ]
+        : []),
       { label: t('common.button.receive'), Icon: ArrowDownCircle, onPress: navigateToReceive },
     ],
-    [fiatOnRampCurrency, hasTokenBalance, onPressBuyFiatOnRamp, t, onPressSend, navigateToReceive],
+    [
+      fiatOnRampCurrency,
+      t,
+      isBridgedAsset,
+      hasTokenBalance,
+      onPressWithdraw,
+      onPressSend,
+      navigateToReceive,
+      onPressBuyFiatOnRamp,
+    ],
   )
 
   const hideActionButtons = useMemo(() => {
