@@ -86,7 +86,7 @@ export default function SettingsMenu({
           />
           <SettingsButton
             title={t('common.language')}
-            currentState={languageInfo.displayName}
+            currentState={languageInfo?.displayName}
             onClick={openLanguageSettings}
             testId={TestID.LanguageSettingsButton}
           />
