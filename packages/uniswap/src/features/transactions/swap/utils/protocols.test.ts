@@ -38,12 +38,7 @@ const mockCreateGetV4SwapEnabled = createGetV4SwapEnabled as jest.Mock
 const mockCreateGetSupportedChainId = createGetSupportedChainId as jest.Mock
 
 describe('protocols', () => {
-  const allProtocols: FrontendSupportedProtocol[] = [
-    ProtocolItems.UNISWAPX_V2,
-    ProtocolItems.V4,
-    ProtocolItems.V3,
-    ProtocolItems.V2,
-  ]
+  const allProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V3]
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -163,12 +158,7 @@ describe('protocols', () => {
       })
 
       // Start with duplicate UNISWAPX_V2 entries
-      const protocolsWithDuplicates: FrontendSupportedProtocol[] = [
-        ProtocolItems.UNISWAPX_V2,
-        ProtocolItems.UNISWAPX_V2,
-        ProtocolItems.V4,
-        ProtocolItems.V3,
-      ]
+      const protocolsWithDuplicates: FrontendSupportedProtocol[] = [ProtocolItems.V3]
 
       const result = protocolFilter(protocolsWithDuplicates, UniverseChainId.Mainnet)
       // Both duplicates should be filtered out

@@ -48,11 +48,7 @@ export function FOTTooltipContent() {
 
 function SwapFeeTooltipContent({ hasFee }: { hasFee: boolean }) {
   const message = hasFee ? <Trans i18nKey="swap.fees.experience" /> : <Trans i18nKey="swap.fees.noFee" />
-  return (
-    <BaseTooltipContent url={`${uniswapUrls.helpUrl}/articles/20131678274957`}>
-      {message}
-    </BaseTooltipContent>
-  )
+  return <BaseTooltipContent url={`${uniswapUrls.helpUrl}/articles/20131678274957`}>{message}</BaseTooltipContent>
 }
 
 export function SlippageTooltipContent() {

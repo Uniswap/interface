@@ -165,6 +165,7 @@ function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<Stat
   const locale = useCurrentLocale()
 
   // For Arabic locales, use simple Text component instead of animated sprites
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const isArabic = locale?.startsWith('ar') ?? false
   if (isArabic) {
     return (

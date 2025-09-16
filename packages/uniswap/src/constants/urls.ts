@@ -24,7 +24,6 @@ export const UNISWAP_APP_URL = 'https://uniswap.org/app'
 export const UNISWAP_SUPPORT_URL = 'https://support.juiceswap.xyz/hc/en-us'
 export const UNISWAP_MOBILE_REDIRECT_URL = 'https://uniswap.org/mobile-redirect'
 
-
 // The trading api uses custom builds for testing which may not use the v1 prefix
 const tradingApiVersionPrefix = config.tradingApiWebTestEnv === 'true' ? '' : '/v1'
 

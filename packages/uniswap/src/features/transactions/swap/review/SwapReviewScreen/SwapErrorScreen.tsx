@@ -5,7 +5,6 @@ import { X } from 'ui/src/components/icons/X'
 import { WarningModalContent } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
@@ -51,7 +50,7 @@ export function SwapErrorScreen({
     } else if (isUniswapXBackendError) {
       // TODO(WEB-7668): move this into onPressRetry logic.
       // Update swap preferences for this session to exclude UniswapX if Uniswap x failed
-      const updatedProtocols = selectedProtocols.filter((protocol) => protocol !== ProtocolItems.UNISWAPX_V2)
+      const updatedProtocols = selectedProtocols
       setSelectedProtocols(updatedProtocols)
     } else {
       resubmitSwap()

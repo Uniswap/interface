@@ -29,6 +29,7 @@ export function useFeatureFlagUrlOverrides() {
     // JuiceSwap: Disable Uniswap embedded wallet for all environments
     if (!isStatsigUninitialized) {
       getOverrideAdapter().overrideGate('embedded_wallet', false)
+      getOverrideAdapter().overrideGate('uniswapx', false)
     }
 
     if (!isStatsigUninitialized && !isProduction) {

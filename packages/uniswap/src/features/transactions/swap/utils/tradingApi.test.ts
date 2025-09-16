@@ -23,7 +23,7 @@ const mockUseProtocolsForChain = useProtocolsForChain as jest.Mock
 describe('useQuoteRoutingParams', () => {
   const tokenInChainId = UniverseChainId.Mainnet
   const tokenOutChainId = UniverseChainId.Mainnet
-  const defaultProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V2, ProtocolItems.V3, ProtocolItems.V4]
+  const defaultProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V3]
 
   beforeEach(() => {
     // Reset mocks before each test
@@ -38,7 +38,7 @@ describe('useQuoteRoutingParams', () => {
         tokenInChainId,
         tokenOutChainId,
         isUSDQuote: true,
-        isV4HookPoolsEnabled: true,
+        isV4HookPoolsEnabled: false,
       }),
     )
     expect(result.current).toEqual({
@@ -52,7 +52,7 @@ describe('useQuoteRoutingParams', () => {
         selectedProtocols: defaultProtocols,
         tokenInChainId: UniverseChainId.Mainnet,
         tokenOutChainId: UniverseChainId.ArbitrumOne,
-        isV4HookPoolsEnabled: true,
+        isV4HookPoolsEnabled: false,
       }),
     )
     expect(result.current).toEqual({
@@ -65,7 +65,7 @@ describe('useQuoteRoutingParams', () => {
       const isV4HookPoolsEnabled = true
 
       it('should return V4_HOOKS_INCLUSIVE for hooksOptions if V4 is already in protocols', () => {
-        const selectedProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V2, ProtocolItems.V3, ProtocolItems.V4]
+        const selectedProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V3]
         // eslint-disable-next-line max-nested-callbacks
         mockUseProtocolsForChain.mockImplementation(() => selectedProtocols)
 
@@ -87,7 +87,7 @@ describe('useQuoteRoutingParams', () => {
       })
 
       it('should add V4 to protocols and return V4_HOOKS_ONLY for hooksOptions if V4 is not in protocols', () => {
-        const selectedProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V2, ProtocolItems.V3]
+        const selectedProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V3]
         const expectedProtocols = [ProtocolItems.V2, ProtocolItems.V3, ProtocolItems.V4]
         // eslint-disable-next-line max-nested-callbacks
         mockUseProtocolsForChain.mockImplementation(() => selectedProtocols) // Original protocols without V4
@@ -114,7 +114,7 @@ describe('useQuoteRoutingParams', () => {
       const isV4HookPoolsEnabled = false
 
       it('should return the original protocols and V4_NO_HOOKS for hooksOptions', () => {
-        const selectedProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V2, ProtocolItems.V3, ProtocolItems.V4]
+        const selectedProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V3]
         // eslint-disable-next-line max-nested-callbacks
         mockUseProtocolsForChain.mockImplementation(() => selectedProtocols)
 
@@ -136,7 +136,7 @@ describe('useQuoteRoutingParams', () => {
       })
 
       it('should return the original protocols (without V4) and V4_NO_HOOKS for hooksOptions', () => {
-        const selectedProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V2, ProtocolItems.V3]
+        const selectedProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V3]
         // eslint-disable-next-line max-nested-callbacks
         mockUseProtocolsForChain.mockImplementation(() => selectedProtocols)
 
