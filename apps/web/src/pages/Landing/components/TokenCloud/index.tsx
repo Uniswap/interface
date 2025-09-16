@@ -16,7 +16,14 @@ export function TokenCloud() {
   const navigate = useNavigate()
   const onPress = useCallback(
     (item: ItemPoint<InteractiveToken>) => {
-      const { address, chain } = item.itemData
+      const { address, chain, symbol } = item.itemData
+
+      // Special handling for Citrea token - navigate to external website
+      if (symbol === 'CITREA') {
+        window.open('https://citrea.xyz/', '_blank', 'noopener,noreferrer')
+        return
+      }
+
       navigate(
         getTokenDetailsURL({
           address,

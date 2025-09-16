@@ -1,28 +1,10 @@
-import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { InteractiveToken } from 'pages/Landing/assets/approvedTokens'
-import { useMemo } from 'react'
 import { Flex, Text } from 'ui/src'
 import { ItemPoint } from 'uniswap/src/components/IconCloud/IconCloud'
-import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 
 export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }) {
-  const { formatPercent } = useLocalizationContext()
-
   const { color, size, floatingElementPosition, itemData } = itemPoint
-  const { address, chain, symbol } = itemData
-
-  const tokenPromoQuery = useTokenPromoQuery({
-    variables: {
-      address: address !== NATIVE_CHAIN_ID ? address : undefined,
-      chain,
-    },
-  })
-
-  const pricePercentChange = useMemo(() => {
-    return tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
-  }, [tokenPromoQuery.data?.token?.market?.pricePercentChange?.value])
+  const { symbol } = itemData
 
   return (
     <Flex
@@ -48,10 +30,6 @@ export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }
         >
           {symbol}
         </Text>
-        <Flex row alignItems="center">
-          <DeltaArrow delta={pricePercentChange} formattedDelta={formatPercent(Math.abs(pricePercentChange))} />
-          <Text variant="body2">{formatPercent(Math.abs(pricePercentChange))}</Text>
-        </Flex>
       </Flex>
     </Flex>
   )

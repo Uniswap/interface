@@ -1,3 +1,6 @@
+import bitcoinLogo from 'assets/images/coins/bitcoin.png'
+import citreaLogo from 'assets/images/coins/citrea.png'
+import citrusDollarLogo from 'assets/images/coins/citrus-dollar.png'
 import ethereumLogo from 'assets/images/ethereum-logo.png'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -21,31 +24,28 @@ export const approvedERC20: InteractiveToken[] = [
     logoUrl: ethereumLogo,
   },
   {
-    name: 'USDCoin',
-    symbol: 'USDC',
+    name: 'Citrus Dollar',
+    symbol: 'CUSD',
     address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
     chain: Chain.Ethereum,
-    color: '#2775CA',
-    logoUrl:
-      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+    color: '#ff8c00',
+    logoUrl: citrusDollarLogo,
   },
   {
-    name: 'Dai Stablecoin',
-    symbol: 'DAI',
+    name: 'Citrea',
+    symbol: 'CITREA',
     address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
     chain: Chain.Ethereum,
-    color: '#FFAA00',
-    logoUrl:
-      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+    color: '#d4d4d8',
+    logoUrl: citreaLogo,
   },
   {
-    name: 'Wrapped BTC',
-    symbol: 'WBTC',
-    address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+    name: 'Bitcoin',
+    symbol: 'BTC',
+    address: '0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6',
     chain: Chain.Ethereum,
     color: '#F7931A',
-    logoUrl:
-      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png',
+    logoUrl: bitcoinLogo,
   },
   {
     name: 'Euro Coin',
