@@ -294,6 +294,7 @@
   "common.dismiss": "Dismiss",
   "common.dnsRegistrar": "DNS Registrar",
   "common.docs": "Docs",
+  "common.faq": "FAQ",
   "common.donate": "Donate",
   "common.done": "Done",
   "common.dontShowAgain": "Don’t show this again",
@@ -2481,5 +2482,9 @@
   "web.explore.description": "Discover and research tokens on {{network}}. Explore top pools. View real-time prices, trading volume, TVL, charts, and transaction data.",
   "web.explore.title.pools": "Explore top pools on {{network}} on JuiceSwap",
   "web.explore.title.tokens": "Explore top tokens on {{network}} on JuiceSwap",
-  "web.explore.title.transactions": "Explore top transactions on {{network}} on JuiceSwap"
+  "web.explore.title.transactions": "Explore top transactions on {{network}} on JuiceSwap",
+  "faq.juiceToken.question": "Is there a Juice Token?",
+  "faq.juiceToken.answer": "It's possible that a Juice Governance System with its own token will be created at a later time, similar to Uniswap, and all early JuiceSwap users will benefit from an airdrop.",
+  "faq.newQuestions.question": "When will new questions be added to the FAQ?",
+  "faq.newQuestions.answer": "New questions will be added soon. The website is currently still in development and we're continuously improving the user experience."
 }
