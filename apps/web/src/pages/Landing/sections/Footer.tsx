@@ -1,5 +1,3 @@
-import { MenuItem, MenuSectionTitle, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
-import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
 import { Wiggle } from 'components/animations/Wiggle'
 import { useModalState } from 'hooks/useModalState'
 import { Github, Telegram, Twitter } from 'pages/Landing/components/Icons'
@@ -46,63 +44,18 @@ export function Socials({ iconSize }: { iconSize?: string }) {
   )
 }
 
-function FooterSection({ title, items }: { title: string; items: MenuItem[] }) {
-  return (
-    <Flex width={130} $md={{ width: '100%' }} flexGrow={0} flexShrink={1} flexBasis="auto" gap={8}>
-      <Text variant="subheading2">{title}</Text>
-      <Flex gap={5}>
-        {items.map((item, index) => (
-          <MenuLink
-            key={`footer_${title}_${index}}`}
-            label={item.label}
-            href={item.href}
-            internal={item.internal}
-            overflow={item.overflow}
-            textVariant="subheading2"
-          />
-        ))}
-      </Flex>
-    </Flex>
-  )
-}
-
 export function Footer() {
   const { t } = useTranslation()
   const { toggleModal: togglePrivacyPolicy } = useModalState(ModalName.PrivacyPolicy)
-  const sectionContent = useMenuContent()
-  const productsSection = sectionContent[MenuSectionTitle.Products]
-  const protocolSection = sectionContent[MenuSectionTitle.Protocol]
-  const companySection = sectionContent[MenuSectionTitle.Company]
-  const needHelpSection = sectionContent[MenuSectionTitle.NeedHelp]
-  const brandAssets = {
-    label: t('common.brandAssets'),
-    href: 'https://github.com/JuiceSwapxyz/documentation/tree/main/media_kit',
-    internal: false,
-  }
   const currentYear = new Date().getFullYear()
 
   return (
     <Flex maxWidth="100vw" width="100%" gap="$spacing24" pt="$none" px="$spacing48" pb={40} $lg={{ px: '$spacing40' }}>
       <Flex row $md={{ flexDirection: 'column' }} justifyContent="space-between" gap="$spacing32">
         <Flex height="100%" gap="$spacing60">
-          <Flex $md={{ display: 'none' }}>
+          <Flex>
             <Socials iconSize={SOCIAL_ICONS_SIZE} />
           </Flex>
-        </Flex>
-        <Flex row $md={{ flexDirection: 'column' }} height="100%" gap="$spacing16">
-          <Flex row gap="$spacing16" justifyContent="space-between" $md={{ width: 'auto' }}>
-            {productsSection && <FooterSection title={productsSection.title} items={productsSection.items} />}
-            {protocolSection && <FooterSection title={protocolSection.title} items={protocolSection.items} />}
-          </Flex>
-          <Flex row gap="$spacing16" $md={{ width: 'auto' }}>
-            {companySection && (
-              <FooterSection title={companySection.title} items={[...companySection.items, brandAssets]} />
-            )}
-            {needHelpSection && <FooterSection title={needHelpSection.title} items={needHelpSection.items} />}
-          </Flex>
-        </Flex>
-        <Flex $md={{ display: 'flex' }} display="none">
-          <Socials iconSize={SOCIAL_ICONS_SIZE} />
         </Flex>
       </Flex>
       <Separator />
