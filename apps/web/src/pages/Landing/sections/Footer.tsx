@@ -116,9 +116,13 @@ export function Footer() {
         <Text variant="body3">© {currentYear} - JuiceSwap Labs</Text>
         <Flex row alignItems="center" gap="$spacing16">
           <PolicyLink onPress={togglePrivacyPolicy}>{t('common.privacyPolicy')}</PolicyLink>
-          {/* <Anchor textDecorationLine="none" href="https://uniswap.org/trademark" target="_blank">
-            <PolicyLink>{t('common.trademarkPolicy')}</PolicyLink>
-          </Anchor> */}
+          <Anchor
+            textDecorationLine="none"
+            href="https://github.com/JuiceSwapxyz/documentation/tree/main/media_kit"
+            target="_blank"
+          >
+            <PolicyLink>{t('common.brandAssets')}</PolicyLink>
+          </Anchor>
         </Flex>
       </Flex>
     </Flex>
