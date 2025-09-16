@@ -113,13 +113,13 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         <Flex maxWidth={920} alignItems="center" pointerEvents="none">
           <Text
             variant="heading1"
-            fontSize={64}
-            lineHeight={76}
+            fontSize={48}
+            lineHeight={56}
             textAlign="center"
             fontWeight="$book"
-            $md={{ fontSize: 52 }}
-            $sm={{ variant: 'heading2', fontSize: 36 }}
-            $short={{ variant: 'heading2', fontSize: 36 }}
+            $md={{ fontSize: 40 }}
+            $sm={{ variant: 'heading2', fontSize: 32 }}
+            $short={{ variant: 'heading2', fontSize: 32 }}
           >
             {renderRiseInText}
           </Text>
