@@ -24,7 +24,7 @@ import { Flex, Separator } from 'ui/src'
 import { ArrowDownCircle, ArrowUpCircle, Bank, ExternalLink, SendRoundedAirplane } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
+import { getBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import type { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
@@ -297,7 +297,7 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     }, 300) // delay is needed to prevent menu from not closing properly
   }, [currencyInfo])
 
-  const isBridgedAsset = currencyInfo && checkIsBridgedAsset(currencyInfo)
+  const bridgedAsset = getBridgedAsset(currencyInfo)
 
   const isScreenNavigationReady = useIsScreenNavigationReady({ navigation })
 
@@ -319,13 +319,13 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
       ...(fiatOnRampCurrency
         ? [{ label: t('common.button.buy'), Icon: Bank, onPress: () => onPressBuyFiatOnRamp() }]
         : []),
-      ...(isBridgedAsset && hasTokenBalance
+      ...(!!bridgedAsset && hasTokenBalance
         ? [
             {
               label: t('common.withdraw'),
               Icon: ArrowUpCircle,
               onPress: () => onPressWithdraw(),
-              subheader: t('bridgedAsset.wormhole.toHyperEVM'),
+              subheader: t('bridgedAsset.wormhole.toNativeChain', { nativeChainName: bridgedAsset.nativeChain }),
               rightIcon: <ExternalLink size="$icon.20" color="$neutral2" />,
               height: 56,
             },
@@ -348,7 +348,7 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     [
       fiatOnRampCurrency,
       t,
-      isBridgedAsset,
+      bridgedAsset,
       hasTokenBalance,
       onPressWithdraw,
       onPressSend,

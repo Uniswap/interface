@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmQqVDZ3muKEJHn7bG4HhuiCvUzYjz11aLt5fAD3TtQk3u`
-- CIDv1: `bafybeibfdj573ph6ojqdverarsuzt6twljdvfivyihs5bdjv6hrckhydhq`
+- CIDv0: `QmPtKEQ9E5VjGVGpsMofpBzZ2PZjfoWiS8j9eTvPBssQaz`
+- CIDv1: `bafybeiaw7a75fegjjgzqmtnelnmjnzhsilnmpev5dtzsbckj46fadqyjd4`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,79 +10,9 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeibfdj573ph6ojqdverarsuzt6twljdvfivyihs5bdjv6hrckhydhq.ipfs.dweb.link/
-- [ipfs://QmQqVDZ3muKEJHn7bG4HhuiCvUzYjz11aLt5fAD3TtQk3u/](ipfs://QmQqVDZ3muKEJHn7bG4HhuiCvUzYjz11aLt5fAD3TtQk3u/)
+- https://bafybeiaw7a75fegjjgzqmtnelnmjnzhsilnmpev5dtzsbckj46fadqyjd4.ipfs.dweb.link/
+- [ipfs://QmPtKEQ9E5VjGVGpsMofpBzZ2PZjfoWiS8j9eTvPBssQaz/](ipfs://QmPtKEQ9E5VjGVGpsMofpBzZ2PZjfoWiS8j9eTvPBssQaz/)
 
-## 5.110.0 (2025-09-15)
-
-
-### Features
-
-* **web:** [lp] add liquidity range area - price chart (#22958) 351be86
-* **web:** [lp] add liquidity range area min/max lines and indicators (#22959) 50fb149
-* **web:** [lp] better responsiveness (#22957) 638d6a1
-* **web:** [lp] change state updates to zustand store (#22956) 377206b
-* **web:** [lp] d3 price chart (#22883) 6ae2c97
-* **web:** [lp] d3 range chart feature flag (#22880) 01cfc62
-* **web:** [lp] d3 range input - loading and error state (#22882) 8455809
-* **web:** [lp] d3 range input (#22881) e433818
-* **web:** [lp] liquidity bars renderer (#23030) f888710
-* **web:** [lp] price line renderer (#23029) 1b576f8
-* **web:** add a sticky header for small screens (#23088) 0b4d64b
-* **web:** add animations between steps in the create flow (#23007) 6f3f1e8
-* **web:** add network filter to portfolio page (#23150) 388dd34
-* **web:** add super basic unstyled portfolio page with routing (#22846) 730704f
-* **web:** Add withdraw to HyperEVM CTA (#23236) 8f5fd7c
-* **web:** Staging hotfixes for 09.15.25 (#23418) 36414b6
-* **web:** update portfolio tabs style (#22912) 63e0047
-
-
-### Bug Fixes
-
-* **web:** [lp] handle undefined currencyA in url sync (#23191) 87aca8f
-* **web:** add back in the edit button (#23279) 6d94e52
-* **web:** align NFT empty state (#23210) 670e0f0
-* **web:** allow cancelling uniswapx orders on web (#23184) 515b1b7
-* **web:** center activity modal on screen (#23180) 6e1046d
-* **web:** display pending uniswapx orders (#23183) c1c0175
-* **web:** fetch main in vercel ignore step (#23250) 822e699
-* **web:** Fix explore table loading skeleton thrash (#23040) 7b451cc
-* **web:** fix reset logic for migrate (#23280) 5d7d36f
-* **web:** Handle trailing slashes in useIsPage hook (#23121) b293144
-* **web:** limit orders - always use  for decimal separator when formatting numbers used in the internal state (#23176) 3180667
-* **web:** memoize offchain order line item (#23144) d8c41cb
-* **web:** remove default vitest filter for web "test" script (#23198) f4942da
-* **web:** remove receipt req for batch txs in updater (#23433) dcbefc2
-* **web:** remove redundant wrangler config option (#22638) b13851d
-* **web:** simplify disable logic for the reset button (#23228) 6feab65
-* **web:** vercel ignore script - support multi commit branches (#23165) ea04582
-
-
-### Continuous Integration
-
-* **web:** update sitemaps eb0faf8
-
-
-### Code Refactoring
-
-* **web:** add clarifying comment (#22707) d115a9e
-* **web:** add offChainOrderDetails return (#22713) 710a87d
-* **web:** add pending remote uniswapx orders to state (#22706) 15c531d
-* **web:** add polling migration updates (#22702) 88a67e8
-* **web:** add shared mapping utils (#22698) 0e2c8c7
-* **web:** begin migrating UniswapOrderDetails type (#22699) 1b65815
-* **web:** re-enable tests (#22709) 0ed40bc
-* **web:** remove legacy uniswapx types across multiple files (#22703) 280bb5f
-* **web:** remove signatures directory (#22708) cd00d8b
-* **web:** rename activity utils move functions to cancel utils (#22915) 2f99041
-* **web:** update ActivityTabShared to use transactions slice (#23221) dfc5fb2
-* **web:** update cancellation types + refactor (#22704) 9b5780e
-* **web:** update parseLocal (#22705) a195b0e
-* **web:** update swap callback and saga (#22700) 1bf4c62
-
-
-### Tests
-
-* **web:** [lp] test useCurrencyValidation (#23192) e9be942
+### 5.110.1 (2025-09-17)
 
 

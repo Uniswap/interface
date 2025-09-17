@@ -399,11 +399,41 @@ export function nativeOnChain(chainId: number): NativeCurrencyImpl | Token {
   return result
 }
 
-// TODO[DAT-1513]: Replace with metadata field from backend
-export const UNICHAIN_BRIDGED_ASSETS: readonly string[] = [
-  '0xbde8a5331e8ac4831cf8ea9e42e229219eafab97', // SOL
-  '0xbe51A5e8FA434F09663e8fB4CCe79d0B2381Afad', // JUP
-  '0x97Fadb3D000b953360FD011e173F12cDDB5d70Fa', // WIF
-  '0x15d0e0c55a3e7ee67152ad7e89acf164253ff68d', // HYPE
-  '0xBbE97f3522101e5B6976cBf77376047097BA837F', // BONK
+// TODO[DAT-1513]: Replace with metadata fields from backend
+export const UNICHAIN_BRIDGED_ASSETS: readonly BridgedAsset[] = [
+  {
+    unichainAddress: '0xbde8a5331e8ac4831cf8ea9e42e229219eafab97', // SOL
+    nativeChain: 'Solana',
+    nativeAddress: 'native',
+  },
+  {
+    unichainAddress: '0xbe51A5e8FA434F09663e8fB4CCe79d0B2381Afad', // JUP
+    nativeChain: 'Solana',
+    nativeAddress: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN',
+  },
+  {
+    unichainAddress: '0x97Fadb3D000b953360FD011e173F12cDDB5d70Fa', // WIF
+    nativeChain: 'Solana',
+    nativeAddress: 'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm',
+  },
+  {
+    unichainAddress: '0x15d0e0c55a3e7ee67152ad7e89acf164253ff68d', // HYPE
+    nativeChain: 'HyperEVM',
+    nativeAddress: 'native',
+  },
+  {
+    unichainAddress: '0xBbE97f3522101e5B6976cBf77376047097BA837F', // BONK
+    nativeChain: 'Solana',
+    nativeAddress: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263',
+  },
 ]
+
+export function isBridgedAsset(address: string): boolean {
+  return UNICHAIN_BRIDGED_ASSETS.some((asset) => asset.unichainAddress === address)
+}
+
+export type BridgedAsset = {
+  unichainAddress: string
+  nativeChain: string
+  nativeAddress: string
+}

@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
-import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
+import { getBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import { WormholeModalAtom } from 'uniswap/src/components/BridgedAsset/WormholeModal'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -165,15 +165,15 @@ function BridgedAssetWithdrawButton(): JSX.Element | null {
     }
   })
 
-  const isBridgedAsset = currencyInfo && checkIsBridgedAsset(currencyInfo)
-  if (!isBridgedAsset) {
+  const bridgedAsset = getBridgedAsset(currencyInfo)
+  if (!bridgedAsset) {
     return null
   }
   return (
     <TouchableArea onPress={handlePress} hoverStyle={{ opacity: 0.8 }}>
       <Flex row gap="$spacing8">
         <Text variant="buttonLabel3" color="$neutral2">
-          {t('bridgedAsset.wormhole.withdrawToHyperEVM')}
+          {t('bridgedAsset.wormhole.withdrawToNativeChain', { nativeChainName: bridgedAsset.nativeChain })}
         </Text>
         <ExternalLink color="$neutral3" size="$icon.16" />
       </Flex>
