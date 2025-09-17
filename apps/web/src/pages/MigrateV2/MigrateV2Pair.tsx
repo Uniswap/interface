@@ -1,7 +1,15 @@
 import type { TransactionResponse } from '@ethersproject/providers'
+import {
+  CurrencyAmount,
+  Fraction,
+  Percent,
+  Price,
+  Token,
+  V2_FACTORY_ADDRESSES,
+  type Currency,
+} from '@juiceswapxyz/sdk-core'
+import { FeeAmount, Pool, Position, TickMath, priceToClosestTick } from '@juiceswapxyz/v3-sdk'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES, type Currency } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Position, TickMath, priceToClosestTick } from '@uniswap/v3-sdk'
 import { BlueCard, DarkGrayCard, LightCard, YellowCard } from 'components/Card/cards'
 import FeeSelector from 'components/FeeSelector'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'

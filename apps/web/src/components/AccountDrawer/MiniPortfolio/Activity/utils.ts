@@ -1,14 +1,14 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Web3Provider } from '@ethersproject/providers'
-import { useQuery } from '@tanstack/react-query'
-import { permit2Address } from '@uniswap/permit2-sdk'
 import {
   CosignedPriorityOrder,
   CosignedV2DutchOrder,
   CosignedV3DutchOrder,
   DutchOrder,
   getCancelMultipleParams,
-} from '@uniswap/uniswapx-sdk'
+} from '@juiceswapxyz/uniswapx-sdk'
+import { useQuery } from '@tanstack/react-query'
+import { permit2Address } from '@uniswap/permit2-sdk'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { ContractTransaction } from 'ethers/lib/ethers'

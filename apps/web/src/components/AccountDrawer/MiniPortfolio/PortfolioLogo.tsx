@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
 import Identicon from 'components/Identicon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'

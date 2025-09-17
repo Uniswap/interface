@@ -1,4 +1,4 @@
-import { TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@juiceswapxyz/sdk-core'
 import { gqlToCurrency, supportedChainIdFromGQLChain } from 'appGraphql/data/util'
 import { parseUnits } from 'ethers/lib/utils'
 import store from 'state'

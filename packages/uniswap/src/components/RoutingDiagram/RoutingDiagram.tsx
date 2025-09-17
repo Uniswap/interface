@@ -1,5 +1,5 @@
-import { Protocol } from '@uniswap/router-sdk'
-import { Currency } from '@uniswap/sdk-core'
+import { Protocol } from '@juiceswapxyz/router-sdk'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip, styled as tamaguiStyled } from 'ui/src'
 import { DotLine } from 'ui/src/components/icons/DotLine'

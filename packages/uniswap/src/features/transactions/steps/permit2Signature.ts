@@ -1,5 +1,5 @@
 import type { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
-import type { Currency } from '@uniswap/sdk-core'
+import type { Currency } from '@juiceswapxyz/sdk-core'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { ValidatedPermit } from 'uniswap/src/features/transactions/swap/utils/trade'
 

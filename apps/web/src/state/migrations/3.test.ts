@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@juiceswapxyz/sdk-core'
 import { createMigrate } from 'redux-persist'
 import { migration1 } from 'state/migrations/1'
 import { migration2 } from 'state/migrations/2'

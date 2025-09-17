@@ -1,6 +1,6 @@
 import 'test-utils/tokens/mocks'
 
-import { WETH9 } from '@uniswap/sdk-core'
+import { WETH9 } from '@juiceswapxyz/sdk-core'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { SignatureType } from 'state/signatures/types'

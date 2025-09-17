@@ -1,4 +1,4 @@
-import { TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@juiceswapxyz/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ColorTokens } from 'ui/src'

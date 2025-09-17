@@ -1,6 +1,6 @@
+import { CurrencyAmount } from '@juiceswapxyz/sdk-core'
+import { Pair } from '@juiceswapxyz/v2-sdk'
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { CurrencyAmount } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
 import { PositionInfo } from 'components/Liquidity/types'
 import { getPositionUrl } from 'components/Liquidity/utils/getPositionUrl'
 import JSBI from 'jsbi'

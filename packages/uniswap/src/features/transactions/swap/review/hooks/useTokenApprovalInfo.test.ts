@@ -1,5 +1,5 @@
+import { CurrencyAmount, Token } from '@juiceswapxyz/sdk-core'
 import { renderHook } from '@testing-library/react-hooks'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import { useCheckApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckApprovalQuery'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'

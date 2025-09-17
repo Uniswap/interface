@@ -1,5 +1,5 @@
+import { Token } from '@juiceswapxyz/sdk-core'
 import { renderHook } from '@testing-library/react-hooks'
-import { Token } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { getExactOutputWillFail } from 'uniswap/src/features/transactions/swap/utils/getExactOutputWillFail'

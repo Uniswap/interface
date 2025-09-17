@@ -1,4 +1,4 @@
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@juiceswapxyz/sdk-core'
 import invariant from 'tiny-invariant'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { is32ByteBase58String } from 'uniswap/src/features/platforms/svm/utils'

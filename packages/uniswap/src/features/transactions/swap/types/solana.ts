@@ -1,5 +1,5 @@
-import { ZERO_PERCENT } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sdk-core'
+import { ZERO_PERCENT } from '@juiceswapxyz/router-sdk'
+import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@juiceswapxyz/sdk-core'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { JupiterOrderResponse } from 'uniswap/src/data/apiClients/jupiterApi/order/types'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/models/Routing'

@@ -1,5 +1,5 @@
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
-import { CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, NativeCurrency, Token } from '@juiceswapxyz/sdk-core'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { fetchTradingApiIndicativeQuoteIgnoring404 } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery'
 import {

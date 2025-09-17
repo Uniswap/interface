@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@juiceswapxyz/sdk-core'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { buildDAI, buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'

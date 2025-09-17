@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token, TradeType } from '@juiceswapxyz/sdk-core'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'

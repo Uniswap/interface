@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { Currency, Percent } from '@juiceswapxyz/sdk-core'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeTierData } from 'components/Liquidity/types'
 import { getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
 import {

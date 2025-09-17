@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@juiceswapxyz/sdk-core'
 import {
   BTC_BSC,
   BUSD_BSC,

@@ -17,9 +17,9 @@ jest.mock('uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracke
   },
 }))
 
-// Mock the @uniswap/v2-sdk package to provide Pair.getAddress
-jest.mock('@uniswap/v2-sdk', () => {
-  const originalModule = jest.requireActual('@uniswap/v2-sdk')
+// Mock the @juiceswapxyz/v2-sdk package to provide Pair.getAddress
+jest.mock('@juiceswapxyz/v2-sdk', () => {
+  const originalModule = jest.requireActual('@juiceswapxyz/v2-sdk')
   originalModule.Pair.getAddress = (): string => {
     return `0xv2PoolAddress`
   }
@@ -31,11 +31,11 @@ const mockV2Pool = {
   token0: { address: 'token0Address' },
   token1: { address: 'token1Address' },
 }
-const { Pair: V2Pool } = jest.requireActual('@uniswap/v2-sdk')
+const { Pair: V2Pool } = jest.requireActual('@juiceswapxyz/v2-sdk')
 Object.setPrototypeOf(mockV2Pool, V2Pool.prototype)
 
-jest.mock('@uniswap/v3-sdk', () => {
-  const originalModule = jest.requireActual('@uniswap/v3-sdk')
+jest.mock('@juiceswapxyz/v3-sdk', () => {
+  const originalModule = jest.requireActual('@juiceswapxyz/v3-sdk')
   originalModule.Pool.getAddress = (): string => {
     return `0xv3PoolAddress`
   }
@@ -47,11 +47,11 @@ const mockV3Pool = {
   token1: { address: 'token1Address' },
   fee: 0,
 }
-const { Pool: V3Pool } = jest.requireActual('@uniswap/v3-sdk')
+const { Pool: V3Pool } = jest.requireActual('@juiceswapxyz/v3-sdk')
 Object.setPrototypeOf(mockV3Pool, V3Pool.prototype)
 //
 const mockV4Pool = { poolId: '0xpool1', v4: true }
-const { Pool: V4Pool } = jest.requireActual('@uniswap/v4-sdk')
+const { Pool: V4Pool } = jest.requireActual('@juiceswapxyz/v4-sdk')
 Object.setPrototypeOf(mockV4Pool, V4Pool.prototype)
 
 // Helper to cast isClassic as a jest.Mock

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@juiceswapxyz/sdk-core'
 import { useMemo } from 'react'
 import { assume0xAddress } from 'utils/wagmi'
 import { erc20Abi } from 'viem'

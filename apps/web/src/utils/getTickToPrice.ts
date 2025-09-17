@@ -1,6 +1,6 @@
-import { Currency, Price, Token } from '@uniswap/sdk-core'
-import { tickToPrice } from '@uniswap/v3-sdk'
-import { tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
+import { Currency, Price, Token } from '@juiceswapxyz/sdk-core'
+import { tickToPrice } from '@juiceswapxyz/v3-sdk'
+import { tickToPrice as tickToPriceV4 } from '@juiceswapxyz/v4-sdk'
 
 export function getTickToPrice({
   baseToken,

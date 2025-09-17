@@ -1,6 +1,7 @@
 import { PartialMessage } from '@bufbuild/protobuf'
 import { ConnectError } from '@connectrpc/connect'
 import { createQueryOptions, useInfiniteQuery, useQuery } from '@connectrpc/connect-query'
+import { Pair } from '@juiceswapxyz/v2-sdk'
 import {
   InfiniteData,
   UseInfiniteQueryResult,
@@ -15,7 +16,6 @@ import {
   ListPositionsResponse,
 } from '@uniswap/client-pools/dist/pools/v1/api_pb'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Pair } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
 import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
 import { SerializedToken } from 'uniswap/src/features/tokens/slice/types'

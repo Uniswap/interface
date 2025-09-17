@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { MixedRouteSDK } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { MixedRouteSDK } from '@juiceswapxyz/router-sdk'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@juiceswapxyz/sdk-core'
 import {
   DutchOrderInfo,
   DutchOrderInfoJSON,
@@ -13,9 +13,9 @@ import {
   UnsignedV3DutchOrderInfo,
   UnsignedV3DutchOrderInfoJSON,
   V3DutchOutputJSON,
-} from '@uniswap/uniswapx-sdk'
-import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
-import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
+} from '@juiceswapxyz/uniswapx-sdk'
+import { Pair, Route as V2Route } from '@juiceswapxyz/v2-sdk'
+import { FeeAmount, Pool, Route as V3Route } from '@juiceswapxyz/v3-sdk'
 import { getApproveInfo, getWrapInfo } from 'state/routing/gas'
 import {
   ClassicQuoteData,

@@ -1,6 +1,6 @@
 import providers from '@ethersproject/providers'
-import { ONE, Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
+import { ONE, Protocol } from '@juiceswapxyz/router-sdk'
+import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@juiceswapxyz/sdk-core'
 import { NullablePermit, Permit } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'

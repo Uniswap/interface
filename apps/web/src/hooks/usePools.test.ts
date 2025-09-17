@@ -1,6 +1,6 @@
 import { renderHook } from 'test-utils/render'
 
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount } from '@juiceswapxyz/v3-sdk'
 import { PoolState, useComputePoolState } from 'hooks/usePools'
 import { USDC, USDT } from 'uniswap/src/constants/tokens'
 

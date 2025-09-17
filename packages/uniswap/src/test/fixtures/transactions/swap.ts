@@ -1,5 +1,5 @@
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
+import { Currency, CurrencyAmount, Token, TradeType } from '@juiceswapxyz/sdk-core'
+import { FeeAmount, Pool, Route } from '@juiceswapxyz/v3-sdk'
 import { ClassicQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
   DutchOrderInfoV2,

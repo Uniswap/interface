@@ -1,4 +1,4 @@
-import { V2_ROUTER_ADDRESSES } from '@uniswap/sdk-core'
+import { V2_ROUTER_ADDRESSES } from '@juiceswapxyz/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 
 /**

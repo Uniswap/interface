@@ -1,6 +1,6 @@
 import type { TransactionResponse } from '@ethersproject/providers'
+import { CurrencyAmount, MERKLE_DISTRIBUTOR_ADDRESS, Token } from '@juiceswapxyz/sdk-core'
 import MerkleDistributorJSON from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
-import { CurrencyAmount, MERKLE_DISTRIBUTOR_ADDRESS, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useAccount } from 'hooks/useAccount'
 import { useContract } from 'hooks/useContract'

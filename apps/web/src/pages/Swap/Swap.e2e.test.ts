@@ -1,5 +1,5 @@
+import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@juiceswapxyz/universal-router-sdk'
 import { MaxUint160, MaxUint256, PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
-import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
 import { ONE_MILLION_USDT } from 'playwright/anvil/utils'
 import { expect, test } from 'playwright/fixtures'
 import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'

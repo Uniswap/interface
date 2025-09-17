@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { RefObject } from 'react'
 import type { TextInput, TextInputProps } from 'react-native'
 import { FlexProps } from 'ui/src'

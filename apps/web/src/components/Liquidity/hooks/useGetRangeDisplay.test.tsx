@@ -1,5 +1,5 @@
+import { Currency, Price } from '@juiceswapxyz/sdk-core'
 import { renderHook } from '@testing-library/react-hooks'
-import { Currency, Price } from '@uniswap/sdk-core'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { Bound } from 'state/mint/v3/actions'

@@ -1,6 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { Token as RestToken } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { Currency } from '@uniswap/sdk-core'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 

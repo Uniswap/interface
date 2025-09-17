@@ -1,4 +1,4 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { applyNativeTokenPercentageBuffer, hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { MAINNET_CURRENCY } from 'uniswap/src/test/fixtures'

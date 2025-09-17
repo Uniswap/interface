@@ -1,4 +1,4 @@
-import type { Percent } from '@uniswap/sdk-core'
+import type { Percent } from '@juiceswapxyz/sdk-core'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 
 export function formatPriceImpact(

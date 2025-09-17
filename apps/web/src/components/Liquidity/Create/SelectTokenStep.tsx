@@ -1,5 +1,5 @@
+import type { Currency, Percent } from '@juiceswapxyz/sdk-core'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import type { Currency, Percent } from '@uniswap/sdk-core'
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import CreatingPoolInfo from 'components/CreatingPoolInfo/CreatingPoolInfo'
 import { ErrorCallout } from 'components/ErrorCallout'

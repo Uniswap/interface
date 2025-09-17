@@ -1,4 +1,4 @@
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@juiceswapxyz/sdk-core'
 import Card, { OutlineCard } from 'components/Card/cards'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoColumn } from 'components/deprecated/Column'

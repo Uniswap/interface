@@ -1,5 +1,5 @@
-import { Token } from '@uniswap/sdk-core'
-import { Pool, Position } from '@uniswap/v3-sdk'
+import { Token } from '@juiceswapxyz/sdk-core'
+import { Pool, Position } from '@juiceswapxyz/v3-sdk'
 import { getTokensAsync } from 'components/AccountDrawer/MiniPortfolio/Pools/getTokensAsync'
 import { useInterfaceMulticallContracts } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
 import { atom, useAtom } from 'jotai'

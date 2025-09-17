@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@juiceswapxyz/sdk-core'
 import { OrderDirection } from 'appGraphql/data/util'
 import { FeeData } from 'components/Liquidity/Create/types'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'

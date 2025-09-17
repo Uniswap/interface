@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-import { Currency, NativeCurrency } from '@uniswap/sdk-core'
+import { Currency, NativeCurrency } from '@juiceswapxyz/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { ColorTokens } from 'ui/src'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'

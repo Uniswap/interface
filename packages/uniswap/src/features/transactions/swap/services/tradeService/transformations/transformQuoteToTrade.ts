@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'

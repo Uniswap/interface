@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useWETHContract } from 'hooks/useContract'
 import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'

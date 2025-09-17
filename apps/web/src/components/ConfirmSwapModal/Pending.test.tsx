@@ -1,7 +1,7 @@
 import 'test-utils/tokens/mocks'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { WETH9 } from '@uniswap/sdk-core'
+import { WETH9 } from '@juiceswapxyz/sdk-core'
 import { Pending } from 'components/ConfirmSwapModal/Pending'
 import { SwapResult, useSwapTransactionStatus } from 'hooks/useSwapCallback'
 import { TradeFillType } from 'state/routing/types'

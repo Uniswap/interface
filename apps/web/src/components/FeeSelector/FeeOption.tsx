@@ -1,4 +1,4 @@
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount } from '@juiceswapxyz/v3-sdk'
 import { FEE_AMOUNT_DETAIL } from 'components/FeeSelector/shared'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { AutoColumn } from 'components/deprecated/Column'

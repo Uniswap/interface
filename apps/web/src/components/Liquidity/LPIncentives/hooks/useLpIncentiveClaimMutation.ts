@@ -1,5 +1,5 @@
+import { Token } from '@juiceswapxyz/sdk-core'
 import { useMutation } from '@tanstack/react-query'
-import { Token } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useLpIncentivesClaim } from 'hooks/useLpIncentivesClaim'
 import { useLpIncentivesClaimData } from 'hooks/useLpIncentivesClaimData'

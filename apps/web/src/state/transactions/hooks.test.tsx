@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { TradeType } from '@juiceswapxyz/sdk-core'
 import { permit2Address } from '@uniswap/permit2-sdk'
-import { TradeType } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import {
   useHasPendingApproval,

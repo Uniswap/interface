@@ -1,8 +1,8 @@
 import 'test-utils/tokens/mocks'
 
+import type { Token } from '@juiceswapxyz/sdk-core'
+import { TradeType as MockTradeType } from '@juiceswapxyz/sdk-core'
 import { permit2Address } from '@uniswap/permit2-sdk'
-import type { Token } from '@uniswap/sdk-core'
-import { TradeType as MockTradeType } from '@uniswap/sdk-core'
 import { getCurrencyFromCurrencyId } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import {
   signatureToActivity,

@@ -1,5 +1,5 @@
+import { Currency, CurrencyAmount, Token } from '@juiceswapxyz/sdk-core'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import {
   CreateLPPositionRequest,
   IncreaseLPPositionRequest,

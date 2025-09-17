@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@juiceswapxyz/sdk-core'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'

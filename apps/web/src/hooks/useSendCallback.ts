@@ -1,5 +1,5 @@
 import type { TransactionRequest } from '@ethersproject/abstract-provider'
-import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import type { Currency, CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersProvider } from 'hooks/useEthersProvider'
 import { useSwitchChain } from 'hooks/useSwitchChain'

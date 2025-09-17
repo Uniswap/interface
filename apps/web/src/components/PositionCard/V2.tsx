@@ -1,5 +1,5 @@
-import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import { CurrencyAmount, Percent, Token } from '@juiceswapxyz/sdk-core'
+import { Pair } from '@juiceswapxyz/v2-sdk'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { CardNoise } from 'components/earn/styled'

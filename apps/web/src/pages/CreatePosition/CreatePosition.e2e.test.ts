@@ -1,6 +1,6 @@
+import { V2_FACTORY_ADDRESSES } from '@juiceswapxyz/sdk-core'
+import { computePairAddress } from '@juiceswapxyz/v2-sdk'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
-import { V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import { computePairAddress } from '@uniswap/v2-sdk'
 import { DYNAMIC_FEE_DATA } from 'components/Liquidity/Create/types'
 import ms from 'ms'
 import { ONE_MILLION_USDT } from 'playwright/anvil/utils'

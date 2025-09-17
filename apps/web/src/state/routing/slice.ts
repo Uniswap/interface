@@ -1,5 +1,5 @@
+import { Protocol } from '@juiceswapxyz/router-sdk'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { Protocol } from '@uniswap/router-sdk'
 import ms from 'ms'
 import {
   ClassicAPIConfig,

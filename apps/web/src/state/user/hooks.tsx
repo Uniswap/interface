@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { Percent, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import { Pair, computePairAddress } from '@uniswap/v2-sdk'
+import { Percent, Token, V2_FACTORY_ADDRESSES } from '@juiceswapxyz/sdk-core'
+import { Pair, computePairAddress } from '@juiceswapxyz/v2-sdk'
 import { gqlToCurrency } from 'appGraphql/data/util'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from 'constants/routing'

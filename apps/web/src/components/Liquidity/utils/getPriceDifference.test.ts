@@ -1,4 +1,4 @@
-import { Currency, Price } from '@uniswap/sdk-core'
+import { Currency, Price } from '@juiceswapxyz/sdk-core'
 import { getPriceDifference } from 'components/Liquidity/utils/getPriceDifference'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ETH_MAINNET } from 'test-utils/constants'

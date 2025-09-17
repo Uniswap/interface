@@ -1,5 +1,5 @@
 import { isAddress } from '@ethersproject/address'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@juiceswapxyz/sdk-core'
 import Circle from 'assets/images/blue-loader.svg'
 import tokenLogo from 'assets/images/token-logo.png'
 import AddressInputPanel from 'components/AddressInputPanel'

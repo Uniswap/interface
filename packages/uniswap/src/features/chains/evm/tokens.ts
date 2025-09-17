@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@juiceswapxyz/sdk-core'
 import { NonEmptyArray, getNonEmptyArrayOrThrow } from 'utilities/src/primitives/array'
 import { Prettify } from 'viem'
 

@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { useTheme } from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { ArrowLeft } from 'react-feather'

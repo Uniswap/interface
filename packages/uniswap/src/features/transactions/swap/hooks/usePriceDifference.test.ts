@@ -1,4 +1,4 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { USDC } from 'uniswap/src/constants/tokens'
 import { usePriceDifference } from 'uniswap/src/features/transactions/swap/hooks/usePriceDifference'
 import type { SwapFormStoreState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'

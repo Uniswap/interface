@@ -1,6 +1,6 @@
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { useQuery } from '@tanstack/react-query'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency } from '@uniswap/sdk-core'
 import { calculateTokensLockedV3, calculateTokensLockedV4 } from 'components/Charts/LiquidityChart'
 import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'

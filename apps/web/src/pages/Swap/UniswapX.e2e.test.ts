@@ -1,4 +1,4 @@
-import { WETH9 } from '@uniswap/sdk-core'
+import { WETH9 } from '@juiceswapxyz/sdk-core'
 import { expect, test } from 'playwright/fixtures'
 import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import { Mocks } from 'playwright/mocks/mocks'

@@ -1,4 +1,4 @@
-import { CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Price, Token } from '@juiceswapxyz/sdk-core'
 import {
   getCrosshairProps,
   isEffectivelyInfinity,

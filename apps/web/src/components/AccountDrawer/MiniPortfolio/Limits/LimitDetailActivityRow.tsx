@@ -1,4 +1,4 @@
-import { CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { CurrencyAmount, Price } from '@juiceswapxyz/sdk-core'
 import {
   useOpenOffchainActivityModal,
   useOrderAmounts,

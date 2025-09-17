@@ -1,11 +1,11 @@
 /* eslint-disable max-lines */
 import { ApolloError } from '@apollo/client'
 import { TransactionRequest as EthersTransactionRequest } from '@ethersproject/providers'
+import { Protocol } from '@juiceswapxyz/router-sdk'
+import { Currency, TradeType } from '@juiceswapxyz/sdk-core'
 import { SerializedError } from '@reduxjs/toolkit'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { SharedEventName } from '@uniswap/analytics-events'
-import { Protocol } from '@uniswap/router-sdk'
-import { Currency, TradeType } from '@uniswap/sdk-core'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import {

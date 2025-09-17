@@ -1,4 +1,4 @@
-import { Currency, Price, Token } from '@uniswap/sdk-core'
+import { Currency, Price, Token } from '@juiceswapxyz/sdk-core'
 import StepCounter from 'components/InputStepCounter'
 import { Trans } from 'react-i18next'
 import { Bound } from 'state/mint/v3/actions'

@@ -1,4 +1,4 @@
-import { CurrencyAmount, Currency } from "@uniswap/sdk-core"
+import { CurrencyAmount, Currency } from "@juiceswapxyz/sdk-core"
 import { PresetPercentage } from "uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types"
 import { TransactionStep } from "uniswap/src/features/transactions/steps/types"
 import { SetCurrentStepFn } from "uniswap/src/features/transactions/swap/types/swapCallback"

@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@juiceswapxyz/sdk-core'
 import { useGetPoolTokenPercentage } from 'components/Liquidity/hooks/useGetPoolTokenPercentage'
 import JSBI from 'jsbi'
 import { renderHook } from 'test-utils/render'

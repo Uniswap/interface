@@ -1,6 +1,5 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import { Currency, CurrencyAmount, Price, Token } from '@juiceswapxyz/sdk-core'
+import { Pair } from '@juiceswapxyz/v2-sdk'
 import {
   FeeAmount,
   TickMath,
@@ -8,8 +7,9 @@ import {
   encodeSqrtRatioX96,
   nearestUsableTick,
   priceToClosestTick as priceToClosestV3Tick,
-} from '@uniswap/v3-sdk'
-import { Pool as V4Pool, priceToClosestTick as priceToClosestV4Tick } from '@uniswap/v4-sdk'
+} from '@juiceswapxyz/v3-sdk'
+import { Pool as V4Pool, priceToClosestTick as priceToClosestV4Tick } from '@juiceswapxyz/v4-sdk'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import {
   CreatePositionInfo,
   CreateV2PositionInfo,

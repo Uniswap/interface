@@ -1,4 +1,4 @@
-import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
+import { ADDRESS_ZERO } from '@juiceswapxyz/v3-sdk'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { LinkHorizontalAlt } from 'ui/src/components/icons/LinkHorizontalAlt'

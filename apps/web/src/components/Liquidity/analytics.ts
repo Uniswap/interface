@@ -1,6 +1,6 @@
+import { Currency, CurrencyAmount } from '@juiceswapxyz/sdk-core'
+import { FeeAmount } from '@juiceswapxyz/v3-sdk'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
 import { LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { LiquidityAnalyticsProperties } from 'uniswap/src/features/telemetry/types'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'

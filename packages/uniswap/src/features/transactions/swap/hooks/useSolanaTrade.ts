@@ -1,5 +1,5 @@
+import { TradeType } from '@juiceswapxyz/sdk-core'
 import { queryOptions, useQuery } from '@tanstack/react-query'
-import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { fetchOrder } from 'uniswap/src/data/apiClients/jupiterApi/order/request'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'

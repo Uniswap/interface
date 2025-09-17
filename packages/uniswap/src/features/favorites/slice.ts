@@ -1,5 +1,5 @@
+import { Ether } from '@juiceswapxyz/sdk-core'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Ether } from '@uniswap/sdk-core'
 import { WBTC } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyId } from 'uniswap/src/types/currency'

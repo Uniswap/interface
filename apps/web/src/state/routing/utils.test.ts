@@ -1,4 +1,4 @@
-import { Currency, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, Token, TradeType } from '@juiceswapxyz/sdk-core'
 import { GetQuoteArgs, PoolType, RouterPreference, TokenInRoute, URAQuoteType } from 'state/routing/types'
 import { computeRoutes } from 'state/routing/utils'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'

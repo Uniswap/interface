@@ -1,13 +1,13 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@juiceswapxyz/sdk-core'
 import {
   FlatFeeOptions,
   SwapRouter,
   UNIVERSAL_ROUTER_ADDRESS,
   UniversalRouterVersion,
-} from '@uniswap/universal-router-sdk'
-import { FeeOptions, toHex } from '@uniswap/v3-sdk'
+} from '@juiceswapxyz/universal-router-sdk'
+import { FeeOptions, toHex } from '@juiceswapxyz/v3-sdk'
 import { useTotalBalancesUsdForAnalytics } from 'appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'

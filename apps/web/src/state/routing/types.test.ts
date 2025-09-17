@@ -1,4 +1,4 @@
-import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, TradeType } from '@juiceswapxyz/sdk-core'
 import { LIMIT_ORDER_TRADE } from 'test-utils/constants'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 

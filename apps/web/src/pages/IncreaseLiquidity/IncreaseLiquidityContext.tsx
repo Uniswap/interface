@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { DepositInfo } from 'components/Liquidity/types'
 import { useDerivedIncreaseLiquidityInfo } from 'pages/IncreaseLiquidity/hooks/useDerivedIncreaseLiquidityInfo'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'

@@ -1,4 +1,4 @@
-import { WETH9 } from '@uniswap/sdk-core'
+import { WETH9 } from '@juiceswapxyz/sdk-core'
 import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
 import { DEFAULT_FEE_DATA, PositionFlowStep } from 'components/Liquidity/Create/types'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'

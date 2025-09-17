@@ -1,4 +1,4 @@
-import { Price, WETH9 } from '@uniswap/sdk-core'
+import { Price, WETH9 } from '@juiceswapxyz/sdk-core'
 import TradePrice from 'components/swap/TradePrice'
 import { fireEvent, render, screen } from 'test-utils/render'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'

@@ -1,4 +1,4 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
 import { TFunction } from 'i18next'
 import JSBI from 'jsbi'

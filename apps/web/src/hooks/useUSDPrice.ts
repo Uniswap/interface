@@ -1,5 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
-import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token, TradeType } from '@juiceswapxyz/sdk-core'
 import { PollingInterval } from 'appGraphql/data/util'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useMemo, useRef } from 'react'

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { BaseDerivedInfo } from 'uniswap/src/features/transactions/types/baseDerivedInfo'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'

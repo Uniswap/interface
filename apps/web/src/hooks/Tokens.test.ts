@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@juiceswapxyz/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { TEST_TOKEN_1 } from 'test-utils/constants'

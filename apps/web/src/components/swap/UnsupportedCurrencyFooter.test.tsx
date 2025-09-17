@@ -1,7 +1,7 @@
 import 'test-utils/tokens/mocks'
 
+import { Token } from '@juiceswapxyz/sdk-core'
 import userEvent from '@testing-library/user-event'
-import { Token } from '@uniswap/sdk-core'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { mocked } from 'test-utils/mocked'

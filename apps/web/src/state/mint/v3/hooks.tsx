@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Price, Rounding, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Rounding, Token } from '@juiceswapxyz/sdk-core'
 import {
   FeeAmount,
   Position,
@@ -9,8 +9,8 @@ import {
   nearestUsableTick,
   priceToClosestTick,
   tickToPrice as tickToPriceV3,
-} from '@uniswap/v3-sdk'
-import { Pool as V4Pool, tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
+} from '@juiceswapxyz/v3-sdk'
+import { Pool as V4Pool, tickToPrice as tickToPriceV4 } from '@juiceswapxyz/v4-sdk'
 import { FeeData } from 'components/Liquidity/Create/types'
 import { BIG_INT_ZERO } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'

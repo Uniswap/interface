@@ -1,5 +1,5 @@
+import { Token as SdkToken } from '@juiceswapxyz/sdk-core'
 import { SpamCode as RestSpamCode, TokenType } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { Token as SdkToken } from '@uniswap/sdk-core'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {

@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { apolloClient } from 'appGraphql/data/apollo/client'
 import { gqlTokenToCurrencyInfo } from 'appGraphql/data/types'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'

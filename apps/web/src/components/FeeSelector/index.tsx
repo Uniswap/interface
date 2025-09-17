@@ -1,5 +1,5 @@
-import { Currency } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { Currency } from '@juiceswapxyz/sdk-core'
+import { FeeAmount } from '@juiceswapxyz/v3-sdk'
 import { OutlineCard } from 'components/Card/cards'
 import { FeeOption } from 'components/FeeSelector/FeeOption'
 import { FeeTierPercentageBadge } from 'components/FeeSelector/FeeTierPercentageBadge'

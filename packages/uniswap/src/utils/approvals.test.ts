@@ -1,4 +1,4 @@
-import { MaxUint256 } from '@uniswap/sdk-core'
+import { MaxUint256 } from '@juiceswapxyz/sdk-core'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
 
 describe(parseERC20ApproveCalldata, () => {

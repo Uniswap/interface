@@ -1,5 +1,5 @@
-import { BigintIsh, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk'
+import { BigintIsh, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@juiceswapxyz/sdk-core'
+import { FeeAmount, Pool, computePoolAddress } from '@juiceswapxyz/v3-sdk'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'

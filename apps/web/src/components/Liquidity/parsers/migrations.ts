@@ -1,4 +1,4 @@
-import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
+import { FeeAmount, TICK_SPACINGS } from '@juiceswapxyz/v3-sdk'
 import { FeeData } from 'components/Liquidity/Create/types'
 import { isDynamicFeeTier } from 'components/Liquidity/utils/feeTiers'
 

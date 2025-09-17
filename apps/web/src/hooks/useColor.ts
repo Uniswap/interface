@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useTheme } from 'lib/styled-components'
 import { useMemo } from 'react'

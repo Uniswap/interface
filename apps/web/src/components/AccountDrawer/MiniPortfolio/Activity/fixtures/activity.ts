@@ -1,4 +1,4 @@
-import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, WETH9 } from '@uniswap/sdk-core'
+import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, WETH9 } from '@juiceswapxyz/sdk-core'
 import { MOONPAY_SENDER_ADDRESSES } from 'components/AccountDrawer/MiniPortfolio/constants'
 import { DAI } from 'uniswap/src/constants/tokens'
 import {

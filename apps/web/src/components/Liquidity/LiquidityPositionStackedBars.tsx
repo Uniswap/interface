@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@juiceswapxyz/sdk-core'
 import { scaleLinear } from 'd3'
 import { useMemo } from 'react'
 import { Flex, Text } from 'ui/src'

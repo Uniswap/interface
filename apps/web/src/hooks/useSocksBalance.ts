@@ -1,4 +1,4 @@
-import { SOCKS_CONTROLLER_ADDRESSES, Token } from '@uniswap/sdk-core'
+import { SOCKS_CONTROLLER_ADDRESSES, Token } from '@juiceswapxyz/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { useMemo } from 'react'

@@ -1,6 +1,6 @@
 import 'test-utils/tokens/mocks'
 
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@juiceswapxyz/sdk-core'
 import { ExploreTopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { useExploreContextTopPools } from 'state/explore/topPools'
 import { mocked } from 'test-utils/mocked'

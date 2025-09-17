@@ -1,6 +1,6 @@
+import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@juiceswapxyz/universal-router-sdk'
 import { getPosition } from '@uniswap/client-pools/dist/pools/v1/api-PoolsService_connectquery'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
-import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
 import { ONE_MILLION_USDT } from 'playwright/anvil/utils'
 import { expect, test } from 'playwright/fixtures'
 import { DEFAULT_TEST_GAS_LIMIT, stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'

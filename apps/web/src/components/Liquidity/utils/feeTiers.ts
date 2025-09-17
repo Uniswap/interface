@@ -1,6 +1,6 @@
+import { Percent } from '@juiceswapxyz/sdk-core'
+import { FeeAmount } from '@juiceswapxyz/v3-sdk'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Percent } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
 import { DYNAMIC_FEE_DATA, DynamicFeeData, FeeData } from 'components/Liquidity/Create/types'
 import { defaultFeeTiers } from 'components/Liquidity/constants'
 import { FeeTierData } from 'components/Liquidity/types'

@@ -1,4 +1,4 @@
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@juiceswapxyz/sdk-core'
 import Column, { AutoColumn } from 'components/deprecated/Column'
 import { SwapModalHeaderAmount } from 'components/swap/SwapModalHeaderAmount'
 import { useUSDPrice } from 'hooks/useUSDPrice'

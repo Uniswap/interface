@@ -4,7 +4,7 @@
 vi.mock('hooks/Tokens')
 vi.mock('components/AccountDrawer/MiniPortfolio/Activity/getCurrency')
 
-import { Currency, WETH9 } from '@uniswap/sdk-core'
+import { Currency, WETH9 } from '@juiceswapxyz/sdk-core'
 import { getCurrencyFromCurrencyId } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import { useCurrency, useCurrencyInfo } from 'hooks/Tokens'
 import {

@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@juiceswapxyz/sdk-core'
 import JSBI from 'jsbi'
 
 // TODO(WEB-1984): Convert the deadline to minutes and remove unecessary conversions from

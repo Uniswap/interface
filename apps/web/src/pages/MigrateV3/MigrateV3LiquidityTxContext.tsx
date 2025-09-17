@@ -1,6 +1,6 @@
+import { Currency, CurrencyAmount } from '@juiceswapxyz/sdk-core'
+import { Pool } from '@juiceswapxyz/v4-sdk'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { Pool } from '@uniswap/v4-sdk'
 import { V3PositionInfo } from 'components/Liquidity/types'
 import { getCurrencyForProtocol, getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
 import { isInvalidPrice, isInvalidRange } from 'components/Liquidity/utils/priceRangeInfo'

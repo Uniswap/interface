@@ -1,5 +1,5 @@
 import { AddressZero } from '@ethersproject/constants'
-import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, Token } from '@juiceswapxyz/sdk-core'
 import { calculateSlippageAmount } from 'utils/calculateSlippageAmount'
 
 describe('#calculateSlippageAmount', () => {

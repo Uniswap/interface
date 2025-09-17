@@ -1,5 +1,5 @@
-import { Protocol } from '@uniswap/router-sdk'
-import { CurrencyAmount, Ether, Token, TradeType } from '@uniswap/sdk-core'
+import { Protocol } from '@juiceswapxyz/router-sdk'
+import { CurrencyAmount, Ether, Token, TradeType } from '@juiceswapxyz/sdk-core'
 import { createGetRoutingAPIArguments, validateRoutingAPIInput } from 'lib/hooks/routing/createGetRoutingAPIArguments'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, URAQuoteType } from 'state/routing/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'

@@ -1,5 +1,5 @@
 import { ContractTransaction } from '@ethersproject/contracts'
-import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, MaxUint256, Token } from '@juiceswapxyz/sdk-core'
 import { useTokenContract } from 'hooks/useContract'
 import { useTriggerOnTransactionType } from 'hooks/useTriggerOnTransactionType'
 import { useCallback, useMemo, useRef } from 'react'

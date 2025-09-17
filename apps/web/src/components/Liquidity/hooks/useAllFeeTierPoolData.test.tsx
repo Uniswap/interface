@@ -1,6 +1,6 @@
+import { Percent } from '@juiceswapxyz/sdk-core'
 import { renderHook } from '@testing-library/react-hooks'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Percent } from '@uniswap/sdk-core'
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks/useAllFeeTierPoolData'
 import { TEST_TOKEN_1, TEST_TOKEN_2 } from 'test-utils/constants'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'

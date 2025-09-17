@@ -1,4 +1,4 @@
-import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
+import { WETH_ADDRESS } from '@juiceswapxyz/universal-router-sdk'
 import { expect, test } from 'playwright/fixtures'
 import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { uniswapUrls } from 'uniswap/src/constants/urls'

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import type { Token } from '@uniswap/sdk-core'
+import type { Token } from '@juiceswapxyz/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useCallback, useEffect, useMemo } from 'react'
 import { getRoutingForTransaction } from 'state/activity/utils'

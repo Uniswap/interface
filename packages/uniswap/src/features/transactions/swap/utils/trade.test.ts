@@ -1,5 +1,5 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
+import { Currency, CurrencyAmount, TradeType } from '@juiceswapxyz/sdk-core'
+import { FeeAmount, Pool, Route } from '@juiceswapxyz/v3-sdk'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
 import { ClassicQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'

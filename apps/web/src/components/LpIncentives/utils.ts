@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@juiceswapxyz/sdk-core'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 
 export const calculateTotalApr = (poolApr: Percent, rewardsApr: number) => {

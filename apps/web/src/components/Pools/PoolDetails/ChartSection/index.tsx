@@ -1,6 +1,6 @@
+import { Currency, CurrencyAmount, NativeCurrency, Token } from '@juiceswapxyz/sdk-core'
+import { FeeAmount } from '@juiceswapxyz/v3-sdk'
 import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
 import { PoolData } from 'appGraphql/data/pools/usePoolData'
 import { TimePeriod, gqlToCurrency, toHistoryDuration } from 'appGraphql/data/util'
 import { TickTooltipContent } from 'components/Charts/ActiveLiquidityChart/TickTooltip'

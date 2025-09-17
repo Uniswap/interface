@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { useCurrencyValidation } from 'components/Liquidity/Create/hooks/useCurrencyValidation'
 import { PositionFlowStep, PositionState, PriceRangeState } from 'components/Liquidity/Create/types'
 import { applyUrlMigrations } from 'components/Liquidity/parsers/migrations'

@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { PoolData } from 'appGraphql/data/pools/usePoolData'
 import { getTokenDetailsURL, unwrapToken } from 'appGraphql/data/util'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'

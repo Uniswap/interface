@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@juiceswapxyz/sdk-core'
 import { toSlippagePercent } from 'utils/slippage'
 
 describe('slippage function', () => {

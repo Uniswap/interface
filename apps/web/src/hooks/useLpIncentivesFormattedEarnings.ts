@@ -1,5 +1,5 @@
+import { CurrencyAmount, type Currency } from '@juiceswapxyz/sdk-core'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { CurrencyAmount, type Currency } from '@uniswap/sdk-core'
 import { PositionInfo } from 'components/Liquidity/types'
 import { LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
 import JSBI from 'jsbi'

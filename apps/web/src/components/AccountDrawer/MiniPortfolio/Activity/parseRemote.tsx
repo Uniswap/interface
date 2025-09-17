@@ -1,12 +1,12 @@
 /* eslint-disable max-params */
 import { BigNumber } from '@ethersproject/bignumber'
-import type { Currency } from '@uniswap/sdk-core'
+import type { Currency } from '@juiceswapxyz/sdk-core'
 import {
   CHAIN_TO_ADDRESSES_MAP,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   TradeType,
   UNI_ADDRESSES,
-} from '@uniswap/sdk-core'
+} from '@juiceswapxyz/sdk-core'
 import { gqlToCurrency, supportedChainIdFromGQLChain } from 'appGraphql/data/util'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'

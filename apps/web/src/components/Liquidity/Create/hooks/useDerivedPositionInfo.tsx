@@ -1,5 +1,5 @@
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { Pool, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency } from '@uniswap/sdk-core'
 import {
   CreatePositionInfo,
   CreateV2PositionInfo,

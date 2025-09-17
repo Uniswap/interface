@@ -1,3 +1,7 @@
+import { Currency, CurrencyAmount, Token } from '@juiceswapxyz/sdk-core'
+import { Pair } from '@juiceswapxyz/v2-sdk'
+import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@juiceswapxyz/v3-sdk'
+import { Pool as V4Pool, Position as V4Position } from '@juiceswapxyz/v4-sdk'
 import {
   PairPosition,
   PoolPosition,
@@ -7,10 +11,6 @@ import {
   Position as RestPosition,
   Token as RestToken,
 } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
-import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
 import { DYNAMIC_FEE_DATA, FeeData } from 'components/Liquidity/Create/types'
 import { PositionInfo } from 'components/Liquidity/types'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'

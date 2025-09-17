@@ -1,4 +1,4 @@
-import { CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { CurrencyAmount, WETH9 } from '@juiceswapxyz/sdk-core'
 import {
   OffchainOrderLineItem,
   OffchainOrderLineItemType,

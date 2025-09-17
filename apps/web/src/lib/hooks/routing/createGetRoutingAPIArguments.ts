@@ -1,6 +1,6 @@
+import { Protocol } from '@juiceswapxyz/router-sdk'
+import { Currency, CurrencyAmount, TradeType } from '@juiceswapxyz/sdk-core'
 import { SkipToken } from '@reduxjs/toolkit/query/react'
-import { Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, URAQuoteType } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'

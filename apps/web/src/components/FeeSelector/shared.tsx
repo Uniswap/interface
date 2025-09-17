@@ -1,4 +1,4 @@
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount } from '@juiceswapxyz/v3-sdk'
 import { getFeeTierTitle } from 'components/Liquidity/utils/feeTiers'
 import type { ReactNode } from 'react'
 import { ALL_EVM_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'

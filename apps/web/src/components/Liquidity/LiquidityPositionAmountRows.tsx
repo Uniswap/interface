@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { getTokenDetailsURL } from 'appGraphql/data/util'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'

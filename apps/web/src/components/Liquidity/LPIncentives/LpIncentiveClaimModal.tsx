@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@juiceswapxyz/sdk-core'
 import { Dialog } from 'components/Dialog/Dialog'
 import { useFormattedTokenRewards } from 'components/Liquidity/LPIncentives/hooks/useFormattedTokenRewards'
 import { useLpIncentiveClaimButtonConfig } from 'components/Liquidity/LPIncentives/hooks/useLpIncentiveClaimButtonConfig'

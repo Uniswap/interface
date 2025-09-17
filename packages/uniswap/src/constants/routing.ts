@@ -1,4 +1,4 @@
-import { Currency, Token, WETH9 } from '@uniswap/sdk-core'
+import { Currency, Token, WETH9 } from '@juiceswapxyz/sdk-core'
 import type { ImageSourcePropType } from 'react-native'
 import { CELO_LOGO, ETH_LOGO } from 'ui/src/assets'
 import {

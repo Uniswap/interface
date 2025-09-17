@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, FlexProps, Text } from 'ui/src'

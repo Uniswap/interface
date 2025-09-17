@@ -1,5 +1,5 @@
+import { CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { canUnwrapCurrency, getCurrencyWithOptionalUnwrap } from 'components/Liquidity/utils/currency'

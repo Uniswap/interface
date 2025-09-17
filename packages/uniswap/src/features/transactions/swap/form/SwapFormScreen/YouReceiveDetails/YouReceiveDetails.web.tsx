@@ -1,5 +1,5 @@
-import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { Percent } from '@uniswap/sdk-core'
+import type { Currency, CurrencyAmount } from '@juiceswapxyz/sdk-core'
+import { Percent } from '@juiceswapxyz/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { Flex, HeightAnimator, Separator, Text, TouchableArea, UniswapXText } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'

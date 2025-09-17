@@ -1,4 +1,4 @@
-import { Token as SDKToken } from '@uniswap/sdk-core'
+import { Token as SDKToken } from '@juiceswapxyz/sdk-core'
 import {
   DAI,
   USDC,

@@ -1,6 +1,6 @@
+import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from '@juiceswapxyz/sdk-core'
 import { PublicKey } from '@solana/web3.js'
 import { skipToken, useQuery } from '@tanstack/react-query'
-import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from '@uniswap/sdk-core'
 import { Contract } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'

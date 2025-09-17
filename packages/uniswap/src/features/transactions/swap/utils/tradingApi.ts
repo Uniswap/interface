@@ -1,12 +1,12 @@
 /* eslint-disable max-lines */
 import { BigNumber } from '@ethersproject/bignumber'
-import { MixedRouteSDK } from '@uniswap/router-sdk'
-import type { Currency, TradeType } from '@uniswap/sdk-core'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
-import type { FeeAmount } from '@uniswap/v3-sdk'
-import { Pool as V3Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { Pool as V4Pool, Route as V4Route } from '@uniswap/v4-sdk'
+import { MixedRouteSDK } from '@juiceswapxyz/router-sdk'
+import type { Currency, TradeType } from '@juiceswapxyz/sdk-core'
+import { CurrencyAmount, Token } from '@juiceswapxyz/sdk-core'
+import { Pair, Route as V2Route } from '@juiceswapxyz/v2-sdk'
+import type { FeeAmount } from '@juiceswapxyz/v3-sdk'
+import { Pool as V3Pool, Route as V3Route } from '@juiceswapxyz/v3-sdk'
+import { Pool as V4Pool, Route as V4Route } from '@juiceswapxyz/v4-sdk'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   ClassicQuoteResponse,

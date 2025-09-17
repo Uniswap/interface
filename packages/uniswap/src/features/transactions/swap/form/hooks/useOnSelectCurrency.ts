@@ -1,6 +1,6 @@
+import type { Currency } from '@juiceswapxyz/sdk-core'
 import type { QueryClient } from '@tanstack/react-query'
 import { useQueryClient } from '@tanstack/react-query'
-import type { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { getSwappableTokensQueryData } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import type { ChainId, GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'

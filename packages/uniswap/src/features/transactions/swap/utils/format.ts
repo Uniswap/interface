@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@juiceswapxyz/sdk-core'
 
 // rounds to nearest basis point
 export const slippageToleranceToPercent = (slippage: number): Percent => {

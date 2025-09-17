@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { ReversedArrowsIcon } from 'nft/components/iconExports'
 
 import { ClickableTamaguiStyle } from 'theme/components/styles'

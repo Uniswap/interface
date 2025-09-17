@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { dismissedWarningTokensSelector } from 'uniswap/src/features/tokens/slice/selectors'

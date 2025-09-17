@@ -1,4 +1,4 @@
-import { TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@juiceswapxyz/sdk-core'
 import ms from 'ms'
 import {
   QUICK_POLL_INITIAL_INTERVAL,

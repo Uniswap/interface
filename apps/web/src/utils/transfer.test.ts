@@ -1,5 +1,5 @@
 import { ExternalProvider, JsonRpcProvider, JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { renderHook } from 'test-utils/render'
 import { Mutable } from 'types/mutable'
 import { DAI, nativeOnChain } from 'uniswap/src/constants/tokens'

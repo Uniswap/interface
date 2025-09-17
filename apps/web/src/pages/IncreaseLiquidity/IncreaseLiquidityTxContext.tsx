@@ -1,5 +1,5 @@
+import type { Currency, CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useIncreasePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
 import { hasLPFoTTransferError } from 'components/Liquidity/utils/hasLPFoTTransferError'

@@ -1,4 +1,4 @@
-import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import type { Currency, CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { Flex, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme/spacing'
 import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'

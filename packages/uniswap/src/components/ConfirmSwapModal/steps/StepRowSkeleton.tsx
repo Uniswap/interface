@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { PropsWithChildren, useMemo } from 'react'
 import { Anchor, ColorTokens, Flex, SpinningLoader, Text, useExtractedTokenColor, useSporeColors } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'

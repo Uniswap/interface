@@ -1,5 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
-import { NativeCurrency, Token } from '@uniswap/sdk-core'
+import { NativeCurrency, Token } from '@juiceswapxyz/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { mocked } from 'test-utils/mocked'

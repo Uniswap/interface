@@ -1,5 +1,5 @@
-import type { Currency } from '@uniswap/sdk-core'
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import type { Currency } from '@juiceswapxyz/sdk-core'
+import { CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { useRemoveLiquidityTxAndGasInfo } from 'pages/RemoveLiquidity/hooks/useRemoveLiquidityTxAndGasInfo'
 import { useRemoveLiquidityModalContext } from 'pages/RemoveLiquidity/RemoveLiquidityModalContext'
 import type { PropsWithChildren } from 'react'

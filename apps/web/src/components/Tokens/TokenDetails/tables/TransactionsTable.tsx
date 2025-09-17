@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { ApolloError } from '@apollo/client'
+import { Token } from '@juiceswapxyz/sdk-core'
 import { createColumnHelper } from '@tanstack/react-table'
-import { Token } from '@uniswap/sdk-core'
 import {
   TokenTransactionType,
   getTokenTransactionTypeTranslation,

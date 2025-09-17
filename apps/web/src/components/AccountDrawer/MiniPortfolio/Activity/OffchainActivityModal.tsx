@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@juiceswapxyz/sdk-core'
 import {
   CancelOrdersDialog,
   CancellationState,

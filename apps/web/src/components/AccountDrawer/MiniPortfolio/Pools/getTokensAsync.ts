@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@juiceswapxyz/sdk-core'
 import { INTERNAL_JSON_RPC_ERROR_CODE } from 'constants/misc'
 import { Interface } from 'ethers/lib/utils'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'

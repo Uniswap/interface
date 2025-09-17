@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import type { StyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet'
 import type { ViewStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, TradeType as SdkTradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType as SdkTradeType } from '@juiceswapxyz/sdk-core'
 import { TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 

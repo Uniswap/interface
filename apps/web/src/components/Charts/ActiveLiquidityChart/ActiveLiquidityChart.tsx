@@ -1,4 +1,4 @@
-import { Currency, Percent } from '@uniswap/sdk-core'
+import { Currency, Percent } from '@juiceswapxyz/sdk-core'
 import { AxisRight } from 'components/Charts/ActiveLiquidityChart/AxisRight'
 import { Brush } from 'components/Charts/ActiveLiquidityChart/Brush'
 import { HorizontalArea } from 'components/Charts/ActiveLiquidityChart/HorizontalArea'

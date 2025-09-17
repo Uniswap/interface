@@ -1,6 +1,6 @@
 import 'test-utils/tokens/mocks'
 
-import { WETH9 } from '@uniswap/sdk-core'
+import { WETH9 } from '@juiceswapxyz/sdk-core'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { LimitDetailActivityRow } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitDetailActivityRow'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'

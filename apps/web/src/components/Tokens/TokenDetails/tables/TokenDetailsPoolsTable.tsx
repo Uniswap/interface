@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import { type Currency } from '@uniswap/sdk-core'
+import { type Currency } from '@juiceswapxyz/sdk-core'
 import { usePoolsFromTokenAddress } from 'appGraphql/data/pools/usePoolsFromTokenAddress'
 import { PoolSortFields } from 'appGraphql/data/pools/useTopPools'
 import { OrderDirection } from 'appGraphql/data/util'

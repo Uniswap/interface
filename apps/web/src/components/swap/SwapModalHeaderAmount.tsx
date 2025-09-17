@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Column from 'components/deprecated/Column'

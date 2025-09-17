@@ -1,4 +1,4 @@
-import { Currency, Percent } from '@uniswap/sdk-core'
+import { Currency, Percent } from '@juiceswapxyz/sdk-core'
 import { LiquidityBarData } from 'components/Charts/LiquidityChart/types'
 import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'

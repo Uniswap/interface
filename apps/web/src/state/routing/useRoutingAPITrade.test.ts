@@ -1,6 +1,6 @@
+import { CurrencyAmount, TradeType } from '@juiceswapxyz/sdk-core'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { renderHook } from '@testing-library/react'
-import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import ms from 'ms'
 import { useGetQuoteQuery, useGetQuoteQueryState } from 'state/routing/slice'

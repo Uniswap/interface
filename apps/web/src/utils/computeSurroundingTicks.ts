@@ -1,8 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
+import { Currency, Price, Token } from '@juiceswapxyz/sdk-core'
+import { tickToPrice as tickToPriceV3 } from '@juiceswapxyz/v3-sdk'
+import { tickToPrice as tickToPriceV4 } from '@juiceswapxyz/v4-sdk'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, Price, Token } from '@uniswap/sdk-core'
-import { tickToPrice as tickToPriceV3 } from '@uniswap/v3-sdk'
-import { tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
 import { Ticks } from 'appGraphql/data/AllV3TicksQuery'
 import JSBI from 'jsbi'
 

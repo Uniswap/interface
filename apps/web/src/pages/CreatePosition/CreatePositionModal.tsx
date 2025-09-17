@@ -1,5 +1,5 @@
+import { Currency, CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import {
   WrappedLiquidityPositionRangeChart,
   getLiquidityRangeChartProps,

@@ -1,7 +1,7 @@
 import 'test-utils/tokens/mocks'
 
 import { ApolloError } from '@apollo/client'
-import { Percent, Token, type Currency } from '@uniswap/sdk-core'
+import { Percent, Token, type Currency } from '@juiceswapxyz/sdk-core'
 import { usePoolsFromTokenAddress } from 'appGraphql/data/pools/usePoolsFromTokenAddress'
 import { TokenDetailsPoolsTable } from 'components/Tokens/TokenDetails/tables/TokenDetailsPoolsTable'
 import { mocked } from 'test-utils/mocked'

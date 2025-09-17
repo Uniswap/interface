@@ -1,4 +1,4 @@
-import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
+import { ADDRESS_ZERO } from '@juiceswapxyz/v3-sdk'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'

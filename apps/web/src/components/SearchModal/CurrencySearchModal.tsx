@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@juiceswapxyz/sdk-core'
 import { SwitchNetworkAction } from 'components/Popups/types'
 import { CurrencySearch } from 'components/SearchModal/CurrencySearch'
 import { memo } from 'react'

@@ -1,7 +1,7 @@
-import { Protocol, ZERO } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount, Pool as V3Pool } from '@uniswap/v3-sdk'
+import { Protocol, ZERO } from '@juiceswapxyz/router-sdk'
+import { Currency, Percent, TradeType } from '@juiceswapxyz/sdk-core'
+import { Pair } from '@juiceswapxyz/v2-sdk'
+import { FeeAmount, Pool as V3Pool } from '@juiceswapxyz/v3-sdk'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import { ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 

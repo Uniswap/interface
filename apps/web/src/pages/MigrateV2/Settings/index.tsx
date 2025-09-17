@@ -1,4 +1,4 @@
-import type { Percent } from '@uniswap/sdk-core'
+import type { Percent } from '@juiceswapxyz/sdk-core'
 import { Scrim } from 'components/AccountDrawer/Scrim'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import useDisableScrolling from 'hooks/useDisableScrolling'

@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@juiceswapxyz/sdk-core'
 import MaxSlippageSettings from 'pages/MigrateV2/Settings/MaxSlippageSettings'
 import store from 'state'
 import { updateUserSlippageTolerance } from 'state/user/reducer'

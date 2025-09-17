@@ -1,4 +1,4 @@
-import type { Token } from '@uniswap/sdk-core'
+import type { Token } from '@juiceswapxyz/sdk-core'
 import dottedBackgroundDark from 'assets/images/dotted-grid-dark.png'
 import dottedBackground from 'assets/images/dotted-grid.png'
 import tokenLogo from 'assets/images/token-logo.png'

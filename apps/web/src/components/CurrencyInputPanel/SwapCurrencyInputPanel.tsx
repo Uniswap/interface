@@ -1,5 +1,5 @@
-import type { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import type { Pair } from '@uniswap/v2-sdk'
+import type { Currency, CurrencyAmount, Percent } from '@juiceswapxyz/sdk-core'
+import type { Pair } from '@juiceswapxyz/v2-sdk'
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import { FiatValue } from 'components/CurrencyInputPanel/FiatValue'

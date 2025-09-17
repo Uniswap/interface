@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
+import { Price, Token } from '@juiceswapxyz/sdk-core'
+import { FeeAmount, TICK_SPACINGS } from '@juiceswapxyz/v3-sdk'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Price, Token } from '@uniswap/sdk-core'
-import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { TickData } from 'appGraphql/data/AllV3TicksQuery'
 import JSBI from 'jsbi'
 import computeSurroundingTicks, { TickProcessed } from 'utils/computeSurroundingTicks'

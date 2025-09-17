@@ -1,5 +1,5 @@
-import { ADDRESS_ZERO } from '@uniswap/router-sdk'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { ADDRESS_ZERO } from '@juiceswapxyz/router-sdk'
+import { CurrencyAmount, Token } from '@juiceswapxyz/sdk-core'
 import { createCollectFeesStep } from 'uniswap/src/features/transactions/liquidity/steps/collectFees'
 import { orderCollectFeesSteps } from 'uniswap/src/features/transactions/liquidity/steps/collectFeesSteps'
 import { orderDecreaseLiquiditySteps } from 'uniswap/src/features/transactions/liquidity/steps/decreaseLiquiditySteps'

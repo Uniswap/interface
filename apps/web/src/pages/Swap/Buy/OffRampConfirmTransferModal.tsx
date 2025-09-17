@@ -1,5 +1,5 @@
+import { CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import { useMutation } from '@tanstack/react-query'
-import { CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Dialog } from 'components/Dialog/Dialog'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'

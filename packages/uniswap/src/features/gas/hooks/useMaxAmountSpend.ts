@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@juiceswapxyz/sdk-core'
 import JSBI from 'jsbi'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
