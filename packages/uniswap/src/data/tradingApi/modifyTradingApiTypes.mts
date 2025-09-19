@@ -77,7 +77,9 @@ function addEnumMember(file: SourceFile, enumName: string, newMember: { name: st
     return
   }
 
-  const existing = enumDecl.getMember(newMember.name)
+  // Check for existing member using both quoted and unquoted names
+  const quotedName = `'${newMember.name}'`
+  const existing = enumDecl.getMember(newMember.name) || enumDecl.getMember(quotedName)
 
   if (existing) {
     console.log(`Enum member ${newMember.name} already exists in ${enumName}`)
@@ -87,7 +89,7 @@ function addEnumMember(file: SourceFile, enumName: string, newMember: { name: st
   const initializer = typeof newMember.value === 'string' ? `"${newMember.value}"` : String(newMember.value)
 
   enumDecl.addMember({
-    name: `'${newMember.name}'`,
+    name: quotedName,
     initializer,
   })
 

@@ -1,5 +1,5 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { CITREA_LOGO, DAI_LOGO, USDC_LOGO } from 'ui/src/assets'
+import { CurrencyAmount } from '@uniswap/sdk-core'
+import { CITREA_LOGO } from 'ui/src/assets'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
@@ -17,10 +17,9 @@ import { defineChain } from 'viem'
 
 const testnetTokens = buildChainTokens({
   stables: {
-    USDC: buildCUSD('0x2fFC18aC99D367b70dd922771dF8c2074af4aCE0', UniverseChainId.CitreaTestnet ),
+    USDC: buildCUSD('0x2fFC18aC99D367b70dd922771dF8c2074af4aCE0', UniverseChainId.CitreaTestnet),
   },
 })
-
 
 const citreaTestnet = defineChain({
   id: UniverseChainId.CitreaTestnet,

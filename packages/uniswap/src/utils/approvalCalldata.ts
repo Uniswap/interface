@@ -1,6 +1,5 @@
 import { MaxUint256 } from '@juiceswapxyz/sdk-core'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const ERC20_APPROVE_SELECTOR = '0x095ea7b3'

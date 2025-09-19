@@ -55,6 +55,7 @@ export function useMaxAmountSpend({
   })
 }
 
+// eslint-disable-next-line complexity
 function useGetMinAmount(chainId?: UniverseChainId, txType?: TransactionType): JSBI | undefined {
   const MIN_ETH_FOR_GAS = useMinEthForGas(txType)
   const MIN_POLYGON_FOR_GAS = useMinPolygonForGas(txType)
