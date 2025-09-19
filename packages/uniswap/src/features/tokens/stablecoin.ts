@@ -27,3 +27,9 @@ export const buildUSDT = createTokenFactory({
   name: 'Tether USD',
   symbol: 'USDT',
 })
+
+export const buildCUSD = createTokenFactory({
+  decimals: 18,
+  name: 'Citrus Dollar',
+  symbol: 'CUSD',
+})

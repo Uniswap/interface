@@ -20,6 +20,7 @@ const responseFiles = [approvalResponseFile, createSwapResponseFile, createSendR
 
 // Enums
 const routingFile = project.addSourceFileAtPath(`${path}/Routing.ts`)
+const chainIdFile = project.addSourceFileAtPath(`${path}/ChainId.ts`)
 
 function addImport(file: SourceFile, importName: string): void {
   if (!file.getImportDeclaration((imp) => imp.getModuleSpecifierValue() === '../../types')) {
@@ -68,7 +69,7 @@ function modifyType(
   }
 }
 
-function addEnumMember(file: SourceFile, enumName: string, newMember: { name: string; value: string }): void {
+function addEnumMember(file: SourceFile, enumName: string, newMember: { name: string; value: string | number }): void {
   const enumDecl = file.getEnum(enumName)
 
   if (!enumDecl) {
@@ -83,12 +84,14 @@ function addEnumMember(file: SourceFile, enumName: string, newMember: { name: st
     return
   }
 
+  const initializer = typeof newMember.value === 'string' ? `"${newMember.value}"` : String(newMember.value)
+
   enumDecl.addMember({
-    name: newMember.name,
-    initializer: `"${newMember.value}"`,
+    name: `'${newMember.name}'`,
+    initializer,
   })
 
-  console.log(`Added enum member ${newMember.name} = "${newMember.value}" to ${enumName}`)
+  console.log(`Added enum member ${newMember.name} = ${initializer} to ${enumName}`)
 }
 
 // Modify the request interfaces
@@ -107,8 +110,9 @@ responseFiles.forEach((file) => {
   ])
 })
 
-// Add new enum member
+// Add new enum members
 addEnumMember(routingFile, 'Routing', { name: 'JUPITER', value: 'JUPITER' })
+addEnumMember(chainIdFile, 'ChainId', { name: '_5115', value: 5115 })
 
 // Save the changes
 requestFiles.forEach((file) => {
@@ -118,5 +122,6 @@ responseFiles.forEach((file) => {
   file.saveSync()
 })
 routingFile.saveSync()
+chainIdFile.saveSync()
 
 console.log('Trading API types have been updated')

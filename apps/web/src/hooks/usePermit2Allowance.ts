@@ -6,7 +6,9 @@ import useInterval from 'lib/hooks/useInterval'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { TradeFillType } from 'state/routing/types'
 import { useHasPendingApproval, useHasPendingRevocation, useTransactionAdder } from 'state/transactions/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import { getSpenderAddress } from 'uniswap/src/utils/approvalCalldata'
 
 enum ApprovalState {
   PENDING = 0,
@@ -55,7 +57,7 @@ export default function usePermit2Allowance({
   const account = useAccount()
   const token = amount?.currency
   // Use the provided spender or fall back to Permit2 address
-  const effectiveSpender = '0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E'
+  const effectiveSpender = getSpenderAddress(token?.chainId as UniverseChainId)
   const { tokenAllowance, isSyncing: isApprovalSyncing } = useTokenAllowance({
     token,
     owner: account.address,

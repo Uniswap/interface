@@ -45,6 +45,7 @@ import {
   WRAPPED_NATIVE_CURRENCY,
   nativeOnChain,
 } from 'uniswap/src/constants/tokens'
+import { CITREA_TESTNET_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/citrea'
 import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -176,6 +177,12 @@ export const COMMON_BASES: ChainCurrencyList = {
     nativeOnChain(UniverseChainId.Zora),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Zora] as Token,
     USDC_ZORA,
+  ].map(buildPartialCurrencyInfo),
+
+  [UniverseChainId.CitreaTestnet]: [
+    nativeOnChain(UniverseChainId.CitreaTestnet),
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.CitreaTestnet] as Token,
+    CITREA_TESTNET_CHAIN_INFO.tokens.USDC,
   ].map(buildPartialCurrencyInfo),
 }
 

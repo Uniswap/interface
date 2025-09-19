@@ -46,6 +46,7 @@ import { useIsMismatchAccountQuery } from 'uniswap/src/features/smartWallet/mism
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageName, SectionName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { getSpenderAddress } from 'uniswap/src/utils/approvalCalldata'
 import { NumberType } from 'utilities/src/format/types'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
@@ -257,7 +258,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   const allowance = usePermit2Allowance({
     amount: parsedAmounts.input?.currency.isNative ? undefined : (parsedAmounts.input as CurrencyAmount<Token>),
-    spender: isSupportedChain ? '0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E' : undefined, // V3 SwapRouter address for Sepolia
+    spender: isSupportedChain ? getSpenderAddress(parsedAmounts.input?.currency.chainId as UniverseChainId) : undefined, // V3 SwapRouter address for Sepolia
     tradeFillType: TradeFillType.UniswapX,
   })
 

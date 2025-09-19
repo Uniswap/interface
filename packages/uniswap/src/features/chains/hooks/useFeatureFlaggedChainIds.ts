@@ -30,5 +30,7 @@ export function createGetFeatureFlaggedChainIds(ctx: {
     filterChainIdsByFeatureFlag({
       [UniverseChainId.Soneium]: ctx.getSoneiumStatus(),
       [UniverseChainId.Solana]: ctx.getSolanaStatus(),
+      // Explicitly enable Citrea testnet for quote calculation
+      [UniverseChainId.CitreaTestnet]: true,
     })
 }

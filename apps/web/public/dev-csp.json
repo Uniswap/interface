@@ -7,6 +7,7 @@
     "https://api.juiceswap.xyz",
     "https://trading-api-labs.gateway.uniswap.org",
     "https://dev.bapp.juiceswap.xyz/api",
-    "https://bapp.juiceswap.xyz/api"
+    "https://bapp.juiceswap.xyz/api",
+    "https://rpc.testnet.citrea.xyz"
   ]
 }

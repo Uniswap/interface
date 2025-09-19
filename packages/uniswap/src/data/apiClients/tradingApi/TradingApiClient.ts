@@ -57,6 +57,7 @@ import {
 import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { getSpenderAddress } from 'uniswap/src/utils/approvalCalldata'
 import { logger } from 'utilities/src/logger/logger'
 
 // TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
@@ -262,10 +263,8 @@ async function computeApprovalTransaction(params: ApprovalRequest): Promise<Appr
   const { createEthersProvider } = require('uniswap/src/features/providers/createEthersProvider')
   const { tradingApiToUniverseChainId } = require('uniswap/src/features/transactions/swap/utils/tradingApi')
 
-  // Get the spender address (V3 SwapRouter for classic swaps)
-  const spenderAddress = '0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E'
+  const spenderAddress = getSpenderAddress(tradingApiToUniverseChainId(params.chainId))
 
-  // Check if enough approval is already granted
   try {
     const universeChainId = tradingApiToUniverseChainId(params.chainId)
     if (!universeChainId) {

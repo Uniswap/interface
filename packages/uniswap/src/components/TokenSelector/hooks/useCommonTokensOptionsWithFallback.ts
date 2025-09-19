@@ -43,6 +43,28 @@ const hardcodedCommonBaseCurrencies: CurrencyInfo[] = [
     currencyId: `${UniverseChainId.Sepolia}-0x14ADf6B87096Ef750a956756BA191fc6BE94e473`,
     logoUrl: '',
   },
+  {
+    currency: buildCurrency({
+      chainId: UniverseChainId.CitreaTestnet,
+      address: '0x2fFC18aC99D367b70dd922771dF8c2074af4aCE0',
+      decimals: 18,
+      symbol: 'cUSD',
+      name: 'Citrus Dollar',
+    }) as Currency,
+    currencyId: `${UniverseChainId.CitreaTestnet}-0x2fFC18aC99D367b70dd922771dF8c2074af4aCE0`,
+    logoUrl: '',
+  },
+  {
+    currency: buildCurrency({
+      chainId: UniverseChainId.CitreaTestnet,
+      address: '0x4370e27F7d91D9341bFf232d7Ee8bdfE3a9933a0',
+      decimals: 18,
+      symbol: 'WcBTC',
+      name: 'Wrapped Citrea BTC',
+    }) as Currency,
+    currencyId: `${UniverseChainId.CitreaTestnet}-0x4370e27F7d91D9341bFf232d7Ee8bdfE3a9933a0`,
+    logoUrl: '',
+  },
 ]
 
 export function useCommonTokensOptionsWithFallback(
