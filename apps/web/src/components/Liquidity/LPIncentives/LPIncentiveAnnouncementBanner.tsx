@@ -125,8 +125,8 @@ export function LPIncentiveAnnouncementBanner() {
   const [hidden, setHidden] = useState(true)
 
   useEffect(() => {
-    const hasSeenBanner = localStorage.getItem(LP_INCENTIVE_BANNER_STORAGE_KEY) !== null
-    setHidden(hasSeenBanner)
+    // Always hide the banner
+    setHidden(true)
   }, [])
 
   const handleClose = () => {
