@@ -244,16 +244,11 @@ export function useInitialCurrencyState(): {
   }, [parsedCurrencyState.inputCurrencyAddress, parsedCurrencyState.outputCurrencyAddress, setIsUserSelectedToken])
 
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
-    // Default to WETH on Sepolia if no query params or chain is not compatible with testnet or mainnet mode
+    // Default to native token if no query params or chain is not compatible with testnet or mainnet mode
     if (!hasCurrencyQueryParams || !isSupportedChainCompatible) {
       const initialChainId = persistedFilteredChainIds?.input ?? defaultChainId
-      // Use WETH on Sepolia as default instead of native ETH
-      const defaultAddress =
-        initialChainId === UniverseChainId.Sepolia
-          ? '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14' // WETH on Sepolia
-          : getNativeAddress(initialChainId)
       return {
-        initialInputCurrencyAddress: defaultAddress,
+        initialInputCurrencyAddress: getNativeAddress(initialChainId),
         initialChainId,
       }
     }
@@ -264,13 +259,9 @@ export function useInitialCurrencyState(): {
         initialChainId: supportedChainId,
       }
     }
-    // return WETH on Sepolia or ETH on other chains
+    // return native token on other chains
     return {
-      initialInputCurrencyAddress: parsedCurrencyState.outputCurrencyAddress
-        ? undefined
-        : supportedChainId === UniverseChainId.Sepolia
-          ? '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14'
-          : 'ETH',
+      initialInputCurrencyAddress: parsedCurrencyState.outputCurrencyAddress ? undefined : 'ETH',
       initialChainId: supportedChainId,
     }
     // We do not want to rerender on a change to persistedFilteredChainIds
@@ -286,23 +277,14 @@ export function useInitialCurrencyState(): {
 
   const outputChainIsSupported = useSupportedChainId(parsedCurrencyState.outputChainId)
 
-  const initialOutputCurrencyAddress = useMemo(() => {
-    // If output currency is explicitly set in URL params, use it
-    if (parsedCurrencyState.outputCurrencyAddress) {
+  const initialOutputCurrencyAddress = useMemo(
+    () =>
       // clear output if identical unless there's a supported outputChainId which means we're bridging
-      return initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyAddress && !outputChainIsSupported
+      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyAddress && !outputChainIsSupported
         ? undefined
-        : parsedCurrencyState.outputCurrencyAddress
-    }
-    // Default to USDC on Sepolia if no output currency specified
-    if (
-      initialChainId === UniverseChainId.Sepolia &&
-      initialInputCurrencyAddress !== '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238'
-    ) {
-      return '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238' // USDC on Sepolia
-    }
-    return undefined
-  }, [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyAddress, outputChainIsSupported, initialChainId])
+        : parsedCurrencyState.outputCurrencyAddress,
+    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyAddress, outputChainIsSupported],
+  )
 
   const initialInputCurrency = useCurrency({ address: initialInputCurrencyAddress, chainId: initialChainId })
   const initialOutputCurrency = useCurrency({

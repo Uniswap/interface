@@ -104,6 +104,11 @@ requestFiles.forEach((file) => {
   ])
 })
 
+addImport(createSwapRequestFile, 'CustomSwapDataForRequest')
+modifyType(createSwapRequestFile, 'CreateSwapRequest', [
+  { name: 'customSwapData', type: 'CustomSwapDataForRequest', isOptional: true },
+])
+
 // Modify the response interfaces
 responseFiles.forEach((file) => {
   addImport(file, 'GasEstimate')

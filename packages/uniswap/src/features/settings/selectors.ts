@@ -9,7 +9,7 @@ export const selectWalletHideSpamTokensSetting = (state: UniswapState): boolean 
 export const selectCurrentLanguage = (state: UniswapState): Language => state.userSettings.currentLanguage
 
 export const selectIsTestnetModeEnabled = (state: UniswapState): boolean =>
-  state.userSettings.isTestnetModeEnabled ?? false
+  state.userSettings.isTestnetModeEnabled ?? true // TODO: remove this once we have a way to toggle testnet mode
 
 export const selectIsCitreaOnlyEnabled = (state: UniswapState): boolean =>
   state.userSettings.isCitreaOnlyEnabled ?? false

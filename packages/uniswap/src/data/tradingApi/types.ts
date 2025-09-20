@@ -38,3 +38,13 @@ export interface GasEstimateEip1559 {
 }
 
 export type GasEstimate = GasEstimateLegacy | GasEstimateEip1559
+
+export type CustomSwapDataForRequest = {
+  tokenOutAddress: string
+  tokenOutDecimals: number
+  tokenInChainId: number
+  tokenInAddress: string
+  tokenInDecimals: number
+  tokenOutChainId: number
+  chainId: number
+}

@@ -49,7 +49,7 @@ export function createGetEVMSwapTransactionRequestInfo(ctx: {
     const { data, error } = await tryCatch(
       skip
         ? Promise.resolve(undefined)
-        : instructionService.getSwapInstructions({ swapQuoteResponse, transactionSettings, approvalAction }),
+        : instructionService.getSwapInstructions({ swapQuoteResponse, transactionSettings, approvalAction, trade }),
     )
 
     const isRevokeNeeded = tokenApprovalInfo.action === ApprovalAction.RevokeAndPermit2Approve

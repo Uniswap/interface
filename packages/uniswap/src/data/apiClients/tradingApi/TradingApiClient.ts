@@ -1,6 +1,8 @@
 /* eslint-disable max-lines */
+import { Protocol } from '@juiceswapxyz/router-sdk'
 import { parseUnits } from 'ethers/lib/utils'
 import { config } from 'uniswap/src/config'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { createApiClient } from 'uniswap/src/data/apiClients/createApiClient'
 import { SwappableTokensParams } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
@@ -137,7 +139,10 @@ export async function fetchQuote({
   ...params
 }: QuoteRequest & { isUSDQuote?: boolean }): Promise<DiscriminatedQuoteResponse> {
   return await CustomQuoteApiClient.post<DiscriminatedQuoteResponse>(uniswapUrls.tradingApiPaths.quote, {
-    body: JSON.stringify(params),
+    body: JSON.stringify({
+      ...params,
+      protocols: [Protocol.V3],
+    }),
     headers: {
       ...V4_HEADERS,
       ...getFeatureFlaggedHeaders(),
@@ -201,6 +206,7 @@ export async function fetchSwap({ ...params }: CreateSwapRequest): Promise<Creat
     slippageTolerance: '5',
     deadline: params.deadline || '1800',
     chainId: tokenIn?.chainId,
+    ...params.customSwapData,
   }
 
   const response = await CustomQuoteApiClient.post<{
@@ -256,6 +262,14 @@ export async function fetchSwap7702({ ...params }: CreateSwap7702Request): Promi
  * and proper gas estimation
  */
 async function computeApprovalTransaction(params: ApprovalRequest): Promise<ApprovalResponse> {
+  if (params.token === ZERO_ADDRESS) {
+    return {
+      requestId: '',
+      approval: null,
+      cancel: null,
+    } as unknown as ApprovalResponse
+  }
+
   const { constructUnlimitedERC20ApproveCalldata } = require('uniswap/src/utils/approvalCalldata')
   const { createFetchGasFee } = require('uniswap/src/data/apiClients/uniswapApi/UniswapApiClient')
   const { Contract } = require('ethers')

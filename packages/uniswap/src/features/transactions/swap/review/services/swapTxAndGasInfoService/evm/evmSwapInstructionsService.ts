@@ -1,10 +1,11 @@
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import type {
   BridgeQuoteResponse,
   ClassicQuoteResponse,
   WrapQuoteResponse,
 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import type { CreateSwapRequest, Permit, Routing } from 'uniswap/src/data/tradingApi/__generated__'
-import type { GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { CreateSwapRequest, Permit, Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import type { CustomSwapDataForRequest, GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'
@@ -19,7 +20,13 @@ import {
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import type { PresignPermitFn } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/hooks'
 import { createPrepareSwapRequestParams } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
-import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
+import {
+  ApprovalAction,
+  BridgeTrade,
+  ClassicTrade,
+  UnwrapTrade,
+  WrapTrade,
+} from 'uniswap/src/features/transactions/swap/types/trade'
 import { tradingApiToUniverseChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
 type SwapInstructions =
@@ -36,6 +43,7 @@ export interface EVMSwapInstructionsService {
       | WrapQuoteResponse<Routing.UNWRAP>
     transactionSettings: TransactionSettings
     approvalAction: ApprovalAction
+    trade?: ClassicTrade | BridgeTrade | WrapTrade | UnwrapTrade
   }) => Promise<SwapInstructions>
 }
 
@@ -48,6 +56,28 @@ interface EVMSwapInstructionsServiceContext {
   getSwapDelegationInfo?: (chainId: UniverseChainId | undefined) => SwapDelegationInfo
 }
 
+const getCustomSwapTokenData = (
+  trade: ClassicTrade | BridgeTrade | WrapTrade | UnwrapTrade | undefined,
+): CustomSwapDataForRequest | undefined => {
+  if (!trade || trade.routing !== Routing.CLASSIC || !trade.swaps[0]) {
+    return undefined
+  }
+
+  const swap = trade.swaps[0]
+  const currencyIn = swap.inputAmount.currency
+  const currencyOut = swap.outputAmount.currency
+
+  return {
+    chainId: currencyIn.chainId,
+    tokenInChainId: currencyIn.chainId,
+    tokenInAddress: currencyIn.isNative ? ZERO_ADDRESS : currencyIn.address,
+    tokenInDecimals: currencyIn.decimals,
+    tokenOutChainId: currencyOut.chainId,
+    tokenOutAddress: currencyOut.isNative ? ZERO_ADDRESS : currencyOut.address,
+    tokenOutDecimals: currencyOut.decimals,
+  }
+}
+
 function createLegacyEVMSwapInstructionsService(
   ctx: Omit<EVMSwapInstructionsServiceContext, 'swapDelegationAddress'> & { swapRepository: EVMSwapRepository },
 ): EVMSwapInstructionsService {
@@ -58,11 +88,9 @@ function createLegacyEVMSwapInstructionsService(
   })
 
   const service: EVMSwapInstructionsService = {
-    getSwapInstructions: async ({ swapQuoteResponse, transactionSettings, approvalAction }) => {
+    getSwapInstructions: async ({ swapQuoteResponse, transactionSettings, approvalAction, trade }) => {
       const { permitData, permitTransaction } = swapQuoteResponse
       const signature = permitData ? await ctx.presignPermit?.(permitData) : undefined
-      const signatureMissing = permitData && !signature
-
       const alreadyApproved = approvalAction === ApprovalAction.None && !permitTransaction
 
       const swapRequestParams = prepareSwapRequestParams({
@@ -72,11 +100,13 @@ function createLegacyEVMSwapInstructionsService(
         alreadyApproved,
       })
 
+      const signatureMissing = permitData && !signature
       if (signatureMissing) {
         return { response: null, unsignedPermit: permitData, swapRequestParams }
       }
 
-      const response = await swapRepository.fetchSwapData(swapRequestParams)
+      const customSwapData = getCustomSwapTokenData(trade)
+      const response = await swapRepository.fetchSwapData({ ...swapRequestParams, customSwapData })
       return { response, unsignedPermit: null, swapRequestParams: null }
     },
   }
