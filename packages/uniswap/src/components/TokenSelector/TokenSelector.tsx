@@ -3,6 +3,7 @@ import { Currency } from '@juiceswapxyz/sdk-core'
 import { hasStringAsync } from 'expo-clipboard'
 import { ComponentProps, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import { Flex, ModalCloseIcon, Text, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { spacing, zIndexes } from 'ui/src/theme'
@@ -26,6 +27,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SearchContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
+import { selectIsCitreaOnlyEnabled } from 'uniswap/src/features/settings/selectors'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import {
   ElementName,
@@ -111,6 +113,7 @@ export function TokenSelectorContent({
   const [hasClipboardString, setHasClipboardString] = useState(false)
 
   const { chains: enabledChains, isTestnetModeEnabled } = useEnabledChains()
+  const isCitreaOnlyEnabled = useSelector(selectIsCitreaOnlyEnabled)
 
   // Check if user clipboard has any text to show paste button
   useEffect(() => {
@@ -300,7 +303,7 @@ export function TokenSelectorContent({
               <Flex row alignItems="center">
                 {hasClipboardString && <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />}
                 <NetworkFilter
-                  includeAllNetworks={!isTestnetModeEnabled}
+                  includeAllNetworks={!isTestnetModeEnabled && !isCitreaOnlyEnabled}
                   chainIds={chainIds || enabledChains}
                   selectedChain={chainFilter}
                   styles={isExtension || isMobileWeb ? { dropdownZIndex: zIndexes.overlay } : undefined}

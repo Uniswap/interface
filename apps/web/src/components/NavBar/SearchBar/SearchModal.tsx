@@ -1,6 +1,7 @@
 import { useModalState } from 'hooks/useModalState'
 import { memo, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import { Flex, Text, TouchableArea, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useUpdateScrollLock } from 'uniswap/src/components/modals/ScrollLock'
@@ -13,6 +14,7 @@ import { SearchModalResultsList } from 'uniswap/src/features/search/SearchModal/
 import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
 import { SearchTab, WEB_SEARCH_TABS } from 'uniswap/src/features/search/SearchModal/types'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
+import { selectIsCitreaOnlyEnabled } from 'uniswap/src/features/settings/selectors'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfaceEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -25,6 +27,7 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
   const { t } = useTranslation()
   const media = useMedia()
   const scrollbarStyles = useScrollbarStyles()
+  const isCitreaOnlyEnabled = useSelector(selectIsCitreaOnlyEnabled)
 
   const { isOpen: isModalOpen, toggleModal: toggleSearchModal } = useModalState(ModalName.Search)
 
@@ -92,7 +95,7 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
             endAdornment={
               <Flex row alignItems="center">
                 <NetworkFilter
-                  includeAllNetworks
+                  includeAllNetworks={!isCitreaOnlyEnabled}
                   chainIds={enabledChains}
                   selectedChain={chainFilter}
                   onPressChain={onChangeChainFilter}
