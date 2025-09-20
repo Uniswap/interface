@@ -87,6 +87,17 @@ const hardcodedCommonBaseCurrencies: CurrencyInfo[] = [
     currencyId: `${UniverseChainId.CitreaTestnet}-0x9B28B690550522608890C3C7e63c0b4A7eBab9AA`,
     logoUrl: '',
   },
+  {
+    currency: buildCurrency({
+      chainId: UniverseChainId.CitreaTestnet,
+      address: '0x14ADf6B87096Ef750a956756BA191fc6BE94e473',
+      decimals: 18,
+      symbol: 'TFC',
+      name: 'TaprootFreakCoin',
+    }) as Currency,
+    currencyId: `${UniverseChainId.CitreaTestnet}-0x14ADf6B87096Ef750a956756BA191fc6BE94e473`,
+    logoUrl: '',
+  },
 ]
 
 export function useCommonTokensOptionsWithFallback(
