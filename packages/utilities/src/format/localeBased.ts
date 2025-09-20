@@ -71,8 +71,26 @@ export function formatCurrencyAmount({
   type?: NumberType
   placeholder?: string
 }): string {
+  // Handle different types of amount objects
+  let numericValue: number | undefined
+  if (!amount) {
+    numericValue = undefined
+  } else if (typeof amount.toExact === 'function') {
+    // CurrencyAmount object - use toExact() method
+    numericValue = parseFloat(amount.toExact())
+  } else if (typeof amount.toFixed === 'function') {
+    // Regular number or similar - use toFixed()
+    numericValue = parseFloat(amount.toFixed())
+  } else if (typeof amount === 'number') {
+    // Direct number
+    numericValue = amount
+  } else {
+    // Unknown type - try to convert to string and parse
+    numericValue = parseFloat(String(amount))
+  }
+
   return formatNumber({
-    input: amount ? parseFloat(amount.toFixed()) : undefined,
+    input: numericValue,
     locale,
     type,
     placeholder,
