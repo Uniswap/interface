@@ -1,12 +1,9 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import PROVIDE_LIQUIDITY from 'assets/images/provideLiquidity.png'
-import tokenLogo from 'assets/images/token-logo.png'
 import V4_HOOK from 'assets/images/v4Hooks.png'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ExternalArrowLink } from 'components/Liquidity/ExternalArrowLink'
-import { LpIncentiveClaimModal } from 'components/Liquidity/LPIncentives/LpIncentiveClaimModal'
-import LpIncentiveRewardsCard from 'components/Liquidity/LPIncentives/LpIncentiveRewardsCard'
 import { LiquidityPositionCard, LiquidityPositionCardLoader } from 'components/Liquidity/LiquidityPositionCard'
 import { PositionsHeader } from 'components/Liquidity/PositionsHeader'
 import { PositionInfo } from 'components/Liquidity/types'
@@ -14,7 +11,6 @@ import { getPositionUrl } from 'components/Liquidity/utils/getPositionUrl'
 import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
 import { useAccount } from 'hooks/useAccount'
 import { useInfiniteScroll } from 'hooks/useInfiniteScroll'
-import { useLpIncentives } from 'hooks/useLpIncentives'
 import { atom, useAtom } from 'jotai'
 import { TopPools } from 'pages/Positions/TopPools'
 import { useMemo, useState } from 'react'
@@ -33,11 +29,8 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useGetPositionsInfiniteQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { InterfacePageName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 
 // The BE limits the number of positions by chain and protocol version.
@@ -244,8 +237,6 @@ export default function Pool() {
   const { t } = useTranslation()
   const { address, isConnected } = account
 
-  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives) && isConnected
-
   const [chainFilter, setChainFilter] = useAtom(chainFilterAtom)
   const { chains: currentModeChains } = useEnabledChains()
   const [versionFilter, setVersionFilter] = useAtom(versionFilterAtom)
@@ -254,17 +245,6 @@ export default function Pool() {
 
   const isPositionVisible = usePositionVisibilityCheck()
   const [showHiddenPositions, setShowHiddenPositions] = useState(false)
-
-  const {
-    isPendingTransaction,
-    isModalOpen,
-    tokenRewards,
-    openModal,
-    closeModal,
-    setTokenRewards,
-    onTransactionSuccess,
-    hasCollectedRewards,
-  } = useLpIncentives()
 
   const { data, isPlaceholderData, refetch, isLoading, fetchNextPage, hasNextPage, isFetching } =
     useGetPositionsInfiniteQuery(
@@ -355,18 +335,7 @@ export default function Pool() {
         $lg={{ px: '$spacing20' }}
       >
         <Flex grow shrink gap="$spacing24" maxWidth={740} $xl={{ maxWidth: '100%' }}>
-          {isLPIncentivesEnabled && (
-            <LpIncentiveRewardsCard
-              walletAddress={account.address}
-              onCollectRewards={() => {
-                sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsButtonClicked)
-                openModal()
-              }}
-              setTokenRewards={setTokenRewards}
-              initialHasCollectedRewards={hasCollectedRewards}
-            />
-          )}
-          <Flex row justifyContent="space-between" alignItems="center" mt={isLPIncentivesEnabled ? '$spacing28' : 0}>
+          <Flex row justifyContent="space-between" alignItems="center" mt={0}>
             <PositionsHeader
               showFilters={account.isConnected}
               selectedChain={chainFilter}
@@ -484,21 +453,6 @@ export default function Pool() {
           )}
         </Flex>
       </Flex>
-      {isLPIncentivesEnabled && (
-        <LpIncentiveClaimModal
-          isOpen={isModalOpen}
-          onClose={() => closeModal()}
-          onSuccess={() => {
-            sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsSuccess, {
-              token_rewards: tokenRewards,
-            })
-            onTransactionSuccess()
-          }}
-          tokenRewards={tokenRewards}
-          isPendingTransaction={isPendingTransaction}
-          iconUrl={tokenLogo}
-        />
-      )}
     </Trace>
   )
 }
