@@ -6,9 +6,8 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Flex, LabeledCheckbox, Text, useMedia } from 'ui/src'
+import { Flex, LabeledCheckbox, Text } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { StatusIndicatorCircle } from 'ui/src/components/icons/StatusIndicatorCircle'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -50,7 +49,6 @@ export function PositionsHeader({
   const { t } = useTranslation()
   const { chains } = useEnabledChains()
   const navigate = useNavigate()
-  const media = useMedia()
 
   const statusFilterOptions = useMemo(() => {
     return [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE, PositionStatus.CLOSED].map((status) => {
@@ -99,27 +97,6 @@ export function PositionsHeader({
     ))
   }, [selectedVersions, onVersionChange])
 
-  const createOptions = useMemo(
-    () =>
-      PROTOCOL_VERSIONS.map((version) => {
-        const protocolVersionLabel = getProtocolVersionLabel(version)
-        return (
-          <Flex
-            key={`PositionsHeader-create-${protocolVersionLabel}`}
-            p="$spacing8"
-            {...ClickableTamaguiStyle}
-            onPress={() => {
-              navigate(`/positions/create/${protocolVersionLabel}`)
-            }}
-          >
-            <Text variant="body2">{t('position.new.protocol', { protocol: protocolVersionLabel })}</Text>
-          </Flex>
-        )
-      }),
-    [navigate, t],
-  )
-
-  const [createDropdownOpen, setCreateDropdownOpen] = useState(false)
   const [protocolDropdownOpen, setProtocolDropdownOpen] = useState(false)
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false)
 
@@ -129,57 +106,24 @@ export function PositionsHeader({
       <Flex gap="$gap8" row $sm={{ flexDirection: 'column' }}>
         {showFilters && (
           <>
-            <Flex gap="$spacing1" row $sm={{ width: '100%' }}>
-              <Flex
-                row
-                gap="$gap8"
-                px="$padding16"
-                backgroundColor="$neutral1"
-                borderTopLeftRadius="$rounded16"
-                borderBottomLeftRadius="$rounded16"
-                alignItems="center"
-                $sm={{ justifyContent: 'center' }}
-                justifyContent="flex-start"
-                flexGrow={1}
-                {...ClickableTamaguiStyle}
-                onPress={() => {
-                  navigate('/positions/create/v4')
-                }}
-              >
-                <Plus size={20} color="$surface1" />
-                <Text color="$surface1" variant="buttonLabel3">
-                  {t('common.new')}
-                </Text>
-              </Flex>
-              <DropdownSelector
-                containerStyle={{ width: 'auto' }}
-                menuLabel={
-                  <Flex
-                    borderTopRightRadius="$rounded16"
-                    borderBottomRightRadius="$rounded16"
-                    backgroundColor="$neutral1"
-                    justifyContent="center"
-                    alignItems="center"
-                    p="$padding8"
-                    {...ClickableTamaguiStyle}
-                  >
-                    <RotatableChevron direction="down" height={20} width={20} color="$surface1" />
-                  </Flex>
-                }
-                buttonStyle={{
-                  borderWidth: 0,
-                  p: 0,
-                }}
-                dropdownStyle={{ width: 160 }}
-                hideChevron={true}
-                isOpen={createDropdownOpen}
-                toggleOpen={() => {
-                  setCreateDropdownOpen((prev) => !prev)
-                }}
-                alignRight={media.sm}
-              >
-                {createOptions}
-              </DropdownSelector>
+            <Flex
+              row
+              gap="$gap8"
+              px="$padding16"
+              backgroundColor="$neutral1"
+              borderRadius="$rounded16"
+              alignItems="center"
+              $sm={{ justifyContent: 'center' }}
+              justifyContent="flex-start"
+              {...ClickableTamaguiStyle}
+              onPress={() => {
+                navigate('/positions/create/v3')
+              }}
+            >
+              <Plus size={20} color="$surface1" />
+              <Text color="$surface1" variant="buttonLabel3">
+                {t('common.new')}
+              </Text>
             </Flex>
             <Flex row alignItems="center" shrink height="100%" gap="$gap4">
               <DropdownSelector

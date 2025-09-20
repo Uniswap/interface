@@ -41,7 +41,7 @@ const DEFAULT_POSITION_STATE: PositionState = {
   fee: DEFAULT_FEE_DATA,
   hook: undefined,
   userApprovedHook: undefined,
-  protocolVersion: ProtocolVersion.V4,
+  protocolVersion: ProtocolVersion.V3,
 }
 
 // Combined state interface

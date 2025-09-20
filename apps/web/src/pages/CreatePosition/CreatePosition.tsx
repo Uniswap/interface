@@ -1,7 +1,6 @@
 import type { Currency } from '@juiceswapxyz/sdk-core'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
-import { DropdownSelector } from 'components/DropdownSelector'
 import { LPSettings } from 'components/LPSettings'
 import { Container } from 'components/Liquidity/Create/Container'
 import { DynamicFeeTierSpeedbump } from 'components/Liquidity/Create/DynamicFeeTierSpeedbump'
@@ -14,7 +13,6 @@ import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiqui
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'components/Liquidity/Create/types'
 import { DepositStep } from 'components/Liquidity/Deposit'
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
-import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
 import {
   CreateLiquidityContextProvider,
@@ -26,10 +24,10 @@ import type { Dispatch, SetStateAction } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { Button, Flex, Text, TouchableArea, styled, useMedia } from 'ui/src'
+import { Button, Flex, Text, styled, useMedia } from 'ui/src'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { parseRestProtocolVersion } from 'uniswap/src/data/rest/utils'
@@ -248,23 +246,17 @@ const ToolbarContainer = styled(Flex, {
 })
 
 const Toolbar = () => {
-  const navigate = useNavigate()
   const { t } = useTranslation()
   const {
     areTokensUnchanged,
     positionState,
-    setPositionState,
-    setStep,
     reset: resetCreatePositionState,
-    setPriceRangeState,
     priceRangeState,
     resetPriceRange: resetPriceRangeState,
     depositState,
     resetDeposit: resetDepositState,
   } = useCreateLiquidityContext()
-  const { protocolVersion } = positionState
   const customSlippageTolerance = useTransactionSettingsStore((s) => s.customSlippageTolerance)
-  const [versionDropdownOpen, setVersionDropdownOpen] = useState(false)
 
   const [showResetModal, setShowResetModal] = useState(false)
 
@@ -297,38 +289,6 @@ const Toolbar = () => {
     }
   }, [handleReset, isTestnetModeEnabled, prevIsTestnetModeEnabled])
 
-  const handleVersionChange = useCallback(
-    (version: ProtocolVersion) => {
-      const versionUrl = getProtocolVersionLabel(version)
-      if (versionUrl) {
-        navigate(`/positions/create/${versionUrl}`)
-      }
-
-      setPositionState({
-        ...DEFAULT_POSITION_STATE,
-        protocolVersion: version,
-      })
-      setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
-      setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-      setVersionDropdownOpen(false)
-    },
-    [setPositionState, setPriceRangeState, setStep, navigate, setVersionDropdownOpen],
-  )
-
-  const versionOptions = useMemo(
-    () =>
-      [ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
-        .filter((version) => version != protocolVersion)
-        .map((version) => (
-          <TouchableArea key={`version-${version}`} onPress={() => handleVersionChange(version)}>
-            <Flex p="$spacing8" borderRadius="$rounded8" hoverStyle={{ backgroundColor: '$surface2' }}>
-              <Text variant="body2">{t('position.new.protocol', { protocol: getProtocolVersionLabel(version) })}</Text>
-            </Flex>
-          </TouchableArea>
-        )),
-    [handleVersionChange, protocolVersion, t],
-  )
-
   return (
     <Flex>
       <ResetCreatePositionFormModal
@@ -339,21 +299,18 @@ const Toolbar = () => {
 
       <ToolbarContainer>
         <ResetButton onClickReset={() => setShowResetModal(true)} isDisabled={isFormUnchanged} />
-        <DropdownSelector
-          containerStyle={{ width: 'auto' }}
-          buttonStyle={{ py: '$spacing8', px: '$spacing12' }}
-          dropdownStyle={{ width: 200, borderRadius: '$rounded16' }}
-          menuLabel={
-            <Text variant="buttonLabel3" lineHeight="16px">
-              {t('position.protocol', { protocol: getProtocolVersionLabel(protocolVersion) })}
-            </Text>
-          }
-          isOpen={versionDropdownOpen}
-          toggleOpen={() => setVersionDropdownOpen(!versionDropdownOpen)}
-          alignRight
+        <Flex
+          alignItems="center"
+          justifyContent="center"
+          py="$spacing8"
+          px="$spacing12"
+          backgroundColor="$surface3"
+          borderRadius="$rounded12"
         >
-          {versionOptions}
-        </DropdownSelector>
+          <Text variant="buttonLabel3" lineHeight="16px">
+            {t('position.protocol', { protocol: 'v3' })}
+          </Text>
+        </Flex>
         <Flex
           borderRadius="$rounded12"
           borderWidth={!customSlippageTolerance ? '$spacing1' : '$none'}
@@ -395,7 +352,7 @@ function CreatePositionContent({
   paramsProtocolVersion: ProtocolVersion | undefined
   autoSlippageTolerance: number
 }) {
-  const initialProtocolVersion = paramsProtocolVersion ?? ProtocolVersion.V4
+  const initialProtocolVersion = paramsProtocolVersion ?? ProtocolVersion.V3
 
   const [currencyInputs, setCurrencyInputs] = useState<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>({
     tokenA: initialInputs.tokenA,

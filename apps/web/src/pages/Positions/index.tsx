@@ -62,7 +62,7 @@ function DisconnectedWalletView() {
           {t('positions.welcome.connect.description')}
         </Text>
         <Flex row gap="$gap8">
-          <Button variant="default" size="small" emphasis="secondary" onPress={() => navigate('/positions/create/v4')}>
+          <Button variant="default" size="small" emphasis="secondary" onPress={() => navigate('/positions/create/v3')}>
             {t('position.new')}
           </Button>
           <Button variant="default" size="small" width={160} onPress={accountDrawer.open}>
@@ -118,7 +118,7 @@ function EmptyPositionsView() {
           <Button variant="default" size="small" emphasis="secondary" onPress={() => navigate('/explore/pools')}>
             {t('pools.explore')}
           </Button>
-          <Button variant="default" size="small" width={160} onPress={() => navigate('/positions/create/v4')}>
+          <Button variant="default" size="small" width={160} onPress={() => navigate('/positions/create/v3')}>
             {t('position.new')}
           </Button>
         </Flex>
