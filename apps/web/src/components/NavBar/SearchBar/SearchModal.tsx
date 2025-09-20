@@ -27,6 +27,7 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
   const { t } = useTranslation()
   const media = useMedia()
   const scrollbarStyles = useScrollbarStyles()
+  const isCitreaOnlyEnabled = useSelector(selectIsCitreaOnlyEnabled)
 
   const { isOpen: isModalOpen, toggleModal: toggleSearchModal } = useModalState(ModalName.Search)
 
@@ -54,7 +55,6 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
   }, [onChangeText, onClose])
 
   const { chains: enabledChains } = useEnabledChains()
-  const isCitreaOnlyEnabled = useSelector(selectIsCitreaOnlyEnabled)
 
   // Tamagui Dialog/Sheets should remove background scroll by default but does not work to disable ArrowUp/Down key scrolling
   useUpdateScrollLock({ isModalOpen })
