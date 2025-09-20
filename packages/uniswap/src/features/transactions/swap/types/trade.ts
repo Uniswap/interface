@@ -44,7 +44,7 @@ function getQuoteOutputAmount<T extends QuoteResponseWithAggregatedOutputs>(quot
     return CurrencyAmount.fromRawAmount(outputCurrency, '0')
   }
 
-  return quote.quote.aggregatedOutputs?.reduce((acc, output) => acc.add(CurrencyAmount.fromRawAmount(outputCurrency, output.amount ?? '0')), CurrencyAmount.fromRawAmount(outputCurrency, '0')) ?? CurrencyAmount.fromRawAmount(outputCurrency, '0')
+  return quote.quote.aggregatedOutputs?.reduce((acc, output) => acc.add(CurrencyAmount.fromRawAmount(outputCurrency, output.amount ?? '0')), CurrencyAmount.fromRawAmount(outputCurrency, '0')) ?? CurrencyAmount.fromRawAmount(outputCurrency, 'output' in quote.quote ? quote.quote.output?.amount ?? '0' : '0')
 }
 
 /**
