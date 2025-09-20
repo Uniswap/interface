@@ -1,12 +1,10 @@
 import { ReactComponent as UniswapLogo } from 'assets/svg/uniswap_app_logo.svg'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useAtom } from 'jotai'
-import { useAtomValue } from 'jotai/utils'
 import { X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { hideMobileAppPromoBannerAtom, persistHideMobileAppPromoBannerAtom } from 'state/application/atoms'
+import { hideMobileAppPromoBannerAtom } from 'state/application/atoms'
 import { Anchor, Flex, Text, styled, useSporeColors } from 'ui/src'
-import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { getWalletMeta } from 'utils/walletMeta'
 
 const Wrapper = styled(Flex, {
@@ -43,9 +41,8 @@ const StyledButton = styled(Anchor, {
  * - The user has not clicked the JuiceSwap wallet or Get JuiceSwap Wallet buttons in wallet options
  */
 export function useMobileAppPromoBannerEligible(): boolean {
-  const hideMobileAppPromoBanner = useAtomValue(hideMobileAppPromoBannerAtom)
-  const persistHideMobileAppPromoBanner = useAtomValue(persistHideMobileAppPromoBannerAtom)
-  return (isWebIOS || isWebAndroid) && !hideMobileAppPromoBanner && !persistHideMobileAppPromoBanner
+  // Always return false to disable the mobile app promo banner
+  return false
 }
 
 const UNIVERSAL_DOWNLOAD_LINK = 'https://uniswapwallet.onelink.me/8q3y/39b0eeui'
