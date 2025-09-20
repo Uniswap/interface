@@ -65,6 +65,28 @@ const hardcodedCommonBaseCurrencies: CurrencyInfo[] = [
     currencyId: `${UniverseChainId.CitreaTestnet}-0x4370e27F7d91D9341bFf232d7Ee8bdfE3a9933a0`,
     logoUrl: '',
   },
+  {
+    currency: buildCurrency({
+      chainId: UniverseChainId.CitreaTestnet,
+      address: '0x36c16eaC6B0Ba6c50f494914ff015fCa95B7835F',
+      decimals: 6,
+      symbol: 'USDC',
+      name: 'USDC (Satsuma)',
+    }) as Currency,
+    currencyId: `${UniverseChainId.CitreaTestnet}-0x36c16eaC6B0Ba6c50f494914ff015fCa95B7835F`,
+    logoUrl: '',
+  },
+  {
+    currency: buildCurrency({
+      chainId: UniverseChainId.CitreaTestnet,
+      address: '0x9B28B690550522608890C3C7e63c0b4A7eBab9AA',
+      decimals: 18,
+      symbol: 'NUSD',
+      name: 'Nectra USD',
+    }) as Currency,
+    currencyId: `${UniverseChainId.CitreaTestnet}-0x9B28B690550522608890C3C7e63c0b4A7eBab9AA`,
+    logoUrl: '',
+  },
 ]
 
 export function useCommonTokensOptionsWithFallback(
