@@ -9,6 +9,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const primary = '#8251FB'
 
+// eslint-disable-next-line import/no-unused-modules
 export function UniswapXCard() {
   const { t } = useTranslation()
 

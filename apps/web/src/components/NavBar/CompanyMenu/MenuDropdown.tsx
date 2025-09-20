@@ -124,6 +124,7 @@ function ProductSection({ items }: { items: MenuItem[] }) {
   )
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export function MenuDropdown({ close }: { close?: () => void }) {
   const { t } = useTranslation()
   const isConversionTrackingEnabled = useFeatureFlag(FeatureFlags.ConversionTracking)

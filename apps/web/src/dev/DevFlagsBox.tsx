@@ -21,6 +21,7 @@ const Override = (name: string, value: any) => {
   )
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export default function DevFlagsBox() {
   const { client: statsigClient } = useContext(StatsigContext)
   const { gateOverrides, configOverrides } = getOverrides(statsigClient)

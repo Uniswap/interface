@@ -9,6 +9,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const primary = '#F50DB4'
 
+// eslint-disable-next-line import/no-unused-modules
 export function UnichainCard() {
   const { t } = useTranslation()
 
