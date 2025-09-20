@@ -277,14 +277,32 @@ export function useInitialCurrencyState(): {
 
   const outputChainIsSupported = useSupportedChainId(parsedCurrencyState.outputChainId)
 
-  const initialOutputCurrencyAddress = useMemo(
-    () =>
+  const initialOutputCurrencyAddress = useMemo(() => {
+    // If there are parsed output currency params, use them
+    if (parsedCurrencyState.outputCurrencyAddress) {
       // clear output if identical unless there's a supported outputChainId which means we're bridging
-      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyAddress && !outputChainIsSupported
-        ? undefined
-        : parsedCurrencyState.outputCurrencyAddress,
-    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyAddress, outputChainIsSupported],
-  )
+      if (initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyAddress && !outputChainIsSupported) {
+        return undefined
+      }
+      return parsedCurrencyState.outputCurrencyAddress
+    }
+
+    // Default to cUSD when no output currency is specified
+    if (!hasCurrencyQueryParams) {
+      // For Citrea Testnet, default to cUSD
+      if (initialChainId === UniverseChainId.CitreaTestnet || initialChainId === UniverseChainId.Sepolia) {
+        return '0x2fFC18aC99D367b70dd922771dF8c2074af4aCE0' // cUSD
+      }
+    }
+
+    return undefined
+  }, [
+    initialInputCurrencyAddress,
+    parsedCurrencyState.outputCurrencyAddress,
+    outputChainIsSupported,
+    hasCurrencyQueryParams,
+    initialChainId,
+  ])
 
   const initialInputCurrency = useCurrency({ address: initialInputCurrencyAddress, chainId: initialChainId })
   const initialOutputCurrency = useCurrency({

@@ -31,5 +31,5 @@ export const buildUSDT = createTokenFactory({
 export const buildCUSD = createTokenFactory({
   decimals: 18,
   name: 'Citrus Dollar',
-  symbol: 'CUSD',
+  symbol: 'cUSD',
 })

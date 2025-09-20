@@ -24,19 +24,16 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
   const media = useMedia()
   const { height: scrollPosition } = useScroll({ enabled: !media.sm })
   const { defaultChainId } = useEnabledChains()
-  // Use WETH on Sepolia as default input currency
+  // Use native token (cBTC on Citrea) as default input currency
   const initialInputCurrency = useCurrency({
-    address:
-      defaultChainId === UniverseChainId.Sepolia
-        ? '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14' // WETH on Sepolia
-        : 'ETH',
+    address: 'ETH', // This will get the native token for any chain
     chainId: defaultChainId,
   })
-  // Use USDC on Sepolia as default output currency
+  // Use cUSD as default output currency for Citrea and Sepolia
   const initialOutputCurrency = useCurrency({
     address:
-      defaultChainId === UniverseChainId.Sepolia
-        ? '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238' // USDC on Sepolia
+      defaultChainId === UniverseChainId.CitreaTestnet || defaultChainId === UniverseChainId.Sepolia
+        ? '0x2fFC18aC99D367b70dd922771dF8c2074af4aCE0' // cUSD
         : undefined,
     chainId: defaultChainId,
   })
