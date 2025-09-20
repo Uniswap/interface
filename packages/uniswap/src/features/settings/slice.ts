@@ -13,6 +13,7 @@ export interface UserSettingsState {
   hideSmallBalances: boolean
   hideSpamTokens: boolean
   isTestnetModeEnabled?: boolean
+  isCitreaOnlyEnabled?: boolean
   hapticsEnabled: boolean
 }
 
@@ -22,6 +23,7 @@ export const initialUserSettingsState: UserSettingsState = {
   hideSmallBalances: true,
   hideSpamTokens: true,
   isTestnetModeEnabled: true,
+  isCitreaOnlyEnabled: true,
   hapticsEnabled: true,
 }
 
@@ -49,6 +51,9 @@ const slice = createSlice({
       state.isTestnetModeEnabled = true
       analytics.setTestnetMode(true, WALLET_TESTNET_CONFIG)
     },
+    setCitreaOnlyEnabled: (state, { payload }: PayloadAction<boolean>) => {
+      state.isCitreaOnlyEnabled = payload
+    },
     setHapticsEnabled: (state, { payload }: PayloadAction<boolean>) => {
       state.hapticsEnabled = payload
     },
@@ -62,6 +67,7 @@ export const {
   setCurrentLanguage,
   setCurrentFiatCurrency,
   setIsTestnetModeEnabled,
+  setCitreaOnlyEnabled,
   setHapticsEnabled,
 } = slice.actions
 

@@ -212,12 +212,14 @@ export function getEnabledChains({
   isTestnetModeEnabled,
   featureFlaggedChainIds,
   connectedWalletChainIds,
+  isCitreaOnlyEnabled = false,
 }: {
   platform?: Platform
   isTestnetModeEnabled: boolean
   featureFlaggedChainIds: UniverseChainId[]
   connectedWalletChainIds?: UniverseChainId[]
   includeTestnets?: boolean
+  isCitreaOnlyEnabled?: boolean
 }): EnabledChainsInfo {
   // Kept for API compatibility but currently unused as we always show testnets
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -231,6 +233,11 @@ export function getEnabledChains({
     // ALWAYS filter to only show testnets, regardless of settings
     // This ensures mainnet chains are never available
     if (!isTestnetChain(chainInfo.id)) {
+      return false
+    }
+
+    // If Citrea only is enabled, only show CitreaTestnet
+    if (isCitreaOnlyEnabled && chainInfo.id !== UniverseChainId.CitreaTestnet) {
       return false
     }
 
@@ -254,7 +261,7 @@ export function getEnabledChains({
   const result = {
     chains,
     gqlChains,
-    defaultChainId: getDefaultChainId({ platform, isTestnetModeEnabled }),
+    defaultChainId: getDefaultChainId({ platform, isTestnetModeEnabled, isCitreaOnlyEnabled }),
     isTestnetModeEnabled,
   }
 
@@ -264,16 +271,23 @@ export function getEnabledChains({
 function getDefaultChainId({
   platform,
   isTestnetModeEnabled,
+  isCitreaOnlyEnabled = false,
 }: {
   platform?: Platform
   isTestnetModeEnabled: boolean
+  isCitreaOnlyEnabled?: boolean
 }): UniverseChainId {
-  // Kept for API compatibility but currently unused as we always return Sepolia
+  // Kept for API compatibility but currently unused as we always return testnets
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _unused2 = isTestnetModeEnabled
   if (platform === Platform.SVM) {
     // TODO(Solana): is there a Solana testnet we can return here?
     return UniverseChainId.Solana
+  }
+
+  // If Citrea only is enabled, return CitreaTestnet as default
+  if (isCitreaOnlyEnabled) {
+    return UniverseChainId.CitreaTestnet
   }
 
   // Always return Sepolia as default chain since we only support testnets

@@ -8,4 +8,3 @@ export function TestnetModeToggle() {
 
   return <SettingsToggle title="Testnet mode" isActive={true} toggle={handleToggle} />
 }
-

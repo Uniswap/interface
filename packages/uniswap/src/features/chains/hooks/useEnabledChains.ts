@@ -11,7 +11,7 @@ import { EnabledChainsInfo, GqlChainId, UniverseChainId } from 'uniswap/src/feat
 import { getEnabledChains, isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
+import { selectIsCitreaOnlyEnabled, selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 import { WalletConnectConnector } from 'uniswap/src/features/web3/walletConnect'
 import { isTestEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
@@ -67,6 +67,7 @@ export function useEnabledChains(options?: { platform?: Platform; includeTestnet
   const featureFlaggedChainIds = useFeatureFlaggedChainIds()
   const connectedWalletChainIds = useConnectedWalletSupportedChains()
   const isTestnetModeEnabled = useSelector(selectIsTestnetModeEnabled)
+  const isCitreaOnlyEnabled = useSelector(selectIsCitreaOnlyEnabled)
 
   const {
     chains: unorderedChains,
@@ -80,6 +81,7 @@ export function useEnabledChains(options?: { platform?: Platform; includeTestnet
         isTestnetModeEnabled,
         connectedWalletChainIds,
         featureFlaggedChainIds,
+        isCitreaOnlyEnabled,
       }),
     [
       options?.platform,
@@ -87,6 +89,7 @@ export function useEnabledChains(options?: { platform?: Platform; includeTestnet
       isTestnetModeEnabled,
       connectedWalletChainIds,
       featureFlaggedChainIds,
+      isCitreaOnlyEnabled,
     ],
   )
 
@@ -100,13 +103,15 @@ export function useEnabledChains(options?: { platform?: Platform; includeTestnet
 // use in non hook contexts
 export function createGetEnabledChains(ctx: {
   getIsTestnetModeEnabled: () => boolean
+  getIsCitreaOnlyEnabled?: () => boolean
   getConnector?: () => Connector | undefined
   getFeatureFlaggedChainIds: () => UniverseChainId[]
 }): () => EnabledChainsInfo {
-  const { getIsTestnetModeEnabled, getConnector, getFeatureFlaggedChainIds } = ctx
+  const { getIsTestnetModeEnabled, getIsCitreaOnlyEnabled, getConnector, getFeatureFlaggedChainIds } = ctx
   return () =>
     getEnabledChains({
       isTestnetModeEnabled: getIsTestnetModeEnabled(),
+      isCitreaOnlyEnabled: getIsCitreaOnlyEnabled?.() ?? false,
       // just fyi no connector on mobile
       connectedWalletChainIds: getConnectorSupportedChains(getConnector?.()),
       featureFlaggedChainIds: getFeatureFlaggedChainIds(),
@@ -123,14 +128,16 @@ export function useEnabledChainsWithConnector(connector?: Connector): {
   const featureFlaggedChainIds = useFeatureFlaggedChainIds()
   const connectedWalletChainIds = useMemo(() => getConnectorSupportedChains(connector), [connector])
   const isTestnetModeEnabled = useSelector(selectIsTestnetModeEnabled)
+  const isCitreaOnlyEnabled = useSelector(selectIsCitreaOnlyEnabled)
 
   return useMemo(
     () =>
       getEnabledChains({
         isTestnetModeEnabled,
+        isCitreaOnlyEnabled,
         connectedWalletChainIds,
         featureFlaggedChainIds,
       }),
-    [isTestnetModeEnabled, connectedWalletChainIds, featureFlaggedChainIds],
+    [isTestnetModeEnabled, isCitreaOnlyEnabled, connectedWalletChainIds, featureFlaggedChainIds],
   )
 }

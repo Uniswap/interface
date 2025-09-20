@@ -73,9 +73,16 @@ export function useCommonTokensOptionsWithFallback(
 ): GqlResult<TokenOption[] | undefined> {
   const { refetch, loading } = useCommonTokensOptions(address, chainFilter)
 
-  const commonOrDefault = hardcodedCommonBaseCurrencies
+  // Filter hardcoded currencies by chainFilter if present
+  const filteredCurrencies = useMemo(() => {
+    if (!chainFilter) {
+      return hardcodedCommonBaseCurrencies
+    }
+    return hardcodedCommonBaseCurrencies.filter((currencyInfo) => currencyInfo.currency.chainId === chainFilter)
+  }, [chainFilter])
+
   const commonBasesTokenOptions = useCurrencyInfosToTokenOptions({
-    currencyInfos: commonOrDefault,
+    currencyInfos: filteredCurrencies,
     portfolioBalancesById: {},
   })
 
