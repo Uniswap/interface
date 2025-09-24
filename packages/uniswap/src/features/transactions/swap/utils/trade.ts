@@ -1,8 +1,7 @@
 import providers from '@ethersproject/providers'
 import { ONE, Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
-import { NullablePermit, Permit } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
+import { GasEstimate, TradingApi } from '@universe/api'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { ACROSS_DAPP_INFO, isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -234,9 +233,9 @@ type RemoveUndefined<T> = {
   [P in keyof T]-?: Exclude<T[P], undefined>
 }
 
-export type ValidatedPermit = RemoveUndefined<Permit>
+export type ValidatedPermit = RemoveUndefined<TradingApi.Permit>
 
-export function validatePermit(permit: NullablePermit | undefined): ValidatedPermit | undefined {
+export function validatePermit(permit: TradingApi.NullablePermit | undefined): ValidatedPermit | undefined {
   const { domain, types, values } = permit ?? {}
   if (domain && types && values) {
     return { domain, types, values }

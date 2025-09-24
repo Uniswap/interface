@@ -52,7 +52,7 @@ import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPri
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -823,7 +823,7 @@ export default function MigrateV2Pair() {
   const account = useAccount()
 
   // get pair contract
-  const validatedAddress = isAddress(address)
+  const validatedAddress = isEVMAddress(address)
   const pair = usePairContract(validatedAddress ? validatedAddress : undefined)
 
   const { data: pairAddresses, isLoading: pairAddressesLoading } = useReadContracts({

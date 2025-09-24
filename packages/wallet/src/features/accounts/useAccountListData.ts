@@ -1,10 +1,10 @@
 import { NetworkStatus, WatchQueryFetchPolicy } from '@apollo/client'
+import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
 import {
   AccountListQuery,
   useAccountListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GqlResult } from 'uniswap/src/data/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances/balances'

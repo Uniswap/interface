@@ -1,12 +1,12 @@
 import { SerializedError } from '@reduxjs/toolkit'
 import { FetchBaseQueryError, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getCountry } from 'react-native-localize'
 import { useDispatch } from 'react-redux'
 import { useCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useCurrencies'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
@@ -90,7 +90,7 @@ export function useFiatOnRampTransactionCreator({
       // Adds a local FOR transaction to track the transaction
       // Later we will query the transaction details for that id
       const transactionDetail: TransactionDetails = {
-        routing: Routing.CLASSIC,
+        routing: TradingApi.Routing.CLASSIC,
         chainId,
         id: externalTransactionId.current,
         from: ownerAddress,

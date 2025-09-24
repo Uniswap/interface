@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { GasStrategy } from '@universe/api'
 import { BigNumber, providers } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -6,7 +7,6 @@ import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/s
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
-import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -22,7 +22,6 @@ import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { isWeb } from 'utilities/src/platform'
@@ -180,18 +179,18 @@ export function useGasFeeHighRelativeToValue(
 }
 
 export function useTransactionGasWarning({
-  account,
+  accountAddress,
   derivedInfo,
   gasFee,
 }: {
-  account?: AccountDetails
+  accountAddress?: Address
   derivedInfo: DerivedSwapInfo | DerivedSendInfo
   gasFee?: string
 }): Warning | undefined {
   const { chainId, currencyAmounts, currencyBalances } = derivedInfo
   const { t } = useTranslation()
-  const { balance: nativeCurrencyBalance } = useOnChainNativeCurrencyBalance(chainId, account?.address)
-  const { isSmartContractAddress } = useIsSmartContractAddress(account?.address, chainId)
+  const { balance: nativeCurrencyBalance } = useOnChainNativeCurrencyBalance(chainId, accountAddress)
+  const { isSmartContractAddress } = useIsSmartContractAddress(accountAddress, chainId)
 
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]

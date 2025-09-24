@@ -15,6 +15,7 @@ import {
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import i18n from 'uniswap/src/i18n'
 
 export enum PoolTableTransactionType {
@@ -84,6 +85,8 @@ export function usePoolTransactions({
 }) {
   const { defaultChainId } = useEnabledChains()
   const variables = { first, chain: toGraphQLChain(chainId ?? defaultChainId) }
+  const isSolanaChain = chainId && isSVMChain(chainId)
+
   const {
     loading: loadingV4,
     error: errorV4,
@@ -94,7 +97,7 @@ export function usePoolTransactions({
       ...variables,
       poolId: address,
     },
-    skip: protocolVersion !== ProtocolVersion.V4,
+    skip: protocolVersion !== ProtocolVersion.V4 || isSolanaChain,
   })
   const {
     loading: loadingV3,
@@ -106,7 +109,7 @@ export function usePoolTransactions({
       ...variables,
       address,
     },
-    skip: protocolVersion !== ProtocolVersion.V3,
+    skip: protocolVersion !== ProtocolVersion.V3 || isSolanaChain,
   })
   const {
     loading: loadingV2,
@@ -118,7 +121,7 @@ export function usePoolTransactions({
       ...variables,
       address,
     },
-    skip: !chainId || protocolVersion !== ProtocolVersion.V2,
+    skip: !chainId || protocolVersion !== ProtocolVersion.V2 || isSolanaChain,
   })
   const loadingMore = useRef(false)
   const { transactions, loading, fetchMore, error } =

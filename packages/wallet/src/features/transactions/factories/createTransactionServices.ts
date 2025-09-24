@@ -1,16 +1,23 @@
-import { SagaIterator } from 'redux-saga'
+import type { TransactionRequest } from '@ethersproject/providers'
+import type { SagaIterator } from 'redux-saga'
 import { call, select } from 'typed-redux-saga'
-import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
-import { PublicClient } from 'viem'
-import { DelegationCheckResult } from 'wallet/src/features/smartWallet/delegation/types'
-import { Provider } from 'wallet/src/features/transactions/executeTransaction/services/providerService'
-import { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
-import { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
-import { TransactionSagaDependencies } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
+import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { PublicClient } from 'viem'
+import type { Provider } from 'wallet/src/features/transactions/executeTransaction/services/providerService'
+import type { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
+import type { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
+import type {
+  DelegationType,
+  TransactionSagaDependencies,
+} from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 import { getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
+
+export type CreateTransactionServicesResult = {
+  transactionSigner: TransactionSigner
+  transactionService: TransactionService
+}
 
 /**
  * Creates transaction services with injected dependencies
@@ -22,10 +29,10 @@ export function* createTransactionServices(
     account: SignerMnemonicAccountMeta
     chainId: UniverseChainId
     submitViaPrivateRpc: boolean
-    includesDelegation: boolean
-    request?: ValidatedTransactionRequest
+    delegationType: DelegationType
+    request?: TransactionRequest
   },
-): SagaIterator<{ transactionSigner: TransactionSigner; transactionService: TransactionService }> {
+): SagaIterator<CreateTransactionServicesResult> {
   const signerManager = yield* call(getSignerManager)
   const signerAccounts = yield* select(selectSortedSignerMnemonicAccounts)
   const activeAccount = signerAccounts.find((a) => a.address === input.account.address)
@@ -41,7 +48,10 @@ export function* createTransactionServices(
 
   const getProvider = (): Promise<Provider> =>
     input.submitViaPrivateRpc
-      ? providerService.getPrivateProvider({ chainId: input.chainId, account: input.account })
+      ? providerService.getPrivateProvider({
+          chainId: input.chainId,
+          account: input.account,
+        })
       : providerService.getProvider({ chainId: input.chainId })
 
   const transactionConfigService = dependencies.createTransactionConfigService({
@@ -56,38 +66,28 @@ export function* createTransactionServices(
       : viemClients.getViemClient(input.chainId)
   }
 
-  const isSelfTransaction = (): boolean => {
-    return input.request?.to.toLowerCase() === input.account.address.toLowerCase()
-  }
-
-  const getDelegationInfo = async (): Promise<DelegationCheckResult> => {
-    // Delegation only applies to self-transactions with smart wallet consent
-    if (!isSelfTransaction() || !activeAccount.smartWalletConsent) {
-      return {
-        needsDelegation: false,
-      }
-    }
-
-    return dependencies.getDelegationDetails(activeAccount.address, input.chainId)
-  }
-
-  const delegationInfo = yield* call(getDelegationInfo)
+  const delegationInfo = yield* call(dependencies.getDelegationInfoForTransaction, {
+    delegationType: input.delegationType,
+    activeAccount,
+    chainId: input.chainId,
+    transactionRequest: input.request,
+    logger: dependencies.logger,
+  })
 
   // Use injected factories for signer creation
-  const transactionSigner =
-    input.includesDelegation || delegationInfo.needsDelegation
-      ? dependencies.createBundledDelegationTransactionSignerService({
-          delegationInfo,
-          getAccount: () => input.account,
-          getProvider,
-          getViemClient,
-          getSignerManager: () => signerManager,
-        })
-      : dependencies.createTransactionSignerService({
-          getAccount: () => input.account,
-          getProvider,
-          getSignerManager: () => signerManager,
-        })
+  const transactionSigner = delegationInfo.needsDelegation
+    ? dependencies.createBundledDelegationTransactionSignerService({
+        delegationInfo,
+        getAccount: () => input.account,
+        getProvider,
+        getViemClient,
+        getSignerManager: () => signerManager,
+      })
+    : dependencies.createTransactionSignerService({
+        getAccount: () => input.account,
+        getProvider,
+        getSignerManager: () => signerManager,
+      })
 
   const transactionRepository = dependencies.createTransactionRepository({
     actions: dependencies.transactionActions,

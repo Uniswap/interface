@@ -14,6 +14,7 @@ import { renderHook, waitFor } from 'test-utils/render'
 import { DAI, nativeOnChain, UNI, USDC_OPTIMISM } from 'uniswap/src/constants/tokens'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
+import { AccountsStore } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { GQL_MAINNET_CHAINS, GQL_TESTNET_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -243,6 +244,7 @@ describe('hooks', () => {
         isSwapTokenSelectorOpen: false,
         setIsSwapTokenSelectorOpen: () => {},
         setSwapOutputChainId: () => {},
+        useAccountsStoreContextHook: () => ({}) as AccountsStore,
       })
     })
 

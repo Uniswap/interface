@@ -42,6 +42,7 @@ export const mockUniswapContext = {
   useProviderHook: jest.fn(),
   useWalletDisplayName: jest.fn(),
   onConnectWallet: jest.fn(),
+  useAccountsStoreContextHook: jest.fn(),
 }
 
 // This type extends the default options for render from RTL, as well

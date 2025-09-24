@@ -8,9 +8,10 @@ import {
   SpamCode as RestSpamCode,
   TokenType,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { TradingApi } from '@universe/api'
 import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+
 import extractRestOnChainTransactionDetails from 'uniswap/src/features/activity/extract/extractOnChainTransactionDetails'
 import { parseRestApproveTransaction } from 'uniswap/src/features/activity/parse/parseApproveTransaction'
 import { parseRestLiquidityTransaction } from 'uniswap/src/features/activity/parse/parseLiquidityTransaction'
@@ -973,12 +974,12 @@ describe(extractRestOnChainTransactionDetails, () => {
   it('Swap token', () => {
     const txn = extractRestOnChainTransactionDetails(MOCK_ERC20_SWAP)
     expect(txn?.typeInfo.type).toEqual(TransactionType.Swap)
-    expect(txn?.routing).toEqual(Routing.CLASSIC)
+    expect(txn?.routing).toEqual(TradingApi.Routing.CLASSIC)
   })
   it('UniswapX swap', () => {
     const txn = extractRestOnChainTransactionDetails(MOCK_UNISWAP_X_SWAP)
     expect(txn?.typeInfo.type).toEqual(TransactionType.Swap)
-    expect(txn?.routing).toEqual(Routing.DUTCH_V2)
+    expect(txn?.routing).toEqual(TradingApi.Routing.DUTCH_V2)
   })
   it('Wrap', () => {
     const txn = extractRestOnChainTransactionDetails(MOCK_NATIVE_WRAP)

@@ -1,5 +1,6 @@
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 import { CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { fetchTradingApiIndicativeQuoteIgnoring404 } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery'
 import {
@@ -7,7 +8,6 @@ import {
   TokenDocument,
   TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { QuoteRequest, QuoteResponse, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
@@ -176,7 +176,7 @@ async function getDenominatedValue({
   const stablecoinCurrency = getPrimaryStablecoin(universeChainId)
 
   const indicativeQuote = await fetchIndicativeQuote({
-    type: TradeType.EXACT_INPUT,
+    type: TradingApi.TradeType.EXACT_INPUT,
     amount: onchainQuantityCurrencyAmount.quotient.toString(),
     tokenInChainId: chainId,
     tokenOutChainId: chainId,
@@ -233,7 +233,9 @@ function getInferredCachedDenominatedValue({
   return undefined
 }
 
-export async function fetchIndicativeQuote(params: QuoteRequest): Promise<QuoteResponse | undefined> {
+export async function fetchIndicativeQuote(
+  params: TradingApi.QuoteRequest,
+): Promise<TradingApi.QuoteResponse | undefined> {
   try {
     return await fetchTradingApiIndicativeQuoteIgnoring404({ params })
   } catch (error) {

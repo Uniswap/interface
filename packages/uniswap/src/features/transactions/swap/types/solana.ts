@@ -1,17 +1,17 @@
 import { ZERO_PERCENT } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sdk-core'
+import { JupiterOrderResponse, TradingApi } from '@universe/api'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
-import { JupiterOrderResponse } from 'uniswap/src/data/apiClients/jupiterApi/order/types'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/models/Routing'
+
 import { SwapFee } from 'uniswap/src/features/transactions/swap/types/trade'
 
 export interface SolanaTrade {
   inputAmount: CurrencyAmount<Currency>
   outputAmount: CurrencyAmount<Currency>
   executionPrice: Price<Currency, Currency>
-  quote: { routing: Routing.JUPITER; quote: JupiterOrderResponse; requestId: string; permitData: null }
+  quote: { routing: TradingApi.Routing.JUPITER; quote: JupiterOrderResponse; requestId: string; permitData: null }
   tradeType: TradeType
-  routing: Routing.JUPITER
+  routing: TradingApi.Routing.JUPITER
   readonly indicative: boolean
   readonly swapFee?: SwapFee
   readonly inputTax: typeof ZERO_PERCENT
@@ -78,15 +78,11 @@ export function createSolanaTrade({
     inputAmount,
     outputAmount,
     executionPrice,
-    quote: { routing: Routing.JUPITER, quote, requestId: quote.requestId, permitData: null },
+    quote: { routing: TradingApi.Routing.JUPITER, quote, requestId: quote.requestId, permitData: null },
     tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
-    routing: Routing.JUPITER,
+    routing: TradingApi.Routing.JUPITER,
     indicative: false,
-    swapFee: {
-      recipient: '',
-      percent: new Percent(quote.platformFee?.feeBps ?? 0, BIPS_BASE),
-      amount: quote.platformFee?.amount ?? '0',
-    },
+    swapFee: getSwapFee(quote),
     inputTax: ZERO_PERCENT,
     outputTax: ZERO_PERCENT,
     slippageTolerance: quote.slippageBps / 100,
@@ -101,5 +97,16 @@ export function createSolanaTrade({
     get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
       return outputAmount
     },
+  }
+}
+
+function getSwapFee(quote: JupiterOrderResponse): SwapFee | undefined {
+  if (!quote.platformFee) {
+    return undefined
+  }
+
+  return {
+    percent: new Percent(quote.platformFee.feeBps, BIPS_BASE),
+    amount: quote.platformFee.amount,
   }
 }

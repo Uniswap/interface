@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import { useAccount } from 'hooks/useAccount'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
@@ -9,8 +10,7 @@ import { useAppDispatch } from 'state/hooks'
 import { useMultichainTransactions, useTransactionRemover } from 'state/transactions/hooks'
 import { PendingTransactionDetails } from 'state/transactions/types'
 import { isPendingTx } from 'state/transactions/utils'
-import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__/models/SwapStatus'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RetryOptions, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -51,10 +51,10 @@ function usePendingTransactions(chainId?: UniverseChainId): PendingTransactionDe
   }, [chainId, multichainTransactions])
 }
 
-const SWAP_STATUS_TO_FINALIZED_STATUS: Partial<Record<SwapStatus, 'success' | 'reverted'>> = {
-  [SwapStatus.SUCCESS]: 'success',
-  [SwapStatus.FAILED]: 'reverted',
-  [SwapStatus.EXPIRED]: 'reverted',
+const SWAP_STATUS_TO_FINALIZED_STATUS: Partial<Record<TradingApi.SwapStatus, 'success' | 'reverted'>> = {
+  [TradingApi.SwapStatus.SUCCESS]: 'success',
+  [TradingApi.SwapStatus.FAILED]: 'reverted',
+  [TradingApi.SwapStatus.EXPIRED]: 'reverted',
 }
 
 export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
@@ -135,7 +135,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
         if (!tx.hash) {
           throw new Error(`Invalid transaction hash: hash not defined`)
         }
-        return fetchSwaps({ txHashes: [tx.hash], chainId })
+        return TradingApiClient.fetchSwaps({ txHashes: [tx.hash], chainId })
           .then(async (res) => {
             const status = res.swaps?.[0]?.status
             const finalizedStatus = status ? SWAP_STATUS_TO_FINALIZED_STATUS[status] : undefined

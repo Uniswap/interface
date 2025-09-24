@@ -1,5 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { useScrollToTop } from '@react-navigation/native'
+import { isError } from '@universe/api'
 import React, { ReactElement, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
@@ -22,7 +23,6 @@ import {
   NftCollectionScreenQuery,
   useNftCollectionScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { isError } from 'uniswap/src/data/utils'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'

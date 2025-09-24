@@ -30,7 +30,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 const PageWrapper = styled(Row)`
@@ -121,7 +121,7 @@ export default function PoolDetailsPage() {
   const { data: poolData, loading } = usePoolData({
     poolIdOrAddress: poolAddress?.toLowerCase() ?? '',
     chainId: chainInfo?.id,
-    isPoolAddress: Boolean(isAddress(poolAddress)),
+    isPoolAddress: Boolean(isEVMAddress(poolAddress)),
   })
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const unwrappedTokens = getUnwrappedPoolToken({

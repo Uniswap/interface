@@ -10,6 +10,8 @@ import { datadogRum } from '@datadog/browser-rum'
 import { QueryClientPersistProvider } from 'components/PersistQueryClient'
 import Web3Provider from 'components/Web3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
+import { AccountsStoreDevTool } from 'features/accounts/store/devtools'
+import { WebAccountsStoreProvider } from 'features/accounts/store/provider'
 import { ExternalWalletProvider } from 'features/wallet/providers/ExternalWalletProvider'
 import { useAccount } from 'hooks/useAccount'
 import { useDeferredComponent } from 'hooks/useDeferredComponent'
@@ -89,6 +91,7 @@ function Updaters() {
       {LogsUpdater && <LogsUpdater />}
       {FiatOnRampTransactionsUpdater && <FiatOnRampTransactionsUpdater />}
       {Web3ProviderUpdater && <Web3ProviderUpdater />}
+      <AccountsStoreDevTool />
     </>
   )
 }
@@ -154,21 +157,23 @@ createRoot(container).render(
                       <StatsigProvider>
                         <ExternalWalletProvider>
                           <WebUniswapProvider>
-                            <GraphqlProviders>
-                              <LocalizationContextProvider>
-                                <BlockNumberProvider>
-                                  <Updaters />
-                                  <ThemeProvider>
-                                    <TamaguiProvider>
-                                      <PortalProvider>
-                                        <ThemedGlobalStyle />
-                                        <App />
-                                      </PortalProvider>
-                                    </TamaguiProvider>
-                                  </ThemeProvider>
-                                </BlockNumberProvider>
-                              </LocalizationContextProvider>
-                            </GraphqlProviders>
+                            <WebAccountsStoreProvider>
+                              <GraphqlProviders>
+                                <LocalizationContextProvider>
+                                  <BlockNumberProvider>
+                                    <Updaters />
+                                    <ThemeProvider>
+                                      <TamaguiProvider>
+                                        <PortalProvider>
+                                          <ThemedGlobalStyle />
+                                          <App />
+                                        </PortalProvider>
+                                      </TamaguiProvider>
+                                    </ThemeProvider>
+                                  </BlockNumberProvider>
+                                </LocalizationContextProvider>
+                              </GraphqlProviders>
+                            </WebAccountsStoreProvider>
                           </WebUniswapProvider>
                         </ExternalWalletProvider>
                       </StatsigProvider>

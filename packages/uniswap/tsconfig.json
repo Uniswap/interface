@@ -9,11 +9,17 @@
   ],
   "references": [
     {
+      "path": "../utilities"
+    },
+    {
       "path": "../ui"
     },
     {
-      "path": "../utilities"
+      "path": "../api"
     },
+    {
+      "path": "../config"
+    }
   ],
   "compilerOptions": {
     "types": [

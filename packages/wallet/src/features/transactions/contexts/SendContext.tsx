@@ -11,19 +11,15 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTransactionGasFee, useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useFormattedWarnings } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
-import { ensure0xHex } from 'uniswap/src/utils/hex'
 import { useDerivedSendInfo } from 'wallet/src/features/transactions/send/hooks/useDerivedSendInfo'
 import { useSendTransactionRequest } from 'wallet/src/features/transactions/send/hooks/useSendTransactionRequest'
 import { useSendWarnings } from 'wallet/src/features/transactions/send/hooks/useSendWarnings'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { getUniswapWalletMeta } from 'wallet/src/features/wallet/providers/NativeWalletProvider'
 
 export const getDefaultSendState = (defaultChainId: UniverseChainId): Readonly<TransactionState> => ({
   [CurrencyField.INPUT]: {
@@ -110,15 +106,8 @@ export function SendContextProvider({
     (): providers.TransactionRequest => ({ ...txRequest, ...gasFee.params }),
     [gasFee.params, txRequest],
   )
-
-  const accountDetails: AccountDetails = {
-    platform: Platform.EVM,
-    accountType: account.type,
-    address: ensure0xHex(account.address),
-    walletMeta: getUniswapWalletMeta(), // temporarily building accountDetails until we implement new WalletService changes in packages/wallet
-  }
   const gasWarning = useTransactionGasWarning({
-    account: accountDetails,
+    accountAddress: account.address,
     derivedInfo: derivedSendInfo,
     gasFee: gasFee.value,
   })

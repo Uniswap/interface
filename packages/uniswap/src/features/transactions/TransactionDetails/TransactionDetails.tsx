@@ -1,11 +1,11 @@
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import type { PropsWithChildren, ReactNode } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Flex } from 'ui/src'
 import { NetworkFee } from 'uniswap/src/components/gas/NetworkFee'
 import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
-import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
@@ -57,7 +57,7 @@ interface TransactionDetailsProps {
   RoutingInfo?: JSX.Element
   RateInfo?: JSX.Element
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
-  txSimulationErrors?: TransactionFailureReason[]
+  txSimulationErrors?: TradingApi.TransactionFailureReason[]
   amountUserWillReceive?: CurrencyAmount<Currency>
   includesDelegation?: boolean
 }
@@ -111,8 +111,8 @@ export function TransactionDetails({
   const showExpectedFailureBanner =
     isSwap &&
     ((showGasFeeError && gasFee.error) ||
-      txSimulationErrors?.includes(TransactionFailureReason.SIMULATION_ERROR) ||
-      txSimulationErrors?.includes(TransactionFailureReason.SLIPPAGE_TOO_LOW))
+      txSimulationErrors?.includes(TradingApi.TransactionFailureReason.SIMULATION_ERROR) ||
+      txSimulationErrors?.includes(TradingApi.TransactionFailureReason.SLIPPAGE_TOO_LOW))
 
   return (
     <Flex>

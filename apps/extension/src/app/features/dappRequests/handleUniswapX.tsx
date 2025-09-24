@@ -1,6 +1,6 @@
+import { TradingApi } from '@universe/api'
 import { Dispatch } from 'redux'
-import { fetchOrdersWithoutIds } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { GetOrdersResponse, OrderStatus } from 'uniswap/src/data/tradingApi/__generated__'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import {
@@ -24,7 +24,7 @@ import { sleep } from 'utilities/src/time/timing'
  */
 export function createExternallySubmittedUniswapXOrder(ctx: {
   addTxToWatcher: (txDetails: UniswapXOrderDetails) => void
-  fetchLatestOpenOrder: (address: string) => Promise<GetOrdersResponse>
+  fetchLatestOpenOrder: (address: string) => Promise<TradingApi.GetOrdersResponse>
   /**
    * Wait for the order to be submitted to the backend. In the case the order is not ready
    * the worst that will happen is the last order will be submitted to the transaction watcher
@@ -94,7 +94,7 @@ export const handleExternallySubmittedUniswapXOrder = (address: string, dispatch
   createExternallySubmittedUniswapXOrder({
     addTxToWatcher: (txDetails) => dispatch(transactionActions.addTransaction(txDetails)),
     fetchLatestOpenOrder: (address) =>
-      fetchOrdersWithoutIds({ swapper: address, limit: 1, orderStatus: OrderStatus.OPEN }),
+      TradingApiClient.fetchOrdersWithoutIds({ swapper: address, limit: 1, orderStatus: TradingApi.OrderStatus.OPEN }),
     waitForOrder: async (ms: number = ONE_SECOND_MS * 2): Promise<void> => {
       await sleep(ms)
     },

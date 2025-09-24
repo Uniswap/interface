@@ -1,7 +1,8 @@
 /* eslint-disable max-lines */
 import { useApolloClient } from '@apollo/client'
-import { useIsFocused } from '@react-navigation/native'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useIsFocused, useScrollToTop } from '@react-navigation/native'
+import { SharedQueryClient } from '@universe/api'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Freeze } from 'react-freeze'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, View, ViewProps, ViewStyle } from 'react-native'
@@ -14,7 +15,7 @@ import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
-import { ActivityTab } from 'src/components/home/ActivityTab'
+import { ActivityContent } from 'src/components/activity/ActivityContent'
 import { HomeExploreTab } from 'src/components/home/HomeExploreTab'
 import { OnboardingIntroCardStack } from 'src/components/home/introCards/OnboardingIntroCardStack'
 import { NftsTab } from 'src/components/home/NftsTab'
@@ -48,14 +49,13 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { NFTS_TAB_DATA_DEPENDENCIES } from 'uniswap/src/components/nfts/constants'
-import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
 import { getListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
-import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
+import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
+import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -82,11 +82,20 @@ type HomeRoute = {
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
 
 /**
+ * Adding `key` forces a full re-render and re-mount when switching accounts
+ * to avoid issues with wrong cached data being shown in some memoized components that are already mounted.
+ */
+export function WrappedHomeScreen(props: AppStackScreenProp<MobileScreens.Home>): JSX.Element {
+  const activeAccount = useActiveAccountWithThrow()
+  return <HomeScreen key={activeAccount.address} {...props} />
+}
+
+/**
  * Home Screen hosts both Tokens and NFTs Tab
  * Manages TokensTabs and NftsTab scroll offsets when header is collapsed
  * Borrowed from: https://stormotion.io/blog/how-to-create-collapsing-tab-header-using-react-native/
  */
-export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element {
+function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element {
   const activeAccount = useActiveAccountWithThrow()
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -101,6 +110,8 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWallet)
   const SmartWalletDisableVideo = useFeatureFlag(FeatureFlags.SmartWalletDisableVideo)
   const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
+
+  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
 
   const { showEmptyWalletState, isTabsDataLoaded } = useHomeScreenState()
 
@@ -134,11 +145,11 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     const tabs: Array<HomeRoute> = [
       { key: SectionName.HomeTokensTab, title: tokensTitle },
       { key: SectionName.HomeNFTsTab, title: nftsTitle },
-      { key: SectionName.HomeActivityTab, title: activityTitle, enableNotificationBadge: true },
+      ...(!isBottomTabsEnabled ? [{ key: SectionName.HomeActivityTab, title: activityTitle }] : []),
     ]
 
     return tabs
-  }, [showEmptyWalletState, tokensTitle, nftsTitle, activityTitle, exploreTitle])
+  }, [showEmptyWalletState, tokensTitle, nftsTitle, isBottomTabsEnabled, activityTitle, exploreTitle])
 
   useEffect(
     function syncTabIndex() {
@@ -205,13 +216,27 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     tokensTabScrollValue.value,
   ])
 
+  // Only enable scroll to top for bottom tab mode
+  const dummyRef = useRef(null)
+  useScrollToTop(isBottomTabsEnabled ? tokensTabScrollRef : dummyRef)
+  useScrollToTop(isBottomTabsEnabled ? exploreTabScrollRef : dummyRef)
+  // We need to create a new ref for this because the nfts tab is a flash list, which is not supported by useScrollToTop
+  const nftsScrollToTopRef = useRef({
+    scrollToTop: () => nftsTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true }),
+  })
+
+  useScrollToTop(isBottomTabsEnabled ? nftsScrollToTopRef : dummyRef)
+
   // clear the notification indicator if the user is on the activity tab
   const hasNotifications = useSelectAddressHasNotifications(activeAccount.address)
   useEffect(() => {
+    if (isBottomTabsEnabled) {
+      return
+    }
     if (tabIndex === 2 && hasNotifications) {
       dispatch(setNotificationStatus({ address: activeAccount.address, hasNotifications: false }))
     }
-  }, [dispatch, activeAccount.address, tabIndex, hasNotifications])
+  }, [dispatch, activeAccount.address, tabIndex, hasNotifications, isBottomTabsEnabled])
 
   // If accounts are switched, we want to scroll to top and show full header
   useEffect(() => {
@@ -234,11 +259,12 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     () => [
       { list: tokensTabScrollRef, position: tokensTabScrollValue, index: 0 },
       { list: nftsTabScrollRef, position: nftsTabScrollValue, index: 1 },
-      { list: activityTabScrollRef, position: activityTabScrollValue, index: 2 },
+      ...(!isBottomTabsEnabled ? [{ list: activityTabScrollRef, position: activityTabScrollValue, index: 2 }] : []),
     ],
     [
       activityTabScrollRef,
       activityTabScrollValue,
+      isBottomTabsEnabled,
       nftsTabScrollRef,
       nftsTabScrollValue,
       tokensTabScrollRef,
@@ -265,9 +291,13 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   const contentHeader = useMemo(() => {
     return (
-      <Flex backgroundColor="$surface1" pb={showEmptyWalletState ? '$spacing8' : '$spacing16'} px="$spacing12">
+      <Flex
+        backgroundColor="$surface1"
+        pb={showEmptyWalletState ? '$spacing8' : '$spacing16'}
+        px={isBottomTabsEnabled ? '$none' : '$spacing12'}
+      >
         <AccountHeader />
-        <Flex py="$spacing20" px="$spacing12">
+        <Flex py="$spacing20" px={isBottomTabsEnabled ? '$spacing24' : '$spacing12'}>
           <PortfolioBalance owner={activeAccount.address} />
         </Flex>
         {isSignerAccount ? (
@@ -284,7 +314,15 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         {promoBanner}
       </Flex>
     )
-  }, [showEmptyWalletState, activeAccount.address, isSignerAccount, onPressViewOnlyLabel, viewOnlyLabel, promoBanner])
+  }, [
+    showEmptyWalletState,
+    isBottomTabsEnabled,
+    activeAccount.address,
+    isSignerAccount,
+    onPressViewOnlyLabel,
+    viewOnlyLabel,
+    promoBanner,
+  ])
 
   const [hasVideoError, setVideoHasError] = useState(false)
 
@@ -315,7 +353,11 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   }, [hasVideoError])
 
   const paddingTop = headerHeight + TAB_BAR_HEIGHT + (showEmptyWalletState ? 0 : TAB_STYLES.tabListInner.paddingTop)
-  const paddingBottom = insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom + spacing.spacing12
+  const paddingBottom =
+    insets.bottom +
+    (isBottomTabsEnabled ? SWAP_BUTTON_HEIGHT : 0) +
+    TAB_STYLES.tabListInner.paddingBottom +
+    spacing.spacing12
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({ paddingTop, paddingBottom }),
@@ -369,7 +411,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       const { textStyleType: theme, enableNotificationBadge, ...rest } = route
       return (
         <TabLabel
-          enableNotificationBadge={enableNotificationBadge}
+          enableNotificationBadge={isBottomTabsEnabled ? false : enableNotificationBadge}
           focused={focused}
           isExternalProfile={isExternalProfile}
           route={rest}
@@ -377,7 +419,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         />
       )
     },
-    [],
+    [isBottomTabsEnabled],
   )
 
   const renderTabBar = useCallback(
@@ -488,7 +530,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         case SectionName.HomeActivityTab:
           return (
             <Freeze freeze={tabIndex !== HomeScreenTabIndex.Activity && isHomeScreenBlur}>
-              <ActivityTab
+              <ActivityContent
                 ref={activityTabScrollRef}
                 containerProps={sharedProps}
                 headerHeight={headerHeight}
@@ -622,7 +664,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
           />
         )}
       </View>
-      <NavBar />
+      {!isBottomTabsEnabled && <NavBar />}
       <AnimatedFlex
         height={insets.top}
         position="absolute"

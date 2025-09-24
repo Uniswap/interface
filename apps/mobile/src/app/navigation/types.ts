@@ -21,6 +21,7 @@ import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { ViewPrivateKeysScreenState } from 'src/screens/ViewPrivateKeys/ViewPrivateKeysScreenState'
 import { BridgedAssetModalProps } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
 import { WormholeModalProps } from 'uniswap/src/components/BridgedAsset/WormholeModal'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { PasskeyManagementModalState } from 'uniswap/src/features/passkey/PasskeyManagementModal'
@@ -38,6 +39,7 @@ import {
 import { SmartWalletAdvancedSettingsModalState } from 'wallet/src/components/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { SmartWalletEnabledModalState } from 'wallet/src/components/smartWallet/modals/SmartWalletEnabledModal'
 import { SmartWalletNudgeState } from 'wallet/src/components/smartWallet/modals/SmartWalletNudge'
+import { ExploreOrderBy } from 'wallet/src/features/wallet/types'
 
 type NFTItemScreenParams = {
   owner?: Address
@@ -45,6 +47,12 @@ type NFTItemScreenParams = {
   tokenId: string
   isSpam?: boolean
   fallbackData?: NFTItem
+}
+
+export type ExploreScreenParams = {
+  showFavorites?: boolean
+  orderByMetric?: ExploreOrderBy
+  chainId?: UniverseChainId
 }
 
 type BackupFormParams = {
@@ -61,7 +69,7 @@ type PasskeyImportParams = {
 }
 
 export type ExploreStackParamList = {
-  [MobileScreens.Explore]: undefined
+  [MobileScreens.Explore]: ExploreScreenParams
   [MobileScreens.ExternalProfile]: {
     address: string
   }
@@ -72,14 +80,11 @@ export type ExploreStackParamList = {
   }
 }
 
-type InnerExploreStackParamList = Omit<ExploreStackParamList, MobileScreens.Explore>
-
-// The ExploreModalState allows a Screen and its Params to be defined, except for the initial Explore screen.
+// The ExploreModalState allows a Screen and its Params to be defined.
 // This workaround facilitates navigation to any screen within the ExploreStack from outside.
-// Implementation of this lives inside screens/ExploreScreen
-type ExploreModalState = {
-  [V in keyof InnerExploreStackParamList]: { screen: V; params: InnerExploreStackParamList[V] }
-}[keyof InnerExploreStackParamList]
+export type ExploreModalState = {
+  [V in keyof ExploreStackParamList]: { screen: V; params: ExploreStackParamList[V] }
+}[keyof ExploreStackParamList]
 
 export type FiatOnRampStackParamList = {
   [FiatOnRampScreens.AmountInput]: undefined
@@ -154,6 +159,7 @@ export type OnboardingStackParamList = {
 } & SharedUnitagScreenParams
 
 export type AppStackParamList = {
+  [MobileScreens.Activity]: undefined
   [MobileScreens.Education]: {
     type: EducationContentType
   } & OnboardingStackBaseParams

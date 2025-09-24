@@ -1,8 +1,7 @@
 import { useMemo } from 'react'
-import { useEnabledChainsWithConnector } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import {
-  Connector,
   type Register,
   type UseAccountReturnType as UseAccountReturnTypeWagmi,
   // eslint-disable-next-line @typescript-eslint/no-restricted-imports
@@ -19,18 +18,10 @@ type ReplaceChainId<T> = T extends { chainId: number }
 
 type UseAccountReturnType = ReplaceChainId<UseAccountReturnTypeWagmi<Register['config']>>
 
-function useSupportedChainIdWithConnector(
-  chainId?: number | EVMUniverseChainId,
-  connector?: Connector,
-): EVMUniverseChainId | undefined {
-  const { chains } = useEnabledChainsWithConnector(connector)
-  return chains.includes(chainId as EVMUniverseChainId) ? (chainId as EVMUniverseChainId) : undefined
-}
-
 export function useAccount(): UseAccountReturnType {
   const { chainId, ...rest } = useAccountWagmi()
   const fallbackChainId = useChainId()
-  const supportedChainId = useSupportedChainIdWithConnector(chainId ?? fallbackChainId, rest.connector)
+  const supportedChainId = useSupportedChainId(chainId ?? fallbackChainId) as EVMUniverseChainId | undefined
 
   return useMemo(
     () => ({

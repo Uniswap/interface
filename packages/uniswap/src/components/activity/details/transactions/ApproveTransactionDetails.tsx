@@ -8,7 +8,12 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { ApproveTransactionInfo, TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  ApproveTransactionInfo,
+  Permit2ApproveTransactionInfo,
+  TransactionDetails,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -22,15 +27,19 @@ export function ApproveTransactionDetails({
   onClose,
 }: {
   transactionDetails: TransactionDetails
-  typeInfo: ApproveTransactionInfo
+  typeInfo: ApproveTransactionInfo | Permit2ApproveTransactionInfo
   onClose: () => void
-}): JSX.Element {
+}): JSX.Element | null {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
   const { navigateToTokenDetails } = useUniswapContext()
-  const currencyInfo = useCurrencyInfo(buildCurrencyId(transactionDetails.chainId, typeInfo.tokenAddress))
+  const currencyInfo = useCurrencyInfo(buildCurrencyId(transactionDetails.chainId, typeInfo.tokenAddress ?? ''))
 
-  const { approvalAmount } = typeInfo
+  if (!currencyInfo && typeInfo.type === TransactionType.Permit2Approve) {
+    return null
+  }
+
+  const approvalAmount = typeInfo.type === TransactionType.Approve ? typeInfo.approvalAmount : typeInfo.amount
 
   const amount =
     approvalAmount === INFINITE_AMOUNT

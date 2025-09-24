@@ -24,6 +24,12 @@
     },
     {
       "path": "./apps/extension"
+    },
+    {
+      "path": "./packages/config"
+    },
+    {
+      "path": "./packages/sessions"
     }
   ]
 }

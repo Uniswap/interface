@@ -30,23 +30,21 @@ export function MenuContent({ items, handleCloseMenu }: MenuContentProps): JSX.E
           e.stopPropagation()
         }}
       >
-        {items.map(({ label, onPress, Icon, showDivider, disabled, iconColor, closeDelay, destructive }, index) => (
+        {items.map(({ Icon, iconColor, destructive, disabled, showDivider, ...otherProps }, index) => (
           <Fragment key={index}>
             {showDivider && <Separator my="$spacing6" />}
             <DropdownMenuSheetItem
               role="none"
               variant={isWeb ? 'small' : 'medium'}
-              label={label}
               icon={
                 Icon && (
                   <Icon size="$icon.16" color={getMenuItemColor({ overrideColor: iconColor, destructive, disabled })} />
                 )
               }
-              disabled={disabled}
               destructive={destructive}
-              closeDelay={closeDelay}
+              disabled={disabled}
+              {...otherProps}
               handleCloseMenu={handleCloseMenu}
-              onPress={onPress}
             />
           </Fragment>
         ))}

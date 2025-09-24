@@ -124,6 +124,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             pointerEvents={isFocus ? 'auto' : 'none'}
             position="absolute"
             scale={isFocus ? 1 : 0}
+            testID={TestID.Back}
             x={CANCEL_CHEVRON_X_OFFSET}
           >
             <TouchableArea hitSlop={16} onPress={onPressCancel}>

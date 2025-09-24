@@ -114,7 +114,6 @@ export default defineConfig(({ mode }) => {
 
     resolve: {
       extensions: ['.web.tsx', '.web.ts', '.web.js', '.tsx', '.ts', '.js'],
-      preserveSymlinks: true,
       modules: [path.resolve(root, 'node_modules')],
       dedupe: [
         '@uniswap/sdk-core',

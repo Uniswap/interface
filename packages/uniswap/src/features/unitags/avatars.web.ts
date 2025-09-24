@@ -1,5 +1,4 @@
-import { SignMessageFunc } from 'uniswap/src/data/utils'
-import { UnitagAvatarUploadCredentials, UnitagGetAvatarUploadUrlResponse } from 'uniswap/src/features/unitags/types'
+import { SignMessageFunc, UnitagAvatarUploadCredentials, UnitagGetAvatarUploadUrlResponse } from '@universe/api'
 import { NotImplementedError } from 'utilities/src/errors'
 
 export function isLocalFileUri(_imageUri: string): boolean {

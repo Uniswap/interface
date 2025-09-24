@@ -55,7 +55,13 @@ export const TokenDetailsHeader = memo(function _TokenDetailsHeader(): JSX.Eleme
         >
           {token.name || FALLBACK_COPY}
         </Text>
-        <TouchableArea disabled={!token.address} flexDirection="row" gap="$spacing4" onPress={handleCopyAddress}>
+        <TouchableArea
+          disabled={!token.address}
+          flexDirection="row"
+          gap="$spacing4"
+          testID={TestID.TokenDetailsCopyAddressButton}
+          onPress={handleCopyAddress}
+        >
           <Text
             color="$neutral2"
             numberOfLines={1}

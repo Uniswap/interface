@@ -12,6 +12,7 @@ import {
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 
 interface RewardsCampaign {
   id: string
@@ -98,6 +99,8 @@ export function usePoolData({
 } {
   const { defaultChainId } = useEnabledChains()
   const chain = toGraphQLChain(chainId ?? defaultChainId)
+  const isSolanaChain = chainId && isSVMChain(chainId)
+
   const {
     loading: loadingV4,
     error: errorV4,
@@ -105,7 +108,7 @@ export function usePoolData({
   } = useV4PoolQuery({
     variables: { chain, poolId: poolIdOrAddress },
     errorPolicy: 'all',
-    skip: isPoolAddress,
+    skip: isPoolAddress || isSolanaChain,
   })
   const {
     loading: loadingV3,
@@ -114,7 +117,7 @@ export function usePoolData({
   } = useV3PoolQuery({
     variables: { chain, address: poolIdOrAddress },
     errorPolicy: 'all',
-    skip: !isPoolAddress,
+    skip: !isPoolAddress || isSolanaChain,
   })
   const {
     loading: loadingV2,
@@ -122,7 +125,7 @@ export function usePoolData({
     data: dataV2,
   } = useV2PairQuery({
     variables: { chain, address: poolIdOrAddress },
-    skip: !chainId || !isPoolAddress,
+    skip: !chainId || !isPoolAddress || isSolanaChain,
     errorPolicy: 'all',
   })
 

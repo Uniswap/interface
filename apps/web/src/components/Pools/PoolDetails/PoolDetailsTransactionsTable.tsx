@@ -287,6 +287,7 @@ export function PoolDetailsTransactionsTable({
         data={transactions}
         loading={loading}
         error={error}
+        v2={false}
         loadMore={loadMore}
         maxHeight={600}
         defaultPinnedColumns={['timestamp', 'swap-type']}

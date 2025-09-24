@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import { useTimeSince } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -13,7 +14,6 @@ import { ThemedText } from 'theme/components'
 import { EllipsisStyle } from 'theme/components/styles'
 import { BridgeIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { TransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -46,7 +46,7 @@ function StatusIndicator({
 
   switch (status) {
     case TransactionStatus.Pending:
-      if (offchainOrderDetails?.routing === Routing.DUTCH_LIMIT) {
+      if (offchainOrderDetails?.routing === TradingApi.Routing.DUTCH_LIMIT) {
         return null
       }
       return <LoaderV2 />

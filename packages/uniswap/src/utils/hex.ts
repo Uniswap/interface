@@ -21,7 +21,7 @@ export function hexToNumber(hex: string): number {
  * Ensures that the input string is a valid hex string starting with 0x
  */
 export function ensure0xHex(hex: string): HexString {
-  return hex.startsWith('0x') ? (hex as HexString) : (`0x${hex}` as HexString)
+  return hex.startsWith('0x') ? (hex as HexString) : `0x${hex}`
 }
 
 /**

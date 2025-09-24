@@ -1,6 +1,7 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { SwitchNetworkAction } from 'components/Popups/types'
 import { ReceiveModalState, receiveCryptoModalStateAtom } from 'components/ReceiveCryptoModal/state'
+import { useAccountsStoreContext } from 'features/accounts/store/provider'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersProvider } from 'hooks/useEthersProvider'
 import { useEthersSigner } from 'hooks/useEthersSigner'
@@ -16,7 +17,7 @@ import { useHasMismatchCallback, useShowMismatchToast } from 'state/walletCapabi
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useEnabledChainsWithConnector } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -48,7 +49,6 @@ export function WebUniswapProvider({ children }: PropsWithChildren): JSX.Element
 
 // Abstracts web-specific transaction flow objects for usage in cross-platform flows in the `uniswap` package.
 function WebUniswapProviderInner({ children }: PropsWithChildren) {
-  const { connector } = useAccount()
   const signer = useEthersSigner()
   const location = useLocation()
   const accountDrawer = useAccountDrawer()
@@ -182,7 +182,6 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
   return (
     <UniswapProvider
       signer={signer}
-      connector={connector}
       useProviderHook={useWebProvider}
       useWalletDisplayName={useOnchainDisplayName}
       onSwapChainsChanged={onSwapChainsChanged}
@@ -201,6 +200,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       getIsUniswapXSupported={getIsUniswapXSupported}
       handleOnPressUniswapXUnsupported={handleOpenUniswapXUnsupportedModal}
       getCanBatchTransactions={getCanBatchTransactions}
+      useAccountsStoreContextHook={useAccountsStoreContext}
     >
       {children}
     </UniswapProvider>
@@ -211,7 +211,7 @@ const MismatchContextWrapper = React.memo(function MismatchContextWrapper({ chil
   const getHasMismatch = useHasMismatchCallback()
   const account = useAccount()
   const onHasAnyMismatch = useShowMismatchToast()
-  const { chains, defaultChainId, isTestnetModeEnabled } = useEnabledChainsWithConnector(account.connector)
+  const { chains, defaultChainId, isTestnetModeEnabled } = useEnabledChains()
   return (
     <MismatchContextProvider
       mismatchCallback={getHasMismatch}
@@ -234,8 +234,8 @@ MismatchContextWrapper.displayName = 'MismatchContextWrapper'
  */
 function useAccountChainIdEffect() {
   const currentChainId = useSelector((state: { delegation: DelegatedState }) => state.delegation.activeChainId)
-  const { chainId, connector } = useAccount()
-  const { defaultChainId } = useEnabledChainsWithConnector(connector)
+  const { chainId } = useAccount()
+  const { defaultChainId } = useEnabledChains()
   const accountChainId = chainId ?? defaultChainId
   const prevChainId = usePrevious(chainId)
   const setActiveChainId = useSetActiveChainId()

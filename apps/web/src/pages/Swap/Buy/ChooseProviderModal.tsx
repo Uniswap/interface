@@ -57,6 +57,10 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
     [rampDirection, inputAmount, amountOut, inputInFiat],
   )
 
+  const rampAmountFiatValue = useMemo(() => {
+    return getOnRampInputAmount({ rampDirection: 0, inputAmount, amountOut: amountOut ?? '0', inputInFiat })
+  }, [inputAmount, amountOut, inputInFiat])
+
   const account = useAccount()
 
   const sortedQuotes = useMemo(() => {
@@ -159,7 +163,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
           </Text>
           <Flex row gap="$spacing12" alignItems="center" pr="$spacing2">
             <Text variant="body2" color="$neutral2">
-              {convertFiatAmountFormatted(onRampInputAmount, NumberType.FiatTokenPrice)}
+              {convertFiatAmountFormatted(rampAmountFiatValue, NumberType.FiatTokenPrice)}
             </Text>
             {unwrappedCurrencyInfo && <CurrencyLogo currencyInfo={unwrappedCurrencyInfo} size={iconSizes.icon24} />}
           </Flex>

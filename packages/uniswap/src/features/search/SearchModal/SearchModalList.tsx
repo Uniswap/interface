@@ -1,3 +1,4 @@
+import { ContentStyle } from '@shopify/flash-list'
 import { memo, useEffect, useState } from 'react'
 import { Flex, styled, TouchableArea } from 'ui/src'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
@@ -47,6 +48,8 @@ export interface SearchModalListProps {
   errorText?: string
   onSelect?: () => void
   searchFilters: SearchFilterContext
+  renderedInModal?: boolean
+  contentContainerStyle?: ContentStyle
 }
 
 export const SearchModalList = memo(function _SearchModalList({
@@ -58,6 +61,8 @@ export const SearchModalList = memo(function _SearchModalList({
   errorText,
   onSelect,
   searchFilters,
+  renderedInModal,
+  contentContainerStyle,
 }: SearchModalListProps): JSX.Element {
   const { navigateToTokenDetails, navigateToExternalProfile, navigateToNftCollection, navigateToPoolDetails } =
     useUniswapContext()
@@ -299,6 +304,8 @@ export const SearchModalList = memo(function _SearchModalList({
       emptyElement={emptyElement}
       errorText={errorText}
       keyExtractor={key}
+      renderedInModal={renderedInModal}
+      contentContainerStyle={contentContainerStyle}
     />
   )
 })

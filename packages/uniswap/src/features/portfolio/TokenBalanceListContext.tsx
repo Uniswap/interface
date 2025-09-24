@@ -1,4 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
+import { isWarmLoadingStatus } from '@universe/api'
 import isEqual from 'lodash/isEqual'
 import {
   createContext,
@@ -11,7 +12,6 @@ import {
   useState,
 } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { isWarmLoadingStatus } from 'uniswap/src/data/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
   sortPortfolioBalances,

@@ -1,7 +1,7 @@
+import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useNftsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GqlResult } from 'uniswap/src/data/types'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
 
 export function useNFT({

@@ -1,5 +1,5 @@
-import { createLpPosition, increaseLpPosition } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { CreateLPPositionRequest, IncreaseLPPositionRequest } from 'uniswap/src/data/tradingApi/__generated__'
+import { TradingApi } from '@universe/api'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
@@ -27,7 +27,7 @@ export function createIncreasePositionStep(txRequest: ValidatedTransactionReques
 }
 
 export function createCreatePositionAsyncStep(
-  createPositionRequestArgs: CreateLPPositionRequest | undefined,
+  createPositionRequestArgs: TradingApi.CreateLPPositionRequest | undefined,
 ): IncreasePositionTransactionStepAsync {
   return {
     type: TransactionStepType.IncreasePositionTransactionAsync,
@@ -37,7 +37,7 @@ export function createCreatePositionAsyncStep(
       }
 
       try {
-        const { create } = await createLpPosition({
+        const { create } = await TradingApiClient.createLpPosition({
           ...createPositionRequestArgs,
           signature,
           simulateTransaction: true,
@@ -67,7 +67,7 @@ export function createCreatePositionAsyncStep(
 }
 
 export function createIncreasePositionAsyncStep(
-  increasePositionRequestArgs: IncreaseLPPositionRequest | undefined,
+  increasePositionRequestArgs: TradingApi.IncreaseLPPositionRequest | undefined,
 ): IncreasePositionTransactionStepAsync {
   return {
     type: TransactionStepType.IncreasePositionTransactionAsync,
@@ -77,7 +77,7 @@ export function createIncreasePositionAsyncStep(
       }
 
       try {
-        const { increase } = await increaseLpPosition({
+        const { increase } = await TradingApiClient.increaseLpPosition({
           ...increasePositionRequestArgs,
           signature,
           simulateTransaction: true,

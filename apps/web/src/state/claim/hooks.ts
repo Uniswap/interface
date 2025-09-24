@@ -10,7 +10,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { UNI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { logger } from 'utilities/src/logger/logger'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { assume0xAddress } from 'utils/wagmi'
@@ -93,7 +93,7 @@ function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData
 const FETCH_CLAIM_PROMISES: { [key: string]: Promise<UserClaimData> } = {}
 // returns the claim for the given address, or null if not valid
 function fetchClaim(account: string): Promise<UserClaimData> {
-  const formatted = isAddress(account)
+  const formatted = isEVMAddress(account)
   if (!formatted) {
     return Promise.reject(new Error('Invalid address'))
   }

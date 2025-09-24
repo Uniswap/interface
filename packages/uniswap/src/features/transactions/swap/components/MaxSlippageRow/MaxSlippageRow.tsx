@@ -27,7 +27,6 @@ export function MaxSlippageRow({
   const { formatPercent } = formatter
 
   const acceptedTrade = acceptedDerivedSwapInfo.trade.trade ?? acceptedDerivedSwapInfo.trade.indicativeTrade
-
   if (!acceptedTrade) {
     throw new Error('Invalid render of `MaxSlippageInfo` with no `trade`')
   }
@@ -73,7 +72,7 @@ export function MaxSlippageRow({
             )
           ) : null}
           <Text color={showSlippageWarning ? '$statusWarning' : '$neutral1'} variant="body3">
-            {formatPercent(acceptedTrade.slippageTolerance)}
+            {acceptedTrade.slippageTolerance === 0 ? t('common.none') : formatPercent(acceptedTrade.slippageTolerance)}
           </Text>
         </Flex>
       </IndicativeLoadingWrapper>

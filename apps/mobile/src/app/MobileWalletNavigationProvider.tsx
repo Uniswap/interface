@@ -14,6 +14,8 @@ import {
   useFiatOnRampAggregatorGetCountryQuery,
 } from 'uniswap/src/features/fiatOnRamp/api'
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
@@ -40,7 +42,7 @@ import {
 
 export function MobileWalletNavigationProvider({ children }: PropsWithChildren): JSX.Element {
   const handleShareToken = useHandleShareToken()
-  const navigateToAccountActivityList = useNavigateToHomepageTab(HomeScreenTabIndex.Activity)
+  const navigateToAccountActivityList = useNavigateToActivity()
   const navigateToAccountTokenList = useNavigateToHomepageTab(HomeScreenTabIndex.Tokens)
   const navigateToBuyOrReceiveWithEmptyWallet = useNavigateToBuyOrReceiveWithEmptyWallet()
   const navigateToNftCollection = useNavigateToNftCollection()
@@ -98,6 +100,25 @@ function useHandleShareToken(): (args: ShareTokenArgs) => Promise<void> {
       })
     }
   }, [])
+}
+
+function useNavigateToActivity(): () => void {
+  const { navigate } = useAppStackNavigation()
+  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
+
+  const navigateToActivityTab = useNavigateToHomepageTab(HomeScreenTabIndex.Activity)
+
+  const navigateToActivityScreen = useCallback((): void => {
+    navigate(MobileScreens.Activity)
+  }, [navigate])
+
+  return useCallback((): void => {
+    if (isBottomTabsEnabled) {
+      navigateToActivityScreen()
+    } else {
+      navigateToActivityTab()
+    }
+  }, [navigateToActivityTab, isBottomTabsEnabled, navigateToActivityScreen])
 }
 
 function useNavigateToHomepageTab(tab: HomeScreenTabIndex): () => void {
@@ -224,29 +245,38 @@ function useNavigateToTokenDetails(): (currencyId: string) => void {
   const appNavigation = useAppStackNavigation()
   const { onClose } = useReactNavigationModal()
   const dispatch = useDispatch()
+  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
 
   return useCallback(
     (currencyId: string): void => {
-      const isExploreNavigationActuallyFocused = Boolean(
-        navigationRef.getCurrentRoute()?.name === ModalName.Explore &&
-          exploreNavigationRef.current &&
-          exploreNavigationRef.isFocused(),
-      )
-
       closeKeyboardBeforeCallback(() => {
-        dispatch(closeAllModals())
-        if (isExploreNavigationActuallyFocused) {
-          exploreNavigationRef.navigate(MobileScreens.TokenDetails, { currencyId })
-        } else {
+        const route = navigationRef.getCurrentRoute()
+
+        const isSwap = route?.name === ModalName.Swap
+        const isExplore = route?.name === ModalName.Explore
+
+        if (!isBottomTabsEnabled || isSwap) {
+          dispatch(closeAllModals())
           onClose()
+        }
+
+        if (isSwap) {
           appNavigation.reset({
             index: 1,
             routes: [{ name: MobileScreens.Home }, { name: MobileScreens.TokenDetails, params: { currencyId } }],
           })
+          return
         }
+
+        if (!isBottomTabsEnabled && isExplore) {
+          exploreNavigationRef.navigate(MobileScreens.TokenDetails, { currencyId })
+          return
+        }
+
+        appNavigation.navigate(MobileScreens.TokenDetails, { currencyId })
       })
     },
-    [appNavigation, dispatch, onClose],
+    [appNavigation, dispatch, onClose, isBottomTabsEnabled],
   )
 }
 

@@ -1,11 +1,11 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { useAccount } from 'hooks/useAccount'
 import ms from 'ms'
 import { useEffect, useRef, useState } from 'react'
 import { ActivityUpdateTransactionType, OnActivityUpdate } from 'state/activity/types'
 import { usePendingUniswapXOrders } from 'state/transactions/hooks'
 import { OrderQueryResponse, UniswapXBackendOrder } from 'types/uniswapx'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import {
   ExactInputSwapTransactionInfo,
@@ -60,13 +60,19 @@ async function fetchStatuses({
   return statuses.orders
 }
 
+export async function fetchOpenLimitOrders(account: string): Promise<UniswapXBackendOrder[]> {
+  const result = await global.fetch(`${UNISWAP_GATEWAY_DNS_URL}/limit-orders?swapper=${account}&orderStatus=open`)
+  const statuses = (await result.json()) as OrderQueryResponse
+  return statuses.orders
+}
+
 async function fetchLimitStatuses(account: string, orders: UniswapXOrderDetails[]): Promise<UniswapXBackendOrder[]> {
-  const limitOrders = orders.filter((order) => order.routing === Routing.DUTCH_LIMIT)
+  const limitOrders = orders.filter((order) => order.routing === TradingApi.Routing.DUTCH_LIMIT)
   return fetchStatuses({ endpoint: 'limit-orders', orders: limitOrders, swapper: account })
 }
 
 async function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[]): Promise<UniswapXBackendOrder[]> {
-  const uniswapXOrders = orders.filter((order) => order.routing !== Routing.DUTCH_LIMIT)
+  const uniswapXOrders = orders.filter((order) => order.routing !== TradingApi.Routing.DUTCH_LIMIT)
   return fetchStatuses({ endpoint: 'orders', orders: uniswapXOrders, swapper: account })
 }
 

@@ -1,1 +1,1 @@
-export const POPUP_MAX_WIDTH = 348
+export const POPUP_MAX_WIDTH = 280

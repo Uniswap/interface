@@ -11,7 +11,7 @@ import {
   useCurrencyInfoWithLoading as useUniswapCurrencyInfoWithLoading,
 } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 
 type Maybe<T> = T | undefined
 
@@ -152,7 +152,7 @@ function getAddress({
 }
 
 export function useToken(tokenAddress?: string, chainId?: UniverseChainId): Maybe<Token> {
-  const formattedAddress = isAddress(tokenAddress)
+  const formattedAddress = isEVMAddress(tokenAddress)
   const { chainId: connectedChainId } = useAccount()
   const currency = useCurrency({
     address: formattedAddress ? formattedAddress : undefined,

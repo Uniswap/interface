@@ -18,7 +18,7 @@ import { GradientOverlay, ScrollArrow } from 'uniswap/src/components/BatchedTran
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { trimToLength } from 'utilities/src/primitives/string'

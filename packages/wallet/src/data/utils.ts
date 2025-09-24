@@ -1,7 +1,7 @@
 import { ApolloClient, NormalizedCacheObject, useApolloClient } from '@apollo/client'
+import { createSignedRequestParams, objectToQueryString } from '@universe/api'
 import { useCallback } from 'react'
 import { OnRampTransactionsAuth } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { createSignedRequestParams, objectToQueryString } from 'uniswap/src/data/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'

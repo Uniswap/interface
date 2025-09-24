@@ -1,5 +1,5 @@
+import { TradingApi } from '@universe/api'
 import { logSwapFinalized, logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
@@ -74,7 +74,7 @@ describe('swapFlowLoggers', () => {
       orderHash: mockOrderHash,
       chainId: mockChainId,
       analyticsContext: mockAnalyticsContext,
-      routing: Routing.DUTCH_V2,
+      routing: TradingApi.Routing.DUTCH_V2,
       status: TransactionStatus.Success,
     })
 

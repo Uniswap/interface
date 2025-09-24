@@ -1,12 +1,12 @@
 import { MaxUint160, MaxUint256, PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
+import { TradingApi } from '@universe/api'
 import { ONE_MILLION_USDT } from 'playwright/anvil/utils'
 import { expect, getTest } from 'playwright/fixtures'
 import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import { USDT } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { assume0xAddress } from 'utils/wagmi'
@@ -140,7 +140,7 @@ test.describe('Swap', () => {
         endpoint: uniswapUrls.tradingApiPaths.quote,
         modifyRequestData: (data) => ({
           ...data,
-          protocols: [ProtocolItems.V4, ProtocolItems.V3, ProtocolItems.V2],
+          protocols: [TradingApi.ProtocolItems.V4, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V2],
         }),
       })
     })
@@ -183,7 +183,7 @@ test.describe('Swap', () => {
         }),
         modifyRequestData: (data) => ({
           ...data,
-          protocols: [ProtocolItems.V4, ProtocolItems.V3, ProtocolItems.V2],
+          protocols: [TradingApi.ProtocolItems.V4, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V2],
         }),
       })
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })

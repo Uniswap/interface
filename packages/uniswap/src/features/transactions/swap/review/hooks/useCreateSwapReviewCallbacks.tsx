@@ -1,9 +1,9 @@
+import { TradingApi } from '@universe/api'
 import { useCallback, useMemo } from 'react'
 // only using to keep a consistent timing on interface
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { ADAPTIVE_MODAL_ANIMATION_DURATION } from 'ui/src/components/modal/AdaptiveWebModal'
 import type { ParsedWarnings } from 'uniswap/src/components/modals/WarningModal/types'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import type { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { TransactionScreen } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
@@ -77,7 +77,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
   const shouldShowConfirmedState =
     shouldShowFlashblocksUI(derivedSwapInfo.trade.trade?.routing) ||
     // show the confirmed state for bridges
-    derivedSwapInfo.trade.trade?.routing === Routing.BRIDGE
+    derivedSwapInfo.trade.trade?.routing === TradingApi.Routing.BRIDGE
 
   const onFailure = useCallback(
     (error?: Error, onPressRetry?: () => void) => {

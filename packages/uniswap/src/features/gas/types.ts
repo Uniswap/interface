@@ -1,5 +1,4 @@
-import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
-import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { FetchError, GasEstimate, GasStrategy } from '@universe/api'
 import { Prettify } from 'viem'
 
 export type TransactionLegacyFeeParams = {

@@ -256,10 +256,10 @@ fragment AssetActivityParts on AssetActivity {
   }
 }
 
-query ActivityWeb($account: String!, $chains: [Chain!]!, $onRampTransactionIDs: [String!], $includeOffChain: Boolean!) {
+query ActivityWeb($account: String!, $chains: [Chain!]!, $onRampTransactionIDs: [String!], $includeOffChain: Boolean!, $page: Int = 1, $pageSize: Int = 100) {
   portfolios(ownerAddresses: [$account], chains: $chains) {
     id
-    assetActivities(pageSize: 100, page: 1, includeOffChain: $includeOffChain, chains: $chains, onRampTransactionIDs: $onRampTransactionIDs, includeBridging: true) {
+    assetActivities(pageSize: $pageSize, page: $page, includeOffChain: $includeOffChain, chains: $chains, onRampTransactionIDs: $onRampTransactionIDs, includeBridging: true) {
       ...AssetActivityParts
     }
   }

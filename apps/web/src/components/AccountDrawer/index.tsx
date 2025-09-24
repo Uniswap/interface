@@ -1,6 +1,7 @@
 import DefaultMenu from 'components/AccountDrawer/DefaultMenu'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Web3StatusRef } from 'components/Web3Status'
+import { WebNotificationToastWrapper } from 'features/notifications/WebNotificationToastWrapper'
 import { useAccount } from 'hooks/useAccount'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useIsUniswapExtensionConnected } from 'hooks/useIsUniswapExtensionConnected'
@@ -252,6 +253,7 @@ function AccountDrawer() {
 
   return (
     <Drawer>
+      <WebNotificationToastWrapper />
       <DefaultMenu />
     </Drawer>
   )

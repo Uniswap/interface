@@ -1,5 +1,5 @@
-import { fetchSwap } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import type { CreateSwapRequest } from 'uniswap/src/data/tradingApi/__generated__'
+import { TradingApi } from '@universe/api'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
   OnChainTransactionFields,
   OnChainTransactionFieldsBatched,
@@ -27,7 +27,7 @@ export function createSwapTransactionStep(txRequest: ValidatedTransactionRequest
 }
 
 export function createSwapTransactionAsyncStep(
-  swapRequestArgs: CreateSwapRequest | undefined,
+  swapRequestArgs: TradingApi.CreateSwapRequest | undefined,
 ): SwapTransactionStepAsync {
   return {
     type: TransactionStepType.SwapTransactionAsync,
@@ -36,7 +36,7 @@ export function createSwapTransactionAsyncStep(
         return undefined
       }
 
-      const { swap } = await fetchSwap({
+      const { swap } = await TradingApiClient.fetchSwap({
         ...swapRequestArgs,
         signature,
         /* simulating transaction provides a more accurate gas limit, and the simulation will succeed because async swap step will only occur after approval has been confirmed. */

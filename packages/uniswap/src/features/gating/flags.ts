@@ -35,6 +35,7 @@ export enum FeatureFlags {
   SmartWalletDisableVideo,
 
   // Wallet
+  BottomTabs,
   DisableFiatOnRampKorea,
   EnableTransactionSpacingForDelegatedAccounts,
   EnableExportPrivateKeys,
@@ -46,7 +47,6 @@ export enum FeatureFlags {
   UwULink,
   BlurredLockScreen,
   Eip5792Methods,
-  ExecuteTransactionV2,
   EnableRestoreSeedPhrase,
   SmartWalletSettings,
   SwapPreSign,
@@ -64,6 +64,7 @@ export enum FeatureFlags {
   LimitsFees,
   LpIncentives,
   MigrateV2,
+  PoolInfoEndpoint,
   PoolSearch,
   PortfolioPage,
   PriceRangeInputV2,
@@ -84,7 +85,7 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.DisableSwap7702, 'disable-swap-7702'],
   [FeatureFlags.EmbeddedWallet, 'embedded_wallet'],
   [FeatureFlags.EnablePermitMismatchUX, 'enable_permit2_mismatch_ux'],
-  [FeatureFlags.ExecuteTransactionV2, 'new_execute_transaction_arch'],
+
   [FeatureFlags.FiatOffRamp, 'fiat_offramp_web'],
   [FeatureFlags.ForceDisableWalletGetCapabilities, 'force_disable_wallet_get_capabilities'],
   [FeatureFlags.ForcePermitTransactions, 'force_permit_transactions'],
@@ -122,6 +123,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.LimitsFees, 'limits_fees'],
   [FeatureFlags.LpIncentives, 'lp_incentives'],
   [FeatureFlags.MigrateV2, 'migrate_v2'],
+  [FeatureFlags.PoolInfoEndpoint, 'pool_info_endpoint'],
   [FeatureFlags.PoolSearch, 'pool_search'],
   [FeatureFlags.PortfolioPage, 'portfolio_page'],
   [FeatureFlags.PortoWalletConnector, 'porto_wallet_connector'],
@@ -138,6 +140,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
 export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   ...SHARED_FEATURE_FLAG_NAMES,
   [FeatureFlags.BlurredLockScreen, 'blurred_lock_screen'],
+  [FeatureFlags.BottomTabs, 'bottom_tabs'],
   [FeatureFlags.DisableFiatOnRampKorea, 'disable-fiat-onramp-korea'],
   [FeatureFlags.Eip5792Methods, 'eip_5792_methods'],
   [FeatureFlags.EnableExportPrivateKeys, 'enable-export-private-keys'],

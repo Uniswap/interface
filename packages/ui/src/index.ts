@@ -61,6 +61,7 @@ export {
 } from 'tamagui'
 export { LinearGradient, type LinearGradientProps } from 'tamagui/linear-gradient'
 export * from 'ui/src/animations'
+export * from './components/AnimatableCopyIcon/AnimatableCopyIcon'
 export { Button } from './components/buttons/Button/Button'
 export type { ButtonEmphasis, ButtonProps, ButtonVariant } from './components/buttons/Button/types'
 export { DropdownButton } from './components/buttons/DropdownButton/DropdownButton'

@@ -1,4 +1,4 @@
-import { ApolloProvider } from '@apollo/client'
+import { ApolloProvider } from '@apollo/client/react/context'
 import { PropsWithChildren } from 'react'
 import { localStorage } from 'redux-persist-webextension-storage'
 import { getReduxStore } from 'src/store/store'

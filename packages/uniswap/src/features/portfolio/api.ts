@@ -1,11 +1,11 @@
 import { PublicKey } from '@solana/web3.js'
 import { skipToken, useQuery } from '@tanstack/react-query'
 import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from '@uniswap/sdk-core'
+import { SharedQueryClient } from '@universe/api'
 import { Contract } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { getSolanaParsedTokenAccountsByOwnerQueryOptions } from 'uniswap/src/data/solanaConnection/getSolanaParsedTokenAccountsByOwnerQueryOptions'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -151,7 +151,7 @@ async function getOnChainBalancesFetchSVM(params: BalanceLookupParams): Promise<
       getSolanaParsedTokenAccountsByOwnerQueryOptions({ params: { accountAddress } }),
     )
 
-    return { balance: tokenAccountsMap[currencyAddress]?.tokenAmount }
+    return { balance: tokenAccountsMap[currencyAddress]?.tokenAmount ?? '0' }
   } catch (error) {
     logger.error(error, {
       tags: { file: 'api.ts', function: 'getOnChainBalancesFetchSVM' },

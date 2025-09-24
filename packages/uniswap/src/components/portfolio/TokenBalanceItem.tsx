@@ -52,6 +52,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       hoverStyle={{ backgroundColor: '$surface2' }}
       px={padded ? '$spacing24' : '$spacing8'}
       py="$spacing8"
+      testID={`TokenBalanceItem_${currency.symbol}`}
     >
       <Flex row shrink alignItems="center" gap="$spacing12" overflow="hidden">
         <TokenLogo

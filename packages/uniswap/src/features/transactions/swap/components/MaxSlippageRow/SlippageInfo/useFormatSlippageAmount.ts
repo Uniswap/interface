@@ -4,10 +4,13 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
 import { NumberType } from 'utilities/src/format/types'
 
-export function useFormatSlippageAmount(trade: TradeWithSlippage): string {
+export function useFormatSlippageAmount(trade: TradeWithSlippage | null): string {
   const { formatCurrencyAmount } = useLocalizationContext()
 
   const formattedSlippageAmount = useMemo(() => {
+    if (!trade) {
+      return ''
+    }
     const amount = formatCurrencyAmount({
       value: [TradeType.EXACT_INPUT, 'EXACT_INPUT'].includes(trade.tradeType) ? trade.minAmountOut : trade.maxAmountIn,
       type: NumberType.TokenTx,

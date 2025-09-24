@@ -9,7 +9,7 @@ import {
   TransactionBreadcrumbStatus,
 } from 'state/sagas/transactions/utils'
 import { call, put } from 'typed-redux-saga'
-import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { InterfaceEventName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
@@ -77,7 +77,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   )
 
   try {
-    yield* call(submitOrder, { signature, quote, routing })
+    yield* call(TradingApiClient.submitOrder, { signature, quote, routing })
   } catch (error) {
     sendAnalyticsEvent(InterfaceEventName.UniswapXOrderPostError, {
       ...formatSwapSignedAnalyticsEventProperties(analyticsParams),

@@ -1,4 +1,4 @@
-import { TransactionRequest } from 'uniswap/src/data/tradingApi/__generated__/models/TransactionRequest'
+import { TradingApi } from '@universe/api'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
 import { generateBatchId, transformCallsToTransactionRequests } from 'wallet/src/features/batchedTransactions/utils'
 
@@ -54,7 +54,7 @@ describe(transformCallsToTransactionRequests, () => {
 
   it('should transform valid calls correctly', () => {
     const calls = [validCall1, validCall2]
-    const expected: TransactionRequest[] = [
+    const expected: TradingApi.TransactionRequest[] = [
       {
         to: validCall1.to!,
         data: validCall1.data!,
@@ -81,7 +81,7 @@ describe(transformCallsToTransactionRequests, () => {
 
   it('should filter out invalid calls', () => {
     const calls = [validCall1, invalidCallMissingTo, validCall2, invalidCallMissingData]
-    const expected: TransactionRequest[] = [
+    const expected: TradingApi.TransactionRequest[] = [
       {
         to: validCall1.to!,
         data: validCall1.data!,

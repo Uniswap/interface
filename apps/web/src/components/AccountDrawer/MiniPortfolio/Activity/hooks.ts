@@ -1,4 +1,5 @@
 import { useAssetActivity } from 'appGraphql/data/apollo/AssetActivityProvider'
+import { TradingApi } from '@universe/api'
 import { useLocalActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { parseRemoteActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
 import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -7,7 +8,6 @@ import { useCreateCancelTransactionRequest } from 'components/AccountDrawer/Mini
 import { GasFeeResult, GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
 import { useEffect, useMemo } from 'react'
 import { usePendingTransactions, usePendingUniswapXOrders, useTransactionCanceller } from 'state/transactions/hooks'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -129,7 +129,8 @@ export function useOpenLimitOrders(account: string) {
   const { activities, loading } = useAllActivities(account)
   const openLimitOrders = activities.filter(
     (activity) =>
-      activity.offchainOrderDetails?.routing === Routing.DUTCH_LIMIT && activity.status === TransactionStatus.Pending,
+      activity.offchainOrderDetails?.routing === TradingApi.Routing.DUTCH_LIMIT &&
+      activity.status === TransactionStatus.Pending,
   )
 
   return {
@@ -146,7 +147,7 @@ export function usePendingActivity() {
   // UniswapX orders are handled separately via pendingOrders
   const pendingTransactions = allPendingTransactions.filter((tx) => !isUniswapX(tx))
   // Pending limit orders shown in the limit sidebar
-  const pendingOrdersWithoutLimits = pendingOrders.filter((order) => order.routing !== Routing.DUTCH_LIMIT)
+  const pendingOrdersWithoutLimits = pendingOrders.filter((order) => order.routing !== TradingApi.Routing.DUTCH_LIMIT)
 
   const hasPendingActivity = pendingTransactions.length > 0 || pendingOrdersWithoutLimits.length > 0
   const pendingActivityCount = pendingTransactions.length + pendingOrdersWithoutLimits.length

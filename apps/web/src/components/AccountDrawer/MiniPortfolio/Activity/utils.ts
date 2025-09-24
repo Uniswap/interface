@@ -1,6 +1,7 @@
 import { gqlToCurrency } from 'appGraphql/data/util'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { parseUnits } from 'ethers/lib/utils'
@@ -10,7 +11,6 @@ import {
   type TokenAssetPartsFragment,
   TransactionStatus as TransactionStatusGQL,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   ExactInputSwapTransactionInfo,
@@ -136,7 +136,7 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
 
     const addedTime = activity.timestamp * ONE_SECOND_MS
     if (activity.status === TransactionStatus.Pending) {
-      if (activity.offchainOrderDetails?.routing === Routing.DUTCH_LIMIT) {
+      if (activity.offchainOrderDetails?.routing === TradingApi.Routing.DUTCH_LIMIT) {
         // limit orders are only displayed in their own pane
       } else {
         pending.push(activity)

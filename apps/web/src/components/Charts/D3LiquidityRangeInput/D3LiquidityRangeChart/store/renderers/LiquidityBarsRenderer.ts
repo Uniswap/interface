@@ -1,5 +1,6 @@
 import { CHART_DIMENSIONS } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
 import type {
+  ChartState,
   Renderer,
   RenderingContext,
 } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
@@ -17,11 +18,7 @@ export function createLiquidityBarsRenderer({
 }: {
   g: d3.Selection<SVGGElement, unknown, null, undefined>
   context: RenderingContext
-  getState: () => {
-    minPrice: number | null
-    maxPrice: number | null
-    dimensions: { width: number; height: number }
-  }
+  getState: () => ChartState
 }): Renderer {
   const barsGroup = g.append('g').attr('class', 'liquidity-bars-group')
 
@@ -32,7 +29,7 @@ export function createLiquidityBarsRenderer({
     const { colors, liquidityData, tickScale } = context
     const { minPrice, maxPrice, dimensions } = getState() // Get dimensions from state
 
-    if (liquidityData.length === 0) {
+    if (liquidityData.length === 0 || minPrice === undefined || maxPrice === undefined) {
       return
     }
 
@@ -42,7 +39,7 @@ export function createLiquidityBarsRenderer({
     const liquidityXScale = d3
       .scaleLinear()
       .domain([0, maxLiquidity])
-      .range([0, CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH])
+      .range([0, CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET])
 
     // Draw horizontal liquidity bars using data join for better performance
     const bars = barsGroup.selectAll<SVGRectElement, ChartEntry>('.liquidity-bar').data(liquidityData, (d) => d.price0)
@@ -58,7 +55,14 @@ export function createLiquidityBarsRenderer({
           maxPrice,
         }),
       )
-      .attr('x', (d) => dimensions.width - liquidityXScale(d.activeLiquidity) + CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH)
+      .attr(
+        'x',
+        (d) =>
+          dimensions.width -
+          liquidityXScale(d.activeLiquidity) +
+          CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH -
+          CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET,
+      )
       .attr('y', (d) => tickScale(d.tick?.toString() ?? '') || 0)
       .attr('width', (d) => liquidityXScale(d.activeLiquidity))
       .attr('height', tickScale.bandwidth())
@@ -68,7 +72,7 @@ export function createLiquidityBarsRenderer({
           minPrice,
           maxPrice,
           getActiveColor: () => colors.accent1.val,
-          getInactiveColor: () => colors.neutral2.val,
+          getInactiveColor: () => colors.neutral1.val,
         }),
       )
   }

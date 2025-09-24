@@ -19,8 +19,8 @@ import { EmptyTokensList } from 'uniswap/src/components/portfolio/EmptyTokensLis
 import { HiddenTokensRow } from 'uniswap/src/components/portfolio/HiddenTokensRow'
 import { TokenBalanceItem } from 'uniswap/src/components/portfolio/TokenBalanceItem'
 import { TokenBalanceItemContextMenu } from 'uniswap/src/components/portfolio/TokenBalanceItemContextMenu'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import {
   TokenBalanceListContextProvider,
   useTokenBalanceListContext,

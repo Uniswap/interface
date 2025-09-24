@@ -9,6 +9,7 @@ import {
   TradeType,
   UNI_ADDRESSES,
 } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import type { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -52,7 +53,6 @@ import {
   TransactionDirection,
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -70,7 +70,8 @@ import {
 } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import i18n from 'uniswap/src/i18n'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isAddress, isSameAddress } from 'utilities/src/addresses'
+import { isSameAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -461,7 +462,11 @@ function createUniswapXOrderDetails({
   chainId: UniverseChainId
   status: TransactionStatus
   timestamp: number
-  routing: Routing.DUTCH_V3 | Routing.DUTCH_V2 | Routing.DUTCH_LIMIT | Routing.PRIORITY
+  routing:
+    | TradingApi.Routing.DUTCH_V3
+    | TradingApi.Routing.DUTCH_V2
+    | TradingApi.Routing.DUTCH_LIMIT
+    | TradingApi.Routing.PRIORITY
   inputCurrencyAddress: string
   outputCurrencyAddress: string
   inputAmountRaw: string
@@ -548,7 +553,7 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
     timestamp: activity.timestamp,
     // TransactionActivity doesn't have swapOrderType, so we can't determine exact routing
     // Default for filled orders where we don't know the original type
-    routing: Routing.DUTCH_V2,
+    routing: TradingApi.Routing.DUTCH_V2,
     inputCurrencyAddress,
     outputCurrencyAddress,
     inputAmountRaw,
@@ -619,7 +624,7 @@ function parseSendReceive(
 
   if (transfer && assetName && amount) {
     const isMoonpayPurchase = MOONPAY_SENDER_ADDRESSES.some((address) => isSameAddress(address, transfer?.sender))
-    const otherAccount = isAddress(transfer.recipient) || undefined
+    const otherAccount = isEVMAddress(transfer.recipient) || undefined
 
     if (transfer.direction === 'IN') {
       return isMoonpayPurchase && transfer.__typename === 'TokenTransfer'

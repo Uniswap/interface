@@ -1,5 +1,6 @@
+import { TradingApi } from '@universe/api'
 import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+
 import parseGraphQLOnRampTransaction from 'uniswap/src/features/activity/parse/parseOnRampTransaction'
 import { remoteTxStatusToLocalTxStatus } from 'uniswap/src/features/activity/utils/remote'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -89,7 +90,7 @@ export function extractFORTransactionDetails({
     const typeInfo = parseFORTransaction(transaction, isOffRamp)
 
     return {
-      routing: Routing.CLASSIC,
+      routing: TradingApi.Routing.CLASSIC,
       id: transaction.externalSessionId,
       chainId,
       hash: isOffRamp ? '' : transaction.cryptoDetails.blockchainTransactionId || '', // Don't merge offramp transactions
@@ -124,7 +125,7 @@ export function extractOnRampTransactionDetails(transaction: TransactionListQuer
   }
 
   return {
-    routing: Routing.CLASSIC,
+    routing: TradingApi.Routing.CLASSIC,
     id: transaction.details.onRampTransfer.externalSessionId,
     // TODO: WALL-4919: Remove hardcoded Mainnet
     chainId: fromGraphQLChain(transaction.chain) ?? UniverseChainId.Mainnet,

@@ -50,6 +50,7 @@ export function useAccountIdentifier() {
     (account.address ? recentAccountIdentifierMap[account.address] : recentAccountIdentifierMap['recent']) ?? {}
 
   const accountIdentifier = unitag ?? ensName ?? shortenAddress(account.address)
+
   return {
     accountIdentifier,
     hasUnitag: Boolean(unitag),

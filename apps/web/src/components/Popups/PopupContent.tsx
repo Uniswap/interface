@@ -44,10 +44,10 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: Univer
       icon={<AlertTriangleFilled color="$yellow" size="32px" />}
       text={
         <Flex gap="$gap4" flexWrap="wrap" flex={1}>
-          <Text variant="body2" color="$neutral1">
+          <Text variant="body4" color="$neutral1">
             {t('common.failedSwitchNetwork')}
           </Text>
-          <Text variant="body3" color="$neutral2" flexWrap="wrap">
+          <Text variant="body4" color="$neutral2" flexWrap="wrap">
             {t('settings.switchNetwork.warning', { label: chainInfo.label })}
           </Text>
         </Flex>

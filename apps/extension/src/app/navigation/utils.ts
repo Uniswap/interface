@@ -53,7 +53,7 @@ export async function focusOrCreateUnitagTab(address: Address, page: UnitagClaim
 export async function focusOrCreateDappRequestWindow(tabId: number | undefined, windowId: number): Promise<void> {
   const extension = await chrome.management.getSelf()
 
-  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/popup.html*` })
+  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/fallback-popup.html*` })
   const tab = tabs[0]
 
   const height = 410
@@ -61,7 +61,7 @@ export async function focusOrCreateDappRequestWindow(tabId: number | undefined, 
 
   const { left, top } = await calculatePopupWindowPosition({ width, height })
 
-  let url = `popup.html?windowId=${windowId}`
+  let url = `fallback-popup.html?windowId=${windowId}`
   if (tabId) {
     url += `&tabId=${tabId}`
   }

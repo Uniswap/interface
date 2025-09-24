@@ -1,15 +1,15 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { DepositInfo } from 'components/Liquidity/types'
 import { useEffect, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
 import { useIncreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useIncreaseLpPositionCalldataQuery'
-import { CreateLPPositionRequest, IncreaseLPPositionRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function useIncreasePositionDependentAmountFallback(
-  queryParams: IncreaseLPPositionRequest | undefined,
+  queryParams: TradingApi.IncreaseLPPositionRequest | undefined,
   isQueryEnabled: boolean,
 ) {
   const [hasErrorResponse, setHasErrorResponse] = useState(false)
@@ -32,7 +32,7 @@ export function useIncreasePositionDependentAmountFallback(
 }
 
 export function useCreatePositionDependentAmountFallback(
-  queryParams: CreateLPPositionRequest | undefined,
+  queryParams: TradingApi.CreateLPPositionRequest | undefined,
   isQueryEnabled: boolean,
 ) {
   const [hasErrorResponse, setHasErrorResponse] = useState(false)

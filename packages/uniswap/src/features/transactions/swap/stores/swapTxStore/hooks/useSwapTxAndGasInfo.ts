@@ -1,5 +1,6 @@
+import { TradingApi } from '@universe/api'
 import { useMemo } from 'react'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+
 import { useTokenApprovalInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import { getUniswapXSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/uniswapx/utils'
 import {
@@ -49,16 +50,16 @@ export function useSwapTxAndGasInfo({
 
   return useMemo(() => {
     switch (trade?.routing) {
-      case Routing.DUTCH_V2:
-      case Routing.DUTCH_V3:
-      case Routing.PRIORITY:
+      case TradingApi.Routing.DUTCH_V2:
+      case TradingApi.Routing.DUTCH_V3:
+      case TradingApi.Routing.PRIORITY:
         return getUniswapXSwapTxAndGasInfo({ trade, swapTxInfo, approvalTxInfo })
-      case Routing.BRIDGE:
+      case TradingApi.Routing.BRIDGE:
         return getBridgeSwapTxAndGasInfo({ trade, swapTxInfo, approvalTxInfo })
-      case Routing.CLASSIC:
+      case TradingApi.Routing.CLASSIC:
         return getClassicSwapTxAndGasInfo({ trade, swapTxInfo, approvalTxInfo, permitTxInfo })
-      case Routing.WRAP:
-      case Routing.UNWRAP:
+      case TradingApi.Routing.WRAP:
+      case TradingApi.Routing.UNWRAP:
         return getWrapTxAndGasInfo({ trade, swapTxInfo })
       default:
         return getFallbackSwapTxAndGasInfo({ swapTxInfo, approvalTxInfo })

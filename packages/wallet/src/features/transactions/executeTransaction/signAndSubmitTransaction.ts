@@ -3,7 +3,7 @@ import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { HexString } from 'uniswap/src/utils/hex'
-import { isAddress } from 'utilities/src/addresses/index'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { PublicClient } from 'viem'
@@ -58,12 +58,12 @@ export async function signAndSubmitTransaction({
       throw new Error('Delegation contract address not found')
     }
 
-    const delegationContractAddress = isAddress(delegationInfo.contractAddress)
+    const delegationContractAddress = isEVMAddress(delegationInfo.contractAddress)
     if (!delegationContractAddress) {
       throw new Error('Delegation contract address is invalid')
     }
 
-    const walletAddress = isAddress(account.address)
+    const walletAddress = isEVMAddress(account.address)
     if (!walletAddress) {
       throw new Error('Wallet address is invalid')
     }

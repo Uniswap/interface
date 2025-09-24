@@ -1,3 +1,4 @@
+import { isWarmLoadingStatus } from '@universe/api'
 import { memo, useMemo } from 'react'
 import { Flex, Shine, useIsDarkMode } from 'ui/src'
 import AnimatedNumber, {
@@ -5,7 +6,6 @@ import AnimatedNumber, {
 } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { isWarmLoadingStatus } from 'uniswap/src/data/utils'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'

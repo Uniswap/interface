@@ -387,6 +387,7 @@ function TokenTable({
       data={tokenTableValues}
       loading={loading}
       error={error}
+      v2={false}
       loadMore={loadMore}
       maxWidth={1200}
       defaultPinnedColumns={['index', 'tokenDescription']}

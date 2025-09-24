@@ -1,5 +1,7 @@
-import { memo, useState } from 'react'
+import { TradingApi } from '@universe/api'
+import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { FlexProps, TextProps } from 'ui/src'
 import { AnimatePresence, Flex, SpinningLoader, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { SlashCircle } from 'ui/src/components/icons/SlashCircle'
@@ -8,10 +10,9 @@ import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText
 import { TransactionDetailsModal } from 'uniswap/src/components/activity/details/TransactionDetailsModal'
 import { TransactionSummaryTitle } from 'uniswap/src/components/activity/general/TransactionSummaryTitle'
 import { useFormattedTimeForActivity } from 'uniswap/src/components/activity/hooks/useFormattedTime'
-import { TransactionSummaryLayoutProps } from 'uniswap/src/components/activity/types'
+import type { TransactionSummaryLayoutProps } from 'uniswap/src/components/activity/types'
 import { TXN_HISTORY_ICON_SIZE, TXN_STATUS_ICON_SIZE } from 'uniswap/src/components/activity/utils'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useTransactionActions } from 'uniswap/src/features/activity/hooks/useTransactionActions'
 import { getTransactionSummaryTitle } from 'uniswap/src/features/activity/utils/getTransactionSummaryTitle'
@@ -20,18 +21,41 @@ import { TransactionStatus } from 'uniswap/src/features/transactions/types/trans
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { openTransactionLink } from 'uniswap/src/utils/linking'
 import { isWeb } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 const LOADING_SPINNER_SIZE = 20
 
-export const TransactionSummaryLayout = memo(function _TransactionSummaryLayout(
-  props: TransactionSummaryLayoutProps,
-): JSX.Element {
+const hoverStyle: FlexProps['hoverStyle'] = { backgroundColor: '$surface2' }
+
+const displayNameTextProps: TextProps = { color: '$accent1', variant: 'body1' }
+
+export const TransactionSummaryLayout = memo(function _TransactionSummaryLayout({
+  caption,
+  transaction,
+  authTrigger,
+  icon,
+  index,
+  onRetry,
+  title,
+}: TransactionSummaryLayoutProps): JSX.Element {
   // Monitor latest nonce to identify queued transactions.
   // We moved this outside of `TransactionSummaryLayoutContent` to avoid re-rendering the entire component when the nonce changes,
   // given that we do not care about the nonce itself but just about the `isQueued` boolean.
-  const isQueued = useIsQueuedTransaction(props.transaction)
+  const isQueued = useIsQueuedTransaction(transaction)
 
-  return <TransactionSummaryLayoutContent {...props} isQueued={isQueued} />
+  return (
+    <TransactionSummaryLayoutContent
+      caption={caption}
+      icon={icon}
+      index={index}
+      isQueued={isQueued}
+      title={title}
+      authTrigger={authTrigger}
+      transaction={transaction}
+      onRetry={onRetry}
+    />
+  )
 })
 
 /**
@@ -55,7 +79,11 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
   const { evmAccount } = useWallet()
   const readonly = !evmAccount || evmAccount.accountType === AccountType.Readonly
 
-  const [showDetailsModal, setShowDetailsModal] = useState(false)
+  const {
+    value: showDetailsModal,
+    setTrue: handleShowDetailsModal,
+    setFalse: handleHideDetailsModal,
+  } = useBooleanState(false)
 
   const { status, hash, chainId } = transaction
 
@@ -72,28 +100,32 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
     transaction,
   })
 
-  const onPress = async (): Promise<void> => {
+  const onPress = useEvent(async (): Promise<void> => {
     if (readonly) {
       await openTransactionLink(hash, chainId)
     } else {
-      setShowDetailsModal(true)
+      handleShowDetailsModal()
     }
-  }
+  })
 
   const formattedAddedTime = useFormattedTimeForActivity(transaction.addedTime)
 
   const statusIconFill = colors.surface1.get()
 
-  const rightBlock = isCancel ? (
-    <SlashCircle color="$statusCritical" fill={statusIconFill} fillOpacity={1} size={TXN_STATUS_ICON_SIZE} />
-  ) : status === TransactionStatus.Failed ? (
-    <Flex grow alignItems="flex-end" justifyContent="space-between">
-      <AlertTriangleFilled color="$statusWarning" fill={colors.statusWarning.val} size={TXN_STATUS_ICON_SIZE} />
-    </Flex>
-  ) : (
-    <Text color="$neutral3" variant="body3">
-      {formattedAddedTime}
-    </Text>
+  const rightBlock = useMemo(
+    () =>
+      isCancel ? (
+        <SlashCircle color="$statusCritical" fill={statusIconFill} fillOpacity={1} size={TXN_STATUS_ICON_SIZE} />
+      ) : status === TransactionStatus.Failed ? (
+        <Flex grow alignItems="flex-end" justifyContent="space-between">
+          <AlertTriangleFilled color="$statusWarning" fill={colors.statusWarning.val} size={TXN_STATUS_ICON_SIZE} />
+        </Flex>
+      ) : (
+        <Text color="$neutral3" variant="body3">
+          {formattedAddedTime}
+        </Text>
+      ),
+    [isCancel, status, statusIconFill, formattedAddedTime, colors],
   )
 
   return (
@@ -105,7 +137,7 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
           backgroundColor="$surface1"
           borderRadius="$rounded16"
           gap="$spacing12"
-          hoverStyle={{ backgroundColor: '$surface2' }}
+          hoverStyle={hoverStyle}
           px={isWeb ? '$spacing8' : '$none'}
           py="$spacing8"
         >
@@ -119,14 +151,10 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
               <Flex grow row alignItems="center" gap="$spacing4" justifyContent="space-between">
                 <Flex row shrink alignItems="center" gap="$spacing4">
                   {walletDisplayName ? (
-                    <DisplayNameText
-                      displayName={walletDisplayName}
-                      textProps={{ color: '$accent1', variant: 'body1' }}
-                    />
+                    <DisplayNameText displayName={walletDisplayName} textProps={displayNameTextProps} />
                   ) : null}
-                  {(transaction.routing === Routing.DUTCH_V2 || transaction.routing === Routing.DUTCH_LIMIT) && (
-                    <UniswapX size="$icon.16" />
-                  )}
+                  {(transaction.routing === TradingApi.Routing.DUTCH_V2 ||
+                    transaction.routing === TradingApi.Routing.DUTCH_LIMIT) && <UniswapX size="$icon.16" />}
                   <TransactionSummaryTitle title={title} transaction={transaction} />
                 </Flex>
                 {!inProgress && rightBlock}
@@ -155,7 +183,7 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
           <TransactionDetailsModal
             authTrigger={authTrigger}
             transactionDetails={transaction}
-            onClose={(): void => setShowDetailsModal(false)}
+            onClose={handleHideDetailsModal}
           />
         )}
       </AnimatePresence>

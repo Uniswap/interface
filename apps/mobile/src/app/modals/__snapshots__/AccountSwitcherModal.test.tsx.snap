@@ -76,75 +76,95 @@ exports[`AccountSwitcher renders correctly 1`] = `
             "borderTopRightRadius": 999999,
             "borderTopWidth": 0,
             "flexDirection": "column",
+            "height": 56,
             "position": "relative",
+            "width": 56,
           }
         }
         testID="account-icon"
       >
         <View
+          collapsable={false}
+          forwardedRef={[Function]}
+          jestAnimatedStyle={
+            {
+              "value": {
+                "opacity": 0,
+              },
+            }
+          }
           style={
             {
               "flexDirection": "column",
-              "height": 56,
-              "width": 56,
+              "opacity": 0,
             }
           }
         >
           <View
             style={
               {
+                "flexDirection": "column",
                 "height": 56,
                 "width": 56,
               }
             }
           >
-            <skCircle
-              color="#00C3A01F"
-              cx={28}
-              cy={28}
-              r={28}
-            />
-            <skGroup
-              transform={
-                [
-                  {
-                    "translateX": 9.333333333333332,
-                  },
-                  {
-                    "translateY": 9.333333333333332,
-                  },
-                ]
+            <View
+              style={
+                {
+                  "height": 56,
+                  "width": 56,
+                }
               }
             >
+              <skCircle
+                color="#00C3A01F"
+                cx={28}
+                cy={28}
+                r={28}
+              />
               <skGroup
                 transform={
                   [
                     {
-                      "scale": 0.7777777777777778,
+                      "translateX": 9.333333333333332,
+                    },
+                    {
+                      "translateY": 9.333333333333332,
                     },
                   ]
                 }
               >
-                <skPath
-                  clip-rule="evenodd"
-                  color="#00C3A0"
-                  end={1}
-                  fillType="evenOdd"
-                  path="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
-                  start={0}
-                  strokeWidth={1}
-                />
-                <skPath
-                  clip-rule="evenodd"
-                  color="#00C3A0"
-                  end={1}
-                  fillType="evenOdd"
-                  path="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
-                  start={0}
-                  strokeWidth={1}
-                />
+                <skGroup
+                  transform={
+                    [
+                      {
+                        "scale": 0.7777777777777778,
+                      },
+                    ]
+                  }
+                >
+                  <skPath
+                    clip-rule="evenodd"
+                    color="#00C3A0"
+                    end={1}
+                    fillType="evenOdd"
+                    path="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
+                    start={0}
+                    strokeWidth={1}
+                  />
+                  <skPath
+                    clip-rule="evenodd"
+                    color="#00C3A0"
+                    end={1}
+                    fillType="evenOdd"
+                    path="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
+                    start={0}
+                    strokeWidth={1}
+                  />
+                </skGroup>
               </skGroup>
-            </skGroup>
+            </View>
           </View>
         </View>
       </View>
@@ -152,7 +172,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
         style={
           {
             "flexDirection": "column",
-            "flexShrink": 1,
+            "flexGrow": 1,
             "gap": 0,
           }
         }
@@ -206,150 +226,236 @@ exports[`AccountSwitcher renders correctly 1`] = `
         </View>
         <View
           collapsable={false}
-          focusVisibleStyle={{}}
           forwardedRef={[Function]}
-          hitSlop={16}
           jestAnimatedStyle={
             {
               "value": {},
             }
           }
-          onBlur={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onLayout={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          role="button"
           style={
             {
-              "backgroundColor": "transparent",
-              "borderBottomLeftRadius": 12,
-              "borderBottomRightRadius": 12,
-              "borderTopLeftRadius": 12,
-              "borderTopRightRadius": 12,
-              "flexDirection": "column",
-              "opacity": 1,
-              "transform": [
-                {
-                  "scale": 1,
-                },
-              ],
+              "opacity": 0,
+              "overflow": "hidden",
+              "width": "100%",
             }
           }
-          testID="copy"
         >
           <View
-            onBlur={[Function]}
-            onFocus={[Function]}
+            onLayout={[Function]}
             style={
               {
-                "alignItems": "center",
-                "backgroundColor": {
-                  "dynamic": {
-                    "dark": "transparent",
-                    "light": "transparent",
-                  },
-                },
-                "borderBottomLeftRadius": 999999,
-                "borderBottomRightRadius": 999999,
-                "borderTopLeftRadius": 999999,
-                "borderTopRightRadius": 999999,
-                "flexDirection": "row",
-                "gap": 4,
-                "justifyContent": "center",
-                "marginTop": 0,
-                "paddingBottom": 0,
-                "paddingLeft": 0,
-                "paddingRight": 0,
-                "paddingTop": 0,
+                "position": "absolute",
+                "width": "100%",
               }
             }
           >
-            <Text
-              allowFontScaling={true}
-              maxFontSizeMultiplier={1.4}
+            <View
+              collapsable={false}
+              focusVisibleStyle={{}}
+              forwardedRef={[Function]}
+              hitSlop={16}
+              jestAnimatedStyle={
+                {
+                  "value": {},
+                }
+              }
               onBlur={[Function]}
+              onClick={[Function]}
               onFocus={[Function]}
+              onLayout={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              role="button"
               style={
                 {
-                  "color": {
-                    "dynamic": {
-                      "dark": "rgba(255, 255, 255, 0.65)",
-                      "light": "rgba(19, 19, 19, 0.63)",
-                    },
-                  },
-                  "fontFamily": "Basel Grotesk",
-                  "fontSize": 17,
-                  "fontWeight": "400",
-                  "lineHeight": 20,
-                }
-              }
-              suppressHighlighting={true}
-            >
-              0x​82D56A...373Fa6
-            </Text>
-            <RNSVGSvgView
-              align="xMidYMid"
-              bbHeight={17}
-              bbWidth={17}
-              fill="none"
-              focusable={false}
-              meetOrSlice={0}
-              minX={0}
-              minY={0}
-              strokeWidth={8}
-              style={
-                [
-                  {
-                    "backgroundColor": "transparent",
-                    "borderWidth": 0,
-                  },
-                  {
-                    "color": "rgba(19, 19, 19, 0.63)",
-                    "height": 17,
-                    "width": 17,
-                  },
-                  {
-                    "flex": 0,
-                    "height": 17,
-                    "width": 17,
-                  },
-                ]
-              }
-              vbHeight={24}
-              vbWidth={24}
-            >
-              <RNSVGGroup
-                color="rgba(19, 19, 19, 0.63)"
-                fill={null}
-                propList={
-                  [
-                    "fill",
-                    "strokeWidth",
-                  ]
-                }
-                strokeWidth={8}
-              >
-                <RNSVGPath
-                  d="M18.375 6.25H9.625C7.448 6.25 6.25 7.448 6.25 9.625V18.375C6.25 20.552 7.448 21.75 9.625 21.75H18.375C20.552 21.75 21.75 20.552 21.75 18.375V9.625C21.75 7.448 20.552 6.25 18.375 6.25ZM20.25 18.375C20.25 19.707 19.707 20.25 18.375 20.25H9.625C8.293 20.25 7.75 19.707 7.75 18.375V9.625C7.75 8.293 8.293 7.75 9.625 7.75H18.375C19.707 7.75 20.25 8.293 20.25 9.625V18.375ZM3.75 5.62V14.38C3.75 15.578 4.23309 15.873 4.39209 15.971C4.74609 16.187 4.85589 16.649 4.63989 17.002C4.49789 17.233 4.25202 17.36 3.99902 17.36C3.86602 17.36 3.72991 17.324 3.60791 17.25C2.70691 16.698 2.25 15.733 2.25 14.38V5.62C2.25 3.478 3.47912 2.25 5.62012 2.25H14.3799C16.0649 2.25 16.87 2.98897 17.25 3.60797C17.466 3.96097 17.355 4.42298 17.002 4.63898C16.648 4.85598 16.1879 4.74399 15.9709 4.39099C15.8739 4.23199 15.5779 3.74902 14.3799 3.74902H5.62012C4.29212 3.75002 3.75 4.292 3.75 5.62Z"
-                  fill={
+                  "backgroundColor": "transparent",
+                  "borderBottomLeftRadius": 12,
+                  "borderBottomRightRadius": 12,
+                  "borderTopLeftRadius": 12,
+                  "borderTopRightRadius": 12,
+                  "flexDirection": "column",
+                  "opacity": 1,
+                  "transform": [
                     {
-                      "type": 2,
+                      "scale": 1,
+                    },
+                  ],
+                }
+              }
+              testID="copy"
+            >
+              <View
+                onBlur={[Function]}
+                onFocus={[Function]}
+                style={
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": {
+                      "dynamic": {
+                        "dark": "transparent",
+                        "light": "transparent",
+                      },
+                    },
+                    "borderBottomLeftRadius": 999999,
+                    "borderBottomRightRadius": 999999,
+                    "borderTopLeftRadius": 999999,
+                    "borderTopRightRadius": 999999,
+                    "flexDirection": "row",
+                    "gap": 4,
+                    "justifyContent": "center",
+                    "marginTop": 0,
+                    "paddingBottom": 0,
+                    "paddingLeft": 0,
+                    "paddingRight": 0,
+                    "paddingTop": 0,
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={true}
+                  maxFontSizeMultiplier={1.4}
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  style={
+                    {
+                      "color": {
+                        "dynamic": {
+                          "dark": "rgba(255, 255, 255, 0.65)",
+                          "light": "rgba(19, 19, 19, 0.63)",
+                        },
+                      },
+                      "fontFamily": "Basel Grotesk",
+                      "fontSize": 17,
+                      "fontWeight": "400",
+                      "lineHeight": 20,
                     }
                   }
-                  propList={
-                    [
-                      "fill",
-                    ]
+                  suppressHighlighting={true}
+                >
+                  0x​82D56A...373Fa6
+                </Text>
+                <View
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  style={
+                    {
+                      "flexDirection": "column",
+                      "height": 17,
+                      "position": "relative",
+                      "width": 17,
+                    }
                   }
-                />
-              </RNSVGGroup>
-            </RNSVGSvgView>
+                >
+                  <View
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    style={
+                      {
+                        "flexDirection": "column",
+                        "left": 0,
+                        "position": "absolute",
+                        "top": 0,
+                      }
+                    }
+                  >
+                    <View
+                      collapsable={false}
+                      forwardedRef={[Function]}
+                      jestAnimatedStyle={
+                        {
+                          "value": {
+                            "opacity": 1,
+                            "transform": [
+                              {
+                                "translateX": 0,
+                              },
+                            ],
+                            "width": "100%",
+                          },
+                        }
+                      }
+                      onBlur={[Function]}
+                      onFocus={[Function]}
+                      style={
+                        {
+                          "flexDirection": "column",
+                          "flexGrow": 1,
+                          "opacity": 1,
+                          "transform": [
+                            {
+                              "translateX": 0,
+                            },
+                          ],
+                          "width": "100%",
+                        }
+                      }
+                    >
+                      <RNSVGSvgView
+                        align="xMidYMid"
+                        bbHeight={17}
+                        bbWidth={17}
+                        fill="none"
+                        focusable={false}
+                        meetOrSlice={0}
+                        minX={0}
+                        minY={0}
+                        strokeWidth={8}
+                        style={
+                          [
+                            {
+                              "backgroundColor": "transparent",
+                              "borderWidth": 0,
+                            },
+                            {
+                              "color": "rgba(19, 19, 19, 0.63)",
+                              "height": 17,
+                              "width": 17,
+                            },
+                            {
+                              "flex": 0,
+                              "height": 17,
+                              "width": 17,
+                            },
+                          ]
+                        }
+                        vbHeight={24}
+                        vbWidth={24}
+                      >
+                        <RNSVGGroup
+                          color="rgba(19, 19, 19, 0.63)"
+                          fill={null}
+                          propList={
+                            [
+                              "fill",
+                              "strokeWidth",
+                            ]
+                          }
+                          strokeWidth={8}
+                        >
+                          <RNSVGPath
+                            d="M18.375 6.25H9.625C7.448 6.25 6.25 7.448 6.25 9.625V18.375C6.25 20.552 7.448 21.75 9.625 21.75H18.375C20.552 21.75 21.75 20.552 21.75 18.375V9.625C21.75 7.448 20.552 6.25 18.375 6.25ZM20.25 18.375C20.25 19.707 19.707 20.25 18.375 20.25H9.625C8.293 20.25 7.75 19.707 7.75 18.375V9.625C7.75 8.293 8.293 7.75 9.625 7.75H18.375C19.707 7.75 20.25 8.293 20.25 9.625V18.375ZM3.75 5.62V14.38C3.75 15.578 4.23309 15.873 4.39209 15.971C4.74609 16.187 4.85589 16.649 4.63989 17.002C4.49789 17.233 4.25202 17.36 3.99902 17.36C3.86602 17.36 3.72991 17.324 3.60791 17.25C2.70691 16.698 2.25 15.733 2.25 14.38V5.62C2.25 3.478 3.47912 2.25 5.62012 2.25H14.3799C16.0649 2.25 16.87 2.98897 17.25 3.60797C17.466 3.96097 17.355 4.42298 17.002 4.63898C16.648 4.85598 16.1879 4.74399 15.9709 4.39099C15.8739 4.23199 15.5779 3.74902 14.3799 3.74902H5.62012C4.29212 3.75002 3.75 4.292 3.75 5.62Z"
+                            fill={
+                              {
+                                "type": 2,
+                              }
+                            }
+                            propList={
+                              [
+                                "fill",
+                              ]
+                            }
+                          />
+                        </RNSVGGroup>
+                      </RNSVGSvgView>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
           </View>
         </View>
       </View>
@@ -397,7 +503,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
           {
             "alignItems": "center",
             "alignSelf": "stretch",
-            "backgroundColor": "rgba(34,34,34,0.05)",
+            "backgroundColor": "rgba(19, 19, 19, 0.08)",
             "borderBottomColor": "transparent",
             "borderBottomLeftRadius": 16,
             "borderBottomRightRadius": 16,
@@ -569,7 +675,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
             "borderBottomColor": {
               "dynamic": {
                 "dark": "rgba(255,255,255,0.12)",
-                "light": "rgba(34,34,34,0.05)",
+                "light": "rgba(19, 19, 19, 0.08)",
               },
             },
             "borderBottomLeftRadius": 999999,
@@ -578,14 +684,14 @@ exports[`AccountSwitcher renders correctly 1`] = `
             "borderLeftColor": {
               "dynamic": {
                 "dark": "rgba(255,255,255,0.12)",
-                "light": "rgba(34,34,34,0.05)",
+                "light": "rgba(19, 19, 19, 0.08)",
               },
             },
             "borderLeftWidth": 1,
             "borderRightColor": {
               "dynamic": {
                 "dark": "rgba(255,255,255,0.12)",
-                "light": "rgba(34,34,34,0.05)",
+                "light": "rgba(19, 19, 19, 0.08)",
               },
             },
             "borderRightWidth": 1,
@@ -593,7 +699,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
             "borderTopColor": {
               "dynamic": {
                 "dark": "rgba(255,255,255,0.12)",
-                "light": "rgba(34,34,34,0.05)",
+                "light": "rgba(19, 19, 19, 0.08)",
               },
             },
             "borderTopLeftRadius": 999999,
@@ -606,12 +712,12 @@ exports[`AccountSwitcher renders correctly 1`] = `
             "paddingLeft": 8,
             "paddingRight": 8,
             "paddingTop": 8,
-            "shadowColor": "rgb(34,34,34)",
+            "shadowColor": "rgb(19,19,19)",
             "shadowOffset": {
               "height": 0,
               "width": 0,
             },
-            "shadowOpacity": 0.050980392156862744,
+            "shadowOpacity": 0.0784313725490196,
             "shadowRadius": 10,
             "width": 32,
           }

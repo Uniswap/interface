@@ -6,7 +6,7 @@ import { parseCurrencyFromURLParameter } from 'state/swap/hooks'
 import { PositionField } from 'types/position'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { getChainIdFromChainUrlParam, getChainUrlParam } from 'utils/chainParams'
 import { assume0xAddress } from 'utils/wagmi'
 import { z } from 'zod'
@@ -122,7 +122,7 @@ export const parseAsHookAddress = createParser({
       return null
     }
 
-    const validAddress = isAddress(query)
+    const validAddress = isEVMAddress(query)
     return validAddress ? assume0xAddress(validAddress) : null
   },
   serialize: (value: string) => value,

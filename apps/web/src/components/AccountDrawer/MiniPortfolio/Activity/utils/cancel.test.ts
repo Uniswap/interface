@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import { hasEncodedOrder } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import { useCancelMultipleOrdersCallback } from 'components/AccountDrawer/MiniPortfolio/Activity/utils/cancel'
 import { ContractTransaction } from 'ethers/lib/ethers'
@@ -5,7 +6,6 @@ import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import useSelectChain from 'hooks/useSelectChain'
 import { renderHookWithProviders } from 'test-utils/renderHookWithProviders'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -75,7 +75,7 @@ const createMockOrder = (overrides?: Partial<UniswapXOrderDetails>): UniswapXOrd
   chainId: UniverseChainId.Mainnet,
   orderHash: '0xhash1',
   encodedOrder: '0xencodedOrder1',
-  routing: Routing.DUTCH_V2,
+  routing: TradingApi.Routing.DUTCH_V2,
   status: TransactionStatus.Pending,
   typeInfo: {
     type: 'order',
@@ -205,7 +205,7 @@ describe('useCancelMultipleOrdersCallback', () => {
           id: 'order-3',
           orderHash: '0xhash3',
           encodedOrder: '0xencodedOrder3',
-          routing: Routing.DUTCH_V3,
+          routing: TradingApi.Routing.DUTCH_V3,
         }),
       ]
 
@@ -414,16 +414,16 @@ describe('useCancelMultipleOrdersCallback', () => {
 
     it('should handle different routing types correctly', async () => {
       const orders = [
-        createMockOrder({ id: 'order-1', routing: Routing.DUTCH_V2, orderHash: '0xhash1' }),
+        createMockOrder({ id: 'order-1', routing: TradingApi.Routing.DUTCH_V2, orderHash: '0xhash1' }),
         createMockOrder({
           id: 'order-2',
-          routing: Routing.DUTCH_V3,
+          routing: TradingApi.Routing.DUTCH_V3,
           orderHash: '0xhash2',
           encodedOrder: '0xencodedOrder2',
         }),
         createMockOrder({
           id: 'order-3',
-          routing: Routing.PRIORITY,
+          routing: TradingApi.Routing.PRIORITY,
           orderHash: '0xhash3',
           encodedOrder: '0xencodedOrder3',
         }),

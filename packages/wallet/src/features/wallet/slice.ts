@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RankingType } from 'uniswap/src/data/types'
+import { RankingType } from '@universe/api'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'

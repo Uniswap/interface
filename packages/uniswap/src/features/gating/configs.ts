@@ -1,4 +1,4 @@
-import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { GasStrategy } from '@universe/api'
 import type { Locale } from 'uniswap/src/features/language/constants'
 
 /**

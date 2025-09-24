@@ -21,7 +21,7 @@ import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/
 import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetailsHeaders'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
 import { Flex, Separator } from 'ui/src'
-import { ArrowDownCircle, ArrowUpCircle, Bank, ExternalLink, SendRoundedAirplane } from 'ui/src/components/icons'
+import { ArrowDownCircle, ArrowUpCircle, Bank, SendRoundedAirplane } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { getBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
@@ -41,6 +41,8 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -106,7 +108,9 @@ const TokenDetailsQuery = memo(function _TokenDetailsQuery(): JSX.Element {
 const TokenDetails = memo(function _TokenDetails(): JSX.Element {
   const centerElement = useMemo(() => <HeaderTitleElement />, [])
   const rightElement = useMemo(() => <HeaderRightElement />, [])
-  const inModal = useIsInModal(MobileScreens.Explore, true)
+
+  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
+  const inModal = useIsInModal(isBottomTabsEnabled ? MobileScreens.Explore : ModalName.Explore, true)
 
   return (
     <>
@@ -314,48 +318,46 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     onPressSwap,
   })
 
-  const actionMenuOptions: MenuOptionItem[] = useMemo(
-    () => [
-      ...(fiatOnRampCurrency
-        ? [{ label: t('common.button.buy'), Icon: Bank, onPress: () => onPressBuyFiatOnRamp() }]
-        : []),
-      ...(!!bridgedAsset && hasTokenBalance
-        ? [
-            {
-              label: t('common.withdraw'),
-              Icon: ArrowUpCircle,
-              onPress: () => onPressWithdraw(),
-              subheader: t('bridgedAsset.wormhole.toNativeChain', { nativeChainName: bridgedAsset.nativeChain }),
-              rightIcon: <ExternalLink size="$icon.20" color="$neutral2" />,
-              height: 56,
-            },
-          ]
-        : []),
-      ...(hasTokenBalance && fiatOnRampCurrency
-        ? [{ label: t('common.button.sell'), Icon: ArrowUpCircle, onPress: () => onPressBuyFiatOnRamp(true) }]
-        : []),
-      ...(hasTokenBalance
-        ? [
-            {
-              label: t('common.button.send'),
-              Icon: SendRoundedAirplane,
-              onPress: onPressSend,
-            },
-          ]
-        : []),
-      { label: t('common.button.receive'), Icon: ArrowDownCircle, onPress: navigateToReceive },
-    ],
-    [
-      fiatOnRampCurrency,
-      t,
-      bridgedAsset,
-      hasTokenBalance,
-      onPressWithdraw,
-      onPressSend,
-      navigateToReceive,
-      onPressBuyFiatOnRamp,
-    ],
-  )
+  const actionMenuOptions: MenuOptionItem[] = useMemo(() => {
+    const actions: MenuOptionItem[] = []
+
+    if (fiatOnRampCurrency) {
+      actions.push({ label: t('common.button.buy'), Icon: Bank, onPress: () => onPressBuyFiatOnRamp() })
+    }
+
+    if (!!bridgedAsset && hasTokenBalance) {
+      actions.push({
+        label: t('common.withdraw'),
+        Icon: ArrowUpCircle,
+        onPress: () => onPressWithdraw(),
+        subheader: t('bridgedAsset.wormhole.toNativeChain', { nativeChainName: bridgedAsset.nativeChain }),
+        actionType: 'external-link',
+        height: 56,
+      })
+    }
+
+    if (hasTokenBalance && fiatOnRampCurrency) {
+      actions.push({ label: t('common.button.sell'), Icon: ArrowUpCircle, onPress: () => onPressBuyFiatOnRamp(true) })
+    }
+
+    if (hasTokenBalance) {
+      actions.push({ label: t('common.button.send'), Icon: SendRoundedAirplane, onPress: onPressSend })
+    }
+
+    // All cases have a receive action
+    actions.push({ label: t('common.button.receive'), Icon: ArrowDownCircle, onPress: navigateToReceive })
+
+    return actions
+  }, [
+    fiatOnRampCurrency,
+    t,
+    bridgedAsset,
+    hasTokenBalance,
+    onPressWithdraw,
+    onPressSend,
+    navigateToReceive,
+    onPressBuyFiatOnRamp,
+  ])
 
   const hideActionButtons = useMemo(() => {
     return (

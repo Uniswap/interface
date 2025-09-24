@@ -1,11 +1,11 @@
 import 'test-utils/tokens/mocks'
 
 import { WETH9 } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { LimitDetailActivityRow } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitDetailActivityRow'
 import { render, screen } from 'test-utils/render'
 import { DAI } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   TransactionOriginType,
@@ -24,7 +24,7 @@ vi.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', async () => {
 })
 
 const mockOrderDetails: UniswapXOrderDetails = {
-  routing: Routing.DUTCH_LIMIT,
+  routing: TradingApi.Routing.DUTCH_LIMIT,
   orderHash: '0x1234',
   status: TransactionStatus.Pending,
   typeInfo: {

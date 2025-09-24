@@ -25,10 +25,10 @@ export const FlashbotsReceiptSchema = z.object({
   transaction: z.object({
     from: z.string(),
     to: z.string(),
-    gasLimit: z.string(),
+    gasLimit: z.union([z.string(), z.number()]).transform((val) => String(val)),
     maxFeePerGas: z.string(),
     maxPriorityFeePerGas: z.string(),
-    nonce: z.string(),
+    nonce: z.union([z.string(), z.number()]).transform((val) => String(val)),
     value: z.string(),
   }),
   fastMode: z.boolean(),

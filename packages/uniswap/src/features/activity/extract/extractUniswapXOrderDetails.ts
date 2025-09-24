@@ -1,5 +1,6 @@
+import { TradingApi } from '@universe/api'
 import { SwapOrderType, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+
 import { deriveCurrencyAmountFromAssetResponse } from 'uniswap/src/features/activity/utils/remote'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -20,7 +21,10 @@ export function extractUniswapXOrderDetails(transaction: TransactionListQueryRes
   }
 
   const typeInfo = parseUniswapXOrderTransaction(transaction)
-  const routing = transaction.details.swapOrderType === SwapOrderType.Limit ? Routing.DUTCH_LIMIT : Routing.DUTCH_V2
+  const routing =
+    transaction.details.swapOrderType === SwapOrderType.Limit
+      ? TradingApi.Routing.DUTCH_LIMIT
+      : TradingApi.Routing.DUTCH_V2
 
   // TODO (MOB-3609): Parse and show pending limit orders in Activity feed
   if (!typeInfo || transaction.details.swapOrderType === SwapOrderType.Limit) {

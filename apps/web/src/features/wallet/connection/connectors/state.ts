@@ -1,8 +1,8 @@
 import { ConnectWalletService } from 'features/wallet/connection/services/ConnectWalletService'
 import { WalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
 import { useSyncExternalStore } from 'react'
-import { UserRejectedRequestError } from 'utils/errors'
 
+// TODO(SWAP-496): Align/move connection state to a query/mutation that lives in AccountsStore
 export enum ConnectionStatus {
   Idle = 'idle',
   Pending = 'pending',
@@ -20,10 +20,13 @@ type ConnectionState =
   | {
       status: ConnectionStatus.Idle
       error?: string
+      lastConnectedWalletMeta?: WalletConnectorMeta
     }
   | {
       status: ConnectionStatus.Pending
+      error?: undefined
       meta: WalletConnectorMeta
+      lastConnectedWalletMeta?: undefined
     }
 
 // External store for connection states
@@ -61,6 +64,13 @@ export function useConnectionState(): ConnectionState {
   return useSyncExternalStore(subscribe, getConnectionState)
 }
 
+export function usePendingConnectorId(): string | undefined {
+  const state = useConnectionState()
+  return state.status === ConnectionStatus.Pending
+    ? (state.meta.wagmi?.id ?? state.meta.solana?.walletName ?? state.meta.customConnectorId)
+    : undefined
+}
+
 /** Wraps a connect wallet service with functionality to update global connection state. Filters out user rejection errors. */
 export function wrapConnectWalletServiceWithStateTracking(service: ConnectWalletService): ConnectWalletService {
   return {
@@ -78,14 +88,18 @@ export function wrapConnectWalletServiceWithStateTracking(service: ConnectWallet
         // Set state to connected on success
         updateConnectionState({ status: ConnectionStatus.Idle })
       } catch (error) {
-        if (error instanceof UserRejectedRequestError || error instanceof ExistingPendingConnectionError) {
+        if (error instanceof ExistingPendingConnectionError) {
           updateConnectionState({ status: ConnectionStatus.Idle })
           return
         }
 
         // Set state to error on failure
         const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-        updateConnectionState({ status: ConnectionStatus.Idle, error: errorMessage })
+        updateConnectionState({
+          status: ConnectionStatus.Idle,
+          error: errorMessage,
+          lastConnectedWalletMeta: params.walletConnector,
+        })
         throw error // Re-throw the error to maintain original behavior
       }
     },

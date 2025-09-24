@@ -1,15 +1,15 @@
 import { call, put } from 'typed-redux-saga'
-import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DynamicConfigs, SyncTransactionSubmissionChainIdsConfigKey } from 'uniswap/src/features/gating/configs'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
-import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import type { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import { FLASHBLOCKS_UI_SKIP_ROUTES } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
 import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
-import {
+import type {
   SwapGasFeeEstimation,
   ValidatedSwapTxContext,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
@@ -17,16 +17,16 @@ import { isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { Logger } from 'utilities/src/logger/logger'
+import type { Logger } from 'utilities/src/logger/logger'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
 import {
   getShouldWaitBetweenTransactions,
   getSwapTransactionCount,
 } from 'wallet/src/features/transactions/swap/confirmation'
-import { createPrepareAndSignSwapSaga } from 'wallet/src/features/transactions/swap/prepareAndSignSwapSaga'
-import { TransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
-import {
+import type { createPrepareAndSignSwapSaga } from 'wallet/src/features/transactions/swap/prepareAndSignSwapSaga'
+import type { TransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
+import type {
   ApprovalTransactionData,
   PermitTransactionData,
   SwapTransactionData,
@@ -37,15 +37,18 @@ import {
 import { submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
 import {
   isUniswapXPreSignedSwapTransaction,
-  PreSignedSwapTransaction,
+  type PreSignedSwapTransaction,
 } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
 import {
-  BaseTransactionContext,
-  TransactionExecutionSyncResultSuccess,
-  TransactionStep,
+  type BaseTransactionContext,
+  type TransactionExecutionSyncResultSuccess,
+  type TransactionStep,
   TransactionStepType,
 } from 'wallet/src/features/transactions/swap/types/transactionExecutor'
-import { TransactionSagaDependencies } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
+import {
+  DelegationType,
+  type TransactionSagaDependencies,
+} from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 import { finalizeTransaction } from 'wallet/src/features/transactions/watcher/transactionFinalizationSaga'
 
 export type SwapParams = {
@@ -191,13 +194,11 @@ export function createExecuteSwapSaga(
 
       const chainId = preSignedTransaction.chainId
       const submitViaPrivateRpc = preSignedTransaction.metadata.submitViaPrivateRpc
-      const includesDelegation = swapTxContext.includesDelegation ?? false
-
       const { transactionService } = yield* call(createTransactionServices, dependencies, {
         account,
         chainId,
         submitViaPrivateRpc,
-        includesDelegation,
+        delegationType: swapTxContext.includesDelegation ? DelegationType.Delegate : DelegationType.Auto,
         request: 'txRequests' in swapTxContext ? swapTxContext.txRequests?.[0] : undefined,
       })
 
@@ -326,7 +327,12 @@ export function createExecuteSwapSaga(
           !getIsFlashblocksEnabled(chainId) ||
           FLASHBLOCKS_UI_SKIP_ROUTES.includes(preSignedTransaction.swapTxContext.routing)
         ) {
-          yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
+          yield* put(
+            pushNotification({
+              type: AppNotificationType.SwapPending,
+              wrapType: WrapType.NotApplicable,
+            }),
+          )
         }
 
         swapResult = yield* executeTransactionStep({
@@ -342,7 +348,10 @@ export function createExecuteSwapSaga(
         if (isFinalizedTx(swapResult.transaction)) {
           // Update the store with tx receipt details
           const apolloClient = yield* call(apolloClientRef.onReady)
-          yield* call(finalizeTransaction, { transaction: swapResult.transaction, apolloClient })
+          yield* call(finalizeTransaction, {
+            transaction: swapResult.transaction,
+            apolloClient,
+          })
         } else {
           // Update transaction with the new status, which will trigger a new transaction watcher
           yield* put(transactionActions.updateTransaction(swapResult.transaction))

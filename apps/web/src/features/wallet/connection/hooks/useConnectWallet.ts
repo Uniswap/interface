@@ -74,7 +74,7 @@ function wrapConnectWalletServiceWithLogging(service: ConnectWalletService): Con
         logger.warn(
           'wrapConnectWalletServiceWithLogging',
           'features/wallet/connection/hooks/useConnectWallet',
-          `Connection failed: ${params.walletConnector.name}`,
+          `Connection failed: ${params.walletConnector.name}. Error: ${error.message}`,
         )
         throw error
       }

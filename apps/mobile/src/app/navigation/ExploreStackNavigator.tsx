@@ -16,7 +16,11 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
 const ExploreStack = createNativeStackNavigator<ExploreStackParamList>()
 
-export function ExploreStackNavigator(): JSX.Element {
+export function ExploreStackNavigator({
+  initialParams,
+}: {
+  initialParams?: ExploreStackParamList[MobileScreens.Explore]
+}): JSX.Element {
   const colors = useSporeColors()
 
   return (
@@ -43,7 +47,7 @@ export function ExploreStackNavigator(): JSX.Element {
           initialRouteName={MobileScreens.Explore}
           screenOptions={navNativeStackOptions.independentBsm}
         >
-          <ExploreStack.Screen component={ExploreScreen} name={MobileScreens.Explore} />
+          <ExploreStack.Screen component={ExploreScreen} name={MobileScreens.Explore} initialParams={initialParams} />
           <ExploreStack.Group screenOptions={{ contentStyle: { backgroundColor: colors.surface1.val } }}>
             <ExploreStack.Screen name={MobileScreens.ExternalProfile}>
               {(props): JSX.Element => <ExternalProfileScreen {...props} renderedInModal />}

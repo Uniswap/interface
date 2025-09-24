@@ -33,6 +33,7 @@ export function OptionContainer({ hideBackground, recent, children, onPress, tes
       p="$spacing16"
       gap="$gap12"
       alignItems="center"
+      justifyContent="space-between"
       borderRadius="$rounded16"
       borderWidth={recent ? 2 : 0}
       borderColor="$accent2"
@@ -69,8 +70,8 @@ export function UniswapWalletOptions() {
         {uniswapExtensionConnector ? (
           // If the extension is detected, show the option to connect
           <OptionContainer onPress={() => connect(uniswapExtensionConnector)} testID="connect-uniswap-extension">
-            <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
-            <Flex row gap={4}>
+            <Flex row gap="$gap12" alignItems="center">
+              <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
               <Text variant="buttonLabel2" color="$neutral1" whiteSpace="nowrap">
                 <Trans i18nKey="common.extension" />
               </Text>

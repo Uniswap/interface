@@ -2,6 +2,7 @@ import { datadogRum } from '@datadog/browser-rum'
 import type { TransactionResponse } from '@ethersproject/abstract-provider'
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
+import { FetchError, TradingApi } from '@universe/api'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { clientToProvider } from 'hooks/useEthersProvider'
 import ms from 'ms'
@@ -12,8 +13,6 @@ import { isPendingTx } from 'state/transactions/utils'
 import type { InterfaceState } from 'state/webReducer'
 import type { SagaGenerator } from 'typed-redux-saga'
 import { call, cancel, delay, fork, put, race, select, spawn, take } from 'typed-redux-saga'
-import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { BlockedAsyncSubmissionChainIdsConfigKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
@@ -530,7 +529,7 @@ export function getSwapTransactionInfo(trade: UniswapXTrade): SwapInfo & { isUni
 export function getSwapTransactionInfo(
   trade: ClassicTrade | BridgeTrade | UniswapXTrade | SolanaTrade,
 ): SwapInfo | BridgeTransactionInfo {
-  if (trade.routing === Routing.BRIDGE) {
+  if (trade.routing === TradingApi.Routing.BRIDGE) {
     return {
       type: TransactionType.Bridge,
       inputCurrencyId: currencyId(trade.inputAmount.currency),

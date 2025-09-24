@@ -9,6 +9,7 @@ import {
   TimestampedPoolPrice,
   usePoolPriceHistoryQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { hashKey } from 'utilities/src/reactQuery/hashKey'
 import { removeOutliers } from 'utils/prices'
 
 export type PDPChartQueryVars = {
@@ -58,6 +59,9 @@ export function usePoolPriceChartData({
     /* const dataQuality = checkDataQuality(entries, ChartType.PRICE, variables.duration) */
     const dataQuality = loading || !priceHistory || !priceHistory.length ? DataQuality.INVALID : DataQuality.VALID
 
-    return { chartType: ChartType.PRICE, entries: filteredEntries, loading, dataQuality }
+    // Hash the data to prevent priceData changes causing re-renders
+    const dataHash = hashKey(filteredEntries)
+
+    return { chartType: ChartType.PRICE, entries: filteredEntries, loading, dataQuality, dataHash }
   }, [data?.v2Pair, data?.v3Pool, data?.v4Pool, loading, priceInverted])
 }

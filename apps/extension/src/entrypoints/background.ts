@@ -17,36 +17,46 @@ import { setSidePanelBehavior, setSidePanelOptions } from 'src/background/utils/
 import { readIsOnboardedFromStorage } from 'src/background/utils/persistedStateUtils'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { logger } from 'utilities/src/logger/logger'
+import { defineBackground } from 'wxt/utils/define-background'
+
+async function enableSidebar(): Promise<void> {
+  await setSidePanelOptions({ enabled: true })
+  await setSidePanelBehavior({ openPanelOnActionClick: true })
+}
+
+async function disableSidebar(): Promise<void> {
+  await setSidePanelOptions({ enabled: false })
+  await setSidePanelBehavior({ openPanelOnActionClick: false })
+}
+
+async function setSidebarState(isOnboarded: boolean): Promise<void> {
+  if (isOnboarded) {
+    await enableSidebar()
+  } else {
+    await disableSidebar()
+  }
+}
+
+async function initApp(): Promise<void> {
+  await initStatSigForBrowserScripts()
+  await initExtensionAnalytics()
+
+  // Enables or disables sidebar based on onboarding status
+  // Injected script will reject any requests if not onboarded
+  backgroundStore.addOnboardingChangedListener(async (isOnboarded) => {
+    await setSidebarState(isOnboarded)
+  })
+
+  // Sets uninstall URL
+  chrome.runtime.setUninstallURL(uniswapUrls.chromeExtensionUninstallUrl)
+
+  await backgroundStore.init()
+}
 
 function makeBackground(): void {
   let isArcBrowser = false
 
   initMessageBridge()
-
-  async function setSidebarState(isOnboarded: boolean): Promise<void> {
-    if (isOnboarded) {
-      await enableSidebar()
-    } else {
-      await disableSidebar()
-      await focusOrCreateOnboardingTab()
-    }
-  }
-
-  async function initApp(): Promise<void> {
-    await initStatSigForBrowserScripts()
-    await initExtensionAnalytics()
-
-    // Enables or disables sidebar based on onboarding status
-    // Injected script will reject any requests if not onboarded
-    backgroundStore.addOnboardingChangedListener(async (isOnboarded) => {
-      await setSidebarState(isOnboarded)
-    })
-
-    // Sets uninstall URL
-    chrome.runtime.setUninstallURL(uniswapUrls.chromeExtensionUninstallUrl)
-
-    await backgroundStore.init()
-  }
 
   chrome.tabs.onActivated.addListener(onTabChange)
   chrome.tabs.onUpdated.addListener(onTabChange)
@@ -70,8 +80,13 @@ function makeBackground(): void {
         await disableSidebar()
       } else {
         // ensure that we reenable the sidebar if arc styles are not detected
-        // this ensures that funky edge cases (eg sites that define arc styles) don't cause the sidebar to be disabled on accident
-        await enableSidebar()
+        // but ONLY if the user is actually onboarded
+        const isOnboarded = await readIsOnboardedFromStorage()
+        if (isOnboarded) {
+          await enableSidebar()
+        } else {
+          await disableSidebar()
+        }
       }
     },
   )
@@ -85,17 +100,13 @@ function makeBackground(): void {
 
     const isOnboarded = await readIsOnboardedFromStorage()
 
-    await setSidebarState(isOnboarded)
-  }
-
-  async function enableSidebar(): Promise<void> {
-    await setSidePanelOptions({ enabled: true })
-    await setSidePanelBehavior({ openPanelOnActionClick: true })
-  }
-
-  async function disableSidebar(): Promise<void> {
-    await setSidePanelOptions({ enabled: false })
-    await setSidePanelBehavior({ openPanelOnActionClick: false })
+    if (isOnboarded) {
+      await enableSidebar()
+    } else {
+      await disableSidebar()
+      // Always open onboarding tab when not onboarded
+      await focusOrCreateOnboardingTab()
+    }
   }
 
   /** Fires an event whenever a tab is changed so the sidebar can reflect the current connection status properly. */
@@ -119,4 +130,10 @@ function makeBackground(): void {
   })
 }
 
-makeBackground()
+// eslint-disable-next-line import/no-unused-modules
+export default defineBackground({
+  type: 'module',
+  main() {
+    makeBackground()
+  },
+})

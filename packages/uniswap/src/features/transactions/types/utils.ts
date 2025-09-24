@@ -18,6 +18,10 @@ export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo
   )
 }
 
+export function isSwapTypeInfo(typeInfo: TransactionTypeInfo): boolean {
+  return typeInfo.type === TransactionType.Swap
+}
+
 export function isBridgeTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is BridgeTransactionInfo {
   return typeInfo.type === TransactionType.Bridge
 }

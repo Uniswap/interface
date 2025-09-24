@@ -6,7 +6,7 @@ import { createEVMWalletService } from 'uniswap/src/features/wallet/services/cre
 import { WalletService } from 'uniswap/src/features/wallet/services/IWalletService'
 import { WalletMeta } from 'uniswap/src/features/wallet/types/WalletMeta'
 import { HexString } from 'uniswap/src/utils/hex'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
@@ -47,7 +47,7 @@ export function NativeWalletProvider({ children }: PropsWithChildren): JSX.Eleme
     if (!account?.address) {
       return undefined
     }
-    const address = isAddress(account.address)
+    const address = isEVMAddress(account.address)
     if (!address) {
       logger.error(new Error('Invalid address stored in wallet state'), {
         tags: { file: 'NativeWalletProvider.tsx', function: 'useNativeWalletService' },

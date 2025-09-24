@@ -1,3 +1,4 @@
+import { GqlResult, TradingApi } from '@universe/api'
 import { useCallback, useMemo } from 'react'
 import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
@@ -7,8 +8,6 @@ import { useTradingApiSwappableTokensQuery } from 'uniswap/src/data/apiClients/t
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
 import { useTokenProjectsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
-import { GqlResult } from 'uniswap/src/data/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -36,7 +35,7 @@ export function useBridgingTokenWithHighestBalance({
 }): {
   data:
     | {
-        token: GetSwappableTokensResponse['tokens'][number]
+        token: TradingApi.GetSwappableTokensResponse['tokens'][number]
         balance: PortfolioBalance
         currencyInfo: CurrencyInfo
       }
@@ -80,7 +79,7 @@ export function useBridgingTokenWithHighestBalance({
 
     const tokenWithHighestBalance = bridgingTokens.tokens.reduce<
       | {
-          token: GetSwappableTokensResponse['tokens'][number]
+          token: TradingApi.GetSwappableTokensResponse['tokens'][number]
           balance: PortfolioBalance
           currencyInfo: CurrencyInfo
         }
@@ -185,7 +184,7 @@ export function useBridgingTokensOptions({
 }
 
 function useBridgingTokensToTokenOptions(
-  bridgingTokens: GetSwappableTokensResponse['tokens'] | undefined,
+  bridgingTokens: TradingApi.GetSwappableTokensResponse['tokens'] | undefined,
   portfolioBalancesById?: Record<string, PortfolioBalance>,
 ): TokenOption[] | undefined {
   const { chains: enabledChainIds } = useEnabledChains()

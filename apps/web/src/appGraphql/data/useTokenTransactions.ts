@@ -11,6 +11,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import i18n from 'uniswap/src/i18n'
 
 export enum TokenTransactionType {
@@ -40,6 +41,8 @@ export function useTokenTransactions({
   chainId: UniverseChainId
   filter?: TokenTransactionType[]
 }) {
+  const skipV3V4Solana = isSVMChain(chainId) // Solana token txs data are surfaced via Gql Token.V2Transactions
+
   const {
     data: dataV4,
     loading: loadingV4,
@@ -51,6 +54,7 @@ export function useTokenTransactions({
       chain: toGraphQLChain(chainId),
       first: TokenTransactionDefaultQuerySize,
     },
+    skip: skipV3V4Solana,
   })
   const {
     data: dataV3,
@@ -63,6 +67,7 @@ export function useTokenTransactions({
       chain: toGraphQLChain(chainId),
       first: TokenTransactionDefaultQuerySize,
     },
+    skip: skipV3V4Solana,
   })
   const {
     data: dataV2,

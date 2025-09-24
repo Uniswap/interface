@@ -1,11 +1,16 @@
-import { useConnect } from 'hooks/useConnect'
-import { useCallback } from 'react'
+import {
+  ConnectionStatus,
+  updateConnectionState,
+  useConnectionState,
+} from 'features/wallet/connection/connectors/state'
+import { useConnectWallet } from 'features/wallet/connection/hooks/useConnectWallet'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { Button, Flex, styled } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useEvent } from 'utilities/src/react/hooks'
 
 const Wrapper = styled(Flex, {
   row: false,
@@ -27,26 +32,28 @@ const AlertTriangleIcon = styled(AlertTriangle, {
 })
 
 export default function ConnectionErrorView() {
-  const connection = useConnect() // TODO(WEB-8088): use new connection state here
+  const { status, error, lastConnectedWalletMeta } = useConnectionState()
 
-  const retry = useCallback(() => {
-    const connector = connection.variables?.connector
-    connection.reset()
+  const resetConnection = useEvent(() => {
+    updateConnectionState({
+      status: ConnectionStatus.Idle,
+      error: undefined,
+      lastConnectedWalletMeta: undefined,
+    })
+  })
 
-    if (!connector) {
-      return
+  const connectWallet = useConnectWallet()
+
+  const retry = useEvent(() => {
+    resetConnection()
+
+    if (lastConnectedWalletMeta) {
+      connectWallet(lastConnectedWalletMeta)
     }
+  })
 
-    connection.connect({ connector })
-  }, [connection])
-
-  return connection.error ? (
-    <Modal
-      name={ModalName.ConnectionError}
-      isModalOpen={Boolean(connection.error)}
-      onClose={connection.reset}
-      padding={0}
-    >
+  return status === ConnectionStatus.Idle && error ? (
+    <Modal name={ModalName.ConnectionError} isModalOpen={Boolean(error)} onClose={resetConnection} padding={0}>
       <Wrapper>
         <AlertTriangleIcon />
         <ThemedText.HeadlineSmall marginBottom="8px">
@@ -66,7 +73,7 @@ export default function ConnectionErrorView() {
             p="$none"
             mt="$spacing20"
             // Reset connection to prevent being stuck in an error state
-            onPress={connection.reset}
+            onPress={resetConnection}
           >
             <Trans i18nKey="common.close" />
           </Button>

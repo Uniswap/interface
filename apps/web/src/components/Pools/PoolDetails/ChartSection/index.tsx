@@ -1,7 +1,7 @@
 import { PoolData } from 'appGraphql/data/pools/usePoolData'
 import { gqlToCurrency, TimePeriod, toHistoryDuration } from 'appGraphql/data/util'
 import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
+import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { TickTooltipContent } from 'components/Charts/ActiveLiquidityChart/TickTooltip'
 import { ChartHeader } from 'components/Charts/ChartHeader'
@@ -28,6 +28,7 @@ import {
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { useAtomValue } from 'jotai/utils'
 import styled, { useTheme } from 'lib/styled-components'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
@@ -41,7 +42,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
 
 const PDP_CHART_HEIGHT_PX = 356
@@ -307,26 +308,26 @@ function PriceChart({
     [data, stale, tokenFormatType],
   )
 
-  const { price } = useUSDCPrice(baseCurrency)
   const lastPrice = data[data.length - 1]
+  const price = useUSDCValue(tryParseCurrencyAmount(lastPrice.value.toString(), quoteCurrency))
   return (
     <Chart height={PDP_CHART_HEIGHT_PX} Model={PriceChartModel} params={params}>
       {(crosshairData) => {
         const displayValue = crosshairData ?? lastPrice
-        const currencyBAmountRaw = Math.floor(
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          (displayValue?.value ?? displayValue.close) * 10 ** baseCurrency.decimals,
-        )
         const priceDisplay = (
           <PriceDisplayContainer>
             <ChartPriceText>
               {`1 ${baseCurrency.symbol} = ${formatCurrencyAmount({
-                value: CurrencyAmount.fromRawAmount(baseCurrency, currencyBAmountRaw),
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                value: tryParseCurrencyAmount((displayValue?.value ?? displayValue.close).toString(), baseCurrency),
               })} 
             ${quoteCurrency.symbol}`}
             </ChartPriceText>
             <ChartPriceText color="neutral2">
-              {price ? '(' + convertFiatAmountFormatted(price.toSignificant(), NumberType.FiatTokenPrice) + ')' : ''}
+              {/* the usd price is only calculated for the most recent data point so hide it when selecting a crosshair */}
+              {price && !crosshairData
+                ? '(' + convertFiatAmountFormatted(price.toSignificant(), NumberType.FiatTokenPrice) + ')'
+                : ''}
             </ChartPriceText>
           </PriceDisplayContainer>
         )

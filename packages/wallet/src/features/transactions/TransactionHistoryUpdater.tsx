@@ -12,13 +12,13 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { parseDataResponseToTransactionDetails } from 'uniswap/src/features/activity/parseRestResponse'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { selectLastTxNotificationUpdate } from 'uniswap/src/features/notifications/selectors'
+import { selectLastTxNotificationUpdate } from 'uniswap/src/features/notifications/slice/selectors'
 import {
   pushNotification,
   setLastTxNotificationUpdate,
   setNotificationStatus,
-} from 'uniswap/src/features/notifications/slice'
-import { ReceiveCurrencyTxNotification, ReceiveNFTNotification } from 'uniswap/src/features/notifications/types'
+} from 'uniswap/src/features/notifications/slice/slice'
+import { ReceiveCurrencyTxNotification, ReceiveNFTNotification } from 'uniswap/src/features/notifications/slice/types'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/portfolio/portfolioUpdates/constants'
 import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'

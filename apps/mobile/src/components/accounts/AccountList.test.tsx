@@ -21,6 +21,15 @@ const defaultProps = {
   onClose: jest.fn(),
 }
 
+// Skip entering animation of AccountIcon
+jest.mock('react-native-reanimated', () => {
+  const Reanimated = require('react-native-reanimated/mock')
+
+  Reanimated.Layout = { duration: (): object => ({}) }
+
+  return Reanimated
+})
+
 describe(AccountList, () => {
   it('renders without error', async () => {
     const tree = render(<AccountList {...defaultProps} accounts={[ACCOUNT]} />, {

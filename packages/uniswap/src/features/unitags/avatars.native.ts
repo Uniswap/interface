@@ -1,7 +1,10 @@
+import {
+  type SignMessageFunc,
+  UnitagAvatarUploadCredentials,
+  UnitagGetAvatarUploadUrlResponse,
+  UnitagsApiClient,
+} from '@universe/api'
 import { Platform } from 'react-native'
-import { getUnitagAvatarUploadUrl, updateUnitagMetadata } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
-import { SignMessageFunc } from 'uniswap/src/data/utils'
-import { UnitagAvatarUploadCredentials, UnitagGetAvatarUploadUrlResponse } from 'uniswap/src/features/unitags/types'
 import { logger } from 'utilities/src/logger/logger'
 
 export function isLocalFileUri(imageUri: string): boolean {
@@ -94,7 +97,7 @@ export async function uploadAndUpdateAvatarAfterClaim({
 }): Promise<{ success: boolean }> {
   try {
     // First get pre-signedUrl and s3UploadFields from the backend
-    const avatarUploadUrlResponse = await getUnitagAvatarUploadUrl({
+    const avatarUploadUrlResponse = await UnitagsApiClient.getUnitagAvatarUploadUrl({
       data: { username },
       address,
       signMessage,
@@ -112,7 +115,7 @@ export async function uploadAndUpdateAvatarAfterClaim({
     }
 
     // Then update profile metadata with the image url
-    await updateUnitagMetadata({
+    await UnitagsApiClient.updateUnitagMetadata({
       username,
       data: {
         metadata: {

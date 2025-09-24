@@ -112,7 +112,7 @@ export function getPollingIntervalByBlocktime(chainId?: UniverseChainId): Pollin
   return isMainnetChainId(chainId) ? PollingInterval.Fast : PollingInterval.LightningMcQueen
 }
 
-export function fromUniswapWebAppLink(network: string | null): UniverseChainId | null {
+export function fromUniswapWebAppLink(network: string | null): UniverseChainId {
   switch (network) {
     case Chain.Ethereum.toLowerCase():
       return UniverseChainId.Mainnet
@@ -212,12 +212,10 @@ export function getEnabledChains({
   includeTestnets = false,
   isTestnetModeEnabled,
   featureFlaggedChainIds,
-  connectedWalletChainIds,
 }: {
   platform?: Platform
   isTestnetModeEnabled: boolean
   featureFlaggedChainIds: UniverseChainId[]
-  connectedWalletChainIds?: UniverseChainId[]
   includeTestnets?: boolean
 }): EnabledChainsInfo {
   const enabledChainInfos = ORDERED_CHAINS.filter((chainInfo) => {
@@ -233,11 +231,6 @@ export function getEnabledChains({
 
     // Filter by feature flags
     if (!featureFlaggedChainIds.includes(chainInfo.id)) {
-      return false
-    }
-
-    // Filter by connected wallet chains if provided
-    if (connectedWalletChainIds && !connectedWalletChainIds.includes(chainInfo.id)) {
       return false
     }
 

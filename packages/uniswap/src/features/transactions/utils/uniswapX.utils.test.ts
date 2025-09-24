@@ -1,4 +1,4 @@
-import { OrderStatus, OrderType, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TradingApi } from '@universe/api'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   TransactionOriginType,
@@ -15,38 +15,41 @@ import {
 describe('UniswapX Utils', () => {
   describe('convertOrderTypeToRouting', () => {
     it.each([
-      [OrderType.PRIORITY, Routing.PRIORITY],
-      [OrderType.DUTCH_V2, Routing.DUTCH_V2],
-      [OrderType.DUTCH_V3, Routing.DUTCH_V3],
-      [OrderType.DUTCH, Routing.DUTCH_LIMIT],
-      [OrderType.DUTCH_LIMIT, Routing.DUTCH_LIMIT],
+      [TradingApi.OrderType.PRIORITY, TradingApi.Routing.PRIORITY],
+      [TradingApi.OrderType.DUTCH_V2, TradingApi.Routing.DUTCH_V2],
+      [TradingApi.OrderType.DUTCH_V3, TradingApi.Routing.DUTCH_V3],
+      [TradingApi.OrderType.DUTCH, TradingApi.Routing.DUTCH_LIMIT],
+      [TradingApi.OrderType.DUTCH_LIMIT, TradingApi.Routing.DUTCH_LIMIT],
     ])('should convert %s to %s', (input, expected) => {
       expect(convertOrderTypeToRouting(input)).toBe(expected)
     })
   })
 
   describe('convertOrderTypeToRouting invalid input', () => {
-    it.each([['UNKNOWN' as OrderType, Routing.DUTCH_LIMIT]])('should convert %s to %s', (input, expected) => {
-      expect(convertOrderTypeToRouting(input)).toBe(expected)
-    })
+    it.each([['UNKNOWN' as TradingApi.OrderType, TradingApi.Routing.DUTCH_LIMIT]])(
+      'should convert %s to %s',
+      (input, expected) => {
+        expect(convertOrderTypeToRouting(input)).toBe(expected)
+      },
+    )
   })
 
   describe('convertOrderStatusToTransactionStatus', () => {
     it.each([
-      [OrderStatus.FILLED, TransactionStatus.Success],
-      [OrderStatus.OPEN, TransactionStatus.Pending],
-      [OrderStatus.EXPIRED, TransactionStatus.Expired],
-      [OrderStatus.ERROR, TransactionStatus.Failed],
-      [OrderStatus.CANCELLED, TransactionStatus.Canceled],
-      [OrderStatus.INSUFFICIENT_FUNDS, TransactionStatus.InsufficientFunds],
-      [OrderStatus.UNVERIFIED, TransactionStatus.Unknown],
+      [TradingApi.OrderStatus.FILLED, TransactionStatus.Success],
+      [TradingApi.OrderStatus.OPEN, TransactionStatus.Pending],
+      [TradingApi.OrderStatus.EXPIRED, TransactionStatus.Expired],
+      [TradingApi.OrderStatus.ERROR, TransactionStatus.Failed],
+      [TradingApi.OrderStatus.CANCELLED, TransactionStatus.Canceled],
+      [TradingApi.OrderStatus.INSUFFICIENT_FUNDS, TransactionStatus.InsufficientFunds],
+      [TradingApi.OrderStatus.UNVERIFIED, TransactionStatus.Unknown],
     ])('should convert %s to %s', (input, expected) => {
       expect(convertOrderStatusToTransactionStatus(input)).toBe(expected)
     })
   })
 
   describe('convertOrderStatusToTransactionStatus invalid input', () => {
-    it.each([['UNKNOWN_STATUS' as OrderStatus, TransactionStatus.Unknown]])(
+    it.each([['UNKNOWN_STATUS' as TradingApi.OrderStatus, TransactionStatus.Unknown]])(
       'should convert %s to %s',
       (input, expected) => {
         expect(convertOrderStatusToTransactionStatus(input)).toBe(expected)
@@ -58,7 +61,7 @@ describe('UniswapX Utils', () => {
     const mockLimitOrder: UniswapXOrderDetails = {
       id: 'test-limit-order',
       chainId: UniverseChainId.Mainnet,
-      routing: Routing.DUTCH_LIMIT,
+      routing: TradingApi.Routing.DUTCH_LIMIT,
       orderHash: '0x123',
       from: '0xabc',
       status: TransactionStatus.Pending,
@@ -78,7 +81,7 @@ describe('UniswapX Utils', () => {
 
     const mockRegularUniswapXOrder: UniswapXOrderDetails = {
       ...mockLimitOrder,
-      routing: Routing.DUTCH_V2,
+      routing: TradingApi.Routing.DUTCH_V2,
     }
 
     it('should return true for limit orders', () => {

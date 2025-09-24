@@ -1,17 +1,17 @@
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { getContract } from 'utilities/src/contracts/getContract'
 
 jest.mock('@ethersproject/contracts', () => ({
   Contract: jest.fn(),
 }))
 
-jest.mock('utilities/src/addresses', () => ({
-  isAddress: jest.fn(),
+jest.mock('utilities/src/addresses/evm/evm', () => ({
+  isEVMAddress: jest.fn(),
 }))
-const addressMock = isAddress as jest.Mock
+const addressMock = isEVMAddress as jest.Mock
 
 describe('getContract', () => {
   const mockProvider = {
@@ -34,7 +34,7 @@ describe('getContract', () => {
     expect(() => getContract({ address: 'invalid_address', ABI: mockABI, provider: mockProvider })).toThrow(
       `Invalid 'address' parameter 'invalid_address'.`,
     )
-    expect(isAddress).toHaveBeenCalledWith('invalid_address')
+    expect(isEVMAddress).toHaveBeenCalledWith('invalid_address')
   })
 
   it('should throw an error if the address is AddressZero', () => {

@@ -5,7 +5,6 @@ import { TransactionScreen } from 'uniswap/src/features/transactions/components/
 import type { WarningService } from 'uniswap/src/features/transactions/swap/services/warningService'
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import type { logger } from 'utilities/src/logger/logger'
@@ -43,7 +42,7 @@ export function createPrepareSwap(
 
 interface GetActionContext {
   swapRedirectCallback?: SwapRedirectFn
-  activeAccount?: AccountDetails
+  isConnected: boolean
   onConnectWallet?: () => void
   isViewOnlyWallet: boolean
   isInterfaceWrap: boolean
@@ -94,7 +93,7 @@ type CallbackArgs = Record<
 function createGetAction(ctx: GetActionContext): (args: CallbackArgs) => ReviewAction {
   const {
     swapRedirectCallback,
-    activeAccount,
+    isConnected,
     onConnectWallet,
     isViewOnlyWallet,
     isInterfaceWrap,
@@ -120,7 +119,7 @@ function createGetAction(ctx: GetActionContext): (args: CallbackArgs) => ReviewA
         type: ReviewActionType.REDIRECT,
         payload: redirectPayload,
       }
-    } else if (!activeAccount && onConnectWallet) {
+    } else if (!isConnected && onConnectWallet) {
       return { type: ReviewActionType.CONNECT_WALLET }
     } else if (isViewOnlyWallet) {
       return { type: ReviewActionType.SHOW_VIEW_ONLY }

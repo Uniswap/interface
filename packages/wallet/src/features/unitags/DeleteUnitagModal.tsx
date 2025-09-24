@@ -1,3 +1,4 @@
+import { UnitagsApiClient } from '@universe/api'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -5,10 +6,9 @@ import { Button, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { deleteUnitag } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
@@ -52,7 +52,7 @@ export function DeleteUnitagModal({
   const onDelete = async (): Promise<void> => {
     try {
       setIsDeleting(true)
-      const deleteResponse = await deleteUnitag({
+      const deleteResponse = await UnitagsApiClient.deleteUnitag({
         data: { username: unitag },
         address: account.address,
         signMessage: generateSignerFunc(account, signerManager),

@@ -39,11 +39,19 @@ export default function Portfolio() {
 
   return (
     <Trace logImpression page={InterfacePageName.PortfolioPage}>
-      <Flex flexDirection="column" gap="$spacing24" maxWidth="$maxWidth1200" width="100%">
+      <Flex
+        flexDirection="column"
+        gap="$spacing40"
+        maxWidth="$maxWidth1200"
+        width="100%"
+        p="$spacing24"
+        pt="$none"
+        position="relative"
+      >
         <PortfolioHeader />
 
         {/* Animated Content Area - All routes show same content, filtered by chain */}
-        <Flex flex={1} position="relative" overflow="hidden">
+        <Flex flex={1} position="relative">
           <TransitionItem childKey={pathname} animationType={animationType} animation="fast">
             {renderPortfolioContent(tab)}
           </TransitionItem>

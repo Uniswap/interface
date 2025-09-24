@@ -17,8 +17,8 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
 import { getIsNftHidden, getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectNftsVisibility } from 'uniswap/src/features/visibility/selectors'
@@ -187,6 +187,7 @@ export function useNFTContextMenuItems({
         }),
         onPress: openExplorerLink,
         Icon: ExplorerLogo,
+        actionType: 'external-link',
       })
     }
 
@@ -195,6 +196,7 @@ export function useNFTContextMenuItems({
         label: t('common.opensea.link'),
         onPress: openOpenseaLink,
         Icon: Opensea,
+        actionType: 'external-link',
       })
     }
 

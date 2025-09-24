@@ -1,10 +1,10 @@
 import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
-import Identicon from 'components/Identicon'
 import { Trans } from 'react-i18next'
 import { CopyHelper } from 'theme/components/CopyHelper'
 import { Flex, QRCodeDisplay, Text, useSporeColors } from 'ui/src'
 import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useAddressColorProps } from 'uniswap/src/features/address/color'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useENSName } from 'uniswap/src/features/ens/api'
@@ -53,7 +53,7 @@ export function AddressQRCode({ accountAddress }: { accountAddress: Address }) {
             backgroundColor="$surface1"
             borderRadius="$roundedFull"
           >
-            <Identicon size={UNICON_SIZE} account={accountAddress} />
+            <AccountIcon size={UNICON_SIZE} address={accountAddress} />
           </Flex>
         </QRCodeDisplay>
         <Text color="$neutral2" textAlign="center" variant="body4" maxWidth={QR_CODE_SIZE} alignSelf="center">

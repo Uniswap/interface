@@ -28,7 +28,12 @@ export function BottomSheetContextProvider({
   return <BottomSheetContext.Provider value={state}>{children}</BottomSheetContext.Provider>
 }
 
-export const useBottomSheetContext = (): BottomSheetContextState => {
+export const useBottomSheetContext = ({
+  forceSafeReturn,
+  // Use forceSafeReturn to conditionally use context with feature flags
+}: {
+  forceSafeReturn?: boolean
+} = {}): BottomSheetContextState => {
   const bottomSheetContext = useContext(BottomSheetContext)
 
   if (isWeb) {
@@ -36,6 +41,10 @@ export const useBottomSheetContext = (): BottomSheetContextState => {
   }
 
   if (bottomSheetContext === undefined) {
+    if (forceSafeReturn) {
+      return { isSheetReady: true }
+    }
+
     throw new Error('`useBottomSheetContext` must be used inside of `BottomSheetContextProvider`')
   }
 

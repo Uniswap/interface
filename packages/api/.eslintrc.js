@@ -1,7 +1,17 @@
 module.exports = {
   root: true,
   extends: ['@uniswap/eslint-config/native', '@uniswap/eslint-config/webPlatform'],
-  ignorePatterns: ['node_modules', '.turbo', '.eslintrc.js', 'codegen.ts', '.nx'],
+  ignorePatterns: [
+    'node_modules',
+    '.turbo',
+    '.eslintrc.js',
+    'vitest.config.ts',
+    'codegen.ts',
+    '.nx',
+    'scripts',
+    'dist',
+    'src/**/__generated__',
+  ],
   parserOptions: {
     project: 'tsconfig.lint.json',
     tsconfigRootDir: __dirname,

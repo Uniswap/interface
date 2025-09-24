@@ -1,11 +1,11 @@
+import { TradingApi } from '@universe/api'
 import { Signer } from 'ethers/lib/ethers'
 import { useCallback } from 'react'
 import { useSigner } from 'uniswap/src/contexts/UniswapContext'
-import { NullablePermit } from 'uniswap/src/data/tradingApi/__generated__'
 import { signTypedData } from 'uniswap/src/features/transactions/signing'
 import { isInterface } from 'utilities/src/platform'
 
-async function getSignature(permitData: NullablePermit, signer: Signer): Promise<string | undefined> {
+async function getSignature(permitData: TradingApi.NullablePermit, signer: Signer): Promise<string | undefined> {
   const { domain, types, values } = permitData || {}
   if (!domain || !types || !values) {
     return undefined
@@ -13,7 +13,7 @@ async function getSignature(permitData: NullablePermit, signer: Signer): Promise
   return signTypedData({ domain, types, value: values, signer })
 }
 
-export type PresignPermitFn = (permitData: NullablePermit) => Promise<string | undefined>
+export type PresignPermitFn = (permitData: TradingApi.NullablePermit) => Promise<string | undefined>
 
 /**
  * Returns a signing utility that can be used to sign permits needed for legacy /swap calldata fetching,
@@ -23,7 +23,7 @@ export function usePresignPermit(): PresignPermitFn | undefined {
   const signer = useSigner()
 
   const presignPermit = useCallback(
-    async (permitData: NullablePermit) => {
+    async (permitData: TradingApi.NullablePermit) => {
       if (!signer) {
         return undefined
       }

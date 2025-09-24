@@ -4,9 +4,13 @@ import { getDeviceLocales } from 'utilities/src/device/locales.web'
 
 // Mock the chrome utilities to return jest-chrome
 // Needed because the jest runner doesn't currently support platform file-splitting
-jest.mock('utilities/src/chrome/chrome', () => ({
-  getChromeWithThrow: (): typeof chrome => chrome,
-}))
+jest.mock('utilities/src/chrome/chrome', () => {
+  // Import jest-chrome inside the mock factory to avoid out-of-scope reference
+  const { chrome: mockChrome } = require('jest-chrome')
+  return {
+    getChromeWithThrow: (): typeof chrome => mockChrome,
+  }
+})
 
 describe(getDeviceLocales, () => {
   const MOCK_LANGUAGE = 'es-ES'

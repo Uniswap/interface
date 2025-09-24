@@ -15,6 +15,7 @@ import {
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 
 const DEFAULT_QUERY_SIZE = 20
 
@@ -30,6 +31,8 @@ export function usePoolsFromTokenAddress({
   isNative?: boolean
 }) {
   const chain = toGraphQLChain(chainId)
+  const skipPoolQueries = isSVMChain(chainId)
+
   const {
     loading: loadingV4,
     error: errorV4,
@@ -41,6 +44,7 @@ export function usePoolsFromTokenAddress({
       tokenAddress: isNative ? DEFAULT_NATIVE_ADDRESS : tokenAddress,
       chain,
     },
+    skip: skipPoolQueries,
   })
 
   const {
@@ -54,6 +58,7 @@ export function usePoolsFromTokenAddress({
       tokenAddress,
       chain,
     },
+    skip: skipPoolQueries,
   })
 
   const {
@@ -67,7 +72,7 @@ export function usePoolsFromTokenAddress({
       tokenAddress,
       chain,
     },
-    skip: !chainId,
+    skip: skipPoolQueries,
   })
   const loading = loadingV4 || loadingV3 || loadingV2
 

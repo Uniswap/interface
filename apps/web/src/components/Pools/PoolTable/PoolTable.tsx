@@ -548,6 +548,7 @@ export function PoolsTable({
       data={poolTableValues}
       loading={loading}
       error={error}
+      v2={false}
       loadMore={loadMore}
       maxWidth={maxWidth}
       maxHeight={maxHeight}

@@ -8,10 +8,15 @@
     "src/**/*.test.tsx"
   ],
   "compilerOptions": {
-    "composite": true,
-    "importHelpers": true,
-    "noEmit": true,
-    "rootDir": "src",
-    "types": ["chrome"]
-  }
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "types": ["chrome", "node"],
+    "paths": {}
+  },
+  "types": ["vitest/globals"],
+  "references": [
+    {
+      "path": "../utilities"
+    }
+  ]
 }

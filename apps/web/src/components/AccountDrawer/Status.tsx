@@ -1,5 +1,5 @@
 import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
-import StatusIcon from 'components/Identicon/StatusIcon'
+import StatusIcon from 'components/StatusIcon'
 import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components'
 import { CopyHelper } from 'theme/components/CopyHelper'

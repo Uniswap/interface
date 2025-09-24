@@ -1,12 +1,6 @@
 import { TransactionRequest } from '@ethersproject/providers'
-import { fetchSwap, fetchSwap5792, fetchSwap7702 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import {
-  CreateSwap5792Response,
-  CreateSwap7702Response,
-  CreateSwapRequest,
-  CreateSwapResponse,
-} from 'uniswap/src/data/tradingApi/__generated__'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
+import { GasEstimate, TradingApi } from '@universe/api'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { tradingApiToUniverseChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
@@ -19,10 +13,10 @@ export type SwapData = {
   includesDelegation?: boolean
 }
 export interface EVMSwapRepository {
-  fetchSwapData: (params: CreateSwapRequest) => Promise<SwapData>
+  fetchSwapData: (params: TradingApi.CreateSwapRequest) => Promise<SwapData>
 }
 
-export function convertSwapResponseToSwapData(response: CreateSwapResponse): SwapData {
+export function convertSwapResponseToSwapData(response: TradingApi.CreateSwapResponse): SwapData {
   return {
     requestId: response.requestId,
     transactions: [response.swap],
@@ -33,12 +27,13 @@ export function convertSwapResponseToSwapData(response: CreateSwapResponse): Swa
 
 export function createLegacyEVMSwapRepository(): EVMSwapRepository {
   return {
-    fetchSwapData: async (params: CreateSwapRequest) => convertSwapResponseToSwapData(await fetchSwap(params)),
+    fetchSwapData: async (params: TradingApi.CreateSwapRequest) =>
+      convertSwapResponseToSwapData(await TradingApiClient.fetchSwap(params)),
   }
 }
 
 export function convertSwap7702ResponseToSwapData(
-  response: CreateSwap7702Response,
+  response: TradingApi.CreateSwap7702Response,
   includesDelegation?: boolean,
 ): SwapData {
   return {
@@ -53,10 +48,10 @@ export function create7702EVMSwapRepository(ctx: {
   getSwapDelegationInfo: (chainId?: UniverseChainId) => SwapDelegationInfo
 }): EVMSwapRepository {
   const { getSwapDelegationInfo } = ctx
-  async function fetchSwapData(params: CreateSwapRequest): Promise<SwapData> {
+  async function fetchSwapData(params: TradingApi.CreateSwapRequest): Promise<SwapData> {
     const chainId = tradingApiToUniverseChainId(params.quote.chainId)
     const smartContractDelegationInfo = getSwapDelegationInfo(chainId)
-    const response = await fetchSwap7702({
+    const response = await TradingApiClient.fetchSwap7702({
       ...params,
       smartContractDelegationAddress: smartContractDelegationInfo.delegationAddress,
     })
@@ -67,7 +62,7 @@ export function create7702EVMSwapRepository(ctx: {
   return { fetchSwapData }
 }
 
-export function convertSwap5792ResponseToSwapData(response: CreateSwap5792Response): SwapData {
+export function convertSwap5792ResponseToSwapData(response: TradingApi.CreateSwap5792Response): SwapData {
   return {
     requestId: response.requestId,
     transactions: response.calls.map((c) => ({ ...c, chainId: response.chainId })),
@@ -77,6 +72,7 @@ export function convertSwap5792ResponseToSwapData(response: CreateSwap5792Respon
 
 export function create5792EVMSwapRepository(): EVMSwapRepository {
   return {
-    fetchSwapData: async (params: CreateSwapRequest) => convertSwap5792ResponseToSwapData(await fetchSwap5792(params)),
+    fetchSwapData: async (params: TradingApi.CreateSwapRequest) =>
+      convertSwap5792ResponseToSwapData(await TradingApiClient.fetchSwap5792(params)),
   }
 }

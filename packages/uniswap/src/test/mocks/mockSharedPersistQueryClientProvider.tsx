@@ -1,6 +1,6 @@
 import { QueryClientProvider } from '@tanstack/react-query'
+import { SharedQueryClient } from '@universe/api'
 import { PropsWithChildren } from 'react'
-import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 
 export const mockSharedPersistQueryClientProvider = {
   SharedPersistQueryClientProvider: jest.fn().mockImplementation(MockedSharedPersistQueryClientProvider),

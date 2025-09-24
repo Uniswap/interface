@@ -1,7 +1,7 @@
 import { StreamResponse, Transport, UnaryResponse } from '@connectrpc/connect'
 import { ConnectTransportOptions, createConnectTransport } from '@connectrpc/connect-web'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { BASE_UNISWAP_HEADERS } from 'uniswap/src/data/apiClients/createApiClient'
+import { BASE_UNISWAP_HEADERS } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
 import { isMobileApp } from 'utilities/src/platform'
 
 export const createConnectTransportWithDefaults = (options: Partial<ConnectTransportOptions> = {}): Transport =>

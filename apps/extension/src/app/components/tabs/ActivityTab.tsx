@@ -21,7 +21,7 @@ export const ActivityTab = memo(function _ActivityTab({
   return (
     <ScrollView showsVerticalScrollIndicator={false} width="100%">
       {/* `sectionData` will be either an array of transactions or an array of loading skeletons */}
-      {(sectionData ?? []).map((item, index) => renderActivityItem({ item, index }))}
+      {sectionData.map((item, index) => renderActivityItem({ item, index }))}
     </ScrollView>
   )
 })

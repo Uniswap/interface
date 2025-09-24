@@ -65,6 +65,7 @@ function getIsSyncing() {
 export function useLiquidityUrlState() {
   const { defaultChainId } = useEnabledChains()
   const [isMigrated, setIsMigrated] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
 
   // Step uses push history for browser navigation
   const [historyState, setHistoryState] = useQueryState(
@@ -115,6 +116,8 @@ export function useLiquidityUrlState() {
   const {
     currencyALoaded,
     currencyBLoaded,
+    loadingA,
+    loadingB,
     loading: currencyValidationLoading,
   } = useCurrencyValidation({
     currencyA,
@@ -155,7 +158,17 @@ export function useLiquidityUrlState() {
     [setReplaceState, isMigrated],
   )
 
-  const loading = currencyValidationLoading || !isMigrated
+  useEffect(() => {
+    if (isMounted) {
+      return
+    }
+
+    if (!currencyValidationLoading) {
+      setIsMounted(true)
+    }
+  }, [currencyValidationLoading, isMounted])
+
+  const loading = (currencyValidationLoading || !isMigrated) && !isMounted
 
   return useMemo(() => {
     return {
@@ -166,6 +179,8 @@ export function useLiquidityUrlState() {
       fee,
       hook,
       loading,
+      loadingA,
+      loadingB,
       priceRangeState,
       depositState,
       flowStep: historyState,
@@ -181,6 +196,8 @@ export function useLiquidityUrlState() {
     hook,
     defaultInitialToken,
     loading,
+    loadingA,
+    loadingB,
     priceRangeState,
     depositState,
     historyState,

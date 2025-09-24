@@ -3,7 +3,7 @@ import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/
 import { useOpenLimitOrders, usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool } from 'components/Icons/Pool'
-import { ExtensionRequestMethods, useUniswapExtensionConnector } from 'components/WalletModal/useConnectorWithId'
+import { ExtensionRequestMethods, useUniswapExtensionRequest } from 'components/WalletModal/useWagmiConnectorWithId'
 import { useUpdateAtom } from 'jotai/utils'
 import { useTheme } from 'lib/styled-components'
 import { useEffect, useState } from 'react'
@@ -47,7 +47,7 @@ const DeepLinkButton = ({ Icon, Label, onPress }: { Icon: JSX.Element; Label: st
 export function ExtensionDeeplinks({ account }: { account: string }) {
   const { t } = useTranslation()
   const theme = useTheme()
-  const uniswapExtensionConnector = useUniswapExtensionConnector()
+  const uniswapExtensionRequest = useUniswapExtensionRequest()
   const accountDrawer = useAccountDrawer()
   const setMenu = useUpdateAtom(miniPortfolioMenuStateAtom)
   const { openLimitOrders } = useOpenLimitOrders(account)
@@ -65,7 +65,7 @@ export function ExtensionDeeplinks({ account }: { account: string }) {
     positionStatuses: [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE, PositionStatus.CLOSED],
   })
 
-  if (!uniswapExtensionConnector) {
+  if (!uniswapExtensionRequest) {
     return null
   }
 
@@ -75,7 +75,7 @@ export function ExtensionDeeplinks({ account }: { account: string }) {
         Icon={<Image height={iconSizes.icon20} source={UNISWAP_LOGO} width={iconSizes.icon20} />}
         Label={t('extension.open')}
         onPress={() => {
-          uniswapExtensionConnector.extensionRequest(ExtensionRequestMethods.OPEN_SIDEBAR, 'Tokens')
+          uniswapExtensionRequest(ExtensionRequestMethods.OPEN_SIDEBAR, 'Tokens')
           accountDrawer.close()
         }}
       />
@@ -88,7 +88,7 @@ export function ExtensionDeeplinks({ account }: { account: string }) {
         }
         Label={t('common.activity')}
         onPress={() => {
-          uniswapExtensionConnector.extensionRequest(ExtensionRequestMethods.OPEN_SIDEBAR, 'Activity')
+          uniswapExtensionRequest(ExtensionRequestMethods.OPEN_SIDEBAR, 'Activity')
           accountDrawer.close()
           setActivityUnread(false)
         }}

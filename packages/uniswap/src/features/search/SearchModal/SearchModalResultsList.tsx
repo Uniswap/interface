@@ -1,3 +1,5 @@
+import { ContentStyle } from '@shopify/flash-list'
+import { GqlResult } from '@universe/api'
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNftSearchResultsToNftCollectionOptions } from 'uniswap/src/components/lists/items/nfts/useNftSearchResultsToNftCollectionOptions'
@@ -8,7 +10,6 @@ import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/componen
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { useCollectionSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSearchPools } from 'uniswap/src/features/dataApi/searchPools'
 import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
@@ -182,6 +183,8 @@ interface SearchModalResultsListProps {
   debouncedParsedSearchFilter: string | null
   activeTab: SearchTab
   onSelect?: SearchModalListProps['onSelect']
+  renderedInModal?: boolean
+  contentContainerStyle?: ContentStyle
 }
 
 function _SearchModalResultsList({
@@ -192,6 +195,8 @@ function _SearchModalResultsList({
   debouncedParsedSearchFilter,
   activeTab,
   onSelect,
+  renderedInModal,
+  contentContainerStyle,
 }: SearchModalResultsListProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -228,6 +233,8 @@ function _SearchModalResultsList({
         searchChainFilter: chainFilter,
         searchTabFilter: activeTab,
       }}
+      renderedInModal={renderedInModal}
+      contentContainerStyle={contentContainerStyle}
       onSelect={onSelect}
     />
   )

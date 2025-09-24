@@ -7,10 +7,11 @@ import {
   DutchOrder,
   getCancelSingleParams,
 } from '@uniswap/uniswapx-sdk'
+import { TradingApi } from '@universe/api'
 import { Contract, providers } from 'ethers/lib/ethers'
 import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
 import { Permit2 } from 'uniswap/src/abis/types'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
+
 import { getOrders } from 'uniswap/src/features/transactions/swap/orders'
 import { UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 
@@ -19,10 +20,10 @@ function getPermit2Contract(): Permit2 {
 }
 
 const ROUTING_TO_ORDER_CLASS = {
-  [Routing.DUTCH_V2]: CosignedV2DutchOrder,
-  [Routing.DUTCH_V3]: CosignedV3DutchOrder,
-  [Routing.PRIORITY]: CosignedPriorityOrder,
-  [Routing.DUTCH_LIMIT]: DutchOrder,
+  [TradingApi.Routing.DUTCH_V2]: CosignedV2DutchOrder,
+  [TradingApi.Routing.DUTCH_V3]: CosignedV3DutchOrder,
+  [TradingApi.Routing.PRIORITY]: CosignedPriorityOrder,
+  [TradingApi.Routing.DUTCH_LIMIT]: DutchOrder,
 } as const
 
 function getPermit2NonceForOrder({

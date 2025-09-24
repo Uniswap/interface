@@ -1,5 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
-import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { type DiscriminatedQuoteResponse } from '@universe/api'
 import { SwapFee } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { logger } from 'utilities/src/logger/logger'

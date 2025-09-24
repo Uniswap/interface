@@ -57,7 +57,7 @@ const TableCell = memo(({ cell, colors }: { cell: Cell<RowData, unknown>; colors
 
 TableCell.displayName = 'TableCell'
 
-const TableRow = ({ row }: { row: Row<RowData> }) => {
+const TableRow = ({ row, v2 = true }: { row: Row<RowData>; v2: boolean }) => {
   const analyticsContext = useTrace()
   const rowOriginal = row.original as {
     linkState: LinkProps['state']
@@ -90,10 +90,12 @@ const TableRow = ({ row }: { row: Row<RowData> }) => {
     >
       {'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
         <TableRowLink to={rowOriginal.link} state={linkState} data-testid={rowTestId}>
-          <DataRow height={rowHeight}>{cells}</DataRow>
+          <DataRow height={rowHeight} v2={v2}>
+            {cells}
+          </DataRow>
         </TableRowLink>
       ) : (
-        <DataRow height={rowHeight} data-testid={rowTestId}>
+        <DataRow height={rowHeight} data-testid={rowTestId} v2={v2}>
           {cells}
         </DataRow>
       )}
@@ -105,9 +107,10 @@ type TableBodyProps<T extends RowData = unknown> = {
   table: TanstackTable<T>
   loading?: boolean
   error?: ApolloError | boolean
+  v2: boolean
 }
 
-const TableBody = forwardRef<HTMLDivElement, TableBodyProps<RowData>>(({ table, loading, error }, ref) => {
+const TableBody = forwardRef<HTMLDivElement, TableBodyProps<RowData>>(({ table, loading, error, v2 = true }, ref) => {
   const rows = table.getRowModel().rows
   const { width: tableWidth } = useTableSize()
   const skeletonRowHeight = useMemo(
@@ -119,7 +122,7 @@ const TableBody = forwardRef<HTMLDivElement, TableBodyProps<RowData>>(({ table, 
     return (
       <>
         {Array.from({ length: 20 }, (_, rowIndex) => (
-          <DataRow key={`skeleton-row-${rowIndex}`} height={skeletonRowHeight}>
+          <DataRow key={`skeleton-row-${rowIndex}`} height={skeletonRowHeight} v2={v2}>
             {table.getAllColumns().map((column, columnIndex) => (
               <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>
                 {flexRender(column.columnDef.cell, {} as CellContext<RowData, any>)}
@@ -150,7 +153,7 @@ const TableBody = forwardRef<HTMLDivElement, TableBodyProps<RowData>>(({ table, 
   return (
     <Flex ref={ref} position="relative">
       {rows.map((row) => (
-        <TableRow key={row.id} row={row} />
+        <TableRow key={row.id} row={row} v2={v2} />
       ))}
     </Flex>
   )
@@ -168,6 +171,7 @@ export function Table<T extends RowData>({
   maxHeight,
   defaultPinnedColumns = [],
   forcePinning = false,
+  v2 = true,
 }: {
   columns: ColumnDef<T, any>[]
   data: T[]
@@ -178,6 +182,7 @@ export function Table<T extends RowData>({
   maxHeight?: number
   defaultPinnedColumns?: string[]
   forcePinning?: boolean
+  v2: boolean
 }) {
   const [loadingMore, setLoadingMore] = useState(false)
   const [showScrollRightButton, setShowScrollRightButton] = useState(false)
@@ -382,7 +387,7 @@ export function Table<T extends RowData>({
               </>
             )}
             <ScrollSyncPane group="table-sync">
-              <HeaderRow dimmed={!!error}>
+              <HeaderRow dimmed={!!error} v2={v2}>
                 {table.getFlatHeaders().map((header) => (
                   <CellContainer key={header.id} style={getCommonPinningStyles(header.column, colors)}>
                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -393,10 +398,11 @@ export function Table<T extends RowData>({
           </TableHead>
           {hasPinnedColumns && <TableScrollMask zIndex={zIndexes.default} borderBottomRightRadius="$rounded20" />}
           <ScrollSyncPane group="table-sync">
-            <TableBodyContainer maxHeight={maxHeight ? maxHeight - headerHeight : 'unset'}>
+            <TableBodyContainer maxHeight={maxHeight ? maxHeight - headerHeight : 'unset'} v2={v2}>
               <TableBody
                 loading={loading}
                 error={error}
+                v2={v2}
                 // @ts-ignore
                 table={table}
                 ref={tableBodyRef}

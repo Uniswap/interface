@@ -13,7 +13,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { Wallet } from 'uniswap/src/features/wallet/types/Wallet'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 
 function AddressDisplay({
   unitag,
@@ -79,8 +79,7 @@ export function MultiBlockchainAddressDisplay({
   const shortenedEvmAddress = shortenAddress(evmAddress)
 
   const svmAddress = wallet.svmAccount?.address
-  // TODO(WEB-8155): update shortenAddress to also take Solana addresses
-  const shortenedSvmAddress = ellipseMiddle({ str: svmAddress ?? '', charsStart: 6, charsEnd: 6 })
+  const shortenedSvmAddress = shortenAddress(svmAddress)
 
   const primaryAddress = evmAddress ?? svmAddress
   if (!primaryAddress) {

@@ -1,10 +1,10 @@
-import { useSelectAddressNotifications } from 'uniswap/src/features/notifications/hooks'
-import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { useSelectAddressNotifications } from 'uniswap/src/features/notifications/slice/hooks'
+import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { DappConnectedNotification } from 'wallet/src/features/notifications/components/DappConnectedNotification'
 import { DappDisconnectedNotification } from 'wallet/src/features/notifications/components/DappDisconnectedNotification'
 import { NotSupportedNetworkNotification } from 'wallet/src/features/notifications/components/NotSupportedNetworkNotification'
 import { PasswordChangedNotification } from 'wallet/src/features/notifications/components/PasswordChangedNotification'
-import { SharedNotificationToastRouter } from 'wallet/src/features/notifications/components/SharedNotificationToastRouter'
+import { WalletNotificationToastRouter } from 'wallet/src/features/notifications/components/SharedNotificationToastRouter'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 export function NotificationToastWrapper(): JSX.Element | null {
@@ -33,5 +33,5 @@ function NotificationToastRouter({ notification }: { notification: AppNotificati
       return <PasswordChangedNotification notification={notification} />
   }
 
-  return <SharedNotificationToastRouter notification={notification} />
+  return <WalletNotificationToastRouter notification={notification} />
 }

@@ -1,5 +1,5 @@
-import type { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { Routing, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
+import type { DiscriminatedQuoteResponse } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
 import {
   createTradeRepository,
@@ -15,7 +15,7 @@ describe('TradeRepository', () => {
   const mockParams = {
     tokenInChainId: 1,
     tokenOutChainId: 1,
-    type: TradeType.EXACT_INPUT,
+    type: TradingApi.TradeType.EXACT_INPUT,
     amount: '1000000',
     tokenIn: '0x1234',
     tokenOut: '0x5678',
@@ -26,7 +26,7 @@ describe('TradeRepository', () => {
   // Minimal mock result
   const mockResult = {
     quote: {},
-    routing: Routing.CLASSIC,
+    routing: TradingApi.Routing.CLASSIC,
     requestId: '123',
   }
 
@@ -142,7 +142,7 @@ describe('TradeRepository', () => {
 
   describe('fetchIndicativeQuote', () => {
     const indicativeParams = {
-      type: TradeType.EXACT_INPUT,
+      type: TradingApi.TradeType.EXACT_INPUT,
       amount: '1000000',
       tokenInChainId: 1,
       tokenOutChainId: 1,

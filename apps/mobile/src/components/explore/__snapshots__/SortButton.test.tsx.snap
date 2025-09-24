@@ -9,7 +9,7 @@ exports[`SortButton renders without error 1`] = `
         "backgroundColor": {
           "dynamic": {
             "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(34,34,34,0.05)",
+            "light": "rgba(19, 19, 19, 0.08)",
           },
         },
         "borderBottomLeftRadius": 20,
@@ -23,6 +23,7 @@ exports[`SortButton renders without error 1`] = `
         "paddingRight": 8,
       }
     }
+    testID="explore-sort-button"
   >
     <View
       collapsable={false}

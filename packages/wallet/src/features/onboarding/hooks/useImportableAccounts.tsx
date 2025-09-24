@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import { useQuery } from '@tanstack/react-query'
+import { UnitagsApiClient } from '@universe/api'
 import { useCallback, useMemo, useState } from 'react'
-import { fetchUnitagsByAddresses } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import {
   SelectWalletScreenDocument,
   SelectWalletScreenQuery,
@@ -101,7 +101,7 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
       variables: { ownerAddresses: addressesArray, chains: gqlChains, valueModifiers },
     })
 
-    const fetchUnitags = fetchUnitagsByAddresses({ addresses: addressesArray })
+    const fetchUnitags = UnitagsApiClient.fetchUnitagsByAddresses({ addresses: addressesArray })
 
     const [balancesResponse, unitagsResponse] = await Promise.all([fetchBalances, fetchUnitags])
 

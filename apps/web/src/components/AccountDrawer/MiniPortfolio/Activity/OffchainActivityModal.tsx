@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import {
   CancellationState,
   CancelOrdersDialog,
@@ -34,7 +35,6 @@ import { Divider } from 'theme/components/Dividers'
 import { Button, Flex, TouchableArea } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { hasTradeType } from 'uniswap/src/features/transactions/swap/utils/trade'
@@ -152,11 +152,11 @@ function getOrderTitle({
   orderStatus,
   t,
 }: {
-  routing: Routing | undefined
+  routing: TradingApi.Routing | undefined
   orderStatus: TransactionStatus
   t: TFunction
 }): string {
-  const isLimit = routing === Routing.DUTCH_LIMIT
+  const isLimit = routing === TradingApi.Routing.DUTCH_LIMIT
   switch (orderStatus) {
     case TransactionStatus.Pending:
       return isLimit ? t('common.limit.pending') : t('common.orderPending')
@@ -269,7 +269,9 @@ export function OrderContent({ order, onCancel }: { order: UniswapXOrderDetails;
       {Boolean(isLimitCancellable(order) && (order.encodedOrder || order.orderHash)) && (
         <Flex mt="$spacing12" row>
           <Button size="small" variant="default" emphasis="secondary" onPress={onCancel}>
-            {order.routing === Routing.DUTCH_LIMIT ? t('common.limit.cancel', { count: 1 }) : t('common.cancelOrder')}
+            {order.routing === TradingApi.Routing.DUTCH_LIMIT
+              ? t('common.limit.cancel', { count: 1 })
+              : t('common.cancelOrder')}
           </Button>
         </Flex>
       )}
@@ -281,13 +283,13 @@ export function OrderContent({ order, onCancel }: { order: UniswapXOrderDetails;
           <Column>
             <ThemedText.SubHeader lineHeight="24px">{t('common.insufficientBalance.error')}</ThemedText.SubHeader>
             <ThemedText.SubHeaderSmall lineHeight="20px">
-              {order.routing === Routing.DUTCH_LIMIT
+              {order.routing === TradingApi.Routing.DUTCH_LIMIT
                 ? t('account.portfolio.activity.signLimit')
                 : t('account.portfolio.activity.canceledBelow')}
             </ThemedText.SubHeaderSmall>
           </Column>
         </InsufficientFundsCopyContainer>
-      ) : order.routing === Routing.DUTCH_LIMIT ? (
+      ) : order.routing === TradingApi.Routing.DUTCH_LIMIT ? (
         <LimitDisclaimer />
       ) : null}
     </Column>

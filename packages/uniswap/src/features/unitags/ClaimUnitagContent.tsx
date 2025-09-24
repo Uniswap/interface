@@ -323,6 +323,8 @@ export function ClaimUnitagContent({
                   value={unitagInputValue}
                   width={isWeb ? '100%' : undefined}
                   minWidth={unitagNameinputMinWidth}
+                  allowFontScaling={false}
+                  maxFontSizeMultiplier={1}
                   onChangeText={onChangeTextInput}
                   onSubmitEditing={onPressContinue}
                   onLayout={getInitialUnitagNameInputWidth}
@@ -346,6 +348,8 @@ export function ClaimUnitagContent({
                     placeholderTextColor="$neutral3"
                     textAlign="left"
                     value={UNITAG_SUFFIX}
+                    allowFontScaling={false}
+                    maxFontSizeMultiplier={1}
                   />
                 </Flex>
               </Flex>

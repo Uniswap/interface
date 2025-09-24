@@ -1,6 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pool } from '@uniswap/v4-sdk'
+import { TradingApi } from '@universe/api'
 import { V3PositionInfo } from 'components/Liquidity/types'
 import { getCurrencyForProtocol, getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
 import { isInvalidPrice, isInvalidRange } from 'components/Liquidity/utils/priceRangeInfo'
@@ -20,12 +21,6 @@ import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useMigrateV3LpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useMigrateV3LpPositionCalldataQuery'
-import {
-  CheckApprovalLPRequest,
-  MigrateLPPositionRequest,
-  ProtocolItems,
-  UniversalRouterVersion,
-} from 'uniswap/src/data/tradingApi/__generated__'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
@@ -68,7 +63,7 @@ export function MigrateV3PositionTxContextProvider({
     useCreateLiquidityContext()
   const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(positionInfo.chainId)
 
-  const migrateLiquidityApprovalParams: CheckApprovalLPRequest | undefined = useMemo(() => {
+  const migrateLiquidityApprovalParams: TradingApi.CheckApprovalLPRequest | undefined = useMemo(() => {
     if (!account.address) {
       return undefined
     }
@@ -76,7 +71,7 @@ export function MigrateV3PositionTxContextProvider({
       simulateTransaction: true,
       walletAddress: account.address,
       chainId: positionInfo.currency0Amount.currency.chainId,
-      protocol: ProtocolItems.V3,
+      protocol: TradingApi.ProtocolItems.V3,
       positionToken: positionInfo.tokenId,
       generatePermitAsTransaction,
     }
@@ -90,7 +85,7 @@ export function MigrateV3PositionTxContextProvider({
   } = useCheckLpApprovalQuery({
     params: migrateLiquidityApprovalParams,
     headers: {
-      'x-universal-router-version': UniversalRouterVersion._2_0,
+      'x-universal-router-version': TradingApi.UniversalRouterVersion._2_0,
     },
     staleTime: 5 * ONE_SECOND_MS,
     enabled: Boolean(migrateLiquidityApprovalParams),
@@ -110,7 +105,7 @@ export function MigrateV3PositionTxContextProvider({
 
   const approvalsNeeded = !approvalLoading && Boolean(permitData || positionTokenPermitTransaction)
 
-  const migratePositionRequestArgs: MigrateLPPositionRequest | undefined = useMemo(() => {
+  const migratePositionRequestArgs: TradingApi.MigrateLPPositionRequest | undefined = useMemo(() => {
     if (
       !positionInfo.tokenId ||
       !account.address ||
@@ -132,7 +127,7 @@ export function MigrateV3PositionTxContextProvider({
     }
     return {
       simulateTransaction: !approvalsNeeded,
-      inputProtocol: ProtocolItems.V3,
+      inputProtocol: TradingApi.ProtocolItems.V3,
       tokenId: Number(positionInfo.tokenId),
       inputPosition: {
         pool: {
@@ -153,7 +148,7 @@ export function MigrateV3PositionTxContextProvider({
       inputSqrtRatioX96: positionInfo.poolOrPair.sqrtRatioX96.toString(),
       inputPositionLiquidity: positionInfo.liquidity,
 
-      outputProtocol: ProtocolItems.V4,
+      outputProtocol: TradingApi.ProtocolItems.V4,
       outputPosition: {
         pool: {
           token0: getTokenOrZeroAddress(destinationPool.currency0),

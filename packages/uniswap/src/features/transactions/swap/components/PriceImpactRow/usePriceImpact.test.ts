@@ -1,6 +1,6 @@
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { usePriceImpact } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/usePriceImpact'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { Trade, TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -12,7 +12,7 @@ const mockUniswapXTrade = {
       classicGasUseEstimateUSD: '5.32',
     },
   },
-  routing: Routing.DUTCH_V2,
+  routing: TradingApi.Routing.DUTCH_V2,
   swapFee: {
     amount: '100000000',
   },
@@ -21,7 +21,7 @@ const mockUniswapXTrade = {
 
 const mockClassicTrade = {
   priceImpact: new Percent(5, 100),
-  routing: Routing.CLASSIC,
+  routing: TradingApi.Routing.CLASSIC,
 } as unknown as Trade
 
 const baseSwapInfo: DerivedSwapInfo = {

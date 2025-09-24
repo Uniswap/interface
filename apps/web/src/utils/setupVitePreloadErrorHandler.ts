@@ -5,7 +5,5 @@ export function setupVitePreloadErrorHandler(): void {
 
     // eslint-disable-next-line no-console
     console.error('Vite preload error: Dynamic import failed to load')
-
-    // TODO(INFRA-546): Add retry logic in the future if needed
   })
 }

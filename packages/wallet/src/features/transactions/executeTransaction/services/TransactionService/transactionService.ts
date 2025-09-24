@@ -25,9 +25,14 @@ export interface SubmitTransactionParams {
   account: SignerMnemonicAccountMeta
   request: SignedTransactionRequest
   options: TransactionOptions
-  typeInfo: TransactionTypeInfo
   transactionOriginType: TransactionOriginType
+  // When undefined, the transaction is submitted but not added to the local state
+  typeInfo?: TransactionTypeInfo
   analytics?: SwapTradeBaseProperties
+}
+
+export interface SubmitTransactionParamsWithTypeInfo extends SubmitTransactionParams {
+  typeInfo: TransactionTypeInfo
 }
 
 /**
@@ -63,7 +68,7 @@ export interface TransactionService {
    * @param input Transaction parameters
    * @returns The transaction details updated with the receipt
    */
-  submitTransactionSync(input: SubmitTransactionParams): Promise<TransactionDetails>
+  submitTransactionSync(input: SubmitTransactionParamsWithTypeInfo): Promise<TransactionDetails>
 
   /**
    * Execute a transaction by preparing, signing, and submitting it

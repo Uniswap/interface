@@ -1,5 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../../../../index.d.ts" />
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../../../.wxt/wxt.d.ts" />
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'

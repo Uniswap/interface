@@ -1,8 +1,8 @@
 import { MaxUint256, TradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { BigNumber } from 'ethers'
 import JSBI from 'jsbi'
 import { USDC } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
@@ -65,7 +65,8 @@ export const mockTransactionParamsFactory: jest.Mocked<TransactionParamsFactory>
   }),
   createSwapParams: jest.fn().mockImplementation((data: SwapTransactionData) => ({
     typeInfo: {
-      type: data.swapTxContext.trade.routing === Routing.BRIDGE ? TransactionType.Bridge : TransactionType.Swap,
+      type:
+        data.swapTxContext.trade.routing === TradingApi.Routing.BRIDGE ? TransactionType.Bridge : TransactionType.Swap,
     },
   })),
   createWrapParams: jest.fn().mockReturnValue({
@@ -102,7 +103,7 @@ export const mockTransactionSagaDependencies: jest.Mocked<TransactionSagaDepende
   createTransactionExecutor: jest.fn().mockReturnValue(mockTransactionExecutor),
   createTransactionParamsFactory: jest.fn().mockReturnValue(mockTransactionParamsFactory),
   getViemClients: jest.fn(),
-  getDelegationDetails: jest.fn(),
+  getDelegationInfoForTransaction: jest.fn(),
   sendAnalyticsEvent: jest.fn(),
   transactionActions,
   makeSelectAddressTransactions: jest.fn(),
@@ -110,7 +111,7 @@ export const mockTransactionSagaDependencies: jest.Mocked<TransactionSagaDepende
 }
 
 export const mockClassicTrade: ClassicTrade = {
-  routing: Routing.CLASSIC,
+  routing: TradingApi.Routing.CLASSIC,
   inputAmount: { currency: ETH },
   outputAmount: { currency: USDC },
   quote: { amount: MaxUint256 },
@@ -118,22 +119,22 @@ export const mockClassicTrade: ClassicTrade = {
 } as unknown as ClassicTrade
 
 export const mockUniswapXTrade: UniswapXTrade = {
-  routing: Routing.DUTCH_V2,
+  routing: TradingApi.Routing.DUTCH_V2,
   inputAmount: { currency: ETH, quotient: JSBI.BigInt(1000) },
   outputAmount: { currency: USDC },
-  quote: { amount: MaxUint256, routing: Routing.DUTCH_V2 },
+  quote: { amount: MaxUint256, routing: TradingApi.Routing.DUTCH_V2 },
   slippageTolerance: 0.5,
 } as unknown as UniswapXTrade
 
 export const mockWrapTrade: WrapTrade = {
-  routing: Routing.WRAP,
+  routing: TradingApi.Routing.WRAP,
   inputAmount: { currency: ETH },
   outputAmount: { currency: WETH },
   tradeType: TradeType.EXACT_INPUT,
 } as unknown as WrapTrade
 
 export const mockBridgeTrade: BridgeTrade = {
-  routing: Routing.BRIDGE,
+  routing: TradingApi.Routing.BRIDGE,
   inputAmount: { currency: ETH },
   outputAmount: { currency: USDC },
   quote: { amount: MaxUint256 },
@@ -195,7 +196,7 @@ export const mockAnalytics: SwapTradeBaseProperties = {
 }
 
 export const prepareSwapTxContext = createFixture<ValidatedSwapTxContext>()(() => ({
-  routing: Routing.CLASSIC,
+  routing: TradingApi.Routing.CLASSIC,
   trade: mockClassicTrade,
   txRequests: [mockSwapTxRequest],
   approveTxRequest: undefined,
@@ -210,7 +211,7 @@ export const prepareSwapTxContext = createFixture<ValidatedSwapTxContext>()(() =
 
 export const prepareUniswapXSwapTxContext = createFixture<ValidatedUniswapXSwapTxAndGasInfo>()(() => ({
   ...prepareSwapTxContext(),
-  routing: Routing.DUTCH_V2,
+  routing: TradingApi.Routing.DUTCH_V2,
   trade: mockUniswapXTrade,
   quote: mockUniswapXTrade.quote,
   gasFeeBreakdown: {

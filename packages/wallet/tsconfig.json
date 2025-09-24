@@ -8,13 +8,16 @@
   ],
   "references": [
     {
-      "path": "../ui"
+      "path": "../utilities"
     },
     {
       "path": "../uniswap"
     },
     {
-      "path": "../utilities"
+      "path": "../ui"
+    },
+    {
+      "path": "../api"
     }
   ],
   "compilerOptions": {

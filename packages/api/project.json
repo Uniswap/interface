@@ -3,58 +3,93 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/api/src",
   "projectType": "library",
-  "tags": [
-    "scope:shared",
-    "type:data",
-    "universe:package"
-  ],
+  "tags": [],
   "targets": {
     "typecheck": {
-      "executor": "@nx/js:tsc",
+      "command": "tsc -b",
       "options": {
-        "tsConfig": "packages/api/tsconfig.json",
-        "main": "packages/api/src/index.ts",
-        "outputPath": "packages/api/dist/"
+        "cwd": "{projectRoot}"
       }
     },
     "lint": {
-      "executor": "nx:run-commands",
+      "command": "eslint . --ext ts,tsx --max-warnings=0",
       "options": {
-        "command": "eslint . --ext ts,tsx --max-warnings=0",
-        "cwd": "packages/api"
+        "cwd": "{projectRoot}"
       }
     },
     "lint:fix": {
-      "executor": "nx:run-commands",
+      "command": "eslint . --ext ts,tsx --fix",
       "options": {
-        "command": "eslint . --ext ts,tsx --fix",
-        "cwd": "packages/api"
+        "cwd": "{projectRoot}"
       }
     },
     "format": {
-      "executor": "nx:run-commands",
+      "command": "biome check . --linter-enabled=false",
       "options": {
-        "command": "biome check . --linter-enabled=false",
-        "cwd": "packages/api"
-      },
-      "inputs": [
-        "sourceFiles"
-      ]
-    },
-    "check:deps:usage": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "depcheck"
-      },
-      "inputs": [
-        "dependencies"
-      ]
+        "cwd": "{projectRoot}"
+      }
     },
     "prepare": {
-      "executor": "nx:run-commands",
+      "command": "echo 'preparing @universe/api'",
       "options": {
-        "command": "echo 'No preparation needed yet'"
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": [
+        "tradingapi:generate"
+      ],
+      "cache": true
+    },
+    "test": {
+      "command": "vitest",
+      "options": {
+        "cwd": "{projectRoot}"
       }
+    },
+    "test:coverage": {
+      "command": "vitest --coverage",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "tradingapi:schema": {
+      "command": "curl https://api.uniswap.org/v2/trade/api.json -o ./src/clients/trading/api.json",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "tradingapi:generate:openapi": {
+      "command": "openapi --input ./src/clients/trading/api.json --output ./src/clients/trading/__generated__ --client axios --useOptions --exportServices true --exportModels true",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/src/clients/trading/api.json"
+      ],
+      "outputs": [
+        "{projectRoot}/src/clients/trading/__generated__"
+      ]
+    },
+    "tradingapi:generate": {
+      "command": "node --no-warnings=ExperimentalWarning --loader ts-node/esm ./scripts/modifyTradingApiTypes.mts",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/src/clients/trading/__generated__/models",
+        "{projectRoot}/scripts/modifyTradingApiTypes.mts",
+        "{projectRoot}/src/clients/trading/types.ts",
+        {
+          "runtime": "node -v"
+        }
+      ],
+      "outputs": [
+        "{projectRoot}/src/clients/trading/__generated__/models"
+      ],
+      "dependsOn": [
+        "tradingapi:generate:openapi"
+      ]
     }
   }
 }

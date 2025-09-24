@@ -1,7 +1,7 @@
 import { SearchTokensResponse, SearchType } from '@uniswap/client-search/dist/search/v1/api_pb'
+import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
 import { searchTokenToCurrencyInfo, useSearchTokensAndPoolsQuery } from 'uniswap/src/data/rest/searchTokensAndPools'
-import { GqlResult } from 'uniswap/src/data/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
